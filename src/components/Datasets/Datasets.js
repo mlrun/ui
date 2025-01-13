@@ -58,6 +58,7 @@ import { toggleYaml } from '../../reducers/appReducer'
 import { transformSearchParams } from '../../utils/filter.util'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { usePagination } from '../../hooks/usePagination.hook'
+import { useMode } from '../../hooks/mode.hook'
 
 import './datasets.scss'
 
@@ -74,6 +75,7 @@ const Datasets = ({ isAllVersions = false }) => {
   const dispatch = useDispatch()
   const location = useLocation()
   const navigate = useNavigate()
+  const { isDemoMode } = useMode()
   const params = useParams()
   const paginationConfigDatasetsRef = useRef({})
   const paginationConfigDatasetVersionsRef = useRef({})
@@ -85,8 +87,8 @@ const Datasets = ({ isAllVersions = false }) => {
   const datasetsFilters = useFiltersFromSearchParams(filtersConfig)
 
   const pageData = useMemo(
-    () => generatePageData(selectedDataset, viewMode, params),
-    [selectedDataset, viewMode, params]
+    () => generatePageData(selectedDataset, viewMode, params, false, isDemoMode),
+    [isDemoMode, selectedDataset, viewMode, params]
   )
 
   const detailsFormInitialValues = useMemo(
