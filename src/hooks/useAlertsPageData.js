@@ -64,12 +64,10 @@ export const useAlertsPageData = (filters, isAlertsPage) => {
       )
         .unwrap()
         .then(response => {
-          if (response?.activations?.length > 0) {
-            setAlerts(response.activations)
-          } else {
-            setAlerts([])
+          if (response?.activations) {
+            setAlerts(response.activations.length > 0 ? response.activations : [])
+            paginationConfigAlertsRef.current.paginationResponse = response.pagination
           }
-          paginationConfigAlertsRef.current.paginationResponse = response.pagination
         })
     },
     [dispatch, isAlertsPage, params.id, params.projectName]
