@@ -31,6 +31,7 @@ import {
   ITERATIONS_FILTER,
   LABELS_FILTER,
   NAME_FILTER,
+  SHOW_ITERATIONS,
   TAG_FILTER,
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST,
@@ -70,9 +71,8 @@ export const getFiltersConfig = isAllVersions => ({
   [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
   [ITERATIONS_FILTER]: {
     label: 'Show best iteration only:',
-    initialValue: '',
-    isModal: true,
-    hidden: !isAllVersions
+    initialValue: isAllVersions ? '' : SHOW_ITERATIONS,
+    isModal: true
   }
 })
 
