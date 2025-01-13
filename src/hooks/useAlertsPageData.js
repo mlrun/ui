@@ -39,11 +39,11 @@ export const useAlertsPageData = (filters, isAlertsPage) => {
     filters => {
       setAlerts([])
       abortControllerRef.current = new AbortController()
-
       const projectName = !isAlertsPage
         ? params.projectName || params.id
-        : filters?.[PROJECT_FILTER]?.toLowerCase?.() !== FILTER_ALL_ITEMS
-          ? filters?.[PROJECT_FILTER]?.toLowerCase?.()
+        : filters?.[PROJECT_FILTER]?.toLowerCase?.() !== FILTER_ALL_ITEMS &&
+            params?.projectName !== FILTER_ALL_ITEMS
+          ? filters[PROJECT_FILTER]?.toLowerCase()
           : params.id
 
       dispatch(
