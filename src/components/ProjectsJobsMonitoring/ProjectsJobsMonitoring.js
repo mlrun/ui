@@ -165,8 +165,8 @@ const ProjectsJobsMonitoring = () => {
   }, [getWorkflows, handleRefreshJobs, initialTabData, refreshScheduled])
 
   const filters = useFiltersFromSearchParams(
-    tabData[selectedTab]?.filtersConfig,
-    tabData[selectedTab]?.parseQueryParamsCallback
+    initialTabData[selectedTab]?.filtersConfig,
+    initialTabData[selectedTab]?.parseQueryParamsCallback
   )
 
   return (
@@ -194,7 +194,7 @@ const ProjectsJobsMonitoring = () => {
                   !isEmpty(selectedJob)
                 }
                 filters={filters}
-                filtersConfig={tabData[selectedTab].filtersConfig}
+                filtersConfig={initialTabData[selectedTab].filtersConfig}
                 handleRefresh={tabData[selectedTab].handleRefresh}
                 hidden={Boolean(params.workflowId)}
                 key={selectedTab}

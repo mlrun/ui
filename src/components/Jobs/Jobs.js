@@ -194,8 +194,8 @@ const Jobs = () => {
   }, [navigate, params.pageTab, location])
 
   const filters = useFiltersFromSearchParams(
-    tabData[selectedTab]?.filtersConfig,
-    tabData[selectedTab]?.parseQueryParamsCallback
+    initialTabData[selectedTab]?.filtersConfig,
+    initialTabData[selectedTab]?.parseQueryParamsCallback
   )
 
   return (
@@ -273,13 +273,13 @@ const Jobs = () => {
                   jobWizardIsOpened,
                   jobWizardMode,
                   jobs,
-                  jobsFiltersConfig: tabData[MONITOR_JOBS_TAB].filtersConfig,
+                  jobsFiltersConfig: initialTabData[MONITOR_JOBS_TAB].filtersConfig,
                   paginatedJobs,
                   paginationConfigJobsRef,
                   refreshJobs,
                   refreshScheduled,
                   requestErrorMessage,
-                  scheduledFiltersConfig: tabData[SCHEDULE_TAB].filtersConfig,
+                  scheduledFiltersConfig: initialTabData[SCHEDULE_TAB].filtersConfig,
                   scheduledJobs,
                   searchParams,
                   selectedJob,
@@ -294,7 +294,7 @@ const Jobs = () => {
                   setSelectedJob,
                   tabData,
                   terminateAbortTasksPolling,
-                  workflowsFiltersConfig: tabData[MONITOR_WORKFLOWS_TAB].filtersConfig
+                  workflowsFiltersConfig: initialTabData[MONITOR_WORKFLOWS_TAB].filtersConfig
                 }}
               >
                 <Outlet />
