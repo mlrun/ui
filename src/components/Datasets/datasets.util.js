@@ -198,7 +198,8 @@ export const checkForSelectedDataset = debounce(
     } else {
       setSelectedDataset({})
     }
-  }
+  },
+  30
 )
 
 export const generateActionsMenu = (

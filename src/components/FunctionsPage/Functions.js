@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -671,7 +671,7 @@ const Functions = ({
     [isAllVersions, paginatedFunctionVersions, paginatedFunctions, params.projectName]
   )
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     checkForSelectedFunction(
       isAllVersions ? paginatedFunctionVersions : paginatedFunctions,
       params.id,

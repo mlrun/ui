@@ -572,7 +572,8 @@ export const checkForSelectedFunction = debounce(
     } else {
       setSelectedFunction({})
     }
-  }
+  },
+  30
 )
 
 export const searchFunctionItem = (

@@ -182,7 +182,8 @@ export const checkForSelectedFile = debounce(
     } else {
       setSelectedFile({})
     }
-  }
+  },
+  30
 )
 
 export const generateActionsMenu = (
