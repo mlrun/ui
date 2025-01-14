@@ -36,7 +36,7 @@ const Download = ({
   fileName,
   fileSize,
   onlyIcon = false,
-  path,
+  path = '',
   projectName,
   user,
   withoutIcon = false
@@ -47,8 +47,9 @@ const Download = ({
   const downloadIsDisabled = useMemo(
     () =>
       disabled ||
+      !path ||
       (artifactLimits?.max_download_size && fileSize > artifactLimits.max_download_size),
-    [disabled, artifactLimits.max_download_size, fileSize]
+    [disabled, artifactLimits.max_download_size, fileSize, path]
   )
   const downloadClassNames = classnames(
     'download',
@@ -57,18 +58,20 @@ const Download = ({
   )
 
   const handleClick = () => {
-    dispatch(
-      setDownloadItem({
-        filename: fileName,
-        id: path + Date.now(),
-        path,
-        user: user,
-        artifactLimits,
-        fileSize,
-        projectName
-      })
-    )
-    dispatch(setShowDownloadsList(true))
+    if (path) {
+      dispatch(
+        setDownloadItem({
+          filename: fileName,
+          id: path + Date.now(),
+          path,
+          user: user,
+          artifactLimits,
+          fileSize,
+          projectName
+        })
+      )
+      dispatch(setShowDownloadsList(true))
+    }
   }
 
   return (
@@ -79,7 +82,7 @@ const Download = ({
       onClick={handleClick}
     >
       {onlyIcon ? (
-        <Tooltip template={!downloadIsDisabled ? <TextTooltipTemplate text="Download" /> : null}>
+        <Tooltip template={<TextTooltipTemplate text="Download" />}>
           <RoundedIcon disabled={downloadIsDisabled}>
             <DownloadIcon />
           </RoundedIcon>
@@ -100,7 +103,7 @@ Download.propTypes = {
   fileName: PropTypes.string,
   fileSize: PropTypes.number,
   onlyIcon: PropTypes.bool,
-  path: PropTypes.string.isRequired,
+  path: PropTypes.string,
   projectName: PropTypes.string.isRequired,
   user: PropTypes.string,
   withoutIcon: PropTypes.bool
