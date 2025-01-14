@@ -217,14 +217,12 @@ const DetailsInfoItem = React.forwardRef(
       )
     } else if (!isEmpty(info) && item.shouldPopUp && item.handleClick && !isDetailsPopUp) {
       return (
-        <Tooltip
-          className="details-item__data details-item__link"
-          template={<TextTooltipTemplate text={info} />}
+        <div
+          className="details-item__data details-item__link link"
+          onClick={info && item.handleClick}
         >
-          <div className="link custom" onClick={item.handleClick}>
-            {info}
-          </div>
-        </Tooltip>
+          <Tooltip template={<TextTooltipTemplate text={info} />}>{info}</Tooltip>
+        </div>
       )
     } else if ((item.link || item.externalLink) && info && !isDetailsPopUp) {
       return (
