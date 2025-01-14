@@ -343,6 +343,7 @@ const jobsSlice = createSlice({
       state.jobLoadingCounter--
     })
     builder.addCase(fetchJobFunction.pending, (state, action) => {
+      state.jobFunc = {}
       state.jobLoadingCounter++
     })
     builder.addCase(fetchJobFunction.fulfilled, (state, action) => {
@@ -351,9 +352,12 @@ const jobsSlice = createSlice({
       state.jobLoadingCounter--
     })
     builder.addCase(fetchJobFunction.rejected, (state, action) => {
+      state.jobFunc = {}
+      state.error = action.error
       state.jobLoadingCounter--
     })
     builder.addCase(fetchJobFunctions.rejected, (state, action) => {
+      state.error = action.error
       state.jobLoadingCounter--
     })
     builder.addCase(fetchJobFunctions.pending, (state, action) => {
@@ -361,7 +365,6 @@ const jobsSlice = createSlice({
     })
     builder.addCase(fetchJobFunctions.fulfilled, (state, action) => {
       state.error = null
-      state.jobFunc = action.payload
       state.jobLoadingCounter--
     })
     builder.addCase(fetchJobLogs.pending, (state, action) => {
