@@ -91,7 +91,7 @@ const BreadcrumbsDropdown = forwardRef(
                       `${link}/${listItem.id}${screen ? `/${screen}` : ''}${tab ? `/${tab}` : ''}`
                     }
                     onClick={e => {
-                      isSelected ? e.preventDefault() : onClick()
+                      isSelected ? e.preventDefault() : onClick(e)
                     }}
                     id={listItem.id}
                     data-testid={`breadcrumbs-dropdown-item-${listItem.id}`}
