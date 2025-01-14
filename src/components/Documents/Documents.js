@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -350,7 +350,7 @@ const Documents = ({ isAllVersions = false }) => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
   }, [dispatch, params.projectName])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     checkForSelectedDocument(
       params.documentName,
       isAllVersions ? paginatedDocumentVersions : paginatedDocuments,

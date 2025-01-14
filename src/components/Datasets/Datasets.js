@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useRef, useState, useMemo, useLayoutEffect } from 'react'
+import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
@@ -347,7 +347,7 @@ const Datasets = ({ isAllVersions = false }) => {
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     checkForSelectedDataset(
       params.datasetName,
       isAllVersions ? paginatedDatasetVersions : paginatedDatasets,
