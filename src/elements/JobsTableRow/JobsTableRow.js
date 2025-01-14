@@ -52,6 +52,7 @@ const JobsTableRow = ({ actionsMenu, handleSelectJob = () => {}, rowItem, select
                   ? rowItemProp.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)
                   : ''
               }
+              firstCell={index === 0}
               onClick={rowItemProp.handleClick}
               selectItem={handleSelectJob}
               selectedItem={selectedJob}
