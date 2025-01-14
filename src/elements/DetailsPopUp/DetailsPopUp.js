@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
@@ -39,7 +39,16 @@ const DetailsPopUp = ({
   selectedItem
 }) => {
   const location = useLocation()
+  const initialLocationPathnameRef = useRef(null)
   const [detailsPopUpSelectedTab, setDetailsPopUpSelectedTab] = useState(DETAILS_OVERVIEW_TAB)
+
+  useEffect(() => {
+    if (!initialLocationPathnameRef.current) {
+      initialLocationPathnameRef.current = location.pathname
+    } else if (initialLocationPathnameRef.current !== location.pathname) {
+      onResolve()
+    }
+  }, [location.pathname, onResolve])
 
   return (
     <Modal onClose={onResolve} show={isOpen} size={MODAL_MAX} location={location} noHeader>
