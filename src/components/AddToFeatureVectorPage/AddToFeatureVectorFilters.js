@@ -46,6 +46,7 @@ const AddToFeatureVectorFilters = ({ content }) => {
           label="Project"
           name={PROJECT_FILTER}
           options={generateProjectsList(projectStore.projectsNames.data, params.projectName)}
+          doNotGrowOverSelectWith
         />
       </div>
       <div className="form-row">
