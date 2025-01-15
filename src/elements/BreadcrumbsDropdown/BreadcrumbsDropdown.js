@@ -64,11 +64,11 @@ const BreadcrumbsDropdown = forwardRef(
               listItem.id.toLocaleLowerCase().startsWith(searchValue.toLocaleLowerCase())
             )
             .map(listItem => {
-              const isSelected = selectedItem === listItem.id
+              const isItemSelected = selectedItem === listItem.id
               const dropdownItemClassNames = classnames(
                 'breadcrumbs__dropdown-item',
                 'data-ellipsis',
-                isSelected && 'breadcrumbs__dropdown-item_selected'
+                isItemSelected && 'breadcrumbs__dropdown-item_selected'
               )
 
               return (
@@ -82,7 +82,7 @@ const BreadcrumbsDropdown = forwardRef(
                     className={dropdownItemClassNames}
                   >
                     <span>{listItem.label}</span>
-                    {isSelected && <CheckmarkIcon className="checkmark" />}
+                    {isItemSelected && <CheckmarkIcon className="checkmark" />}
                   </a>
                 ) : (
                   <Link
@@ -90,8 +90,8 @@ const BreadcrumbsDropdown = forwardRef(
                       listItem.linkTo ||
                       `${link}/${listItem.id}${screen ? `/${screen}` : ''}${tab ? `/${tab}` : ''}`
                     }
-                    onClick={e => {
-                      isSelected ? e.preventDefault() : onClick(e)
+                    onClick={event => {
+                      isItemSelected ? event.preventDefault() : onClick(event)
                     }}
                     id={listItem.id}
                     data-testid={`breadcrumbs-dropdown-item-${listItem.id}`}
@@ -101,7 +101,7 @@ const BreadcrumbsDropdown = forwardRef(
                     <Tooltip template={<TextTooltipTemplate text={listItem.label} />}>
                       {listItem.label}
                     </Tooltip>
-                    {isSelected && <CheckmarkIcon className="checkmark" />}
+                    {isItemSelected && <CheckmarkIcon className="checkmark" />}
                   </Link>
                 ))
               )
