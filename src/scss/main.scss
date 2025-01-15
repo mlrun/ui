@@ -737,17 +737,12 @@ main {
     display: flex;
     margin-bottom: 20px;
 
-    &-small > * {
-      width: 225px;
-    }
-
-
     &.align-stretch {
       align-items: stretch;
     }
 
     &.drop-down{
-      max-width: 225px;
+      max-width: 200px;
     }
   }
 

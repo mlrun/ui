@@ -150,7 +150,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
       <div className="form-row">
         <StatusFilter statusList={filterAlertsSeverityOptions} name={SEVERITY} />
       </div>
-      <div className="form-row-small">
+      <div className="form-row">
         <FormSelect
           dropDownClassName="form-row drop-down"
           label="Event type"
