@@ -470,7 +470,7 @@ module.exports = {
     Batch_Run_Button: pageHeaderButton,
     Error_Message: commonErrorMessage,
     Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
-    Arrow_Back: By.css('.link-back__icon'),
+    Arrow_Back: By.css('a.link-back__icon'),
     Resource_Monitoring_Button: By.css(
       '.content__action-bar-wrapper .action-bar button'
     ),

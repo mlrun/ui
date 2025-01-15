@@ -8,9 +8,9 @@ Feature: Jobs Monitoring Page
         Given open url
         And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
-        When click on "See_All_Link" element in "Monitoring_Jobs_Box" on "Projects" wizard
+        When click on "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/*/jobs-monitoring/jobs"
+        Then verify redirection to "projects/*/jobs-monitoring/jobs?state=all&bePage=1&fePage=1"
         Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then verify "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Jobs_Tab" wizard should contains "Jobs_Monitoring"."Tab_List"
@@ -104,10 +104,10 @@ Feature: Jobs Monitoring Page
         Then "Status_Jobs_Completed_Checkbox" element should be checked on "FilterBy_Popup" wizard
         Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
         And select "crossTab" with "Jobs monitoring" value in breadcrumbs menu
-        Then verify redirection to "projects/*/jobs-monitoring/jobs"
+        Then verify redirection to "projects/*/jobs-monitoring/jobs?state=all&bePage=1&fePage=1"
         Then click on breadcrumbs "projectsPage" label on "commonPagesHeader" wizard
         And wait load page
-        When click on "See_All_Link" element in "Monitoring_Jobs_Box" on "Projects" wizard
+        When click on "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
         Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
@@ -122,9 +122,9 @@ Feature: Jobs Monitoring Page
     Scenario: MLJM004 - Check search by name, project name, filter by Date picker on Jobs tab of Jobs monitoring page
         Given open url
         And wait load page
-        When click on "See_All_Link" element in "Monitoring_Jobs_Box" on "Projects" wizard
+        When click on "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/*/jobs-monitoring/jobs"
+        Then verify redirection to "projects/*/jobs-monitoring/jobs?state=all&bePage=1&fePage=1"
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
         And wait load page
@@ -178,12 +178,75 @@ Feature: Jobs Monitoring Page
     
     @MLJM
     @smoke
+    Scenario: MLJM013 - Check Pagination info pane on Jobs tab of Jobs monitoring page
+        Given open url
+        And wait load page
+        When click on "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
+        And wait load page
+        Then verify redirection to "projects/*/jobs-monitoring/jobs?state=all&bePage=1&fePage=1"
+        Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
+        Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "BE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "FE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
+        Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
+        Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
+        Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
+        Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
+        Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 7" value
+        When click on cell with row index 1 in "name" column in "Jobs_Table" table on "Jobs_Monitoring_Jobs_Tab" wizard
+        And wait load page
+        Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
+        Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "BE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "FE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
+        Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
+        Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
+        Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
+        Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
+        Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 1" value
+        When click on cell with row index 1 in "uid" column in "Jobs_Table" table on "Jobs_Monitoring_Jobs_Tab" wizard
+        And wait load page
+        Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
+        Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "BE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "FE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
+        Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
+        Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
+        Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
+        Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
+        Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 1" value
+        Then click on "Arrow_Back" element on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
+        Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "BE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "FE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
+        Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
+        Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
+        Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
+        Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
+        Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 7" value
+
+    @MLJM
+    @smoke
     Scenario: MLJM007 - Check filter by Statuses and View Yaml action on Jobs tab of Jobs monitoring page
         Given open url
         And wait load page
-        When click on "See_All_Link" element in "Monitoring_Jobs_Box" on "Projects" wizard
+        When click on "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/*/jobs-monitoring/jobs"
+        Then verify redirection to "projects/*/jobs-monitoring/jobs?state=all&bePage=1&fePage=1"
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
         Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
@@ -240,9 +303,9 @@ Feature: Jobs Monitoring Page
     Scenario: MLJM010 - Check filter by Types on Jobs tab of Jobs monitoring page
         Given open url
         And wait load page
-        When click on "See_All_Link" element in "Monitoring_Jobs_Box" on "Projects" wizard
+        When click on "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/*/jobs-monitoring/jobs"
+        Then verify redirection to "projects/*/jobs-monitoring/jobs?state=all&bePage=1&fePage=1"
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
         Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
@@ -253,29 +316,6 @@ Feature: Jobs Monitoring Page
         Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Job"
-        When select "Nuclio" option in "Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
-        Then click on "Title" element on "FilterBy_Popup" wizard
-        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
-        And wait load page
-        Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
-        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
-        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Nuclio"
-        When select "Application" option in "Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
-        Then click on "Title" element on "FilterBy_Popup" wizard
-        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
-        And wait load page
-        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Type"
-        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
-        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Application"
-        When select "Serving" option in "Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
-        Then click on "Title" element on "FilterBy_Popup" wizard
-        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
-        And wait load page
-        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Type"
-        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
-        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Serving"
         When select "Spark" option in "Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
         Then click on "Title" element on "FilterBy_Popup" wizard
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
@@ -322,15 +362,15 @@ Feature: Jobs Monitoring Page
         Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Handler"
-    
+
     @MLJM
     @smoke
     Scenario: MLJM011 - Check filter by Labels on Jobs tab of Jobs monitoring page
         Given open url
         And wait load page
-        When click on "See_All_Link" element in "Monitoring_Jobs_Box" on "Projects" wizard
+        When click on "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/*/jobs-monitoring/jobs"
+        Then verify redirection to "projects/*/jobs-monitoring/jobs?state=all&bePage=1&fePage=1"
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
         Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
@@ -353,8 +393,10 @@ Feature: Jobs Monitoring Page
         And wait load page
         And select "Jobs" tab in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Jobs_Tab" wizard
         And wait load page
-        Then verify options in action menu on "Jobs_Monitoring_Jobs_Tab" wizard in "Jobs_Table" table with "Job" value in "type" column should contains "Jobs_And_Workflows"."Job_Action_Menu_Options"
-        Then select "Batch re-run" option in action menu on "Jobs_Monitoring_Jobs_Tab" wizard in "Jobs_Table" table at row with "sef" value in "name" column
+        Then verify options in action menu on "Jobs_Monitoring_Jobs_Tab" wizard in "Jobs_Table" table with "Job" value in "type" column should contains "Jobs_And_Workflows"."Job_List_Action_Menu_Options"
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
+        And wait load page
+        Then select "Batch re-run" option in action menu on "Jobs_Monitoring_Jobs_Tab" wizard in "Jobs_Table" table at row with "seff" value in "name" column
         And wait load page
         Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
         And wait load page
@@ -369,18 +411,92 @@ Feature: Jobs Monitoring Page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         And wait load page
-        Then select "Delete" option in action menu on "Jobs_Monitoring_Jobs_Tab" wizard in "Jobs_Table" table at row with "qwe" value in "name" column
+        Then type value "qwe" to "Search_By_Name_Filter_Input" field on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then click on "Refresh_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
+        And wait load page
+        Then value in "name" column with "text" in "Jobs_Table" on "Jobs_Monitoring_Jobs_Tab" wizard should contains "qwe"
+        Then verify action menu on "Jobs_Monitoring_Jobs_Tab" wizard in "Jobs_Table" table with "qwe" value in "name" column should contains "Jobs_And_Workflows"."Job_List_Action_Menu_Options" without scroll
+        When click on cell with row index 1 in "name" column in "Jobs_Table" table on "Jobs_Monitoring_Jobs_Tab" wizard
+        And wait load page
+        Then verify that 3 row elements are displayed in "Jobs_Table" on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then click on "Arrow_Back" element on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then select "Delete run" option in action menu on "Jobs_Monitoring_Jobs_Tab" wizard in "Jobs_Table" table at row with "qwe" value in "name" column
         And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         Then "Title" element on "Confirm_Popup" should contains "Delete job?" value
+        Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
+        Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Jobs_And_Workflows"."Delete_Run_Message"
+        Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
+        Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
+        Then verify "Cancel_Button" element on "Confirm_Popup" wizard is enabled
+        Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
+        Then "Delete_Button" element on "Confirm_Popup" should contains "Delete" value
         When click on "Delete_Button" element on "Confirm_Popup" wizard
-        Then wait for 5 seconds
+        And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        And wait load page
+        And wait load page
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Job is successfully deleted" value
         And wait load page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        When click on cell with row index 1 in "name" column in "Jobs_Table" table on "Jobs_Monitoring_Jobs_Tab" wizard
         And wait load page
+        Then verify that 2 row elements are displayed in "Jobs_Table" on "Jobs_Monitoring_Jobs_Tab" wizard
+        When click on cell with row index 2 in "uid" column in "Jobs_Table" table on "Jobs_Monitoring_Jobs_Tab" wizard
+        And wait load page
+        Then verify "Action_Menu" dropdown element on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_And_Workflows"."Job_Overview_Action_Menu_Options"
+        Then select "Delete run" option in action menu on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then "Title" element on "Confirm_Popup" should contains "Delete job?" value
+        Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
+        Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Jobs_And_Workflows"."Delete_Run_Message"
+        Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
+        Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
+        Then verify "Cancel_Button" element on "Confirm_Popup" wizard is enabled
+        Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
+        Then "Delete_Button" element on "Confirm_Popup" should contains "Delete" value
+        When click on "Delete_Button" element on "Confirm_Popup" wizard
+        And wait load page
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        And wait load page
+        And wait load page
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Job is successfully deleted" value
+        And wait load page
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then verify that 1 row elements are displayed in "Jobs_Table" on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then click on "Arrow_Back" element on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then type value "fesf" to "Search_By_Name_Filter_Input" field on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then click on "Refresh_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
+        And wait load page
+        Then value in "name" column with "text" in "Jobs_Table" on "Jobs_Monitoring_Jobs_Tab" wizard should contains "fesf"
+        Then verify action menu on "Jobs_Monitoring_Jobs_Tab" wizard in "Jobs_Table" table with "fesf" value in "name" column should contains "Jobs_And_Workflows"."Job_List_Action_Menu_Options" without scroll
+        Then select "Delete all runs" option in action menu on "Jobs_Monitoring_Jobs_Tab" wizard in "Jobs_Table" table at row with "fesf" value in "name" column
+        And wait load page
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Jobs_And_Workflows"."Delete_All_Runs_Message"
+        Then "Title" element on "Confirm_Popup" should contains "Delete job?" value
+        Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
+        Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
+        Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
+        Then verify "Cancel_Button" element on "Confirm_Popup" wizard is enabled
+        Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
+        Then "Delete_Button" element on "Confirm_Popup" should contains "Delete" value
+        When click on "Delete_Button" element on "Confirm_Popup" wizard
+        And wait load page
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        And wait load page
+        And wait load page
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Job is successfully deleted" value
+        And wait load page
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Monitor_Jobs_Name"
  
     @MLJM
     @smoke
@@ -390,9 +506,9 @@ Feature: Jobs Monitoring Page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Workflows_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Total_Counter_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
-        When click on "See_All_Link" element in "Monitoring_Workflows_Box" on "Projects" wizard
+        When click on "Total_Counter_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/*/jobs-monitoring/workflows"
+        Then verify redirection to "projects/*/jobs-monitoring/workflows?state=all"
         Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then verify "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Workflows_Tab" wizard should contains "Jobs_Monitoring"."Tab_List"
@@ -468,11 +584,11 @@ Feature: Jobs Monitoring Page
         Then "Status_Workflows_Running_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
         Then "Status_Workflows_Completed_Checkbox" element should be checked on "FilterBy_Popup" wizard
         Then verify "Workflows_Table" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
-        And select "crossTab" with "Jobs monitoring" value in breadcrumbs menu
-        Then verify redirection to "projects/*/jobs-monitoring/jobs"
+        # And select "crossTab" with "Jobs monitoring" value in breadcrumbs menu
+        # Then verify redirection to "projects/*/jobs-monitoring/jobs"
         Then click on breadcrumbs "projectsPage" label on "commonPagesHeader" wizard
         And wait load page
-        When click on "See_All_Link" element in "Monitoring_Jobs_Box" on "Projects" wizard
+        When click on "Total_Counter_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
         And wait load page
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
         Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
@@ -480,7 +596,7 @@ Feature: Jobs Monitoring Page
         And wait load page
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
-        Then "Error_Message" component on "Jobs_Monitoring_Workflows_Tab" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring"
+        Then "Error_Message" component on "Jobs_Monitoring_Workflows_Tab" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Workflows"
         And turn on demo mode
         And wait load page
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
@@ -492,9 +608,9 @@ Feature: Jobs Monitoring Page
     Scenario: MLJM005 - Check search by name, project name, filter by Date picker on Workflows tab of Jobs monitoring page
         Given open url
         And wait load page
-        When click on "See_All_Link" element in "Monitoring_Workflows_Box" on "Projects" wizard
+        When click on "Total_Counter_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/*/jobs-monitoring/workflows"
+        Then verify redirection to "projects/*/jobs-monitoring/workflows?state=all"
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Workflows_Tab" wizard
         And wait load page
@@ -503,12 +619,12 @@ Feature: Jobs Monitoring Page
         Then type value "main" to "Search_By_Name_Filter_Input" field on "Jobs_Monitoring_Workflows_Tab" wizard
         Then click on "Refresh_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
         And wait load page
-        Then verify that 1 row elements are displayed in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify that 6 row elements are displayed in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard
         Then value in "name" column with "text" in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard should contains "main"
         Then type value "kfpipeline" to "Search_By_Name_Filter_Input" field on "Jobs_Monitoring_Workflows_Tab" wizard
         Then click on "Refresh_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
         And wait load page
-        Then verify that 1 row elements are displayed in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify that 6 row elements are displayed in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard
         Then value in "name" column with "text" in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard should contains "kfpipeline"
         And select "Scheduled" tab in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Scheduled_Tab" wizard
         And select "Workflows" tab in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Workflows_Tab" wizard

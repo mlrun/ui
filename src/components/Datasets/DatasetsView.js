@@ -20,7 +20,6 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
-import { useLocation } from 'react-router-dom'
 
 import ActionBar from '../ActionBar/ActionBar'
 import ArtifactsFilters from '../ArtifactsActionBar/ArtifactsFilters'
@@ -74,8 +73,6 @@ const DatasetsView = React.forwardRef(
     },
     { datasetsRef }
   ) => {
-    const location = useLocation()
-
     return (
       <>
         <div className="content-wrapper" ref={datasetsRef}>
@@ -110,7 +107,7 @@ const DatasetsView = React.forwardRef(
                   withRefreshButton
                   withoutExpandButton
                 >
-                  <ArtifactsFilters artifacts={datasets} isAllVersions={isAllVersions} />
+                  <ArtifactsFilters artifacts={datasets} />
                 </ActionBar>
               </div>
               {artifactsStore.loading ? null : tableContent.length === 0 ? (
@@ -133,10 +130,7 @@ const DatasetsView = React.forwardRef(
                     applyDetailsChangesCallback={applyDetailsChangesCallback}
                     detailsFormInitialValues={detailsFormInitialValues}
                     getCloseDetailsLink={() =>
-                      getCloseDetailsLink(
-                        isAllVersions ? ALL_VERSIONS_PATH : DATASETS_TAB,
-                        location
-                      )
+                      getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : DATASETS_TAB)
                     }
                     handleCancel={() => setSelectedDatasetMin({})}
                     pageData={pageData}

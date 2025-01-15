@@ -35,7 +35,9 @@ import {
   BE_PAGE_SIZE,
   FILES_TAB,
   GROUP_BY_NONE,
-  REQUEST_CANCELED
+  ITERATIONS_FILTER,
+  REQUEST_CANCELED,
+  SHOW_ITERATIONS
 } from '../../constants'
 import {
   checkForSelectedFile,
@@ -111,7 +113,11 @@ const Files = ({ isAllVersions = false }) => {
         requestParams.name = params.fileName
         setFileVersions([])
       } else {
-        requestParams['partition-by'] = 'project_and_name'
+        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS) {
+          requestParams['partition-by'] = 'project_and_name'
+          requestParams['partition-sort-by'] = 'updated'
+        }
+
         setFiles([])
       }
 

@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { max, min } from 'lodash'
 
 import { RoundedIcon } from 'igz-controls/components'
@@ -56,7 +56,6 @@ const Pagination = ({
   const paginationPagesRef = useRef()
   const leftSideRef = useRef(0)
   const rightSideRef = useRef(0)
-  const location = useLocation()
 
   // Total pages are now calculated based on start and end pages
   const totalPagesCount = useMemo(
@@ -85,9 +84,9 @@ const Pagination = ({
 
   const handlePageChange = useCallback(() => {
     if (closeParamName) {
-      navigate(getCloseDetailsLink(closeParamName, location, true), { replace: true })
+      navigate(getCloseDetailsLink(closeParamName, true), { replace: true })
     }
-  }, [closeParamName, navigate, location])
+  }, [closeParamName, navigate])
 
   const paginationItems = useMemo(() => {
     if (!paginationConfig[FE_PAGE]) return []
@@ -201,7 +200,7 @@ const Pagination = ({
     }
   }
 
-  const getPageNumberStyle = useCallback((paginationItems, paginationItem, index) => {
+  const getPageNumberStyle = useCallback(paginationItems => {
     const maxPage = max(paginationItems)
     const paginationItemWidth = `${maxPage.toString().length}ch`
 
@@ -209,7 +208,7 @@ const Pagination = ({
   }, [])
 
   const getPaginationPagesStyle = useCallback(
-    (paginationItems, paginationItem, index) => {
+    paginationItems => {
       const maxFePages = paginationConfig[BE_PAGE_SIZE] / paginationConfig[FE_PAGE_SIZE]
       const maxPage = max(paginationItems)
       const maxPageCount = min([7, maxPage, maxFePages])
@@ -262,7 +261,9 @@ const Pagination = ({
                           ? 'pagination-dots'
                           : `pagination-page-${pageItem}`
                       }
-                      onClick={() => goToPage(pageItem)}
+                      onClick={
+                        pageItem !== paginationConfig[FE_PAGE] ? () => goToPage(pageItem) : null
+                      }
                       className={classnames(
                         'pagination-btn',
                         pageItem !== threeDotsString && 'pagination-page-btn',

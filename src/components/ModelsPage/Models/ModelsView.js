@@ -20,7 +20,6 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
-import { useLocation } from 'react-router-dom'
 
 import ActionBar from '../../ActionBar/ActionBar'
 import ArtifactsFilters from '../../ArtifactsActionBar/ArtifactsFilters'
@@ -73,8 +72,6 @@ const ModelsView = React.forwardRef(
     },
     { modelsRef }
   ) => {
-    const location = useLocation()
-
     return (
       <>
         <div className="models" ref={modelsRef}>
@@ -108,7 +105,7 @@ const ModelsView = React.forwardRef(
                 withRefreshButton
                 withoutExpandButton
               >
-                <ArtifactsFilters artifacts={models} isAllVersions={isAllVersions} />
+                <ArtifactsFilters artifacts={models} />
               </ActionBar>
             </div>
             {isAllVersions && (
@@ -141,7 +138,7 @@ const ModelsView = React.forwardRef(
                   applyDetailsChangesCallback={applyDetailsChangesCallback}
                   detailsFormInitialValues={detailsFormInitialValues}
                   getCloseDetailsLink={() =>
-                    getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : MODELS_TAB, location)
+                    getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : MODELS_TAB)
                   }
                   handleCancel={() => setSelectedModelMin({})}
                   pageData={pageData}

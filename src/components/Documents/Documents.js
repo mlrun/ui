@@ -44,7 +44,9 @@ import {
   DOCUMENT_TYPE,
   DOCUMENTS_TAB,
   GROUP_BY_NONE,
-  REQUEST_CANCELED
+  ITERATIONS_FILTER,
+  REQUEST_CANCELED,
+  SHOW_ITERATIONS
 } from '../../constants'
 import { fetchArtifactTags, fetchDocuments, removeDocuments } from '../../reducers/artifactsReducer'
 import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
@@ -109,7 +111,11 @@ const Documents = ({ isAllVersions = false }) => {
         requestParams.name = params.documentName
         setDocumentVersions([])
       } else {
-        requestParams['partition-by'] = 'project_and_name'
+        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS) {
+          requestParams['partition-by'] = 'project_and_name'
+          requestParams['partition-sort-by'] = 'updated'
+        }
+
         setDocuments([])
       }
 
@@ -396,7 +402,6 @@ const Documents = ({ isAllVersions = false }) => {
       }
       projectName={params.projectName}
       ref={{ documentsRef }}
-      refreshDocuments={refreshDocuments}
       requestErrorMessage={requestErrorMessage}
       selectedDocument={selectedDocument}
       setSearchDocumentsParams={

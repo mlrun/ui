@@ -28,7 +28,7 @@ import { ITERATIONS_FILTER, LABELS_FILTER, SHOW_ITERATIONS, TAG_FILTER } from '.
 
 import './artifactsFilters.scss'
 
-const ArtifactsFilters = ({ artifacts, isAllVersions }) => {
+const ArtifactsFilters = ({ artifacts }) => {
   const form = useForm()
 
   const handleIter = value => {
@@ -53,8 +53,7 @@ const ArtifactsFilters = ({ artifacts, isAllVersions }) => {
       <div className="form-row">
         <FormTagFilter content={artifacts} label="Version tag" name={TAG_FILTER} />
       </div>
-      {isAllVersions && (
-        <div className="form-row">
+      <div className="form-row">
           <FormCheckBox
             className="artifacts-filters__iter"
             label="Show best iteration only"
@@ -62,7 +61,6 @@ const ArtifactsFilters = ({ artifacts, isAllVersions }) => {
           />
           <FormOnChange name={ITERATIONS_FILTER} handler={handleIter} />
         </div>
-      )}
     </div>
   )
 }

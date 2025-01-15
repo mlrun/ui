@@ -20,7 +20,6 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
-import { useLocation } from 'react-router-dom'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Loader from '../../common/Loader/Loader'
@@ -69,8 +68,6 @@ const DocumentsView = React.forwardRef(
     },
     { documentsRef }
   ) => {
-    const location = useLocation()
-
     return (
       <>
         <div className="content-wrapper" ref={documentsRef}>
@@ -97,7 +94,7 @@ const DocumentsView = React.forwardRef(
                   withRefreshButton
                   withoutExpandButton
                 >
-                  <ArtifactsFilters artifacts={documents} isAllVersions={isAllVersions} />
+                  <ArtifactsFilters artifacts={documents} />
                 </ActionBar>
               </div>
               {artifactsStore.loading ? null : tableContent.length === 0 ? (
@@ -120,10 +117,7 @@ const DocumentsView = React.forwardRef(
                     applyDetailsChangesCallback={applyDetailsChangesCallback}
                     detailsFormInitialValues={detailsFormInitialValues}
                     getCloseDetailsLink={() =>
-                      getCloseDetailsLink(
-                        isAllVersions ? ALL_VERSIONS_PATH : DOCUMENTS_TAB,
-                        location
-                      )
+                      getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : DOCUMENTS_TAB)
                     }
                     handleCancel={() => setSelectedDocumentMin({})}
                     pageData={pageData}
