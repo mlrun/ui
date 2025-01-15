@@ -33,18 +33,18 @@ const ScheduledJobs = () => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const {
     abortControllerRef,
+    initialTabData,
     scheduledJobs,
     refreshScheduled: refreshJobs,
     requestErrorMessage,
     setJobs,
-    scheduledFiltersConfig,
-    tabData
+    scheduledFiltersConfig
   } = React.useContext(JobsContext)
   const dispatch = useDispatch()
   const params = useParams()
   const filters = useFiltersFromSearchParams(
-    tabData[SCHEDULE_TAB]?.filtersConfig,
-    tabData[SCHEDULE_TAB]?.parseQueryParamsCallback
+    initialTabData[SCHEDULE_TAB]?.filtersConfig,
+    initialTabData[SCHEDULE_TAB]?.parseQueryParamsCallback
   )
 
   useEffect(() => {

@@ -218,6 +218,7 @@ const ProjectsJobsMonitoring = () => {
                   getWorkflows,
                   handleMonitoring,
                   handleRerunJob,
+                  initialTabData,
                   jobRuns,
                   jobWizardIsOpened,
                   jobWizardMode,
