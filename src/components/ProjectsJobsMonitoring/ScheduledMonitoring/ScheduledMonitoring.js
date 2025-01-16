@@ -31,17 +31,17 @@ const ScheduledMonitoring = () => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const dispatch = useDispatch()
   const {
+    initialTabData,
     requestErrorMessage,
     refreshScheduled,
     scheduledFiltersConfig,
     scheduledJobs,
-    setScheduledJobs,
-    tabData
+    setScheduledJobs
   } = React.useContext(ProjectJobsMonitoringContext)
 
   const filters = useFiltersFromSearchParams(
-    tabData[JOBS_MONITORING_SCHEDULED_TAB]?.filtersConfig,
-    tabData[JOBS_MONITORING_SCHEDULED_TAB]?.parseQueryParamsCallback
+    initialTabData[JOBS_MONITORING_SCHEDULED_TAB]?.filtersConfig,
+    initialTabData[JOBS_MONITORING_SCHEDULED_TAB]?.parseQueryParamsCallback
   )
 
   useEffect(() => {
