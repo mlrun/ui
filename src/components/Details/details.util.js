@@ -216,9 +216,6 @@ export const generateAlertsContent = selectedItem => {
     endpoint_name: {
       value: selectedItem.endpointName
     },
-    endpointId: {
-      value: selectedItem.endpointId
-    },
     resultName: {
       value: selectedItem.resultName
     },

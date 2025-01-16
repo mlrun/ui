@@ -192,7 +192,7 @@ export const alertsHeaders = type => {
       ],
       [MODEL_ENDPOINT_RESULT]: [
         { label: 'Project Name', id: 'projectName' },
-        { label: 'Endpoint ID', id: 'endpointId' },
+        { label: 'Endpoint ID', id: 'uid' },
         { label: 'Application Name', id: 'applicationName' },
         { label: 'Result Name', id: 'resultName' },
         { label: 'Type', id: 'type' },
