@@ -42,6 +42,7 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { roundFloats } from '../../utils/roundFloats'
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import classnames from 'classnames'
 
 export const generateTriggerInfoContent = criteria => {
   if (criteria) {
@@ -249,7 +250,7 @@ export const generateAlertsDetailsInfo = selectedItem => {
     AlertsDetailsInfo.triggerCriteriaDetailsInfo = triggerCriteriaContent.map(trigger => {
       return (
         <li className="details-item" key={trigger.id}>
-          <div className="details-item__header">{trigger.label}:</div>
+          <div className={classnames('details-item__header', 'long-label')}>{trigger.label}:</div>
           <DetailsInfoItem info={trigger.value} />
         </li>
       )

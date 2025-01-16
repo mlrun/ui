@@ -72,6 +72,10 @@ $itemInfoWithoutPadding: item-info-without-padding;
         font-weight: 500;
         font-size: 15px;
         line-height: 18px;
+
+        &.long-label {
+          width: 190px;
+        }
       }
 
       &__tip {
