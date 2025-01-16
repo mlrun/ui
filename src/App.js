@@ -40,6 +40,7 @@ import {
   FEATURES_TAB,
   MODEL_ENDPOINTS_TAB,
   MODELS_TAB,
+  MONITOR_ALERTS_PAGE,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
   PIPELINE_SUB_PAGE,
@@ -155,8 +156,10 @@ const App = () => {
           <Route path={`projects/:projectName/${PROJECT_MONITOR}`} element={<ProjectMonitor />} />
 
           {[
-            'projects/:id/alerts',
-            'projects/:id/alerts/:project/:alertName/:alertId/:entityName/:uid/:tab'
+            `projects/:id/${MONITOR_ALERTS_PAGE}`,
+            `projects/:id/${MONITOR_ALERTS_PAGE}/:project/:alertName/:alertId/:entityName/:uid/:tab`,
+            'projects/:projectName/alerts',
+            'projects/:projectName/alerts/:project/:alertName/:alertId/:entityName/:uid/:tab'
           ].map((path, index) => (
             <Fragment key={index}>
               <Route path={path} element={<ProjectsAlerts />} />

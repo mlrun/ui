@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
-  ALERTS_TAB,
+  ALERTS_PAGE,
   DOCUMENTS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
@@ -26,6 +26,7 @@ import {
   MODEL_ENDPOINTS_TAB,
   MONITOR_JOBS_TAB,
   MODELS_TAB,
+  MONITOR_ALERTS_PAGE,
   MONITOR_WORKFLOWS_TAB,
   PROJECT_MONITOR,
   PROJECT_QUICK_ACTIONS_PAGE,
@@ -65,6 +66,11 @@ export const generateMlrunScreens = params =>
           link: generateNuclioLink(`/projects/${params.projectName}/api-gateways`)
         },
         {
+          label: 'Alerts',
+          id: ALERTS_PAGE,
+          linkTo: `/${PROJECTS_PAGE_PATH}/${params.projectName}/${ALERTS_PAGE}`
+        },
+        {
           label: 'Settings',
           id: 'settings'
         }
@@ -72,8 +78,8 @@ export const generateMlrunScreens = params =>
     : [
         {
           label: 'Alerts monitoring',
-          id: ALERTS_TAB,
-          linkTo: `/${PROJECTS_PAGE_PATH}/*/${ALERTS_TAB}`
+          id: MONITOR_ALERTS_PAGE,
+          linkTo: `/${PROJECTS_PAGE_PATH}/*/${MONITOR_ALERTS_PAGE}`
         },
         {
           label: 'Jobs monitoring',

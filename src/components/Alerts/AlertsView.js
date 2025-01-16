@@ -29,7 +29,7 @@ import NoData from '../../common/NoData/NoData'
 import Pagination from '../../common/Pagination/Pagination'
 import Table from '../Table/Table'
 
-import { ALERTS_FILTERS, ALERTS_PAGE, ALERTS_PAGE_PATH } from '../../constants'
+import { ALERTS_FILTERS, ALERTS_PAGE, ALERTS_PAGE_PATH, MONITOR_ALERTS_PAGE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 
@@ -98,7 +98,9 @@ const AlertsView = ({
               <>
                 <Table
                   actionsMenu={[]}
-                  getCloseDetailsLink={() => getCloseDetailsLink(ALERTS_PAGE_PATH)}
+                  getCloseDetailsLink={() =>
+                    getCloseDetailsLink(isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE)
+                  }
                   pageData={pageData}
                   retryRequest={handleRefreshWithFilters}
                   selectedItem={isAlertsPage ? selectedAlert : {}}

@@ -44,7 +44,8 @@ import {
   SEVERITY_CRITICAL,
   SEVERITY_HIGH,
   SEVERITY_LOW,
-  SEVERITY_MEDIUM
+  SEVERITY_MEDIUM,
+  MONITOR_ALERTS_PAGE
 } from '../constants'
 
 const getEntityTypeData = entityType => {
@@ -196,21 +197,22 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects, showExpandButt
   const getLink = alert => {
     const queryString = window.location.search
     const { alertName, entity_kind: entityType, entity_id, id: alertId, job, project, uid } = alert
-
+    const projectName = isCrossProjects ? '*' : project
+    const alertPath = isCrossProjects ? MONITOR_ALERTS_PAGE : 'alerts'
     if (entityType === MODEL_ENDPOINT_RESULT) {
       const [endpointId, , , name] = entity_id.split('.')
-      return `/projects/*/alerts/${project}/${alertName}/${alertId}/${name}/${endpointId}/${DETAILS_ALERT_APPLICATION}${queryString}`
+      return `/projects/${projectName}/${alertPath}/${project}/${alertName}/${alertId}/${name}/${endpointId}/${DETAILS_ALERT_APPLICATION}${queryString}`
     }
 
     if (entityType === JOB) {
       return job
-        ? `/projects/*/alerts/${project}/${alertName}/${alertId}/${job.name}/${job.jobUid}/${DETAILS_ALERT_APPLICATION}${queryString}`
+        ? `/projects/${projectName}/${alertPath}/${project}/${alertName}/${alertId}/${job.name}/${job.jobUid}/${DETAILS_ALERT_APPLICATION}${queryString}`
         : ''
     }
 
     if (entityType === MODEL_MONITORING_APPLICATION) {
       const [, applicationName] = entity_id.split('_')
-      return `/projects/*/alerts/${project}/${alertName}/${alertId}/${applicationName}/${uid}/${DETAILS_ALERT_APPLICATION}${queryString}`
+      return `/projects/${projectName}/${alertPath}/${project}/${alertName}/${alertId}/${applicationName}/${uid}/${DETAILS_ALERT_APPLICATION}${queryString}`
     }
 
     return ''
