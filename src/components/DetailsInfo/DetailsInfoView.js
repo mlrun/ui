@@ -170,12 +170,7 @@ const DetailsInfoView = React.forwardRef(
                 return (
                   <li className={detailsItemClassNames} key={header.id}>
                     <>
-                      <div
-                        className={classnames(
-                          'details-item__header',
-                          pageData.page === ALERTS_PAGE && 'alert-page-header'
-                        )}
-                      >
+                      <div className="details-item__header">
                         {header.label}:
                         {header.tip && <Tip className="details-item__tip" text={header.tip} />}
                       </div>
