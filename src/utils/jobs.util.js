@@ -76,7 +76,7 @@ export const checkForSelectedJob = debounce(
       setSelectedJob({})
     }
   },
-  20
+  30
 )
 
 export const getJobKindFromLabels = (labels = []) => {

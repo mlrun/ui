@@ -254,7 +254,8 @@ export const checkForSelectedModel = debounce(
     } else {
       setSelectedModel({})
     }
-  }
+  },
+  30
 )
 
 export const generateActionsMenu = (

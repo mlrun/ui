@@ -63,6 +63,7 @@ const ProjectsJobsMonitoring = () => {
   const [selectedCard, setSelectedCard] = useState(
     jobsMonitoringData.filters?.status || STATS_TOTAL_CARD
   )
+  const [autoRefreshPrevValue, setAutoRefreshPrevValue] = useState(false)
   const location = useLocation()
   const params = useParams()
   const navigate = useNavigate()
@@ -165,8 +166,8 @@ const ProjectsJobsMonitoring = () => {
   }, [getWorkflows, handleRefreshJobs, initialTabData, refreshScheduled])
 
   const filters = useFiltersFromSearchParams(
-    tabData[selectedTab]?.filtersConfig,
-    tabData[selectedTab]?.parseQueryParamsCallback
+    initialTabData[selectedTab]?.filtersConfig,
+    initialTabData[selectedTab]?.parseQueryParamsCallback
   )
 
   return (
@@ -184,23 +185,22 @@ const ProjectsJobsMonitoring = () => {
                 onClick={handleTabChange}
                 tabs={tabs}
               />
-
               <ActionBar
-                autoRefreshIsEnabled={selectedTab === JOBS_MONITORING_JOBS_TAB}
                 autoRefreshIsStopped={
-                  jobWizardIsOpened ||
-                  jobsStore.loading ||
-                  Boolean(jobsStore.jobLoadingCounter) ||
-                  !isEmpty(selectedJob)
+                  jobWizardIsOpened || jobsStore.loading || Boolean(jobsStore.jobLoadingCounter)
                 }
+                autoRefreshStopTrigger={!isEmpty(selectedJob)}
                 closeParamName={selectedTab}
                 filters={filters}
-                filtersConfig={tabData[selectedTab].filtersConfig}
+                filtersConfig={initialTabData[selectedTab].filtersConfig}
                 handleRefresh={tabData[selectedTab].handleRefresh}
+                handleAutoRefreshPrevValueChange={setAutoRefreshPrevValue}
                 hidden={Boolean(params.workflowId)}
                 key={selectedTab}
                 setSearchParams={setSearchParams}
                 tab={selectedTab}
+                withAutoRefresh={selectedTab === JOBS_MONITORING_JOBS_TAB}
+                withInternalAutoRefresh={selectedTab === JOBS_MONITORING_JOBS_TAB && params.jobName}
                 withRefreshButton
                 withoutExpandButton
               >
@@ -213,11 +213,13 @@ const ProjectsJobsMonitoring = () => {
                   abortControllerRef,
                   abortJobRef,
                   abortingJobs,
+                  autoRefreshPrevValue,
                   editableItem,
                   fetchJobFunctionsPromiseRef,
                   getWorkflows,
                   handleMonitoring,
                   handleRerunJob,
+                  initialTabData,
                   jobRuns,
                   jobWizardIsOpened,
                   jobWizardMode,

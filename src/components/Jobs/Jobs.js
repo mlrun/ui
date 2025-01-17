@@ -193,8 +193,8 @@ const Jobs = () => {
   }, [navigate, params.pageTab, location])
 
   const filters = useFiltersFromSearchParams(
-    tabData[selectedTab]?.filtersConfig,
-    tabData[selectedTab]?.parseQueryParamsCallback
+    initialTabData[selectedTab]?.filtersConfig,
+    initialTabData[selectedTab]?.parseQueryParamsCallback
   )
 
   return (
@@ -246,8 +246,8 @@ const Jobs = () => {
                 key={selectedTab}
                 setSearchParams={setSearchParams}
                 tab={selectedTab}
-                withAutoRefresh
-                withInternalAutoRefresh={params.jobName}
+                withAutoRefresh={selectedTab === MONITOR_JOBS_TAB}
+                withInternalAutoRefresh={selectedTab === MONITOR_JOBS_TAB && params.jobName}
                 withRefreshButton
                 withoutExpandButton
               >
@@ -258,25 +258,26 @@ const Jobs = () => {
               <JobsContext.Provider
                 value={{
                   abortControllerRef,
-                  abortJobRef,
                   abortingJobs,
+                  abortJobRef,
+                  autoRefreshPrevValue,
                   editableItem,
                   fetchJobFunctionsPromiseRef,
                   getWorkflows,
                   handleMonitoring,
                   handleRerunJob,
-                  autoRefreshPrevValue,
+                  initialTabData,
                   jobRuns,
+                  jobs,
+                  jobsFiltersConfig: initialTabData[MONITOR_JOBS_TAB].filtersConfig,
                   jobWizardIsOpened,
                   jobWizardMode,
-                  jobs,
-                  jobsFiltersConfig: tabData[MONITOR_JOBS_TAB].filtersConfig,
                   paginatedJobs,
                   paginationConfigJobsRef,
                   refreshJobs,
                   refreshScheduled,
                   requestErrorMessage,
-                  scheduledFiltersConfig: tabData[SCHEDULE_TAB].filtersConfig,
+                  scheduledFiltersConfig: initialTabData[SCHEDULE_TAB].filtersConfig,
                   scheduledJobs,
                   searchParams,
                   selectedJob,
@@ -284,14 +285,14 @@ const Jobs = () => {
                   setConfirmData,
                   setEditableItem,
                   setJobRuns,
+                  setJobs,
                   setJobWizardIsOpened,
                   setJobWizardMode,
-                  setJobs,
                   setScheduledJobs,
                   setSelectedJob,
                   tabData,
                   terminateAbortTasksPolling,
-                  workflowsFiltersConfig: tabData[MONITOR_WORKFLOWS_TAB].filtersConfig
+                  workflowsFiltersConfig: initialTabData[MONITOR_WORKFLOWS_TAB].filtersConfig
                 }}
               >
                 <Outlet />

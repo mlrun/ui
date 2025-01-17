@@ -332,5 +332,6 @@ export const checkForSelectedDocument = debounce(
     } else {
       setSelectedDocument({})
     }
-  }
+  },
+  30
 )

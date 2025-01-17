@@ -41,7 +41,9 @@ const JobsMonitoring = () => {
     abortControllerRef,
     abortJobRef,
     abortingJobs,
+    autoRefreshPrevValue,
     fetchJobFunctionsPromiseRef,
+    initialTabData,
     jobRuns,
     jobs,
     jobsFiltersConfig,
@@ -54,14 +56,13 @@ const JobsMonitoring = () => {
     setJobRuns,
     setJobs,
     setSelectedJob,
-    tabData,
     terminateAbortTasksPolling
   } = React.useContext(ProjectJobsMonitoringContext)
   const jobsAreInitializedRef = useRef(false)
 
   const filters = useFiltersFromSearchParams(
-    tabData[JOBS_MONITORING_JOBS_TAB]?.filtersConfig,
-    tabData[JOBS_MONITORING_JOBS_TAB]?.parseQueryParamsCallback
+    initialTabData[JOBS_MONITORING_JOBS_TAB]?.filtersConfig,
+    initialTabData[JOBS_MONITORING_JOBS_TAB]?.parseQueryParamsCallback
   )
 
   const tableContent = useMemo(
@@ -97,6 +98,7 @@ const JobsMonitoring = () => {
       {params.jobName && <TableTop link={getBackLink(true)} text={params.jobName} />}
       <JobsTable
         abortingJobs={abortingJobs}
+        autoRefreshPrevValue={autoRefreshPrevValue}
         context={ProjectJobsMonitoringContext}
         filters={filters}
         filtersConfig={jobsFiltersConfig}

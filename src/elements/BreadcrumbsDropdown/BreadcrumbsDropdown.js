@@ -64,10 +64,11 @@ const BreadcrumbsDropdown = forwardRef(
               listItem.id.toLocaleLowerCase().startsWith(searchValue.toLocaleLowerCase())
             )
             .map(listItem => {
+              const isItemSelected = selectedItem === listItem.id
               const dropdownItemClassNames = classnames(
                 'breadcrumbs__dropdown-item',
                 'data-ellipsis',
-                selectedItem === listItem.id && 'breadcrumbs__dropdown-item_selected'
+                isItemSelected && 'breadcrumbs__dropdown-item_selected'
               )
 
               return (
@@ -81,7 +82,7 @@ const BreadcrumbsDropdown = forwardRef(
                     className={dropdownItemClassNames}
                   >
                     <span>{listItem.label}</span>
-                    {selectedItem === listItem.id && <CheckmarkIcon className="checkmark" />}
+                    {isItemSelected && <CheckmarkIcon className="checkmark" />}
                   </a>
                 ) : (
                   <Link
@@ -89,7 +90,9 @@ const BreadcrumbsDropdown = forwardRef(
                       listItem.linkTo ||
                       `${link}/${listItem.id}${screen ? `/${screen}` : ''}${tab ? `/${tab}` : ''}`
                     }
-                    onClick={onClick}
+                    onClick={event => {
+                      isItemSelected ? event.preventDefault() : onClick(event)
+                    }}
                     id={listItem.id}
                     data-testid={`breadcrumbs-dropdown-item-${listItem.id}`}
                     key={listItem.id}
@@ -98,7 +101,7 @@ const BreadcrumbsDropdown = forwardRef(
                     <Tooltip template={<TextTooltipTemplate text={listItem.label} />}>
                       {listItem.label}
                     </Tooltip>
-                    {selectedItem === listItem.id && <CheckmarkIcon className="checkmark" />}
+                    {isItemSelected && <CheckmarkIcon className="checkmark" />}
                   </Link>
                 ))
               )

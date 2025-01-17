@@ -83,7 +83,7 @@ const TableCell = ({
     )
   } else if (firstCell && !link) {
     return (
-      <td className={cellClassNames}>
+      <td onClick={() => data.value && onClick && onClick(data.value)} className={cellClassNames}>
         <div className="data-ellipsis">
           {data && (
             <Tooltip template={<TextTooltipTemplate text={data.tooltip || data.value} />}>

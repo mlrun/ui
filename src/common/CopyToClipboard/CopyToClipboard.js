@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import PropTypes from 'prop-types'
+import { useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
@@ -31,10 +32,11 @@ const CopyToClipboard = ({
   children = null,
   className = '',
   disabled = false,
-  textToCopy,
+  textToCopy = '',
   tooltipText
 }) => {
   const dispatch = useDispatch()
+  const copyIsDisabled = useMemo(() => disabled || !textToCopy, [disabled, textToCopy])
 
   const copyToClipboard = textToCopy => {
     navigator.clipboard
@@ -63,7 +65,7 @@ const CopyToClipboard = ({
         <RoundedIcon
           tooltipText={tooltipText}
           onClick={() => copyToClipboard(textToCopy)}
-          disabled={disabled}
+          disabled={copyIsDisabled}
         >
           <Copy />
         </RoundedIcon>
@@ -76,7 +78,7 @@ CopyToClipboard.propTypes = {
   children: PropTypes.string,
   className: PropTypes.string,
   disabled: PropTypes.bool,
-  textToCopy: PropTypes.string.isRequired,
+  textToCopy: PropTypes.string,
   tooltipText: PropTypes.string.isRequired
 }
 

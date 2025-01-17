@@ -38,10 +38,11 @@ const MonitorJobs = () => {
   const { isStagingMode } = useMode()
   const {
     abortControllerRef,
-    abortJobRef,
     abortingJobs,
-    fetchJobFunctionsPromiseRef,
+    abortJobRef,
     autoRefreshPrevValue,
+    fetchJobFunctionsPromiseRef,
+    initialTabData,
     jobRuns,
     jobs,
     jobsFiltersConfig,
@@ -54,14 +55,13 @@ const MonitorJobs = () => {
     setJobRuns,
     setJobs,
     setSelectedJob,
-    tabData,
     terminateAbortTasksPolling
   } = React.useContext(JobsContext)
   const jobsAreInitializedRef = useRef(false)
 
   const filters = useFiltersFromSearchParams(
-    tabData[MONITOR_JOBS_TAB]?.filtersConfig,
-    tabData[MONITOR_JOBS_TAB]?.parseQueryParamsCallback
+    initialTabData[MONITOR_JOBS_TAB]?.filtersConfig,
+    initialTabData[MONITOR_JOBS_TAB]?.parseQueryParamsCallback
   )
 
   const tableContent = useMemo(
