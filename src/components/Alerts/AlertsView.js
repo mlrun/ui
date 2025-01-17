@@ -69,11 +69,11 @@ const AlertsView = ({
             <div className="content__action-bar-wrapper">
               <ActionBar
                 autoRefreshIsStopped={true}
+                closeParamName={ALERTS_PAGE_PATH}
                 filterMenuName={ALERTS_FILTERS}
-                filtersConfig={alertsFiltersConfig}
                 filters={filters}
+                filtersConfig={alertsFiltersConfig}
                 handleRefresh={handleRefreshAlerts}
-                page={ALERTS_PAGE}
                 setSearchParams={setSearchParams}
                 withRefreshButton
                 withoutExpandButton

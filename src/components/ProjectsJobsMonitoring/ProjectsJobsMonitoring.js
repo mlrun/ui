@@ -190,13 +190,13 @@ const ProjectsJobsMonitoring = () => {
                   jobWizardIsOpened || jobsStore.loading || Boolean(jobsStore.jobLoadingCounter)
                 }
                 autoRefreshStopTrigger={!isEmpty(selectedJob)}
+                closeParamName={selectedTab}
                 filters={filters}
                 filtersConfig={initialTabData[selectedTab].filtersConfig}
                 handleRefresh={tabData[selectedTab].handleRefresh}
                 handleAutoRefreshPrevValueChange={setAutoRefreshPrevValue}
                 hidden={Boolean(params.workflowId)}
                 key={selectedTab}
-                page={JOBS_MONITORING_PAGE}
                 setSearchParams={setSearchParams}
                 tab={selectedTab}
                 withAutoRefresh={selectedTab === JOBS_MONITORING_JOBS_TAB}

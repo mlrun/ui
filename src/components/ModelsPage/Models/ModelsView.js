@@ -95,11 +95,10 @@ const ModelsView = React.forwardRef(
                     hidden: !isDemoMode
                   }
                 ]}
+                closeParamName={isAllVersions ? ALL_VERSIONS_PATH : MODELS_TAB}
                 filters={filters}
                 filtersConfig={filtersConfig}
-                navigateLink={`/projects/${projectName}/models/models${isAllVersions ? `/${modelName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
                 handleRefresh={handleRefreshModels}
-                page={MODELS_PAGE}
                 setSearchParams={setSearchModelsParams}
                 tab={MODELS_TAB}
                 withRefreshButton

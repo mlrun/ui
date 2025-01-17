@@ -399,7 +399,6 @@ JobsTable.propTypes = {
   filtersConfig: FILTERS_CONFIG.isRequired,
   jobRuns: PropTypes.array.isRequired,
   jobs: PropTypes.array.isRequired,
-  navigateLink: PropTypes.string.isRequired,
   paginatedJobs: PropTypes.array.isRequired,
   refreshJobs: PropTypes.func.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,

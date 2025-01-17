@@ -113,7 +113,6 @@ const MonitorJobs = () => {
         autoRefreshPrevValue={autoRefreshPrevValue}
         jobRuns={jobRuns}
         jobs={jobs}
-        navigateLink={getBackLink()}
         paginatedJobs={paginatedJobs}
         ref={{ abortJobRef, fetchJobFunctionsPromiseRef }}
         refreshJobs={refreshJobs}
