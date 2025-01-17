@@ -91,13 +91,6 @@ const FunctionsView = ({
                 />
               )}
               <ActionBar
-                page={FUNCTIONS_PAGE}
-                filtersConfig={functionsFiltersConfig}
-                filters={filters}
-                handleRefresh={handleRefreshFunctions}
-                navigateLink={`/projects/${params.projectName}/functions${isAllVersions ? `/${params.funcName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
-                setSearchParams={setSearchFunctionsParams}
-                withoutExpandButton
                 actionButtons={[
                   {
                     hidden: !isDemoMode,
@@ -108,6 +101,12 @@ const FunctionsView = ({
                     })
                   }
                 ]}
+                closeParamName={isAllVersions ? ALL_VERSIONS_PATH : FUNCTIONS_PAGE_PATH}
+                filters={filters}
+                filtersConfig={functionsFiltersConfig}
+                handleRefresh={handleRefreshFunctions}
+                setSearchParams={setSearchFunctionsParams}
+                withoutExpandButton
               >
                 <FunctionsFilters />
               </ActionBar>

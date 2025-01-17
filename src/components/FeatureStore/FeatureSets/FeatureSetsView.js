@@ -82,10 +82,10 @@ const FeatureSetsView = React.forwardRef(
                 onClick: () => setFeatureSetsPanelIsOpen(true)
               }
             ]}
+            closeParamName={FEATURE_SETS_TAB}
             filters={filters}
             filtersConfig={filtersConfig}
             handleRefresh={handleRefresh}
-            page={FEATURE_STORE_PAGE}
             setSearchParams={setSearchParams}
             tab={FEATURE_SETS_TAB}
             withoutExpandButton

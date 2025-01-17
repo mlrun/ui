@@ -68,7 +68,6 @@ const AddToFeatureVectorView = React.forwardRef(
               filters={filters}
               filtersConfig={filtersConfig}
               handleRefresh={handleRefresh}
-              page={FEATURE_STORE_PAGE}
               setSearchParams={setSearchParams}
               tab={ADD_TO_FEATURE_VECTOR_TAB}
               withoutExpandButton

@@ -193,12 +193,12 @@ const ProjectsJobsMonitoring = () => {
                   Boolean(jobsStore.jobLoadingCounter) ||
                   !isEmpty(selectedJob)
                 }
+                closeParamName={selectedTab}
                 filters={filters}
                 filtersConfig={tabData[selectedTab].filtersConfig}
                 handleRefresh={tabData[selectedTab].handleRefresh}
                 hidden={Boolean(params.workflowId)}
                 key={selectedTab}
-                page={JOBS_MONITORING_PAGE}
                 setSearchParams={setSearchParams}
                 tab={selectedTab}
                 withRefreshButton

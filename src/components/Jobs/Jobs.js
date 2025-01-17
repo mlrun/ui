@@ -30,7 +30,6 @@ import { ConfirmDialog } from 'igz-controls/components'
 
 import {
   INACTIVE_JOBS_TAB,
-  JOBS_MONITORING_PAGE,
   JOBS_PAGE,
   JOBS_PAGE_PATH,
   MONITOR_JOBS_TAB,
@@ -235,18 +234,16 @@ const Jobs = () => {
                   }
                 ]}
                 autoRefreshIsStopped={
-                  jobWizardIsOpened ||
-                  jobsStore.loading ||
-                  Boolean(jobsStore.jobLoadingCounter)
+                  jobWizardIsOpened || jobsStore.loading || Boolean(jobsStore.jobLoadingCounter)
                 }
                 autoRefreshStopTrigger={!isEmpty(selectedJob)}
+                closeParamName={selectedTab}
                 filters={filters}
                 filtersConfig={initialTabData[selectedTab].filtersConfig}
-                handleRefresh={tabData[selectedTab].handleRefresh}
                 handleAutoRefreshPrevValueChange={setAutoRefreshPrevValue}
+                handleRefresh={tabData[selectedTab].handleRefresh}
                 hidden={Boolean(params.workflowId)}
                 key={selectedTab}
-                page={JOBS_MONITORING_PAGE}
                 setSearchParams={setSearchParams}
                 tab={selectedTab}
                 withAutoRefresh

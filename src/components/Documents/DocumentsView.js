@@ -85,11 +85,10 @@ const DocumentsView = React.forwardRef(
                   />
                 )}
                 <ActionBar
+                  closeParamName={isAllVersions ? ALL_VERSIONS_PATH : DOCUMENTS_TAB}
                   filters={filters}
                   filtersConfig={filtersConfig}
-                  navigateLink={`/projects/${projectName}/${DOCUMENTS_TAB}${isAllVersions ? `/${documentName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
                   handleRefresh={handleRefreshDocuments}
-                  page={DOCUMENTS_PAGE}
                   setSearchParams={setSearchDocumentsParams}
                   withRefreshButton
                   withoutExpandButton
