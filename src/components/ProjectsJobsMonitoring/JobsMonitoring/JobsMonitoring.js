@@ -41,6 +41,7 @@ const JobsMonitoring = () => {
     abortControllerRef,
     abortJobRef,
     abortingJobs,
+    autoRefreshPrevValue,
     fetchJobFunctionsPromiseRef,
     initialTabData,
     jobRuns,
@@ -97,6 +98,7 @@ const JobsMonitoring = () => {
       {params.jobName && <TableTop link={getBackLink(true)} text={params.jobName} />}
       <JobsTable
         abortingJobs={abortingJobs}
+        autoRefreshPrevValue={autoRefreshPrevValue}
         context={ProjectJobsMonitoringContext}
         filters={filters}
         filtersConfig={jobsFiltersConfig}

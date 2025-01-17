@@ -289,7 +289,7 @@ const ActionBar = ({
   }, [filterMenu, filtersConfig])
 
   useEffect(() => {
-    if ((autoRefresh || internalAutoRefresh) && !hidden) {
+    if (((autoRefresh && !withInternalAutoRefresh) || internalAutoRefresh) && !hidden) {
       const intervalId = setInterval(() => {
         if (!autoRefreshIsStopped) {
           refresh(formRef.current.getState())

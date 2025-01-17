@@ -235,9 +235,7 @@ const Jobs = () => {
                   }
                 ]}
                 autoRefreshIsStopped={
-                  jobWizardIsOpened ||
-                  jobsStore.loading ||
-                  Boolean(jobsStore.jobLoadingCounter)
+                  jobWizardIsOpened || jobsStore.loading || Boolean(jobsStore.jobLoadingCounter)
                 }
                 autoRefreshStopTrigger={!isEmpty(selectedJob)}
                 filters={filters}
@@ -249,8 +247,8 @@ const Jobs = () => {
                 page={JOBS_MONITORING_PAGE}
                 setSearchParams={setSearchParams}
                 tab={selectedTab}
-                withAutoRefresh
-                withInternalAutoRefresh={params.jobName}
+                withAutoRefresh={selectedTab === MONITOR_JOBS_TAB}
+                withInternalAutoRefresh={selectedTab === MONITOR_JOBS_TAB && params.jobName}
                 withRefreshButton
                 withoutExpandButton
               >
