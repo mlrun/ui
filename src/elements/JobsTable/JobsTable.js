@@ -379,7 +379,8 @@ const JobsTable = React.forwardRef(
                 disabledNextDoubleBtnTooltip={
                   filtersStore.autoRefresh
                     ? 'Uncheck Auto Refresh to view more results'
-                    : autoRefreshPrevValue
+                    : autoRefreshPrevValue &&
+                        paginationConfigJobsRef.current?.paginationResponse?.['page-token']
                       ? 'Close detailed view and uncheck Auto Refresh to view more results'
                       : ''
                 }
