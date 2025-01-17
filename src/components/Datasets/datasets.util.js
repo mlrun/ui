@@ -247,18 +247,20 @@ export const generateActionsMenu = (
         icon: <DownloadIcon />,
         onClick: datasetMin => {
           getFullDataset(datasetMin).then(dataset => {
-            const downloadPath = `${dataset?.target_path}${dataset?.model_file || ''}`
-            dispatch(
-              setDownloadItem({
-                path: downloadPath,
-                user: dataset.producer?.owner,
-                id: downloadPath,
-                artifactLimits: frontendSpec?.artifact_limits,
-                fileSize: dataset.size,
-                projectName
-              })
-            )
-            dispatch(setShowDownloadsList(true))
+            if (dataset) {
+              const downloadPath = `${dataset?.target_path}${dataset?.model_file || ''}`
+              dispatch(
+                setDownloadItem({
+                  path: downloadPath,
+                  user: dataset.producer?.owner,
+                  id: downloadPath,
+                  artifactLimits: frontendSpec?.artifact_limits,
+                  fileSize: dataset.size,
+                  projectName
+                })
+              )
+              dispatch(setShowDownloadsList(true))
+            }
           })
         }
       },
@@ -342,12 +344,14 @@ export const generateActionsMenu = (
         icon: <ArtifactView />,
         onClick: datasetMin => {
           getFullDataset(datasetMin).then(dataset => {
-            dispatch(
-              showArtifactsPreview({
-                isPreview: true,
-                selectedItem: dataset
-              })
-            )
+            if (dataset) {
+              dispatch(
+                showArtifactsPreview({
+                  isPreview: true,
+                  selectedItem: dataset
+                })
+              )
+            }
           })
         }
       }

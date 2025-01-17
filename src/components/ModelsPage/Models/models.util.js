@@ -296,18 +296,20 @@ export const generateActionsMenu = (
         icon: <DownloadIcon />,
         onClick: modelMin => {
           getFullModel(modelMin).then(model => {
-            const downloadPath = `${model?.target_path}${model?.model_file || ''}`
-            dispatch(
-              setDownloadItem({
-                path: downloadPath,
-                user: model.producer?.owner,
-                id: downloadPath,
-                artifactLimits: frontendSpec?.artifact_limits,
-                fileSize: model.size,
-                projectName
-              })
-            )
-            dispatch(setShowDownloadsList(true))
+            if (model) {
+              const downloadPath = `${model?.target_path}${model?.model_file || ''}`
+              dispatch(
+                setDownloadItem({
+                  path: downloadPath,
+                  user: model.producer?.owner,
+                  id: downloadPath,
+                  artifactLimits: frontendSpec?.artifact_limits,
+                  fileSize: model.size,
+                  projectName
+                })
+              )
+              dispatch(setShowDownloadsList(true))
+            }
           })
         }
       },
@@ -383,12 +385,14 @@ export const generateActionsMenu = (
         icon: <ArtifactView />,
         onClick: modelMin => {
           getFullModel(modelMin).then(model => {
-            dispatch(
-              showArtifactsPreview({
-                isPreview: true,
-                selectedItem: model
-              })
-            )
+            if (model) {
+              dispatch(
+                showArtifactsPreview({
+                  isPreview: true,
+                  selectedItem: model
+                })
+              )
+            }
           })
         }
       },
