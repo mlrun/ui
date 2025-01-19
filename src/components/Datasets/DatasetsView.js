@@ -98,11 +98,10 @@ const DatasetsView = React.forwardRef(
                       onClick: handleRegisterDataset
                     }
                   ]}
+                  closeParamName={isAllVersions ? ALL_VERSIONS_PATH : DATASETS_TAB}
                   filters={filters}
                   filtersConfig={filtersConfig}
-                  navigateLink={`/projects/${projectName}/${DATASETS_TAB}${isAllVersions ? `/${datasetName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
                   handleRefresh={handleRefreshDatasets}
-                  page={DATASETS_PAGE}
                   setSearchParams={setSearchDatasetsParams}
                   withRefreshButton
                   withoutExpandButton

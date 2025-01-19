@@ -2028,7 +2028,7 @@ function postSubmitJob(req, res) {
     funcObject.spec.volumes = req.body.function.spec.volumes
     funcObject.status = {}
 
-    const functionSpec = `${runProject}/${req.body.task.spec.handler}@${funcUID}`
+    const functionSpec = `${runProject}/${req.body.task.metadata.name}@${funcUID}`
     respTemplate.data.spec.function = functionSpec
     job.spec.function = functionSpec
 

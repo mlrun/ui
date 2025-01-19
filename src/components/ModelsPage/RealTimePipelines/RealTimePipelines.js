@@ -185,11 +185,10 @@ const RealTimePipelines = () => {
           <div className={filterMenuClassNames}>
             <ModelsPageTabs />
             <ActionBar
+              closeParamName={REAL_TIME_PIPELINES_TAB}
               filters={filters}
               filtersConfig={filtersConfig}
               handleRefresh={handleRefresh}
-              navigateLink={`/projects/${params.projectName}/models/${REAL_TIME_PIPELINES_TAB}${window.location.search}`}
-              page={MODELS_PAGE}
               setSearchParams={setSearchParams}
               tab={REAL_TIME_PIPELINES_TAB}
               withoutExpandButton

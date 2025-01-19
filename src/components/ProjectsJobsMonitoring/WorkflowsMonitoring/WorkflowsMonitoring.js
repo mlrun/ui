@@ -50,12 +50,12 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
   const { isStagingMode } = useMode()
   const abortControllerRef = useRef(new AbortController())
 
-  const { abortJobRef, getWorkflows, requestErrorMessage, workflowsFiltersConfig, tabData } =
+  const { abortJobRef, initialTabData, getWorkflows, requestErrorMessage, workflowsFiltersConfig } =
     React.useContext(ProjectJobsMonitoringContext)
 
     const filters = useFiltersFromSearchParams(
-      tabData[JOBS_MONITORING_WORKFLOWS_TAB]?.filtersConfig,
-      tabData[JOBS_MONITORING_WORKFLOWS_TAB]?.parseQueryParamsCallback
+      initialTabData[JOBS_MONITORING_WORKFLOWS_TAB]?.filtersConfig,
+      initialTabData[JOBS_MONITORING_WORKFLOWS_TAB]?.parseQueryParamsCallback
     )
 
   usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)

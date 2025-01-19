@@ -52,7 +52,11 @@ const getEntityTypeData = entityType => {
   switch (entityType) {
     case MODEL_ENDPOINT_RESULT:
       return {
-        value: <Endpoint />,
+        value: (
+          <div data-testid={entityType}>
+            <Endpoint />
+          </div>
+        ),
         detailsValue: (
           <div className="alert-row__details-alert-icon-cell">
             <Endpoint /> <span>{upperFirst(ENDPOINT)}</span>
@@ -183,7 +187,7 @@ const getNotificationData = notifications =>
         </div>
       ),
       tooltip: upperFirst(
-        `${notification.summary.succeeded} success, ${notification.summary.failed} failed`
+        `${notification.kind}: ${notification.summary.succeeded} success, ${notification.summary.failed} failed`
       ),
       kind: notification.kind,
       succeeded: notification.summary.succeeded,
