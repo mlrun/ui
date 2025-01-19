@@ -91,7 +91,12 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
     <>
       {isCrossProjects && (
         <div className="form-row">
-          <FormSelect label="Project name" name={PROJECTS_FILTER} options={projectsList} />
+          <FormSelect
+            label="Project name"
+            name={PROJECTS_FILTER}
+            options={projectsList}
+            preventWidthOverflow
+          />
         </div>
       )}
       {isAlertsPage && (
@@ -150,6 +155,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
           label="Event type"
           name={EVENT_TYPE}
           options={filterAlertsEventTypeOptions(entityType)}
+          preventWidthOverflow
         />
       </div>
     </>
