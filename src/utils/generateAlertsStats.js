@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
-  ALERTS_PAGE,
+  ALERTS_PAGE_PATH,
   ENTITY_TYPE,
   JOB,
   MODEL_ENDPOINT_RESULT,
@@ -30,7 +30,7 @@ export const generateAlertsStats = (data, navigate, projectName) => {
   const navigateToAlertsPage = (filters = {}) => {
     projectName === '*'
       ? navigate(`/projects/${projectName}/${MONITOR_ALERTS_PAGE}?${new URLSearchParams(filters)}`)
-      : navigate(`/projects/${projectName}/${ALERTS_PAGE}?${new URLSearchParams(filters)}`)
+      : navigate(`/projects/${projectName}/${ALERTS_PAGE_PATH}?${new URLSearchParams(filters)}`)
   }
 
   return {

@@ -94,7 +94,7 @@ export const JOBS_MONITORING_JOBS_TAB = 'jobs'
 export const JOBS_MONITORING_WORKFLOWS_TAB = 'workflows'
 export const JOBS_MONITORING_SCHEDULED_TAB = 'scheduled'
 
-export const ALERTS_PAGE = 'alerts'
+export const ALERTS_PAGE = 'ALERTS'
 export const MONITOR_ALERTS_PAGE = 'alerts-monitoring'
 export const ALERTS_PAGE_PATH = 'alerts'
 export const ALERTS_FILTERS = 'alerts'

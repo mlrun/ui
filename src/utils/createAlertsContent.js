@@ -34,18 +34,20 @@ import { ReactComponent as Slack } from 'igz-controls/images/slack-icon-colored.
 import { ReactComponent as Webhook } from 'igz-controls/images/webhook-icon.svg'
 
 import {
+  ALERTS_PAGE_PATH,
   APPLICATION,
   ENDPOINT,
   DETAILS_ALERT_APPLICATION,
   JOB,
   MODEL_ENDPOINT_RESULT,
   MODEL_MONITORING_APPLICATION,
+  MONITOR_ALERTS_PAGE,
+  PROJECTS_PAGE_PATH,
   SEVERITY,
   SEVERITY_CRITICAL,
   SEVERITY_HIGH,
   SEVERITY_LOW,
-  SEVERITY_MEDIUM,
-  MONITOR_ALERTS_PAGE
+  SEVERITY_MEDIUM
 } from '../constants'
 
 const getEntityTypeData = entityType => {
@@ -202,21 +204,21 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects, showExpandButt
     const queryString = window.location.search
     const { alertName, entity_kind: entityType, entity_id, id: alertId, job, project, uid } = alert
     const projectName = isCrossProjects ? '*' : project
-    const alertPath = isCrossProjects ? MONITOR_ALERTS_PAGE : 'alerts'
+    const alertPath = isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE_PATH
     if (entityType === MODEL_ENDPOINT_RESULT) {
       const [endpointId, , , name] = entity_id.split('.')
-      return `/projects/${projectName}/${alertPath}/${project}/${alertName}/${alertId}/${name}/${endpointId}/${DETAILS_ALERT_APPLICATION}${queryString}`
+      return `/${PROJECTS_PAGE_PATH}/${projectName}/${alertPath}/${project}/${alertName}/${alertId}/${name}/${endpointId}/${DETAILS_ALERT_APPLICATION}${queryString}`
     }
 
     if (entityType === JOB) {
       return job
-        ? `/projects/${projectName}/${alertPath}/${project}/${alertName}/${alertId}/${job.name}/${job.jobUid}/${DETAILS_ALERT_APPLICATION}${queryString}`
+        ? `/${PROJECTS_PAGE_PATH}/${projectName}/${alertPath}/${project}/${alertName}/${alertId}/${job.name}/${job.jobUid}/${DETAILS_ALERT_APPLICATION}${queryString}`
         : ''
     }
 
     if (entityType === MODEL_MONITORING_APPLICATION) {
       const [, applicationName] = entity_id.split('_')
-      return `/projects/${projectName}/${alertPath}/${project}/${alertName}/${alertId}/${applicationName}/${uid}/${DETAILS_ALERT_APPLICATION}${queryString}`
+      return `/${PROJECTS_PAGE_PATH}/${projectName}/${alertPath}/${project}/${alertName}/${alertId}/${applicationName}/${uid}/${DETAILS_ALERT_APPLICATION}${queryString}`
     }
 
     return ''

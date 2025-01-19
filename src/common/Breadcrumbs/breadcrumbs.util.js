@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
-  ALERTS_PAGE,
+  ALERTS_PAGE_PATH,
   DOCUMENTS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
@@ -67,8 +67,8 @@ export const generateMlrunScreens = params =>
         },
         {
           label: 'Alerts',
-          id: ALERTS_PAGE,
-          linkTo: `/${PROJECTS_PAGE_PATH}/${params.projectName}/${ALERTS_PAGE}`
+          id: ALERTS_PAGE_PATH,
+          linkTo: `/${PROJECTS_PAGE_PATH}/${params.projectName}/${ALERTS_PAGE_PATH}`
         },
         {
           label: 'Settings',

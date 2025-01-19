@@ -35,6 +35,8 @@ import localStorageService from './utils/localStorageService'
 import { lazyRetry } from './lazyWithRetry'
 
 import {
+  ALERTS_PAGE_PATH,
+  ALL_VERSIONS_PATH,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
   FEATURES_TAB,
@@ -52,8 +54,7 @@ import {
   JOBS_MONITORING_PAGE,
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_WORKFLOWS_TAB,
-  JOBS_MONITORING_SCHEDULED_TAB,
-  ALL_VERSIONS_PATH
+  JOBS_MONITORING_SCHEDULED_TAB
 } from './constants'
 
 import 'reactflow/dist/style.css'
@@ -158,8 +159,8 @@ const App = () => {
           {[
             `projects/:id/${MONITOR_ALERTS_PAGE}`,
             `projects/:id/${MONITOR_ALERTS_PAGE}/:project/:alertName/:alertId/:entityName/:uid/:tab`,
-            'projects/:projectName/alerts',
-            'projects/:projectName/alerts/:project/:alertName/:alertId/:entityName/:uid/:tab'
+            `projects/:projectName/${ALERTS_PAGE_PATH}`,
+            `projects/:projectName/${ALERTS_PAGE_PATH}/:project/:alertName/:alertId/:entityName/:uid/:tab`
           ].map((path, index) => (
             <Fragment key={index}>
               <Route path={path} element={<ProjectsAlerts />} />

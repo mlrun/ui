@@ -99,7 +99,7 @@ const AlertsView = ({
                 <Table
                   actionsMenu={[]}
                   getCloseDetailsLink={() =>
-                    getCloseDetailsLink(isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE)
+                    getCloseDetailsLink(isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE_PATH)
                   }
                   pageData={pageData}
                   retryRequest={handleRefreshWithFilters}
