@@ -59,10 +59,21 @@
 
           &-row {
             display: flex;
+            flex: 1 0 100%;
             flex-flow: row wrap;
             align-items: center;
-            flex: 1 0 100%;
             margin-bottom: 5px;
+
+            .info-banner {
+              display: flex;
+              gap: 8px;
+              align-items: center;
+              max-width: 100%;
+              height: 36px;
+              padding: 4px 8px;
+              background-color: #5871f426;
+              border-radius: 4px;
+            }
           }
         }
 
@@ -109,9 +120,9 @@
             margin-left: 0;
 
             &:not(:last-child) {
-              border-right: $secondaryBorder;
               margin-right: 1em;
               padding-right: 1em;
+              border-right: $secondaryBorder;
             }
           }
         }

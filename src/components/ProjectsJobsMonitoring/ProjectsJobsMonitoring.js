@@ -111,6 +111,7 @@ const ProjectsJobsMonitoring = () => {
     jobWizardIsOpened,
     jobWizardMode,
     jobs,
+    lastCheckedJobIdRef,
     paginatedJobs,
     paginationConfigJobsRef,
     refreshJobs,
@@ -226,6 +227,7 @@ const ProjectsJobsMonitoring = () => {
                   jobs,
                   jobsFiltersConfig,
                   jobsMonitoringData,
+                  lastCheckedJobIdRef,
                   paginatedJobs,
                   paginationConfigJobsRef,
                   refreshJobs,
@@ -246,6 +248,7 @@ const ProjectsJobsMonitoring = () => {
                   setScheduledJobs,
                   setSelectedCard,
                   setSelectedJob,
+                  setSearchParams,
                   tabData,
                   terminateAbortTasksPolling,
                   workflowsFiltersConfig

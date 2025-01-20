@@ -65,7 +65,7 @@ const ModelsView = React.forwardRef(
       requestErrorMessage,
       selectedModel,
       setSearchModelsParams,
-      setSelectedModelMin,
+      setSelectedModel,
       tableContent,
       tableHeaders,
       viewMode = null
@@ -115,7 +115,7 @@ const ModelsView = React.forwardRef(
                 />
               </div>
             )}
-            {artifactsStore.loading ? null : tableContent.length === 0 ? (
+            {artifactsStore.loading ? null : tableContent.length === 0 && isEmpty(selectedModel) ? (
               <NoData
                 message={getNoDataMessage(
                   filters,
@@ -139,13 +139,21 @@ const ModelsView = React.forwardRef(
                   getCloseDetailsLink={() =>
                     getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : MODELS_TAB)
                   }
-                  handleCancel={() => setSelectedModelMin({})}
+                  handleCancel={() => setSelectedModel({})}
                   pageData={pageData}
                   retryRequest={handleRefreshWithFilters}
                   selectedItem={selectedModel}
                   tab={MODELS_TAB}
                   tableClassName="models-table"
-                  tableHeaders={tableHeaders ?? []}
+                  tableHeaders={
+                    tableHeaders ?? [
+                      {
+                        headerId: isAllVersions ? 'uid' : 'name',
+                        headerLabel: isAllVersions ? 'UID' : 'Name',
+                        className: 'table-cell-name'
+                      }
+                    ]
+                  }
                 >
                   {tableContent.map((tableItem, index) => (
                     <ArtifactsTableRow
@@ -206,7 +214,7 @@ ModelsView.propTypes = {
   requestErrorMessage: PropTypes.string.isRequired,
   selectedModel: PropTypes.object.isRequired,
   setSearchModelsParams: PropTypes.func.isRequired,
-  setSelectedModelMin: PropTypes.func.isRequired,
+  setSelectedModel: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   viewMode: PropTypes.string

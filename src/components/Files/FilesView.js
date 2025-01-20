@@ -65,7 +65,7 @@ const FilesView = React.forwardRef(
       requestErrorMessage,
       selectedFile,
       setSearchFilesParams,
-      setSelectedFileMin,
+      setSelectedFile,
       tableContent,
       tableHeaders,
       viewMode = null
@@ -108,7 +108,7 @@ const FilesView = React.forwardRef(
                   <ArtifactsFilters artifacts={files} />
                 </ActionBar>
               </div>
-              {artifactsStore.loading ? null : tableContent.length === 0 ? (
+              {artifactsStore.loading ? null : tableContent.length === 0 && isEmpty(selectedFile) ? (
                 <NoData
                   message={getNoDataMessage(
                     filters,
@@ -130,12 +130,20 @@ const FilesView = React.forwardRef(
                     getCloseDetailsLink={() =>
                       getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : FILES_TAB)
                     }
-                    handleCancel={() => setSelectedFileMin({})}
+                    handleCancel={() => setSelectedFile({})}
                     pageData={pageData}
                     retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedFile}
                     tableClassName="files-table"
-                    tableHeaders={tableHeaders ?? []}
+                    tableHeaders={
+                      tableHeaders ?? [
+                        {
+                          headerId: isAllVersions ? 'uid' : 'name',
+                          headerLabel: isAllVersions ? 'UID' : 'Name',
+                          className: 'table-cell-name'
+                        }
+                      ]
+                    }
                   >
                     {tableContent.map((tableItem, index) => (
                       <ArtifactsTableRow
@@ -198,7 +206,7 @@ FilesView.propTypes = {
   requestErrorMessage: PropTypes.string.isRequired,
   selectedFile: PropTypes.object.isRequired,
   setSearchFilesParams: PropTypes.func.isRequired,
-  setSelectedFileMin: PropTypes.func.isRequired,
+  setSelectedFile: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   viewMode: PropTypes.string

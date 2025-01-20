@@ -65,8 +65,7 @@ const DatasetsView = React.forwardRef(
       requestErrorMessage,
       selectedDataset,
       setSearchDatasetsParams,
-      setSearchParams,
-      setSelectedDatasetMin,
+      setSelectedDataset,
       tableContent,
       tableHeaders,
       viewMode = null
@@ -109,7 +108,7 @@ const DatasetsView = React.forwardRef(
                   <ArtifactsFilters artifacts={datasets} />
                 </ActionBar>
               </div>
-              {artifactsStore.loading ? null : tableContent.length === 0 ? (
+              {artifactsStore.loading ? null : tableContent.length === 0 && isEmpty(selectedDataset) ? (
                 <NoData
                   message={getNoDataMessage(
                     filters,
@@ -131,12 +130,20 @@ const DatasetsView = React.forwardRef(
                     getCloseDetailsLink={() =>
                       getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : DATASETS_TAB)
                     }
-                    handleCancel={() => setSelectedDatasetMin({})}
+                    handleCancel={() => setSelectedDataset({})}
                     pageData={pageData}
                     retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedDataset}
                     tableClassName="datasets-table"
-                    tableHeaders={tableHeaders ?? []}
+                    tableHeaders={
+                      tableHeaders ?? [
+                        {
+                          headerId: isAllVersions ? 'uid' : 'name',
+                          headerLabel: isAllVersions ? 'UID' : 'Name',
+                          className: 'table-cell-name'
+                        }
+                      ]
+                    }
                   >
                     {tableContent.map((tableItem, index) => (
                       <ArtifactsTableRow
@@ -199,7 +206,7 @@ DatasetsView.propTypes = {
   requestErrorMessage: PropTypes.string.isRequired,
   selectedDataset: PropTypes.object.isRequired,
   setSearchDatasetsParams: PropTypes.func.isRequired,
-  setSelectedDatasetMin: PropTypes.func.isRequired,
+  setSelectedDataset: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   viewMode: PropTypes.string

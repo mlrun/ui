@@ -45,6 +45,7 @@ import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { getSavedSearchParams } from '../../utils/filter.util'
+import { isEmpty } from 'lodash'
 
 const FunctionsView = ({
   actionsMenu,
@@ -113,7 +114,7 @@ const FunctionsView = ({
             </div>
             {functionsStore.loading ? (
               <Loader />
-            ) : tableContent.length === 0 ? (
+            ) : tableContent.length === 0 && isEmpty(selectedFunction) ? (
               <NoData
                 message={getNoDataMessage(
                   filters,
@@ -137,7 +138,15 @@ const FunctionsView = ({
                   retryRequest={retryRequest}
                   selectedItem={selectedFunction}
                   tableClassName="functions-table"
-                  tableHeaders={tableContent[0]?.content ?? []}
+                  tableHeaders={
+                    tableContent[0]?.content ?? [
+                      {
+                        headerId: isAllVersions ? 'hash' : 'name',
+                        headerLabel: isAllVersions ? 'Hash' : 'Name',
+                        className: 'table-cell-name'
+                      }
+                    ]
+                  }
                 >
                   {tableContent.map((tableItem, index) => (
                     <FunctionsTableRow

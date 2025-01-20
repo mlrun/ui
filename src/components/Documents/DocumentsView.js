@@ -61,7 +61,7 @@ const DocumentsView = React.forwardRef(
       requestErrorMessage,
       selectedDocument,
       setSearchDocumentsParams,
-      setSelectedDocumentMin,
+      setSelectedDocument,
       tableContent,
       tableHeaders,
       viewMode = null
@@ -96,7 +96,7 @@ const DocumentsView = React.forwardRef(
                   <ArtifactsFilters artifacts={documents} />
                 </ActionBar>
               </div>
-              {artifactsStore.loading ? null : tableContent.length === 0 ? (
+              {artifactsStore.loading ? null : tableContent.length === 0 && isEmpty(selectedDocument)? (
                 <NoData
                   message={getNoDataMessage(
                     filters,
@@ -118,12 +118,20 @@ const DocumentsView = React.forwardRef(
                     getCloseDetailsLink={() =>
                       getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : DOCUMENTS_TAB)
                     }
-                    handleCancel={() => setSelectedDocumentMin({})}
+                    handleCancel={() => setSelectedDocument({})}
                     pageData={pageData}
                     retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedDocument}
                     tableClassName="documents-table"
-                    tableHeaders={tableHeaders ?? []}
+                    tableHeaders={
+                      tableHeaders ?? [
+                        {
+                          headerId: isAllVersions ? 'uid' : 'name',
+                          headerLabel: isAllVersions ? 'UID' : 'Name',
+                          className: 'table-cell-name'
+                        }
+                      ]
+                    }
                   >
                     {tableContent.map((tableItem, index) => (
                       <ArtifactsTableRow
@@ -182,7 +190,7 @@ DocumentsView.propTypes = {
   requestErrorMessage: PropTypes.string.isRequired,
   selectedDocument: PropTypes.object.isRequired,
   setSearchDocumentsParams: PropTypes.func.isRequired,
-  setSelectedDocumentMin: PropTypes.func.isRequired,
+  setSelectedDocument: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   viewMode: PropTypes.string
