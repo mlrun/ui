@@ -108,6 +108,7 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
               link={`/projects/${projectName}/${ALERTS_PAGE_PATH}`}
             />
             <NavbarLink
+              id="project-settings"
               icon={<SettingsIcon />}
               label="Project settings"
               link={`/projects/${projectName}/settings`}

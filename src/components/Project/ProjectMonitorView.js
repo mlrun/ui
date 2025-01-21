@@ -175,10 +175,10 @@ const ProjectMonitorView = ({
               </div>
             </div>
             <div className="main-info__statistics-section">
-              <div>
+              <div className="d-flex">
                 <ProjectJobs />
               </div>
-              <div>
+              <div className="d-flex">
                 <ProjectFunctions />
               </div>
             </div>

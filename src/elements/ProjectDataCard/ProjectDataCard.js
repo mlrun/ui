@@ -70,7 +70,7 @@ const ProjectDataCard = ({
           <div className="project-data-card__recent-text">
             {!href ? (
               <>
-                Recent <span className="text-sm">(last 48 hours)</span>
+                Recent <span className="text-sm">(last 7 days)</span>
               </>
             ) : (
               ''

@@ -125,50 +125,50 @@ export const filterAlertsSeverityOptions = [
 
 const alertsEventTypeOptions = [
   { label: upperFirst(FILTER_ALL_ITEMS), id: FILTER_ALL_ITEMS },
-  { label: 'Job Failed', id: 'failed', ENTITY_TYPE: JOB_KIND_JOB },
-  { label: 'Data Drift Detected', id: 'data-drift-detected', ENTITY_TYPE: MODEL_ENDPOINT_RESULT },
-  { label: 'Data Drift Suspected', id: 'data-drift-suspected', ENTITY_TYPE: MODEL_ENDPOINT_RESULT },
+  { label: 'Job failed', id: 'failed', ENTITY_TYPE: JOB_KIND_JOB },
+  { label: 'Data drift detected', id: 'data-drift-detected', ENTITY_TYPE: MODEL_ENDPOINT_RESULT },
+  { label: 'Data drift suspected', id: 'data-drift-suspected', ENTITY_TYPE: MODEL_ENDPOINT_RESULT },
   {
-    label: 'Conc Drift Detected',
+    label: 'Conc drift detected',
     id: 'concept-drift-detected',
     ENTITY_TYPE: MODEL_ENDPOINT_RESULT
   },
   {
-    label: 'Conc Drift Suspected',
+    label: 'Conc drift suspected',
     id: 'concept-drift-suspected',
     ENTITY_TYPE: MODEL_ENDPOINT_RESULT
   },
   {
-    label: 'MM Perf. Detected',
+    label: 'MM performance detected',
     id: 'model-performance-detected',
     ENTITY_TYPE: MODEL_ENDPOINT_RESULT
   },
   {
-    label: 'MM Perf. Suspected',
+    label: 'MM performance suspected',
     id: 'model-performance-suspected',
     ENTITY_TYPE: MODEL_ENDPOINT_RESULT
   },
   {
-    label: 'S Perf. Detected',
+    label: 'System performance detected',
     id: 'system-performance-detected',
     ENTITY_TYPE: MODEL_ENDPOINT_RESULT
   },
   {
-    label: 'S Perf. Suspected',
+    label: 'System performance suspected',
     id: 'system-performance-suspected',
     ENTITY_TYPE: MODEL_ENDPOINT_RESULT
   },
   {
-    label: 'MM App Ano. Detected',
+    label: 'MM app anomaly detected',
     id: 'mm-app-anomaly-detected',
     ENTITY_TYPE: MODEL_ENDPOINT_RESULT
   },
   {
-    label: 'MM App Ano. Suspected',
+    label: 'MM app anomaly suspected',
     id: 'mm-app-anomaly-suspected',
     ENTITY_TYPE: MODEL_ENDPOINT_RESULT
   },
-  { label: 'MM App Failed', id: 'mm-app-failed', ENTITY_TYPE: MODEL_MONITORING_APPLICATION }
+  { label: 'MM app failed', id: 'mm-app-failed', ENTITY_TYPE: MODEL_MONITORING_APPLICATION }
 ]
 export const filterAlertsEventTypeOptions = entityType => {
   if (entityType === FILTER_ALL_ITEMS) {
@@ -193,7 +193,9 @@ export const alertsHeaders = type => {
       ],
       [MODEL_ENDPOINT_RESULT]: [
         { label: 'Project Name', id: 'projectName' },
-        { label: 'Endpoint Name', id: 'endpoint_name' },
+        { label: 'Endpoint ID', id: 'uid' },
+        { label: 'Application Name', id: 'applicationName' },
+        { label: 'Result Name', id: 'resultName' },
         { label: 'Type', id: 'type' },
         { label: 'Timestamp', id: 'timestamp' },
         { label: 'Severity', id: SEVERITY }

@@ -133,7 +133,7 @@ export const generateActionsMenu = (
 ) => {
   const isTargetPathValid = getIsTargetPathValid(documentMin ?? {}, frontendSpec)
 
-  const getFullDocument = fileMin => {
+  const getFullDocument = documentMin => {
     return chooseOrFetchArtifact(dispatch, DOCUMENTS_TAB, selectedDocument, documentMin)
   }
 
@@ -154,18 +154,20 @@ export const generateActionsMenu = (
         icon: <DownloadIcon />,
         onClick: documentMin => {
           getFullDocument(documentMin).then(document => {
-            const downloadPath = `${documentMin?.target_path}${documentMin?.model_file || ''}`
-            dispatch(
-              setDownloadItem({
-                path: downloadPath,
-                user: document.producer?.owner,
-                id: downloadPath,
-                artifactLimits: frontendSpec?.artifact_limits,
-                fileSize: document.size,
-                projectName
-              })
-            )
-            dispatch(setShowDownloadsList(true))
+            if (document) {
+              const downloadPath = `${documentMin?.target_path}${documentMin?.model_file || ''}`
+              dispatch(
+                setDownloadItem({
+                  path: downloadPath,
+                  user: document.producer?.owner,
+                  id: downloadPath,
+                  artifactLimits: frontendSpec?.artifact_limits,
+                  fileSize: document.size,
+                  projectName
+                })
+              )
+              dispatch(setShowDownloadsList(true))
+            }
           })
         }
       },
