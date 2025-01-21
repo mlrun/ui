@@ -183,6 +183,7 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, isAlertsPage = true }) =>
 
 DetailsAlertsMetrics.propTypes = {
   isAlertsPage: PropTypes.bool,
+  filters: PropTypes.object.isRequired,
   selectedItem: PropTypes.object.isRequired
 }
 
