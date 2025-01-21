@@ -97,11 +97,10 @@ const FilesView = React.forwardRef(
                       onClick: handleRegisterArtifact
                     }
                   ]}
+                  closeParamName={isAllVersions ? ALL_VERSIONS_PATH : FILES_TAB}
                   filters={filters}
                   filtersConfig={filtersConfig}
-                  navigateLink={`/projects/${projectName}/files${isAllVersions ? `/${fileName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
                   handleRefresh={handleRefreshFiles}
-                  page={FILES_PAGE}
                   setSearchParams={setSearchFilesParams}
                   withRefreshButton
                   withoutExpandButton

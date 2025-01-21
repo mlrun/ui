@@ -46,7 +46,7 @@ import {
   JOB_NAME,
   MODEL_ENDPOINT_RESULT,
   MODEL_MONITORING_APPLICATION,
-  PROJECTS_FILTER,
+  PROJECT_FILTER,
   SEVERITY
 } from '../../constants'
 
@@ -93,7 +93,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
         <div className="form-row">
           <FormSelect
             label="Project name"
-            name={PROJECTS_FILTER}
+            name={PROJECT_FILTER}
             options={projectsList}
             preventWidthOverflow
           />

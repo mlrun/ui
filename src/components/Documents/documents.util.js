@@ -133,7 +133,7 @@ export const generateActionsMenu = (
 ) => {
   const isTargetPathValid = getIsTargetPathValid(documentMin ?? {}, frontendSpec)
 
-  const getFullDocument = fileMin => {
+  const getFullDocument = documentMin => {
     return chooseOrFetchArtifact(dispatch, DOCUMENTS_TAB, selectedDocument, documentMin)
   }
 
@@ -154,18 +154,20 @@ export const generateActionsMenu = (
         icon: <DownloadIcon />,
         onClick: documentMin => {
           getFullDocument(documentMin).then(document => {
-            const downloadPath = `${documentMin?.target_path}${documentMin?.model_file || ''}`
-            dispatch(
-              setDownloadItem({
-                path: downloadPath,
-                user: document.producer?.owner,
-                id: downloadPath,
-                artifactLimits: frontendSpec?.artifact_limits,
-                fileSize: document.size,
-                projectName
-              })
-            )
-            dispatch(setShowDownloadsList(true))
+            if (document) {
+              const downloadPath = `${documentMin?.target_path}${documentMin?.model_file || ''}`
+              dispatch(
+                setDownloadItem({
+                  path: downloadPath,
+                  user: document.producer?.owner,
+                  id: downloadPath,
+                  artifactLimits: frontendSpec?.artifact_limits,
+                  fileSize: document.size,
+                  projectName
+                })
+              )
+              dispatch(setShowDownloadsList(true))
+            }
           })
         }
       },
@@ -267,7 +269,7 @@ export const handleApplyDetailsChanges = (
           setNotification({
             status: response.status,
             id: Math.random(),
-            message: 'Model was updated successfully'
+            message: 'Document was updated successfully'
           })
         )
       })
@@ -275,7 +277,7 @@ export const handleApplyDetailsChanges = (
         const customErrorMsg =
           error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
             ? 'Permission denied'
-            : getErrorMsg(error, 'Failed to update the model')
+            : getErrorMsg(error, 'Failed to update the document')
 
         showErrorNotification(dispatch, error, '', customErrorMsg, () =>
           handleApplyDetailsChanges(changes, projectName, selectedItem, setNotification, dispatch)
@@ -332,5 +334,6 @@ export const checkForSelectedDocument = debounce(
     } else {
       setSelectedDocument({})
     }
-  }
+  },
+  30
 )

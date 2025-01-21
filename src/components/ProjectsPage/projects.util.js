@@ -161,7 +161,7 @@ export const handleDeleteProjectError = (
       rejectHandler: () => {
         setConfirmData(null)
       },
-      confirmHandler: project => {
+      confirmHandler: () => {
         handleDeleteProject(
           project,
           true,
@@ -336,8 +336,7 @@ export const onDeleteProject = (project, setConfirmData, ...args) => {
     rejectHandler: () => {
       setConfirmData(null)
     },
-    confirmHandler: deleteNonEmpty =>
-      handleDeleteProject(project, deleteNonEmpty, setConfirmData, ...args)
+    confirmHandler: () => handleDeleteProject(project, false, setConfirmData, ...args)
   })
 }
 

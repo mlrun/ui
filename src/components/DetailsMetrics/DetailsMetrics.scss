@@ -19,7 +19,6 @@ $stickyHeaderHeight: 55px;
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end;
-    height: $stickyHeaderHeight;
     background-color: $white;
 
     > * {
@@ -403,10 +402,6 @@ $stickyHeaderHeight: 55px;
   z-index: 1;
   box-shadow: 0 -10px 0 0 $white;
   padding-bottom: 1em;
-}
-
-.no-data-block {
-  height: calc(100% - $stickyHeaderHeight);
 }
 
 #chartjs-tooltip-metric {

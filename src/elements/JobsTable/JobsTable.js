@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo, useCallback, useEffect, useLayoutEffect } from 'react'
+import React, { useMemo, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
@@ -311,7 +311,7 @@ const JobsTable = React.forwardRef(
       setJobWizardMode
     ])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
       checkForSelectedJob(
         paginatedJobs,
         params.jobName,
@@ -377,7 +377,8 @@ const JobsTable = React.forwardRef(
                 disabledNextDoubleBtnTooltip={
                   filtersStore.autoRefresh
                     ? 'Uncheck Auto Refresh to view more results'
-                    : autoRefreshPrevValue
+                    : autoRefreshPrevValue &&
+                        paginationConfigJobsRef.current?.paginationResponse?.['page-token']
                       ? 'Close detailed view and uncheck Auto Refresh to view more results'
                       : ''
                 }
@@ -398,7 +399,6 @@ JobsTable.propTypes = {
   filtersConfig: FILTERS_CONFIG.isRequired,
   jobRuns: PropTypes.array.isRequired,
   jobs: PropTypes.array.isRequired,
-  navigateLink: PropTypes.string.isRequired,
   paginatedJobs: PropTypes.array.isRequired,
   refreshJobs: PropTypes.func.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,

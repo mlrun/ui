@@ -60,7 +60,7 @@ const Alerts = () => {
     refreshAlerts,
     setAlerts,
     setSearchParams
-  } = useAlertsPageData(alertsFilters)
+  } = useAlertsPageData(alertsFilters, true)
 
   const handleRefreshWithFilters = useCallback(
     filters => {

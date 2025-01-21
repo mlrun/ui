@@ -345,7 +345,7 @@ export const createDocumentsRowData = (artifact, project, isAllVersions) => {
         headerId: 'updated',
         headerLabel: 'Updated',
         value: formatDatetime(artifact.updated, 'N/A'),
-        className: 'table-cell-2'
+        className: 'table-cell-1'
       },
       {
         id: `labels.${artifact.ui.identifierUnique}`,

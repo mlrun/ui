@@ -17,30 +17,23 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
+import { useBlocker } from 'react-router-dom'
 
-import StatsCard from '../../common/StatsCard/StatsCard'
+const BlockerSpy = ({ setBlocker, shouldBlock }) => {
+  const blocker = useBlocker(shouldBlock)
 
-import { ReactComponent as NoDataIcon } from 'igz-controls/images/no-data-metric-icon.svg'
+  useEffect(() => {
+    setBlocker(blocker)
+  }, [setBlocker, blocker])
 
-const NoMetricData = ({ title = '', message = 'No data to show', className = '', tip = '' }) => {
-  return (
-    <StatsCard className={`metrics__card ${className}`}>
-      <StatsCard.Header title={title} tip={tip}></StatsCard.Header>
-      <div className="metrics__empty-card">
-        <div>
-          <NoDataIcon />
-        </div>
-        <div>{message}</div>
-      </div>
-    </StatsCard>
-  )
+  return <></>
 }
 
-NoMetricData.propTypes = {
-  className: PropTypes.string,
-  message: PropTypes.string,
-  title: PropTypes.string
+BlockerSpy.propTypes = {
+  setBlocker: PropTypes.func.isRequired,
+  shouldBlock: PropTypes.func.isRequired
 }
 
-export default NoMetricData
+export default BlockerSpy

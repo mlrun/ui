@@ -257,8 +257,7 @@ const ModelEndpoints = () => {
               filters={filters}
               filtersConfig={filtersConfig}
               handleRefresh={handleRefresh}
-              navigateLink={`/projects/${params.projectName}/models/${MODEL_ENDPOINTS_TAB}${window.location.search}`}
-              page={MODELS_PAGE}
+              closeParamName={MODEL_ENDPOINTS_TAB}
               setSearchParams={setSearchParams}
               tab={MODEL_ENDPOINTS_TAB}
               withoutExpandButton
