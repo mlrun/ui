@@ -101,6 +101,7 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
         <div className="navbar__additional">
           <ul className="navbar-links">
             <NavbarLink
+              id="project-settings"
               icon={<SettingsIcon />}
               label="Project settings"
               link={`/projects/${projectName}/settings`}

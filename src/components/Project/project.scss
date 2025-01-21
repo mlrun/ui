@@ -146,12 +146,16 @@
         min-width: 0;
         min-height: 460px;
         margin-right: 20px;
-        padding: 20px;
+        padding: 15px;
         overflow-x: auto;
         background-color: $white;
         border: $dividerBorder;
         border-radius: 8px;
         box-shadow: $projectStatisticsShadow;
+
+        @media screen and (min-width: 1300px) {
+          padding: 20px;
+        }
 
         &__header {
           z-index: 1;
@@ -163,8 +167,12 @@
             margin-bottom: 16px;
             color: $primary;
             font-weight: 500;
-            font-size: 20px;
+            font-size: 1rem;
             line-height: 23px;
+
+            @media screen and (min-width: 1600px) {
+              font-size: 1.25rem;
+            }
           }
 
           &.table-header {
@@ -240,12 +248,6 @@
 
           &.alerts-card {
             flex: 2;
-          }
-
-          .stats-card__title {
-            @media screen and (max-width: 1400px) {
-              font-size: 1vi;
-            }
           }
         }
       }
