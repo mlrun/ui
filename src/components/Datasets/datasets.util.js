@@ -96,7 +96,7 @@ export const getFiltersConfig = isAllVersions => ({
 
 export const registerDatasetTitle = 'Register dataset'
 
-export const generateDataSetsDetailsMenu = selectedItem => [
+export const generateDataSetsDetailsMenu = (selectedItem, isDemoMode) => [
   {
     label: 'overview',
     id: 'overview'
@@ -113,14 +113,20 @@ export const generateDataSetsDetailsMenu = selectedItem => [
   {
     label: 'analysis',
     id: 'analysis',
-    hidden: !selectedItem.extra_data
+    hidden: !isDemoMode || !selectedItem.extra_data
   }
 ]
 
-export const generatePageData = (selectedItem, viewMode, params, isDetailsPopUp = false) => ({
+export const generatePageData = (
+  selectedItem,
+  viewMode,
+  params,
+  isDetailsPopUp = false,
+  isDemoMode
+) => ({
   page: DATASETS_PAGE,
   details: {
-    menu: generateDataSetsDetailsMenu(selectedItem),
+    menu: generateDataSetsDetailsMenu(selectedItem, isDemoMode),
     infoHeaders,
     type: DATASETS_TAB,
     hideBackBtn: viewMode === FULL_VIEW_MODE,
@@ -198,7 +204,8 @@ export const checkForSelectedDataset = debounce(
     } else {
       setSelectedDataset({})
     }
-  }
+  },
+  30
 )
 
 export const generateActionsMenu = (
@@ -240,18 +247,20 @@ export const generateActionsMenu = (
         icon: <DownloadIcon />,
         onClick: datasetMin => {
           getFullDataset(datasetMin).then(dataset => {
-            const downloadPath = `${dataset?.target_path}${dataset?.model_file || ''}`
-            dispatch(
-              setDownloadItem({
-                path: downloadPath,
-                user: dataset.producer?.owner,
-                id: downloadPath,
-                artifactLimits: frontendSpec?.artifact_limits,
-                fileSize: dataset.size,
-                projectName
-              })
-            )
-            dispatch(setShowDownloadsList(true))
+            if (dataset) {
+              const downloadPath = `${dataset?.target_path}${dataset?.model_file || ''}`
+              dispatch(
+                setDownloadItem({
+                  path: downloadPath,
+                  user: dataset.producer?.owner,
+                  id: downloadPath,
+                  artifactLimits: frontendSpec?.artifact_limits,
+                  fileSize: dataset.size,
+                  projectName
+                })
+              )
+              dispatch(setShowDownloadsList(true))
+            }
           })
         }
       },
@@ -335,12 +344,14 @@ export const generateActionsMenu = (
         icon: <ArtifactView />,
         onClick: datasetMin => {
           getFullDataset(datasetMin).then(dataset => {
-            dispatch(
-              showArtifactsPreview({
-                isPreview: true,
-                selectedItem: dataset
-              })
-            )
+            if (dataset) {
+              dispatch(
+                showArtifactsPreview({
+                  isPreview: true,
+                  selectedItem: dataset
+                })
+              )
+            }
           })
         }
       }

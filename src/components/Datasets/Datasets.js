@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useRef, useState, useMemo, useLayoutEffect } from 'react'
+import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
@@ -58,6 +58,7 @@ import { toggleYaml } from '../../reducers/appReducer'
 import { transformSearchParams } from '../../utils/filter.util'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { usePagination } from '../../hooks/usePagination.hook'
+import { useMode } from '../../hooks/mode.hook'
 
 import './datasets.scss'
 
@@ -74,6 +75,7 @@ const Datasets = ({ isAllVersions = false }) => {
   const dispatch = useDispatch()
   const location = useLocation()
   const navigate = useNavigate()
+  const { isDemoMode } = useMode()
   const params = useParams()
   const paginationConfigDatasetsRef = useRef({})
   const paginationConfigDatasetVersionsRef = useRef({})
@@ -85,8 +87,8 @@ const Datasets = ({ isAllVersions = false }) => {
   const datasetsFilters = useFiltersFromSearchParams(filtersConfig)
 
   const pageData = useMemo(
-    () => generatePageData(selectedDataset, viewMode, params),
-    [selectedDataset, viewMode, params]
+    () => generatePageData(selectedDataset, viewMode, params, false, isDemoMode),
+    [isDemoMode, selectedDataset, viewMode, params]
   )
 
   const detailsFormInitialValues = useMemo(
@@ -345,7 +347,7 @@ const Datasets = ({ isAllVersions = false }) => {
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     checkForSelectedDataset(
       params.datasetName,
       isAllVersions ? paginatedDatasetVersions : paginatedDatasets,

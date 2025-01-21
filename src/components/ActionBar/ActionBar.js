@@ -26,7 +26,7 @@ import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import { isEmpty, isEqual, isNil, mapValues, pickBy } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import DatePicker from '../../common/DatePicker/DatePicker'
 import FilterMenuModal from '../FilterMenuModal/FilterMenuModal'
@@ -45,10 +45,11 @@ import {
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import detailsActions from '../../actions/details'
-import { FILTERS_CONFIG } from '../../types'
-import { setFilters, toggleAutoRefresh } from '../../reducers/filtersReducer'
-import { setFieldState } from 'igz-controls/utils/form.util'
 import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
+import { FILTERS_CONFIG } from '../../types'
+import { getCloseDetailsLink } from '../../utils/link-helper.util'
+import { setFieldState } from 'igz-controls/utils/form.util'
+import { setFilters, toggleAutoRefresh } from '../../reducers/filtersReducer'
 
 import { ReactComponent as CollapseIcon } from 'igz-controls/images/collapse.svg'
 import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
@@ -62,13 +63,13 @@ const ActionBar = ({
   autoRefreshStopTrigger = false,
   cancelRequest = null,
   children,
+  closeParamName = '',
   filters,
   filtersConfig,
   handleAutoRefreshPrevValueChange,
   handleRefresh,
   hidden = false,
   internalAutoRefreshIsEnabled = false,
-  navigateLink,
   removeSelectedItem = null,
   setSearchParams,
   setSelectedRowData = null,
@@ -87,7 +88,6 @@ const ActionBar = ({
   const filtersStore = useSelector(store => store.filtersStore)
   const changes = useSelector(store => store.detailsStore.changes)
   const dispatch = useDispatch()
-  const params = useParams()
   const navigate = useNavigate()
 
   const actionBarClassNames = classnames('action-bar', hidden && 'action-bar_hidden')
@@ -202,8 +202,8 @@ const ActionBar = ({
       const newFilters = { ...filters, ...formValues }
 
       if (filtersHelperResult) {
-        if ((params.name && params.tag) || params.id) {
-          navigate(navigateLink)
+        if (closeParamName) {
+          navigate(getCloseDetailsLink(closeParamName, true))
         }
 
         if (
@@ -230,17 +230,14 @@ const ActionBar = ({
       filtersHelper,
       changes,
       dispatch,
-      params.name,
-      params.tag,
-      params.id,
       filtersStore.groupBy,
       saveFilters,
+      closeParamName,
       removeSelectedItem,
       setSelectedRowData,
       toggleAllRows,
       handleRefresh,
-      navigate,
-      navigateLink
+      navigate
     ]
   )
 
@@ -289,7 +286,7 @@ const ActionBar = ({
   }, [filterMenu, filtersConfig])
 
   useEffect(() => {
-    if ((autoRefresh || internalAutoRefresh) && !hidden) {
+    if (((autoRefresh && !withInternalAutoRefresh) || internalAutoRefresh) && !hidden) {
       const intervalId = setInterval(() => {
         if (!autoRefreshIsStopped) {
           refresh(formRef.current.getState())
@@ -472,11 +469,11 @@ ActionBar.propTypes = {
   autoRefreshIsEnabled: PropTypes.bool,
   autoRefreshIsStopped: PropTypes.bool,
   cancelRequest: PropTypes.func,
+  closeParamName: PropTypes.string,
   filters: PropTypes.object.isRequired,
   filtersConfig: FILTERS_CONFIG.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   hidden: PropTypes.bool,
-  navigateLink: PropTypes.string,
   removeSelectedItem: PropTypes.func,
   setSearchParams: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func,

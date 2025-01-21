@@ -29,9 +29,9 @@ import NoData from '../../common/NoData/NoData'
 import Pagination from '../../common/Pagination/Pagination'
 import Table from '../Table/Table'
 
-import { ALERTS_FILTERS, ALERTS_PAGE } from '../../constants'
+import { ALERTS_FILTERS, ALERTS_PAGE, ALERTS_PAGE_PATH } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { getCloseDetailsAlertLink } from '../../utils/link-helper.util'
+import { getCloseDetailsLink } from '../../utils/link-helper.util'
 
 import './alerts.scss'
 
@@ -69,11 +69,11 @@ const AlertsView = ({
             <div className="content__action-bar-wrapper">
               <ActionBar
                 autoRefreshIsStopped={true}
+                closeParamName={ALERTS_PAGE_PATH}
                 filterMenuName={ALERTS_FILTERS}
-                filtersConfig={alertsFiltersConfig}
                 filters={filters}
+                filtersConfig={alertsFiltersConfig}
                 handleRefresh={handleRefreshAlerts}
-                page={ALERTS_PAGE}
                 setSearchParams={setSearchParams}
                 withRefreshButton
                 withoutExpandButton
@@ -98,7 +98,7 @@ const AlertsView = ({
               <>
                 <Table
                   actionsMenu={[]}
-                  getCloseDetailsLink={() => getCloseDetailsAlertLink()}
+                  getCloseDetailsLink={() => getCloseDetailsLink(ALERTS_PAGE_PATH)}
                   pageData={pageData}
                   retryRequest={handleRefreshWithFilters}
                   selectedItem={isAlertsPage ? selectedAlert : {}}
@@ -130,6 +130,7 @@ const AlertsView = ({
                   })}
                 </Table>
                 <Pagination
+                  closeParamName={ALERTS_PAGE_PATH}
                   page={pageData.page}
                   paginationConfig={paginationConfigAlertsRef.current}
                 />

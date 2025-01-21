@@ -17,9 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useCallback, useRef, useMemo } from 'react'
+import React, {useEffect, useCallback, useRef, useMemo, useState} from 'react'
 import PropTypes from 'prop-types'
-import { useBlocker, useLocation, useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
@@ -34,6 +34,7 @@ import DetailsTabsContent from './DetailsTabsContent/DetailsTabsContent'
 import DetailsHeader from './DetailsHeader/DetailsHeader'
 import Loader from '../../common/Loader/Loader'
 import TabsSlider from '../../common/TabsSlider/TabsSlider'
+import BlockerSpy from '../../common/BlockerSpy/BlockerSpy'
 
 import { TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import detailsActions from '../../actions/details'
@@ -95,6 +96,7 @@ const Details = ({
   tab = '',
   withActionMenu = true
 }) => {
+  const [blocker, setBlocker] = useState({})
   const applyChangesRef = useRef()
   const dispatch = useDispatch()
   const detailsRef = useRef()
@@ -206,17 +208,20 @@ const Details = ({
     }
   }, [handleRefreshClick])
 
-  let blocker = useBlocker(({ currentLocation, nextLocation }) => {
-    const currentLocationPathname = currentLocation.pathname.split('/')
-    const nextLocationPathname = nextLocation.pathname.split('/')
-    currentLocationPathname.pop()
-    nextLocationPathname.pop()
+  const shouldDetailsBlock = useCallback(
+    ({ currentLocation, nextLocation }) => {
+      const currentLocationPathname = currentLocation.pathname.split('/')
+      const nextLocationPathname = nextLocation.pathname.split('/')
+      currentLocationPathname.pop()
+      nextLocationPathname.pop()
 
-    return (
-      detailsStore.changes.counter > 0 &&
-      currentLocationPathname.join('/') !== nextLocationPathname.join('/')
-    )
-  })
+      return (
+        detailsStore.changes.counter > 0 &&
+        currentLocationPathname.join('/') !== nextLocationPathname.join('/')
+      )
+    },
+    [detailsStore.changes.counter]
+  )
 
   useEffect(() => {
     if (
@@ -344,6 +349,7 @@ const Details = ({
               } will discard your changes.`}
             />
           )}
+          {!isDetailsPopUp && <BlockerSpy setBlocker={setBlocker} shouldBlock={shouldDetailsBlock} />}
         </div>
       )}
     </Form>

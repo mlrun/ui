@@ -39,14 +39,9 @@ const AlertLogsModal = ({ isOpen, onResolve, pageData, selectedItem }) => {
     >
       <DetailsLogs
         item={selectedItem}
-        logsTitle={pageData.details.logsTitle}
         noDataMessage={pageData.details.logsNoDataMessage}
-        refreshAdditionalLogs={pageData.details.refreshAdditionalLogs}
         refreshLogs={pageData.details.refreshLogs}
-        removeAdditionalLogs={pageData.details.removeAdditionalLogs}
-        removeLogs={() => {}}
-        subTitle="Job logs"
-        show={true}
+        removeLogs={pageData.details.removeLogs}
         withLogsRefreshBtn={false}
       />
     </Modal>

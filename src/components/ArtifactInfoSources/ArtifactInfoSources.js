@@ -28,10 +28,11 @@ import { openPopUp } from 'igz-controls/utils/common.util'
 import { FEATURE_VECTORS_TAB } from '../../constants'
 
 import './artifactInfoSources.scss'
+import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
 
 const ArtifactInfoSources = ({ isDetailsPopUp = false, sources = {} }) => {
   const handleOpenSourceDetails = sourceData => {
-    if (sourceData.parsedUri.kind === FEATURE_VECTORS_TAB) {
+    if (sourceData.parsedUri?.kind === FEATURE_VECTORS_TAB) {
       openPopUp(FeatureVectorPopUp, {
         featureVectorData: sourceData.parsedUri
       })
@@ -45,31 +46,40 @@ const ArtifactInfoSources = ({ isDetailsPopUp = false, sources = {} }) => {
   return (
     <div className="info-sources" data-testid="sources">
       <h3 className="item-info__header">Sources</h3>
-      {Object.entries(sources).map(([key, sourceData], index) => (
-        <div className="info-sources__table" key={key + sourceData.value}>
-          <h5 className="info-sources__table-header">Source {index + 1}</h5>
-          <div className="info-sources__table-row">
-            <div className="info-sources__table-key">Name:</div>
-            <div className="info-sources__table-value">
-              <Tooltip template={<TextTooltipTemplate text={key} />}>{key}</Tooltip>
+      {Object.entries(sources).map(([key, sourceData], index) => {
+        return (
+          <div className="info-sources__table" key={key + sourceData.value}>
+            <h5 className="info-sources__table-header">Source {index + 1}</h5>
+            <div className="info-sources__table-row">
+              <div className="info-sources__table-key">Name:</div>
+              <div className="info-sources__table-value">
+                <Tooltip template={<TextTooltipTemplate text={key} />}>{key}</Tooltip>
+              </div>
             </div>
-          </div>
-          <div className="info-sources__table-row">
-            <div className="info-sources__table-key">Path:</div>
-            <div className="info-sources__table-value">
-              <Tooltip template={<TextTooltipTemplate text={sourceData.value} />}>
-                {sourceData && !isDetailsPopUp ? (
-                  <div onClick={() => handleOpenSourceDetails(sourceData)} className="link">
-                    {sourceData.value}
-                  </div>
+            <div className="info-sources__table-row">
+              <div className="info-sources__table-key">Path:</div>
+              <div className="info-sources__table-value">
+                {sourceData.parsedUri && !isDetailsPopUp ? (
+                  <Tooltip template={<TextTooltipTemplate text={sourceData.value} />}>
+                    <div onClick={() => handleOpenSourceDetails(sourceData)} className="link">
+                      {sourceData.value}
+                    </div>
+                  </Tooltip>
                 ) : (
-                  sourceData.value
+                  <CopyToClipboard
+                    key={index}
+                    className="info-sources__table-value__copy-to-clipboard"
+                    textToCopy={sourceData.value}
+                    tooltipText="Click to copy"
+                  >
+                    {sourceData.value}
+                  </CopyToClipboard>
                 )}
-              </Tooltip>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }

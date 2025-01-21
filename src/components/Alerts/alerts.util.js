@@ -36,7 +36,7 @@ import {
   MODEL_ENDPOINT_RESULT,
   MODEL_MONITORING_APPLICATION,
   NAME_FILTER,
-  PROJECTS_FILTER,
+  PROJECT_FILTER,
   SEVERITY,
   SEVERITY_HIGH,
   SEVERITY_LOW,
@@ -57,7 +57,7 @@ export const getAlertsFiltersConfig = (timeFrameLimit = false) => {
       initialValue: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION),
       timeFrameLimit: timeFrameLimit ? TIME_FRAME_LIMITS.MONTH : Infinity
     },
-    [PROJECTS_FILTER]: { label: 'Project:', initialValue: FILTER_ALL_ITEMS, isModal: true },
+    [PROJECT_FILTER]: { label: 'Project:', initialValue: FILTER_ALL_ITEMS, isModal: true },
     [ENTITY_TYPE]: { label: 'Entity Type:', initialValue: FILTER_ALL_ITEMS, isModal: true },
     [ENTITY_ID]: { label: 'Entity ID:', initialValue: '', isModal: true },
     [JOB_NAME]: { label: 'Job Name:', initialValue: '', isModal: true },
@@ -96,7 +96,8 @@ export const generatePageData = (selectedAlert, handleFetchJobLogs = () => {}) =
       entityType: selectedAlert.entity_kind,
       infoHeaders: alertsHeaders(selectedAlert.entity_kind),
       menu: [],
-      refreshLogs: handleFetchJobLogs
+      refreshLogs: handleFetchJobLogs,
+      removeLogs: () => {}
     }
   }
 }

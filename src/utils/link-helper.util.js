@@ -57,11 +57,6 @@ export const getCloseDetailsLink = (paramName, ignoreOrigin) => {
   return ignoreOrigin ? link : generateUrlFromRouterPath(link)
 }
 
-//TODO: the getCloseDetailsAlertLink will be updated with ML-8368
-export const getCloseDetailsAlertLink = () => {
-  return `/projects/*/alerts/${window.location.search}`
-}
-
 export const getDefaultCloseDetailsLink = (params, page, tab) => {
   return `/projects/${params.projectName}/${page.toLowerCase()}${
     params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
