@@ -921,6 +921,10 @@ div[id^='chartjs-tooltip'] {
 
 /* =========== GENERAL ============= */
 
+.d-flex {
+  display: flex;
+}
+
 .visibility-hidden {
   visibility: hidden;
 }
