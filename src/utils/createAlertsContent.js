@@ -245,11 +245,12 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects, showExpandButt
   }
 
   if (alert.entity_kind === MODEL_ENDPOINT_RESULT) {
-    const [uid, endpointName, ...rest] = alert.entity_id.split('.')
-    const fullName = [endpointName, ...rest].join('.')
-    alert.endpointName = endpointName
+    const [uid, applicationName, result, resultName] = alert.entity_id.split('.')
+    const fullName = [applicationName, result, resultName].join('.')
     alert.uid = uid
     alert.fullName = `${alert.project}.${fullName}`
+    alert.applicationName = applicationName
+    alert.resultName = resultName
   }
 
   if (alert.entity_kind === MODEL_MONITORING_APPLICATION) {
