@@ -95,11 +95,10 @@ const JobWizardFunctionSelection = ({
   const functionsContainerRef = useRef(null)
   const hubFunctionLoadedRef = useRef(false)
 
-  const filtersStoreHubCategories = useSelector(
-    store =>
-      store.filtersStore[FILTER_MENU_MODAL][JOB_WIZARD_FILTERS]?.values?.[HUB_CATEGORIES_FILTER]
-  )
+  const jobWizardFiltersValues = useSelector(store => store.filtersStore[FILTER_MENU_MODAL]?.[JOB_WIZARD_FILTERS]?.values ?? hubFiltersInitialValues)
   const { loading } = useSelector(store => store.functionsStore)
+
+  const filtersStoreHubCategories = useMemo(() => jobWizardFiltersValues[HUB_CATEGORIES_FILTER], [jobWizardFiltersValues])
 
   const dispatch = useDispatch()
 
@@ -443,7 +442,7 @@ const JobWizardFunctionSelection = ({
                 wizardClassName="hub-filter"
                 filterMenuName={JOB_WIZARD_FILTERS}
                 initialValues={hubFiltersInitialValues}
-                values={hubFiltersInitialValues}
+                values={jobWizardFiltersValues}
               >
                 <HubCategoriesFilter templates={filterTemplates} />
               </FilterMenuModal>
