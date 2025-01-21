@@ -46,7 +46,9 @@ import {
   GROUP_BY_NONE,
   ITERATIONS_FILTER,
   REQUEST_CANCELED,
-  SHOW_ITERATIONS
+  SHOW_ITERATIONS,
+  TAG_FILTER,
+  TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import { fetchArtifactTags, fetchDocuments, removeDocuments } from '../../reducers/artifactsReducer'
 import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
@@ -111,7 +113,7 @@ const Documents = ({ isAllVersions = false }) => {
         requestParams.name = params.documentName
         setDocumentVersions([])
       } else {
-        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS) {
+        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS || filters[TAG_FILTER] === TAG_FILTER_ALL_ITEMS) {
           requestParams['partition-by'] = 'project_and_name'
           requestParams['partition-sort-by'] = 'updated'
         }
