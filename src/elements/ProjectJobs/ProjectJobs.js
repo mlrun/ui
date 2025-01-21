@@ -40,7 +40,7 @@ const ProjectJobs = ({ fetchProjectJobs, projectStore }) => {
 
   useEffect(() => {
     const abortController = new AbortController()
-    const startTimeFrom = moment().add(-2, 'days').toISOString()
+    const startTimeFrom = moment().add(-7, 'days').toISOString()
 
     fetchProjectJobs(params.projectName, startTimeFrom, abortController.signal)
 
