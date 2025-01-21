@@ -44,8 +44,7 @@ export const useAlertsPageData = (filters, isAlertsPage) => {
         : filters?.[PROJECT_FILTER]?.toLowerCase?.() !== FILTER_ALL_ITEMS &&
             params?.projectName !== FILTER_ALL_ITEMS
           ? filters[PROJECT_FILTER]?.toLowerCase()
-          : params.id
-
+          : params.id || params.projectName
       dispatch(
         fetchAlerts({
           project: projectName,
