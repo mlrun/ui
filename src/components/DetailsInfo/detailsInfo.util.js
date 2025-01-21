@@ -249,7 +249,9 @@ export const generateAlertsDetailsInfo = selectedItem => {
     AlertsDetailsInfo.triggerCriteriaDetailsInfo = triggerCriteriaContent.map(trigger => {
       return (
         <li className="details-item" key={trigger.id}>
-          <div className="details-item__header">{trigger.label}:</div>
+          <div className={classNames('details-item__header', 'details-item__header_long')}>
+            {trigger.label}:
+          </div>
           <DetailsInfoItem info={trigger.value} />
         </li>
       )
