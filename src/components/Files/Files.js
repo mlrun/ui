@@ -37,7 +37,9 @@ import {
   GROUP_BY_NONE,
   ITERATIONS_FILTER,
   REQUEST_CANCELED,
-  SHOW_ITERATIONS
+  SHOW_ITERATIONS,
+  TAG_FILTER,
+  TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import {
   checkForSelectedFile,
@@ -113,7 +115,7 @@ const Files = ({ isAllVersions = false }) => {
         requestParams.name = params.fileName
         setFileVersions([])
       } else {
-        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS) {
+        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS || filters[TAG_FILTER] === TAG_FILTER_ALL_ITEMS) {
           requestParams['partition-by'] = 'project_and_name'
           requestParams['partition-sort-by'] = 'updated'
         }
