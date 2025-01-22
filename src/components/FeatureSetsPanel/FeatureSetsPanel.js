@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, connect, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -78,9 +78,9 @@ const FeatureSetsPanel = ({
   })
   const [confirmDialog, setConfirmDialog] = useState(null)
   const [accessKeyRequired, setAccessKeyRequired] = useState(false)
-  const [tempValidation, setTempValidation] = useState(true)
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const prevAreLabelsValidRef = React.useRef(validation.areLabelsValid)
   const formRef = React.useRef(
     createForm({
       initialValues: { labels: [] },
@@ -88,13 +88,6 @@ const FeatureSetsPanel = ({
       onSubmit: () => {}
     })
   )
-
-  useEffect(() => {
-    setValidation(prevState => ({
-      ...prevState,
-      areLabelsValid: tempValidation
-    }))
-  }, [tempValidation])
 
   const handleSave = () => {
     let data = {
@@ -206,7 +199,14 @@ const FeatureSetsPanel = ({
             <FormSpy
               subscription={{ valid: true }}
               onChange={() => {
-                setTempValidation(formRef.current?.getFieldState?.('labels')?.valid ?? true)
+                const areLabelsValid = formRef.current?.getFieldState?.('labels')?.valid ?? true
+                if (prevAreLabelsValidRef.current !== areLabelsValid) {
+                  setValidation(prevState => ({
+                    ...prevState,
+                    areLabelsValid
+                  }))
+                  prevAreLabelsValidRef.current = areLabelsValid
+                }
               }}
             />
           </>
