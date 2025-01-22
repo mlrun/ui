@@ -112,7 +112,12 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
       )}
       {entityType === JOB && (
         <div className="form-row">
-          <FormInput label={upperFirst(JOB)} name={JOB_NAME} placeholder="Search by job name" />
+          <FormInput
+            label={upperFirst(JOB)}
+            name={JOB_NAME}
+            placeholder="Search by job name"
+            tip="Add ~* before the filter value to return substring and case insensitive value."
+          />
           <FormOnChange handler={value => handleInputChange(value, JOB_NAME)} name={JOB_NAME} />
         </div>
       )}
