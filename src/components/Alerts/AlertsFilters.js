@@ -20,7 +20,7 @@ such restriction.
 import { useCallback, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { useForm, useFormState } from 'react-final-form'
-import { truncate, upperFirst } from 'lodash'
+import { upperFirst } from 'lodash'
 import { useSelector } from 'react-redux'
 
 import StatusFilter from '../../common/StatusFilter/StatusFilter'
@@ -46,7 +46,7 @@ import {
   JOB_NAME,
   MODEL_ENDPOINT_RESULT,
   MODEL_MONITORING_APPLICATION,
-  PROJECTS_FILTER,
+  PROJECT_FILTER,
   SEVERITY
 } from '../../constants'
 
@@ -63,7 +63,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
 
     return [...allProjectsOption, ...generatedProjects].map(item => ({
       ...item,
-      label: truncate(item.label, { length: 26 })
+      label: item.label
     }))
   }, [projectStore.projectsNames.data])
 
@@ -91,7 +91,12 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
     <>
       {isCrossProjects && (
         <div className="form-row">
-          <FormSelect label="Project name" name={PROJECTS_FILTER} options={projectsList} />
+          <FormSelect
+            label="Project name"
+            name={PROJECT_FILTER}
+            options={projectsList}
+            preventWidthOverflow
+          />
         </div>
       )}
       {isAlertsPage && (
@@ -150,6 +155,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
           label="Event type"
           name={EVENT_TYPE}
           options={filterAlertsEventTypeOptions(entityType)}
+          preventWidthOverflow
         />
       </div>
     </>

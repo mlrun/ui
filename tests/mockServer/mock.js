@@ -1033,6 +1033,18 @@ function getProjectsSchedules(req, res) {
     )
   }
 
+  if (req.query['next_run_time_since']) {
+    collectedSchedules = collectedSchedules.filter(
+      schedule => Date.parse(schedule.next_run_time) >= Date.parse(req.query['next_run_time_since'])
+    )
+  }
+
+  if (req.query['next_run_time_until']) {
+    collectedSchedules = collectedSchedules.filter(
+      schedule => Date.parse(schedule.next_run_time) <= Date.parse(req.query['next_run_time_until'])
+    )
+  }
+
   res.send({ schedules: collectedSchedules })
 }
 
@@ -2028,7 +2040,7 @@ function postSubmitJob(req, res) {
     funcObject.spec.volumes = req.body.function.spec.volumes
     funcObject.status = {}
 
-    const functionSpec = `${runProject}/${req.body.task.spec.handler}@${funcUID}`
+    const functionSpec = `${runProject}/${req.body.task.metadata.name}@${funcUID}`
     respTemplate.data.spec.function = functionSpec
     job.spec.function = functionSpec
 

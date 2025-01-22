@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useRef, useState, useMemo, useLayoutEffect } from 'react'
+import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
@@ -34,11 +34,14 @@ import {
   GROUP_BY_NONE,
   REQUEST_CANCELED,
   BE_PAGE,
-  BE_PAGE_SIZE
+  BE_PAGE_SIZE,
+  ITERATIONS_FILTER,
+  SHOW_ITERATIONS,
+  TAG_FILTER,
+  TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import { fetchArtifactTags, fetchDataSets, removeDataSets } from '../../reducers/artifactsReducer'
 import {
-  checkForSelectedDataset,
   getFiltersConfig,
   generateActionsMenu,
   generatePageData,
@@ -50,12 +53,13 @@ import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { getViewMode } from '../../utils/helper'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { setFullSelectedArtifact } from '../../utils/artifacts.util'
+import { checkForSelectedArtifact, setFullSelectedArtifact } from '../../utils/artifacts.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { toggleYaml } from '../../reducers/appReducer'
 import { transformSearchParams } from '../../utils/filter.util'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { usePagination } from '../../hooks/usePagination.hook'
+import { useMode } from '../../hooks/mode.hook'
 
 import './datasets.scss'
 
@@ -63,7 +67,6 @@ const Datasets = ({ isAllVersions = false }) => {
   const [datasets, setDatasets] = useState([])
   const [datasetVersions, setDatasetVersions] = useState([])
   const [selectedDataset, setSelectedDataset] = useState({})
-  const [selectedDatasetMin, setSelectedDatasetMin] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -72,19 +75,21 @@ const Datasets = ({ isAllVersions = false }) => {
   const dispatch = useDispatch()
   const location = useLocation()
   const navigate = useNavigate()
+  const { isDemoMode } = useMode()
   const params = useParams()
   const paginationConfigDatasetsRef = useRef({})
   const paginationConfigDatasetVersionsRef = useRef({})
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const datasetsRef = useRef(null)
+  const lastCheckedArtifactIdRef = useRef(null)
 
   const filtersConfig = useMemo(() => getFiltersConfig(isAllVersions), [isAllVersions])
   const datasetsFilters = useFiltersFromSearchParams(filtersConfig)
 
   const pageData = useMemo(
-    () => generatePageData(selectedDataset, viewMode, params),
-    [selectedDataset, viewMode, params]
+    () => generatePageData(selectedDataset, viewMode, params, false, isDemoMode),
+    [isDemoMode, selectedDataset, viewMode, params]
   )
 
   const detailsFormInitialValues = useMemo(
@@ -111,10 +116,14 @@ const Datasets = ({ isAllVersions = false }) => {
 
       if (isAllVersions) {
         requestParams.name = params.datasetName
-        setDatasetVersions([])
+        setDatasetVersions(null)
       } else {
-        requestParams['partition-by'] = 'project_and_name'
-        setDatasets([])
+        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS || filters[TAG_FILTER] === TAG_FILTER_ALL_ITEMS) {
+          requestParams['partition-by'] = 'project_and_name'
+          requestParams['partition-sort-by'] = 'updated'
+        }
+        
+        setDatasets(null)
       }
 
       if (!isAllVersions && !isEmpty(paginationConfigDatasetsRef.current)) {
@@ -126,6 +135,8 @@ const Datasets = ({ isAllVersions = false }) => {
         requestParams.page = paginationConfigDatasetVersionsRef.current[BE_PAGE]
         requestParams['page-size'] = paginationConfigDatasetVersionsRef.current[BE_PAGE_SIZE]
       }
+
+      lastCheckedArtifactIdRef.current = null
 
       return dispatch(
         fetchDataSets({
@@ -150,9 +161,21 @@ const Datasets = ({ isAllVersions = false }) => {
               paginationConfigDatasetsRef.current.paginationResponse = response.pagination
               setDatasets(response.artifacts || [])
             }
+          } else {
+            if (isAllVersions) {
+              setDatasetVersions([])
+            } else {
+              setDatasets([])
+            }
           }
 
           return response
+        }).catch(() => {
+          if (isAllVersions) {
+            setDatasetVersions([])
+          } else {
+            setDatasets([])
+          }
         })
     },
     [dispatch, isAllVersions, params.datasetName, params.projectName]
@@ -177,7 +200,7 @@ const Datasets = ({ isAllVersions = false }) => {
   const refreshDatasets = useCallback(
     filters => {
       fetchTags()
-      setSelectedDatasetMin({})
+      setSelectedDataset({})
 
       return fetchData(filters)
     },
@@ -253,9 +276,9 @@ const Datasets = ({ isAllVersions = false }) => {
   const applyDetailsChangesCallback = (changes, selectedItem) => {
     if ('tag' in changes.data) {
       if (isAllVersions) {
-        setDatasetVersions([])
+        setDatasetVersions(null)
       } else {
-        setDatasets([])
+        setDatasets(null)
       }
 
       if (changes.data.tag.currentFieldValue) {
@@ -283,8 +306,8 @@ const Datasets = ({ isAllVersions = false }) => {
 
   useEffect(() => {
     return () => {
-      setDatasets([])
-      setDatasetVersions([])
+      setDatasets(null)
+      setDatasetVersions(null)
     }
   }, [params.projectName])
 
@@ -293,7 +316,7 @@ const Datasets = ({ isAllVersions = false }) => {
 
     return () => {
       dispatch(removeDataSets())
-      setSelectedDatasetMin({})
+      setSelectedDataset({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
       tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
@@ -311,7 +334,7 @@ const Datasets = ({ isAllVersions = false }) => {
   const [handleRefreshDatasets, paginatedDatasets, searchDatasetsParams, setSearchDatasetsParams] =
     usePagination({
       hidden: isAllVersions,
-      content: datasets,
+      content: datasets ?? [],
       refreshContent: refreshDatasets,
       filters: datasetsFilters,
       paginationConfigRef: paginationConfigDatasetsRef,
@@ -324,7 +347,7 @@ const Datasets = ({ isAllVersions = false }) => {
     setSearchDatasetVersionsParams
   ] = usePagination({
     hidden: !isAllVersions,
-    content: datasetVersions,
+    content: datasetVersions ?? [],
     refreshContent: refreshDatasets,
     filters: datasetsFilters,
     paginationConfigRef: paginationConfigDatasetVersionsRef,
@@ -339,17 +362,23 @@ const Datasets = ({ isAllVersions = false }) => {
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
-  useLayoutEffect(() => {
-    checkForSelectedDataset(
-      params.datasetName,
-      isAllVersions ? paginatedDatasetVersions : paginatedDatasets,
-      params.id,
-      params.projectName,
-      setSelectedDatasetMin,
-      navigate,
+  useEffect(() => {
+    checkForSelectedArtifact({
+      artifactName: params.datasetName,
+      artifacts: isAllVersions ? datasetVersions : datasets,
+      dispatch,
       isAllVersions,
-      isAllVersions ? searchDatasetVersionsParams : searchDatasetsParams,
-      isAllVersions ? paginationConfigDatasetVersionsRef : paginationConfigDatasetsRef
+      navigate,
+      paginatedArtifacts: isAllVersions ? paginatedDatasetVersions : paginatedDatasets,
+      paginationConfigRef: isAllVersions ? paginationConfigDatasetVersionsRef : paginationConfigDatasetsRef,
+      paramsId: params.id,
+      projectName: params.projectName,
+      searchParams: isAllVersions ? searchDatasetVersionsParams : searchDatasetsParams,
+      setSearchParams: isAllVersions ? setSearchDatasetVersionsParams : setSearchDatasetsParams,
+      setSelectedArtifact: setSelectedDataset,
+      lastCheckedArtifactIdRef,
+      tab: DATASETS_TAB
+    }
     )
   }, [
     isAllVersions,
@@ -360,25 +389,32 @@ const Datasets = ({ isAllVersions = false }) => {
     paginatedDatasetVersions,
     paginatedDatasets,
     searchDatasetVersionsParams,
-    searchDatasetsParams
+    searchDatasetsParams,
+    datasetVersions,
+    datasets,
+    setSearchDatasetVersionsParams,
+    setSearchDatasetsParams,
+    dispatch
   ])
+
+  useEffect(() => {
+    if (isEmpty(selectedDataset)) {
+      lastCheckedArtifactIdRef.current = null
+    }
+  }, [selectedDataset])
 
   const getAndSetSelectedArtifact = useCallback(() => {
     setFullSelectedArtifact(
       DATASETS_TAB,
       dispatch,
       navigate,
-      selectedDatasetMin,
+      params.datasetName,
       setSelectedDataset,
       params.projectName,
       params.id,
       isAllVersions
     )
-  }, [dispatch, isAllVersions, navigate, params.projectName, params.id, selectedDatasetMin])
-
-  useEffect(() => {
-    getAndSetSelectedArtifact()
-  }, [getAndSetSelectedArtifact])
+  }, [dispatch, navigate, params.datasetName, params.projectName, params.id, isAllVersions])
 
   return (
     <DatasetsView
@@ -387,7 +423,7 @@ const Datasets = ({ isAllVersions = false }) => {
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
       datasetName={params.datasetName}
-      datasets={isAllVersions ? datasetVersions : datasets}
+      datasets={(isAllVersions ? datasetVersions : datasets) ?? []}
       detailsFormInitialValues={detailsFormInitialValues}
       filters={datasetsFilters}
       filtersConfig={filtersConfig}
@@ -408,7 +444,7 @@ const Datasets = ({ isAllVersions = false }) => {
       setSearchDatasetsParams={
         isAllVersions ? setSearchDatasetVersionsParams : setSearchDatasetsParams
       }
-      setSelectedDatasetMin={setSelectedDatasetMin}
+      setSelectedDataset={setSelectedDataset}
       tableContent={tableContent}
       tableHeaders={tableHeaders}
       viewMode={viewMode}

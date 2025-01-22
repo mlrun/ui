@@ -17,30 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import PropTypes from 'prop-types'
 
-import StatsCard from '../../common/StatsCard/StatsCard'
-
-import { ReactComponent as NoDataIcon } from 'igz-controls/images/no-data-metric-icon.svg'
-
-const NoMetricData = ({ title = '', message = 'No data to show', className = '', tip = '' }) => {
-  return (
-    <StatsCard className={`metrics__card ${className}`}>
-      <StatsCard.Header title={title} tip={tip}></StatsCard.Header>
-      <div className="metrics__empty-card">
-        <div>
-          <NoDataIcon />
-        </div>
-        <div>{message}</div>
-      </div>
-    </StatsCard>
-  )
+export const generateObjectNotInTheListMessage = (objectName = 'object') => {
+    return `The ${objectName} is not in the filtered list. Closing the details panel will return you to the current list.`
 }
-
-NoMetricData.propTypes = {
-  className: PropTypes.string,
-  message: PropTypes.string,
-  title: PropTypes.string
-}
-
-export default NoMetricData

@@ -20,7 +20,6 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
-import { useLocation } from 'react-router-dom'
 
 import ActionBar from '../../ActionBar/ActionBar'
 import ArtifactsFilters from '../../ArtifactsActionBar/ArtifactsFilters'
@@ -39,6 +38,7 @@ import { SECONDARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../../utils/link-helper.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { getSavedSearchParams } from '../../../utils/filter.util'
+import { getDefaultFirstHeader } from '../../../utils/createArtifactsContent'
 
 const ModelsView = React.forwardRef(
   (
@@ -66,15 +66,13 @@ const ModelsView = React.forwardRef(
       requestErrorMessage,
       selectedModel,
       setSearchModelsParams,
-      setSelectedModelMin,
+      setSelectedModel,
       tableContent,
       tableHeaders,
       viewMode = null
     },
     { modelsRef }
   ) => {
-    const location = useLocation()
-
     return (
       <>
         <div className="models" ref={modelsRef}>
@@ -98,17 +96,16 @@ const ModelsView = React.forwardRef(
                     hidden: !isDemoMode
                   }
                 ]}
+                closeParamName={isAllVersions ? ALL_VERSIONS_PATH : MODELS_TAB}
                 filters={filters}
                 filtersConfig={filtersConfig}
-                navigateLink={`/projects/${projectName}/models/models${isAllVersions ? `/${modelName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
                 handleRefresh={handleRefreshModels}
-                page={MODELS_PAGE}
                 setSearchParams={setSearchModelsParams}
                 tab={MODELS_TAB}
                 withRefreshButton
                 withoutExpandButton
               >
-                <ArtifactsFilters artifacts={models} isAllVersions={isAllVersions} />
+                <ArtifactsFilters artifacts={models} />
               </ActionBar>
             </div>
             {isAllVersions && (
@@ -119,7 +116,7 @@ const ModelsView = React.forwardRef(
                 />
               </div>
             )}
-            {artifactsStore.loading ? null : tableContent.length === 0 ? (
+            {artifactsStore.loading ? null : tableContent.length === 0 && isEmpty(selectedModel) ? (
               <NoData
                 message={getNoDataMessage(
                   filters,
@@ -141,15 +138,15 @@ const ModelsView = React.forwardRef(
                   applyDetailsChangesCallback={applyDetailsChangesCallback}
                   detailsFormInitialValues={detailsFormInitialValues}
                   getCloseDetailsLink={() =>
-                    getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : MODELS_TAB, location)
+                    getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : MODELS_TAB)
                   }
-                  handleCancel={() => setSelectedModelMin({})}
+                  handleCancel={() => setSelectedModel({})}
                   pageData={pageData}
                   retryRequest={handleRefreshWithFilters}
                   selectedItem={selectedModel}
                   tab={MODELS_TAB}
                   tableClassName="models-table"
-                  tableHeaders={tableHeaders ?? []}
+                  tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
                 >
                   {tableContent.map((tableItem, index) => (
                     <ArtifactsTableRow
@@ -210,7 +207,7 @@ ModelsView.propTypes = {
   requestErrorMessage: PropTypes.string.isRequired,
   selectedModel: PropTypes.object.isRequired,
   setSearchModelsParams: PropTypes.func.isRequired,
-  setSelectedModelMin: PropTypes.func.isRequired,
+  setSelectedModel: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   viewMode: PropTypes.string

@@ -18,14 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { debounce, isEqual } from 'lodash'
 
 import JobWizard from '../JobWizard/JobWizard'
 import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
 
 import {
   ARTIFACT_MAX_DOWNLOAD_SIZE,
-  ALL_VERSIONS_PATH,
   DATASET_TYPE,
   DATASETS_PAGE,
   DATASETS_TAB,
@@ -36,11 +34,13 @@ import {
   TAG_FILTER,
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST,
-  VIEW_SEARCH_PARAMETER,
-  BE_PAGE
+  SHOW_ITERATIONS
 } from '../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
-import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
+import {
+  applyTagChanges,
+  chooseOrFetchArtifact
+} from '../../utils/artifacts.util'
 import { copyToClipboard } from '../../utils/copyToClipboard'
 import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
@@ -48,10 +48,7 @@ import { generateUri } from '../../utils/resources'
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
 import { openDeleteConfirmPopUp } from 'igz-controls/utils/common.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
-import { getFilteredSearchParams } from '../../utils/filter.util'
-import { parseIdentifier } from '../../utils'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -88,15 +85,14 @@ export const getFiltersConfig = isAllVersions => ({
   [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
   [ITERATIONS_FILTER]: {
     label: 'Show best iteration only:',
-    initialValue: '',
-    isModal: true,
-    hidden: !isAllVersions
+    initialValue: isAllVersions ? '' : SHOW_ITERATIONS,
+    isModal: true
   }
 })
 
 export const registerDatasetTitle = 'Register dataset'
 
-export const generateDataSetsDetailsMenu = selectedItem => [
+export const generateDataSetsDetailsMenu = (selectedItem, isDemoMode) => [
   {
     label: 'overview',
     id: 'overview'
@@ -113,14 +109,20 @@ export const generateDataSetsDetailsMenu = selectedItem => [
   {
     label: 'analysis',
     id: 'analysis',
-    hidden: !selectedItem.extra_data
+    hidden: !isDemoMode || !selectedItem.extra_data
   }
 ]
 
-export const generatePageData = (selectedItem, viewMode, params, isDetailsPopUp = false) => ({
+export const generatePageData = (
+  selectedItem,
+  viewMode,
+  params,
+  isDetailsPopUp = false,
+  isDemoMode
+) => ({
   page: DATASETS_PAGE,
   details: {
-    menu: generateDataSetsDetailsMenu(selectedItem),
+    menu: generateDataSetsDetailsMenu(selectedItem, isDemoMode),
     infoHeaders,
     type: DATASETS_TAB,
     hideBackBtn: viewMode === FULL_VIEW_MODE,
@@ -154,52 +156,6 @@ export const handleApplyDetailsChanges = (
 ) => {
   return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
 }
-
-export const checkForSelectedDataset = debounce(
-  (
-    paramsName,
-    datasets,
-    paramsId,
-    projectName,
-    setSelectedDataset,
-    navigate,
-    isAllVersions,
-    searchParams,
-    paginationConfigRef
-  ) => {
-    if (paramsId) {
-      const searchBePage = parseInt(searchParams.get(BE_PAGE))
-      const configBePage = paginationConfigRef.current[BE_PAGE]
-      const { tag, uid, iter } = parseIdentifier(paramsId)
-
-      if (datasets.length > 0 && searchBePage === configBePage) {
-        const searchItem = searchArtifactItem(
-          datasets.map(artifact => artifact.data ?? artifact),
-          paramsName,
-          tag,
-          iter,
-          uid
-        )
-
-        if (!searchItem) {
-          navigate(
-            `/projects/${projectName}/datasets${isAllVersions ? `/${paramsName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(
-              window.location.search,
-              [VIEW_SEARCH_PARAMETER]
-            )}`,
-            { replace: true }
-          )
-        } else {
-          setSelectedDataset(prevState => {
-            return isEqual(prevState, searchItem) ? prevState : searchItem
-          })
-        }
-      }
-    } else {
-      setSelectedDataset({})
-    }
-  }
-)
 
 export const generateActionsMenu = (
   datasetMin,
@@ -240,18 +196,20 @@ export const generateActionsMenu = (
         icon: <DownloadIcon />,
         onClick: datasetMin => {
           getFullDataset(datasetMin).then(dataset => {
-            const downloadPath = `${dataset?.target_path}${dataset?.model_file || ''}`
-            dispatch(
-              setDownloadItem({
-                path: downloadPath,
-                user: dataset.producer?.owner,
-                id: downloadPath,
-                artifactLimits: frontendSpec?.artifact_limits,
-                fileSize: dataset.size,
-                projectName
-              })
-            )
-            dispatch(setShowDownloadsList(true))
+            if (dataset) {
+              const downloadPath = `${dataset?.target_path}${dataset?.model_file || ''}`
+              dispatch(
+                setDownloadItem({
+                  path: downloadPath,
+                  user: dataset.producer?.owner,
+                  id: downloadPath,
+                  artifactLimits: frontendSpec?.artifact_limits,
+                  fileSize: dataset.size,
+                  projectName
+                })
+              )
+              dispatch(setShowDownloadsList(true))
+            }
           })
         }
       },
@@ -335,12 +293,14 @@ export const generateActionsMenu = (
         icon: <ArtifactView />,
         onClick: datasetMin => {
           getFullDataset(datasetMin).then(dataset => {
-            dispatch(
-              showArtifactsPreview({
-                isPreview: true,
-                selectedItem: dataset
-              })
-            )
+            if (dataset) {
+              dispatch(
+                showArtifactsPreview({
+                  isPreview: true,
+                  selectedItem: dataset
+                })
+              )
+            }
           })
         }
       }

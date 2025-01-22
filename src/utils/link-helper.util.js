@@ -41,19 +41,20 @@ export const generateUrlFromRouterPath = link => {
   return new URL(link, window.location.origin).toString()
 }
 
-export const getCloseDetailsLink = (paramName, location, ignoreOrigin) => {
+export const getCloseDetailsLink = (paramName, ignoreOrigin) => {
+  let pathname = window.location.pathname
+
+  if (ignoreOrigin && pathname.startsWith(process.env.PUBLIC_URL)) {
+    pathname = pathname.slice(process.env.PUBLIC_URL.length)
+  }
+
   const link =
-    location.pathname
+    pathname
       .split('/')
-      .splice(0, location.pathname.split('/').lastIndexOf(paramName) + 1)
+      .splice(0, pathname.split('/').lastIndexOf(paramName) + 1)
       .join('/') + window.location.search
 
   return ignoreOrigin ? link : generateUrlFromRouterPath(link)
-}
-
-//TODO: the getCloseDetailsAlertLink will be updated with ML-8368
-export const getCloseDetailsAlertLink = () => {
-  return `/projects/*/alerts/${window.location.search}`
 }
 
 export const getDefaultCloseDetailsLink = (params, page, tab) => {

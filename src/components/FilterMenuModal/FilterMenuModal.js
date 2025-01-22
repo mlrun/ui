@@ -140,6 +140,15 @@ const FilterMenuModal = ({
       setFiltersWizardIsShown(false)
 
       if (counter > 0) {
+        if (filterMenuName) {
+          dispatch(
+            setModalFiltersValues({
+              name: filterMenuName,
+              value: initialValues
+            })
+          )
+        }
+        
         applyChanges && applyChanges(initialValues)
       }
     }

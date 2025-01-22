@@ -20,6 +20,7 @@ such restriction.
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { chunk, debounce, isEqual, isNull } from 'lodash'
+import { useSelector } from 'react-redux'
 
 import {
   BE_PAGE,
@@ -31,7 +32,6 @@ import {
   ITEMS_COUNT_END,
   ITEMS_COUNT_START
 } from '../constants'
-import { useSelector } from 'react-redux'
 
 export const usePagination = ({
   bePageSize = 1000,
@@ -173,23 +173,25 @@ export const usePagination = ({
   }, [filters, hidden, paginationConfigRef, refreshContentDebounced, searchParams])
 
   useEffect(() => {
-    if (
-      !hidden &&
-      content.length === 0 &&
-      isNull(paginationConfigRef.current.paginationResponse?.page) &&
-      parseInt(searchParams.get(BE_PAGE)) > 1
-    ) {
-      setSearchParams(
-        prevSearchParams => {
-          prevSearchParams.set(BE_PAGE, 1)
-          prevSearchParams.set(FE_PAGE, 1)
-          return prevSearchParams
-        },
-        { replace: true }
-      )
+    queueMicrotask(() => {
+      if (
+        !hidden &&
+        content.length === 0 &&
+        isNull(paginationConfigRef.current.paginationResponse?.page) &&
+        parseInt(searchParams.get(BE_PAGE)) > 1
+      ) {
+        paginationConfigRef.current.paginationResponse = null
 
-      paginationConfigRef.current.paginationResponse = null
-    }
+        setSearchParams(
+          prevSearchParams => {
+            prevSearchParams.set(BE_PAGE, 1)
+            prevSearchParams.set(FE_PAGE, 1)
+            return prevSearchParams
+          },
+          { replace: true }
+        )
+      }
+    })
   }, [paginationConfigRef, content, searchParams, setSearchParams, hidden])
 
   useEffect(() => {

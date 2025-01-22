@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { useLocation, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import ActionBar from '../ActionBar/ActionBar'
@@ -45,6 +45,7 @@ import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { getSavedSearchParams } from '../../utils/filter.util'
+import { isEmpty } from 'lodash'
 
 const FunctionsView = ({
   actionsMenu,
@@ -74,7 +75,6 @@ const FunctionsView = ({
   tableContent
 }) => {
   const params = useParams()
-  const location = useLocation()
 
   return (
     <>
@@ -92,13 +92,6 @@ const FunctionsView = ({
                 />
               )}
               <ActionBar
-                page={FUNCTIONS_PAGE}
-                filtersConfig={functionsFiltersConfig}
-                filters={filters}
-                handleRefresh={handleRefreshFunctions}
-                navigateLink={`/projects/${params.projectName}/functions${isAllVersions ? `/${params.funcName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
-                setSearchParams={setSearchFunctionsParams}
-                withoutExpandButton
                 actionButtons={[
                   {
                     hidden: !isDemoMode,
@@ -109,13 +102,19 @@ const FunctionsView = ({
                     })
                   }
                 ]}
+                closeParamName={isAllVersions ? ALL_VERSIONS_PATH : FUNCTIONS_PAGE_PATH}
+                filters={filters}
+                filtersConfig={functionsFiltersConfig}
+                handleRefresh={handleRefreshFunctions}
+                setSearchParams={setSearchFunctionsParams}
+                withoutExpandButton
               >
                 <FunctionsFilters />
               </ActionBar>
             </div>
             {functionsStore.loading ? (
               <Loader />
-            ) : tableContent.length === 0 ? (
+            ) : tableContent.length === 0 && isEmpty(selectedFunction) ? (
               <NoData
                 message={getNoDataMessage(
                   filters,
@@ -132,17 +131,22 @@ const FunctionsView = ({
                 <Table
                   actionsMenu={actionsMenu}
                   getCloseDetailsLink={() =>
-                    getCloseDetailsLink(
-                      isAllVersions ? ALL_VERSIONS_PATH : FUNCTIONS_PAGE_PATH,
-                      location
-                    )
+                    getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : FUNCTIONS_PAGE_PATH)
                   }
                   handleCancel={handleCancel}
                   pageData={pageData}
                   retryRequest={retryRequest}
                   selectedItem={selectedFunction}
                   tableClassName="functions-table"
-                  tableHeaders={tableContent[0]?.content ?? []}
+                  tableHeaders={
+                    tableContent[0]?.content ?? [
+                      {
+                        headerId: isAllVersions ? 'hash' : 'name',
+                        headerLabel: isAllVersions ? 'Hash' : 'Name',
+                        className: 'table-cell-name'
+                      }
+                    ]
+                  }
                 >
                   {tableContent.map((tableItem, index) => (
                     <FunctionsTableRow

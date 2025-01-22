@@ -48,9 +48,7 @@ const HubCategoriesFilter = ({ templates }) => {
     if (!isEqual(prev, next)) {
       const hubCategories = pickBy(next, value => value)
 
-      if (!isEqual(hubCategories, filtersStoreHubCategories)) {
-        form.change(HUB_CATEGORIES_FILTER, hubCategories)
-      }
+      form.change(HUB_CATEGORIES_FILTER, hubCategories)
     }
   }
 

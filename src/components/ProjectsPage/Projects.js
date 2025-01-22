@@ -239,7 +239,7 @@ const Projects = () => {
         rejectHandler: () => {
           setConfirmData(null)
         },
-        confirmHandler: handleArchiveProject
+        confirmHandler: () => handleArchiveProject(project)
       })
     },
     [handleArchiveProject]

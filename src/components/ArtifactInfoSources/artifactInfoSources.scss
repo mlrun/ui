@@ -28,7 +28,7 @@
 
     &-key {
       display: flex;
-      width: 150px;
+      width: 160px;
       min-width: 100px;
       font-weight: bold;
       font-size: 14px;
@@ -36,12 +36,19 @@
     }
 
     &-value {
-      display: flex;
+      display: inline-block;
       flex: 1 1;
-      align-items: center;
       min-width: 110px;
       word-break: break-word;
       color: $topaz;
+
+      &__copy-to-clipboard {
+        display: flex;
+        align-items: center;
+        min-width: 110px;
+        white-space: normal;
+        cursor: pointer;
+      }
     }
   }
 }

@@ -16,7 +16,8 @@ $itemInfoWithoutPadding: item-info-without-padding;
   }
 
   &:has(.metrics-wrapper),
-  &:has(.table__item-logs-container) {
+  &:has(.table__item-logs-container),
+  &:has(> .item-info__details-metrics) {
     align-content: flex-start;
   }
 
@@ -67,11 +68,15 @@ $itemInfoWithoutPadding: item-info-without-padding;
       &__header {
         display: flex;
         align-self: center;
-        width: 160px;
+        width: 190px;
         min-width: 100px;
         font-weight: 500;
         font-size: 15px;
         line-height: 18px;
+
+        &_long {
+          width: 190px;
+        }
       }
 
       &__tip {

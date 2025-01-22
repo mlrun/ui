@@ -26,6 +26,7 @@ import JobPopUp from '../../elements/DetailsPopUp/JobPopUp/JobPopUp'
 
 import {
   DATASETS_PAGE,
+  DOCUMENTS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   FEATURE_VECTORS_TAB,
@@ -83,6 +84,11 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
               tag: featureSetParsedUri.tag
             }
           })
+      },
+      sampling_percentage: {
+        value: selectedItem?.status?.sampling_percentage
+          ? `${selectedItem.status.sampling_percentage}%`
+          : 0
       },
       last_prediction: {
         value: formatDatetime(selectedItem?.status?.last_request, '-')
@@ -182,7 +188,7 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
         value: formatDatetime(selectedItem.updated, 'N/A')
       },
       framework: {
-        value: detailsType === MODELS_TAB ? selectedItem.framework ?? '' : null
+        value: detailsType === MODELS_TAB ? (selectedItem.framework ?? '') : null
       },
       algorithm: {
         value: selectedItem.algorithm
@@ -192,7 +198,7 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
         fieldData: {
           name: 'labels'
         },
-        editModeEnabled: detailsType === MODELS_TAB,
+        editModeEnabled: detailsType === MODELS_TAB || detailsType === DOCUMENTS_TAB,
         editModeType: 'chips'
       }
     }
@@ -212,8 +218,8 @@ export const generateAlertsContent = selectedItem => {
     uid: {
       value: selectedItem.uid
     },
-    endpoint_name: {
-      value: selectedItem.endpointName
+    resultName: {
+      value: selectedItem.resultName
     },
     projectName: {
       value: selectedItem.project

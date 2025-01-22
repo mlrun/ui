@@ -17,11 +17,20 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { ENTITY_TYPE, JOB, MODEL_ENDPOINT_RESULT, MODEL_MONITORING_APPLICATION } from '../constants'
+import {
+  ALERTS_PAGE_PATH,
+  ENTITY_TYPE,
+  JOB,
+  MODEL_ENDPOINT_RESULT,
+  MODEL_MONITORING_APPLICATION,
+  MONITOR_ALERTS_PAGE
+} from '../constants'
 
 export const generateAlertsStats = (data, navigate, projectName) => {
   const navigateToAlertsPage = (filters = {}) => {
-    navigate(`/projects/${projectName}/alerts?${new URLSearchParams(filters)}`)
+    projectName === '*'
+      ? navigate(`/projects/${projectName}/${MONITOR_ALERTS_PAGE}?${new URLSearchParams(filters)}`)
+      : navigate(`/projects/${projectName}/${ALERTS_PAGE_PATH}?${new URLSearchParams(filters)}`)
   }
 
   return {

@@ -34,12 +34,15 @@ import { ReactComponent as Slack } from 'igz-controls/images/slack-icon-colored.
 import { ReactComponent as Webhook } from 'igz-controls/images/webhook-icon.svg'
 
 import {
+  ALERTS_PAGE_PATH,
   APPLICATION,
   ENDPOINT,
   DETAILS_ALERT_APPLICATION,
   JOB,
   MODEL_ENDPOINT_RESULT,
   MODEL_MONITORING_APPLICATION,
+  MONITOR_ALERTS_PAGE,
+  PROJECTS_PAGE_PATH,
   SEVERITY,
   SEVERITY_CRITICAL,
   SEVERITY_HIGH,
@@ -51,7 +54,11 @@ const getEntityTypeData = entityType => {
   switch (entityType) {
     case MODEL_ENDPOINT_RESULT:
       return {
-        value: <Endpoint />,
+        value: (
+          <div data-testid={entityType}>
+            <Endpoint />
+          </div>
+        ),
         detailsValue: (
           <div className="alert-row__details-alert-icon-cell">
             <Endpoint /> <span>{upperFirst(ENDPOINT)}</span>
@@ -182,7 +189,7 @@ const getNotificationData = notifications =>
         </div>
       ),
       tooltip: upperFirst(
-        `${notification.summary.succeeded} success, ${notification.summary.failed} failed`
+        `${notification.kind}: ${notification.summary.succeeded} success, ${notification.summary.failed} failed`
       ),
       kind: notification.kind,
       succeeded: notification.summary.succeeded,
@@ -196,21 +203,22 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects, showExpandButt
   const getLink = alert => {
     const queryString = window.location.search
     const { alertName, entity_kind: entityType, entity_id, id: alertId, job, project, uid } = alert
-
+    const projectName = isCrossProjects ? '*' : project
+    const alertPath = isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE_PATH
     if (entityType === MODEL_ENDPOINT_RESULT) {
       const [endpointId, , , name] = entity_id.split('.')
-      return `/projects/*/alerts/${project}/${alertName}/${alertId}/${name}/${endpointId}/${DETAILS_ALERT_APPLICATION}${queryString}`
+      return `/${PROJECTS_PAGE_PATH}/${projectName}/${alertPath}/${project}/${alertName}/${alertId}/${name}/${endpointId}/${DETAILS_ALERT_APPLICATION}${queryString}`
     }
 
     if (entityType === JOB) {
       return job
-        ? `/projects/*/alerts/${project}/${alertName}/${alertId}/${job.name}/${job.jobUid}/${DETAILS_ALERT_APPLICATION}${queryString}`
+        ? `/${PROJECTS_PAGE_PATH}/${projectName}/${alertPath}/${project}/${alertName}/${alertId}/${job.name}/${job.jobUid}/${DETAILS_ALERT_APPLICATION}${queryString}`
         : ''
     }
 
     if (entityType === MODEL_MONITORING_APPLICATION) {
       const [, applicationName] = entity_id.split('_')
-      return `/projects/*/alerts/${project}/${alertName}/${alertId}/${applicationName}/${uid}/${DETAILS_ALERT_APPLICATION}${queryString}`
+      return `/${PROJECTS_PAGE_PATH}/${projectName}/${alertPath}/${project}/${alertName}/${alertId}/${applicationName}/${uid}/${DETAILS_ALERT_APPLICATION}${queryString}`
     }
 
     return ''
@@ -241,11 +249,12 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects, showExpandButt
   }
 
   if (alert.entity_kind === MODEL_ENDPOINT_RESULT) {
-    const [uid, endpointName, ...rest] = alert.entity_id.split('.')
-    const fullName = [endpointName, ...rest].join('.')
-    alert.endpointName = endpointName
+    const [uid, applicationName, result, resultName] = alert.entity_id.split('.')
+    const fullName = [applicationName, result, resultName].join('.')
     alert.uid = uid
     alert.fullName = `${alert.project}.${fullName}`
+    alert.applicationName = applicationName
+    alert.resultName = resultName
   }
 
   if (alert.entity_kind === MODEL_MONITORING_APPLICATION) {

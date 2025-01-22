@@ -17,17 +17,22 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { cloneDeep, debounce, isEmpty, isNil } from 'lodash'
+import { cloneDeep, debounce, isEmpty, isEqual, isNil } from 'lodash'
 
 import artifactApi from '../api/artifacts-api'
 import {
   ARTIFACT_TYPE,
+  ARTIFACTS_TAB,
+  BE_PAGE,
   DATASET_TYPE,
   DATASETS_TAB,
+  DOCUMENT_TYPE,
   DOCUMENTS_TAB,
+  FE_PAGE,
   FILES_TAB,
   MODEL_TYPE,
-  MODELS_TAB
+  MODELS_TAB,
+  VIEW_SEARCH_PARAMETER
 } from '../constants'
 import { TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST, ALL_VERSIONS_PATH } from '../constants'
 import {
@@ -44,6 +49,8 @@ import { parseArtifacts } from './parseArtifacts'
 import { parseIdentifier } from './parseUri'
 import { setFilters, setModalFiltersValues } from '../reducers/filtersReducer'
 import { showErrorNotification } from './notifications.util'
+import { getFilteredSearchParams } from './filter.util'
+import { generateObjectNotInTheListMessage } from './generateMessage.util'
 
 export const applyTagChanges = (changes, artifactItem, projectName, dispatch, setNotification) => {
   let updateTagMsg = 'Tag was updated'
@@ -199,49 +206,142 @@ const generateArtifactTags = artifacts => {
   return Array.from(uniqueTags).filter(Boolean)
 }
 
-export const setFullSelectedArtifact = debounce(
-  (
-    tab,
-    dispatch,
-    navigate,
-    selectedArtifactMin,
-    setSelectedArtifact,
-    projectName,
-    artifactId,
-    isAllVersions
-  ) => {
-    if (isEmpty(selectedArtifactMin) || !artifactId) {
-      setSelectedArtifact({})
-    } else {
-      const { tag: paramsTag, uid: paramsUid } = parseIdentifier(artifactId)
-      const { db_key, tree, tag, iter, uid } = selectedArtifactMin
-      const fetchArtifactData = getArtifactFetchMethod(tab)
+const getArtifactTypeByTabName = (tab = ARTIFACTS_TAB) => {
+  const typeMap = {
+    [ARTIFACTS_TAB]: ARTIFACT_TYPE,
+    [DATASETS_TAB]: DATASET_TYPE,
+    [DOCUMENTS_TAB]: DOCUMENT_TYPE,
+    [MODELS_TAB]: MODEL_TYPE
+  }
+  
+  return typeMap[tab]
+}
 
-      if (paramsUid === uid && (paramsTag === tag || (isNil(paramsTag) && isNil(tag)))) {
-        dispatch(fetchArtifactData({ projectName, artifactName: db_key, uid, tree, tag, iter }))
-          .unwrap()
-          .then(artifact => {
-            setSelectedArtifact(artifact)
-          })
-          .catch(error => {
-            if (tab === MODELS_TAB) {
-              navigate(
-                `/projects/${projectName}/${tab}/${tab}${isAllVersions ? `/${db_key}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`,
-                { replace: true }
-              )
-            } else {
-              navigate(
-                `/projects/${projectName}/${tab}${isAllVersions ? `/${db_key}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`,
-                { replace: true }
-              )
+export const checkForSelectedArtifact = debounce(
+  ({
+    artifactName,
+    artifacts,
+    dispatch,
+    isAllVersions,
+    navigate,
+    paginatedArtifacts,
+    paginationConfigRef,
+    paramsId,
+    projectName,
+    searchParams,
+    setSearchParams,
+    setSelectedArtifact,
+    lastCheckedArtifactIdRef,
+    tab
+  }) => {
+    if (paramsId) {
+      const searchBePage = parseInt(searchParams.get(BE_PAGE))
+      const configBePage = paginationConfigRef.current[BE_PAGE]
+
+      if (
+        artifacts &&
+        searchBePage === configBePage &&
+        lastCheckedArtifactIdRef.current !== paramsId
+      ) {
+        lastCheckedArtifactIdRef.current = paramsId
+
+        setFullSelectedArtifact(
+          tab,
+          dispatch,
+          navigate,
+          artifactName,
+          setSelectedArtifact,
+          projectName,
+          paramsId,
+          isAllVersions
+        ).then(artifact => {
+          if (artifact) {
+            const findArtifactIndex = artifactList =>
+              artifactList.findIndex(iteratedArtifact => {
+                const iteratedArtifactData = iteratedArtifact.data ?? iteratedArtifact
+                const fetchedArtifactData = artifact.data ?? artifact
+
+                return (
+                  iteratedArtifactData.uid === fetchedArtifactData.uid &&
+                  (iteratedArtifactData.tag === fetchedArtifactData.tag ||
+                    (isNil(iteratedArtifactData.tag) && isNil(fetchedArtifactData.tag)))
+                )
+              })
+
+            if (findArtifactIndex(paginatedArtifacts) === -1) {
+              const itemIndexInMainList = findArtifactIndex(artifacts)
+
+              if (itemIndexInMainList > -1) {
+                const { fePageSize } = paginationConfigRef.current
+
+                setSearchParams(prevSearchParams => {
+                  prevSearchParams.set(FE_PAGE, Math.ceil((itemIndexInMainList + 1) / fePageSize))
+
+                  return prevSearchParams
+                })
+              } else {
+                artifact.ui.infoMessage = generateObjectNotInTheListMessage(getArtifactTypeByTabName(tab))
+              }
             }
-            showArtifactErrorNotification(dispatch, error, tab)
-          })
+          }
+        })
       }
+    } else {
+      setSelectedArtifact({})
     }
   },
-  20
+  30
 )
+
+export const setFullSelectedArtifact = (
+  tab,
+  dispatch,
+  navigate,
+  artifactName,
+  setSelectedArtifact,
+  projectName,
+  artifactId,
+  isAllVersions
+) => {
+  const { tag, uid, iter } = parseIdentifier(artifactId)
+  const fetchArtifactData = getArtifactFetchMethod(tab)
+
+  return dispatch(fetchArtifactData({ projectName, artifactName, uid, tag, iter }))
+    .unwrap()
+    .then(artifact => {
+      if (!isEmpty(artifact)) {
+        queueMicrotask(() => {
+          setSelectedArtifact(prevState => {
+            return isEqual(prevState, artifact) ? prevState : artifact
+          })
+        })   
+      } else {
+        setSelectedArtifact({})
+      }
+      return artifact
+    })
+    .catch(error => {
+      setSelectedArtifact({})
+      if (tab === MODELS_TAB) {
+        navigate(
+          `/projects/${projectName}/${tab}/${tab}${isAllVersions ? `/${artifactName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(
+            window.location.search,
+            [VIEW_SEARCH_PARAMETER]
+          )}`,
+          { replace: true }
+        )
+      } else {
+        navigate(
+          `/projects/${projectName}/${tab}${isAllVersions ? `/${artifactName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(
+            window.location.search,
+            [VIEW_SEARCH_PARAMETER]
+          )}`,
+          { replace: true }
+        )
+      }
+      showArtifactErrorNotification(dispatch, error, tab)
+    })
+}
 
 export const chooseOrFetchArtifact = (dispatch, tab, selectedArtifact, artifactMin) => {
   if (!isEmpty(selectedArtifact)) return Promise.resolve(selectedArtifact)

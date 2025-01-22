@@ -147,7 +147,8 @@ export const handleDeleteProjectError = (
   deletingProjectsRef,
   terminatePollRef,
   fetchMinimalProjects,
-  navigate
+  navigate,
+  refreshProjects
 ) => {
   if (error.response?.status === 412 && !deleteNonEmpty) {
     setConfirmData({
@@ -161,7 +162,7 @@ export const handleDeleteProjectError = (
       rejectHandler: () => {
         setConfirmData(null)
       },
-      confirmHandler: project => {
+      confirmHandler: () => {
         handleDeleteProject(
           project,
           true,
@@ -170,7 +171,8 @@ export const handleDeleteProjectError = (
           deletingProjectsRef,
           terminatePollRef,
           fetchMinimalProjects,
-          navigate
+          navigate,
+          refreshProjects
         )
       }
     })
@@ -336,8 +338,7 @@ export const onDeleteProject = (project, setConfirmData, ...args) => {
     rejectHandler: () => {
       setConfirmData(null)
     },
-    confirmHandler: deleteNonEmpty =>
-      handleDeleteProject(project, deleteNonEmpty, setConfirmData, ...args)
+    confirmHandler: () => handleDeleteProject(project, false, setConfirmData, ...args)
   })
 }
 
@@ -403,7 +404,8 @@ export const handleDeleteProject = (
         deletingProjectsRef,
         terminatePollRef,
         fetchMinimalProjects,
-        navigate
+        navigate,
+        refreshProjects
       )
     })
 }

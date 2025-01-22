@@ -4,6 +4,7 @@
 
 .breadcrumbs__dropdown {
   max-height: 384px;
+  min-width: 220px;
   overflow-y: auto;
 
   &-wrapper {
@@ -34,6 +35,11 @@
 
     &_selected {
       font-weight: bold;
+
+      &:hover {
+        cursor: default;
+        background: white;
+      }
     }
 
     .checkmark {

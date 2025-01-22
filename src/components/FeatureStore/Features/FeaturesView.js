@@ -75,7 +75,6 @@ const FeaturesView = React.forwardRef(
             filters={filters}
             filtersConfig={filtersConfig}
             handleRefresh={handleRefresh}
-            page={FEATURE_STORE_PAGE}
             setSearchParams={setSearchParams}
             tab={FEATURES_TAB}
             withoutExpandButton

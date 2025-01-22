@@ -68,7 +68,6 @@ const DetailsArtifacts = ({
 
   const dispatch = useDispatch()
   const artifactsStore = useSelector(store => store.artifactsStore)
-  const isJobLoading = useSelector(store => Boolean(store.jobsStore.jobLoadingCounter))
 
   const showArtifact = useCallback(
     id => {
@@ -149,7 +148,7 @@ const DetailsArtifacts = ({
 
       if (workflowId) {
         return dispatch(
-          fetchJob({ // todo remove this request in ML-8608 and use data from the selectedJob (it will be up to date)
+          fetchJob({
             project: job.project || params.projectName,
             jobId: params.jobId,
             iter: iteration
@@ -192,14 +191,14 @@ const DetailsArtifacts = ({
   )
 
   useEffect(() => {
-    if ((params.jobId === selectedItem.uid || isDetailsPopUp) && !isJobLoading) {
+    if (params.jobId === selectedItem.uid || isDetailsPopUp) {
       if (selectedItem.iterationStats?.length > 0 && iteration) {
         getJobArtifacts(selectedItem, iteration)
       } else if (selectedItem.iterationStats?.length === 0) {
         getJobArtifacts(selectedItem, null)
       }
     }
-  }, [getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem, isDetailsPopUp, isJobLoading])
+  }, [getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem, isDetailsPopUp])
 
   useEffect(() => {
     return () => {

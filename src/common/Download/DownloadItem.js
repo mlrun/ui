@@ -25,7 +25,11 @@ import { useDispatch } from 'react-redux'
 import { RoundedIcon, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import downloadFile from '../../utils/downloadFile'
-import { ARTIFACT_MAX_CHUNK_SIZE, ARTIFACT_MAX_DOWNLOAD_SIZE, REQUEST_CANCELED } from '../../constants'
+import {
+  ARTIFACT_MAX_CHUNK_SIZE,
+  ARTIFACT_MAX_DOWNLOAD_SIZE,
+  REQUEST_CANCELED
+} from '../../constants'
 import { removeDownloadItem } from '../../reducers/downloadReducer'
 import api from '../../api/artifacts-api'
 
@@ -55,7 +59,7 @@ const DownloadItem = ({ downloadItem }) => {
   const downloadCallback = useCallback(async () => {
     if (isDownload) {
       let isFileTooLargeLocal = false
-      
+
       try {
         downloadAbortControllerRef.current = new AbortController()
 
@@ -185,9 +189,7 @@ const DownloadItem = ({ downloadItem }) => {
         ) : isSuccessResponse ? (
           <div className="download-item__message_succeed">Done</div>
         ) : (
-          <div className="download-item__message_failed">
-            {failedDownloadMessage}
-          </div>
+          <div className="download-item__message_failed">{failedDownloadMessage}</div>
         )}
       </div>
       {!isFileTooLarge ? (
@@ -213,7 +215,6 @@ DownloadItem.propTypes = {
       max_chunk_size: PropTypes.number,
       max_download_size: PropTypes.number,
       max_preview_size: PropTypes.number
-
     }),
     filename: PropTypes.string,
     fileSize: PropTypes.number,

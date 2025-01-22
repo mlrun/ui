@@ -256,7 +256,6 @@ const DetailsMetrics = ({ selectedItem }) => {
           withLabels
         />
       </div>
-
       {generatedMetrics.length === 0 ? (
         !detailsStore.loadingCounter ? (
           requestErrorMessage ? (
@@ -285,6 +284,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                             className="empty-invocation-card"
                             key={metric.id}
                             title="Endpoint call count"
+                            tip="All values are approximate when using sampling to monitor this model endpoint"
                           />
                           {chooseMetricsDataCard}
                         </React.Fragment>
