@@ -1033,6 +1033,18 @@ function getProjectsSchedules(req, res) {
     )
   }
 
+  if (req.query['next_run_time_since']) {
+    collectedSchedules = collectedSchedules.filter(
+      schedule => Date.parse(schedule.next_run_time) >= Date.parse(req.query['next_run_time_since'])
+    )
+  }
+
+  if (req.query['next_run_time_until']) {
+    collectedSchedules = collectedSchedules.filter(
+      schedule => Date.parse(schedule.next_run_time) <= Date.parse(req.query['next_run_time_until'])
+    )
+  }
+
   res.send({ schedules: collectedSchedules })
 }
 

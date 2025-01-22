@@ -169,24 +169,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
             const parsedJobs = jobs
               .map(job => parseJob(job, SCHEDULE_TAB))
               .filter(job => {
-                let inDateRange = true
-
-                if (filters.dates) {
-                  const timeTo = filters.dates.value[1]?.getTime?.() || ''
-                  const timeFrom = filters.dates.value[0]?.getTime?.() || ''
-                  const nextRun = job.nextRun.getTime()
-
-                  if (timeFrom) {
-                    inDateRange = nextRun >= timeFrom
-                  }
-
-                  if (timeTo && inDateRange) {
-                    inDateRange = nextRun <= timeTo
-                  }
-                }
-
                 return (
-                  inDateRange &&
                   (!filters.type ||
                     filters.type === FILTER_ALL_ITEMS ||
                     job.type === filters.type) &&
