@@ -40,6 +40,7 @@ import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { getSavedSearchParams } from '../../utils/filter.util'
 import { registerArtifactTitle } from './files.util'
+import { getDefaultFirstHeader } from '../../utils/createArtifactsContent'
 
 const FilesView = React.forwardRef(
   (
@@ -108,7 +109,8 @@ const FilesView = React.forwardRef(
                   <ArtifactsFilters artifacts={files} />
                 </ActionBar>
               </div>
-              {artifactsStore.loading ? null : tableContent.length === 0 && isEmpty(selectedFile) ? (
+              {artifactsStore.loading ? null : tableContent.length === 0 &&
+                isEmpty(selectedFile) ? (
                 <NoData
                   message={getNoDataMessage(
                     filters,
@@ -135,15 +137,7 @@ const FilesView = React.forwardRef(
                     retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedFile}
                     tableClassName="files-table"
-                    tableHeaders={
-                      tableHeaders ?? [
-                        {
-                          headerId: isAllVersions ? 'uid' : 'name',
-                          headerLabel: isAllVersions ? 'UID' : 'Name',
-                          className: 'table-cell-name'
-                        }
-                      ]
-                    }
+                    tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
                   >
                     {tableContent.map((tableItem, index) => (
                       <ArtifactsTableRow

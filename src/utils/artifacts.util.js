@@ -245,7 +245,16 @@ export const checkForSelectedArtifact = debounce(
       ) {
         lastCheckedArtifactIdRef.current = paramsId
 
-        const onBeforeSelectArtifactCallback = (artifact) => {
+        setFullSelectedArtifact(
+          tab,
+          dispatch,
+          navigate,
+          artifactName,
+          setSelectedArtifact,
+          projectName,
+          paramsId,
+          isAllVersions
+        ).then(artifact => {
           if (artifact) {
             const findArtifactIndex = artifactList =>
               artifactList.findIndex(iteratedArtifact => {
@@ -272,23 +281,10 @@ export const checkForSelectedArtifact = debounce(
                 })
               } else {
                 artifact.ui.infoMessage = generateObjectNotInTheListMessage(getArtifactTypeByTabName(tab))
-                console.log(generateObjectNotInTheListMessage(getArtifactTypeByTabName(tab)), getArtifactTypeByTabName(tab))
               }
             }
           }
-        }
-
-        setFullSelectedArtifact(
-          tab,
-          dispatch,
-          navigate,
-          artifactName,
-          setSelectedArtifact,
-          projectName,
-          paramsId,
-          isAllVersions,
-          onBeforeSelectArtifactCallback
-        )
+        })
       }
     } else {
       setSelectedArtifact({})
@@ -305,8 +301,7 @@ export const setFullSelectedArtifact = (
   setSelectedArtifact,
   projectName,
   artifactId,
-  isAllVersions,
-  onBeforeSelectArtifactCallback = () => {}
+  isAllVersions
 ) => {
   const { tag, uid, iter } = parseIdentifier(artifactId)
   const fetchArtifactData = getArtifactFetchMethod(tab)
@@ -315,10 +310,11 @@ export const setFullSelectedArtifact = (
     .unwrap()
     .then(artifact => {
       if (!isEmpty(artifact)) {
-        onBeforeSelectArtifactCallback(artifact)
-        setSelectedArtifact(prevState => {
-          return isEqual(prevState, artifact) ? prevState : artifact
-        })
+        queueMicrotask(() => {
+          setSelectedArtifact(prevState => {
+            return isEqual(prevState, artifact) ? prevState : artifact
+          })
+        })   
       } else {
         setSelectedArtifact({})
       }

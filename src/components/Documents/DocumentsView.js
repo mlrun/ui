@@ -37,6 +37,7 @@ import { getSavedSearchParams } from '../../utils/filter.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { ACTIONS_MENU } from '../../types'
+import { getDefaultFirstHeader } from '../../utils/createArtifactsContent'
 
 const DocumentsView = React.forwardRef(
   (
@@ -96,7 +97,8 @@ const DocumentsView = React.forwardRef(
                   <ArtifactsFilters artifacts={documents} />
                 </ActionBar>
               </div>
-              {artifactsStore.loading ? null : tableContent.length === 0 && isEmpty(selectedDocument)? (
+              {artifactsStore.loading ? null : tableContent.length === 0 &&
+                isEmpty(selectedDocument) ? (
                 <NoData
                   message={getNoDataMessage(
                     filters,
@@ -123,15 +125,7 @@ const DocumentsView = React.forwardRef(
                     retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedDocument}
                     tableClassName="documents-table"
-                    tableHeaders={
-                      tableHeaders ?? [
-                        {
-                          headerId: isAllVersions ? 'uid' : 'name',
-                          headerLabel: isAllVersions ? 'UID' : 'Name',
-                          className: 'table-cell-name'
-                        }
-                      ]
-                    }
+                    tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
                   >
                     {tableContent.map((tableItem, index) => (
                       <ArtifactsTableRow

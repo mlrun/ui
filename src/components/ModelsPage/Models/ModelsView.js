@@ -38,6 +38,7 @@ import { SECONDARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../../utils/link-helper.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { getSavedSearchParams } from '../../../utils/filter.util'
+import { getDefaultFirstHeader } from '../../../utils/createArtifactsContent'
 
 const ModelsView = React.forwardRef(
   (
@@ -145,15 +146,7 @@ const ModelsView = React.forwardRef(
                   selectedItem={selectedModel}
                   tab={MODELS_TAB}
                   tableClassName="models-table"
-                  tableHeaders={
-                    tableHeaders ?? [
-                      {
-                        headerId: isAllVersions ? 'uid' : 'name',
-                        headerLabel: isAllVersions ? 'UID' : 'Name',
-                        className: 'table-cell-name'
-                      }
-                    ]
-                  }
+                  tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
                 >
                   {tableContent.map((tableItem, index) => (
                     <ArtifactsTableRow

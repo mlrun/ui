@@ -40,6 +40,7 @@ import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { getSavedSearchParams } from '../../utils/filter.util'
 import { registerDatasetTitle } from './datasets.util'
+import { getDefaultFirstHeader } from '../../utils/createArtifactsContent'
 
 const DatasetsView = React.forwardRef(
   (
@@ -135,15 +136,7 @@ const DatasetsView = React.forwardRef(
                     retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedDataset}
                     tableClassName="datasets-table"
-                    tableHeaders={
-                      tableHeaders ?? [
-                        {
-                          headerId: isAllVersions ? 'uid' : 'name',
-                          headerLabel: isAllVersions ? 'UID' : 'Name',
-                          className: 'table-cell-name'
-                        }
-                      ]
-                    }
+                    tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
                   >
                     {tableContent.map((tableItem, index) => (
                       <ArtifactsTableRow
