@@ -173,6 +173,18 @@ const FeatureSetsPanel = ({
     })
   }
 
+  const handleLabelValidationChange = () => {
+    const areLabelsValid = formRef.current?.getFieldState?.('labels')?.valid ?? true
+    console.log({ areLabelsValid, prevAreLabelsValidRef })
+    if (prevAreLabelsValidRef.current !== areLabelsValid) {
+      setValidation(prevState => ({
+        ...prevState,
+        areLabelsValid
+      }))
+      prevAreLabelsValidRef.current = areLabelsValid
+    }
+  }
+
   return createPortal(
     <Form form={formRef.current} onSubmit={() => {}}>
       {formState => {
@@ -196,19 +208,7 @@ const FeatureSetsPanel = ({
               setValidation={setValidation}
               validation={validation}
             />
-            <FormSpy
-              subscription={{ valid: true }}
-              onChange={() => {
-                const areLabelsValid = formRef.current?.getFieldState?.('labels')?.valid ?? true
-                if (prevAreLabelsValidRef.current !== areLabelsValid) {
-                  setValidation(prevState => ({
-                    ...prevState,
-                    areLabelsValid
-                  }))
-                  prevAreLabelsValidRef.current = areLabelsValid
-                }
-              }}
-            />
+            <FormSpy subscription={{ valid: true }} onChange={handleLabelValidationChange} />
           </>
         )
       }}
