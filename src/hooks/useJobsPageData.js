@@ -40,7 +40,7 @@ import { fetchWorkflows } from '../reducers/workflowReducer'
 import { useFiltersFromSearchParams } from './useFiltersFromSearchParams.hook'
 
 export const useJobsPageData = (initialTabData, selectedTab) => {
-  const [jobRuns, setJobRuns] = useState([])
+  const [jobRuns, setJobRuns] = useState(null)
   const [editableItem, setEditableItem] = useState(null)
   const [jobWizardMode, setJobWizardMode] = useState(null)
   const [jobWizardIsOpened, setJobWizardIsOpened] = useState(false)
@@ -56,6 +56,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
   const [scheduledJobs, setScheduledJobs] = useState([])
   const dispatch = useDispatch()
   const appStore = useSelector(store => store.appStore)
+  const lastCheckedJobIdRef = useRef(null)
 
   const filters = useFiltersFromSearchParams(
     initialTabData[selectedTab]?.filtersConfig,
@@ -70,7 +71,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
   const refreshJobs = useCallback(
     filters => {
       if (params.jobName) {
-        setJobRuns([])
+        setJobRuns(null)
       } else {
         setJobs([])
       }
@@ -103,6 +104,8 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
         config.params.page = paginationConfigRunsRef.current[BE_PAGE]
         config.params['page-size'] = paginationConfigRunsRef.current[BE_PAGE_SIZE]
       }
+
+      lastCheckedJobIdRef.current = null
 
       dispatch(
         fetchData({ project: projectName, filters, config, jobName: params.jobName ?? false })
@@ -140,6 +143,14 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
               setJobs(parsedJobs)
               paginationConfigJobsRef.current.paginationResponse = response.pagination
             }
+          } else {
+            if (params.jobName) {
+              setJobRuns([])
+            }
+          }
+        }).catch(() => {
+          if (params.jobName) {
+            setJobRuns([])
           }
         })
     },
@@ -229,7 +240,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
   })
   const [handleRefreshRuns, paginatedRuns, searchRunsParams, setSearchRunsParams] = usePagination({
     hidden: ![MONITOR_JOBS_TAB, JOBS_MONITORING_JOBS_TAB].includes(selectedTab) || !params.jobName,
-    content: jobRuns,
+    content: jobRuns ?? [],
     refreshContent: refreshJobs,
     filters,
     paginationConfigRef: paginationConfigRunsRef,
@@ -250,6 +261,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
     jobWizardIsOpened,
     jobWizardMode,
     jobs,
+    lastCheckedJobIdRef,
     paginatedJobs: params.jobName ? paginatedRuns : paginatedJobs,
     paginationConfigJobsRef: params.jobName ? paginationConfigRunsRef : paginationConfigJobsRef,
     refreshJobs,

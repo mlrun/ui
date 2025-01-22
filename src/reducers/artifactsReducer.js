@@ -190,6 +190,8 @@ export const fetchDataSets = createAsyncThunk(
           thunkAPI.dispatch,
           config?.ui?.setRequestErrorMessage
         )
+
+        throw error
       })
   }
 )
@@ -227,6 +229,8 @@ export const fetchDocuments = createAsyncThunk(
           thunkAPI.dispatch,
           config?.ui?.setRequestErrorMessage
         )
+
+        throw error
       })
   }
 )
@@ -264,6 +268,8 @@ export const fetchFiles = createAsyncThunk(
           thunkAPI.dispatch,
           config?.ui?.setRequestErrorMessage
         )
+
+        throw error
       })
   }
 )
@@ -354,6 +360,8 @@ export const fetchModels = createAsyncThunk(
           thunkAPI.dispatch,
           config?.ui?.setRequestErrorMessage
         )
+
+        throw error
       })
   }
 )

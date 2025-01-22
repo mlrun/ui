@@ -108,6 +108,7 @@ const Jobs = () => {
     jobWizardIsOpened,
     jobWizardMode,
     jobs,
+    lastCheckedJobIdRef,
     paginatedJobs,
     paginationConfigJobsRef,
     refreshJobs,
@@ -272,6 +273,7 @@ const Jobs = () => {
                   jobsFiltersConfig: initialTabData[MONITOR_JOBS_TAB].filtersConfig,
                   jobWizardIsOpened,
                   jobWizardMode,
+                  lastCheckedJobIdRef,
                   paginatedJobs,
                   paginationConfigJobsRef,
                   refreshJobs,
@@ -290,6 +292,7 @@ const Jobs = () => {
                   setJobWizardMode,
                   setScheduledJobs,
                   setSelectedJob,
+                  setSearchParams,
                   tabData,
                   terminateAbortTasksPolling,
                   workflowsFiltersConfig: initialTabData[MONITOR_WORKFLOWS_TAB].filtersConfig

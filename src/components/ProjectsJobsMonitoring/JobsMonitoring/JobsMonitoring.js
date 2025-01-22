@@ -56,6 +56,7 @@ const JobsMonitoring = () => {
     setJobRuns,
     setJobs,
     setSelectedJob,
+    setSearchParams,
     terminateAbortTasksPolling
   } = React.useContext(ProjectJobsMonitoringContext)
   const jobsAreInitializedRef = useRef(false)
@@ -114,6 +115,7 @@ const JobsMonitoring = () => {
         setJobRuns={setJobRuns}
         setJobs={setJobs}
         setSelectedJob={setSelectedJob}
+        setSearchParams={setSearchParams}
         tableContent={tableContent}
         terminateAbortTasksPolling={terminateAbortTasksPolling}
       />
