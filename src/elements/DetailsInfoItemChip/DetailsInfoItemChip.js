@@ -17,8 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import { isEmpty, isEqual } from 'lodash'
 import classnames from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -37,7 +38,7 @@ const DetailsInfoItemChip = ({
   chipsData,
   currentField,
   detailsInfoDispatch,
-  detailsInfoState,
+  detailsStore,
   editableFieldType,
   formState,
   handleFinishEdit,
@@ -53,8 +54,8 @@ const DetailsInfoItemChip = ({
     editableFieldType && editableFieldType !== 'chips' && 'details-item_disabled'
   )
 
-  const setEditMode = () => {
-    if (!detailsInfoState.editMode.field && !formState.pristine) {
+  const setEditMode = useCallback(() => {
+    if (!formState.form.getFieldState(item.fieldData.name).pristine && !isFieldInEditMode) {
       detailsInfoDispatch({
         type: detailsInfoActions.SET_EDIT_MODE,
         payload: {
@@ -63,10 +64,66 @@ const DetailsInfoItemChip = ({
         }
       })
       dispatch(detailsActions.setEditMode(true))
-    } else if (formState.pristine) {
+    } else if (formState.form.getFieldState(item.fieldData.name).pristine && !isFieldInEditMode) {
       handleFinishEdit(item.fieldData.name)
     }
-  }
+  }, [
+    currentField,
+    detailsInfoDispatch,
+    dispatch,
+    formState.form,
+    handleFinishEdit,
+    isFieldInEditMode,
+    item?.editModeType,
+    item.fieldData.name
+  ])
+
+  useEffect(() => {
+    if (
+      !isEmpty(formState.values[item.fieldData.name]) &&
+      !formState.form.getFieldState(item.fieldData.name).pristine &&
+      !isEqual(
+        formState.values[item.fieldData.name],
+        detailsStore.changes.data?.[item.fieldData.name]?.currentFieldValue
+      ) &&
+      !isFieldInEditMode
+    ) {
+      detailsInfoDispatch({
+        type: detailsInfoActions.SET_EDIT_MODE,
+        payload: {
+          field: currentField,
+          fieldType: item?.editModeType
+        }
+      })
+      dispatch(detailsActions.setEditMode(true))
+    } else if (
+      !isEmpty(formState.initialValues[item.fieldData.name]) &&
+      isEmpty(formState.values[item.fieldData.name]) &&
+      !detailsStore.changes.data?.[item.fieldData.name] &&
+      !isFieldInEditMode
+    ) {
+      detailsInfoDispatch({
+        type: detailsInfoActions.SET_EDIT_MODE,
+        payload: {
+          field: currentField,
+          fieldType: item?.editModeType
+        }
+      })
+      dispatch(detailsActions.setEditMode(true))
+    }
+  }, [
+    currentField,
+    detailsInfoDispatch,
+    detailsStore.changes.data,
+    dispatch,
+    formState.form,
+    formState.initialValues,
+    formState.values,
+    isFieldInEditMode,
+    item?.editModeType,
+    item.fieldData.name,
+    setEditMode
+  ])
 
   return (
     <div className={chipFieldClassName}>
@@ -107,7 +164,6 @@ DetailsInfoItemChip.propTypes = {
   chipsData: PropTypes.object.isRequired,
   currentField: PropTypes.string.isRequired,
   detailsInfoDispatch: PropTypes.func.isRequired,
-  detailsInfoState: PropTypes.object.isRequired,
   editableFieldType: PropTypes.string.isRequired,
   handleFinishEdit: PropTypes.func.isRequired,
   isFieldInEditMode: PropTypes.bool.isRequired,

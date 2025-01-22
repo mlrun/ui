@@ -631,3 +631,7 @@ export const ARTIFACT_MAX_DOWNLOAD_SIZE = 104857600 // 100MB
 
 /*=========== NOTIFICATION =============*/
 export const NOTIFICATION_DURATION = 500
+
+/*========= DEFAULT PROPS =============*/
+export const EMPTY_ARRAY = []
+export const EMPTY_OBJECT = {}
