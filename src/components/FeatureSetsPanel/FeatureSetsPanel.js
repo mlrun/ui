@@ -175,7 +175,6 @@ const FeatureSetsPanel = ({
 
   const handleLabelValidationChange = () => {
     const areLabelsValid = formRef.current?.getFieldState?.('labels')?.valid ?? true
-    console.log({ areLabelsValid, prevAreLabelsValidRef })
     if (prevAreLabelsValidRef.current !== areLabelsValid) {
       setValidation(prevState => ({
         ...prevState,
