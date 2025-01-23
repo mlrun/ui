@@ -107,6 +107,7 @@ const ProjectsJobsMonitoring = () => {
     handleMonitoring,
     handleRefreshJobs,
     handleRerunJob,
+    historyBackLink,
     jobRuns,
     jobWizardIsOpened,
     jobWizardMode,
@@ -114,6 +115,7 @@ const ProjectsJobsMonitoring = () => {
     lastCheckedJobIdRef,
     paginatedJobs,
     paginationConfigJobsRef,
+    refreshAfterDeleteCallback,
     refreshJobs,
     refreshScheduled,
     requestErrorMessage,
@@ -191,7 +193,7 @@ const ProjectsJobsMonitoring = () => {
                   jobWizardIsOpened || jobsStore.loading || Boolean(jobsStore.jobLoadingCounter)
                 }
                 autoRefreshStopTrigger={!isEmpty(selectedJob)}
-                closeParamName={selectedTab}
+                closeParamName={params.jobName}
                 filters={filters}
                 filtersConfig={initialTabData[selectedTab].filtersConfig}
                 handleRefresh={tabData[selectedTab].handleRefresh}
@@ -220,6 +222,7 @@ const ProjectsJobsMonitoring = () => {
                   getWorkflows,
                   handleMonitoring,
                   handleRerunJob,
+                  historyBackLink,
                   initialTabData,
                   jobRuns,
                   jobWizardIsOpened,
@@ -230,6 +233,7 @@ const ProjectsJobsMonitoring = () => {
                   lastCheckedJobIdRef,
                   paginatedJobs,
                   paginationConfigJobsRef,
+                  refreshAfterDeleteCallback,
                   refreshJobs,
                   refreshScheduled,
                   requestErrorMessage,

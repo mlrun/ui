@@ -17,8 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { useLocation, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
@@ -30,6 +30,7 @@ import {
   FILTER_ALL_ITEMS,
   GROUP_BY_WORKFLOW,
   JOBS_MONITORING_JOBS_TAB,
+  JOBS_MONITORING_PAGE,
   MONITOR_JOBS_TAB,
   SCHEDULE_TAB
 } from '../constants'
@@ -38,6 +39,8 @@ import { parseJob } from '../utils/parseJob'
 import { fetchAllJobRuns, fetchJobs, fetchScheduledJobs } from '../reducers/jobReducer'
 import { fetchWorkflows } from '../reducers/workflowReducer'
 import { useFiltersFromSearchParams } from './useFiltersFromSearchParams.hook'
+import { getSavedSearchParams } from '../utils/filter.util'
+import { useRefreshAfterDelete } from './useRefreshAfterDelete.hook'
 
 export const useJobsPageData = (initialTabData, selectedTab) => {
   const [jobRuns, setJobRuns] = useState(null)
@@ -55,12 +58,27 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [scheduledJobs, setScheduledJobs] = useState([])
   const dispatch = useDispatch()
+  const location = useLocation()
   const appStore = useSelector(store => store.appStore)
   const lastCheckedJobIdRef = useRef(null)
+
+  const historyBackLink = useMemo(() => {
+    const queryParams = getSavedSearchParams(location.search)
+
+    return selectedTab === MONITOR_JOBS_TAB
+      ? `/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}${queryParams}`
+      : `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}${queryParams}`
+  }, [location.search, params.projectName, selectedTab])
 
   const filters = useFiltersFromSearchParams(
     initialTabData[selectedTab]?.filtersConfig,
     initialTabData[selectedTab]?.parseQueryParamsCallback
+  )
+
+  const [refreshAfterDeleteCallback, refreshAfterDeleteTrigger] = useRefreshAfterDelete(
+    paginationConfigRunsRef,
+    historyBackLink,
+    'runs'
   )
 
   const terminateAbortTasksPolling = useCallback(() => {
@@ -107,7 +125,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
 
       lastCheckedJobIdRef.current = null
 
-      dispatch(
+      return dispatch(
         fetchData({ project: projectName, filters, config, jobName: params.jobName ?? false })
       )
         .unwrap()
@@ -148,7 +166,10 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
               setJobRuns([])
             }
           }
-        }).catch(() => {
+
+          return response
+        })
+        .catch(() => {
           if (params.jobName) {
             setJobRuns([])
           }
@@ -236,7 +257,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
     refreshContent: refreshJobs,
     filters,
     paginationConfigRef: paginationConfigJobsRef,
-    resetPaginationTrigger: `${params.projectName}_${selectedTab}`
+    resetPaginationTrigger: `${params.projectName}_${selectedTab}_${refreshAfterDeleteTrigger}`
   })
   const [handleRefreshRuns, paginatedRuns, searchRunsParams, setSearchRunsParams] = usePagination({
     hidden: ![MONITOR_JOBS_TAB, JOBS_MONITORING_JOBS_TAB].includes(selectedTab) || !params.jobName,
@@ -257,6 +278,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
     handleMonitoring,
     handleRefreshJobs: params.jobName ? handleRefreshRuns : handleRefreshJobs,
     handleRerunJob,
+    historyBackLink,
     jobRuns,
     jobWizardIsOpened,
     jobWizardMode,
@@ -264,6 +286,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
     lastCheckedJobIdRef,
     paginatedJobs: params.jobName ? paginatedRuns : paginatedJobs,
     paginationConfigJobsRef: params.jobName ? paginationConfigRunsRef : paginationConfigJobsRef,
+    refreshAfterDeleteCallback,
     refreshJobs,
     refreshScheduled,
     requestErrorMessage,

@@ -38,7 +38,6 @@ import { ACTIONS_MENU } from '../../types'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { getSavedSearchParams } from '../../utils/filter.util'
 import { registerArtifactTitle } from './files.util'
 import { getDefaultFirstHeader } from '../../utils/createArtifactsContent'
 
@@ -59,6 +58,7 @@ const FilesView = React.forwardRef(
       handleRefreshFiles,
       handleRefreshWithFilters,
       handleRegisterArtifact,
+      historyBackLink,
       isAllVersions,
       pageData,
       paginationConfigFilesRef,
@@ -83,12 +83,7 @@ const FilesView = React.forwardRef(
             {artifactsStore.loading && <Loader />}
             <div className="table-container">
               <div className="content__action-bar-wrapper">
-                {isAllVersions && (
-                  <HistoryBackLink
-                    itemName={fileName}
-                    link={`/projects/${projectName}/files${getSavedSearchParams(window.location.search)}`}
-                  />
-                )}
+                {isAllVersions && <HistoryBackLink itemName={fileName} link={historyBackLink} />}
                 <ActionBar
                   actionButtons={[
                     {
@@ -194,6 +189,7 @@ FilesView.propTypes = {
   handleRefreshFiles: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterArtifact: PropTypes.func.isRequired,
+  historyBackLink: PropTypes.string.isRequired,
   isAllVersions: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   projectName: PropTypes.string.isRequired,

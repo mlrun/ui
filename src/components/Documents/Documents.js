@@ -26,16 +26,6 @@ import { isEmpty } from 'lodash'
 import DocumentsView from './DocumentsView'
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 
-import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
-import {
-  getFiltersConfig,
-  generatePageData,
-  handleApplyDetailsChanges,
-  generateActionsMenu
-} from './documents.util'
-import { getViewMode } from '../../utils/helper'
-import { parseChipsData } from '../../utils/convertChipsData'
-import { toggleYaml } from '../../reducers/appReducer'
 import {
   ALL_VERSIONS_PATH,
   BE_PAGE,
@@ -49,15 +39,26 @@ import {
   TAG_FILTER,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
+import {
+  getFiltersConfig,
+  generatePageData,
+  handleApplyDetailsChanges,
+  generateActionsMenu
+} from './documents.util'
+import { createDocumentsRowData } from '../../utils/createArtifactsContent'
 import { fetchArtifactTags, fetchDocuments, removeDocuments } from '../../reducers/artifactsReducer'
 import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
-import { openPopUp } from 'igz-controls/utils/common.util'
-import { transformSearchParams } from '../../utils/filter.util'
-import { createDocumentsRowData } from '../../utils/createArtifactsContent'
-import { setNotification } from '../../reducers/notificationReducer'
+import { getSavedSearchParams, transformSearchParams } from '../../utils/filter.util'
+import { getViewMode } from '../../utils/helper'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
-import { usePagination } from '../../hooks/usePagination.hook'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { parseChipsData } from '../../utils/convertChipsData'
 import { checkForSelectedArtifact, setFullSelectedArtifact } from '../../utils/artifacts.util'
+import { setNotification } from '../../reducers/notificationReducer'
+import { toggleYaml } from '../../reducers/appReducer'
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import { usePagination } from '../../hooks/usePagination.hook'
+import { useRefreshAfterDelete } from '../../hooks/useRefreshAfterDelete.hook'
 
 import './documents.scss'
 
@@ -82,9 +83,19 @@ const Documents = ({ isAllVersions = false }) => {
   const paginationConfigDocumentVersionsRef = useRef({})
   const lastCheckedArtifactIdRef = useRef(null)
 
+  const historyBackLink = useMemo(
+    () =>
+      `/projects/${params.projectName}/${DOCUMENTS_TAB}${getSavedSearchParams(location.search)}`,
+    [location.search, params.projectName]
+  )
   const filtersConfig = useMemo(() => getFiltersConfig(isAllVersions), [isAllVersions])
   const documentsFilters = useFiltersFromSearchParams(filtersConfig)
   const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
+  const [refreshAfterDeleteCallback, refreshAfterDeleteTrigger] = useRefreshAfterDelete(
+    paginationConfigDocumentVersionsRef,
+    historyBackLink,
+    'artifacts'
+  )
 
   const detailsFormInitialValues = useMemo(
     () => ({
@@ -113,7 +124,10 @@ const Documents = ({ isAllVersions = false }) => {
         requestParams.name = params.documentName
         setDocumentVersions(null)
       } else {
-        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS || filters[TAG_FILTER] === TAG_FILTER_ALL_ITEMS) {
+        if (
+          filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS ||
+          filters[TAG_FILTER] === TAG_FILTER_ALL_ITEMS
+        ) {
           requestParams['partition-by'] = 'project_and_name'
           requestParams['partition-sort-by'] = 'updated'
         }
@@ -163,7 +177,8 @@ const Documents = ({ isAllVersions = false }) => {
           }
 
           return response
-        }).catch(() => {
+        })
+        .catch(() => {
           if (isAllVersions) {
             setDocumentVersions([])
           } else {
@@ -234,6 +249,7 @@ const Documents = ({ isAllVersions = false }) => {
         handleAddTag,
         params.projectName,
         refreshDocuments,
+        refreshAfterDeleteCallback,
         documentsFilters,
         selectedDocument,
         showAllVersions,
@@ -246,6 +262,7 @@ const Documents = ({ isAllVersions = false }) => {
       handleAddTag,
       params.projectName,
       refreshDocuments,
+      refreshAfterDeleteCallback,
       documentsFilters,
       selectedDocument,
       showAllVersions,
@@ -298,7 +315,7 @@ const Documents = ({ isAllVersions = false }) => {
     refreshContent: refreshDocuments,
     filters: documentsFilters,
     paginationConfigRef: paginationConfigDocumentsRef,
-    resetPaginationTrigger: `${params.projectName}`
+    resetPaginationTrigger: `${params.projectName}_${refreshAfterDeleteTrigger}`
   })
 
   const [
@@ -424,6 +441,7 @@ const Documents = ({ isAllVersions = false }) => {
         isAllVersions ? handleRefreshDocumentVersions : handleRefreshDocuments
       }
       handleRefreshWithFilters={handleRefreshWithFilters}
+      historyBackLink={historyBackLink}
       isAllVersions={isAllVersions}
       isSelectedArtifactBeyondTheList={isSelectedArtifactBeyondTheList}
       pageData={pageData}

@@ -213,6 +213,7 @@ export const generateActionsMenu = (
   handleAddTag,
   projectName,
   handleRefresh,
+  refreshAfterDeleteCallback,
   modelsFilters,
   selectedModel,
   showAllVersions,
@@ -286,6 +287,7 @@ export const generateActionsMenu = (
                 modelMin.db_key,
                 modelMin.uid,
                 handleRefresh,
+                refreshAfterDeleteCallback,
                 modelsFilters,
                 MODEL_TYPE
               )
@@ -308,6 +310,7 @@ export const generateActionsMenu = (
                 modelMin.db_key,
                 modelMin.uid,
                 handleRefresh,
+                null,
                 modelsFilters,
                 MODEL_TYPE,
                 MODEL_TYPE,

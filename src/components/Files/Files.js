@@ -51,15 +51,16 @@ import {
 import { createFilesRowData } from '../../utils/createArtifactsContent'
 import { fetchArtifactTags, fetchFiles, removeFiles } from '../../reducers/artifactsReducer'
 import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
+import { getSavedSearchParams, transformSearchParams } from '../../utils/filter.util'
 import { getViewMode } from '../../utils/helper'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { checkForSelectedArtifact, setFullSelectedArtifact } from '../../utils/artifacts.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { toggleYaml } from '../../reducers/appReducer'
-import { transformSearchParams } from '../../utils/filter.util'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { usePagination } from '../../hooks/usePagination.hook'
+import { useRefreshAfterDelete } from '../../hooks/useRefreshAfterDelete.hook'
 
 import './files.scss'
 
@@ -84,8 +85,17 @@ const Files = ({ isAllVersions = false }) => {
   const filesRef = useRef(null)
   const lastCheckedArtifactIdRef = useRef(null)
 
+  const historyBackLink = useMemo(
+    () => `/projects/${params.projectName}/files${getSavedSearchParams(location.search)}`,
+    [location.search, params.projectName]
+  )
   const filtersConfig = useMemo(() => getFiltersConfig(isAllVersions), [isAllVersions])
   const filesFilters = useFiltersFromSearchParams(filtersConfig)
+  const [refreshAfterDeleteCallback, refreshAfterDeleteTrigger] = useRefreshAfterDelete(
+    paginationConfigFileVersionsRef,
+    historyBackLink,
+    'artifacts'
+  )
 
   const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
 
@@ -115,7 +125,10 @@ const Files = ({ isAllVersions = false }) => {
         requestParams.name = params.fileName
         setFileVersions(null)
       } else {
-        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS || filters[TAG_FILTER] === TAG_FILTER_ALL_ITEMS) {
+        if (
+          filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS ||
+          filters[TAG_FILTER] === TAG_FILTER_ALL_ITEMS
+        ) {
           requestParams['partition-by'] = 'project_and_name'
           requestParams['partition-sort-by'] = 'updated'
         }
@@ -167,7 +180,8 @@ const Files = ({ isAllVersions = false }) => {
           }
 
           return response
-        }).catch(() => {
+        })
+        .catch(() => {
           if (isAllVersions) {
             setFileVersions([])
           } else {
@@ -238,6 +252,7 @@ const Files = ({ isAllVersions = false }) => {
         handleAddTag,
         params.projectName,
         refreshFiles,
+        refreshAfterDeleteCallback,
         filesFilters,
         selectedFile,
         showAllVersions,
@@ -250,6 +265,7 @@ const Files = ({ isAllVersions = false }) => {
       handleAddTag,
       params.projectName,
       refreshFiles,
+      refreshAfterDeleteCallback,
       filesFilters,
       selectedFile,
       showAllVersions,
@@ -335,7 +351,7 @@ const Files = ({ isAllVersions = false }) => {
       refreshContent: refreshFiles,
       filters: filesFilters,
       paginationConfigRef: paginationConfigFilesRef,
-      resetPaginationTrigger: `${params.projectName}`
+      resetPaginationTrigger: `${params.projectName}_${refreshAfterDeleteTrigger}`
     })
   const [
     handleRefreshFileVersions,
@@ -431,6 +447,7 @@ const Files = ({ isAllVersions = false }) => {
       handleRefreshFiles={isAllVersions ? handleRefreshFileVersions : handleRefreshFiles}
       handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterArtifact={handleRegisterArtifact}
+      historyBackLink={historyBackLink}
       isAllVersions={isAllVersions}
       isSelectedArtifactBeyondTheList={isSelectedArtifactBeyondTheList}
       pageData={pageData}

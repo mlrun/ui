@@ -164,7 +164,8 @@ export const generateActionsMenu = (
   toggleConvertedYaml,
   handleAddTag,
   projectName,
-  handleRefresh,
+  refreshArtifacts,
+  refreshAfterDeleteCallback,
   datasetsFilters,
   selectedDataset,
   showAllVersions,
@@ -235,7 +236,8 @@ export const generateActionsMenu = (
                 artifactType: DATASET_TYPE,
                 category: DATASET_TYPE,
                 filters: datasetsFilters,
-                handleRefresh
+                refreshArtifacts,
+                refreshAfterDeleteCallback
               })
             : openDeleteConfirmPopUp(
                 'Delete dataset?',
@@ -246,7 +248,8 @@ export const generateActionsMenu = (
                     projectName,
                     datasetMin.db_key,
                     datasetMin.uid,
-                    handleRefresh,
+                    refreshArtifacts,
+                    refreshAfterDeleteCallback,
                     datasetsFilters,
                     DATASET_TYPE
                   )
@@ -268,7 +271,8 @@ export const generateActionsMenu = (
                 projectName,
                 datasetMin.db_key,
                 datasetMin.uid,
-                handleRefresh,
+                refreshArtifacts,
+                null,
                 datasetsFilters,
                 DATASET_TYPE,
                 DATASET_TYPE,

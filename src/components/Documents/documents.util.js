@@ -118,7 +118,8 @@ export const generateActionsMenu = (
   toggleConvertedYaml,
   handleAddTag,
   projectName,
-  handleRefresh,
+  refreshArtifacts,
+  refreshAfterDeleteCallback,
   filters,
   selectedDocument,
   showAllVersions,
@@ -186,7 +187,8 @@ export const generateActionsMenu = (
             artifactType: DOCUMENT_TYPE,
             category: DOCUMENT_TYPE,
             filters,
-            handleRefresh
+            refreshArtifacts,
+            refreshAfterDeleteCallback
           })
       },
       {
@@ -204,7 +206,8 @@ export const generateActionsMenu = (
                 projectName,
                 documentMin.db_key,
                 documentMin.uid,
-                handleRefresh,
+                refreshArtifacts,
+                null,
                 filters,
                 DOCUMENT_TYPE,
                 DOCUMENT_TYPE,

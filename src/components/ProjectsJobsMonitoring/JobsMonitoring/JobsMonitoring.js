@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo, useEffect, useRef, useCallback } from 'react'
+import React, { useMemo, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 
 import JobsTable from '../../../elements/JobsTable/JobsTable'
@@ -26,13 +26,8 @@ import TableTop from '../../../elements/TableTop/TableTop'
 import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
 import { createJobsMonitoringContent } from '../../../utils/createJobsContent'
 import { useMode } from '../../../hooks/mode.hook'
-import {
-  JOBS_MONITORING_JOBS_TAB,
-  JOBS_MONITORING_PAGE,
-  REQUEST_CANCELED
-} from '../../../constants'
+import { JOBS_MONITORING_JOBS_TAB, REQUEST_CANCELED } from '../../../constants'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
-import { getSavedSearchParams } from '../../../utils/filter.util'
 
 const JobsMonitoring = () => {
   const params = useParams()
@@ -43,6 +38,7 @@ const JobsMonitoring = () => {
     abortingJobs,
     autoRefreshPrevValue,
     fetchJobFunctionsPromiseRef,
+    historyBackLink,
     initialTabData,
     jobRuns,
     jobs,
@@ -71,17 +67,6 @@ const JobsMonitoring = () => {
     [isStagingMode, paginatedJobs, params.jobName]
   )
 
-  const getBackLink = useCallback(
-    (useSavedParams = false) => {
-      let queryParams = useSavedParams
-        ? getSavedSearchParams(window.location.search)
-        : `?${searchParams.toString()}`
-
-      return `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}${queryParams}`
-    },
-    [searchParams]
-  )
-
   useEffect(() => {
     const abortController = abortControllerRef.current
 
@@ -96,7 +81,7 @@ const JobsMonitoring = () => {
 
   return (
     <>
-      {params.jobName && <TableTop link={getBackLink(true)} text={params.jobName} />}
+      {params.jobName && <TableTop link={historyBackLink} text={params.jobName} />}
       <JobsTable
         abortingJobs={abortingJobs}
         autoRefreshPrevValue={autoRefreshPrevValue}

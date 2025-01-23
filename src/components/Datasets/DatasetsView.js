@@ -38,7 +38,6 @@ import { ACTIONS_MENU } from '../../types'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { getSavedSearchParams } from '../../utils/filter.util'
 import { registerDatasetTitle } from './datasets.util'
 import { getDefaultFirstHeader } from '../../utils/createArtifactsContent'
 
@@ -59,6 +58,7 @@ const DatasetsView = React.forwardRef(
       handleRefreshDatasets,
       handleRefreshWithFilters,
       handleRegisterDataset,
+      historyBackLink,
       isAllVersions,
       pageData,
       paginationConfigDatasetsRef,
@@ -83,12 +83,7 @@ const DatasetsView = React.forwardRef(
             {artifactsStore.loading && <Loader />}
             <div className="table-container">
               <div className="content__action-bar-wrapper">
-                {isAllVersions && (
-                  <HistoryBackLink
-                    itemName={datasetName}
-                    link={`/projects/${projectName}/datasets${getSavedSearchParams(window.location.search)}`}
-                  />
-                )}
+                {isAllVersions && <HistoryBackLink itemName={datasetName} link={historyBackLink} />}
                 <ActionBar
                   actionButtons={[
                     {
@@ -193,6 +188,7 @@ DatasetsView.propTypes = {
   handleRefreshDatasets: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterDataset: PropTypes.func.isRequired,
+  historyBackLink: PropTypes.string.isRequired,
   isAllVersions: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   projectName: PropTypes.string.isRequired,
