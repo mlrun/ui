@@ -33,7 +33,7 @@ import { showErrorNotification } from '../../../utils/notifications.util'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
-export const generateFeatureSetsDetailsMenu = selectedItem => [
+export const generateFeatureSetsDetailsMenu = (selectedItem, isDemoMode) => [
   {
     label: 'overview',
     id: 'overview'
@@ -59,7 +59,8 @@ export const generateFeatureSetsDetailsMenu = selectedItem => [
   },
   {
     label: 'analysis',
-    id: 'analysis'
+    id: 'analysis',
+    hidden: !isDemoMode
   }
 ]
 
@@ -83,12 +84,12 @@ export const filtersConfig = {
   [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
 }
 
-export const generatePageData = selectedFeatureSet => {
+export const generatePageData = (selectedFeatureSet, isDemoMode) => {
   return {
     page: FEATURE_STORE_PAGE,
     details: {
       type: FEATURE_SETS_TAB,
-      menu: generateFeatureSetsDetailsMenu(selectedFeatureSet),
+      menu: generateFeatureSetsDetailsMenu(selectedFeatureSet, isDemoMode),
       infoHeaders: featureSetsInfoHeaders
     }
   }

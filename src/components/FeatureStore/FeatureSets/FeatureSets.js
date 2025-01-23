@@ -58,6 +58,7 @@ import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 import { filtersConfig } from './featureSets.util'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
+import { useMode } from '../../../hooks/mode.hook'
 
 import cssVariables from './featureSets.scss'
 
@@ -86,6 +87,7 @@ const FeatureSets = ({
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
+  const { isDemoMode } = useMode()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const detailsFormInitialValues = useMemo(
     () => ({
@@ -99,7 +101,10 @@ const FeatureSets = ({
   const { featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen, toggleConvertedYaml } =
     React.useContext(FeatureStoreContext)
 
-  const pageData = useMemo(() => generatePageData(selectedFeatureSet), [selectedFeatureSet])
+  const pageData = useMemo(
+    () => generatePageData(selectedFeatureSet, isDemoMode),
+    [isDemoMode, selectedFeatureSet]
+  )
 
   const actionsMenu = useMemo(
     () => generateActionsMenu(dispatch, selectedFeatureSet, toggleConvertedYaml),

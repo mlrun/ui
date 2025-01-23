@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -31,8 +31,7 @@ import {
   getFiltersConfig,
   generatePageData,
   handleApplyDetailsChanges,
-  generateActionsMenu,
-  checkForSelectedDocument
+  generateActionsMenu
 } from './documents.util'
 import { getViewMode } from '../../utils/helper'
 import { parseChipsData } from '../../utils/convertChipsData'
@@ -46,7 +45,9 @@ import {
   GROUP_BY_NONE,
   ITERATIONS_FILTER,
   REQUEST_CANCELED,
-  SHOW_ITERATIONS
+  SHOW_ITERATIONS,
+  TAG_FILTER,
+  TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import { fetchArtifactTags, fetchDocuments, removeDocuments } from '../../reducers/artifactsReducer'
 import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
@@ -56,17 +57,17 @@ import { createDocumentsRowData } from '../../utils/createArtifactsContent'
 import { setNotification } from '../../reducers/notificationReducer'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { usePagination } from '../../hooks/usePagination.hook'
-import { setFullSelectedArtifact } from '../../utils/artifacts.util'
+import { checkForSelectedArtifact, setFullSelectedArtifact } from '../../utils/artifacts.util'
 
 import './documents.scss'
 
 const Documents = ({ isAllVersions = false }) => {
-  const [documents, setDocuments] = useState([])
-  const [documentVersions, setDocumentVersions] = useState([])
+  const [documents, setDocuments] = useState(null)
+  const [documentVersions, setDocumentVersions] = useState(null)
   const [selectedDocument, setSelectedDocument] = useState({})
   const viewMode = getViewMode(window.location.search)
-  const [selectedDocumentMin, setSelectedDocumentMin] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
+  const [isSelectedArtifactBeyondTheList, setSelectedArtifactIsBeyondTheList] = useState(false)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
@@ -79,6 +80,7 @@ const Documents = ({ isAllVersions = false }) => {
   const documentsRef = useRef(null)
   const paginationConfigDocumentsRef = useRef({})
   const paginationConfigDocumentVersionsRef = useRef({})
+  const lastCheckedArtifactIdRef = useRef(null)
 
   const filtersConfig = useMemo(() => getFiltersConfig(isAllVersions), [isAllVersions])
   const documentsFilters = useFiltersFromSearchParams(filtersConfig)
@@ -109,14 +111,14 @@ const Documents = ({ isAllVersions = false }) => {
 
       if (isAllVersions) {
         requestParams.name = params.documentName
-        setDocumentVersions([])
+        setDocumentVersions(null)
       } else {
-        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS) {
+        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS || filters[TAG_FILTER] === TAG_FILTER_ALL_ITEMS) {
           requestParams['partition-by'] = 'project_and_name'
           requestParams['partition-sort-by'] = 'updated'
         }
 
-        setDocuments([])
+        setDocuments(null)
       }
 
       if (!isAllVersions && !isEmpty(paginationConfigDocumentsRef.current)) {
@@ -152,9 +154,21 @@ const Documents = ({ isAllVersions = false }) => {
               paginationConfigDocumentsRef.current.paginationResponse = response.pagination
               setDocuments(response.artifacts || [])
             }
+          } else {
+            if (isAllVersions) {
+              setDocumentVersions([])
+            } else {
+              setDocuments([])
+            }
           }
 
           return response
+        }).catch(() => {
+          if (isAllVersions) {
+            setDocumentVersions([])
+          } else {
+            setDocuments([])
+          }
         })
     },
     [dispatch, isAllVersions, params.documentName, params.projectName]
@@ -179,7 +193,7 @@ const Documents = ({ isAllVersions = false }) => {
   const refreshDocuments = useCallback(
     filters => {
       fetchTags()
-      setSelectedDocumentMin({})
+      setSelectedDocument({})
 
       return fetchData(filters)
     },
@@ -255,9 +269,9 @@ const Documents = ({ isAllVersions = false }) => {
   const applyDetailsChangesCallback = (changes, selectedItem) => {
     if ('tag' in changes.data) {
       if (isAllVersions) {
-        setDocumentVersions([])
+        setDocumentVersions(null)
       } else {
-        setDocuments([])
+        setDocuments(null)
       }
 
       if (changes.data.tag.currentFieldValue) {
@@ -280,7 +294,7 @@ const Documents = ({ isAllVersions = false }) => {
     setSearchDocumentsParams
   ] = usePagination({
     hidden: isAllVersions,
-    content: documents,
+    content: documents ?? [],
     refreshContent: refreshDocuments,
     filters: documentsFilters,
     paginationConfigRef: paginationConfigDocumentsRef,
@@ -294,7 +308,7 @@ const Documents = ({ isAllVersions = false }) => {
     setSearchDocumentVersionsParams
   ] = usePagination({
     hidden: !isAllVersions,
-    content: documentVersions,
+    content: documentVersions ?? [],
     refreshContent: refreshDocuments,
     filters: documentsFilters,
     paginationConfigRef: paginationConfigDocumentVersionsRef,
@@ -314,13 +328,13 @@ const Documents = ({ isAllVersions = false }) => {
       DOCUMENTS_TAB,
       dispatch,
       navigate,
-      selectedDocumentMin,
+      params.documentName,
       setSelectedDocument,
       params.projectName,
       params.id,
       isAllVersions
     )
-  }, [dispatch, isAllVersions, navigate, params.projectName, params.id, selectedDocumentMin])
+  }, [dispatch, isAllVersions, navigate, params.projectName, params.id, params.documentName])
 
   useEffect(() => {
     if (params.id && pageData.details.menu.length > 0) {
@@ -330,8 +344,8 @@ const Documents = ({ isAllVersions = false }) => {
 
   useEffect(() => {
     return () => {
-      setDocuments([])
-      setDocumentVersions([])
+      setDocuments(null)
+      setDocumentVersions(null)
     }
   }, [params.projectName])
 
@@ -340,7 +354,7 @@ const Documents = ({ isAllVersions = false }) => {
 
     return () => {
       dispatch(removeDocuments())
-      setSelectedDocumentMin({})
+      setSelectedDocument({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
       tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
@@ -350,19 +364,30 @@ const Documents = ({ isAllVersions = false }) => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
   }, [dispatch, params.projectName])
 
-  useLayoutEffect(() => {
-    checkForSelectedDocument(
-      params.documentName,
-      isAllVersions ? paginatedDocumentVersions : paginatedDocuments,
-      params.id,
-      params.projectName,
-      setSelectedDocumentMin,
-      navigate,
+  useEffect(() => {
+    checkForSelectedArtifact({
+      artifactName: params.documentName,
+      artifacts: isAllVersions ? documentVersions : documents,
+      dispatch,
       isAllVersions,
-      isAllVersions ? searchDocumentVersionsParams : searchDocumentsParams,
-      isAllVersions ? paginationConfigDocumentVersionsRef : paginationConfigDocumentsRef
-    )
+      navigate,
+      paginatedArtifacts: isAllVersions ? paginatedDocumentVersions : paginatedDocuments,
+      paginationConfigRef: isAllVersions
+        ? paginationConfigDocumentVersionsRef
+        : paginationConfigDocumentsRef,
+      paramsId: params.id,
+      projectName: params.projectName,
+      searchParams: isAllVersions ? searchDocumentVersionsParams : searchDocumentsParams,
+      setSearchParams: isAllVersions ? setSearchDocumentVersionsParams : setSearchDocumentsParams,
+      setSelectedArtifact: setSelectedDocument,
+      setSelectedArtifactIsBeyondTheList,
+      lastCheckedArtifactIdRef,
+      tab: DOCUMENTS_TAB
+    })
   }, [
+    dispatch,
+    documentVersions,
+    documents,
     isAllVersions,
     navigate,
     paginatedDocumentVersions,
@@ -371,12 +396,16 @@ const Documents = ({ isAllVersions = false }) => {
     params.id,
     params.projectName,
     searchDocumentVersionsParams,
-    searchDocumentsParams
+    searchDocumentsParams,
+    setSearchDocumentVersionsParams,
+    setSearchDocumentsParams
   ])
 
   useEffect(() => {
-    getAndSetSelectedArtifact()
-  }, [getAndSetSelectedArtifact])
+    if (isEmpty(selectedDocument)) {
+      lastCheckedArtifactIdRef.current = null
+    }
+  }, [selectedDocument])
 
   return (
     <DocumentsView
@@ -386,7 +415,7 @@ const Documents = ({ isAllVersions = false }) => {
       artifactsStore={artifactsStore}
       detailsFormInitialValues={detailsFormInitialValues}
       documentName={params.documentName}
-      documents={isAllVersions ? documentVersions : documents}
+      documents={(isAllVersions ? documentVersions : documents) ?? []}
       filters={documentsFilters}
       filtersConfig={filtersConfig}
       filtersStore={filtersStore}
@@ -396,6 +425,7 @@ const Documents = ({ isAllVersions = false }) => {
       }
       handleRefreshWithFilters={handleRefreshWithFilters}
       isAllVersions={isAllVersions}
+      isSelectedArtifactBeyondTheList={isSelectedArtifactBeyondTheList}
       pageData={pageData}
       paginationConfigDocumentsRef={
         isAllVersions ? paginationConfigDocumentVersionsRef : paginationConfigDocumentsRef
@@ -407,7 +437,7 @@ const Documents = ({ isAllVersions = false }) => {
       setSearchDocumentsParams={
         isAllVersions ? setSearchDocumentVersionsParams : setSearchDocumentsParams
       }
-      setSelectedDocumentMin={setSelectedDocumentMin}
+      setSelectedDocument={setSelectedDocument}
       tableContent={tableContent}
       tableHeaders={tableHeaders}
       viewMode={viewMode}

@@ -17,25 +17,48 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import Prism from 'prismjs'
 import PropTypes from 'prop-types'
+import { useLocation } from 'react-router-dom'
 
 import { PopUpDialog } from 'igz-controls/components'
 
 import './yamlmodal.scss'
 
 const YamlModal = ({ convertedYaml, toggleConvertToYaml }) => {
-  const html =
-    convertedYaml && Prism.highlight(convertedYaml, Prism.languages.yml, 'yml')
+  const location = useLocation()
+  const initialLocationPathnameRef = useRef(null)
+  const html = convertedYaml && Prism.highlight(convertedYaml, Prism.languages.yml, 'yml')
+
+  useEffect(() => {
+    if (!initialLocationPathnameRef.current) {
+      initialLocationPathnameRef.current = location.pathname
+    } else if (initialLocationPathnameRef.current !== location.pathname) {
+      toggleConvertToYaml()
+    }
+  }, [convertedYaml, location.pathname, toggleConvertToYaml])
+
+  const outsideClick = useCallback(
+    event => {
+      if (!event.target.closest('.pop-up-dialog')) {
+        toggleConvertToYaml()
+      }
+    },
+    [toggleConvertToYaml]
+  )
+
+  useEffect(() => {
+    document.addEventListener('click', outsideClick, true)
+
+    return () => {
+      document.removeEventListener('click', outsideClick, true)
+    }
+  }, [outsideClick])
 
   return (
     <PopUpDialog className="yaml-modal" closePopUp={toggleConvertToYaml}>
-      <div
-        data-testid="yaml-modal"
-        className="yaml-modal-container"
-        id="yaml_modal"
-      >
+      <div data-testid="yaml-modal" className="yaml-modal-container" id="yaml_modal">
         <pre>
           <code dangerouslySetInnerHTML={{ __html: html }} />
         </pre>

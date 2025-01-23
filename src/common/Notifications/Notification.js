@@ -17,11 +17,14 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { Transition } from 'react-transition-group'
 import { inRange } from 'lodash'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
+
+import { useTimeout } from '../../hooks/useTimeout'
 
 import { removeNotification } from '../../reducers/notificationReducer'
 
@@ -33,10 +36,15 @@ import { ReactComponent as UnsuccessAlert } from 'igz-controls/images/unsuccess_
 
 import './notification.scss'
 
-const Notification = ({ notification, ...rest }) => {
+const Notification = ({ notification, timeoutMs = 10000, ...rest }) => {
   // rest is required for Transition
   const dispatch = useDispatch()
   const nodeRef = useRef()
+
+  const { pauseTimeout, resumeTimeout, cancelTimeout } = useTimeout(
+    () => handleRemoveNotification(notification.id),
+    timeoutMs
+  )
 
   const defaultStyle = {
     transform: 'translateY(130px)',
@@ -61,23 +69,37 @@ const Notification = ({ notification, ...rest }) => {
   )
   const handleRemoveNotification = itemId => {
     dispatch(removeNotification(itemId))
+    cancelTimeout()
   }
   const handleRetry = item => {
     handleRemoveNotification(item.id)
+    cancelTimeout()
     item.retry(item)
   }
 
+  const progressbarClasses = classnames(
+    'notification__progress-bar',
+    isSuccessResponse ? 'notification__progress-bar-success' : 'notification__progress-bar-alert'
+  )
+
+  useEffect(() => {
+    const element = nodeRef.current
+
+    if (element) {
+      element.addEventListener('mouseenter', pauseTimeout)
+      element.addEventListener('mouseleave', resumeTimeout)
+    }
+
+    return () => {
+      if (element) {
+        element.removeEventListener('mouseenter', pauseTimeout)
+        element.removeEventListener('mouseleave', resumeTimeout)
+      }
+    }
+  }, [pauseTimeout, resumeTimeout])
+
   return (
-    <Transition
-      nodeRef={nodeRef}
-      timeout={NOTIFICATION_DURATION}
-      onEntered={() => {
-        setTimeout(() => {
-          handleRemoveNotification(notification.id)
-        }, 10000)
-      }}
-      {...rest}
-    >
+    <Transition nodeRef={nodeRef} timeout={NOTIFICATION_DURATION} {...rest}>
       {state => (
         <div
           className="notification"
@@ -85,14 +107,9 @@ const Notification = ({ notification, ...rest }) => {
             ...defaultStyle,
             ...transitionStyles[state]
           }}
+          ref={nodeRef}
         >
           <div className="notification__body">
-            <button
-              className="notification__button-close"
-              onClick={() => handleRemoveNotification(notification.id)}
-            >
-              <CloseIcon />
-            </button>
             <div
               className={`notification__body__status notification__body__icon-${
                 isSuccessResponse ? 'success' : 'alert'
@@ -114,6 +131,24 @@ const Notification = ({ notification, ...rest }) => {
               </div>
             )}
           </div>
+          <button
+            className="notification__button-close"
+            onClick={() => {
+              handleRemoveNotification(notification.id)
+            }}
+          >
+            <CloseIcon />
+          </button>
+          <div className="notification__progress-bar__wrapper">
+            <div className="notification__progress-bar__bg"></div>
+            <div
+              role="progressbar"
+              aria-hidden="false"
+              aria-label="notification timer"
+              className={progressbarClasses}
+              style={{ animationDuration: `${timeoutMs}ms` }}
+            ></div>
+          </div>
         </div>
       )}
     </Transition>
@@ -121,7 +156,8 @@ const Notification = ({ notification, ...rest }) => {
 }
 
 Notification.prototype = {
-  notification: PropTypes.object.isRequired
+  notification: PropTypes.object.isRequired,
+  timeoutMs: PropTypes.number
 }
 
 export default Notification

@@ -85,6 +85,11 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
             }
           })
       },
+      sampling_percentage: {
+        value: selectedItem?.status?.sampling_percentage
+          ? `${selectedItem.status.sampling_percentage}%`
+          : 0
+      },
       last_prediction: {
         value: formatDatetime(selectedItem?.status?.last_request, '-')
       },
@@ -213,8 +218,8 @@ export const generateAlertsContent = selectedItem => {
     uid: {
       value: selectedItem.uid
     },
-    endpoint_name: {
-      value: selectedItem.endpointName
+    resultName: {
+      value: selectedItem.resultName
     },
     projectName: {
       value: selectedItem.project

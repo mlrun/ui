@@ -30,7 +30,6 @@ import { ConfirmDialog } from 'igz-controls/components'
 
 import {
   INACTIVE_JOBS_TAB,
-  JOBS_MONITORING_PAGE,
   JOBS_PAGE,
   JOBS_PAGE_PATH,
   MONITOR_JOBS_TAB,
@@ -109,6 +108,7 @@ const Jobs = () => {
     jobWizardIsOpened,
     jobWizardMode,
     jobs,
+    lastCheckedJobIdRef,
     paginatedJobs,
     paginationConfigJobsRef,
     refreshJobs,
@@ -194,8 +194,8 @@ const Jobs = () => {
   }, [navigate, params.pageTab, location])
 
   const filters = useFiltersFromSearchParams(
-    tabData[selectedTab]?.filtersConfig,
-    tabData[selectedTab]?.parseQueryParamsCallback
+    initialTabData[selectedTab]?.filtersConfig,
+    initialTabData[selectedTab]?.parseQueryParamsCallback
   )
 
   return (
@@ -235,22 +235,20 @@ const Jobs = () => {
                   }
                 ]}
                 autoRefreshIsStopped={
-                  jobWizardIsOpened ||
-                  jobsStore.loading ||
-                  Boolean(jobsStore.jobLoadingCounter)
+                  jobWizardIsOpened || jobsStore.loading || Boolean(jobsStore.jobLoadingCounter)
                 }
                 autoRefreshStopTrigger={!isEmpty(selectedJob)}
+                closeParamName={selectedTab}
                 filters={filters}
                 filtersConfig={initialTabData[selectedTab].filtersConfig}
-                handleRefresh={tabData[selectedTab].handleRefresh}
                 handleAutoRefreshPrevValueChange={setAutoRefreshPrevValue}
+                handleRefresh={tabData[selectedTab].handleRefresh}
                 hidden={Boolean(params.workflowId)}
                 key={selectedTab}
-                page={JOBS_MONITORING_PAGE}
                 setSearchParams={setSearchParams}
                 tab={selectedTab}
-                withAutoRefresh
-                withInternalAutoRefresh={params.jobName}
+                withAutoRefresh={selectedTab === MONITOR_JOBS_TAB}
+                withInternalAutoRefresh={selectedTab === MONITOR_JOBS_TAB && params.jobName}
                 withRefreshButton
                 withoutExpandButton
               >
@@ -261,25 +259,27 @@ const Jobs = () => {
               <JobsContext.Provider
                 value={{
                   abortControllerRef,
-                  abortJobRef,
                   abortingJobs,
+                  abortJobRef,
+                  autoRefreshPrevValue,
                   editableItem,
                   fetchJobFunctionsPromiseRef,
                   getWorkflows,
                   handleMonitoring,
                   handleRerunJob,
-                  autoRefreshPrevValue,
+                  initialTabData,
                   jobRuns,
+                  jobs,
+                  jobsFiltersConfig: initialTabData[MONITOR_JOBS_TAB].filtersConfig,
                   jobWizardIsOpened,
                   jobWizardMode,
-                  jobs,
-                  jobsFiltersConfig: tabData[MONITOR_JOBS_TAB].filtersConfig,
+                  lastCheckedJobIdRef,
                   paginatedJobs,
                   paginationConfigJobsRef,
                   refreshJobs,
                   refreshScheduled,
                   requestErrorMessage,
-                  scheduledFiltersConfig: tabData[SCHEDULE_TAB].filtersConfig,
+                  scheduledFiltersConfig: initialTabData[SCHEDULE_TAB].filtersConfig,
                   scheduledJobs,
                   searchParams,
                   selectedJob,
@@ -287,14 +287,15 @@ const Jobs = () => {
                   setConfirmData,
                   setEditableItem,
                   setJobRuns,
+                  setJobs,
                   setJobWizardIsOpened,
                   setJobWizardMode,
-                  setJobs,
                   setScheduledJobs,
                   setSelectedJob,
+                  setSearchParams,
                   tabData,
                   terminateAbortTasksPolling,
-                  workflowsFiltersConfig: tabData[MONITOR_WORKFLOWS_TAB].filtersConfig
+                  workflowsFiltersConfig: initialTabData[MONITOR_WORKFLOWS_TAB].filtersConfig
                 }}
               >
                 <Outlet />

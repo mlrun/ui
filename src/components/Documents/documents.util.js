@@ -18,12 +18,10 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { cloneDeep, debounce, isEmpty, isEqual, omit } from 'lodash'
+import { cloneDeep, isEmpty, omit } from 'lodash'
 
 import {
-  ALL_VERSIONS_PATH,
   ARTIFACT_MAX_DOWNLOAD_SIZE,
-  BE_PAGE,
   DOCUMENT_TYPE,
   DOCUMENTS_PAGE,
   DOCUMENTS_TAB,
@@ -34,8 +32,7 @@ import {
   SHOW_ITERATIONS,
   TAG_FILTER,
   TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST,
-  VIEW_SEARCH_PARAMETER
+  TAG_FILTER_LATEST
 } from '../../constants'
 import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
@@ -50,9 +47,6 @@ import { getErrorMsg } from 'igz-controls/utils/common.util'
 import { convertChipsData } from '../../utils/convertChipsData'
 import { updateArtifact } from '../../reducers/artifactsReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
-import { parseIdentifier } from '../../utils'
-import { searchArtifactItem } from '../../utils/searchArtifactItem'
-import { getFilteredSearchParams } from '../../utils/filter.util'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -133,7 +127,7 @@ export const generateActionsMenu = (
 ) => {
   const isTargetPathValid = getIsTargetPathValid(documentMin ?? {}, frontendSpec)
 
-  const getFullDocument = fileMin => {
+  const getFullDocument = documentMin => {
     return chooseOrFetchArtifact(dispatch, DOCUMENTS_TAB, selectedDocument, documentMin)
   }
 
@@ -154,18 +148,20 @@ export const generateActionsMenu = (
         icon: <DownloadIcon />,
         onClick: documentMin => {
           getFullDocument(documentMin).then(document => {
-            const downloadPath = `${documentMin?.target_path}${documentMin?.model_file || ''}`
-            dispatch(
-              setDownloadItem({
-                path: downloadPath,
-                user: document.producer?.owner,
-                id: downloadPath,
-                artifactLimits: frontendSpec?.artifact_limits,
-                fileSize: document.size,
-                projectName
-              })
-            )
-            dispatch(setShowDownloadsList(true))
+            if (document) {
+              const downloadPath = `${documentMin?.target_path}${documentMin?.model_file || ''}`
+              dispatch(
+                setDownloadItem({
+                  path: downloadPath,
+                  user: document.producer?.owner,
+                  id: downloadPath,
+                  artifactLimits: frontendSpec?.artifact_limits,
+                  fileSize: document.size,
+                  projectName
+                })
+              )
+              dispatch(setShowDownloadsList(true))
+            }
           })
         }
       },
@@ -267,7 +263,7 @@ export const handleApplyDetailsChanges = (
           setNotification({
             status: response.status,
             id: Math.random(),
-            message: 'Model was updated successfully'
+            message: 'Document was updated successfully'
           })
         )
       })
@@ -275,7 +271,7 @@ export const handleApplyDetailsChanges = (
         const customErrorMsg =
           error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
             ? 'Permission denied'
-            : getErrorMsg(error, 'Failed to update the model')
+            : getErrorMsg(error, 'Failed to update the document')
 
         showErrorNotification(dispatch, error, '', customErrorMsg, () =>
           handleApplyDetailsChanges(changes, projectName, selectedItem, setNotification, dispatch)
@@ -288,49 +284,3 @@ export const handleApplyDetailsChanges = (
     return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
   }
 }
-
-export const checkForSelectedDocument = debounce(
-  (
-    paramsName,
-    documents,
-    paramsId,
-    projectName,
-    setSelectedDocument,
-    navigate,
-    isAllVersions,
-    searchParams,
-    paginationConfigRef
-  ) => {
-    if (paramsId) {
-      const searchBePage = parseInt(searchParams.get(BE_PAGE))
-      const configBePage = paginationConfigRef.current[BE_PAGE]
-      const { tag, uid, iter } = parseIdentifier(paramsId)
-
-      if (documents.length > 0 && searchBePage === configBePage) {
-        const searchItem = searchArtifactItem(
-          documents.map(artifact => artifact.data ?? artifact),
-          paramsName,
-          tag,
-          iter,
-          uid
-        )
-
-        if (!searchItem) {
-          navigate(
-            `/projects/${projectName}/documents${isAllVersions ? `/${paramsName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(
-              window.location.search,
-              [VIEW_SEARCH_PARAMETER]
-            )}`,
-            { replace: true }
-          )
-        } else {
-          setSelectedDocument(prevState => {
-            return isEqual(prevState, searchItem) ? prevState : searchItem
-          })
-        }
-      }
-    } else {
-      setSelectedDocument({})
-    }
-  }
-)

@@ -40,6 +40,7 @@ import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { getSavedSearchParams } from '../../utils/filter.util'
 import { registerArtifactTitle } from './files.util'
+import { getDefaultFirstHeader } from '../../utils/createArtifactsContent'
 
 const FilesView = React.forwardRef(
   (
@@ -65,7 +66,7 @@ const FilesView = React.forwardRef(
       requestErrorMessage,
       selectedFile,
       setSearchFilesParams,
-      setSelectedFileMin,
+      setSelectedFile,
       tableContent,
       tableHeaders,
       viewMode = null
@@ -97,11 +98,10 @@ const FilesView = React.forwardRef(
                       onClick: handleRegisterArtifact
                     }
                   ]}
+                  closeParamName={isAllVersions ? ALL_VERSIONS_PATH : FILES_TAB}
                   filters={filters}
                   filtersConfig={filtersConfig}
-                  navigateLink={`/projects/${projectName}/files${isAllVersions ? `/${fileName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
                   handleRefresh={handleRefreshFiles}
-                  page={FILES_PAGE}
                   setSearchParams={setSearchFilesParams}
                   withRefreshButton
                   withoutExpandButton
@@ -109,7 +109,8 @@ const FilesView = React.forwardRef(
                   <ArtifactsFilters artifacts={files} />
                 </ActionBar>
               </div>
-              {artifactsStore.loading ? null : tableContent.length === 0 ? (
+              {artifactsStore.loading ? null : tableContent.length === 0 &&
+                isEmpty(selectedFile) ? (
                 <NoData
                   message={getNoDataMessage(
                     filters,
@@ -131,12 +132,12 @@ const FilesView = React.forwardRef(
                     getCloseDetailsLink={() =>
                       getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : FILES_TAB)
                     }
-                    handleCancel={() => setSelectedFileMin({})}
+                    handleCancel={() => setSelectedFile({})}
                     pageData={pageData}
                     retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedFile}
                     tableClassName="files-table"
-                    tableHeaders={tableHeaders ?? []}
+                    tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
                   >
                     {tableContent.map((tableItem, index) => (
                       <ArtifactsTableRow
@@ -199,7 +200,7 @@ FilesView.propTypes = {
   requestErrorMessage: PropTypes.string.isRequired,
   selectedFile: PropTypes.object.isRequired,
   setSearchFilesParams: PropTypes.func.isRequired,
-  setSelectedFileMin: PropTypes.func.isRequired,
+  setSelectedFile: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   viewMode: PropTypes.string

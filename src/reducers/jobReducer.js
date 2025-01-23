@@ -251,6 +251,16 @@ export const fetchScheduledJobs = createAsyncThunk(
       newConfig.params.label = filters.labels?.split(',')
     }
 
+    if (filters?.[DATES_FILTER]) {
+      if (filters[DATES_FILTER].value[0]  && !filters[DATES_FILTER].isPredefined) {
+        newConfig.params.next_run_time_since  = filters[DATES_FILTER].value[0].toISOString()
+      }
+  
+      if (filters[DATES_FILTER].value[1]) {
+        newConfig.params.next_run_time_until = filters[DATES_FILTER].value[1].toISOString()
+      }
+    }
+
     return jobsApi
       .getScheduledJobs(project, newConfig)
       .then(({ data }) => {
@@ -343,6 +353,7 @@ const jobsSlice = createSlice({
       state.jobLoadingCounter--
     })
     builder.addCase(fetchJobFunction.pending, (state, action) => {
+      state.jobFunc = {}
       state.jobLoadingCounter++
     })
     builder.addCase(fetchJobFunction.fulfilled, (state, action) => {
@@ -351,9 +362,12 @@ const jobsSlice = createSlice({
       state.jobLoadingCounter--
     })
     builder.addCase(fetchJobFunction.rejected, (state, action) => {
+      state.jobFunc = {}
+      state.error = action.error
       state.jobLoadingCounter--
     })
     builder.addCase(fetchJobFunctions.rejected, (state, action) => {
+      state.error = action.error
       state.jobLoadingCounter--
     })
     builder.addCase(fetchJobFunctions.pending, (state, action) => {
@@ -361,7 +375,6 @@ const jobsSlice = createSlice({
     })
     builder.addCase(fetchJobFunctions.fulfilled, (state, action) => {
       state.error = null
-      state.jobFunc = action.payload
       state.jobLoadingCounter--
     })
     builder.addCase(fetchJobLogs.pending, (state, action) => {

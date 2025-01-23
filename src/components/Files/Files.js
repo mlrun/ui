@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useState, useMemo, useRef, useLayoutEffect } from 'react'
+import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
@@ -37,10 +37,11 @@ import {
   GROUP_BY_NONE,
   ITERATIONS_FILTER,
   REQUEST_CANCELED,
-  SHOW_ITERATIONS
+  SHOW_ITERATIONS,
+  TAG_FILTER,
+  TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import {
-  checkForSelectedFile,
   getFiltersConfig,
   generateActionsMenu,
   generatePageData,
@@ -53,7 +54,7 @@ import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { getViewMode } from '../../utils/helper'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { setFullSelectedArtifact } from '../../utils/artifacts.util'
+import { checkForSelectedArtifact, setFullSelectedArtifact } from '../../utils/artifacts.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { toggleYaml } from '../../reducers/appReducer'
 import { transformSearchParams } from '../../utils/filter.util'
@@ -63,11 +64,11 @@ import { usePagination } from '../../hooks/usePagination.hook'
 import './files.scss'
 
 const Files = ({ isAllVersions = false }) => {
-  const [files, setFiles] = useState([])
-  const [fileVersions, setFileVersions] = useState([])
+  const [files, setFiles] = useState(null)
+  const [fileVersions, setFileVersions] = useState(null)
   const [selectedFile, setSelectedFile] = useState({})
-  const [selectedFileMin, setSelectedFileMin] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
+  const [isSelectedArtifactBeyondTheList, setSelectedArtifactIsBeyondTheList] = useState('')
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
@@ -81,6 +82,7 @@ const Files = ({ isAllVersions = false }) => {
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const filesRef = useRef(null)
+  const lastCheckedArtifactIdRef = useRef(null)
 
   const filtersConfig = useMemo(() => getFiltersConfig(isAllVersions), [isAllVersions])
   const filesFilters = useFiltersFromSearchParams(filtersConfig)
@@ -111,14 +113,14 @@ const Files = ({ isAllVersions = false }) => {
 
       if (isAllVersions) {
         requestParams.name = params.fileName
-        setFileVersions([])
+        setFileVersions(null)
       } else {
-        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS) {
+        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS || filters[TAG_FILTER] === TAG_FILTER_ALL_ITEMS) {
           requestParams['partition-by'] = 'project_and_name'
           requestParams['partition-sort-by'] = 'updated'
         }
 
-        setFiles([])
+        setFiles(null)
       }
 
       if (!isAllVersions && !isEmpty(paginationConfigFilesRef.current)) {
@@ -130,6 +132,8 @@ const Files = ({ isAllVersions = false }) => {
         requestParams.page = paginationConfigFileVersionsRef.current[BE_PAGE]
         requestParams['page-size'] = paginationConfigFileVersionsRef.current[BE_PAGE_SIZE]
       }
+
+      lastCheckedArtifactIdRef.current = null
 
       return dispatch(
         fetchFiles({
@@ -154,9 +158,21 @@ const Files = ({ isAllVersions = false }) => {
               paginationConfigFilesRef.current.paginationResponse = response.pagination
               setFiles(response.artifacts || [])
             }
+          } else {
+            if (isAllVersions) {
+              setFileVersions([])
+            } else {
+              setFiles([])
+            }
           }
 
           return response
+        }).catch(() => {
+          if (isAllVersions) {
+            setFileVersions([])
+          } else {
+            setFiles([])
+          }
         })
     },
     [dispatch, isAllVersions, params.fileName, params.projectName]
@@ -181,7 +197,7 @@ const Files = ({ isAllVersions = false }) => {
   const refreshFiles = useCallback(
     filters => {
       fetchTags()
-      setSelectedFileMin({})
+      setSelectedFile({})
 
       return fetchData(filters)
     },
@@ -257,9 +273,9 @@ const Files = ({ isAllVersions = false }) => {
   const applyDetailsChangesCallback = (changes, selectedItem) => {
     if ('tag' in changes.data) {
       if (isAllVersions) {
-        setFileVersions([])
+        setFileVersions(null)
       } else {
-        setFiles([])
+        setFiles(null)
       }
 
       if (changes.data.tag.currentFieldValue) {
@@ -283,8 +299,8 @@ const Files = ({ isAllVersions = false }) => {
 
   useEffect(() => {
     return () => {
-      setFiles([])
-      setFileVersions([])
+      setFiles(null)
+      setFileVersions(null)
     }
   }, [params.projectName])
 
@@ -293,7 +309,7 @@ const Files = ({ isAllVersions = false }) => {
 
     return () => {
       dispatch(removeFiles())
-      setSelectedFileMin({})
+      setSelectedFile({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
       tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
@@ -315,7 +331,7 @@ const Files = ({ isAllVersions = false }) => {
   const [handleRefreshFiles, paginatedFiles, searchFilesParams, setSearchFilesParams] =
     usePagination({
       hidden: isAllVersions,
-      content: files,
+      content: files ?? [],
       refreshContent: refreshFiles,
       filters: filesFilters,
       paginationConfigRef: paginationConfigFilesRef,
@@ -328,7 +344,7 @@ const Files = ({ isAllVersions = false }) => {
     setSearchFileVersionsParams
   ] = usePagination({
     hidden: !isAllVersions,
-    content: fileVersions,
+    content: fileVersions ?? [],
     refreshContent: refreshFiles,
     filters: filesFilters,
     paginationConfigRef: paginationConfigFileVersionsRef,
@@ -343,46 +359,61 @@ const Files = ({ isAllVersions = false }) => {
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
-  useLayoutEffect(() => {
-    checkForSelectedFile(
-      params.fileName,
-      isAllVersions ? paginatedFileVersions : paginatedFiles,
-      params.id,
-      params.projectName,
-      setSelectedFileMin,
-      navigate,
+  useEffect(() => {
+    checkForSelectedArtifact({
+      artifactName: params.fileName,
+      artifacts: isAllVersions ? fileVersions : files,
+      dispatch,
       isAllVersions,
-      isAllVersions ? searchFileVersionsParams : searchFilesParams,
-      isAllVersions ? paginationConfigFileVersionsRef : paginationConfigFilesRef
-    )
+      navigate,
+      paginatedArtifacts: isAllVersions ? paginatedFileVersions : paginatedFiles,
+      paginationConfigRef: isAllVersions
+        ? paginationConfigFileVersionsRef
+        : paginationConfigFilesRef,
+      paramsId: params.id,
+      projectName: params.projectName,
+      searchParams: isAllVersions ? searchFileVersionsParams : searchFilesParams,
+      setSearchParams: isAllVersions ? setSearchFileVersionsParams : setSearchFilesParams,
+      setSelectedArtifact: setSelectedFile,
+      setSelectedArtifactIsBeyondTheList,
+      lastCheckedArtifactIdRef,
+      tab: FILES_TAB
+    })
   }, [
-    paginatedFileVersions,
-    paginatedFiles,
+    dispatch,
+    fileVersions,
+    files,
     isAllVersions,
     navigate,
-    params.id,
+    paginatedFileVersions,
+    paginatedFiles,
     params.fileName,
+    params.id,
     params.projectName,
     searchFileVersionsParams,
-    searchFilesParams
+    searchFilesParams,
+    setSearchFileVersionsParams,
+    setSearchFilesParams
   ])
+
+  useEffect(() => {
+    if (isEmpty(selectedFile)) {
+      lastCheckedArtifactIdRef.current = null
+    }
+  }, [selectedFile])
 
   const getAndSetSelectedArtifact = useCallback(() => {
     setFullSelectedArtifact(
       FILES_TAB,
       dispatch,
       navigate,
-      selectedFileMin,
+      params.fileName,
       setSelectedFile,
       params.projectName,
       params.id,
       isAllVersions
     )
-  }, [dispatch, isAllVersions, navigate, params.projectName, params.id, selectedFileMin])
-
-  useEffect(() => {
-    getAndSetSelectedArtifact()
-  }, [getAndSetSelectedArtifact])
+  }, [dispatch, isAllVersions, navigate, params.projectName, params.id, params.fileName])
 
   return (
     <FilesView
@@ -392,7 +423,7 @@ const Files = ({ isAllVersions = false }) => {
       artifactsStore={artifactsStore}
       detailsFormInitialValues={detailsFormInitialValues}
       fileName={params.fileName}
-      files={isAllVersions ? fileVersions : files}
+      files={(isAllVersions ? fileVersions : files) ?? []}
       filters={filesFilters}
       filtersConfig={filtersConfig}
       filtersStore={filtersStore}
@@ -401,6 +432,7 @@ const Files = ({ isAllVersions = false }) => {
       handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterArtifact={handleRegisterArtifact}
       isAllVersions={isAllVersions}
+      isSelectedArtifactBeyondTheList={isSelectedArtifactBeyondTheList}
       pageData={pageData}
       paginationConfigFilesRef={
         isAllVersions ? paginationConfigFileVersionsRef : paginationConfigFilesRef
@@ -411,7 +443,7 @@ const Files = ({ isAllVersions = false }) => {
       requestErrorMessage={requestErrorMessage}
       selectedFile={selectedFile}
       setSearchFilesParams={isAllVersions ? setSearchFileVersionsParams : setSearchFilesParams}
-      setSelectedFileMin={setSelectedFileMin}
+      setSelectedFile={setSelectedFile}
       tableContent={tableContent}
       tableHeaders={tableHeaders}
       viewMode={viewMode}

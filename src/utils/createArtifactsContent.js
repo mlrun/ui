@@ -62,6 +62,14 @@ export const createArtifactsContent = (artifacts, page, pageTab, project, isAllV
   })
 }
 
+export const getDefaultFirstHeader = (isAllVersions) => [
+  {
+    headerId: isAllVersions ? 'uid' : 'name',
+    headerLabel: isAllVersions ? 'UID' : 'Name',
+    className: 'table-cell-name'
+  }
+]
+
 const getArtifactsDetailsLink = (artifact, artifactPathFragment, tab, project, isAllVersions) =>
   validateArguments(artifact.db_key, tab, artifact.uid)
     ? `/projects/${project}/${artifactPathFragment}/${artifact.db_key}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/${artifact.tag ? `:${artifact.tag}` : ''}@${artifact.uid}${`/${tab}`}${window.location.search}`
@@ -345,7 +353,7 @@ export const createDocumentsRowData = (artifact, project, isAllVersions) => {
         headerId: 'updated',
         headerLabel: 'Updated',
         value: formatDatetime(artifact.updated, 'N/A'),
-        className: 'table-cell-2'
+        className: 'table-cell-1'
       },
       {
         id: `labels.${artifact.ui.identifierUnique}`,

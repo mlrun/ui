@@ -40,6 +40,7 @@ import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { getSavedSearchParams } from '../../utils/filter.util'
 import { registerDatasetTitle } from './datasets.util'
+import { getDefaultFirstHeader } from '../../utils/createArtifactsContent'
 
 const DatasetsView = React.forwardRef(
   (
@@ -65,8 +66,7 @@ const DatasetsView = React.forwardRef(
       requestErrorMessage,
       selectedDataset,
       setSearchDatasetsParams,
-      setSearchParams,
-      setSelectedDatasetMin,
+      setSelectedDataset,
       tableContent,
       tableHeaders,
       viewMode = null
@@ -98,11 +98,10 @@ const DatasetsView = React.forwardRef(
                       onClick: handleRegisterDataset
                     }
                   ]}
+                  closeParamName={isAllVersions ? ALL_VERSIONS_PATH : DATASETS_TAB}
                   filters={filters}
                   filtersConfig={filtersConfig}
-                  navigateLink={`/projects/${projectName}/${DATASETS_TAB}${isAllVersions ? `/${datasetName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
                   handleRefresh={handleRefreshDatasets}
-                  page={DATASETS_PAGE}
                   setSearchParams={setSearchDatasetsParams}
                   withRefreshButton
                   withoutExpandButton
@@ -110,7 +109,7 @@ const DatasetsView = React.forwardRef(
                   <ArtifactsFilters artifacts={datasets} />
                 </ActionBar>
               </div>
-              {artifactsStore.loading ? null : tableContent.length === 0 ? (
+              {artifactsStore.loading ? null : tableContent.length === 0 && isEmpty(selectedDataset) ? (
                 <NoData
                   message={getNoDataMessage(
                     filters,
@@ -132,12 +131,12 @@ const DatasetsView = React.forwardRef(
                     getCloseDetailsLink={() =>
                       getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : DATASETS_TAB)
                     }
-                    handleCancel={() => setSelectedDatasetMin({})}
+                    handleCancel={() => setSelectedDataset({})}
                     pageData={pageData}
                     retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedDataset}
                     tableClassName="datasets-table"
-                    tableHeaders={tableHeaders ?? []}
+                    tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
                   >
                     {tableContent.map((tableItem, index) => (
                       <ArtifactsTableRow
@@ -200,7 +199,7 @@ DatasetsView.propTypes = {
   requestErrorMessage: PropTypes.string.isRequired,
   selectedDataset: PropTypes.object.isRequired,
   setSearchDatasetsParams: PropTypes.func.isRequired,
-  setSelectedDatasetMin: PropTypes.func.isRequired,
+  setSelectedDataset: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   viewMode: PropTypes.string

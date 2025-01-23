@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo, useCallback, useEffect, useLayoutEffect } from 'react'
+import React, { useMemo, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
@@ -56,10 +56,11 @@ const JobsTable = React.forwardRef(
   (
     {
       abortingJobs,
+      autoRefreshPrevValue,
       context,
       filters,
       filtersConfig,
-      autoRefreshPrevValue,
+      jobRuns = null,
       paginatedJobs,
       refreshJobs,
       requestErrorMessage,
@@ -68,6 +69,7 @@ const JobsTable = React.forwardRef(
       setAbortingJobs,
       setJobRuns,
       setJobs,
+      setSearchParams,
       setSelectedJob,
       tableContent
     },
@@ -86,6 +88,7 @@ const JobsTable = React.forwardRef(
       handleRerunJob,
       jobWizardIsOpened,
       jobWizardMode,
+      lastCheckedJobIdRef,
       paginationConfigJobsRef,
       setConfirmData,
       setEditableItem,
@@ -311,19 +314,25 @@ const JobsTable = React.forwardRef(
       setJobWizardMode
     ])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
       checkForSelectedJob(
         paginatedJobs,
+        jobRuns,
         params.jobName,
         params.jobId,
+        params.projectName,
         navigate,
         setSelectedJob,
         modifyAndSelectRun,
         searchParams,
-        paginationConfigJobsRef
+        paginationConfigJobsRef,
+        dispatch,
+        setSearchParams,
+        lastCheckedJobIdRef
       )
     }, [
       searchParams,
+      jobRuns,
       paginationConfigJobsRef,
       paginatedJobs,
       navigate,
@@ -331,13 +340,22 @@ const JobsTable = React.forwardRef(
       params.jobName,
       params.projectName,
       setSelectedJob,
-      modifyAndSelectRun
+      modifyAndSelectRun,
+      dispatch,
+      setSearchParams,
+      lastCheckedJobIdRef
     ])
+
+    useEffect(() => {
+      if (isEmpty(selectedJob)) {
+        lastCheckedJobIdRef.current = null
+      }
+    }, [lastCheckedJobIdRef, selectedJob])
 
     return (
       <>
         {jobsStore.loading && <Loader />}
-        {paginatedJobs.length === 0 && !jobsStore.loading && filters ? (
+        {paginatedJobs.length === 0 && !jobsStore.loading && filters && isEmpty(selectedJob) ? (
           <NoData
             message={getNoDataMessage(
               filters,
@@ -360,7 +378,15 @@ const JobsTable = React.forwardRef(
                 selectedItem={selectedJob}
                 tab={MONITOR_JOBS_TAB}
                 tableClassName="monitor-jobs-table"
-                tableHeaders={tableContent[0]?.content ?? []}
+                tableHeaders={
+                  tableContent[0]?.content ?? [
+                    {
+                      headerId: 'uid',
+                      headerLabel: 'UID',
+                      className: 'table-cell-name'
+                    }
+                  ]
+                }
               >
                 {tableContent.map((tableItem, index) => (
                   <JobsTableRow
@@ -377,7 +403,8 @@ const JobsTable = React.forwardRef(
                 disabledNextDoubleBtnTooltip={
                   filtersStore.autoRefresh
                     ? 'Uncheck Auto Refresh to view more results'
-                    : autoRefreshPrevValue
+                    : autoRefreshPrevValue &&
+                        paginationConfigJobsRef.current?.paginationResponse?.['page-token']
                       ? 'Close detailed view and uncheck Auto Refresh to view more results'
                       : ''
                 }
@@ -396,9 +423,8 @@ JobsTable.propTypes = {
   context: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
   filtersConfig: FILTERS_CONFIG.isRequired,
-  jobRuns: PropTypes.array.isRequired,
+  jobRuns: PropTypes.array,
   jobs: PropTypes.array.isRequired,
-  navigateLink: PropTypes.string.isRequired,
   paginatedJobs: PropTypes.array.isRequired,
   refreshJobs: PropTypes.func.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,

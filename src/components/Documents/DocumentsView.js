@@ -37,6 +37,7 @@ import { getSavedSearchParams } from '../../utils/filter.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { ACTIONS_MENU } from '../../types'
+import { getDefaultFirstHeader } from '../../utils/createArtifactsContent'
 
 const DocumentsView = React.forwardRef(
   (
@@ -61,7 +62,7 @@ const DocumentsView = React.forwardRef(
       requestErrorMessage,
       selectedDocument,
       setSearchDocumentsParams,
-      setSelectedDocumentMin,
+      setSelectedDocument,
       tableContent,
       tableHeaders,
       viewMode = null
@@ -85,11 +86,10 @@ const DocumentsView = React.forwardRef(
                   />
                 )}
                 <ActionBar
+                  closeParamName={isAllVersions ? ALL_VERSIONS_PATH : DOCUMENTS_TAB}
                   filters={filters}
                   filtersConfig={filtersConfig}
-                  navigateLink={`/projects/${projectName}/${DOCUMENTS_TAB}${isAllVersions ? `/${documentName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
                   handleRefresh={handleRefreshDocuments}
-                  page={DOCUMENTS_PAGE}
                   setSearchParams={setSearchDocumentsParams}
                   withRefreshButton
                   withoutExpandButton
@@ -97,7 +97,8 @@ const DocumentsView = React.forwardRef(
                   <ArtifactsFilters artifacts={documents} />
                 </ActionBar>
               </div>
-              {artifactsStore.loading ? null : tableContent.length === 0 ? (
+              {artifactsStore.loading ? null : tableContent.length === 0 &&
+                isEmpty(selectedDocument) ? (
                 <NoData
                   message={getNoDataMessage(
                     filters,
@@ -119,12 +120,12 @@ const DocumentsView = React.forwardRef(
                     getCloseDetailsLink={() =>
                       getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : DOCUMENTS_TAB)
                     }
-                    handleCancel={() => setSelectedDocumentMin({})}
+                    handleCancel={() => setSelectedDocument({})}
                     pageData={pageData}
                     retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedDocument}
                     tableClassName="documents-table"
-                    tableHeaders={tableHeaders ?? []}
+                    tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
                   >
                     {tableContent.map((tableItem, index) => (
                       <ArtifactsTableRow
@@ -183,7 +184,7 @@ DocumentsView.propTypes = {
   requestErrorMessage: PropTypes.string.isRequired,
   selectedDocument: PropTypes.object.isRequired,
   setSearchDocumentsParams: PropTypes.func.isRequired,
-  setSelectedDocumentMin: PropTypes.func.isRequired,
+  setSelectedDocument: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   viewMode: PropTypes.string

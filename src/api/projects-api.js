@@ -26,14 +26,11 @@ const projectsApi = {
     }),
   createProject: postData => mainHttpClient.post('/projects', postData),
   deleteProject: (project, deleteNonEmpty) =>
-    mainHttpClientV2.delete(
-      `/projects/${project}`,
-      deleteNonEmpty && {
-        headers: {
-          'x-mlrun-deletion-strategy': 'cascade'
-        }
+    mainHttpClientV2.delete(`/projects/${project}`, {
+      headers: {
+        'x-mlrun-deletion-strategy': deleteNonEmpty ? 'cascade' : 'restricted'
       }
-    ),
+    }),
   deleteSecret: (project, key) =>
     mainHttpClient.delete(`/projects/${project}/secrets?provider=kubernetes&secret=${key}`),
   editProject: (project, data) => mainHttpClient.put(`/projects/${project}`, data),
@@ -84,7 +81,7 @@ const projectsApi = {
       signal
     }),
   getProjectSummary: (project, signal) => {
-    return mainHttpClient.get(`/project-summaries/${project}`, {signal})
+    return mainHttpClient.get(`/project-summaries/${project}`, { signal })
   },
   getProjectWorkflows: project => {
     return mainHttpClient.get(`/projects/${project}/pipelines`)

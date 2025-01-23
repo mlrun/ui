@@ -75,7 +75,7 @@ const generateRequestParams = filters => {
   }
 
   if (entityType && entityType === JOB && filters?.[JOB_NAME].trim()) {
-    params[ENTITY_ID] = `~${filters?.[JOB_NAME]}*`
+    params[ENTITY_ID] = `~*${filters?.[JOB_NAME]}*`
   }
 
   const endpointApplication = filters?.[ENDPOINT_APPLICATION]?.trim()

@@ -29,8 +29,7 @@ module.exports = {
     ],
     Online_Status: 'online',
     Data_Collection_Description:
-      'Register, upload data directly, or define ' +
-      'features using the feature store.',
+      'Register, upload data directly, or define ' + 'features using the feature store.',
     Development_Description:
       'Define your code in a function and train your ' +
       'models. You can also run any additional code ' +
@@ -100,8 +99,8 @@ module.exports = {
     Action_Menu_List_Expanded: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete all'],
     Action_Menu_List_Dataset_Transition_Popup: ['Download', 'Copy URI', 'View YAML'],
     Handler_List: ['train'],
-    Pods_Priority_List: ['Low','Medium', 'High'],
-    Ranking_Criteria_List: ['Min','Max']
+    Pods_Priority_List: ['Low', 'Medium', 'High'],
+    Ranking_Criteria_List: ['Min', 'Max']
   },
   Datasets_Info_Pane: {
     Tab_List: ['Overview', 'Preview', 'Metadata', 'Analysis'],
@@ -118,18 +117,8 @@ module.exports = {
       'Updated:',
       'Labels:'
     ],
-    Overview_Producer_Headers: [
-      'Name:',
-      'Kind:',
-      'URI:',
-      'Owner:',
-      'Workflow:',
-      'UID:'
-    ],
-    Overview_Sources_Headers: [
-      'Name:',
-      'Path:'
-    ]
+    Overview_Producer_Headers: ['Name:', 'Kind:', 'URI:', 'Owner:', 'Workflow:', 'UID:'],
+    Overview_Sources_Headers: ['Name:', 'Path:']
   },
   ML_Functions_Tab: {
     Common_Action_Menu_Options: ['Edit', 'View YAML', 'Delete'],
@@ -180,17 +169,8 @@ module.exports = {
       'Updated:',
       'Labels:'
     ],
-    Overview_Producer_Headers: [
-      'Name:',
-      'Kind:',
-      'URI:',
-      'Owner:',
-      'UID:'
-    ],
-    Overview_Sources_Headers: [
-      'Name:',
-      'Path:'
-    ]
+    Overview_Producer_Headers: ['Name:', 'Kind:', 'URI:', 'Owner:', 'UID:'],
+    Overview_Sources_Headers: ['Name:', 'Path:']
   },
   Models_Info_Pane: {
     Tab_List: ['Overview'],
@@ -214,18 +194,8 @@ module.exports = {
       'Labels:',
       'Metrics:'
     ],
-    Overview_Producer_Headers: [
-      'Name:',
-      'Kind:',
-      'URI:',
-      'Owner:',
-      'Workflow:',
-      'UID:'
-    ],
-    Overview_Sources_Headers: [
-      'Name:',
-      'Path:'
-    ]
+    Overview_Producer_Headers: ['Name:', 'Kind:', 'URI:', 'Owner:', 'Workflow:', 'UID:'],
+    Overview_Sources_Headers: ['Name:', 'Path:']
   },
   Models_Endpoints_Info_Pane: {
     Tab_List: ['Overview', 'Features Analysis', 'Metrics'],
@@ -236,6 +206,7 @@ module.exports = {
       'Function URI:',
       'Function Tag:',
       'Feature set:',
+      'Sampling percentage:',
       'Last prediction:',
       'Error count:',
       'Accuracy:',
@@ -276,7 +247,7 @@ module.exports = {
       'Google storage'
     ]
   },
-  Modal_Wizard_Form:{
+  Modal_Wizard_Form: {
     Tab_List: ['Functions', 'Hub'],
     Hub_Filter_Category: [
       'Data Analysis',
@@ -293,8 +264,9 @@ module.exports = {
     ],
     Data_Inputs_Table_Header: ['Input name', 'Path'],
     Parameters_Table_Header: ['Name', 'Type', 'Value'],
-    Parameters_Table_Header_Hyper: ['Hyper','Name', 'Type', 'Value'],
-    Image_Name_Text: 'The image must include all the software packages that are required to run the function. For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version'
+    Parameters_Table_Header_Hyper: ['Hyper', 'Name', 'Type', 'Value'],
+    Image_Name_Text:
+      'The image must include all the software packages that are required to run the function. For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version'
   },
   Register_Artifact: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
@@ -311,7 +283,8 @@ module.exports = {
       'Google storage',
       'Databricks filesystem'
     ],
-    Register_Error_Message: /That combination of name and tag is already in use in an existing (artifact|dataset|plotly|table)\. If you proceed, the existing (artifact|dataset|plotly|table) will be overwritten/
+    Register_Error_Message:
+      /That combination of name and tag is already in use in an existing (artifact|dataset|plotly|table)\. If you proceed, the existing (artifact|dataset|plotly|table) will be overwritten/
   },
   Register_Dataset: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
@@ -334,7 +307,7 @@ module.exports = {
     Secrets_Hint:
       'These secrets are automatically available to all jobs belonging to this project that are not executed locally. See Secrets'
   },
-  Common_Tooltips:{
+  Common_Tooltips: {
     FilterBy_Button: 'Filter',
     Refresh_Button: 'Refresh',
     In_Process_Jobs: 'Aborting, Pending, Running',
@@ -343,8 +316,8 @@ module.exports = {
     Failed_Worflows: 'Error, Failed',
     Succeeded: 'Completed',
     Error_Content: 'Error. Columns must be same length as key',
-    Error_Content_Workflow: 
-      'Error. 2021-08-29 20:01:36.582972: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library \'libcudart.so.11.0\'; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/lib:/usr/local/lib: 2021-08-29 20:01:36.583019: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine. 2021-08-29 20:01:46.470042: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set 2021-08-29 20:01:46.470263: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library \'libcuda.so.1\'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/lib:/usr/local/lib: 2021-08-29 20:01:46.470283: W tensorflow/stream_executor/cuda/cuda_driver.cc:326] failed call to cuInit: UNKNOWN ERROR (303) 2021-08-29 20:01:46.470306: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (train-1193bacd-worker-0): /proc/driver/nvidia/version does not exist 2021-08-29 20:01:46.518782: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations: AVX2 FMA To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags. 2021-08-29 20:01:46.518927: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set Some callbacks may not have access to the averaged metrics, see https://github.com/horovod/horovod/issues/2440 Traceback (most recent call last): File "/User/demos/image-classification-with-distributed-training/src-tfv2/horovod-training.py", line 116, in <module> hvd.callbacks.LearningRateWarmupCallback(warmup_epochs=5, verbose=1), TypeError: __init__() missing 1 required positional argument: \'initial_lr\''
+    Error_Content_Workflow:
+      "Error. 2021-08-29 20:01:36.582972: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library 'libcudart.so.11.0'; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/lib:/usr/local/lib: 2021-08-29 20:01:36.583019: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine. 2021-08-29 20:01:46.470042: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set 2021-08-29 20:01:46.470263: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/lib:/usr/local/lib: 2021-08-29 20:01:46.470283: W tensorflow/stream_executor/cuda/cuda_driver.cc:326] failed call to cuInit: UNKNOWN ERROR (303) 2021-08-29 20:01:46.470306: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (train-1193bacd-worker-0): /proc/driver/nvidia/version does not exist 2021-08-29 20:01:46.518782: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations: AVX2 FMA To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags. 2021-08-29 20:01:46.518927: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set Some callbacks may not have access to the averaged metrics, see https://github.com/horovod/horovod/issues/2440 Traceback (most recent call last): File \"/User/demos/image-classification-with-distributed-training/src-tfv2/horovod-training.py\", line 116, in <module> hvd.callbacks.LearningRateWarmupCallback(warmup_epochs=5, verbose=1), TypeError: __init__() missing 1 required positional argument: 'initial_lr'"
   },
   Input_Hint: {
     Artifact_Names_Unique: 'Artifact names in the same project must be unique',
@@ -361,15 +334,20 @@ module.exports = {
     Run_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 63\n' +
       'This field is required',
-    Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75\n' +
-    'Key must be unique',
-    Labels_Warning_Key_Modal_Wizard_Form: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75\n' +
-    'System-defined labels cannot be modified.\nKey must be unique',
-    Projects_Labels_Warning_Key: '[Name] Valid characters : a–z, A–Z, 0–9, –, _, .\n[Name] Must begin and end with: a–z, A–Z, 0–9\n[Name] Max length - 63 characters\n' +
-    '[Prefix] Valid characters: a–z, 0–9, –, .\n[Prefix] Must begin and end with: a–z, 0–9\n[Prefix] Max length - 253 characters\n' +
-    '[Prefix] Must not start with \'kubernetes.io\', \'k8s.io\'\nSystem-defined labels cannot be modified.\nKey must be unique',
-    Projects_Labels_Warning_Value: '[Value] Must begin and end with: a–z, A–Z, 0–9\n[Value] Length – max: 63\n[Value] Valid characters: a–z, A–Z, 0–9, –, _, .',
-    Labels_Warning_Value: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',
+    Labels_Warning_Key:
+      'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75\n' +
+      'Key must be unique',
+    Labels_Warning_Key_Modal_Wizard_Form:
+      'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75\n' +
+      'System-defined labels cannot be modified.\nKey must be unique',
+    Projects_Labels_Warning_Key:
+      '[Name] Valid characters : a–z, A–Z, 0–9, –, _, .\n[Name] Must begin and end with: a–z, A–Z, 0–9\n[Name] Max length - 63 characters\n' +
+      '[Prefix] Valid characters: a–z, 0–9, –, .\n[Prefix] Must begin and end with: a–z, 0–9\n[Prefix] Max length - 253 characters\n' +
+      "[Prefix] Must not start with 'kubernetes.io', 'k8s.io'\nSystem-defined labels cannot be modified.\nKey must be unique",
+    Projects_Labels_Warning_Value:
+      '[Value] Must begin and end with: a–z, A–Z, 0–9\n[Value] Length – max: 63\n[Value] Valid characters: a–z, A–Z, 0–9, –, _, .',
+    Labels_Warning_Value:
+      'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',
     Feature_Set_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
       'This field is required',
@@ -418,7 +396,8 @@ module.exports = {
     Add_Feature_Vector_Hint: 'Add features from the list on the left to this feature vector',
     Deploy_Model_Name_Hint:
       'After the function is deployed, it will have a URL for calling the model that is based upon this name.',
-    MLRun_Store_Path_Hint: 'Field must be in "<artifact type>/<project>/<artifact name>:<artifact tag>" or "<artifact type>/<project>/<artifact name>@<artifact uid>" format',
+    MLRun_Store_Path_Hint:
+      'Field must be in "<artifact type>/<project>/<artifact name>:<artifact tag>" or "<artifact type>/<project>/<artifact name>@<artifact uid>" format',
     Jobs_MLRun_Store_Path_Hint:
       'Field must be in "artifacts/my-project/my-artifact:my-tag" or "artifacts/my-project/my-artifact@my-uid" format',
     V3IO_Path_Hint: 'Invalid URL. Field must be in "container-name/file" format',
@@ -429,7 +408,8 @@ module.exports = {
     Start_Time_Input: 'Filter data by start date >= value',
     End_Time_Input: 'Filter data by start date <= value',
     Target_Store_Online: 'Store the feature set in a NoSQL database',
-    Target_Store_Offline: 'Store the feature set as a Parquet file or a partitioned Parquet directory',
+    Target_Store_Offline:
+      'Store the feature set as a Parquet file or a partitioned Parquet directory',
     Target_Store_External_Offline:
       'Store the feature set in a remote object store (e.g. AWS S3 Google or Azure storage)',
     Distinct_Keys: 'The partition is based on key.',
@@ -460,13 +440,16 @@ module.exports = {
     Feature_Sets_Statistics:
       'Statistics reflect the data for the latest ingestion. \n' +
       ' Note that some values may be empty due to the use of different engines for calculating statistics',
-    Models_Statistics: 'Note that some values may be empty due to the use of different engines for calculating statistics'
+    Models_Statistics:
+      'Note that some values may be empty due to the use of different engines for calculating statistics'
   },
   Descriptions: {
     Archive_Project:
       'Archived projects continue to consume resources.To stop the project from consuming resources, delete its scheduled jobs and suspend its Nuclio functions.',
-    Delete_Project_Confirm_Message: /You are trying to delete the project "[^"]+[$"]\. Deleted projects cannot be restored/,
-    Delete_Project: /You are trying to delete the non-empty project "[^"]+[$"]\. Deleting it will also delete all of its resources, such as jobs, artifacts, and features\./,
+    Delete_Project_Confirm_Message:
+      /You are trying to delete the project "[^"]+[$"]\. Deleted projects cannot be restored/,
+    Delete_Project:
+      /You are trying to delete the non-empty project "[^"]+[$"]\. Deleting it will also delete all of its resources, such as jobs, artifacts, and features\./,
     Delete_Function:
       /You try to delete function "[^"]+[$"]\. Deleted functions cannot be restored\./,
     Delete_Scheduled_Job:
@@ -476,7 +459,7 @@ module.exports = {
   },
   Messages: {
     How_To_Create:
-    'See how to create a serving function in https://docs.mlrun.org/en/stable/serving/built-in-model-serving.html and https://docs.mlrun.org/en/stable/tutorials/03-model-serving.html',
+      'See how to create a serving function in https://docs.mlrun.org/en/stable/serving/built-in-model-serving.html and https://docs.mlrun.org/en/stable/tutorials/03-model-serving.html',
     Metrics_Empty_Select_Message: 'Choose metrics to view endpoint’s data'
   },
   Jobs_Monitoring: {
@@ -484,12 +467,30 @@ module.exports = {
   },
   Jobs_And_Workflows: {
     Tab_List: ['Monitor Jobs', 'Monitor Workflows', 'Schedule'],
-    Job_Action_Menu_Options: ['Batch re-run', 'Run\'s resource monitoring', 'View YAML', 'Delete run'],
-    Job_List_Action_Menu_Options: ['Batch re-run', 'Run\'s resource monitoring', 'View YAML', 'Delete run', 'Delete all runs'],
-    Job_Overview_Action_Menu_Options: ['View YAML', 'Run\'s resource monitoring', 'Batch re-run', 'Delete run'],
+    Job_Action_Menu_Options: [
+      'Batch re-run',
+      "Run's resource monitoring",
+      'View YAML',
+      'Delete run'
+    ],
+    Job_List_Action_Menu_Options: [
+      'Batch re-run',
+      "Run's resource monitoring",
+      'View YAML',
+      'Delete run',
+      'Delete all runs'
+    ],
+    Job_Overview_Action_Menu_Options: [
+      'View YAML',
+      "Run's resource monitoring",
+      'Batch re-run',
+      'Delete run'
+    ],
     Running_Job_Action_Menu_Options: ['Monitoring', 'Abort', 'View YAML'],
-    Delete_Run_Message: /Are you sure you want to delete the run with the UID "(.+?)" of the job "(.+?)"\? Deleted runs can not be restored./,
-    Delete_All_Runs_Message: /Are you sure you want to delete all runs of the job "(.+?)"\? Deleted runs can not be restored./,
+    Delete_Run_Message:
+      /Are you sure you want to delete the run with the UID "(.+?)" of the job "(.+?)"\? Deleted runs can not be restored./,
+    Delete_All_Runs_Message:
+      /Are you sure you want to delete all runs of the job "(.+?)"\? Deleted runs can not be restored./,
     Workflows_Action_Menu_Options: ['View YAML', 'Retry'],
     Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
     Pending_Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'Abort', 'View YAML'],
@@ -532,7 +533,8 @@ module.exports = {
     Project_Already_Exists: /A project named "[^"]+[$"] already exists/,
     Projects_Limit_Reached:
       'The system already has the maximum number of projects. An existing project must be deleted before you can create another.',
-    MLRunAccessDeniedError: 'MLRunAccessDeniedError(\'Not allowed to create/update internal secrets (key starts with mlrun.)\')',
+    MLRunAccessDeniedError:
+      "MLRunAccessDeniedError('Not allowed to create/update internal secrets (key starts with mlrun.)')",
     Must_Select_One: 'Must select at least one',
     Must_Select_One_Partition: 'Must select at least one partitioning option',
     Already_Scheduled: 'This job is already scheduled',
@@ -541,10 +543,40 @@ module.exports = {
   Dropdown_Options: {
     Tag_Filer_Options: ['All', 'latest'],
     Status_Filter_Options: ['All', 'Completed', 'Running', 'Pending', 'Error', 'Aborted'],
-    Jobs_Status_Filter_Options: ['All', 'Aborted', 'Aborting', 'Completed', 'Error', 'Running', 'Pending'],
+    Jobs_Status_Filter_Options: [
+      'All',
+      'Aborted',
+      'Aborting',
+      'Completed',
+      'Error',
+      'Running',
+      'Pending'
+    ],
     Workflows_Status_Filter_Options: ['All', 'Error', 'Failed', 'Running', 'Completed'],
-    Jobs_Type_Filter_Options: ['All', 'Local', 'Dask', 'Databricks', 'Handler', 'Job', 'Horovod', 'Spark'],
-    Scheduled_Type_Filter_Options: ['All', 'Job', 'Workflow', 'Spark', 'Horovod', 'Dask', 'Databricks'],
+    Jobs_Type_Filter_Options: [
+      'All',
+      'Local',
+      'Dask',
+      'Databricks',
+      'Handler',
+      'Job',
+      'Horovod',
+      'Spark'
+    ],
+    Scheduled_Type_Filter_Options: [
+      'All',
+      'Job',
+      'Workflow',
+      'Nuclio',
+      'Application',
+      'Serving',
+      'Spark',
+      'Horovod',
+      'Dask',
+      'Databricks',
+      'Local',
+      'Handler'
+    ],
     Group_By_Filter_Options: ['None', 'Name'],
     Start_Time_Filter_Options: [
       'Any time',
@@ -586,21 +618,18 @@ module.exports = {
     Criteria_Dropdown_Options: ['Max', 'Min'],
     Volume_Mount_Options: ['Auto', 'Manual', 'None'],
     Hyperparameter_Strategy_Options: ['List', 'Grid', 'Random'],
-    Memory_Unit_Options: [
-      'Bytes',
-      'KB',
-      'KiB',
-      'MB',
-      'MiB',
-      'GB',
-      'GiB',
-      'TB',
-      'TiB'
-    ],
+    Memory_Unit_Options: ['Bytes', 'KB', 'KiB', 'MB', 'MiB', 'GB', 'GiB', 'TB', 'TiB'],
     CPU_Unit_Options: ['cpu', 'millicpu'],
     Time_Unit_Options: ['Minute', 'Hourly', 'Daily', 'Weekly', 'Monthly'],
     Minute_Intervals_Dropdown_Options: ['Every 10', 'Every 15', 'Every 20', 'Every 30'],
-    Hour_Intervals_Dropdown_Options: ['Every 1', 'Every 2', 'Every 3', 'Every 4', 'Every 6', 'Every 12'],
+    Hour_Intervals_Dropdown_Options: [
+      'Every 1',
+      'Every 2',
+      'Every 3',
+      'Every 4',
+      'Every 6',
+      'Every 12'
+    ],
     Partition_Granularity_Options: ['Second', 'Minute', 'Hour', 'Day', 'Month', 'Year'],
     Pods_Priority: ['Low', 'Medium', 'High'],
     Schedule_Variants: ['Minute', 'Hourly', 'Daily', 'Weekly', 'Monthly'],
@@ -608,24 +637,31 @@ module.exports = {
     Schedule_Hours_Variants: ['1', '2', '3', '4', '6', '12']
   },
   No_Data_Message: {
-    Common_Message_Jobs_Monitoring: /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
-    Common_Message_Jobs_Monitoring_Status: /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Status: (.+?)"/,
-    Common_Message_Jobs_Monitoring_Workflows: /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
-    Common_Message_Jobs_Monitoring_Type: /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Type: (.+?)"/,
-    Common_Message_Jobs_Monitoring_Scheduled: /No data matches the filter: "Scheduled at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
-    Common_Message_Monitor_Jobs: /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}"/,
-    Common_Message_Monitor_Jobs_Name: /No data matches the filter: "Name: (.+?)"/,
+    Common_Message_Jobs_Monitoring:
+      /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
+    Common_Message_Jobs_Monitoring_Status:
+      /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Status: (.+?)"/,
+    Common_Message_Jobs_Monitoring_Type:
+      /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Type: (.+?)"/,
+    Common_Message_Monitor_Jobs:
+      /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}"/,
+    Common_Message_Jobs_Monitoring_Scheduled:
+      /No data matches the filter: "Scheduled at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
     Common_Message: 'No data matches the filter: "Version Tag: latest, Name: ccccc"',
     Common_Message_Feature: 'No data matches the filter: "Version Tag: latest"',
-    Common_Message_Feature_Vector_Tab: 'No data matches the filter: "Tag: latest, Project: test-test"',
+    Common_Message_Feature_Vector_Tab:
+      'No data matches the filter: "Tag: latest, Project: test-test"',
     Common_Message_Feature_Vector: 'No data matches the filter: "Version Tag: latest"',
     Common_Message_Feature_Sets: 'No data matches the filter: "Version Tag: latest"',
     No_Data: 'No data to show',
     No_Features_Yet: 'No features found.',
     No_Consumer_Group_Yet: 'You haven’t created any consumer group yet',
-    No_Datasets_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
-    No_Files_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
-    No_Models_data: 'No data matches the filter: "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"'
+    No_Datasets_data:
+      'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
+    No_Files_data:
+      'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
+    No_Models_data:
+      'No data matches the filter: "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"'
   },
   Preview_Pop_Up: {
     Table_Header: ['Name', 'Path', 'Size', 'Updated']

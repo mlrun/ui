@@ -26,8 +26,9 @@ import { RoundedIcon } from 'igz-controls/components'
 
 import { getLinks } from './Navbar.utils'
 import localStorageService from '../../utils/localStorageService'
-import { NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
+import { ALERTS_PAGE_PATH, NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
 
+import { ReactComponent as Alerts } from 'igz-controls/images/navbar/alerts-icon.svg'
 import { ReactComponent as PinIcon } from 'igz-controls/images/pin-icon.svg'
 import { ReactComponent as UnPinIcon } from 'igz-controls/images/unpin-icon.svg'
 import { ReactComponent as SettingsIcon } from 'igz-controls/images/navbar/mlrun-project-settings.svg'
@@ -101,6 +102,13 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
         <div className="navbar__additional">
           <ul className="navbar-links">
             <NavbarLink
+              icon={<Alerts />}
+              id="alerts"
+              label="Alerts"
+              link={`/projects/${projectName}/${ALERTS_PAGE_PATH}`}
+            />
+            <NavbarLink
+              id="project-settings"
               icon={<SettingsIcon />}
               label="Project settings"
               link={`/projects/${projectName}/settings`}

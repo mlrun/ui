@@ -18,13 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { cloneDeep, debounce, isEmpty, isEqual, omit } from 'lodash'
+import { cloneDeep, isEmpty, omit } from 'lodash'
 import Prism from 'prismjs'
 
 import { PopUpDialog } from 'igz-controls/components'
 
 import {
-  ALL_VERSIONS_PATH,
   NAME_FILTER,
   MODELS_PAGE,
   MODELS_TAB,
@@ -36,9 +35,7 @@ import {
   TAG_FILTER,
   ITERATIONS_FILTER,
   TAG_FILTER_LATEST,
-  VIEW_SEARCH_PARAMETER,
   TAG_FILTER_ALL_ITEMS,
-  BE_PAGE,
   SHOW_ITERATIONS
 } from '../../../constants'
 import { showArtifactsPreview, updateArtifact } from '../../../reducers/artifactsReducer'
@@ -51,12 +48,9 @@ import { generateUri } from '../../../utils/resources'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
 import { handleDeleteArtifact } from '../../../utils/handleDeleteArtifact'
 import { openDeleteConfirmPopUp } from 'igz-controls/utils/common.util'
-import { searchArtifactItem } from '../../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../../reducers/downloadReducer'
 import { showErrorNotification } from '../../../utils/notifications.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { getFilteredSearchParams } from '../../../utils/filter.util'
-import { parseIdentifier } from '../../../utils'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -211,52 +205,6 @@ export const handleApplyDetailsChanges = (
   }
 }
 
-export const checkForSelectedModel = debounce(
-  (
-    paramsName,
-    models,
-    paramsId,
-    navigate,
-    projectName,
-    setSelectedModel,
-    isAllVersions,
-    searchParams,
-    paginationConfigRef
-  ) => {
-    if (paramsId) {
-      const searchBePage = parseInt(searchParams.get(BE_PAGE))
-      const configBePage = paginationConfigRef.current[BE_PAGE]
-      const { tag, uid, iter } = parseIdentifier(paramsId)
-
-      if (models.length > 0 && searchBePage === configBePage) {
-        const searchItem = searchArtifactItem(
-          models.map(artifact => artifact.data ?? artifact),
-          paramsName,
-          tag,
-          iter,
-          uid
-        )
-
-        if (!searchItem) {
-          navigate(
-            `/projects/${projectName}/models/models${isAllVersions ? `/${paramsName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(
-              window.location.search,
-              [VIEW_SEARCH_PARAMETER]
-            )}`,
-            { replace: true }
-          )
-        } else {
-          setSelectedModel(prevState => {
-            return isEqual(prevState, searchItem) ? prevState : searchItem
-          })
-        }
-      }
-    } else {
-      setSelectedModel({})
-    }
-  }
-)
-
 export const generateActionsMenu = (
   modelMin,
   frontendSpec,
@@ -295,18 +243,20 @@ export const generateActionsMenu = (
         icon: <DownloadIcon />,
         onClick: modelMin => {
           getFullModel(modelMin).then(model => {
-            const downloadPath = `${model?.target_path}${model?.model_file || ''}`
-            dispatch(
-              setDownloadItem({
-                path: downloadPath,
-                user: model.producer?.owner,
-                id: downloadPath,
-                artifactLimits: frontendSpec?.artifact_limits,
-                fileSize: model.size,
-                projectName
-              })
-            )
-            dispatch(setShowDownloadsList(true))
+            if (model) {
+              const downloadPath = `${model?.target_path}${model?.model_file || ''}`
+              dispatch(
+                setDownloadItem({
+                  path: downloadPath,
+                  user: model.producer?.owner,
+                  id: downloadPath,
+                  artifactLimits: frontendSpec?.artifact_limits,
+                  fileSize: model.size,
+                  projectName
+                })
+              )
+              dispatch(setShowDownloadsList(true))
+            }
           })
         }
       },
@@ -382,12 +332,14 @@ export const generateActionsMenu = (
         icon: <ArtifactView />,
         onClick: modelMin => {
           getFullModel(modelMin).then(model => {
-            dispatch(
-              showArtifactsPreview({
-                isPreview: true,
-                selectedItem: model
-              })
-            )
+            if (model) {
+              dispatch(
+                showArtifactsPreview({
+                  isPreview: true,
+                  selectedItem: model
+                })
+              )
+            }
           })
         }
       },

@@ -22,6 +22,7 @@ import { cloneDeep, debounce } from 'lodash'
 import {
   BE_PAGE,
   DATES_FILTER,
+  FE_PAGE,
   FILTER_ALL_ITEMS,
   JOBS_MONITORING_SCHEDULED_TAB,
   LABELS_FILTER,
@@ -45,38 +46,88 @@ import {
   workflowsStatuses
 } from '../components/FilterMenu/filterMenu.settings'
 import { getCloseDetailsLink } from './link-helper.util'
+import { parseJob } from './parseJob'
+import { fetchJob } from '../reducers/jobReducer'
+import { showErrorNotification } from './notifications.util'
+import { generateObjectNotInTheListMessage } from './generateMessage.util'
 
 export const checkForSelectedJob = debounce(
   (
     paginatedJobs,
+    jobRuns,
     jobName,
     jobId,
+    projectName,
     navigate,
     setSelectedJob,
     modifyAndSelectRun,
     searchParams,
-    paginationConfigJobsRef
+    paginationConfigJobsRef,
+    dispatch,
+    setSearchParams,
+    lastCheckedJobIdRef
   ) => {
-    if (jobId) {
+    const runProject = projectName || searchParams.get(PROJECT_FILTER)
+
+    if (jobId && runProject) {
       const searchBePage = parseInt(searchParams.get(BE_PAGE))
       const configBePage = paginationConfigJobsRef.current[BE_PAGE]
 
-      if (paginatedJobs?.length > 0 && searchBePage === configBePage) {
-        const selectedPaginatedJob = paginatedJobs.find(paginatedJob => {
-          return paginatedJob.uid === jobId
-        })
+      if (jobRuns && searchBePage === configBePage && lastCheckedJobIdRef.current !== jobId) {
+        lastCheckedJobIdRef.current = jobId
 
-        if (!selectedPaginatedJob) {
-          navigate(getCloseDetailsLink(jobName, true), { replace: true })
-        } else if (selectedPaginatedJob) {
-          modifyAndSelectRun(cloneDeep(selectedPaginatedJob))
-        }
+        dispatch(
+          fetchJob({
+            project: runProject,
+            jobId: jobId
+          })
+        )
+          .unwrap()
+          .then(job => {
+            const parsedJob = parseJob(job)
+            if (!parsedJob) {
+              navigate(getCloseDetailsLink(jobName, true), { replace: true })
+            } else if (parsedJob) {
+              const findJobIndex = jobsList =>
+                jobsList.findIndex(job => {
+                  return job.uid === jobId
+                })
+
+              const itemIndexInPaginatedList = findJobIndex(paginatedJobs)
+              const itemIndexInMainList =
+                itemIndexInPaginatedList !== -1 ? itemIndexInPaginatedList : findJobIndex(jobRuns)
+
+              if (itemIndexInPaginatedList === -1) {
+                if (itemIndexInMainList > -1) {
+                  const { fePageSize } = paginationConfigJobsRef.current
+
+                  setSearchParams(prevSearchParams => {
+                    prevSearchParams.set(FE_PAGE, Math.ceil((itemIndexInMainList + 1) / fePageSize))
+
+                    return prevSearchParams
+                  })
+                } else {
+                  parsedJob.ui.infoMessage = generateObjectNotInTheListMessage("job's run")
+                }
+              }
+
+              modifyAndSelectRun(cloneDeep(parsedJob))
+            }
+          })
+          .catch(error => {
+            showErrorNotification(
+              dispatch,
+              error,
+              '',
+              'This run either does not exist or was deleted'
+            )
+          })
       }
     } else {
       setSelectedJob({})
     }
   },
-  20
+  30
 )
 
 export const getJobKindFromLabels = (labels = []) => {

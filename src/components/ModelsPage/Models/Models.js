@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useState, useRef, useLayoutEffect } from 'react'
+import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { chain, isEmpty, isNil } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -45,10 +45,11 @@ import {
   BE_PAGE,
   BE_PAGE_SIZE,
   ITERATIONS_FILTER,
-  SHOW_ITERATIONS
+  SHOW_ITERATIONS,
+  TAG_FILTER,
+  TAG_FILTER_ALL_ITEMS
 } from '../../../constants'
 import {
-  checkForSelectedModel,
   getFiltersConfig,
   generateActionsMenu,
   generatePageData,
@@ -63,7 +64,7 @@ import { getViewMode } from '../../../utils/helper'
 import { isDetailsTabExists } from '../../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseChipsData } from '../../../utils/convertChipsData'
-import { setFullSelectedArtifact } from '../../../utils/artifacts.util'
+import { checkForSelectedArtifact, setFullSelectedArtifact } from '../../../utils/artifacts.util'
 import { setNotification } from '../../../reducers/notificationReducer'
 import { transformSearchParams } from '../../../utils/filter.util'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
@@ -74,11 +75,11 @@ import { usePagination } from '../../../hooks/usePagination.hook'
 import './models.scss'
 
 const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
-  const [models, setModels] = useState([])
-  const [modelVersions, setModelVersions] = useState([])
+  const [models, setModels] = useState(null)
+  const [modelVersions, setModelVersions] = useState(null)
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [selectedModel, setSelectedModel] = useState({})
-  const [selectedModelMin, setSelectedModelMin] = useState({})
+  const [isSelectedArtifactBeyondTheList, setSelectedArtifactIsBeyondTheList] = useState(false)
   //temporarily commented till ML-5606 will be done
   // const [metricsCounter, setMetricsCounter] = useState(0)
   // const [dataIsLoaded, setDataIsLoaded] = useState(false)
@@ -98,6 +99,7 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const modelsRef = useRef(null)
+  const lastCheckedArtifactIdRef = useRef(null)
 
   const filtersConfig = useMemo(() => getFiltersConfig(isAllVersions), [isAllVersions])
   const modelsFilters = useFiltersFromSearchParams(filtersConfig)
@@ -127,14 +129,14 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
 
       if (isAllVersions) {
         requestParams.name = params.modelName
-        setModelVersions([])
+        setModelVersions(null)
       } else {
-        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS) {
+        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS || filters[TAG_FILTER] === TAG_FILTER_ALL_ITEMS) {
           requestParams['partition-by'] = 'project_and_name'
           requestParams['partition-sort-by'] = 'updated'
         }
 
-        setModels([])
+        setModels(null)
       }
 
       if (!isAllVersions && !isEmpty(paginationConfigModelsRef.current)) {
@@ -146,6 +148,8 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
         requestParams.page = paginationConfigModelVersionsRef.current[BE_PAGE]
         requestParams['page-size'] = paginationConfigModelVersionsRef.current[BE_PAGE_SIZE]
       }
+
+      lastCheckedArtifactIdRef.current = null
 
       return dispatch(
         fetchModels({
@@ -170,9 +174,21 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
               paginationConfigModelsRef.current.paginationResponse = response.pagination
               setModels(response.artifacts || [])
             }
+          } else {
+            if (isAllVersions) {
+              setModelVersions([])
+            } else {
+              setModels([])
+            }
           }
 
           return response
+        }).catch(() => {
+          if (isAllVersions) {
+            setModelVersions([])
+          } else {
+            setModels([])
+          }
         })
     },
     [dispatch, isAllVersions, params.modelName, params.projectName]
@@ -235,7 +251,7 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
   const refreshModels = useCallback(
     filters => {
       fetchTags()
-      setSelectedModelMin({})
+      setSelectedModel({})
       //temporarily commented till ML-5606 will be done
       // setTableHeaders([])
       // setDataIsLoaded(false)
@@ -319,9 +335,9 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
   const applyDetailsChangesCallback = (changes, selectedItem) => {
     if ('tag' in changes.data) {
       if (isAllVersions) {
-        setModelVersions([])
+        setModelVersions(null)
       } else {
-        setModels([])
+        setModels(null)
       }
 
       if (changes.data.tag.currentFieldValue) {
@@ -345,8 +361,8 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
 
   useEffect(() => {
     return () => {
-      setModels([])
-      setModelVersions([])
+      setModels(null)
+      setModelVersions(null)
     }
   }, [params.projectName])
 
@@ -355,7 +371,7 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
 
     return () => {
       dispatch(removeModels())
-      setSelectedModelMin({})
+      setSelectedModel({})
       //temporarily commented till ML-5606 will be done
       // setTableHeaders([])
       // setDataIsLoaded(false)
@@ -438,7 +454,7 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
   const [handleRefreshModels, paginatedModels, searchModelsParams, setSearchModelsParams] =
     usePagination({
       hidden: isAllVersions,
-      content: models,
+      content: models ?? [],
       refreshContent: refreshModels,
       filters: modelsFilters,
       paginationConfigRef: paginationConfigModelsRef,
@@ -451,7 +467,7 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
     setSearchModelVersionsParams
   ] = usePagination({
     hidden: !isAllVersions,
-    content: modelVersions,
+    content: modelVersions ?? [],
     refreshContent: refreshModels,
     filters: modelsFilters,
     paginationConfigRef: paginationConfigModelVersionsRef,
@@ -466,46 +482,62 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
-  useLayoutEffect(() => {
-    checkForSelectedModel(
-      params.modelName,
-      isAllVersions ? paginatedModelVersions : paginatedModels,
-      params.id,
-      navigate,
-      params.projectName,
-      setSelectedModelMin,
+  useEffect(() => {
+    checkForSelectedArtifact({
+      artifactName: params.modelName,
+      artifacts: isAllVersions ? modelVersions : models,
+      dispatch,
       isAllVersions,
-      isAllVersions ? searchModelVersionsParams : searchModelsParams,
-      isAllVersions ? paginationConfigModelVersionsRef : paginationConfigModelsRef
-    )
+      navigate,
+      paginatedArtifacts: isAllVersions ? paginatedModelVersions : paginatedModels,
+      paginationConfigRef: isAllVersions
+        ? paginationConfigModelVersionsRef
+        : paginationConfigModelsRef,
+      paramsId: params.id,
+      projectName: params.projectName,
+      searchParams: isAllVersions ? searchModelVersionsParams : searchModelsParams,
+      setSearchParams: isAllVersions ? setSearchModelVersionsParams : setSearchModelsParams,
+      setSelectedArtifact: setSelectedModel,
+      setSelectedArtifactIsBeyondTheList,
+      lastCheckedArtifactIdRef,
+      tab: MODELS_TAB
+    })
   }, [
+    dispatch,
     isAllVersions,
+    modelVersions,
+    models,
+    navigate,
     paginatedModelVersions,
     paginatedModels,
-    navigate,
     params.id,
     params.modelName,
     params.projectName,
     searchModelVersionsParams,
-    searchModelsParams
+    searchModelsParams,
+    setSearchModelVersionsParams,
+    setSearchModelsParams
   ])
+
+
+useEffect(() => {
+  if (isEmpty(selectedModel)) {
+    lastCheckedArtifactIdRef.current = null
+  }
+}, [selectedModel])
 
   const getAndSetSelectedArtifact = useCallback(() => {
     setFullSelectedArtifact(
       MODELS_TAB,
       dispatch,
       navigate,
-      selectedModelMin,
+      params.modelName,
       setSelectedModel,
       params.projectName,
       params.id,
       isAllVersions
     )
-  }, [dispatch, isAllVersions, navigate, params.projectName, params.id, selectedModelMin])
-
-  useEffect(() => {
-    getAndSetSelectedArtifact()
-  }, [getAndSetSelectedArtifact])
+  }, [dispatch, isAllVersions, navigate, params.projectName, params.id, params.modelName])
 
   return (
     <ModelsView
@@ -523,9 +555,10 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
       handleRegisterModel={handleRegisterModel}
       handleTrainModel={handleTrainModel}
       isAllVersions={isAllVersions}
+      isSelectedArtifactBeyondTheList={isSelectedArtifactBeyondTheList}
       isDemoMode={isDemoMode}
       modelName={params.modelName}
-      models={isAllVersions ? modelVersions : models}
+      models={(isAllVersions ? modelVersions : models) ?? []}
       pageData={pageData}
       paginationConfigModelsRef={
         isAllVersions ? paginationConfigModelVersionsRef : paginationConfigModelsRef
@@ -535,7 +568,7 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
       requestErrorMessage={requestErrorMessage}
       selectedModel={selectedModel}
       setSearchModelsParams={isAllVersions ? setSearchModelVersionsParams : setSearchModelsParams}
-      setSelectedModelMin={setSelectedModelMin}
+      setSelectedModel={setSelectedModel}
       tableContent={tableContent}
       tableHeaders={tableHeaders}
       viewMode={viewMode}

@@ -20,7 +20,7 @@ such restriction.
 import { useCallback, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { useForm, useFormState } from 'react-final-form'
-import { truncate, upperFirst } from 'lodash'
+import { upperFirst } from 'lodash'
 import { useSelector } from 'react-redux'
 
 import StatusFilter from '../../common/StatusFilter/StatusFilter'
@@ -46,7 +46,7 @@ import {
   JOB_NAME,
   MODEL_ENDPOINT_RESULT,
   MODEL_MONITORING_APPLICATION,
-  PROJECTS_FILTER,
+  PROJECT_FILTER,
   SEVERITY
 } from '../../constants'
 
@@ -63,7 +63,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
 
     return [...allProjectsOption, ...generatedProjects].map(item => ({
       ...item,
-      label: truncate(item.label, { length: 26 })
+      label: item.label
     }))
   }, [projectStore.projectsNames.data])
 
@@ -91,7 +91,12 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
     <>
       {isCrossProjects && (
         <div className="form-row">
-          <FormSelect label="Project name" name={PROJECTS_FILTER} options={projectsList} />
+          <FormSelect
+            label="Project name"
+            name={PROJECT_FILTER}
+            options={projectsList}
+            preventWidthOverflow
+          />
         </div>
       )}
       {isAlertsPage && (
@@ -106,7 +111,12 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
 
       {(entityType === FILTER_ALL_ITEMS || entityType === MODEL_MONITORING_APPLICATION) && (
         <div className="form-row">
-          <FormInput label="Entity ID" name={ENTITY_ID} placeholder="Search by ID" />
+          <FormInput
+            label="Entity ID"
+            name={ENTITY_ID}
+            placeholder="Search by ID"
+            tip="Search for case insensitive, full or partial strings"
+          />
           <FormOnChange handler={value => handleInputChange(value, ENTITY_ID)} name={ENTITY_ID} />
         </div>
       )}
@@ -116,7 +126,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
             label={upperFirst(JOB)}
             name={JOB_NAME}
             placeholder="Search by job name"
-            tip="Add ~* before the filter value to return substring and case insensitive value."
+            tip="Search for case insensitive, full or partial strings"
           />
           <FormOnChange handler={value => handleInputChange(value, JOB_NAME)} name={JOB_NAME} />
         </div>
@@ -128,6 +138,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
               label="Endpoint Application"
               name={ENDPOINT_APPLICATION}
               placeholder="Search by application"
+              tip="Search for case insensitive, full or partial strings"
             />
             <FormOnChange
               handler={value => handleInputChange(value, ENDPOINT_APPLICATION)}
@@ -139,6 +150,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
               label="Endpoint Result"
               name={ENDPOINT_RESULT}
               placeholder="Search by result"
+              tip="Search for case insensitive, full or partial strings"
             />
             <FormOnChange
               handler={value => handleInputChange(value, ENDPOINT_RESULT)}
@@ -155,6 +167,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
           label="Event type"
           name={EVENT_TYPE}
           options={filterAlertsEventTypeOptions(entityType)}
+          preventWidthOverflow
         />
       </div>
     </>

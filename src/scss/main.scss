@@ -898,26 +898,32 @@ div[id^='chartjs-tooltip'] {
 /* =========== NOTIFICATION BUTTON ============= */
 
 .notification__button-close {
-  position: absolute;
-  top: -9px;
-  right: -9px;
   display: flex;
   align-items: center;
   width: 18px;
   height: 18px;
   padding: 2px;
-  background-color: $darkPurple;
-  border: 1px solid $white;
+  background-color: transparent;
   border-radius: 50%;
+  opacity: 0.5;
+  transition: opacity 0.3s ease-in-out;
 
   & svg {
     & > * {
       fill: $white;
     }
   }
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
 /* =========== GENERAL ============= */
+
+.d-flex {
+  display: flex;
+}
 
 .visibility-hidden {
   visibility: hidden;
