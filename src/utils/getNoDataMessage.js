@@ -62,7 +62,8 @@ import {
   STATUS_FILTER,
   TAG_FILTER,
   TAG_FILTER_ALL_ITEMS,
-  TYPE_FILTER
+  TYPE_FILTER,
+  PROJECTS_FILTER_ALL_ITEMS
 } from '../constants'
 
 const messageNamesList = {
@@ -208,7 +209,7 @@ const getVisibleFilterTypes = (filtersConfig, filters, filtersStore) => {
     const isProjectsVisible =
       type === PROJECT_FILTER &&
       filters[PROJECT_FILTER] &&
-      !isEqual(filters[PROJECT_FILTER], FILTER_ALL_ITEMS)
+      !isEqual(filters[PROJECT_FILTER], PROJECTS_FILTER_ALL_ITEMS)
     const isSeverityVisible = type === SEVERITY && !isEqual(filters[SEVERITY], [FILTER_ALL_ITEMS])
     const isTypeVisible = type === TYPE_FILTER && !isEqual(filters[TYPE_FILTER], FILTER_ALL_ITEMS)
     const isDateVisible =

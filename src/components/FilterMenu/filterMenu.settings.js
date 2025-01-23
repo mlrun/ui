@@ -116,6 +116,6 @@ export const filterSelectOptions = {
 }
 
 export const tagFilterOptions = [
-  { label: 'All', id: TAG_FILTER_ALL_ITEMS },
+  { label: 'All tags', id: TAG_FILTER_ALL_ITEMS },
   { label: 'latest', id: TAG_FILTER_LATEST }
 ]
