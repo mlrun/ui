@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, {useEffect, useCallback, useRef, useMemo, useState} from 'react'
+import React, { useEffect, useCallback, useRef, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useLocation, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
@@ -160,15 +160,29 @@ const Details = ({
         pageData.details.type === DOCUMENTS_TAB
       ) {
         setDetailsInfo(
-          generateArtifactsContent(pageData.details.type, selectedItem, params.projectName)
+          generateArtifactsContent(
+            pageData.details.type,
+            selectedItem,
+            params.projectName,
+            isDetailsPopUp
+          )
         )
       } else if (pageData.details.type === FUNCTIONS_PAGE) {
         setDetailsInfo(generateFunctionsContent(selectedItem))
       } else {
-        setDetailsInfo(generateFeatureStoreContent(pageData.details.type, selectedItem))
+        setDetailsInfo(
+          generateFeatureStoreContent(pageData.details.type, selectedItem, isDetailsPopUp)
+        )
       }
     }
-  }, [pageData.details.type, params.projectName, selectedItem, setDetailsInfo, location.search])
+  }, [
+    isDetailsPopUp,
+    location.search,
+    pageData.details.type,
+    params.projectName,
+    setDetailsInfo,
+    selectedItem
+  ])
 
   useEffect(() => {
     return () => {
@@ -349,7 +363,9 @@ const Details = ({
               } will discard your changes.`}
             />
           )}
-          {!isDetailsPopUp && <BlockerSpy setBlocker={setBlocker} shouldBlock={shouldDetailsBlock} />}
+          {!isDetailsPopUp && (
+            <BlockerSpy setBlocker={setBlocker} shouldBlock={shouldDetailsBlock} />
+          )}
         </div>
       )}
     </Form>
