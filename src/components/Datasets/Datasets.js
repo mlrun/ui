@@ -22,8 +22,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
-import DatasetsView from './DatasetsView'
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
+import DatasetsView from './DatasetsView'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 
 import {
@@ -40,7 +40,6 @@ import {
   TAG_FILTER,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
-import { fetchArtifactTags, fetchDataSets, removeDataSets } from '../../reducers/artifactsReducer'
 import {
   getFiltersConfig,
   generateActionsMenu,
@@ -49,17 +48,19 @@ import {
   registerDatasetTitle
 } from './datasets.util'
 import { createDatasetsRowData } from '../../utils/createArtifactsContent'
+import { fetchArtifactTags, fetchDataSets, removeDataSets } from '../../reducers/artifactsReducer'
 import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
+import { getSavedSearchParams, transformSearchParams } from '../../utils/filter.util'
 import { getViewMode } from '../../utils/helper'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { checkForSelectedArtifact, setFullSelectedArtifact } from '../../utils/artifacts.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { toggleYaml } from '../../reducers/appReducer'
-import { transformSearchParams } from '../../utils/filter.util'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
-import { usePagination } from '../../hooks/usePagination.hook'
 import { useMode } from '../../hooks/mode.hook'
+import { usePagination } from '../../hooks/usePagination.hook'
+import { useRefreshAfterDelete } from '../../hooks/useRefreshAfterDelete.hook'
 
 import './datasets.scss'
 
@@ -84,8 +85,17 @@ const Datasets = ({ isAllVersions = false }) => {
   const datasetsRef = useRef(null)
   const lastCheckedArtifactIdRef = useRef(null)
 
+  const historyBackLink = useMemo(
+    () => `/projects/${params.projectName}/datasets${getSavedSearchParams(location.search)}`,
+    [location.search, params.projectName]
+  )
   const filtersConfig = useMemo(() => getFiltersConfig(isAllVersions), [isAllVersions])
   const datasetsFilters = useFiltersFromSearchParams(filtersConfig)
+  const [refreshAfterDeleteCallback, refreshAfterDeleteTrigger] = useRefreshAfterDelete(
+    paginationConfigDatasetVersionsRef,
+    historyBackLink,
+    'artifacts'
+  )
 
   const pageData = useMemo(
     () => generatePageData(selectedDataset, viewMode, params, false, isDemoMode),
@@ -118,11 +128,14 @@ const Datasets = ({ isAllVersions = false }) => {
         requestParams.name = params.datasetName
         setDatasetVersions(null)
       } else {
-        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS || filters[TAG_FILTER] === TAG_FILTER_ALL_ITEMS) {
+        if (
+          filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS ||
+          filters[TAG_FILTER] === TAG_FILTER_ALL_ITEMS
+        ) {
           requestParams['partition-by'] = 'project_and_name'
           requestParams['partition-sort-by'] = 'updated'
         }
-        
+
         setDatasets(null)
       }
 
@@ -170,7 +183,8 @@ const Datasets = ({ isAllVersions = false }) => {
           }
 
           return response
-        }).catch(() => {
+        })
+        .catch(() => {
           if (isAllVersions) {
             setDatasetVersions([])
           } else {
@@ -241,19 +255,21 @@ const Datasets = ({ isAllVersions = false }) => {
         handleAddTag,
         params.projectName,
         refreshDatasets,
+        refreshAfterDeleteCallback,
         datasetsFilters,
         selectedDataset,
         showAllVersions,
         isAllVersions
       ),
     [
-      dispatch,
       datasetsFilters,
+      dispatch,
       frontendSpec,
       handleAddTag,
-      refreshDatasets,
       isAllVersions,
       params.projectName,
+      refreshAfterDeleteCallback,
+      refreshDatasets,
       selectedDataset,
       showAllVersions,
       toggleConvertedYaml
@@ -338,7 +354,7 @@ const Datasets = ({ isAllVersions = false }) => {
       refreshContent: refreshDatasets,
       filters: datasetsFilters,
       paginationConfigRef: paginationConfigDatasetsRef,
-      resetPaginationTrigger: `${params.projectName}`
+      resetPaginationTrigger: `${params.projectName}_${refreshAfterDeleteTrigger}`
     })
   const [
     handleRefreshDatasetVersions,
@@ -370,7 +386,9 @@ const Datasets = ({ isAllVersions = false }) => {
       isAllVersions,
       navigate,
       paginatedArtifacts: isAllVersions ? paginatedDatasetVersions : paginatedDatasets,
-      paginationConfigRef: isAllVersions ? paginationConfigDatasetVersionsRef : paginationConfigDatasetsRef,
+      paginationConfigRef: isAllVersions
+        ? paginationConfigDatasetVersionsRef
+        : paginationConfigDatasetsRef,
       paramsId: params.id,
       projectName: params.projectName,
       searchParams: isAllVersions ? searchDatasetVersionsParams : searchDatasetsParams,
@@ -378,8 +396,7 @@ const Datasets = ({ isAllVersions = false }) => {
       setSelectedArtifact: setSelectedDataset,
       lastCheckedArtifactIdRef,
       tab: DATASETS_TAB
-    }
-    )
+    })
   }, [
     isAllVersions,
     navigate,
@@ -432,6 +449,7 @@ const Datasets = ({ isAllVersions = false }) => {
       handleRefreshDatasets={isAllVersions ? handleRefreshDatasetVersions : handleRefreshDatasets}
       handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterDataset={handleRegisterDataset}
+      historyBackLink={historyBackLink}
       isAllVersions={isAllVersions}
       pageData={pageData}
       paginationConfigDatasetsRef={

@@ -36,9 +36,8 @@ import { ACTIONS_MENU } from '../../../types'
 import { FULL_VIEW_MODE, MODELS_PAGE, MODELS_TAB, ALL_VERSIONS_PATH } from '../../../constants'
 import { SECONDARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../../utils/link-helper.util'
-import { getNoDataMessage } from '../../../utils/getNoDataMessage'
-import { getSavedSearchParams } from '../../../utils/filter.util'
 import { getDefaultFirstHeader } from '../../../utils/createArtifactsContent'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 
 const ModelsView = React.forwardRef(
   (
@@ -56,6 +55,7 @@ const ModelsView = React.forwardRef(
       handleRefreshWithFilters,
       handleRegisterModel,
       handleTrainModel,
+      historyBackLink,
       isAllVersions,
       isDemoMode,
       modelName,
@@ -110,10 +110,7 @@ const ModelsView = React.forwardRef(
             </div>
             {isAllVersions && (
               <div className="content__history-back-link-wrapper">
-                <HistoryBackLink
-                  itemName={modelName}
-                  link={`/projects/${projectName}/models/models${getSavedSearchParams(window.location.search)}`}
-                />
+                <HistoryBackLink itemName={modelName} link={historyBackLink} />
               </div>
             )}
             {artifactsStore.loading ? null : tableContent.length === 0 && isEmpty(selectedModel) ? (
@@ -198,6 +195,7 @@ ModelsView.propTypes = {
   handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterModel: PropTypes.func.isRequired,
   handleTrainModel: PropTypes.func.isRequired,
+  historyBackLink: PropTypes.string.isRequired,
   isAllVersions: PropTypes.bool.isRequired,
   isDemoMode: PropTypes.bool.isRequired,
   modelName: PropTypes.string,

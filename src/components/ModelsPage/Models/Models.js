@@ -60,17 +60,18 @@ import {
 import detailsActions from '../../../actions/details'
 import { createModelsRowData } from '../../../utils/createArtifactsContent'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
+import { getSavedSearchParams, transformSearchParams } from '../../../utils/filter.util'
 import { getViewMode } from '../../../utils/helper'
 import { isDetailsTabExists } from '../../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseChipsData } from '../../../utils/convertChipsData'
 import { checkForSelectedArtifact, setFullSelectedArtifact } from '../../../utils/artifacts.util'
 import { setNotification } from '../../../reducers/notificationReducer'
-import { transformSearchParams } from '../../../utils/filter.util'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 import { useMode } from '../../../hooks/mode.hook'
 import { useModelsPage } from '../ModelsPage.context'
 import { usePagination } from '../../../hooks/usePagination.hook'
+import { useRefreshAfterDelete } from '../../../hooks/useRefreshAfterDelete.hook'
 
 import './models.scss'
 
@@ -101,8 +102,17 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
   const modelsRef = useRef(null)
   const lastCheckedArtifactIdRef = useRef(null)
 
+  const historyBackLink = useMemo(
+    () => `/projects/${params.projectName}/models/models${getSavedSearchParams(location.search)}`,
+    [location.search, params.projectName]
+  )
   const filtersConfig = useMemo(() => getFiltersConfig(isAllVersions), [isAllVersions])
   const modelsFilters = useFiltersFromSearchParams(filtersConfig)
+  const [refreshAfterDeleteCallback, refreshAfterDeleteTrigger] = useRefreshAfterDelete(
+    paginationConfigModelVersionsRef,
+    historyBackLink,
+    'artifacts'
+  )
 
   const { isDemoMode } = useMode()
 
@@ -131,7 +141,10 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
         requestParams.name = params.modelName
         setModelVersions(null)
       } else {
-        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS || filters[TAG_FILTER] === TAG_FILTER_ALL_ITEMS) {
+        if (
+          filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS ||
+          filters[TAG_FILTER] === TAG_FILTER_ALL_ITEMS
+        ) {
           requestParams['partition-by'] = 'project_and_name'
           requestParams['partition-sort-by'] = 'updated'
         }
@@ -183,7 +196,8 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
           }
 
           return response
-        }).catch(() => {
+        })
+        .catch(() => {
           if (isAllVersions) {
             setModelVersions([])
           } else {
@@ -297,6 +311,7 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
         handleAddTag,
         params.projectName,
         refreshModels,
+        refreshAfterDeleteCallback,
         modelsFilters,
         selectedModel,
         showAllVersions,
@@ -311,6 +326,7 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
       handleAddTag,
       params.projectName,
       refreshModels,
+      refreshAfterDeleteCallback,
       modelsFilters,
       selectedModel,
       handleDeployModel,
@@ -458,7 +474,7 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
       refreshContent: refreshModels,
       filters: modelsFilters,
       paginationConfigRef: paginationConfigModelsRef,
-      resetPaginationTrigger: `${params.projectName}`
+      resetPaginationTrigger: `${params.projectName}_${refreshAfterDeleteTrigger}`
     })
   const [
     handleRefreshModelVersions,
@@ -519,12 +535,11 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
     setSearchModelsParams
   ])
 
-
-useEffect(() => {
-  if (isEmpty(selectedModel)) {
-    lastCheckedArtifactIdRef.current = null
-  }
-}, [selectedModel])
+  useEffect(() => {
+    if (isEmpty(selectedModel)) {
+      lastCheckedArtifactIdRef.current = null
+    }
+  }, [selectedModel])
 
   const getAndSetSelectedArtifact = useCallback(() => {
     setFullSelectedArtifact(
@@ -554,6 +569,7 @@ useEffect(() => {
       handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterModel={handleRegisterModel}
       handleTrainModel={handleTrainModel}
+      historyBackLink={historyBackLink}
       isAllVersions={isAllVersions}
       isSelectedArtifactBeyondTheList={isSelectedArtifactBeyondTheList}
       isDemoMode={isDemoMode}

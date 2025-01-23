@@ -90,6 +90,7 @@ const JobsTable = React.forwardRef(
       jobWizardMode,
       lastCheckedJobIdRef,
       paginationConfigJobsRef,
+      refreshAfterDeleteCallback,
       setConfirmData,
       setEditableItem,
       setJobWizardIsOpened,
@@ -220,13 +221,20 @@ const JobsTable = React.forwardRef(
 
     const onDeleteJob = useCallback(
       (job, isDeleteAll) => {
-        handleDeleteJob(isDeleteAll, job, refreshJobs, filters, dispatch).then(() => {
+        handleDeleteJob(
+          isDeleteAll,
+          job,
+          refreshJobs,
+          refreshAfterDeleteCallback,
+          filters,
+          dispatch
+        ).then(() => {
           if (params.jobName) {
             navigate(getCloseDetailsLink(params.jobName, true))
           }
         })
       },
-      [refreshJobs, filters, dispatch, params.jobName, navigate]
+      [refreshJobs, refreshAfterDeleteCallback, filters, dispatch, params.jobName, navigate]
     )
 
     const handleConfirmDeleteJob = useCallback(

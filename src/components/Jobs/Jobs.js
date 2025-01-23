@@ -104,6 +104,7 @@ const Jobs = () => {
     handleMonitoring,
     handleRefreshJobs,
     handleRerunJob,
+    historyBackLink,
     jobRuns,
     jobWizardIsOpened,
     jobWizardMode,
@@ -111,6 +112,7 @@ const Jobs = () => {
     lastCheckedJobIdRef,
     paginatedJobs,
     paginationConfigJobsRef,
+    refreshAfterDeleteCallback,
     refreshJobs,
     refreshScheduled,
     requestErrorMessage,
@@ -238,7 +240,7 @@ const Jobs = () => {
                   jobWizardIsOpened || jobsStore.loading || Boolean(jobsStore.jobLoadingCounter)
                 }
                 autoRefreshStopTrigger={!isEmpty(selectedJob)}
-                closeParamName={selectedTab}
+                closeParamName={params.jobName}
                 filters={filters}
                 filtersConfig={initialTabData[selectedTab].filtersConfig}
                 handleAutoRefreshPrevValueChange={setAutoRefreshPrevValue}
@@ -259,23 +261,25 @@ const Jobs = () => {
               <JobsContext.Provider
                 value={{
                   abortControllerRef,
-                  abortingJobs,
                   abortJobRef,
+                  abortingJobs,
                   autoRefreshPrevValue,
                   editableItem,
                   fetchJobFunctionsPromiseRef,
                   getWorkflows,
                   handleMonitoring,
                   handleRerunJob,
+                  historyBackLink,
                   initialTabData,
                   jobRuns,
-                  jobs,
-                  jobsFiltersConfig: initialTabData[MONITOR_JOBS_TAB].filtersConfig,
                   jobWizardIsOpened,
                   jobWizardMode,
+                  jobs,
+                  jobsFiltersConfig: initialTabData[MONITOR_JOBS_TAB].filtersConfig,
                   lastCheckedJobIdRef,
                   paginatedJobs,
                   paginationConfigJobsRef,
+                  refreshAfterDeleteCallback,
                   refreshJobs,
                   refreshScheduled,
                   requestErrorMessage,
@@ -287,12 +291,12 @@ const Jobs = () => {
                   setConfirmData,
                   setEditableItem,
                   setJobRuns,
-                  setJobs,
                   setJobWizardIsOpened,
                   setJobWizardMode,
+                  setJobs,
                   setScheduledJobs,
-                  setSelectedJob,
                   setSearchParams,
+                  setSelectedJob,
                   tabData,
                   terminateAbortTasksPolling,
                   workflowsFiltersConfig: initialTabData[MONITOR_WORKFLOWS_TAB].filtersConfig
