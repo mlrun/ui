@@ -35,6 +35,7 @@ import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { FUNCTION_TYPE_JOB } from '../../constants'
 
 import './newFunctionPopUp.scss'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
 
 const NewFunctionPopUp = ({
   action = null,
@@ -179,7 +180,7 @@ const NewFunctionPopUp = ({
           />
           <div className="pop-up-dialog__footer-container">
             <Button
-              variant="label"
+              variant={TERTIARY_BUTTON}
               label="Cancel"
               className="pop-up-dialog__btn_cancel"
               onClick={handleClosePopUp}
@@ -200,7 +201,7 @@ const NewFunctionPopUp = ({
                   handleClosePopUp()
                 }
               }}
-              variant="primary"
+              variant={PRIMARY_BUTTON}
             />
           </div>
         </PopUpDialog>

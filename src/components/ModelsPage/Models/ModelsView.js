@@ -84,13 +84,13 @@ const ModelsView = React.forwardRef(
               <ActionBar
                 actionButtons={[
                   {
-                    variant: TERTIARY_BUTTON,
+                    variant: PRIMARY_BUTTON,
                     label: 'Train model',
                     className: 'action-button',
                     onClick: handleTrainModel
                   },
                   {
-                    variant: PRIMARY_BUTTON,
+                    variant: TERTIARY_BUTTON,
                     label: 'Register model',
                     className: 'action-button',
                     onClick: handleRegisterModel,
