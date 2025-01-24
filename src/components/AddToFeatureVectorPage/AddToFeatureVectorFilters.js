@@ -30,7 +30,7 @@ import { FormSelect } from 'iguazio.dashboard-react-controls/dist/components'
 import { ENTITIES_FILTER, LABELS_FILTER, PROJECT_FILTER, TAG_FILTER } from '../../constants'
 import { generateProjectsList } from '../../utils/projects'
 
-const AddToFeatureVectorFilters = ({ content }) => {
+const AddToFeatureVectorFilters = ({ content, fetchTags }) => {
   const form = useForm()
   const projectStore = useSelector(store => store.projectStore)
   const params = useParams()
@@ -48,7 +48,8 @@ const AddToFeatureVectorFilters = ({ content }) => {
           options={generateProjectsList(projectStore.projectsNames.data, params.projectName)}
           preventWidthOverflow
         />
-      </div>
+        <FormOnChange name={PROJECT_FILTER} handler={value => fetchTags(value)} />
+      </div>      
       <div className="form-row">
         <FormInput label="Entity" name={ENTITIES_FILTER} placeholder="Search by entity" />
         <FormOnChange name={ENTITIES_FILTER} handler={value => handleInputChange(value, ENTITIES_FILTER)} />
@@ -70,7 +71,8 @@ const AddToFeatureVectorFilters = ({ content }) => {
 }
 
 AddToFeatureVectorFilters.propTypes = {
-  content: PropTypes.arrayOf(PropTypes.object).isRequired
+  content: PropTypes.arrayOf(PropTypes.object).isRequired,
+  fetchTags: PropTypes.func.isRequired
 }
 
 export default AddToFeatureVectorFilters
