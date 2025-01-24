@@ -18,17 +18,17 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import AlertsView from './AlertsView'
 
-import { ALERTS_PAGE } from '../../constants'
 import { createAlertRowData } from '../../utils/createAlertsContent'
 import {
   getAlertsFiltersConfig,
   generatePageData,
-  parseAlertsQueryParamsCallback
+  parseAlertsQueryParamsCallback,
+  checkForSelectedAlert
 } from './alerts.util'
 import { getJobLogs } from '../../utils/getJobLogs.util'
 import projectsAction from '../../actions/projects'
@@ -41,6 +41,7 @@ const Alerts = () => {
   const alertsStore = useSelector(state => state.alertsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const { id: projectId } = useParams()
   const params = useParams()
 
@@ -53,18 +54,21 @@ const Alerts = () => {
   )
 
   const {
+    alerts,
     handleRefreshAlerts,
+    lastCheckedAlertIdRef,
     paginatedAlerts,
     paginationConfigAlertsRef,
-    requestErrorMessage,
     refreshAlerts,
+    requestErrorMessage,
+    searchParams,
     setAlerts,
     setSearchParams
   } = useAlertsPageData(alertsFilters, true)
 
   const handleRefreshWithFilters = useCallback(
     filters => {
-      setAlerts([])
+      setAlerts(null)
 
       return refreshAlerts(filters)
     },
@@ -101,15 +105,33 @@ const Alerts = () => {
   )
 
   useEffect(() => {
-    if (tableContent.length > 0) {
-      const alert = tableContent.find(({ data }) => data.id && data.id === params.alertId)
-      if (alert) {
-        setSelectedAlert({ ...alert.data, page: ALERTS_PAGE })
-      } else {
-        return setSelectedAlert({})
-      }
-    }
-  }, [params, tableContent])
+    checkForSelectedAlert({
+      alertId: params.alertId,
+      alerts,
+      dispatch,
+      isCrossProjects,
+      lastCheckedAlertIdRef,
+      navigate,
+      paginatedAlerts,
+      paginationConfigAlertsRef,
+      project: params.project,
+      searchParams,
+      setSearchParams,
+      setSelectedAlert
+    })
+  }, [
+    alerts,
+    dispatch,
+    isCrossProjects,
+    lastCheckedAlertIdRef,
+    navigate,
+    paginatedAlerts,
+    paginationConfigAlertsRef,
+    params,
+    searchParams,
+    setSearchParams,
+    tableContent
+  ])
 
   return (
     <AlertsView
