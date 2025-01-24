@@ -42,7 +42,7 @@ const initialState = {
   alerts: [],
   error: null,
   loading: false,
-  alertLoading: false,
+  alertLoading: false
 }
 
 const generateRequestParams = filters => {
