@@ -81,8 +81,8 @@ const Alerts = () => {
 
   useEffect(() => {
     dispatch(projectsAction.removeProjects())
-    fetchMinimalProjects()
-  }, [dispatch, fetchMinimalProjects])
+    isCrossProjects && fetchMinimalProjects()
+  }, [dispatch, isCrossProjects, fetchMinimalProjects])
 
   const handleCancel = () => {
     setSelectedAlert({})
