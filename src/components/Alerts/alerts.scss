@@ -13,16 +13,20 @@
       height: 16px;
     }
   }
-}
 
-.alerts-table {
-  min-width: 1120px;
-
-  &__metrics {
-    margin: 8px 12px;
+  .item-info {
+    align-content: flex-start;
   }
 
-  &__content {
-    padding: 0;
+  .alerts-table {
+    min-width: 1120px;
+
+    &__metrics {
+      margin: 8px 12px;
+    }
+
+    &__content {
+      padding: 0;
+    }
   }
 }
