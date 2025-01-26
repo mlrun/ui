@@ -21,6 +21,7 @@ import { upperFirst } from 'lodash'
 
 import {
   ALERTS_PAGE,
+  ALERTS_PAGE_PATH,
   APPLICATION,
   DATES_FILTER,
   ENDPOINT,
@@ -47,15 +48,20 @@ import {
   datePickerPastOptions,
   getDatePickerFilterValue,
   PAST_24_HOUR_DATE_OPTION,
+  PAST_MONTH_DATE_OPTION,
   TIME_FRAME_LIMITS
 } from '../../utils/datePicker.util'
 
-export const getAlertsFiltersConfig = (timeFrameLimit = false) => {
+export const getAlertsFiltersConfig = (timeFrameLimit = false, isAlertsPage = false) => {
   return {
-    [NAME_FILTER]: { label: 'Alert Name:', initialValue: '' },
+    [NAME_FILTER]: { label: 'Alert Name:', initialValue: '', hidden: isAlertsPage },
     [DATES_FILTER]: {
+      initialValue: getDatePickerFilterValue(
+        datePickerPastOptions,
+        isAlertsPage ? PAST_MONTH_DATE_OPTION : PAST_24_HOUR_DATE_OPTION
+      ),
+      hidden: isAlertsPage,
       label: 'Start time:',
-      initialValue: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION),
       timeFrameLimit: timeFrameLimit ? TIME_FRAME_LIMITS.MONTH : Infinity
     },
     [PROJECT_FILTER]: {
@@ -106,6 +112,8 @@ export const generatePageData = (selectedAlert, handleFetchJobLogs = () => {}) =
     }
   }
 }
+
+export const ALERTS_DISPLAY_LIMIT = 100
 
 export const allProjectsOption = [
   {
@@ -218,4 +226,12 @@ export const alertsHeaders = type => {
   }
 
   return []
+}
+
+export const navigateToPerProjectAlertsPage = (navigate, projectName) => {
+  const filters = {
+    dates: PAST_MONTH_DATE_OPTION,
+    [ENTITY_TYPE]: MODEL_ENDPOINT_RESULT
+  }
+  navigate(`/projects/${projectName}/${ALERTS_PAGE_PATH}?${new URLSearchParams(filters)}`)
 }

@@ -1,3 +1,20 @@
+.alerts-container {
+  margin-top: 10px;
+
+  &__content-info {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    margin-bottom: 15px;
+    line-height: 20px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
 .alerts-table {
   min-width: 1120px;
 
