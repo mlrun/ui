@@ -80,7 +80,6 @@ const FeatureSetsPanel = ({
   const [accessKeyRequired, setAccessKeyRequired] = useState(false)
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const prevAreLabelsValidRef = React.useRef(validation.areLabelsValid)
   const formRef = React.useRef(
     createForm({
       initialValues: { labels: [] },
@@ -173,17 +172,6 @@ const FeatureSetsPanel = ({
     })
   }
 
-  const handleLabelValidationChange = () => {
-    const areLabelsValid = formRef.current?.getFieldState?.('labels')?.valid ?? true
-    if (prevAreLabelsValidRef.current !== areLabelsValid) {
-      setValidation(prevState => ({
-        ...prevState,
-        areLabelsValid
-      }))
-      prevAreLabelsValidRef.current = areLabelsValid
-    }
-  }
-
   return createPortal(
     <Form form={formRef.current} onSubmit={() => {}}>
       {formState => {
@@ -207,7 +195,22 @@ const FeatureSetsPanel = ({
               setValidation={setValidation}
               validation={validation}
             />
-            <FormSpy subscription={{ valid: true }} onChange={handleLabelValidationChange} />
+            <FormSpy
+              subscription={{ valid: true }}
+              onChange={() => {
+                const areLabelsValid = formRef.current?.getFieldState?.('labels')?.valid ?? true
+                setValidation(prevState => {
+                  if (prevState.areLabelsValid === areLabelsValid) {
+                    return prevState
+                  }
+
+                  return {
+                    ...prevState,
+                    areLabelsValid
+                  }
+                })
+              }}
+            />
           </>
         )
       }}

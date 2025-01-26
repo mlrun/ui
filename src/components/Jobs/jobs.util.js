@@ -428,12 +428,20 @@ export const enrichRunWithFunctionFields = (dispatch, jobRun, fetchJobFunctionsP
     })
 }
 
-export const handleDeleteJob = (isDeleteAll, job, refreshJobs, filters, dispatch) => {
-  
+export const handleDeleteJob = (
+  isDeleteAll,
+  job,
+  refreshJobs,
+  refreshAfterDeleteCallback,
+  filters,
+  dispatch
+) => {
   return dispatch((isDeleteAll ? deleteAllJobRuns : deleteJob)({ project: job.project, job }))
     .unwrap()
     .then(() => {
-      refreshJobs(filters)
+      refreshJobs(filters).then(
+        response => refreshAfterDeleteCallback && refreshAfterDeleteCallback(response)
+      )
       dispatch(
         setNotification({
           status: 200,
@@ -444,7 +452,14 @@ export const handleDeleteJob = (isDeleteAll, job, refreshJobs, filters, dispatch
     })
     .catch(error => {
       showErrorNotification(dispatch, error, 'Deleting job failed', '', () =>
-        handleDeleteJob(isDeleteAll, job, refreshJobs, filters, dispatch)
+        handleDeleteJob(
+          isDeleteAll,
+          job,
+          refreshJobs,
+          refreshAfterDeleteCallback,
+          filters,
+          dispatch
+        )
       )
     })
 }

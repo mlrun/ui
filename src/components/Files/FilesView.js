@@ -38,8 +38,8 @@ import { ACTIONS_MENU } from '../../types'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { getSavedSearchParams } from '../../utils/filter.util'
 import { registerArtifactTitle } from './files.util'
+import { getDefaultFirstHeader } from '../../utils/createArtifactsContent'
 
 const FilesView = React.forwardRef(
   (
@@ -58,6 +58,7 @@ const FilesView = React.forwardRef(
       handleRefreshFiles,
       handleRefreshWithFilters,
       handleRegisterArtifact,
+      historyBackLink,
       isAllVersions,
       pageData,
       paginationConfigFilesRef,
@@ -65,7 +66,7 @@ const FilesView = React.forwardRef(
       requestErrorMessage,
       selectedFile,
       setSearchFilesParams,
-      setSelectedFileMin,
+      setSelectedFile,
       tableContent,
       tableHeaders,
       viewMode = null
@@ -82,12 +83,7 @@ const FilesView = React.forwardRef(
             {artifactsStore.loading && <Loader />}
             <div className="table-container">
               <div className="content__action-bar-wrapper">
-                {isAllVersions && (
-                  <HistoryBackLink
-                    itemName={fileName}
-                    link={`/projects/${projectName}/files${getSavedSearchParams(window.location.search)}`}
-                  />
-                )}
+                {isAllVersions && <HistoryBackLink itemName={fileName} link={historyBackLink} />}
                 <ActionBar
                   actionButtons={[
                     {
@@ -108,7 +104,8 @@ const FilesView = React.forwardRef(
                   <ArtifactsFilters artifacts={files} />
                 </ActionBar>
               </div>
-              {artifactsStore.loading ? null : tableContent.length === 0 ? (
+              {artifactsStore.loading ? null : tableContent.length === 0 &&
+                isEmpty(selectedFile) ? (
                 <NoData
                   message={getNoDataMessage(
                     filters,
@@ -130,12 +127,12 @@ const FilesView = React.forwardRef(
                     getCloseDetailsLink={() =>
                       getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : FILES_TAB)
                     }
-                    handleCancel={() => setSelectedFileMin({})}
+                    handleCancel={() => setSelectedFile({})}
                     pageData={pageData}
                     retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedFile}
                     tableClassName="files-table"
-                    tableHeaders={tableHeaders ?? []}
+                    tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
                   >
                     {tableContent.map((tableItem, index) => (
                       <ArtifactsTableRow
@@ -192,13 +189,14 @@ FilesView.propTypes = {
   handleRefreshFiles: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterArtifact: PropTypes.func.isRequired,
+  historyBackLink: PropTypes.string.isRequired,
   isAllVersions: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   projectName: PropTypes.string.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedFile: PropTypes.object.isRequired,
   setSearchFilesParams: PropTypes.func.isRequired,
-  setSelectedFileMin: PropTypes.func.isRequired,
+  setSelectedFile: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   viewMode: PropTypes.string

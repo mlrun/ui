@@ -43,9 +43,7 @@ import {
   checkForSelectedFunction,
   generateActionsMenu,
   generateFunctionsPageData,
-  pollDeletingFunctions,
-  searchFunctionItem,
-  setFullSelectedFunction
+  pollDeletingFunctions
 } from './functions.util'
 import {
   ANY_TIME_DATE_OPTION,
@@ -56,7 +54,7 @@ import {
 import createFunctionsRowData from '../../utils/createFunctionsRowData'
 import functionsActions from '../../actions/functions'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { getSavedSearchParams, transformSearchParams } from '../../utils/filter.util'
+import { transformSearchParams } from '../../utils/filter.util'
 import { isBackgroundTaskRunning } from '../../utils/poll.util'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -81,9 +79,8 @@ const Functions = ({
   removeNewFunction
 }) => {
   const [confirmData, setConfirmData] = useState(null)
-  const [functions, setFunctions] = useState([])
-  const [functionVersions, setFunctionVersions] = useState([])
-  const [selectedFunctionMin, setSelectedFunctionMin] = useState({})
+  const [functions, setFunctions] = useState(null)
+  const [functionVersions, setFunctionVersions] = useState(null)
   const [selectedFunction, setSelectedFunction] = useState({})
   const [editableItem, setEditableItem] = useState(null)
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
@@ -104,6 +101,7 @@ const Functions = ({
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
+  const lastCheckedFunctionIdRef = useRef(null)
 
   const functionsFiltersConfig = useMemo(() => {
     return {
@@ -131,6 +129,17 @@ const Functions = ({
     setDeletingFunctions({})
   }, [])
 
+  const resetFunctions = useCallback(
+    funcs => {
+      if (isAllVersions) {
+        setFunctionVersions(funcs)
+      } else {
+        setFunctions(funcs)
+      }
+    },
+    [isAllVersions]
+  )
+
   const fetchData = useCallback(
     filters => {
       terminateDeleteTasksPolling()
@@ -143,9 +152,9 @@ const Functions = ({
       if (isAllVersions) {
         delete requestParams.tag
         requestParams.name = params.funcName
-        setFunctionVersions([])
+        setFunctionVersions(null)
       } else {
-        setFunctions([])
+        setFunctions(null)
       }
 
       if (!isAllVersions && !isEmpty(paginationConfigFunctionsRef.current)) {
@@ -158,93 +167,74 @@ const Functions = ({
         requestParams['page-size'] = paginationConfigFunctionVersionsRef.current[BE_PAGE_SIZE]
       }
 
+      lastCheckedFunctionIdRef.current = null
+
       return fetchFunctions(params.projectName, filters, {
         ui: {
           controller: abortControllerRef.current,
           setRequestErrorMessage
         },
         params: requestParams
-      }).then(response => {
-        if (response?.funcs) {
-          if (isAllVersions) {
-            paginationConfigFunctionVersionsRef.current.paginationResponse = response.pagination
-          } else {
-            paginationConfigFunctionsRef.current.paginationResponse = response.pagination
-          }
+      })
+        .then(response => {
+          if (response?.funcs) {
+            if (isAllVersions) {
+              paginationConfigFunctionVersionsRef.current.paginationResponse = response.pagination
+            } else {
+              paginationConfigFunctionsRef.current.paginationResponse = response.pagination
+            }
 
-          if (response.funcs?.length > 0) {
-            const newFunctions = parseFunctions(response.funcs, params.projectName)
-            const deletingFunctions = newFunctions.reduce((acc, func) => {
-              if (func.deletion_task_id && !func.deletion_error && !acc[func.deletion_task_id]) {
-                acc[func.deletion_task_id] = {
-                  name: func.name
+            if (response.funcs?.length > 0) {
+              const newFunctions = parseFunctions(response.funcs, params.projectName)
+              const deletingFunctions = newFunctions.reduce((acc, func) => {
+                if (func.deletion_task_id && !func.deletion_error && !acc[func.deletion_task_id]) {
+                  acc[func.deletion_task_id] = {
+                    name: func.name
+                  }
                 }
+
+                return acc
+              }, {})
+
+              if (!isEmpty(deletingFunctions)) {
+                setDeletingFunctions(deletingFunctions)
+                pollDeletingFunctions(
+                  params.projectName,
+                  terminatePollRef,
+                  deletingFunctions,
+                  () => fetchData(filters),
+                  dispatch
+                )
               }
 
-              return acc
-            }, {})
+              resetFunctions(newFunctions)
 
-            if (!isEmpty(deletingFunctions)) {
-              setDeletingFunctions(deletingFunctions)
-              pollDeletingFunctions(
-                params.projectName,
-                terminatePollRef,
-                deletingFunctions,
-                () => fetchData(filters),
-                dispatch
-              )
-            }
-
-            if (isAllVersions) {
-              setFunctionVersions(newFunctions)
+              return newFunctions
             } else {
-              setFunctions(newFunctions)
+              resetFunctions([])
             }
-
-            return newFunctions
           } else {
-            const paramsFunction = searchFunctionItem(
-              params.id,
-              params.projectName,
-              params.funcName,
-              [],
-              dispatch,
-              true
-            )
-
-            if (!paramsFunction) {
-              navigate(
-                `/projects/${params.projectName}/functions${isAllVersions ? getSavedSearchParams(window.location.search) : window.location.search}`,
-                {
-                  replace: true
-                }
-              )
-            }
-
-            if (isAllVersions) {
-              setFunctionVersions([])
-            } else {
-              setFunctions([])
-            }
+            resetFunctions([])
           }
-        }
-      })
+        })
+        .catch(() => {
+          resetFunctions([])
+        })
     },
     [
       dispatch,
       fetchFunctions,
       isAllVersions,
-      navigate,
       params.funcName,
-      params.id,
       params.projectName,
+      resetFunctions,
       terminateDeleteTasksPolling
     ]
   )
 
   const refreshFunctions = useCallback(
     filters => {
-      setSelectedFunctionMin({})
+      setSelectedFunction({})
 
       return fetchData(filters)
     },
@@ -283,7 +273,7 @@ const Functions = ({
           })
 
           if (!isEmpty(selectedFunction)) {
-            setSelectedFunctionMin({})
+            setSelectedFunction({})
             navigate(`/projects/${params.projectName}/functions${window.location.search}`, {
               replace: true
             })
@@ -489,8 +479,8 @@ const Functions = ({
 
   useEffect(() => {
     return () => {
-      setFunctions([])
-      setFunctionVersions([])
+      setFunctions(null)
+      setFunctionVersions(null)
     }
   }, [params.projectName])
 
@@ -498,10 +488,10 @@ const Functions = ({
     const abortController = abortControllerRef.current
 
     return () => {
-      setSelectedFunctionMin({})
+      setSelectedFunction({})
       abortController.abort(REQUEST_CANCELED)
     }
-  }, [params.projectName, isAllVersions])
+  }, [params.projectName])
 
   useEffect(() => {
     if (params.id && pageData.details.menu.length > 0) {
@@ -618,7 +608,7 @@ const Functions = ({
   )
 
   const handleCancel = () => {
-    setSelectedFunctionMin({})
+    setSelectedFunction({})
   }
 
   useEffect(() => {
@@ -643,7 +633,7 @@ const Functions = ({
     setSearchFunctionsParams
   ] = usePagination({
     hidden: isAllVersions,
-    content: functions,
+    content: functions ?? [],
     refreshContent: refreshFunctions,
     filters: functionsFilters,
     paginationConfigRef: paginationConfigFunctionsRef,
@@ -656,7 +646,7 @@ const Functions = ({
     setSearchFunctionVersionsParams
   ] = usePagination({
     hidden: !isAllVersions,
-    content: functionVersions,
+    content: functionVersions ?? [],
     refreshContent: refreshFunctions,
     filters: functionsFilters,
     paginationConfigRef: paginationConfigFunctionVersionsRef,
@@ -674,18 +664,23 @@ const Functions = ({
   useEffect(() => {
     checkForSelectedFunction(
       isAllVersions ? paginatedFunctionVersions : paginatedFunctions,
+      isAllVersions ? functionVersions : functions,
+      fetchFunction,
       params.id,
       params.funcName,
       navigate,
       params.projectName,
-      setSelectedFunctionMin,
+      setSelectedFunction,
       dispatch,
       isAllVersions,
       isAllVersions ? searchFunctionVersionsParams : searchFunctionsParams,
-      isAllVersions ? paginationConfigFunctionVersionsRef : paginationConfigFunctionsRef
+      isAllVersions ? paginationConfigFunctionVersionsRef : paginationConfigFunctionsRef,
+      isAllVersions ? setSearchFunctionVersionsParams : setSearchFunctionsParams,
+      lastCheckedFunctionIdRef
     )
   }, [
     dispatch,
+    fetchFunction,
     functionVersions,
     functions,
     isAllVersions,
@@ -696,28 +691,17 @@ const Functions = ({
     params.id,
     params.projectName,
     searchFunctionVersionsParams,
-    searchFunctionsParams
+    searchFunctionsParams,
+    setSearchFunctionVersionsParams,
+    setSearchFunctionsParams,
+    lastCheckedFunctionIdRef
   ])
 
   useEffect(() => {
-    setFullSelectedFunction(
-      dispatch,
-      navigate,
-      fetchFunction,
-      selectedFunctionMin,
-      setSelectedFunction,
-      params.projectName,
-      params.id
-    )
-  }, [
-    dispatch,
-    fetchFunction,
-    isAllVersions,
-    navigate,
-    params.projectName,
-    params.id,
-    selectedFunctionMin
-  ])
+    if (isEmpty(selectedFunction)) {
+      lastCheckedFunctionIdRef.current = null
+    }
+  }, [selectedFunction])
 
   return (
     <FunctionsView

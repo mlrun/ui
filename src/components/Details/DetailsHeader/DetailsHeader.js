@@ -51,6 +51,7 @@ import { ReactComponent as Refresh } from 'igz-controls/images/refresh.svg'
 import { ReactComponent as EnlargeIcon } from 'igz-controls/images/ml-enlarge.svg'
 import { ReactComponent as MinimizeIcon } from 'igz-controls/images/ml-minimize.svg'
 import { ReactComponent as HistoryIcon } from 'igz-controls/images/history.svg'
+import { ReactComponent as InfoIcon } from 'igz-controls/images/info-fill.svg'
 
 const DetailsHeader = ({
   actionsMenu,
@@ -213,6 +214,19 @@ const DetailsHeader = ({
               <span className="item-header__pods-error left-margin">Failed to load pods</span>
             )}
           </div>
+          {selectedItem.ui?.infoMessage && (
+            <div className="item-header__status-row">
+              <div className="info-banner">
+                <InfoIcon />
+                <Tooltip
+                  className="error-container"
+                  template={<TextTooltipTemplate text={selectedItem.ui.infoMessage} />}
+                >
+                  {selectedItem.ui.infoMessage}
+                </Tooltip>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <div className="item-header__custom-elements">

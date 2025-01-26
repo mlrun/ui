@@ -39,9 +39,9 @@ import {
   PANEL_FUNCTION_CREATE_MODE,
   FAILED_STATE,
   ALL_VERSIONS_PATH,
-  BE_PAGE
+  BE_PAGE,
+  FE_PAGE
 } from '../../constants'
-import functionsApi from '../../api/functions-api'
 import tasksApi from '../../api/tasks-api'
 import functionsActions from '../../actions/functions'
 import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
@@ -58,6 +58,7 @@ import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
 import { ReactComponent as HistoryIcon } from 'igz-controls/images/history.svg'
+import { generateObjectNotInTheListMessage } from '../../utils/generateMessage.util'
 
 export const page = 'FUNCTIONS'
 export const detailsMenu = [
@@ -510,7 +511,12 @@ const fetchAndParseFunction = (
       return parseFunction(func, projectName)
     })
     .catch(error => {
-      showErrorNotification(dispatch, error, '', 'Failed to retrieve function data')
+      showErrorNotification(
+        dispatch,
+        error,
+        '',
+        'This function either does not exist or was deleted'
+      )
 
       if (returnError) {
         return Promise.reject(error)
@@ -533,7 +539,9 @@ const chooseOrFetchFunction = (selectedFunction, dispatch, fetchFunction, funcMi
 
 export const checkForSelectedFunction = debounce(
   (
+    paginatedFunctions,
     functions,
+    fetchFunction,
     funcId,
     funcNameParam,
     navigate,
@@ -542,32 +550,74 @@ export const checkForSelectedFunction = debounce(
     dispatch,
     isAllVersions,
     searchParams,
-    paginationConfigRef
+    paginationConfigRef,
+    setSearchParams,
+    lastCheckedFunctionIdRef
   ) => {
     if (funcId) {
       const searchBePage = parseInt(searchParams.get(BE_PAGE))
       const configBePage = paginationConfigRef.current[BE_PAGE]
 
-      if (functions.length > 0 && searchBePage === configBePage) {
-        const searchItem = searchFunctionItem(
-          funcId,
+      if (
+        functions &&
+        searchBePage === configBePage &&
+        lastCheckedFunctionIdRef.current !== funcId
+      ) {
+        const { tag, uid: hash } = parseIdentifier(funcId)
+        lastCheckedFunctionIdRef.current = funcId
+
+        fetchAndParseFunction(
+          dispatch,
+          fetchFunction,
           projectName,
           funcNameParam,
-          functions.map(func => func.data ?? func),
-          dispatch,
-          true
-        )
+          hash,
+          tag
+        ).then((selectedFunction) => {
+          if (!selectedFunction) {
+            navigate(
+              `/projects/${projectName}/functions${isAllVersions ? `/${funcNameParam}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`,
+              { replace: true }
+            )
+          } else {
+            const findFunctionIndex = functions => {
+              return functions.findIndex(func => {
+                const funcData = func.data ?? func
 
-        if (!searchItem) {
-          navigate(
-            `/projects/${projectName}/functions${isAllVersions ? `/${funcNameParam}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`,
-            { replace: true }
-          )
-        } else {
-          setSelectedFunction(prevState => {
-            return isEqual(prevState, searchItem) ? prevState : searchItem
-          })
-        }
+                if (tag) {
+                  return isEqual(funcData.tag, tag) && isEqual(funcData.name, funcNameParam)
+                } else {
+                  return isEqual(funcData.hash, hash) && isEqual(funcData.name, funcNameParam)
+                }
+              })
+            }
+      
+            const itemIndexInPaginatedList = findFunctionIndex(paginatedFunctions)
+            const itemIndexInMainList =
+              itemIndexInPaginatedList !== -1
+                ? itemIndexInPaginatedList
+                : findFunctionIndex(functions)
+
+            if (itemIndexInPaginatedList === -1) {
+              if (itemIndexInMainList > -1) {
+                const { fePageSize } = paginationConfigRef.current
+  
+                setSearchParams(prevSearchParams => {
+                  prevSearchParams.set(FE_PAGE, Math.ceil((itemIndexInMainList + 1) / fePageSize))
+  
+                  return prevSearchParams
+                })
+              } else {
+                selectedFunction.ui.infoMessage = generateObjectNotInTheListMessage('function')
+              }
+            }
+
+            setSelectedFunction(prevState => {
+              return isEqual(prevState, selectedFunction) ? prevState : selectedFunction
+            })
+            
+          }
+        })
       }
     } else {
       setSelectedFunction({})
@@ -575,39 +625,3 @@ export const checkForSelectedFunction = debounce(
   },
   30
 )
-
-export const searchFunctionItem = (
-  paramsId,
-  projectName,
-  funcNameParam,
-  functions,
-  dispatch,
-  checkExistence = false
-) => {
-  let item = {}
-
-  if (paramsId) {
-    const { tag, uid: hash } = parseIdentifier(paramsId)
-
-    item = functions.find(func => {
-      if (tag) {
-        return isEqual(func.tag, tag) && isEqual(func.name, funcNameParam)
-      } else {
-        return isEqual(func.hash, hash) && isEqual(func.name, funcNameParam)
-      }
-    })
-
-    checkExistence &&
-      checkFunctionExistence(item, { tag, name: funcNameParam, hash }, projectName, dispatch)
-  }
-
-  return item
-}
-
-const checkFunctionExistence = (item, filters, projectName, dispatch) => {
-  if (!item || Object.keys(item).length === 0) {
-    functionsApi.getFunction(projectName, filters.name, filters.hash, filters.tag).catch(() => {
-      showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
-    })
-  }
-}

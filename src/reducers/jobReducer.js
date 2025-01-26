@@ -251,6 +251,16 @@ export const fetchScheduledJobs = createAsyncThunk(
       newConfig.params.label = filters.labels?.split(',')
     }
 
+    if (filters?.[DATES_FILTER]) {
+      if (filters[DATES_FILTER].value[0]  && !filters[DATES_FILTER].isPredefined) {
+        newConfig.params.next_run_time_since  = filters[DATES_FILTER].value[0].toISOString()
+      }
+  
+      if (filters[DATES_FILTER].value[1]) {
+        newConfig.params.next_run_time_until = filters[DATES_FILTER].value[1].toISOString()
+      }
+    }
+
     return jobsApi
       .getScheduledJobs(project, newConfig)
       .then(({ data }) => {

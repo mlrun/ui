@@ -56,10 +56,11 @@ const JobsTable = React.forwardRef(
   (
     {
       abortingJobs,
+      autoRefreshPrevValue,
       context,
       filters,
       filtersConfig,
-      autoRefreshPrevValue,
+      jobRuns = null,
       paginatedJobs,
       refreshJobs,
       requestErrorMessage,
@@ -68,6 +69,7 @@ const JobsTable = React.forwardRef(
       setAbortingJobs,
       setJobRuns,
       setJobs,
+      setSearchParams,
       setSelectedJob,
       tableContent
     },
@@ -86,7 +88,9 @@ const JobsTable = React.forwardRef(
       handleRerunJob,
       jobWizardIsOpened,
       jobWizardMode,
+      lastCheckedJobIdRef,
       paginationConfigJobsRef,
+      refreshAfterDeleteCallback,
       setConfirmData,
       setEditableItem,
       setJobWizardIsOpened,
@@ -217,13 +221,20 @@ const JobsTable = React.forwardRef(
 
     const onDeleteJob = useCallback(
       (job, isDeleteAll) => {
-        handleDeleteJob(isDeleteAll, job, refreshJobs, filters, dispatch).then(() => {
+        handleDeleteJob(
+          isDeleteAll,
+          job,
+          refreshJobs,
+          refreshAfterDeleteCallback,
+          filters,
+          dispatch
+        ).then(() => {
           if (params.jobName) {
             navigate(getCloseDetailsLink(params.jobName, true))
           }
         })
       },
-      [refreshJobs, filters, dispatch, params.jobName, navigate]
+      [refreshJobs, refreshAfterDeleteCallback, filters, dispatch, params.jobName, navigate]
     )
 
     const handleConfirmDeleteJob = useCallback(
@@ -314,16 +325,22 @@ const JobsTable = React.forwardRef(
     useEffect(() => {
       checkForSelectedJob(
         paginatedJobs,
+        jobRuns,
         params.jobName,
         params.jobId,
+        params.projectName,
         navigate,
         setSelectedJob,
         modifyAndSelectRun,
         searchParams,
-        paginationConfigJobsRef
+        paginationConfigJobsRef,
+        dispatch,
+        setSearchParams,
+        lastCheckedJobIdRef
       )
     }, [
       searchParams,
+      jobRuns,
       paginationConfigJobsRef,
       paginatedJobs,
       navigate,
@@ -331,13 +348,22 @@ const JobsTable = React.forwardRef(
       params.jobName,
       params.projectName,
       setSelectedJob,
-      modifyAndSelectRun
+      modifyAndSelectRun,
+      dispatch,
+      setSearchParams,
+      lastCheckedJobIdRef
     ])
+
+    useEffect(() => {
+      if (isEmpty(selectedJob)) {
+        lastCheckedJobIdRef.current = null
+      }
+    }, [lastCheckedJobIdRef, selectedJob])
 
     return (
       <>
         {jobsStore.loading && <Loader />}
-        {paginatedJobs.length === 0 && !jobsStore.loading && filters ? (
+        {paginatedJobs.length === 0 && !jobsStore.loading && filters && isEmpty(selectedJob) ? (
           <NoData
             message={getNoDataMessage(
               filters,
@@ -360,7 +386,15 @@ const JobsTable = React.forwardRef(
                 selectedItem={selectedJob}
                 tab={MONITOR_JOBS_TAB}
                 tableClassName="monitor-jobs-table"
-                tableHeaders={tableContent[0]?.content ?? []}
+                tableHeaders={
+                  tableContent[0]?.content ?? [
+                    {
+                      headerId: 'uid',
+                      headerLabel: 'UID',
+                      className: 'table-cell-name'
+                    }
+                  ]
+                }
               >
                 {tableContent.map((tableItem, index) => (
                   <JobsTableRow
@@ -397,7 +431,7 @@ JobsTable.propTypes = {
   context: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
   filtersConfig: FILTERS_CONFIG.isRequired,
-  jobRuns: PropTypes.array.isRequired,
+  jobRuns: PropTypes.array,
   jobs: PropTypes.array.isRequired,
   paginatedJobs: PropTypes.array.isRequired,
   refreshJobs: PropTypes.func.isRequired,

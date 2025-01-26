@@ -37,6 +37,7 @@ import {
   MODEL_MONITORING_APPLICATION,
   NAME_FILTER,
   PROJECT_FILTER,
+  PROJECTS_FILTER_ALL_ITEMS,
   SEVERITY,
   SEVERITY_HIGH,
   SEVERITY_LOW,
@@ -57,7 +58,11 @@ export const getAlertsFiltersConfig = (timeFrameLimit = false) => {
       initialValue: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION),
       timeFrameLimit: timeFrameLimit ? TIME_FRAME_LIMITS.MONTH : Infinity
     },
-    [PROJECT_FILTER]: { label: 'Project:', initialValue: FILTER_ALL_ITEMS, isModal: true },
+    [PROJECT_FILTER]: {
+      label: 'Project:',
+      initialValue: PROJECTS_FILTER_ALL_ITEMS,
+      isModal: true
+    },
     [ENTITY_TYPE]: { label: 'Entity Type:', initialValue: FILTER_ALL_ITEMS, isModal: true },
     [ENTITY_ID]: { label: 'Entity ID:', initialValue: '', isModal: true },
     [JOB_NAME]: { label: 'Job Name:', initialValue: '', isModal: true },
@@ -104,7 +109,7 @@ export const generatePageData = (selectedAlert, handleFetchJobLogs = () => {}) =
 
 export const allProjectsOption = [
   {
-    id: FILTER_ALL_ITEMS,
+    id: PROJECTS_FILTER_ALL_ITEMS,
     label: upperFirst(FILTER_ALL_ITEMS)
   }
 ]

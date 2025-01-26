@@ -59,8 +59,7 @@ const FunctionsTableRow = ({
                 item={rowItem.data}
                 key={value.id}
                 link={value.getLink?.(
-                  params.tab ?? DETAILS_OVERVIEW_TAB,
-                  rowItem.data.hash
+                  params.tab ?? DETAILS_OVERVIEW_TAB
                 )}
                 selectedItem={selectedItem}
                 selectItem={handleSelectItem}
