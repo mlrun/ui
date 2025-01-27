@@ -55,6 +55,7 @@ import { toggleYaml } from '../../reducers/appReducer'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 import cssVariables from '../FeatureStore/Features/features.scss'
+import { isEmpty } from 'lodash'
 
 const AddToFeatureVectorPage = ({
   createNewFeatureVector,
@@ -88,9 +89,18 @@ const AddToFeatureVectorPage = ({
     [dispatch]
   )
 
-  const navigateToFeatureVectorsScreen = useCallback(() => {
-    navigate(`/projects/${params.projectName}/feature-store/feature-vectors`)
-  }, [navigate, params.projectName])
+  const navigateToFeatureVectorsScreen = useCallback(
+    featureVector => {
+      if (!isEmpty(featureVector)) {
+        navigate(
+          `/projects/${params.projectName}/feature-store/feature-vectors/${featureVector.metadata.name}/${featureVector.metadata.tag}/overview?tag=${featureVector.metadata.tag}`
+        )
+      } else {
+        navigate(`/projects/${params.projectName}/feature-store/feature-vectors`)
+      }
+    },
+    [navigate, params.projectName]
+  )
 
   const handleCancelCreateFeatureVector = useCallback(() => {
     dispatch(setTablePanelOpen(false))
@@ -109,7 +119,7 @@ const AddToFeatureVectorPage = ({
             })
           )
           dispatch(setTablePanelOpen(false))
-          navigateToFeatureVectorsScreen()
+          navigateToFeatureVectorsScreen(featureVector)
         })
         .catch(error => {
           const customErrorMsg =
