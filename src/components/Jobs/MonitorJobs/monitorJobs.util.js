@@ -94,14 +94,14 @@ export const generateActionsMenu = (
           label: 'Delete run',
           icon: <Delete />,
           className: 'danger',
-          onClick: (job) => handleConfirmDeleteJob(job),
+          onClick: job => handleConfirmDeleteJob(job),
           hidden: JOB_RUNNING_STATES.includes(job?.state?.value) || isDetailsPopUp
         },
         {
           label: 'Delete all runs',
           icon: <Delete />,
           className: 'danger',
-          onClick: (job) => handleConfirmDeleteJob(job, true),
+          onClick: job => handleConfirmDeleteJob(job, true),
           hidden: JOB_RUNNING_STATES.includes(job?.state?.value) || jobName || isDetailsPopUp
         }
       ]

@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { debounce, isEqual } from 'lodash'
 
 import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
 
@@ -27,7 +26,6 @@ import {
   ARTIFACT_MAX_DOWNLOAD_SIZE,
   ARTIFACT_OTHER_TYPE,
   ARTIFACT_TYPE,
-  ALL_VERSIONS_PATH,
   FILES_PAGE,
   FILES_TAB,
   FULL_VIEW_MODE,
@@ -37,8 +35,6 @@ import {
   TAG_FILTER,
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST,
-  VIEW_SEARCH_PARAMETER,
-  BE_PAGE,
   SHOW_ITERATIONS
 } from '../../constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
@@ -48,10 +44,7 @@ import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { generateUri } from '../../utils/resources'
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
 import { openDeleteConfirmPopUp, openPopUp } from 'igz-controls/utils/common.util'
-import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
-import { getFilteredSearchParams } from '../../utils/filter.util'
-import { parseIdentifier } from '../../utils'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -139,53 +132,6 @@ export const handleApplyDetailsChanges = (
   return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
 }
 
-export const checkForSelectedFile = debounce(
-  (
-    paramsName,
-    files,
-    paramsId,
-    projectName,
-    setSelectedFile,
-    navigate,
-    isAllVersions,
-    searchParams,
-    paginationConfigRef
-  ) => {
-    if (paramsId) {
-      const searchBePage = parseInt(searchParams.get(BE_PAGE))
-      const configBePage = paginationConfigRef.current[BE_PAGE]
-      const { tag, uid, iter } = parseIdentifier(paramsId)
-
-      if (files.length > 0 && searchBePage === configBePage) {
-        const searchItem = searchArtifactItem(
-          files.map(artifact => artifact.data ?? artifact),
-          paramsName,
-          tag,
-          iter,
-          uid
-        )
-
-        if (!searchItem) {
-          navigate(
-            `/projects/${projectName}/files${isAllVersions ? `/${paramsName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(
-              window.location.search,
-              [VIEW_SEARCH_PARAMETER]
-            )}`,
-            { replace: true }
-          )
-        } else {
-          setSelectedFile(prevState => {
-            return isEqual(prevState, searchItem) ? prevState : searchItem
-          })
-        }
-      }
-    } else {
-      setSelectedFile({})
-    }
-  },
-  30
-)
-
 export const generateActionsMenu = (
   fileMin,
   frontendSpec,
@@ -193,7 +139,8 @@ export const generateActionsMenu = (
   toggleConvertedYaml,
   handleAddTag,
   projectName,
-  handleRefresh,
+  refreshArtifacts,
+  refreshAfterDeleteCallback,
   filters,
   selectedFile,
   showAllVersions,
@@ -261,7 +208,8 @@ export const generateActionsMenu = (
             artifactType: ARTIFACT_TYPE,
             category: ARTIFACT_OTHER_TYPE,
             filters,
-            handleRefresh
+            refreshArtifacts,
+            refreshAfterDeleteCallback
           })
       },
       {
@@ -279,7 +227,8 @@ export const generateActionsMenu = (
                 projectName,
                 fileMin.db_key,
                 fileMin.uid,
-                handleRefresh,
+                refreshArtifacts,
+                null,
                 filters,
                 ARTIFACT_TYPE,
                 ARTIFACT_OTHER_TYPE,

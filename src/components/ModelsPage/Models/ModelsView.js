@@ -36,8 +36,8 @@ import { ACTIONS_MENU } from '../../../types'
 import { FULL_VIEW_MODE, MODELS_PAGE, MODELS_TAB, ALL_VERSIONS_PATH } from '../../../constants'
 import { SECONDARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../../utils/link-helper.util'
+import { getDefaultFirstHeader } from '../../../utils/createArtifactsContent'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
-import { getSavedSearchParams } from '../../../utils/filter.util'
 
 const ModelsView = React.forwardRef(
   (
@@ -55,6 +55,7 @@ const ModelsView = React.forwardRef(
       handleRefreshWithFilters,
       handleRegisterModel,
       handleTrainModel,
+      historyBackLink,
       isAllVersions,
       isDemoMode,
       modelName,
@@ -65,7 +66,7 @@ const ModelsView = React.forwardRef(
       requestErrorMessage,
       selectedModel,
       setSearchModelsParams,
-      setSelectedModelMin,
+      setSelectedModel,
       tableContent,
       tableHeaders,
       viewMode = null
@@ -109,13 +110,10 @@ const ModelsView = React.forwardRef(
             </div>
             {isAllVersions && (
               <div className="content__history-back-link-wrapper">
-                <HistoryBackLink
-                  itemName={modelName}
-                  link={`/projects/${projectName}/models/models${getSavedSearchParams(window.location.search)}`}
-                />
+                <HistoryBackLink itemName={modelName} link={historyBackLink} />
               </div>
             )}
-            {artifactsStore.loading ? null : tableContent.length === 0 ? (
+            {artifactsStore.loading ? null : tableContent.length === 0 && isEmpty(selectedModel) ? (
               <NoData
                 message={getNoDataMessage(
                   filters,
@@ -139,13 +137,13 @@ const ModelsView = React.forwardRef(
                   getCloseDetailsLink={() =>
                     getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : MODELS_TAB)
                   }
-                  handleCancel={() => setSelectedModelMin({})}
+                  handleCancel={() => setSelectedModel({})}
                   pageData={pageData}
                   retryRequest={handleRefreshWithFilters}
                   selectedItem={selectedModel}
                   tab={MODELS_TAB}
                   tableClassName="models-table"
-                  tableHeaders={tableHeaders ?? []}
+                  tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
                 >
                   {tableContent.map((tableItem, index) => (
                     <ArtifactsTableRow
@@ -197,6 +195,7 @@ ModelsView.propTypes = {
   handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterModel: PropTypes.func.isRequired,
   handleTrainModel: PropTypes.func.isRequired,
+  historyBackLink: PropTypes.string.isRequired,
   isAllVersions: PropTypes.bool.isRequired,
   isDemoMode: PropTypes.bool.isRequired,
   modelName: PropTypes.string,
@@ -206,7 +205,7 @@ ModelsView.propTypes = {
   requestErrorMessage: PropTypes.string.isRequired,
   selectedModel: PropTypes.object.isRequired,
   setSearchModelsParams: PropTypes.func.isRequired,
-  setSelectedModelMin: PropTypes.func.isRequired,
+  setSelectedModel: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   viewMode: PropTypes.string

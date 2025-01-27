@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
@@ -30,7 +30,6 @@ import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useMode } from '../../../hooks/mode.hook'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
-import { getSavedSearchParams } from '../../../utils/filter.util'
 
 const MonitorJobs = () => {
   const params = useParams()
@@ -38,10 +37,11 @@ const MonitorJobs = () => {
   const { isStagingMode } = useMode()
   const {
     abortControllerRef,
-    abortingJobs,
     abortJobRef,
+    abortingJobs,
     autoRefreshPrevValue,
     fetchJobFunctionsPromiseRef,
+    historyBackLink,
     initialTabData,
     jobRuns,
     jobs,
@@ -55,6 +55,7 @@ const MonitorJobs = () => {
     setJobRuns,
     setJobs,
     setSelectedJob,
+    setSearchParams,
     terminateAbortTasksPolling
   } = React.useContext(JobsContext)
   const jobsAreInitializedRef = useRef(false)
@@ -67,17 +68,6 @@ const MonitorJobs = () => {
   const tableContent = useMemo(
     () => createJobsMonitorTabContent(paginatedJobs, params.jobName, isStagingMode),
     [isStagingMode, paginatedJobs, params.jobName]
-  )
-
-  const getBackLink = useCallback(
-    useSavedParams => {
-      let queryParams = useSavedParams
-        ? getSavedSearchParams(window.location.search)
-        : `?${searchParams.toString()}`
-
-      return `/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}${queryParams}`
-    },
-    [params.projectName, searchParams]
   )
 
   useEffect(() => {
@@ -104,13 +94,13 @@ const MonitorJobs = () => {
 
   return (
     <>
-      {params.jobName && <TableTop link={getBackLink(true)} text={params.jobName} />}
+      {params.jobName && <TableTop link={historyBackLink} text={params.jobName} />}
       <JobsTable
         abortingJobs={abortingJobs}
+        autoRefreshPrevValue={autoRefreshPrevValue}
         context={JobsContext}
         filters={filters}
         filtersConfig={jobsFiltersConfig}
-        autoRefreshPrevValue={autoRefreshPrevValue}
         jobRuns={jobRuns}
         jobs={jobs}
         paginatedJobs={paginatedJobs}
@@ -123,6 +113,7 @@ const MonitorJobs = () => {
         setJobRuns={setJobRuns}
         setJobs={setJobs}
         setSelectedJob={setSelectedJob}
+        setSearchParams={setSearchParams}
         tableContent={tableContent}
         terminateAbortTasksPolling={terminateAbortTasksPolling}
       />

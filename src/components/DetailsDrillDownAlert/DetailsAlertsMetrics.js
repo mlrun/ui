@@ -100,9 +100,8 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, isAlertsPage = true }) =>
     },
     [dispatch, setMetrics, metricsValuesAbortController]
   )
-
   const fetchMetrics = useCallback(() => {
-    if (selectedItem.uid !== prevSelectedEndPointNameRef.current) {
+    if (!isAlertsPage && selectedItem.uid !== prevSelectedEndPointNameRef.current) {
       prevSelectedEndPointNameRef.current = selectedItem.uid
       return
     }
@@ -134,8 +133,8 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, isAlertsPage = true }) =>
   }, [fetchMetrics, setMetrics])
 
   return (
-    <div>
-      {isAlertsPage && (
+    <div className="item-info__details-metrics">
+      {isAlertsPage && detailsStore.loadingCounter === 0 && (
         <div className="metrics__custom-filters">
           <DatePicker
             className="details-date-picker"
@@ -184,6 +183,7 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, isAlertsPage = true }) =>
 
 DetailsAlertsMetrics.propTypes = {
   isAlertsPage: PropTypes.bool,
+  filters: PropTypes.object.isRequired,
   selectedItem: PropTypes.object.isRequired
 }
 

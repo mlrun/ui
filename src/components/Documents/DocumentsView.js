@@ -21,22 +21,22 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
-import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import Loader from '../../common/Loader/Loader'
 import ActionBar from '../ActionBar/ActionBar'
 import ArtifactsFilters from '../ArtifactsActionBar/ArtifactsFilters'
-import Table from '../Table/Table'
-import NoData from '../../common/NoData/NoData'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
+import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Details from '../Details/Details'
-import Pagination from '../../common/Pagination/Pagination'
-
-import { ALL_VERSIONS_PATH, DOCUMENTS_PAGE, DOCUMENTS_TAB, FULL_VIEW_MODE } from '../../constants'
 import HistoryBackLink from '../../common/HistoryBackLink/historyBackLink'
-import { getSavedSearchParams } from '../../utils/filter.util'
-import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { getCloseDetailsLink } from '../../utils/link-helper.util'
+import Loader from '../../common/Loader/Loader'
+import NoData from '../../common/NoData/NoData'
+import Pagination from '../../common/Pagination/Pagination'
+import Table from '../Table/Table'
+
 import { ACTIONS_MENU } from '../../types'
+import { ALL_VERSIONS_PATH, DOCUMENTS_PAGE, DOCUMENTS_TAB, FULL_VIEW_MODE } from '../../constants'
+import { getCloseDetailsLink } from '../../utils/link-helper.util'
+import { getDefaultFirstHeader } from '../../utils/createArtifactsContent'
+import { getNoDataMessage } from '../../utils/getNoDataMessage'
 
 const DocumentsView = React.forwardRef(
   (
@@ -54,6 +54,7 @@ const DocumentsView = React.forwardRef(
       getAndSetSelectedArtifact,
       handleRefreshDocuments,
       handleRefreshWithFilters,
+      historyBackLink,
       isAllVersions,
       pageData,
       paginationConfigDocumentsRef,
@@ -61,7 +62,7 @@ const DocumentsView = React.forwardRef(
       requestErrorMessage,
       selectedDocument,
       setSearchDocumentsParams,
-      setSelectedDocumentMin,
+      setSelectedDocument,
       tableContent,
       tableHeaders,
       viewMode = null
@@ -79,10 +80,7 @@ const DocumentsView = React.forwardRef(
             <div className="table-container">
               <div className="content__action-bar-wrapper">
                 {isAllVersions && (
-                  <HistoryBackLink
-                    itemName={documentName}
-                    link={`/projects/${projectName}/${DOCUMENTS_TAB}${getSavedSearchParams(window.location.search)}`}
-                  />
+                  <HistoryBackLink itemName={documentName} link={historyBackLink} />
                 )}
                 <ActionBar
                   closeParamName={isAllVersions ? ALL_VERSIONS_PATH : DOCUMENTS_TAB}
@@ -96,7 +94,8 @@ const DocumentsView = React.forwardRef(
                   <ArtifactsFilters artifacts={documents} />
                 </ActionBar>
               </div>
-              {artifactsStore.loading ? null : tableContent.length === 0 ? (
+              {artifactsStore.loading ? null : tableContent.length === 0 &&
+                isEmpty(selectedDocument) ? (
                 <NoData
                   message={getNoDataMessage(
                     filters,
@@ -118,12 +117,12 @@ const DocumentsView = React.forwardRef(
                     getCloseDetailsLink={() =>
                       getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : DOCUMENTS_TAB)
                     }
-                    handleCancel={() => setSelectedDocumentMin({})}
+                    handleCancel={() => setSelectedDocument({})}
                     pageData={pageData}
                     retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedDocument}
                     tableClassName="documents-table"
-                    tableHeaders={tableHeaders ?? []}
+                    tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
                   >
                     {tableContent.map((tableItem, index) => (
                       <ArtifactsTableRow
@@ -176,13 +175,14 @@ DocumentsView.propTypes = {
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
   handleRefreshDocuments: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
+  historyBackLink: PropTypes.string.isRequired,
   isAllVersions: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   projectName: PropTypes.string.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedDocument: PropTypes.object.isRequired,
   setSearchDocumentsParams: PropTypes.func.isRequired,
-  setSelectedDocumentMin: PropTypes.func.isRequired,
+  setSelectedDocument: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   viewMode: PropTypes.string
