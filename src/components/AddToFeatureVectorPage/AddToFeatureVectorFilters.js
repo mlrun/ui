@@ -39,6 +39,10 @@ const AddToFeatureVectorFilters = ({ content, fetchTags }) => {
     form.change(inputName, value || '')
   }
 
+  const handleProjectChange = (value) => {
+    fetchTags(value)
+  }
+
   return (
     <div>
       <div className="form-row">
@@ -48,7 +52,7 @@ const AddToFeatureVectorFilters = ({ content, fetchTags }) => {
           options={generateProjectsList(projectStore.projectsNames.data, params.projectName)}
           preventWidthOverflow
         />
-        <FormOnChange name={PROJECT_FILTER} handler={value => fetchTags(value)} />
+        <FormOnChange name={PROJECT_FILTER} handler={handleProjectChange} />
       </div>      
       <div className="form-row">
         <FormInput label="Entity" name={ENTITIES_FILTER} placeholder="Search by entity" />

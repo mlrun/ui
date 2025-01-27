@@ -148,6 +148,18 @@ const FormTagFilter = ({ content, label, name }) => {
     }
   }, [isDropDownMenuOpen, handlerOverall])
 
+  console.log(options)
+
+  useEffect(() => {
+    if (input?.onChange) {
+      input.onChange(TAG_FILTER_LATEST)
+      setTagFilter(tagFilterOptions.find(tag => tag.id === TAG_FILTER_LATEST).label)
+    }
+  
+  // do not track input change because it reset input when user types
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filtersStore.tagOptions])
+
   const handleLabelClick = event => {
     event.stopPropagation()
     setIsDropDownMenuOpen(false)
