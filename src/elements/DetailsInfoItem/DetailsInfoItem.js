@@ -55,7 +55,6 @@ const DetailsInfoItem = React.forwardRef(
       detailsInfoState = {},
       editableFieldType = null,
       formState,
-      func = '',
       handleDiscardChanges,
       handleFinishEdit = () => {},
       info = null,

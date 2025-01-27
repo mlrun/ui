@@ -179,12 +179,12 @@ const DetailsTabsContent = ({
     case DETAILS_METADATA_TAB:
     case DETAILS_FEATURES_TAB:
     case DETAILS_RETURNED_FEATURES_TAB:
-      return detailsStore.modelFeatureVectorData.features ??
+      return (detailsStore.modelFeatureVectorData.features ??
         (selectedItem.schema ||
           selectedItem.entities ||
           selectedItem.features ||
           selectedItem.inputs ||
-          selectedItem.outputs) ? (
+          selectedItem.outputs)) ? (
         <DetailsMetadata
           selectedItem={
             selectedItem.schema ||
@@ -238,6 +238,7 @@ const DetailsTabsContent = ({
       return (
         <DetailsDrillDownAlert
           detailsStore={detailsStore}
+          formState={formState}
           isDetailsPopUp={isDetailsPopUp}
           pageData={pageData}
           ref={applyChangesRef}
