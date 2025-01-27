@@ -73,6 +73,7 @@ const Jobs = () => {
   const workflowsStore = useSelector(store => store.workflowsStore)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const appStore = useSelector(store => store.appStore)
+  const filtersStore = useSelector(store => store.filtersStore)
 
   const initialTabData = useMemo(() => {
     return {
@@ -239,6 +240,7 @@ const Jobs = () => {
                 autoRefreshIsStopped={
                   jobWizardIsOpened || jobsStore.loading || Boolean(jobsStore.jobLoadingCounter)
                 }
+                autoRefreshIsEnabled={filtersStore.autoRefresh}
                 autoRefreshStopTrigger={!isEmpty(selectedJob)}
                 closeParamName={params.jobName}
                 filters={filters}

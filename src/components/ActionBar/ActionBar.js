@@ -26,7 +26,7 @@ import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import { isEmpty, isEqual, isNil, mapValues, pickBy } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import DatePicker from '../../common/DatePicker/DatePicker'
 import FilterMenuModal from '../FilterMenuModal/FilterMenuModal'
@@ -49,7 +49,11 @@ import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
 import { FILTERS_CONFIG } from '../../types'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
-import { setFilters, toggleAutoRefresh } from '../../reducers/filtersReducer'
+import {
+  setFilters,
+  toggleAutoRefresh,
+  toggleInternalAutoRefresh
+} from '../../reducers/filtersReducer'
 
 import { ReactComponent as CollapseIcon } from 'igz-controls/images/collapse.svg'
 import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
@@ -89,6 +93,7 @@ const ActionBar = ({
   const changes = useSelector(store => store.detailsStore.changes)
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const params = useParams()
 
   const actionBarClassNames = classnames('action-bar', hidden && 'action-bar_hidden')
 
@@ -308,12 +313,12 @@ const ActionBar = ({
     if (autoRefreshStopTrigger && internalAutoRefresh) {
       formRef.current?.change(INTERNAL_AUTO_REFRESH_ID, false)
       setInternalAutoRefreshPrevValue(true)
-      dispatch(toggleAutoRefresh(false))
+      dispatch(toggleInternalAutoRefresh(false))
       handleAutoRefreshPrevValueChange && handleAutoRefreshPrevValueChange(true)
     } else if (!autoRefreshStopTrigger && internalAutoRefreshPrevValue) {
       setInternalAutoRefreshPrevValue(false)
       setInternalAutoRefresh(true)
-      dispatch(toggleAutoRefresh(true))
+      dispatch(toggleInternalAutoRefresh(true))
       formRef.current?.change(INTERNAL_AUTO_REFRESH_ID, true)
       handleAutoRefreshPrevValueChange && handleAutoRefreshPrevValueChange(false)
     }
@@ -328,6 +333,12 @@ const ActionBar = ({
   useLayoutEffect(() => {
     formRef.current.reset(formInitialValues)
   }, [formInitialValues])
+
+  useEffect(() => {
+    setAutoRefresh(false)
+    setInternalAutoRefresh(false)
+    dispatch(toggleAutoRefresh(false))
+  }, [dispatch, params.projectName])
 
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
@@ -399,34 +410,38 @@ const ActionBar = ({
                   ))
               )}
               {withAutoRefresh && !withInternalAutoRefresh && (
-                <FormCheckBox
-                  className="auto-refresh"
-                  label={AUTO_REFRESH}
-                  name={AUTO_REFRESH_ID}
-                />
+                <>
+                  <FormCheckBox
+                    className="auto-refresh"
+                    label={AUTO_REFRESH}
+                    name={AUTO_REFRESH_ID}
+                  />
+                  <FormOnChange
+                    handler={value => {
+                      dispatch(toggleAutoRefresh(value))
+                      setAutoRefresh(value)
+                    }}
+                    name={AUTO_REFRESH_ID}
+                  />
+                </>
               )}
-              <FormOnChange
-                handler={value => {
-                  dispatch(toggleAutoRefresh(value))
-                  setAutoRefresh(value)
-                }}
-                name={AUTO_REFRESH_ID}
-              />
               {withInternalAutoRefresh && (
-                <FormCheckBox
-                  className="auto-refresh"
-                  disabled={autoRefreshStopTrigger}
-                  label={AUTO_REFRESH}
-                  name={INTERNAL_AUTO_REFRESH_ID}
-                />
+                <>
+                  <FormCheckBox
+                    className="auto-refresh"
+                    disabled={autoRefreshStopTrigger}
+                    label={AUTO_REFRESH}
+                    name={INTERNAL_AUTO_REFRESH_ID}
+                  />
+                  <FormOnChange
+                    handler={value => {
+                      setInternalAutoRefresh(value)
+                      dispatch(toggleInternalAutoRefresh(value))
+                    }}
+                    name={INTERNAL_AUTO_REFRESH_ID}
+                  />
+                </>
               )}
-              <FormOnChange
-                handler={value => {
-                  setInternalAutoRefresh(value)
-                  dispatch(toggleAutoRefresh(value))
-                }}
-                name={INTERNAL_AUTO_REFRESH_ID}
-              />
               {withRefreshButton && (
                 <RoundedIcon tooltipText="Refresh" onClick={() => refresh(formState)} id="refresh">
                   <RefreshIcon />
