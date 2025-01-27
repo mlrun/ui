@@ -41,7 +41,8 @@ import {
 const initialState = {
   alerts: [],
   error: null,
-  loading: false
+  loading: false,
+  alertLoading: false
 }
 
 const generateRequestParams = filters => {
@@ -158,6 +159,12 @@ export const fetchAlerts = createAsyncThunk(
   }
 )
 
+export const fetchAlertById = createAsyncThunk('fetchAlertById', ({ project, alertId }) => {
+  return alertsApi.getAlertById(project, alertId).then(({ data }) => {
+    return data ? parseAlerts([data])[0] : null
+  })
+})
+
 const alertsSlice = createSlice({
   name: 'alertsStore',
   initialState,
@@ -191,6 +198,15 @@ const alertsSlice = createSlice({
       .addCase(fetchAlerts.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload
+      })
+      .addCase(fetchAlertById.pending, state => {
+        state.alertLoading = true
+      })
+      .addCase(fetchAlertById.fulfilled, state => {
+        state.alertLoading = false
+      })
+      .addCase(fetchAlertById.rejected, state => {
+        state.alertLoading = false
       })
   }
 })

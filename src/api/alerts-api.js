@@ -25,6 +25,9 @@ const alertsApi = {
   },
   getAlert: (project, alertName, newConfig) => {
     return mainHttpClient.get(`/projects/${project}/alerts/${alertName}/activations`, newConfig)
+  },
+  getAlertById: (project, id) => {
+    return mainHttpClient.get(`/projects/${project}/alert-activations/${id}`)
   }
 }
 

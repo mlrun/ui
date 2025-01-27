@@ -19,6 +19,7 @@ such restriction.
 */
 import classNames from 'classnames'
 import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
 
 import ActionBar from '../ActionBar/ActionBar'
 import AlertsFilters from './AlertsFilters'
@@ -83,7 +84,7 @@ const AlertsView = ({
             </div>
             {alertsStore.loading ? (
               <Loader />
-            ) : tableContent.length === 0 ? (
+            ) : tableContent.length === 0 && isEmpty(selectedAlert) ? (
               <NoData
                 message={getNoDataMessage(
                   filters,
@@ -96,6 +97,7 @@ const AlertsView = ({
               />
             ) : (
               <>
+              {alertsStore.alertLoading && <Loader />}
                 <Table
                   actionsMenu={[]}
                   getCloseDetailsLink={() =>
@@ -107,7 +109,13 @@ const AlertsView = ({
                   tableClassName="alerts-table"
                   handleCancel={handleCancel}
                   hideActionsMenu
-                  tableHeaders={tableContent[0]?.content ?? []}
+                  tableHeaders={tableContent[0]?.content ?? [
+                    {
+                      headerId: 'alertName',
+                      headerLabel: 'Alert Name',
+                      className: 'table-cell-name'
+                    }
+                  ]}
                   withActionMenu={false}
                 >
                   {tableContent.map((tableItem, index) => {

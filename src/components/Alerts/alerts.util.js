@@ -22,6 +22,7 @@ import { upperFirst } from 'lodash'
 import {
   ALERTS_PAGE,
   APPLICATION,
+  BE_PAGE,
   DATES_FILTER,
   ENDPOINT,
   ENDPOINT_APPLICATION,
@@ -29,6 +30,7 @@ import {
   ENTITY_ID,
   ENTITY_TYPE,
   EVENT_TYPE,
+  FE_PAGE,
   FILTER_ALL_ITEMS,
   JOB,
   JOB_KIND_JOB,
@@ -49,6 +51,10 @@ import {
   PAST_24_HOUR_DATE_OPTION,
   TIME_FRAME_LIMITS
 } from '../../utils/datePicker.util'
+import { fetchAlertById } from '../../reducers/alertsReducer'
+import { generateObjectNotInTheListMessage } from '../../utils/generateMessage.util'
+import { createAlertRowData } from '../../utils/createAlertsContent'
+import { showErrorNotification } from '../../utils/notifications.util'
 
 export const getAlertsFiltersConfig = (timeFrameLimit = false) => {
   return {
@@ -218,4 +224,75 @@ export const alertsHeaders = type => {
   }
 
   return []
+}
+
+export const checkForSelectedAlert = ({
+  alertId,
+  alerts,
+  dispatch,
+  isCrossProjects,
+  lastCheckedAlertIdRef,
+  navigate,
+  paginatedAlerts,
+  paginationConfigAlertsRef,
+  project,
+  searchParams,
+  setSearchParams,
+  setSelectedAlert
+}) => {
+  if (alertId) {
+    const searchBePage = parseInt(searchParams.get(BE_PAGE))
+    const configBePage = paginationConfigAlertsRef.current[BE_PAGE]
+
+    if (alerts && searchBePage === configBePage && lastCheckedAlertIdRef.current !== alertId) {
+      lastCheckedAlertIdRef.current = alertId
+
+      dispatch(fetchAlertById({ project, alertId }))
+        .unwrap()
+        .then(selectedAlert => {
+          if (selectedAlert) {
+            const findAlertIndex = alerts => {
+              return alerts.findIndex(alert => alert.id && alert.id === selectedAlert.id)
+            }
+
+            const itemIndexInPaginatedList = findAlertIndex(paginatedAlerts)
+            const itemIndexInMainList =
+              itemIndexInPaginatedList !== -1 ? itemIndexInPaginatedList : findAlertIndex(alerts)
+
+            if (itemIndexInPaginatedList === -1) {
+              if (itemIndexInMainList > -1) {
+                const { fePageSize } = paginationConfigAlertsRef.current
+
+                setSearchParams(prevSearchParams => {
+                  prevSearchParams.set(FE_PAGE, Math.ceil((itemIndexInMainList + 1) / fePageSize))
+
+                  return prevSearchParams
+                })
+              } else {
+                selectedAlert.ui.infoMessage = generateObjectNotInTheListMessage('alert')
+              }
+            }
+
+            setSelectedAlert({...createAlertRowData(selectedAlert).data, page: ALERTS_PAGE })
+          }
+        })
+        .catch((error) => {
+          setSelectedAlert({})
+
+          navigate(
+            `/projects/${isCrossProjects ? '*/alerts-monitoring' : `${project}/alerts`}${window.location.search}`,
+            { replace: true }
+          )
+
+          showErrorNotification(
+            dispatch,
+            error,
+            '',
+            'Failed to retrieve alert data'
+          )
+        })
+    }
+  } else {
+    setSelectedAlert({})
+  }
 }
