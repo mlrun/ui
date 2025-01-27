@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-final-form'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -27,11 +27,12 @@ import { FormInput, FormOnChange } from 'igz-controls/components'
 import FormTagFilter from '../../common/FormTagFilter/FormTagFilter'
 import { FormSelect } from 'iguazio.dashboard-react-controls/dist/components'
 
-import { ENTITIES_FILTER, LABELS_FILTER, PROJECT_FILTER, TAG_FILTER } from '../../constants'
+import { ENTITIES_FILTER, LABELS_FILTER, PROJECT_FILTER, TAG_FILTER, TAG_FILTER_LATEST } from '../../constants'
 import { generateProjectsList } from '../../utils/projects'
 
 const AddToFeatureVectorFilters = ({ content, fetchTags }) => {
   const form = useForm()
+  const [tagSelectKey, setTagSelectKey] = useState('TAG_FILTER_LATEST')
   const projectStore = useSelector(store => store.projectStore)
   const params = useParams()
 
@@ -41,6 +42,8 @@ const AddToFeatureVectorFilters = ({ content, fetchTags }) => {
 
   const handleProjectChange = (value) => {
     fetchTags(value)
+    form.change(TAG_FILTER, TAG_FILTER_LATEST)
+    setTagSelectKey(value)
   }
 
   return (
@@ -68,7 +71,7 @@ const AddToFeatureVectorFilters = ({ content, fetchTags }) => {
         <FormOnChange name={LABELS_FILTER} handler={value => handleInputChange(value, LABELS_FILTER)} />
       </div>
       <div className="form-row">
-        <FormTagFilter content={content} label="Version tag" name={TAG_FILTER} />
+        <FormTagFilter content={content} label="Version tag" name={TAG_FILTER} key={tagSelectKey} />
       </div>
     </div>
   )
