@@ -357,6 +357,7 @@ const AddToFeatureVectorPage = ({
       actionsMenu={actionsMenu}
       content={content}
       featureStore={featureStore}
+      fetchTags={fetchTags}
       filters={addToFeatureVectorFilters}
       filtersConfig={filtersConfig}
       filtersStore={filtersStore}
