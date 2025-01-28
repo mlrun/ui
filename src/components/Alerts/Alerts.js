@@ -85,8 +85,8 @@ const Alerts = () => {
 
   useEffect(() => {
     dispatch(projectsAction.removeProjects())
-    fetchMinimalProjects()
-  }, [dispatch, fetchMinimalProjects])
+    isCrossProjects && fetchMinimalProjects()
+  }, [dispatch, isCrossProjects, fetchMinimalProjects])
 
   const handleCancel = () => {
     setSelectedAlert({})
@@ -100,8 +100,8 @@ const Alerts = () => {
   )
 
   const pageData = useMemo(
-    () => generatePageData(selectedAlert, handleFetchJobLogs),
-    [handleFetchJobLogs, selectedAlert]
+    () => generatePageData(selectedAlert, handleFetchJobLogs, isCrossProjects),
+    [handleFetchJobLogs, isCrossProjects, selectedAlert]
   )
 
   useEffect(() => {
