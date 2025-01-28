@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { ConfirmDialog } from 'igz-controls/components'
 
@@ -42,7 +42,7 @@ export const defaultCloseModalHandler = (
           onResolve && onResolve()
         },
         label: 'OK',
-        variant: SECONDARY_BUTTON
+        variant: PRIMARY_BUTTON
       },
       header: 'Are you sure?',
       message: 'All changes will be lost'

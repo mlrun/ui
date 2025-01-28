@@ -23,7 +23,7 @@ import { createPortal } from 'react-dom'
 import Editor from '@monaco-editor/react'
 import { Base64 } from 'js-base64'
 
-import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import { Button } from 'igz-controls/components'
 
@@ -43,7 +43,7 @@ const EditorModalView = ({ closeModal, data, handleSaveCode, setData }) =>
           <Button
             label="Save"
             onClick={() => handleSaveCode(Base64.encode(data))}
-            variant={SECONDARY_BUTTON}
+            variant={PRIMARY_BUTTON}
           />
         </div>
         <Editor

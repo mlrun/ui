@@ -34,7 +34,7 @@ import Accordion from '../../common/Accordion/Accordion'
 
 import { filterMetrics, groupMetricByApplication, metricsTypes } from './metricsSelector.util'
 import { METRICS_SELECTOR_OPTIONS } from '../../types'
-import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
@@ -301,7 +301,7 @@ const MetricsSelector = ({
                       className="metrics-selector__footer-buttons"
                     >
                       <Button variant={TERTIARY_BUTTON} label="Clear" onClick={handleClear} />
-                      <Button variant={SECONDARY_BUTTON} label="Apply" onClick={handleApply} />
+                      <Button variant={PRIMARY_BUTTON} label="Apply" onClick={handleApply} />
                     </div>
                   </div>
                 </PopUpDialog>

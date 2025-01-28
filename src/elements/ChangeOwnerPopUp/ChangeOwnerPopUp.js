@@ -29,7 +29,7 @@ import { Button, PopUpDialog } from 'igz-controls/components'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import {
   FORBIDDEN_ERROR_STATUS_CODE,
-  SECONDARY_BUTTON,
+  PRIMARY_BUTTON,
   TERTIARY_BUTTON
 } from 'igz-controls/constants'
 import { deleteUnsafeHtml } from '../../utils'
@@ -249,7 +249,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
               disabled={!newOwnerId}
               label="Apply"
               onClick={applyChanges}
-              variant={SECONDARY_BUTTON}
+              variant={PRIMARY_BUTTON}
             />
           </div>
         </div>
