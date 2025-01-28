@@ -51,11 +51,11 @@ import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { getFiltersConfig } from './addToFeatureVectorPage.util'
 import { toggleYaml } from '../../reducers/appReducer'
+import { isEmpty } from 'lodash'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 import cssVariables from '../FeatureStore/Features/features.scss'
-import { isEmpty } from 'lodash'
 
 const AddToFeatureVectorPage = ({
   createNewFeatureVector,
