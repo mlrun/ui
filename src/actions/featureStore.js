@@ -119,9 +119,9 @@ const featureStoreActions = {
   deleteFeatureVector: (project, featureVector) => () => {
     return featureStoreApi.deleteFeatureVector(project, featureVector)
   },
-  fetchEntity: (project, entityName, entityMetadataName) => dispatch => {
+  fetchEntity: (project, entityName, entityMetadataName, labels) => dispatch => {
     return featureStoreApi
-      .getEntity(project, entityName)
+      .getEntity(project, entityName, labels)
       .then(response => {
         const parsedEntities = parseFeatures(response.data, entityMetadataName)
 
@@ -204,9 +204,9 @@ const featureStoreActions = {
     type: FETCH_FEATURE_SETS_SUCCESS,
     payload: featureSets
   }),
-  fetchExpandedFeatureSet: (project, featureSet, tag) => dispatch => {
+  fetchExpandedFeatureSet: (project, featureSet, tag, labels) => dispatch => {
     return featureStoreApi
-      .getExpandedFeatureSet(project, featureSet, tag)
+      .getExpandedFeatureSet(project, featureSet, tag, labels)
       .then(response => {
         const generatedFeatureSets = parseFeatureSets(response.data?.feature_sets)
 
@@ -251,9 +251,9 @@ const featureStoreActions = {
   fetchFeatureSetSuccess: () => ({
     type: FETCH_FEATURE_SET_SUCCESS
   }),
-  fetchFeatureVector: (project, featureVector, tag) => dispatch => {
+  fetchFeatureVector: (project, featureVector, tag, labels) => dispatch => {
     return featureStoreApi
-      .getFeatureVector(project, featureVector, tag)
+      .getFeatureVector(project, featureVector, tag, labels)
       .then(response => {
         const generatedFeatureVectors = parseFeatureVectors(response.data?.feature_vectors)
 
@@ -314,9 +314,9 @@ const featureStoreActions = {
     type: FETCH_FEATURE_VECTORS_SUCCESS,
     payload: featureSets
   }),
-  fetchFeature: (project, featureName, featureMetadataName) => dispatch => {
+  fetchFeature: (project, featureName, featureMetadataName, labels) => dispatch => {
     return featureStoreApi
-      .getFeature(project, featureName)
+      .getFeature(project, featureName, labels)
       .then(response => {
         const parsedFeatures = parseFeatures(response.data, featureMetadataName)
 

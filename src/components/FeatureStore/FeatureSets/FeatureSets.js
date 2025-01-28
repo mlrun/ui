@@ -196,7 +196,7 @@ const FeatureSets = ({
         }
       }))
 
-      fetchExpandedFeatureSet(item.project, item.name, featureSetsFilters.tag)
+      fetchExpandedFeatureSet(item.project, item.name, featureSetsFilters.tag, featureSetsFilters.labels)
         .then(result => {
           const content = [...parseFeatureSets(result)].map(contentItem =>
             createFeatureSetsRowData(contentItem, params.projectName, FEATURE_SETS_TAB, true)
@@ -221,7 +221,7 @@ const FeatureSets = ({
           }))
         })
     },
-    [fetchExpandedFeatureSet, featureSetsFilters.tag, params.projectName]
+    [fetchExpandedFeatureSet, featureSetsFilters.tag, featureSetsFilters.labels, params.projectName]
   )
 
   const { latestItems, toggleRow } = useGroupContent(

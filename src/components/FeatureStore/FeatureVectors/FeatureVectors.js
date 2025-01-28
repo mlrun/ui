@@ -278,7 +278,7 @@ const FeatureVectors = ({
         }
       }))
 
-      fetchFeatureVector(featureVector.project, featureVector.name, featureVectorsFilters.tag)
+      fetchFeatureVector(featureVector.project, featureVector.name, featureVectorsFilters.tag, featureVectorsFilters.labels)
         .then(result => {
           const content = sortListByDate(parseFeatureVectors(result), 'updated', false).map(
             contentItem =>
@@ -304,7 +304,7 @@ const FeatureVectors = ({
           }))
         })
     },
-    [fetchFeatureVector, featureVectorsFilters.tag, params.projectName]
+    [fetchFeatureVector, featureVectorsFilters.tag, featureVectorsFilters.labels, params.projectName]
   )
 
   const { latestItems, toggleRow } = useGroupContent(
