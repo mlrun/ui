@@ -347,7 +347,7 @@ export const generateDocumentLoaderDetailsInfo = (selectedItem, isDetailsPopUp) 
   }
 }
 
-export const generateSourcesDetailsInfo = (selectedItem, projectName) => {
+export const generateSourcesDetailsInfo = selectedItem => {
   const reduceHandler = (acc, [key, value]) => {
     let source = {}
     const parsedUri = parseUri(value)

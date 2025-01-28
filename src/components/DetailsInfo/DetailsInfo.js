@@ -108,8 +108,8 @@ const DetailsInfo = React.forwardRef(
     )
 
     const sources = useMemo(
-      () => generateSourcesDetailsInfo(selectedItem, params.projectName),
-      [params.projectName, selectedItem]
+      () => generateSourcesDetailsInfo(selectedItem),
+      [selectedItem]
     )
 
     const producer = useMemo(
