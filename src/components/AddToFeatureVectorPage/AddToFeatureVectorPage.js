@@ -51,6 +51,7 @@ import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { getFiltersConfig } from './addToFeatureVectorPage.util'
 import { toggleYaml } from '../../reducers/appReducer'
+import { isEmpty } from 'lodash'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -88,9 +89,18 @@ const AddToFeatureVectorPage = ({
     [dispatch]
   )
 
-  const navigateToFeatureVectorsScreen = useCallback(() => {
-    navigate(`/projects/${params.projectName}/feature-store/feature-vectors`)
-  }, [navigate, params.projectName])
+  const navigateToFeatureVectorsScreen = useCallback(
+    featureVector => {
+      if (!isEmpty(featureVector)) {
+        navigate(
+          `/projects/${params.projectName}/feature-store/feature-vectors/${featureVector.metadata.name}/${featureVector.metadata.tag}/overview?tag=${featureVector.metadata.tag}`
+        )
+      } else {
+        navigate(`/projects/${params.projectName}/feature-store/feature-vectors`)
+      }
+    },
+    [navigate, params.projectName]
+  )
 
   const handleCancelCreateFeatureVector = useCallback(() => {
     dispatch(setTablePanelOpen(false))
@@ -109,7 +119,7 @@ const AddToFeatureVectorPage = ({
             })
           )
           dispatch(setTablePanelOpen(false))
-          navigateToFeatureVectorsScreen()
+          navigateToFeatureVectorsScreen(featureVector)
         })
         .catch(error => {
           const customErrorMsg =
