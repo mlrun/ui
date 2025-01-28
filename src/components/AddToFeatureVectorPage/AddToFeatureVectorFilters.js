@@ -32,7 +32,7 @@ import { generateProjectsList } from '../../utils/projects'
 
 const AddToFeatureVectorFilters = ({ content, fetchTags }) => {
   const form = useForm()
-  const [tagSelectKey, setTagSelectKey] = useState('TAG_FILTER_LATEST')
+  const [tagFilterKey, setTagFilterKey] = useState('')
   const projectStore = useSelector(store => store.projectStore)
   const params = useParams()
 
@@ -43,7 +43,7 @@ const AddToFeatureVectorFilters = ({ content, fetchTags }) => {
   const handleProjectChange = (value) => {
     fetchTags(value)
     form.change(TAG_FILTER, TAG_FILTER_LATEST)
-    setTagSelectKey(value)
+    setTagFilterKey(value)
   }
 
   return (
@@ -71,7 +71,7 @@ const AddToFeatureVectorFilters = ({ content, fetchTags }) => {
         <FormOnChange name={LABELS_FILTER} handler={value => handleInputChange(value, LABELS_FILTER)} />
       </div>
       <div className="form-row">
-        <FormTagFilter content={content} label="Version tag" name={TAG_FILTER} key={tagSelectKey} />
+        <FormTagFilter content={content} label="Version tag" name={TAG_FILTER} key={tagFilterKey} />
       </div>
     </div>
   )
