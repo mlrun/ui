@@ -84,8 +84,6 @@ const ActionBar = ({
   withRefreshButton = true,
   withoutExpandButton
 }) => {
-  const [autoRefresh, setAutoRefresh] = useState(autoRefreshIsEnabled)
-  const [internalAutoRefresh, setInternalAutoRefresh] = useState(internalAutoRefreshIsEnabled)
   const [internalAutoRefreshPrevValue, setInternalAutoRefreshPrevValue] = useState(
     internalAutoRefreshIsEnabled
   )
@@ -291,7 +289,11 @@ const ActionBar = ({
   }, [filterMenu, filtersConfig])
 
   useEffect(() => {
-    if (((autoRefresh && !withInternalAutoRefresh) || internalAutoRefresh) && !hidden) {
+    if (
+      ((filtersStore.autoRefresh && !withInternalAutoRefresh) ||
+        filtersStore.internalAutoRefresh) &&
+      !hidden
+    ) {
       const intervalId = setInterval(() => {
         if (!autoRefreshIsStopped) {
           refresh(formRef.current.getState())
@@ -301,23 +303,22 @@ const ActionBar = ({
       return () => clearInterval(intervalId)
     }
   }, [
-    autoRefresh,
     autoRefreshIsStopped,
     hidden,
     refresh,
-    internalAutoRefresh,
-    withInternalAutoRefresh
+    withInternalAutoRefresh,
+    filtersStore.internalAutoRefresh,
+    filtersStore.autoRefresh
   ])
 
   useEffect(() => {
-    if (autoRefreshStopTrigger && internalAutoRefresh) {
+    if (autoRefreshStopTrigger && filtersStore.internalAutoRefresh) {
       formRef.current?.change(INTERNAL_AUTO_REFRESH_ID, false)
       setInternalAutoRefreshPrevValue(true)
       dispatch(toggleInternalAutoRefresh(false))
       handleAutoRefreshPrevValueChange && handleAutoRefreshPrevValueChange(true)
     } else if (!autoRefreshStopTrigger && internalAutoRefreshPrevValue) {
       setInternalAutoRefreshPrevValue(false)
-      setInternalAutoRefresh(true)
       dispatch(toggleInternalAutoRefresh(true))
       formRef.current?.change(INTERNAL_AUTO_REFRESH_ID, true)
       handleAutoRefreshPrevValueChange && handleAutoRefreshPrevValueChange(false)
@@ -325,9 +326,9 @@ const ActionBar = ({
   }, [
     internalAutoRefreshPrevValue,
     autoRefreshStopTrigger,
-    internalAutoRefresh,
     handleAutoRefreshPrevValueChange,
-    dispatch
+    dispatch,
+    filtersStore.internalAutoRefresh
   ])
 
   useLayoutEffect(() => {
@@ -335,9 +336,8 @@ const ActionBar = ({
   }, [formInitialValues])
 
   useEffect(() => {
-    setAutoRefresh(false)
-    setInternalAutoRefresh(false)
     dispatch(toggleAutoRefresh(false))
+    dispatch(toggleInternalAutoRefresh(false))
   }, [dispatch, params.projectName])
 
   return (
@@ -419,7 +419,6 @@ const ActionBar = ({
                   <FormOnChange
                     handler={value => {
                       dispatch(toggleAutoRefresh(value))
-                      setAutoRefresh(value)
                     }}
                     name={AUTO_REFRESH_ID}
                   />
@@ -435,7 +434,6 @@ const ActionBar = ({
                   />
                   <FormOnChange
                     handler={value => {
-                      setInternalAutoRefresh(value)
                       dispatch(toggleInternalAutoRefresh(value))
                     }}
                     name={INTERNAL_AUTO_REFRESH_ID}
