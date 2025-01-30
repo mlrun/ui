@@ -13,7 +13,7 @@
 # limitations under the License.
 #
 # build stage
-FROM quay.io/mlrun/node:14-alpine as build-stage
+FROM quay.io/mlrun/node:20-alpine as build-stage
 
 RUN apk update && \
 	apk upgrade && \
@@ -22,7 +22,7 @@ RUN apk update && \
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm install --omit=dev
 
 COPY . .
 RUN npm run build
