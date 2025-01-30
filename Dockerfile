@@ -13,7 +13,7 @@
 # limitations under the License.
 #
 # build stage
-FROM node:14.18-alpine as build-stage
+FROM node:20.18.2-alpine as build-stage
 
 RUN apk update && \
 	apk upgrade && \
