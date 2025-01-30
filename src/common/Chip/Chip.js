@@ -95,11 +95,11 @@ const Chip = React.forwardRef(
             { name: 'internal label', label: 'System-defined labels cannot be modified.' }
           ])
 
-          return setValidation(false)
+          return setValidation && setValidation(false)
         }
 
         setValidationRules([])
-        setValidation(true)
+        setValidation && setValidation(true)
       },
       [frontendSpec.internal_labels, setValidation]
     )

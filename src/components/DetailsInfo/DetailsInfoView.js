@@ -80,6 +80,16 @@ const DetailsInfoView = React.forwardRef(
         : 'item-info__full-width'
     )
 
+    const isArtifactPage = useMemo(() => {
+      return (
+        pageData.page === ARTIFACTS_PAGE ||
+        pageData.page === DATASETS_PAGE ||
+        pageData.page === FILES_PAGE ||
+        pageData.page === MODELS_PAGE ||
+        pageData.page === DOCUMENTS_PAGE
+      )
+    }, [pageData.page])
+
     return (
       !isEveryObjectValueEmpty(infoContent) && (
         <>
@@ -188,6 +198,7 @@ const DetailsInfoView = React.forwardRef(
                         handleFinishEdit={handleFinishEdit}
                         info={info}
                         isDetailsPopUp={isDetailsPopUp}
+                        isArtifactPage={isArtifactPage}
                         isFieldInEditMode={detailsInfoState.editMode.field === header.id}
                         item={infoContent[header.id]}
                         onClick={handleInfoItemClick}

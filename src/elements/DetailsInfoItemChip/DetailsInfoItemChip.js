@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty, isEqual } from 'lodash'
 import classnames from 'classnames'
@@ -43,6 +43,7 @@ const DetailsInfoItemChip = ({
   formState,
   handleFinishEdit,
   isEditable = true,
+  isArtifactPage,
   isFieldInEditMode,
   item
 }) => {
@@ -125,6 +126,26 @@ const DetailsInfoItemChip = ({
     setEditMode
   ])
 
+  const validationRules = useMemo(() => {
+    if (isArtifactPage) {
+      return {
+        key: getValidationRules(
+          'artifact.labels.key',
+          getInternalLabelsValidationRule(frontendSpec.internal_labels)
+        ),
+        value: getValidationRules('artifact.labels.value')
+      }
+    } else {
+      return {
+        key: getValidationRules(
+          'common.tag',
+          getInternalLabelsValidationRule(frontendSpec.internal_labels)
+        ),
+        value: getValidationRules('common.tag')
+      }
+    }
+  }, [frontendSpec.internal_labels, isArtifactPage])
+
   return (
     <div className={chipFieldClassName}>
       <FormChipCell
@@ -135,13 +156,7 @@ const DetailsInfoItemChip = ({
         name={item.fieldData.name}
         shortChips
         visibleChipsMaxLength="all"
-        validationRules={{
-          key: getValidationRules(
-            'common.tag',
-            getInternalLabelsValidationRule(frontendSpec.internal_labels)
-          ),
-          value: getValidationRules('common.tag')
-        }}
+        validationRules={validationRules}
       />
       <FormOnChange name={item.fieldData.name} handler={setEditMode} />
       {isFieldInEditMode && (
