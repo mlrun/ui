@@ -196,4 +196,4 @@ Chip.propTypes = {
   textOverflowEllipsis: PropTypes.bool
 }
 
-export default Chip
+export default React.memo(Chip)
