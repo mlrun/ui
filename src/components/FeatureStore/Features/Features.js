@@ -219,7 +219,7 @@ const Features = ({
         }
       }))
 
-      fetchData(feature.metadata.project, feature.name, feature.metadata.name)
+      fetchData(feature.metadata.project, feature.name, feature.metadata.name, featuresFilters.labels)
         .then(result => {
           if (result?.length > 0) {
             const content = [...result].map(contentItem =>
@@ -246,7 +246,7 @@ const Features = ({
           }))
         })
     },
-    [fetchEntity, fetchFeature, tableStore.isTablePanelOpen]
+    [featuresFilters.labels, fetchEntity, fetchFeature, tableStore.isTablePanelOpen]
   )
 
   const { latestItems, toggleRow } = useGroupContent(

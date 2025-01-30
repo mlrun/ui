@@ -41,7 +41,7 @@ import {
   RUN_DETAILS_STEP,
   TAG_NA
 } from '../../../../constants'
-import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { areFormValuesChanged } from 'igz-controls/utils/form.util'
 import { getChipOptions } from '../../../../utils/getChipOptions'
 import {
@@ -124,7 +124,7 @@ const JobWizardRunDetails = ({
         },
         confirmButton: {
           label: 'OK',
-          variant: SECONDARY_BUTTON,
+          variant: PRIMARY_BUTTON,
           handler: () => {
             handleVersionChange(currentVersion)
           }
@@ -196,7 +196,7 @@ const JobWizardRunDetails = ({
         },
         confirmButton: {
           label: 'OK',
-          variant: SECONDARY_BUTTON,
+          variant: PRIMARY_BUTTON,
           handler: () => {
             handleHandlerChange(currentHandler)
           }

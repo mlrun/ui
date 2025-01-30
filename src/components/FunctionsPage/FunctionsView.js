@@ -41,7 +41,7 @@ import {
   ALL_VERSIONS_PATH
 } from '../../constants'
 import { FILTERS_CONFIG } from '../../types'
-import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { getSavedSearchParams } from '../../utils/filter.util'
@@ -98,7 +98,7 @@ const FunctionsView = ({
                     template: getPopUpTemplate({
                       className: 'action-button',
                       label: 'New',
-                      variant: SECONDARY_BUTTON
+                      variant: PRIMARY_BUTTON
                     })
                   }
                 ]}

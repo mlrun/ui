@@ -35,7 +35,7 @@ import Table from '../Table/Table'
 
 import { FILES_PAGE, FULL_VIEW_MODE, ALL_VERSIONS_PATH, FILES_TAB } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
-import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { registerArtifactTitle } from './files.util'
@@ -87,7 +87,7 @@ const FilesView = React.forwardRef(
                 <ActionBar
                   actionButtons={[
                     {
-                      variant: SECONDARY_BUTTON,
+                      variant: PRIMARY_BUTTON,
                       label: registerArtifactTitle,
                       className: 'action-button',
                       onClick: handleRegisterArtifact

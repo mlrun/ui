@@ -44,7 +44,7 @@ import {
   targetsPathEditDataInitialState
 } from './featureSetsPanelTargetStore.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import { isUrlInputValid } from '../UrlPath.utils'
 
@@ -684,7 +684,7 @@ const FeatureSetsPanelTargetStore = ({
         openPopUp(ConfirmDialog, {
           confirmButton: {
             label: 'Unset online-target',
-            variant: SECONDARY_BUTTON,
+            variant: PRIMARY_BUTTON,
             handler: () => {
               clearTargets(false)
             }

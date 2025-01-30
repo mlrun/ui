@@ -27,10 +27,7 @@ import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import TableCell from '../TableCell/TableCell'
 
 import { ACTIONS_MENU } from '../../types'
-import {
-  DETAILS_OVERVIEW_TAB,
-  MODEL_ENDPOINTS_TAB
-} from '../../constants'
+import { DETAILS_OVERVIEW_TAB, MODEL_ENDPOINTS_TAB } from '../../constants'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 
 const ArtifactsTableRow = ({
@@ -40,7 +37,7 @@ const ArtifactsTableRow = ({
   mainRowItemsCount = 1,
   rowItem,
   selectedItem,
-  tab = '',
+  tab = ''
 }) => {
   const parent = useRef()
   const params = useParams()
@@ -49,45 +46,45 @@ const ArtifactsTableRow = ({
     'table-row',
     'table-body-row',
     'parent-row',
-    (selectedItem?.db_key || selectedItem?.spec?.model) &&
+    (selectedItem?.db_key || selectedItem?.spec?.model_name) &&
       getArtifactIdentifier(selectedItem, true) === rowItem.data.ui.identifierUnique &&
       'table-row_active'
   )
 
   return (
     <tr className={rowClassNames} ref={parent}>
-       <>
-          {rowItem.content.map((value, index) => {
-            const cellClassNames = classnames(
-              !isEmpty(selectedItem) && index >= mainRowItemsCount && 'table-body__cell_hidden'
-            )
+      <>
+        {rowItem.content.map((value, index) => {
+          const cellClassNames = classnames(
+            !isEmpty(selectedItem) && index >= mainRowItemsCount && 'table-body__cell_hidden'
+          )
 
-            return (
-              !value.hidden && (
-                <TableCell
-                  className={cellClassNames}
-                  data={value}
-                  firstCell={index === 0 && params.pageTab !== MODEL_ENDPOINTS_TAB}
-                  item={rowItem.data}
-                  key={value.id}
-                  link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
-                  onClick={value.handleClick}
-                  selectItem={handleSelectItem}
-                  selectedItem={selectedItem}
-                />
-              )
-            )
-          })}
-          {!hideActionsMenu && (
-            <td className="table-body__cell table-cell-icon">
-              <ActionsMenu
-                dataItem={rowItem.data}
-                withQuickActions={tab !== MODEL_ENDPOINTS_TAB}
-                menu={actionsMenu}
+          return (
+            !value.hidden && (
+              <TableCell
+                className={cellClassNames}
+                data={value}
+                firstCell={index === 0 && params.pageTab !== MODEL_ENDPOINTS_TAB}
+                item={rowItem.data}
+                key={value.id}
+                link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
+                onClick={value.handleClick}
+                selectItem={handleSelectItem}
+                selectedItem={selectedItem}
               />
-            </td>
-          )}
-        </>
+            )
+          )
+        })}
+        {!hideActionsMenu && (
+          <td className="table-body__cell table-cell-icon">
+            <ActionsMenu
+              dataItem={rowItem.data}
+              withQuickActions={tab !== MODEL_ENDPOINTS_TAB}
+              menu={actionsMenu}
+            />
+          </td>
+        )}
+      </>
     </tr>
   )
 }
@@ -99,7 +96,7 @@ ArtifactsTableRow.propTypes = {
   rowIndex: PropTypes.number.isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
-  tab: PropTypes.string,
+  tab: PropTypes.string
 }
 
 export default React.memo(ArtifactsTableRow)

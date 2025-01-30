@@ -30,7 +30,7 @@ import { tabs } from '../ScheduleJob/scheduleJobData'
 import { decodeLocale, getWeekDays, getWeekStart } from '../../utils/datePicker.util'
 import { getFormatTime } from '../../utils'
 import { generateCronInitialValue } from '../../utils/generateCronInitialValue'
-import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { getDefaultSchedule, scheduleDataInitialState } from './scheduleWizard.util'
 import { SCHEDULE_DATA } from '../../types'
 import { SIMPLE_SCHEDULE, CRONSTRING_SCHEDULE } from '../../constants'
@@ -157,7 +157,7 @@ const ScheduleWizard = ({
         <div className="modal__footer-actions">
           <Button label="Cancel" onClick={() => setShowSchedule(false)} variant={TERTIARY_BUTTON} />
           <Button
-            variant={SECONDARY_BUTTON}
+            variant={PRIMARY_BUTTON}
             disabled={isWeekDaysEmpty}
             icon={<Schedule />}
             label="Schedule"

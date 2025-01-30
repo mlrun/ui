@@ -29,11 +29,12 @@ import Loader from '../../common/Loader/Loader'
 import PanelCredentialsAccessKey from '../../elements/PanelCredentialsAccessKey/PanelCredentialsAccessKey'
 import { Button, ConfirmDialog } from 'igz-controls/components'
 
-import { PRIMARY_BUTTON, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
 import './featureSetsPanel.scss'
+import { LABEL_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
 
 const FeatureSetsPanelView = ({
   accessKeyRequired,
@@ -124,14 +125,14 @@ const FeatureSetsPanelView = ({
           />
           <div className="new-item-side-panel__buttons-container">
             <Button
-              variant={TERTIARY_BUTTON}
+              variant={LABEL_BUTTON}
               label="Cancel"
               className="pop-up-dialog__btn_cancel"
               onClick={closePanel}
             />
             <Button
               disabled={validationIsFailed || buttonsIsDisabled}
-              variant={SECONDARY_BUTTON}
+              variant={TERTIARY_BUTTON}
               label="Save"
               onClick={() => handleSaveOnClick(false)}
             />
@@ -144,7 +145,7 @@ const FeatureSetsPanelView = ({
               }
               label="Save and ingest"
               onClick={() => handleSaveOnClick(true)}
-              variant={SECONDARY_BUTTON}
+              variant={PRIMARY_BUTTON}
             />
           </div>
         </div>

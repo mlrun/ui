@@ -28,7 +28,7 @@ import { Button, FormInput, Modal } from 'igz-controls/components'
 import Loader from '../../common/Loader/Loader'
 
 import { DATASET_TYPE, MODEL_TYPE, TAG_LATEST } from '../../constants'
-import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { addTag, fetchArtifacts } from '../../reducers/artifactsReducer'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setNotification } from '../../reducers/notificationReducer'
@@ -105,7 +105,7 @@ const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag = () => {}, onResolve,
         disabled: isSubmitDisabled(formState),
         label: 'Add',
         onClick: formState.handleSubmit,
-        variant: SECONDARY_BUTTON
+        variant: PRIMARY_BUTTON
       }
     ]
 
