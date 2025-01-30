@@ -15,9 +15,10 @@
 # build stage
 FROM quay.io/mlrun/node:20-alpine as build-stage
 
-RUN apk update && \
-	apk upgrade && \
-	rm -rf /var/cache/apk/*
+RUN rm -rf /var/cache/apk/* && \
+    apk update && \
+	apk upgrade
+
 
 WORKDIR /app
 
