@@ -13,12 +13,11 @@
 # limitations under the License.
 #
 # build stage
-FROM quay.io/mlrun/node:20-alpine as build-stage
+FROM node:14.8-alpine as build-stage
 
-RUN rm -rf /var/cache/apk/* && \
-    apk update && \
-	apk upgrade
-
+RUN apk update && \
+	apk upgrade && \
+	rm -rf /var/cache/apk/*
 
 WORKDIR /app
 
