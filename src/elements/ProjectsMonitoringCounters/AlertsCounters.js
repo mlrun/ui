@@ -19,6 +19,7 @@ such restriction.
 */
 import React, { useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import classNames from 'classnames'
 
 import { useSelector } from 'react-redux'
 
@@ -78,8 +79,14 @@ const AlertsCounters = () => {
     [navigate, alertsData]
   )
 
+  const alertsCardClass = classNames(
+    'monitoring-stats',
+    'alerts-card',
+    alertsData.data.total && 'alerts-card__has-alerts'
+  )
+
   return (
-    <StatsCard className="monitoring-stats alerts-card">
+    <StatsCard className={alertsCardClass}>
       <StatsCard.Header title="Alerts" icon={<Alerts />} iconClass="stats-card__title-icon">
         <StatsCard.Col>
           <div className="project-card__info">

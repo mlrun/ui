@@ -16,9 +16,14 @@
   border: 1px solid $frenchLilac;
 
   &.alerts-card {
-    height: 100%;
-    background-color: $carouselPink;
-    border: 1px solid $babyPink;
+    transition:
+      background-color 0s,
+      border-color 0s;
+
+    &__has-alerts {
+      background-color: $carouselPink;
+      border: 1px solid $babyPink;
+    }
   }
 
   .stats {
