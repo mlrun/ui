@@ -28,7 +28,7 @@ import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
 import Loader from '../../../common/Loader/Loader'
 import { Button, FormChipCell, FormInput, FormTextarea, PopUpDialog } from 'igz-controls/components'
 
-import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { getChipOptions } from '../../../utils/getChipOptions'
 import {
   getValidationRules,
@@ -123,7 +123,7 @@ const CreateProjectDialog = ({
                 />
                 <Button
                   disabled={projectStore.loading || isSubmitDisabled(formState)}
-                  variant={SECONDARY_BUTTON}
+                  variant={PRIMARY_BUTTON}
                   label="Create"
                   onClick={formState.handleSubmit}
                 />

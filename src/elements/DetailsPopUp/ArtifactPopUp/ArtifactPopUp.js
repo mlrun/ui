@@ -38,8 +38,19 @@ import {
   generateActionsMenu as generateModelActionsMenu,
   generatePageData as generateModelPageData
 } from '../../../components/ModelsPage/Models/models.util'
-
-import { DATASETS_TAB, FILES_TAB, MODEL_TYPE, MODELS_TAB } from '../../../constants'
+import {
+    generateActionsMenu as generateDocumentActionsMenu,
+    generatePageData as generateDocumentPageData
+} from '../../../components/Documents/documents.util'
+import {
+    DATASET_TYPE,
+    DATASETS_TAB,
+    DOCUMENT_TYPE,
+    DOCUMENTS_TAB,
+    FILES_TAB,
+    MODEL_TYPE,
+    MODELS_TAB
+} from '../../../constants'
 import { toggleYaml } from '../../../reducers/appReducer'
 import artifactsApi from '../../../api/artifacts-api'
 import { parseArtifacts } from '../../../utils/parseArtifacts'
@@ -54,26 +65,33 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
   const viewMode = getViewMode(window.location.search)
 
   const artifactContext = useMemo(() => {
-    return artifactData.kind === DATASETS_TAB
+    return [DATASETS_TAB, DATASET_TYPE].includes(artifactData.kind)
       ? {
           type: DATASETS_TAB,
           generateActionsMenu: generateDatasetActionsMenu,
           pageData: generateDatasetPageData(selectedArtifact, viewMode, {}, true),
           fetchArtifact: artifactsApi.getDataSets
         }
-      : artifactData.kind === MODEL_TYPE
+      : [MODELS_TAB, MODEL_TYPE].includes(artifactData.kind)
         ? {
             type: MODELS_TAB,
             generateActionsMenu: generateModelActionsMenu,
             pageData: generateModelPageData(selectedArtifact, viewMode),
             fetchArtifact: artifactsApi.getModels
           }
-        : {
-            type: FILES_TAB,
-            generateActionsMenu: generateFileActionsMenu,
-            pageData: generateFilePageData(viewMode),
-            fetchArtifact: artifactsApi.getFiles
-          }
+        : [DOCUMENTS_TAB, DOCUMENT_TYPE].includes(artifactData.kind)
+          ? {
+              type: DOCUMENTS_TAB,
+              generateActionsMenu: generateDocumentActionsMenu,
+              pageData: generateDocumentPageData(viewMode),
+              fetchArtifact: artifactsApi.getDocuments
+            }
+          : {
+              type: FILES_TAB,
+              generateActionsMenu: generateFileActionsMenu,
+              pageData: generateFilePageData(viewMode),
+              fetchArtifact: artifactsApi.getFiles
+            }
   }, [selectedArtifact, artifactData.kind, viewMode])
 
   const toggleConvertedYaml = useCallback(

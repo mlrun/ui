@@ -39,7 +39,7 @@ import {
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { convertChipsData, parseChipsData } from '../../utils/convertChipsData'
 import { FUNCTION_TYPE_SERVING, PANEL_CREATE_MODE, PANEL_DEFAULT_ACCESS_KEY, PANEL_EDIT_MODE } from '../../constants'
-import { LABEL_BUTTON, NOTFOUND_ERROR_STATUS_CODE, SECONDARY_BUTTON } from 'igz-controls/constants'
+import { LABEL_BUTTON, NOTFOUND_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-controls/constants'
 
 const FunctionsPanel = ({
   appStore,
@@ -255,7 +255,7 @@ const FunctionsPanel = ({
               btnCancelLabel: 'Cancel',
               btnCancelVariant: LABEL_BUTTON,
               btnConfirmLabel: 'Overwrite',
-              btnConfirmVariant: SECONDARY_BUTTON,
+              btnConfirmVariant: PRIMARY_BUTTON,
               rejectHandler: () => setConfirmData(null),
               confirmHandler: () => {
                 createFunction(deploy)

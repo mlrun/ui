@@ -35,11 +35,11 @@ import Table from '../Table/Table'
 
 import { ALL_VERSIONS_PATH, DATASETS_PAGE, DATASETS_TAB, FULL_VIEW_MODE } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
-import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { getSavedSearchParams } from '../../utils/filter.util'
 import { registerDatasetTitle } from './datasets.util'
+import { getDefaultFirstHeader } from '../../utils/createArtifactsContent'
 
 const DatasetsView = React.forwardRef(
   (
@@ -58,6 +58,7 @@ const DatasetsView = React.forwardRef(
       handleRefreshDatasets,
       handleRefreshWithFilters,
       handleRegisterDataset,
+      historyBackLink,
       isAllVersions,
       pageData,
       paginationConfigDatasetsRef,
@@ -65,8 +66,7 @@ const DatasetsView = React.forwardRef(
       requestErrorMessage,
       selectedDataset,
       setSearchDatasetsParams,
-      setSearchParams,
-      setSelectedDatasetMin,
+      setSelectedDataset,
       tableContent,
       tableHeaders,
       viewMode = null
@@ -83,16 +83,11 @@ const DatasetsView = React.forwardRef(
             {artifactsStore.loading && <Loader />}
             <div className="table-container">
               <div className="content__action-bar-wrapper">
-                {isAllVersions && (
-                  <HistoryBackLink
-                    itemName={datasetName}
-                    link={`/projects/${projectName}/datasets${getSavedSearchParams(window.location.search)}`}
-                  />
-                )}
+                {isAllVersions && <HistoryBackLink itemName={datasetName} link={historyBackLink} />}
                 <ActionBar
                   actionButtons={[
                     {
-                      variant: SECONDARY_BUTTON,
+                      variant: PRIMARY_BUTTON,
                       label: registerDatasetTitle,
                       className: 'action-button',
                       onClick: handleRegisterDataset
@@ -109,7 +104,7 @@ const DatasetsView = React.forwardRef(
                   <ArtifactsFilters artifacts={datasets} />
                 </ActionBar>
               </div>
-              {artifactsStore.loading ? null : tableContent.length === 0 ? (
+              {artifactsStore.loading ? null : tableContent.length === 0 && isEmpty(selectedDataset) ? (
                 <NoData
                   message={getNoDataMessage(
                     filters,
@@ -131,12 +126,12 @@ const DatasetsView = React.forwardRef(
                     getCloseDetailsLink={() =>
                       getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : DATASETS_TAB)
                     }
-                    handleCancel={() => setSelectedDatasetMin({})}
+                    handleCancel={() => setSelectedDataset({})}
                     pageData={pageData}
                     retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedDataset}
                     tableClassName="datasets-table"
-                    tableHeaders={tableHeaders ?? []}
+                    tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
                   >
                     {tableContent.map((tableItem, index) => (
                       <ArtifactsTableRow
@@ -193,13 +188,14 @@ DatasetsView.propTypes = {
   handleRefreshDatasets: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterDataset: PropTypes.func.isRequired,
+  historyBackLink: PropTypes.string.isRequired,
   isAllVersions: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   projectName: PropTypes.string.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedDataset: PropTypes.object.isRequired,
   setSearchDatasetsParams: PropTypes.func.isRequired,
-  setSelectedDatasetMin: PropTypes.func.isRequired,
+  setSelectedDataset: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   viewMode: PropTypes.string

@@ -108,7 +108,7 @@
           }
 
           &.create-new-menu {
-            background-color: $brightTurquoise;
+            background-color: $malibu;
             border: none;
 
             .select {
@@ -162,17 +162,20 @@
           min-width: fit-content;
 
           &-text {
-            min-width: 100%;
-            max-width: 100px;
+            display: flex;
+            align-items: center;
             margin-bottom: 16px;
             color: $primary;
-            font-weight: 500;
-            font-size: 1rem;
+            font-size: 1.25rem;
             line-height: 23px;
 
             @media screen and (min-width: 1600px) {
               font-size: 1.25rem;
             }
+          }
+
+          &-tip {
+            margin-left: 5px;
           }
 
           &.table-header {

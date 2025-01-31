@@ -148,9 +148,9 @@ const DetailsArtifacts = ({
 
       if (workflowId) {
         return dispatch(
-          fetchJob({ // todo remove this request in ML-8608 and use data from the selectedJob (it will be up to date)
+          fetchJob({
             project: job.project || params.projectName,
-            jobId: params.jobId,
+            jobId:  job.uid || params.jobId,
             iter: iteration
           })
         )

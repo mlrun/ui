@@ -61,7 +61,7 @@ export const generateCreateNewOptions = (
     }
   },
   {
-    label: 'ML Function',
+    label: 'ML function',
     id: 'mlFunction',
     handler: () => {
       setIsNewFunctionPopUpOpen(true)
@@ -69,19 +69,19 @@ export const generateCreateNewOptions = (
     hidden: !isDemoMode
   },
   {
-    label: 'Feature Set',
+    label: 'Feature set',
     id: 'featureSet',
     handler: () => setCreateFeatureSetsPanelIsOpen(true)
   },
   {
-    label: 'Register Artifact',
+    label: 'Register artifact',
     id: 'registerFile',
     handler: () => {
       openRegisterArtifactModal(ARTIFACT_TYPE)
     }
   },
   {
-    label: 'Register Model',
+    label: 'Register model',
     id: 'registerModel',
     handler: () => {
       openRegisterModelModal()
@@ -89,7 +89,7 @@ export const generateCreateNewOptions = (
     hidden: !isDemoMode
   },
   {
-    label: 'Register Dataset',
+    label: 'Register dataset',
     id: 'registerDataset',
     handler: () => {
       openRegisterArtifactModal(DATASET_TYPE)

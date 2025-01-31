@@ -111,13 +111,23 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
 
       {(entityType === FILTER_ALL_ITEMS || entityType === MODEL_MONITORING_APPLICATION) && (
         <div className="form-row">
-          <FormInput label="Entity ID" name={ENTITY_ID} placeholder="Search by ID" />
+          <FormInput
+            label="Entity ID"
+            name={ENTITY_ID}
+            placeholder="Search by ID"
+            tip="Search for case insensitive, full or partial strings"
+          />
           <FormOnChange handler={value => handleInputChange(value, ENTITY_ID)} name={ENTITY_ID} />
         </div>
       )}
       {entityType === JOB && (
         <div className="form-row">
-          <FormInput label={upperFirst(JOB)} name={JOB_NAME} placeholder="Search by job name" />
+          <FormInput
+            label={upperFirst(JOB)}
+            name={JOB_NAME}
+            placeholder="Search by job name"
+            tip="Search for case insensitive, full or partial strings"
+          />
           <FormOnChange handler={value => handleInputChange(value, JOB_NAME)} name={JOB_NAME} />
         </div>
       )}
@@ -128,6 +138,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
               label="Endpoint Application"
               name={ENDPOINT_APPLICATION}
               placeholder="Search by application"
+              tip="Search for case insensitive, full or partial strings"
             />
             <FormOnChange
               handler={value => handleInputChange(value, ENDPOINT_APPLICATION)}
@@ -139,6 +150,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
               label="Endpoint Result"
               name={ENDPOINT_RESULT}
               placeholder="Search by result"
+              tip="Search for case insensitive, full or partial strings"
             />
             <FormOnChange
               handler={value => handleInputChange(value, ENDPOINT_RESULT)}

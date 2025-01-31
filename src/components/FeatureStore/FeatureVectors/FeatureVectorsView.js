@@ -32,7 +32,7 @@ import { filtersConfig } from './featureVectors.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered } from '../../../hooks/useVirtualization.hook'
 import ActionBar from '../../ActionBar/ActionBar'
-import { SECONDARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
+import { PRIMARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
 import { createFeatureVectorTitle } from '../featureStore.util'
 import FeatureStoreFilters from '../FeatureStoreFilters'
 
@@ -72,7 +72,7 @@ const FeatureVectorsView = React.forwardRef(
               {
                 className: 'action-button',
                 label: createFeatureVectorTitle,
-                variant: SECONDARY_BUTTON,
+                variant: PRIMARY_BUTTON,
                 onClick: () => setCreateVectorPopUpIsOpen(true)
               }
             ]}

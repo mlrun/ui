@@ -24,7 +24,7 @@ import RegisterArtifactModal from '../../RegisterArtifactModal/RegisterArtifactM
 import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
 
 import { ARTIFACT_TYPE, DATASET_TYPE } from '../../../constants'
-import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { generateNuclioLink } from '../../../utils'
 import { isSubmitDisabled } from 'igz-controls/utils/form.util'
 
@@ -107,7 +107,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
                       navigate(`${base_url}/datasets`)
                     }
                   },
-                  variant: SECONDARY_BUTTON
+                  variant: PRIMARY_BUTTON
                 }
               ],
               // TODO: un-comment for 1.3
@@ -124,7 +124,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               //   disabled: isSubmitDisabled(formState),
               //   label: 'Register',
               //   onClick: formState.handleSubmit,
-              //   variant: SECONDARY_BUTTON
+              //   variant: PRIMARY_BUTTON
               // }],
 
               artifactKind: DATASET_TYPE,
@@ -161,7 +161,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
                       navigate(`${base_url}/files`)
                     }
                   },
-                  variant: SECONDARY_BUTTON
+                  variant: PRIMARY_BUTTON
                 }
               ],
               // [{
@@ -177,7 +177,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               //   disabled: isSubmitDisabled(formState),
               //   label: 'Register',
               //   onClick: formState.handleSubmit,
-              //   variant: SECONDARY_BUTTON
+              //   variant: PRIMARY_BUTTON
               // }],
               artifactKind: ARTIFACT_TYPE,
               params,
@@ -285,7 +285,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
                       navigate(`${base_url}/models/models`)
                     }
                   },
-                  variant: SECONDARY_BUTTON
+                  variant: PRIMARY_BUTTON
                 }
               ],
               // TODO: un-comment for 1.3
@@ -302,7 +302,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               //   disabled: isSubmitDisabled(formState),
               //   label: 'Register',
               //   onClick: formState.handleSubmit,
-              //   variant: SECONDARY_BUTTON
+              //   variant: PRIMARY_BUTTON
               // }],
               params,
               refresh: () => {}

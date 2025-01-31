@@ -29,7 +29,10 @@ import Select from '../../common/Select/Select'
 import MembersPopUpRow from './MembersPopUpRow'
 import { Button, ConfirmDialog, RoundedIcon, Tip } from 'igz-controls/components'
 
-import { TERTIARY_BUTTON, PRIMARY_BUTTON, SECONDARY_BUTTON } from 'igz-controls/constants'
+import {
+  TERTIARY_BUTTON,
+  PRIMARY_BUTTON
+} from 'igz-controls/constants'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
@@ -351,7 +354,7 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
             />
             <div className="new-member-btn">
               <Button
-                variant={SECONDARY_BUTTON}
+                variant={PRIMARY_BUTTON}
                 disabled={newMembers.length === 0 || !newMembersRole}
                 label="Add"
                 onClick={addNewMembers}
@@ -450,7 +453,7 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
             onClick={closeMemberPopUp}
           />
           <Button
-            variant={SECONDARY_BUTTON}
+            variant={PRIMARY_BUTTON}
             disabled={!areChangesMade()}
             label="Apply"
             onClick={applyMembersChanges}

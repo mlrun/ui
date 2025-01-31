@@ -17,18 +17,24 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { mainHttpClient } from '../httpClient'
+import { useCallback, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const alertsApi = {
-  getAlerts: (project, newConfig) => {
-    return mainHttpClient.get(`/projects/${project}/alert-activations`, newConfig)
-  },
-  getAlert: (project, alertName, newConfig) => {
-    return mainHttpClient.get(`/projects/${project}/alerts/${alertName}/activations`, newConfig)
-  },
-  getAlertById: (project, id) => {
-    return mainHttpClient.get(`/projects/${project}/alert-activations/${id}`)
-  }
+import { BE_PAGE } from '../constants'
+
+export const useRefreshAfterDelete = (paginationConfigRef, historyBackLink, responsePath) => {
+  const [refreshAfterDeleteTrigger, setRefreshAfterDeleteTrigger] = useState(null)
+  const navigate = useNavigate()
+
+  const refreshAfterDeleteCallback = useCallback(
+    response => {
+      if (response?.[responsePath]?.length === 0 && paginationConfigRef?.current?.[BE_PAGE] === 1) {
+        navigate(historyBackLink)
+        setRefreshAfterDeleteTrigger(Math.random())
+      }
+    },
+    [paginationConfigRef, responsePath, navigate, historyBackLink]
+  )
+
+  return [refreshAfterDeleteCallback, refreshAfterDeleteTrigger]
 }
-
-export default alertsApi

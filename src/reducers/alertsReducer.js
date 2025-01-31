@@ -41,7 +41,8 @@ import {
 const initialState = {
   alerts: [],
   error: null,
-  loading: false
+  loading: false,
+  alertLoading: false
 }
 
 const generateRequestParams = filters => {
@@ -71,11 +72,11 @@ const generateRequestParams = filters => {
     (entityType === FILTER_ALL_ITEMS || entityType === MODEL_MONITORING_APPLICATION) &&
     entityId
   ) {
-    params[ENTITY_ID] = `~${entityId}`
+    params[ENTITY_ID] = `~*${entityId}*`
   }
 
   if (entityType && entityType === JOB && filters?.[JOB_NAME].trim()) {
-    params[ENTITY_ID] = `~${filters?.[JOB_NAME]}*`
+    params[ENTITY_ID] = `~*${filters?.[JOB_NAME]}*`
   }
 
   const endpointApplication = filters?.[ENDPOINT_APPLICATION]?.trim()
@@ -158,6 +159,12 @@ export const fetchAlerts = createAsyncThunk(
   }
 )
 
+export const fetchAlertById = createAsyncThunk('fetchAlertById', ({ project, alertId }) => {
+  return alertsApi.getAlertById(project, alertId).then(({ data }) => {
+    return data ? parseAlerts([data])[0] : null
+  })
+})
+
 const alertsSlice = createSlice({
   name: 'alertsStore',
   initialState,
@@ -191,6 +198,15 @@ const alertsSlice = createSlice({
       .addCase(fetchAlerts.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload
+      })
+      .addCase(fetchAlertById.pending, state => {
+        state.alertLoading = true
+      })
+      .addCase(fetchAlertById.fulfilled, state => {
+        state.alertLoading = false
+      })
+      .addCase(fetchAlertById.rejected, state => {
+        state.alertLoading = false
       })
   }
 })

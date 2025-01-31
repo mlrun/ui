@@ -35,7 +35,7 @@ import { Button, ConfirmDialog } from 'igz-controls/components'
 import { FUNCTION_PANEL_MODE } from '../../types'
 import { runtimeSections } from './functionsPanel.util'
 import { JOB_KIND_JOB, PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
-import { LABEL_BUTTON, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { LABEL_BUTTON, PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
@@ -189,7 +189,7 @@ const FunctionsPanelView = ({
                   onClick={() => handleSave()}
                 />
                 <Button
-                  variant={SECONDARY_BUTTON}
+                  variant={PRIMARY_BUTTON}
                   label={functionsStore.newFunction.kind === JOB_KIND_JOB ? 'Create' : 'Deploy'}
                   onClick={() => handleSave(true)}
                   disabled={!checkValidation()}

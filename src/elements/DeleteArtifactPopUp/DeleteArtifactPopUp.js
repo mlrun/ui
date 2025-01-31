@@ -42,7 +42,14 @@ import { ReactComponent as AlertIcon } from 'igz-controls/images/alert-yellow.sv
 
 import './deleteArtifactPopUp.scss'
 
-const DeleteArtifactPopUp = ({ artifact, artifactType, category, filters, handleRefresh }) => {
+const DeleteArtifactPopUp = ({
+  artifact,
+  artifactType,
+  category,
+  filters,
+  refreshAfterDeleteCallback = null,
+  refreshArtifacts
+}) => {
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(true)
   const [disableConfirmButton, setDisableConfirmButton] = useState(false)
   const dispatch = useDispatch()
@@ -75,7 +82,8 @@ const DeleteArtifactPopUp = ({ artifact, artifactType, category, filters, handle
       params.projectName,
       artifact.db_key,
       artifact.uid,
-      handleRefresh,
+      refreshArtifacts,
+      refreshAfterDeleteCallback,
       filters,
       artifactType,
       category,
@@ -92,7 +100,8 @@ const DeleteArtifactPopUp = ({ artifact, artifactType, category, filters, handle
     category,
     dispatch,
     filters,
-    handleRefresh,
+    refreshArtifacts,
+    refreshAfterDeleteCallback,
     params.projectName
   ])
 
@@ -191,7 +200,8 @@ DeleteArtifactPopUp.propTypes = {
   artifactType: PropTypes.string.isRequired,
   category: PropTypes.string.isRequired,
   filters: PropTypes.object.isRequired,
-  handleRefresh: PropTypes.func.isRequired
+  refreshAfterDeleteCallback: PropTypes.func,
+  refreshArtifacts: PropTypes.func.isRequired
 }
 
 export default DeleteArtifactPopUp

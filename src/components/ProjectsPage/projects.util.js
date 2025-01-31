@@ -147,7 +147,8 @@ export const handleDeleteProjectError = (
   deletingProjectsRef,
   terminatePollRef,
   fetchMinimalProjects,
-  navigate
+  navigate,
+  refreshProjects
 ) => {
   if (error.response?.status === 412 && !deleteNonEmpty) {
     setConfirmData({
@@ -170,7 +171,8 @@ export const handleDeleteProjectError = (
           deletingProjectsRef,
           terminatePollRef,
           fetchMinimalProjects,
-          navigate
+          navigate,
+          refreshProjects
         )
       }
     })
@@ -402,7 +404,8 @@ export const handleDeleteProject = (
         deletingProjectsRef,
         terminatePollRef,
         fetchMinimalProjects,
-        navigate
+        navigate,
+        refreshProjects
       )
     })
 }

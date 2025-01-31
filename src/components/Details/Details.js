@@ -167,15 +167,29 @@ const Details = ({
         pageData.details.type === DOCUMENTS_TAB
       ) {
         setDetailsInfo(
-          generateArtifactsContent(pageData.details.type, selectedItem, params.projectName)
+          generateArtifactsContent(
+            pageData.details.type,
+            selectedItem,
+            params.projectName,
+            isDetailsPopUp
+          )
         )
       } else if (pageData.details.type === FUNCTIONS_PAGE) {
         setDetailsInfo(generateFunctionsContent(selectedItem))
       } else {
-        setDetailsInfo(generateFeatureStoreContent(pageData.details.type, selectedItem))
+        setDetailsInfo(
+          generateFeatureStoreContent(pageData.details.type, selectedItem, isDetailsPopUp)
+        )
       }
     }
-  }, [pageData.details.type, params.projectName, selectedItem, setDetailsInfo, location.search])
+  }, [
+    isDetailsPopUp,
+    location.search,
+    pageData.details.type,
+    params.projectName,
+    setDetailsInfo,
+    selectedItem
+  ])
 
   useEffect(() => {
     return () => {

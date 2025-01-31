@@ -96,6 +96,7 @@ const WorkflowsTable = React.forwardRef(
     abortJobRef
   ) => {
     const [dataIsLoading, setDataIsLoading] = useState(false)
+    const [rerunIsDisabled, setRerunIsDisabled] = useState(false)
     const [workflowsViewMode, setWorkflowsViewMode] = useState(WORKFLOW_GRAPH_VIEW)
     const workflowsStore = useSelector(state => state.workflowsStore)
     const filtersStore = useSelector(state => state.filtersStore)
@@ -362,7 +363,7 @@ const WorkflowsTable = React.forwardRef(
 
     const onDeleteJob = useCallback(
       job => {
-        handleDeleteJob(false, job, refreshWorkflow, filters, dispatch).then(() => {
+        handleDeleteJob(false, job, refreshWorkflow, null, filters, dispatch).then(() => {
           navigate(
             location.pathname
               .split('/')
@@ -399,7 +400,9 @@ const WorkflowsTable = React.forwardRef(
         dispatch(rerunWorkflow({ project: workflow.project, workflowId: workflow.id }))
           .unwrap()
           .then(() => {
-            handleRetry()
+            setTimeout(() => {
+              handleRetry()
+            }, 5000)
             dispatch(
               setNotification({
                 status: 200,
@@ -428,7 +431,8 @@ const WorkflowsTable = React.forwardRef(
           handleConfirmAbortJob,
           handleConfirmDeleteJob,
           toggleConvertedYaml,
-          handleRerun
+          handleRerun,
+          rerunIsDisabled
         )
     }, [
       handleRerunJob,
@@ -438,7 +442,8 @@ const WorkflowsTable = React.forwardRef(
       handleConfirmAbortJob,
       handleConfirmDeleteJob,
       toggleConvertedYaml,
-      handleRerun
+      handleRerun,
+      rerunIsDisabled
     ])
 
     const handleCancel = useCallback(() => {
@@ -672,6 +677,15 @@ const WorkflowsTable = React.forwardRef(
         setSelectedFunction({})
       }
     }, [params.functionHash, params.jobId, setItemIsSelected, setSelectedFunction, setSelectedJob])
+
+    useEffect(() => {
+      if (workflowsStore.workflows.rerunInProgress) {
+        setRerunIsDisabled(true)
+        setTimeout(() => {
+          setRerunIsDisabled(false)
+        }, 5000)
+      }
+    }, [workflowsStore.workflows.rerunInProgress])
 
     const virtualizationConfig = useVirtualization({
       rowsData: {

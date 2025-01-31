@@ -17,18 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { mainHttpClient } from '../httpClient'
 
-const alertsApi = {
-  getAlerts: (project, newConfig) => {
-    return mainHttpClient.get(`/projects/${project}/alert-activations`, newConfig)
-  },
-  getAlert: (project, alertName, newConfig) => {
-    return mainHttpClient.get(`/projects/${project}/alerts/${alertName}/activations`, newConfig)
-  },
-  getAlertById: (project, id) => {
-    return mainHttpClient.get(`/projects/${project}/alert-activations/${id}`)
-  }
+export const generateObjectNotInTheListMessage = (objectName = 'object') => {
+    return `The ${objectName} is not in the filtered list. Closing the details panel will return you to the current list.`
 }
-
-export default alertsApi

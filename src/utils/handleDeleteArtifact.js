@@ -29,6 +29,7 @@ export const handleDeleteArtifact = (
   key,
   uid,
   refreshArtifacts,
+  refreshAfterDeleteCallback,
   filters,
   artifactType,
   category,
@@ -43,7 +44,9 @@ export const handleDeleteArtifact = (
   )
     .unwrap()
     .then(() => {
-      refreshArtifacts(filters)
+      refreshArtifacts(filters).then(
+        response => refreshAfterDeleteCallback && refreshAfterDeleteCallback(response)
+      )
       return dispatch(
         setNotification({
           status: 200,

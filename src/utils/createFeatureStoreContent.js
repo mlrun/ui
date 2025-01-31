@@ -121,6 +121,13 @@ export const createFeatureSetsRowData = (featureSet, project, pageTab, showExpan
       },
       { ...getFeatureSetTargetCellValue(featureSet.targets) },
       {
+        id: `updated.${featureSet.ui.identifierUnique}`,
+        headerId: 'updated',
+        headerLabel: 'Updated',
+        value: featureSet.updated ? formatDatetime(featureSet.updated, 'N/A') : 'N/A',
+        className: 'table-cell-2'
+      },
+      {
         id: `buttonCopy.${featureSet.ui.identifierUnique}`,
         headerId: 'copy',
         value: '',
