@@ -14,7 +14,7 @@
 #
 # build stage
 # node:20.18.2-alpine used as 20-alpine
-FROM node:20.18.2-alpine as build-stage
+FROM quay.io/mlrun/node:20-alpine as build-stage
 
 RUN apk update && \
 	apk upgrade && \
@@ -23,7 +23,7 @@ RUN apk update && \
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install --omit=dev
+RUN npm install
 
 COPY . .
 RUN npm run build
