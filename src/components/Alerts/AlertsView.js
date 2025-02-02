@@ -97,7 +97,7 @@ const AlertsView = ({
               />
             ) : (
               <>
-              {alertsStore.alertLoading && <Loader />}
+                {alertsStore.alertLoading && <Loader />}
                 <Table
                   actionsMenu={[]}
                   getCloseDetailsLink={() =>
@@ -109,13 +109,15 @@ const AlertsView = ({
                   tableClassName="alerts-table"
                   handleCancel={handleCancel}
                   hideActionsMenu
-                  tableHeaders={tableContent[0]?.content ?? [
-                    {
-                      headerId: 'alertName',
-                      headerLabel: 'Alert Name',
-                      className: 'table-cell-name'
-                    }
-                  ]}
+                  tableHeaders={
+                    tableContent[0]?.content ?? [
+                      {
+                        headerId: 'alertName',
+                        headerLabel: 'Alert Name',
+                        className: 'table-cell-name'
+                      }
+                    ]
+                  }
                   withActionMenu={false}
                 >
                   {tableContent.map((tableItem, index) => {
@@ -140,7 +142,7 @@ const AlertsView = ({
                   })}
                 </Table>
                 <Pagination
-                  closeParamName={ALERTS_PAGE_PATH}
+                  closeParamName={isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE_PATH}
                   page={pageData.page}
                   paginationConfig={paginationConfigAlertsRef.current}
                 />
