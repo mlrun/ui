@@ -268,6 +268,11 @@ const action = {
 
     expect(hintText).equal(text)
   },
+  putToTestContextElementValue: async function(driver, testContext, element, pageValue) {
+    const pageElement = await driver.findElement(element)
+
+    testContext[pageValue] = await pageElement.getText()  
+  },
   scrollToWebElement
 }
 

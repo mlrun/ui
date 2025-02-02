@@ -548,18 +548,28 @@ module.exports = {
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
-    Empty_Description_Field: By.css('.item-info__details-wrapper .details-item:nth-of-type(1) .details-item__data-add-placeholder'),
-    Full_Description_Field: By.css('.item-info .details-item:nth-of-type(1) .details-item__data > div.data-ellipsis.tooltip-wrapper'),
+    Empty_Description_Field: By.css(
+      '.item-info__details-wrapper .details-item:nth-of-type(1) .details-item__data-add-placeholder'
+    ),
+    Full_Description_Field: By.css(
+      '.item-info .details-item:nth-of-type(1) .details-item__data > div.data-ellipsis.tooltip-wrapper'
+    ),
     Description_Input: textAreaGroup(
-      generateTextAreaGroup('.item-info__details-wrapper .details-item:nth-of-type(1) .form-field-textarea')
+      generateTextAreaGroup(
+        '.item-info__details-wrapper .details-item:nth-of-type(1) .form-field-textarea'
+      )
     ),
     Labels_Field: By.css(
       '.item-info__details .details-item:nth-of-type(2) .button-add-density_dense'
     ),
     Labels_Table: commonTable(featureSetsInfoPaneLabelsTable),
-    Apply_Button: By.css('.item-info__details-wrapper .details-item__input-wrapper .round-icon-cp:nth-of-type(2)'),
+    Apply_Button: By.css(
+      '.item-info__details-wrapper .details-item__input-wrapper .round-icon-cp:nth-of-type(2)'
+    ),
     Labels_Apply_Button: commonLabelsApplyButton,
-    Edit_Button: By.css('.item-info__details-wrapper .details-item__data .details-item__data-btn-edit')
+    Edit_Button: By.css(
+      '.item-info__details-wrapper .details-item__data .details-item__data-btn-edit'
+    )
   },
   featuresInfoPane: {
     Header: header,
@@ -593,7 +603,9 @@ module.exports = {
     Full_View_Button: fullViewButton,
     Header_Full_View: By.css('.table__item_big .item-header__data h3'),
     Updated_Full_View: By.css('.table__item_big .item-header__data span'),
-    Refresh_Button_Full_View: By.css('.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]'),
+    Refresh_Button_Full_View: By.css(
+      '.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]'
+    ),
     Action_Menu_Full_View: commonActionMenuFullView,
     Tabel_View_Button: tabelViewButton,
     Cross_Close_Button: crossCloseButton,
@@ -735,8 +747,10 @@ module.exports = {
     Full_View_Button: fullViewButton,
     Header_Full_View: By.css('.table__item_big .item-header__data h3'),
     Updated_Full_View: By.css('.table__item_big .item-header__data span'),
-    Refresh_Button_Full_View: By.css('.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]'),
-    Action_Menu_Full_View: commonActionMenuFullView, 
+    Refresh_Button_Full_View: By.css(
+      '.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]'
+    ),
+    Action_Menu_Full_View: commonActionMenuFullView,
     Tabel_View_Button: tabelViewButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]'),
@@ -784,7 +798,19 @@ module.exports = {
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Drift_Headers: commonTable(infoPaneDriftHeaders),
     Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
-    Overview_Sources_Headers: commonTable(infoPaneOverviewSourcesHeaders),
+    Overview_Sources_Headers: commonTable({
+      root: '.table-container [data-testid="detailsPanel"]',
+      header: {},
+      body: {
+        row: {
+          root: '[data-testid="sources"]',
+          fields: {
+            key: '.info-sources__table-key',
+            value: '.info-sources__table-value'
+          }
+        }
+      }
+    }),
     Overview_Hash_Header: labelComponent(
       generateLabelGroup(
         '.item-info__details:nth-of-type(1) .details-item:nth-of-type(1) .details-item__header',
@@ -794,7 +820,7 @@ module.exports = {
     ),
     Overview_UID_Header: labelComponent(
       generateLabelGroup(
-        '.item-info__details-wrapper:nth-of-type(2) .item-info__details .details-item:nth-of-type(6) .details-item__header',
+        '.item-info__details-wrapper:nth-of-type(2) .item-info__details .details-item:nth-of-type(5) .details-item__header',
         false,
         true
       )
@@ -812,7 +838,11 @@ module.exports = {
     Version_tag_Input_table_view: commonVersionTagInputTableView,
     Version_tag_Input_full_view: commonVersionTagInputFullView,
     Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
-    Version_tag_Input: commonVersionTagInput,
+    Version_tag_Input: commonVersionTagInput
+  },
+  modelEndpointsInfoPane: {
+    Header: By.css('[data-testid="detailsPanel"] .item-header__title'),
+    Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Choose_Metrics_Dropdown: By.css('[data-testid="metric-selector-field"]'),
     Date_Picker_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
@@ -836,7 +866,16 @@ module.exports = {
     Invocation_Graph: By.css('.stats-card .metrics__card-body-invocation'),
     Metrics_Empty_Select_Message: By.css('.metrics .metrics__empty-select'),
     Metric_App_Name: By.css('.metrics .metrics__app-name:nth-of-type(3)'),
-    Metrics_Card: By.css('.metrics .metrics__card:nth-of-type(4)')
+    Metrics_Card: By.css('.metrics .metrics__card:nth-of-type(4)'),
+    Search_By_Name_Filter_Input: inputGroup(
+      generateInputGroup(
+        '[data-testid="name-form-input"]',
+        true,
+        false
+      )
+    ),
+    Alerts_FilterBy_Button: By.css('[data-testid="detailsPanel"] [data-testid="filter-menu-btn-tooltip-wrapper"]'),
+    Alerts_Refresh_Button: By.css('[data-testid="detailsPanel"] [data-testid="refresh-tooltip-wrapper"]')
   },
   modelsRealTimePipelineInfoPane: {
     Arrow_Back: commonArrowBack,
@@ -845,10 +884,14 @@ module.exports = {
     Overview_Headers: commonTable(modelsRealTimeinfoPaneOverviewHeaders)
   },
   paginationInfoPane: {
-    BE_Pagination_Navigate_Prev: By.css('[data-testid="pagination-navigate-double-prev-btn"] button'),
-    BE_Pagination_Navigate_Next: By.css('[data-testid="pagination-navigate-next-double-btn"] button'),
-    FE_Pagination_Navigate_Next: By.css('[data-testid="pagination-navigate-next-btn"] button'), 
-    FE_Pagination_Navigate_Prev: By.css('[data-testid="pagination-navigate-prev-btn"] button'), 
+    BE_Pagination_Navigate_Prev: By.css(
+      '[data-testid="pagination-navigate-double-prev-btn"] button'
+    ),
+    BE_Pagination_Navigate_Next: By.css(
+      '[data-testid="pagination-navigate-next-double-btn"] button'
+    ),
+    FE_Pagination_Navigate_Next: By.css('[data-testid="pagination-navigate-next-btn"] button'),
+    FE_Pagination_Navigate_Prev: By.css('[data-testid="pagination-navigate-prev-btn"] button'),
     Pagination_Page_Number: By.css('.pagination-pages .pagination-page-number'),
     Pagination_Count: By.css('.pagination .pagination-items-count')
   }
