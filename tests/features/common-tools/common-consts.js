@@ -95,9 +95,11 @@ module.exports = {
     ]
   },
   Common_Lists: {
-    Action_Menu_List: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete'],
+    Action_Menu_List: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete', 'Delete all versions'],
     Action_Menu_List_Expanded: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete all'],
     Action_Menu_List_Dataset_Transition_Popup: ['Download', 'Copy URI', 'View YAML'],
+    Action_Menu_List_Function_Transition_Popup: ['View YAML'],
+    Action_Menu_List_Run_Transition_Popup: ['Run\'s resource monitoring', 'View YAML'],
     Handler_List: ['train'],
     Pods_Priority_List: ['Low', 'Medium', 'High'],
     Ranking_Criteria_List: ['Min', 'Max']
@@ -125,6 +127,8 @@ module.exports = {
     Serving_Action_Menu_Options: ['Edit', 'View YAML', 'Delete']
   },
   ML_Function_Info_Pane: {
+    Initialized_State: 'Initialized',
+    Ready_State: 'Ready',
     Tab_List: ['Overview', 'Code', 'Build Log'],
     Tab_List_Application_type: ['Overview', 'Build Log'],
     Overview_Headers: [
@@ -174,6 +178,7 @@ module.exports = {
   },
   Models_Info_Pane: {
     Tab_List: ['Overview'],
+    Tab_List_Two_Tabs: ['Overview', 'Preview'],
     Tab_List_Extended: ['Overview', 'Preview', 'Features', 'Statistics'],
     Overview_General_Headers: [
       'Hash:',
@@ -198,7 +203,7 @@ module.exports = {
     Overview_Sources_Headers: ['Name:', 'Path:']
   },
   Models_Endpoints_Info_Pane: {
-    Tab_List: ['Overview', 'Features Analysis', 'Metrics'],
+    Tab_List: ['Overview', 'Features Analysis', 'Metrics', 'Alerts'],
     Overview_General_Headers: [
       'UID:',
       'Model class:',
@@ -309,6 +314,8 @@ module.exports = {
   },
   Common_Tooltips: {
     FilterBy_Button: 'Filter',
+    FilterBy_Button_1: 'Filter (1)',
+    Show_All_Versions: 'Show all versions',
     Refresh_Button: 'Refresh',
     In_Process_Jobs: 'Aborting, Pending, Running',
     In_Process_Workflows: 'Running',
@@ -467,37 +474,20 @@ module.exports = {
   },
   Jobs_And_Workflows: {
     Tab_List: ['Monitor Jobs', 'Monitor Workflows', 'Schedule'],
-    Job_Action_Menu_Options: [
-      'Batch re-run',
-      "Run's resource monitoring",
-      'View YAML',
-      'Delete run'
-    ],
-    Job_List_Action_Menu_Options: [
-      'Batch re-run',
-      "Run's resource monitoring",
-      'View YAML',
-      'Delete run',
-      'Delete all runs'
-    ],
-    Job_Overview_Action_Menu_Options: [
-      'View YAML',
-      "Run's resource monitoring",
-      'Batch re-run',
-      'Delete run'
-    ],
-    Running_Job_Action_Menu_Options: ['Monitoring', 'Abort', 'View YAML'],
-    Delete_Run_Message:
-      /Are you sure you want to delete the run with the UID "(.+?)" of the job "(.+?)"\? Deleted runs can not be restored./,
-    Delete_All_Runs_Message:
-      /Are you sure you want to delete all runs of the job "(.+?)"\? Deleted runs can not be restored./,
+    Job_Action_Menu_Options: ['Batch re-run', 'Run\'s resource monitoring', 'View YAML', 'Delete run'],
+    Job_List_Action_Menu_Options: ['Batch re-run', 'Run\'s resource monitoring', 'View YAML', 'Delete run', 'Delete all runs'],
+    Job_Overview_Action_Menu_Options: ['View YAML', 'Run\'s resource monitoring', 'Batch re-run', 'Delete run'],
+    Running_Job_Action_Menu_Options: ['Run\'s resource monitoring', 'Abort', 'View YAML'],
+    Delete_Run_Message: /Are you sure you want to delete the run with the UID "(.+?)" of the job "(.+?)"\? Deleted runs can not be restored./,
+    Delete_All_Runs_Message: /Are you sure you want to delete all runs of the job "(.+?)"\? Deleted runs can not be restored./,
     Workflows_Action_Menu_Options: ['View YAML', 'Retry'],
     Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
-    Pending_Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'Abort', 'View YAML'],
+    Pending_Job_Action_Menu_Options: ['Batch re-run', 'Run\'s resource monitoring', 'Abort', 'View YAML'],
     Schedule_Action_Menu_Options: ['Run now', 'Edit', 'Delete', 'View YAML'],
     Workflows_Unsuccessful_Run_Message: 'Workflow did not run successfully\nRETRY'
   },
   Jobs_Monitor_Tab_Info_Pane: {
+    Pending_State: 'Pending',
     Tab_List: ['Overview', 'Inputs', 'Artifacts', 'Results', 'Logs', 'Pods'],
     Overview_Headers: [
       'UID:',
@@ -656,12 +646,10 @@ module.exports = {
     No_Data: 'No data to show',
     No_Features_Yet: 'No features found.',
     No_Consumer_Group_Yet: 'You haven’t created any consumer group yet',
-    No_Datasets_data:
-      'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
-    No_Files_data:
-      'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
-    No_Models_data:
-      'No data matches the filter: "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"'
+    No_Datasets_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
+    No_Files_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
+    No_Models_data: 'No data matches the filter: "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"',
+    No_Pods_data: 'Pods not found, it is likely because Kubernetes removed these pods listing'
   },
   Preview_Pop_Up: {
     Table_Header: ['Name', 'Path', 'Size', 'Updated']
