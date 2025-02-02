@@ -16,6 +16,7 @@
   cursor: pointer;
   overflow: hidden;
   opacity: 0;
+  max-height: 300px;
 
   &__progress-bar {
     position: absolute;
@@ -61,7 +62,7 @@
   &__body {
     display: flex;
     align-items: center;
-    margin: 5px 20px 5px 0;
+    margin: 5px 5px 5px 0;
     padding: 6px;
 
     &__button-retry {
@@ -79,6 +80,21 @@
       .icon-alert {
         width: 4px;
         height: 14px;
+      }
+    }
+
+    &__message {
+      width: calc(100% - 30px);
+      height: 100%;
+      overflow-y: auto;
+      align-content: center;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: rgba($white, 0.4);
+
+      &:hover {
+        background-color: rgba($white, 0.6);
       }
     }
 

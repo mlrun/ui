@@ -80,7 +80,8 @@ export const generateActionsMenu = (
   handleConfirmAbortJob,
   handleConfirmDeleteJob,
   toggleConvertedYaml,
-  handleRerun
+  handleRerun,
+  rerunIsDisabled
 ) => {
   if (job?.uid) {
     const jobKindIsAbortable = isJobKindAbortable(job, abortable_function_kinds)
@@ -143,6 +144,7 @@ export const generateActionsMenu = (
           onClick: toggleConvertedYaml
         },
         {
+          disabled: rerunIsDisabled,
           hidden: runningStates.includes(job?.state?.value),
           icon: <Rerun />,
           label: 'Retry',

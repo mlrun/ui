@@ -132,7 +132,7 @@ Feature: Models Page
   @MLM
   @passive
   @smoke
-  Scenario: MLM005 - Verify behaviour of Show iterations checkbox on Models tab
+  Scenario: MLM005 - Verify behaviour of Show iterations checkbox and Show all versions on Models tab
     Given open url
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
@@ -147,12 +147,29 @@ Feature: Models Page
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
     Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
-    Then check "expand_btn" visibility in "Models_Table" on "Models" wizard with 0 offset
-    Then click on cell with row index 1 in "expand_btn" column in "Models_Table" table on "Models" wizard
+    And select "Models" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
+    Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
+    Then verify "show_all_versions" option is present on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
+    Then verify "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions"
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
+    And wait load page
+    Then verify "History_Back_Button" element visibility on "Models" wizard
+    Then verify "Version_History_Title" element visibility on "Models" wizard
+    Then "Version_History_Title" element on "Models" should contains "Version history:" value
+    Then verify "Version_History_Model_Name" element visibility on "Models" wizard
+    Then "Version_History_Model_Name" element on "Models" should contains "transaction_fraud_xgboost" value
+    Then verify "Table_Refresh_Button" element visibility on "Models" wizard
+    Then verify "Train_Model_Button" element visibility on "Models" wizard
+    Then verify "Table_FilterBy_Button" element visibility on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
     Then click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then "Header" element on "Models_Info_Pane" should contains "transaction_fraud_xgboost" value
+    Then verify "Full_View_Button" element visibility on "Models_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "Models" wizard
     Then check "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
@@ -160,6 +177,17 @@ Feature: Models Page
     Then verify "Header" element not exists on "Models_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "Models" wizard
     Then "Show_Iterations_Checkbox" element should be checked on "FilterBy_Popup" wizard
+    Then click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
+    Then click on "Cross_Close_Button" element on "Models_Info_Pane" wizard
+    And wait load page
+    Then verify "Full_View_Button" element not exists on "Models_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element not exists on "Models_Info_Pane" wizard
+    Then click on "History_Back_Button" element on "Models" wizard
+    And wait load page
+    Then verify "Models_Table" element visibility on "Models" wizard
+    Then verify "History_Back_Button" element not exists on "Models" wizard
+    Then verify "Version_History_Title" element not exists on "Models" wizard
 
   @MLM
   @passive
@@ -421,11 +449,20 @@ Feature: Models Page
     Then uncheck "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then click on cell with row index 1 in "expand_btn" column in "Models_Table" table on "Models" wizard
-    Then select "View YAML" option in action menu on "Models" wizard in "Models_Table" table at row with "latest" value in "name_expand_btn" column
+    Then verify "show_all_versions" option is present on "Models" wizard in "Models_Table" table with "model_default" value in "name" column
+    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
+    Then verify "Action_Menu" element visibility on "Models_Info_Pane" wizard
+    Then select "View YAML" option in action menu on "Models_Info_Pane" wizard
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+    Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+    And wait load page
+    Then click on "Cross_Close_Button" element on "Models_Info_Pane" wizard
+    And wait load page
+    Then verify "Models_Table" element visibility on "Models" wizard
+    Then verify "YAML_Modal_Container" element not exists on "View_YAML" wizard
 
   @MLM
   @passive
@@ -459,7 +496,7 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
@@ -513,30 +550,82 @@ Feature: Models Page
     And wait load page
     Then verify action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then verify that in action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column "Delete" option is enabled
+    Then verify that in action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column "Delete all versions" option is enabled
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
     Then verify "Action_Menu" element visibility on "Models_Info_Pane" wizard
     Then verify "Action_Menu" dropdown element on "Models_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
     Then check that "Delete" option in action menu on "Models_Info_Pane" wizard is enabled
+    Then check that "Delete all versions" option in action menu on "Models_Info_Pane" wizard is enabled
+    Then verify "Edit_btn_table_view" element not exists on "Models_Info_Pane" wizard
+    Then click on "Cross_Close_Button" element on "Models_Info_Pane" wizard
+    And wait load page
+    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
+    Then select "Add a tag" option in action menu on "Models_Info_Pane" wizard
+    And wait load page
+    Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
+    Then verify "Close_Button" element visibility on "Add_Tag_Popup" wizard
+    Then verify "Title" element visibility on "Add_Tag_Popup" wizard
+    Then "Title" element on "Add_Tag_Popup" should contains "Add A Tag" value
+    Then verify "Input_Label" element visibility on "Add_Tag_Popup" wizard
+    Then "Input_Label" element on "Add_Tag_Popup" should contains "Model tag *" value
+    Then verify "Tag_Input" element visibility on "Add_Tag_Popup" wizard
+    Then verify "Add_Button" element visibility on "Add_Tag_Popup" wizard
+    Then "Add_Button" element on "Add_Tag_Popup" should contains "Add" value
+    Then verify "Cancel_Button" element visibility on "Add_Tag_Popup" wizard
+    Then "Cancel_Button" element on "Add_Tag_Popup" should contains "Cancel" value
+    Then type value "testTag" to "Tag_Input" field on "Add_Tag_Popup" wizard
+    Then click on "Add_Button" element on "Add_Tag_Popup" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was added successfully" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then click on "Cross_Close_Button" element on "Models_Info_Pane" wizard
+    And wait load page
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column
+    And wait load page
+    Then verify that 2 row elements are displayed in "Models_Table" on "Models" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then select "testTag" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    And wait load page
+    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then click on "Edit_btn_table_view" element on "Models_Info_Pane" wizard
     And wait load page
     When type value "" to "Version_tag_Input" field on "Models_Info_Pane" wizard
     Then click on "Apply_Button" element on "Models_Info_Pane" wizard
     Then click on "Apply_Changes_Button" element on "Models_Info_Pane" wizard
     And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was deleted successfully" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+    Then "No_Data_Message" element on "commonPagesHeader" should contains "No data matches the filter: \"Version tag: testTag\"" value
+    Then click on "History_Back_Button" element on "Models" wizard
+    And wait load page
     Then verify "Table_FilterBy_Button" element visibility on "Models" wizard
     Then click on "Table_FilterBy_Button" element on "Models" wizard
     Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then verify action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column should contains "Common_Lists"."Action_Menu_List_Expanded"
-    Then verify that in action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column "Delete" option is disabled
+    Then verify action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then verify that in action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column "Delete" option is enabled
+    Then verify that in action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column "Delete all versions" option is enabled
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column
+    And wait load page
+    Then verify that 1 row elements are displayed in "Models_Table" on "Models" wizard
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
-    Then check "Click to add" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
-    Then verify "Action_Menu" dropdown element on "Models_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
-    Then check that "Delete" option in action menu on "Models_Info_Pane" wizard is enabled
+    Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
 
   @MLM
   @passive
@@ -911,12 +1000,12 @@ Feature: Models Page
   Scenario: MLM031 - Verify behaviour of Real-Time Pipelines table
     Given open url
     And wait load page
-    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
     And wait load page
-    Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
+    Then verify breadcrumbs "project" label should be equal "default" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
@@ -925,9 +1014,8 @@ Feature: Models Page
     And select "Real-Time Pipelines" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
     Then verify "Real-Time Pipelines" tab is active in "Models_Tab_Selector" on "Models" wizard
-    Then check "expand_btn" visibility in "Real_Time_Pipelines_Table" on "Real_Time_Pipelines" wizard with 0 offset
-    Then save to context "name" column and "href" attribute on 1 row from "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
-    When click on cell with row index 1 in "name" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    Then save to context "name" column and "href" attribute on 2 row from "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    When click on cell with row index 2 in "name" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     And wait load page
     Then compare current browser URL with test "href" context value
     Then verify "Real_Time_Pipelines_Graph" element visibility on "Real_Time_Pipelines" wizard
@@ -938,12 +1026,58 @@ Feature: Models Page
     Then verify "Overview_Headers" on "Real_Time_Pipeline_Pane" wizard should contains "Real_Time_Pipeline_Pane"."Overview_Headers"
     Then click on "Arrow_Back" element on "Real_Time_Pipeline_Pane" wizard
     And wait load page
-    Then save to context "function" column and "href" attribute on 1 row from "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
-    Then click on cell with row index 1 in "function" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    Then click on cell with row index 2 in "function" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     And wait load page
-    Then verify breadcrumbs "tab" label should be equal "ML functions" value
-    Then compare current browser URL with test "href" context value
-    Then compare "Header" element value on "ML_Function_Info_Pane" wizard with test "function" context value
+    Then verify if "Modal_Transition_Popup" popup dialog appears
+    Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
+    Then "Title" element on "Modal_Transition_Popup" should contains "model-monitoring-stream" value
+    Then verify "Data_Status" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "State_Icon" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "State_Icon" element on "Modal_Transition_Popup" wizard should display hover tooltip "ML_Function_Info_Pane"."Initialized_State"
+    Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Refresh_Button" element on "Modal_Transition_Popup" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
+    Then click on "Refresh_Button" element on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Action_Menu" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Action_Menu" dropdown element on "Modal_Transition_Popup" wizard should contains "Common_Lists"."Action_Menu_List_Function_Transition_Popup"
+    Then select "View YAML" option in action menu on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then verify if "View_YAML" popup dialog appears
+    Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+    Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+    Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+    And wait load page
+    Then verify "Cross_Close_Button" element visibility on "Modal_Transition_Popup" wizard
+    Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then click on cell with row index 2 in "function" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    And wait load page
+    Then verify if "Modal_Transition_Popup" popup dialog appears
+    Then verify "Tab_Selector" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Tab_Selector" on "Modal_Transition_Popup" wizard should contains "ML_Function_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then verify "Overview_General_Headers" on "Modal_Transition_Popup" wizard should contains "ML_Function_Info_Pane"."Overview_Headers"
+    Then select "Code" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then verify "Code" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then verify "Code_Content" element visibility on "Modal_Transition_Popup" wizard
+    Then select "Build Log" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then verify "Build Log" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then verify "Title_Application_Log_Info" element visibility on "Modal_Transition_Popup" wizard
+    Then "Title_Application_Log_Info" element on "Modal_Transition_Popup" should contains "Application" value
+    Then verify "Content_Application_Log_Info" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Title_Function_Log_Info" element visibility on "Modal_Transition_Popup" wizard
+    Then "Title_Function_Log_Info" element on "Modal_Transition_Popup" should contains "Function" value
+    Then verify "Content_Function_Log_Info" element visibility on "Modal_Transition_Popup" wizard
+    Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then verify "Real_Time_Pipelines_Table" element visibility on "Real_Time_Pipelines" wizard
+    Then click on cell with row index 1 in "name" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    And wait load page
+    And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+    Then "No_Data_Message" element on "commonPagesHeader" should contains "The ingestion function has no steps and therefore no graph." value
 
   @MLM
   @smoke
@@ -957,20 +1091,19 @@ Feature: Models Page
     And wait load page
     And select "tab" with "Models" value in breadcrumbs menu
     And wait load page
-    Then verify redirection from "projects/default/models/INVALID" to "projects/default/models/models"
+    Then verify redirection from "projects/default/models/INVALID" to "projects/default/models/models?bePage=1&fePage=1"
     When click on cell with row index 3 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
-    Then verify redirection from "projects/default/models/INVALID/model_default/latest/0/overview" to "projects/default/models/models"
-    Then verify redirection from "projects/default/models/models/INVALID/latest/0/overview" to "projects/default/models/models/INVALID/latest/0/overview"
+    Then verify redirection from "projects/default/models/INVALID/model_default/:latest@188b0102-eff9-9a48-9a63-2bbd53e4102e/overview?bePage=1&fePage=1" to "projects/default/models/models?bePage=1&fePage=1"
+    Then verify redirection from "projects/default/models/models/INVALID/:latest@188b0102-eff9-9a48-9a63-2bbd53e4102e/overview?bePage=1&fePage=1" to "projects/default/models/models?bePage=1&fePage=1"
     And select "tab" with "Datasets" value in breadcrumbs menu
     And wait load page
     And select "tab" with "Models" value in breadcrumbs menu
     And wait load page
     When click on cell with row index 3 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
-    Then verify redirection from "projects/default/models/models/model_default/latest/0/INVALID" to "projects/default/models/models/model_default/latest/0/overview"
-    Then verify redirection from "projects/default/models/models/model_default/latest/0/INVALID" to "projects/default/models/models/model_default/latest/0/overview"
-    Then verify redirection from "projects/default/models/models/model_default/latest/INVALID/overview" to "projects/default/models/models"
+    Then verify redirection from "projects/default/models/models/model_default/:latest@188b0102-eff9-9a48-9a63-2bbd53e4102e/INVALID" to "projects/default/models/models/model_default/:latest@188b0102-eff9-9a48-9a63-2bbd53e4102e/overview?bePage=1&fePage=1"
+    Then verify redirection from "projects/default/models/models/model_default/INVALID/overview?bePage=1&fePage=1" to "projects/default/models/models"
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
@@ -1013,21 +1146,23 @@ Feature: Models Page
     Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
     Then verify "Model_Endpoints_Table" element visibility on "Model_Endpoints" wizard
     Then click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
-    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
-    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
-    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    And wait load page
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Header" element visibility on "Model_Endpoints_Info_Pane" wizard
     Then save to context "name" column on 1 row from "Model_Endpoints_Table" table on "Model_Endpoints" wizard
-    Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+    Then compare "Header" element value on "Model_Endpoints_Info_Pane" wizard with test "name" context value
 	  Then verify that row index 1 is active in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     Then verify that row index 2 is NOT active in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
-    Then click on cell with row index 2 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard  
+    Then click on cell with row index 2 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    And wait load page
     Then verify that row index 2 is active in "Model_Endpoints_Table" table on "Model_Endpoints" wizard   
     Then verify that row index 1 is NOT active in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
-    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
-    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
-    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Header" element visibility on "Model_Endpoints_Info_Pane" wizard
     Then save to context "name" column on 2 row from "Model_Endpoints_Table" table on "Model_Endpoints" wizard
-    Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+    Then compare "Header" element value on "Model_Endpoints_Info_Pane" wizard with test "name" context value
 
   @MLM
   @smoke
@@ -1069,18 +1204,37 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with row index 3 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
     Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
+    Then verify "Edit_btn_table_view" element not exists on "Models_Info_Pane" wizard
+    Then select "Add a tag" option in action menu on "Models_Info_Pane" wizard
+    And wait load page
+    Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
+    Then type value "modelTag" to "Tag_Input" field on "Add_Tag_Popup" wizard
+    Then click on "Add_Button" element on "Add_Tag_Popup" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was added successfully" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then click on "Cross_Close_Button" element on "Models_Info_Pane" wizard
+    And wait load page
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "survival-curves_km-model" value in "name" column
+    And wait load page
+    When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then click on "Edit_btn_table_view" element on "Models_Info_Pane" wizard    
-    Then verify "Version_tag_Input_table_view" on "Models_Info_Pane" wizard should contains "latest" value
+    Then verify "Version_tag_Input_table_view" on "Models_Info_Pane" wizard should contains "modelTag" value
     Then click on "Full_View_Button" element on "Models_Info_Pane" wizard
     Then verify "Cross_Close_Button" element not exists on "Models_Info_Pane" wizard
     Then click on "Edit_btn_full_view" element on "Models_Info_Pane" wizard
-    Then verify "Version_tag_Input_full_view" on "Models_Info_Pane" wizard should contains "latest" value   
+    Then verify "Version_tag_Input_full_view" on "Models_Info_Pane" wizard should contains "modelTag" value   
     Then click on "Tabel_View_Button" element on "Models_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
 
@@ -1089,17 +1243,19 @@ Feature: Models Page
   Scenario: MLM021 - Check that version tag dropdown shows all tags on filters wizard on Models page
     Given open url
     And wait load page
-    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "survival-curves_km-model" value in "name" column
+    And wait load page
     When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
-    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
+    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Two_Tabs"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
-    Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
+    Then check "modelTag" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
     Then click on "Edit_btn_table_view" element on "Models_Info_Pane" wizard
     And wait load page
     When type value "newTag" to "Version_tag_Input" field on "Models_Info_Pane" wizard
@@ -1129,18 +1285,41 @@ Feature: Models Page
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"   
     Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
+    Then verify "Edit_btn_table_view" element not exists on "Models_Info_Pane" wizard
+    Then select "Add a tag" option in action menu on "Models_Info_Pane" wizard
+    And wait load page
+    Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
+    Then type value "newModelTag" to "Tag_Input" field on "Add_Tag_Popup" wizard
+    Then click on "Add_Button" element on "Add_Tag_Popup" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was added successfully" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then click on "Cross_Close_Button" element on "Models_Info_Pane" wizard
+    And wait load page
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
+    And wait load page
+    When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then click on "Edit_btn_table_view" element on "Models_Info_Pane" wizard
     Then type value "" to "Version_tag_Input" field on "Models_Info_Pane" wizard
     Then click on "Apply_Button" element on "Models_Info_Pane" wizard
     Then click on "Apply_Changes_Button" element on "Models_Info_Pane" wizard
     And wait load page
-    Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
     And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was deleted successfully" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    And wait load page
+    Then verify that 1 row elements are displayed in "Models_Table" on "Models" wizard
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
-    Then "Version_Tag_Input_Placeholder" element on "Models_Info_Pane" should contains "Click to add" value
+    Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
 
   @MLM
   @smoke
@@ -1153,14 +1332,35 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
+    And wait load page
+    Then "Version_Tag_Value" element on "FilterBy_Popup" should contains "latest" attribute value
     Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then click on cell with row index 3 in "name" column in "Models_Table" table on "Models" wizard
+    Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
+    Then select "Add a tag" option in action menu on "Models" wizard in "Models_Table" table at row with "transaction_fraud_xgboost" value in "name" column
     And wait load page
-    Then save to context "name" column on 3 row from "Models_Table" table on "Models" wizard
-    Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
-    Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
+    Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
+    Then type value "nextModelTag" to "Tag_Input" field on "Add_Tag_Popup" wizard
+    Then click on "Add_Button" element on "Add_Tag_Popup" wizard
+    And wait load page
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was added successfully" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
+    And wait load page
+    Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then "Version_Tag_Value" element on "FilterBy_Popup" should contains "All" attribute value
+    When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
+    When save to context "versionHistoryName" page value from "Version_History_Model_Name" element on "Models" wizard
+    Then compare "Header" element value on "Models_Info_Pane" wizard with test "versionHistoryName" context value
+    Then check "nextModelTag" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
     Then click on "Edit_btn_table_view" element on "Models_Info_Pane" wizard
     Then type value "latest123456" to "Version_tag_Input" field on "Models_Info_Pane" wizard
     Then click on "Apply_Button" element on "Models_Info_Pane" wizard
@@ -1170,8 +1370,15 @@ Feature: Models Page
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
     Then check "latest123456" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
-    Then save to context "name" column on 3 row from "Models_Table" table on "Models" wizard
-    Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+    When save to context "versionHistoryName" page value from "Version_History_Model_Name" element on "Models" wizard
+    Then compare "Header" element value on "Models_Info_Pane" wizard with test "versionHistoryName" context value
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then "Version_Tag_Value" element on "FilterBy_Popup" should contains "All" attribute value
+    Then click on "History_Back_Button" element on "Models" wizard
+    And wait load page
+    Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then "Version_Tag_Value" element on "FilterBy_Popup" should contains "All" attribute value
 
   @MLM
   @smoke
@@ -1187,43 +1394,43 @@ Feature: Models Page
     And wait load page
     When click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     And wait load page
-    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Tab_List"
-    Then select "Metrics" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
-    Then verify "Choose_Metrics_Dropdown" element visibility on "Models_Info_Pane" wizard
-    Then "Choose_Metrics_Dropdown" element on "Models_Info_Pane" should contains "Choose Metrics..." value
-    Then verify "Date_Picker_Filter_Dropdown" element visibility on "Models_Info_Pane" wizard
-    Then verify "Date_Picker_Filter_Dropdown" dropdown on "Models_Info_Pane" wizard selected option value "Past 24 hours"
-    Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Models_Info_Pane" wizard should contains "Dropdown_Options"."Metrics_Date_Picker_Filter_Options"
-    Then verify "Endpoint_Call_Count" element visibility on "Models_Info_Pane" wizard
-    Then verify "Invocation_Collapse_Title" element visibility on "Models_Info_Pane" wizard
-    And hover "Invocation_Collapse_Title" component on "Models_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Tab_List"
+    Then select "Metrics" tab in "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Choose_Metrics_Dropdown" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then "Choose_Metrics_Dropdown" element on "Model_Endpoints_Info_Pane" should contains "Choose Metrics..." value
+    Then verify "Date_Picker_Filter_Dropdown" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Date_Picker_Filter_Dropdown" dropdown on "Model_Endpoints_Info_Pane" wizard selected option value "Past 24 hours"
+    Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Model_Endpoints_Info_Pane" wizard should contains "Dropdown_Options"."Metrics_Date_Picker_Filter_Options"
+    Then verify "Endpoint_Call_Count" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Invocation_Collapse_Title" element visibility on "Model_Endpoints_Info_Pane" wizard
+    And hover "Invocation_Collapse_Title" component on "Model_Endpoints_Info_Pane" wizard
     And wait load page
-    Then click on "Expand_Collapse_Invocation_Card_Button" element on "Models_Info_Pane" wizard
-    Then verify "Invocation_Title" element visibility on "Models_Info_Pane" wizard
-    Then "Invocation_Title" element on "Models_Info_Pane" should contains "Endpoint call count" value
-    Then verify "Invocation_Drift_Icon" element visibility on "Models_Info_Pane" wizard
-    Then verify "Invocation_Drift_Up" element visibility on "Models_Info_Pane" wizard
-    Then verify "Invocation_Selected_Date" element visibility on "Models_Info_Pane" wizard
-    Then "Invocation_Selected_Date" element on "Models_Info_Pane" should contains "last 24 hours" value
-    Then verify "Invocation_Total_Title" element visibility on "Models_Info_Pane" wizard
-    Then "Invocation_Total_Title" element on "Models_Info_Pane" should contains "Total" value
-    Then verify "Invocation_Total_Score" element visibility on "Models_Info_Pane" wizard
-    Then verify "Invocation_Graph" element visibility on "Models_Info_Pane" wizard
-    Then verify "Metrics_Empty_Select_Message" element visibility on "Models_Info_Pane" wizard
-    Then "Metrics_Empty_Select_Message" component on "Models_Info_Pane" should contains "Messages"."Metrics_Empty_Select_Message"
-    Then click on "Choose_Metrics_Dropdown" element on "Models_Info_Pane" wizard
+    Then click on "Expand_Collapse_Invocation_Card_Button" element on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Invocation_Title" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then "Invocation_Title" element on "Model_Endpoints_Info_Pane" should contains "Endpoint call count" value
+    Then verify "Invocation_Drift_Icon" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Invocation_Drift_Up" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Invocation_Selected_Date" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then "Invocation_Selected_Date" element on "Model_Endpoints_Info_Pane" should contains "last 24 hours" value
+    Then verify "Invocation_Total_Title" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then "Invocation_Total_Title" element on "Model_Endpoints_Info_Pane" should contains "Total" value
+    Then verify "Invocation_Total_Score" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Invocation_Graph" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Metrics_Empty_Select_Message" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then "Metrics_Empty_Select_Message" component on "Model_Endpoints_Info_Pane" should contains "Messages"."Metrics_Empty_Select_Message"
+    Then click on "Choose_Metrics_Dropdown" element on "Model_Endpoints_Info_Pane" wizard
     And wait load page
     Then "Hellinger_Mean_Metrics_Checkbox" element should be unchecked in "Evidently_App_Test_Accordion" on "Metrics_Selector_Popup" wizard
     Then check "Hellinger_Mean_Metrics_Checkbox" element in "Evidently_App_Test_Accordion" on "Metrics_Selector_Popup" wizard
     And wait load page
     Then click on "Metrics_Apply_Button" element on "Metrics_Selector_Popup" wizard
     And wait load page
-    Then "Choose_Metrics_Dropdown" element on "Models_Info_Pane" should contains "1 metric selected" value
-    Then verify "Metric_App_Name" element visibility on "Models_Info_Pane" wizard
-    Then "Metric_App_Name" element on "Models_Info_Pane" should contains "evidently-app-test" value
-    Then verify "Metrics_Card" element visibility on "Models_Info_Pane" wizard
-    Then click on "Choose_Metrics_Dropdown" element on "Models_Info_Pane" wizard
+    Then "Choose_Metrics_Dropdown" element on "Model_Endpoints_Info_Pane" should contains "1 metric selected" value
+    Then verify "Metric_App_Name" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then "Metric_App_Name" element on "Model_Endpoints_Info_Pane" should contains "evidently-app-test" value
+    Then verify "Metrics_Card" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then click on "Choose_Metrics_Dropdown" element on "Model_Endpoints_Info_Pane" wizard
     And wait load page
     Then uncheck "Hellinger_Mean_Metrics_Checkbox" element in "Evidently_App_Test_Accordion" on "Metrics_Selector_Popup" wizard
     And wait load page
@@ -1243,8 +1450,8 @@ Feature: Models Page
     And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
-    Then select "Metrics" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
-    Then click on "Choose_Metrics_Dropdown" element on "Models_Info_Pane" wizard
+    Then select "Metrics" tab in "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard
+    Then click on "Choose_Metrics_Dropdown" element on "Model_Endpoints_Info_Pane" wizard
     And wait load page
     Then verify "Search_Metrics_Input" element visibility on "Metrics_Selector_Popup" wizard
     Then verify "Accordion_Header" element visibility in "Evidently_App_Test_Accordion" on "Metrics_Selector_Popup" wizard
@@ -1294,6 +1501,7 @@ Feature: Models Page
     And wait load page
     Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
     And wait load page
+    And wait load page
     Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
     And wait load page
     And wait load page
@@ -1325,6 +1533,7 @@ Feature: Models Page
     Then select "Delete" option in action menu on "Models_Info_Pane" wizard
     And wait load page
     Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
+    And wait load page
     And wait load page
     Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
     And wait load page
@@ -1373,3 +1582,33 @@ Feature: Models Page
     Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
     Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     Then check "model_default" value not in "name" column in "Models_Table" table on "Models" wizard
+
+  @MLM
+  @smoke
+  Scenario: MLM038 - Check components in Alerts tab on Model Endpoint info pane
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    And wait load page
+    When click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    And wait load page
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Tab_List"
+    Then select "Alerts" tab in "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Search_By_Name_Filter_Input" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Date_Picker_Filter_Dropdown" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Date_Picker_Filter_Dropdown" dropdown on "Model_Endpoints_Info_Pane" wizard selected option value "Past 24 hours"
+    Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Model_Endpoints_Info_Pane" wizard should contains "Dropdown_Options"."Metrics_Date_Picker_Filter_Options"
+    Then verify "Alerts_FilterBy_Button" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then click on "Alerts_FilterBy_Button" element on "Model_Endpoints_Info_Pane" wizard
+    Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+    Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+    Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+    Then verify "Alerts_Refresh_Button" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Alerts_Refresh_Button" element on "Model_Endpoints_Info_Pane" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
+    Then click on "Alerts_Refresh_Button" element on "Model_Endpoints_Info_Pane" wizard

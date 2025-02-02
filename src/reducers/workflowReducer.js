@@ -29,7 +29,8 @@ const initialState = {
   workflows: {
     data: [],
     loading: false,
-    error: null
+    error: null,
+    rerunInProgress: false
   },
   activeWorkflow: {
     data: {},
@@ -150,6 +151,15 @@ const workflowsSlice = createSlice({
         loading: false,
         error: action.payload
       }
+    })
+    builder.addCase(rerunWorkflow.fulfilled, state => {
+      state.workflows.rerunInProgress = true
+    })
+    builder.addCase(rerunWorkflow.pending, state => {
+      state.workflows.rerunInProgress = false
+    })
+    builder.addCase(rerunWorkflow.rejected, state => {
+      state.workflows.rerunInProgress = false
     })
   }
 })

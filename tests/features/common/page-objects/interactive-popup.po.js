@@ -526,7 +526,7 @@ const functionSelectionTabs = {
     row: {
       root: '.content-menu__item',
       fields: {
-        key: 'a'
+        key: ''
       }
     }
   }
@@ -803,13 +803,23 @@ module.exports = {
   modalTransitionPopup: {
     Title: By.css('.table__item-popup .item-header__title'),
     Data_Status: By.css('.table__item-popup .item-header__status-row .updated'),
+    State_Icon: By.css('[data-testid="modal"] [data-testid="detailsPanel"] .state'),
     Refresh_Button: By.css('.table__item-popup .item-header__buttons [data-testid="refresh"]'),
     Action_Menu: actionMenu(actionMenuStructureTransitionPopup),
-    Cross_Close_Button: By.css('.table__item-popup .item-header__buttons [data-testid="details-close-btn"]'),
+    Cross_Close_Button: By.css(
+      '.table__item-popup .item-header__buttons [data-testid="details-close-btn"]'
+    ),
     Tab_Selector: commonTable(infoPaneTabSelector),
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
     Overview_Sources_Headers: commonTable(infoPaneOverviewSourcesHeaders),
+    Code_Content: By.css('.item-info .table__item_code__content'),
+    Title_Application_Log_Info: By.css('.item-info > div > h3:nth-of-type(1)'),
+    Content_Application_Log_Info: By.css('.item-info .table__item-logs:nth-of-type(1)'),
+    Title_Function_Log_Info: By.css('.item-info > div > h3:nth-of-type(2)'),
+    Content_Function_Log_Info: By.css('.item-info .table__item-logs:nth-of-type(2)'),
+    Logs_Text_container: By.css('.table__item .table__item-logs-content'),
+    Logs_Refresh_Button: By.css('.table__item .logs-refresh')
   },
   modalWizardForm: {
     Title: By.css('.modal .modal__header-title'),
@@ -1642,6 +1652,14 @@ module.exports = {
     ),
     Table_Project_Filter_Input: commonProjectFilterInput,
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
+    Version_Tag_Value: inputGroup(
+      generateInputGroup(
+        '[data-testid="pop-up-dialog"] .form-tag-filter .form-tag-filter__input-wrapper',
+        true,
+        false,
+        true
+      )
+    ),
     Status_Filter_Element: By.css('[data-testid="state-form-field-select"]'),
     Status_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
@@ -1771,12 +1789,7 @@ module.exports = {
       )
     ),
     Table_Entity_Filter_Input: inputGroup(
-      generateInputGroup(
-        '[data-testid="entities-form-field-input"]',
-        true,
-        false,
-        true
-      )
+      generateInputGroup('[data-testid="entities-form-field-input"]', true, false, true)
     ),
     Clear_Button: By.css('[data-testid="filter-clear-btn"]'),
     Apply_Button: By.css('[data-testid="filter-apply-btn"]')
@@ -1791,7 +1804,9 @@ module.exports = {
   notificationPopUp: {
     Title: By.css('#overlay_container .notification__body'),
     Notification_Pop_Up: By.css('#overlay_container .notification__body'),
-    Notification_Pop_Up_Cross_Close_Button: By.css('#overlay_container .notification__button-close'),
+    Notification_Pop_Up_Cross_Close_Button: By.css(
+      '#overlay_container .notification__button-close'
+    ),
     Retry_Button: By.css('#overlay_container .notification__body .notification__body__button-retry')
   },
   addTagPopup: {

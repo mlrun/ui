@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useReducer, useCallback, useEffect, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
 import DetailsInfoView from './DetailsInfoView'
@@ -50,10 +50,15 @@ const DetailsInfo = React.forwardRef(
     },
     applyChangesRef
   ) => {
+    const location = useLocation()
     const [detailsInfoState, detailsInfoDispatch] = useReducer(detailsInfoReducer, initialState)
     const params = useParams()
     const editItemRef = useRef()
     const dispatch = useDispatch()
+    const pathnameWithoutTab = useMemo(
+      () => location.pathname.substring(0, location.pathname.lastIndexOf(params.tab)),
+      [location.pathname, params.tab]
+    )
 
     const onApplyChanges = useCallback(
       event => {
@@ -69,12 +74,13 @@ const DetailsInfo = React.forwardRef(
 
     useEffect(() => {
       return () => {
-        detailsInfoDispatch({
-          type: detailsInfoActions.RESET_EDIT_MODE
-        })
-        dispatch(detailsActions.setEditMode(false))
+        if (!isDetailsPopUp) {
+          detailsInfoDispatch({
+            type: detailsInfoActions.RESET_EDIT_MODE
+          })
+        }
       }
-    }, [detailsInfoDispatch, dispatch, params.name])
+    }, [detailsInfoDispatch, isDetailsPopUp, pathnameWithoutTab])
 
     useEffect(() => {
       window.addEventListener('click', onApplyChanges)
@@ -108,8 +114,8 @@ const DetailsInfo = React.forwardRef(
     )
 
     const sources = useMemo(
-      () => generateSourcesDetailsInfo(selectedItem, params.projectName),
-      [params.projectName, selectedItem]
+      () => generateSourcesDetailsInfo(selectedItem),
+      [selectedItem]
     )
 
     const producer = useMemo(

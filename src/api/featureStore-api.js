@@ -70,13 +70,20 @@ const featureStoreApi = {
     mainHttpClient.get(`/projects/${project}/feature-sets/*/tags`, config),
   fetchFeatureVectorsTags: (project, config) =>
     mainHttpClient.get(`/projects/${project}/feature-vectors/*/tags`, config),
-  getEntity: (project, entity) =>
-    mainHttpClientV2.get(`/projects/${project}/entities`, {
-      params: { name: entity }
-    }),
+  getEntity: (project, entity, labels) => {
+    const params = { name: entity }
+
+    if (labels) {
+      params.labels = labels
+    }
+
+    return mainHttpClientV2.get(`/projects/${project}/entities`, {
+      params
+    })
+  },
   getEntities: (project, filters, config) =>
     fetchFeatureStoreContent(`/projects/${project}/entities`, filters, config ?? {}, true, true),
-  getExpandedFeatureSet: (project, featureSet, tag) => {
+  getExpandedFeatureSet: (project, featureSet, tag, labels) => {
     const params = {
       name: featureSet,
       format: 'minimal'
@@ -84,6 +91,10 @@ const featureStoreApi = {
 
     if (tag !== TAG_FILTER_ALL_ITEMS) {
       params.tag = tag
+    }
+
+    if (labels) {
+      params.labels = labels
     }
 
     return mainHttpClient.get(`/projects/${project}/feature-sets`, {
@@ -105,13 +116,17 @@ const featureStoreApi = {
       true
     )
   },
-  getFeatureVector: (project, featureVector, tag) => {
+  getFeatureVector: (project, featureVector, tag, labels) => {
     const params = {
       name: featureVector
     }
 
     if (tag !== TAG_FILTER_ALL_ITEMS) {
       params.tag = tag
+    }
+
+    if (labels) {
+      params.labels = labels
     }
 
     return mainHttpClient.get(`/projects/${project}/feature-vectors`, {
@@ -129,10 +144,17 @@ const featureStoreApi = {
       true
     )
   },
-  getFeature: (project, feature) =>
-    mainHttpClientV2.get(`/projects/${project}/features`, {
-      params: { name: feature }
-    }),
+  getFeature: (project, feature, labels) => {
+    const params = { name: feature }
+
+    if (labels) {
+      params.labels = labels
+    }
+
+    return mainHttpClientV2.get(`/projects/${project}/features`, {
+      params
+    })
+  },
   getFeatures: (project, filters, config) =>
     fetchFeatureStoreContent(
       `/projects/${project}/${FEATURES_TAB}`,

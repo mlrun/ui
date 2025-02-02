@@ -52,10 +52,8 @@ const DetailsInfoItem = React.forwardRef(
       },
       currentField = '',
       detailsInfoDispatch = () => {},
-      detailsInfoState = {},
       editableFieldType = null,
       formState,
-      func = '',
       handleDiscardChanges,
       handleFinishEdit = () => {},
       info = null,
@@ -84,7 +82,7 @@ const DetailsInfoItem = React.forwardRef(
           chipsData={chipsData}
           currentField={currentField}
           detailsInfoDispatch={detailsInfoDispatch}
-          detailsInfoState={detailsInfoState}
+          detailsStore={detailsStore}
           editableFieldType={editableFieldType}
           formState={formState}
           handleFinishEdit={handleFinishEdit}
@@ -150,7 +148,7 @@ const DetailsInfoItem = React.forwardRef(
             className={`details-item__${chipsClassName}`}
             delimiter={chipsData.delimiter}
             elements={chipsData.chips}
-            isEditMode={chipsData.isEditEnabled ?? !isDetailsPopUp}
+            isEditMode={!isDetailsPopUp && chipsData.isEditEnabled}
             visibleChipsMaxLength="all"
           />
         </div>
@@ -332,7 +330,6 @@ DetailsInfoItem.propTypes = {
   }),
   currentField: PropTypes.string,
   detailsInfoDispatch: PropTypes.func,
-  detailsInfoState: PropTypes.object,
   editableFieldType: PropTypes.string,
   formState: PropTypes.shape({}),
   func: PropTypes.string,

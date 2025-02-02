@@ -35,7 +35,7 @@ import Table from '../Table/Table'
 
 import { ALL_VERSIONS_PATH, DATASETS_PAGE, DATASETS_TAB, FULL_VIEW_MODE } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
-import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { registerDatasetTitle } from './datasets.util'
@@ -87,7 +87,7 @@ const DatasetsView = React.forwardRef(
                 <ActionBar
                   actionButtons={[
                     {
-                      variant: SECONDARY_BUTTON,
+                      variant: PRIMARY_BUTTON,
                       label: registerDatasetTitle,
                       className: 'action-button',
                       onClick: handleRegisterDataset

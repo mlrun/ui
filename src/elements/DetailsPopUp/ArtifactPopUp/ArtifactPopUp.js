@@ -38,10 +38,24 @@ import {
   generateActionsMenu as generateModelActionsMenu,
   generatePageData as generateModelPageData
 } from '../../../components/ModelsPage/Models/models.util'
-
-import { fetchDataSets, fetchFiles, fetchModels } from '../../../reducers/artifactsReducer'
-import { DATASETS_TAB, FILES_TAB, MODEL_TYPE, MODELS_TAB } from '../../../constants'
+import {
+    generateActionsMenu as generateDocumentActionsMenu,
+    generatePageData as generateDocumentPageData
+} from '../../../components/Documents/documents.util'
+import {
+    DATASET_TYPE,
+    DATASETS_TAB,
+    DOCUMENT_TYPE,
+    DOCUMENTS_TAB,
+    FILES_TAB,
+    MODEL_TYPE,
+    MODELS_TAB
+} from '../../../constants'
 import { toggleYaml } from '../../../reducers/appReducer'
+import artifactsApi from '../../../api/artifacts-api'
+import { parseArtifacts } from '../../../utils/parseArtifacts'
+import { generateArtifacts } from '../../../utils/generateArtifacts'
+import { filterArtifacts } from '../../../utils/filterArtifacts'
 
 const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
   const dispatch = useDispatch()
@@ -51,26 +65,33 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
   const viewMode = getViewMode(window.location.search)
 
   const artifactContext = useMemo(() => {
-    return artifactData.kind === DATASETS_TAB
+    return [DATASETS_TAB, DATASET_TYPE].includes(artifactData.kind)
       ? {
           type: DATASETS_TAB,
           generateActionsMenu: generateDatasetActionsMenu,
           pageData: generateDatasetPageData(selectedArtifact, viewMode, {}, true),
-          fetchArtifact: fetchDataSets
+          fetchArtifact: artifactsApi.getDataSets
         }
-      : artifactData.kind === MODEL_TYPE
+      : [MODELS_TAB, MODEL_TYPE].includes(artifactData.kind)
         ? {
             type: MODELS_TAB,
             generateActionsMenu: generateModelActionsMenu,
             pageData: generateModelPageData(selectedArtifact, viewMode),
-            fetchArtifact: fetchModels
+            fetchArtifact: artifactsApi.getModels
           }
-        : {
-            type: FILES_TAB,
-            generateActionsMenu: generateFileActionsMenu,
-            pageData: generateFilePageData(viewMode),
-            fetchArtifact: fetchFiles
-          }
+        : [DOCUMENTS_TAB, DOCUMENT_TYPE].includes(artifactData.kind)
+          ? {
+              type: DOCUMENTS_TAB,
+              generateActionsMenu: generateDocumentActionsMenu,
+              pageData: generateDocumentPageData(viewMode),
+              fetchArtifact: artifactsApi.getDocuments
+            }
+          : {
+              type: FILES_TAB,
+              generateActionsMenu: generateFileActionsMenu,
+              pageData: generateFilePageData(viewMode),
+              fetchArtifact: artifactsApi.getFiles
+            }
   }, [selectedArtifact, artifactData.kind, viewMode])
 
   const toggleConvertedYaml = useCallback(
@@ -90,31 +111,25 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
 
     setIsLoading(true)
 
-    dispatch(
-      artifactContext.fetchArtifact({
-        project: artifactData.project,
-        filters: artifactMin
-      })
-    )
-      .unwrap()
-      .then(response => {
-        if (response) {
-          if (response.artifacts?.length > 0) {
-            const selectedArtifact =
-              response.artifacts.length === 1
-                ? response.artifacts[0]
-                : response.artifacts.find(
-                    artifact => artifact.tag === 'latest' || maxBy(response.artifacts, 'updated')
-                  )
+    artifactContext
+      .fetchArtifact(artifactData.project, artifactMin)
+      .then(({ data }) => {
+        const result = parseArtifacts(data.artifacts)
+        const artifacts = generateArtifacts(filterArtifacts(result), DATASETS_TAB, data.artifacts)
 
-            setSelectedArtifact(selectedArtifact)
+        if (artifacts?.length > 0) {
+          const selectedArtifact =
+            artifacts.length === 1
+              ? artifacts[0]
+              : artifacts.find(artifact => artifact.tag === 'latest' || maxBy(artifacts, 'updated'))
 
-            setIsLoading(false)
-          } else {
-            showArtifactErrorNotification(dispatch, {}, artifactContext.type)
+          setSelectedArtifact(selectedArtifact)
 
-            onResolve()
-          }
+          setIsLoading(false)
+        } else {
+          showArtifactErrorNotification(dispatch, {}, artifactContext.type)
+
+          onResolve()
         }
       })
       .catch(error => {

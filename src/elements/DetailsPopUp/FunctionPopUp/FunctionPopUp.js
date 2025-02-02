@@ -33,7 +33,6 @@ import {
 import { parseFunction } from '../../../utils/parseFunction'
 import { parseFunctionUri } from '../../../utils/link-helper.util'
 import { showErrorNotification } from '../../../utils/notifications.util'
-import { TAG_LATEST } from '../../../constants'
 
 import functionsApi from '../../../api/functions-api'
 import { toggleYaml } from '../../../reducers/appReducer'
@@ -46,7 +45,6 @@ const FunctionPopUp = ({ funcUri, isOpen, onResolve }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
   const fetchFunctionLogsTimeout = useRef(null)
   const fetchFunctionNuclioLogsTimeout = useRef(null)
-
   const toggleConvertedYaml = useCallback(
     data => {
       return dispatch(toggleYaml(data))
@@ -59,12 +57,7 @@ const FunctionPopUp = ({ funcUri, isOpen, onResolve }) => {
 
     setIsLoading(true)
     return functionsApi
-      .getFunction(
-        parsedFuncUri.project,
-        parsedFuncUri.name,
-        parsedFuncUri.hash,
-        parsedFuncUri.tag || TAG_LATEST
-      )
+      .getFunction(parsedFuncUri.project, parsedFuncUri.name, parsedFuncUri.hash, parsedFuncUri.tag)
       .then(result => {
         setSelectedFunction(parseFunction(result.data.func))
         setIsLoading(false)
