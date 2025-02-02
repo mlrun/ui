@@ -104,10 +104,10 @@ const DetailsHeader = ({
   }, [detailsStore.changes.counter, handleCancel, handleShowWarning])
 
   const handleCancelClick = useCallback(() => {
-    if (detailsStore.changes.counter === 0) {
+    if (detailsStore.changes.counter === 0 || isDetailsPopUp) {
       handleCancel()
     }
-  }, [detailsStore.changes.counter, handleCancel])
+  }, [detailsStore.changes.counter, handleCancel, isDetailsPopUp])
 
   useEffect(() => {
     if (!headerRef.current) return
@@ -244,7 +244,7 @@ const DetailsHeader = ({
         )}
       </div>
       <div className="item-header__buttons">
-        {detailsStore.changes.counter > 0 && (
+        {detailsStore.changes.counter > 0 && !isDetailsPopUp && (
           <>
             <Button
               variant={TERTIARY_BUTTON}

@@ -44,6 +44,7 @@ import {
   DATASETS_TAB,
   DETAILS_OVERVIEW_TAB,
   DOCUMENTS_TAB,
+  EMPTY_OBJECT,
   FILES_TAB,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
@@ -70,7 +71,7 @@ const Details = ({
   applyDetailsChangesCallback = () => {},
   detailsMenu,
   detailsPopUpSelectedTab = DETAILS_OVERVIEW_TAB,
-  formInitialValues = {},
+  formInitialValues = EMPTY_OBJECT,
   getCloseDetailsLink = null,
   handleCancel = null,
   handleRefresh = () => {},
@@ -114,6 +115,10 @@ const Details = ({
     setDetailsPopUpInfoContent,
     setInfoContent
   ])
+  const pathnameWithoutTab = useMemo(
+    () => location.pathname.substring(0, location.pathname.lastIndexOf(params.tab)),
+    [location.pathname, params.tab]
+  )
 
   const detailsPanelClassNames = classnames(
     'table__item',
@@ -122,7 +127,7 @@ const Details = ({
     isDetailsPopUp && 'table__item-popup'
   )
 
-  const formRef = React.useRef(
+  const formRef = useRef(
     createForm({
       initialValues: formInitialValues,
       mutators: { ...arrayMutators, setFieldState },
@@ -141,9 +146,11 @@ const Details = ({
 
   useEffect(() => {
     return () => {
-      resetChanges()
+      if (!isDetailsPopUp) {
+        resetChanges()
+      }
     }
-  }, [resetChanges])
+  }, [isDetailsPopUp, resetChanges])
 
   useEffect(() => {
     if (!isEveryObjectValueEmpty(selectedItem)) {
@@ -242,11 +249,18 @@ const Details = ({
       formRef.current &&
       detailsStore.changes.counter === 0 &&
       !isEqual(pickBy(formInitialValues), pickBy(formRef.current.getState()?.values)) &&
-      !formRef.current.getState()?.active
+      !formRef.current.getState()?.values?.labelsAreInEditMode
     ) {
       formRef.current.restart(formInitialValues)
     }
   }, [formInitialValues, detailsStore.changes.counter])
+
+  useEffect(() => {
+    if (!isDetailsPopUp) {
+      formRef.current.restart(formInitialValues)
+      dispatch(detailsActions.setEditMode(false))
+    }
+  }, [dispatch, formInitialValues, isDetailsPopUp, pathnameWithoutTab])
 
   const applyChanges = useCallback(() => {
     applyDetailsChanges(detailsStore.changes).then(() => {
@@ -349,7 +363,7 @@ const Details = ({
                 variant: TERTIARY_BUTTON
               }}
               closePopUp={() => {
-                blocker.proceed?.()
+                blocker.reset?.()
               }}
               confirmButton={{
                 handler: leavePage,
