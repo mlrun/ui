@@ -21,17 +21,17 @@ import { forwardRef, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
-import StatsCard from '../../common/StatsCard/StatsCard'
-import MetricChart from '../MetricChart/MetricChart'
+import StatsCard from '../../../common/StatsCard/StatsCard'
+import MetricChart from '../../../common/Chart/MetricChart/MetricChart'
 import { RoundedIcon, Tip } from 'igz-controls/components'
 
 import {
   calculatePercentageDrift,
   METRIC_COMPUTED_TOTAL_POINTS,
   METRIC_RAW_TOTAL_POINTS
-} from './detailsMetrics.util'
-import { getGradientLineChartConfig } from '../../utils/getMetricChartConfig'
-import { CHART_TYPE_LINE } from '../../constants'
+} from '../detailsMetrics.util'
+import { getMetricChartConfig } from '../../../utils/getChartConfig'
+import { CHART_TYPE_LINE, CHART_TYPE_GRADIENT_LINE } from '../../../constants'
 import { ReactComponent as EnlargeIcon } from 'igz-controls/images/expand.svg'
 import { ReactComponent as MinimizeIcon } from 'igz-controls/images/collapse.svg'
 
@@ -59,7 +59,7 @@ const InvocationsMetricCard = forwardRef(
       isInvocationCardExpanded ? 'metrics__card-invocation-header_expanded' : ''
     )
 
-    const gradientConfig = useMemo(() => getGradientLineChartConfig(), [])
+    const gradientConfig = useMemo(() => getMetricChartConfig(CHART_TYPE_GRADIENT_LINE), [])
     const resultPercentageDrift = calculatePercentageDrift(
       previousTotalInvocation,
       metric[METRIC_RAW_TOTAL_POINTS]
@@ -152,8 +152,8 @@ const InvocationsMetricCard = forwardRef(
             </div>
             <div className="metrics__card-body-invocation">
               <MetricChart
+                config={chartConfig}
                 isInvocationCardExpanded={isInvocationCardExpanded}
-                chartConfig={chartConfig}
               />
             </div>
           </div>

@@ -21,7 +21,7 @@ import React, { memo } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import MlChart from '../../common/Chart/MlChart'
+import HistogramChart from '../../common/Chart/HistogramChart/HistogramChart'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import './detailsStatistics.scss'
@@ -79,7 +79,7 @@ const DetailsStatisticsTableRow = ({ statisticsItem, headers, chartConfig }) => 
           <div key={Date.now() + index} className={statisticsItemClassNames}>
             {statisticsValue.type.match(/icon/) && !statisticsValue.hidden && statisticsValue.value}
             {statisticsValue.type === 'chart' && statisticsValue.value[1]?.length > 0 && (
-              <MlChart config={config} showLoader={false} />
+              <HistogramChart config={config} showLoader={false} />
             )}
             {!statisticsValue.type.match(/icon|chart/) && (
               <Tooltip

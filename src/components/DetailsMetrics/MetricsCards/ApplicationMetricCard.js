@@ -19,22 +19,22 @@ such restriction.
 */
 import React, { useMemo, memo } from 'react'
 
-import StatsCard from '../../common/StatsCard/StatsCard'
+import StatsCard from '../../../common/StatsCard/StatsCard'
 import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/dist/components'
-import MetricChart from '../MetricChart/MetricChart'
+import MetricChart from '../../../common/Chart/MetricChart/MetricChart'
 
-import { getBarChartMetricConfig, getLineChartMetricConfig } from '../../utils/getMetricChartConfig'
-import { calculateHistogram, METRIC_COMPUTED_AVG_POINTS } from './detailsMetrics.util'
-import { CHART_TYPE_LINE } from '../../constants'
-import { METRIC_DATA } from '../../types'
+import { getMetricChartConfig } from '../../../utils/getChartConfig'
+import { calculateHistogram, METRIC_COMPUTED_AVG_POINTS } from '../detailsMetrics.util'
+import { CHART_TYPE_LINE, CHART_TYPE_BAR } from '../../../constants'
+import { METRIC_DATA } from '../../../types'
 
 import colors from 'igz-controls/scss/colors.scss'
 
-import './DetailsMetrics.scss'
+import '../DetailsMetrics.scss'
 
 const ApplicationMetricCard = ({ metric }) => {
-  const lineConfig = useMemo(() => getLineChartMetricConfig(), [])
-  const barConfig = useMemo(() => getBarChartMetricConfig(), [])
+  const lineConfig = useMemo(() => getMetricChartConfig(CHART_TYPE_LINE), [])
+  const barConfig = useMemo(() => getMetricChartConfig(CHART_TYPE_BAR), [])
 
   const lineChartConfig = useMemo(() => {
     return {
@@ -99,11 +99,11 @@ const ApplicationMetricCard = ({ metric }) => {
               {metric[METRIC_COMPUTED_AVG_POINTS]}
             </div>
           </div>
-          <MetricChart chartConfig={barChartConfig} />
+          <MetricChart config={barChartConfig} />
         </div>
         <div className="metrics__card-body-line">
           <div className="metrics__card-header">Value over time</div>
-          <MetricChart chartConfig={lineChartConfig} />
+          <MetricChart config={lineChartConfig} />
         </div>
       </div>
     </StatsCard>

@@ -814,7 +814,7 @@ div[id^='chartjs-tooltip'] {
   position: fixed;
   z-index: 5;
   width: auto;
-  padding: 5px;
+  padding: 0;
   color: $white;
   background-color: $primary;
   border-radius: 4px;
@@ -840,8 +840,49 @@ div[id^='chartjs-tooltip'] {
     pointer-events: none;
   }
 
-  td {
-    white-space: nowrap;
+  .tooltip-container {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 5px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 7px;
+    background: inherit;
+
+    &-date {
+      min-width: 150px;
+    }
+  }
+
+  .tooltip-drift-content {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: flex-start;
+    background: inherit;
+  }
+
+  .tooltip-drift-status {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+
+    &-drift-possible_drift {
+      background-color: $grandis;
+    }
+
+    &-drift-drift_detected {
+      background-color: $ceriseRed;
+    }
+
+    &-drift-no_drift {
+      background-color: $brightTurquoise;
+    }
+
+    &-drift-no-status {
+      background-color: $doveGray;
+    }
   }
 }
 

@@ -20,12 +20,12 @@ such restriction.
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
-import MlChart from '../../common/Chart/MlChart'
+import HistogramChart from '../../common/Chart/HistogramChart/HistogramChart'
 import NoData from '../../common/NoData/NoData'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { generateFeaturesAnalysis } from './detailsFeaturesAnalysis.util'
-import { getHistogramChartConfig } from '../../utils/getHistogramChartConfig'
+import { getHistogramChartConfig } from '../../utils/getChartConfig'
 
 import './detailsFeaturesAnalysis.scss'
 import colors from 'igz-controls/scss/colors.scss'
@@ -80,7 +80,7 @@ const DetailsFeaturesAnalysis = ({ selectedItem }) => {
                       cell.contentArray.map((item, index) => (
                         <div className={`${item.className}`} key={index}>
                           {item.type === 'chart' && item.value[1]?.length > 0 ? (
-                            <MlChart
+                            <HistogramChart
                               config={{
                                 ...chartConfig,
                                 data: {
