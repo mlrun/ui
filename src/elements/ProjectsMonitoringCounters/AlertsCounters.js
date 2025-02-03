@@ -82,7 +82,7 @@ const AlertsCounters = () => {
   const alertsCardClass = classNames(
     'monitoring-stats',
     'alerts-card',
-    alertsData.data.total && 'alerts-card__has-alerts'
+    alertsData.data.total && 'alerts-card_not-empty'
   )
 
   return (
