@@ -114,7 +114,8 @@ const ProjectSettingsGeneral = ({
               [LABELS]: parseChipsData(
                 response?.data?.metadata?.[LABELS],
                 frontendSpec.internal_labels || []
-              )
+              ),
+              labelsAreInEditMode: false
             }
 
             if (areNodeSelectorsSupported) {
