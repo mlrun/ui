@@ -23,6 +23,8 @@ import Chart from '../Chart'
 
 import { setChartGradient } from './metricChart.util'
 
+import './metricChart.scss'
+
 const MetricChart = ({ config, isInvocationCardExpanded }) => {
   const chartRef = useRef(null)
   const contextRef = useRef(null)
