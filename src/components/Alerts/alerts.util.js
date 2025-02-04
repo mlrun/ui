@@ -119,8 +119,6 @@ export const generatePageData = (selectedAlert, handleFetchJobLogs = () => {}, i
   }
 }
 
-export const ALERTS_DISPLAY_LIMIT = 100
-
 export const allProjectsOption = [
   {
     id: PROJECTS_FILTER_ALL_ITEMS,
@@ -281,10 +279,10 @@ export const checkForSelectedAlert = ({
               }
             }
 
-            setSelectedAlert({...createAlertRowData(selectedAlert).data, page: ALERTS_PAGE })
+            setSelectedAlert({ ...createAlertRowData(selectedAlert).data, page: ALERTS_PAGE })
           }
         })
-        .catch((error) => {
+        .catch(error => {
           setSelectedAlert({})
 
           navigate(
@@ -292,12 +290,7 @@ export const checkForSelectedAlert = ({
             { replace: true }
           )
 
-          showErrorNotification(
-            dispatch,
-            error,
-            '',
-            'Failed to retrieve alert data'
-          )
+          showErrorNotification(dispatch, error, '', 'Failed to retrieve alert data')
         })
     }
   } else {
@@ -306,9 +299,9 @@ export const checkForSelectedAlert = ({
 }
 
 export const navigateToPerProjectAlertsPage = (navigate, projectName) => {
-    const filters = {
-        dates: PAST_MONTH_DATE_OPTION,
-        [ENTITY_TYPE]: MODEL_ENDPOINT_RESULT
-    }
-    navigate(`/projects/${projectName}/${ALERTS_PAGE_PATH}?${new URLSearchParams(filters)}`)
+  const filters = {
+    dates: PAST_MONTH_DATE_OPTION,
+    [ENTITY_TYPE]: MODEL_ENDPOINT_RESULT
+  }
+  navigate(`/projects/${projectName}/${ALERTS_PAGE_PATH}?${new URLSearchParams(filters)}`)
 }

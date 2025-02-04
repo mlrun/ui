@@ -23,9 +23,9 @@ import { useSelector } from 'react-redux'
 
 import AlertsView from '../Alerts/AlertsView'
 
+import { ALERTS_DISPLAY_LIMIT } from '../../constants'
 import { createAlertRowData } from '../../utils/createAlertsContent'
 import {
-  ALERTS_DISPLAY_LIMIT,
   generatePageData,
   getAlertsFiltersConfig,
   navigateToPerProjectAlertsPage,

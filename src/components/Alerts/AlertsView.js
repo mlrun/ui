@@ -30,7 +30,13 @@ import NoData from '../../common/NoData/NoData'
 import Pagination from '../../common/Pagination/Pagination'
 import Table from '../Table/Table'
 
-import { ALERTS_FILTERS, ALERTS_PAGE, ALERTS_PAGE_PATH, MONITOR_ALERTS_PAGE } from '../../constants'
+import {
+  ALERTS_DISPLAY_LIMIT,
+  ALERTS_FILTERS,
+  ALERTS_PAGE,
+  ALERTS_PAGE_PATH,
+  MONITOR_ALERTS_PAGE
+} from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 
@@ -73,7 +79,7 @@ const AlertsView = ({
         <div className={content}>
           <div className="table-container alerts-container">
             <div className="content__action-bar-wrapper">
-              {!isAlertsPage && tableContent.length > 100 && (
+              {!isAlertsPage && tableContent.length >= ALERTS_DISPLAY_LIMIT && (
                 <div className="alerts-container__content-info">
                   <ExclamationMarkIcon />
                   <div>Only 100 alerts are displayed. View all in</div>
@@ -117,7 +123,7 @@ const AlertsView = ({
               />
             ) : (
               <>
-              {alertsStore.alertLoading && <Loader />}
+                {alertsStore.alertLoading && <Loader />}
                 <Table
                   actionsMenu={[]}
                   getCloseDetailsLink={() =>
@@ -129,13 +135,15 @@ const AlertsView = ({
                   tableClassName="alerts-table"
                   handleCancel={handleCancel}
                   hideActionsMenu
-                  tableHeaders={tableContent[0]?.content ?? [
-                    {
-                      headerId: 'alertName',
-                      headerLabel: 'Alert Name',
-                      className: 'table-cell-name'
-                    }
-                  ]}
+                  tableHeaders={
+                    tableContent[0]?.content ?? [
+                      {
+                        headerId: 'alertName',
+                        headerLabel: 'Alert Name',
+                        className: 'table-cell-name'
+                      }
+                    ]
+                  }
                   withActionMenu={false}
                 >
                   {tableContent.map((tableItem, index) => {
