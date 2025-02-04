@@ -19,12 +19,12 @@
         "function_name": "transaction-fraud",
         "function_tag": "latest",
         "function_uid": "unversioned-latest",
-        "function_uri": "fraud-demo-admin/transaction-fraud@a98a5f1e34f9c56c3615f5601ee02a375169cbed",
+        "function_uri": "default/aggregate@79fd83704a8514dc2415bded0e9d0ffd94262e92",
         "model_name": "RandomForestClassifier",
         "model_class": "ClassifierModel",
         "model_uid": "898baa010eb35b914558182ad487bc582defde34",
         "model_tag": null,
-        "model_uri": "store://artifacts/fraud-demo-admin/training_model#1:latest",
+        "model_uri": "store://models/default/model_default:latest",
         "feature_names": [
           "amount_max_2h",
           "amount_sum_2h",
@@ -131,7 +131,7 @@
             ]
           }
         },
-        "monitoring_feature_set_uri": "store://feature-sets/mm-app-project-n-v1/monitoring-serving-3-RandomForestClassifier:464ab6128bea4f27b8c2d52b91e8fba6_"
+        "monitoring_feature_set_uri": "store://feature-sets/default/stocks:latest"
       },
       "status": {
         "state": null,
@@ -277,12 +277,12 @@
         "function_name": "transaction-fraud",
         "function_tag": "latest",
         "function_uid": "unversioned-latest",
-        "function_uri": "fraud-demo-admin/transaction-fraud@a98a5f1e34f9c56c3615f5601ee02a375169cbed",
+        "function_uri": "default/vizro@69200c7de5447f61f15bd28913714c5970b831eb",
         "model_name": "GradientBoostingClassifier",
         "model_uid": "898baa010eb35b914558182ad487bc582defde34",
         "model_tag": null,
         "model_class": "ClassifierModel",
-        "model_uri": "store://artifacts/fraud-demo-admin/training_model#2:latest",
+        "model_uri": "store://models/default/train_model:latest",
         "feature_names": [
           "amount_max_2h",
           "amount_sum_2h",
@@ -389,7 +389,7 @@
             ]
           }
         },
-        "monitoring_feature_set_uri": "store://feature-sets/mm-app-project-n-v1/monitoring-serving-3-RandomForestClassifier:464ab6128bea4f27b8c2d52b91e8fba6_"
+        "monitoring_feature_set_uri": "store://feature-sets/default/test-m2:latest"
       },
       "status": {
         "state": null,

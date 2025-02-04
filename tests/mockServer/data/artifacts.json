@@ -35622,14 +35622,14 @@
         "producer": {
           "name": "auto-trainer-train",
           "kind": "run",
-          "uri": "ds-source/7cce8e5794aa41bca4ca7fd0f492bd1b",
+          "uri": "cat-vs-dog-classification/9723e5a30b0e43b0b7cfda098445c446",
           "owner": "admin"
         },
         "label_column": "radius",
         "sources": [
           {
             "name": "dataset",
-            "path": "store://artifacts/ds-source/data-prep-breast-cancer-generator_dataset:187a678aca8f4d208949eb8c104ce4e6"
+            "path": "store://datasets/default/test_new_structure@5a44b12b-9ef3-4239-87e8-e0cbdae5827c"
           }
         ],
         "license": ""
