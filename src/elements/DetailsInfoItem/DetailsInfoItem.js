@@ -58,7 +58,6 @@ const DetailsInfoItem = React.forwardRef(
       handleFinishEdit = () => {},
       info = null,
       isDetailsPopUp = false,
-      isArtifactPage = false,
       isFieldInEditMode = false,
       item = {},
       onClick = null,
@@ -88,7 +87,6 @@ const DetailsInfoItem = React.forwardRef(
           formState={formState}
           handleFinishEdit={handleFinishEdit}
           isFieldInEditMode={isFieldInEditMode}
-          isArtifactPage={isArtifactPage}
           item={item}
           isEditable={!isDetailsPopUp}
           setChangesData={setChangesData}

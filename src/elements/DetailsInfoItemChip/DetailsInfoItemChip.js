@@ -43,7 +43,6 @@ const DetailsInfoItemChip = ({
   formState,
   handleFinishEdit,
   isEditable = true,
-  isArtifactPage,
   isFieldInEditMode,
   item
 }) => {
@@ -127,14 +126,8 @@ const DetailsInfoItemChip = ({
   ])
 
   const validationRules = useMemo(() => {
-    if (isArtifactPage) {
-      return {
-        key: getValidationRules(
-          'artifact.labels.key',
-          getInternalLabelsValidationRule(frontendSpec.internal_labels)
-        ),
-        value: getValidationRules('artifact.labels.value')
-      }
+    if (chipsData.validationRules) {
+      return chipsData.validationRules
     } else {
       return {
         key: getValidationRules(
@@ -144,7 +137,7 @@ const DetailsInfoItemChip = ({
         value: getValidationRules('common.tag')
       }
     }
-  }, [frontendSpec.internal_labels, isArtifactPage])
+  }, [frontendSpec.internal_labels, chipsData.validationRules])
 
   return (
     <div className={chipFieldClassName}>
