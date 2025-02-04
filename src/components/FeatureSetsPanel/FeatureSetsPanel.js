@@ -159,7 +159,9 @@ const FeatureSetsPanel = ({
 
   const handleCreateFeatureSetSuccess = (name, tag) => {
     createFeatureSetSuccess(tag).then(() => {
-      navigate(`/projects/${project}/feature-store/${FEATURE_SETS_TAB}/${name}/${tag}/overview${window.location.search}`)
+      navigate(
+        `/projects/${project}/feature-store/${FEATURE_SETS_TAB}/${name}/${tag}/overview${window.location.search}`
+      )
       dispatch(
         setNotification({
           status: 200,
@@ -196,17 +198,23 @@ const FeatureSetsPanel = ({
             <FormSpy
               subscription={{ valid: true }}
               onChange={() => {
-                setValidation(prevState => ({
-                  ...prevState,
-                  areLabelsValid: formRef.current?.getFieldState?.('labels')?.valid ?? true
-                }))
+                const areLabelsValid = formRef.current?.getFieldState?.('labels')?.valid ?? true
+                setValidation(prevState => {
+                  if (prevState.areLabelsValid === areLabelsValid) {
+                    return prevState
+                  }
+
+                  return {
+                    ...prevState,
+                    areLabelsValid
+                  }
+                })
               }}
             />
           </>
         )
       }}
-    </Form>
-    ,
+    </Form>,
     document.getElementById('overlay_container')
   )
 }
