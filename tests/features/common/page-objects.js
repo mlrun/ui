@@ -75,6 +75,7 @@ module.exports = {
   ML_Functions: Functions['mlFunctions'],
   MLRun_Unhealthy_PopUp: interactivePopup['mLRunUnhealthyPopUp'],
   Model_Endpoints: models['modelEndpoints'],
+  Model_Endpoints_Info_Pane: infoPane['modelEndpointsInfoPane'],
   Models: models['modelsTab'],
   Models_Info_Pane: infoPane['modelsInfoPane'],
   Modal_Transition_Popup: interactivePopup['modalTransitionPopup'],

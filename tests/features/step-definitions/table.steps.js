@@ -34,7 +34,8 @@ import {
   verifyComponentContainsAttributeValue,
   verifyTypedText,
   waitPageLoad,
-  waiteUntilComponent
+  waiteUntilComponent,
+  checkComponentHintTextWithHover
 } from '../common/actions/common.action'
 import {
   checkCellHintText,
@@ -1486,6 +1487,37 @@ Then(
     )
     await this.driver.sleep(500)
     await componentIsPresent(this.driver, actionMenuSel)
+  }
+)
+
+Then(
+  'verify {string} option on {string} wizard in {string} table with {string} value in {string} column should display hover tooltip {string}.{string}',
+  async function (option, wizard, table, value, column, constStorage, constValue) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      option
+    )
+
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][column](indx)
+    )
+    await this.driver.sleep(500)
+	await checkComponentHintTextWithHover(
+      this.driver,
+      actionMenuSel,
+      pageObjects['commonPagesHeader']['Common_Tolltip'],
+      pageObjectsConsts[constStorage][constValue]
+    )
   }
 )
 

@@ -34,10 +34,11 @@ import Table from '../../Table/Table'
 
 import { ACTIONS_MENU } from '../../../types'
 import { FULL_VIEW_MODE, MODELS_PAGE, MODELS_TAB, ALL_VERSIONS_PATH } from '../../../constants'
-import { SECONDARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../../utils/link-helper.util'
 import { getDefaultFirstHeader } from '../../../utils/createArtifactsContent'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
+import { TERTIARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
 
 const ModelsView = React.forwardRef(
   (
@@ -89,7 +90,7 @@ const ModelsView = React.forwardRef(
                     onClick: handleTrainModel
                   },
                   {
-                    variant: SECONDARY_BUTTON,
+                    variant: TERTIARY_BUTTON,
                     label: 'Register model',
                     className: 'action-button',
                     onClick: handleRegisterModel,

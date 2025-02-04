@@ -119,7 +119,9 @@ const Notification = ({ notification, timeoutMs = 10000, ...rest }) => {
                 {isSuccessResponse ? <SuccessDone /> : <UnsuccessAlert />}
               </div>
             </div>
-            {notification.message}
+            <div className="notification__body__message">
+              {notification.message}
+            </div>
             {!isSuccessResponse && notification.retry && (
               <div
                 className="notification__body__button-retry"

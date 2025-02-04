@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-final-form'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -27,16 +27,23 @@ import { FormInput, FormOnChange } from 'igz-controls/components'
 import FormTagFilter from '../../common/FormTagFilter/FormTagFilter'
 import { FormSelect } from 'iguazio.dashboard-react-controls/dist/components'
 
-import { ENTITIES_FILTER, LABELS_FILTER, PROJECT_FILTER, TAG_FILTER } from '../../constants'
+import { ENTITIES_FILTER, LABELS_FILTER, PROJECT_FILTER, TAG_FILTER, TAG_FILTER_LATEST } from '../../constants'
 import { generateProjectsList } from '../../utils/projects'
 
-const AddToFeatureVectorFilters = ({ content }) => {
+const AddToFeatureVectorFilters = ({ content, fetchTags }) => {
   const form = useForm()
+  const [tagFilterKey, setTagFilterKey] = useState('')
   const projectStore = useSelector(store => store.projectStore)
   const params = useParams()
 
   const handleInputChange = (value, inputName) => {
     form.change(inputName, value || '')
+  }
+
+  const handleProjectChange = (value) => {
+    fetchTags(value)
+    form.change(TAG_FILTER, TAG_FILTER_LATEST)
+    setTagFilterKey(value)
   }
 
   return (
@@ -48,7 +55,8 @@ const AddToFeatureVectorFilters = ({ content }) => {
           options={generateProjectsList(projectStore.projectsNames.data, params.projectName)}
           preventWidthOverflow
         />
-      </div>
+        <FormOnChange name={PROJECT_FILTER} handler={handleProjectChange} />
+      </div>      
       <div className="form-row">
         <FormInput label="Entity" name={ENTITIES_FILTER} placeholder="Search by entity" />
         <FormOnChange name={ENTITIES_FILTER} handler={value => handleInputChange(value, ENTITIES_FILTER)} />
@@ -63,14 +71,15 @@ const AddToFeatureVectorFilters = ({ content }) => {
         <FormOnChange name={LABELS_FILTER} handler={value => handleInputChange(value, LABELS_FILTER)} />
       </div>
       <div className="form-row">
-        <FormTagFilter content={content} label="Version tag" name={TAG_FILTER} />
+        <FormTagFilter content={content} label="Version tag" name={TAG_FILTER} key={tagFilterKey} />
       </div>
     </div>
   )
 }
 
 AddToFeatureVectorFilters.propTypes = {
-  content: PropTypes.arrayOf(PropTypes.object).isRequired
+  content: PropTypes.arrayOf(PropTypes.object).isRequired,
+  fetchTags: PropTypes.func.isRequired
 }
 
 export default AddToFeatureVectorFilters

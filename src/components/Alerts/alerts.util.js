@@ -23,6 +23,7 @@ import {
   ALERTS_PAGE,
   ALERTS_PAGE_PATH,
   APPLICATION,
+  BE_PAGE,
   DATES_FILTER,
   ENDPOINT,
   ENDPOINT_APPLICATION,
@@ -30,6 +31,7 @@ import {
   ENTITY_ID,
   ENTITY_TYPE,
   EVENT_TYPE,
+  FE_PAGE,
   FILTER_ALL_ITEMS,
   JOB,
   JOB_KIND_JOB,
@@ -51,6 +53,10 @@ import {
   PAST_MONTH_DATE_OPTION,
   TIME_FRAME_LIMITS
 } from '../../utils/datePicker.util'
+import { fetchAlertById } from '../../reducers/alertsReducer'
+import { generateObjectNotInTheListMessage } from '../../utils/generateMessage.util'
+import { createAlertRowData } from '../../utils/createAlertsContent'
+import { showErrorNotification } from '../../utils/notifications.util'
 
 export const getAlertsFiltersConfig = (timeFrameLimit = false, isAlertsPage = false) => {
   return {
@@ -99,13 +105,13 @@ export const parseAlertsQueryParamsCallback = (paramName, paramValue) => {
   return paramValue
 }
 
-export const generatePageData = (selectedAlert, handleFetchJobLogs = () => {}) => {
+export const generatePageData = (selectedAlert, handleFetchJobLogs = () => {}, isCrossProjects) => {
   return {
     page: ALERTS_PAGE,
     details: {
       type: ALERTS_PAGE,
       entityType: selectedAlert.entity_kind,
-      infoHeaders: alertsHeaders(selectedAlert.entity_kind),
+      infoHeaders: alertsHeaders(selectedAlert.entity_kind, isCrossProjects),
       menu: [],
       refreshLogs: handleFetchJobLogs,
       removeLogs: () => {}
@@ -193,11 +199,11 @@ export const filterAlertsEventTypeOptions = entityType => {
   )
 }
 
-export const alertsHeaders = type => {
+export const alertsHeaders = (type, isCrossProjects) => {
   if (type) {
     const entityType = {
       [JOB]: [
-        { label: 'Project Name', id: 'projectName' },
+        { label: 'Project Name', id: 'projectName', hidden: !isCrossProjects },
         { label: 'Job Name', id: 'jobName' },
         { label: 'Type', id: 'type' },
         { label: 'Timestamp', id: 'timestamp' },
@@ -205,7 +211,7 @@ export const alertsHeaders = type => {
         { label: 'Job', id: 'job' }
       ],
       [MODEL_ENDPOINT_RESULT]: [
-        { label: 'Project Name', id: 'projectName' },
+        { label: 'Project Name', id: 'projectName', hidden: !isCrossProjects },
         { label: 'Endpoint ID', id: 'uid' },
         { label: 'Application Name', id: 'applicationName' },
         { label: 'Result Name', id: 'resultName' },
@@ -214,7 +220,7 @@ export const alertsHeaders = type => {
         { label: 'Severity', id: SEVERITY }
       ],
       [MODEL_MONITORING_APPLICATION]: [
-        { label: 'Project Name', id: 'projectName' },
+        { label: 'Project Name', id: 'projectName', hidden: !isCrossProjects },
         { label: 'Application Name', id: 'applicationName' },
         { label: 'Type', id: 'type' },
         { label: 'Timestamp', id: 'timestamp' },
@@ -228,10 +234,81 @@ export const alertsHeaders = type => {
   return []
 }
 
-export const navigateToPerProjectAlertsPage = (navigate, projectName) => {
-  const filters = {
-    dates: PAST_MONTH_DATE_OPTION,
-    [ENTITY_TYPE]: MODEL_ENDPOINT_RESULT
+export const checkForSelectedAlert = ({
+  alertId,
+  alerts,
+  dispatch,
+  isCrossProjects,
+  lastCheckedAlertIdRef,
+  navigate,
+  paginatedAlerts,
+  paginationConfigAlertsRef,
+  project,
+  searchParams,
+  setSearchParams,
+  setSelectedAlert
+}) => {
+  if (alertId) {
+    const searchBePage = parseInt(searchParams.get(BE_PAGE))
+    const configBePage = paginationConfigAlertsRef.current[BE_PAGE]
+
+    if (alerts && searchBePage === configBePage && lastCheckedAlertIdRef.current !== alertId) {
+      lastCheckedAlertIdRef.current = alertId
+
+      dispatch(fetchAlertById({ project, alertId }))
+        .unwrap()
+        .then(selectedAlert => {
+          if (selectedAlert) {
+            const findAlertIndex = alerts => {
+              return alerts.findIndex(alert => alert.id && alert.id === selectedAlert.id)
+            }
+
+            const itemIndexInPaginatedList = findAlertIndex(paginatedAlerts)
+            const itemIndexInMainList =
+              itemIndexInPaginatedList !== -1 ? itemIndexInPaginatedList : findAlertIndex(alerts)
+
+            if (itemIndexInPaginatedList === -1) {
+              if (itemIndexInMainList > -1) {
+                const { fePageSize } = paginationConfigAlertsRef.current
+
+                setSearchParams(prevSearchParams => {
+                  prevSearchParams.set(FE_PAGE, Math.ceil((itemIndexInMainList + 1) / fePageSize))
+
+                  return prevSearchParams
+                })
+              } else {
+                selectedAlert.ui.infoMessage = generateObjectNotInTheListMessage('alert')
+              }
+            }
+
+            setSelectedAlert({...createAlertRowData(selectedAlert).data, page: ALERTS_PAGE })
+          }
+        })
+        .catch((error) => {
+          setSelectedAlert({})
+
+          navigate(
+            `/projects/${isCrossProjects ? '*/alerts-monitoring' : `${project}/alerts`}${window.location.search}`,
+            { replace: true }
+          )
+
+          showErrorNotification(
+            dispatch,
+            error,
+            '',
+            'Failed to retrieve alert data'
+          )
+        })
+    }
+  } else {
+    setSelectedAlert({})
   }
-  navigate(`/projects/${projectName}/${ALERTS_PAGE_PATH}?${new URLSearchParams(filters)}`)
+}
+
+export const navigateToPerProjectAlertsPage = (navigate, projectName) => {
+    const filters = {
+        dates: PAST_MONTH_DATE_OPTION,
+        [ENTITY_TYPE]: MODEL_ENDPOINT_RESULT
+    }
+    navigate(`/projects/${projectName}/${ALERTS_PAGE_PATH}?${new URLSearchParams(filters)}`)
 }

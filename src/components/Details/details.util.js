@@ -42,7 +42,12 @@ import { isArtifactTagUnique } from '../../utils/artifacts.util'
 import { getFunctionImage } from '../FunctionsPage/functions.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 
-export const generateArtifactsContent = (detailsType, selectedItem, projectName) => {
+export const generateArtifactsContent = (
+  detailsType,
+  selectedItem,
+  projectName,
+  isDetailsPopUp
+) => {
   if (detailsType === MODEL_ENDPOINTS_TAB) {
     const monitoringFeatureSetUri = selectedItem?.spec?.monitoring_feature_set_uri ?? ''
     const featureSetParsedUri = parseUri(monitoringFeatureSetUri)
@@ -198,18 +203,19 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
         fieldData: {
           name: 'labels'
         },
-        editModeEnabled: detailsType === MODELS_TAB || detailsType === DOCUMENTS_TAB,
+        editModeEnabled:
+          !isDetailsPopUp && (detailsType === MODELS_TAB || detailsType === DOCUMENTS_TAB),
         editModeType: 'chips'
       }
     }
   }
 }
 
-export const generateFeatureStoreContent = (detailsType, selectedItem) => {
+export const generateFeatureStoreContent = (detailsType, selectedItem, isDetailsPopUp) => {
   if (detailsType === FEATURE_SETS_TAB) {
-    return generateFeatureSetsOverviewContent(selectedItem)
+    return generateFeatureSetsOverviewContent(selectedItem, isDetailsPopUp)
   } else if (detailsType === FEATURE_VECTORS_TAB) {
-    return generateFeatureVectorsOverviewContent(selectedItem)
+    return generateFeatureVectorsOverviewContent(selectedItem, isDetailsPopUp)
   }
 }
 
@@ -373,7 +379,7 @@ export const generateFunctionsContent = selectedItem => ({
   }
 })
 
-export const generateFeatureSetsOverviewContent = selectedItem => ({
+export const generateFeatureSetsOverviewContent = (selectedItem, isDetailsPopUp) => ({
   description: {
     value: selectedItem.description ?? '',
     editModeEnabled: true,
@@ -391,7 +397,7 @@ export const generateFeatureSetsOverviewContent = selectedItem => ({
   },
   labels: {
     value: selectedItem.labels ?? [],
-    editModeEnabled: true,
+    editModeEnabled: !isDetailsPopUp,
     editModeType: 'chips',
     fieldData: {
       name: 'labels'
@@ -428,7 +434,7 @@ export const generateFeatureSetsOverviewContent = selectedItem => ({
   }
 })
 
-export const generateFeatureVectorsOverviewContent = selectedItem => ({
+export const generateFeatureVectorsOverviewContent = (selectedItem, isDetailsPopUp) => ({
   description: {
     value: selectedItem.description ?? '',
     editModeEnabled: true,
@@ -446,7 +452,7 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
   },
   labels: {
     value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels,
-    editModeEnabled: true,
+    editModeEnabled: !isDetailsPopUp,
     editModeType: 'chips',
     fieldData: {
       name: 'labels'

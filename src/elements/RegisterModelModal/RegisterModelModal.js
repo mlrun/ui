@@ -33,7 +33,7 @@ import { Button, Modal, FormChipCell, FormInput, FormTextarea } from 'igz-contro
 
 import artifactApi from '../../api/artifacts-api'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
-import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
+import { MODAL_SM, TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { convertChipsData } from '../../utils/convertChipsData'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
@@ -171,7 +171,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
             disabled: isSubmitDisabled(formState),
             label: 'Register',
             onClick: formState.handleSubmit,
-            variant: SECONDARY_BUTTON
+            variant: PRIMARY_BUTTON
           }
         ]
     return defaultActions.map(action => <Button {...action} />)

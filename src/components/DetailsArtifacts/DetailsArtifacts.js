@@ -150,7 +150,7 @@ const DetailsArtifacts = ({
         return dispatch(
           fetchJob({
             project: job.project || params.projectName,
-            jobId: params.jobId,
+            jobId:  job.uid || params.jobId,
             iter: iteration
           })
         )

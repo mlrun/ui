@@ -723,7 +723,7 @@ Feature: Jobs and workflows
     Scenario: MLJW066 - Check all mandatory components in Item infopane on Overview tab table on Schedule Page
         Given open url
         And wait load page
-        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -734,13 +734,50 @@ Feature: Jobs and workflows
         Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         When click on cell with row index 1 in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
         And wait load page
-        Then verify "Header" element visibility on "ML_Function_Info_Pane" wizard
-        Then verify "Updated" element visibility on "ML_Function_Info_Pane" wizard
-        Then verify "Cross_Close_Button" element visibility on "ML_Function_Info_Pane" wizard
-        Then verify "Info_Pane_Tab_Selector" element visibility on "ML_Function_Info_Pane" wizard
-        Then verify "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Tab_List"
-        Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
-        Then verify "Overview_Headers" on "ML_Function_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Overview_Headers"
+        Then verify if "Modal_Transition_Popup" popup dialog appears
+        Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
+        Then "Title" element on "Modal_Transition_Popup" should contains "aggregate" value
+        Then verify "Data_Status" element visibility on "Modal_Transition_Popup" wizard
+        Then "Data_Status" element on "Modal_Transition_Popup" should contains "Nov 25, 2021, 05:20:00 PM" value
+        Then verify "State_Icon" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "State_Icon" element on "Modal_Transition_Popup" wizard should display hover tooltip "ML_Function_Info_Pane"."Initialized_State"
+        Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Refresh_Button" element on "Modal_Transition_Popup" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
+        Then click on "Refresh_Button" element on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Action_Menu" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Action_Menu" dropdown element on "Modal_Transition_Popup" wizard should contains "Common_Lists"."Action_Menu_List_Function_Transition_Popup"
+        Then select "View YAML" option in action menu on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify if "View_YAML" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+        Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+        And wait load page
+        Then verify "Cross_Close_Button" element visibility on "Modal_Transition_Popup" wizard
+        Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
+        And wait load page
+        Then verify if "Modal_Transition_Popup" popup dialog appears
+        Then verify "Tab_Selector" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Tab_Selector" on "Modal_Transition_Popup" wizard should contains "ML_Function_Info_Pane"."Tab_List"
+        Then verify "Overview" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        Then verify "Overview_General_Headers" on "Modal_Transition_Popup" wizard should contains "ML_Function_Info_Pane"."Overview_Headers"
+        Then select "Code" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify "Code" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        Then verify "Code_Content" element visibility on "Modal_Transition_Popup" wizard
+        Then select "Build Log" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify "Build Log" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        Then verify "Title_Application_Log_Info" element visibility on "Modal_Transition_Popup" wizard
+        Then "Title_Application_Log_Info" element on "Modal_Transition_Popup" should contains "Application" value
+        Then verify "Content_Application_Log_Info" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Title_Function_Log_Info" element visibility on "Modal_Transition_Popup" wizard
+        Then "Title_Function_Log_Info" element on "Modal_Transition_Popup" should contains "Function" value
+        Then verify "Content_Function_Log_Info" element visibility on "Modal_Transition_Popup" wizard
 
     @MLJW
     @passive
@@ -875,10 +912,23 @@ Feature: Jobs and workflows
         When click on "Cross_Cancel_Button" element on "View_YAML" wizard
         When click on cell with row index 1 in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
         And wait load page
-        Then select "View YAML" option in action menu on "ML_Function_Info_Pane" wizard
+        Then verify if "Modal_Transition_Popup" popup dialog appears
+        Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
+        Then "Title" element on "Modal_Transition_Popup" should contains "clean-data" value
+        Then verify "Action_Menu" dropdown element on "Modal_Transition_Popup" wizard should contains "Common_Lists"."Action_Menu_List_Function_Transition_Popup"
+        Then select "View YAML" option in action menu on "Modal_Transition_Popup" wizard
+        And wait load page
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+        Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+        And wait load page
+        Then verify "Cross_Close_Button" element visibility on "Modal_Transition_Popup" wizard
+        Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
+        And wait load page
+        Then verify if "Modal_Transition_Popup" popup dialog appears
 
     @MLJW
     @passive
@@ -1132,7 +1182,7 @@ Feature: Jobs and workflows
         Then click on "Title" element on "FilterBy_Popup" wizard
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
-        Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Error. [Errno 2] No such file or directory: \'\'" value in "status" column should contains "Jobs_And_Workflows"."Job_Action_Menu_Options"
+        Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Error. [Errno 2] No such file or directory: \'\'" value in "status" column should contains "Jobs_And_Workflows"."Job_List_Action_Menu_Options"
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
         Then select "Error" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
         Then click on "Title" element on "FilterBy_Popup" wizard
@@ -1149,7 +1199,7 @@ Feature: Jobs and workflows
         Then click on "Title" element on "FilterBy_Popup" wizard
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
-        Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Completed" value in "status" column should contains "Jobs_And_Workflows"."Job_Action_Menu_Options"
+        Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Completed" value in "status" column should contains "Jobs_And_Workflows"."Job_List_Action_Menu_Options"
         Then select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
         Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
@@ -1317,13 +1367,57 @@ Feature: Jobs and workflows
         When click on cell with value "test-m_ingest" in "name" column in "Jobs_And_Workflows" table on "Project" wizard
         And wait load page
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
-        And save to context "link" column and "href" attributes row where header "key" is "Function:" from "Overview_Headers" table on "Jobs_Monitor_Tab_Info_Pane" wizard
         When click on "link" value where option is "Function:" in "Overview_Headers" on "Jobs_Monitor_Tab_Info_Pane" wizard
         And wait load page
-        Then verify "key" values "Hash:,Default handler:" values from "Overview_Headers" on "ML_Function_Info_Pane" with "link" context value with split
-        Then compare current browser URL with test "href" context value
-        Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard
-        Then select "Delete" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-m_ingest" value in "name" column
+        Then verify if "Modal_Transition_Popup" popup dialog appears
+        Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
+        Then "Title" element on "Modal_Transition_Popup" should contains "test-m_ingest" value
+        Then verify "Data_Status" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "State_Icon" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "State_Icon" element on "Modal_Transition_Popup" wizard should display hover tooltip "ML_Function_Info_Pane"."Initialized_State"
+        Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Refresh_Button" element on "Modal_Transition_Popup" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
+        Then click on "Refresh_Button" element on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Action_Menu" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Action_Menu" dropdown element on "Modal_Transition_Popup" wizard should contains "Common_Lists"."Action_Menu_List_Function_Transition_Popup"
+        Then select "View YAML" option in action menu on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify if "View_YAML" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+        Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+        And wait load page
+        Then verify "Cross_Close_Button" element visibility on "Modal_Transition_Popup" wizard
+        Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
+        And wait load page
+        When click on "link" value where option is "Function:" in "Overview_Headers" on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then verify if "Modal_Transition_Popup" popup dialog appears
+        Then verify "Tab_Selector" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Tab_Selector" on "Modal_Transition_Popup" wizard should contains "ML_Function_Info_Pane"."Tab_List"
+        Then verify "Overview" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        Then verify "Overview_General_Headers" on "Modal_Transition_Popup" wizard should contains "ML_Function_Info_Pane"."Overview_Headers"
+        Then select "Code" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify "Code" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        Then verify "Code_Content" element visibility on "Modal_Transition_Popup" wizard
+        Then select "Build Log" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify "Build Log" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        Then verify "Title_Application_Log_Info" element visibility on "Modal_Transition_Popup" wizard
+        Then "Title_Application_Log_Info" element on "Modal_Transition_Popup" should contains "Application" value
+        Then verify "Content_Application_Log_Info" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Title_Function_Log_Info" element visibility on "Modal_Transition_Popup" wizard
+        Then "Title_Function_Log_Info" element on "Modal_Transition_Popup" should contains "Function" value
+        Then verify "Content_Function_Log_Info" element visibility on "Modal_Transition_Popup" wizard
+        Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
+        Then select "Delete all versions" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-m_ingest" value in "name" column
         And wait load page
         Then "Title" element on "Common_Popup" should contains "Delete function?" value
         Then verify "Delete_Button" element visibility on "Common_Popup" wizard
@@ -1331,7 +1425,12 @@ Feature: Jobs and workflows
         And wait load page
         Then verify if "Notification_Popup" popup dialog appears
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Function deleted successfully" value
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Function deletion in progress" value
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then wait for 8 seconds
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Function test-m_ingest is successfully deleted" value
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1340,8 +1439,6 @@ Feature: Jobs and workflows
         When click on cell with value "test-m_ingest" in "name" column in "Jobs_And_Workflows" table on "Project" wizard
         And wait load page
         When click on "link" value where option is "Function:" in "Overview_Headers" on "Jobs_Monitor_Tab_Info_Pane" wizard
-        And wait load page
-        Then verify redirection to "projects/churn-project-admin/functions"
         And wait load page
         Then verify if "Notification_Popup" popup dialog appears
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
@@ -1367,18 +1464,63 @@ Feature: Jobs and workflows
         And wait load page
         Then click on "Table_Refresh_Button" element on "Schedule_Monitor_Tab" wizard
         And wait load page
-        Then save to context "lastRun" column and "href" attribute on 2 row from "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
         Then click on cell with row index 2 in "lastRun" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
         And wait load page
-        Then compare current browser URL with test "href" context value
-        Then verify "Header" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
-        Then "Header" element on "Jobs_Monitor_Tab_Info_Pane" should contains "erann-test" value
-        And select "Inputs" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        Then verify if "Modal_Transition_Popup" popup dialog appears
+        Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
+        Then "Title" element on "Modal_Transition_Popup" should contains "erann-test" value
+        Then verify "Data_Status" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "State_Icon" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "State_Icon" element on "Modal_Transition_Popup" wizard should display hover tooltip "Jobs_Monitor_Tab_Info_Pane"."Pending_State"
+        Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Refresh_Button" element on "Modal_Transition_Popup" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
+        Then click on "Refresh_Button" element on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Action_Menu" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Action_Menu" dropdown element on "Modal_Transition_Popup" wizard should contains "Common_Lists"."Action_Menu_List_Run_Transition_Popup"
+        Then select "View YAML" option in action menu on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify if "View_YAML" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+        Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+        And wait load page
+        Then verify "Cross_Close_Button" element visibility on "Modal_Transition_Popup" wizard
+        Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then click on cell with row index 2 in "lastRun" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
+        And wait load page
+        Then verify if "Modal_Transition_Popup" popup dialog appears
+        Then verify "Tab_Selector" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Tab_Selector" on "Modal_Transition_Popup" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Tab_List"
+        Then verify "Overview" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        Then verify "Overview_General_Headers" on "Modal_Transition_Popup" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Overview_Headers"
+        And select "Inputs" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify "Inputs" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-        And select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Data"
+        And select "Artifacts" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify "Artifacts" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        And select "Results" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify "Results" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-        And select "Results" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Data"
+        And select "Logs" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify "Logs" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        Then verify "Logs_Text_container" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Logs_Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Data"
+        And select "Pods" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify "Pods" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Pods_data"
 
     @MLJW
     @smoke
@@ -1392,11 +1534,54 @@ Feature: Jobs and workflows
         And wait load page
         And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then save to context "name" column and "href" attribute on 2 row from "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
         Then click on cell with row index 2 in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
         And wait load page
+        Then verify if "Modal_Transition_Popup" popup dialog appears
+        Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
+        Then "Title" element on "Modal_Transition_Popup" should contains "erann-test" value
+        Then verify "Data_Status" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "State_Icon" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "State_Icon" element on "Modal_Transition_Popup" wizard should display hover tooltip "ML_Function_Info_Pane"."Initialized_State"
+        Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Refresh_Button" element on "Modal_Transition_Popup" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
+        Then click on "Refresh_Button" element on "Modal_Transition_Popup" wizard
         And wait load page
-        Then compare current browser URL with test "href" context value
+        Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Action_Menu" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Action_Menu" dropdown element on "Modal_Transition_Popup" wizard should contains "Common_Lists"."Action_Menu_List_Function_Transition_Popup"
+        Then select "View YAML" option in action menu on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify if "View_YAML" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+        Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+        And wait load page
+        Then verify "Cross_Close_Button" element visibility on "Modal_Transition_Popup" wizard
+        Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then click on cell with row index 2 in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
+        And wait load page
+        Then verify if "Modal_Transition_Popup" popup dialog appears
+        Then verify "Tab_Selector" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Tab_Selector" on "Modal_Transition_Popup" wizard should contains "ML_Function_Info_Pane"."Tab_List"
+        Then verify "Overview" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        Then verify "Overview_General_Headers" on "Modal_Transition_Popup" wizard should contains "ML_Function_Info_Pane"."Overview_Headers"
+        Then select "Code" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify "Code" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        Then verify "Code_Content" element visibility on "Modal_Transition_Popup" wizard
+        Then select "Build Log" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify "Build Log" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+        Then verify "Title_Application_Log_Info" element visibility on "Modal_Transition_Popup" wizard
+        Then "Title_Application_Log_Info" element on "Modal_Transition_Popup" should contains "Application" value
+        Then verify "Content_Application_Log_Info" element visibility on "Modal_Transition_Popup" wizard
+        Then verify "Title_Function_Log_Info" element visibility on "Modal_Transition_Popup" wizard
+        Then "Title_Function_Log_Info" element on "Modal_Transition_Popup" should contains "Function" value
+        Then verify "Content_Function_Log_Info" element visibility on "Modal_Transition_Popup" wizard
+        Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
+        And wait load page
+        Then verify "Schedule_Monitor_Table" element visibility on "Schedule_Monitor_Tab" wizard
 
     @MLJW
     @smoke
@@ -1407,12 +1592,12 @@ Feature: Jobs and workflows
         And wait load page
         And select "tab" with "Jobs and workflows" value in breadcrumbs menu
         And wait load page
-        Then verify redirection from "projects/default/jobs/INVALID" to "projects/default/jobs/monitor-jobs"
+        Then verify redirection from "projects/default/jobs/INVALID" to "projects/default/jobs/monitor-jobs?bePage=1&fePage=1"
         Then select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then verify redirection from "projects/default/jobs/INVALID" to "projects/default/jobs/monitor-jobs"
+        Then verify redirection from "projects/default/jobs/INVALID" to "projects/default/jobs/monitor-jobs?bePage=1&fePage=1"
         Then select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
@@ -2451,21 +2636,21 @@ Feature: Jobs and workflows
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then verify redirection to "projects/cat-vs-dog-classification/jobs/monitor-jobs/sef/cf842616c89347c7bb7bca2c9e840a21/overview"
+        Then verify redirection to "projects/cat-vs-dog-classification/jobs/monitor-jobs/sef/cf842616c89347c7bb7bca2c9e840a21/overview?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1"
         Then verify "Info_Pane_Tab_Selector" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Tab_List"
         Then navigate back
         And wait load page
-        Then verify redirection to "projects/cat-vs-dog-classification/jobs/monitor-jobs/sef"
+        Then verify redirection to "projects/cat-vs-dog-classification/jobs/monitor-jobs/sef?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1"
         Then navigate back
         And wait load page
-        Then verify redirection to "projects/cat-vs-dog-classification/jobs/monitor-jobs"
+        Then verify redirection to "projects/cat-vs-dog-classification/jobs/monitor-jobs?bePage=1&fePage=1&dates=anyTime"
         Then navigate forward
         And wait load page
-        Then verify redirection to "projects/cat-vs-dog-classification/jobs/monitor-jobs/sef"
+        Then verify redirection to "projects/cat-vs-dog-classification/jobs/monitor-jobs/sef?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1"
         Then navigate forward
         And wait load page
-        Then verify redirection to "projects/cat-vs-dog-classification/jobs/monitor-jobs/sef/cf842616c89347c7bb7bca2c9e840a21/overview"
+        Then verify redirection to "projects/cat-vs-dog-classification/jobs/monitor-jobs/sef/cf842616c89347c7bb7bca2c9e840a21/overview?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1"
         Then verify "Info_Pane_Tab_Selector" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Tab_List"
 
@@ -2557,7 +2742,7 @@ Feature: Jobs and workflows
         Then wait for 10 seconds
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         And wait load page
-        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Job erann-test was aborted" value
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Job erann-test (...e19ea57) was aborted" value
         And wait load page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard

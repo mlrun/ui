@@ -31,7 +31,7 @@ import Loader from '../../../common/Loader/Loader'
 import FeatureStorePageTabs from '../FeatureStorePageTabs/FeatureStorePageTabs'
 
 import { FEATURE_SETS_TAB, FEATURE_STORE_PAGE } from '../../../constants'
-import { SECONDARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
+import { PRIMARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
 import { VIRTUALIZATION_CONFIG } from '../../../types'
 import { filtersConfig } from './featureSets.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
@@ -78,7 +78,7 @@ const FeatureSetsView = React.forwardRef(
               {
                 className: 'action-button',
                 label: createFeatureSetTitle,
-                variant: SECONDARY_BUTTON,
+                variant: PRIMARY_BUTTON,
                 onClick: () => setFeatureSetsPanelIsOpen(true)
               }
             ]}

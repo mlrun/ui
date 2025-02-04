@@ -30,8 +30,8 @@ export const getArtifactIdentifier = (artifact, unique) => {
 
   if (artifact?.db_key || artifact?.spec?.db_key) {
     identifier = artifact?.db_key || artifact?.spec?.db_key
-  } else if (artifact?.spec?.model) {
-    identifier = `${artifact?.spec?.model}.${artifact?.spec?.function_uri}`
+  } else if (artifact?.spec?.model_name) {
+    identifier = `${artifact?.spec?.model_name}.${artifact?.spec?.function_uri}`
   }
 
   if (unique) {
@@ -80,7 +80,7 @@ export const getWorkflowJobIdentifier = (job, unique) => {
   }
 
   if (unique) {
-    jobId = job.customData.run_uid ? job.customData.run_uid : job.customData?.functionHash ?? ''
+    jobId = job.customData.run_uid ? job.customData.run_uid : (job.customData?.functionHash ?? '')
   }
 
   if (jobId) identifier += `.${jobId}`

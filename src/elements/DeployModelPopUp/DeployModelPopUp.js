@@ -36,7 +36,7 @@ import {
 } from 'igz-controls/components'
 
 import { MODELS_TAB } from '../../constants'
-import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { MODAL_SM, PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { buildFunction, fetchArtifactsFunction } from '../../reducers/artifactsReducer'
 import { generateUri } from '../../utils/resources'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
@@ -189,7 +189,7 @@ const DeployModelPopUp = ({
         disabled: isSubmitDisabled(formState),
         label: 'Deploy',
         onClick: formState.handleSubmit,
-        variant: SECONDARY_BUTTON
+        variant: PRIMARY_BUTTON
       }
     ]
     return actions.map(action => <Button {...action} />)

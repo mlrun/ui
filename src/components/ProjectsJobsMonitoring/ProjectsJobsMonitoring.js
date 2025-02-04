@@ -71,6 +71,7 @@ const ProjectsJobsMonitoring = () => {
   const jobsStore = useSelector(store => store.jobsStore)
   const workflowsStore = useSelector(store => store.workflowsStore)
   const functionsStore = useSelector(store => store.functionsStore)
+  const filtersStore = useSelector(store => store.filtersStore)
 
   const jobsFiltersConfig = useMemo(
     () => getJobsFiltersConfig(params.jobName, true),
@@ -192,6 +193,7 @@ const ProjectsJobsMonitoring = () => {
                 autoRefreshIsStopped={
                   jobWizardIsOpened || jobsStore.loading || Boolean(jobsStore.jobLoadingCounter)
                 }
+                autoRefreshIsEnabled={filtersStore.autoRefresh}
                 autoRefreshStopTrigger={!isEmpty(selectedJob)}
                 closeParamName={params.jobName}
                 filters={filters}

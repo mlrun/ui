@@ -142,7 +142,7 @@ const ProjectsView = ({
                   setIsDescendingOrder={setIsDescendingOrder}
                 />
                 <PageActionsMenu
-                  actionsMenuHeader={'New Project'}
+                  actionsMenuHeader={'New project'}
                   disabled={projectStore.mlrunUnhealthy.retrying}
                   onClick={() => setCreateProject(true)}
                   showActionsMenu

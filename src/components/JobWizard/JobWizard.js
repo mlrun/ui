@@ -54,6 +54,7 @@ import {
   RUN_DETAILS_STEP,
   SCHEDULE_TAB
 } from '../../constants'
+import { PRIMARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
 import {
   generateJobRequestData,
   generateJobWizardData,
@@ -455,7 +456,7 @@ const JobWizard = ({
             submitRequest(formState, false, goToFirstInvalidStep)
           },
           disabled: !allStepsAreEnabled || submitIsDisabled,
-          variant: 'secondary'
+          variant: PRIMARY_BUTTON
         }
       ]
     },

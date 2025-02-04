@@ -26,7 +26,7 @@ import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import { isEmpty, isEqual, isNil, mapValues, pickBy } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import DatePicker from '../../common/DatePicker/DatePicker'
 import FilterMenuModal from '../FilterMenuModal/FilterMenuModal'
@@ -49,7 +49,11 @@ import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
 import { FILTERS_CONFIG } from '../../types'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
-import { setFilters, toggleAutoRefresh } from '../../reducers/filtersReducer'
+import {
+  setFilters,
+  toggleAutoRefresh,
+  toggleInternalAutoRefresh
+} from '../../reducers/filtersReducer'
 
 import { ReactComponent as CollapseIcon } from 'igz-controls/images/collapse.svg'
 import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
@@ -80,8 +84,6 @@ const ActionBar = ({
   withRefreshButton = true,
   withoutExpandButton
 }) => {
-  const [autoRefresh, setAutoRefresh] = useState(autoRefreshIsEnabled)
-  const [internalAutoRefresh, setInternalAutoRefresh] = useState(internalAutoRefreshIsEnabled)
   const [internalAutoRefreshPrevValue, setInternalAutoRefreshPrevValue] = useState(
     internalAutoRefreshIsEnabled
   )
@@ -89,6 +91,7 @@ const ActionBar = ({
   const changes = useSelector(store => store.detailsStore.changes)
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const params = useParams()
 
   const actionBarClassNames = classnames('action-bar', hidden && 'action-bar_hidden')
 
@@ -286,7 +289,11 @@ const ActionBar = ({
   }, [filterMenu, filtersConfig])
 
   useEffect(() => {
-    if (((autoRefresh && !withInternalAutoRefresh) || internalAutoRefresh) && !hidden) {
+    if (
+      ((filtersStore.autoRefresh && !withInternalAutoRefresh) ||
+        filtersStore.internalAutoRefresh) &&
+      !hidden
+    ) {
       const intervalId = setInterval(() => {
         if (!autoRefreshIsStopped) {
           refresh(formRef.current.getState())
@@ -296,38 +303,42 @@ const ActionBar = ({
       return () => clearInterval(intervalId)
     }
   }, [
-    autoRefresh,
     autoRefreshIsStopped,
     hidden,
     refresh,
-    internalAutoRefresh,
-    withInternalAutoRefresh
+    withInternalAutoRefresh,
+    filtersStore.internalAutoRefresh,
+    filtersStore.autoRefresh
   ])
 
   useEffect(() => {
-    if (autoRefreshStopTrigger && internalAutoRefresh) {
+    if (autoRefreshStopTrigger && filtersStore.internalAutoRefresh) {
       formRef.current?.change(INTERNAL_AUTO_REFRESH_ID, false)
       setInternalAutoRefreshPrevValue(true)
-      dispatch(toggleAutoRefresh(false))
+      dispatch(toggleInternalAutoRefresh(false))
       handleAutoRefreshPrevValueChange && handleAutoRefreshPrevValueChange(true)
     } else if (!autoRefreshStopTrigger && internalAutoRefreshPrevValue) {
       setInternalAutoRefreshPrevValue(false)
-      setInternalAutoRefresh(true)
-      dispatch(toggleAutoRefresh(true))
+      dispatch(toggleInternalAutoRefresh(true))
       formRef.current?.change(INTERNAL_AUTO_REFRESH_ID, true)
       handleAutoRefreshPrevValueChange && handleAutoRefreshPrevValueChange(false)
     }
   }, [
     internalAutoRefreshPrevValue,
     autoRefreshStopTrigger,
-    internalAutoRefresh,
     handleAutoRefreshPrevValueChange,
-    dispatch
+    dispatch,
+    filtersStore.internalAutoRefresh
   ])
 
   useLayoutEffect(() => {
     formRef.current.reset(formInitialValues)
   }, [formInitialValues])
+
+  useEffect(() => {
+    dispatch(toggleAutoRefresh(false))
+    dispatch(toggleInternalAutoRefresh(false))
+  }, [dispatch, params.projectName])
 
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
@@ -399,34 +410,36 @@ const ActionBar = ({
                   ))
               )}
               {withAutoRefresh && !withInternalAutoRefresh && (
-                <FormCheckBox
-                  className="auto-refresh"
-                  label={AUTO_REFRESH}
-                  name={AUTO_REFRESH_ID}
-                />
+                <>
+                  <FormCheckBox
+                    className="auto-refresh"
+                    label={AUTO_REFRESH}
+                    name={AUTO_REFRESH_ID}
+                  />
+                  <FormOnChange
+                    handler={value => {
+                      dispatch(toggleAutoRefresh(value))
+                    }}
+                    name={AUTO_REFRESH_ID}
+                  />
+                </>
               )}
-              <FormOnChange
-                handler={value => {
-                  dispatch(toggleAutoRefresh(value))
-                  setAutoRefresh(value)
-                }}
-                name={AUTO_REFRESH_ID}
-              />
               {withInternalAutoRefresh && (
-                <FormCheckBox
-                  className="auto-refresh"
-                  disabled={autoRefreshStopTrigger}
-                  label={AUTO_REFRESH}
-                  name={INTERNAL_AUTO_REFRESH_ID}
-                />
+                <>
+                  <FormCheckBox
+                    className="auto-refresh"
+                    disabled={autoRefreshStopTrigger}
+                    label={AUTO_REFRESH}
+                    name={INTERNAL_AUTO_REFRESH_ID}
+                  />
+                  <FormOnChange
+                    handler={value => {
+                      dispatch(toggleInternalAutoRefresh(value))
+                    }}
+                    name={INTERNAL_AUTO_REFRESH_ID}
+                  />
+                </>
               )}
-              <FormOnChange
-                handler={value => {
-                  setInternalAutoRefresh(value)
-                  dispatch(toggleAutoRefresh(value))
-                }}
-                name={INTERNAL_AUTO_REFRESH_ID}
-              />
               {withRefreshButton && (
                 <RoundedIcon tooltipText="Refresh" onClick={() => refresh(formState)} id="refresh">
                   <RefreshIcon />
