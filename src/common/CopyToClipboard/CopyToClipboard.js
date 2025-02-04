@@ -58,7 +58,7 @@ const CopyToClipboard = ({
   return (
     <div className={className} data-testid="copy-to-clipboard">
       {children ? (
-        <Tooltip template={<TextTooltipTemplate text={tooltipText} />}>
+        <Tooltip template={<TextTooltipTemplate text={tooltipText} />} textShow>
           <span onClick={() => copyToClipboard(textToCopy)}>{children}</span>
         </Tooltip>
       ) : (
