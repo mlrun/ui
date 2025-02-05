@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { connect, useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { cloneDeep } from 'lodash'
 
 import FeatureSetsView from './FeatureSetsView'
@@ -41,7 +41,6 @@ import {
 import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
 import { createFeatureSetsRowData } from '../../../utils/createFeatureStoreContent'
 import {
-  featureSetsActionCreator,
   generateActionsMenu,
   generatePageData,
   setFullSelectedFeatureSet
@@ -62,16 +61,16 @@ import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchP
 import { useMode } from '../../../hooks/mode.hook'
 
 import cssVariables from './featureSets.scss'
-
-const FeatureSets = ({
+import {
   fetchExpandedFeatureSet,
   fetchFeatureSets,
   fetchFeatureSetsTags,
   removeFeatureSet,
   removeFeatureSets,
-  removeNewFeatureSet,
-  updateFeatureStoreData
-}) => {
+  removeNewFeatureSet
+} from '../../../reducers/featureStoreReducer'
+
+const FeatureSets = () => {
   const [featureSets, setFeatureSets] = useState([])
   const [selectedFeatureSet, setSelectedFeatureSet] = useState({})
   const [selectedFeatureSetMin, setSelectedFeatureSetMin] = useState({})
@@ -126,17 +125,19 @@ const FeatureSets = ({
         }
       }
 
-      return fetchFeatureSets(params.projectName, filters, config).then(result => {
-        if (result) {
-          const parsedResult = parseFeatureSets(result)
+      return dispatch(fetchFeatureSets({ project: params.projectName, filters, config }))
+        .unwrap()
+        .then(result => {
+          if (result) {
+            const parsedResult = parseFeatureSets(result)
 
-          setFeatureSets(parsedResult)
+            setFeatureSets(parsedResult)
 
-          return parsedResult
-        }
-      })
+            return parsedResult
+          }
+        })
     },
-    [fetchFeatureSets, params.projectName]
+    [dispatch, params.projectName]
   )
 
   const fetchTags = useCallback(() => {
@@ -151,7 +152,7 @@ const FeatureSets = ({
         }
       })
     )
-  }, [dispatch, fetchFeatureSetsTags, params.projectName])
+  }, [dispatch, params.projectName])
 
   const handleRefresh = useCallback(
     filters => {
@@ -179,10 +180,10 @@ const FeatureSets = ({
       delete newStoreSelectedRowData[featureSet.data.ui.identifier]
       delete newPageDataSelectedRowData[featureSet.data.ui.identifier]
 
-      removeFeatureSet(newStoreSelectedRowData)
+      dispatch(removeFeatureSet(newStoreSelectedRowData))
       setSelectedRowData(newPageDataSelectedRowData)
     },
-    [featureStore.featureSets.selectedRowData.content, selectedRowData, removeFeatureSet]
+    [featureStore.featureSets.selectedRowData.content, selectedRowData, dispatch]
   )
 
   const expandRowCallback = useCallback(
@@ -196,7 +197,15 @@ const FeatureSets = ({
         }
       }))
 
-      fetchExpandedFeatureSet(item.project, item.name, featureSetsFilters.tag, featureSetsFilters.labels)
+      dispatch(
+        fetchExpandedFeatureSet({
+          project: item.project,
+          featureSet: item.name,
+          tag: featureSetsFilters.tag,
+          labels: featureSetsFilters.labels
+        })
+      )
+        .unwrap()
         .then(result => {
           const content = [...parseFeatureSets(result)].map(contentItem =>
             createFeatureSetsRowData(contentItem, params.projectName, FEATURE_SETS_TAB, true)
@@ -221,7 +230,7 @@ const FeatureSets = ({
           }))
         })
     },
-    [fetchExpandedFeatureSet, featureSetsFilters.tag, featureSetsFilters.labels, params.projectName]
+    [dispatch, featureSetsFilters.tag, featureSetsFilters.labels, params.projectName]
   )
 
   const { latestItems, toggleRow } = useGroupContent(
@@ -263,7 +272,6 @@ const FeatureSets = ({
         FEATURE_SETS_TAB,
         selectedFeatureSet,
         setNotification,
-        updateFeatureStoreData,
         featureSetsFilters,
         dispatch
       )
@@ -274,8 +282,7 @@ const FeatureSets = ({
       featureSetsFilters,
       params.name,
       params.projectName,
-      selectedFeatureSet,
-      updateFeatureStoreData
+      selectedFeatureSet
     ]
   )
 
@@ -291,7 +298,7 @@ const FeatureSets = ({
     const currentTag = featureSetsFilters.tag === TAG_FILTER_ALL_ITEMS ? TAG_FILTER_ALL_ITEMS : tag
 
     setFeatureSetsPanelIsOpen(false)
-    removeNewFeatureSet()
+    dispatch(removeNewFeatureSet())
 
     setSearchParams(
       prevSearchParams => {
@@ -317,7 +324,7 @@ const FeatureSets = ({
 
   const closePanel = () => {
     setFeatureSetsPanelIsOpen(false)
-    removeNewFeatureSet()
+    dispatch(removeNewFeatureSet())
   }
 
   useEffect(() => {
@@ -402,14 +409,14 @@ const FeatureSets = ({
 
     return () => {
       setFeatureSets([])
-      removeFeatureSets()
-      removeFeatureSet()
+      dispatch(removeFeatureSets())
+      dispatch(removeFeatureSet())
       setSelectedFeatureSetMin({})
       setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
       tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
-  }, [removeFeatureSet, removeFeatureSets, params.projectName, tagAbortControllerRef])
+  }, [params.projectName, tagAbortControllerRef, dispatch])
 
   const virtualizationConfig = useVirtualization({
     rowsData: {
@@ -454,6 +461,4 @@ const FeatureSets = ({
   )
 }
 
-export default connect(null, {
-  ...featureSetsActionCreator
-})(FeatureSets)
+export default FeatureSets

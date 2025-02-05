@@ -24,6 +24,8 @@ import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanel
 import Input from '../../../common/Input/Input'
 
 import './featureSetsPanelSchema.scss'
+import { useDispatch } from 'react-redux'
+import { setNewFeatureSetSchemaTimestampKey } from '../../../reducers/featureStoreReducer'
 
 const FeatureSetsPanelSchemaView = ({
   data,
@@ -31,10 +33,11 @@ const FeatureSetsPanelSchemaView = ({
   handleEntitiesOnBlur,
   handleEntitiesOnChange,
   setData,
-  setNewFeatureSetSchemaTimestampKey,
   setValidation,
   validation
 }) => {
+  const dispatch = useDispatch()
+
   return (
     <div className="feature-set-panel__item new-item-side-panel__item schema">
       <FeatureSetsPanelSection title="Schema">
@@ -81,7 +84,7 @@ const FeatureSetsPanelSchemaView = ({
             onChange={timestamp_key => setData(state => ({ ...state, timestamp_key }))}
             onBlur={event => {
               if (featureStore.newFeatureSet.spec.timestamp_key !== event.target.value) {
-                setNewFeatureSetSchemaTimestampKey(event.target.value)
+                dispatch(setNewFeatureSetSchemaTimestampKey(event.target.value))
               }
             }}
             required={featureStore.newFeatureSet.spec.targets.some(target =>
@@ -109,7 +112,6 @@ FeatureSetsPanelSchemaView.propTypes = {
   handleEntitiesOnBlur: PropTypes.func.isRequired,
   handleEntitiesOnChange: PropTypes.func.isRequired,
   setData: PropTypes.func.isRequired,
-  setNewFeatureSetSchemaTimestampKey: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({}).isRequired
 }

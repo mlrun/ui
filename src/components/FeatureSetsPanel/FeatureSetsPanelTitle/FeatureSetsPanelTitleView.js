@@ -26,12 +26,20 @@ import Input from '../../../common/Input/Input'
 import TextArea from '../../../common/TextArea/TextArea'
 import { RoundedIcon, Tip } from 'igz-controls/components'
 
-import { getValidationRules, getInternalLabelsValidationRule } from 'igz-controls/utils/validation.util'
+import {
+  getValidationRules,
+  getInternalLabelsValidationRule
+} from 'igz-controls/utils/validation.util'
 import { getChipOptions } from '../../../utils/getChipOptions'
 
 import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
 
 import './featureSetsPanelTitle.scss'
+import { useDispatch } from 'react-redux'
+import {
+  setNewFeatureSetDescription,
+  setNewFeatureSetVersion
+} from '../../../reducers/featureStoreReducer'
 
 const FeatureSetsPanelTitleView = ({
   closePanel,
@@ -42,11 +50,11 @@ const FeatureSetsPanelTitleView = ({
   handleCheckPassthrough,
   handleNameOnBlur,
   setData,
-  setNewFeatureSetDescription,
-  setNewFeatureSetVersion,
   setValidation,
   validation
 }) => {
+  const dispatch = useDispatch()
+
   return (
     <div className="panel-title feature-sets-panel__title">
       <div className="panel-title__container">
@@ -80,7 +88,7 @@ const FeatureSetsPanelTitleView = ({
             }
             onBlur={event => {
               if (featureStore.newFeatureSet.metadata.tag !== event.target.value) {
-                setNewFeatureSetVersion(event.target.value)
+                dispatch(setNewFeatureSetVersion(event.target.value))
               }
             }}
             placeholder="latest"
@@ -104,7 +112,7 @@ const FeatureSetsPanelTitleView = ({
           }
           onBlur={event => {
             if (featureStore.newFeatureSet.spec.description !== event.target.value) {
-              setNewFeatureSetDescription(event.target.value)
+              dispatch(setNewFeatureSetDescription(event.target.value))
             }
           }}
           type="text"
@@ -159,8 +167,6 @@ FeatureSetsPanelTitleView.propTypes = {
   featureStore: PropTypes.shape({}).isRequired,
   handleNameOnBlur: PropTypes.func.isRequired,
   setData: PropTypes.func.isRequired,
-  setNewFeatureSetDescription: PropTypes.func.isRequired,
-  setNewFeatureSetVersion: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({}).isRequired
 }

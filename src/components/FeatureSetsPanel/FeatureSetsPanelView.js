@@ -35,6 +35,8 @@ import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
 import './featureSetsPanel.scss'
 import { LABEL_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
+import { setNewFeatureSetCredentialsAccessKey } from '../../reducers/featureStoreReducer'
+import { useDispatch } from 'react-redux'
 
 const FeatureSetsPanelView = ({
   accessKeyRequired,
@@ -50,12 +52,12 @@ const FeatureSetsPanelView = ({
   project,
   setConfirmDialog,
   setDisableButtons,
-  setNewFeatureSetCredentialsAccessKey,
   setValidation,
   validation
 }) => {
   const validationIsFailed = !Object.values(validation).every(value => value)
   const buttonsIsDisabled = !Object.values(disableButtons).every(value => value)
+  const dispatch = useDispatch()
 
   return (
     <div className="new-item-side-panel-container">
@@ -119,7 +121,7 @@ const FeatureSetsPanelView = ({
           <PanelCredentialsAccessKey
             credentialsAccessKey={featureStore.newFeatureSet.credentials.access_key}
             required={accessKeyRequired}
-            setCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}
+            setCredentialsAccessKey={value => dispatch(setNewFeatureSetCredentialsAccessKey(value))}
             setValidation={setValidation}
             validation={validation}
           />
@@ -166,7 +168,6 @@ FeatureSetsPanelView.propTypes = {
   project: PropTypes.string.isRequired,
   setConfirmDialog: PropTypes.func.isRequired,
   setDisableButtons: PropTypes.func.isRequired,
-  setNewFeatureSetCredentialsAccessKey: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({}).isRequired
 }

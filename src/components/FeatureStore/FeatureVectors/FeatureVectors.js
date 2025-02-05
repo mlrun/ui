@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { cloneDeep, isEmpty } from 'lodash'
 
 import FeatureVectorsView from './FeatureVectorsView'
@@ -38,7 +38,6 @@ import {
 import {
   generateActionsMenu,
   generatePageData,
-  featureVectorsActionCreator,
   searchFeatureVectorItem,
   generateDetailsFormInitialValue
 } from './featureVectors.util'
@@ -60,18 +59,18 @@ import { isDetailsTabExists } from '../../../utils/link-helper.util'
 import { filtersConfig } from './featureVectors.util'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 import { useMode } from '../../../hooks/mode.hook'
-
-import cssVariables from './featureVectors.scss'
-
-const FeatureVectors = ({
+import {
   deleteFeatureVector,
   fetchFeatureVector,
   fetchFeatureVectors,
   fetchFeatureVectorsTags,
   removeFeatureVector,
-  removeFeatureVectors,
-  updateFeatureStoreData
-}) => {
+  removeFeatureVectors
+} from '../../../reducers/featureStoreReducer'
+
+import cssVariables from './featureVectors.scss'
+
+const FeatureVectors = () => {
   const [featureVectors, setFeatureVectors] = useState([])
   const [selectedFeatureVector, setSelectedFeatureVector] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
@@ -118,17 +117,19 @@ const FeatureVectors = ({
         }
       }
 
-      return fetchFeatureVectors(params.projectName, filters, config).then(result => {
-        if (result) {
-          const parsedResult = parseFeatureVectors(result)
+      return dispatch(fetchFeatureVectors({ project: params.projectName, filters, config }))
+        .unwrap()
+        .then(result => {
+          if (result) {
+            const parsedResult = parseFeatureVectors(result)
 
-          setFeatureVectors(parsedResult)
+            setFeatureVectors(parsedResult)
 
-          return parsedResult
-        }
-      })
+            return parsedResult
+          }
+        })
     },
-    [fetchFeatureVectors, params.projectName]
+    [dispatch, params.projectName]
   )
 
   const fetchTags = useCallback(() => {
@@ -143,11 +144,14 @@ const FeatureVectors = ({
         }
       })
     )
-  }, [dispatch, fetchFeatureVectorsTags, params.projectName])
+  }, [dispatch, params.projectName])
 
   const handleDeleteFeatureVector = useCallback(
     featureVector => {
-      deleteFeatureVector(params.projectName, featureVector.name)
+      dispatch(
+        deleteFeatureVector({ project: params.projectName, featureVector: featureVector.name })
+      )
+        .unwrap()
         .then(() => {
           if (!isEmpty(selectedFeatureVector)) {
             setSelectedFeatureVector({})
@@ -199,7 +203,6 @@ const FeatureVectors = ({
       setConfirmData(null)
     },
     [
-      deleteFeatureVector,
       params.projectName,
       setConfirmData,
       selectedFeatureVector,
@@ -261,10 +264,10 @@ const FeatureVectors = ({
       delete newStoreSelectedRowData[featureVector.data.ui.identifier]
       delete newPageDataSelectedRowData[featureVector.data.ui.identifier]
 
-      removeFeatureVector(newStoreSelectedRowData)
+      dispatch(removeFeatureVector(newStoreSelectedRowData))
       setSelectedRowData(newPageDataSelectedRowData)
     },
-    [featureStore.featureVectors.selectedRowData.content, selectedRowData, removeFeatureVector]
+    [featureStore.featureVectors.selectedRowData.content, selectedRowData, dispatch]
   )
 
   const expandRowCallback = useCallback(
@@ -278,7 +281,15 @@ const FeatureVectors = ({
         }
       }))
 
-      fetchFeatureVector(featureVector.project, featureVector.name, featureVectorsFilters.tag, featureVectorsFilters.labels)
+      dispatch(
+        fetchFeatureVector({
+          project: featureVector.project,
+          featureVector: featureVector.name,
+          tag: featureVectorsFilters.tag,
+          labels: featureVectorsFilters.labels
+        })
+      )
+        .unwrap()
         .then(result => {
           const content = sortListByDate(parseFeatureVectors(result), 'updated', false).map(
             contentItem =>
@@ -304,7 +315,7 @@ const FeatureVectors = ({
           }))
         })
     },
-    [fetchFeatureVector, featureVectorsFilters.tag, featureVectorsFilters.labels, params.projectName]
+    [dispatch, featureVectorsFilters.tag, featureVectorsFilters.labels, params.projectName]
   )
 
   const { latestItems, toggleRow } = useGroupContent(
@@ -348,7 +359,6 @@ const FeatureVectors = ({
         FEATURE_VECTORS_TAB,
         selectedFeatureVector,
         setNotification,
-        updateFeatureStoreData,
         featureVectorsFilters,
         dispatch
       )
@@ -359,8 +369,7 @@ const FeatureVectors = ({
       featureVectorsFilters,
       params.name,
       params.projectName,
-      selectedFeatureVector,
-      updateFeatureStoreData
+      selectedFeatureVector
     ]
   )
 
@@ -460,20 +469,14 @@ const FeatureVectors = ({
 
     return () => {
       setFeatureVectors([])
-      removeFeatureVectors()
+      dispatch(removeFeatureVectors())
       setSelectedFeatureVector({})
       setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
       tagAbortControllerCurrent.abort(REQUEST_CANCELED)
       setCreateVectorPopUpIsOpen(false)
     }
-  }, [
-    removeFeatureVector,
-    removeFeatureVectors,
-    setCreateVectorPopUpIsOpen,
-    params.projectName,
-    tagAbortControllerRef
-  ])
+  }, [setCreateVectorPopUpIsOpen, params.projectName, tagAbortControllerRef, dispatch])
 
   const virtualizationConfig = useVirtualization({
     rowsData: {
@@ -516,6 +519,4 @@ const FeatureVectors = ({
   )
 }
 
-export default connect(null, {
-  ...featureVectorsActionCreator
-})(FeatureVectors)
+export default FeatureVectors

@@ -30,8 +30,8 @@ import {
 } from '../../../components/FeatureStore/FeatureSets/featureSets.util.js'
 import { showErrorNotification } from '../../../utils/notifications.util'
 
-import featureStoreActions from '../../../actions/featureStore'
 import { toggleYaml } from '../../../reducers/appReducer'
+import { fetchFeatureSet } from '../../../reducers/featureStoreReducer'
 
 const FeatureSetPopUp = ({ featureSetData, isOpen, onResolve }) => {
   const dispatch = useDispatch()
@@ -56,12 +56,13 @@ const FeatureSetPopUp = ({ featureSetData, isOpen, onResolve }) => {
     setIsLoading(true)
 
     dispatch(
-      featureStoreActions.fetchFeatureSet(
-        featureSetData.project,
-        featureSetData.name,
-        featureSetData.tag
-      )
+      fetchFeatureSet({
+        project: featureSetData.project,
+        featureSet: featureSetData.name,
+        tag: featureSetData.tag
+      })
     )
+      .unwrap()
       .then(featureSet => {
         if (!isEmpty(featureSet)) {
           setSelectedFeatureSet(featureSet)
