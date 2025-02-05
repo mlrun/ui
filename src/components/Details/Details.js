@@ -103,6 +103,7 @@ const Details = ({
   const detailsRef = useRef()
   const params = useParams()
   const detailsStore = useSelector(store => store.detailsStore)
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const location = useLocation()
   const [setDetailsInfo, removeDetailsInfo] = useMemo(() => {
     return isDetailsPopUp
@@ -171,7 +172,8 @@ const Details = ({
             pageData.details.type,
             selectedItem,
             params.projectName,
-            isDetailsPopUp
+            isDetailsPopUp,
+            frontendSpec.internal_labels
           )
         )
       } else if (pageData.details.type === FUNCTIONS_PAGE) {
@@ -183,6 +185,7 @@ const Details = ({
       }
     }
   }, [
+    frontendSpec.internal_labels,
     isDetailsPopUp,
     location.search,
     pageData.details.type,
