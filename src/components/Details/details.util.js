@@ -205,7 +205,7 @@ export const generateArtifactsContent = (
         value: selectedItem.algorithm
       },
       labels: {
-        value: selectedItem.labels ?? [],
+        value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels,
         fieldData: {
           name: 'labels'
         },
@@ -329,7 +329,7 @@ export const generateJobsContent = selectedItem => {
       value: selectedItem.resultsChips
     },
     labels: {
-      value: selectedItem.labels
+      value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels
     },
     logLevel: {
       value: selectedItem.logLevel
@@ -409,7 +409,7 @@ export const generateFeatureSetsOverviewContent = (selectedItem, isDetailsPopUp)
     }
   },
   labels: {
-    value: selectedItem.labels ?? [],
+    value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels,
     editModeEnabled: !isDetailsPopUp,
     editModeType: 'chips',
     fieldData: {
