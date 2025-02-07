@@ -25,6 +25,11 @@ import FeatureSetPopUp from '../../elements/DetailsPopUp/FeatureSetPopUp/Feature
 import JobPopUp from '../../elements/DetailsPopUp/JobPopUp/JobPopUp'
 
 import {
+  getValidationRules,
+  getInternalLabelsValidationRule
+} from 'igz-controls/utils/validation.util'
+
+import {
   DATASETS_PAGE,
   DOCUMENTS_TAB,
   FEATURE_SETS_TAB,
@@ -46,7 +51,8 @@ export const generateArtifactsContent = (
   detailsType,
   selectedItem,
   projectName,
-  isDetailsPopUp
+  isDetailsPopUp,
+  internal_labels
 ) => {
   if (detailsType === MODEL_ENDPOINTS_TAB) {
     const monitoringFeatureSetUri = selectedItem?.spec?.monitoring_feature_set_uri ?? ''
@@ -199,13 +205,20 @@ export const generateArtifactsContent = (
         value: selectedItem.algorithm
       },
       labels: {
-        value: selectedItem.labels ?? [],
+        value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels,
         fieldData: {
           name: 'labels'
         },
         editModeEnabled:
           !isDetailsPopUp && (detailsType === MODELS_TAB || detailsType === DOCUMENTS_TAB),
-        editModeType: 'chips'
+        editModeType: 'chips',
+        validationRules: {
+          key: getValidationRules(
+            'artifact.labels.key',
+            getInternalLabelsValidationRule(internal_labels)
+          ),
+          value: getValidationRules('artifact.labels.value')
+        }
       }
     }
   }
@@ -316,7 +329,7 @@ export const generateJobsContent = selectedItem => {
       value: selectedItem.resultsChips
     },
     labels: {
-      value: selectedItem.labels
+      value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels
     },
     logLevel: {
       value: selectedItem.logLevel
@@ -396,7 +409,7 @@ export const generateFeatureSetsOverviewContent = (selectedItem, isDetailsPopUp)
     }
   },
   labels: {
-    value: selectedItem.labels ?? [],
+    value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels,
     editModeEnabled: !isDetailsPopUp,
     editModeType: 'chips',
     fieldData: {

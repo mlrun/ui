@@ -99,11 +99,13 @@ export const MONITOR_ALERTS_PAGE = 'alerts-monitoring'
 export const ALERTS_PAGE_PATH = 'alerts'
 export const ALERTS_FILTERS = 'alerts'
 export const MODEL_ENDPOINT_RESULT = 'model-endpoint-result'
+export const MODEL_ENDPOINT_ID = 'model-endpoint-id'
 export const MODEL_MONITORING_APPLICATION = 'model-monitoring-application'
 export const SEVERITY_LOW = 'low'
 export const SEVERITY_MEDIUM = 'medium'
 export const SEVERITY_HIGH = 'high'
 export const SEVERITY_CRITICAL = 'critical'
+export const ALERTS_DISPLAY_LIMIT = 100
 
 export const MODELS_PAGE = 'MODELS'
 export const MODELS_TAB = 'models'
