@@ -168,7 +168,7 @@ const FunctionsPanel = ({
 
   const createFunction = deploy => {
     const functionPayload = cloneDeep(functionsStore.newFunction)
-    const funcTag = functionPayload.metadata.tag ?? 'latest'
+    const funcTag = functionPayload.metadata.tag || 'latest'
 
     functionPayload.labels = convertChipsData(formRef.current.getFieldState('labels')?.value)
 
