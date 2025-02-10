@@ -168,6 +168,7 @@ const FunctionsPanel = ({
 
   const createFunction = deploy => {
     const functionPayload = cloneDeep(functionsStore.newFunction)
+    const funcTag = functionPayload.metadata.tag ?? 'latest'
 
     functionPayload.labels = convertChipsData(formRef.current.getFieldState('labels')?.value)
 
@@ -205,7 +206,9 @@ const FunctionsPanel = ({
 
       if (result) {
         createFunctionSuccess(mode === PANEL_EDIT_MODE).then(() => {
-          navigate(`/projects/${params.projectName}/functions/${functionPayload.metadata.name}@${result.data.hash_key}/overview`)
+          navigate(
+            `/projects/${params.projectName}/functions/${functionPayload.metadata.name}/:${funcTag}@${result.data.hash_key}/overview`
+          )
         })
       }
     })
