@@ -101,7 +101,7 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, isAlertsPage = true }) =>
   )
 
   const fetchMetrics = useCallback(() => {
-    if (!isAlertsPage && selectedItem.uid !== prevSelectedEndPointNameRef.current) {
+    if (!prevSelectedEndPointNameRef.current) {
       prevSelectedEndPointNameRef.current = selectedItem.uid
       return
     }
@@ -129,7 +129,15 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, isAlertsPage = true }) =>
       .catch(() => {
         setMetrics([])
       })
-  }, [isAlertsPage, filters, selectedItem, detailsStore.dates.value, fetchData])
+  }, [
+    isAlertsPage,
+    filters,
+    detailsStore.dates.value,
+    fetchData,
+    selectedItem.fullName,
+    selectedItem.project,
+    selectedItem.uid
+  ])
 
   useEffect(() => {
     fetchMetrics()
