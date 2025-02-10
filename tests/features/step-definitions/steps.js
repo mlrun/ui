@@ -1009,12 +1009,14 @@ Then(
 Then(
   'verify {string} on {string} wizard should contains {string}.{string}',
   async function(tabSelector, wizard, constWizard, constValue) {
-    await checkTableColumnValues(
+    const compareResult = await checkTableColumnValues(
       this.driver,
       pageObjects[wizard][tabSelector],
       'key',
       pageObjectsConsts[constWizard][constValue]
     )
+    
+    expect(compareResult).to.equal(true)
   }
 )
 
@@ -1068,6 +1070,18 @@ Then(
       this.driver,
       pageObjects[wizard][inputField],
       pageObjects['commonPagesHeader']['Common_Tolltip'],
+      pageObjectsConsts[constStorage][constValue]
+    )
+  }
+)
+
+Then(
+  'verify {string} element on {string} wizard should display hover hint {string}.{string}',
+  async function(inputField, wizard, constStorage, constValue) {
+    await checkComponentHintTextWithHover(
+      this.driver,
+      pageObjects[wizard][inputField],
+      pageObjects['commonPagesHeader']['Common_Hint'],
       pageObjectsConsts[constStorage][constValue]
     )
   }

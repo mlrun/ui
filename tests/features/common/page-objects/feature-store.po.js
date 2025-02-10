@@ -147,9 +147,9 @@ const featuresTable = {
     row: {
       root: '.table-row',
       fields: {
-        feature_name: '.table-body__cell:nth-of-type(1) [data-testid="tooltip-wrapper"]',  //div.data-ellipsis
+        feature_name: '.table-body__cell:nth-of-type(1) [data-testid="tooltip-wrapper"]',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        feature_set: '.table-body__cell:nth-of-type(2) .link',
+        feature_set: '.table-body__cell:nth-of-type(2)',
         type: '.table-body__cell:nth-of-type(3) .data-ellipsis',
         entity: '.table-body__cell:nth-of-type(4) .data-ellipsis',
         description: '.table-body__cell:nth-of-type(5) .data-ellipsis',
@@ -395,7 +395,7 @@ module.exports = {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
     Table_FilterBy_Button: tableFilterByButton,
     Add_To_Feature_Vector_Button: By.css(
-      '.content .content__action-bar-wrapper .action-bar  button.btn-secondary'
+      '.content .content__action-bar-wrapper .action-bar__actions [data-testid="btn"]'
     ),
     Table_Name_Filter_Input: commonNameFilterInput,
     Table_Label_Filter_Input: commonLabelFilterInput,

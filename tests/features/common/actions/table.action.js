@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { expect } from 'chai'
-import { differenceWith, isEqual } from 'lodash'
+import { difference  } from 'lodash'
 import {
   getOptionValues,
   openDropdown,
@@ -338,17 +338,20 @@ const action = {
   checkTableColumnValues: async function(driver, table, columnName, values) {
     const arr = await getColumnValues(driver, table, columnName)
     if (arr.length === 0) {
-      expect(arr.length > 0).equal(
-        true,
-        'Array is empty, nothing to compare'
+      throw new Error('Array is empty, nothing to compare')
+    }
+
+    // find missing and extra values
+    const missingValues = difference(values, arr) // items in values but NOT in arr
+    const extraValues = difference(arr, values)   // items in arr but NOT in values
+
+    if (missingValues.length > 0 || extraValues.length > 0) {
+      throw new Error(
+        `Arrays not equal: \nMissing values: ${missingValues} \nExtra values: ${extraValues}`
       )
     }
-    const diff = differenceWith(arr, values, isEqual)
 
-    expect(diff.length).equal(
-      0,
-      `Arrays not equal: web "${arr}" vs. const "${values} diff "${diff}"`
-    )
+    return true
   },
   getAllCellsWithAttribute: async function(driver, table, attribute) {
     const result = []

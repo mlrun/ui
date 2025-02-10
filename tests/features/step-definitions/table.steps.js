@@ -1483,7 +1483,8 @@ Then(
 
     await hoverComponent(
       this.driver,
-      pageObjects[wizard][table]['tableFields'][column](indx)
+      pageObjects[wizard][table]['tableFields'][column](indx),
+      false
     )
     await this.driver.sleep(500)
     await componentIsPresent(this.driver, actionMenuSel)
