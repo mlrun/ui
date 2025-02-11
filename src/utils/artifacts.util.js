@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { cloneDeep, debounce, isEmpty, isEqual, isNil } from 'lodash'
+import { capitalize, cloneDeep, debounce, isEmpty, isEqual, isNil } from 'lodash'
 
 import artifactApi from '../api/artifacts-api'
 import {
@@ -213,7 +213,7 @@ const getArtifactTypeByTabName = (tab = ARTIFACTS_TAB) => {
     [DOCUMENTS_TAB]: DOCUMENT_TYPE,
     [MODELS_TAB]: MODEL_TYPE
   }
-  
+
   return typeMap[tab]
 }
 
@@ -270,6 +270,7 @@ export const checkForSelectedArtifact = debounce(
 
             if (findArtifactIndex(paginatedArtifacts) === -1) {
               const itemIndexInMainList = findArtifactIndex(artifacts)
+              const { tag, uid } = parseIdentifier(paramsId)
 
               if (itemIndexInMainList > -1) {
                 const { fePageSize } = paginationConfigRef.current
@@ -279,8 +280,12 @@ export const checkForSelectedArtifact = debounce(
 
                   return prevSearchParams
                 })
+              } else if (tag && !artifact.tag && uid === artifact.uid) {
+                artifact.ui.infoMessage = `This is not the latest ${getArtifactTypeByTabName(tab)}. To see the latest, refresh the ${capitalize(getArtifactTypeByTabName(tab))}s page.`
               } else {
-                artifact.ui.infoMessage = generateObjectNotInTheListMessage(getArtifactTypeByTabName(tab))
+                artifact.ui.infoMessage = generateObjectNotInTheListMessage(
+                  getArtifactTypeByTabName(tab)
+                )
               }
             }
           }
