@@ -143,6 +143,7 @@ const DetailsInfoView = React.forwardRef(
                   pageData.page === DOCUMENTS_PAGE
                 ) {
                   if (header.id === 'labels') {
+                    chipsData.validationRules = infoContent[header.id]?.validationRules
                     chipsData.chips = formState.values.labels
                       ? parseKeyValues(formState.values.labels)
                       : parseKeyValues(infoContent[header.id]?.value)

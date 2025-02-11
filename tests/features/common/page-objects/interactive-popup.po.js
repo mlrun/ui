@@ -805,6 +805,7 @@ module.exports = {
     Data_Status: By.css('.table__item-popup .item-header__status-row .updated'),
     State_Icon: By.css('[data-testid="modal"] [data-testid="detailsPanel"] .state'),
     Refresh_Button: By.css('.table__item-popup .item-header__buttons [data-testid="refresh"]'),
+    Tab_Tip : By.css('[data-testid="detailsPanel"] [data-testid="tip"]'),
     Action_Menu: actionMenu(actionMenuStructureTransitionPopup),
     Cross_Close_Button: By.css(
       '.table__item-popup .item-header__buttons [data-testid="details-close-btn"]'

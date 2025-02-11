@@ -276,7 +276,7 @@ export const generateProducerDetailsInfo = (selectedItem, isDetailsPopUp) => {
           openPopUp(JobPopUp, { jobData })
         }
 
-        if (isUri) {
+        if (isUri && selectedItem.producer.name !== 'UI') {
           // value is in the form of: project/uid-iteration
           const [project, rest] = value.split('/')
           const [uid, iter] = rest?.split('-') ?? []
@@ -301,8 +301,9 @@ export const generateProducerDetailsInfo = (selectedItem, isDetailsPopUp) => {
             </div>
             <DetailsInfoItem
               item={{
-                shouldPopUp: isUri,
-                handleClick: () => isUri && handleOpenJobDetails(producerData)
+                shouldPopUp: isUri && selectedItem.producer.name !== 'UI',
+                handleClick: () => isUri && handleOpenJobDetails(producerData),
+                copyToClipboard: isUri && selectedItem.producer.name === 'UI'
               }}
               info={value}
               isDetailsPopUp={isDetailsPopUp}

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty, isEqual } from 'lodash'
 import classnames from 'classnames'
@@ -125,6 +125,20 @@ const DetailsInfoItemChip = ({
     setEditMode
   ])
 
+  const validationRules = useMemo(() => {
+    if (chipsData.validationRules) {
+      return chipsData.validationRules
+    } else {
+      return {
+        key: getValidationRules(
+          'common.tag',
+          getInternalLabelsValidationRule(frontendSpec.internal_labels)
+        ),
+        value: getValidationRules('common.tag')
+      }
+    }
+  }, [frontendSpec.internal_labels, chipsData.validationRules])
+
   return (
     <div className={chipFieldClassName}>
       <FormChipCell
@@ -135,13 +149,7 @@ const DetailsInfoItemChip = ({
         name={item.fieldData.name}
         shortChips
         visibleChipsMaxLength="all"
-        validationRules={{
-          key: getValidationRules(
-            'common.tag',
-            getInternalLabelsValidationRule(frontendSpec.internal_labels)
-          ),
-          value: getValidationRules('common.tag')
-        }}
+        validationRules={validationRules}
       />
       <FormOnChange name={item.fieldData.name} handler={setEditMode} />
       {isFieldInEditMode && (
