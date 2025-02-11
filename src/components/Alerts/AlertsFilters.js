@@ -93,7 +93,10 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
   const handleEntityTypeChange = selectedValue => {
     const params = Object.fromEntries(new URLSearchParams(location.search))
 
-    form.change(EVENT_TYPE, params[ENTITY_TYPE] === selectedValue ? params[EVENT_TYPE] : 'all')
+    form.change(
+      EVENT_TYPE,
+      params[ENTITY_TYPE] === selectedValue || entityType === 'all' ? params[EVENT_TYPE] : 'all'
+    )
   }
 
   return (
