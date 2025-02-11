@@ -49,7 +49,8 @@ import {
   FUNCTIONS_PAGE,
   JOBS_PAGE,
   MODEL_ENDPOINTS_TAB,
-  MODELS_TAB
+  MODELS_TAB,
+  VIEW_SEARCH_PARAMETER
 } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
 import {
@@ -116,9 +117,8 @@ const Details = ({
     setDetailsPopUpInfoContent,
     setInfoContent
   ])
-  const pathnameWithoutTab = useMemo(
-    () => location.pathname.substring(0, location.pathname.lastIndexOf(params.tab)),
-    [location.pathname, params.tab]
+  const previousPathnameRef = useRef(
+    location.pathname.substring(0, location.pathname.lastIndexOf(params.tab))
   )
 
   const detailsPanelClassNames = classnames(
@@ -234,6 +234,8 @@ const Details = ({
 
   const shouldDetailsBlock = useCallback(
     ({ currentLocation, nextLocation }) => {
+      const currentDetailsView = currentLocation.search.split(`${VIEW_SEARCH_PARAMETER}=`)?.[1]
+      const nextDetailsView = nextLocation.search.split(`${VIEW_SEARCH_PARAMETER}=`)?.[1]
       const currentLocationPathname = currentLocation.pathname.split('/')
       const nextLocationPathname = nextLocation.pathname.split('/')
       currentLocationPathname.pop()
@@ -241,7 +243,8 @@ const Details = ({
 
       return (
         detailsStore.changes.counter > 0 &&
-        currentLocationPathname.join('/') !== nextLocationPathname.join('/')
+        (currentLocationPathname.join('/') !== nextLocationPathname.join('/') ||
+          currentDetailsView !== nextDetailsView)
       )
     },
     [detailsStore.changes.counter]
@@ -259,11 +262,17 @@ const Details = ({
   }, [formInitialValues, detailsStore.changes.counter])
 
   useEffect(() => {
-    if (!isDetailsPopUp) {
+    const currentPathname = location.pathname.substring(
+      0,
+      location.pathname.lastIndexOf(params.tab)
+    )
+
+    if (previousPathnameRef.current !== currentPathname && !isDetailsPopUp) {
       formRef.current.restart(formInitialValues)
       dispatch(detailsActions.setEditMode(false))
+      previousPathnameRef.current = currentPathname
     }
-  }, [dispatch, formInitialValues, isDetailsPopUp, pathnameWithoutTab])
+  }, [dispatch, formInitialValues, isDetailsPopUp, location.pathname, params.tab])
 
   const applyChanges = useCallback(() => {
     applyDetailsChanges(detailsStore.changes).then(() => {
@@ -290,7 +299,6 @@ const Details = ({
     handleShowWarning(false)
 
     if (detailsStore.filtersWasHandled) {
-      retryRequest({})
       setFiltersWasHandled(false)
     } else {
       blocker.proceed?.()
@@ -302,7 +310,6 @@ const Details = ({
     cancelChanges,
     detailsStore.filtersWasHandled,
     handleShowWarning,
-    retryRequest,
     setFiltersWasHandled
   ])
 
@@ -356,17 +363,19 @@ const Details = ({
               setIterationOption={setIterationOption}
             />
           </div>
-          {blocker.state === 'blocked' && (
+          {(blocker.state === 'blocked' || detailsStore.showWarning) && (
             <ConfirmDialog
               cancelButton={{
                 handler: () => {
                   blocker.reset?.()
+                  dispatch(detailsActions.showWarning(false))
                 },
                 label: detailsStore.filtersWasHandled ? "Don't refresh" : "Don't Leave",
                 variant: TERTIARY_BUTTON
               }}
               closePopUp={() => {
                 blocker.reset?.()
+                dispatch(detailsActions.showWarning(false))
               }}
               confirmButton={{
                 handler: leavePage,
@@ -374,7 +383,7 @@ const Details = ({
                 variant: PRIMARY_BUTTON
               }}
               header="You have unsaved changes."
-              isOpen={blocker.state === 'blocked'}
+              isOpen={blocker.state === 'blocked' || detailsStore.showWarning}
               message={`${
                 detailsStore.filtersWasHandled ? 'Refreshing the list' : 'Leaving this page'
               } will discard your changes.`}
