@@ -40,7 +40,8 @@ module.exports = {
       'monitoring and notification.'
   },
   Feature_Store: {
-    Tab_List: ['Feature Sets', 'Features', 'Feature Vectors']
+    Tab_List: ['Feature Sets', 'Features', 'Feature Vectors'],
+    Delete_Feature_Vector_Message: /Are you sure you want to delete the feature vector "(.+?)"\?. You cannot restore a feature vector after deleting it./,
   },
   Models: {
     Tab_List: ['Models', 'Model Endpoints', 'Real-Time Pipelines'],
@@ -66,7 +67,9 @@ module.exports = {
     ]
   },
   Feature_Sets_Info_Pane: {
-    Tab_List: ['Overview', 'Features', 'Transformations', 'Preview', 'Statistics', 'Analysis'],
+    Created_State: 'Created',
+    Tab_List: ['Overview', 'Features', 'Transformations', 'Preview', 'Statistics'],
+    Tab_List_Demo: ['Overview', 'Features', 'Transformations', 'Preview', 'Statistics', 'Analysis'],
     Overview_General_Headers: [
       'Description:',
       'Labels:',
@@ -81,7 +84,7 @@ module.exports = {
     ]
   },
   Feature_Vectors_Info_Pane: {
-    Tab_List: ['Overview', 'Requested Features', 'Analysis'],
+    Tab_List: ['Overview', 'Requested Features'],
     Overview_General_Headers: [
       'Description:',
       'Labels:',
@@ -100,6 +103,7 @@ module.exports = {
     Action_Menu_List_Dataset_Transition_Popup: ['Download', 'Copy URI', 'View YAML'],
     Action_Menu_List_Function_Transition_Popup: ['View YAML'],
     Action_Menu_List_Run_Transition_Popup: ['Run\'s resource monitoring', 'View YAML'],
+    Action_Menu_List_Feature_Set_Transition_Popup: ['View YAML'],
     Handler_List: ['train'],
     Pods_Priority_List: ['Low', 'Medium', 'High'],
     Ranking_Criteria_List: ['Min', 'Max']
@@ -322,6 +326,7 @@ module.exports = {
     Failed_Jobs: 'Aborted, Error',
     Failed_Worflows: 'Error, Failed',
     Succeeded: 'Completed',
+    Statistics_Tab_Tip: 'Statistics reflect the data for the latest ingestion. \n Note that some values may be empty due to the use of different engines for calculating statistics',
     Error_Content: 'Error. Columns must be same length as key',
     Error_Content_Workflow:
       "Error. 2021-08-29 20:01:36.582972: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library 'libcudart.so.11.0'; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/lib:/usr/local/lib: 2021-08-29 20:01:36.583019: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine. 2021-08-29 20:01:46.470042: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set 2021-08-29 20:01:46.470263: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/lib:/usr/local/lib: 2021-08-29 20:01:46.470283: W tensorflow/stream_executor/cuda/cuda_driver.cc:326] failed call to cuInit: UNKNOWN ERROR (303) 2021-08-29 20:01:46.470306: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (train-1193bacd-worker-0): /proc/driver/nvidia/version does not exist 2021-08-29 20:01:46.518782: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations: AVX2 FMA To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags. 2021-08-29 20:01:46.518927: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set Some callbacks may not have access to the averaged metrics, see https://github.com/horovod/horovod/issues/2440 Traceback (most recent call last): File \"/User/demos/image-classification-with-distributed-training/src-tfv2/horovod-training.py\", line 116, in <module> hvd.callbacks.LearningRateWarmupCallback(warmup_epochs=5, verbose=1), TypeError: __init__() missing 1 required positional argument: 'initial_lr'"
@@ -531,7 +536,7 @@ module.exports = {
     One_Day_Option: 'Must select at least one day option'
   },
   Dropdown_Options: {
-    Tag_Filer_Options: ['All', 'latest'],
+    Tag_Filer_Options: ['All tags', 'latest'],
     Status_Filter_Options: ['All', 'Completed', 'Running', 'Pending', 'Error', 'Aborted'],
     Jobs_Status_Filter_Options: [
       'All',
