@@ -119,7 +119,7 @@ const AddToFeatureVectorPage = ({
             })
           )
           dispatch(setTablePanelOpen(false))
-          navigateToFeatureVectorsScreen(featureVector)
+          navigateToFeatureVectorsScreen(response?.data)
         })
         .catch(error => {
           const customErrorMsg =
