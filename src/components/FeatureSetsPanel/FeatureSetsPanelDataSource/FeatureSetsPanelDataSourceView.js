@@ -35,6 +35,11 @@ import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { ReactComponent as Pencil } from 'igz-controls/images/edit.svg'
 
 import './featureSetsPanelDataSource.scss'
+import { useDispatch } from 'react-redux'
+import {
+  setNewFeatureSetDataSourceParseDates,
+  setNewFeatureSetSchedule
+} from '../../../reducers/featureStoreReducer'
 
 const FeatureSetsPanelDataSourceView = ({
   data,
@@ -46,13 +51,13 @@ const FeatureSetsPanelDataSourceView = ({
   handleUrlOnEditModeChange,
   handleUrlSelectOnChange = null,
   setData,
-  setNewFeatureSetDataSourceParseDates,
-  setNewFeatureSetSchedule,
   setShowSchedule,
   setValidation,
   showSchedule,
   validation
 }) => {
+  const dispatch = useDispatch()
+
   return (
     <div className="feature-set-panel__item new-item-side-panel__item data-source">
       <FeatureSetsPanelSection title="Data Source">
@@ -95,7 +100,7 @@ const FeatureSetsPanelDataSourceView = ({
               <ScheduleFeatureSet
                 defaultCron={data.schedule}
                 setNewFeatureSetSchedule={cron => {
-                  setNewFeatureSetSchedule(cron)
+                  dispatch(setNewFeatureSetSchedule(cron))
                   setData(state => ({ ...state, schedule: cron }))
                 }}
                 setShowSchedule={setShowSchedule}
@@ -111,7 +116,7 @@ const FeatureSetsPanelDataSourceView = ({
             label="Parse Dates"
             onBlur={event => {
               if (featureStore.newFeatureSet.spec.source.parse_dates !== event.target.value) {
-                setNewFeatureSetDataSourceParseDates(event.target.value)
+                dispatch(setNewFeatureSetDataSourceParseDates(event.target.value))
               }
             }}
             onChange={parseDates =>
@@ -143,8 +148,6 @@ FeatureSetsPanelDataSourceView.propTypes = {
   handleUrlOnEditModeChange: PropTypes.func.isRequired,
   handleUrlSelectOnChange: PropTypes.func,
   setData: PropTypes.func.isRequired,
-  setNewFeatureSetDataSourceParseDates: PropTypes.func.isRequired,
-  setNewFeatureSetSchedule: PropTypes.func.isRequired,
   setShowSchedule: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   showSchedule: PropTypes.bool.isRequired,

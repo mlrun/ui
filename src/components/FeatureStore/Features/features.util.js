@@ -17,8 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import featureStoreActions from '../../../actions/featureStore'
-import { LABELS_FILTER, LARGE_REQUEST_CANCELED, NAME_FILTER, TAG_FILTER, TAG_FILTER_LATEST } from '../../../constants'
+import {
+  LABELS_FILTER,
+  LARGE_REQUEST_CANCELED,
+  NAME_FILTER,
+  TAG_FILTER,
+  TAG_FILTER_LATEST
+} from '../../../constants'
 import { showLargeResponsePopUp } from '../../../httpClient'
 import { largeResponseCatchHandler } from '../../../utils/largeResponseCatchHandler'
 
@@ -50,17 +55,4 @@ export const handleFeaturesResponse = (
   }
 
   return features || []
-}
-
-export const featuresActionCreator = {
-  fetchEntity: featureStoreActions.fetchEntity,
-  fetchFeature: featureStoreActions.fetchFeature,
-  fetchEntities: featureStoreActions.fetchEntities,
-  fetchFeatures: featureStoreActions.fetchFeatures,
-  fetchFeatureSetsTags: featureStoreActions.fetchFeatureSetsTags,
-  fetchFeatureVectors: featureStoreActions.fetchFeatureVectors,
-  removeEntity: featureStoreActions.removeEntity,
-  removeFeature: featureStoreActions.removeFeature,
-  removeFeatures: featureStoreActions.removeFeatures,
-  removeEntities: featureStoreActions.removeEntities
 }

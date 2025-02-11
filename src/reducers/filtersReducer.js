@@ -20,15 +20,7 @@ such restriction.
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { set } from 'lodash'
 
-import {
-  ARTIFACT_OTHER_TYPE,
-  DATASET_TYPE,
-  DOCUMENT_TYPE,
-  FILTER_MENU_MODAL,
-  GROUP_BY_NAME,
-  MODEL_TYPE,
-  SHOW_ITERATIONS
-} from '../constants'
+import { FILTER_MENU_MODAL, GROUP_BY_NAME, SHOW_ITERATIONS } from '../constants'
 
 const initialState = {
   groupBy: GROUP_BY_NAME,
@@ -48,16 +40,14 @@ export const getFilterTagOptions = createAsyncThunk(
       category,
       config
     }
-    const fetchTagsPromise =
-      [ARTIFACT_OTHER_TYPE, MODEL_TYPE, DATASET_TYPE, DOCUMENT_TYPE].includes(category) && dispatch
-        ? dispatch(fetchTags(fetchTagsArguments)).unwrap()
-        : fetchTags(fetchTagsArguments)
 
-    return fetchTagsPromise.then(response => {
-      if (response?.data) {
-        return [...new Set(response.data.tags)].filter(option => option)
-      }
-    })
+    return dispatch(fetchTags(fetchTagsArguments))
+      .unwrap()
+      .then(response => {
+        if (response?.data) {
+          return [...new Set(response.data.tags)].filter(option => option)
+        }
+      })
   }
 )
 

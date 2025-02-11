@@ -18,8 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
 import AddToFeatureVectorView from './AddToFeatureVectorView'
 import FeaturesTablePanel from '../../elements/FeaturesTablePanel/FeaturesTablePanel'
@@ -35,7 +36,6 @@ import {
   CANCEL_REQUEST_TIMEOUT,
   PROJECT_FILTER
 } from '../../constants'
-import featureStoreActions from '../../actions/featureStore'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { createFeaturesRowData } from '../../utils/createFeatureStoreContent'
 import { getFeatureIdentifier } from '../../utils/getUniqueIdentifier'
@@ -51,21 +51,20 @@ import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { getFiltersConfig } from './addToFeatureVectorPage.util'
 import { toggleYaml } from '../../reducers/appReducer'
-import { isEmpty } from 'lodash'
+import {
+  createNewFeatureVector,
+  fetchFeature,
+  fetchFeatures,
+  fetchFeatureSetsTags,
+  removeFeature,
+  removeFeatures
+} from '../../reducers/featureStoreReducer'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 import cssVariables from '../FeatureStore/Features/features.scss'
 
-const AddToFeatureVectorPage = ({
-  createNewFeatureVector,
-  featureStore,
-  fetchFeature,
-  fetchFeatureSetsTags,
-  fetchFeatures,
-  removeFeature,
-  removeFeatures
-}) => {
+const AddToFeatureVectorPage = () => {
   const [content, setContent] = useState([])
   const [selectedRowData, setSelectedRowData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
@@ -76,6 +75,7 @@ const AddToFeatureVectorPage = ({
   const navigate = useNavigate()
   const tableStore = useSelector(store => store.tableStore)
   const filtersStore = useSelector(store => store.filtersStore)
+  const featureStore = useSelector(store => store.featureStore)
   const dispatch = useDispatch()
   const filtersConfig = useMemo(() => {
     return getFiltersConfig(params.projectName)
@@ -109,7 +109,8 @@ const AddToFeatureVectorPage = ({
 
   const handleCreateFeatureVector = useCallback(
     featureVector => {
-      createNewFeatureVector(featureVector)
+      dispatch(createNewFeatureVector({ data: featureVector }))
+        .unwrap()
         .then(response => {
           dispatch(
             setNotification({
@@ -137,7 +138,7 @@ const AddToFeatureVectorPage = ({
           }
         })
     },
-    [createNewFeatureVector, dispatch, navigateToFeatureVectorsScreen]
+    [dispatch, navigateToFeatureVectorsScreen]
   )
 
   const pageData = useMemo(
@@ -180,7 +181,8 @@ const AddToFeatureVectorPage = ({
       }
 
       setRequestErrorMessage('')
-      fetchFeatures(filters.project, filters, config)
+      dispatch(fetchFeatures({ project: filters.project, filters, config }))
+        .unwrap()
         .then(features => {
           return handleFeaturesResponse(
             features,
@@ -201,14 +203,14 @@ const AddToFeatureVectorPage = ({
         })
         .finally(() => clearTimeout(cancelRequestTimeout))
     },
-    [dispatch, fetchFeatures]
+    [dispatch]
   )
 
   const fetchTags = useCallback(
     (project = params.projectName) => {
-      return dispatch(getFilterTagOptions({ fetchTags: fetchFeatureSetsTags, project }))
+      return dispatch(getFilterTagOptions({ dispatch, fetchTags: fetchFeatureSetsTags, project }))
     },
-    [dispatch, fetchFeatureSetsTags, params.projectName]
+    [dispatch, params.projectName]
   )
 
   const handleRefresh = useCallback(
@@ -236,10 +238,10 @@ const AddToFeatureVectorPage = ({
       delete newStoreSelectedRowData[feature.data.ui.identifier]
       delete newSelectedRowData[feature.data.ui.identifier]
 
-      removeFeature(newStoreSelectedRowData)
+      dispatch(removeFeature(newStoreSelectedRowData))
       setSelectedRowData(newSelectedRowData)
     },
-    [featureStore.features.selectedRowData.content, removeFeature, selectedRowData]
+    [dispatch, featureStore.features.selectedRowData.content, selectedRowData]
   )
 
   const expandRowCallback = useCallback(
@@ -253,7 +255,14 @@ const AddToFeatureVectorPage = ({
         }
       }))
 
-      fetchFeature(feature.metadata.project, feature.name, feature.metadata.name)
+      dispatch(
+        fetchFeature({
+          project: feature.metadata.project,
+          name: feature.name,
+          metadataName: feature.metadata.name
+        })
+      )
+        .unwrap()
         .then(result => {
           if (result?.length > 0) {
             const content = [...result].map(contentItem =>
@@ -280,7 +289,7 @@ const AddToFeatureVectorPage = ({
           }))
         })
     },
-    [fetchFeature, tableStore.isTablePanelOpen]
+    [dispatch, tableStore.isTablePanelOpen]
   )
 
   const { latestItems, toggleRow } = useGroupContent(
@@ -310,12 +319,12 @@ const AddToFeatureVectorPage = ({
   useEffect(() => {
     return () => {
       setContent([])
-      removeFeature()
-      removeFeatures()
+      dispatch(removeFeature())
+      dispatch(removeFeatures())
       setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
-  }, [removeFeature, removeFeatures])
+  }, [dispatch])
 
   useEffect(() => {
     if (addToFeatureVectorFilters.tag === TAG_FILTER_ALL_ITEMS) {
@@ -376,11 +385,4 @@ const AddToFeatureVectorPage = ({
   )
 }
 
-export default connect(
-  ({ featureStore }) => ({
-    featureStore
-  }),
-  {
-    ...featureStoreActions
-  }
-)(AddToFeatureVectorPage)
+export default AddToFeatureVectorPage
