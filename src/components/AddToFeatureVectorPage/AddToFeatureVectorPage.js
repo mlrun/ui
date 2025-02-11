@@ -208,7 +208,7 @@ const AddToFeatureVectorPage = () => {
 
   const fetchTags = useCallback(
     (project = params.projectName) => {
-      return dispatch(getFilterTagOptions({ fetchTags: fetchFeatureSetsTags, project }))
+      return dispatch(getFilterTagOptions({ dispatch, fetchTags: fetchFeatureSetsTags, project }))
     },
     [dispatch, params.projectName]
   )

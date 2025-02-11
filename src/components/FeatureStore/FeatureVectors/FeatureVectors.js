@@ -137,6 +137,7 @@ const FeatureVectors = () => {
 
     return dispatch(
       getFilterTagOptions({
+        dispatch,
         fetchTags: fetchFeatureVectorsTags,
         project: params.projectName,
         config: {

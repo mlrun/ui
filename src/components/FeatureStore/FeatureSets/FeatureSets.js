@@ -145,6 +145,7 @@ const FeatureSets = () => {
 
     return dispatch(
       getFilterTagOptions({
+        dispatch,
         fetchTags: fetchFeatureSetsTags,
         project: params.projectName,
         config: {

@@ -157,6 +157,7 @@ const Features = () => {
 
     return dispatch(
       getFilterTagOptions({
+        dispatch,
         fetchTags: fetchFeatureSetsTags,
         project: params.projectName,
         config: { signal: tagAbortControllerRef.current.signal }
