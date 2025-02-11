@@ -18,14 +18,17 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useMemo, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import AlertsView from '../Alerts/AlertsView'
 
+import { ALERTS_DISPLAY_LIMIT } from '../../constants'
 import { createAlertRowData } from '../../utils/createAlertsContent'
 import {
   generatePageData,
   getAlertsFiltersConfig,
+  navigateToPerProjectAlertsPage,
   parseAlertsQueryParamsCallback
 } from '../../components/Alerts/alerts.util'
 import { useAlertsPageData } from '../../hooks/useAlertsPageData'
@@ -35,8 +38,10 @@ const DetailsAlerts = () => {
   const [selectedAlert, setSelectedAlert] = useState({})
   const alertsStore = useSelector(state => state.alertsStore)
   const filtersStore = useSelector(store => store.filtersStore)
+  const navigate = useNavigate()
+  const { projectName } = useParams()
 
-  const alertsFiltersConfig = useMemo(() => getAlertsFiltersConfig(true), [])
+  const alertsFiltersConfig = useMemo(() => getAlertsFiltersConfig(true, true), [])
 
   const alertsFilters = useFiltersFromSearchParams(
     alertsFiltersConfig,
@@ -63,7 +68,8 @@ const DetailsAlerts = () => {
   )
 
   const tableContent = useMemo(() => {
-    return paginatedAlerts.map(alert => createAlertRowData(alert, false, true))
+    const limitedAlerts = paginatedAlerts.slice(0, ALERTS_DISPLAY_LIMIT)
+    return limitedAlerts.map(alert => createAlertRowData(alert, false, true))
   }, [paginatedAlerts])
 
   const pageData = useMemo(() => generatePageData(selectedAlert), [selectedAlert])
@@ -89,8 +95,11 @@ const DetailsAlerts = () => {
       handleRefreshWithFilters={handleRefreshWithFilters}
       isAlertsPage={false}
       isCrossProjects={false}
+      navigate={navigate}
+      navigateToPerProjectAlertsPage={navigateToPerProjectAlertsPage}
       pageData={pageData}
       paginationConfigAlertsRef={paginationConfigAlertsRef}
+      projectName={projectName}
       requestErrorMessage={requestErrorMessage}
       selectedAlert={selectedAlert}
       setSearchParams={setSearchParams}

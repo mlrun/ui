@@ -442,8 +442,9 @@ function getFeatureSet(req, res) {
       const specFields = ['description', 'entities', 'targets', 'engine'].map(
         fieldName => `spec.${fieldName}`
       )
+      const statusFields = ['state', 'stats', 'preview'].map(fieldName => `status.${fieldName}`)
 
-      return pick(featureSet, ['kind', ...metadataFields, 'status.state', ...specFields])
+      return pick(featureSet, ['kind', ...metadataFields, ...statusFields, ...specFields])
     })
   }
 

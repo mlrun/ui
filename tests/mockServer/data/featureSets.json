@@ -1005,7 +1005,27 @@
         }
       },
       "status": {
-        "state": null
+        "state": null,
+        "stats": {
+          "ticker": {
+            "count": 3,
+            "unique": 3,
+            "top": "MSFT",
+            "freq": 1
+          },
+          "name": {
+            "count": 3,
+            "unique": 3,
+            "top": "Microsoft Corporation",
+            "freq": 1
+          },
+          "exchange": {
+            "count": 3,
+            "unique": 1,
+            "top": "NASDAQ",
+            "freq": 3
+          }
+        }
       }
     },
     {
@@ -7141,7 +7161,27 @@
       },
       "status": {
         "state": "created",
-        "preview": []
+        "preview": [],
+        "stats": {
+          "ticker": {
+            "count": 3,
+            "unique": 3,
+            "top": "MSFT",
+            "freq": 1
+          },
+          "name": {
+            "count": 3,
+            "unique": 3,
+            "top": "Microsoft Corporation",
+            "freq": 1
+          },
+          "exchange": {
+            "count": 3,
+            "unique": 1,
+            "top": "NASDAQ",
+            "freq": 3
+          }
+        }
       }
     },
     {

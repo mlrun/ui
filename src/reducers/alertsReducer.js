@@ -34,6 +34,7 @@ import {
   FILTER_ALL_ITEMS,
   JOB,
   JOB_NAME,
+  MODEL_ENDPOINT_ID,
   MODEL_ENDPOINT_RESULT,
   MODEL_MONITORING_APPLICATION
 } from '../constants'
@@ -77,6 +78,10 @@ const generateRequestParams = filters => {
 
   if (entityType && entityType === JOB && filters?.[JOB_NAME].trim()) {
     params[ENTITY_ID] = `~*${filters?.[JOB_NAME]}*`
+  }
+
+  if (filters[MODEL_ENDPOINT_ID]) {
+    params[ENTITY_ID] = `~${filters[MODEL_ENDPOINT_ID]}*`
   }
 
   const endpointApplication = filters?.[ENDPOINT_APPLICATION]?.trim()

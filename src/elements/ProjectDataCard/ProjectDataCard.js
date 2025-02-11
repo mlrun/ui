@@ -57,6 +57,13 @@ const ProjectDataCard = ({
           </div>
         )}
       </div>
+      <div className="project-data-card__recent-text">
+        {!href && (
+          <>
+            Recent <span className="text-sm">(last 7 days)</span>
+          </>
+        )}
+      </div>
       {content.loading ? (
         <Loader section />
       ) : content.error ? (
@@ -67,15 +74,6 @@ const ProjectDataCard = ({
         <NoData />
       ) : (
         <>
-          <div className="project-data-card__recent-text">
-            {!href ? (
-              <>
-                Recent <span className="text-sm">(last 7 days)</span>
-              </>
-            ) : (
-              ''
-            )}
-          </div>
           <ProjectTable params={params} table={table} />
           {href ? (
             <a href={href} target="_top" className="link project-data-card__see-all-link">
