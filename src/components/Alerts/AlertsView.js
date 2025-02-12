@@ -169,7 +169,7 @@ const AlertsView = ({
                 </Table>
                 {isAlertsPage && (
                   <Pagination
-                      closeParamName={isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE_PATH}
+                    closeParamName={isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE_PATH}
                     page={pageData.page}
                     paginationConfig={paginationConfigAlertsRef.current}
                   />
