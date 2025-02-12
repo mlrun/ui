@@ -30,9 +30,17 @@ import NoData from '../../common/NoData/NoData'
 import Pagination from '../../common/Pagination/Pagination'
 import Table from '../Table/Table'
 
-import { ALERTS_FILTERS, ALERTS_PAGE, ALERTS_PAGE_PATH, MONITOR_ALERTS_PAGE } from '../../constants'
+import {
+  ALERTS_DISPLAY_LIMIT,
+  ALERTS_FILTERS,
+  ALERTS_PAGE,
+  ALERTS_PAGE_PATH,
+  MONITOR_ALERTS_PAGE
+} from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
+
+import { ReactComponent as ExclamationMarkIcon } from 'igz-controls/images/info-fill.svg'
 
 import './alerts.scss'
 
@@ -46,8 +54,11 @@ const AlertsView = ({
   handleRefreshAlerts,
   handleRefreshWithFilters,
   isCrossProjects,
+  navigate,
+  navigateToPerProjectAlertsPage,
   pageData,
   paginationConfigAlertsRef,
+  projectName = '',
   requestErrorMessage,
   selectedAlert,
   setSearchParams,
@@ -66,21 +77,36 @@ const AlertsView = ({
           </div>
         )}
         <div className={content}>
-          <div className="table-container alerts-table__container">
+          <div className="table-container alerts-container">
             <div className="content__action-bar-wrapper">
-              <ActionBar
-                autoRefreshIsStopped={true}
-                closeParamName={ALERTS_PAGE_PATH}
-                filterMenuName={ALERTS_FILTERS}
-                filters={filters}
-                filtersConfig={alertsFiltersConfig}
-                handleRefresh={handleRefreshAlerts}
-                setSearchParams={setSearchParams}
-                withRefreshButton
-                withoutExpandButton
-              >
-                <AlertsFilters isAlertsPage={isAlertsPage} isCrossProjects={isCrossProjects} />
-              </ActionBar>
+              {!isAlertsPage && tableContent.length >= ALERTS_DISPLAY_LIMIT && (
+                <div className="alerts-container__content-info">
+                  <ExclamationMarkIcon />
+                  <div>Only 100 alerts are displayed. View all in</div>
+                  <span
+                    className="link"
+                    onClick={() => navigateToPerProjectAlertsPage(navigate, projectName)}
+                  >
+                    alerts screen
+                  </span>
+                  .
+                </div>
+              )}
+              {isAlertsPage && (
+                <ActionBar
+                  autoRefreshIsStopped={true}
+                  closeParamName={ALERTS_PAGE_PATH}
+                  filterMenuName={ALERTS_FILTERS}
+                  filters={filters}
+                  filtersConfig={isAlertsPage ? alertsFiltersConfig : {}}
+                  handleRefresh={handleRefreshAlerts}
+                  setSearchParams={setSearchParams}
+                  withRefreshButton
+                  withoutExpandButton
+                >
+                  <AlertsFilters isAlertsPage={isAlertsPage} isCrossProjects={isCrossProjects} />
+                </ActionBar>
+              )}
             </div>
             {alertsStore.loading ? (
               <Loader />
@@ -141,11 +167,13 @@ const AlertsView = ({
                     )
                   })}
                 </Table>
-                <Pagination
-                  closeParamName={isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE_PATH}
-                  page={pageData.page}
-                  paginationConfig={paginationConfigAlertsRef.current}
-                />
+                {isAlertsPage && (
+                  <Pagination
+                      closeParamName={isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE_PATH}
+                    page={pageData.page}
+                    paginationConfig={paginationConfigAlertsRef.current}
+                  />
+                )}
               </>
             )}
           </div>
@@ -165,8 +193,11 @@ AlertsView.propTypes = {
   handleRefreshWithFilters: PropTypes.func.isRequired,
   isAlertsPage: PropTypes.bool,
   isCrossProjects: PropTypes.bool.isRequired,
+  navigate: PropTypes.func,
+  navigateToPerProjectAlertsPage: PropTypes.func,
   pageData: PropTypes.object.isRequired,
   paginationConfigAlertsRef: PropTypes.object.isRequired,
+  projectName: PropTypes.string,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedAlert: PropTypes.object.isRequired,
   setSearchParams: PropTypes.func.isRequired,

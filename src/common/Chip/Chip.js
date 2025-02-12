@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useSelector } from 'react-redux'
@@ -95,11 +95,11 @@ const Chip = React.forwardRef(
             { name: 'internal label', label: 'System-defined labels cannot be modified.' }
           ])
 
-          return setValidation(false)
+          return setValidation && setValidation(false)
         }
 
         setValidationRules([])
-        setValidation(true)
+        setValidation && setValidation(true)
       },
       [frontendSpec.internal_labels, setValidation]
     )
@@ -110,7 +110,7 @@ const Chip = React.forwardRef(
       }
     }, [checkValidation, chip, setValidation])
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       if (chipRef.current && setChipsSizes) {
         const { marginLeft, marginRight } = getComputedStyle(chipRef.current)
 
@@ -196,4 +196,4 @@ Chip.propTypes = {
   textOverflowEllipsis: PropTypes.bool
 }
 
-export default Chip
+export default React.memo(Chip)

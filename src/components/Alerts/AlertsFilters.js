@@ -18,10 +18,11 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useEffect, useMemo } from 'react'
+import { useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import { useForm, useFormState } from 'react-final-form'
 import { upperFirst } from 'lodash'
-import { useSelector } from 'react-redux'
 
 import StatusFilter from '../../common/StatusFilter/StatusFilter'
 import { FormSelect, FormInput } from 'igz-controls/components'
@@ -56,6 +57,8 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
     values: { [ENTITY_TYPE]: entityType }
   } = useFormState()
 
+  const location = useLocation()
+
   const projectStore = useSelector(state => state.projectStore)
 
   const projectsList = useMemo(() => {
@@ -87,6 +90,15 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
     form.change(inputName, value || '')
   }
 
+  const handleEntityTypeChange = selectedValue => {
+    const params = Object.fromEntries(new URLSearchParams(location.search))
+
+    form.change(
+      EVENT_TYPE,
+      params[ENTITY_TYPE] === selectedValue || entityType === 'all' ? params[EVENT_TYPE] : 'all'
+    )
+  }
+
   return (
     <>
       {isCrossProjects && (
@@ -106,6 +118,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
             name={ENTITY_TYPE}
             options={filterAlertsEntityTypeOptions}
           />
+          <FormOnChange handler={handleEntityTypeChange} name={ENTITY_TYPE} />
         </div>
       )}
 

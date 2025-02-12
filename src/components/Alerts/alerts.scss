@@ -1,11 +1,32 @@
-.alerts-table {
-  min-width: 1120px;
+.alerts-container {
+  margin-top: 10px;
 
-  &__metrics {
-    margin: 8px 12px;
+  &__content-info {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    margin-bottom: 15px;
+    line-height: 20px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
   }
 
-  &__content {
-    padding: 0;
+  .item-info {
+    align-content: flex-start;
+  }
+
+  .alerts-table {
+    min-width: 1120px;
+
+    &__metrics {
+      margin: 8px 12px;
+    }
+
+    &__content {
+      padding: 0;
+    }
   }
 }

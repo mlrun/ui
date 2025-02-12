@@ -1405,8 +1405,8 @@
         "outputs": [],
         "output_path": "v3io:///projects/churn-project-admin/artifacts/77b5e613020741af9f8ceebfb5fb479b",
         "inputs": {
-          "models_path": "store://artifacts/churn-project-admin/survival-curves_cx-model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79",
-          "test_set": "store://artifacts/churn-project-admin/survival-curves_tenured-test-set:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
+          "models_path": "store://models/churn-project-admin/survival-curves_cx-model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79",
+          "test_set": "store://datasets/churn-project-admin/survival-curves_tenured-test-set:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
         },
         "hyperparams": {},
         "hyper_param_options": {},
@@ -1484,8 +1484,8 @@
         "outputs": [],
         "output_path": "v3io:///projects/churn-project-admin/artifacts/c556954c7b7d4be4abbc3ed4755865c4",
         "inputs": {
-          "models_path": "store://artifacts/churn-project-admin/survival-curves_cx-model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79",
-          "test_set": "store://artifacts/churn-project-admin/survival-curves_tenured-test-set:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
+          "models_path": "store://models/churn-project-admin/survival-curves_cx-model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79",
+          "test_set": "store://datasets/churn-project-admin/survival-curves_tenured-test-set:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
         },
         "hyperparams": {},
         "hyper_param_options": {},
@@ -1929,8 +1929,8 @@
         "outputs": [],
         "output_path": "v3io:///projects/churn-project-admin/artifacts/6a1d90fac94b4cbc8f49997ac5f71df9",
         "inputs": {
-          "models_path": "store://artifacts/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79",
-          "test_set": "store://artifacts/churn-project-admin/current-state_test_set:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
+          "models_path": "store://models/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79",
+          "test_set": "store://datasets/churn-project-admin/current-state_test_set:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
         },
         "hyperparams": {},
         "hyper_param_options": {},
@@ -2617,8 +2617,8 @@
         ],
         "output_path": "/User/demos/customer-churn-prediction/data/pipeline/eaae138e-439a-47fa-93c6-ba0fe1dc3b79",
         "inputs": {
-          "models_path": "store://artifacts/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79",
-          "test_set": "store://artifacts/churn-project-admin/current-state_test_set:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
+          "models_path": "store://models/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79",
+          "test_set": "store://datasets/churn-project-admin/current-state_test_set:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
         },
         "hyperparams": {},
         "hyper_param_options": {},
@@ -2735,8 +2735,8 @@
         ],
         "output_path": "/User/demos/customer-churn-prediction/data/pipeline/eaae138e-439a-47fa-93c6-ba0fe1dc3b79",
         "inputs": {
-          "models_path": "store://artifacts/churn-project-admin/survival-curves_cx-model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79",
-          "test_set": "store://artifacts/churn-project-admin/survival-curves_tenured-test-set:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
+          "models_path": "store://models/churn-project-admin/survival-curves_cx-model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79",
+          "test_set": "store://datasets/churn-project-admin/survival-curves_tenured-test-set:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
         },
         "hyperparams": {},
         "hyper_param_options": {},
@@ -3621,7 +3621,7 @@
         ],
         "output_path": "/User/demos/customer-churn-prediction/data/pipeline/eaae138e-439a-47fa-93c6-ba0fe1dc3b79",
         "inputs": {
-          "dataset": "store://artifacts/churn-project-admin/clean-data_encoded-data:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
+          "dataset": "store://datasets/churn-project-admin/clean-data_encoded-data:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
         },
         "hyperparams": {},
         "hyper_param_options": {},
@@ -5975,7 +5975,7 @@
         ],
         "output_path": "/User/demos/customer-churn-prediction/data/pipeline/eaae138e-439a-47fa-93c6-ba0fe1dc3b79",
         "inputs": {
-          "dataset": "store://artifacts/churn-project-admin/clean-data_encoded-data:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
+          "dataset": "store://datasets/churn-project-admin/clean-data_encoded-data:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
         },
         "hyperparams": {},
         "hyper_param_options": {},
@@ -35166,8 +35166,8 @@
         "outputs": [],
         "output_path": "v3io:///projects/getting-started-tutorial-admin/artifacts/1534052be3e4456286a6d1a8db139e96",
         "inputs": {
-          "models_path": "store://artifacts/getting-started-tutorial-admin/train_model:dd5972cb-cbc2-4998-ab0e-705dba1b307d",
-          "test_set": "store://artifacts/getting-started-tutorial-admin/train_test_set:dd5972cb-cbc2-4998-ab0e-705dba1b307d"
+          "models_path": "store://models/getting-started-tutorial-admin/train_model:dd5972cb-cbc2-4998-ab0e-705dba1b307d",
+          "test_set": "store://datasets/getting-started-tutorial-admin/train_test_set:dd5972cb-cbc2-4998-ab0e-705dba1b307d"
         },
         "hyperparams": {},
         "hyper_param_options": {},
@@ -35423,8 +35423,8 @@
         ],
         "output_path": "v3io:///projects/getting-started-tutorial-admin/artifacts/pipeline/dd5972cb-cbc2-4998-ab0e-705dba1b307d",
         "inputs": {
-          "models_path": "store://artifacts/getting-started-tutorial-admin/train_model:dd5972cb-cbc2-4998-ab0e-705dba1b307d",
-          "test_set": "store://artifacts/getting-started-tutorial-admin/train_test_set:dd5972cb-cbc2-4998-ab0e-705dba1b307d"
+          "models_path": "store://models/getting-started-tutorial-admin/train_model:dd5972cb-cbc2-4998-ab0e-705dba1b307d",
+          "test_set": "store://datasets/getting-started-tutorial-admin/train_test_set:dd5972cb-cbc2-4998-ab0e-705dba1b307d"
         },
         "hyperparams": {},
         "hyper_param_options": {},
@@ -36102,7 +36102,7 @@
         ],
         "output_path": "v3io:///projects/getting-started-tutorial-admin/artifacts/pipeline/dd5972cb-cbc2-4998-ab0e-705dba1b307d",
         "inputs": {
-          "dataset": "store://artifacts/getting-started-tutorial-admin/prep-data_cleaned_data:dd5972cb-cbc2-4998-ab0e-705dba1b307d"
+          "dataset": "store://datasets/getting-started-tutorial-admin/prep-data_cleaned_data:dd5972cb-cbc2-4998-ab0e-705dba1b307d"
         },
         "hyperparams": {},
         "hyper_param_options": {},
@@ -37774,8 +37774,8 @@
         "outputs": [],
         "output_path": "v3io:///projects/getting-started-tutorial-admin/artifacts",
         "inputs": {
-          "models_path": "store://artifacts/getting-started-tutorial-admin/train-iris-train_iris_model:a88f50da057c45c99ce022153d3ad5b1",
-          "test_set": "store://artifacts/getting-started-tutorial-admin/train-iris-train_iris_test_set:a88f50da057c45c99ce022153d3ad5b1"
+          "models_path": "store://models/getting-started-tutorial-admin/train-iris-train_iris_model:a88f50da057c45c99ce022153d3ad5b1",
+          "test_set": "store://datasets/getting-started-tutorial-admin/train-iris-train_iris_test_set:a88f50da057c45c99ce022153d3ad5b1"
         },
         "hyperparams": {},
         "hyper_param_options": {},
@@ -42080,8 +42080,8 @@
         ],
         "output_path": "/User/demos/network-operations/artifacts",
         "inputs": {
-          "models_path": "store://artifacts/network-operations-admin/train_model:cd151783-05df-4f9c-a9db-3aa674e4a058",
-          "test_set": "store://artifacts/network-operations-admin/train_test_set:cd151783-05df-4f9c-a9db-3aa674e4a058"
+          "models_path": "store://models/network-operations-admin/train_model:cd151783-05df-4f9c-a9db-3aa674e4a058",
+          "test_set": "store://datasets/network-operations-admin/train_test_set:cd151783-05df-4f9c-a9db-3aa674e4a058"
         },
         "hyperparams": {},
         "hyper_param_options": {},
@@ -42783,7 +42783,7 @@
         ],
         "output_path": "/User/demos/network-operations/artifacts",
         "inputs": {
-          "dataset": "store://artifacts/network-operations-admin/feature_selection_selected_features:cd151783-05df-4f9c-a9db-3aa674e4a058"
+          "dataset": "store://datasets/network-operations-admin/feature_selection_selected_features:cd151783-05df-4f9c-a9db-3aa674e4a058"
         },
         "data_stores": []
       },
@@ -43806,7 +43806,7 @@
         ],
         "output_path": "/User/demos/network-operations/artifacts",
         "inputs": {
-          "dataset": "store://artifacts/network-operations-admin/feature_selection_selected_features:cd151783-05df-4f9c-a9db-3aa674e4a058"
+          "dataset": "store://datasets/network-operations-admin/feature_selection_selected_features:cd151783-05df-4f9c-a9db-3aa674e4a058"
         },
         "data_stores": []
       },
@@ -44814,7 +44814,7 @@
         ],
         "output_path": "/User/demos/network-operations/artifacts",
         "inputs": {
-          "dataset": "store://artifacts/network-operations-admin/feature_selection_selected_features:cd151783-05df-4f9c-a9db-3aa674e4a058"
+          "dataset": "store://datasets/network-operations-admin/feature_selection_selected_features:cd151783-05df-4f9c-a9db-3aa674e4a058"
         },
         "data_stores": []
       },
@@ -45834,7 +45834,7 @@
         ],
         "output_path": "/User/demos/network-operations/artifacts",
         "inputs": {
-          "dataset": "store://artifacts/network-operations-admin/feature_selection_selected_features:cd151783-05df-4f9c-a9db-3aa674e4a058"
+          "dataset": "store://datasets/network-operations-admin/feature_selection_selected_features:cd151783-05df-4f9c-a9db-3aa674e4a058"
         },
         "hyperparams": {
           "model_pkg_class": [
@@ -56799,8 +56799,8 @@
         ],
         "output_path": "/User/demos/scikit-learn-pipeline/pipe/a0e31343-3be8-4aa2-9de5-0e54342f8e1a",
         "inputs": {
-          "models_path": "store://artifacts/sk-project-admin/train_model:a0e31343-3be8-4aa2-9de5-0e54342f8e1a",
-          "test_set": "store://artifacts/sk-project-admin/train_test_set:a0e31343-3be8-4aa2-9de5-0e54342f8e1a"
+          "models_path": "store://models/sk-project-admin/train_model:a0e31343-3be8-4aa2-9de5-0e54342f8e1a",
+          "test_set": "store://datasets/sk-project-admin/train_test_set:a0e31343-3be8-4aa2-9de5-0e54342f8e1a"
         },
         "hyperparams": {},
         "hyper_param_options": {},
@@ -57451,7 +57451,7 @@
         ],
         "output_path": "/User/demos/scikit-learn-pipeline/pipe/a0e31343-3be8-4aa2-9de5-0e54342f8e1a",
         "inputs": {
-          "dataset": "store://artifacts/sk-project-admin/get-data_iris_dataset:a0e31343-3be8-4aa2-9de5-0e54342f8e1a"
+          "dataset": "store://datasets/sk-project-admin/get-data_iris_dataset:a0e31343-3be8-4aa2-9de5-0e54342f8e1a"
         },
         "data_stores": []
       },
@@ -58357,7 +58357,7 @@
         ],
         "output_path": "/User/demos/scikit-learn-pipeline/pipe/a0e31343-3be8-4aa2-9de5-0e54342f8e1a",
         "inputs": {
-          "dataset": "store://artifacts/sk-project-admin/get-data_iris_dataset:a0e31343-3be8-4aa2-9de5-0e54342f8e1a"
+          "dataset": "store://datasets/sk-project-admin/get-data_iris_dataset:a0e31343-3be8-4aa2-9de5-0e54342f8e1a"
         },
         "data_stores": []
       },
@@ -59248,7 +59248,7 @@
         ],
         "output_path": "/User/demos/scikit-learn-pipeline/pipe/a0e31343-3be8-4aa2-9de5-0e54342f8e1a",
         "inputs": {
-          "dataset": "store://artifacts/sk-project-admin/get-data_iris_dataset:a0e31343-3be8-4aa2-9de5-0e54342f8e1a"
+          "dataset": "store://datasets/sk-project-admin/get-data_iris_dataset:a0e31343-3be8-4aa2-9de5-0e54342f8e1a"
         },
         "data_stores": []
       },
@@ -60284,7 +60284,7 @@
         ],
         "output_path": "/User/demos/scikit-learn-pipeline/pipe/a0e31343-3be8-4aa2-9de5-0e54342f8e1a",
         "inputs": {
-          "dataset": "store://artifacts/sk-project-admin/get-data_iris_dataset:a0e31343-3be8-4aa2-9de5-0e54342f8e1a"
+          "dataset": "store://datasets/sk-project-admin/get-data_iris_dataset:a0e31343-3be8-4aa2-9de5-0e54342f8e1a"
         },
         "hyperparams": {
           "model_pkg_class": [
@@ -62531,7 +62531,7 @@
           "outputs": [],
           "output_path": "v3io:///projects/breast-cancer-admin/artifacts",
           "inputs": {
-            "dataset": "store://artifacts/breast-cancer-admin/gen-breast-cancer_dataset:a5f935b70981475fad5f7df0ac3b8102"
+            "dataset": "store://datasets/breast-cancer-admin/gen-breast-cancer_dataset:a5f935b70981475fad5f7df0ac3b8102"
           },
           "hyperparams": {
             "n_estimators": [10, 100, 1000],

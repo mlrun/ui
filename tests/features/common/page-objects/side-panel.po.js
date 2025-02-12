@@ -771,7 +771,7 @@ module.exports = {
       Close_Button: By.css('.pop-up-dialog .pop-up-dialog__header .pop-up-dialog__btn_close'),
       Dialog_Message: By.css('.pop-up-dialog .confirm-dialog__message'), 
       Keep_Online_Target_Set_Button: By.css('.pop-up-dialog .confirm-dialog__btn-container .btn-tertiary'),
-      Unset_Online_Target_Button: By.css('.pop-up-dialog .confirm-dialog__btn-container .btn-secondary')
+      Unset_Online_Target_Button: By.css('.pop-up-dialog .confirm-dialog__btn-container .btn-primary')
     },
     Offline_Checkbox_State: By.css(
       '.feature-set-panel .accordion__container:nth-of-type(3) .accordion__body .target-store__item:nth-of-type(2) .checkbox'
@@ -1145,10 +1145,10 @@ module.exports = {
       '.feature-set-panel .new-item-side-panel__buttons-container .pop-up-dialog__btn_cancel'
     ),
     Save_Button: By.css(
-      '.feature-set-panel .new-item-side-panel__buttons-container .btn-secondary:nth-of-type(2)'
+      '.feature-set-panel .new-item-side-panel__buttons-container .btn-tertiary'
     ),
     Save_And_Ingest_Button: By.css(
-      '.feature-set-panel .new-item-side-panel__buttons-container .btn-secondary:nth-of-type(3)'
+      '.feature-set-panel .new-item-side-panel__buttons-container .btn_start-ingestion'
     )
   },
   newJobTemplateEdit: {

@@ -54,7 +54,7 @@ const tabSelector = {
     row: {
       root: '.content-menu__item',
       fields: {
-        key: 'a'
+        key: ''
       }
     }
   }
@@ -88,7 +88,7 @@ const modelsTable = {
           structure: generateDropdownGroup(
             '.table-body__cell:nth-of-type(2)',
             '.chip-block span.chips_button',
-            '.chip-block .data-ellipsis.tooltip-wrapper', 
+            '.chip-block .data-ellipsis.tooltip-wrapper',
             false,
             true
           )
@@ -98,6 +98,7 @@ const modelsTable = {
         updated: '.table-body__cell:nth-of-type(5) .data-ellipsis',
         metrics: '.table-body__cell:nth-of-type(6) .data-ellipsis',
         frameworkAndAlgorithm: '.table-body__cell:nth-of-type(7) .chips-wrapper',
+        show_all_versions: '[data-testid="quick-link-show-all-versions"]',
         preview: '[data-testid="quick-link-model-preview-tooltip-wrapper"]',
         deploy: '[data-testid="quick-link-model-deploy-tooltip-wrapper"]',
         download: '.table-body__cell:nth-of-type(9) button .download-container svg',
@@ -137,7 +138,7 @@ const modelsEndpointTable = {
     row: {
       root: '.table-row',
       fields: {
-        name: '.table-body__cell:nth-of-type(1) a',
+        name: '.table-body__cell:nth-of-type(1) .link',
         function: '.table-body__cell:nth-of-type(2) .data-ellipsis',
         version: '.table-body__cell:nth-of-type(3) .data-ellipsis',
         class: '.table-body__cell:nth-of-type(4) .data-ellipsis',
@@ -192,7 +193,7 @@ const realTimePipelinesTable = {
         },
         name: '.table-body__cell:nth-of-type(1) a.data-ellipsis',
         type: '.table-body__cell:nth-of-type(2) .data-ellipsis',
-        function: '.table-body__cell:nth-of-type(3) a.data-ellipsis',
+        function: '.table-body__cell:nth-of-type(3) .data-ellipsis',
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
@@ -260,22 +261,29 @@ module.exports = {
     Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
     Models_Tab_Selector: commonTable(tabSelector),
     Table_Name_Filter_Input: tableNameFilterInput,
-    Table_Refresh_Button: By.css('.content__action-bar-wrapper .action-bar__actions [data-testid="refresh"]'),
+    Table_Refresh_Button: By.css(
+      '.content__action-bar-wrapper .action-bar__actions [data-testid="refresh"]'
+    ),
     Models_Table: commonTable(modelsTable),
     Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
-    Register_Model_Button: By.css('.content__action-bar-wrapper .action-bar__actions .btn-secondary'),
+    Register_Model_Button: By.css(
+      '.content__action-bar-wrapper .action-bar__actions .btn-secondary'
+    ),
     Train_Model_Button: By.css('.content__action-bar-wrapper .action-bar__actions .btn-primary'),
-    Table_FilterBy_Button: By.css(
-      '.content .content__action-bar-wrapper .action-bar__filters .filters-button button'
+    Table_FilterBy_Button: By.css('.models .action-bar [data-testid="filter-menu-btn"]'),
+    History_Back_Button: By.css('.history-back-link .history-back-link__icon'),
+    Version_History_Title: By.css(
+      '.history-back-link .history-back-link__title [data-testid="version-history"]'
+    ),
+    Version_History_Model_Name: By.css(
+      '.history-back-link .history-back-link__title .data-ellipsis.tooltip-wrapper'
     )
   },
   modelEndpoints: {
     Table_Refresh_Button: tableRefreshButton,
     Model_Endpoints_Table: commonTable(modelsEndpointTable),
     Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
-    Table_FilterBy_Button: By.css(
-      '[data-testid="filter-menu-btn-tooltip-wrapper"]'
-    ),
+    Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
     Column_Name_Header: By.css('[data-testid="name"]'),
     Sort_By_Name: By.css('[data-testid="name"].sortable-header-cell_active svg'),
     Sort_By_Function: By.css('[data-testid="function"].sortable-header-cell_active svg'),

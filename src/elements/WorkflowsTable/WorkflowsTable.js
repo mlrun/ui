@@ -400,9 +400,7 @@ const WorkflowsTable = React.forwardRef(
         dispatch(rerunWorkflow({ project: workflow.project, workflowId: workflow.id }))
           .unwrap()
           .then(() => {
-            setTimeout(() => {
-              handleRetry()
-            }, 5000)
+            handleRetry()
             dispatch(
               setNotification({
                 status: 200,

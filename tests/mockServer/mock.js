@@ -442,8 +442,9 @@ function getFeatureSet(req, res) {
       const specFields = ['description', 'entities', 'targets', 'engine'].map(
         fieldName => `spec.${fieldName}`
       )
+      const statusFields = ['state', 'stats', 'preview'].map(fieldName => `status.${fieldName}`)
 
-      return pick(featureSet, ['kind', ...metadataFields, 'status.state', ...specFields])
+      return pick(featureSet, ['kind', ...metadataFields, ...statusFields, ...specFields])
     })
   }
 
@@ -2329,7 +2330,8 @@ function getModelEndpoints(req, res) {
       ...endpoint,
       status: {
         ...endpoint.status,
-        drift_measures: null,
+        drift_measures: endpoint.status?.drift_measures ?? {},
+        state: 'ready',
         features: null
       }
     }))
@@ -2352,6 +2354,14 @@ function getModelEndpoints(req, res) {
     collectedEndpoints = collectedEndpoints.filter(endpoint =>
       filterByLabels(endpoint.metadata.labels, req.query['label'])
     )
+  }
+
+  if (req.query['endpoint_id']) {
+    const modelEndpoint = collectedEndpoints.find(
+      endpoint => endpoint.metadata.uid === req.query.endpoint_id
+    )
+
+    return res.send(modelEndpoint)
   }
 
   res.send({ endpoints: collectedEndpoints })
@@ -2787,6 +2797,7 @@ app.get(`${mlrunAPIIngress}/log/:project/:uid`, getLog)
 app.get(`${mlrunAPIIngress}/projects/:project/runtime-resources`, getRuntimeResources)
 
 app.get(`${mlrunAPIIngress}/projects/:project/model-endpoints`, getModelEndpoints)
+app.get(`${mlrunAPIIngress}/projects/:project/model-endpoints/:endpoint`, getModelEndpoints)
 app.get(`${mlrunAPIIngress}/projects/:project/model-endpoints/:uid/metrics`, getMetrics)
 app.get(
   `${mlrunAPIIngress}/projects/:project/model-endpoints/:uid/metrics-values`,

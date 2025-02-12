@@ -50,7 +50,8 @@ import {
   generatePath,
   determineFileAccess,
   verifyClassDisabled,
-  checkComponentHintTextWithHover
+  checkComponentHintTextWithHover,
+  putToTestContextElementValue
 } from '../common/actions/common.action'
 import {
   checkTableColumnValues,
@@ -664,6 +665,30 @@ Then(
 )
 
 Then(
+  '{string} element on {string} should contains {string} attribute value',
+  async function (component, wizard, value) {
+    await verifyComponentContainsAttributeValue(
+      this.driver,
+      pageObjects[wizard][component]['inputField'],
+      'value',
+      value
+    )
+  }
+)
+
+When(
+  'save to context {string} page value from {string} element on {string} wizard',
+  async function (pageValue, elementName, wizardName) {
+    await putToTestContextElementValue(
+      this.driver,
+      this.testContext,
+      pageObjects[wizardName][elementName],
+      pageValue
+    )
+  }
+)
+
+Then(
   '{string} component on {string} should be equal {string}.{string}',
   async function(component, wizard, constStorage, constValue) {
     await verifyTextRegExp(
@@ -784,13 +809,14 @@ When(
       pageObjects[wizardName][dropdownName],
       optionValue
     )
-    await this.driver.sleep(100)
+    await this.driver.sleep(200)
     await pickUpCustomDatetimeRange(
       this.driver,
       pageObjects[wizardName][datetimePicker],
       fromDatetime,
       toDatetime
     )
+    await this.driver.sleep(200)
     await applyDatetimePickerRange(
       this.driver,
       pageObjects[wizardName][datetimePicker]
@@ -983,12 +1009,14 @@ Then(
 Then(
   'verify {string} on {string} wizard should contains {string}.{string}',
   async function(tabSelector, wizard, constWizard, constValue) {
-    await checkTableColumnValues(
+    const compareResult = await checkTableColumnValues(
       this.driver,
       pageObjects[wizard][tabSelector],
       'key',
       pageObjectsConsts[constWizard][constValue]
     )
+    
+    expect(compareResult).to.equal(true)
   }
 )
 
@@ -1042,6 +1070,18 @@ Then(
       this.driver,
       pageObjects[wizard][inputField],
       pageObjects['commonPagesHeader']['Common_Tolltip'],
+      pageObjectsConsts[constStorage][constValue]
+    )
+  }
+)
+
+Then(
+  'verify {string} element on {string} wizard should display hover hint {string}.{string}',
+  async function(inputField, wizard, constStorage, constValue) {
+    await checkComponentHintTextWithHover(
+      this.driver,
+      pageObjects[wizard][inputField],
+      pageObjects['commonPagesHeader']['Common_Hint'],
       pageObjectsConsts[constStorage][constValue]
     )
   }

@@ -26,6 +26,7 @@ import TableView from './TableView'
 
 import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../types'
 import { SORT_PROPS } from 'igz-controls/types'
+import { EMPTY_OBJECT } from '../../constants'
 
 import './table.scss'
 
@@ -36,7 +37,7 @@ const Table = React.forwardRef(
       applyDetailsChanges = () => {},
       applyDetailsChangesCallback = () => {},
       children,
-      detailsFormInitialValues = {},
+      detailsFormInitialValues = EMPTY_OBJECT,
       getCloseDetailsLink = null,
       handleCancel = () => {},
       hideActionsMenu = false,

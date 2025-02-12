@@ -21,6 +21,7 @@ import { upperFirst } from 'lodash'
 
 import {
   ALERTS_PAGE,
+  ALERTS_PAGE_PATH,
   APPLICATION,
   BE_PAGE,
   DATES_FILTER,
@@ -49,6 +50,7 @@ import {
   datePickerPastOptions,
   getDatePickerFilterValue,
   PAST_24_HOUR_DATE_OPTION,
+  PAST_MONTH_DATE_OPTION,
   TIME_FRAME_LIMITS
 } from '../../utils/datePicker.util'
 import { fetchAlertById } from '../../reducers/alertsReducer'
@@ -56,12 +58,16 @@ import { generateObjectNotInTheListMessage } from '../../utils/generateMessage.u
 import { createAlertRowData } from '../../utils/createAlertsContent'
 import { showErrorNotification } from '../../utils/notifications.util'
 
-export const getAlertsFiltersConfig = (timeFrameLimit = false) => {
+export const getAlertsFiltersConfig = (timeFrameLimit = false, isAlertsPage = false) => {
   return {
-    [NAME_FILTER]: { label: 'Alert Name:', initialValue: '' },
+    [NAME_FILTER]: { label: 'Alert Name:', initialValue: '', hidden: isAlertsPage },
     [DATES_FILTER]: {
+      initialValue: getDatePickerFilterValue(
+        datePickerPastOptions,
+        isAlertsPage ? PAST_MONTH_DATE_OPTION : PAST_24_HOUR_DATE_OPTION
+      ),
+      hidden: isAlertsPage,
       label: 'Start time:',
-      initialValue: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION),
       timeFrameLimit: timeFrameLimit ? TIME_FRAME_LIMITS.MONTH : Infinity
     },
     [PROJECT_FILTER]: {
@@ -273,10 +279,10 @@ export const checkForSelectedAlert = ({
               }
             }
 
-            setSelectedAlert({...createAlertRowData(selectedAlert).data, page: ALERTS_PAGE })
+            setSelectedAlert({ ...createAlertRowData(selectedAlert).data, page: ALERTS_PAGE })
           }
         })
-        .catch((error) => {
+        .catch(error => {
           setSelectedAlert({})
 
           navigate(
@@ -284,15 +290,18 @@ export const checkForSelectedAlert = ({
             { replace: true }
           )
 
-          showErrorNotification(
-            dispatch,
-            error,
-            '',
-            'Failed to retrieve alert data'
-          )
+          showErrorNotification(dispatch, error, '', 'Failed to retrieve alert data')
         })
     }
   } else {
     setSelectedAlert({})
   }
+}
+
+export const navigateToPerProjectAlertsPage = (navigate, projectName) => {
+  const filters = {
+    dates: PAST_MONTH_DATE_OPTION,
+    [ENTITY_TYPE]: MODEL_ENDPOINT_RESULT
+  }
+  navigate(`/projects/${projectName}/${ALERTS_PAGE_PATH}?${new URLSearchParams(filters)}`)
 }
