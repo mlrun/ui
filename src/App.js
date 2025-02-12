@@ -63,12 +63,14 @@ import './scss/main.scss'
 import { createPortal } from 'react-dom'
 
 import Notifications from './common/Notifications/Notifications'
+import { useMode } from './hooks/mode.hook'
 
 const Page = lazyRetry(() => import('./layout/Page/Page'))
 const Datasets = lazyRetry(() => import('./components/Datasets/Datasets'))
 const FeatureStore = lazyRetry(() => import('./components/FeatureStore/FeatureStore'))
 const Files = lazyRetry(() => import('./components/Files/Files'))
-const Functions = lazyRetry(() => import('./components/FunctionsPage/Functions'))
+const FunctionsOld = lazyRetry(() => import('./components/FunctionsPageOld/Functions'))
+const Functions = lazyRetry(() => import('./components/FunctionsPage/Functions')) // TODO rename FunctionsNew to Functions and delete old component and logic in 1.9.0
 const Jobs = lazyRetry(() => import('./components/Jobs/Jobs'))
 const MonitorJobs = lazyRetry(() => import('./components/Jobs/MonitorJobs/MonitorJobs'))
 const MonitorWorkflows = lazyRetry(
@@ -119,6 +121,7 @@ const Documents = lazyRetry(() => import('./components/Documents/Documents'))
 
 const App = () => {
   const { isNuclioModeDisabled } = useNuclioMode()
+  const { isDemoMode } = useMode()
   const isHeaderShown = localStorageService.getStorageValue('mlrunUi.headerHidden') !== 'true'
   const mlAppContainerClasses = classNames('ml-app-container', isHeaderShown && 'has-header')
 
@@ -216,16 +219,29 @@ const App = () => {
             <Route path={`${SCHEDULE_TAB}`} element={<ScheduledJobs />} />
             <Route path="*" element={<Navigate to={MONITOR_JOBS_TAB} />} replace />
           </Route>
-          {[
-            'projects/:projectName/functions',
-            'projects/:projectName/functions/:funcName/:id/:tab',
-            `projects/:projectName/functions/:funcName/${ALL_VERSIONS_PATH}`,
-            `projects/:projectName/functions/:funcName/${ALL_VERSIONS_PATH}/:id/:tab`
-          ].map((path, index) => (
-            <Fragment key={index}>
-              <Route path={path} element={<Functions isAllVersions={[2, 3].includes(index)} />} />
-            </Fragment>
-          ))}
+          {isDemoMode
+            ? [
+                'projects/:projectName/functions',
+                'projects/:projectName/functions/:funcName/:id/:tab',
+                `projects/:projectName/functions/:funcName/${ALL_VERSIONS_PATH}`,
+                `projects/:projectName/functions/:funcName/${ALL_VERSIONS_PATH}/:id/:tab`
+              ].map((path, index) => (
+                <Fragment key={index}>
+                  <Route
+                    path={path}
+                    element={<Functions isAllVersions={[2, 3].includes(index)} />}
+                  />
+                </Fragment>
+              ))
+            : [
+                'projects/:projectName/functions',
+                'projects/:projectName/functions/:hash/:tab',
+                'projects/:projectName/functions/:funcName/:tag/:tab'
+              ].map((path, index) => (
+                <Fragment key={index}>
+                  <Route path={path} element={<FunctionsOld />} />
+                </Fragment>
+              ))}
           {[
             'projects/:projectName/datasets',
             'projects/:projectName/datasets/:datasetName/:id/:tab',

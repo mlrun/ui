@@ -37,11 +37,9 @@ import {
   FUNCTION_TYPE_SERVING,
   FUNCTIONS_PAGE,
   PANEL_FUNCTION_CREATE_MODE,
-  FAILED_STATE,
-  ALL_VERSIONS_PATH,
-  BE_PAGE,
-  FE_PAGE
+  FAILED_STATE
 } from '../../constants'
+import functionsApi from '../../api/functions-api'
 import tasksApi from '../../api/tasks-api'
 import functionsActions from '../../actions/functions'
 import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
@@ -49,16 +47,13 @@ import { parseFunction } from '../../utils/parseFunction'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { getFunctionLogs, getFunctionNuclioLogs } from '../../utils/getFunctionLogs'
-import { parseIdentifier } from '../../utils'
-import { setJobFunction } from '../../reducers/jobReducer'
 
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
-import { ReactComponent as HistoryIcon } from 'igz-controls/images/history.svg'
-import { generateObjectNotInTheListMessage } from '../../utils/generateMessage.util'
+import { setJobFunction } from '../../reducers/jobReducer'
 
 export const page = 'FUNCTIONS'
 export const detailsMenu = [
@@ -156,8 +151,7 @@ export const generateFunctionsPageData = (
   fetchFunctionNuclioLogsTimeout,
   navigate,
   fetchData,
-  filtersStore,
-  showAllVersions
+  filtersStore
 ) => {
   const showAdditionalLogs = selectedFunction.type === FUNCTION_TYPE_APPLICATION
 
@@ -205,7 +199,6 @@ export const generateFunctionsPageData = (
       },
       withLogsRefreshBtn: false,
       type: FUNCTIONS_PAGE
-      // showAllVersions // todo uncomment or remove button from details when we decide about this btn in details
     }
   }
 }
@@ -295,9 +288,7 @@ export const generateActionsMenu = (
   deletingFunctions,
   selectedFunction,
   fetchFunction,
-  isDetailsPopUp = false,
-  isAllVersions,
-  showAllVersions
+  isDetailsPopUp = false
 ) => {
   const functionIsDeleting = isFunctionDeleting(func, deletingFunctions)
   const getFullFunction = funcMin => {
@@ -352,23 +343,15 @@ export const generateActionsMenu = (
           getFullFunction(funcMin).then(func => !isEmpty(func) && toggleConvertedYaml(func))
       },
       {
-        label: 'Delete all versions',
+        label: 'Delete',
         icon: <Delete />,
         className: 'danger',
         disabled: functionIsDeleting,
         onClick: onRemoveFunction,
-        hidden: isDetailsPopUp || isAllVersions
+        hidden: isDetailsPopUp
       }
     ],
     [
-      {
-        id: 'show-all-versions',
-        label: 'Show all versions',
-        icon: <HistoryIcon />,
-        disabled: functionIsDeleting,
-        onClick: () => showAllVersions(func.name),
-        hidden: isDetailsPopUp || isAllVersions
-      },
       {
         id: 'build-and-run',
         label: 'Build and run',
@@ -449,33 +432,20 @@ export const pollDeletingFunctions = (
 }
 
 export const setFullSelectedFunction = debounce(
-  (
-    dispatch,
-    navigate,
-    fetchFunction,
-    selectedFunctionMin,
-    setSelectedFunction,
-    projectName,
-    functionId
-  ) => {
-    if (isEmpty(selectedFunctionMin) || !functionId) {
+  (dispatch, navigate, fetchFunction, selectedFunctionMin, setSelectedFunction, projectName) => {
+    if (isEmpty(selectedFunctionMin)) {
       setSelectedFunction({})
     } else {
-      const { uid: paramsHash } = parseIdentifier(functionId)
       const { name, hash, tag } = selectedFunctionMin
 
-      if (paramsHash === hash) {
-        fetchAndParseFunction(dispatch, fetchFunction, projectName, name, hash, tag, true)
-          .then(parsedFunction => {
-            setSelectedFunction(parsedFunction)
-          })
-          .catch(() => {
-            setSelectedFunction({})
-            navigate(`/projects/${projectName}/functions${window.location.search}`, {
-              replace: true
-            })
-          })
-      }
+      fetchAndParseFunction(dispatch, fetchFunction, projectName, name, hash, tag, true)
+        .then(parsedFunction => {
+          setSelectedFunction(parsedFunction)
+        })
+        .catch(() => {
+          setSelectedFunction({})
+          navigate(`/projects/${projectName}/functions${window.location.search}`, { replace: true })
+        })
     }
   },
   20
@@ -537,91 +507,92 @@ const chooseOrFetchFunction = (selectedFunction, dispatch, fetchFunction, funcMi
   )
 }
 
-export const checkForSelectedFunction = debounce(
-  (
-    paginatedFunctions,
-    functions,
-    fetchFunction,
-    funcId,
-    funcNameParam,
-    navigate,
-    projectName,
-    setSelectedFunction,
-    dispatch,
-    isAllVersions,
-    searchParams,
-    paginationConfigRef,
-    setSearchParams,
-    lastCheckedFunctionIdRef
-  ) => {
-    if (funcId) {
-      const searchBePage = parseInt(searchParams.get(BE_PAGE))
-      const configBePage = paginationConfigRef.current[BE_PAGE]
+export const checkForSelectedFunction = (
+  name,
+  expandedRowsData,
+  functions,
+  hash,
+  tag,
+  navigate,
+  projectName,
+  setSelectedFunction,
+  dispatch
+) => {
+  queueMicrotask(() => {
+    if (name || hash) {
+      const functionsList = expandedRowsData?.[name]?.content || functions
 
-      if (
-        functions &&
-        searchBePage === configBePage &&
-        lastCheckedFunctionIdRef.current !== funcId
-      ) {
-        const { tag, uid: hash } = parseIdentifier(funcId)
-        lastCheckedFunctionIdRef.current = funcId
-
-        fetchAndParseFunction(
-          dispatch,
-          fetchFunction,
-          projectName,
-          funcNameParam,
+      if (functionsList.length > 0) {
+        const searchItem = searchFunctionItem(
           hash,
-          tag
-        ).then((selectedFunction) => {
-          if (!selectedFunction) {
-            navigate(
-              `/projects/${projectName}/functions${isAllVersions ? `/${funcNameParam}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`,
-              { replace: true }
-            )
-          } else {
-            const findFunctionIndex = functions => {
-              return functions.findIndex(func => {
-                const funcData = func.data ?? func
+          name,
+          tag,
+          projectName,
+          functionsList.map(func => func.data ?? func),
+          dispatch,
+          true
+        )
 
-                if (tag) {
-                  return isEqual(funcData.tag, tag) && isEqual(funcData.name, funcNameParam)
-                } else {
-                  return isEqual(funcData.hash, hash) && isEqual(funcData.name, funcNameParam)
-                }
-              })
-            }
-      
-            const itemIndexInPaginatedList = findFunctionIndex(paginatedFunctions)
-            const itemIndexInMainList =
-              itemIndexInPaginatedList !== -1
-                ? itemIndexInPaginatedList
-                : findFunctionIndex(functions)
-
-            if (itemIndexInPaginatedList === -1) {
-              if (itemIndexInMainList > -1) {
-                const { fePageSize } = paginationConfigRef.current
-  
-                setSearchParams(prevSearchParams => {
-                  prevSearchParams.set(FE_PAGE, Math.ceil((itemIndexInMainList + 1) / fePageSize))
-  
-                  return prevSearchParams
-                })
-              } else {
-                selectedFunction.ui.infoMessage = generateObjectNotInTheListMessage('function')
-              }
-            }
-
-            setSelectedFunction(prevState => {
-              return isEqual(prevState, selectedFunction) ? prevState : selectedFunction
-            })
-            
-          }
-        })
+        if (!searchItem) {
+          navigate(`/projects/${projectName}/functions${window.location.search}`, { replace: true })
+        } else {
+          setSelectedFunction(prevState => {
+            return isEqual(prevState, searchItem) ? prevState : searchItem
+          })
+        }
       }
     } else {
       setSelectedFunction({})
     }
-  },
-  30
-)
+  })
+}
+
+export const searchFunctionItem = (
+  paramsHash,
+  paramsName,
+  paramsTag,
+  projectName,
+  functions,
+  dispatch,
+  checkExistence = false
+) => {
+  let item = {}
+
+  if (paramsHash) {
+    const withFunctionTag = paramsHash.indexOf(':') > 0
+    let name,
+      tag,
+      hash = ''
+
+    item = functions.find(func => {
+      if (withFunctionTag) {
+        ;[name, tag] = paramsHash.split(':')
+
+        return isEqual(func.tag, tag) && isEqual(func.name, name)
+      } else {
+        ;[name, hash] = paramsHash.split('@')
+
+        return isEqual(func.hash, hash) && isEqual(func.name, name)
+      }
+    })
+
+    checkExistence && checkFunctionExistence(item, { tag, name, hash }, projectName, dispatch)
+  } else if (paramsName && paramsTag) {
+    item = functions.find(func => {
+      return isEqual(func.tag, paramsTag) && isEqual(func.name, paramsName)
+    })
+
+    checkExistence &&
+      checkFunctionExistence(item, { name: paramsName, tag: paramsTag }, projectName, dispatch)
+  }
+
+  return item
+}
+
+const checkFunctionExistence = (item, filters, projectName, dispatch) => {
+  if (!item || Object.keys(item).length === 0) {
+    functionsApi.getFunction(projectName, filters.name, filters.hash, filters.tag).catch(() => {
+      showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
+    })
+  }
+}
