@@ -28,8 +28,8 @@ import {
   TAG_FILTER,
   TAG_FILTER_LATEST
 } from '../../../constants'
-import featureStoreActions from '../../../actions/featureStore'
 import { showErrorNotification } from '../../../utils/notifications.util'
+import { fetchFeatureSet } from '../../../reducers/featureStoreReducer'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -109,18 +109,19 @@ export const generateActionsMenu = (dispatch, selectedFeatureSet, toggleConverte
 ]
 
 export const setFullSelectedFeatureSet = debounce(
-  (tab, dispatch, navigate, selectedFeatureSetMin, setSelectedFeatureSet, projectName) => {
+  (tab, dispatch, navigate, selectedFeatureSetMin, setSelectedFeatureSet, project) => {
     if (isEmpty(selectedFeatureSetMin)) {
       setSelectedFeatureSet({})
     } else {
       const { name, tag } = selectedFeatureSetMin
 
-      dispatch(featureStoreActions.fetchFeatureSet(projectName, name, tag))
+      dispatch(fetchFeatureSet({ project, featureSet: name, tag }))
+        .unwrap()
         .then(featureSet => {
           setSelectedFeatureSet(featureSet)
         })
         .catch(error => {
-          navigate(`/projects/${projectName}/${tab}`, { replace: true })
+          navigate(`/projects/${project}/${tab}`, { replace: true })
           showErrorNotification(dispatch, error, '', 'Failed to retrieve feature set data.')
         })
     }
@@ -132,22 +133,14 @@ export const chooseOrFetchFeatureSet = (dispatch, selectedFeatureSet, featureSet
   if (!isEmpty(selectedFeatureSet)) return Promise.resolve(selectedFeatureSet)
 
   return dispatch(
-    featureStoreActions.fetchFeatureSet(
-      featureSetMin.project,
-      featureSetMin.name,
-      featureSetMin.tag
-    )
-  ).catch(error => {
-    showErrorNotification(dispatch, error, 'Failed to retrieve feature set data.')
-  })
-}
-
-export const featureSetsActionCreator = {
-  fetchExpandedFeatureSet: featureStoreActions.fetchExpandedFeatureSet,
-  fetchFeatureSets: featureStoreActions.fetchFeatureSets,
-  fetchFeatureSetsTags: featureStoreActions.fetchFeatureSetsTags,
-  removeFeatureSet: featureStoreActions.removeFeatureSet,
-  removeFeatureSets: featureStoreActions.removeFeatureSets,
-  removeNewFeatureSet: featureStoreActions.removeNewFeatureSet,
-  updateFeatureStoreData: featureStoreActions.updateFeatureStoreData
+    fetchFeatureSet({
+      project: featureSetMin.project,
+      featureSet: featureSetMin.name,
+      tag: featureSetMin.tag
+    })
+  )
+    .unwrap()
+    .catch(error => {
+      showErrorNotification(dispatch, error, 'Failed to retrieve feature set data.')
+    })
 }

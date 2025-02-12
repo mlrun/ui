@@ -53,7 +53,7 @@ import { fetchArtifactTags, fetchFiles, removeFiles } from '../../reducers/artif
 import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { getSavedSearchParams, transformSearchParams } from '../../utils/filter.util'
 import { getViewMode } from '../../utils/helper'
-import { isDetailsTabExists } from '../../utils/link-helper.util'
+import { getCloseDetailsLink, isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { checkForSelectedArtifact, setFullSelectedArtifact } from '../../utils/artifacts.util'
 import { setNotification } from '../../reducers/notificationReducer'
@@ -94,7 +94,8 @@ const Files = ({ isAllVersions = false }) => {
   const [refreshAfterDeleteCallback, refreshAfterDeleteTrigger] = useRefreshAfterDelete(
     paginationConfigFileVersionsRef,
     historyBackLink,
-    'artifacts'
+    'artifacts',
+    params.id && getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : FILES_TAB, true)
   )
 
   const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
@@ -294,14 +295,12 @@ const Files = ({ isAllVersions = false }) => {
         setFiles(null)
       }
 
-      if (changes.data.tag.currentFieldValue) {
-        navigate(
-          `/projects/${params.projectName}/files/${params.fileName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/:${
-            changes.data.tag.currentFieldValue
-          }@${selectedItem.uid}/overview${window.location.search}`,
-          { replace: true }
-        )
-      }
+      navigate(
+        `/projects/${params.projectName}/files/${params.fileName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/${
+          changes.data.tag.currentFieldValue ? `:${changes.data.tag.currentFieldValue}` : ''
+        }@${selectedItem.uid}/overview${window.location.search}`,
+        { replace: true }
+      )
     }
 
     refreshFiles(filesFilters)

@@ -19,21 +19,19 @@ such restriction.
 */
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import FeatureSetsPanelTitleView from './FeatureSetsPanelTitleView'
 
-import featureStoreActions from '../../../actions/featureStore'
+import {
+  setNewFeatureSetName,
+  setNewFeatureSetPassthrough
+} from '../../../reducers/featureStoreReducer'
 
 const FeatureSetsPanelTitle = ({
   closePanel,
-  featureStore,
   formState,
   frontendSpec,
-  setNewFeatureSetDescription,
-  setNewFeatureSetName,
-  setNewFeatureSetPassthrough,
-  setNewFeatureSetVersion,
   setValidation,
   validation
 }) => {
@@ -43,17 +41,19 @@ const FeatureSetsPanelTitle = ({
     passthrough: '',
     version: ''
   })
+  const dispatch = useDispatch()
+  const featureStore = useSelector(state => state.featureStore)
 
   const handleNameOnBlur = () => {
     if (data.name !== featureStore.newFeatureSet.metadata.name) {
-      setNewFeatureSetName(data.name)
+      dispatch(setNewFeatureSetName(data.name))
     }
   }
 
   const handleCheckPassthrough = id => {
     const isPassthroughChecked = !featureStore.newFeatureSet.spec.passthrough
 
-    setNewFeatureSetPassthrough(isPassthroughChecked)
+    dispatch(setNewFeatureSetPassthrough(isPassthroughChecked))
     setData(state => ({
       ...state,
       passthrough: isPassthroughChecked ? id : ''
@@ -79,8 +79,6 @@ const FeatureSetsPanelTitle = ({
       handleCheckPassthrough={handleCheckPassthrough}
       handleNameOnBlur={handleNameOnBlur}
       setData={setData}
-      setNewFeatureSetDescription={setNewFeatureSetDescription}
-      setNewFeatureSetVersion={setNewFeatureSetVersion}
       setValidation={setValidation}
       validation={validation}
     />
@@ -93,6 +91,4 @@ FeatureSetsPanelTitle.propTypes = {
   validation: PropTypes.shape({}).isRequired
 }
 
-export default connect(featureStore => ({ ...featureStore }), {
-  ...featureStoreActions
-})(FeatureSetsPanelTitle)
+export default FeatureSetsPanelTitle

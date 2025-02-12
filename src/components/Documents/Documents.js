@@ -50,7 +50,7 @@ import { fetchArtifactTags, fetchDocuments, removeDocuments } from '../../reduce
 import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { getSavedSearchParams, transformSearchParams } from '../../utils/filter.util'
 import { getViewMode } from '../../utils/helper'
-import { isDetailsTabExists } from '../../utils/link-helper.util'
+import { getCloseDetailsLink, isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseChipsData } from '../../utils/convertChipsData'
 import { checkForSelectedArtifact, setFullSelectedArtifact } from '../../utils/artifacts.util'
@@ -94,7 +94,8 @@ const Documents = ({ isAllVersions = false }) => {
   const [refreshAfterDeleteCallback, refreshAfterDeleteTrigger] = useRefreshAfterDelete(
     paginationConfigDocumentVersionsRef,
     historyBackLink,
-    'artifacts'
+    'artifacts',
+    params.id && getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : DOCUMENTS_TAB, true)
   )
 
   const detailsFormInitialValues = useMemo(
@@ -291,14 +292,12 @@ const Documents = ({ isAllVersions = false }) => {
         setDocuments(null)
       }
 
-      if (changes.data.tag.currentFieldValue) {
-        navigate(
-          `/projects/${params.projectName}/${DOCUMENTS_TAB}/${params.documentName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/:${
-            changes.data.tag.currentFieldValue
-          }@${selectedItem.uid}/overview${window.location.search}`,
-          { replace: true }
-        )
-      }
+      navigate(
+        `/projects/${params.projectName}/${DOCUMENTS_TAB}/${params.documentName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/${
+          changes.data.tag.currentFieldValue ? `:${changes.data.tag.currentFieldValue}` : ''
+        }@${selectedItem.uid}/overview${window.location.search}`,
+        { replace: true }
+      )
     }
 
     refreshDocuments(documentsFilters)

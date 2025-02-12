@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { mapValues, map } from 'lodash'
 
 import AddToFeatureVectorPopUp from '../../../elements/AddToFeatureVectorPopUp/AddToFeatureVectorPopUp'
@@ -38,7 +38,7 @@ import {
   TAG_FILTER_ALL_ITEMS
 } from '../../../constants'
 import { createFeaturesRowData } from '../../../utils/createFeatureStoreContent'
-import { featuresActionCreator, filtersConfig, handleFeaturesResponse } from './features.util'
+import { filtersConfig, handleFeaturesResponse } from './features.util'
 import { getFeatureIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { setTablePanelOpen } from '../../../reducers/tableReducer'
@@ -50,19 +50,19 @@ import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchP
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 import cssVariables from './features.scss'
-
-const Features = ({
+import {
+  fetchEntities,
   fetchEntity,
   fetchFeature,
-  fetchEntities,
   fetchFeatures,
   fetchFeatureSetsTags,
-  fetchFeatureVectors,
+  removeEntities,
   removeEntity,
   removeFeature,
-  removeFeatures,
-  removeEntities
-}) => {
+  removeFeatures
+} from '../../../reducers/featureStoreReducer'
+
+const Features = () => {
   const [features, setFeatures] = useState([])
   const [selectedRowData, setSelectedRowData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
@@ -126,8 +126,8 @@ const Features = ({
       }
 
       return Promise.allSettled([
-        fetchFeatures(params.projectName, filters, config),
-        fetchEntities(params.projectName, filters, config)
+        dispatch(fetchFeatures({ project: params.projectName, filters, config })).unwrap(),
+        dispatch(fetchEntities({ project: params.projectName, filters, config })).unwrap()
       ])
         .then(result => {
           if (result) {
@@ -149,7 +149,7 @@ const Features = ({
         })
         .finally(() => clearTimeout(cancelRequestTimeout))
     },
-    [dispatch, fetchEntities, fetchFeatures, params.projectName]
+    [dispatch, params.projectName]
   )
 
   const fetchTags = useCallback(() => {
@@ -157,26 +157,27 @@ const Features = ({
 
     return dispatch(
       getFilterTagOptions({
+        dispatch,
         fetchTags: fetchFeatureSetsTags,
         project: params.projectName,
         config: { signal: tagAbortControllerRef.current.signal }
       })
     )
-  }, [dispatch, fetchFeatureSetsTags, params.projectName])
+  }, [dispatch, params.projectName])
 
   const handleRefresh = useCallback(
     filters => {
       fetchTags()
       setFeatures([])
-      removeFeature()
-      removeEntity()
-      removeFeatures()
-      removeEntities()
+      dispatch(removeFeature())
+      dispatch(removeEntity())
+      dispatch(removeFeatures())
+      dispatch(removeEntities())
       setSelectedRowData({})
 
       return fetchData(filters)
     },
-    [fetchData, fetchTags, removeEntities, removeEntity, removeFeature, removeFeatures]
+    [dispatch, fetchData, fetchTags]
   )
 
   const handleRefreshWithFilters = useCallback(() => {
@@ -195,15 +196,14 @@ const Features = ({
       delete newStoreSelectedRowData[feature.data.ui.identifier]
       delete newSelectedRowData[feature.data.ui.identifier]
 
-      removeData(newStoreSelectedRowData)
+      dispatch(removeData(newStoreSelectedRowData))
       setSelectedRowData(newSelectedRowData)
     },
     [
       featureStore.features.selectedRowData.content,
       featureStore.entities.selectedRowData.content,
       selectedRowData,
-      removeFeature,
-      removeEntity
+      dispatch
     ]
   )
 
@@ -219,7 +219,15 @@ const Features = ({
         }
       }))
 
-      fetchData(feature.metadata.project, feature.name, feature.metadata.name, featuresFilters.labels)
+      dispatch(
+        fetchData({
+          project: feature.metadata.project,
+          name: feature.name,
+          metadataName: feature.metadata.name,
+          labels: featuresFilters.labels
+        })
+      )
+        .unwrap()
         .then(result => {
           if (result?.length > 0) {
             const content = [...result].map(contentItem =>
@@ -246,7 +254,7 @@ const Features = ({
           }))
         })
     },
-    [featuresFilters.labels, fetchEntity, fetchFeature, tableStore.isTablePanelOpen]
+    [dispatch, featuresFilters.labels, tableStore.isTablePanelOpen]
   )
 
   const { latestItems, toggleRow } = useGroupContent(
@@ -272,15 +280,10 @@ const Features = ({
   const getPopUpTemplate = useCallback(
     action => {
       return (
-        <AddToFeatureVectorPopUp
-          key={action}
-          action={action}
-          currentProject={params.projectName}
-          fetchFeatureVectors={fetchFeatureVectors}
-        />
+        <AddToFeatureVectorPopUp key={action} action={action} currentProject={params.projectName} />
       )
     },
-    [fetchFeatureVectors, params.projectName]
+    [params.projectName]
   )
 
   useEffect(() => {
@@ -308,22 +311,15 @@ const Features = ({
 
     return () => {
       setFeatures([])
-      removeFeature()
-      removeEntity()
-      removeFeatures()
-      removeEntities()
+      dispatch(removeFeature())
+      dispatch(removeEntity())
+      dispatch(removeFeatures())
+      dispatch(removeEntities())
       setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
       tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
-  }, [
-    removeEntities,
-    removeEntity,
-    removeFeature,
-    removeFeatures,
-    params.projectName,
-    tagAbortControllerRef
-  ])
+  }, [params.projectName, tagAbortControllerRef, dispatch])
 
   const virtualizationConfig = useVirtualization({
     rowsData: {
@@ -360,6 +356,4 @@ const Features = ({
   )
 }
 
-export default connect(null, {
-  ...featuresActionCreator
-})(Features)
+export default Features
