@@ -35,13 +35,13 @@ const createFunctionsRowData = (func, projectName, isAllVersions, showExpandButt
         className: 'table-cell-name',
         getLink: tab => {
           if (oldVersion) {
-            return `/projects/${projectName}/functions/${func.name}${func.tag ? `/${func.tag}` : `@${func.hash}`}${`/${tab}`}${window.location.search}` // todo remove in 1.9.0
+            return `/projects/${projectName}/functions/${func.name}${func.tag ? `/${func.tag}` : `@${func.hash}`}${`/${tab}`}${window.location.search}` // todo [functionsWithPagination] remove in 1.9.0
           }
 
           return `/projects/${projectName}/functions/${func.name}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/${func.tag ? `:${func.tag}` : ''}@${func.hash}${`/${tab}`}${window.location.search}`
         },
         expandedCellContent: {
-          // todo remove this and showExpandButton in 1.9.0
+          // todo [functionsWithPagination] remove this and showExpandButton in 1.9.0
           value: formatDatetime(func.updated, 'N/A'),
           className: 'table-cell-name',
           type: 'date',
