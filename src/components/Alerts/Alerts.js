@@ -20,6 +20,7 @@ such restriction.
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { isEmpty } from 'lodash'
 
 import AlertsView from './AlertsView'
 
@@ -133,6 +134,12 @@ const Alerts = () => {
     setSearchParams,
     tableContent
   ])
+
+  useEffect(() => {
+    if (isEmpty(selectedAlert)) {
+      lastCheckedAlertIdRef.current = null
+    }
+  }, [lastCheckedAlertIdRef, selectedAlert])
 
   return (
     <AlertsView
