@@ -565,7 +565,9 @@ export const ACTION_MENU_PARENT_ROW_EXPANDED = 'action-menu_parent-row-expanded'
 
 /*=========== Chart =============*/
 export const CHART_TYPE_LINE = 'line'
+export const CHART_TYPE_GRADIENT_LINE = 'gradient-line'
 export const CHART_TYPE_BAR = 'bar'
+export const CHART_TYPE_HISTOGRAM = 'histogram'
 
 /*=========== ARTIFACTS LIMITS =============*/
 export const ARTIFACT_MAX_CHUNK_SIZE = 1048576 // 1MB

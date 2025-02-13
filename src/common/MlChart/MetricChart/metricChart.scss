@@ -1,0 +1,34 @@
+@import '~igz-controls/scss/colors';
+
+div[id^='chartjs-tooltip'] {
+  .tooltip-drift-content {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: flex-start;
+    background: inherit;
+  }
+
+  .tooltip-drift-status {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+
+    &-drift-possible_drift {
+      background-color: $grandis;
+    }
+
+    &-drift-drift_detected {
+      background-color: $ceriseRed;
+    }
+
+    &-drift-no_drift {
+      background-color: $brightTurquoise;
+    }
+
+    &-drift-no-status {
+      background-color: $doveGray;
+    }
+  }
+}
