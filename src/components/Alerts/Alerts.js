@@ -94,9 +94,10 @@ const Alerts = () => {
 
   const handleFetchJobLogs = useCallback(
     (item, projectName, setDetailsLogs, streamLogsRef) => {
-      return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, dispatch)
+      lastCheckedAlertIdRef.current &&
+        getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, dispatch)
     },
-    [dispatch]
+    [dispatch, lastCheckedAlertIdRef]
   )
 
   const pageData = useMemo(
