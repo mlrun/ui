@@ -20,7 +20,7 @@ such restriction.
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
-import HistogramChart from '../../common/Chart/HistogramChart/HistogramChart'
+import HistogramChart from '../../common/MlChart/HistogramChart/HistogramChart'
 import NoData from '../../common/NoData/NoData'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 

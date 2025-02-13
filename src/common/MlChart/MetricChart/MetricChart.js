@@ -19,7 +19,7 @@ such restriction.
 */
 import { useEffect, useMemo, useRef, memo, useCallback } from 'react'
 
-import Chart from '../Chart'
+import MlChart from '../MlChart'
 
 import { setChartGradient } from './metricChart.util'
 
@@ -94,7 +94,7 @@ const MetricChart = ({ config, isInvocationCardExpanded }) => {
   }, [backgroundColor, config.gradient, isInvocationCardExpanded])
 
   return (
-    <Chart
+    <MlChart
       config={chartConfig}
       chartRef={chartRef}
       contextRef={contextRef}

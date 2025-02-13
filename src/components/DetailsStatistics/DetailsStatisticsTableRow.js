@@ -21,7 +21,7 @@ import React, { memo } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import HistogramChart from '../../common/Chart/HistogramChart/HistogramChart'
+import HistogramChart from '../../common/MlChart/HistogramChart/HistogramChart'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import './detailsStatistics.scss'

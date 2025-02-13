@@ -20,7 +20,7 @@ such restriction.
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
-import Chart from '../Chart'
+import MlChart from '../MlChart'
 
 import './histogramChart.scss'
 
@@ -49,7 +49,7 @@ const HistogramChart = ({ config, showLoader = true }) => {
     }
   }, [config])
 
-  return <Chart config={chartConfig} showLoader={showLoader} smallLoader />
+  return <MlChart config={chartConfig} showLoader={showLoader} smallLoader />
 }
 
 HistogramChart.propTypes = {

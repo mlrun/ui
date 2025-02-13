@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
 import StatsCard from '../../../common/StatsCard/StatsCard'
-import MetricChart from '../../../common/Chart/MetricChart/MetricChart'
+import MetricChart from '../../../common/MlChart/MetricChart/MetricChart'
 import { RoundedIcon, Tip } from 'igz-controls/components'
 
 import {

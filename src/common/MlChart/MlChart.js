@@ -19,11 +19,11 @@ such restriction.
 */
 import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Chart as ChartJs} from 'chart.js/auto'
+import { Chart } from 'chart.js/auto'
 import Loader from '../Loader/Loader'
 import classnames from 'classnames'
 
-const Chart = ({
+const MlChart = ({
   chartRef,
   config,
   contextRef,
@@ -47,7 +47,7 @@ const Chart = ({
         chartRef.current?.destroy()
       }
 
-      const chartInstance = new ChartJs(ctx, {
+      const chartInstance = new Chart(ctx, {
         ...config,
         options: {
           ...config.options,
@@ -84,7 +84,7 @@ const Chart = ({
   )
 }
 
-Chart.propTypes = {
+MlChart.propTypes = {
   chartRef: PropTypes.object,
   config: PropTypes.shape({}).isRequired,
   contextRef: PropTypes.object,
@@ -93,4 +93,4 @@ Chart.propTypes = {
   smallLoader: PropTypes.bool
 }
 
-export default React.memo(Chart)
+export default React.memo(MlChart)

@@ -21,7 +21,7 @@ import React, { useMemo, memo } from 'react'
 
 import StatsCard from '../../../common/StatsCard/StatsCard'
 import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/dist/components'
-import MetricChart from '../../../common/Chart/MetricChart/MetricChart'
+import MetricChart from '../../../common/MlChart/MetricChart/MetricChart'
 
 import { getMetricChartConfig } from '../../../utils/getChartConfig'
 import { calculateHistogram, METRIC_COMPUTED_AVG_POINTS } from '../detailsMetrics.util'
