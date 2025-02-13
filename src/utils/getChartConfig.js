@@ -26,7 +26,7 @@ import {
 } from '../constants'
 import colors from 'igz-controls/scss/colors.scss'
 
-const setHistogramText = (context, tooltipModel, tooltipEl) => {
+const setHistogramChartText = (context, tooltipModel, tooltipEl) => {
   if (tooltipModel.dataPoints) {
     const labels = context.chart.config._config.data?.labels
     const dataPoints = tooltipModel.dataPoints.map(dataPoint => {
@@ -134,7 +134,7 @@ const generateCustomTooltip = (context, applicationChartType) => {
 
   // Set Text
   if (applicationChartType === CHART_TYPE_HISTOGRAM) {
-    setHistogramText(context, tooltipModel, tooltipEl)
+    setHistogramChartText(context, tooltipModel, tooltipEl)
   } else {
     setMetricChartText(context, tooltipModel, tooltipEl, chartType)
   }

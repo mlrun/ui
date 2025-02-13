@@ -25,7 +25,6 @@ import Chart from '../Chart'
 import './histogramChart.scss'
 
 const HistogramChart = ({ config, showLoader = true }) => {
-
   const chartConfig = useMemo(() => {
     const pythonInfinity = 'e+308'
 
