@@ -69,8 +69,8 @@ const Page = lazyRetry(() => import('./layout/Page/Page'))
 const Datasets = lazyRetry(() => import('./components/Datasets/Datasets'))
 const FeatureStore = lazyRetry(() => import('./components/FeatureStore/FeatureStore'))
 const Files = lazyRetry(() => import('./components/Files/Files'))
-const FunctionsOld = lazyRetry(() => import('./components/FunctionsPageOld/Functions'))
-const Functions = lazyRetry(() => import('./components/FunctionsPage/Functions')) // TODO rename FunctionsNew to Functions and delete old component and logic in 1.9.0
+const FunctionsOld = lazyRetry(() => import('./components/FunctionsPageOld/FunctionsOld')) // TODO delete FunctionsOld and other related logic in 1.9.0
+const Functions = lazyRetry(() => import('./components/FunctionsPage/Functions'))
 const Jobs = lazyRetry(() => import('./components/Jobs/Jobs'))
 const MonitorJobs = lazyRetry(() => import('./components/Jobs/MonitorJobs/MonitorJobs'))
 const MonitorWorkflows = lazyRetry(

@@ -22,7 +22,7 @@ import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
-import FunctionsView from './FunctionsView'
+import FunctionsViewOld from './FunctionsViewOld'
 import JobWizard from '../JobWizard/JobWizard'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 
@@ -44,7 +44,7 @@ import {
   pollDeletingFunctions,
   searchFunctionItem,
   setFullSelectedFunction
-} from './functions.util'
+} from './functionsOld.util'
 import createFunctionsRowData from '../../utils/createFunctionsRowData'
 import functionsActions from '../../actions/functions'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
@@ -697,7 +697,7 @@ const Functions = ({
   })
 
   return (
-    <FunctionsView
+    <FunctionsViewOld
       actionsMenu={actionsMenu}
       allRowsAreExpanded={allRowsAreExpanded}
       closePanel={closePanel}

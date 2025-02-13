@@ -25,7 +25,7 @@ import ActionBar from '../ActionBar/ActionBar'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import FunctionsFilters from '../FunctionsPage/FunctionsFilters'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
-import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRowOld'
+import FunctionsTableRowOld from '../../elements/FunctionsTableRow/FunctionsTableRowOld'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Table from '../Table/Table'
@@ -42,13 +42,13 @@ import { FILTERS_CONFIG, VIRTUALIZATION_CONFIG } from '../../types'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isRowRendered } from '../../hooks/useVirtualization.hook'
 
-const FunctionsView = ({
+const FunctionsViewOld = ({
   actionsMenu,
   allRowsAreExpanded,
   closePanel,
-  confirmData,
+  confirmData = null,
   createFunctionSuccess,
-  editableItem,
+  editableItem = null,
   expandedRowsData,
   filters,
   filtersChangeCallback,
@@ -134,7 +134,7 @@ const FunctionsView = ({
                   {tableContent.map(
                     (tableItem, index) =>
                       isRowRendered(virtualizationConfig, index) && (
-                        <FunctionsTableRow
+                        <FunctionsTableRowOld
                           actionsMenu={actionsMenu}
                           expandedRowsData={expandedRowsData}
                           handleSelectItem={handleSelectFunction}
@@ -186,12 +186,7 @@ const FunctionsView = ({
   )
 }
 
-FunctionsView.defaultPropTypes = {
-  confirmData: null,
-  editableItem: null
-}
-
-FunctionsView.propTypes = {
+FunctionsViewOld.propTypes = {
   actionsMenu: PropTypes.func.isRequired,
   allRowsAreExpanded: PropTypes.bool.isRequired,
   closePanel: PropTypes.func.isRequired,
@@ -221,4 +216,4 @@ FunctionsView.propTypes = {
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 
-export default FunctionsView
+export default FunctionsViewOld

@@ -47,13 +47,13 @@ import { parseFunction } from '../../utils/parseFunction'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { getFunctionLogs, getFunctionNuclioLogs } from '../../utils/getFunctionLogs'
+import { setJobFunction } from '../../reducers/jobReducer'
 
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
-import { setJobFunction } from '../../reducers/jobReducer'
 
 export const page = 'FUNCTIONS'
 export const detailsMenu = [

@@ -32,7 +32,7 @@ import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { generateTableRowTestId } from '../../utils/generateTableRowTestId'
 import { isRowExpanded, PARENT_ROW_EXPANDED_CLASS } from '../../utils/tableRows.util'
 
-const FunctionsTableRow = ({
+const FunctionsTableRowOld = ({
   actionsMenu,
   expandedRowsData,
   handleSelectItem,
@@ -165,7 +165,11 @@ const FunctionsTableRow = ({
                   firstCell={index === 0}
                   item={rowItem.data}
                   key={value.id}
-                  link={value.getLink?.(rowItem.data.tag, params.tab ?? DETAILS_OVERVIEW_TAB, rowItem.data.hash)}
+                  link={value.getLink?.(
+                    rowItem.data.tag,
+                    params.tab ?? DETAILS_OVERVIEW_TAB,
+                    rowItem.data.hash
+                  )}
                   selectItem={handleSelectItem}
                   selectedItem={selectedItem}
                   showExpandButton={value.showExpandButton}
@@ -187,7 +191,7 @@ const FunctionsTableRow = ({
   )
 }
 
-FunctionsTableRow.propTypes = {
+FunctionsTableRowOld.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   expandedRowsData: PropTypes.object.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
@@ -198,4 +202,4 @@ FunctionsTableRow.propTypes = {
   withQuickActions: PropTypes.bool
 }
 
-export default FunctionsTableRow
+export default FunctionsTableRowOld
