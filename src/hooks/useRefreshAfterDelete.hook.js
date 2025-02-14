@@ -22,18 +22,22 @@ import { useNavigate } from 'react-router-dom'
 
 import { BE_PAGE } from '../constants'
 
-export const useRefreshAfterDelete = (paginationConfigRef, historyBackLink, responsePath) => {
+export const useRefreshAfterDelete = (paginationConfigRef, historyBackLink, responsePath, closeDetailsLink) => {
   const [refreshAfterDeleteTrigger, setRefreshAfterDeleteTrigger] = useState(null)
   const navigate = useNavigate()
+
 
   const refreshAfterDeleteCallback = useCallback(
     response => {
       if (response?.[responsePath]?.length === 0 && paginationConfigRef?.current?.[BE_PAGE] === 1) {
         navigate(historyBackLink)
         setRefreshAfterDeleteTrigger(Math.random())
+      } else if (closeDetailsLink) {
+        navigate(closeDetailsLink)
+        setRefreshAfterDeleteTrigger(Math.random())
       }
     },
-    [paginationConfigRef, responsePath, navigate, historyBackLink]
+    [responsePath, paginationConfigRef, navigate, historyBackLink, closeDetailsLink]
   )
 
   return [refreshAfterDeleteCallback, refreshAfterDeleteTrigger]

@@ -367,7 +367,7 @@ export const generateActionsMenu = (
         icon: <HistoryIcon />,
         disabled: functionIsDeleting,
         onClick: () => showAllVersions(func.name),
-        hidden: isAllVersions
+        hidden: isDetailsPopUp || isAllVersions
       },
       {
         id: 'build-and-run',

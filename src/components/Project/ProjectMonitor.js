@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useState, useEffect, useMemo, useRef } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
@@ -26,7 +26,6 @@ import ProjectMonitorView from './ProjectMonitorView'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelModal'
 
-import featureStoreActions from '../../actions/featureStore'
 import functionsActions from '../../actions/functions'
 import nuclioAction from '../../actions/nuclio'
 import projectsAction from '../../actions/projects'
@@ -46,18 +45,17 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { useMode } from '../../hooks/mode.hook'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
+import { removeNewFeatureSet } from '../../reducers/featureStoreReducer'
 
 const ProjectMonitor = ({
   fetchNuclioV3ioStreams,
   fetchProject,
   fetchProjectFunctions,
   fetchProjectSummary,
-  frontendSpec,
   functionsStore,
   nuclioStore,
   projectStore,
   removeFunctionsError,
-  removeNewFeatureSet,
   removeNewFunction,
   removeProjectData,
   removeProjectSummary,
@@ -75,6 +73,7 @@ const ProjectMonitor = ({
   const projectAbortControllerRef = useRef(new AbortController())
   const projectSummariesAbortControllerRef = useRef(new AbortController())
   const v3ioStreamsAbortControllerRef = useRef(new AbortController())
+  const frontendSpec = useSelector(state => state.appStore.frontendSpec)
 
   const registerArtifactLink = useCallback(
     artifactKind =>
@@ -177,7 +176,7 @@ const ProjectMonitor = ({
 
   const closeFeatureSetPanel = () => {
     setCreateFeatureSetPanelIsOpen(false)
-    removeNewFeatureSet()
+    dispatch(removeNewFeatureSet())
   }
 
   const closeFunctionsPanel = () => {
@@ -191,7 +190,7 @@ const ProjectMonitor = ({
 
   const createFeatureSetSuccess = async () => {
     setCreateFeatureSetPanelIsOpen(false)
-    removeNewFeatureSet()
+    dispatch(removeNewFeatureSet())
   }
 
   const createFunctionSuccess = async () => {
@@ -316,15 +315,12 @@ const ProjectMonitor = ({
 }
 
 export default connect(
-  ({ appStore, functionsStore, featureStore, nuclioStore, projectStore }) => ({
-    featureStore,
+  ({ functionsStore, nuclioStore, projectStore }) => ({
     functionsStore,
-    frontendSpec: appStore.frontendSpec,
     nuclioStore,
     projectStore
   }),
   {
-    ...featureStoreActions,
     ...functionsActions,
     ...projectsAction,
     ...nuclioAction

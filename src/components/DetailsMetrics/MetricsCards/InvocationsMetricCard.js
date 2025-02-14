@@ -21,17 +21,17 @@ import { forwardRef, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
-import StatsCard from '../../common/StatsCard/StatsCard'
-import MetricChart from '../MetricChart/MetricChart'
+import StatsCard from '../../../common/StatsCard/StatsCard'
+import MetricChart from '../../../common/MlChart/MetricChart/MetricChart'
 import { RoundedIcon, Tip } from 'igz-controls/components'
 
 import {
   calculatePercentageDrift,
   METRIC_COMPUTED_TOTAL_POINTS,
   METRIC_RAW_TOTAL_POINTS
-} from './detailsMetrics.util'
-import { getGradientLineChartConfig } from '../../utils/getMetricChartConfig'
-import { CHART_TYPE_LINE } from '../../constants'
+} from '../detailsMetrics.util'
+import { getMetricChartConfig } from '../../../utils/getChartConfig'
+import { CHART_TYPE_LINE, CHART_TYPE_GRADIENT_LINE } from '../../../constants'
 import { ReactComponent as EnlargeIcon } from 'igz-controls/images/expand.svg'
 import { ReactComponent as MinimizeIcon } from 'igz-controls/images/collapse.svg'
 
@@ -59,7 +59,7 @@ const InvocationsMetricCard = forwardRef(
       isInvocationCardExpanded ? 'metrics__card-invocation-header_expanded' : ''
     )
 
-    const gradientConfig = useMemo(() => getGradientLineChartConfig(), [])
+    const gradientConfig = useMemo(() => getMetricChartConfig(CHART_TYPE_GRADIENT_LINE), [])
     const resultPercentageDrift = calculatePercentageDrift(
       previousTotalInvocation,
       metric[METRIC_RAW_TOTAL_POINTS]
@@ -92,7 +92,7 @@ const InvocationsMetricCard = forwardRef(
       <div className={invocationCardClassnames}>
         <StatsCard key={metric.id} className="metrics__card metrics__card-invocation">
           <RoundedIcon
-            className="metrics__card-invocation-toggle-icon"
+            className="metrics__card-invocation__toggle-icon"
             id="invocation-card-toggle-icon"
             onClick={() => setIsInvocationCardExpanded(!isInvocationCardExpanded)}
             tooltipText={`${isInvocationCardExpanded ? 'Collapse' : 'Expand'} Invocation Card`}
@@ -104,15 +104,15 @@ const InvocationsMetricCard = forwardRef(
             tip="All values are approximate when using sampling to monitor this model endpoint"
           >
             <div className={invocationCardHeaderClassnames}>
-              <div className="metrics__card-invocation-header_drift-icon-container">
+              <div className="metrics__card-invocation-header__drift-icon-container">
                 {resultPercentageDrift.icon}
               </div>
-              <div className={`metrics__card-invocation-header_${resultPercentageDrift.className}`}>
+              <div className={`metrics__card-invocation-header__${resultPercentageDrift.className}`}>
                 {resultPercentageDrift.percentageChange}
               </div>
-              <div className="metrics__card-invocation-header-selected-date">{selectedDate}</div>
-              <div className="metrics__card-invocation-header-total-title">Total</div>
-              <div className="metrics__card-invocation-header-total-score">
+              <div className="metrics__card-invocation-header__selected-date">{selectedDate}</div>
+              <div className="metrics__card-invocation-header__total-title">Total</div>
+              <div className="metrics__card-invocation-header__total-score">
                 {metric[METRIC_COMPUTED_TOTAL_POINTS]}
               </div>
             </div>
@@ -132,19 +132,19 @@ const InvocationsMetricCard = forwardRef(
                 />
               </div>
               <div className="metrics__card-invocation-content-container">
-                <div className="metrics__card-invocation-content-container_drift_icon">
+                <div className="metrics__card-invocation-content-container__drift-icon">
                   {resultPercentageDrift.icon}
                 </div>
                 <div
-                  className={`metrics__card-invocation-content-container_${resultPercentageDrift.className}`}
+                  className={`metrics__card-invocation-content-container__${resultPercentageDrift.className}`}
                 >
                   {resultPercentageDrift.percentageChange}
                 </div>
                 <div>{selectedDate}</div>
               </div>
               <div className="metrics__card-invocation-content-data">
-                <div className="metrics__card-invocation-content-data_total_title">Total</div>
-                <div className="metrics__card-invocation-content-data-total-score">
+                <div className="metrics__card-invocation-content-data__total-title">Total</div>
+                <div className="metrics__card-invocation-content-data__total-score">
                   {' '}
                   {metric[METRIC_COMPUTED_TOTAL_POINTS]}
                 </div>
@@ -152,8 +152,8 @@ const InvocationsMetricCard = forwardRef(
             </div>
             <div className="metrics__card-body-invocation">
               <MetricChart
+                config={chartConfig}
                 isInvocationCardExpanded={isInvocationCardExpanded}
-                chartConfig={chartConfig}
               />
             </div>
           </div>

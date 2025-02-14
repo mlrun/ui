@@ -39,17 +39,17 @@ import {
   generatePageData as generateModelPageData
 } from '../../../components/ModelsPage/Models/models.util'
 import {
-    generateActionsMenu as generateDocumentActionsMenu,
-    generatePageData as generateDocumentPageData
+  generateActionsMenu as generateDocumentActionsMenu,
+  generatePageData as generateDocumentPageData
 } from '../../../components/Documents/documents.util'
 import {
-    DATASET_TYPE,
-    DATASETS_TAB,
-    DOCUMENT_TYPE,
-    DOCUMENTS_TAB,
-    FILES_TAB,
-    MODEL_TYPE,
-    MODELS_TAB
+  DATASET_TYPE,
+  DATASETS_TAB,
+  DOCUMENT_TYPE,
+  DOCUMENTS_TAB,
+  FILES_TAB,
+  MODEL_TYPE,
+  MODELS_TAB
 } from '../../../constants'
 import { toggleYaml } from '../../../reducers/appReducer'
 import artifactsApi from '../../../api/artifacts-api'
@@ -105,7 +105,7 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
     const artifactMin = {
       name: artifactData.key,
       iter: artifactData.iteration,
-      tree: artifactData.uid,
+      tree: artifactData.tree || artifactData.uid,
       tag: artifactData.tag
     }
 

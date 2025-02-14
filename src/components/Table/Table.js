@@ -49,6 +49,7 @@ const Table = React.forwardRef(
       tab = '',
       tableClassName = '',
       tableHeaders = [],
+      viewMode,
       virtualizationConfig = {
         tableBodyPaddingTop: 0,
         startIndex: -1,
@@ -139,6 +140,7 @@ const Table = React.forwardRef(
         tableHeaders={tableHeaders}
         tableHeadRef={tableHeadRef}
         tablePanelRef={tablePanelRef}
+        viewMode={viewMode}
         virtualizationConfig={virtualizationConfig}
         withActionMenu={withActionMenu}
       >

@@ -35,14 +35,9 @@ import { setFeaturesPanelData, setTablePanelOpen } from '../../reducers/tableRed
 import { ReactComponent as AddCircle } from 'igz-controls/images/add-circle.svg'
 
 import './addToFeatureVectorPopUp.scss'
+import { fetchFeatureVectors } from '../../reducers/featureStoreReducer'
 
-const AddToFeatureVectorPopUp = ({
-  action,
-  currentProject,
-  fetchFeatureVectors,
-  featureStore,
-  projectStore
-}) => {
+const AddToFeatureVectorPopUp = ({ action, currentProject, featureStore, projectStore }) => {
   const [isPopUpOpen, setIsPopUpOpen] = useState(false)
   const [isCreateFeaturePopUpOpen, setIsCreateFeaturePopUpOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState('')
@@ -70,22 +65,24 @@ const AddToFeatureVectorPopUp = ({
 
   const onSelectProject = projectName => {
     setSelectedProject(projectName)
-    fetchFeatureVectors(projectName).then(result => {
-      if (result) {
-        const featureVectorsOptions = result.map(featureVector => {
-          return {
-            id: featureVector.metadata.name,
-            label: featureVector.metadata.name
-          }
-        })
+    dispatch(fetchFeatureVectors({ project: projectName }))
+      .unwrap()
+      .then(result => {
+        if (result) {
+          const featureVectorsOptions = result.map(featureVector => {
+            return {
+              id: featureVector.metadata.name,
+              label: featureVector.metadata.name
+            }
+          })
 
-        setFeatureVectors(result)
-        setFeatureVectorsList(uniqBy(featureVectorsOptions, 'id'))
-        setFeatureVectorTagsList([])
-        setSelectedFeatureVector('')
-        setSelectedFeatureVectorTag('')
-      }
-    })
+          setFeatureVectors(result)
+          setFeatureVectorsList(uniqBy(featureVectorsOptions, 'id'))
+          setFeatureVectorTagsList([])
+          setSelectedFeatureVector('')
+          setSelectedFeatureVectorTag('')
+        }
+      })
   }
 
   const onSelectFeatureVector = featureVectorName => {
@@ -285,8 +282,7 @@ const AddToFeatureVectorPopUp = ({
 
 AddToFeatureVectorPopUp.propTypes = {
   action: PropTypes.shape({}).isRequired,
-  currentProject: PropTypes.string.isRequired,
-  fetchFeatureVectors: PropTypes.func.isRequired
+  currentProject: PropTypes.string.isRequired
 }
 
 export default connect(

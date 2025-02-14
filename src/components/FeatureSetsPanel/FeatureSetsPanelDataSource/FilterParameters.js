@@ -19,28 +19,27 @@ such restriction.
 */
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Input from '../../../common/Input/Input'
 import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanelSection'
 import DatePicker from '../../../common/DatePicker/DatePicker'
 
 import { END_TIME, START_TIME, TIME_FIELD } from './featureSetsPanelDataSource.util'
-import featureStoreActions from '../../../actions/featureStore'
-
-const FilterParameters = ({
-  featureStore,
+import {
   setNewFeatureSetDataSourceEndTime,
   setNewFeatureSetDataSourceStartTime,
-  setNewFeatureSetDataSourceTimestampColumn,
-  setValidation,
-  validation
-}) => {
+  setNewFeatureSetDataSourceTimestampColumn
+} from '../../../reducers/featureStoreReducer'
+
+const FilterParameters = ({ setValidation, validation }) => {
   const [data, setData] = useState({
     timeField: '',
     startTime: '',
     endTime: ''
   })
+  const dispatch = useDispatch()
+  const featureStore = useSelector(state => state.featureStore)
 
   useEffect(() => {
     return () => {
@@ -56,20 +55,15 @@ const FilterParameters = ({
         isStartTimeValid: true,
         isEndTimeValid: true
       }))
-      setNewFeatureSetDataSourceTimestampColumn('')
-      setNewFeatureSetDataSourceStartTime('')
-      setNewFeatureSetDataSourceEndTime('')
+      dispatch(setNewFeatureSetDataSourceTimestampColumn(''))
+      dispatch(setNewFeatureSetDataSourceStartTime(''))
+      dispatch(setNewFeatureSetDataSourceEndTime(''))
     }
-  }, [
-    setNewFeatureSetDataSourceEndTime,
-    setNewFeatureSetDataSourceStartTime,
-    setNewFeatureSetDataSourceTimestampColumn,
-    setValidation
-  ])
+  }, [dispatch, setValidation])
 
   const handleTimestampColumnOnBlur = event => {
     if (featureStore.newFeatureSet.spec.source.time_field !== event.target.value) {
-      setNewFeatureSetDataSourceTimestampColumn(event.target.value)
+      dispatch(setNewFeatureSetDataSourceTimestampColumn(event.target.value))
       setData(state => ({
         ...state,
         timeField: event.target.value
@@ -109,7 +103,7 @@ const FilterParameters = ({
       type === START_TIME ? setNewFeatureSetDataSourceStartTime : setNewFeatureSetDataSourceEndTime
 
     if (date[0]) {
-      setTime(date[0].toISOString())
+      dispatch(setTime(date[0].toISOString()))
 
       if (type === START_TIME) {
         setValidation(prevState => ({
@@ -125,7 +119,7 @@ const FilterParameters = ({
         }))
       }
     } else {
-      setTime('')
+      dispatch(setTime(''))
       setValidation(prevState => ({
         ...prevState,
         isTimeFieldValid: true,
@@ -215,6 +209,4 @@ FilterParameters.propTypes = {
   validation: PropTypes.shape({}).isRequired
 }
 
-export default connect(featureStore => ({ ...featureStore }), {
-  ...featureStoreActions
-})(FilterParameters)
+export default FilterParameters

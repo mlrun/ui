@@ -62,7 +62,7 @@ import { createModelsRowData } from '../../../utils/createArtifactsContent'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { getSavedSearchParams, transformSearchParams } from '../../../utils/filter.util'
 import { getViewMode } from '../../../utils/helper'
-import { isDetailsTabExists } from '../../../utils/link-helper.util'
+import { getCloseDetailsLink, isDetailsTabExists } from '../../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseChipsData } from '../../../utils/convertChipsData'
 import { checkForSelectedArtifact, setFullSelectedArtifact } from '../../../utils/artifacts.util'
@@ -111,7 +111,8 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
   const [refreshAfterDeleteCallback, refreshAfterDeleteTrigger] = useRefreshAfterDelete(
     paginationConfigModelVersionsRef,
     historyBackLink,
-    'artifacts'
+    'artifacts',
+    params.id && getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : MODELS_TAB, true)
   )
 
   const { isDemoMode } = useMode()
@@ -356,14 +357,12 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
         setModels(null)
       }
 
-      if (changes.data.tag.currentFieldValue) {
-        navigate(
-          `/projects/${params.projectName}/${MODELS_PAGE.toLowerCase()}/${MODELS_TAB}/${params.modelName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/:${
-            changes.data.tag.currentFieldValue
-          }@${selectedItem.uid}/overview${window.location.search}`,
-          { replace: true }
-        )
-      }
+      navigate(
+        `/projects/${params.projectName}/${MODELS_PAGE.toLowerCase()}/${MODELS_TAB}/${params.modelName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/${
+          changes.data.tag.currentFieldValue ? `:${changes.data.tag.currentFieldValue}` : ''
+        }@${selectedItem.uid}/overview${window.location.search}`,
+        { replace: true }
+      )
     }
 
     refreshModels(modelsFilters)

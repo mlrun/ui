@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch, connect, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import { Form, FormSpy } from 'react-final-form'
@@ -29,7 +29,6 @@ import arrayMutators from 'final-form-arrays'
 import FeatureSetsPanelView from './FeatureSetsPanelView'
 
 import { FEATURE_SETS_TAB, TAG_FILTER_LATEST } from '../../constants'
-import featureStoreActions from '../../actions/featureStore'
 import { setNotification } from '../../reducers/notificationReducer'
 import { checkValidation } from './featureSetPanel.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
@@ -38,17 +37,11 @@ import {
   PARQUET
 } from './FeatureSetsPanelTargetStore/featureSetsPanelTargetStore.util'
 import { convertChipsData } from '../../utils/convertChipsData'
+import { createNewFeatureSet, startFeatureSetIngest } from '../../reducers/featureStoreReducer'
 
-const FeatureSetsPanel = ({
-  closePanel,
-  createFeatureSetSuccess,
-  createNewFeatureSet,
-  featureStore,
-  project,
-  setNewFeatureSetCredentialsAccessKey,
-  startFeatureSetIngest
-}) => {
+const FeatureSetsPanel = ({ closePanel, createFeatureSetSuccess, project }) => {
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+  const featureStore = useSelector(store => store.featureStore)
   const [validation, setValidation] = useState({
     areLabelsValid: true,
     isNameValid: true,
@@ -113,7 +106,8 @@ const FeatureSetsPanel = ({
 
     delete data.credentials
 
-    createNewFeatureSet(project, data)
+    dispatch(createNewFeatureSet({ project, data }))
+      .unwrap()
       .then(result => {
         setConfirmDialog(null)
 
@@ -152,9 +146,13 @@ const FeatureSetsPanel = ({
       credentials: featureStore.newFeatureSet.credentials
     }
 
-    return startFeatureSetIngest(project, result.data.metadata.name, reference, data).then(() => {
-      handleCreateFeatureSetSuccess(result.data.metadata.name, reference)
-    })
+    return dispatch(
+      startFeatureSetIngest({ project, featureSet: result.data.metadata.name, reference, data })
+    )
+      .unwrap()
+      .then(() => {
+        handleCreateFeatureSetSuccess(result.data.metadata.name, reference)
+      })
   }
 
   const handleCreateFeatureSetSuccess = (name, tag) => {
@@ -191,7 +189,6 @@ const FeatureSetsPanel = ({
               project={project}
               setConfirmDialog={setConfirmDialog}
               setDisableButtons={setDisableButtons}
-              setNewFeatureSetCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}
               setValidation={setValidation}
               validation={validation}
             />
@@ -225,6 +222,4 @@ FeatureSetsPanel.propTypes = {
   project: PropTypes.string.isRequired
 }
 
-export default connect(({ featureStore }) => ({ featureStore }), {
-  ...featureStoreActions
-})(FeatureSetsPanel)
+export default FeatureSetsPanel

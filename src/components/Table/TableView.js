@@ -26,7 +26,7 @@ import Details from '../Details/Details'
 import TableHead from './TableHead'
 
 import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../types'
-import { MAIN_TABLE_BODY_ID, MAIN_TABLE_ID } from '../../constants'
+import { FULL_VIEW_MODE, MAIN_TABLE_BODY_ID, MAIN_TABLE_ID } from '../../constants'
 import { SORT_PROPS } from 'igz-controls/types'
 
 const TableView = ({
@@ -52,6 +52,7 @@ const TableView = ({
   tableHeaders,
   tablePanelRef,
   tableRef,
+  viewMode,
   virtualizationConfig,
   withActionMenu
 }) => {
@@ -97,7 +98,7 @@ const TableView = ({
             </div>
           )}
         </div>
-        {!isEmpty(selectedItem) && (
+        {!isEmpty(selectedItem) && viewMode !== FULL_VIEW_MODE && (
           <Details
             actionsMenu={actionsMenu}
             applyDetailsChanges={applyDetailsChanges}

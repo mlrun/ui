@@ -132,6 +132,7 @@ const DatasetsView = React.forwardRef(
                     selectedItem={selectedDataset}
                     tableClassName="datasets-table"
                     tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
+                    viewMode={viewMode}
                   >
                     {tableContent.map((tableItem, index) => (
                       <ArtifactsTableRow

@@ -37,7 +37,7 @@ import { getArtifactReference, getFeatureReference, getParsedResource } from '..
 import projectAction from '../../actions/projects'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
-import featureStoreActions from '../../actions/featureStore'
+import { fetchFeatureVector, fetchFeatureVectors } from '../../reducers/featureStoreReducer'
 
 const targetPathRegex =
   /^(store|v3io|s3|az|gs):(\/\/\/|\/\/)(?!.*:\/\/)([\w\-._~:?#[\]@!$&'()*+,;=]+)\/([\w\-._~:/?#[\]%@!$&'()*+,;=]+)$/i
@@ -372,21 +372,23 @@ export const getArtifacts = (dispatch, project, storePathType, setDataInputState
 }
 
 export const getFeatureVectors = (dispatch, project, setDataInputState) => {
-  dispatch(featureStoreActions.fetchFeatureVectors(project, {}, {})).then(featureVectors => {
-    const featureVectorsList = uniqBy(featureVectors, 'metadata.name')
-      .map(featureVector => ({
-        label: featureVector.metadata.name,
-        id: featureVector.metadata.name
-      }))
-      .sort((prevFeatureVector, nextFeatureVector) =>
-        prevFeatureVector.id.localeCompare(nextFeatureVector.id)
-      )
+  dispatch(fetchFeatureVectors({ project, filters: {}, config: {} }))
+    .unwrap()
+    .then(featureVectors => {
+      const featureVectorsList = uniqBy(featureVectors, 'metadata.name')
+        .map(featureVector => ({
+          label: featureVector.metadata.name,
+          id: featureVector.metadata.name
+        }))
+        .sort((prevFeatureVector, nextFeatureVector) =>
+          prevFeatureVector.id.localeCompare(nextFeatureVector.id)
+        )
 
-    setDataInputState(prev => ({
-      ...prev,
-      featureVectors: featureVectorsList
-    }))
-  })
+      setDataInputState(prev => ({
+        ...prev,
+        featureVectors: featureVectorsList
+      }))
+    })
 }
 
 export const getArtifact = (dispatch, project, projectItem, setDataInputState) => {
@@ -406,7 +408,8 @@ export const getArtifact = (dispatch, project, projectItem, setDataInputState) =
 }
 
 export const getFeatureVector = (dispatch, project, projectItem, setDataInputState) => {
-  dispatch(featureStoreActions.fetchFeatureVector(project, projectItem))
+  dispatch(fetchFeatureVector({ project, featureVector: projectItem }))
+    .unwrap()
     .then(featureVectors => {
       const featureVectorsReferencesList = featureVectors
         .map(featureVector => {

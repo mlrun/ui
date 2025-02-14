@@ -133,6 +133,7 @@ const FilesView = React.forwardRef(
                     selectedItem={selectedFile}
                     tableClassName="files-table"
                     tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
+                    viewMode={viewMode}
                   >
                     {tableContent.map((tableItem, index) => (
                       <ArtifactsTableRow

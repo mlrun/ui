@@ -2767,7 +2767,7 @@
               },
               {
                 "name": "SERVING_SPEC_ENV",
-                "value": "{\"function_uri\": \"churn-project-admin/churn-server\", \"version\": \"v2\", \"parameters\": {}, \"graph\": {\"kind\": \"router\", \"routes\": {\"churn_server_v1\": {\"kind\": \"task\", \"class_name\": \"ChurnModel\", \"class_args\": {\"model_path\": \"store://artifacts/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79\"}}}}, \"load_mode\": null, \"functions\": {}, \"graph_initializer\": null, \"error_stream\": null, \"track_models\": null, \"default_content_type\": null}"
+                "value": "{\"function_uri\": \"churn-project-admin/churn-server\", \"version\": \"v2\", \"parameters\": {}, \"graph\": {\"kind\": \"router\", \"routes\": {\"churn_server_v1\": {\"kind\": \"task\", \"class_name\": \"ChurnModel\", \"class_args\": {\"model_path\": \"store://models/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79\"}}}}, \"load_mode\": null, \"functions\": {}, \"graph_initializer\": null, \"error_stream\": null, \"track_models\": null, \"default_content_type\": null}"
               }
             ],
             "volumes": [
@@ -2824,7 +2824,7 @@
               "kind": "task",
               "class_name": "ChurnModel",
               "class_args": {
-                "model_path": "store://artifacts/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
+                "model_path": "store://models/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
               }
             }
           }
@@ -3988,7 +3988,7 @@
               },
               {
                 "name": "SERVING_SPEC_ENV",
-                "value": "{\"function_uri\": \"churn-project-admin/churn-server:latest\", \"version\": \"v2\", \"parameters\": {}, \"graph\": {\"kind\": \"router\", \"routes\": {\"churn_server_v1\": {\"kind\": \"task\", \"class_name\": \"ChurnModel\", \"class_args\": {\"model_path\": \"store://artifacts/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79\"}}, \"data_clean_model\": {\"kind\": \"task\", \"class_name\": \"ChurnModel\", \"class_args\": {\"model_path\": \"store://models/churn-project-admin/data_clean_model#0:latest@cbe8504d4efe4d40a0815acca24ce345\", \"a\": \"a\"}}}}, \"load_mode\": null, \"functions\": {}, \"graph_initializer\": null, \"error_stream\": null, \"track_models\": null, \"default_content_type\": null}"
+                "value": "{\"function_uri\": \"churn-project-admin/churn-server:latest\", \"version\": \"v2\", \"parameters\": {}, \"graph\": {\"kind\": \"router\", \"routes\": {\"churn_server_v1\": {\"kind\": \"task\", \"class_name\": \"ChurnModel\", \"class_args\": {\"model_path\": \"store://models/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79\"}}, \"data_clean_model\": {\"kind\": \"task\", \"class_name\": \"ChurnModel\", \"class_args\": {\"model_path\": \"store://models/churn-project-admin/data_clean_model#0:latest@cbe8504d4efe4d40a0815acca24ce345\", \"a\": \"a\"}}}}, \"load_mode\": null, \"functions\": {}, \"graph_initializer\": null, \"error_stream\": null, \"track_models\": null, \"default_content_type\": null}"
               },
               {
                 "name": "MLRUN_K8S_SECRET__SF",
@@ -4054,7 +4054,7 @@
               "kind": "task",
               "class_name": "ChurnModel",
               "class_args": {
-                "model_path": "store://artifacts/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
+                "model_path": "store://models/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
               }
             },
             "data_clean_model": {
@@ -4228,7 +4228,7 @@
               },
               {
                 "name": "SERVING_SPEC_ENV",
-                "value": "{\"function_uri\": \"churn-project-admin/churn-server:latest\", \"version\": \"v2\", \"parameters\": {}, \"graph\": {\"kind\": \"router\", \"routes\": {\"churn_server_v1\": {\"kind\": \"task\", \"class_name\": \"ChurnModel\", \"class_args\": {\"model_path\": \"store://artifacts/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79\"}}, \"data_clean_model\": {\"kind\": \"task\", \"class_name\": \"ChurnModel\", \"class_args\": {\"model_path\": \"store://models/churn-project-admin/data_clean_model#0:latest@cbe8504d4efe4d40a0815acca24ce345\", \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}}}}, \"load_mode\": null, \"functions\": {}, \"graph_initializer\": null, \"error_stream\": null, \"track_models\": null, \"default_content_type\": null}"
+                "value": "{\"function_uri\": \"churn-project-admin/churn-server:latest\", \"version\": \"v2\", \"parameters\": {}, \"graph\": {\"kind\": \"router\", \"routes\": {\"churn_server_v1\": {\"kind\": \"task\", \"class_name\": \"ChurnModel\", \"class_args\": {\"model_path\": \"store://models/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79\"}}, \"data_clean_model\": {\"kind\": \"task\", \"class_name\": \"ChurnModel\", \"class_args\": {\"model_path\": \"store://models/churn-project-admin/data_clean_model#0:latest@cbe8504d4efe4d40a0815acca24ce345\", \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}}}}, \"load_mode\": null, \"functions\": {}, \"graph_initializer\": null, \"error_stream\": null, \"track_models\": null, \"default_content_type\": null}"
               },
               {
                 "name": "MLRUN_K8S_SECRET__SF",
@@ -4294,7 +4294,7 @@
               "kind": "task",
               "class_name": "ChurnModel",
               "class_args": {
-                "model_path": "store://artifacts/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
+                "model_path": "store://models/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
               }
             },
             "data_clean_model": {
@@ -4465,7 +4465,7 @@
               },
               {
                 "name": "SERVING_SPEC_ENV",
-                "value": "{\"function_uri\": \"churn-project-admin/churn-server:latest\", \"version\": \"v2\", \"parameters\": {}, \"graph\": {\"kind\": \"router\", \"routes\": {\"churn_server_v1\": {\"kind\": \"task\", \"class_name\": \"ChurnModel\", \"class_args\": {\"model_path\": \"store://artifacts/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79\"}}, \"data_clean_model\": {\"kind\": \"task\", \"class_name\": \"ChurnModel\", \"class_args\": {\"model_path\": \"store://models/churn-project-admin/data_clean_model#0:latest@cbe8504d4efe4d40a0815acca24ce345\", \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}}}}, \"load_mode\": null, \"functions\": {}, \"graph_initializer\": null, \"error_stream\": null, \"track_models\": null, \"default_content_type\": null}"
+                "value": "{\"function_uri\": \"churn-project-admin/churn-server:latest\", \"version\": \"v2\", \"parameters\": {}, \"graph\": {\"kind\": \"router\", \"routes\": {\"churn_server_v1\": {\"kind\": \"task\", \"class_name\": \"ChurnModel\", \"class_args\": {\"model_path\": \"store://models/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79\"}}, \"data_clean_model\": {\"kind\": \"task\", \"class_name\": \"ChurnModel\", \"class_args\": {\"model_path\": \"store://models/churn-project-admin/data_clean_model#0:latest@cbe8504d4efe4d40a0815acca24ce345\", \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}}}}, \"load_mode\": null, \"functions\": {}, \"graph_initializer\": null, \"error_stream\": null, \"track_models\": null, \"default_content_type\": null}"
               },
               {
                 "name": "MLRUN_K8S_SECRET__SF",
@@ -4531,7 +4531,7 @@
               "kind": "task",
               "class_name": "ChurnModel",
               "class_args": {
-                "model_path": "store://artifacts/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
+                "model_path": "store://models/churn-project-admin/current-state_model:eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
               }
             },
             "data_clean_model": {
@@ -14063,7 +14063,7 @@
               },
               {
                 "name": "SERVING_SPEC_ENV",
-                "value": "{\"function_uri\": \"getting-started-tutorial-admin/serving\", \"version\": \"v2\", \"parameters\": {}, \"graph\": {\"kind\": \"router\", \"full_event\": true, \"routes\": {\"my_model\": {\"kind\": \"task\", \"class_name\": \"ClassifierModel\", \"class_args\": {\"model_path\": \"store://getting-started-tutorial-admin/train-iris-train_iris_model\"}, \"full_event\": true}, \"cleaned_data_v1\": {\"kind\": \"task\", \"class_name\": \"ClassifierModel\", \"class_args\": {\"model_path\": \"store://artifacts/getting-started-tutorial-admin/train_model:dd5972cb-cbc2-4998-ab0e-705dba1b307d\"}}}}, \"load_mode\": null, \"functions\": {}, \"graph_initializer\": null, \"error_stream\": null, \"track_models\": null, \"default_content_type\": null}"
+                "value": "{\"function_uri\": \"getting-started-tutorial-admin/serving\", \"version\": \"v2\", \"parameters\": {}, \"graph\": {\"kind\": \"router\", \"full_event\": true, \"routes\": {\"my_model\": {\"kind\": \"task\", \"class_name\": \"ClassifierModel\", \"class_args\": {\"model_path\": \"store://getting-started-tutorial-admin/train-iris-train_iris_model\"}, \"full_event\": true}, \"cleaned_data_v1\": {\"kind\": \"task\", \"class_name\": \"ClassifierModel\", \"class_args\": {\"model_path\": \"store://models/getting-started-tutorial-admin/train_model:dd5972cb-cbc2-4998-ab0e-705dba1b307d\"}}}}, \"load_mode\": null, \"functions\": {}, \"graph_initializer\": null, \"error_stream\": null, \"track_models\": null, \"default_content_type\": null}"
               }
             ],
             "handler": "03-model-serving:handler",
@@ -14125,7 +14125,7 @@
               "kind": "task",
               "class_name": "ClassifierModel",
               "class_args": {
-                "model_path": "store://artifacts/getting-started-tutorial-admin/train_model:dd5972cb-cbc2-4998-ab0e-705dba1b307d"
+                "model_path": "store://models/getting-started-tutorial-admin/train_model:dd5972cb-cbc2-4998-ab0e-705dba1b307d"
               }
             }
           }
@@ -14240,7 +14240,7 @@
               "kind": "task",
               "class_name": "ClassifierModel",
               "class_args": {
-                "model_path": "store://artifacts/getting-started-tutorial-admin/train_model:dd5972cb-cbc2-4998-ab0e-705dba1b307d"
+                "model_path": "store://models/getting-started-tutorial-admin/train_model:dd5972cb-cbc2-4998-ab0e-705dba1b307d"
               }
             }
           }
@@ -14666,7 +14666,7 @@
               "kind": "task",
               "class_name": "ClassifierModel",
               "class_args": {
-                "model_path": "store://artifacts/getting-started-tutorial-admin/train_model:dd5972cb-cbc2-4998-ab0e-705dba1b307d"
+                "model_path": "store://models/getting-started-tutorial-admin/train_model:dd5972cb-cbc2-4998-ab0e-705dba1b307d"
               }
             }
           }
@@ -22375,7 +22375,7 @@
           },
           {
             "name": "model_path",
-            "value": "store://artifacts/network-operations-admin/train_model:cd151783-05df-4f9c-a9db-3aa674e4a058"
+            "value": "store://models/network-operations-admin/train_model:cd151783-05df-4f9c-a9db-3aa674e4a058"
           },
           {
             "name": "FEATURES_TABLE",
@@ -22563,7 +22563,7 @@
           },
           {
             "name": "model_path",
-            "value": "store://artifacts/network-operations-admin/train_model:cd151783-05df-4f9c-a9db-3aa674e4a058"
+            "value": "store://models/network-operations-admin/train_model:cd151783-05df-4f9c-a9db-3aa674e4a058"
           },
           {
             "name": "FEATURES_TABLE",
@@ -22634,7 +22634,7 @@
               },
               {
                 "name": "model_path",
-                "value": "store://artifacts/network-operations-admin/train_model:cd151783-05df-4f9c-a9db-3aa674e4a058"
+                "value": "store://models/network-operations-admin/train_model:cd151783-05df-4f9c-a9db-3aa674e4a058"
               },
               {
                 "name": "model_name",
@@ -23104,7 +23104,7 @@
           },
           {
             "name": "base_dataset",
-            "value": "store://artifacts/network-operations-admin/train_test_set:cd151783-05df-4f9c-a9db-3aa674e4a058"
+            "value": "store://datasets/network-operations-admin/train_test_set:cd151783-05df-4f9c-a9db-3aa674e4a058"
           },
           {
             "name": "label_col",
@@ -23478,7 +23478,7 @@
           },
           {
             "name": "base_dataset",
-            "value": "store://artifacts/network-operations-admin/train_test_set:cd151783-05df-4f9c-a9db-3aa674e4a058"
+            "value": "store://datasets/network-operations-admin/train_test_set:cd151783-05df-4f9c-a9db-3aa674e4a058"
           },
           {
             "name": "label_col",
@@ -23532,7 +23532,7 @@
               },
               {
                 "name": "base_dataset",
-                "value": "store://artifacts/network-operations-admin/train_test_set:cd151783-05df-4f9c-a9db-3aa674e4a058"
+                "value": "store://datasets/network-operations-admin/train_test_set:cd151783-05df-4f9c-a9db-3aa674e4a058"
               },
               {
                 "name": "BATCHES_TO_GENERATE",
@@ -24702,7 +24702,7 @@
           },
           {
             "name": "base_dataset",
-            "value": "store://artifacts/network-operations-admin/test_test_set_preds:cd151783-05df-4f9c-a9db-3aa674e4a058"
+            "value": "store://datasets/network-operations-admin/test_test_set_preds:cd151783-05df-4f9c-a9db-3aa674e4a058"
           },
           {
             "name": "results_tsdb_container",
@@ -24867,7 +24867,7 @@
           },
           {
             "name": "base_dataset",
-            "value": "store://artifacts/network-operations-admin/test_test_set_preds:cd151783-05df-4f9c-a9db-3aa674e4a058"
+            "value": "store://datasets/network-operations-admin/test_test_set_preds:cd151783-05df-4f9c-a9db-3aa674e4a058"
           },
           {
             "name": "results_tsdb_container",
@@ -24961,7 +24961,7 @@
               },
               {
                 "name": "base_dataset",
-                "value": "store://artifacts/network-operations-admin/test_test_set_preds:cd151783-05df-4f9c-a9db-3aa674e4a058"
+                "value": "store://datasets/network-operations-admin/test_test_set_preds:cd151783-05df-4f9c-a9db-3aa674e4a058"
               },
               {
                 "name": "results_tsdb_container",
@@ -26929,7 +26929,7 @@
               "kind": "task",
               "class_name": "ClassifierModel",
               "class_args": {
-                "model_path": "store://artifacts/sk-project-admin/train_model:a0e31343-3be8-4aa2-9de5-0e54342f8e1a"
+                "model_path": "store://models/sk-project-admin/train_model:a0e31343-3be8-4aa2-9de5-0e54342f8e1a"
               }
             }
           }
@@ -27438,7 +27438,7 @@
               },
               {
                 "name": "SERVING_SPEC_ENV",
-                "value": "{\"function_uri\": \"sk-project-admin/v2-model-server\", \"version\": \"v2\", \"parameters\": {}, \"graph\": {\"kind\": \"router\", \"routes\": {\"iris_dataset:v1\": {\"kind\": \"task\", \"class_name\": \"ClassifierModel\", \"class_args\": {\"model_path\": \"store://artifacts/sk-project-admin/train_model:a0e31343-3be8-4aa2-9de5-0e54342f8e1a\"}}}}, \"load_mode\": null, \"functions\": {}, \"graph_initializer\": null, \"error_stream\": null, \"track_models\": null, \"default_content_type\": null}"
+                "value": "{\"function_uri\": \"sk-project-admin/v2-model-server\", \"version\": \"v2\", \"parameters\": {}, \"graph\": {\"kind\": \"router\", \"routes\": {\"iris_dataset:v1\": {\"kind\": \"task\", \"class_name\": \"ClassifierModel\", \"class_args\": {\"model_path\": \"store://models/sk-project-admin/train_model:a0e31343-3be8-4aa2-9de5-0e54342f8e1a\"}}}}, \"load_mode\": null, \"functions\": {}, \"graph_initializer\": null, \"error_stream\": null, \"track_models\": null, \"default_content_type\": null}"
               }
             ],
             "volumes": [
@@ -27495,7 +27495,7 @@
               "kind": "task",
               "class_name": "ClassifierModel",
               "class_args": {
-                "model_path": "store://artifacts/sk-project-admin/train_model:a0e31343-3be8-4aa2-9de5-0e54342f8e1a"
+                "model_path": "store://models/sk-project-admin/train_model:a0e31343-3be8-4aa2-9de5-0e54342f8e1a"
               }
             }
           }

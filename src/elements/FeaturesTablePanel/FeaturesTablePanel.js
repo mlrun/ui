@@ -18,13 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useState } from 'react'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { cloneDeep, isNil } from 'lodash'
 import PropTypes from 'prop-types'
 
 import FeaturesTablePanelView from './FeaturesTablePanelView'
 
-import featureStoreActions from '../../actions/featureStore'
 import { setNotification } from '../../reducers/notificationReducer'
 import {
   setLabelFeature,
@@ -35,14 +34,9 @@ import {
 } from '../../reducers/tableReducer'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { showErrorNotification } from '../../utils/notifications.util'
+import { createNewFeatureVector, updateFeatureVectorData } from '../../reducers/featureStoreReducer'
 
-const FeaturesTablePanel = ({
-  createNewFeatureVector,
-  projectName = '',
-  handleCancel = null,
-  onSubmit = null,
-  updateFeatureVectorData
-}) => {
+const FeaturesTablePanel = ({ projectName = '', handleCancel = null, onSubmit = null }) => {
   const [isCreateFeaturePopUpOpen, setIsCreateFeaturePopUpOpen] = useState(false)
   const tableStore = useSelector(store => store.tableStore)
   const dispatch = useDispatch()
@@ -50,9 +44,7 @@ const FeaturesTablePanel = ({
   useEffect(() => {
     if (tableStore.features.isNewFeatureVector) {
       dispatch(
-        updateCurrentProjectName(
-          projectName || tableStore.features.featureVector.metadata.project
-        )
+        updateCurrentProjectName(projectName || tableStore.features.featureVector.metadata.project)
       )
     }
   }, [
@@ -93,12 +85,13 @@ const FeaturesTablePanel = ({
       onSubmit(featureVector)
     } else {
       if (tableStore.features.isNewFeatureVector) {
-        addFeaturesPromise = createNewFeatureVector(featureVector)
+        addFeaturesPromise = dispatch(createNewFeatureVector({ data: featureVector }))
       } else {
-        addFeaturesPromise = updateFeatureVectorData(featureVector)
+        addFeaturesPromise = dispatch(updateFeatureVectorData({ data: featureVector }))
       }
 
       addFeaturesPromise
+        .unwrap()
         .then(response => {
           dispatch(
             setNotification({
@@ -178,7 +171,4 @@ FeaturesTablePanel.propTypes = {
   projectName: PropTypes.string
 }
 
-export default connect(
-  null,
-  { ...featureStoreActions }
-)(FeaturesTablePanel)
+export default FeaturesTablePanel
