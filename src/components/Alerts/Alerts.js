@@ -21,8 +21,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import AlertsView from './AlertsView'
+import ActionBar from '../ActionBar/ActionBar'
+import AlertsFilters from './AlertsFilters'
+import AlertsTable from '../../elements/AlertsTable/AlertsTable'
+import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+import Pagination from '../../common/Pagination/Pagination'
 
+import { ALERTS_FILTERS, ALERTS_PAGE_PATH } from '../../constants'
 import { createAlertRowData } from '../../utils/createAlertsContent'
 import {
   getAlertsFiltersConfig,
@@ -134,23 +139,51 @@ const Alerts = () => {
   ])
 
   return (
-    <AlertsView
-      alerts={paginatedAlerts}
-      alertsFiltersConfig={alertsFiltersConfig}
-      alertsStore={alertsStore}
-      filters={alertsFilters}
-      filtersStore={filtersStore}
-      handleCancel={handleCancel}
-      handleRefreshAlerts={handleRefreshAlerts}
-      handleRefreshWithFilters={handleRefreshWithFilters}
-      isCrossProjects={isCrossProjects}
-      pageData={pageData}
-      paginationConfigAlertsRef={paginationConfigAlertsRef}
-      requestErrorMessage={requestErrorMessage}
-      selectedAlert={selectedAlert}
-      setSearchParams={setSearchParams}
-      tableContent={tableContent}
-    />
+    <div className="content-wrapper">
+      <div className="content__header">
+        <Breadcrumbs />
+      </div>
+      <div className="content">
+        <div className="table-container alerts-container">
+          <div className="content__action-bar-wrapper">
+            <ActionBar
+              autoRefreshIsStopped={true}
+              closeParamName={ALERTS_PAGE_PATH}
+              filterMenuName={ALERTS_FILTERS}
+              filters={alertsFilters}
+              filtersConfig={alertsFiltersConfig}
+              handleRefresh={handleRefreshAlerts}
+              setSearchParams={setSearchParams}
+              withRefreshButton
+              withoutExpandButton
+            >
+              <AlertsFilters isAlertsPage={alertsFilters} isCrossProjects={isCrossProjects} />
+            </ActionBar>
+          </div>
+          <AlertsTable
+            alertsFiltersConfig={alertsFiltersConfig}
+            alertsStore={alertsStore}
+            filters={alertsFilters}
+            filtersStore={filtersStore}
+            handleCancel={handleCancel}
+            handleRefreshAlerts={handleRefreshAlerts}
+            handleRefreshWithFilters={handleRefreshWithFilters}
+            isCrossProjects={isCrossProjects}
+            pageData={pageData}
+            paginationConfigAlertsRef={paginationConfigAlertsRef}
+            requestErrorMessage={requestErrorMessage}
+            selectedAlert={selectedAlert}
+            setSearchParams={setSearchParams}
+            tableContent={tableContent}
+          />
+          <Pagination
+            closeParamName={ALERTS_PAGE_PATH}
+            page={pageData.page}
+            paginationConfig={paginationConfigAlertsRef.current}
+          />
+        </div>
+      </div>
+    </div>
   )
 }
 
