@@ -102,7 +102,7 @@ const DetailsAlerts = () => {
                 >
                   alerts screen
                 </span>
-                . .
+                .
               </div>
             )}
           </div>
