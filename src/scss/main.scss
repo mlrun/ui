@@ -240,6 +240,10 @@ main {
 
         @include tableDet(8px, 5px, 8px, 10px);
 
+        &:first-child {
+          padding-left: 30px;
+        }
+
         &.table-cell {
           &-name {
             position: sticky;
