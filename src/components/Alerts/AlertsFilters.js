@@ -95,7 +95,10 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
 
     form.change(
       EVENT_TYPE,
-      params[ENTITY_TYPE] === selectedValue || entityType === 'all' ? params[EVENT_TYPE] : 'all'
+      params[ENTITY_TYPE] === selectedValue ||
+        (entityType === FILTER_ALL_ITEMS && params[EVENT_TYPE])
+        ? params[EVENT_TYPE]
+        : FILTER_ALL_ITEMS
     )
   }
 

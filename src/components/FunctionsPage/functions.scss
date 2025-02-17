@@ -7,6 +7,16 @@ $functionsRowHeightExtended: $rowHeightExtended;
 
 .functions-table {
   @include rowsHeight($functionsHeaderRowHeight, $functionsRowHeight, $functionsRowHeightExtended);
+
+  .table {
+    &-row {
+      &:not(.parent-row_expanded) > * {
+        &:first-child {
+          padding-left: 30px;
+        }
+      }
+    }
+  }
 }
 
 :export {
