@@ -204,7 +204,7 @@ const generateArtifactTags = artifacts => {
   return Array.from(uniqueTags).filter(Boolean)
 }
 
-const getArtifactTypeByTabName = (tab = FILES_TAB) => {
+const getArtifactLabelByTabName = (tab = FILES_TAB) => {
   const typeMap = {
     [FILES_TAB]: 'artifact',
     [DATASETS_TAB]: 'dataset',
@@ -279,10 +279,10 @@ export const checkForSelectedArtifact = debounce(
                   return prevSearchParams
                 })
               } else if (tag && !artifact.tag && uid === artifact.uid) {
-                artifact.ui.infoMessage = `The ${getArtifactTypeByTabName(tab)} you are viewing was updated. Refresh the list to see the most current version.`
+                artifact.ui.infoMessage = `The ${getArtifactLabelByTabName(tab)} you are viewing was updated. Refresh the list to see the most current version.`
               } else {
                 artifact.ui.infoMessage = generateObjectNotInTheListMessage(
-                  getArtifactTypeByTabName(tab)
+                  getArtifactLabelByTabName(tab)
                 )
               }
             }
@@ -382,7 +382,7 @@ const getArtifactFetchMethod = tab => {
 }
 
 export const showArtifactErrorNotification = (dispatch, error, tab) => {
-  let customArtifactErrorMsg = `An error occurred while retrieving the ${getArtifactTypeByTabName(tab)}.`
+  let customArtifactErrorMsg = `An error occurred while retrieving the ${getArtifactLabelByTabName(tab)}.`
 
   showErrorNotification(dispatch, error, '', customArtifactErrorMsg)
 }
