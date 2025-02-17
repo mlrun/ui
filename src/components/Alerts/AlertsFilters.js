@@ -98,7 +98,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
       params[ENTITY_TYPE] === selectedValue ||
         (entityType === FILTER_ALL_ITEMS && params[EVENT_TYPE])
         ? params[EVENT_TYPE]
-        : 'all'
+        : FILTER_ALL_ITEMS
     )
   }
 
