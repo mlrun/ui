@@ -25,7 +25,6 @@ import {
   BE_PAGE,
   DATASET_TYPE,
   DATASETS_TAB,
-  DOCUMENT_TYPE,
   DOCUMENTS_TAB,
   FE_PAGE,
   FILES_TAB,
@@ -207,10 +206,10 @@ const generateArtifactTags = artifacts => {
 
 const getArtifactTypeByTabName = (tab = FILES_TAB) => {
   const typeMap = {
-    [FILES_TAB]: ARTIFACT_TYPE,
-    [DATASETS_TAB]: DATASET_TYPE,
-    [DOCUMENTS_TAB]: DOCUMENT_TYPE,
-    [MODELS_TAB]: MODEL_TYPE
+    [FILES_TAB]: 'artifact',
+    [DATASETS_TAB]: 'dataset',
+    [DOCUMENTS_TAB]: 'document',
+    [MODELS_TAB]: 'model'
   }
 
   return typeMap[tab]
