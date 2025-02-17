@@ -34,7 +34,6 @@ export const useRefreshAfterDelete = (paginationConfigRef, historyBackLink, resp
         setRefreshAfterDeleteTrigger(Math.random())
       } else if (closeDetailsLink) {
         navigate(closeDetailsLink)
-        setRefreshAfterDeleteTrigger(Math.random())
       }
     },
     [responsePath, paginationConfigRef, navigate, historyBackLink, closeDetailsLink]
