@@ -69,9 +69,11 @@ const DetailsAlerts = () => {
   )
 
   const tableContent = useMemo(() => {
-    if (!alerts) return []
-    const limitedAlerts = alerts.slice(0, ALERTS_DISPLAY_LIMIT)
-    return limitedAlerts.map(alert => createAlertRowData(alert, false, true))
+    if (alerts) {
+      const limitedAlerts = alerts.slice(0, ALERTS_DISPLAY_LIMIT)
+      return limitedAlerts.map(alert => createAlertRowData(alert, false, true))
+    }
+    return []
   }, [alerts])
 
   const pageData = useMemo(() => generatePageData(selectedAlert), [selectedAlert])
