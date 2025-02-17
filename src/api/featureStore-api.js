@@ -74,7 +74,7 @@ const featureStoreApi = {
     const params = { name: entity }
 
     if (labels) {
-      params.labels = labels
+      params.label = labels?.split(',')
     }
 
     return mainHttpClientV2.get(`/projects/${project}/entities`, {
@@ -94,7 +94,7 @@ const featureStoreApi = {
     }
 
     if (labels) {
-      params.labels = labels
+      params.label = labels?.split(',')
     }
 
     return mainHttpClient.get(`/projects/${project}/feature-sets`, {
@@ -126,7 +126,7 @@ const featureStoreApi = {
     }
 
     if (labels) {
-      params.labels = labels
+      params.label = labels.split(',')
     }
 
     return mainHttpClient.get(`/projects/${project}/feature-vectors`, {
@@ -148,7 +148,7 @@ const featureStoreApi = {
     const params = { name: feature }
 
     if (labels) {
-      params.labels = labels
+      params.label = labels?.split(',')
     }
 
     return mainHttpClientV2.get(`/projects/${project}/features`, {
