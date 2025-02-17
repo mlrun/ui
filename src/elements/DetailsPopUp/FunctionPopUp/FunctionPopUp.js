@@ -37,7 +37,7 @@ import { showErrorNotification } from '../../../utils/notifications.util'
 import functionsApi from '../../../api/functions-api'
 import { toggleYaml } from '../../../reducers/appReducer'
 
-const FunctionPopUp = ({ funcUri, isOpen, onResolve }) => {
+const FunctionPopUp = ({ funcUri, functionTag = null, isOpen, onResolve }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { isDemoMode, isStagingMode } = useMode()
@@ -57,17 +57,27 @@ const FunctionPopUp = ({ funcUri, isOpen, onResolve }) => {
 
     setIsLoading(true)
     return functionsApi
-      .getFunction(parsedFuncUri.project, parsedFuncUri.name, parsedFuncUri.hash, parsedFuncUri.tag)
+      .getFunction(
+        parsedFuncUri.project,
+        parsedFuncUri.name,
+        parsedFuncUri.hash,
+        functionTag ?? parsedFuncUri.tag
+      )
       .then(result => {
         setSelectedFunction(parseFunction(result.data.func))
         setIsLoading(false)
       })
       .catch(error => {
-        showErrorNotification(dispatch, error, '', 'This function either does not exist or was deleted')
+        showErrorNotification(
+          dispatch,
+          error,
+          '',
+          'This function either does not exist or was deleted'
+        )
 
         onResolve()
       })
-  }, [dispatch, funcUri, onResolve])
+  }, [dispatch, funcUri, functionTag, onResolve])
 
   const actionsMenu = useMemo(
     () => func =>
@@ -124,6 +134,7 @@ const FunctionPopUp = ({ funcUri, isOpen, onResolve }) => {
 
 FunctionPopUp.propTypes = {
   funcUri: PropTypes.string.isRequired,
+  functionTag: PropTypes.string,
   isOpen: PropTypes.bool.isRequired,
   onResolve: PropTypes.func.isRequired
 }

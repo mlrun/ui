@@ -78,11 +78,12 @@ export const generateArtifactsContent = (
         shouldPopUp: !isEmpty(selectedItem?.spec?.function_uri),
         handleClick: () =>
           openPopUp(FunctionPopUp, {
-            funcUri: selectedItem?.spec?.function_uri
+            funcUri: selectedItem?.spec?.function_uri,
+            functionTag: selectedItem?.spec?.function_tag
           })
       },
       function_tag: {
-        value: selectedItem?.spec?.function_uri?.match(/(?<=:)[^:]*$/) || 'latest'
+        value: selectedItem?.spec?.function_tag || 'latest'
       },
       monitoring_feature_set_uri: {
         value: monitoringFeatureSetUri,

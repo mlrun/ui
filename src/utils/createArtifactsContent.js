@@ -62,7 +62,7 @@ export const createArtifactsContent = (artifacts, page, pageTab, project, isAllV
   })
 }
 
-export const getDefaultFirstHeader = (isAllVersions) => [
+export const getDefaultFirstHeader = isAllVersions => [
   {
     headerId: isAllVersions ? 'uid' : 'name',
     headerLabel: isAllVersions ? 'UID' : 'Name',
@@ -474,7 +474,8 @@ export const createModelEndpointsRowData = (artifact, project) => {
         className: 'table-cell-1',
         handleClick: () =>
           openPopUp(FunctionPopUp, {
-            funcUri: artifact.spec?.function_uri
+            funcUri: artifact.spec?.function_uri,
+            functionTag: artifact.spec?.function_tag
           }),
         type: 'link',
         tooltip: functionUri
