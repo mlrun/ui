@@ -25,7 +25,7 @@ $detailsStatisticsHeaderRowHeight: 49px;
       border-bottom: none;
 
       .header-item {
-        padding: 15px 0;
+        padding: 15px 5px;
         background-color: $white;
         border-bottom: $secondaryBorder;
       }
@@ -70,5 +70,5 @@ $detailsStatisticsHeaderRowHeight: 49px;
 
 :export {
   detailsStatisticsRowHeight: $detailsStatisticsRowHeight;
-  detailsStatisticsHeaderRowHeight: $detailsStatisticsHeaderRowHeight
+  detailsStatisticsHeaderRowHeight: $detailsStatisticsHeaderRowHeight;
 }

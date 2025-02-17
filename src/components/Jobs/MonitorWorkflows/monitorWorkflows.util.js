@@ -20,7 +20,14 @@ such restriction.
 import React from 'react'
 import { debounce } from 'lodash'
 
-import { FUNCTIONS_PAGE, GROUP_BY_NONE, GROUP_BY_WORKFLOW, JOBS_PAGE } from '../../../constants'
+import {
+  FUNCTIONS_PAGE,
+  GROUP_BY_NONE,
+  GROUP_BY_WORKFLOW,
+  JOBS_PAGE,
+  PENDING_STATE,
+  UNKNOWN_STATE
+} from '../../../constants'
 import {
   getJobsDetailsMenu,
   getInfoHeaders,
@@ -144,11 +151,14 @@ export const generateActionsMenu = (
           onClick: toggleConvertedYaml
         },
         {
-          disabled: rerunIsDisabled,
+          disabled: rerunIsDisabled || [PENDING_STATE, UNKNOWN_STATE].includes(job?.state?.value),
           hidden: runningStates.includes(job?.state?.value),
           icon: <Rerun />,
           label: 'Retry',
-          onClick: () => handleRerun(job)
+          onClick: () => handleRerun(job),
+          tooltip:
+            [PENDING_STATE, UNKNOWN_STATE].includes(job?.state?.value) &&
+            'Status pending: refresh the display to check for update.'
         }
       ]
     ]
