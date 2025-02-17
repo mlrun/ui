@@ -17,12 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize, cloneDeep, debounce, isEmpty, isEqual, isNil } from 'lodash'
+import { cloneDeep, debounce, isEmpty, isEqual, isNil } from 'lodash'
 
 import artifactApi from '../api/artifacts-api'
 import {
   ARTIFACT_TYPE,
-  ARTIFACTS_TAB,
   BE_PAGE,
   DATASET_TYPE,
   DATASETS_TAB,
@@ -206,9 +205,9 @@ const generateArtifactTags = artifacts => {
   return Array.from(uniqueTags).filter(Boolean)
 }
 
-const getArtifactTypeByTabName = (tab = ARTIFACTS_TAB) => {
+const getArtifactTypeByTabName = (tab = FILES_TAB) => {
   const typeMap = {
-    [ARTIFACTS_TAB]: ARTIFACT_TYPE,
+    [FILES_TAB]: ARTIFACT_TYPE,
     [DATASETS_TAB]: DATASET_TYPE,
     [DOCUMENTS_TAB]: DOCUMENT_TYPE,
     [MODELS_TAB]: MODEL_TYPE
@@ -281,7 +280,7 @@ export const checkForSelectedArtifact = debounce(
                   return prevSearchParams
                 })
               } else if (tag && !artifact.tag && uid === artifact.uid) {
-                artifact.ui.infoMessage = `This is not the latest ${getArtifactTypeByTabName(tab)}. To see the latest, refresh the ${capitalize(getArtifactTypeByTabName(tab))}s page.`
+                artifact.ui.infoMessage = `The ${getArtifactTypeByTabName(tab)} you are viewing was updated. Refresh the list to see the most current version.`
               } else {
                 artifact.ui.infoMessage = generateObjectNotInTheListMessage(
                   getArtifactTypeByTabName(tab)
@@ -384,21 +383,7 @@ const getArtifactFetchMethod = tab => {
 }
 
 export const showArtifactErrorNotification = (dispatch, error, tab) => {
-  let customArtifactErrorMsg = ''
-
-  switch (tab) {
-    case DATASETS_TAB:
-      customArtifactErrorMsg = 'Failed to retrieve dataset data'
-      break
-    case FILES_TAB:
-      customArtifactErrorMsg = 'Failed to retrieve artifact data'
-      break
-    case MODELS_TAB:
-      customArtifactErrorMsg = 'Failed to retrieve model data'
-      break
-    default:
-      customArtifactErrorMsg = 'Failed to retrieve document data'
-  }
+  let customArtifactErrorMsg = `An error occurred while retrieving the ${getArtifactTypeByTabName(tab)}.`
 
   showErrorNotification(dispatch, error, '', customArtifactErrorMsg)
 }

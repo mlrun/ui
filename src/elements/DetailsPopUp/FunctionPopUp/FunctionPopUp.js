@@ -63,7 +63,7 @@ const FunctionPopUp = ({ funcUri, isOpen, onResolve }) => {
         setIsLoading(false)
       })
       .catch(error => {
-        showErrorNotification(dispatch, error, '', 'Failed to retrieve function data')
+        showErrorNotification(dispatch, error, '', 'This function either does not exist or was deleted')
 
         onResolve()
       })
