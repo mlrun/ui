@@ -19,6 +19,7 @@ such restriction.
 */
 import React, { useMemo, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
 import JobsTable from '../../../elements/JobsTable/JobsTable'
 import TableTop from '../../../elements/TableTop/TableTop'
@@ -28,6 +29,7 @@ import { createJobsMonitoringContent } from '../../../utils/createJobsContent'
 import { useMode } from '../../../hooks/mode.hook'
 import { JOBS_MONITORING_JOBS_TAB, REQUEST_CANCELED } from '../../../constants'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
+import { toggleInternalAutoRefresh } from '../../../reducers/filtersReducer'
 
 const JobsMonitoring = () => {
   const params = useParams()
@@ -56,6 +58,7 @@ const JobsMonitoring = () => {
     terminateAbortTasksPolling
   } = React.useContext(ProjectJobsMonitoringContext)
   const jobsAreInitializedRef = useRef(false)
+  const dispatch = useDispatch()
 
   const filters = useFiltersFromSearchParams(
     initialTabData[JOBS_MONITORING_JOBS_TAB]?.filtersConfig,
@@ -78,6 +81,12 @@ const JobsMonitoring = () => {
       terminateAbortTasksPolling()
     }
   }, [terminateAbortTasksPolling, abortControllerRef, setJobs, setJobRuns])
+
+  useEffect(() => {
+    return () => {
+      dispatch(toggleInternalAutoRefresh(false))
+    }
+  }, [dispatch, params.jobName])
 
   return (
     <>
