@@ -56,6 +56,8 @@ export const PROJECT_ONLINE_STATUS = 'online'
 export const ERROR_STATE = 'error'
 export const FAIL_STATE = 'fail'
 export const FAILED_STATE = 'failed'
+export const PENDING_STATE = 'pending'
+export const UNKNOWN_STATE = 'unknown'
 
 export const VIEW_SEARCH_PARAMETER = 'view'
 
