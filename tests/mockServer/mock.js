@@ -62,7 +62,6 @@ import pipelines from './data/pipelines.json'
 import secretKeys from './data/secretKeys.json'
 import pipelineIDs from './data/piplineIDs.json'
 import schedules from './data/schedules.json'
-import artifactTags from './data/artifactsTags.json'
 import funcs from './data/funcs.json'
 import logs from './data/logs.json'
 import modelEndpoints from './data/modelEndpoints.json'
@@ -195,6 +194,12 @@ const nuclioApiUrl = '/nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.co
 const iguazioApiUrl = '/platform-api.default-tenant.app.vmdev36.lab.iguazeng.com'
 const port = 30000
 const NOT_ALLOWED_SECRET_KEY = 'mlrun.'
+const artifactsCategories = {
+  dataset: ['dataset'],
+  document: ['document'],
+  model: ['model'],
+  other: ['', 'table', 'link', 'plot', 'chart', 'plotly', 'artifact']
+}
 
 // Support functions
 function createTask(projectName, config) {
@@ -1297,18 +1302,24 @@ function getProjectsFeatureArtifactTags(req, res) {
 }
 
 function getProjectsArtifactTags(req, res) {
-  let artifactTag = artifactTags.find(aTag => aTag.project === req.params['project'])
+  let collectedArtifacts = artifacts.artifacts.filter(
+    artifact =>
+      artifact.metadata.tag &&
+      (artifact.metadata?.project === req.params.project || artifact.project === req.params.project)
+  )
 
-  res.send(artifactTag)
+  if (req.query['category']) {
+    collectedArtifacts = collectedArtifacts.filter(artifact =>
+      artifactsCategories[req.query['category']].includes(artifact.kind)
+    )
+  }
+
+  const tags = collectedArtifacts.map(artifact => artifact.metadata.tag)
+
+  res.send({project: req.params.project, tags})
 }
 
 function getArtifacts(req, res) {
-  const categories = {
-    dataset: ['dataset'],
-    document: ['document'],
-    model: ['model'],
-    other: ['', 'table', 'link', 'plot', 'chart', 'plotly', 'artifact']
-  }
   let collectedArtifacts = artifacts.artifacts.filter(
     artifact =>
       artifact.metadata?.project === req.params.project || artifact.project === req.params.project
@@ -1316,7 +1327,7 @@ function getArtifacts(req, res) {
 
   if (req.query['category']) {
     collectedArtifacts = collectedArtifacts.filter(artifact =>
-      categories[req.query['category']].includes(artifact.kind)
+      artifactsCategories[req.query['category']].includes(artifact.kind)
     )
   }
 
@@ -1385,9 +1396,14 @@ function getArtifacts(req, res) {
     )
   }
 
+  const sortArtifactBy = ['crated', 'updated'].includes(req.query['partition-sort-by'])
+    ? req.query['partition-sort-by']
+    : 'updated'
+
   collectedArtifacts = collectedArtifacts.sort((prevArtifact, nextArtifact) => {
-    const datePrevArtifact = new Date(prevArtifact.metadata.updated)
-    const dateNextArtifact = new Date(nextArtifact.metadata.updated)
+    const datePrevArtifact = new Date(prevArtifact.metadata[sortArtifactBy])
+    const dateNextArtifact = new Date(nextArtifact.metadata[sortArtifactBy])
+
     return dateNextArtifact - datePrevArtifact
   })
 
@@ -2066,9 +2082,6 @@ function postSubmitJob(req, res) {
 function putTags(req, res) {
   const tagName = req.params.tag
   const projectName = req.params.project
-  const tagObject = artifactTags.find(
-    artifact => artifact.metadata?.project === projectName || artifact.project === projectName
-  )
 
   const collectedArtifacts = artifacts.artifacts.filter(artifact => {
     const artifactMetaData = artifact.metadata ?? artifact
@@ -2088,15 +2101,6 @@ function putTags(req, res) {
     let editedTag = cloneDeep(collectedArtifacts[0])
     editedTag.metadata ? (editedTag.metadata.tag = tagName) : (editedTag.tag = tagName)
     artifacts.artifacts.push(editedTag)
-  }
-
-  if (tagObject) {
-    tagObject.tags.push(tagName)
-  } else {
-    artifactTags.push({
-      project: req.body.metadata.project,
-      tags: [tagName]
-    })
   }
 
   res.send({
@@ -2171,11 +2175,6 @@ function getArtifact(req, res) {
 function postArtifact(req, res) {
   const currentDate = new Date()
   const artifactTag = req.body.metadata.tag || 'latest'
-  const tagObject = artifactTags.find(
-    artifact =>
-      artifact.metadata?.project === req.body.metadata.project ||
-      artifact.project === req.body.metadata.project
-  )
   const artifactUID = makeUID(40)
 
   const artifactTemplate = {
@@ -2245,15 +2244,6 @@ function postArtifact(req, res) {
     artifactTemplateLatest.metadata['tag'] = 'latest'
     artifacts.artifacts.push(artifactTemplate)
     artifacts.artifacts.push(artifactTemplateLatest)
-  }
-
-  if (tagObject) {
-    tagObject.tags.push(artifactTag)
-  } else {
-    artifactTags.push({
-      project: req.body.metadata.project,
-      tags: [artifactTag]
-    })
   }
 
   res.send()

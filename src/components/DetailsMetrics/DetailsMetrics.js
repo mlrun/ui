@@ -21,12 +21,12 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
-import InvocationsMetricCard from './InvocationsMetricCard'
-import NoMetricData from './NoMetricData'
+import InvocationsMetricCard from './MetricsCards/InvocationsMetricCard'
+import NoMetricData from './MetricsCards/NoMetricData'
 import DatePicker from '../../common/DatePicker/DatePicker'
 import MetricsSelector from '../../elements/MetricsSelector/MetricsSelector'
 import StatsCard from '../../common/StatsCard/StatsCard'
-import ApplicationMetricCard from './ApplicationMetricCard'
+import ApplicationMetricCard from './MetricsCards/ApplicationMetricCard'
 import NoData from '../../common/NoData/NoData'
 
 import { REQUEST_CANCELED } from '../../constants'
@@ -229,7 +229,7 @@ const DetailsMetrics = ({ selectedItem }) => {
 
   return (
     <div className="metrics-wrapper">
-      <div className="metrics__custom-filters">
+      <div className="metrics-wrapper__custom-filters">
         <MetricsSelector
           name="metrics"
           disabled={!hasMetricsList}

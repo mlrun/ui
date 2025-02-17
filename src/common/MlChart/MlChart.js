@@ -17,74 +17,80 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useRef, useLayoutEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Chart, registerables } from 'chart.js'
+import { Chart } from 'chart.js/auto'
 import Loader from '../Loader/Loader'
 import classnames from 'classnames'
 
-import './mlChart.scss'
-
-Chart.register(...registerables)
-
-const MlChart = ({ config, showLoader = true }) => {
+const MlChart = ({
+  chartRef,
+  config,
+  contextRef,
+  onChartCreated = () => {},
+  showLoader = true,
+  smallLoader = false
+}) => {
   const canvasRef = useRef()
   const [isLoading, setIsLoading] = useState(true)
   const canvasClassNames = classnames(showLoader && isLoading && 'hidden')
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const ctx = canvasRef.current.getContext('2d')
-    const pythonInfinity = 'e+308'
-    const chartConfig = {
-      ...config,
-      data: {
-        ...config.data,
-        labels: config.data.labels.map(label => {
-          const labelStr = String(label)
-          if (labelStr.includes(pythonInfinity)) {
-            if (labelStr.includes('-')) {
-              return `${labelStr.replace(/^([-]).*/, '$1∞')}`
-            }
 
-            return '∞'
-          }
-
-          return label
-        })
+    if (ctx) {
+      if (contextRef) {
+        contextRef.current = ctx
       }
-    }
-    const mlChartInstance = new Chart(ctx, {
-      ...chartConfig,
-      options: {
-        ...chartConfig.options,
-        animation: {
-          ...chartConfig.options.animation,
-          onComplete: () => {
-            showLoader && setIsLoading(false)
 
-            if (chartConfig?.options?.animation?.onComplete) {
-              chartConfig.options.animation.onComplete()
+      if (chartRef?.current) {
+        chartRef.current?.destroy()
+      }
+
+      const chartInstance = new Chart(ctx, {
+        ...config,
+        options: {
+          ...config.options,
+          animation: {
+            ...config.options.animation,
+            onComplete: () => {
+              showLoader && setIsLoading(false)
+
+              if (config?.options?.animation?.onComplete) {
+                config.options.animation.onComplete()
+              }
             }
           }
         }
-      }
-    })
+      })
 
-    return () => {
-      mlChartInstance?.destroy()
+      onChartCreated(chartInstance, ctx)
+
+      if (chartRef) {
+        chartRef.current = chartInstance
+      }
+
+      return () => {
+        chartInstance?.destroy()
+      }
     }
-  }, [config, showLoader])
+  }, [chartRef, config, contextRef, onChartCreated, showLoader])
 
   return (
     <div className="chart-container">
-      {showLoader && isLoading && <Loader section small secondary />}
+      {showLoader && isLoading && <Loader section small={smallLoader} secondary />}
       <canvas className={canvasClassNames} ref={canvasRef} />
     </div>
   )
 }
 
 MlChart.propTypes = {
-  config: PropTypes.shape({}).isRequired
+  chartRef: PropTypes.object,
+  config: PropTypes.shape({}).isRequired,
+  contextRef: PropTypes.object,
+  onChartCreated: PropTypes.func,
+  showLoader: PropTypes.bool,
+  smallLoader: PropTypes.bool
 }
 
 export default React.memo(MlChart)

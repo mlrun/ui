@@ -25,7 +25,7 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import DetailsStatisticsTableRow from './DetailsStatisticsTableRow'
 
 import { DETAILS_STATISTICS_TABLE_BODY_ID, DETAILS_STATISTICS_TABLE_ID, generateStatistics } from './detailsStatistics.util'
-import { getHistogramChartConfig } from '../../utils/getHistogramChartConfig'
+import { getHistogramChartConfig } from '../../utils/getChartConfig'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
 
 import cssVariables from './detailsStatistics.scss'

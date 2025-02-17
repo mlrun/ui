@@ -54,13 +54,13 @@ const ArtifactsFilters = ({ artifacts }) => {
         <FormTagFilter content={artifacts} label="Version tag" name={TAG_FILTER} />
       </div>
       <div className="form-row">
-          <FormCheckBox
-            className="artifacts-filters__iter"
-            label="Show best iteration only"
-            name={ITERATIONS_FILTER}
-          />
-          <FormOnChange name={ITERATIONS_FILTER} handler={handleIter} />
-        </div>
+        <FormCheckBox
+          className="artifacts-filters__iter"
+          label="Show best iteration only"
+          name={ITERATIONS_FILTER}
+        />
+        <FormOnChange name={ITERATIONS_FILTER} handler={handleIter} />
+      </div>
     </div>
   )
 }

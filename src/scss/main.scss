@@ -814,7 +814,7 @@ div[id^='chartjs-tooltip'] {
   position: fixed;
   z-index: 5;
   width: auto;
-  padding: 5px;
+  padding: 0;
   color: $white;
   background-color: $primary;
   border-radius: 4px;
@@ -840,8 +840,18 @@ div[id^='chartjs-tooltip'] {
     pointer-events: none;
   }
 
-  td {
-    white-space: nowrap;
+  .tooltip-container {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 5px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 7px;
+    background: inherit;
+
+    &-date {
+      min-width: 150px;
+    }
   }
 }
 
