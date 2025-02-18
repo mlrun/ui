@@ -19,6 +19,7 @@ such restriction.
 */
 import React from 'react'
 import { useForm } from 'react-final-form'
+import { useParams } from 'react-router-dom'
 
 import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
 import StatusFilter from '../../../common/StatusFilter/StatusFilter'
@@ -33,6 +34,7 @@ import { generateTypeFilter, jobsStatuses } from '../../FilterMenu/filterMenu.se
 
 const JobsMonitoringFilters = () => {
   const form = useForm()
+  const params = useParams()
 
   const handleInputChange = (value, inputName) => {
     form.change(inputName, value || '')
@@ -40,13 +42,15 @@ const JobsMonitoringFilters = () => {
 
   return (
     <>
-      <div className="form-row">
-        <FormInput name={PROJECT_FILTER} placeholder="Search by project name..." />
-        <FormOnChange
-          handler={value => handleInputChange(value, PROJECT_FILTER)}
-          name={PROJECT_FILTER}
-        />
-      </div>
+      {!params.jobName && (
+        <div className="form-row">
+          <FormInput name={PROJECT_FILTER} placeholder="Search by project name..." />
+          <FormOnChange
+            handler={value => handleInputChange(value, PROJECT_FILTER)}
+            name={PROJECT_FILTER}
+          />
+        </div>
+      )}
       <div className="form-row">
         <StatusFilter statusList={jobsStatuses} name={STATUS_FILTER_NAME} />
       </div>
