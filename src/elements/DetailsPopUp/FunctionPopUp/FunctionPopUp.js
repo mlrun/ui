@@ -37,7 +37,7 @@ import { showErrorNotification } from '../../../utils/notifications.util'
 import functionsApi from '../../../api/functions-api'
 import { toggleYaml } from '../../../reducers/appReducer'
 
-const FunctionPopUp = ({ funcUri, functionTag = null, isOpen, onResolve }) => {
+const FunctionPopUp = ({ funcUri = null, isOpen, onResolve, tab }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { isDemoMode, isStagingMode } = useMode()
@@ -53,7 +53,7 @@ const FunctionPopUp = ({ funcUri, functionTag = null, isOpen, onResolve }) => {
   )
 
   const fetchFunction = useCallback(() => {
-    const parsedFuncUri = parseFunctionUri(funcUri)
+    const parsedFuncUri = parseFunctionUri(funcUri, tab)
 
     setIsLoading(true)
     return functionsApi
@@ -61,7 +61,8 @@ const FunctionPopUp = ({ funcUri, functionTag = null, isOpen, onResolve }) => {
         parsedFuncUri.project,
         parsedFuncUri.name,
         parsedFuncUri.hash,
-        functionTag ?? parsedFuncUri.tag
+        parsedFuncUri.tag,
+        parsedFuncUri.uid
       )
       .then(result => {
         setSelectedFunction(parseFunction(result.data.func))
@@ -77,7 +78,7 @@ const FunctionPopUp = ({ funcUri, functionTag = null, isOpen, onResolve }) => {
 
         onResolve()
       })
-  }, [dispatch, funcUri, functionTag, onResolve])
+  }, [dispatch, funcUri, onResolve, tab])
 
   const actionsMenu = useMemo(
     () => func =>
@@ -134,9 +135,9 @@ const FunctionPopUp = ({ funcUri, functionTag = null, isOpen, onResolve }) => {
 
 FunctionPopUp.propTypes = {
   funcUri: PropTypes.string.isRequired,
-  functionTag: PropTypes.string,
   isOpen: PropTypes.bool.isRequired,
-  onResolve: PropTypes.func.isRequired
+  onResolve: PropTypes.func.isRequired,
+  tab: PropTypes.string
 }
 
 export default FunctionPopUp
