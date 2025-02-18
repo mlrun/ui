@@ -42,7 +42,7 @@ const JobsMonitoringFilters = () => {
 
   return (
     <>
-      {params.jobName ? null : (
+      {!params.jobName ? (
         <div className="form-row">
           <FormInput name={PROJECT_FILTER} placeholder="Search by project name..." />
           <FormOnChange
@@ -50,7 +50,7 @@ const JobsMonitoringFilters = () => {
             name={PROJECT_FILTER}
           />
         </div>
-      )}
+      ) : null}
       <div className="form-row">
         <StatusFilter statusList={jobsStatuses} name={STATUS_FILTER_NAME} />
       </div>
