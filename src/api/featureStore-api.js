@@ -144,11 +144,15 @@ const featureStoreApi = {
       true
     )
   },
-  getFeature: (project, feature, labels) => {
+  getFeature: (project, feature, labels, entities) => {
     const params = { name: feature }
 
     if (labels) {
       params.label = labels?.split(',')
+    }
+
+    if (entities) {
+      params.entity = entities.split(',')
     }
 
     return mainHttpClientV2.get(`/projects/${project}/features`, {

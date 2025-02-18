@@ -259,7 +259,9 @@ const AddToFeatureVectorPage = () => {
         fetchFeature({
           project: feature.metadata.project,
           name: feature.name,
-          metadataName: feature.metadata.name
+          metadataName: feature.metadata.name,
+          labels: addToFeatureVectorFilters.labels,
+          entities: addToFeatureVectorFilters.entities
         })
       )
         .unwrap()
@@ -289,7 +291,12 @@ const AddToFeatureVectorPage = () => {
           }))
         })
     },
-    [dispatch, tableStore.isTablePanelOpen]
+    [
+      dispatch,
+      tableStore.isTablePanelOpen,
+      addToFeatureVectorFilters.labels,
+      addToFeatureVectorFilters.entities
+    ]
   )
 
   const { latestItems, toggleRow } = useGroupContent(
