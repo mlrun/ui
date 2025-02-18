@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { DETAILS_OVERVIEW_TAB, VIEW_SEARCH_PARAMETER } from '../constants'
+import { DETAILS_OVERVIEW_TAB, MODEL_ENDPOINTS_TAB, VIEW_SEARCH_PARAMETER } from '../constants'
 import { getFilteredSearchParams } from './filter.util'
 
 export const isPageTabValid = (pageTab, tabs, navigate, location) => {
@@ -80,21 +80,28 @@ export const generateLinkToDetailsPanel = (
     isNaN(parseInt(iter)) ? '' : `/${iter}`
   }/${detailsTab.toLowerCase()}${window.location.search}`
 
-export const parseFunctionUri = functionUri => {
+export const parseFunctionUri = (functionUri, tab) => {
   let [project, rest] = functionUri.split('/')
   let name = rest
   let hash = null
   let tag = null
   let nameWithHash = null
+  let nameWithUid = null
+  let uid = null
 
   if (rest.includes('@')) {
-    ;[name, hash] = rest.split('@')
-    nameWithHash = `${name}@${hash}`
+    if (tab === MODEL_ENDPOINTS_TAB) {
+      ;[name, uid] = rest.split('@')
+      nameWithUid = `${name}@${uid}`
+    } else {
+      ;[name, hash] = rest.split('@')
+      nameWithHash = `${name}@${hash}`
+    }
   } else if (rest.includes(':')) {
     ;[name, tag] = rest.split(':')
   }
 
-  return { project, name, hash, tag, nameWithHash }
+  return { project, name, hash, tag, nameWithHash, uid, nameWithUid }
 }
 
 export const generateFunctionDetailsLink = (uri = '') => {
