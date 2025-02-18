@@ -129,11 +129,7 @@ const FunctionsTableRowOld = ({
                               className={cellClassNames}
                               data={value.expandedCellContent ? value.expandedCellContent : value}
                               item={func.data}
-                              link={value.getLink?.(
-                                func.data.tag,
-                                params.tab ?? DETAILS_OVERVIEW_TAB,
-                                func.data.hash
-                              )}
+                              link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
                               key={value.id}
                               selectItem={handleSelectItem}
                               selectedItem={selectedItem}
