@@ -158,7 +158,7 @@ export const generateActionsMenu = (
           onClick: () => handleRerun(job),
           tooltip:
             [PENDING_STATE, UNKNOWN_STATE].includes(job?.state?.value) &&
-            'Status pending: refresh the display to check for update.'
+            'Retry is unavailable while workflow status is pending, refresh the display to check for updates.'
         }
       ]
     ]
