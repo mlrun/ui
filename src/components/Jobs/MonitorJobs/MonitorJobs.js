@@ -27,7 +27,7 @@ import TableTop from '../../../elements/TableTop/TableTop'
 import { GROUP_BY_NONE, MONITOR_JOBS_TAB, REQUEST_CANCELED } from '../../../constants'
 import { JobsContext } from '../Jobs'
 import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
-import { setFilters } from '../../../reducers/filtersReducer'
+import { setFilters, toggleInternalAutoRefresh } from '../../../reducers/filtersReducer'
 import { useMode } from '../../../hooks/mode.hook'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 
@@ -91,6 +91,12 @@ const MonitorJobs = () => {
       terminateAbortTasksPolling()
     }
   }, [params.projectName, params.jobName, terminateAbortTasksPolling])
+
+  useEffect(() => {
+    return () => {
+      dispatch(toggleInternalAutoRefresh(false))
+    }
+  }, [dispatch, params.jobName])
 
   return (
     <>

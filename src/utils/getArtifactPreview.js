@@ -302,7 +302,7 @@ export const getArtifactPreview = (
     fetchArtifactPreviewFromPath(
       projectName,
       artifact,
-      artifact.target_path,
+      `${artifact?.target_path}${artifact?.model_file || ''}`,
       noData,
       setNoData,
       previewContent =>

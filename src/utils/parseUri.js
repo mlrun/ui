@@ -89,8 +89,8 @@ const parseUri = uri => {
         key: match.groups.key,
         iteration: match.groups.iteration,
         tag: match.groups.tag,
-        tree: match.groups.uid && match.groups.tree, // Якщо є uid, зберігаємо tree
-        uid: match.groups.uid ?? match.groups.tree // uid має пріоритет, якщо його немає — беремо tree
+        tree: match.groups.uid && match.groups.tree,
+        uid: match.groups.uid ?? match.groups.tree
       }
     : {}
 }
