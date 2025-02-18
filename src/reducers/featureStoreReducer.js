@@ -241,9 +241,9 @@ export const fetchFeatureVectors = createAsyncThunk(
 )
 export const fetchFeature = createAsyncThunk(
   'fetchFeature',
-  ({ project, name, metadataName, labels }, thunkAPI) => {
+  ({ project, name, metadataName, labels, entities }, thunkAPI) => {
     return featureStoreApi
-      .getFeature(project, name, labels)
+      .getFeature(project, name, labels, entities)
       .then(response => {
         return parseFeatures(response.data, metadataName)
       })
