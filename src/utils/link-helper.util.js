@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { DETAILS_OVERVIEW_TAB, MODEL_ENDPOINTS_TAB, VIEW_SEARCH_PARAMETER } from '../constants'
+import { DETAILS_OVERVIEW_TAB, VIEW_SEARCH_PARAMETER } from '../constants'
 import { getFilteredSearchParams } from './filter.util'
 
 export const isPageTabValid = (pageTab, tabs, navigate, location) => {
@@ -90,13 +90,8 @@ export const parseFunctionUri = (functionUri, tab) => {
   let uid = null
 
   if (rest.includes('@')) {
-    if (tab === MODEL_ENDPOINTS_TAB) {
-      ;[name, uid] = rest.split('@')
-      nameWithUid = `${name}@${uid}`
-    } else {
-      ;[name, hash] = rest.split('@')
-      nameWithHash = `${name}@${hash}`
-    }
+    ;[name, hash] = rest.split('@')
+    nameWithHash = `${name}@${hash}`
   } else if (rest.includes(':')) {
     ;[name, tag] = rest.split(':')
   }
