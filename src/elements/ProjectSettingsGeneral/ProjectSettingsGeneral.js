@@ -146,10 +146,14 @@ const ProjectSettingsGeneral = ({
   ])
 
   useEffect(() => {
-    if (!isEmpty(frontendSpec) && !isEmpty(lastEditedProjectValues) && !internalLabelsValidatedRef.current) {
+    if (
+      !isEmpty(frontendSpec) &&
+      !isEmpty(lastEditedProjectValues) &&
+      !internalLabelsValidatedRef.current
+    ) {
       const parsedLabels = parseChipsData(
-          projectStore.project.data?.metadata?.[LABELS],
-          frontendSpec.internal_labels || []
+        projectStore.project.data?.metadata?.[LABELS],
+        frontendSpec.internal_labels || []
       )
 
       set(formStateRef.current.initialValues, LABELS, parsedLabels)
@@ -374,23 +378,25 @@ const ProjectSettingsGeneral = ({
                       )}
                     </div>
                     <div className="settings__card-content-col">
-                      <div className="settings__owner">
-                        <div className="settings__owner-row">
-                          <div className="row-value">
-                            <span className="row-label">Owner:</span>
-                            <span className="row-name">
-                              {membersState.projectInfo?.owner?.username ||
-                                projectStore.project.data?.spec?.owner}
-                            </span>
+                      {!frontendSpec.ce?.version && (
+                        <div className="settings__owner">
+                          <div className="settings__owner-row">
+                            <div className="row-value">
+                              <span className="row-label">Owner:</span>
+                              <span className="row-name">
+                                {membersState.projectInfo?.owner?.username ||
+                                  projectStore.project.data?.spec?.owner}
+                              </span>
+                            </div>
                           </div>
+                          {projectMembershipIsEnabled && projectOwnerIsShown && (
+                            <ChangeOwnerPopUp
+                              changeOwnerCallback={changeOwnerCallback}
+                              projectId={membersState.projectInfo.id}
+                            />
+                          )}
                         </div>
-                        {projectMembershipIsEnabled && projectOwnerIsShown && (
-                          <ChangeOwnerPopUp
-                            changeOwnerCallback={changeOwnerCallback}
-                            projectId={membersState.projectInfo.id}
-                          />
-                        )}
-                      </div>
+                      )}
                       <div>
                         <p className="settings__card-title">Parameters</p>
                         <p className="settings__card-subtitle">
