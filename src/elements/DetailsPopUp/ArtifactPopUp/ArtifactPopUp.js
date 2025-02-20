@@ -149,6 +149,7 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
         () => {},
         artifactData.project,
         fetchArtifact,
+        () => {},
         {},
         selectedArtifact,
         () => {},
