@@ -290,6 +290,7 @@ const Details = ({
   const cancelChanges = useCallback(() => {
     if (detailsStore.changes.counter > 0) {
       resetChanges()
+
       formRef.current.reset(formInitialValues)
     }
   }, [detailsStore.changes.counter, formInitialValues, resetChanges])
@@ -312,6 +313,12 @@ const Details = ({
     handleShowWarning,
     setFiltersWasHandled
   ])
+
+  const doNotLeavePage = useCallback(() => {
+    blocker.reset?.()
+    dispatch(detailsActions.showWarning(false))
+    window.dispatchEvent(new CustomEvent('cancelLeave'))
+  }, [blocker, dispatch])
 
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
@@ -366,17 +373,11 @@ const Details = ({
           {(blocker.state === 'blocked' || detailsStore.showWarning) && (
             <ConfirmDialog
               cancelButton={{
-                handler: () => {
-                  blocker.reset?.()
-                  dispatch(detailsActions.showWarning(false))
-                },
+                handler: doNotLeavePage,
                 label: detailsStore.filtersWasHandled ? "Don't refresh" : "Don't Leave",
                 variant: TERTIARY_BUTTON
               }}
-              closePopUp={() => {
-                blocker.reset?.()
-                dispatch(detailsActions.showWarning(false))
-              }}
+              closePopUp={doNotLeavePage}
               confirmButton={{
                 handler: leavePage,
                 label: detailsStore.filtersWasHandled ? 'Refresh' : 'Leave',
