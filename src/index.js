@@ -26,6 +26,7 @@ import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
 import toolkitStore from './store/toolkitStore'
+import { HTTP, HTTPS } from './constants'
 
 if (!window.location.pathname.includes(process.env.PUBLIC_URL)) {
   window.location.href = process.env.PUBLIC_URL
@@ -35,7 +36,10 @@ fetch(`${process.env.PUBLIC_URL}/config.json`, { cache: 'no-store' })
   .then(response => response.json())
   .then(config => {
     if (config.nuclioUiUrl) {
-      const mlrunProtocol = config.nuclioUiUrl.startsWith(`${window.location.protocol}//`) ? '' : `${window.location.protocol}//`
+      const mlrunProtocol =
+        config.nuclioUiUrl.startsWith(HTTP) || config.nuclioUiUrl.startsWith(HTTPS)
+          ? ''
+          : `${window.location.protocol}//`
 
       window.mlrunConfig = {
         ...config,
