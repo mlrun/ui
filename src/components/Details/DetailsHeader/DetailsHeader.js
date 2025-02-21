@@ -230,7 +230,7 @@ const DetailsHeader = ({
         </div>
       </div>
       <div className="item-header__custom-elements">
-        {params.tab === DETAILS_ARTIFACTS_TAB && detailsStore.iteration && (
+        {params.tab === DETAILS_ARTIFACTS_TAB && detailsStore.iteration && !isDetailsPopUp && (
           <Select
             density="dense"
             key="Iteration"
