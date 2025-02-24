@@ -87,9 +87,11 @@ const generateRequestParams = filters => {
   const endpointApplication = filters?.[ENDPOINT_APPLICATION]?.trim()
   const endpointResult = filters?.[ENDPOINT_RESULT]?.trim()
 
-  if (entityType === MODEL_ENDPOINT_RESULT && (endpointApplication || endpointResult)) {
+  if (entityType === MODEL_ENDPOINT_RESULT && (endpointApplication || endpointResult || entityId)) {
+    const application = endpointApplication ? `*${endpointApplication}*` : ''
+    const uid = entityId ? `*${entityId}*` : ''
     const metricName = endpointResult ? `*${endpointResult}` : ''
-    params[ENTITY_ID] = `~*${endpointApplication || ''}*.result.${metricName}*`
+    params[ENTITY_ID] = `~${uid}${application}.result.${metricName}*`
   }
 
   if (
