@@ -280,7 +280,7 @@ const Details = ({
 
       const changes = cloneDeep(detailsStore.changes)
       
-      // todo [redux-toolkit] rework it after redux-toolkit will be redux-toolkit to details store. Need to remove setTimeout and use a Promise that resolves after state updated
+      // todo [redux-toolkit] rework it after redux-toolkit will be added to the details store. Need to remove setTimeout and use a Promise that resolves after the state is updated.
       setTimeout(() => {
         applyDetailsChangesCallback(changes, selectedItem)
       })
