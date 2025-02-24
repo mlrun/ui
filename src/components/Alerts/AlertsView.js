@@ -85,13 +85,7 @@ const AlertsView = ({
                   <div>Only 100 alerts are displayed. View all in</div>
                   <span
                     className="link"
-                    onClick={() =>
-                      navigateToPerProjectAlertsPage(
-                        navigate,
-                        projectName,
-                        tableContent[0]?.data?.uid
-                      )
-                    }
+                    onClick={() => navigateToPerProjectAlertsPage(navigate, projectName)}
                   >
                     alerts screen
                   </span>

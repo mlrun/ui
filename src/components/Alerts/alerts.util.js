@@ -298,11 +298,10 @@ export const checkForSelectedAlert = ({
   }
 }
 
-export const navigateToPerProjectAlertsPage = (navigate, projectName, uid) => {
+export const navigateToPerProjectAlertsPage = (navigate, projectName) => {
   const filters = {
     dates: PAST_MONTH_DATE_OPTION,
-    [ENTITY_TYPE]: MODEL_ENDPOINT_RESULT,
-    [ENTITY_ID]: uid
+    [ENTITY_TYPE]: MODEL_ENDPOINT_RESULT
   }
   navigate(`/projects/${projectName}/${ALERTS_PAGE_PATH}?${new URLSearchParams(filters)}`)
 }
