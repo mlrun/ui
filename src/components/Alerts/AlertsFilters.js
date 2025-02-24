@@ -75,7 +75,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
       [FILTER_ALL_ITEMS]: [ENTITY_ID],
       [MODEL_MONITORING_APPLICATION]: [ENTITY_ID],
       [JOB]: [JOB_NAME],
-      [MODEL_ENDPOINT_RESULT]: [ENDPOINT_APPLICATION, ENDPOINT_RESULT]
+      [MODEL_ENDPOINT_RESULT]: [ENDPOINT_APPLICATION, ENDPOINT_RESULT, ENTITY_ID]
     }
     const allFields = [ENTITY_ID, JOB_NAME, ENDPOINT_APPLICATION, ENDPOINT_RESULT]
 
@@ -125,7 +125,9 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
         </div>
       )}
 
-      {(entityType === FILTER_ALL_ITEMS || entityType === MODEL_MONITORING_APPLICATION) && (
+      {(entityType === FILTER_ALL_ITEMS ||
+        entityType === MODEL_MONITORING_APPLICATION ||
+        entityType === MODEL_ENDPOINT_RESULT) && (
         <div className="form-row">
           <FormInput
             label="Entity ID"

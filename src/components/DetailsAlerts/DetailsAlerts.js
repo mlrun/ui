@@ -39,7 +39,7 @@ const DetailsAlerts = () => {
   const alertsStore = useSelector(state => state.alertsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const navigate = useNavigate()
-  const { projectName } = useParams()
+  const { projectName, tag: entityId } = useParams()
 
   const alertsFiltersConfig = useMemo(() => getAlertsFiltersConfig(true, true), [])
 
@@ -93,6 +93,7 @@ const DetailsAlerts = () => {
       alerts={paginatedAlerts}
       alertsFiltersConfig={alertsFiltersConfig}
       alertsStore={alertsStore}
+      entityId={entityId}
       filters={alertsFilters}
       filtersStore={filtersStore}
       handleRefreshAlerts={handleRefreshAlerts}
