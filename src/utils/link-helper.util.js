@@ -80,12 +80,14 @@ export const generateLinkToDetailsPanel = (
     isNaN(parseInt(iter)) ? '' : `/${iter}`
   }/${detailsTab.toLowerCase()}${window.location.search}`
 
-export const parseFunctionUri = functionUri => {
+export const parseFunctionUri = (functionUri, tab) => {
   let [project, rest] = functionUri.split('/')
   let name = rest
   let hash = null
   let tag = null
   let nameWithHash = null
+  let nameWithUid = null
+  let uid = null
 
   if (rest.includes('@')) {
     ;[name, hash] = rest.split('@')
@@ -94,7 +96,7 @@ export const parseFunctionUri = functionUri => {
     ;[name, tag] = rest.split(':')
   }
 
-  return { project, name, hash, tag, nameWithHash }
+  return { project, name, hash, tag, nameWithHash, uid, nameWithUid }
 }
 
 export const generateFunctionDetailsLink = (uri = '') => {

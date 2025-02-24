@@ -556,7 +556,7 @@ const Functions = ({
         if (currentItem) {
           // todo need better logic for searching currentItem for cases when the function has no tag
           navigate(
-            `/projects/${params.projectName}/functions/${params.funcName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/@${currentItem.hash}/${tab}${window.location.search}`
+            `/projects/${params.projectName}/functions/${name ?? params.funcName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/:${tag}@${currentItem.hash}/${tab}${window.location.search}`
           )
         }
         dispatch(

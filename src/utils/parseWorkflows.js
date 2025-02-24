@@ -24,11 +24,7 @@ export const parseWorkflows = (workflows, page) => {
   return workflows.map(workflow => {
     return {
       ...workflow,
-      state: getState(
-        (workflow.status ?? '').toLowerCase(),
-        page,
-        JOB_KIND_WORKFLOW
-      ),
+      state: getState((workflow.status ?? '').toLowerCase(), page, JOB_KIND_WORKFLOW),
       ui: {
         originalContent: workflow
       }

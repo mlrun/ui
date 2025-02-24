@@ -95,7 +95,7 @@ const AlertsView = ({
               {isAlertsPage && (
                 <ActionBar
                   autoRefreshIsStopped={true}
-                  closeParamName={ALERTS_PAGE_PATH}
+                  closeParamName={isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE_PATH}
                   filterMenuName={ALERTS_FILTERS}
                   filters={filters}
                   filtersConfig={isAlertsPage ? alertsFiltersConfig : {}}
@@ -169,7 +169,7 @@ const AlertsView = ({
                 </Table>
                 {isAlertsPage && (
                   <Pagination
-                    closeParamName={ALERTS_PAGE_PATH}
+                    closeParamName={isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE_PATH}
                     page={pageData.page}
                     paginationConfig={paginationConfigAlertsRef.current}
                   />

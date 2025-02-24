@@ -407,9 +407,11 @@ const JobsTable = React.forwardRef(
               </Table>
               <Pagination
                 paginationConfig={paginationConfigJobsRef.current}
-                closeParamName={selectedJob.name}
+                closeParamName={selectedJob?.name}
                 disabledNextDoubleBtnTooltip={
-                  filtersStore.autoRefresh
+                  paginationConfigJobsRef.current?.paginationResponse?.['page-token'] &&
+                  ((filtersStore.autoRefresh && !params.jobName) ||
+                    (params.jobName && filtersStore.internalAutoRefresh))
                     ? 'Uncheck Auto Refresh to view more results'
                     : autoRefreshPrevValue &&
                         paginationConfigJobsRef.current?.paginationResponse?.['page-token']

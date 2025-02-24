@@ -28,7 +28,7 @@ export const generatePageData = (handleFetchJobLogs, selectedJob) => {
     details: {
       menu: getJobsDetailsMenu(selectedJob),
       type: JOBS_PAGE,
-      infoHeaders: getInfoHeaders(!isNil(selectedJob.ui_run), selectedJob),
+      infoHeaders: getInfoHeaders(!isNil(selectedJob?.ui_run), selectedJob),
       refreshLogs: handleFetchJobLogs,
       removeLogs: () => {},
       withLogsRefreshBtn: true

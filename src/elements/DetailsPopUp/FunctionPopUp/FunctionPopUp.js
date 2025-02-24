@@ -37,7 +37,7 @@ import { showErrorNotification } from '../../../utils/notifications.util'
 import functionsApi from '../../../api/functions-api'
 import { toggleYaml } from '../../../reducers/appReducer'
 
-const FunctionPopUp = ({ funcUri, isOpen, onResolve }) => {
+const FunctionPopUp = ({ funcUri = null, isOpen, onResolve }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { isDemoMode, isStagingMode } = useMode()
@@ -63,7 +63,12 @@ const FunctionPopUp = ({ funcUri, isOpen, onResolve }) => {
         setIsLoading(false)
       })
       .catch(error => {
-        showErrorNotification(dispatch, error, '', 'Failed to retrieve function data')
+        showErrorNotification(
+          dispatch,
+          error,
+          '',
+          'This function either does not exist or was deleted'
+        )
 
         onResolve()
       })

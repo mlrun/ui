@@ -33,6 +33,7 @@ import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { convertChipsData } from '../../utils/convertChipsData'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { truncateUid } from '../../utils'
+import { updateFeatureStoreData } from '../../reducers/featureStoreReducer'
 
 export const createFeatureSetTitle = 'Create set'
 export const createFeatureVectorTitle = 'Create vector'
@@ -58,7 +59,6 @@ export const handleApplyDetailsChanges = (
   pageTab,
   selectedItem,
   setNotification,
-  updateFeatureStoreData,
   filters,
   dispatch
 ) => {
@@ -94,13 +94,16 @@ export const handleApplyDetailsChanges = (
     data.metadata.labels = convertChipsData(data.metadata.labels)
   }
 
-  return updateFeatureStoreData(
-    projectName,
-    itemName,
-    selectedItem.tag || TAG_LATEST,
-    data,
-    pageTab
+  return dispatch(
+    updateFeatureStoreData({
+      projectName,
+      featureData: itemName,
+      tag: selectedItem.tag || TAG_LATEST,
+      data,
+      pageTab
+    })
   )
+    .unwrap()
     .then(response => {
       return fetchData(filters).then(() => {
         dispatch(
@@ -142,7 +145,6 @@ export const handleApplyDetailsChanges = (
           pageTab,
           selectedItem,
           setNotification,
-          updateFeatureStoreData,
           filters,
           dispatch
         )

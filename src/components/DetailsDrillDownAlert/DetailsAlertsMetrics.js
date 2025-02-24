@@ -22,10 +22,10 @@ import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
-import ApplicationMetricCard from '../DetailsMetrics/ApplicationMetricCard'
+import ApplicationMetricCard from '../DetailsMetrics/MetricsCards/ApplicationMetricCard'
 import DatePicker from '../../common/DatePicker/DatePicker'
 import NoData from '../../common/NoData/NoData'
-import NoMetricData from '../DetailsMetrics/NoMetricData'
+import NoMetricData from '../DetailsMetrics/MetricsCards/NoMetricData'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
 import { REQUEST_CANCELED } from '../../constants'
@@ -101,7 +101,7 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, isAlertsPage = true }) =>
   )
 
   const fetchMetrics = useCallback(() => {
-    if (!isAlertsPage && selectedItem.uid !== prevSelectedEndPointNameRef.current) {
+    if (!prevSelectedEndPointNameRef.current) {
       prevSelectedEndPointNameRef.current = selectedItem.uid
       return
     }
@@ -129,7 +129,15 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, isAlertsPage = true }) =>
       .catch(() => {
         setMetrics([])
       })
-  }, [isAlertsPage, filters, selectedItem, detailsStore.dates.value, fetchData])
+  }, [
+    isAlertsPage,
+    filters,
+    detailsStore.dates.value,
+    fetchData,
+    selectedItem.fullName,
+    selectedItem.project,
+    selectedItem.uid
+  ])
 
   useEffect(() => {
     fetchMetrics()

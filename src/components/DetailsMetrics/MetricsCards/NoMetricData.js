@@ -19,7 +19,7 @@ such restriction.
 */
 import PropTypes from 'prop-types'
 
-import StatsCard from '../../common/StatsCard/StatsCard'
+import StatsCard from '../../../common/StatsCard/StatsCard'
 
 import { ReactComponent as NoDataIcon } from 'igz-controls/images/no-data-metric-icon.svg'
 

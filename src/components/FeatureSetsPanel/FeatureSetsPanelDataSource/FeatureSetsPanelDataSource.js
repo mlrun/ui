@@ -18,30 +18,26 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useState } from 'react'
-import { connect } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 
 import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
 
 import FeatureSetsPanelDataSourceView from './FeatureSetsPanelDataSourceView'
 
-import featureStoreActions from '../../../actions/featureStore'
 import projectsAction from '../../../actions/projects'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
 
 import { CSV, PARQUET } from './featureSetsPanelDataSource.util'
 import { isUrlInputValid } from '../UrlPath.utils'
-import { isEmpty } from 'lodash'
-
-const FeatureSetsPanelDataSource = ({
-  featureStore,
-  setDisableButtons,
+import {
   setNewFeatureSetDataSourceKind,
   setNewFeatureSetDataSourceParseDates,
   setNewFeatureSetDataSourceUrl,
-  setNewFeatureSetSchedule,
-  setValidation,
-  validation
-}) => {
+  setNewFeatureSetSchedule
+} from '../../../reducers/featureStoreReducer'
+
+const FeatureSetsPanelDataSource = ({ setDisableButtons, setValidation, validation }) => {
   const [data, setData] = useState({
     attributes: [],
     kind: CSV,
@@ -54,6 +50,8 @@ const FeatureSetsPanelDataSource = ({
     schedule: ''
   })
   const [showSchedule, setShowSchedule] = useState(false)
+  const dispatch = useDispatch()
+  const featureStore = useSelector(state => state.featureStore)
 
   const handleKindOnChange = useCallback(
     kind => {
@@ -63,20 +61,20 @@ const FeatureSetsPanelDataSource = ({
           : data.url.path
 
       if (kind === CSV) {
-        setNewFeatureSetSchedule('')
+        dispatch(setNewFeatureSetSchedule(''))
         setValidation(prevState => ({
           ...prevState,
           isUrlValid: url.length > 0 ? isUrlInputValid(data.url.pathType, url, kind) : true
         }))
       } else if (kind === PARQUET) {
-        setNewFeatureSetDataSourceParseDates('')
+        dispatch(setNewFeatureSetDataSourceParseDates(''))
         setValidation(state => ({
           ...state,
           isUrlValid: true
         }))
       }
 
-      setNewFeatureSetDataSourceKind(kind)
+      dispatch(setNewFeatureSetDataSourceKind(kind))
       setData(state => ({
         ...state,
         kind,
@@ -84,15 +82,7 @@ const FeatureSetsPanelDataSource = ({
         schedule: ''
       }))
     },
-    [
-      data.url.fullPath,
-      data.url.path,
-      data.url.pathType,
-      setNewFeatureSetDataSourceKind,
-      setNewFeatureSetSchedule,
-      setNewFeatureSetDataSourceParseDates,
-      setValidation
-    ]
+    [data.url.pathType, data.url.fullPath, data.url.path, dispatch, setValidation]
   )
 
   const handleUrlSelectOnChange = () => {
@@ -101,7 +91,7 @@ const FeatureSetsPanelDataSource = ({
       isUrlValid: true
     }))
 
-    setNewFeatureSetDataSourceUrl('')
+    dispatch(setNewFeatureSetDataSourceUrl(''))
   }
 
   const handleUrlOnApply = ({ selectValue, inputValue, urlData }) => {
@@ -121,7 +111,7 @@ const FeatureSetsPanelDataSource = ({
         }))
       }
 
-      setNewFeatureSetDataSourceUrl(`${selectValue}${inputValue}`)
+      dispatch(setNewFeatureSetDataSourceUrl(`${selectValue}${inputValue}`))
 
       setData(state => ({
         ...state,
@@ -143,12 +133,15 @@ const FeatureSetsPanelDataSource = ({
     }))
   }
 
-  const handleUrlOnEditModeChange = useCallback((isEditModeActive) => {
-    setDisableButtons(state => ({
-      ...state,
-      isUrlEditModeClosed: !isEditModeActive
-    }))
-  }, [setDisableButtons])
+  const handleUrlOnEditModeChange = useCallback(
+    isEditModeActive => {
+      setDisableButtons(state => ({
+        ...state,
+        isUrlEditModeClosed: !isEditModeActive
+      }))
+    },
+    [setDisableButtons]
+  )
 
   const handleUrlInputOnChange = path => {
     setValidation(state => ({
@@ -168,8 +161,6 @@ const FeatureSetsPanelDataSource = ({
       handleUrlOnEditModeChange={handleUrlOnEditModeChange}
       handleUrlSelectOnChange={handleUrlSelectOnChange}
       setData={setData}
-      setNewFeatureSetDataSourceParseDates={setNewFeatureSetDataSourceParseDates}
-      setNewFeatureSetSchedule={setNewFeatureSetSchedule}
       setShowSchedule={setShowSchedule}
       setValidation={setValidation}
       showSchedule={showSchedule}
@@ -184,7 +175,6 @@ FeatureSetsPanelDataSource.propTypes = {
   validation: PropTypes.shape({}).isRequired
 }
 
-export default connect((featureStore, projectStore) => ({ ...featureStore, ...projectStore }), {
-  ...featureStoreActions,
+export default connect(projectStore => ({ ...projectStore }), {
   ...projectsAction
 })(FeatureSetsPanelDataSource)

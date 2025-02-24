@@ -52,7 +52,7 @@ import { fetchArtifactTags, fetchDataSets, removeDataSets } from '../../reducers
 import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { getSavedSearchParams, transformSearchParams } from '../../utils/filter.util'
 import { getViewMode } from '../../utils/helper'
-import { isDetailsTabExists } from '../../utils/link-helper.util'
+import { getCloseDetailsLink, isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { checkForSelectedArtifact, setFullSelectedArtifact } from '../../utils/artifacts.util'
 import { setNotification } from '../../reducers/notificationReducer'
@@ -94,7 +94,8 @@ const Datasets = ({ isAllVersions = false }) => {
   const [refreshAfterDeleteCallback, refreshAfterDeleteTrigger] = useRefreshAfterDelete(
     paginationConfigDatasetVersionsRef,
     historyBackLink,
-    'artifacts'
+    'artifacts',
+    params.id && getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : DATASETS_TAB, true)
   )
 
   const pageData = useMemo(
@@ -297,14 +298,12 @@ const Datasets = ({ isAllVersions = false }) => {
         setDatasets(null)
       }
 
-      if (changes.data.tag.currentFieldValue) {
-        navigate(
-          `/projects/${params.projectName}/${DATASETS_PAGE.toLowerCase()}/${params.datasetName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/:${
-            changes.data.tag.currentFieldValue
-          }@${selectedItem.uid}/overview${window.location.search}`,
-          { replace: true }
-        )
-      }
+      navigate(
+        `/projects/${params.projectName}/${DATASETS_PAGE.toLowerCase()}/${params.datasetName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/${
+          changes.data.tag.currentFieldValue ? `:${changes.data.tag.currentFieldValue}` : ''
+        }@${selectedItem.uid}/overview${window.location.search}`,
+        { replace: true }
+      )
     }
 
     refreshDatasets(datasetsFilters)

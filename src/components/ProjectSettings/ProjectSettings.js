@@ -68,7 +68,8 @@ const ProjectSettings = () => {
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   const projectMembershipIsEnabled = useMemo(
-    () => frontendSpec?.feature_flags?.project_membership === 'enabled',
+    () =>
+      frontendSpec?.feature_flags?.project_membership === 'enabled' || frontendSpec?.ce?.version,
     [frontendSpec]
   )
 

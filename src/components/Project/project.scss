@@ -114,6 +114,7 @@
             .select {
               &__label {
                 color: $white;
+                text-transform: none;
               }
             }
 

@@ -20,6 +20,7 @@ such restriction.
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { isEmpty } from 'lodash'
 
 import AlertsView from './AlertsView'
 
@@ -94,9 +95,10 @@ const Alerts = () => {
 
   const handleFetchJobLogs = useCallback(
     (item, projectName, setDetailsLogs, streamLogsRef) => {
-      return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, dispatch)
+      lastCheckedAlertIdRef.current &&
+        getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, dispatch)
     },
-    [dispatch]
+    [dispatch, lastCheckedAlertIdRef]
   )
 
   const pageData = useMemo(
@@ -132,6 +134,12 @@ const Alerts = () => {
     setSearchParams,
     tableContent
   ])
+
+  useEffect(() => {
+    if (isEmpty(selectedAlert)) {
+      lastCheckedAlertIdRef.current = null
+    }
+  }, [lastCheckedAlertIdRef, selectedAlert])
 
   return (
     <AlertsView

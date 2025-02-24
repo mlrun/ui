@@ -245,18 +245,22 @@ const ActionBar = ({
   )
 
   const refresh = useCallback(
-    formState => {
-      if (changes.counter > 0 && cancelRequest) {
-        cancelRequest(REQUEST_CANCELED)
-      } else {
-        saveFilters(formState.values)
-        handleRefresh({
-          ...filters,
-          ...formState.values
-        })
+    async formState => {
+      const filtersHelperResult = await filtersHelper(changes, dispatch)
+
+      if (filtersHelperResult) {
+        if (changes.counter > 0 && cancelRequest) {
+          cancelRequest(REQUEST_CANCELED)
+        } else {
+          saveFilters(formState.values)
+          handleRefresh({
+            ...filters,
+            ...formState.values
+          })
+        }
       }
     },
-    [cancelRequest, changes.counter, filters, handleRefresh, saveFilters]
+    [cancelRequest, changes, dispatch, filters, filtersHelper, handleRefresh, saveFilters]
   )
 
   const handleDateChange = (dates, isPredefined, optionId, input, formState) => {

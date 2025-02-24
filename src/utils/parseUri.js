@@ -77,14 +77,25 @@ import {
  *         uid:       '24fce79e709f9b3fe5e8251a39e67c678d94c20c' }
  */
 
-const parseUri = uri =>
-  (uri ?? '').match(
-    /^store:\/\/(?<kind>.+?)\/(?<project>.+?)\/(?<key>.+?)(#(?<iteration>.+?))?(:(?<tag>.+?))?(@(?<uid>.+))?$/
-  )?.groups ?? {}
+const parseUri = uri => {
+  const match = (uri ?? '').match(
+    /^store:\/\/(?<kind>.+?)\/(?<project>.+?)\/(?<key>.+?)(#(?<iteration>.+?))?(:(?<tag>.+?))?(@(?<tree>[^^]+))?(\^(?<uid>.+))?$/
+  )
 
+  return match
+    ? {
+        kind: match.groups.kind,
+        project: match.groups.project,
+        key: match.groups.key,
+        iteration: match.groups.iteration,
+        tag: match.groups.tag,
+        tree: match.groups.uid && match.groups.tree,
+        uid: match.groups.uid ?? match.groups.tree
+      }
+    : {}
+}
 const parseIdentifier = identifier =>
-  (identifier ?? '').match(/(#(?<iteration>.+?))?(:(?<tag>.+?))?(@(?<uid>.+))?$/)
-    ?.groups ?? {}
+  (identifier ?? '').match(/(#(?<iteration>.+?))?(:(?<tag>.+?))?(@(?<uid>.+))?$/)?.groups ?? {}
 
 const kindToScreen = {
   artifacts: FILES_TAB,
