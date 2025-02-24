@@ -88,10 +88,10 @@ const generateRequestParams = filters => {
   const endpointResult = filters?.[ENDPOINT_RESULT]?.trim()
 
   if (entityType === MODEL_ENDPOINT_RESULT && (endpointApplication || endpointResult || entityId)) {
-    const application = endpointApplication ? `*${endpointApplication}*` : ''
-    const uid = entityId ? `*${entityId}*` : ''
+    const application = endpointApplication ? `*${endpointApplication}` : ''
+    const id = entityId ? `*${entityId}` : ''
     const metricName = endpointResult ? `*${endpointResult}` : ''
-    params[ENTITY_ID] = `~${uid}${application}.result.${metricName}*`
+    params[ENTITY_ID] = `~${id}*.${application}*.result.${metricName}*`
   }
 
   if (

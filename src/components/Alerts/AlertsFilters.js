@@ -130,7 +130,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
         entityType === MODEL_ENDPOINT_RESULT) && (
         <div className="form-row">
           <FormInput
-            label="Entity ID"
+            label={entityType === MODEL_ENDPOINT_RESULT ? 'Endpoint ID' : 'Entity ID'}
             name={ENTITY_ID}
             placeholder="Search by ID"
             tip="Search for case insensitive, full or partial strings"
