@@ -46,6 +46,7 @@ import { formatDatetime, generateLinkPath, parseUri } from '../../utils'
 import { isArtifactTagUnique } from '../../utils/artifacts.util'
 import { getFunctionImage } from '../FunctionsPage/functions.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import detailsActions from '../../actions/details'
 
 export const generateArtifactsContent = (
   detailsType,
@@ -578,4 +579,27 @@ export const generateArtifactIdentifiers = (
   }
 
   setArtifactsIdentifiers(newArtifactsIdentifiers)
+}
+
+export const performDetailsActionHelper = async (changes, dispatch, filtersWasHandled = false) => {
+  let actionCanBePerformed = Promise.resolve(true)
+
+  if (changes.counter > 0) {
+    actionCanBePerformed = await new Promise(resolve => {
+      const resolver = isSuccess => {
+        window.removeEventListener('discardChanges', resolver)
+        window.removeEventListener('cancelLeave', resolver)
+
+        resolve(isSuccess)
+      }
+
+      window.addEventListener('discardChanges', () => resolver(true))
+      window.addEventListener('cancelLeave', () => resolver(false))
+
+      dispatch(detailsActions.setFiltersWasHandled(filtersWasHandled))
+      dispatch(detailsActions.showWarning(true))
+    })
+  }
+
+  return actionCanBePerformed
 }

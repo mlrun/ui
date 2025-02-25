@@ -44,7 +44,6 @@ import {
   REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
-import detailsActions from '../../actions/details'
 import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
 import { FILTERS_CONFIG } from '../../types'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
@@ -54,6 +53,7 @@ import {
   toggleAutoRefresh,
   toggleInternalAutoRefresh
 } from '../../reducers/filtersReducer'
+import { performDetailsActionHelper } from '../Details/details.util'
 
 import { ReactComponent as CollapseIcon } from 'igz-controls/images/collapse.svg'
 import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
@@ -143,32 +143,6 @@ const ActionBar = ({
     )
   }, [filtersConfig])
 
-  const performActionHelper = useCallback(
-    async (filtersWasHandled = false) => {
-      let actionCanBePerformed = Promise.resolve(true)
-
-      if (changes.counter > 0) {
-        actionCanBePerformed = await new Promise(resolve => {
-          const resolver = isSuccess => {
-            window.removeEventListener('discardChanges', resolver)
-            window.removeEventListener('cancelLeave', resolver)
-
-            resolve(isSuccess)
-          }
-
-          window.addEventListener('discardChanges', () => resolver(true))
-          window.addEventListener('cancelLeave', () => resolver(false))
-
-          dispatch(detailsActions.setFiltersWasHandled(filtersWasHandled))
-          dispatch(detailsActions.showWarning(true))
-        })
-      }
-
-      return actionCanBePerformed
-    },
-    [changes.counter, dispatch]
-  )
-
   const saveFilters = useCallback(
     filtersForSaving => {
       for (const [filterName, filterValue] of Object.entries(filtersForSaving)) {
@@ -208,7 +182,7 @@ const ActionBar = ({
 
   const applyFilters = useCallback(
     async (formValues, filters) => {
-      const actionCanBePerformed = await performActionHelper(true)
+      const actionCanBePerformed = await performDetailsActionHelper(changes, dispatch, true)
       const newFilters = { ...filters, ...formValues }
 
       if (actionCanBePerformed) {
@@ -237,12 +211,12 @@ const ActionBar = ({
       }
     },
     [
-      performActionHelper,
+      changes,
+      dispatch,
       closeParamName,
       filtersStore.groupBy,
       saveFilters,
       removeSelectedItem,
-      dispatch,
       setSelectedRowData,
       toggleAllRows,
       handleRefresh,
@@ -252,7 +226,7 @@ const ActionBar = ({
 
   const refresh = useCallback(
     async formState => {
-      const actionCanBePerformed = await performActionHelper()
+      const actionCanBePerformed = await performDetailsActionHelper(changes, dispatch)
 
       if (actionCanBePerformed) {
         if (changes.counter > 0 && cancelRequest) {
@@ -266,7 +240,7 @@ const ActionBar = ({
         }
       }
     },
-    [performActionHelper, changes.counter, cancelRequest, saveFilters, handleRefresh, filters]
+    [changes, dispatch, cancelRequest, saveFilters, handleRefresh, filters]
   )
 
   const handleDateChange = (dates, isPredefined, optionId, input, formState) => {
@@ -289,7 +263,7 @@ const ActionBar = ({
   }
 
   const handleActionClick = async handler => {
-    const actionCanBePerformed = await performActionHelper()
+    const actionCanBePerformed = await performDetailsActionHelper(changes, dispatch)
 
     if (actionCanBePerformed) {
       handler()

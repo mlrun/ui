@@ -374,20 +374,18 @@ const Details = ({
             <ConfirmDialog
               cancelButton={{
                 handler: doNotLeavePage,
-                label: detailsStore.filtersWasHandled ? "Don't refresh" : "Don't Leave",
+                label: 'Cancel',
                 variant: TERTIARY_BUTTON
               }}
               closePopUp={doNotLeavePage}
               confirmButton={{
                 handler: leavePage,
-                label: detailsStore.filtersWasHandled ? 'Refresh' : 'Leave',
+                label: 'Yes',
                 variant: PRIMARY_BUTTON
               }}
               header="You have unsaved changes."
               isOpen={blocker.state === 'blocked' || detailsStore.showWarning}
-              message={`${
-                detailsStore.filtersWasHandled ? 'Refreshing the list' : 'Leaving this page'
-              } will discard your changes.`}
+              message="Do you want to discard the changes?"
             />
           )}
           {!isDetailsPopUp && (
