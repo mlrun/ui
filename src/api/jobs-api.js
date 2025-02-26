@@ -66,10 +66,10 @@ const jobsApi = {
       params.iter = iter
     }
 
-    return mainHttpClient.get(`/run/${project}/${jobId}`, { params })
+    return mainHttpClient.get(`/projects/${project}/runs/${jobId}`, { params })
   },
   getJobLogs: (id, project) =>
-    fetch(`${mainBaseUrl}/log/${project}/${id}`, {
+    fetch(`${mainBaseUrl}/projects/${project}/logs/${id}`, {
       method: 'get'
     }),
   getScheduledJobs: (project, newConfig) => {
