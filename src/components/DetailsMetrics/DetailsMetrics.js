@@ -229,7 +229,7 @@ const DetailsMetrics = ({ selectedItem }) => {
 
   return (
     <div className="metrics-wrapper">
-      <div className="metrics-wrapper__custom-filters">
+      <div className="metrics__custom-filters">
         <MetricsSelector
           name="metrics"
           disabled={!hasMetricsList}
