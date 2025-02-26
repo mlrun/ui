@@ -180,7 +180,7 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, isAlertsPage = true }) =>
         <div ref={metricsContainerRef} className="metrics-wrapper alerts-table__metrics">
           {generatedMetrics.map(([applicationName, applicationMetrics]) => (
             <React.Fragment key={applicationName}>
-              {isAlertsPage && <div className="metrics__app-name">{applicationName}</div>}
+              {isAlertsPage && <div className="metrics__card-header">{applicationName}</div>}
               {applicationMetrics.map(metric =>
                 !metric.data || isEmpty(metric.points) ? (
                   <NoMetricData key={metric.id} title={metric.title} />
