@@ -177,7 +177,7 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, isAlertsPage = true }) =>
           )
         ) : null
       ) : (
-        <div ref={metricsContainerRef} className="metrics alerts-table__metrics">
+        <div ref={metricsContainerRef} className="metrics-wrapper alerts-table__metrics">
           {generatedMetrics.map(([applicationName, applicationMetrics]) => (
             <React.Fragment key={applicationName}>
               {isAlertsPage && <div className="metrics__app-name">{applicationName}</div>}
