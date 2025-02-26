@@ -268,7 +268,7 @@ const DetailsMetrics = ({ selectedItem }) => {
           )
         ) : null
       ) : (
-        <div ref={metricsContainerRef} className="metrics">
+        <div ref={metricsContainerRef} className="metrics-wrapper">
           {generatedMetrics.map(([applicationName, applicationMetrics]) => {
             return (
               <React.Fragment key={applicationName}>

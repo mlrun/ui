@@ -148,7 +148,7 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, isAlertsPage = true }) =>
   }, [fetchMetrics, setMetrics])
 
   return (
-    <div className="item-info__details-metrics">
+    <div className="metrics-wrapper">
       {isAlertsPage && detailsStore.loadingCounter === 0 && (
         <div className="metrics__custom-filters">
           <DatePicker
