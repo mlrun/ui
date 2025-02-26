@@ -24,7 +24,7 @@ import { connect, useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
-import { isEqual, pickBy } from 'lodash'
+import { cloneDeep, isEqual, pickBy } from 'lodash'
 import classnames from 'classnames'
 
 import { ConfirmDialog } from 'igz-controls/components'
@@ -277,7 +277,13 @@ const Details = ({
   const applyChanges = useCallback(() => {
     applyDetailsChanges(detailsStore.changes).then(() => {
       resetChanges()
-      applyDetailsChangesCallback(detailsStore.changes, selectedItem)
+
+      const changes = cloneDeep(detailsStore.changes)
+      
+      // todo [redux-toolkit] rework it after redux-toolkit will be added to the details store. Need to remove setTimeout and use a Promise that resolves after the state is updated.
+      setTimeout(() => {
+        applyDetailsChangesCallback(changes, selectedItem)
+      })
     })
   }, [
     applyDetailsChanges,
