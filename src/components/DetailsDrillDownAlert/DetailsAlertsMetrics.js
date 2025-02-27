@@ -148,7 +148,7 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, isAlertsPage = true }) =>
   }, [fetchMetrics, setMetrics])
 
   return (
-    <div className="item-info__details-metrics">
+    <div className="metrics-wrapper">
       {isAlertsPage && detailsStore.loadingCounter === 0 && (
         <div className="metrics__custom-filters">
           <DatePicker
@@ -177,10 +177,10 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, isAlertsPage = true }) =>
           )
         ) : null
       ) : (
-        <div ref={metricsContainerRef} className="metrics alerts-table__metrics">
+        <div ref={metricsContainerRef} className="metrics-wrapper alerts-table__metrics">
           {generatedMetrics.map(([applicationName, applicationMetrics]) => (
             <React.Fragment key={applicationName}>
-              {isAlertsPage && <div className="metrics__app-name">{applicationName}</div>}
+              {isAlertsPage && <div className="metrics__card-header">{applicationName}</div>}
               {applicationMetrics.map(metric =>
                 !metric.data || isEmpty(metric.points) ? (
                   <NoMetricData key={metric.id} title={metric.title} />
