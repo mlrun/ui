@@ -272,7 +272,7 @@ export const generateActionsMenu = (
                 datasetMin.db_key,
                 datasetMin.uid,
                 refreshArtifacts,
-                null,
+                refreshAfterDeleteCallback,
                 datasetsFilters,
                 DATASET_TYPE,
                 DATASET_TYPE,

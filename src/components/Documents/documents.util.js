@@ -207,7 +207,7 @@ export const generateActionsMenu = (
                 documentMin.db_key,
                 documentMin.uid,
                 refreshArtifacts,
-                null,
+                refreshAfterDeleteCallback,
                 filters,
                 DOCUMENT_TYPE,
                 DOCUMENT_TYPE,
