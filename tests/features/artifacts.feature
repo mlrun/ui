@@ -29,6 +29,7 @@ Feature: Artifacts Page
     Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
     Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
     Then verify "Table_Refresh_Button" element visibility on "Files" wizard
+    Then verify "Table_Refresh_Button" element on "Files" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
     Then verify "Files_Table" element visibility on "Files" wizard
     Then verify "Register_File_Button" element visibility on "Files" wizard
     Then "Register_File_Button" element on "Files" should contains "Register artifact" value
@@ -93,6 +94,7 @@ Feature: Artifacts Page
   @smoke
   Scenario: MLA004 - Verify behaviour of Show iterations checkbox on Artifacts tab
     Given open url
+    And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -106,9 +108,10 @@ Feature: Artifacts Page
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
-    Then check "expand_btn" visibility in "Files_Table" on "Files" wizard with 0 offset
-    Then click on cell with row index 1 in "expand_btn" column in "Files_Table" table on "Files" wizard
-    And wait load page
+    Then check "expand_btn" not presented in "Files_Table" on "Files" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then verify "show_all_versions" option is present on "Files" wizard in "Files_Table" table with "training_iteration_results" value in "name" column
+    Then verify "show_all_versions" option on "Files" wizard in "Files_Table" table with "training_iteration_results" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions"
     Then click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
@@ -119,7 +122,6 @@ Feature: Artifacts Page
     Then verify "Header" element not exists on "Files_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     Then "Show_Iterations_Checkbox" element should be checked on "FilterBy_Popup" wizard
-    Then check "expand_btn" not presented in "Files_Table" on "Files" wizard
 
   @MLA
   @passive
@@ -200,6 +202,7 @@ Feature: Artifacts Page
     Then verify "Title" element not exists on "Register_File_Popup" wizard
     Then navigate forward
     Then verify "Title" element not exists on "Register_File_Popup" wizard
+    Then verify "Files_Table" element visibility on "Files" wizard
 
   @MLA
   @smoke
@@ -221,6 +224,11 @@ Feature: Artifacts Page
     Then select "Table" option in "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard
     Then click on "Register_Button" element on "Register_File_Popup" wizard
     And wait load page
+    Then verify if "Notification_Popup" popup dialog appears
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Register artifact initiated successfully" value
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     Then value in "name" column with "text" in "Files_Table" on "Files" wizard should contains "test-artifact"
     Then value in "type" column with "text" in "Files_Table" on "Files" wizard should contains "table"
     Then click on cell with value "test-artifact" in "name" column in "Files_Table" table on "Files" wizard
@@ -307,21 +315,23 @@ Feature: Artifacts Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
+    Then verify "Table_FilterBy_Button" element on "Files" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then select "All tags" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    And wait load page
     When click on cell with value "test-file" in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
-    Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
+    Then check "test" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then click on "Edit_btn_table_view" element on "Files_Info_Pane" wizard
     And wait load page
     When type value "v1" to "Version_tag_Input" field on "Files_Info_Pane" wizard
     Then click on "Apply_Button" element on "Files_Info_Pane" wizard
     Then click on "Apply_Changes_Button" element on "Files_Info_Pane" wizard
     And wait load page
-    Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then select "v1" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
-    And wait load page
-    When click on cell with value "test-file" in "name" column in "Files_Table" table on "Files" wizard
-    And wait load page
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Not_In_Filtered_List_Message" element visibility on "Files_Info_Pane" wizard
+    Then "Not_In_Filtered_List_Message" component on "Files_Info_Pane" should be equal "Files_Info_Pane"."Info_Banner_Message"
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
@@ -329,8 +339,36 @@ Feature: Artifacts Page
     Then "Header" element on "Files_Info_Pane" should contains "test-file" value
     Then refresh a page
     And wait load page
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Not_In_Filtered_List_Message" element visibility on "Files_Info_Pane" wizard
+    Then "Not_In_Filtered_List_Message" component on "Files_Info_Pane" should be equal "Files_Info_Pane"."Info_Banner_Message"
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
     Then "Header" element on "Files_Info_Pane" should contains "test-file" value
+    Then verify "Table_Refresh_Button" element visibility on "Files" wizard
+    Then verify "Table_Refresh_Button" element on "Files" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
+    Then click on "Table_Refresh_Button" element on "Files" wizard
+    And wait load page
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Not_In_Filtered_List_Message" element visibility on "Files_Info_Pane" wizard
+    Then "Not_In_Filtered_List_Message" component on "Files_Info_Pane" should be equal "Files_Info_Pane"."Info_Banner_Message"
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
+    Then verify "Header" element visibility on "Files_Info_Pane" wizard
+    Then click on "Cross_Close_Button" element on "Files_Info_Pane" wizard
+    And wait load page
+    Then verify "Header" element not exists on "Files_Info_Pane" wizard
+    When click on cell with value "test-file" in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Not_In_Filtered_List_Message" element not exists on "Files_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
+    Then verify "Header" element visibility on "Files_Info_Pane" wizard
 
   @MLA
   @passive
@@ -391,12 +429,54 @@ Feature: Artifacts Page
     And wait load page
     Then verify action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then verify that in action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column "Delete" option is enabled
+    Then verify that in action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column "Delete all versions" option is enabled
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then verify "Action_Menu" element visibility on "Files_Info_Pane" wizard
     Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
     Then check that "Delete" option in action menu on "Files_Info_Pane" wizard is enabled
+    Then check that "Delete all versions" option in action menu on "Files_Info_Pane" wizard is enabled
+    Then click on "Cross_Close_Button" element on "Files_Info_Pane" wizard
+    And wait load page
+    Then verify "show_all_versions" option is present on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column
+    Then verify "show_all_versions" option on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions"
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "survival-curves_km-survival" value in "name" column
+    And wait load page
+    Then verify "History_Back_Button" element visibility on "Files" wizard
+    Then verify "Version_History_Title" element visibility on "Files" wizard
+    Then "Version_History_Title" element on "Files" should contains "Version history:" value
+    Then verify "Version_History_Model_Name" element visibility on "Files" wizard
+    Then "Version_History_Model_Name" element on "Files" should contains "survival-curves_km-survival" value
+    Then verify "Table_Refresh_Button" element visibility on "Files" wizard
+    Then verify "Register_File_Button" element visibility on "Files" wizard
+    Then verify "Table_FilterBy_Button" element visibility on "Files" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+    Then verify action menu on "Files" wizard in "Files_Table" table with "5a44b12b-9ef3-4239-87e8-e0cbdae-17" value in "uid" column should contains "Common_Lists"."Action_Menu_List_Version_History"
+    Then verify that in action menu on "Files" wizard in "Files_Table" table with "5a44b12b-9ef3-4239-87e8-e0cbdae-17" value in "uid" column "Delete" option is enabled
+    When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
+    Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
+    Then verify "Action_Menu" element visibility on "Files_Info_Pane" wizard
+    Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List_Version_History"
+    Then check that "Delete" option in action menu on "Files_Info_Pane" wizard is enabled
+    Then verify "Header" element visibility on "Files_Info_Pane" wizard
+    Then "Header" element on "Files_Info_Pane" should contains "survival-curves_km-survival" value
+    Then click on "Register_File_Button" element on "Files" wizard
+    Then verify if "Register_File_Popup" popup dialog appears
+    Then type value "survival-curves_km-survival" to "New_File_Name_Input" field on "Register_File_Popup" wizard
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
+    When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
+    Then click on "Register_Button" element on "Register_File_Popup" wizard
+    And wait load page
+    Then verify if "Confirm_Popup" popup dialog appears
+    Then "Title" element on "Confirm_Popup" should contains "Overwrite artifact?" value
+    When click on "Overwrite_Button" element on "Confirm_Popup" wizard
+    And wait load page
+    
+
+
     Then click on "Edit_btn_table_view" element on "Files_Info_Pane" wizard
     And wait load page
     When type value "" to "Version_tag_Input" field on "Files_Info_Pane" wizard

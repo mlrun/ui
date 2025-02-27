@@ -99,6 +99,7 @@ module.exports = {
   },
   Common_Lists: {
     Action_Menu_List: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete', 'Delete all versions'],
+    Action_Menu_List_Version_History: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete'],
     Action_Menu_List_Expanded: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete all'],
     Action_Menu_List_Dataset_Transition_Popup: ['Download', 'Copy URI', 'View YAML'],
     Action_Menu_List_Function_Transition_Popup: ['View YAML'],
@@ -109,7 +110,7 @@ module.exports = {
     Ranking_Criteria_List: ['Min', 'Max']
   },
   Datasets_Info_Pane: {
-    Tab_List: ['Overview', 'Preview', 'Metadata', 'Analysis'],
+    Tab_List: ['Overview', 'Preview', 'Metadata'],
     Overview_General_Headers: [
       'Hash:',
       'Key:',
@@ -119,12 +120,60 @@ module.exports = {
       'Label column:',
       'Path:',
       'URI:',
-      'UID:',
       'Updated:',
       'Labels:'
     ],
     Overview_Producer_Headers: ['Name:', 'Kind:', 'URI:', 'Owner:', 'Workflow:', 'UID:'],
     Overview_Sources_Headers: ['Name:', 'Path:']
+  },
+  Documents_Info_Pane: {
+    Tab_List: ['Overview', 'Collections'],
+    Overview_General_Headers: [
+      'Key:',
+      'Hash:',
+      'Version tag:',
+      'Original source:',
+      'Iter:',
+      'URI:',
+      'Path:',
+      'UID:',
+      'Updated:',
+      'Labels:'
+    ],
+    Overview_Producer_Headers: ['Name:', 'Kind:', 'Tag:', 'Owner:', 'UID:']
+  },
+  Alerts_Jobs_Info_Pane: {
+    Overview_General_Headers: [
+      'Project Name:',
+      'Job Name:',
+      'Type:',
+      'Timestamp:',
+      'Severity:',
+      'Job:'
+    ],
+    Overview_Trigger_Criteria_Headers: ['Trigger criteria count:', 'Trigger criteria time period:']
+  },
+  Alerts_Endpoint_Info_Pane: {
+    Overview_General_Headers: [
+      'Project Name:',
+      'Endpoint ID:',
+      'Application Name:',
+      'Result Name:',
+      'Type:',
+      'Timestamp:',
+      'Severity:'
+    ],
+    Overview_Trigger_Criteria_Headers: ['Trigger criteria count:', 'Trigger criteria time period:']
+  },
+  Alerts_Application_Info_Pane: {
+    Overview_General_Headers: [
+      'Project Name:',
+      'Application Name:',
+      'Type:',
+      'Timestamp:',
+      'Severity:'
+    ],
+    Overview_Trigger_Criteria_Headers: ['Trigger criteria count:', 'Trigger criteria time period:']
   },
   ML_Functions_Tab: {
     Common_Action_Menu_Options: ['Edit', 'View YAML', 'Delete'],
@@ -165,6 +214,7 @@ module.exports = {
   },
   Files_Info_Pane: {
     Tab_List: ['Overview', 'Preview'],
+    Info_Banner_Message: /The (.+?) is not in the filtered list\. Closing the details panel will return you to the current list\./,
     Overview_General_Headers: [
       'Hash:',
       'Key:',
@@ -173,7 +223,6 @@ module.exports = {
       'Size:',
       'Path:',
       'URI:',
-      'UID:',
       'Updated:',
       'Labels:'
     ],
@@ -321,6 +370,7 @@ module.exports = {
     FilterBy_Button_1: 'Filter (1)',
     Show_All_Versions: 'Show all versions',
     Refresh_Button: 'Refresh',
+    Expand_All_Button: 'Expand all',
     In_Process_Jobs: 'Aborting, Pending, Running',
     In_Process_Workflows: 'Running',
     Failed_Jobs: 'Aborted, Error',
@@ -493,6 +543,7 @@ module.exports = {
   },
   Jobs_Monitor_Tab_Info_Pane: {
     Pending_State: 'Pending',
+    Error_State: 'Error',
     Tab_List: ['Overview', 'Inputs', 'Artifacts', 'Results', 'Logs', 'Pods'],
     Overview_Headers: [
       'UID:',
@@ -538,6 +589,12 @@ module.exports = {
   Dropdown_Options: {
     Tag_Filer_Options: ['All tags', 'latest'],
     Status_Filter_Options: ['All', 'Completed', 'Running', 'Pending', 'Error', 'Aborted'],
+    Entity_Type_Filter_Options: ['All', 'Job', 'Endpoint', 'Application'],
+    Severity_Filter_Options: ['All', 'High', 'Medium', 'Low'],
+    Event_Type_Filter_Options: ['All', 'Job failed', 'Data drift detected', 'Data drift suspected', 'Conc drift detected', 'Conc drift suspected', 'MM performance detected', 'MM performance suspected', 'System performance detected', 'System performance suspected', 'MM app anomaly detected', 'MM app anomaly suspected', 'MM app failed'],
+    Event_Type_Endpoint_Filter_Options: ['All', 'Data drift detected', 'Data drift suspected', 'Conc drift detected', 'Conc drift suspected', 'MM performance detected', 'MM performance suspected', 'System performance detected', 'System performance suspected', 'MM app anomaly detected', 'MM app anomaly suspected'],
+    Event_Type_Job_Filter_Options: ['All', 'Job failed'],
+    Event_Type_Application_Filter_Options: ['All', 'MM app failed'],
     Jobs_Status_Filter_Options: [
       'All',
       'Aborted',
@@ -652,6 +709,7 @@ module.exports = {
     No_Features_Yet: 'No features found.',
     No_Consumer_Group_Yet: 'You haven’t created any consumer group yet',
     No_Datasets_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
+    No_Documents_data: 'No data matches the filter: "Version tag: latest, Show best iteration only: true"',
     No_Files_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
     No_Models_data: 'No data matches the filter: "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"',
     No_Pods_data: 'Pods not found, it is likely because Kubernetes removed these pods listing'

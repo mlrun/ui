@@ -39,6 +39,7 @@ Feature: Jobs and workflows
         Then "Status_All_Checkbox" element should be checked on "FilterBy_Popup" wizard
         Then click on "Status_Filter_Element" element on "FilterBy_Popup" wizard
         Then verify "Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then verify "Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Jobs_Type_Filter_Options"
         Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
@@ -48,11 +49,12 @@ Feature: Jobs and workflows
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
         Then verify "Batch_Run_Button" element visibility on "Jobs_Monitor_Tab" wizard
-        Then "Batch_Run_Button" element on "Jobs_Monitor_Tab" should contains "Batch Run" value
+        Then "Batch_Run_Button" element on "Jobs_Monitor_Tab" should contains "Batch run" value
         Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Auto_Refresh_Checkbox" element visibility on "Jobs_Monitor_Tab" wizard
         Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Any time"
@@ -114,7 +116,7 @@ Feature: Jobs and workflows
         Then verify "Workflows_Monitor_Table" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Monitor_Workflows_Subtitle" element visibility on "Workflows_Monitor_Tab" wizard
         Then "Monitor_Workflows_Subtitle" element on "Workflows_Monitor_Tab" should contains "View running workflows and previously executed workflows" value
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         Then click on "Table_FilterBy_Button" element on "Workflows_Monitor_Tab" wizard
         #moved to demo mode ML-7352

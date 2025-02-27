@@ -597,7 +597,7 @@ Feature: Jobs Monitoring Page
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then "Error_Message" component on "Jobs_Monitoring_Workflows_Tab" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Workflows"
-        And turn on demo mode
+        When turn on demo mode with query params "true"
         And wait load page
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
         #moved to demo mode ML-7352
