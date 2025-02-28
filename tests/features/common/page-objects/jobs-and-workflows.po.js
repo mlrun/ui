@@ -246,7 +246,7 @@ const scheduleMonitorTable = {
     row: {
       root: '.table-row',
       fields: {
-        name: '.table-body__cell:nth-of-type(1) > div',
+        name: '.table-body__cell:nth-of-type(1) .data-ellipsis > div',
         type: {
           componentType: labelComponent,
           structure: generateLabelGroup(
@@ -471,9 +471,7 @@ module.exports = {
     Error_Message: commonErrorMessage,
     Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
     Arrow_Back: By.css('a.link-back__icon'),
-    Resource_Monitoring_Button: By.css(
-      '.content__action-bar-wrapper .action-bar button'
-    ),
+    Resource_Monitoring_Button: By.css('.action-bar .action-bar__actions button:nth-of-type(2)'),
     Auto_Refresh_Checkbox: checkboxComponent({
       root: '[data-testid="form-field-checkbox"]',
       elements: {

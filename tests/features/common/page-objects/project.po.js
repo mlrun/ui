@@ -47,7 +47,7 @@ const actionMenuStructure = {
 }
 
 const projectDashboardRealtimeFunctionsTable = {
-  root: '.project-data-card:nth-of-type(2) .project-data-card__table',
+  root: '.main-info__statistics-section .d-flex:nth-of-type(2) .project-data-card .project-data-card__table',
   header: {
     root: '.project-data-card__table-header',
     sorters: {
@@ -125,7 +125,7 @@ const generalInfoJobsCardStat = {
 }
 
 const generalInfoRealTimeFunctionsCardStat = {
-  root: '.main-info__statistics-section .project-data-card:nth-of-type(2)',
+  root: '.main-info__statistics-section .d-flex:nth-of-type(2) .project-data-card',
   header: {},
   body: {
     root: '.project-data-card__statistics',
@@ -320,7 +320,7 @@ module.exports = {
       generateLabelGroup(
         '.project-overview .project-overview__header .project-details__title',
         ' ',
-        ' '//'.status-icon'
+        ' '
       )
     ),
     Header_Created_Time: labelComponent(
