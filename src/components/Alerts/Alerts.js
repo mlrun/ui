@@ -32,13 +32,12 @@ import {
   checkForSelectedAlert
 } from './alerts.util'
 import { getJobLogs } from '../../utils/getJobLogs.util'
-import projectsAction from '../../actions/projects'
 import { useAlertsPageData } from '../../hooks/useAlertsPageData'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import { removeProjects } from '../../reducers/projectReducer'
 
 const Alerts = () => {
   const [selectedAlert, setSelectedAlert] = useState({})
-  const [, setProjectsRequestErrorMessage] = useState('')
   const alertsStore = useSelector(state => state.alertsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const dispatch = useDispatch()
@@ -80,14 +79,9 @@ const Alerts = () => {
     return paginatedAlerts.map(alert => createAlertRowData(alert, isCrossProjects))
   }, [isCrossProjects, paginatedAlerts])
 
-  const fetchMinimalProjects = useCallback(() => {
-    dispatch(projectsAction.fetchProjects({ format: 'minimal' }, setProjectsRequestErrorMessage))
-  }, [dispatch])
-
   useEffect(() => {
-    dispatch(projectsAction.removeProjects())
-    isCrossProjects && fetchMinimalProjects()
-  }, [dispatch, isCrossProjects, fetchMinimalProjects])
+    dispatch(removeProjects())
+  }, [dispatch, isCrossProjects])
 
   const handleCancel = () => {
     setSelectedAlert({})

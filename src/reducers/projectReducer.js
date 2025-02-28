@@ -17,74 +17,20 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+
+import projectsApi from '../api/projects-api'
+import { hideLoading, showLoading } from './redux.util'
 import {
-  CHANGE_PROJECT_STATE_BEGIN,
-  CHANGE_PROJECT_STATE_FAILURE,
-  CHANGE_PROJECT_STATE_SUCCESS,
-  CREATE_PROJECT_BEGIN,
-  CREATE_PROJECT_FAILURE,
-  CREATE_PROJECT_SUCCESS,
-  DELETE_PROJECT_BEGIN,
-  DELETE_PROJECT_FAILURE,
-  DELETE_PROJECT_SUCCESS,
-  FETCH_PROJECT_BEGIN,
-  FETCH_PROJECT_DATASETS_BEGIN,
-  FETCH_PROJECT_SUMMARY_BEGIN,
-  FETCH_PROJECT_SUMMARY_FAILURE,
-  FETCH_PROJECT_SUMMARY_SUCCESS,
-  FETCH_PROJECT_DATASETS_FAILURE,
-  FETCH_PROJECT_DATASETS_SUCCESS,
-  FETCH_PROJECT_FAILED_JOBS_BEGIN,
-  FETCH_PROJECT_FAILED_JOBS_FAILURE,
-  FETCH_PROJECT_FAILED_JOBS_SUCCESS,
-  FETCH_PROJECT_FAILURE,
-  FETCH_PROJECT_FILES_BEGIN,
-  FETCH_PROJECT_FILES_FAILURE,
-  FETCH_PROJECT_FILES_SUCCESS,
-  FETCH_PROJECT_FUNCTIONS_BEGIN,
-  FETCH_PROJECT_FUNCTIONS_FAILURE,
-  FETCH_PROJECT_FUNCTIONS_SUCCESS,
-  FETCH_PROJECT_JOBS_BEGIN,
-  FETCH_PROJECT_JOBS_FAILURE,
-  FETCH_PROJECT_JOBS_SUCCESS,
-  FETCH_PROJECT_MODELS_BEGIN,
-  FETCH_PROJECT_MODELS_FAILURE,
-  FETCH_PROJECT_MODELS_SUCCESS,
-  FETCH_PROJECT_RUNNING_JOBS_BEGIN,
-  FETCH_PROJECT_RUNNING_JOBS_FAILURE,
-  FETCH_PROJECT_RUNNING_JOBS_SUCCESS,
-  FETCH_PROJECT_SCHEDULED_JOBS_BEGIN,
-  FETCH_PROJECT_SCHEDULED_JOBS_FAILURE,
-  FETCH_PROJECT_SCHEDULED_JOBS_SUCCESS,
-  FETCH_PROJECT_SUCCESS,
-  FETCH_PROJECT_WORKFLOWS_BEGIN,
-  FETCH_PROJECT_WORKFLOWS_FAILURE,
-  FETCH_PROJECT_WORKFLOWS_SUCCESS,
-  FETCH_PROJECTS_BEGIN,
-  FETCH_PROJECTS_FAILURE,
-  FETCH_PROJECTS_SUCCESS,
-  REMOVE_NEW_PROJECT_ERROR,
-  REMOVE_PROJECT_SUMMARY,
-  REMOVE_PROJECT_DATA,
-  REMOVE_PROJECTS,
-  FETCH_PROJECT_FEATURE_SETS_BEGIN,
-  FETCH_PROJECT_FEATURE_SETS_SUCCESS,
-  FETCH_PROJECT_FEATURE_SETS_FAILURE,
-  FETCH_PROJECTS_SUMMARY_BEGIN,
-  FETCH_PROJECTS_SUMMARY_FAILURE,
-  FETCH_PROJECTS_SUMMARY_SUCCESS,
-  FETCH_PROJECTS_NAMES_BEGIN,
-  FETCH_PROJECTS_NAMES_FAILURE,
-  FETCH_PROJECTS_NAMES_SUCCESS,
-  FETCH_PROJECT_SECRETS_BEGIN,
-  FETCH_PROJECT_SECRETS_FAILURE,
-  FETCH_PROJECT_SECRETS_SUCCESS,
-  SET_PROJECT_TOTAL_ALERTS,
-  SET_JOBS_MONITORING_DATA,
-  SET_MLRUN_IS_UNHEALTHY,
-  SET_MLRUN_UNHEALTHY_RETRYING,
-  SET_DELETING_PROJECTS
-} from '../constants'
+  CONFLICT_ERROR_STATUS_CODE,
+  FORBIDDEN_ERROR_STATUS_CODE,
+  INTERNAL_SERVER_ERROR_STATUS_CODE
+} from 'igz-controls/constants'
+import { DEFAULT_ABORT_MSG, PROJECT_ONLINE_STATUS, REQUEST_CANCELED } from '../constants'
+import { parseProjects } from '../utils/parseProjects'
+import { showErrorNotification } from '../utils/notifications.util'
+import { parseSummaryData } from '../utils/parseSummaryData'
+import { mlrunUnhealthyErrors } from '../components/ProjectsPage/projects.util'
 
 const initialState = {
   deletingProjects: {},
@@ -129,12 +75,12 @@ const initialState = {
       error: null
     },
     functions: {
-      data: null,
+      data: [],
       loading: false,
       error: null
     },
     jobs: {
-      data: null,
+      data: [],
       error: null,
       loading: false
     },
@@ -184,648 +130,453 @@ const initialState = {
   }
 }
 
-const projectReducer = (state = initialState, { type, payload }) => {
-  switch (type) {
-    case CHANGE_PROJECT_STATE_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case CHANGE_PROJECT_STATE_FAILURE:
-      return {
-        ...state,
-        loading: false
-      }
-    case CHANGE_PROJECT_STATE_SUCCESS:
-      return {
-        ...state,
-        loading: false
-      }
-    case CREATE_PROJECT_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case CREATE_PROJECT_FAILURE:
-      return {
-        ...state,
+export const changeProjectState = createAsyncThunk(
+  'changeProjectState',
+  ({ project, status }, thunkAPI) => {
+    return projectsApi
+      .changeProjectState(project, status)
+      .catch(error => thunkAPI.rejectWithValue(error))
+  }
+)
+export const createNewProject = createAsyncThunk('createNewProject', ({ postData }, thunkAPI) => {
+  return projectsApi
+    .createProject(postData)
+    .then(result => {
+      return result.data
+    })
+    .catch(error => {
+      const message =
+        error.response?.status === CONFLICT_ERROR_STATUS_CODE
+          ? `A project named "${postData.metadata.name}" already exists.`
+          : error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+            ? 'You don’t have permission to create a project.'
+            : error.response?.status === INTERNAL_SERVER_ERROR_STATUS_CODE
+              ? error.response.data?.detail ||
+                'The system already has the maximum number of projects. An existing project must be deleted before you can create another.'
+              : error.message
+
+      thunkAPI.rejectWithValue(message)
+    })
+})
+export const deleteProject = createAsyncThunk(
+  'deleteProject',
+  ({ projectName, deleteNonEmpty }, thunkAPI) => {
+    return projectsApi
+      .deleteProject(projectName, deleteNonEmpty)
+      .then(response => {
+        return { response, projectName }
+      })
+      .catch(error => thunkAPI.rejectWithValue({ error, projectName }))
+  }
+)
+
+export const fetchProject = createAsyncThunk(
+  'fetchProject',
+  ({ project, params, signal }, thunkAPI) => {
+    return projectsApi
+      .getProject(project, params, signal)
+      .then(response => {
+        return response
+      })
+      .catch(error => {
+        if (![REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(error.message)) {
+          return thunkAPI.rejectWithValue(error)
+        }
+      })
+  }
+)
+export const fetchProjectDataSets = createAsyncThunk(
+  'fetchProjectDataSets',
+  ({ project, params, signal }, thunkAPI) => {
+    return projectsApi
+      .getProjectDataSets(project)
+      .then(response => {
+        return response?.data.artifacts
+      })
+      .catch(error => thunkAPI.rejectWithValue(error.message))
+  }
+)
+export const fetchProjectFailedJobs = createAsyncThunk(
+  'fetchProjectFailedJobs',
+  ({ project, signal }, thunkAPI) => {
+    return projectsApi
+      .getProjectFailedJobs(project, signal)
+      .then(response => {
+        return response?.data.runs
+      })
+      .catch(error => thunkAPI.rejectWithValue(error.message))
+  }
+)
+export const fetchProjectFunctions = createAsyncThunk(
+  'fetchProjectFunctions',
+  ({ project, signal }, thunkAPI) => {
+    return projectsApi
+      .getProjectFunctions(project, signal)
+      .then(response => {
+        return response?.data.funcs
+      })
+      .catch(error => thunkAPI.rejectWithValue(error.message))
+  }
+)
+export const fetchProjectJobs = createAsyncThunk(
+  'fetchProjectJobs',
+  ({ project, startTimeFrom, signal }, thunkAPI) => {
+    const params = {
+      'partition-by': 'name',
+      'partition-sort-by': 'updated',
+      'rows-per-partition': '5',
+      'max-partitions': '5',
+      iter: 'false',
+      start_time_from: startTimeFrom
+    }
+
+    return projectsApi
+      .getJobsAndWorkflows(project, params, signal)
+      .then(response => {
+        return response?.data.runs
+      })
+      .catch(error => thunkAPI.rejectWithValue(error.message))
+  }
+)
+export const fetchProjectSecrets = createAsyncThunk(
+  'fetchProjectSecrets',
+  ({ project }, thunkAPI) => {
+    return projectsApi.getProjectSecrets(project).catch(error => thunkAPI.rejectWithValue(error))
+  }
+)
+export const fetchProjectSummary = createAsyncThunk(
+  'fetchProjectSummary',
+  ({ project, signal }, thunkAPI) => {
+    return projectsApi
+      .getProjectSummary(project, signal)
+      .then(({ data }) => {
+        return parseSummaryData(data)
+      })
+      .catch(error => {
+        if (![REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(error.message)) {
+          return thunkAPI.rejectWithValue(error)
+        }
+      })
+  }
+)
+export const fetchProjects = createAsyncThunk(
+  'fetchProjects',
+  ({ params, setRequestErrorMessage = () => {} }, thunkAPI) => {
+    setRequestErrorMessage('')
+
+    return projectsApi
+      .getProjects(params)
+      .then(response => {
+        return parseProjects(response.data.projects)
+      })
+      .catch(error => {
+        showErrorNotification(
+          thunkAPI.dispatch,
+          error,
+          'Failed to fetch projects',
+          null,
+          null,
+          setRequestErrorMessage
+        )
+        thunkAPI.rejectWithValue(error)
+      })
+  }
+)
+export const fetchProjectsNames = createAsyncThunk('fetchProjectsNames', (_, thunkAPI) => {
+  return projectsApi
+    .getProjects({ format: 'name_only', state: PROJECT_ONLINE_STATUS })
+    .then(({ data: { projects } }) => {
+      return projects
+    })
+    .catch(error => {
+      showErrorNotification(thunkAPI.dispatch, error, '', 'Failed to fetch projects')
+      thunkAPI.rejectWithValue(error)
+    })
+})
+
+let firstServerErrorTimestamp = null
+
+export const fetchProjectsSummary = createAsyncThunk(
+  'fetchProjectsSummary',
+  ({ signal, refresh }, thunkAPI) => {
+    return projectsApi
+      .getProjectSummaries(signal)
+      .then(({ data: { project_summaries } }) => {
+        if (firstServerErrorTimestamp && refresh) {
+          firstServerErrorTimestamp = null
+
+          refresh()
+        }
+
+        thunkAPI.dispatch(setMlrunIsUnhealthy(false))
+        thunkAPI.dispatch(setMlrunUnhealthyRetrying(false))
+
+        return parseSummaryData(project_summaries)
+      })
+      .catch(err => {
+        if (mlrunUnhealthyErrors.includes(err.response?.status)) {
+          if (!firstServerErrorTimestamp) {
+            firstServerErrorTimestamp = new Date()
+
+            thunkAPI.dispatch(setMlrunUnhealthyRetrying(true))
+          }
+
+          const threeMinutesPassed = (new Date() - firstServerErrorTimestamp) / 1000 > 180
+
+          if (!threeMinutesPassed) {
+            setTimeout(() => {
+              thunkAPI.dispatch(fetchProjectsSummary({ signal, refresh }))
+            }, 3000)
+          }
+
+          if (threeMinutesPassed) {
+            thunkAPI.dispatch(setMlrunIsUnhealthy(true))
+            thunkAPI.dispatch(setMlrunUnhealthyRetrying(true))
+          }
+        }
+
+        thunkAPI.rejectWithValue(err)
+      })
+  }
+)
+
+const projectStoreSlice = createSlice({
+  name: 'projectStore',
+  initialState,
+  reducers: {
+    removeNewProjectError(state) {
+      state.newProject.error = null
+    },
+    removeProjectData(state) {
+      state.project = initialState.project
+    },
+    removeProjectSummary(state) {
+      state.projectSummary = {
+        error: null,
         loading: false,
-        newProject: {
-          error: payload
-        }
+        data: []
       }
-    case CREATE_PROJECT_SUCCESS:
-      return {
-        ...state,
+    },
+    removeProjects(state) {
+      state.projects = []
+    },
+    setDeletingProjects(state, action) {
+      state.deletingProjects = { ...action.payload }
+    },
+    setMlrunIsUnhealthy(state, action) {
+      state.mlrunUnhealthy.isUnhealthy = action.payload
+    },
+    setMlrunUnhealthyRetrying(state, action) {
+      state.mlrunUnhealthy.retrying = action.payload
+    },
+    setJobsMonitoringData(state, action) {
+      state.jobsMonitoringData = action.payload
+    },
+    setProjectTotalAlerts(state, action) {
+      state.projectTotalAlerts = { ...action.payload }
+    }
+  },
+  extraReducers: builder => {
+    builder.addCase(changeProjectState.pending, showLoading)
+    builder.addCase(changeProjectState.fulfilled, hideLoading)
+    builder.addCase(changeProjectState.rejected, hideLoading)
+    builder.addCase(createNewProject.pending, showLoading)
+    builder.addCase(createNewProject.fulfilled, state => {
+      state.newProject.error = null
+      state.loading = false
+    })
+    builder.addCase(createNewProject.rejected, (state, action) => {
+      state.newProject.error = action.payload
+      state.loading = false
+    })
+    builder.addCase(deleteProject.fulfilled, (state, action) => {
+      state.projectsToDelete = state.projectsToDelete.filter(
+        projectName => projectName !== action.payload.projectName
+      )
+    })
+    builder.addCase(deleteProject.rejected, (state, action) => {
+      state.projectsToDelete = state.projectsToDelete.filter(
+        projectName => projectName !== action.payload.projectName
+      )
+    })
+    builder.addCase(fetchProject.pending, state => {
+      state.project.loading = true
+    })
+    builder.addCase(fetchProject.fulfilled, (state, action) => {
+      state.project = {
+        ...state.project,
+        error: null,
         loading: false,
-        newProject: {
-          error: null
-        }
+        data: action.payload?.data
       }
-    case DELETE_PROJECT_BEGIN:
-      return {
-        ...state,
-        projectsToDelete: [...state.projectsToDelete, payload]
-      }
-    case DELETE_PROJECT_FAILURE:
-      return {
-        ...state,
-        projectsToDelete: state.projectsToDelete.filter(projectName => projectName !== payload)
-      }
-    case DELETE_PROJECT_SUCCESS:
-      return {
-        ...state,
-        projectsToDelete: state.projectsToDelete.filter(projectName => projectName !== payload)
-      }
-    case FETCH_PROJECT_BEGIN:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          loading: true
-        }
-      }
-    case FETCH_PROJECT_DATASETS_BEGIN:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          dataSets: {
-            ...state.project.dataSets,
-            loading: true
-          }
-        }
-      }
-    case FETCH_PROJECT_DATASETS_FAILURE:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          dataSets: {
-            data: [],
-            error: payload,
-            loading: false
-          }
-        }
-      }
-    case FETCH_PROJECT_DATASETS_SUCCESS:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          dataSets: {
-            data: payload,
-            loading: false,
-            error: null
-          }
-        }
-      }
-    case FETCH_PROJECT_FEATURE_SETS_BEGIN:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          featureSets: {
-            ...state.project.featureSets,
-            loading: true
-          }
-        }
-      }
-    case FETCH_PROJECT_FEATURE_SETS_FAILURE:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          featureSets: {
-            data: [],
-            error: payload,
-            loading: false
-          }
-        }
-      }
-    case FETCH_PROJECT_FEATURE_SETS_SUCCESS:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          featureSets: {
-            data: payload,
-            loading: false,
-            error: null
-          }
-        }
-      }
-    case FETCH_PROJECT_FAILED_JOBS_BEGIN:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          failedJobs: {
-            ...state.project.failedJobs,
-            loading: true
-          }
-        }
-      }
-    case FETCH_PROJECT_FAILED_JOBS_FAILURE:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          failedJobs: {
-            ...state.project.failedJobs,
-            data: [],
-            error: payload,
-            loading: false
-          }
-        }
-      }
-    case FETCH_PROJECT_FAILED_JOBS_SUCCESS:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          failedJobs: {
-            ...state.project.failedJobs,
-            data: payload,
-            error: null,
-            loading: false
-          }
-        }
-      }
-    case FETCH_PROJECT_FAILURE:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          loading: false,
-          error: payload
-        }
-      }
-    case FETCH_PROJECT_FILES_BEGIN:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          files: {
-            ...state.project.files,
-            loading: true
-          }
-        }
-      }
-    case FETCH_PROJECT_FILES_FAILURE:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          files: {
-            data: [],
-            error: payload,
-            loading: false
-          }
-        }
-      }
-    case FETCH_PROJECT_FILES_SUCCESS:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          files: {
-            data: payload,
-            loading: true,
-            error: null
-          }
-        }
-      }
-    case FETCH_PROJECT_FUNCTIONS_BEGIN:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          functions: {
-            ...state.project.functions,
-            loading: true
-          }
-        }
-      }
-    case FETCH_PROJECT_FUNCTIONS_FAILURE:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          functions: {
-            ...state.project.functions,
-            error: payload
-          }
-        }
-      }
-    case FETCH_PROJECT_FUNCTIONS_SUCCESS:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          functions: {
-            data: payload,
-            loading: false,
-            error: null
-          }
-        }
-      }
-    case FETCH_PROJECT_JOBS_BEGIN:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          jobs: {
-            ...state.project.jobs,
-            loading: true
-          }
-        }
-      }
-    case FETCH_PROJECT_JOBS_FAILURE:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          jobs: {
-            ...state.project.jobs,
-            error: payload,
-            loading: false
-          }
-        }
-      }
-    case FETCH_PROJECT_JOBS_SUCCESS:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          jobs: {
-            data: payload,
-            loading: false,
-            error: null
-          }
-        }
-      }
-    case FETCH_PROJECT_MODELS_BEGIN:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          models: {
-            ...state.project.models,
-            loading: true
-          }
-        }
-      }
-    case FETCH_PROJECT_MODELS_FAILURE:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          models: {
-            data: [],
-            error: payload,
-            loading: false
-          }
-        }
-      }
-    case FETCH_PROJECT_MODELS_SUCCESS:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          models: {
-            data: payload,
-            error: null,
-            loading: false
-          }
-        }
-      }
-    case FETCH_PROJECT_RUNNING_JOBS_BEGIN:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          runningJobs: {
-            ...state.project.runningJobs,
-            error: null,
-            loading: true
-          }
-        }
-      }
-    case FETCH_PROJECT_RUNNING_JOBS_FAILURE:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          runningJobs: {
-            ...state.project.runningJobs,
-            data: [],
-            error: payload,
-            loading: false
-          }
-        }
-      }
-    case FETCH_PROJECT_RUNNING_JOBS_SUCCESS:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          runningJobs: {
-            ...state.project.runningJobs,
-            data: payload,
-            error: null,
-            loading: false
-          }
-        }
-      }
-    case FETCH_PROJECT_SUCCESS:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          data: payload,
-          loading: false,
-          error: null
-        }
-      }
-    case FETCH_PROJECT_SCHEDULED_JOBS_BEGIN:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          scheduledJobs: {
-            ...state.project.scheduledJobs,
-            loading: true
-          }
-        }
-      }
-    case FETCH_PROJECT_SCHEDULED_JOBS_FAILURE:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          scheduledJobs: {
-            ...state.project.scheduledJobs,
-            data: [],
-            error: payload,
-            loading: false
-          }
-        }
-      }
-    case FETCH_PROJECT_SCHEDULED_JOBS_SUCCESS:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          scheduledJobs: {
-            ...state.project.scheduledJobs,
-            data: payload,
-            error: null,
-            loading: false
-          }
-        }
-      }
-    case FETCH_PROJECT_SECRETS_BEGIN:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          secrets: {
-            ...state.project.secrets,
-            loading: true
-          }
-        }
-      }
-    case FETCH_PROJECT_SECRETS_FAILURE:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          secrets: {
-            ...state.project.secrets,
-            error: payload,
-            loading: false
-          }
-        }
-      }
-    case FETCH_PROJECT_SECRETS_SUCCESS:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          secrets: {
-            ...state.project.secrets,
-            data: payload,
-            error: null,
-            loading: false
-          }
-        }
-      }
-    case FETCH_PROJECTS_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case FETCH_PROJECTS_FAILURE:
-      return {
-        ...state,
-        projects: [],
-        loading: false,
-        error: payload
-      }
-    case FETCH_PROJECTS_NAMES_BEGIN:
-      return {
-        ...state,
-        projectsNames: {
-          ...state.projectsNames,
-          loading: true
-        }
-      }
-    case FETCH_PROJECTS_NAMES_FAILURE:
-      return {
-        ...state,
-        projectsNames: {
-          data: [],
-          loading: false,
-          error: payload
-        }
-      }
-    case FETCH_PROJECTS_NAMES_SUCCESS:
-      return {
-        ...state,
-        projectsNames: {
-          ...state.projectsNames,
-          data: payload,
-          loading: false
-        }
-      }
-    case FETCH_PROJECTS_SUCCESS:
-      return {
-        ...state,
-        projects: payload,
+    })
+    builder.addCase(fetchProject.rejected, (state, action) => {
+      state.project.error = action.payload
+      state.project.loading = false
+    })
+    builder.addCase(fetchProjectDataSets.pending, state => {
+      state.project.dataSets.loading = true
+    })
+    builder.addCase(fetchProjectDataSets.fulfilled, (state, action) => {
+      state.project.dataSets = {
+        data: action.payload,
         loading: false,
         error: null
       }
-    case FETCH_PROJECTS_SUMMARY_BEGIN:
-      return {
-        ...state,
-        projectsSummary: {
-          ...state.projectsSummary,
-          loading: true
-        }
+    })
+    builder.addCase(fetchProjectDataSets.rejected, (state, action) => {
+      state.project.dataSets = {
+        data: [],
+        error: action.payload,
+        loading: false
       }
-    case FETCH_PROJECTS_SUMMARY_FAILURE:
-      return {
-        ...state,
-        projectsSummary: {
-          data: [],
-          loading: false,
-          error: payload
-        }
+    })
+    builder.addCase(fetchProjectFailedJobs.pending, state => {
+      state.project.failedJobs.loading = true
+    })
+    builder.addCase(fetchProjectFailedJobs.fulfilled, (state, action) => {
+      state.project.failedJobs = {
+        data: action.payload,
+        error: null,
+        loading: false
       }
-    case FETCH_PROJECTS_SUMMARY_SUCCESS:
-      return {
-        ...state,
-        projectsSummary: {
-          ...state.projectsSummary,
-          data: payload,
-          loading: false,
-          error: null
-        }
+    })
+    builder.addCase(fetchProjectFailedJobs.rejected, (state, action) => {
+      state.project.failedJobs = {
+        data: [],
+        error: action.payload,
+        loading: false
       }
-    case FETCH_PROJECT_SUMMARY_BEGIN:
-      return {
-        ...state,
-        projectSummary: {
-          ...state.projectSummary,
-          loading: true
-        }
+    })
+    builder.addCase(fetchProjectFunctions.pending, state => {
+      state.project.functions.loading = true
+    })
+    builder.addCase(fetchProjectFunctions.fulfilled, (state, action) => {
+      state.project.functions = {
+        data: action.payload,
+        error: null,
+        loading: false
       }
-    case FETCH_PROJECT_SUMMARY_FAILURE:
-      return {
-        ...state,
-        projectSummary: {
-          data: [],
-          loading: false,
-          error: payload
-        }
+    })
+    builder.addCase(fetchProjectFunctions.rejected, (state, action) => {
+      state.project.functions = {
+        data: [],
+        error: action.payload,
+        loading: false
       }
-    case FETCH_PROJECT_SUMMARY_SUCCESS:
-      return {
-        ...state,
-        projectSummary: {
-          data: payload,
-          loading: false,
-          error: null
-        }
+    })
+    builder.addCase(fetchProjectJobs.pending, state => {
+      state.project.jobs.loading = true
+    })
+    builder.addCase(fetchProjectJobs.fulfilled, (state, action) => {
+      state.project.jobs = {
+        data: action.payload.filter(job => job.metadata.iteration === 0),
+        error: null,
+        loading: false
       }
-    case FETCH_PROJECT_WORKFLOWS_BEGIN:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          workflows: {
-            ...state.project.workflows,
-            loading: true
-          }
-        }
+    })
+    builder.addCase(fetchProjectJobs.rejected, (state, action) => {
+      state.project.jobs = {
+        data: [],
+        error: action.payload,
+        loading: false
       }
-    case FETCH_PROJECT_WORKFLOWS_FAILURE:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          workflows: {
-            ...state.project.workflows,
-            data: [],
-            error: payload,
-            loading: false
-          }
-        }
+    })
+    builder.addCase(fetchProjectSecrets.pending, state => {
+      state.project.secrets.loading = true
+    })
+    builder.addCase(fetchProjectSecrets.fulfilled, (state, action) => {
+      state.project.secrets = {
+        data: action.payload,
+        error: null,
+        loading: false
       }
-    case FETCH_PROJECT_WORKFLOWS_SUCCESS:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          workflows: {
-            ...state.project.workflows,
-            data: payload,
-            error: null,
-            loading: false
-          }
-        }
+    })
+    builder.addCase(fetchProjectSecrets.rejected, (state, action) => {
+      state.project.secrets = {
+        data: [],
+        error: action.payload.message,
+        loading: false
       }
-    case REMOVE_PROJECT_SUMMARY:
-      return {
-        ...state,
-        projectSummary: {
-          error: null,
-          loading: false,
-          data: []
-        }
+    })
+    builder.addCase(fetchProjectSummary.pending, state => {
+      state.projectSummary.loading = true
+    })
+    builder.addCase(fetchProjectSummary.fulfilled, (state, action) => {
+      state.projectSummary = {
+        data: action.payload,
+        error: null,
+        loading: false
       }
-    case REMOVE_PROJECT_DATA:
-      return {
-        ...state,
-        project: {
-          ...initialState.project
-        }
+    })
+    builder.addCase(fetchProjectSummary.rejected, (state, action) => {
+      state.projectSummary = {
+        data: [],
+        error: action.payload.message,
+        loading: false
       }
-    case REMOVE_PROJECTS:
-      return {
-        ...state,
-        projects: []
+    })
+    builder.addCase(fetchProjects.pending, showLoading)
+    builder.addCase(fetchProjects.fulfilled, (state, action) => {
+      state.projects = action.payload
+      state.loading = false
+      state.error = null
+      state.projectsNames.data = action.payload
+        .filter(project => project.status.state === PROJECT_ONLINE_STATUS)
+        .map(project => project.metadata.name)
+    })
+    builder.addCase(fetchProjects.rejected, (state, action) => {
+      state.projects = []
+      state.loading = false
+      state.error = action.payload
+    })
+    builder.addCase(fetchProjectsNames.pending, state => {
+      state.projectsNames.loading = true
+    })
+    builder.addCase(fetchProjectsNames.fulfilled, (state, action) => {
+      state.projectsNames = {
+        data: action.payload,
+        error: null,
+        loading: false
       }
-    case REMOVE_NEW_PROJECT_ERROR:
-      return {
-        ...state,
-        newProject: {
-          error: null
-        }
+    })
+    builder.addCase(fetchProjectsNames.rejected, (state, action) => {
+      state.projectsNames = {
+        data: [],
+        error: action.payload,
+        loading: false
       }
-    case SET_PROJECT_TOTAL_ALERTS:
-      return {
-        ...state,
-        projectTotalAlerts: {
-          ...state.projectTotalAlerts,
-          ...payload
-        }
+    })
+    builder.addCase(fetchProjectsSummary.pending, state => {
+      state.projectsSummary.loading = true
+    })
+    builder.addCase(fetchProjectsSummary.fulfilled, (state, action) => {
+      state.projectsSummary = {
+        data: action.payload,
+        error: null,
+        loading: false
       }
-    case SET_DELETING_PROJECTS:
-      return {
-        ...state,
-        deletingProjects: {
-          ...payload
-        }
+    })
+    builder.addCase(fetchProjectsSummary.rejected, (state, action) => {
+      state.projectsSummary = {
+        data: [],
+        error: action.payload,
+        loading: false
       }
-    case SET_JOBS_MONITORING_DATA:
-      return {
-        ...state,
-        jobsMonitoringData: {
-          ...state.jobsMonitoringData,
-          ...payload
-        }
-      }
-    case SET_MLRUN_IS_UNHEALTHY:
-      return {
-        ...state,
-        mlrunUnhealthy: {
-          ...state.mlrunUnhealthy,
-          isUnhealthy: payload
-        }
-      }
-    case SET_MLRUN_UNHEALTHY_RETRYING:
-      return {
-        ...state,
-        mlrunUnhealthy: {
-          ...state.mlrunUnhealthy,
-          retrying: payload
-        }
-      }
-    default:
-      return state
+    })
   }
-}
+})
 
-export default projectReducer
+export const {
+  removeNewProjectError,
+  removeProjectData,
+  removeProjectSummary,
+  removeProjects,
+  setDeletingProjects,
+  setMlrunIsUnhealthy,
+  setMlrunUnhealthyRetrying,
+  setJobsMonitoringData,
+  setProjectTotalAlerts
+} = projectStoreSlice.actions
+
+export default projectStoreSlice.reducer

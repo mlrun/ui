@@ -34,10 +34,10 @@ import {
   V3IO_INPUT_PATH_SCHEME
 } from '../../constants'
 import { getArtifactReference, getFeatureReference, getParsedResource } from '../../utils/resources'
-import projectAction from '../../actions/projects'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
 import { fetchFeatureVector, fetchFeatureVectors } from '../../reducers/featureStoreReducer'
+import { fetchProjectsNames } from '../../reducers/projectReducer'
 
 const targetPathRegex =
   /^(store|v3io|s3|az|gs):(\/\/\/|\/\/)(?!.*:\/\/)([\w\-._~:?#[\]@!$&'()*+,;=]+)\/([\w\-._~:/?#[\]%@!$&'()*+,;=]+)$/i
@@ -330,14 +330,15 @@ export const generateArtifactsReferencesList = artifacts => {
 
   return uniqBy(generatedArtifacts, 'id')
 }
-
 export const getProjectsNames = (dispatch, setDataInputState, projectName) => {
-  dispatch(projectAction.fetchProjectsNames()).then(result => {
-    setDataInputState(prev => ({
-      ...prev,
-      projects: generateProjectsList(result ?? [], projectName)
-    }))
-  })
+  dispatch(fetchProjectsNames())
+    .unwrap()
+    .then(result => {
+      setDataInputState(prev => ({
+        ...prev,
+        projects: generateProjectsList(result ?? [], projectName)
+      }))
+    })
 }
 
 export const getArtifacts = (dispatch, project, storePathType, setDataInputState) => {
