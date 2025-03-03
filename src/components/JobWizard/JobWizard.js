@@ -302,18 +302,6 @@ const JobWizard = ({
     [isBatchInference, isEditMode, isRunMode, isTrain, selectedFunctionData]
   )
 
-  const searchParams = useCallback(
-    isSchedule => {
-      if ((!isSchedule && tab === MONITOR_JOBS_TAB) || (isSchedule && tab === SCHEDULE_TAB)) {
-        return window.location.search
-      }
-      return ''
-    },
-    [tab]
-  )
-
-  searchParams()
-
   const runJobHandler = useCallback(
     (formData, selectedFunctionData, params, isSchedule) => {
       const jobRequestData = generateJobRequestData(
@@ -331,7 +319,7 @@ const JobWizard = ({
             setShowSchedule(state => !state)
           }
           resolveModal()
-          onSuccessRequest && onSuccessRequest()
+          onSuccessRequest && onSuccessRequest(true)
           dispatch(
             setNotification({
               status: 200,
@@ -342,14 +330,14 @@ const JobWizard = ({
         })
         .then(() => {
           return navigate(
-            `/projects/${params.projectName}/jobs/${isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB}${searchParams(isSchedule)}`
+            `/projects/${params.projectName}/jobs/${isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB}`
           )
         })
         .catch(error => {
           showErrorNotification(dispatch, error, '', getNewJobErrorMsg(error))
         })
     },
-    [dispatch, mode, navigate, onSuccessRequest, resolveModal, searchParams]
+    [dispatch, mode, navigate, onSuccessRequest, resolveModal]
   )
 
   const editJobHandler = useCallback(
