@@ -52,10 +52,10 @@ module.exports = {
     '.ml-app .navbar'
   ),
   Project_Settings_Button: By.css(
-    '.navbar .navbar__body .navbar__additional .navbar-links .nav-link__button .nav-link__label'
+    '[data-testid="nav-link-project-settings"] .nav-link__button .nav-link__label'
   ),
   Project_Settings_Icon: By.css(
-    '.ml-app .navbar .navbar__additional .navbar-links svg'
+    '[data-testid="nav-link-project-settings"] .nav-link__button svg'
   ),
   Pin_Quick_Link_Button: By.css(
     '.navbar .navbar__body .tooltip-wrapper button.round-icon-cp__circle'
@@ -81,7 +81,8 @@ module.exports = {
   Real_Time_Functions_Icon: By.css('.ml-app .navbar .navbar__content .navbar-links .nav-link:nth-of-type(9) svg'),
   API_Gateways_Button: By.css('.ml-app .navbar .navbar__content .navbar-links .nav-link:nth-of-type(10) span'),
   API_Gateways_Icon: By.css('.ml-app .navbar .navbar__content .navbar-links .nav-link:nth-of-type(10) svg'),
-  Alerts_Button: By.css('[data-testid="nav-link-alerts"]'),
+  Alerts_Button: By.css('[data-testid="nav-link-alerts"] .nav-link__label'),
+  Alerts_Icon: By.css('[data-testid="nav-link-alerts"] svg'),
   General_Info_Quick_Panel: By.css('.ml-app .navbar .navbar__body'),
   Project_Quick_Actions_Instance: By.css('.project-details__details .link'),
   Quick_actions_Active: By.css('#quick-actions'),
