@@ -126,6 +126,28 @@ export const fetchArtifact = createAsyncThunk('fetchArtifact', ({ project, artif
     return filterArtifacts(result)
   })
 })
+export const fetchAllArtifactKindsTags = createAsyncThunk(
+    'fetchAllArtifactKindsTags',
+    ({ project, filters, config, setRequestErrorMessage = () => {}, withExactName }, thunkAPI) => {
+
+      return artifactsApi
+          .getArtifacts(project, filters, config, withExactName)
+          .then(({ data }) => {
+            const result = parseArtifacts(data.artifacts)
+            const generatedArtifacts = generateArtifacts(filterArtifacts(result))
+
+            return generatedArtifacts.map(artifact => artifact.tag)
+          })
+          .catch(error => {
+            largeResponseCatchHandler(
+                error,
+                'Failed to fetch artifact tags',
+                thunkAPI.dispatch,
+                setRequestErrorMessage
+            )
+          })
+    }
+)
 export const fetchArtifacts = createAsyncThunk(
   'fetchArtifacts',
   ({ project, filters, config, setRequestErrorMessage = () => {}, withExactName }, thunkAPI) => {

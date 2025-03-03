@@ -17,18 +17,22 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const filterArtifacts = artifacts =>
-  Object.values(
-    artifacts.reduce((prev, curr) => {
-      if (!prev[curr.db_key]) prev[curr.db_key] = { key: curr.db_key, data: [] }
+export const filterArtifacts = artifacts => [
+  ...artifacts
+    .reduce((artifactsMap, artifact) => {
+      if (!artifactsMap.has(artifact.db_key)) artifactsMap.set(artifact.db_key, { key: artifact.db_key, data: [] })
 
-      if ('link_iteration' in curr) {
-        prev[curr.db_key] = Object.assign(prev[curr.db_key], {
-          link_iteration: curr
-        })
+      if ('link_iteration' in artifact) {
+        artifactsMap.set(
+          artifact.db_key,
+          Object.assign(artifactsMap.get(artifact.db_key), {
+            link_iteration: artifact
+          })
+        )
       } else {
-        prev[curr.db_key].data.push(curr)
+        artifactsMap.get(artifact.db_key).data.push(artifact)
       }
-      return prev
-    }, {})
-  )
+      return artifactsMap
+    }, new Map())
+    .values()
+]

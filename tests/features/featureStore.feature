@@ -233,7 +233,7 @@ Feature: Feature Store Page
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Cross_Close_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then click on "Cross_Close_Button" element on "Feature_Vectors_Info_Pane" wizard
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         When click on cell with row index 1 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then select "Analysis" tab in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
@@ -377,7 +377,7 @@ Feature: Feature Store Page
     # Moved analyses tabs to Demo mode in `1.8.0` ML-9059
     Scenario: MLFS011 - Check all mandatory components in Item infopane on Analysis tab table
         Given open url
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -527,7 +527,7 @@ Feature: Feature Store Page
         Then type value "type=featureVector" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
-        Then value in "labels" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "type=featureVector"
+        Then value in "labels" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "type=featureVector" in "Overlay"
         Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
@@ -1516,6 +1516,7 @@ Feature: Feature Store Page
     @smoke
     Scenario: MLFS043 - Add to feature vector
         Given open url
+        And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1590,9 +1591,8 @@ Feature: Feature Store Page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         And set tear-down property "featureVector" created in "fsdemo-admin" project with "temp_vector01" value
-        Then click on "Table_FilterBy_Button" element on "Add_To_Feature_Vector_Tab" wizard
-        When select "temp_tag" option in "Table_Tree_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
-        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        Then verify "Table_FilterBy_Button" element on "Add_To_Feature_Vector_Tab" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
+        Then click on "Cross_Close_Button" element on "Feature_Vectors_Info_Pane" wizard
         And wait load page
         Then value in "name" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "temp_vector01"
         Then value in "description" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "Automation test description"
@@ -1739,7 +1739,7 @@ Feature: Feature Store Page
         * set tear-down property "project" created with "automation-test-name001" value
         * create "automation-test-name001" MLRun Project with code 201
         Given open url
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And click on row root with value "automation-test-name001" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -1785,7 +1785,7 @@ Feature: Feature Store Page
         * create "test_fs" Feature Set in "automation-test-010" project with code 200
         Given open url
         And wait load page
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And click on row root with value "automation-test-010" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page

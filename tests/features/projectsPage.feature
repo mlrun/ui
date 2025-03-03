@@ -333,7 +333,7 @@ Feature: Projects Page
     Scenario: MLPr015 - Check components on Monitoring container on Projects page
         Given open url
         And wait load page
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Container_Title" element visibility in "Projects_Monitoring_Container" on "Projects" wizard

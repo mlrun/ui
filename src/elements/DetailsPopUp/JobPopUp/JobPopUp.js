@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { isEmpty } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
@@ -28,7 +28,7 @@ import DetailsPopUp from '../DetailsPopUp'
 import { parseJob } from '../../../utils/parseJob'
 import { generatePageData } from '../../JobsTable/jobsTable.util'
 import { getJobLogs } from '../../../utils/getJobLogs.util'
-import { monitorJob } from '../../../components/Jobs/jobs.util'
+import { enrichRunWithFunctionFields, monitorJob } from '../../../components/Jobs/jobs.util'
 import { generateActionsMenu } from '../../../components/Jobs/MonitorJobs/monitorJobs.util'
 import { showErrorNotification } from '../../../utils/notifications.util'
 import { usePods } from '../../../hooks/usePods.hook'
@@ -41,6 +41,7 @@ const JobPopUp = ({ isOpen, jobData, onResolve }) => {
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const [selectedJob, setSelectedJob] = useState({})
   const [isLoading, setIsLoading] = useState(true)
+  const fetchJobFunctionsPromiseRef = useRef()
 
   usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
 
@@ -105,8 +106,13 @@ const JobPopUp = ({ isOpen, jobData, onResolve }) => {
       .unwrap()
       .then(job => {
         if (job) {
-          setSelectedJob(parseJob(job))
-          setIsLoading(false)
+          enrichRunWithFunctionFields(dispatch, parseJob(job), fetchJobFunctionsPromiseRef).then(
+            jobRun => {
+              setSelectedJob(jobRun)
+              setIsLoading(false)
+              fetchJobFunctionsPromiseRef.current = null
+            }
+          )
         } else {
           showErrorNotification(dispatch, {}, '', 'Failed to retrieve job data')
           onResolve()

@@ -184,7 +184,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM005 - Check all mandatory components on Register Model Popup
         Given open url
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -371,7 +371,7 @@ Feature: Project Monitoring Page
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         Then select "ML Function" option in "Create_New" dropdown on "Project" wizard
         Then "Title" element on "Create_ML_Function_Popup" should contains "Create New Function" value
@@ -431,7 +431,7 @@ Feature: Project Monitoring Page
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         Then select "ML Function" option in "Create_New" dropdown on "Project" wizard
         Then "Title" element on "Create_ML_Function_Popup" should contains "Create New Function" value
@@ -551,7 +551,7 @@ Feature: Project Monitoring Page
         Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
         Then verify "Table_Refresh_Button" element visibility on "Models" wizard
         Then verify "Models_Table" element visibility on "Models" wizard
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         Then verify "Register_Model_Button" element visibility on "Models" wizard
         Then "Register_Model_Button" element on "Models" should contains "Register model" value

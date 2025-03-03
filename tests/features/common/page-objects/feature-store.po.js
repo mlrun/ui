@@ -331,7 +331,8 @@ const datasetsTable = {
         action_menu_expand: {
           componentType: actionMenu,
           structure: actionMenuStructureExpand
-        }
+        },
+        show_all_versions: '[data-testid="quick-link-show-all-versions"]'
       }
     }
   }

@@ -69,9 +69,9 @@ Feature: Datasets Page
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
-    Then check "expand_btn" visibility in "Datasets_Table" on "Datasets" wizard with 0 offset
-    Then click on cell with row index 1 in "expand_btn" column in "Datasets_Table" table on "Datasets" wizard
-    And wait load page
+    Then click on "Table_FilterBy_Button" element on "Datasets" wizard
+    Then verify "show_all_versions" option is present on "Datasets" wizard in "Datasets_Table" table with "survival-curves_coxhazard-summary" value in "name" column
+    Then verify "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "survival-curves_coxhazard-summary" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions"
     Then click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
@@ -82,7 +82,6 @@ Feature: Datasets Page
     Then verify "Header" element not exists on "Datasets_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then "Show_Iterations_Checkbox" element should be checked on "FilterBy_Popup" wizard
-    Then check "expand_btn" not presented in "Datasets_Table" on "Datasets" wizard
 
   @MLD
   @passive
