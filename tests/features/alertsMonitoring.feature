@@ -51,8 +51,6 @@ Feature: Alerts Monitoring Page
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then navigate back
         And wait load page
-        Then navigate back
-        And wait load page
         Then verify "Monitoring_Alerts_Box_Title" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
         
     @MLAM
@@ -119,6 +117,8 @@ Feature: Alerts Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Alerts_Monitoring" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Alerts_Monitoring" wizard selected option value "Past 24 hours"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Alerts_Monitoring" wizard
+        When pick up "Custom range" from "12/01/2024 00:00" to "12/31/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Alerts_Monitoring" wizard
+        Then verify from "12/01/2024 00:00" to "12/31/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Alerts_Monitoring" wizard
         And wait load page
         Then verify "Alerts_Table" element visibility on "Alerts_Monitoring" wizard
         Then value in "entityType" column with "tooltip" in "Alerts_Table" on "Alerts_Monitoring" wizard should contains "Job"
@@ -214,6 +214,9 @@ Feature: Alerts Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Alerts_Monitoring" wizard selected option value "Past 24 hours"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Alerts_Monitoring" wizard
         And wait load page
+        When pick up "Custom range" from "12/01/2024 00:00" to "12/31/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Alerts_Monitoring" wizard
+        Then verify from "12/01/2024 00:00" to "12/31/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Alerts_Monitoring" wizard
+        And wait load page
         Then verify "Alerts_Table" element visibility on "Alerts_Monitoring" wizard
         Then value in "entityType" column with "tooltip" in "Alerts_Table" on "Alerts_Monitoring" wizard should contains "Job"
         When click on cell with row index 1 in "alertName" column in "Alerts_Table" table on "Alerts_Monitoring" wizard
@@ -242,7 +245,7 @@ Feature: Alerts Monitoring Page
         Then verify "Title" element visibility on "Job_Logs_YAML" wizard
         Then verify "Cross_Cancel_Button" element visibility on "Job_Logs_YAML" wizard
         Then verify "Alerts_Logs_Container" element visibility on "Job_Logs_YAML" wizard
-        Then click on "Cross_Cancel_Button" element on "Alerts_Jobs_Info_Pane" wizard
+        Then click on "Cross_Cancel_Button" element on "Job_Logs_YAML" wizard
         And wait load page
         Then verify "Cross_Close_Button" element visibility on "Alerts_Jobs_Info_Pane" wizard
         Then click on "Cross_Close_Button" element on "Alerts_Jobs_Info_Pane" wizard
@@ -253,6 +256,7 @@ Feature: Alerts Monitoring Page
     
     @MLAM
     @smoke
+    # TODO: Add data to the mock to check the following elements (existing job data for details popup)
     Scenario: MLAM006 - Check components in Job detail pop-up on Job alert detail pane
         Given open url
         And wait load page
@@ -266,6 +270,9 @@ Feature: Alerts Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Alerts_Monitoring" wizard selected option value "Past 24 hours"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Alerts_Monitoring" wizard
         And wait load page
+        When pick up "Custom range" from "12/01/2024 00:00" to "12/31/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Alerts_Monitoring" wizard
+        Then verify from "12/01/2024 00:00" to "12/31/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Alerts_Monitoring" wizard
+        And wait load page
         Then verify "Alerts_Table" element visibility on "Alerts_Monitoring" wizard
         Then value in "entityType" column with "tooltip" in "Alerts_Table" on "Alerts_Monitoring" wizard should contains "Job"
         When click on cell with row index 1 in "alertName" column in "Alerts_Table" table on "Alerts_Monitoring" wizard
@@ -276,6 +283,7 @@ Feature: Alerts Monitoring Page
         Then verify "Overview_General_Headers" on "Alerts_Jobs_Info_Pane" wizard should contains "Alerts_Jobs_Info_Pane"."Overview_General_Headers"
         Then verify "Job_Detail_PopUp_Link" element visibility on "Alerts_Jobs_Info_Pane" wizard
         Then click on "Job_Detail_PopUp_Link" element on "Alerts_Jobs_Info_Pane" wizard
+        # Add data to the mock to check the following elements
         Then verify if "Modal_Transition_Popup" popup dialog appears
         Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
         Then "Title" element on "Modal_Transition_Popup" should contains "erann-test" value
@@ -334,6 +342,7 @@ Feature: Alerts Monitoring Page
 
     @MLAM
     @smoke
+    # TODO: Add data to the mock to check the following elements
     Scenario: MLAM007 - Check components on Endpoints alert detail pane
         Given open url
         And wait load page
@@ -348,6 +357,9 @@ Feature: Alerts Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Alerts_Monitoring" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Alerts_Monitoring" wizard selected option value "Past 24 hours"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Alerts_Monitoring" wizard
+        And wait load page
+        When pick up "Custom range" from "12/01/2024 00:00" to "12/31/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Alerts_Monitoring" wizard
+        Then verify from "12/01/2024 00:00" to "12/31/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Alerts_Monitoring" wizard
         And wait load page
         Then verify "Alerts_Table" element visibility on "Alerts_Monitoring" wizard
         Then value in "entityType" column with "tooltip" in "Alerts_Table" on "Alerts_Monitoring" wizard should contains "Endpoint"
@@ -369,9 +381,13 @@ Feature: Alerts Monitoring Page
         Then verify "Notifications_Item" element visibility on "Alerts_Endpoint_Info_Pane" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Alerts_Endpoint_Info_Pane" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Alerts_Endpoint_Info_Pane" wizard selected option value "Past 24 hours"
-        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Alerts_Endpoint_Info_Pane" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
-        Then verify "Metrics_App_Name" element visibility on "Alerts_Endpoint_Info_Pane" wizard
-        Then verify "Metrics_Stats_Card" element visibility on "Alerts_Endpoint_Info_Pane" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Alerts_Endpoint_Info_Pane" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options_Endpoint"
+        Then click on "Header" element on "Alerts_Endpoint_Info_Pane" wizard
+        And wait load page
+        # Add data to the mock to check the following elements
+        # Then verify "Metrics_App_Name" element visibility on "Alerts_Endpoint_Info_Pane" wizard
+        # Then verify "Metrics_Stats_Card" element visibility on "Alerts_Endpoint_Info_Pane" wizard
+        Then verify "Metrics_Stats_Card_Empty" element visibility on "Alerts_Endpoint_Info_Pane" wizard
         Then click on "Cross_Close_Button" element on "Alerts_Endpoint_Info_Pane" wizard
         Then verify "Header" element not exists on "Alerts_Endpoint_Info_Pane" wizard
         When click on cell with row index 1 in "alertName" column in "Alerts_Table" table on "Alerts_Monitoring" wizard
@@ -458,44 +474,44 @@ Feature: Alerts Monitoring Page
         Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
         Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
         Then verify "BE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
-        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is enabled
         Then verify "FE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
-        Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is enabled
         Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
         Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
         Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
         Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
         Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
-        Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 12" value
+        Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 50" value
         When click on cell with row index 1 in "alertName" column in "Alerts_Table" table on "Alerts_Monitoring" wizard
         And wait load page
         Then verify "Header" element visibility on "Alerts_Endpoint_Info_Pane" wizard
         Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
         Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
         Then verify "BE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
-        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is enabled
         Then verify "FE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
-        Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is enabled
         Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
         Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
         Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
         Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
         Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
-        Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 12" value
+        Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 50" value
         Then click on "Cross_Close_Button" element on "Alerts_Endpoint_Info_Pane" wizard
         And wait load page
         Then verify "Header" element not exists on "Alerts_Endpoint_Info_Pane" wizard
         Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
         Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
         Then verify "BE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
-        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is enabled
         Then verify "FE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
-        Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is enabled
         Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
         Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
         Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
         Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
         Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
-        Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 12" value
+        Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 50" value
         And wait load page
      

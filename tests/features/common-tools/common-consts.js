@@ -21,11 +21,17 @@ module.exports = {
   Project: {
     Create_New_Options: [
       'Batch run',
-      //'ML Function', - demo mode
-      'Feature Set',
-      'Register Artifact',
-      //'Register Model', - demo mode
-      'Register Dataset'
+      'Feature set',
+      'Register artifact',
+      'Register dataset'
+    ],
+    Create_New_Options_Demo: [
+      'Batch run',
+      'ML function',
+      'Feature set',
+      'Register artifact',
+      'Register model',
+      'Register dataset'
     ],
     Online_Status: 'online',
     Data_Collection_Description:
@@ -145,6 +151,13 @@ module.exports = {
   Alerts_Jobs_Info_Pane: {
     Overview_General_Headers: [
       'Project Name:',
+      'Job Name:',
+      'Type:',
+      'Timestamp:',
+      'Severity:',
+      'Job:'
+    ],
+    Overview_General_Headers_PerProject: [
       'Job Name:',
       'Type:',
       'Timestamp:',
@@ -503,7 +516,16 @@ module.exports = {
       'Statistics reflect the data for the latest ingestion. \n' +
       ' Note that some values may be empty due to the use of different engines for calculating statistics',
     Models_Statistics:
-      'Note that some values may be empty due to the use of different engines for calculating statistics'
+      'Note that some values may be empty due to the use of different engines for calculating statistics',
+    Model_Stats_Tip:  
+      'Each model can have multiple versions, produced by multiple runs and given multiple tags.\n' +
+      ' You can browse them in the Models page.',
+    FeatureSets_Stats_Tip:  
+      'Each feature set can have multiple versions, produced by multiple runs and given multiple tags.\n' +
+      ' You can browse them in the Feature store page.',
+    Artifacts_Stats_Tip:  
+      'Each artifact can have multiple versions, produced by multiple runs and given multiple tags.\n' +
+      ' You can browse them in the Artifacts page.'
   },
   Descriptions: {
     Archive_Project:
@@ -646,6 +668,13 @@ module.exports = {
       'Past week',
       'Past month',
       'Past year',
+      'Custom range'
+    ],
+    Date_Picker_Filter_Options_Endpoint: [
+      'Past hour',
+      'Past 24 hours',
+      'Past week',
+      'Past month',
       'Custom range'
     ],
     Scheduled_Date_Picker_Filter_Options: [

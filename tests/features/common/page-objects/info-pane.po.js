@@ -984,7 +984,8 @@ module.exports = {
       )
     ),
     Metrics_App_Name: By.css('.item-info__details-metrics .alerts-table__metrics .metrics__app-name'),
-    Metrics_Stats_Card: By.css('.item-info__details-metrics .alerts-table__metrics .metrics__card')
+    Metrics_Stats_Card: By.css('.item-info__details-metrics .alerts-table__metrics .metrics__card'),
+    Metrics_Stats_Card_Empty: By.css('[data-testid="detailsPanel"] .metrics__empty-select')
   },
   alertsApplicationInfoPane: {
     Header: header,
