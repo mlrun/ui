@@ -90,7 +90,7 @@ const ScheduledJobsCounters = () => {
             onClick={scheduledStats.jobs.link}
             data-testid="scheduled_jobs_counter"
           >
-            <div className="stats__counter">
+            <div className="stats__counter stats__counter-large">
               {projectStore.projectsSummary.loading ? (
                 <Loader section small secondary />
               ) : (
@@ -106,7 +106,7 @@ const ScheduledJobsCounters = () => {
             onClick={scheduledStats.workflows.link}
             data-testid="scheduled_wf_counter"
           >
-            <div className="stats__counter">
+            <div className="stats__counter stats__counter-large">
               {projectStore.projectsSummary.loading ? (
                 <Loader section small secondary />
               ) : (
