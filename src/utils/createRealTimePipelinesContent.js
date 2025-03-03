@@ -65,7 +65,8 @@ const createRealTimePipelinesContent = (pipelines, projectName) =>
           className: 'table-cell-2',
           handleClick: () =>
             openPopUp(FunctionPopUp, {
-              funcUri: `${pipeline.project}/${pipeline.name}@${pipeline.hash}`
+              funcUri: `${pipeline.project}/${pipeline.name}@${pipeline.hash}`,
+              funcTag: pipeline.tag
             })
         },
         {
