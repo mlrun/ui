@@ -32,7 +32,6 @@ import Search from '../../../../common/Search/Search'
 import { FormOnChange, FormSelect } from 'igz-controls/components'
 
 import functionsActions from '../../../../actions/functions'
-import projectsAction from '../../../../actions/projects'
 import {
   FILTER_MENU_MODAL,
   FUNCTION_RUN_KINDS,
@@ -54,6 +53,7 @@ import {
 } from './jobWizardFunctionSelection.util'
 
 import './jobWizardFunctionSelection.scss'
+import { fetchProjectsNames } from '../../../../reducers/projectReducer'
 
 const JobWizardFunctionSelection = ({
   activeTab,
@@ -95,10 +95,16 @@ const JobWizardFunctionSelection = ({
   const functionsContainerRef = useRef(null)
   const hubFunctionLoadedRef = useRef(false)
 
-  const jobWizardFiltersValues = useSelector(store => store.filtersStore[FILTER_MENU_MODAL]?.[JOB_WIZARD_FILTERS]?.values ?? hubFiltersInitialValues)
+  const jobWizardFiltersValues = useSelector(
+    store =>
+      store.filtersStore[FILTER_MENU_MODAL]?.[JOB_WIZARD_FILTERS]?.values ?? hubFiltersInitialValues
+  )
   const { loading } = useSelector(store => store.functionsStore)
 
-  const filtersStoreHubCategories = useMemo(() => jobWizardFiltersValues[HUB_CATEGORIES_FILTER], [jobWizardFiltersValues])
+  const filtersStoreHubCategories = useMemo(
+    () => jobWizardFiltersValues[HUB_CATEGORIES_FILTER],
+    [jobWizardFiltersValues]
+  )
 
   const dispatch = useDispatch()
 
@@ -132,9 +138,11 @@ const JobWizardFunctionSelection = ({
 
   useEffect(() => {
     if (projects.length === 0) {
-      dispatch(projectsAction.fetchProjectsNames()).then(projects => {
-        setProjects(generateProjectsList(projects, params.projectName))
-      })
+      dispatch(fetchProjectsNames())
+        .unwrap()
+        .then(projects => {
+          setProjects(generateProjectsList(projects, params.projectName))
+        })
     }
   }, [dispatch, params.projectName, projects.length])
 

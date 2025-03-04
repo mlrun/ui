@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Form } from 'react-final-form'
-import { connect, useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 import { differenceWith, isEmpty, isEqual } from 'lodash'
 import { useParams } from 'react-router-dom'
@@ -35,23 +35,19 @@ import {
 } from './ProjectSettingsSecrets.utils'
 import { areFormValuesChanged, setFieldState } from 'igz-controls/utils/form.util'
 import projectApi from '../../api/projects-api'
-import projectsAction from '../../actions/projects'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { showErrorNotification } from '../../utils/notifications.util'
+import { fetchProjectSecrets, removeProjectData } from '../../reducers/projectReducer'
 
-const ProjectSettingsSecrets = ({
-  fetchProjectSecrets,
-  projectStore,
-  removeProjectData,
-  setNotification
-}) => {
+const ProjectSettingsSecrets = ({ setNotification }) => {
   const [modifyingIsInProgress, setModifyingIsInProgress] = useState(false)
   const [lastEditedFormValues, setLastEditedFormValues] = useState({})
   const [isUserAllowed, setIsUserAllowed] = useState(true)
   const params = useParams()
   const dispatch = useDispatch()
+  const projectStore = useSelector(store => store.projectStore)
   const formRef = React.useRef(
     createForm({
       initialValues: {},
@@ -63,34 +59,36 @@ const ProjectSettingsSecrets = ({
 
   const fetchSecrets = useCallback(() => {
     setIsUserAllowed(true)
-    fetchProjectSecrets(params.projectName).catch(error => {
-      const customErrorMsg =
-        error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-          ? 'Permission denied'
-          : getErrorMsg(error, 'Failed to fetch project data')
+    dispatch(fetchProjectSecrets({ project: params.projectName }))
+      .unwrap()
+      .catch(error => {
+        const customErrorMsg =
+          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+            ? 'Permission denied'
+            : getErrorMsg(error, 'Failed to fetch project data')
 
-      showErrorNotification(dispatch, error, '', customErrorMsg, () => {
-        fetchSecrets()
+        showErrorNotification(dispatch, error, '', customErrorMsg, () => {
+          fetchSecrets()
+        })
       })
-    })
-  }, [dispatch, fetchProjectSecrets, params.projectName])
+  }, [dispatch, params.projectName])
 
   useEffect(() => {
     fetchSecrets()
 
     return () => {
-      removeProjectData()
+      dispatch(removeProjectData())
     }
-  }, [fetchSecrets, removeProjectData, params.projectName])
+  }, [dispatch, fetchSecrets, params.projectName])
 
   useEffect(() => {
     const formSecrets = projectStore.project.secrets?.data['secret_keys']
       ? projectStore.project.secrets.data['secret_keys'].map(secret => ({
-        data: {
-          key: secret,
-          value: ''
-        }
-      }))
+          data: {
+            key: secret,
+            value: ''
+          }
+        }))
       : []
     const newInitial = {
       secrets: formSecrets
@@ -141,18 +139,18 @@ const ProjectSettingsSecrets = ({
         areFormValuesChanged(lastEditedFormValues, formStateLocal.values) &&
         formStateLocal.valid
       ) {
-        const modificationType  =
+        const modificationType =
           formStateLocal.values.secrets.length > lastEditedFormValues.secrets.length
             ? ADD_PROJECT_SECRET
             : formStateLocal.values.secrets.length === lastEditedFormValues.secrets.length
               ? EDIT_PROJECT_SECRET
               : DELETE_PROJECT_SECRET
         const primarySecretsArray =
-          modificationType  === DELETE_PROJECT_SECRET
+          modificationType === DELETE_PROJECT_SECRET
             ? lastEditedFormValues.secrets
             : formStateLocal.values.secrets
         const secondarySecretsArray =
-          modificationType  === DELETE_PROJECT_SECRET
+          modificationType === DELETE_PROJECT_SECRET
             ? formStateLocal.values.secrets
             : lastEditedFormValues.secrets
         const differences = differenceWith(primarySecretsArray, secondarySecretsArray, isEqual)
@@ -164,13 +162,13 @@ const ProjectSettingsSecrets = ({
           }))
           const newFormValues = { secrets: newSecrets }
           const requestData =
-            modificationType  === DELETE_PROJECT_SECRET
+            modificationType === DELETE_PROJECT_SECRET
               ? changedData.key
               : { provider: 'kubernetes', secrets: { [changedData.key]: changedData.value } }
 
           setLastEditedFormValues(newFormValues)
           formStateRef.current.form.restart(newFormValues)
-          modifyProjectSecret(modificationType , requestData)
+          modifyProjectSecret(modificationType, requestData)
         }
       }
     })
@@ -225,9 +223,4 @@ const ProjectSettingsSecrets = ({
   )
 }
 
-export default connect(
-  ({ projectStore }) => ({
-    projectStore
-  }),
-  { ...projectsAction }
-)(ProjectSettingsSecrets)
+export default ProjectSettingsSecrets
