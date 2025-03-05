@@ -31,25 +31,6 @@ $stickyHeaderHeight: 55px;
     height: fit-content;
     margin-bottom: 30px;
 
-    &__custom-filters {
-      position: sticky;
-      top: 0;
-      z-index: 2;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: flex-end;
-      background-color: $white;
-
-      > * {
-        margin: 0 0 15px 0;
-      }
-
-      .details-date-picker {
-        margin-left: 15px;
-      }
-    }
-
     &__app-name {
       color: $primary;
       font-weight: 700;
