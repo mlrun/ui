@@ -31,11 +31,10 @@ import { createJobsWorkflowsTabContent } from '../../../utils/createJobsContent'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
-import detailsActions from '../../../actions/details'
-
-import './monitorWorkflows.scss'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 import { deleteWorkflows } from '../../../reducers/workflowReducer'
+
+import './monitorWorkflows.scss'
 
 const MonitorWorkflows = ({ fetchFunctionLogs }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
@@ -63,7 +62,7 @@ const MonitorWorkflows = ({ fetchFunctionLogs }) => {
     initialTabData[MONITOR_WORKFLOWS_TAB]?.parseQueryParamsCallback
   )
 
-  usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
+  usePods(dispatch, selectedJob)
 
   const tableContent = useMemo(
     () =>

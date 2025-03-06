@@ -53,7 +53,6 @@ const AlertsView = ({
   filtersStore,
   handleCancel,
   handleRefreshAlerts,
-  handleRefreshWithFilters,
   isCrossProjects,
   navigate,
   navigateToPerProjectAlertsPage,
@@ -131,7 +130,6 @@ const AlertsView = ({
                     getCloseDetailsLink(isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE_PATH)
                   }
                   pageData={pageData}
-                  retryRequest={handleRefreshWithFilters}
                   selectedItem={isAlertsPage ? selectedAlert : {}}
                   tableClassName="alerts-table"
                   handleCancel={handleCancel}
@@ -191,7 +189,6 @@ AlertsView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   handleCancel: PropTypes.func,
   handleRefreshAlerts: PropTypes.func.isRequired,
-  handleRefreshWithFilters: PropTypes.func.isRequired,
   isAlertsPage: PropTypes.bool,
   isCrossProjects: PropTypes.bool.isRequired,
   navigate: PropTypes.func,

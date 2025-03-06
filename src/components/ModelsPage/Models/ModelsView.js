@@ -53,7 +53,6 @@ const ModelsView = React.forwardRef(
       filtersStore,
       getAndSetSelectedArtifact,
       handleRefreshModels,
-      handleRefreshWithFilters,
       handleRegisterModel,
       handleTrainModel,
       historyBackLink,
@@ -140,11 +139,12 @@ const ModelsView = React.forwardRef(
                   }
                   handleCancel={() => setSelectedModel({})}
                   pageData={pageData}
-                  retryRequest={handleRefreshWithFilters}
                   selectedItem={selectedModel}
                   tab={MODELS_TAB}
                   tableClassName="models-table"
-                  tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
+                  tableHeaders={
+                    !isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)
+                  }
                   viewMode={viewMode}
                 >
                   {tableContent.map((tableItem, index) => (
@@ -195,7 +195,6 @@ ModelsView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
   handleRefreshModels: PropTypes.func.isRequired,
-  handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterModel: PropTypes.func.isRequired,
   handleTrainModel: PropTypes.func.isRequired,
   historyBackLink: PropTypes.string.isRequired,

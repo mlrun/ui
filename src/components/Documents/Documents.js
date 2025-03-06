@@ -216,10 +216,6 @@ const Documents = ({ isAllVersions = false }) => {
     [fetchData, fetchTags]
   )
 
-  const handleRefreshWithFilters = useCallback(() => {
-    refreshDocuments(documentsFilters)
-  }, [documentsFilters, refreshDocuments])
-
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
@@ -439,7 +435,6 @@ const Documents = ({ isAllVersions = false }) => {
       handleRefreshDocuments={
         isAllVersions ? handleRefreshDocumentVersions : handleRefreshDocuments
       }
-      handleRefreshWithFilters={handleRefreshWithFilters}
       historyBackLink={historyBackLink}
       isAllVersions={isAllVersions}
       isSelectedArtifactBeyondTheList={isSelectedArtifactBeyondTheList}

@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { chain, isEmpty, isNil } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
@@ -57,7 +57,6 @@ import {
   handleApplyDetailsChanges,
   handleDeployModelFailure
 } from './models.util'
-import detailsActions from '../../../actions/details'
 import { createModelsRowData } from '../../../utils/createArtifactsContent'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { getSavedSearchParams, transformSearchParams } from '../../../utils/filter.util'
@@ -74,8 +73,9 @@ import { usePagination } from '../../../hooks/usePagination.hook'
 import { useRefreshAfterDelete } from '../../../hooks/useRefreshAfterDelete.hook'
 
 import './models.scss'
+import { fetchModelFeatureVector } from '../../../reducers/detailsReducer'
 
-const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
+const Models = ({ isAllVersions }) => {
   const [models, setModels] = useState(null)
   const [modelVersions, setModelVersions] = useState(null)
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
@@ -276,10 +276,6 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
     [fetchData, fetchTags]
   )
 
-  const handleRefreshWithFilters = useCallback(() => {
-    refreshModels(modelsFilters)
-  }, [modelsFilters, refreshModels])
-
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
@@ -406,12 +402,12 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
       isEmpty(detailsStore.modelFeatureVectorData)
     ) {
       const { name, tag } = getFeatureVectorData(selectedModel.feature_vector)
-      fetchModelFeatureVector(params.projectName, name, tag)
+      dispatch(fetchModelFeatureVector({ project: params.projectName, name, reference: tag }))
     }
   }, [
     detailsStore.error,
     detailsStore.modelFeatureVectorData,
-    fetchModelFeatureVector,
+    dispatch,
     params.projectName,
     selectedModel.feature_vector
   ])
@@ -565,7 +561,6 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}
       handleRefreshModels={isAllVersions ? handleRefreshModelVersions : handleRefreshModels}
-      handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterModel={handleRegisterModel}
       handleTrainModel={handleTrainModel}
       historyBackLink={historyBackLink}
@@ -591,6 +586,4 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
   )
 }
 
-export default connect(null, {
-  ...detailsActions
-})(Models)
+export default Models

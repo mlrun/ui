@@ -44,7 +44,6 @@ import {
   REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
-import detailsActions from '../../actions/details'
 import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
 import { FILTERS_CONFIG } from '../../types'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
@@ -54,6 +53,7 @@ import {
   toggleAutoRefresh,
   toggleInternalAutoRefresh
 } from '../../reducers/filtersReducer'
+import { setFiltersWasHandled, showWarning } from '../../reducers/detailsReducer'
 
 import { ReactComponent as CollapseIcon } from 'igz-controls/images/collapse.svg'
 import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
@@ -154,8 +154,8 @@ const ActionBar = ({
         }
         window.addEventListener('discardChanges', handleDiscardChanges)
 
-        dispatch(detailsActions.setFiltersWasHandled(true))
-        dispatch(detailsActions.showWarning(true))
+        dispatch(setFiltersWasHandled(true))
+        dispatch(showWarning(true))
       })
     }
 
@@ -173,20 +173,20 @@ const ActionBar = ({
                 !isEqual(filtersConfig[filterName].initialValue, filterValue)
               ) {
                 let newFilterValue = filterValue
-  
+
                 if (filterName === DATES_FILTER) {
                   newFilterValue =
                     filterValue.initialSelectedOptionId === CUSTOM_RANGE_DATE_OPTION
                       ? filterValue.value.map(date => new Date(date).getTime()).join('-')
                       : filterValue.initialSelectedOptionId
                 }
-  
+
                 prevSearchParams.set(filterName, newFilterValue)
               } else {
                 prevSearchParams.delete(filterName)
               }
             }
-  
+
             return prevSearchParams
           },
           { replace: true }

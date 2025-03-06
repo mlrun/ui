@@ -219,10 +219,6 @@ const Files = ({ isAllVersions = false }) => {
     [fetchData, fetchTags]
   )
 
-  const handleRefreshWithFilters = useCallback(() => {
-    refreshFiles(filesFilters)
-  }, [filesFilters, refreshFiles])
-
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
@@ -444,7 +440,6 @@ const Files = ({ isAllVersions = false }) => {
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}
       handleRefreshFiles={isAllVersions ? handleRefreshFileVersions : handleRefreshFiles}
-      handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterArtifact={handleRegisterArtifact}
       historyBackLink={historyBackLink}
       isAllVersions={isAllVersions}
