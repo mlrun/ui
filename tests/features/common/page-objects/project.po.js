@@ -95,20 +95,6 @@ const projectJobsAndWorkflows = {
   }
 }
 
-const generalInfoMonoValueCards = {
-  root: '.main-info__statistics-section:nth-of-type(3)',
-  header: {},
-  body: {
-    row: {
-      root: '.project-data-card',
-      fields: {
-        name: '.project-data-card__header-text',
-        value: '.project-data-card__statistics'
-      }
-    }
-  }
-}
-
 const generalInfoJobsCardStat = {
   root: '.main-info__statistics-section .project-data-card:nth-of-type(1)',
   header: {},
@@ -308,7 +294,23 @@ module.exports = {
     See_All_Jobs_Link: By.css(
       '.project-data-card:nth-of-type(1) .project-data-card__see-all-link'
     ),
-    Mono_Values_Cards: commonTable(generalInfoMonoValueCards),
+    Mono_Values_Cards: By.css('.main-info__statistics-section:nth-of-type(3)'),
+    Model_Stats_Title: By.css('.main-info__statistics-section_left .stats-card:nth-of-type(1) .stats-card__row:nth-of-type(1) .stats-card__title span'),
+    Model_Stats_Tip: By.css('.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(1) [data-testid="tip"]'),
+    Model_Stats_Counter: By.css('.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) [data-testid="monitoring-Models"] .stats__counter'),
+    FeatureSets_Stats_Title: By.css('.main-info__statistics-section_left .stats-card:nth-of-type(2) .stats-card__row:nth-of-type(1) .stats-card__title span'),
+    FeatureSets_Stats_Tip: By.css('.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(1) [data-testid="tip"]'),
+    FeatureSets_Stats_Counter: By.css('.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) [data-testid="monitoring-Feature sets"] .stats__counter'),
+    Artifacts_Stats_Title: By.css('.main-info__statistics-section_left .stats-card:nth-of-type(3) .stats-card__row:nth-of-type(1) .stats-card__title span'),
+    Artifacts_Stats_Tip: By.css('.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(1) [data-testid="tip"]'),
+    Artifacts_Stats_Counter: By.css('.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) [data-testid="monitoring-Artifacts"] .stats__counter'),
+    ConsumerGroups_Stats_Title: By.css('.main-info__statistics-section_right .stats-card:nth-of-type(1) .stats-card__row:nth-of-type(1) .stats-card__title span'),
+    ConsumerGroups_Stats_Counter: By.css('.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) [data-testid="monitoring-Consumer groups"] .stats__counter'),
+    Alerts_Stats_Title: By.css('.main-info__statistics-section_right .stats-card:nth-of-type(2) .stats-card__row:nth-of-type(1) .stats-card__title span'),
+    Alerts_Stats_Total_Number: By.css('.main-info__statistics-section_right .stats-card:nth-of-type(2) [data-testid="alerts_total_counter"] .stats__counter'),
+    Alerts_Stats_Endpoint_Number: By.css('.main-info__statistics-section_right .stats-card:nth-of-type(2) [data-testid="alerts_endpoint_counter"] .stats__counter'),
+    Alerts_Stats_Jobs_Number: By.css('.main-info__statistics-section_right .stats-card:nth-of-type(2) [data-testid="alerts_jobs_counter"] .stats__counter'),
+    Alerts_Stats_Application_Number: By.css('.main-info__statistics-section_right .stats-card:nth-of-type(2) [data-testid="alerts_application_counter"] .stats__counter'),
     Jobs_Info_Card_Statistics: commonTable(generalInfoJobsCardStat),
     Real_Time_Functions_Card_Statistics: commonTable(
       generalInfoRealTimeFunctionsCardStat

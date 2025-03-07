@@ -15,6 +15,25 @@ Feature: Project Monitoring Page
         Then verify "Dashboard_Realtime_Functions_Table" element visibility on "Project" wizard
         Then verify "Jobs_And_Workflows" element visibility on "Project" wizard
         Then verify "Mono_Values_Cards" element visibility on "Project" wizard
+        Then verify "Model_Stats_Title" element visibility on "Project" wizard
+        Then verify "Model_Stats_Tip" element visibility on "Project" wizard
+        Then verify "Model_Stats_Tip" element on "Project" wizard should display hover hint "Label_Hint"."Model_Stats_Tip"
+        Then verify "Model_Stats_Counter" element visibility on "Project" wizard
+        Then verify "FeatureSets_Stats_Title" element visibility on "Project" wizard
+        Then verify "FeatureSets_Stats_Tip" element visibility on "Project" wizard
+        Then verify "FeatureSets_Stats_Tip" element on "Project" wizard should display hover hint "Label_Hint"."FeatureSets_Stats_Tip"
+        Then verify "FeatureSets_Stats_Counter" element visibility on "Project" wizard
+        Then verify "Artifacts_Stats_Title" element visibility on "Project" wizard
+        Then verify "Artifacts_Stats_Tip" element visibility on "Project" wizard
+        Then verify "Artifacts_Stats_Tip" element on "Project" wizard should display hover hint "Label_Hint"."Artifacts_Stats_Tip"
+        Then verify "Artifacts_Stats_Counter" element visibility on "Project" wizard
+        Then verify "Alerts_Stats_Title" element visibility on "Project" wizard
+        Then verify "Alerts_Stats_Total_Number" element visibility on "Project" wizard
+        Then verify "Alerts_Stats_Endpoint_Number" element visibility on "Project" wizard
+        Then verify "Alerts_Stats_Jobs_Number" element visibility on "Project" wizard
+        Then verify "Alerts_Stats_Application_Number" element visibility on "Project" wizard
+        Then verify "ConsumerGroups_Stats_Title" element visibility on "Project" wizard
+        Then verify "ConsumerGroups_Stats_Counter" element visibility on "Project" wizard
         Then verify "Jobs_Info_Card_Statistics" element visibility on "Project" wizard
         Then verify "Real_Time_Functions_Card_Statistics" element visibility on "Project" wizard
         When hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -46,6 +65,7 @@ Feature: Project Monitoring Page
         Then verify "ML_Functions_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Real_Time_Functions_Button" element visibility on "commonPagesHeader" wizard
         Then verify "API_Gateways_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Alerts_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Project_Settings_Button" element visibility on "commonPagesHeader" wizard
         #check invisibility of menu buttons and visibility of menu icons with unpinned 'Navigation_Bar'
         Then click on "Pin_Quick_Link_Button" element on "commonPagesHeader" wizard
@@ -72,6 +92,8 @@ Feature: Project Monitoring Page
         Then verify "Real_Time_Functions_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "API_Gateways_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "API_Gateways_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Alerts_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Alerts_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Project_Settings_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Project_Settings_Icon" element visibility on "commonPagesHeader" wizard
         #check that 'Navigation_Bar' save the state through different pages
@@ -106,7 +128,7 @@ Feature: Project Monitoring Page
         And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         And wait load page
         Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
-        #check navigation between pages  Project monitoring and Quick-actions due to instance links
+        #check navigation between pages Project monitoring and Quick-actions due to instance links
         Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         Then click on "Project_Quick_Actions_Instance" element on "commonPagesHeader" wizard
         Then verify "Quick_actions_Active" not input element on "commonPagesHeader" wizard is active
@@ -138,7 +160,7 @@ Feature: Project Monitoring Page
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
-        Then select "Register Artifact" option in "Create_New" dropdown on "Project" wizard
+        Then select "Register artifact" option in "Create_New" dropdown on "Project" wizard
         Then "Title" element on "Register_File_Popup" should contains "Register Artifact" value
         Then "Form_Text" component on "Register_File_Popup" should contains "Register_Artifact"."Form_Text"
         Then "Form_Subtext" component on "Register_File_Popup" should contains "Register_Artifact"."Form_Subtext"
@@ -189,8 +211,8 @@ Feature: Project Monitoring Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
-        Then select "Register Model" option in "Create_New" dropdown on "Project" wizard
+        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options_Demo"
+        Then select "Register model" option in "Create_New" dropdown on "Project" wizard
         Then "Title" element on "Register_Model_Popup" should contains "Register Model" value
         Then verify "Cross_Cancel_Button" element visibility on "Register_Model_Popup" wizard
         Then verify "New_File_Name_Input" element visibility on "Register_Model_Popup" wizard
@@ -233,7 +255,7 @@ Feature: Project Monitoring Page
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
-        Then select "Register Dataset" option in "Create_New" dropdown on "Project" wizard
+        Then select "Register dataset" option in "Create_New" dropdown on "Project" wizard
         Then "Title" element on "Register_Dataset" should contains "Register Dataset" value
         Then "Form_Text" component on "Register_Dataset" should contains "Register_Dataset"."Form_Text"
         Then "Form_Subtext" component on "Register_Dataset" should contains "Register_Dataset"."Form_Subtext"
@@ -373,7 +395,7 @@ Feature: Project Monitoring Page
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
         When turn on demo mode with query params "false"
         And wait load page
-        Then select "ML Function" option in "Create_New" dropdown on "Project" wizard
+        Then select "ML function" option in "Create_New" dropdown on "Project" wizard
         Then "Title" element on "Create_ML_Function_Popup" should contains "Create New Function" value
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
@@ -433,7 +455,7 @@ Feature: Project Monitoring Page
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
         When turn on demo mode with query params "false"
         And wait load page
-        Then select "ML Function" option in "Create_New" dropdown on "Project" wizard
+        Then select "ML function" option in "Create_New" dropdown on "Project" wizard
         Then "Title" element on "Create_ML_Function_Popup" should contains "Create New Function" value
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
@@ -488,7 +510,8 @@ Feature: Project Monitoring Page
         Then verify "Access_Key_Checkbox" element visibility on "New_Function" wizard
         Then verify "Cancel_Button" element visibility on "New_Function" wizard
         Then verify "Save_Button" element visibility on "New_Function" wizard
-        Then verify "Deploy_Button" element visibility on "New_Function" wizard
+        # Deploy button available for Serving function 
+        # Then verify "Deploy_Button" element visibility on "New_Function" wizard
 
     @MLPM
     @passive
@@ -499,7 +522,7 @@ Feature: Project Monitoring Page
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
-        Then select "Feature Set" option in "Create_New" dropdown on "Project" wizard
+        Then select "Feature set" option in "Create_New" dropdown on "Project" wizard
         Then verify "Cross_Close_Button" element visibility on "New_Feature_Set" wizard
         Then verify "Feature_Set_Name_Input" element visibility on "New_Feature_Set" wizard
         Then verify "Version_Input" element visibility on "New_Feature_Set" wizard
@@ -542,7 +565,7 @@ Feature: Project Monitoring Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on cell with value "Models" in "name" column in "Mono_Values_Cards" table on "Project" wizard
+        Then click on "Model_Stats_Counter" element on "Project" wizard
         And wait load page
         Then verify "Table_Name_Filter_Input" element visibility on "Models" wizard
         Then click on "Table_FilterBy_Button" element on "Models" wizard
@@ -551,7 +574,7 @@ Feature: Project Monitoring Page
         Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
         Then verify "Table_Refresh_Button" element visibility on "Models" wizard
         Then verify "Models_Table" element visibility on "Models" wizard
-        When turn on demo mode with query params "false"
+        When turn on demo mode with query params "true"
         And wait load page
         Then verify "Register_Model_Button" element visibility on "Models" wizard
         Then "Register_Model_Button" element on "Models" should contains "Register model" value
@@ -563,7 +586,7 @@ Feature: Project Monitoring Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on cell with value "Feature sets" in "name" column in "Mono_Values_Cards" table on "Project" wizard
+        Then click on "FeatureSets_Stats_Counter" element on "Project" wizard
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -587,7 +610,7 @@ Feature: Project Monitoring Page
         Then verify "Feature_Sets_Table" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature_Store_Tab_Selector" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
-        Then "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" should contains "Create Set" value
+        Then "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" should contains "Create set" value
 
     @MLPM
     @passive
@@ -596,7 +619,7 @@ Feature: Project Monitoring Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on cell with value "Artifacts" in "name" column in "Mono_Values_Cards" table on "Project" wizard
+        Then click on "Artifacts_Stats_Counter" element on "Project" wizard
         And wait load page
         Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
         Then click on "Table_FilterBy_Button" element on "Files" wizard
@@ -623,10 +646,10 @@ Feature: Project Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Table_FilterBy_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Batch_Run_Button" element visibility on "Jobs_Monitor_Tab" wizard
-        Then "Batch_Run_Button" element on "Jobs_Monitor_Tab" should contains "Batch Run" value
+        Then "Batch_Run_Button" element on "Jobs_Monitor_Tab" should contains "Batch run" value
         Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Auto_Refresh_Checkbox" element visibility on "Jobs_Monitor_Tab" wizard
-        Then "Auto_Refresh_Checkbox" element should be checked on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
         
@@ -645,7 +668,7 @@ Feature: Project Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Table_FilterBy_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Batch_Run_Button" element visibility on "Schedule_Monitor_Tab" wizard
-        Then "Batch_Run_Button" element on "Schedule_Monitor_Tab" should contains "Batch Run" value
+        Then "Batch_Run_Button" element on "Schedule_Monitor_Tab" should contains "Batch run" value
         Then verify "Table_Refresh_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Schedule_Monitor_Table" element visibility on "Schedule_Monitor_Tab" wizard
 
@@ -706,7 +729,7 @@ Feature: Project Monitoring Page
         Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify "Batch_Run_Button" element visibility on "Jobs_Monitor_Tab" wizard
-        Then "Batch_Run_Button" element on "Jobs_Monitor_Tab" should contains "Batch Run" value
+        Then "Batch_Run_Button" element on "Jobs_Monitor_Tab" should contains "Batch run" value
         Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Name_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
@@ -733,7 +756,7 @@ Feature: Project Monitoring Page
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Overview_Headers" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Overview_Headers"
         Then compare "Header" element value on "Jobs_Monitor_Tab_Info_Pane" wizard with test "name" context value
-        Then compare current browser URL with test "href" context value
+        Then verify redirection to "projects/default/jobs/monitor-jobs/erann-test/1d3a8b0833b74f55b008537b1e19ea57/overview?bePage=1&fePage=1"
 
     @MLPM
     @passive
@@ -743,7 +766,7 @@ Feature: Project Monitoring Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on cell with value "Consumer groups" in "name" column in "Mono_Values_Cards" table on "Project" wizard
+        Then click on "ConsumerGroups_Stats_Counter" element on "Project" wizard
         And wait load page
         Then "Title" element on "Consumer_Groups" should contains "Consumer groups (v3io stream)" value
         Then "Description" element on "Consumer_Groups" should contains "This report displays the project's consumer groups for Iguazio v3io streams" value
@@ -769,7 +792,7 @@ Feature: Project Monitoring Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on cell with value "Consumer groups" in "name" column in "Mono_Values_Cards" table on "Project" wizard
+        Then click on "ConsumerGroups_Stats_Counter" element on "Project" wizard
         And wait load page
         Then verify "Search_Input" element visibility on "Consumer_Groups" wizard
         Then verify "Consumer_Groups_Table" element visibility on "Consumer_Groups" wizard
@@ -788,13 +811,13 @@ Feature: Project Monitoring Page
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on cell with value "Consumer groups" in "name" column in "Mono_Values_Cards" table on "Project" wizard
+        Then click on "ConsumerGroups_Stats_Counter" element on "Project" wizard
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Consumer_Group_Yet"
         Then select "project" with "default" value in breadcrumbs menu
         And wait load page
-        Then click on cell with value "Consumer groups" in "name" column in "Mono_Values_Cards" table on "Project" wizard
+        Then click on "ConsumerGroups_Stats_Counter" element on "Project" wizard
         And wait load page
         And save to context "consumer_group_name" column and "href" attribute on 1 row from "Consumer_Groups_Table" table on "Consumer_Groups" wizard
         And click on cell with row index 1 in "consumer_group_name" column in "Consumer_Groups_Table" table on "Consumer_Groups" wizard
@@ -818,7 +841,7 @@ Feature: Project Monitoring Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on cell with value "Consumer groups" in "name" column in "Mono_Values_Cards" table on "Project" wizard
+        Then click on "ConsumerGroups_Stats_Counter" element on "Project" wizard
         And wait load page
         And click on cell with row index 1 in "consumer_group_name" column in "Consumer_Groups_Table" table on "Consumer_Groups" wizard
         And wait load page
@@ -831,4 +854,94 @@ Feature: Project Monitoring Page
         Then value in "shard_name" column with "text" in "Shard_Lags_Table" on "Consumer_Groups" wizard should contains "shard-id-0"
         Then type value "randomText" to "Search_Input" field on "Consumer_Groups" wizard
         Then check "shard-id-0" value not in "shard_name" column in "Shard_Lags_Table" table on "Consumer_Groups" wizard
-        
+
+    @MLPM
+    @smoke
+    Scenario: MLPM023 - Check all mandatory components on Alerts page
+        Given open url
+        And click on row root with value "auto-generated-data" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then click on "Alerts_Stats_Total_Number" element on "Project" wizard
+        And wait load page
+        Then verify "Search_By_Name_Filter_Input" element visibility on "Alerts" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Alerts" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Alerts" wizard selected option value "Past 24 hours"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Alerts" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Alerts" wizard
+        And wait load page
+        Then verify "Alerts_Table" element visibility on "Alerts" wizard
+        Then verify "Table_FilterBy_Button" element visibility on "Alerts" wizard
+        Then verify "Table_FilterBy_Button" element on "Alerts" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
+        Then verify "Refresh_Button" element visibility on "Alerts" wizard
+        Then verify "Refresh_Button" element on "Alerts" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
+        Then click on "Table_FilterBy_Button" element on "Alerts" wizard
+        Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+        Then verify "Entity_Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Entity_Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then verify "Severity_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Severity_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then verify "Event_Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Event_Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
+        And wait load page
+        Then click on "Alerts_Stats_Endpoint_Number" element on "Project" wizard
+        And wait load page
+        Then verify "Search_By_Name_Filter_Input" element visibility on "Alerts" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Alerts" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Alerts" wizard selected option value "Past 24 hours"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Alerts" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        Then verify "Table_FilterBy_Button" element on "Alerts" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
+        Then click on "Table_FilterBy_Button" element on "Alerts" wizard
+        Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+        Then verify "Entity_Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Entity_Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Endpoint"
+        Then verify "Entity_Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Entity_Type_Filter_Options"
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then verify "Severity_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then verify "Severity_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Severity_Filter_Options"
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then verify "Event_Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Event_Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
+        And wait load page
+        Then click on "Alerts_Stats_Jobs_Number" element on "Project" wizard
+        And wait load page
+        Then verify "Search_By_Name_Filter_Input" element visibility on "Alerts" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Alerts" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Alerts" wizard selected option value "Past 24 hours"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Alerts" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        Then verify "Table_FilterBy_Button" element on "Alerts" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
+        Then click on "Table_FilterBy_Button" element on "Alerts" wizard
+        Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+        Then verify "Entity_Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Entity_Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Job"
+        Then verify "Entity_Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Entity_Type_Filter_Options"
+        Then verify "Alerts_Table" element visibility on "Alerts" wizard
+        Then verify "Severity_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then verify "Severity_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Severity_Filter_Options"
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then verify "Event_Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Event_Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
+        And wait load page
+        Then click on "Alerts_Stats_Application_Number" element on "Project" wizard
+        And wait load page
+        Then verify "Search_By_Name_Filter_Input" element visibility on "Alerts" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Alerts" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Alerts" wizard selected option value "Past 24 hours"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Alerts" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        Then verify "Table_FilterBy_Button" element on "Alerts" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
+        Then click on "Table_FilterBy_Button" element on "Alerts" wizard
+        Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+        Then verify "Entity_Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Entity_Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Application"
+        Then verify "Entity_Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Entity_Type_Filter_Options"
+        Then verify "Severity_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then verify "Severity_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Severity_Filter_Options"
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then verify "Event_Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Event_Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
