@@ -20,12 +20,17 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import { useDispatch, useSelector } from 'react-redux'
+
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { performDetailsActionHelper } from '../../components/Details/details.util'
 
 import './actionsMenuItem.scss'
 
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
-
 const ActionsMenuItem = ({ dataItem = {}, index, isIconDisplayed, menuItem }) => {
+  const dispatch = useDispatch()
+  const changes = useSelector(store => store.detailsStore.changes)
+
   const iconClassNames = classnames(
     'actions-menu__icon',
     isIconDisplayed && 'actions-menu__icon_visible'
@@ -36,15 +41,25 @@ const ActionsMenuItem = ({ dataItem = {}, index, isIconDisplayed, menuItem }) =>
     menuItem.disabled && 'actions-menu__option_disabled'
   )
 
+  const handleActionClick = async () => {
+    if (!menuItem.disabled) {
+      if (menuItem.allowLeaveWarning) {
+        const actionCanBePerformed = await performDetailsActionHelper(changes, dispatch)
+
+        if (actionCanBePerformed) {
+          menuItem.onClick(dataItem)
+        }
+      } else {
+        menuItem.onClick(dataItem)
+      }
+    }
+  }
+
   return (
     <li
       data-testid={`actions-menu__option-${index}`}
       className={menuClassNames}
-      onClick={event => {
-        if (!menuItem.disabled) {
-          menuItem.onClick(dataItem)
-        }
-      }}
+      onClick={handleActionClick}
     >
       <Tooltip
         template={<TextTooltipTemplate text={menuItem.tooltip} />}
