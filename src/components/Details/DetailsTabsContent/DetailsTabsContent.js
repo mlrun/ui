@@ -77,12 +77,7 @@ const DetailsTabsContent = ({
   handlePreview,
   isDetailsPopUp = false,
   pageData,
-  selectedItem,
-  setChanges,
-  setChangesCounter,
-  setChangesData,
-  setIteration,
-  setIterationOption
+  selectedItem
 }) => {
   const detailsStore = useSelector(store => store.detailsStore)
   const params = useParams()
@@ -97,8 +92,6 @@ const DetailsTabsContent = ({
           pageData={pageData}
           ref={applyChangesRef}
           selectedItem={selectedItem}
-          setChangesCounter={setChangesCounter}
-          setChangesData={setChangesData}
         />
       )
     case DETAILS_DRIFT_ANALYSIS_TAB:
@@ -138,8 +131,6 @@ const DetailsTabsContent = ({
           isDetailsPopUp={isDetailsPopUp}
           iteration={detailsStore.iteration}
           selectedItem={selectedItem}
-          setIteration={setIteration}
-          setIterationOption={setIterationOption}
         />
       )
     case DETAILS_RESULTS_TAB:
@@ -229,9 +220,6 @@ const DetailsTabsContent = ({
           formState={formState}
           isDetailsPopUp={isDetailsPopUp}
           selectedItem={selectedItem}
-          setChanges={setChanges}
-          setChangesData={setChangesData}
-          setChangesCounter={setChangesCounter}
         />
       )
     case DETAILS_ALERT_APPLICATION:
@@ -243,8 +231,6 @@ const DetailsTabsContent = ({
           pageData={pageData}
           ref={applyChangesRef}
           selectedItem={selectedItem}
-          setChangesCounter={setChangesCounter}
-          setChangesData={setChangesData}
         />
       )
     case DETAILS_COLLECTIONS_TAB:
@@ -257,12 +243,7 @@ const DetailsTabsContent = ({
 DetailsTabsContent.propTypes = {
   handlePreview: PropTypes.func.isRequired,
   pageData: PropTypes.shape({}).isRequired,
-  selectedItem: PropTypes.shape({}).isRequired,
-  setChanges: PropTypes.func.isRequired,
-  setChangesCounter: PropTypes.func.isRequired,
-  setChangesData: PropTypes.func.isRequired,
-  setIteration: PropTypes.func.isRequired,
-  setIterationOption: PropTypes.func.isRequired
+  selectedItem: PropTypes.shape({}).isRequired
 }
 
 export default React.memo(DetailsTabsContent)

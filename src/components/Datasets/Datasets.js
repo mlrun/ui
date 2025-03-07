@@ -223,10 +223,6 @@ const Datasets = ({ isAllVersions = false }) => {
     [fetchData, fetchTags]
   )
 
-  const handleRefreshWithFilters = useCallback(() => {
-    refreshDatasets(datasetsFilters)
-  }, [datasetsFilters, refreshDatasets])
-
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
@@ -447,7 +443,6 @@ const Datasets = ({ isAllVersions = false }) => {
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}
       handleRefreshDatasets={isAllVersions ? handleRefreshDatasetVersions : handleRefreshDatasets}
-      handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterDataset={handleRegisterDataset}
       historyBackLink={historyBackLink}
       isAllVersions={isAllVersions}

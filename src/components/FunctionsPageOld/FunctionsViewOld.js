@@ -65,7 +65,6 @@ const FunctionsViewOld = ({
   isDemoMode,
   pageData,
   requestErrorMessage,
-  retryRequest,
   selectedFunction,
   setSearchParams,
   tableContent,
@@ -125,7 +124,6 @@ const FunctionsViewOld = ({
                   actionsMenu={actionsMenu}
                   handleCancel={handleCancel}
                   pageData={pageData}
-                  retryRequest={retryRequest}
                   selectedItem={selectedFunction}
                   tableClassName="functions-table"
                   tableHeaders={tableContent[0]?.content ?? []}
@@ -207,7 +205,6 @@ FunctionsViewOld.propTypes = {
   handleSelectFunction: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
-  retryRequest: PropTypes.func.isRequired,
   selectedFunction: PropTypes.object.isRequired,
   setSearchParams: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,

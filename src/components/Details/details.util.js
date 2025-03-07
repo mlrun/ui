@@ -46,6 +46,7 @@ import { formatDatetime, generateLinkPath, parseUri } from '../../utils'
 import { isArtifactTagUnique } from '../../utils/artifacts.util'
 import { getFunctionImage } from '../FunctionsPage/functions.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { setChangesCounter, setChangesData } from '../../reducers/detailsReducer'
 
 export const generateArtifactsContent = (
   detailsType,
@@ -496,10 +497,9 @@ export const handleFinishEdit = (
   changes,
   detailsTabActions,
   detailsTabDispatch,
-  setChangesData,
-  setChangesCounter,
   currentField,
   formState,
+  dispatch,
   fields
 ) => {
   detailsTabDispatch({
@@ -539,8 +539,8 @@ export const handleFinishEdit = (
     })
   }
 
-  setChangesCounter(countChanges(changesData))
-  setChangesData({ ...changesData })
+  dispatch(setChangesCounter(countChanges(changesData)))
+  dispatch(setChangesData({ ...changesData }))
 }
 
 export const countChanges = changesData => {

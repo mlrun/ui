@@ -24,7 +24,6 @@ import { useDispatch } from 'react-redux'
 
 import DetailsInfoView from './DetailsInfoView'
 
-import detailsActions from '../../actions/details'
 import { detailsInfoActions, detailsInfoReducer, initialState } from './detailsInfoReducer'
 import { handleFinishEdit } from '../Details/details.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
@@ -36,20 +35,10 @@ import {
   generateSourcesDetailsInfo,
   generateAlertsDetailsInfo
 } from './detailsInfo.util'
+import { setEditMode } from '../../reducers/detailsReducer'
 
 const DetailsInfo = React.forwardRef(
-  (
-    {
-      detailsStore,
-      formState,
-      isDetailsPopUp,
-      pageData,
-      selectedItem,
-      setChangesCounter,
-      setChangesData
-    },
-    applyChangesRef
-  ) => {
+  ({ detailsStore, formState, isDetailsPopUp, pageData, selectedItem }, applyChangesRef) => {
     const location = useLocation()
     const [detailsInfoState, detailsInfoDispatch] = useReducer(detailsInfoReducer, initialState)
     const params = useParams()
@@ -66,7 +55,7 @@ const DetailsInfo = React.forwardRef(
           detailsInfoDispatch({
             type: detailsInfoActions.RESET_EDIT_MODE
           })
-          dispatch(detailsActions.setEditMode(false))
+          dispatch(setEditMode(false))
         }
       },
       [applyChangesRef, dispatch]
@@ -94,7 +83,7 @@ const DetailsInfo = React.forwardRef(
       detailsInfoDispatch({
         type: detailsInfoActions.RESET_EDIT_MODE
       })
-      dispatch(detailsActions.setEditMode(false))
+      dispatch(setEditMode(false))
     }, [dispatch])
 
     const handleInfoItemClick = useCallback(
@@ -107,16 +96,13 @@ const DetailsInfo = React.forwardRef(
               fieldType
             }
           })
-          dispatch(detailsActions.setEditMode(true))
+          dispatch(setEditMode(true))
         }
       },
       [detailsInfoState.editMode, dispatch]
     )
 
-    const sources = useMemo(
-      () => generateSourcesDetailsInfo(selectedItem),
-      [selectedItem]
-    )
+    const sources = useMemo(() => generateSourcesDetailsInfo(selectedItem), [selectedItem])
 
     const producer = useMemo(
       () => generateProducerDetailsInfo(selectedItem, isDetailsPopUp),
@@ -139,19 +125,18 @@ const DetailsInfo = React.forwardRef(
 
     const finishEdit = useCallback(
       currentField => {
-        dispatch(detailsActions.setEditMode(false))
+        dispatch(setEditMode(false))
 
         return handleFinishEdit(
           detailsStore.changes,
           detailsInfoActions,
           detailsInfoDispatch,
-          setChangesData,
-          setChangesCounter,
           currentField,
-          formState
+          formState,
+          dispatch
         )
       },
-      [detailsStore.changes, dispatch, formState, setChangesCounter, setChangesData]
+      [detailsStore.changes, dispatch, formState]
     )
 
     return (
@@ -169,7 +154,6 @@ const DetailsInfo = React.forwardRef(
         params={params}
         ref={editItemRef}
         selectedItem={selectedItem}
-        setChangesData={setChangesData}
       />
     )
   }
@@ -179,9 +163,7 @@ DetailsInfo.propTypes = {
   detailsStore: PropTypes.shape({}).isRequired,
   formState: PropTypes.shape({}),
   pageData: PropTypes.shape({}).isRequired,
-  selectedItem: PropTypes.shape({}).isRequired,
-  setChangesData: PropTypes.func.isRequired,
-  setChangesCounter: PropTypes.func.isRequired
+  selectedItem: PropTypes.shape({}).isRequired
 }
 
 DetailsInfo.displayName = 'DetailsInfo'
