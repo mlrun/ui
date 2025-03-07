@@ -52,7 +52,7 @@ export const getCloseDetailsLink = (paramName, ignoreOrigin) => {
     pathname
       .split('/')
       .splice(0, pathname.split('/').lastIndexOf(paramName) + 1)
-      .join('/') + window.location.search
+      .join('/') + getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])
 
   return ignoreOrigin ? link : generateUrlFromRouterPath(link)
 }
