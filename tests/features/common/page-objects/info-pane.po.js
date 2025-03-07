@@ -835,8 +835,10 @@ module.exports = {
     Overview_Table: commonTable(artifactOverviewTable),
     Edit_btn_table_view: commonEditBtnTableView,
     Edit_btn_full_view: commonEditBtnFullView,
+    Click_To_Add_Button: By.css('[data-testid="detailsPanel"] .item-info__details-wrapper:nth-of-type(1) .details-item:nth-of-type(3)  .details-item__data-add-placeholder'),
     Version_tag_Input_table_view: commonVersionTagInputTableView,
     Version_tag_Input_full_view: commonVersionTagInputFullView,
+    Version_tag_Value_full_view: By.css('.table__item_big .item-info__details-wrapper:nth-of-type(1) .details-item:nth-of-type(3) .details-item__data .data-ellipsis'),
     Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
     Version_tag_Input: commonVersionTagInput
   },

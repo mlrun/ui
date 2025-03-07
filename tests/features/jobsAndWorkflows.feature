@@ -2894,4 +2894,79 @@ Feature: Jobs and workflows
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         Then verify that 2 row elements are displayed in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard
 
+    @MLJW
+    @passive
+    @smoke
+    Scenario: MLJW091 - Check the auto refresh checkbox on Jobs Monitor tab
+        Given open url
+        And wait load page
+        And click on row root with value "auto-generated-data" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then verify breadcrumbs "project" label should be equal "auto-generated-data" value
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Jobs and workflows" value
+        Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
+        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify "Auto_Refresh_Checkbox" element visibility on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
+        Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 50" value
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is enabled
+        Then check "Auto_Refresh_Checkbox" element on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be checked on "Jobs_Monitor_Tab" wizard
+        Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 50" value
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard should display hover tooltip "Common_Tooltips"."Auto_Refresh"
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Auto_Refresh_Checkbox" element visibility on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then check "Auto_Refresh_Checkbox" element on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be checked on "Jobs_Monitor_Tab" wizard
+        When click on cell with row index 1 in "uid" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Auto_Refresh_Checkbox" element visibility on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then verify "Auto_Refresh_Checkbox_Element" element on "Jobs_Monitor_Tab" wizard is disabled
+        Then click on "Cross_Close_Button" element on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then "Auto_Refresh_Checkbox" element should be checked on "Jobs_Monitor_Tab" wizard
+        Then click on "Arrow_Back" element on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then "Auto_Refresh_Checkbox" element should be checked on "Jobs_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then check "Auto_Refresh_Checkbox" element on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be checked on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When click on cell with row index 1 in "uid" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then verify "Auto_Refresh_Checkbox_Element" element on "Jobs_Monitor_Tab" wizard is disabled
+        Then click on "Arrow_Back" element on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then "Auto_Refresh_Checkbox" element should be checked on "Jobs_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then click on "Arrow_Back" element on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then uncheck "Auto_Refresh_Checkbox" element on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is enabled
+        Then click on "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard
+        And wait load page
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then click on "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard
+        And wait load page
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then check "Auto_Refresh_Checkbox" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 50" value
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard should display hover tooltip "Common_Tooltips"."Auto_Refresh"
         
