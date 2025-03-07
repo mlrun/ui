@@ -78,7 +78,9 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
   const [refreshAfterDeleteCallback, refreshAfterDeleteTrigger] = useRefreshAfterDelete(
     paginationConfigRunsRef,
     historyBackLink,
-    'runs'
+    'runs',
+    null,
+    Boolean(params.jobName)
   )
 
   const terminateAbortTasksPolling = useCallback(() => {
