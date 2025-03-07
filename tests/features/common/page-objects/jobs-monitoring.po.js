@@ -110,7 +110,70 @@ const overallTable = {
             true,
             '.tooltip .tooltip__text span'
           )
+        }
+      }
+    }
+  }
+}
+
+const scheduledTabTable = {
+  root: '.table__content',
+  header: {
+    root: '.table-head',
+    sorters: {
+      name: '.table-head__item:nth-of-type(1) .data-ellipsis',
+      type: '.table-head__item:nth-of-type(2) .data-ellipsis',
+      duration: '.table-head__item:nth-of-type(3) .data-ellipsis',
+      owner: '.table-head__item:nth-of-type(4) .data-ellipsis',
+      labels: '.table-head__item:nth-of-type(5) .data-ellipsis',
+      parameters: '.table-head__item:nth-of-type(6) .data-ellipsis',
+      results: '.table-head__item:nth-of-type(7) .data-ellipsis'
+    }
+  },
+  body: {
+    root: '.table-body',
+    row: {
+      root: '.table-row',
+      fields: {
+        name: '.table-cell-name.link',
+        uid: '[data-testid="uid"] a .link',
+        project_name: '[data-testid="projectName"] .data-ellipsis',
+        datetime:
+          '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(1)',
+        duration: '.table-body__cell:nth-of-type(3) .data-ellipsis',
+        owner: '.table-body__cell:nth-of-type(4) .data-ellipsis',
+        action_menu: {
+          componentType: actionMenu,
+          structure: actionMenuStructure
         },
+        labels: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.table-body__cell:nth-of-type(7)',
+            '.chip-block span.chips_button',
+            '.chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            false,
+            false
+          )
+        },
+        type: {
+          componentType: labelComponent,
+          structure: generateLabelGroup(
+            '.table-body__cell:nth-of-type(3)',
+            '.data-ellipsis',
+            true,
+            '.tooltip .tooltip__text span'
+          )
+        },
+        status: {
+          componentType: labelComponent,
+          structure: generateLabelGroup(
+            '.table-body__cell:nth-of-type(1) .status',
+            'i',
+            true,
+            '.tooltip .tooltip__text span'
+          )
+        }
       }
     }
   }
@@ -229,6 +292,7 @@ module.exports = {
         icon: ''
       }
     }),
+    Auto_Refresh_Checkbox_Element: By.css('[data-testid="form-field-checkbox"] input'),
     Search_By_Name_Filter_Input: commonSearchByNameFilterInput,
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,
     Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
@@ -256,6 +320,6 @@ module.exports = {
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Refresh_Button: commonRefreshButton,
     Error_Message: commonErrorMessage,
-    Scheduled_Table: commonTable(overallTable)
+    Scheduled_Table: commonTable(scheduledTabTable)
   }
 }

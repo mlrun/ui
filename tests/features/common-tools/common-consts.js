@@ -379,6 +379,7 @@ module.exports = {
       'These secrets are automatically available to all jobs belonging to this project that are not executed locally. See Secrets'
   },
   Common_Tooltips: {
+    Auto_Refresh: 'Uncheck Auto Refresh to view more results',
     FilterBy_Button: 'Filter',
     FilterBy_Button_1: 'Filter (1)',
     Show_All_Versions: 'Show all versions',
@@ -641,15 +642,10 @@ module.exports = {
       'All',
       'Job',
       'Workflow',
-      'Nuclio',
-      'Application',
-      'Serving',
       'Spark',
       'Horovod',
       'Dask',
-      'Databricks',
-      'Local',
-      'Handler'
+      'Databricks'
     ],
     Group_By_Filter_Options: ['None', 'Name'],
     Start_Time_Filter_Options: [
@@ -720,6 +716,8 @@ module.exports = {
   No_Data_Message: {
     Common_Message_Jobs_Monitoring:
       /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
+    Common_Message_Jobs_Monitoring_Workflow_Project:
+      /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
     Common_Message_Jobs_Monitoring_Status:
       /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Status: (.+?)"/,
     Common_Message_Jobs_Monitoring_Type:
