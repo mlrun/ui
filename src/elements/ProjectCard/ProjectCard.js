@@ -19,23 +19,16 @@ such restriction.
 */
 import React, { useEffect, useState, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import ProjectCardView from './ProjectCardView'
 
 import { generateProjectStatistic } from './projectCard.util'
-import projectsAction from '../../actions/projects'
 
-const ProjectCard = ({
-  actionsMenu,
-  alert,
-  nuclioStore,
-  project,
-  projectStore,
-  projectSummary
-}) => {
+const ProjectCard = ({ actionsMenu, alert, project, projectSummary }) => {
   const [fetchNuclioFunctionsFailure, setFetchNuclioFunctionsFailure] = useState(false)
-
+  const projectStore = useSelector(store => store.projectStore)
+  const nuclioStore = useSelector(store => store.nuclioStore)
   const actionsMenuRef = useRef()
 
   useEffect(() => {
@@ -80,12 +73,4 @@ ProjectCard.propTypes = {
   alert: PropTypes.number.isRequired
 }
 
-export default connect(
-  (projectStore, nuclioStore) => ({
-    ...projectStore,
-    ...nuclioStore
-  }),
-  {
-    ...projectsAction
-  }
-)(ProjectCard)
+export default ProjectCard

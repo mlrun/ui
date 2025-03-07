@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useMemo, useState } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
 
@@ -26,28 +26,36 @@ import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
 import { MONITOR_JOBS_TAB, REQUEST_CANCELED } from '../../constants'
 import { getJobsStatistics, getJobsTableData, groupByName, sortByDate } from './projectJobs.utils'
-import projectsAction from '../../actions/projects'
+import { fetchProjectJobs } from '../../reducers/projectReducer'
 
-const ProjectJobs = ({ fetchProjectJobs, projectStore }) => {
+const ProjectJobs = () => {
   const [groupedLatestItem, setGroupedLatestItem] = useState([])
   const params = useParams()
+  const dispatch = useDispatch()
+  const projectStore = useSelector(store => store.projectStore)
 
   useEffect(() => {
-    if (projectStore.project.jobs.data) {
+    if (projectStore.project?.jobs?.data) {
       setGroupedLatestItem(sortByDate(groupByName(projectStore.project.jobs.data)))
     }
-  }, [projectStore.project.jobs.data])
+  }, [projectStore.project?.jobs?.data])
 
   useEffect(() => {
     const abortController = new AbortController()
     const startTimeFrom = moment().add(-7, 'days').toISOString()
 
-    fetchProjectJobs(params.projectName, startTimeFrom, abortController.signal)
+    dispatch(
+      fetchProjectJobs({
+        project: params.projectName,
+        startTimeFrom,
+        signal: abortController.signal
+      })
+    )
 
     return () => {
       abortController.abort(REQUEST_CANCELED)
     }
-  }, [fetchProjectJobs, params.projectName])
+  }, [dispatch, params.projectName])
 
   const jobsData = useMemo(() => {
     const statistics = getJobsStatistics(projectStore.projectSummary, params.projectName)
@@ -74,11 +82,4 @@ const ProjectJobs = ({ fetchProjectJobs, projectStore }) => {
   )
 }
 
-export default connect(
-  projectStore => ({
-    ...projectStore
-  }),
-  {
-    ...projectsAction
-  }
-)(React.memo(ProjectJobs))
+export default React.memo(ProjectJobs)

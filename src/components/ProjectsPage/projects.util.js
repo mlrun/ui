@@ -32,17 +32,22 @@ import {
   isBackgroundTaskRunning,
   pollTask
 } from '../../utils/poll.util'
-import { PROJECT_ONLINE_STATUS, SET_PROJECT_TOTAL_ALERTS } from '../../constants'
+import { PROJECT_ONLINE_STATUS } from '../../constants'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
-import projectsAction from '../../actions/projects'
 
 import { ReactComponent as ArchiveIcon } from 'igz-controls/images/archive-icon.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as DownloadIcon } from 'igz-controls/images/ml-download.svg'
 import { ReactComponent as UnarchiveIcon } from 'igz-controls/images/unarchive-icon.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+import {
+  deleteProject,
+  setDeletingProjects,
+  setJobsMonitoringData,
+  setProjectTotalAlerts
+} from '../../reducers/projectReducer'
 
 export const mlrunUnhealthyErrors = [
   BAD_GATEWAY_ERROR_STATUS_CODE,
@@ -235,7 +240,7 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
         }
       })
 
-      dispatch(projectsAction.setDeletingProjects(omit(deletingProjects, tasksToExclude)))
+      dispatch(setDeletingProjects(omit(deletingProjects, tasksToExclude)))
       refresh()
     }
 
@@ -260,10 +265,7 @@ export const generateAlerts = (data, dispatch) => {
       (project.other_alerts_count || 0)
   })
 
-  dispatch({
-    type: SET_PROJECT_TOTAL_ALERTS,
-    payload: projectAlerts
-  })
+  dispatch(setProjectTotalAlerts(projectAlerts))
 }
 
 export const generateMonitoringCounters = (data, dispatch) => {
@@ -325,7 +327,7 @@ export const generateMonitoringCounters = (data, dispatch) => {
       monitoringCounters.alerts.application
   })
 
-  dispatch(projectsAction.setJobsMonitoringData(monitoringCounters))
+  dispatch(setJobsMonitoringData(monitoringCounters))
 }
 
 export const onDeleteProject = (project, setConfirmData, ...args) => {
@@ -355,8 +357,9 @@ export const handleDeleteProject = (
 ) => {
   setConfirmData && setConfirmData(null)
 
-  dispatch(projectsAction.deleteProject(project.metadata.name, deleteNonEmpty))
-    .then(response => {
+  dispatch(deleteProject({ projectName: project.metadata.name, deleteNonEmpty }))
+    .unwrap()
+    .then(({ response }) => {
       if (isBackgroundTaskRunning(response)) {
         dispatch(
           setNotification({
@@ -371,7 +374,8 @@ export const handleDeleteProject = (
           [response.data.metadata.name]: last(response.data.metadata.kind.split('.'))
         }
 
-        dispatch(projectsAction.setDeletingProjects(newDeletingProjects))
+        dispatch(setDeletingProjects(newDeletingProjects))
+
         if (refreshProjects) {
           pollDeletingProjects(terminatePollRef, newDeletingProjects, refreshProjects, dispatch)
         }
