@@ -286,8 +286,8 @@ const JobsTable = React.forwardRef(
     ])
 
     const refreshJobsWithFilters = useCallback((useInitialFilter) => {
-      const initialFilters = getInitialFiltersByConfig(filtersConfig)
-      refreshJobs( useInitialFilter ? initialFilters : filters)
+      const initialJobFilters = getInitialFiltersByConfig(filtersConfig)
+      refreshJobs(useInitialFilter ? initialJobFilters : filters, { forceFetchJobs: true })
     }, [filters, refreshJobs, filtersConfig])
 
     useEffect(() => {
