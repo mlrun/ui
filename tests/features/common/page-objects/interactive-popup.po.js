@@ -1890,7 +1890,7 @@ module.exports = {
         true
       )
     ),
-    Add_Button: By.css('[data-testid="modal"] .modal__footer .btn-secondary'),
+    Add_Button: By.css('[data-testid="modal"] .modal__footer .btn-primary'),
     Cancel_Button: By.css('[data-testid="modal"] .modal__footer .btn-tertiary')
   },
   deleteArtifactPopup: {

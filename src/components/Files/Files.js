@@ -95,7 +95,8 @@ const Files = ({ isAllVersions = false }) => {
     paginationConfigFileVersionsRef,
     historyBackLink,
     'artifacts',
-    params.id && getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : FILES_TAB, true)
+    params.id && getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : FILES_TAB, true),
+    isAllVersions
   )
 
   const pageData = useMemo(() => generatePageData(viewMode), [viewMode])

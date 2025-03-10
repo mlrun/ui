@@ -21,11 +21,17 @@ module.exports = {
   Project: {
     Create_New_Options: [
       'Batch run',
-      //'ML Function', - demo mode
-      'Feature Set',
-      'Register Artifact',
-      //'Register Model', - demo mode
-      'Register Dataset'
+      'Feature set',
+      'Register artifact',
+      'Register dataset'
+    ],
+    Create_New_Options_Demo: [
+      'Batch run',
+      'ML function',
+      'Feature set',
+      'Register artifact',
+      'Register model',
+      'Register dataset'
     ],
     Online_Status: 'online',
     Data_Collection_Description:
@@ -145,6 +151,13 @@ module.exports = {
   Alerts_Jobs_Info_Pane: {
     Overview_General_Headers: [
       'Project Name:',
+      'Job Name:',
+      'Type:',
+      'Timestamp:',
+      'Severity:',
+      'Job:'
+    ],
+    Overview_General_Headers_PerProject: [
       'Job Name:',
       'Type:',
       'Timestamp:',
@@ -366,6 +379,7 @@ module.exports = {
       'These secrets are automatically available to all jobs belonging to this project that are not executed locally. See Secrets'
   },
   Common_Tooltips: {
+    Auto_Refresh: 'Uncheck Auto Refresh to view more results',
     FilterBy_Button: 'Filter',
     FilterBy_Button_1: 'Filter (1)',
     Show_All_Versions: 'Show all versions',
@@ -503,7 +517,16 @@ module.exports = {
       'Statistics reflect the data for the latest ingestion. \n' +
       ' Note that some values may be empty due to the use of different engines for calculating statistics',
     Models_Statistics:
-      'Note that some values may be empty due to the use of different engines for calculating statistics'
+      'Note that some values may be empty due to the use of different engines for calculating statistics',
+    Model_Stats_Tip:  
+      'Each model can have multiple versions, produced by multiple runs and given multiple tags.\n' +
+      ' You can browse them in the Models page.',
+    FeatureSets_Stats_Tip:  
+      'Each feature set can have multiple versions, produced by multiple runs and given multiple tags.\n' +
+      ' You can browse them in the Feature store page.',
+    Artifacts_Stats_Tip:  
+      'Each artifact can have multiple versions, produced by multiple runs and given multiple tags.\n' +
+      ' You can browse them in the Artifacts page.'
   },
   Descriptions: {
     Archive_Project:
@@ -619,15 +642,10 @@ module.exports = {
       'All',
       'Job',
       'Workflow',
-      'Nuclio',
-      'Application',
-      'Serving',
       'Spark',
       'Horovod',
       'Dask',
-      'Databricks',
-      'Local',
-      'Handler'
+      'Databricks'
     ],
     Group_By_Filter_Options: ['None', 'Name'],
     Start_Time_Filter_Options: [
@@ -646,6 +664,13 @@ module.exports = {
       'Past week',
       'Past month',
       'Past year',
+      'Custom range'
+    ],
+    Date_Picker_Filter_Options_Endpoint: [
+      'Past hour',
+      'Past 24 hours',
+      'Past week',
+      'Past month',
       'Custom range'
     ],
     Scheduled_Date_Picker_Filter_Options: [
@@ -691,6 +716,8 @@ module.exports = {
   No_Data_Message: {
     Common_Message_Jobs_Monitoring:
       /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
+    Common_Message_Jobs_Monitoring_Workflow_Project:
+      /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
     Common_Message_Jobs_Monitoring_Status:
       /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Status: (.+?)"/,
     Common_Message_Jobs_Monitoring_Type:

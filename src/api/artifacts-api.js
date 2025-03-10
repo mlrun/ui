@@ -38,7 +38,7 @@ const fetchArtifacts = (project, filters, config = {}, withLatestTag, withExactN
 
   if (filters?.iter === SHOW_ITERATIONS) {
     params['best-iteration'] = true
-  } else if (!isNil(filters.iter) && !isEmpty(filters.iter)) {
+  } else if (!isNil(filters?.iter) && !isEmpty(filters?.iter)) {
     params.iter = filters.iter
   }
 

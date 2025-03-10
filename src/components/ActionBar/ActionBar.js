@@ -173,20 +173,20 @@ const ActionBar = ({
                 !isEqual(filtersConfig[filterName].initialValue, filterValue)
               ) {
                 let newFilterValue = filterValue
-  
+
                 if (filterName === DATES_FILTER) {
                   newFilterValue =
                     filterValue.initialSelectedOptionId === CUSTOM_RANGE_DATE_OPTION
                       ? filterValue.value.map(date => new Date(date).getTime()).join('-')
                       : filterValue.initialSelectedOptionId
                 }
-  
+
                 prevSearchParams.set(filterName, newFilterValue)
               } else {
                 prevSearchParams.delete(filterName)
               }
             }
-  
+
             return prevSearchParams
           },
           { replace: true }
@@ -331,6 +331,12 @@ const ActionBar = ({
     dispatch,
     filtersStore.internalAutoRefresh
   ])
+
+  useEffect(() => {
+    return () => {
+      setInternalAutoRefreshPrevValue(false)
+    }
+  }, [])
 
   useLayoutEffect(() => {
     formRef.current.reset(formInitialValues)

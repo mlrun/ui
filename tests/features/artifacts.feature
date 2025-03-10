@@ -441,7 +441,7 @@ Feature: Artifacts Page
     And wait load page
     Then verify "show_all_versions" option is present on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column
     Then verify "show_all_versions" option on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions"
-    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "survival-curves_km-survival" value in "name" column
+    Then click on "show_all_versions" option on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column
     And wait load page
     Then verify "History_Back_Button" element visibility on "Files" wizard
     Then verify "Version_History_Title" element visibility on "Files" wizard
@@ -474,27 +474,14 @@ Feature: Artifacts Page
     Then "Title" element on "Confirm_Popup" should contains "Overwrite artifact?" value
     When click on "Overwrite_Button" element on "Confirm_Popup" wizard
     And wait load page
+    Then click on "History_Back_Button" element on "Files" wizard
+    When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
+    Then verify "Header" element visibility on "Files_Info_Pane" wizard
+    Then "Header" element on "Files_Info_Pane" should contains "test-file" value
+    #TODO: Verify text message 'The <artifact> you are viewing was updated. Close the detail panel and refresh the list to see the current version.' on Files_Info_Pane
+    #TODO: Verify that editing the tag to an empty string '' will delete the artifact instance
     
-
-
-    Then click on "Edit_btn_table_view" element on "Files_Info_Pane" wizard
-    And wait load page
-    When type value "" to "Version_tag_Input" field on "Files_Info_Pane" wizard
-    Then click on "Apply_Button" element on "Files_Info_Pane" wizard
-    Then click on "Apply_Changes_Button" element on "Files_Info_Pane" wizard
-    And wait load page
-    Then verify "Table_FilterBy_Button" element visibility on "Files" wizard
-    Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
-    And wait load page
-    Then verify action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column should contains "Common_Lists"."Action_Menu_List_Expanded"
-    Then verify that in action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column "Delete" option is disabled
-    When click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
-    And wait load page
-    Then check "Click to add" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
-    Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
-    Then check that "Delete" option in action menu on "Files_Info_Pane" wizard is enabled
 
   @MLA
   @passive
@@ -622,8 +609,7 @@ Feature: Artifacts Page
     Then uncheck "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then click on cell with row index 1 in "expand_btn" column in "Files_Table" table on "Files" wizard
-    Then select "View YAML" option in action menu on "Files" wizard in "Files_Table" table at row with "latest" value in "name_expand_btn" column
+    Then select "View YAML" option in action menu on "Files" wizard in "Files_Table" table at row with "training_iteration_results" value in "name" column
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
@@ -694,23 +680,35 @@ Feature: Artifacts Page
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
-    Then verify redirection from "projects/default/files/INVALID/latest/0/overview" to "projects/default/files"
+    Then verify redirection from "projects/default/files/INVALID/:latest@5a44b12b-9ef3-4239-87e8-e0cbdae-98/overview?bePage=1&fePage=1" to "projects/default/files?bePage=1&fePage=1"
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "An error occurred while retrieving the artifact." value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     And select "tab" with "Datasets" value in breadcrumbs menu
     And wait load page
     And select "tab" with "Artifacts" value in breadcrumbs menu
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
-    And wait load page
-    Then verify redirection from "projects/default/files/training_iteration_results/latest/0/INVALID" to "projects/default/files/training_iteration_results/latest/0/overview"
+    Then verify redirection from "projects/default/files/training_iteration_results/:latest@5a44b12b-9ef3-4239-87e8-e0cbdae-98/INVALID?bePage=1&fePage=1" to "projects/default/files/training_iteration_results/:latest@5a44b12b-9ef3-4239-87e8-e0cbdae-98/overview?bePage=1&fePage=1"
     And wait load page
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     And wait load page
-    Then verify redirection from "projects/default/files/training_iteration_results/latest/0/INVALID" to "projects/default/files/training_iteration_results/latest/0/overview"
+    Then verify redirection from "projects/default/files/training_iteration_results/:latest@5a44b12b-9ef3-4239-87e8-e0cbdae-98/INVALID?bePage=1&fePage=1" to "projects/default/files/training_iteration_results/:latest@5a44b12b-9ef3-4239-87e8-e0cbdae-98/overview?bePage=1&fePage=1"
     And wait load page
-    Then verify redirection from "projects/default/files/training_iteration_results/latest/IVNALID/overview" to "projects/default/files"
+    Then verify redirection from "projects/default/files/training_iteration_results/:INVALID/overview?bePage=1&fePage=1" to "projects/default/files?bePage=1&fePage=1"
     And wait load page
-    Then verify redirection from "projects/INVALID/files" to "projects"
+     Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "An error occurred while retrieving the artifact." value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify redirection from "projects/INVALID/files?bePage=1&fePage=1" to "projects"
     And wait load page
 
   @MLA
@@ -757,12 +755,11 @@ Feature: Artifacts Page
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"
     Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
-    Then click on "Edit_btn_table_view" element on "Files_Info_Pane" wizard    
-    Then verify "Version_tag_Input_table_view" on "Files_Info_Pane" wizard should contains "latest" value
+    Then verify "Edit_btn_table_view" element not exists on "Files_Info_Pane" wizard    
     Then click on "Full_View_Button" element on "Files_Info_Pane" wizard
     Then verify "Cross_Close_Button" element not exists on "Files_Info_Pane" wizard
-    Then click on "Edit_btn_full_view" element on "Files_Info_Pane" wizard
-    Then verify "Version_tag_Input_full_view" on "Files_Info_Pane" wizard should contains "latest" value   
+    Then verify "Edit_btn_full_view" element not exists on "Files_Info_Pane" wizard   
+    Then "Version_tag_Value_full_view" element on "Files_Info_Pane" should contains "latest" value
     Then click on "Tabel_View_Button" element on "Files_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
 
@@ -782,12 +779,19 @@ Feature: Artifacts Page
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"
     Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
-    Then click on "Edit_btn_table_view" element on "Files_Info_Pane" wizard
+    Then verify "Edit_btn_table_view" element not exists on "Files_Info_Pane" wizard
+    Then select "Add a tag" option in action menu on "Files_Info_Pane" wizard
     And wait load page
-    When type value "newTag" to "Version_tag_Input" field on "Files_Info_Pane" wizard
-    Then click on "Apply_Button" element on "Files_Info_Pane" wizard
-    Then click on "Apply_Changes_Button" element on "Files_Info_Pane" wizard
+    Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
+    Then type value "newTag" to "Tag_Input" field on "Add_Tag_Popup" wizard
+    Then click on "Add_Button" element on "Add_Tag_Popup" wizard
     And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was added successfully" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     Then verify "Table_FilterBy_Button" element visibility on "Files" wizard
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     Then select "newTag" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
@@ -800,28 +804,29 @@ Feature: Artifacts Page
   Scenario: MLA011 - Check that version tag has "Click to add" status when it's empty after edited
     Given open url
     And wait load page
-    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    Then click on "show_all_versions" option on "Files" wizard in "Files_Table" table with "download_content" value in "name" column
+    And wait load page
+    Then click on "Register_File_Button" element on "Files" wizard
+    Then verify if "Register_File_Popup" popup dialog appears
+    Then type value "download_content" to "New_File_Name_Input" field on "Register_File_Popup" wizard
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
+    When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
+    Then click on "Register_Button" element on "Register_File_Popup" wizard
+    And wait load page
+    Then verify if "Confirm_Popup" popup dialog appears
+    Then "Title" element on "Confirm_Popup" should contains "Overwrite artifact?" value
+    When click on "Overwrite_Button" element on "Confirm_Popup" wizard
+    And wait load page
+    When click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"   
-    Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
-    Then click on "Edit_btn_table_view" element on "Files_Info_Pane" wizard
-    Then type value "" to "Version_tag_Input" field on "Files_Info_Pane" wizard
-    Then click on "Apply_Button" element on "Files_Info_Pane" wizard
-    Then click on "Apply_Changes_Button" element on "Files_Info_Pane" wizard
-    And wait load page
-    Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
-    And wait load page
-    When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
-    And wait load page
     Then "Version_Tag_Input_Placeholder" element on "Files_Info_Pane" should contains "Click to add" value
 
   @MLA
@@ -829,21 +834,28 @@ Feature: Artifacts Page
   Scenario: MLA012 - Check filter by "All" tag is performed when version tag was edited
     Given open url
     And wait load page
-    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    Then click on "show_all_versions" option on "Files" wizard in "Files_Table" table with "images" value in "name" column
     And wait load page
-    Then click on cell with row index 3 in "name" column in "Files_Table" table on "Files" wizard
+    Then click on "Register_File_Button" element on "Files" wizard
+    Then verify if "Register_File_Popup" popup dialog appears
+    Then type value "images" to "New_File_Name_Input" field on "Register_File_Popup" wizard
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
+    When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
+    Then click on "Register_Button" element on "Register_File_Popup" wizard
     And wait load page
-    Then save to context "name" column on 3 row from "Files_Table" table on "Files" wizard
-    Then compare "Header" element value on "Files_Info_Pane" wizard with test "name" context value
-    Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
-    Then click on "Edit_btn_table_view" element on "Files_Info_Pane" wizard
+    Then verify if "Confirm_Popup" popup dialog appears
+    Then "Title" element on "Confirm_Popup" should contains "Overwrite artifact?" value
+    When click on "Overwrite_Button" element on "Confirm_Popup" wizard
+    And wait load page
+    When click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
+    Then "Version_Tag_Input_Placeholder" element on "Files_Info_Pane" should contains "Click to add" value
+    Then click on "Click_To_Add_Button" element on "Files_Info_Pane" wizard
     Then type value "latest123456" to "Version_tag_Input" field on "Files_Info_Pane" wizard
     Then click on "Apply_Button" element on "Files_Info_Pane" wizard
     Then click on "Apply_Changes_Button" element on "Files_Info_Pane" wizard
@@ -852,8 +864,6 @@ Feature: Artifacts Page
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"
     Then check "latest123456" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
-    Then save to context "name" column on 3 row from "Files_Table" table on "Files" wizard
-    Then compare "Header" element value on "Files_Info_Pane" wizard with test "name" context value
 
   @MLA
   @smoke

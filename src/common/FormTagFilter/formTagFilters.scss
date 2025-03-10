@@ -7,7 +7,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  width: auto;
+  width: 100%;
   min-width: 200px;
   height: 60px;
   color: $mulledWine;
@@ -20,7 +20,8 @@
   }
 
   &__input {
-    width: 196px;
+    width: 100%;
+    min-width: 196px;
     height: 100%;
     padding: 10px;
     color: $mulledWine;
@@ -36,9 +37,9 @@
   }
 
   &__dropdown {
+    align-items: normal;
     width: 100%;
     max-height: 400px;
-    align-items: normal;
     overflow-y: auto;
     background-color: $white;
     border: $primaryBorder;
