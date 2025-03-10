@@ -99,14 +99,18 @@ export const buildFunction = createAsyncThunk('buildFunction', ({ funcData }) =>
 })
 export const deleteArtifact = createAsyncThunk(
   'deleteArtifact',
-  ({ project, key, uid, deletion_strategy, secrets }) => {
-    return artifactsApi.deleteArtifact(project, key, uid, deletion_strategy, secrets)
+  ({ project, key, uid, deletion_strategy, secrets }, thunkAPI) => {
+    return artifactsApi
+      .deleteArtifact(project, key, uid, deletion_strategy, secrets)
+      .catch(error => thunkAPI.rejectWithValue(error))
   }
 )
 export const deleteArtifacts = createAsyncThunk(
   'deleteArtifacts',
-  ({ project, name, category }) => {
-    return artifactsApi.deleteArtifacts(project, name, category)
+  ({ project, name, category }, thunkAPI) => {
+    return artifactsApi
+      .deleteArtifacts(project, name, category)
+      .catch(error => thunkAPI.rejectWithValue(error))
   }
 )
 export const deleteTag = createAsyncThunk('deleteTag', ({ project, tag, data }) => {
@@ -127,26 +131,25 @@ export const fetchArtifact = createAsyncThunk('fetchArtifact', ({ project, artif
   })
 })
 export const fetchAllArtifactKindsTags = createAsyncThunk(
-    'fetchAllArtifactKindsTags',
-    ({ project, filters, config, setRequestErrorMessage = () => {}, withExactName }, thunkAPI) => {
+  'fetchAllArtifactKindsTags',
+  ({ project, filters, config, setRequestErrorMessage = () => {}, withExactName }, thunkAPI) => {
+    return artifactsApi
+      .getArtifacts(project, filters, config, withExactName)
+      .then(({ data }) => {
+        const result = parseArtifacts(data.artifacts)
+        const generatedArtifacts = generateArtifacts(filterArtifacts(result))
 
-      return artifactsApi
-          .getArtifacts(project, filters, config, withExactName)
-          .then(({ data }) => {
-            const result = parseArtifacts(data.artifacts)
-            const generatedArtifacts = generateArtifacts(filterArtifacts(result))
-
-            return generatedArtifacts.map(artifact => artifact.tag)
-          })
-          .catch(error => {
-            largeResponseCatchHandler(
-                error,
-                'Failed to fetch artifact tags',
-                thunkAPI.dispatch,
-                setRequestErrorMessage
-            )
-          })
-    }
+        return generatedArtifacts.map(artifact => artifact.tag)
+      })
+      .catch(error => {
+        largeResponseCatchHandler(
+          error,
+          'Failed to fetch artifact tags',
+          thunkAPI.dispatch,
+          setRequestErrorMessage
+        )
+      })
+  }
 )
 export const fetchArtifacts = createAsyncThunk(
   'fetchArtifacts',
