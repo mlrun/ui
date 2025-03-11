@@ -52,7 +52,7 @@ export const getCloseDetailsLink = (paramName, ignoreOrigin) => {
     pathname
       .split('/')
       .splice(0, pathname.split('/').lastIndexOf(paramName) + 1)
-      .join('/') + window.location.search
+      .join('/') + getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])
 
   return ignoreOrigin ? link : generateUrlFromRouterPath(link)
 }
@@ -86,6 +86,8 @@ export const parseFunctionUri = functionUri => {
   let hash = null
   let tag = null
   let nameWithHash = null
+  let nameWithUid = null
+  let uid = null
 
   if (rest.includes('@')) {
     ;[name, hash] = rest.split('@')
@@ -94,7 +96,7 @@ export const parseFunctionUri = functionUri => {
     ;[name, tag] = rest.split(':')
   }
 
-  return { project, name, hash, tag, nameWithHash }
+  return { project, name, hash, tag, nameWithHash, uid, nameWithUid }
 }
 
 export const generateFunctionDetailsLink = (uri = '') => {

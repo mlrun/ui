@@ -62,7 +62,7 @@ export const createArtifactsContent = (artifacts, page, pageTab, project, isAllV
   })
 }
 
-export const getDefaultFirstHeader = (isAllVersions) => [
+export const getDefaultFirstHeader = isAllVersions => [
   {
     headerId: isAllVersions ? 'uid' : 'name',
     headerLabel: isAllVersions ? 'UID' : 'Name',

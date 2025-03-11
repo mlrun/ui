@@ -41,7 +41,7 @@ const DetailsAlerts = () => {
   const alertsStore = useSelector(state => state.alertsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const navigate = useNavigate()
-  const { projectName } = useParams()
+  const { projectName, tag: entityId } = useParams()
 
   const alertsFiltersConfig = useMemo(() => getAlertsFiltersConfig(true, true), [])
 
@@ -70,9 +70,11 @@ const DetailsAlerts = () => {
   )
 
   const tableContent = useMemo(() => {
-    if (!alerts) return []
-    const limitedAlerts = alerts.slice(0, ALERTS_DISPLAY_LIMIT)
-    return limitedAlerts.map(alert => createAlertRowData(alert, false, true))
+    if (alerts) {
+      const limitedAlerts = alerts.slice(0, ALERTS_DISPLAY_LIMIT)
+      return limitedAlerts.map(alert => createAlertRowData(alert, false, true))
+    }
+    return []
   }, [alerts])
 
   const pageData = useMemo(() => generatePageData(selectedAlert), [selectedAlert])
@@ -98,7 +100,7 @@ const DetailsAlerts = () => {
                 <div>Only 100 alerts are displayed. View all in</div>
                 <span
                   className="link"
-                  onClick={() => navigateToPerProjectAlertsPage(navigate, projectName)}
+                  onClick={() => navigateToPerProjectAlertsPage(navigate, projectName, entityId)}
                 >
                   alerts screen
                 </span>

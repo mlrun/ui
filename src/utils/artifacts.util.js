@@ -22,11 +22,9 @@ import { cloneDeep, debounce, isEmpty, isEqual, isNil } from 'lodash'
 import artifactApi from '../api/artifacts-api'
 import {
   ARTIFACT_TYPE,
-  ARTIFACTS_TAB,
   BE_PAGE,
   DATASET_TYPE,
   DATASETS_TAB,
-  DOCUMENT_TYPE,
   DOCUMENTS_TAB,
   FE_PAGE,
   FILES_TAB,
@@ -206,14 +204,14 @@ const generateArtifactTags = artifacts => {
   return Array.from(uniqueTags).filter(Boolean)
 }
 
-const getArtifactTypeByTabName = (tab = ARTIFACTS_TAB) => {
+const getArtifactLabelByTabName = (tab = FILES_TAB) => {
   const typeMap = {
-    [ARTIFACTS_TAB]: ARTIFACT_TYPE,
-    [DATASETS_TAB]: DATASET_TYPE,
-    [DOCUMENTS_TAB]: DOCUMENT_TYPE,
-    [MODELS_TAB]: MODEL_TYPE
+    [FILES_TAB]: 'artifact',
+    [DATASETS_TAB]: 'dataset',
+    [DOCUMENTS_TAB]: 'document',
+    [MODELS_TAB]: 'model'
   }
-  
+
   return typeMap[tab]
 }
 
@@ -270,6 +268,7 @@ export const checkForSelectedArtifact = debounce(
 
             if (findArtifactIndex(paginatedArtifacts) === -1) {
               const itemIndexInMainList = findArtifactIndex(artifacts)
+              const { tag, uid } = parseIdentifier(paramsId)
 
               if (itemIndexInMainList > -1) {
                 const { fePageSize } = paginationConfigRef.current
@@ -279,8 +278,12 @@ export const checkForSelectedArtifact = debounce(
 
                   return prevSearchParams
                 })
+              } else if (tag && !artifact.tag && uid === artifact.uid) {
+                artifact.ui.infoMessage = `The ${getArtifactLabelByTabName(tab)} you are viewing was updated. Close the detail panel and refresh the list to see the current version.`
               } else {
-                artifact.ui.infoMessage = generateObjectNotInTheListMessage(getArtifactTypeByTabName(tab))
+                artifact.ui.infoMessage = generateObjectNotInTheListMessage(
+                  getArtifactLabelByTabName(tab)
+                )
               }
             }
           }
@@ -379,21 +382,7 @@ const getArtifactFetchMethod = tab => {
 }
 
 export const showArtifactErrorNotification = (dispatch, error, tab) => {
-  let customArtifactErrorMsg = ''
-
-  switch (tab) {
-    case DATASETS_TAB:
-      customArtifactErrorMsg = 'Failed to retrieve dataset data'
-      break
-    case FILES_TAB:
-      customArtifactErrorMsg = 'Failed to retrieve artifact data'
-      break
-    case MODELS_TAB:
-      customArtifactErrorMsg = 'Failed to retrieve model data'
-      break
-    default:
-      customArtifactErrorMsg = 'Failed to retrieve document data'
-  }
+  let customArtifactErrorMsg = `An error occurred while retrieving the ${getArtifactLabelByTabName(tab)}.`
 
   showErrorNotification(dispatch, error, '', customArtifactErrorMsg)
 }

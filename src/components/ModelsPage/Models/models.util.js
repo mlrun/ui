@@ -310,7 +310,7 @@ export const generateActionsMenu = (
                 modelMin.db_key,
                 modelMin.uid,
                 handleRefresh,
-                null,
+                refreshAfterDeleteCallback,
                 modelsFilters,
                 MODEL_TYPE,
                 MODEL_TYPE,

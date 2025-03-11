@@ -208,7 +208,7 @@ const FeatureSets = () => {
       )
         .unwrap()
         .then(result => {
-          const content = [...parseFeatureSets(result)].map(contentItem =>
+          const content = sortListByDate(parseFeatureSets(result), 'updated', false).map(contentItem =>
             createFeatureSetsRowData(contentItem, params.projectName, FEATURE_SETS_TAB, true)
           )
           setSelectedRowData(state => ({

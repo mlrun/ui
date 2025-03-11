@@ -82,7 +82,7 @@ export const generateArtifactsContent = (
           })
       },
       function_tag: {
-        value: selectedItem?.spec?.function_uri?.match(/(?<=:)[^:]*$/) || 'latest'
+        value: selectedItem?.spec?.function_tag || 'latest'
       },
       monitoring_feature_set_uri: {
         value: monitoringFeatureSetUri,

@@ -84,12 +84,25 @@ import {
   updatePipelineIDs,
   updateSchedules
 } from './dateSynchronization.js'
+import {
+  generateArtifacts,
+  generateFunctions,
+  makeUID,
+  generateRuns,
+  generateAlerts
+} from './dataGenerators.js'
 
 // Updating values in files with synthetic data
 updateRuns(runs)
 updatePipelines(pipelines)
 updatePipelineIDs(pipelineIDs)
 updateSchedules(schedules)
+
+// generate a lot of data for auto-generated-data project
+generateArtifacts(artifacts)
+generateFunctions(funcs)
+generateRuns(runs)
+generateAlerts(alerts)
 
 // Here we are configuring express to use body-parser as middle-ware.
 const app = express()
@@ -313,18 +326,6 @@ function getPaginationConfig(data, query) {
   }
 
   return [pageData, paginationQueryConfig]
-}
-
-function makeUID(length) {
-  let result = ''
-  const characters = 'abcdef0123456789'
-  const charactersLength = characters.length
-
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength))
-  }
-
-  return result
 }
 
 function deleteProjectHandler(req, res, omitResponse) {
@@ -889,7 +890,9 @@ function getAlerts(req, res) {
   // TODO:ML-8514 Update getAlerts to support both parameters and query strings.
   let collectedAlerts = alerts.activations
 
-  const [paginatedAlerts, pagination] = getPaginationConfig(collectedAlerts, req.query)
+  if (req.params.project !== '*') {
+    collectedAlerts = collectedAlerts.filter(alert => alert.project === req.params.project)
+  }
 
   if (req.query['name']) {
     collectedAlerts = collectedAlerts.filter(schedule =>
@@ -932,7 +935,25 @@ function getAlerts(req, res) {
     )
   }
 
-  res.send({ activations: collectedAlerts, paginatedAlerts, pagination })
+  const [paginatedAlerts, pagination] = getPaginationConfig(collectedAlerts, req.query)
+
+  res.send({ activations: paginatedAlerts, pagination })
+}
+
+function getAlert(req, res) {
+  const searchedAlert = alerts.activations.find(alert => {
+    return alert.project === req.params.project && Number(alert.id) === Number(req.params.id)
+  })
+
+  if (!searchedAlert) {
+    res.statusCode = 404
+
+    return res.send({
+      detail: `MLRunNotFoundError('Alert activation not found: activation_id=${req.params.id}')`
+    })
+  }
+
+  res.send(searchedAlert)
 }
 
 function patchRun(req, res) {
@@ -2703,9 +2724,10 @@ app.get(`${mlrunAPIIngress}/project-summaries/:project`, getProjectSummary)
 
 app.get(`${mlrunAPIIngress}/projects/:project/runs`, getRuns)
 app.get(`${mlrunAPIIngress}/projects/*/runs`, getRuns)
-app.get(`${mlrunAPIIngress}/projects/*/alert-activations`, getAlerts)
-app.get(`${mlrunAPIIngress}/run/:project/:uid`, getRun)
-app.patch(`${mlrunAPIIngress}/run/:project/:uid`, patchRun)
+app.get(`${mlrunAPIIngress}/projects/:project/alert-activations`, getAlerts)
+app.get(`${mlrunAPIIngress}/projects/:project/alert-activations/:id`, getAlert)
+app.get(`${mlrunAPIIngress}/projects/:project/runs/:uid`, getRun)
+app.patch(`${mlrunAPIIngress}/projects//:project/runs/:uid`, patchRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs/:uid`, deleteRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs`, deleteRuns)
 app.post(`${mlrunAPIIngress}/projects/:project/runs/:uid/abort`, abortRun)
@@ -2782,7 +2804,7 @@ app.post(`${mlrunAPIIngress}/build/function`, deployMLFunction)
 app.get(`${mlrunAPIIngress}/projects/:project/files`, getFile)
 app.get(`${mlrunAPIIngress}/projects/:project/filestat`, getFileStats)
 
-app.get(`${mlrunAPIIngress}/log/:project/:uid`, getLog)
+app.get(`${mlrunAPIIngress}/projects/:project/logs/:uid`, getLog)
 
 app.get(`${mlrunAPIIngress}/projects/:project/runtime-resources`, getRuntimeResources)
 

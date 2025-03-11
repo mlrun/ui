@@ -51,6 +51,7 @@ import { openPopUp } from 'igz-controls/utils/common.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { toggleYaml } from '../../reducers/appReducer'
 import { usePods } from '../../hooks/usePods.hook'
+import { getInitialFiltersByConfig } from '../../hooks/useFiltersFromSearchParams.hook'
 
 const JobsTable = React.forwardRef(
   (
@@ -284,6 +285,11 @@ const JobsTable = React.forwardRef(
       params.jobName
     ])
 
+    const refreshJobsWithFilters = useCallback((useInitialFilter) => {
+      const initialJobFilters = getInitialFiltersByConfig(filtersConfig)
+      refreshJobs(useInitialFilter ? initialJobFilters : filters, { forceFetchJobs: true })
+    }, [filters, refreshJobs, filtersConfig])
+
     useEffect(() => {
       if (
         jobWizardMode &&
@@ -305,7 +311,7 @@ const JobsTable = React.forwardRef(
           defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
           mode: jobWizardMode,
           wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Batch re-run' : undefined,
-          onSuccessRequest: () => refreshJobs(filters)
+          onSuccessRequest: refreshJobsWithFilters
         })
 
         setJobWizardIsOpened(true)
@@ -316,7 +322,7 @@ const JobsTable = React.forwardRef(
       jobWizardMode,
       filters,
       params,
-      refreshJobs,
+      refreshJobsWithFilters,
       setEditableItem,
       setJobWizardIsOpened,
       setJobWizardMode
@@ -409,8 +415,9 @@ const JobsTable = React.forwardRef(
                 paginationConfig={paginationConfigJobsRef.current}
                 closeParamName={selectedJob?.name}
                 disabledNextDoubleBtnTooltip={
-                  (filtersStore.autoRefresh && !params.jobName) ||
-                  (params.jobName && filtersStore.internalAutoRefresh)
+                  paginationConfigJobsRef.current?.paginationResponse?.['page-token'] &&
+                  ((filtersStore.autoRefresh && !params.jobName) ||
+                    (params.jobName && filtersStore.internalAutoRefresh))
                     ? 'Uncheck Auto Refresh to view more results'
                     : autoRefreshPrevValue &&
                         paginationConfigJobsRef.current?.paginationResponse?.['page-token']

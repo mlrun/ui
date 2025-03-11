@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isNil } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
 import { mainHttpClient, mainHttpClientV2 } from '../httpClient'
 import {
   ARTIFACT_OTHER_TYPE,
@@ -38,6 +38,8 @@ const fetchArtifacts = (project, filters, config = {}, withLatestTag, withExactN
 
   if (filters?.iter === SHOW_ITERATIONS) {
     params['best-iteration'] = true
+  } else if (!isNil(filters?.iter) && !isEmpty(filters?.iter)) {
+    params.iter = filters.iter
   }
 
   if (filters?.tag && (withLatestTag || filters.tag !== TAG_FILTER_LATEST)) {
@@ -134,7 +136,7 @@ const artifactsApi = {
       newConfig.params.tag = tag
     }
 
-    if (!isNil(iter)) {
+    if (!isNil(iter) && !isEmpty(iter)) {
       newConfig.params.iter = iter
     }
 

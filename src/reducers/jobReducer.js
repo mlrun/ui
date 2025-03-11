@@ -290,14 +290,17 @@ export const fetchSpecificJobs = createAsyncThunk(
 )
 export const handleRunScheduledJob = createAsyncThunk(
   'handleRunScheduledJob',
-  ({ postData, project, job }) => {
-    return jobsApi.runScheduledJob(postData, project, job)
+  ({ postData, project, job }, thunkAPI) => {
+    return jobsApi
+      .runScheduledJob(postData, project, job)
+      .catch(error => thunkAPI.rejectWithValue(error))
   }
 )
 export const removeScheduledJob = createAsyncThunk(
   'removeScheduledJob',
-  ({ projectName, scheduleName }) => {
+  ({ projectName, scheduleName }, thunkAPI) => {
     return jobsApi.removeScheduledJob({ projectName, scheduleName })
+        .catch(error => thunkAPI.rejectWithValue(error))
   }
 )
 export const runNewJob = createAsyncThunk('runNewJob', ({ postData }, thunkAPI) => {

@@ -20,12 +20,11 @@ such restriction.
 import React, { useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { useParams } from 'react-router-dom'
 
 import DetailsAlertsMetrics from '../../components/DetailsDrillDownAlert/DetailsAlertsMetrics'
 import TableCell from '../TableCell/TableCell'
 
-import { ALERTS_PAGE, DETAILS_OVERVIEW_TAB } from '../../constants'
+import { ALERTS_PAGE } from '../../constants'
 import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
 
 import './AlertsTableRow.scss'
@@ -39,7 +38,6 @@ const AlertsTableRow = ({
   toggleRow
 }) => {
   const parent = useRef()
-  const params = useParams()
   const getIdentifier = useMemo(() => getIdentifierMethod(ALERTS_PAGE), [])
   const rowClassNames = classnames(
     'alert-row',
@@ -62,11 +60,7 @@ const AlertsTableRow = ({
                   className={className}
                   firstCell={index === 0}
                   item={rowItem.data}
-                  link={value.getLink?.(
-                    rowItem.data.tag,
-                    params.tab ?? DETAILS_OVERVIEW_TAB,
-                    rowItem.data.hash
-                  )}
+                  link={value.getLink?.()}
                   selectedItem={selectedItem}
                   showExpandButton={value.showExpandButton}
                   toggleRow={toggleRow}

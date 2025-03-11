@@ -63,6 +63,7 @@ export const handleDeleteArtifact = (
           key,
           uid,
           refreshArtifacts,
+          refreshAfterDeleteCallback,
           filters,
           artifactType,
           category,

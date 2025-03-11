@@ -123,7 +123,7 @@ const WorkflowsTable = React.forwardRef(
     const { sortedTableContent } = useSortTable({
       headers: tableContent[0]?.content,
       content: tableContent,
-      sortConfig: { defaultSortBy: 'startedAt' }
+      sortConfig: { defaultSortBy: 'createdat', defaultDirection: 'desc' }
     })
 
     const handleRetry = useCallback(() => {

@@ -164,36 +164,33 @@ const ActionBar = ({
 
   const saveFilters = useCallback(
     filtersForSaving => {
-      for (const [filterName, filterValue] of Object.entries(filtersForSaving)) {
-        if (
-          !isNil(filtersConfig[filterName]?.initialValue) &&
-          !isEqual(filtersConfig[filterName].initialValue, filterValue)
-        ) {
-          let newFilterValue = filterValue
+      if (!isEmpty(filtersForSaving)) {
+        setSearchParams(
+          prevSearchParams => {
+            for (const [filterName, filterValue] of Object.entries(filtersForSaving)) {
+              if (
+                !isNil(filtersConfig[filterName]?.initialValue) &&
+                !isEqual(filtersConfig[filterName].initialValue, filterValue)
+              ) {
+                let newFilterValue = filterValue
 
-          if (filterName === DATES_FILTER) {
-            newFilterValue =
-              filterValue.initialSelectedOptionId === CUSTOM_RANGE_DATE_OPTION
-                ? filterValue.value.map(date => new Date(date).getTime()).join('-')
-                : filterValue.initialSelectedOptionId
-          }
+                if (filterName === DATES_FILTER) {
+                  newFilterValue =
+                    filterValue.initialSelectedOptionId === CUSTOM_RANGE_DATE_OPTION
+                      ? filterValue.value.map(date => new Date(date).getTime()).join('-')
+                      : filterValue.initialSelectedOptionId
+                }
 
-          setSearchParams(
-            prevSearchParams => {
-              prevSearchParams.set(filterName, newFilterValue)
-              return prevSearchParams
-            },
-            { replace: true }
-          )
-        } else {
-          setSearchParams(
-            prevSearchParams => {
-              prevSearchParams.delete(filterName)
-              return prevSearchParams
-            },
-            { replace: true }
-          )
-        }
+                prevSearchParams.set(filterName, newFilterValue)
+              } else {
+                prevSearchParams.delete(filterName)
+              }
+            }
+
+            return prevSearchParams
+          },
+          { replace: true }
+        )
       }
     },
     [filtersConfig, setSearchParams]
@@ -206,7 +203,7 @@ const ActionBar = ({
 
       if (filtersHelperResult) {
         if (closeParamName) {
-          navigate(getCloseDetailsLink(closeParamName, true))
+          navigate(getCloseDetailsLink(closeParamName, true), { replace: true })
         }
 
         if (
@@ -334,6 +331,12 @@ const ActionBar = ({
     dispatch,
     filtersStore.internalAutoRefresh
   ])
+
+  useEffect(() => {
+    return () => {
+      setInternalAutoRefreshPrevValue(false)
+    }
+  }, [])
 
   useLayoutEffect(() => {
     formRef.current.reset(formInitialValues)

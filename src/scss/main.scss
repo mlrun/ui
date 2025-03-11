@@ -516,6 +516,10 @@ main {
   @include statusState(transparent, false);
 }
 
+[class^='state-unknown'] {
+  @include statusState($topaz, true);
+}
+
 [class^='state-initialized'] {
   @include statusState($chateauGreen, false);
 }

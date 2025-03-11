@@ -304,7 +304,7 @@ const FeatureSetsPanelTargetStore = ({
       'isOnlineTargetPathEditModeClosed',
       setTargetsPathEditData,
       setDisableButtons,
-      setNewFeatureSetTarget
+      value => dispatch(setNewFeatureSetTarget(value))
     )
   }
 

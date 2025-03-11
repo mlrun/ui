@@ -144,7 +144,7 @@ export const getJobsFiltersConfig = (jobName, crossProjects) => {
         crossProjects ? PAST_24_HOUR_DATE_OPTION : PAST_WEEK_DATE_OPTION
       )
     },
-    [PROJECT_FILTER]: { label: 'Project:', initialValue: '', isModal: true },
+    [PROJECT_FILTER]: { label: 'Project:', initialValue: '', isModal: true , hidden: Boolean(jobName) },
     [STATUS_FILTER]: { label: 'Status:', initialValue: [FILTER_ALL_ITEMS], isModal: true },
     [TYPE_FILTER]: { label: 'Type:', initialValue: FILTER_ALL_ITEMS, isModal: true },
     [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }

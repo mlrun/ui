@@ -48,6 +48,7 @@ export const parseFeatures = (featuresResp, filterByFeatureSetName) => {
 
     return {
       ...item,
+      updated: item.metadata?.updated, // added updated property from feature_set_digest for correct grouping to get correct last items
       ui: {
         ...item.ui,
         identifier: getFeatureIdentifier(item),

@@ -31,15 +31,8 @@ const actionMenuStructure = {
     options: '.actions-menu__body .actions-menu__option'
   }
 }
-const actionMenuStructureExpand = {
-  root: '.table-body__cell:nth-of-type(2) .actions-menu__container',
-  menuElements: {
-    open_button: '[data-testid="actions-menu"] button',
-    options: '.actions-menu__body .actions-menu__option'
-  }
-}
 
-const filesTable = {
+const documentsTable = {
   root: '.table-container .table__content',
   header: {
     root: '.table-head',
@@ -59,14 +52,15 @@ const filesTable = {
       root: '.table-row',
       fields: {
         name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
-        uid:  '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
         tag: '.table-body__cell:nth-of-type(1) a .item-tag',
+        name_expand_btn: '.table-body__cell:nth-of-type(1) a .name-wrapper .item-tag',
+        expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         type: '.table-body__cell:nth-of-type(2) .data-ellipsis',
         labels: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
             '.table-body__cell:nth-of-type(3)',
-            '.chip-block span.chips_button',
+            '.chip-block .chip .chip__label',
             '.chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
             false,
             false
@@ -83,10 +77,6 @@ const filesTable = {
           componentType: actionMenu,
           structure: actionMenuStructure
         },
-        action_menu_expand: {
-          componentType: actionMenu,
-          structure: actionMenuStructureExpand
-        },
         show_all_versions: '[data-testid="quick-link-show-all-versions"]'
       }
     }
@@ -94,23 +84,17 @@ const filesTable = {
 }
 
 module.exports = {
-  filesTab: {
+  documents: {
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(
         '.content .content__action-bar-wrapper .action-bar__filters .name-filter',
         true
       )
     ),
-    Table_Refresh_Button: By.css('.content .content__action-bar-wrapper [data-testid="refresh-tooltip-wrapper"]'),
-    Files_Table: commonTable(filesTable),
-    Register_File_Button: By.css('.content__action-bar-wrapper .action-bar__actions .action-button'),
-    Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn"]'),
-    History_Back_Button: By.css('.history-back-link .history-back-link__icon'),
-    Version_History_Title: By.css(
-      '.history-back-link .history-back-link__title [data-testid="version-history"]'
+    Table_Refresh_Button: By.css(
+      '.content .content__action-bar-wrapper [data-testid="refresh"]'
     ),
-    Version_History_Model_Name: By.css(
-      '.history-back-link .history-back-link__title .data-ellipsis.tooltip-wrapper'
-    )
+    Documents_Table: commonTable(documentsTable),
+    Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn"]')
   }
 }

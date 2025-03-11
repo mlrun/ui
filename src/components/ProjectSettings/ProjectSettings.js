@@ -68,7 +68,8 @@ const ProjectSettings = () => {
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   const projectMembershipIsEnabled = useMemo(
-    () => frontendSpec?.feature_flags?.project_membership === 'enabled',
+    () =>
+      frontendSpec?.feature_flags?.project_membership === 'enabled' || frontendSpec?.ce?.version,
     [frontendSpec]
   )
 
@@ -317,7 +318,9 @@ const ProjectSettings = () => {
                   }}
                   className="delete-project-btn"
                   disabled={
-                    !userIsProjectOwner || projectStore.loading || projectStore.project.loading
+                    (!frontendSpec?.ce?.version && !userIsProjectOwner) ||
+                    projectStore.loading ||
+                    projectStore.project.loading
                   }
                 />
               )}

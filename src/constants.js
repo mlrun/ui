@@ -582,3 +582,7 @@ export const NOTIFICATION_DURATION = 500
 /*========= DEFAULT PROPS =============*/
 export const EMPTY_ARRAY = []
 export const EMPTY_OBJECT = {}
+
+/*========= PROTOCOLS =============*/
+export const HTTP = 'http://'
+export const HTTPS = 'https://'
