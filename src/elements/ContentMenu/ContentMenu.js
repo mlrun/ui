@@ -73,7 +73,7 @@ const ContentMenu = ({ activeTab = '', disabled = false, screen, tabs = [], onCl
                     )}
                   </Link>
                 ) : (
-                  <span>
+                  <span className={tab.icon && 'content-menu__item-icon'}>
                     {tab.icon && <i>{tab.icon}</i>}
                     {tab.label ?? tab.id}
                     {window.mlrunConfig.betaMode === 'enabled' && tab.preview && (
