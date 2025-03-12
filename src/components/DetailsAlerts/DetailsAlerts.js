@@ -115,6 +115,7 @@ const DetailsAlerts = () => {
             filtersStore={filtersStore}
             handleRefreshAlerts={handleRefreshAlerts}
             handleRefreshWithFilters={handleRefreshWithFilters}
+            isAlertsPage={false}
             isCrossProjects={false}
             pageData={pageData}
             paginationConfigAlertsRef={paginationConfigAlertsRef}
