@@ -41,7 +41,8 @@ export const usePagination = ({
   hidden = false,
   paginationConfigRef,
   refreshContent,
-  resetPaginationTrigger
+  resetPaginationTrigger,
+  isAllVersions = false
 }) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [paginatedContent, setPaginatedContent] = useState([])
@@ -195,17 +196,30 @@ export const usePagination = ({
   }, [paginationConfigRef, content, searchParams, setSearchParams, hidden])
 
   useEffect(() => {
-    if (filtersStore.autoRefresh && paginationConfigRef.current[BE_PAGE] > 1) {
-      setSearchParams(
-        prevSearchParams => {
-          prevSearchParams.set(BE_PAGE, 1)
-          prevSearchParams.set(FE_PAGE, 1)
-          return prevSearchParams
-        },
-        { replace: true }
-      )
+    if (!hidden) {
+      if (
+        ((filtersStore.autoRefresh && !isAllVersions) ||
+          (isAllVersions && filtersStore.internalAutoRefresh)) &&
+        paginationConfigRef.current[BE_PAGE] > 1
+      ) {
+        setSearchParams(
+          prevSearchParams => {
+            prevSearchParams.set(BE_PAGE, 1)
+            prevSearchParams.set(FE_PAGE, 1)
+            return prevSearchParams
+          },
+          { replace: true }
+        )
+      }
     }
-  }, [filtersStore.autoRefresh, paginationConfigRef, setSearchParams])
+  }, [
+    filtersStore.autoRefresh,
+    filtersStore.internalAutoRefresh,
+    hidden,
+    isAllVersions,
+    paginationConfigRef,
+    setSearchParams
+  ])
 
   const handleRefresh = (filters, filtersChange) => {
     if (filtersChange && (searchParams.get(BE_PAGE) !== '1' || searchParams.get(FE_PAGE) !== '1')) {
