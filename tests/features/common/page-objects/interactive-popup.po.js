@@ -733,7 +733,7 @@ module.exports = {
     ),
     Cross_Cancel_Button: commonCrossCancelButton,
     Cancel_Button: commonCancelButton,
-    Create_Button: By.css('.pop-up-dialog .btn-secondary'),
+    Create_Button: By.css('.pop-up-dialog .btn-primary'),
     Error_Message: By.css('.pop-up-dialog .error__message'),
     New_Project_Labels_Table: commonTable(newProjectLabelsTable),
     Add_Label_Button: By.css(
@@ -844,7 +844,7 @@ module.exports = {
     Filter_Dropdown: {
       Title: By.css('.hub-filter h3.filters-wizard__header'),
       Clear_Button: By.css('.hub-filter .filters-wizard__modal-buttons .btn-tertiary'),
-      Apply_Button: By.css('.hub-filter .filters-wizard__modal-buttons .btn-secondary')
+      Apply_Button: By.css('.hub-filter .filters-wizard__modal-buttons .btn-primary')
     },
     Category_Selector_Dropdown: categorySelect,
     Checkbox_Category_Selector: commonTable(checkboxCategorySelector),
@@ -1917,7 +1917,7 @@ module.exports = {
   },
   schedulePopUp: {
     Schedule_For_Later: {
-      Schedule_Button: By.css('.schedule-wizard .modal__footer-actions .btn-secondary'),
+      Schedule_Button: By.css('.schedule-wizard .modal__footer-actions .btn-primary'),
       Time_unit_Dropdown: dropdownComponent(
         generateDropdownGroup(
           '.simple-schedule-item .form-field-select .form-field__wrapper',

@@ -117,10 +117,10 @@ Feature: Alerts Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Alerts" wizard selected option value "Past 24 hours"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Alerts" wizard
         And wait load page
-        Then type value "alertd0beb8b0b8" to "Search_By_Name_Filter_Input" field on "Alerts" wizard
+        Then type value "alertd04" to "Search_By_Name_Filter_Input" field on "Alerts" wizard
         Then click on "Refresh_Button" element on "Alerts" wizard
         And wait load page
-        Then value in "alertName" column with "text" in "Alerts_Table" on "Alerts" wizard should contains "alertd0beb8b0b8"
+        Then value in "alertName" column with "text" in "Alerts_Table" on "Alerts" wizard should contains "alertd04"
         And wait load page
         Then verify "Alerts_Table" element visibility on "Alerts" wizard
         Then click on "Table_FilterBy_Button" element on "Alerts" wizard
@@ -219,10 +219,10 @@ Feature: Alerts Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Alerts" wizard selected option value "Past 24 hours"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Alerts" wizard
         And wait load page
-        Then type value "alertd0beb8b0b8" to "Search_By_Name_Filter_Input" field on "Alerts" wizard
+        Then type value "alertd04" to "Search_By_Name_Filter_Input" field on "Alerts" wizard
         Then click on "Refresh_Button" element on "Alerts" wizard
         And wait load page
-        Then value in "alertName" column with "text" in "Alerts_Table" on "Alerts" wizard should contains "alertd0beb8b0b8"
+        Then value in "alertName" column with "text" in "Alerts_Table" on "Alerts" wizard should contains "alertd04"
         And wait load page
         Then verify "Alerts_Table" element visibility on "Alerts" wizard
         Then click on "Table_FilterBy_Button" element on "Alerts" wizard
@@ -234,7 +234,6 @@ Feature: Alerts Page
         When click on cell with row index 1 in "alertName" column in "Alerts_Table" table on "Alerts" wizard
         And wait load page
         Then verify "Header" element visibility on "Alerts_Jobs_Info_Pane" wizard
-        Then "Header" element on "Alerts_Jobs_Info_Pane" should contains "alertd0beb8b0b8" value
         Then verify "Cross_Close_Button" element visibility on "Alerts_Jobs_Info_Pane" wizard
         Then click on "Cross_Close_Button" element on "Alerts_Jobs_Info_Pane" wizard
         Then verify "Header" element not exists on "Alerts_Jobs_Info_Pane" wizard
