@@ -55,7 +55,7 @@ Feature: Documents Page
     Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
     Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
     Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
-    Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 7" value
+    Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 8" value
     When click on cell with row index 1 in "name" column in "Documents_Table" table on "Documents" wizard
     And wait load page
     Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
@@ -69,7 +69,7 @@ Feature: Documents Page
     Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
     Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
     Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
-    Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 7" value
+    Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 8" value
     Then select "project" with "cat-vs-dog-classification" value in breadcrumbs menu
     And wait load page
     Then verify breadcrumbs "project" label should be equal "cat-vs-dog-classification" value
@@ -194,12 +194,12 @@ Feature: Documents Page
     Then type value "kind" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then value in "labels" column with "dropdowns" in "Documents_Table" on "Documents" wizard should contains "kind"
+    Then value in "labels" column with "text" in "Documents_Table" on "Documents" wizard should contains "kind"
     Then click on "Table_FilterBy_Button" element on "Documents" wizard
     Then type value "kind=milvus" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then value in "labels" column with "dropdowns" in "Documents_Table" on "Documents" wizard should contains "kind=milvus"
+    Then value in "labels" column with "text" in "Documents_Table" on "Documents" wizard should contains "kind=milvus"
     Then click on "Table_FilterBy_Button" element on "Documents" wizard
     Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard

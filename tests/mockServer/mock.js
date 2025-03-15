@@ -516,6 +516,7 @@ function createNewProject(req, res) {
   } else if (!collectedProjects.length) {
     const project = cloneDeep(projectTemplate)
     project.metadata.name = req.body.metadata.name
+    project.metadata.labels = req.body.metadata.labels
     project.metadata.created = currentDate.toISOString()
     project.spec.description = req.body.spec.description
     projects.projects.push(project)
