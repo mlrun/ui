@@ -21,7 +21,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 
 import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
@@ -35,14 +35,11 @@ import {
   getInternalLabelsValidationRule
 } from 'igz-controls/utils/validation.util'
 import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
+import { removeNewProjectError } from '../../../reducers/projectReducer'
 
 import './createProjectDialog.scss'
 
-const CreateProjectDialog = ({
-  closeNewProjectPopUp,
-  handleCreateProject,
-  removeNewProjectError
-}) => {
+const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject }) => {
   const projectStore = useSelector(store => store.projectStore)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const initialValues = {
@@ -57,6 +54,7 @@ const CreateProjectDialog = ({
       onSubmit: handleCreateProject
     })
   )
+  const dispatch = useDispatch()
 
   return (
     <PopUpDialog
@@ -105,7 +103,7 @@ const CreateProjectDialog = ({
                   <ErrorMessage
                     closeError={() => {
                       if (projectStore.newProject.error) {
-                        removeNewProjectError()
+                        dispatch(removeNewProjectError())
                       }
                     }}
                     message={projectStore.newProject.error}
@@ -138,8 +136,7 @@ const CreateProjectDialog = ({
 
 CreateProjectDialog.propTypes = {
   closeNewProjectPopUp: PropTypes.func.isRequired,
-  handleCreateProject: PropTypes.func.isRequired,
-  removeNewProjectError: PropTypes.func.isRequired
+  handleCreateProject: PropTypes.func.isRequired
 }
 
 export default CreateProjectDialog

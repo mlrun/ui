@@ -28,7 +28,6 @@ import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelM
 
 import functionsActions from '../../actions/functions'
 import nuclioAction from '../../actions/nuclio'
-import projectsAction from '../../actions/projects'
 import {
   DATASET_TYPE,
   DATASETS_TAB,
@@ -46,19 +45,20 @@ import { useMode } from '../../hooks/mode.hook'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 import { removeNewFeatureSet } from '../../reducers/featureStoreReducer'
-
-const ProjectMonitor = ({
-  fetchNuclioV3ioStreams,
+import {
   fetchProject,
   fetchProjectFunctions,
   fetchProjectSummary,
+  removeProjectData,
+  removeProjectSummary
+} from '../../reducers/projectReducer'
+
+const ProjectMonitor = ({
+  fetchNuclioV3ioStreams,
   functionsStore,
   nuclioStore,
-  projectStore,
   removeFunctionsError,
   removeNewFunction,
-  removeProjectData,
-  removeProjectSummary,
   removeV3ioStreams
 }) => {
   const [createFeatureSetPanelIsOpen, setCreateFeatureSetPanelIsOpen] = useState(false)
@@ -74,6 +74,7 @@ const ProjectMonitor = ({
   const projectSummariesAbortControllerRef = useRef(new AbortController())
   const v3ioStreamsAbortControllerRef = useRef(new AbortController())
   const frontendSpec = useSelector(state => state.appStore.frontendSpec)
+  const projectStore = useSelector(store => store.projectStore)
 
   const registerArtifactLink = useCallback(
     artifactKind =>
@@ -132,16 +133,27 @@ const ProjectMonitor = ({
     projectSummariesAbortControllerRef.current = new AbortController()
 
     Promise.all([
-      fetchProject(params.projectName, {}, projectAbortControllerRef.current.signal),
-      fetchProjectSummary(params.projectName, projectSummariesAbortControllerRef.current.signal)
+      dispatch(
+        fetchProject({
+          project: params.projectName,
+          params: {},
+          signal: projectAbortControllerRef.current.signal
+        })
+      ).unwrap(),
+      dispatch(
+        fetchProjectSummary({
+          project: params.projectName,
+          signal: projectSummariesAbortControllerRef.current.signal
+        })
+      ).unwrap()
     ]).catch(error => {
       handleFetchProjectError(error, navigate, setConfirmData, dispatch)
     })
-  }, [dispatch, fetchProject, fetchProjectSummary, navigate, params.projectName])
+  }, [dispatch, navigate, params.projectName])
 
   const resetProjectData = useCallback(() => {
-    removeProjectData()
-  }, [removeProjectData])
+    dispatch(removeProjectData())
+  }, [dispatch])
 
   useEffect(() => {
     return () => {
@@ -156,9 +168,9 @@ const ProjectMonitor = ({
 
     return () => {
       resetProjectData()
-      removeProjectSummary()
+      dispatch(removeProjectSummary())
     }
-  }, [fetchProjectDataAndSummary, removeProjectSummary, resetProjectData])
+  }, [dispatch, fetchProjectDataAndSummary, resetProjectData])
 
   useEffect(() => {
     if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {
@@ -215,17 +227,19 @@ const ProjectMonitor = ({
     setShowFunctionsPanel(false)
     removeNewFunction()
 
-    const funcs = await fetchProjectFunctions(params.projectName).catch(error => {
-      dispatch(
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Function was deployed'
-        })
-      )
+    const funcs = await dispatch(fetchProjectFunctions({ project: params.projectName }))
+      .unwrap()
+      .catch(error => {
+        dispatch(
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: 'Function was deployed'
+          })
+        )
 
-      showErrorNotification(dispatch, error, '', 'Failed to fetch functions')
-    })
+        showErrorNotification(dispatch, error, '', 'Failed to fetch functions')
+      })
 
     if (!isEmpty(funcs)) {
       const currentItem = funcs.find(func => {
@@ -252,10 +266,12 @@ const ProjectMonitor = ({
     setShowFunctionsPanel(false)
     removeNewFunction()
 
-    const funcs = await fetchProjectFunctions(params.projectName).catch(error => {
-      showErrorNotification(dispatch, deployError, '', 'Failed to deploy the function')
-      showErrorNotification(dispatch, error, '', 'Failed to fetch functions')
-    })
+    const funcs = await dispatch(fetchProjectFunctions({ project: params.projectName }))
+      .unwrap()
+      .catch(error => {
+        showErrorNotification(dispatch, deployError, '', 'Failed to deploy the function')
+        showErrorNotification(dispatch, error, '', 'Failed to fetch functions')
+      })
 
     if (!isEmpty(funcs)) {
       const currentItem = funcs.find(func => {
@@ -273,8 +289,8 @@ const ProjectMonitor = ({
   const handleLaunchIDE = useCallback(() => {}, [])
 
   const handleRefresh = () => {
-    removeProjectData()
-    removeProjectSummary()
+    dispatch(removeProjectData())
+    dispatch(removeProjectSummary())
     fetchProjectDataAndSummary()
 
     if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {
@@ -315,14 +331,12 @@ const ProjectMonitor = ({
 }
 
 export default connect(
-  ({ functionsStore, nuclioStore, projectStore }) => ({
+  ({ functionsStore, nuclioStore }) => ({
     functionsStore,
-    nuclioStore,
-    projectStore
+    nuclioStore
   }),
   {
     ...functionsActions,
-    ...projectsAction,
     ...nuclioAction
   }
 )(ProjectMonitor)
