@@ -24,9 +24,11 @@ import { getDateAndTimeByFormat } from '../../utils/'
 import { PROJECT_MONITOR, PROJECT_QUICK_ACTIONS_PAGE } from '../../constants'
 
 import './ProjectDetailsHeader.scss'
+import { useSelector } from 'react-redux'
 
 const ProjectDetailsHeader = ({ projectData, projectName }) => {
   const location = useLocation()
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   return (
     <div className="project-details">
@@ -48,10 +50,12 @@ const ProjectDetailsHeader = ({ projectData, projectName }) => {
                 {getDateAndTimeByFormat(projectData.metadata.created, 'MM/DD/YYYY, HH:mm:ss A')}
               </span>
             </li>
-            <li>
-              <span className="project-details__details-label">Owner:</span>
-              <span>{projectData.spec.owner}</span>
-            </li>
+            {!frontendSpec.ce?.version && (
+              <li>
+                <span className="project-details__details-label">Owner:</span>
+                <span>{projectData.spec.owner}</span>
+              </li>
+            )}
             <li>
               <span className="project-details__details-label">Status:</span>
               <div>
