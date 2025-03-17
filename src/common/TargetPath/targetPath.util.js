@@ -38,6 +38,7 @@ import projectAction from '../../actions/projects'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
 import { fetchFeatureVector, fetchFeatureVectors } from '../../reducers/featureStoreReducer'
+import { isCommunityEdition } from '../../utils/helper'
 
 const targetPathRegex =
   /^(store|v3io|s3|az|gs):(\/\/\/|\/\/)(?!.*:\/\/)([\w\-._~:?#[\]@!$&'()*+,;=]+)\/([\w\-._~:/?#[\]%@!$&'()*+,;=]+)$/i
@@ -174,7 +175,7 @@ export const getTargetPathOptions = hiddenOptionsIds => [
     className: 'path-type-v3io',
     label: 'V3IO',
     id: V3IO_INPUT_PATH_SCHEME,
-    hidden: hiddenOptionsIds?.includes(V3IO_INPUT_PATH_SCHEME)
+    hidden: isCommunityEdition() || hiddenOptionsIds?.includes(V3IO_INPUT_PATH_SCHEME)
   },
   {
     className: 'path-type-s3',
