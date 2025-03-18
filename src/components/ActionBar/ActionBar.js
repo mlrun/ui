@@ -113,11 +113,8 @@ const ActionBar = ({
   const filterMenu = useMemo(() => getFilterMenu(false), [getFilterMenu])
   const filterMenuModal = useMemo(() => getFilterMenu(true), [getFilterMenu])
 
-  const formInitialValues = useMemo(() => {
-    const initialValues = {
-      [AUTO_REFRESH_ID]: autoRefreshIsEnabled,
-      [INTERNAL_AUTO_REFRESH_ID]: internalAutoRefreshIsEnabled
-    }
+  const formFiltersInitialValues = useMemo(() => {
+    const initialValues = {}
 
     for (const [filterName, filterConfig] of Object.entries(filtersConfig)) {
       if (!filterConfig.isModal && !filterConfig.hidden) {
@@ -126,7 +123,17 @@ const ActionBar = ({
     }
 
     return initialValues
-  }, [autoRefreshIsEnabled, filtersConfig, internalAutoRefreshIsEnabled])
+  }, [filtersConfig])
+
+  const formInitialValues = useMemo(() => {
+    const initialValues = {
+      [AUTO_REFRESH_ID]: autoRefreshIsEnabled,
+      [INTERNAL_AUTO_REFRESH_ID]: internalAutoRefreshIsEnabled,
+      ...formFiltersInitialValues
+    }
+
+    return initialValues
+  }, [autoRefreshIsEnabled, formFiltersInitialValues, internalAutoRefreshIsEnabled])
 
   const formRef = React.useRef(
     createForm({
@@ -339,8 +346,21 @@ const ActionBar = ({
   }, [])
 
   useLayoutEffect(() => {
-    formRef.current.reset(formInitialValues)
-  }, [formInitialValues])
+    const prevValues = formRef.current.getState().values
+    const valuesToReset = {
+      [INTERNAL_AUTO_REFRESH_ID]: prevValues[INTERNAL_AUTO_REFRESH_ID],
+      [AUTO_REFRESH_ID]: prevValues[AUTO_REFRESH_ID],
+      ...formFiltersInitialValues
+    }
+    formRef.current.reset(valuesToReset)
+  }, [formFiltersInitialValues])
+
+  useLayoutEffect(() => {
+    formRef.current?.batch(() => {
+      formRef.current?.change(AUTO_REFRESH_ID, autoRefreshIsEnabled)
+      formRef.current?.change(INTERNAL_AUTO_REFRESH_ID, internalAutoRefreshIsEnabled)
+    })
+  }, [autoRefreshIsEnabled, internalAutoRefreshIsEnabled])
 
   useEffect(() => {
     dispatch(toggleAutoRefresh(false))

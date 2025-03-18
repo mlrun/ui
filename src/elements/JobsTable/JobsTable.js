@@ -424,7 +424,11 @@ const JobsTable = React.forwardRef(
                       ? 'Close detailed view and uncheck Auto Refresh to view more results'
                       : ''
                 }
-                disableNextDoubleBtn={filtersStore.autoRefresh || autoRefreshPrevValue}
+                disableNextDoubleBtn={
+                  (filtersStore.autoRefresh && !params.jobName) ||
+                  (params.jobName && filtersStore.internalAutoRefresh) ||
+                  autoRefreshPrevValue
+                }
               />
             </>
           )
