@@ -19,6 +19,7 @@ such restriction.
 */
 import { isNil, map } from 'lodash'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { isCommunityEdition } from '../../utils/helper'
 
 import {
   V3IO_VOLUME_TYPE,
@@ -35,7 +36,7 @@ const volumeTypeInputLabels = {
 }
 
 const selectVolumeTypeOptions = [
-  { label: 'V3IO', id: V3IO_VOLUME_TYPE },
+  ...(isCommunityEdition() ? [] : [{ label: 'V3IO', id: V3IO_VOLUME_TYPE }]),
   { label: 'Config Map', id: CONFIG_MAP_VOLUME_TYPE },
   { label: 'Secret', id: SECRET_VOLUME_TYPE },
   { label: 'PVC', id: PVC_VOLUME_TYPE }
