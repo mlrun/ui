@@ -716,6 +716,7 @@ module.exports = {
   No_Data_Message: {
     Common_Message_Jobs_Monitoring:
       /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
+    Common_Message_Monitor_Jobs_Name: /No data matches the filter: "Name: (.+?)"/,
     Common_Message_Jobs_Monitoring_Workflow_Project:
       /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
     Common_Message_Jobs_Monitoring_Status:

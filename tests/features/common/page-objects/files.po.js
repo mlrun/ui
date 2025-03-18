@@ -87,7 +87,8 @@ const filesTable = {
           componentType: actionMenu,
           structure: actionMenuStructureExpand
         },
-        show_all_versions: '[data-testid="quick-link-show-all-versions"]'
+        show_all_versions: '[data-testid="quick-link-show-all-versions"]',
+        expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow'
       }
     }
   }

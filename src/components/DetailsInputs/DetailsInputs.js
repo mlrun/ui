@@ -32,6 +32,7 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import {
   ARTIFACT_OTHER_TYPE,
   DATASET_TYPE,
+  DOCUMENT_TYPE,
   MLRUN_STORAGE_INPUT_PATH_SCHEME,
   MODEL_TYPE,
   TAG_FILTER_LATEST
@@ -87,7 +88,9 @@ const DetailsInputs = ({ inputs, isDetailsPopUp = false }) => {
             ? ARTIFACT_OTHER_TYPE
             : kind === 'datasets'
               ? DATASET_TYPE
-              : MODEL_TYPE
+              : kind === 'models'
+                ? MODEL_TYPE
+                : DOCUMENT_TYPE
       }
 
       if (tag) {

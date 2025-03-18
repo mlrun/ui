@@ -961,7 +961,7 @@ Feature: Artifacts Page
     And wait load page
     Then verify "Cross_Close_Button" element not exists on "Files_Info_Pane" wizard
     Then verify "Header_Full_View" element visibility on "Files_Info_Pane" wizard
-    Then "Header_Full_View" element on "Files_Info_Pane" should contains "clean-data_preproc-column_map.json" value
+    Then "Header_Full_View" element on "Files_Info_Pane" should contains "clean-data_preproc-numcat_map.json" value
     Then select "Add a tag" option in full view action menu on "Files_Info_Pane" wizard
     And wait load page
     And wait load page
@@ -971,7 +971,7 @@ Feature: Artifacts Page
     Then click on "Add_Button" element on "Add_Tag_Popup" wizard
     And wait load page
     Then verify "Header_Full_View" element visibility on "Files_Info_Pane" wizard
-    Then "Header_Full_View" element on "Files_Info_Pane" should contains "clean-data_preproc-column_map.json" value
+    Then "Header_Full_View" element on "Files_Info_Pane" should contains "clean-data_preproc-numcat_map.json" value
     Then click on "Tabel_View_Button" element on "Files_Info_Pane" wizard
     And wait load page
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard

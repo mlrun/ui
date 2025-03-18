@@ -410,7 +410,7 @@ const pageHeaderButton = By.css(
 )
 const jobsTabSelector = commonTable(tabSelector)
 const tableRefreshButton = By.css(
-  '.content .content__action-bar-wrapper [data-testid="refresh"]'
+  '.content .content__action-bar-wrapper [data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]'
 )
 const commonStatusFilter = dropdownComponent(
   generateDropdownGroup(

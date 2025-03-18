@@ -175,6 +175,7 @@ Feature: Jobs Monitoring Page
         Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
         Then verify that 50 row elements are displayed in "Jobs_Table" on "Jobs_Monitoring_Jobs_Tab" wizard
         When pick up "Custom range" from "09/03/2024 00:00" to "09/04/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitoring_Jobs_Tab" wizard
+        And wait load page
         Then verify from "09/03/2024 00:00" to "09/04/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
         And wait load page
     
@@ -423,6 +424,7 @@ Feature: Jobs Monitoring Page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         And wait load page
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
         Then type value "qwe" to "Search_By_Name_Filter_Input" field on "Jobs_Monitoring_Jobs_Tab" wizard
         Then click on "Refresh_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
         And wait load page
@@ -499,6 +501,7 @@ Feature: Jobs Monitoring Page
         Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
         Then "Delete_Button" element on "Confirm_Popup" should contains "Delete" value
         When click on "Delete_Button" element on "Confirm_Popup" wizard
+        And wait load page
         And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         And wait load page

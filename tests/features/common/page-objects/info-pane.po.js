@@ -71,7 +71,7 @@ const infoPaneOverviewHeaders = {
       root: 'li:not(li.details-item_hidden)',
       fields: {
         key: '.details-item__header',
-        link: '.details-item__data .link',
+        link: '.details-item__data.link',
         value: '.details-item__data'
       }
     }
