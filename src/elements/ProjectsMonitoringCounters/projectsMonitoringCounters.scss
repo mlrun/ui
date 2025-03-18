@@ -43,6 +43,10 @@
       }
     }
 
+    &-card__col:not(:last-child) {
+      padding-right: 0.75em;
+    }
+
     &__counter {
       color: $primary;
       font-weight: 400;
