@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useState, useEffect, useMemo, useRef } from 'react'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
@@ -26,7 +26,6 @@ import ProjectMonitorView from './ProjectMonitorView'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelModal'
 
-import nuclioAction from '../../actions/nuclio'
 import {
   DATASET_TYPE,
   DATASETS_TAB,
@@ -44,6 +43,7 @@ import { useMode } from '../../hooks/mode.hook'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 import { removeNewFeatureSet } from '../../reducers/featureStoreReducer'
+import { fetchNuclioV3ioStreams } from '../../reducers/nuclioReducer'
 import {
   fetchProject,
   fetchProjectFunctions,
@@ -53,7 +53,7 @@ import {
 } from '../../reducers/projectReducer'
 import { removeFunctionsError, removeNewFunction } from '../../reducers/functionReducer'
 
-const ProjectMonitor = ({ fetchNuclioV3ioStreams, nuclioStore, removeV3ioStreams }) => {
+const ProjectMonitor = () => {
   const [createFeatureSetPanelIsOpen, setCreateFeatureSetPanelIsOpen] = useState(false)
   const [isNewFunctionPopUpOpen, setIsNewFunctionPopUpOpen] = useState(false)
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
@@ -69,6 +69,7 @@ const ProjectMonitor = ({ fetchNuclioV3ioStreams, nuclioStore, removeV3ioStreams
   const frontendSpec = useSelector(state => state.appStore.frontendSpec)
   const functionsStore = useSelector(store => store.functionsStore)
   const projectStore = useSelector(store => store.projectStore)
+  const nuclioStore = useSelector((store) => store.nuclioStore)
 
   const registerArtifactLink = useCallback(
     artifactKind =>
@@ -170,15 +171,9 @@ const ProjectMonitor = ({ fetchNuclioV3ioStreams, nuclioStore, removeV3ioStreams
     if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {
       v3ioStreamsAbortControllerRef.current = new AbortController()
 
-      fetchNuclioV3ioStreams(params.projectName, v3ioStreamsAbortControllerRef.current.signal)
+      dispatch(fetchNuclioV3ioStreams({ project: params.projectName, signal: v3ioStreamsAbortControllerRef.current.signal }))
     }
-  }, [
-    fetchNuclioV3ioStreams,
-    isNuclioModeDisabled,
-    params.projectName,
-    nuclioStreamsAreEnabled,
-    removeV3ioStreams
-  ])
+  }, [isNuclioModeDisabled, params.projectName, nuclioStreamsAreEnabled, dispatch])
 
   const closeFeatureSetPanel = () => {
     setCreateFeatureSetPanelIsOpen(false)
@@ -290,7 +285,7 @@ const ProjectMonitor = ({ fetchNuclioV3ioStreams, nuclioStore, removeV3ioStreams
     if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {
       v3ioStreamsAbortControllerRef.current = new AbortController()
 
-      fetchNuclioV3ioStreams(params.projectName, v3ioStreamsAbortControllerRef.current.signal)
+      dispatch(fetchNuclioV3ioStreams({ project: params.projectName, signal: v3ioStreamsAbortControllerRef.current.signal }))
     }
   }
 
@@ -324,11 +319,4 @@ const ProjectMonitor = ({ fetchNuclioV3ioStreams, nuclioStore, removeV3ioStreams
   )
 }
 
-export default connect(
-  ({ nuclioStore }) => ({
-    nuclioStore
-  }),
-  {
-    ...nuclioAction
-  }
-)(ProjectMonitor)
+export default ProjectMonitor

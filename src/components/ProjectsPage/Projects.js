@@ -34,7 +34,6 @@ import {
   projectDeletionWrapperKind,
   projectsSortOptions
 } from './projects.util'
-import nuclioActions from '../../actions/nuclio'
 import { BG_TASK_RUNNING } from '../../utils/poll.util'
 import { onDeleteProject } from './projects.util'
 import { PROJECT_ONLINE_STATUS } from '../../constants'
@@ -57,6 +56,7 @@ import {
   removeProjects,
   setDeletingProjects
 } from '../../reducers/projectReducer'
+import { fetchAllNuclioFunctions } from '../../reducers/nuclioReducer'
 
 const Projects = () => {
   const [actionsMenu, setActionsMenu] = useState({})
@@ -129,7 +129,7 @@ const Projects = () => {
     abortControllerRef.current = new AbortController()
 
     if (!isNuclioModeDisabled) {
-      dispatch(nuclioActions.fetchNuclioFunctions())
+      dispatch(fetchAllNuclioFunctions())
     }
 
     dispatch(removeProjects())
