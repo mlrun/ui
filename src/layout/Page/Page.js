@@ -17,9 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams, Outlet, useNavigate } from 'react-router-dom'
+import { useParams, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import classNames from 'classnames'
 import { isEmpty } from 'lodash'
 import { createPortal } from 'react-dom'
@@ -34,13 +34,18 @@ import { NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
 import { isProjectValid } from '../../utils/link-helper.util'
 
 import './Page.scss'
+import Loader from '../../common/Loader/Loader'
+import { generateProjectsList } from '../../utils/projects'
+import projectsAction from '../../actions/projects'
 
 const Page = () => {
   const [isNavbarPinned, setIsNavbarPinned] = useState(false)
+  const [isProjectsFetched, setProjectFetched] = useState(false)
   const { projectName } = useParams()
   const mainRef = useRef()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const location = useLocation()
   const transitionEndEventName = useMemo(() => getTransitionEndEventName(), [])
   const pinnedClasses = classNames(!(isNavbarPinned && projectName) && 'unpinned')
   const mainStyles = {
@@ -53,11 +58,26 @@ const Page = () => {
   const { frontendSpec, frontendSpecPopupIsOpened, convertedYaml } = useSelector(
     store => store.appStore
   )
-  const { projects } = useSelector(store => store.projectStore)
+  const { projectsNames } = useSelector(store => store.projectStore)
 
-  useLayoutEffect(() => {
-    isProjectValid(navigate, projects, projectName)
-  }, [navigate, projectName, projects])
+  const projectsList = useMemo(() => {
+    return generateProjectsList(projectsNames.data)
+  }, [projectsNames.data])
+
+  useEffect(() => {
+    if (
+      projectsList.length === 0 &&
+      location.pathname !== '/projects' &&
+      !location.pathname.startsWith('/projects/*') //todo remove last condition when project filter (select) on cross project monitoring will be merged
+    ) {
+      dispatch(projectsAction.fetchProjects({ format: 'minimal' })).then(projects => {
+        isProjectValid(navigate, projects, projectName, dispatch)
+        setProjectFetched(true)
+      })
+    } else {
+      setProjectFetched(true)
+    }
+  }, [dispatch, location.pathname, navigate, projectName, projectsList.length])
 
   useEffect(() => {
     if (mainRef) {
@@ -89,9 +109,7 @@ const Page = () => {
     <>
       {projectName && <Navbar projectName={projectName} setIsNavbarPinned={setIsNavbarPinned} />}
       <main id="main" className={pinnedClasses} ref={mainRef} style={mainStyles}>
-        <div id="main-wrapper">
-          <Outlet />
-        </div>
+        <div id="main-wrapper">{isProjectsFetched ? <Outlet /> : <Loader />}</div>
       </main>
       {createPortal(<ModalContainer />, document.getElementById('overlay_container'))}
       {convertedYaml.length > 0 && (
