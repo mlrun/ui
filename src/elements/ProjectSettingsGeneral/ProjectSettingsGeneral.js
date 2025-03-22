@@ -110,7 +110,7 @@ const ProjectSettingsGeneral = ({
             [DEFAULT_IMAGE]: response?.data?.spec?.[DEFAULT_IMAGE],
             [DESCRIPTION]: response?.data?.spec?.[DESCRIPTION],
             [GOALS]: response?.data?.spec?.[GOALS],
-            [PARAMS]: parseObjectToKeyValue(response?.data?.spec?.[PARAMS]),
+            [PARAMS]: parseObjectToKeyValue(response?.data?.spec?.[PARAMS] || {}),
             [LABELS]: parseChipsData(
               response?.data?.metadata?.[LABELS],
               frontendSpec.internal_labels || []
