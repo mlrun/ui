@@ -23,7 +23,7 @@ import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
 import { connect, useDispatch } from 'react-redux'
 import { createForm } from 'final-form'
-import { cloneDeep, isEmpty, set } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash'
 import { useParams } from 'react-router-dom'
 
 import {
@@ -156,7 +156,6 @@ const ProjectSettingsGeneral = ({
         frontendSpec.internal_labels || []
       )
 
-      set(formStateRef.current.initialValues, LABELS, parsedLabels)
       formStateRef.current.form.change(LABELS, parsedLabels)
       setLastEditedProjectValues(state => ({
         ...state,
