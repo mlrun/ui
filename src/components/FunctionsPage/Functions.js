@@ -503,10 +503,6 @@ const Functions = ({
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
   }, [dispatch, params.projectName])
 
-  const retryRequestCallback = useCallback(() => {
-    refreshFunctions(functionsFilters)
-  }, [functionsFilters, refreshFunctions])
-
   const handleSelectFunction = item => {
     if (document.getElementsByClassName('view')[0]) {
       document.getElementsByClassName('view')[0].classList.remove('view')
@@ -730,7 +726,6 @@ const Functions = ({
         isAllVersions ? paginationConfigFunctionVersionsRef : paginationConfigFunctionsRef
       }
       requestErrorMessage={requestErrorMessage}
-      retryRequest={retryRequestCallback}
       selectedFunction={selectedFunction}
       setSearchFunctionsParams={
         isAllVersions ? setSearchFunctionVersionsParams : setSearchFunctionsParams

@@ -166,10 +166,6 @@ const FeatureSets = () => {
     [fetchData, fetchTags]
   )
 
-  const handleRefreshWithFilters = useCallback(() => {
-    handleRefresh(featureSetsFilters)
-  }, [featureSetsFilters, handleRefresh])
-
   const collapseRowCallback = useCallback(
     featureSet => {
       const newStoreSelectedRowData = {
@@ -445,7 +441,6 @@ const FeatureSets = () => {
       featureStore={featureStore}
       filtersStore={filtersStore}
       filters={featureSetsFilters}
-      handleRefreshWithFilters={handleRefreshWithFilters}
       handleRefresh={handleRefresh}
       pageData={pageData}
       ref={{ featureStoreRef }}

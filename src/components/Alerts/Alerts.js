@@ -60,21 +60,10 @@ const Alerts = () => {
     lastCheckedAlertIdRef,
     paginatedAlerts,
     paginationConfigAlertsRef,
-    refreshAlerts,
     requestErrorMessage,
     searchParams,
-    setAlerts,
     setSearchParams
   } = useAlertsPageData(alertsFilters, true)
-
-  const handleRefreshWithFilters = useCallback(
-    filters => {
-      setAlerts(null)
-
-      return refreshAlerts(filters)
-    },
-    [refreshAlerts, setAlerts]
-  )
 
   const tableContent = useMemo(() => {
     return paginatedAlerts.map(alert => createAlertRowData(alert, isCrossProjects))
@@ -150,7 +139,6 @@ const Alerts = () => {
       filtersStore={filtersStore}
       handleCancel={handleCancel}
       handleRefreshAlerts={handleRefreshAlerts}
-      handleRefreshWithFilters={handleRefreshWithFilters}
       isCrossProjects={isCrossProjects}
       pageData={pageData}
       paginationConfigAlertsRef={paginationConfigAlertsRef}

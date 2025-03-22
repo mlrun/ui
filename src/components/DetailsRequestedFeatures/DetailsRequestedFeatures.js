@@ -20,26 +20,21 @@ such restriction.
 import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { cloneDeep, isEqual, isNil } from 'lodash'
+import { useDispatch } from 'react-redux'
 
 import DetailsRequestedFeaturesView from './DetailsRequestedFeaturesView'
 
 import { countChanges } from '../Details/details.util.js'
+import { setChanges, setChangesCounter, setChangesData } from '../../reducers/detailsReducer'
 
-const DetailsRequestedFeatures = ({
-  changes,
-  formState,
-  isDetailsPopUp = false,
-  selectedItem,
-  setChanges,
-  setChangesData,
-  setChangesCounter
-}) => {
+const DetailsRequestedFeatures = ({ changes, formState, isDetailsPopUp = false, selectedItem }) => {
   const [confirmDialogData, setConfirmDialogData] = useState({
     index: null,
     feature: null
   })
   const [editableItemIndex, setEditableItemIndex] = useState(null)
   const [labelFeatureIsEditable, setLabelFeatureIsEditable] = useState(false)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     return () => {
@@ -90,15 +85,15 @@ const DetailsRequestedFeatures = ({
       }
     }
 
-    setChangesCounter(countChanges(changesData))
-    setChangesData({ ...changesData })
+    dispatch(setChangesCounter(countChanges(changesData)))
+    dispatch(setChangesData({ ...changesData }))
   }, [
     changes.data,
+    dispatch,
     editableItemIndex,
-    formState,
-    labelFeatureIsEditable,
-    setChangesCounter,
-    setChangesData
+    formState.initialValues.features,
+    formState.values.features,
+    labelFeatureIsEditable
   ])
 
   const handleDelete = index => {
@@ -131,10 +126,12 @@ const DetailsRequestedFeatures = ({
     }
 
     formState.form.change('features', updatedFeatures)
-    setChanges({
-      data: changesData,
-      counter: countChanges(changesData)
-    })
+    dispatch(
+      setChanges({
+        data: changesData,
+        counter: countChanges(changesData)
+      })
+    )
     setConfirmDialogData({ index: null, feature: null })
   }
 
@@ -170,10 +167,7 @@ const DetailsRequestedFeatures = ({
 DetailsRequestedFeatures.propTypes = {
   changes: PropTypes.object.isRequired,
   formState: PropTypes.object.isRequired,
-  selectedItem: PropTypes.shape({}).isRequired,
-  setChanges: PropTypes.func.isRequired,
-  setChangesData: PropTypes.func.isRequired,
-  setChangesCounter: PropTypes.func.isRequired
+  selectedItem: PropTypes.shape({}).isRequired
 }
 
 export default DetailsRequestedFeatures

@@ -33,7 +33,6 @@ import {
 import { createWorkflowsMonitoringContent } from '../../../utils/createJobsContent'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
-import detailsActions from '../../../actions/details'
 import { actionCreator } from './workflowsMonitoring.util'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 import { deleteWorkflows } from '../../../reducers/workflowReducer'
@@ -53,12 +52,12 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
   const { abortJobRef, initialTabData, getWorkflows, requestErrorMessage, workflowsFiltersConfig } =
     React.useContext(ProjectJobsMonitoringContext)
 
-    const filters = useFiltersFromSearchParams(
-      initialTabData[JOBS_MONITORING_WORKFLOWS_TAB]?.filtersConfig,
-      initialTabData[JOBS_MONITORING_WORKFLOWS_TAB]?.parseQueryParamsCallback
-    )
+  const filters = useFiltersFromSearchParams(
+    initialTabData[JOBS_MONITORING_WORKFLOWS_TAB]?.filtersConfig,
+    initialTabData[JOBS_MONITORING_WORKFLOWS_TAB]?.parseQueryParamsCallback
+  )
 
-  usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
+  usePods(dispatch, selectedJob)
 
   const tableContent = useMemo(
     () =>

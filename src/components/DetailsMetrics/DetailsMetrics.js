@@ -30,8 +30,6 @@ import ApplicationMetricCard from './MetricsCards/ApplicationMetricCard'
 import NoData from '../../common/NoData/NoData'
 
 import { REQUEST_CANCELED } from '../../constants'
-import detailsActions from '../../actions/details'
-import modelEndpointsActions from '../../actions/modelEndpoints'
 import { groupMetricByApplication } from '../../elements/MetricsSelector/metricsSelector.util'
 
 import {
@@ -50,6 +48,12 @@ import {
 import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
 
 import './DetailsMetrics.scss'
+import {
+  fetchModelEndpointMetrics,
+  fetchModelEndpointMetricsValues,
+  setDetailsDates,
+  setSelectedMetricsOptions
+} from '../../reducers/detailsReducer'
 
 const DetailsMetrics = ({ selectedItem }) => {
   const [metrics, setMetrics] = useState([])
@@ -93,7 +97,7 @@ const DetailsMetrics = ({ selectedItem }) => {
       }
 
       dispatch(
-        detailsActions.setDetailsDates({
+        setDetailsDates({
           value: generatedDates,
           selectedOptionId,
           isPredefined
@@ -113,11 +117,13 @@ const DetailsMetrics = ({ selectedItem }) => {
 
   useEffect(() => {
     dispatch(
-      modelEndpointsActions.fetchModelEndpointMetrics(
-        selectedItem.metadata.project,
-        selectedItem.metadata.uid
-      )
-    ).then(() => setMetricOptionsAreLoaded(true))
+      fetchModelEndpointMetrics({
+        project: selectedItem.metadata.project,
+        uid: selectedItem.metadata.uid
+      })
+    )
+      .unwrap()
+      .then(() => setMetricOptionsAreLoaded(true))
   }, [dispatch, selectedItem.metadata.project, selectedItem.metadata.uid])
 
   useEffect(() => {
@@ -133,23 +139,23 @@ const DetailsMetrics = ({ selectedItem }) => {
 
       return Promise.all([
         dispatch(
-          modelEndpointsActions.fetchModelEndpointMetricsValues(
-            selectedItemProject,
-            selectedItemUid,
-            selectedMetricsParams,
-            metricsValuesAbortController.current,
+          fetchModelEndpointMetricsValues({
+            project: selectedItemProject,
+            uid: selectedItemUid,
+            params: selectedMetricsParams,
+            abortController: metricsValuesAbortController.current,
             setRequestErrorMessage
-          )
-        ),
+          })
+        ).unwrap(),
         dispatch(
-          modelEndpointsActions.fetchModelEndpointMetricsValues(
-            selectedItemProject,
-            selectedItemUid,
-            preInvocationMetricParams,
-            metricsValuesAbortController.current,
+          fetchModelEndpointMetricsValues({
+            project: selectedItemProject,
+            uid: selectedItemUid,
+            params: preInvocationMetricParams,
+            abortController: metricsValuesAbortController.current,
             setRequestErrorMessage
-          )
-        )
+          })
+        ).unwrap()
       ]).then(([metrics, previousInvocation]) => {
         if (metrics) setMetrics(metrics)
 
@@ -236,7 +242,7 @@ const DetailsMetrics = ({ selectedItem }) => {
           metrics={detailsStore.metricsOptions.all}
           onSelect={metrics =>
             dispatch(
-              modelEndpointsActions.setSelectedMetricsOptions({
+              setSelectedMetricsOptions({
                 endpointUid: selectedItem.metadata.uid,
                 metrics
               })

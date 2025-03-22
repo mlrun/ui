@@ -37,7 +37,6 @@ import {
   handleDeleteJob,
   isJobKindLocal
 } from '../../components/Jobs/jobs.util'
-import detailsActions from '../../actions/details'
 import getState from '../../utils/getState'
 import { DANGER_BUTTON } from 'igz-controls/constants'
 import { FILTERS_CONFIG } from '../../types'
@@ -98,7 +97,7 @@ const JobsTable = React.forwardRef(
       setJobWizardMode
     } = React.useContext(context)
 
-    usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
+    usePods(dispatch, selectedJob)
 
     const toggleConvertedYaml = useCallback(
       data => {
@@ -113,10 +112,6 @@ const JobsTable = React.forwardRef(
       },
       [dispatch]
     )
-
-    const handleRefreshWithFilters = useCallback(() => {
-      refreshJobs(filters)
-    }, [filters, refreshJobs])
 
     const pageData = useMemo(
       () => generatePageData(handleFetchJobLogs, selectedJob),
@@ -388,7 +383,6 @@ const JobsTable = React.forwardRef(
                 getCloseDetailsLink={() => getCloseDetailsLink(params.jobName)}
                 handleCancel={() => setSelectedJob({})}
                 pageData={pageData}
-                retryRequest={handleRefreshWithFilters}
                 selectedItem={selectedJob}
                 tab={MONITOR_JOBS_TAB}
                 tableClassName="monitor-jobs-table"

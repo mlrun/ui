@@ -224,10 +224,6 @@ const AddToFeatureVectorPage = () => {
     [fetchData, fetchTags]
   )
 
-  const handleRefreshWithFilters = useCallback(() => {
-    handleRefresh(addToFeatureVectorFilters)
-  }, [addToFeatureVectorFilters, handleRefresh])
-
   const collapseRowCallback = useCallback(
     feature => {
       const newStoreSelectedRowData = {
@@ -378,7 +374,6 @@ const AddToFeatureVectorPage = () => {
       filtersConfig={filtersConfig}
       filtersStore={filtersStore}
       handleRefresh={handleRefresh}
-      handleRefreshWithFilters={handleRefreshWithFilters}
       pageData={pageData}
       ref={addToFeatureVectorPageRef}
       requestErrorMessage={requestErrorMessage}

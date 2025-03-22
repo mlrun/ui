@@ -52,11 +52,11 @@ import {
   STATUS_FILTER,
   TAG_FILTER
 } from '../../constants'
-import detailsActions from '../../actions/details'
 import { filterSelectOptions, tagFilterOptions } from './filterMenu.settings'
 import { generateProjectsList } from '../../utils/projects'
 import { getDefaultCloseDetailsLink } from '../../utils/link-helper.util'
 import { removeFilters, setFilterProjectOptions, setFilters } from '../../reducers/filtersReducer'
+import { setFiltersWasHandled, showWarning } from '../../reducers/detailsReducer'
 
 import './filterMenu.scss'
 
@@ -170,8 +170,8 @@ const FilterMenu = ({
         }
         window.addEventListener('discardChanges', handleDiscardChanges)
 
-        dispatch(detailsActions.setFiltersWasHandled(true))
-        dispatch(detailsActions.showWarning(true))
+        dispatch(setFiltersWasHandled(true))
+        dispatch(showWarning(true))
       })
     }
 
@@ -450,18 +450,18 @@ const FilterMenu = ({
           })}
         </div>
         {actionButton &&
-        !actionButton.hidden &&
-        (actionButton.getCustomTemplate ? (
-          actionButton.getCustomTemplate(actionButton)
-        ) : (
-          <Button
-            variant={actionButton.variant}
-            label={actionButton.label}
-            tooltip={actionButton.tooltip}
-            disabled={actionButton.disabled}
-            onClick={actionButton.onClick}
-          />
-        ))}
+          !actionButton.hidden &&
+          (actionButton.getCustomTemplate ? (
+            actionButton.getCustomTemplate(actionButton)
+          ) : (
+            <Button
+              variant={actionButton.variant}
+              label={actionButton.label}
+              tooltip={actionButton.tooltip}
+              disabled={actionButton.disabled}
+              onClick={actionButton.onClick}
+            />
+          ))}
 
         <div className="actions">
           {autoRefreshIsEnabled && (

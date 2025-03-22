@@ -44,7 +44,6 @@ import {
   REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
-import detailsActions from '../../actions/details'
 import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
 import { FILTERS_CONFIG } from '../../types'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
@@ -54,6 +53,7 @@ import {
   toggleAutoRefresh,
   toggleInternalAutoRefresh
 } from '../../reducers/filtersReducer'
+import { setFiltersWasHandled, showWarning } from '../../reducers/detailsReducer'
 
 import { ReactComponent as CollapseIcon } from 'igz-controls/images/collapse.svg'
 import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
@@ -161,8 +161,8 @@ const ActionBar = ({
         }
         window.addEventListener('discardChanges', handleDiscardChanges)
 
-        dispatch(detailsActions.setFiltersWasHandled(true))
-        dispatch(detailsActions.showWarning(true))
+        dispatch(setFiltersWasHandled(true))
+        dispatch(showWarning(true))
       })
     }
 
