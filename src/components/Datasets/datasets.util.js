@@ -186,7 +186,8 @@ export const generateActionsMenu = (
         label: 'Add a tag',
         hidden: isDetailsPopUp,
         icon: <TagIcon />,
-        onClick: handleAddTag
+        onClick: handleAddTag,
+        allowLeaveWarning: true
       },
       {
         label: 'Download',
@@ -254,7 +255,8 @@ export const generateActionsMenu = (
                     DATASET_TYPE
                   )
                 }
-              )
+              ),
+        allowLeaveWarning: true
       },
       {
         label: 'Delete all versions',
@@ -279,7 +281,8 @@ export const generateActionsMenu = (
                 true
               )
             }
-          )
+          ),
+        allowLeaveWarning: true
       }
     ],
     [

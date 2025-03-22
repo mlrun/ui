@@ -44,7 +44,6 @@ import {
   REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
-import detailsActions from '../../actions/details'
 import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
 import { FILTERS_CONFIG } from '../../types'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
@@ -54,6 +53,7 @@ import {
   toggleAutoRefresh,
   toggleInternalAutoRefresh
 } from '../../reducers/filtersReducer'
+import { performDetailsActionHelper } from '../Details/details.util'
 
 import { ReactComponent as CollapseIcon } from 'igz-controls/images/collapse.svg'
 import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
@@ -150,25 +150,6 @@ const ActionBar = ({
     )
   }, [filtersConfig])
 
-  const filtersHelper = useCallback(async () => {
-    let handleChangeFilters = Promise.resolve(true)
-
-    if (changes.counter > 0) {
-      handleChangeFilters = await new Promise(resolve => {
-        const handleDiscardChanges = () => {
-          window.removeEventListener('discardChanges', handleDiscardChanges)
-          resolve(true)
-        }
-        window.addEventListener('discardChanges', handleDiscardChanges)
-
-        dispatch(detailsActions.setFiltersWasHandled(true))
-        dispatch(detailsActions.showWarning(true))
-      })
-    }
-
-    return handleChangeFilters
-  }, [changes.counter, dispatch])
-
   const saveFilters = useCallback(
     filtersForSaving => {
       if (!isEmpty(filtersForSaving)) {
@@ -203,12 +184,12 @@ const ActionBar = ({
     [filtersConfig, setSearchParams]
   )
 
-  const applyChanges = useCallback(
+  const applyFilters = useCallback(
     async (formValues, filters) => {
-      const filtersHelperResult = await filtersHelper(changes, dispatch)
+      const actionCanBePerformed = await performDetailsActionHelper(changes, dispatch, true)
       const newFilters = { ...filters, ...formValues }
 
-      if (filtersHelperResult) {
+      if (actionCanBePerformed) {
         if (closeParamName) {
           navigate(getCloseDetailsLink(closeParamName, true), { replace: true })
         }
@@ -234,12 +215,11 @@ const ActionBar = ({
       }
     },
     [
-      filtersHelper,
       changes,
       dispatch,
+      closeParamName,
       filtersStore.groupBy,
       saveFilters,
-      closeParamName,
       removeSelectedItem,
       setSelectedRowData,
       toggleAllRows,
@@ -250,9 +230,9 @@ const ActionBar = ({
 
   const refresh = useCallback(
     async formState => {
-      const filtersHelperResult = await filtersHelper(changes, dispatch)
+      const actionCanBePerformed = await performDetailsActionHelper(changes, dispatch)
 
-      if (filtersHelperResult) {
+      if (actionCanBePerformed) {
         if (changes.counter > 0 && cancelRequest) {
           cancelRequest(REQUEST_CANCELED)
         } else {
@@ -264,7 +244,7 @@ const ActionBar = ({
         }
       }
     },
-    [cancelRequest, changes, dispatch, filters, filtersHelper, handleRefresh, saveFilters]
+    [changes, dispatch, cancelRequest, saveFilters, handleRefresh, filters]
   )
 
   const handleDateChange = (dates, isPredefined, optionId, input, formState) => {
@@ -282,8 +262,16 @@ const ActionBar = ({
 
     const newFilterValues = { ...formState.values, [DATES_FILTER]: selectedDate }
 
-    applyChanges(newFilterValues, filterMenuModal)
+    applyFilters(newFilterValues, filterMenuModal)
     input.onChange(selectedDate)
+  }
+
+  const handleActionClick = async handler => {
+    const actionCanBePerformed = await performDetailsActionHelper(changes, dispatch)
+
+    if (actionCanBePerformed) {
+      handler()
+    }
   }
 
   useEffect(() => {
@@ -376,7 +364,7 @@ const ActionBar = ({
               <div key={NAME_FILTER} className="action-bar__filters-item">
                 <NameFilter
                   applyChanges={value =>
-                    applyChanges({ ...formState.values, name: value }, filterMenuModal)
+                    applyFilters({ ...formState.values, name: value }, filterMenuModal)
                   }
                 />
               </div>
@@ -412,7 +400,7 @@ const ActionBar = ({
           </div>
           {!isEmpty(filterMenuModalInitialState) && (
             <FilterMenuModal
-              applyChanges={filterMenuModal => applyChanges(formState.values, filterMenuModal)}
+              applyChanges={filterMenuModal => applyFilters(formState.values, filterMenuModal)}
               initialValues={filterMenuModalInitialState}
               values={filterMenuModal}
             >
@@ -432,7 +420,9 @@ const ActionBar = ({
                       variant={actionButton.variant}
                       label={actionButton.label}
                       className={actionButton.className}
-                      onClick={actionButton.onClick}
+                      onClick={() => {
+                        handleActionClick(actionButton.onClick)
+                      }}
                     />
                   ))
               )}
