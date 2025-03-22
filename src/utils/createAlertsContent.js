@@ -123,7 +123,7 @@ const getSeverityData = severity => {
         value: (
           <div className="alert-row__details-alert-icon-cell">
             <Low />
-            <span>{upperFirst(SEVERITY_LOW)}</span>
+            <span className={'data-ellipsis'}>{upperFirst(SEVERITY_LOW)}</span>
           </div>
         ),
         tooltip: upperFirst(SEVERITY_LOW)
@@ -133,7 +133,7 @@ const getSeverityData = severity => {
         value: (
           <div className="alert-row__details-alert-icon-cell">
             <Normal />
-            <span>{upperFirst(SEVERITY_MEDIUM)}</span>
+            <span className={'data-ellipsis'}>{upperFirst(SEVERITY_MEDIUM)}</span>
           </div>
         ),
         tooltip: upperFirst(SEVERITY_MEDIUM)
@@ -143,7 +143,7 @@ const getSeverityData = severity => {
         value: (
           <div className="alert-row__details-alert-icon-cell">
             <High />
-            <span>{upperFirst(SEVERITY_HIGH)}</span>
+            <span className={'data-ellipsis'}>{upperFirst(SEVERITY_HIGH)}</span>
           </div>
         ),
         tooltip: upperFirst(SEVERITY_HIGH)
@@ -153,7 +153,7 @@ const getSeverityData = severity => {
         value: (
           <div className="alert-row__details-alert-icon-cell">
             <Critical />
-            <span>{upperFirst(SEVERITY_CRITICAL)}</span>
+            <span className={'data-ellipsis'}>{upperFirst(SEVERITY_CRITICAL)}</span>
           </div>
         ),
         tooltip: upperFirst(SEVERITY_CRITICAL)
