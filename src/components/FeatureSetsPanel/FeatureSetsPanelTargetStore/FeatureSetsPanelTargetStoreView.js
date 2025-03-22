@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import { CSSTransition } from 'react-transition-group'
 import classNames from 'classnames'
@@ -96,6 +96,9 @@ const FeatureSetsPanelTargetStoreView = ({
   triggerPartitionCheckbox,
   validation
 }) => {
+  const offlineFieldsRef = useRef(null)
+  const externalOfflineFieldsRef = useRef(null)
+
   return (
     <div className="feature-set-panel__item new-item-side-panel__item target-store">
       <FeatureSetsPanelSection title="Target store">
@@ -322,12 +325,14 @@ const FeatureSetsPanelTargetStoreView = ({
                     {showAdvanced.parquet ? 'Hide advanced' : 'Show advanced'}
                   </span>
                   <CSSTransition
+                    nodeRef={offlineFieldsRef}
                     in={showAdvanced.parquet}
                     timeout={200}
                     classNames="fade"
                     unmountOnExit
                   >
                     <PartitionFields
+                      ref={offlineFieldsRef}
                       data={data.parquet}
                       handlePartitionRadioButtonClick={value =>
                         handlePartitionRadioButtonClick(value, PARQUET)
@@ -430,12 +435,14 @@ const FeatureSetsPanelTargetStoreView = ({
                     {showAdvanced.externalOffline ? 'Hide advanced' : 'Show advanced'}
                   </span>
                   <CSSTransition
+                    nodeRef={externalOfflineFieldsRef}
                     in={showAdvanced.externalOffline}
                     timeout={200}
                     classNames="fade"
                     unmountOnExit
                   >
                     <PartitionFields
+                      ref={externalOfflineFieldsRef}
                       data={data.externalOffline}
                       handlePartitionRadioButtonClick={value =>
                         handlePartitionRadioButtonClick(value, EXTERNAL_OFFLINE)
