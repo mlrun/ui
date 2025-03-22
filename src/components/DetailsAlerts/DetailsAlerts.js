@@ -21,7 +21,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
-import AlertsView from '../Alerts/AlertsView'
+import AlertsTable from '../../elements/AlertsTable/AlertsTable'
 
 import { ALERTS_DISPLAY_LIMIT } from '../../constants'
 import { createAlertRowData } from '../../utils/createAlertsContent'
@@ -33,6 +33,8 @@ import {
 } from '../../components/Alerts/alerts.util'
 import { useAlertsPageData } from '../../hooks/useAlertsPageData'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+
+import { ReactComponent as ExclamationMarkIcon } from 'igz-controls/images/exclamation-mark.svg'
 
 const DetailsAlerts = () => {
   const [selectedAlert, setSelectedAlert] = useState({})
@@ -51,7 +53,6 @@ const DetailsAlerts = () => {
   const {
     alerts,
     handleRefreshAlerts,
-    paginatedAlerts,
     paginationConfigAlertsRef,
     requestErrorMessage,
     refreshAlerts,
@@ -89,28 +90,44 @@ const DetailsAlerts = () => {
   )
 
   return (
-    <AlertsView
-      alerts={paginatedAlerts}
-      alertsFiltersConfig={alertsFiltersConfig}
-      alertsStore={alertsStore}
-      entityId={entityId}
-      filters={alertsFilters}
-      filtersStore={filtersStore}
-      handleRefreshAlerts={handleRefreshAlerts}
-      handleRefreshWithFilters={handleRefreshWithFilters}
-      isAlertsPage={false}
-      isCrossProjects={false}
-      navigate={navigate}
-      navigateToPerProjectAlertsPage={navigateToPerProjectAlertsPage}
-      pageData={pageData}
-      paginationConfigAlertsRef={paginationConfigAlertsRef}
-      projectName={projectName}
-      requestErrorMessage={requestErrorMessage}
-      selectedAlert={selectedAlert}
-      setSearchParams={setSearchParams}
-      tableContent={tableContent}
-      toggleRow={toggleRow}
-    />
+    <div className="content-wrapper">
+      <div className="content">
+        <div className="table-container alerts-container">
+          <div className="content__action-bar-wrapper">
+            {tableContent.length >= ALERTS_DISPLAY_LIMIT && (
+              <div className="alerts-container__content-info">
+                <ExclamationMarkIcon />
+                <div>Only 100 alerts are displayed. View all in</div>
+                <span
+                  className="link"
+                  onClick={() => navigateToPerProjectAlertsPage(navigate, projectName, entityId)}
+                >
+                  alerts screen
+                </span>
+                .
+              </div>
+            )}
+          </div>
+          <AlertsTable
+            alertsFiltersConfig={alertsFiltersConfig}
+            alertsStore={alertsStore}
+            filters={alertsFilters}
+            filtersStore={filtersStore}
+            handleRefreshAlerts={handleRefreshAlerts}
+            handleRefreshWithFilters={handleRefreshWithFilters}
+            isAlertsPage={false}
+            isCrossProjects={false}
+            pageData={pageData}
+            paginationConfigAlertsRef={paginationConfigAlertsRef}
+            requestErrorMessage={requestErrorMessage}
+            selectedAlert={selectedAlert}
+            setSearchParams={setSearchParams}
+            tableContent={tableContent}
+            toggleRow={toggleRow}
+          />
+        </div>
+      </div>
+    </div>
   )
 }
 export default React.memo(DetailsAlerts)

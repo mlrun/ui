@@ -86,12 +86,11 @@ const AlertsTableRow = ({
 
 AlertsTableRow.propTypes = {
   className: PropTypes.string,
-  handleSelectItem: PropTypes.func.isRequired,
   isRowSelected: PropTypes.bool,
-  mainRowItemsCount: PropTypes.number,
-  rowIndex: PropTypes.number.isRequired,
+  filters: PropTypes.object.isRequired,
   rowItem: PropTypes.shape({}).isRequired,
-  selectedItem: PropTypes.shape({}).isRequired
+  selectedItem: PropTypes.shape({}).isRequired,
+  toggleRow: PropTypes.func
 }
 
 export default AlertsTableRow
