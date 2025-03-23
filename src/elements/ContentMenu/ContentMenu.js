@@ -26,7 +26,14 @@ import { CONTENT_MENU_TABS } from '../../types'
 
 import './contentMenu.scss'
 
-const ContentMenu = ({ activeTab = '', disabled = false, screen, tabs = [], onClick }) => {
+const ContentMenu = ({
+  activeTab = '',
+  disabled = false,
+  fontSize = 'medium',
+  screen,
+  tabs = [],
+  onClick
+}) => {
   const params = useParams()
   const handleClick = (e, tabId) => {
     if (!disabled) {
@@ -49,12 +56,13 @@ const ContentMenu = ({ activeTab = '', disabled = false, screen, tabs = [], onCl
 
   return (
     <div className="content-menu">
-      <ul className="content-menu__list">
+      <ul className="content-menu__tabs">
         {tabs.map(tab => {
           const tabClassNames = classnames(
-            'content-menu__item',
-            tab.id === activeTab && 'content-menu__item_active',
-            disabled && 'content-menu__item_disabled'
+            'content-menu__tab',
+            `content-menu__tab-${fontSize}`,
+            tab.id === activeTab && 'content-menu__tab_active',
+            disabled && 'content-menu__tab_disabled'
           )
 
           return (
@@ -63,13 +71,13 @@ const ContentMenu = ({ activeTab = '', disabled = false, screen, tabs = [], onCl
                 {activeTab !== tab.id ? (
                   <Link
                     to={generateRedirectLink(tab.id)}
-                    className={tab.icon && 'content-menu__item-icon'}
+                    className={tab.icon && 'content-menu__tab-icon'}
                     onClick={onClick && (e => handleClick(e, tab.id))}
                   >
                     {tab.icon && <i>{tab.icon}</i>}
                     {tab.label ?? tab.id}
                     {window.mlrunConfig.betaMode === 'enabled' && tab.preview && (
-                      <span className="content-menu__item__preview"> (Beta)</span>
+                      <span className="content-menu__tab__preview"> (Beta)</span>
                     )}
                   </Link>
                 ) : (

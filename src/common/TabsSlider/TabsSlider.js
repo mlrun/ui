@@ -29,9 +29,8 @@ import { generateUrlFromRouterPath } from '../../utils/link-helper.util'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
-import './tabsSlider.scss'
-
 const TabsSlider = ({
+  fontSize = 'small',
   initialTab = '',
   isDetailsPopUp = false,
   onClick = () => {},
@@ -50,18 +49,18 @@ const TabsSlider = ({
   const menuOffsetHalfWidth = 2
   const tabOffset = 1.5
 
-  const tabsSliderClassNames = classnames('tabs-slider', sliderStyle)
+  const tabsSliderClassNames = classnames('content-menu', sliderStyle)
   const leftArrowClassNames = classnames(
-    'tabs-slider__arrow',
-    'tabs-slider__arrow_left',
-    arrowsAreHidden && 'tabs-slider__arrow_hidden',
-    scrolledWidth === 0 && 'tabs-slider__arrow_disabled'
+    'tabs-sliders__arrow',
+    'tabs-sliders__arrow_left',
+    arrowsAreHidden && 'tabs-sliders__arrow_hidden',
+    scrolledWidth === 0 && 'tabs-sliders__arrow_disabled'
   )
   const rightArrowClassNames = classnames(
-    'tabs-slider__arrow',
-    'tabs-slider__arrow_right',
-    arrowsAreHidden && 'tabs-slider__arrow_hidden',
-    rightArrowDisabled && 'tabs-slider__arrow_disabled'
+    'tabs-sliders__arrow',
+    'tabs-sliders__arrow_right',
+    arrowsAreHidden && 'tabs-sliders__arrow_hidden',
+    rightArrowDisabled && 'tabs-sliders__arrow_disabled'
   )
 
   const scrollTabs = toRight => {
@@ -170,36 +169,41 @@ const TabsSlider = ({
       >
         <Arrow />
       </div>
-      <div className="tabs-slider__tabs-wrapper" ref={tabsWrapperRef}>
+      <div className="content-menu__tabs-wrapper" ref={tabsWrapperRef}>
         <div
           ref={tabsRef}
-          className="tabs-slider__tabs"
+          className="content-menu__tabs"
           style={{
             transform: `translateX(${-scrolledWidth}px)`
           }}
         >
           {tabsList.map(tab => {
             const tabClassName = classnames(
-              'tabs-slider__tab',
-              selectedTab === tab.id && 'tabs-slider__tab_active'
+              'content-menu__tab',
+              `content-menu__tab-${fontSize}`,
+              selectedTab === tab.id && 'content-menu__tab_active'
             )
 
             return (
               !tab.hidden &&
               (!skipLink ? (
-                <Link
-                  className={tabClassName}
-                  data-tab={tab.id}
-                  to={generateUrlFromRouterPath(
-                    `${window.location.pathname?.replace(/^$|([^/]+$)/, tab.id)}${location.search ?? ''}${tab.query ?? ''}`
-                  )}
-                  onClick={() => onSelectTab(tab)}
-                  key={tab.id}
-                >
-                  {tab.icon && <div className="tabs-slider__tab-icon">{tab.icon}</div>}
-                  {tab.label}
-                  {tab.tip && <Tip className="tabs-slider__tab-tip" text={tab.tip} />}
-                </Link>
+                <div className={tabClassName}>
+                  <Link
+                    className={
+                      (tab.icon && 'content-menu__tab-icon') || (tab.tip && 'content-menu__tab-tip')
+                    }
+                    data-tab={tab.id}
+                    to={generateUrlFromRouterPath(
+                      `${window.location.pathname?.replace(/^$|([^/]+$)/, tab.id)}${location.search ?? ''}${tab.query ?? ''}`
+                    )}
+                    onClick={() => onSelectTab(tab)}
+                    key={tab.id}
+                  >
+                    {tab.icon && <div>{tab.icon}</div>}
+                    {tab.label}
+                    {tab.tip && <Tip text={tab.tip} />}
+                  </Link>
+                </div>
               ) : (
                 <div
                   className={tabClassName}
@@ -207,9 +211,9 @@ const TabsSlider = ({
                   key={tab.id}
                   onClick={() => onSelectTab(tab.id)}
                 >
-                  {tab.icon && <div className="tabs-slider__tab-icon">{tab.icon}</div>}
+                  {tab.icon && <div className="content-menu_tab-icon">{tab.icon}</div>}
                   {tab.label}
-                  {tab.tip && <Tip className="tabs-slider__tab-tip" text={tab.tip} />}
+                  {tab.tip && <Tip className="content-menu__tab-tip" text={tab.tip} />}
                 </div>
               ))
             )

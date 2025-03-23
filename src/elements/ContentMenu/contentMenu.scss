@@ -8,33 +8,67 @@
   width: 100%;
   min-height: 40px;
 
-  &__list {
+  &__tabs-wrapper {
+    overflow-x: hidden;
+  }
+
+  &__tabs {
     display: flex;
     flex-direction: row;
     align-items: center;
     list-style-type: none;
+    transition: 0.2s;
 
     @include resetSpaces;
   }
 
-  &__item {
-    margin: 0 10px 0 0;
+  &__tab {
+    align-items: center;
+    margin: 0 15px 0 0;
+    padding: 5px;
     color: $topaz;
     font-weight: 400;
-    font-size: 18px;
+    font-size: 2px;
     line-height: 1;
+    white-space: nowrap;
     text-align: center;
     text-transform: capitalize;
+    cursor: pointer;
 
-    @media screen and (min-width: 1300px) {
+    &:first-child {
+      padding-left: 0;
+    }
+
+    &-small {
+      font-size: 16px;
+
+      @media screen and (min-width: 1300px) {
+        font-size: 18px;
+      }
+    }
+
+    &-medium {
+      font-size: 18px;
+
+      @media screen and (min-width: 1300px) {
+        font-size: 20px;
+      }
+    }
+
+    &-large {
       font-size: 20px;
+
+      @media screen and (min-width: 1300px) {
+        font-size: 22px;
+      }
     }
 
     &::after {
       display: block;
       width: 100%;
-      border-bottom: $activeJobTabBorder;
+      padding-bottom: 5px;
       border-width: 2px;
+      border-bottom: 2px solid $cornflowerBlue;
       transform: scale(0);
       opacity: 0;
       transition: all 0.3s ease-in-out;
@@ -49,28 +83,34 @@
     }
 
     & > * {
-      display: block;
-      padding: 5px;
       position: relative;
+      display: inline-flex;
+      align-items: center;
 
-      &.content-menu__item-icon {
-        padding-left: 30px;
-        & > * {
-          position: absolute;
-          left: 5px;
-          bottom: 2px;
-        }
+      &.content-menu__tab-tip {
+        gap: 5px;
       }
 
-      svg {
-        width: 20px;
-        height: 20px;
+      &.content-menu__tab-icon {
+        gap: 5px;
+
+        & > * {
+          svg {
+            width: 20px;
+            height: 20px;
+
+            path {
+              fill: $topaz;
+            }
+          }
+        }
       }
     }
 
     &_active {
       color: $primary;
       font-weight: 700;
+      pointer-events: none;
 
       &::after {
         transform: scale(1);
@@ -80,25 +120,86 @@
       a {
         cursor: default;
       }
+    }
+  }
 
-      .content-menu__item-icon {
-        path {
-          fill: $cornflowerBlue;
+  &_disabled {
+    pointer-events: none;
+
+    a {
+      cursor: not-allowed;
+    }
+  }
+
+  &__preview {
+    color: $spunPearl;
+    font-size: 10px;
+  }
+
+  .tabs-sliders {
+    &__arrow {
+      display: flex;
+      width: 30px;
+      min-width: fit-content;
+      max-width: 24px;
+      border-radius: 8px;
+
+      &_left {
+        padding-top: 3px;
+        transform: rotate(180deg);
+      }
+
+      &_right {
+        padding-bottom: 3px;
+      }
+
+      &_hidden {
+        display: none;
+      }
+
+      &_disabled {
+        pointer-events: none;
+
+        & path {
+          fill: $spunPearl;
         }
       }
-    }
 
-    &_disabled {
-      pointer-events: none;
+      &:hover:not(.details-menu__arrow_disabled) {
+        background-color: $mulledWineThree;
+        cursor: pointer;
+      }
 
-      a {
-        cursor: not-allowed;
+      svg {
+        align-self: center;
       }
     }
+  }
 
-    &__preview {
-      color: $spunPearl;
-      font-size: 10px;
+  &.style2 {
+    border-bottom: none;
+
+    .content-menu {
+      &__tab {
+        justify-content: center;
+        width: 148px;
+        height: 64px;
+        color: $primary;
+        font-size: 15px;
+        text-align: center;
+        border: 1px solid $amethyst;
+        border-radius: 8px;
+
+        &:not(:last-child) {
+          margin-right: 12px;
+        }
+
+        &_active {
+          color: $amethyst;
+          background-color: $frenchLilac;
+          border: 1px solid transparent;
+        }
+      }
     }
   }
 }
