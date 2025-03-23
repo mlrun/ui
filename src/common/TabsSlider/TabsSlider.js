@@ -51,16 +51,16 @@ const TabsSlider = ({
 
   const tabsSliderClassNames = classnames('content-menu', sliderStyle)
   const leftArrowClassNames = classnames(
-    'tabs-sliders__arrow',
-    'tabs-sliders__arrow_left',
-    arrowsAreHidden && 'tabs-sliders__arrow_hidden',
-    scrolledWidth === 0 && 'tabs-sliders__arrow_disabled'
+    'tabs-slider__arrow',
+    'tabs-slider__arrow_left',
+    arrowsAreHidden && 'tabs-slider__arrow_hidden',
+    scrolledWidth === 0 && 'tabs-slider__arrow_disabled'
   )
   const rightArrowClassNames = classnames(
-    'tabs-sliders__arrow',
-    'tabs-sliders__arrow_right',
-    arrowsAreHidden && 'tabs-sliders__arrow_hidden',
-    rightArrowDisabled && 'tabs-sliders__arrow_disabled'
+    'tabs-slider__arrow',
+    'tabs-slider__arrow_right',
+    arrowsAreHidden && 'tabs-slider__arrow_hidden',
+    rightArrowDisabled && 'tabs-slider__arrow_disabled'
   )
 
   const scrollTabs = toRight => {
