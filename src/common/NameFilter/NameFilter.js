@@ -14,7 +14,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useField } from 'react-final-form'
 
@@ -41,6 +41,10 @@ const NameFilter = ({ applyChanges }) => {
     }
   }
 
+  const handleValidationError = useCallback((isInvalid) => {
+    isInvalidRef.current = isInvalid
+  }, [])
+
   return (
     <div className="name-filter filter-column">
       <FormInput
@@ -50,7 +54,7 @@ const NameFilter = ({ applyChanges }) => {
         name={NAME_FILTER}
         onKeyDown={handleNameChange}
         placeholder="Search by name"
-        onValidationError={(isInvalid) => isInvalidRef.current = isInvalid}
+        onValidationError={handleValidationError}
       />
     </div>
   )
