@@ -14,7 +14,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useField } from 'react-final-form'
 
@@ -28,14 +28,15 @@ import './nameFilter.scss'
 
 const NameFilter = ({ applyChanges }) => {
   const { input } = useField(NAME_FILTER)
+  const isInvalidRef = useRef(false)
 
   const handleNameChange = event => {
-    if (event.keyCode === KEY_CODES.ENTER) {
+    if (event.keyCode === KEY_CODES.ENTER && !isInvalidRef.current) {
       applyChanges(event.target.value)
     }
   }
   const handleIconClick = () => {
-    if (input.value.length > 0) {
+    if (input.value.length > 0 && !isInvalidRef.current) {
       applyChanges(input.value)
     }
   }
@@ -49,6 +50,7 @@ const NameFilter = ({ applyChanges }) => {
         name={NAME_FILTER}
         onKeyDown={handleNameChange}
         placeholder="Search by name"
+        onValidationError={(isInvalid) => isInvalidRef.current = isInvalid}
       />
     </div>
   )
