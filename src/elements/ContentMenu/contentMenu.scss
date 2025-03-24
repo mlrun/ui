@@ -17,7 +17,7 @@
     flex-direction: row;
     align-items: center;
     list-style-type: none;
-    transition: 0.2s;
+    transition: transform 0.2s ease-in-out;
 
     @include resetSpaces;
   }
@@ -38,7 +38,7 @@
       padding-left: 0;
     }
 
-    &-small {
+    &-sm {
       font-size: 16px;
 
       @media screen and (min-width: 1300px) {
@@ -46,7 +46,7 @@
       }
     }
 
-    &-medium {
+    &-md {
       font-size: 18px;
 
       @media screen and (min-width: 1300px) {
@@ -54,7 +54,7 @@
       }
     }
 
-    &-large {
+    &-lg {
       font-size: 20px;
 
       @media screen and (min-width: 1300px) {
@@ -171,33 +171,6 @@
 
       svg {
         align-self: center;
-      }
-    }
-  }
-
-  &.style2 {
-    border-bottom: none;
-
-    .content-menu {
-      &__tab {
-        justify-content: center;
-        width: 148px;
-        height: 64px;
-        color: $primary;
-        font-size: 15px;
-        text-align: center;
-        border: 1px solid $amethyst;
-        border-radius: 8px;
-
-        &:not(:last-child) {
-          margin-right: 12px;
-        }
-
-        &_active {
-          color: $amethyst;
-          background-color: $frenchLilac;
-          border: 1px solid transparent;
-        }
       }
     }
   }

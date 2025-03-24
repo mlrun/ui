@@ -24,18 +24,17 @@ import classnames from 'classnames'
 
 import { Tip } from 'igz-controls/components'
 
-import { SLIDER_STYLE_1, SLIDER_STYLE_2, SLIDER_TABS } from '../../types'
+import { SLIDER_TABS } from '../../types'
 import { generateUrlFromRouterPath } from '../../utils/link-helper.util'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
 const TabsSlider = ({
-  fontSize = 'small',
+  fontSize = 'sm',
   initialTab = '',
   isDetailsPopUp = false,
   onClick = () => {},
   skipLink = false,
-  sliderStyle = SLIDER_STYLE_1,
   tabsList
 }) => {
   const [selectedTab, setSelectedTab] = useState(initialTab)
@@ -49,7 +48,6 @@ const TabsSlider = ({
   const menuOffsetHalfWidth = 2
   const tabOffset = 1.5
 
-  const tabsSliderClassNames = classnames('content-menu', sliderStyle)
   const leftArrowClassNames = classnames(
     'tabs-slider__arrow',
     'tabs-slider__arrow_left',
@@ -160,7 +158,7 @@ const TabsSlider = ({
   }, [isDetailsPopUp, params.tab, selectedTab, tabsList])
 
   return (
-    <div className={tabsSliderClassNames}>
+    <div className="content-menu">
       <div
         className={leftArrowClassNames}
         onClick={() => {
@@ -228,10 +226,10 @@ const TabsSlider = ({
 }
 
 TabsSlider.propTypes = {
+  fontSize: PropTypes.oneOf(['sm', 'md', 'lg']),
   initialTab: PropTypes.string,
   onClick: PropTypes.func,
   skipLink: PropTypes.bool,
-  sliderStyle: PropTypes.oneOf([SLIDER_STYLE_1, SLIDER_STYLE_2]),
   tabsList: SLIDER_TABS.isRequired
 }
 

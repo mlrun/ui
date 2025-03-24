@@ -29,7 +29,7 @@ import './contentMenu.scss'
 const ContentMenu = ({
   activeTab = '',
   disabled = false,
-  fontSize = 'medium',
+  fontSize = 'md',
   screen,
   tabs = [],
   onClick
@@ -101,6 +101,7 @@ const ContentMenu = ({
 ContentMenu.propTypes = {
   activeTab: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
+  fontSize: PropTypes.oneOf(['sm', 'md', 'lg']),
   tabs: CONTENT_MENU_TABS.isRequired
 }
 
