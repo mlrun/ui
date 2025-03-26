@@ -24,8 +24,6 @@ import classnames from 'classnames'
 
 import { CONTENT_MENU_TABS } from '../../types'
 
-import './contentMenu.scss'
-
 const ContentMenu = ({
   activeTab = '',
   disabled = false,
