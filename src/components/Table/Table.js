@@ -45,6 +45,7 @@ const Table = React.forwardRef(
       pageData,
       retryRequest = () => {},
       selectedItem = {},
+      skipTableWrapper = false,
       sortProps = null,
       tab = '',
       tableClassName = '',
@@ -131,6 +132,7 @@ const Table = React.forwardRef(
         params={params}
         retryRequest={retryRequest}
         selectedItem={selectedItem}
+        skipTableWrapper={skipTableWrapper}
         sortProps={sortProps}
         tab={tab}
         tableRef={tableRef}
@@ -162,6 +164,7 @@ Table.propTypes = {
   pageData: PropTypes.shape({}).isRequired,
   retryRequest: PropTypes.func,
   selectedItem: PropTypes.shape({}),
+  skipTableWrapper: PropTypes.bool,
   sortProps: SORT_PROPS,
   tab: PropTypes.string,
   tableClassName: PropTypes.string,

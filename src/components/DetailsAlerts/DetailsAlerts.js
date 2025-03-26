@@ -30,7 +30,7 @@ import {
   getAlertsFiltersConfig,
   navigateToPerProjectAlertsPage,
   parseAlertsQueryParamsCallback
-} from '../../components/Alerts/alerts.util'
+} from '../Alerts/alerts.util'
 import { useAlertsPageData } from '../../hooks/useAlertsPageData'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 
@@ -100,6 +100,7 @@ const DetailsAlerts = () => {
       handleRefreshWithFilters={handleRefreshWithFilters}
       isAlertsPage={false}
       isCrossProjects={false}
+      isDetailsPanel={true}
       navigate={navigate}
       navigateToPerProjectAlertsPage={navigateToPerProjectAlertsPage}
       pageData={pageData}

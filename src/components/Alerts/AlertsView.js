@@ -48,13 +48,14 @@ const AlertsView = ({
   alertsFiltersConfig,
   alertsStore,
   entityId,
-  isAlertsPage = true,
   filters,
   filtersStore,
   handleCancel,
   handleRefreshAlerts,
   handleRefreshWithFilters,
+  isAlertsPage = true,
   isCrossProjects,
+  isDetailsPanel = false,
   navigate,
   navigateToPerProjectAlertsPage,
   pageData,
@@ -136,6 +137,7 @@ const AlertsView = ({
                   tableClassName="alerts-table"
                   handleCancel={handleCancel}
                   hideActionsMenu
+                  skipTableWrapper={isDetailsPanel}
                   tableHeaders={
                     tableContent[0]?.content ?? [
                       {
@@ -194,6 +196,7 @@ AlertsView.propTypes = {
   handleRefreshWithFilters: PropTypes.func.isRequired,
   isAlertsPage: PropTypes.bool,
   isCrossProjects: PropTypes.bool.isRequired,
+  isDetailsPanel: PropTypes.bool,
   navigate: PropTypes.func,
   navigateToPerProjectAlertsPage: PropTypes.func,
   pageData: PropTypes.object.isRequired,
