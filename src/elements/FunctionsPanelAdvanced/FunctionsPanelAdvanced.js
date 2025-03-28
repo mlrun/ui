@@ -18,25 +18,21 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useState } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import FunctionsPanelParameters from '../FunctionsPanelParameters/FunctionsPanelParameters'
 import PanelSection from '../PanelSection/PanelSection'
 import Input from '../../common/Input/Input'
 
-import functionsActions from '../../actions/functions'
+import { setNewFunctionErrorStream } from '../../reducers/functionReducer'
 
-const FunctionsPanelAdvanced = ({
-  defaultData,
-  functionsStore,
-  setNewFunctionErrorStream,
-  setValidation,
-  validation
-}) => {
+const FunctionsPanelAdvanced = ({ defaultData, setValidation, validation }) => {
   const [data, setData] = useState({
     error_stream: defaultData.error_stream ?? ''
   })
+  const dispatch = useDispatch()
+  const functionsStore = useSelector(store => store.functionsStore)
 
   return (
     <PanelSection title="Advanced" className="advanced">
@@ -47,14 +43,10 @@ const FunctionsPanelAdvanced = ({
         label="Stream Path"
         tip=" Enables users to store the function error in a V3IO stream"
         value={data.error_stream}
-        onChange={error_stream =>
-          setData(state => ({ ...state, error_stream }))
-        }
+        onChange={error_stream => setData(state => ({ ...state, error_stream }))}
         onBlur={() => {
-          if (
-            functionsStore.newFunction.spec.error_stream !== data.error_stream
-          ) {
-            setNewFunctionErrorStream(data.error_stream)
+          if (functionsStore.newFunction.spec.error_stream !== data.error_stream) {
+            dispatch(setNewFunctionErrorStream(data.error_stream))
           }
         }}
         setInvalid={value =>
@@ -75,9 +67,4 @@ FunctionsPanelAdvanced.propTypes = {
   validation: PropTypes.shape({}).isRequired
 }
 
-export default connect(
-  functionsStore => ({
-    ...functionsStore
-  }),
-  { ...functionsActions }
-)(FunctionsPanelAdvanced)
+export default FunctionsPanelAdvanced

@@ -26,7 +26,6 @@ import ProjectMonitorView from './ProjectMonitorView'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelModal'
 
-import functionsActions from '../../actions/functions'
 import nuclioAction from '../../actions/nuclio'
 import projectsAction from '../../actions/projects'
 import {
@@ -46,17 +45,15 @@ import { useMode } from '../../hooks/mode.hook'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 import { removeNewFeatureSet } from '../../reducers/featureStoreReducer'
+import { removeFunctionsError, removeNewFunction } from '../../reducers/functionReducer'
 
 const ProjectMonitor = ({
   fetchNuclioV3ioStreams,
   fetchProject,
   fetchProjectFunctions,
   fetchProjectSummary,
-  functionsStore,
   nuclioStore,
   projectStore,
-  removeFunctionsError,
-  removeNewFunction,
   removeProjectData,
   removeProjectSummary,
   removeV3ioStreams
@@ -74,6 +71,7 @@ const ProjectMonitor = ({
   const projectSummariesAbortControllerRef = useRef(new AbortController())
   const v3ioStreamsAbortControllerRef = useRef(new AbortController())
   const frontendSpec = useSelector(state => state.appStore.frontendSpec)
+  const functionsStore = useSelector(store => store.functionsStore)
 
   const registerArtifactLink = useCallback(
     artifactKind =>
@@ -181,10 +179,10 @@ const ProjectMonitor = ({
 
   const closeFunctionsPanel = () => {
     setShowFunctionsPanel(false)
-    removeNewFunction()
+    dispatch(removeNewFunction())
 
     if (functionsStore.error) {
-      removeFunctionsError()
+      dispatch(removeFunctionsError())
     }
   }
 
@@ -195,7 +193,7 @@ const ProjectMonitor = ({
 
   const createFunctionSuccess = async () => {
     setShowFunctionsPanel(false)
-    removeNewFunction()
+    dispatch(removeNewFunction())
 
     return dispatch(
       setNotification({
@@ -213,7 +211,7 @@ const ProjectMonitor = ({
     tag ||= 'latest'
 
     setShowFunctionsPanel(false)
-    removeNewFunction()
+    dispatch(removeNewFunction())
 
     const funcs = await fetchProjectFunctions(params.projectName).catch(error => {
       dispatch(
@@ -250,7 +248,7 @@ const ProjectMonitor = ({
     const { name, tag } = functionsStore.newFunction.metadata
 
     setShowFunctionsPanel(false)
-    removeNewFunction()
+    dispatch(removeNewFunction())
 
     const funcs = await fetchProjectFunctions(params.projectName).catch(error => {
       showErrorNotification(dispatch, deployError, '', 'Failed to deploy the function')
@@ -315,13 +313,11 @@ const ProjectMonitor = ({
 }
 
 export default connect(
-  ({ functionsStore, nuclioStore, projectStore }) => ({
-    functionsStore,
+  ({ nuclioStore, projectStore }) => ({
     nuclioStore,
     projectStore
   }),
   {
-    ...functionsActions,
     ...projectsAction,
     ...nuclioAction
   }

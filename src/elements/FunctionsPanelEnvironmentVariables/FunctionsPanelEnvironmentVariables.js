@@ -18,21 +18,20 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import FunctionsPanelEnvironmentVariablesView from './FunctionsPanelEnvironmentVariablesView'
 
-import functionsActions from '../../actions/functions'
 import { parseEnvVariables } from '../../utils/parseEnvironmentVariables'
 import { generateEnvVariable } from '../../utils/generateEnvironmentVariable'
 import { useMode } from '../../hooks/mode.hook'
+import { setNewFunctionEnv } from '../../reducers/functionReducer'
 
-const FunctionsPanelEnvironmentVariables = ({
-  functionsStore,
-  setNewFunctionEnv
-}) => {
+const FunctionsPanelEnvironmentVariables = () => {
   const [envVariables, setEnvVariables] = useState([])
   const { isStagingMode } = useMode()
+  const dispatch = useDispatch()
+  const functionsStore = useSelector(store => store.functionsStore)
 
   useEffect(() => {
     setEnvVariables(parseEnvVariables(functionsStore.newFunction.spec.env))
@@ -42,32 +41,29 @@ const FunctionsPanelEnvironmentVariables = ({
     if (isStagingMode) {
       const generatedVariable = generateEnvVariable(env)
 
-      setNewFunctionEnv([
-        ...functionsStore.newFunction.spec.env,
-        generatedVariable
-      ])
+      dispatch(setNewFunctionEnv([...functionsStore.newFunction.spec.env, generatedVariable]))
     } else {
-      setNewFunctionEnv([...envVariables, { name: env.key, value: env.value }])
+      dispatch(setNewFunctionEnv([...envVariables, { name: env.key, value: env.value }]))
     }
   }
 
   const handleEditEnv = env => {
     if (isStagingMode) {
-      const generatedVariables = env.map(variable =>
-        generateEnvVariable(variable)
-      )
+      const generatedVariables = env.map(variable => generateEnvVariable(variable))
 
-      setNewFunctionEnv([...generatedVariables])
+      dispatch(setNewFunctionEnv([...generatedVariables]))
     } else {
-      setNewFunctionEnv(
-        envVariables.map(item => {
-          if (item.name === env.key) {
-            item.name = env.newKey || env.key
-            item.value = env.value
-          }
+      dispatch(
+        setNewFunctionEnv(
+          envVariables.map(item => {
+            if (item.name === env.key) {
+              item.name = env.newKey || env.key
+              item.value = env.value
+            }
 
-          return item
-        })
+            return item
+          })
+        )
       )
     }
   }
@@ -76,11 +72,11 @@ const FunctionsPanelEnvironmentVariables = ({
     if (isStagingMode) {
       const generatedVariables = env.map(item => generateEnvVariable(item))
 
-      setNewFunctionEnv([...generatedVariables])
+      dispatch(setNewFunctionEnv([...generatedVariables]))
     } else {
       const newData = envVariables.filter((_, index) => index !== env)
 
-      setNewFunctionEnv([...newData])
+      dispatch(setNewFunctionEnv([...newData]))
     }
   }
 
@@ -95,7 +91,4 @@ const FunctionsPanelEnvironmentVariables = ({
   )
 }
 
-export default connect(
-  functionsStore => ({ ...functionsStore }),
-  functionsActions
-)(FunctionsPanelEnvironmentVariables)
+export default FunctionsPanelEnvironmentVariables

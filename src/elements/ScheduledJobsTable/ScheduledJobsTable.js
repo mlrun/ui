@@ -28,7 +28,6 @@ import Table from '../../components/Table/Table'
 import NoData from '../../common/NoData/NoData'
 import Loader from '../../common/Loader/Loader'
 
-import functionsActions from '../../actions/functions'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { FILTERS_CONFIG } from '../../types'
 import { JOB_KIND_WORKFLOW, JOBS_PAGE, PANEL_EDIT_MODE, SCHEDULE_TAB } from '../../constants'
@@ -40,6 +39,7 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { toggleYaml } from '../../reducers/appReducer'
 import { handleRunScheduledJob, removeScheduledJob } from '../../reducers/jobReducer'
+import { fetchFunctionTemplate } from '../../reducers/functionReducer'
 
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
@@ -173,19 +173,17 @@ const ScheduledJobsTable = ({
 
   const handleEditScheduleJob = useCallback(
     editableItem => {
-      getJobFunctionData(editableItem, dispatch, functionsActions.fetchFunctionTemplate).then(
-        functionData => {
-          setEditableItem({
-            ...editableItem,
-            scheduled_object: {
-              ...editableItem.scheduled_object,
-              function: functionData
-            }
-          })
+      getJobFunctionData(editableItem, dispatch, fetchFunctionTemplate).then(functionData => {
+        setEditableItem({
+          ...editableItem,
+          scheduled_object: {
+            ...editableItem.scheduled_object,
+            function: functionData
+          }
+        })
 
-          setJobWizardMode(PANEL_EDIT_MODE)
-        }
-      )
+        setJobWizardMode(PANEL_EDIT_MODE)
+      })
     },
     [dispatch, setEditableItem, setJobWizardMode]
   )

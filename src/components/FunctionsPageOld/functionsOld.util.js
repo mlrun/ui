@@ -41,7 +41,6 @@ import {
 } from '../../constants'
 import functionsApi from '../../api/functions-api'
 import tasksApi from '../../api/tasks-api'
-import functionsActions from '../../actions/functions'
 import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { parseFunction } from '../../utils/parseFunction'
 import { setNotification } from '../../reducers/notificationReducer'
@@ -104,7 +103,6 @@ const handleFetchFunctionLogs = (
 ) => {
   return getFunctionLogs(
     dispatch,
-    functionsActions.fetchFunctionLogs,
     fetchFunctionLogsTimeout,
     projectName,
     item.name,
@@ -120,12 +118,10 @@ const handleFetchFunctionApplicationLogs = (
   item,
   projectName,
   setDetailsLogs,
-  fetchFunctionNuclioLogs,
   fetchFunctionNuclioLogsTimeout
 ) => {
   return getFunctionNuclioLogs(
     dispatch,
-    fetchFunctionNuclioLogs,
     fetchFunctionNuclioLogsTimeout,
     projectName,
     item.name,
@@ -186,7 +182,6 @@ export const generateFunctionsPageData = (
             item,
             projectName,
             setDetailsLogs,
-            functionsActions.fetchFunctionNuclioLogs,
             fetchFunctionNuclioLogsTimeout
           )
         }
@@ -476,7 +471,10 @@ const fetchAndParseFunction = (
   funcTag,
   returnError
 ) => {
-  return fetchFunction(projectName, funcName, funcHash, funcTag)
+  return dispatch(
+    fetchFunction({ project: projectName, name: funcName, hash: funcHash, tag: funcTag })
+  )
+    .unwrap()
     .then(func => {
       return parseFunction(func, projectName)
     })

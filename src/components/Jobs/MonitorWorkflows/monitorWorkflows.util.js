@@ -38,7 +38,6 @@ import {
   JOB_RUNNING_STATES,
   isJobKindLocal
 } from '../jobs.util'
-import functionsActions from '../../../actions/functions'
 import {
   detailsMenu as functionsDetailsMenu,
   infoHeaders as functionsInfoHeaders
@@ -178,7 +177,3 @@ export const fetchInitialWorkflows = debounce(
     }
   }
 )
-
-export const monitorWorkflowsActionCreator = {
-  fetchFunctionLogs: functionsActions.fetchFunctionLogs
-}

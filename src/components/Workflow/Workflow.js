@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useState, useMemo } from 'react'
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { forEach, isEmpty } from 'lodash'
@@ -43,7 +42,6 @@ import {
   isWorkflowStepVisible
 } from './workflow.util'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
-import functionsActions from '../../actions/functions'
 import { ACTIONS_MENU } from '../../types'
 import {
   DEFAULT_EDGE,
@@ -313,4 +311,4 @@ Workflow.propTypes = {
   workflowsViewMode: PropTypes.string.isRequired
 }
 
-export default connect(null, { ...functionsActions })(React.memo(Workflow))
+export default React.memo(Workflow)
