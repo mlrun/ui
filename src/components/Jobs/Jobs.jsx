@@ -17,19 +17,18 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState, useMemo, useLayoutEffect, useCallback } from 'react'
+import React, { useEffect, useState, useMemo, useLayoutEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate, useParams, Outlet, useLocation } from 'react-router-dom'
 import { defaultsDeep, isEmpty } from 'lodash'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import ContentMenu from '../../elements/ContentMenu/ContentMenu'
+
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import { ConfirmDialog, Loader } from 'igz-controls/components'
 
 import {
   INACTIVE_JOBS_TAB,
-  JOBS_PAGE,
   JOBS_PAGE_PATH,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
@@ -39,8 +38,6 @@ import {
 } from '../../constants'
 import { TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { actionButtonHeader, tabs } from './jobs.util'
-// import { TERTIARY_BUTTON } from 'igz-controls/constants'
-// import { actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
 import { isPageTabValid } from '../../utils/link-helper.util'
 import {
   getJobsFiltersConfig,
@@ -133,14 +130,6 @@ const Jobs = () => {
     setJobWizardMode(PANEL_CREATE_MODE)
   }
 
-  const handleTabChange = useCallback(
-    tabName => {
-      setSelectedTab(tabName)
-      navigate(`/projects/${params.projectName}/${JOBS_PAGE.toLowerCase()}/${tabName}`)
-    },
-    [navigate, params.projectName]
-  )
-
   const tabData = useMemo(() => {
     return defaultsDeep(
       {
@@ -209,12 +198,6 @@ const Jobs = () => {
         {selectedTab && filters && (
           <div className="content">
             <div className="content__action-bar-wrapper content__action-bar-wrapper_multi-row">
-              <ContentMenu
-                activeTab={selectedTab}
-                onClick={handleTabChange}
-                screen={JOBS_PAGE}
-                tabs={tabs}
-              />
               <ActionBar
                 actionButtons={[
                   {

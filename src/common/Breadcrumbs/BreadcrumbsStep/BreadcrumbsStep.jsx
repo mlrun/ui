@@ -159,61 +159,71 @@ const BreadcrumbsStep = React.forwardRef(
       }
     }
 
-    return (
+    return isLastStep ? (
       <>
-        {isLastStep ? (
-          <li
-            data-testid="breadcrumbs-last-item"
-            className="breadcrumbs__item"
-            key={`${index}${urlPart}`}
-          >
-            {label}
-          </li>
-        ) : (
-          [
-            <li key={`${index}${urlPart}`} className="breadcrumbs__item">
-              <Link to={to} onClick={onClick}>
-                {label}
-              </Link>
-            </li>,
-            <li key={index} className="breadcrumbs__item">
-              <RoundedIcon
-                className={separatorClassNames}
-                id="separator"
-                ref={separatorRef}
-                onClick={() => handleSeparatorClick(urlParts.pathItems[index + 1], separatorRef)}
-              >
-                <ArrowIcon />
-              </RoundedIcon>
-              {showScreensList && urlParts.pathItems[index + 1] === urlParts.screen?.label && (
-                <BreadcrumbsDropdown
-                  link={to}
-                  list={mlrunScreens}
-                  onClick={() => handleSelectDropdownItem(separatorRef)}
-                  selectedItem={urlParts.screen?.id}
-                  searchValue={searchValue}
-                  setSearchValue={setSearchValue}
-                />
-              )}
-              {showProjectsList && urlParts.pathItems[index + 1] === params.projectName && (
-                <>
-                  <BreadcrumbsDropdown
-                    link={to}
-                    list={projectsList}
-                    onClick={() => handleSelectDropdownItem(separatorRef)}
-                    ref={projectListRef}
-                    screen={urlParts.screen?.id}
-                    selectedItem={params.projectName}
-                    searchValue={searchValue}
-                    setSearchValue={setSearchValue}
-                    tab={urlParts.tab?.id}
-                    withSearch
-                  />
-                </>
-              )}
+        <li
+          data-testid="breadcrumbs-last-item"
+          className="breadcrumbs__item"
+          key={`${index}${urlPart}`}
+        >
+          <span>{label}</span>
+        </li>
+        {urlParts.tab?.label && (
+          <>
+            <li className="breadcrumbs__separator">
+              <ArrowIcon />
             </li>
-          ]
+            <li data-testid="breadcrumbs-tab" className="breadcrumbs__item">
+              <span>{urlParts.tab.label}</span>
+            </li>
+          </>
         )}
+      </>
+    ) : (
+      <>
+        <li key={`${index}${urlPart}`} className="breadcrumbs__item">
+          <Link to={to} onClick={onClick}>
+            {label}
+          </Link>
+        </li>
+        <li key={index} className="breadcrumbs__item">
+          <RoundedIcon
+            className={separatorClassNames}
+            id={`separator-${index}`}
+            ref={separatorRef}
+            onClick={() => handleSeparatorClick(urlParts.pathItems[index + 1], separatorRef)}
+          >
+            <ArrowIcon />
+          </RoundedIcon>
+          {showScreensList && urlParts.pathItems[index + 1] === urlParts.screen?.label && (
+            <BreadcrumbsDropdown
+              id="breadcrumbs-screens-dropdown"
+              link={to}
+              list={mlrunScreens}
+              onClick={() => handleSelectDropdownItem(separatorRef)}
+              selectedItem={urlParts.screen?.id}
+              searchValue={searchValue}
+              setSearchValue={setSearchValue}
+            />
+          )}
+          {showProjectsList && urlParts.pathItems[index + 1] === params.projectName && (
+            <>
+              <BreadcrumbsDropdown
+                id="breadcrumbs-projects-dropdown"
+                link={to}
+                list={projectsList}
+                onClick={() => handleSelectDropdownItem(separatorRef)}
+                ref={projectListRef}
+                screen={urlParts.screen?.id}
+                selectedItem={params.projectName}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                tab={urlParts.tab?.id}
+                withSearch
+              />
+            </>
+          )}
+        </li>
       </>
     )
   }

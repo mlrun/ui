@@ -25,7 +25,7 @@ import { isEmpty } from 'lodash'
 import { createPortal } from 'react-dom'
 import ModalContainer from 'react-modal-promise'
 
-import Navbar from '../Navbar/Navbar'
+import Navbar from '../Navbar2/Navbar'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import { Loader } from 'igz-controls/components'
 
