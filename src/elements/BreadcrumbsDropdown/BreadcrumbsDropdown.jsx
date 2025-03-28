@@ -32,11 +32,12 @@ import './breadcrumbsDropdown.scss'
 const BreadcrumbsDropdown = forwardRef(
   (
     {
-      link,
+      id = '',
+      link = '',
       list = [],
       onClick = () => {},
       screen = '',
-      searchValue,
+      searchValue = '',
       setSearchValue,
       selectedItem,
       tab = '',
@@ -45,10 +46,11 @@ const BreadcrumbsDropdown = forwardRef(
     ref
   ) => {
     return (
-      <div className="breadcrumbs__dropdown-wrapper" data-testid="breadcrumbs-dropdown">
+      <div className="breadcrumbs__dropdown-wrapper" data-testid={id}>
         {withSearch && (
           <div className="breadcrumbs__dropdown-search" data-testid="breadcrumbs-search">
             <input
+              name="projects-search"
               className="input"
               onChange={event => setSearchValue(event.target.value)}
               placeholder="Type to search"
@@ -115,7 +117,8 @@ const BreadcrumbsDropdown = forwardRef(
 BreadcrumbsDropdown.displayName = 'BreadcrumbsDropdown'
 
 BreadcrumbsDropdown.propTypes = {
-  link: PropTypes.string.isRequired,
+  id: PropTypes.string,
+  link: PropTypes.string,
   list: PropTypes.arrayOf(PropTypes.object).isRequired,
   onClick: PropTypes.func,
   screen: PropTypes.string,
