@@ -31,6 +31,7 @@ import {
 } from '../../../constants'
 
 const ModelsPageTabs = () => {
+  // To delete after new navbar is merged
   const location = useLocation()
 
   return (

@@ -32,6 +32,7 @@ import {
 } from '../../../constants'
 
 const FeatureStorePageTabs = () => {
+  // To delete after new navbar is merged
   const location = useLocation()
 
   return (

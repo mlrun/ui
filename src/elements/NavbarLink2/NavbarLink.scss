@@ -1,0 +1,113 @@
+@import '~igz-controls/scss/colors';
+
+.nav-link {
+  margin-bottom: 8px;
+
+  &:last-child {
+    margin: 0;
+  }
+
+  &__arrow {
+    flex: 1;
+    display: flex;
+    justify-content: end;
+
+    svg {
+      transition: transform 0.2s ease-in-out;
+    }
+  }
+
+  &__button {
+    position: relative;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 48px;
+    min-width: 48px;
+    padding: 0 8px 0 18px;
+    color: #a9b4d0;
+    font-weight: normal;
+    background-color: transparent;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    svg {
+      flex: 0 0 20px;
+      width: 20px;
+      height: 20px;
+
+      & * {
+        fill: #a9b4d0;
+      }
+    }
+
+    &.active,
+    &.active:hover {
+      color: $white;
+      background-color: #404567;
+      cursor: default;
+
+      svg {
+        & * {
+          fill: $white;
+        }
+      }
+
+      &::before {
+        content: '';
+        border: 2px solid #0fddaf;
+        height: 100%;
+        position: absolute;
+        left: 0;
+      }
+
+      &.nav-link__parent {
+        cursor: pointer;
+      }
+    }
+
+    &.expended {
+      .nav-link__arrow {
+        svg {
+          transform: rotate(90deg);
+        }
+      }
+    }
+
+    &:hover,
+    &:focus-visible,
+    &.expended {
+      &:not(:disabled):not([class*='active']) {
+        color: #a9b4d0;
+        background-color: #404567;
+        outline: none;
+        transition: all 0.3s ease-in-out;
+
+        svg {
+          & * {
+            fill: #a9b4d0;
+          }
+        }
+      }
+    }
+
+    &:focus,
+    &:active {
+      border-color: transparent;
+    }
+  }
+
+  &__label {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+
+    .navbar:hover &,
+    .navbar.navbar_hovered &,
+    .navbar.navbar_pinned & {
+      opacity: 1;
+    }
+  }
+}

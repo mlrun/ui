@@ -21,6 +21,7 @@ import React, { useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useLocation, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { startCase } from 'lodash'
 
 import BreadcrumbsStep from './BreadcrumbsStep/BreadcrumbsStep'
 
@@ -30,7 +31,7 @@ import { generateProjectsList } from '../../utils/projects'
 
 import './breadcrumbs.scss'
 
-const Breadcrumbs = ({ onClick = () => {} }) => {
+const Breadcrumbs = ({ onClick = () => { } }) => {
   const [searchValue, setSearchValue] = useState('')
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
@@ -69,7 +70,7 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
       return {
         pathItems: [projects, projectName, screen?.label || screenName],
         screen,
-        tab
+        tab: { ...tab, label: startCase(tab?.label.replace('-', ' ')) || '' }
       }
     } else {
       const [page] = location.pathname.split('/').slice(3, 4)
