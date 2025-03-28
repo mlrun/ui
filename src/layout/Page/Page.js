@@ -27,16 +27,16 @@ import ModalContainer from 'react-modal-promise'
 
 import Navbar from '../Navbar/Navbar'
 import YamlModal from '../../common/YamlModal/YamlModal'
+import Loader from '../../common/Loader/Loader'
 
 import { getTransitionEndEventName } from 'igz-controls/utils/common.util'
 import { fetchFrontendSpec, toggleYaml } from '../../reducers/appReducer'
 import { NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
 import { isProjectValid } from '../../utils/link-helper.util'
-
-import './Page.scss'
-import Loader from '../../common/Loader/Loader'
 import { generateProjectsList } from '../../utils/projects'
 import projectsAction from '../../actions/projects'
+
+import './Page.scss'
 
 const Page = () => {
   const [isNavbarPinned, setIsNavbarPinned] = useState(false)
