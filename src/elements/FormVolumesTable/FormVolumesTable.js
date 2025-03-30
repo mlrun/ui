@@ -27,7 +27,8 @@ import { FormActionButton } from 'igz-controls/elements'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { useFormTable } from 'igz-controls/hooks'
-import { V3IO_VOLUME_TYPE } from '../../constants'
+import { CONFIG_MAP_VOLUME_TYPE, V3IO_VOLUME_TYPE } from '../../constants'
+import { isCommunityEdition } from '../../utils/helper'
 
 const FormVolumesTable = ({
   disabled = false,
@@ -94,14 +95,21 @@ const FormVolumesTable = ({
                 label="Add volume"
                 onClick={(...addRowArgs) =>
                   addNewRow(...addRowArgs, {
-                    data: {
-                      type: V3IO_VOLUME_TYPE,
-                      name: '',
-                      mountPath: '',
-                      container: '',
-                      accessKey: '',
-                      subPath: ''
-                    },
+                    data: isCommunityEdition()
+                      ? {
+                          type: CONFIG_MAP_VOLUME_TYPE ,
+                          name: '',
+                          mountPath: '',
+                          typeName: ''
+                        }
+                      : {
+                          type: V3IO_VOLUME_TYPE,
+                          name: '',
+                          mountPath: '',
+                          container: '',
+                          accessKey: '',
+                          subPath: ''
+                        },
                     isDefault: false,
                     canBeModified: true
                   })

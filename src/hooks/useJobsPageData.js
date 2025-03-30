@@ -274,7 +274,8 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
     refreshContent: refreshJobs,
     filters,
     paginationConfigRef: paginationConfigRunsRef,
-    resetPaginationTrigger: `${params.projectName}_${selectedTab}_${params.jobName}`
+    resetPaginationTrigger: `${params.projectName}_${selectedTab}_${params.jobName}`,
+    isAllVersions: Boolean(params.jobName)
   })
 
   return {
