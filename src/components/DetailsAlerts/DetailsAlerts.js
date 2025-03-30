@@ -30,9 +30,9 @@ import {
   getAlertsFiltersConfig,
   navigateToPerProjectAlertsPage,
   parseAlertsQueryParamsCallback
-} from '../../components/Alerts/alerts.util'
-import { useAlertsPageData } from '../../hooks/useAlertsPageData'
+} from '../Alerts/alerts.util'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import { useRefreshAlerts } from '../../hooks/useRefreshAlerts.hook'
 
 import { ReactComponent as ExclamationMarkIcon } from 'igz-controls/images/exclamation-mark.svg'
 
@@ -50,15 +50,7 @@ const DetailsAlerts = () => {
     parseAlertsQueryParamsCallback
   )
 
-  const {
-    alerts,
-    handleRefreshAlerts,
-    paginationConfigAlertsRef,
-    requestErrorMessage,
-    refreshAlerts,
-    setAlerts,
-    setSearchParams
-  } = useAlertsPageData(alertsFilters)
+  const { alerts, refreshAlerts, requestErrorMessage, setAlerts } = useRefreshAlerts(alertsFilters)
 
   const handleRefreshWithFilters = useCallback(
     filters => {
@@ -90,42 +82,34 @@ const DetailsAlerts = () => {
   )
 
   return (
-    <div className="content-wrapper">
-      <div className="content">
-        <div className="table-container alerts-container">
-          <div className="content__action-bar-wrapper">
-            {tableContent.length >= ALERTS_DISPLAY_LIMIT && (
-              <div className="alerts-container__content-info">
-                <ExclamationMarkIcon />
-                <div>Only 100 alerts are displayed. View all in</div>
-                <span
-                  className="link"
-                  onClick={() => navigateToPerProjectAlertsPage(navigate, projectName, entityId)}
-                >
-                  alerts screen
-                </span>
-                .
-              </div>
-            )}
-          </div>
-          <AlertsTable
-            alertsFiltersConfig={alertsFiltersConfig}
-            alertsStore={alertsStore}
-            filters={alertsFilters}
-            filtersStore={filtersStore}
-            handleRefreshAlerts={handleRefreshAlerts}
-            handleRefreshWithFilters={handleRefreshWithFilters}
-            isAlertsPage={false}
-            isCrossProjects={false}
-            pageData={pageData}
-            paginationConfigAlertsRef={paginationConfigAlertsRef}
-            requestErrorMessage={requestErrorMessage}
-            selectedAlert={selectedAlert}
-            setSearchParams={setSearchParams}
-            tableContent={tableContent}
-            toggleRow={toggleRow}
-          />
+    <div>
+      {tableContent.length >= ALERTS_DISPLAY_LIMIT && (
+        <div className="alerts-container__content-info">
+          <ExclamationMarkIcon />
+          <div>Only 100 alerts are displayed. View all in</div>
+          <span
+            className="link"
+            onClick={() => navigateToPerProjectAlertsPage(navigate, projectName, entityId)}
+          >
+            alerts screen
+          </span>
         </div>
+      )}
+      <div className="alerts-container__wrapper">
+        <AlertsTable
+          alertsFiltersConfig={alertsFiltersConfig}
+          alertsStore={alertsStore}
+          filters={alertsFilters}
+          filtersStore={filtersStore}
+          handleRefreshWithFilters={handleRefreshWithFilters}
+          isAlertsPage={false}
+          isCrossProjects={false}
+          pageData={pageData}
+          requestErrorMessage={requestErrorMessage}
+          selectedAlert={selectedAlert}
+          tableContent={tableContent}
+          toggleRow={toggleRow}
+        />
       </div>
     </div>
   )
