@@ -38,6 +38,7 @@ import {
 import { showErrorNotification } from '../../utils/notifications.util'
 import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
 import { fetchProjectsNames } from '../../reducers/projectReducer'
+import { isCommunityEdition } from '../../utils/helper'
 
 export const CSV = 'csv'
 export const URL = 'URL'
@@ -84,11 +85,15 @@ export const comboboxSelectList = [
     label: 'MLRun store',
     id: MLRUN_STORAGE_INPUT_PATH_SCHEME
   },
-  {
-    className: 'path-type-v3io',
-    label: 'V3IO',
-    id: V3IO_INPUT_PATH_SCHEME
-  },
+  ...(isCommunityEdition()
+    ? []
+    : [
+        {
+          className: 'path-type-v3io',
+          label: 'V3IO',
+          id: V3IO_INPUT_PATH_SCHEME
+        }
+      ]),
   {
     className: 'path-type-s3',
     label: 'S3',

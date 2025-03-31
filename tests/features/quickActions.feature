@@ -86,7 +86,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH002 - Verify behaviour on Register Model Popup on Project Home Page
         Given open url
-        * turn on demo mode
+        When turn on demo mode with query params "false"
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -250,7 +250,7 @@ Feature: Quick actions Page
         * set tear-down property "project" created with "automation-test-1003" value
         * create "automation-test-1003" MLRun Project with code 201
         Given open url
-        * turn on demo mode
+        When turn on demo mode with query params "false"
         And click on row root with value "automation-test-1003" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -470,7 +470,8 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH009 - Check all mandatory components on Feature Set tab on Project Home Page
         Given open url
-        * turn on demo mode
+        When turn on demo mode with query params "false"
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -504,7 +505,7 @@ Feature: Quick actions Page
         Then verify "Feature_Sets_Table" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature_Store_Tab_Selector" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
-        Then "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" should contains "Create Set" value
+        Then "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" should contains "Create set" value
 
     @MLPH
     @passive
@@ -602,9 +603,21 @@ Feature: Quick actions Page
             | ML Functions |
         And wait load page
         Then verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "ML_Functions" wizard selected option value "Past week"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        Then verify "Table_FilterBy_Button" element visibility on "ML_Functions" wizard
+        Then verify "Table_FilterBy_Button" element on "ML_Functions" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
+        Then click on "Table_FilterBy_Button" element on "ML_Functions" wizard
+        Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+        Then verify "Show_Untagged" element visibility on "FilterBy_Popup" wizard
+        Then "Show_Untagged" element should be unchecked on "FilterBy_Popup" wizard
         Then verify "Table_Refresh_Button" element visibility on "ML_Functions" wizard
+        Then verify "Table_Refresh_Button" element on "ML_Functions" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
+        Then verify "Expand_All_Button" element visibility on "ML_Functions" wizard
+        Then verify "Expand_All_Button" element on "ML_Functions" wizard should display hover tooltip "Common_Tooltips"."Expand_All_Button"
         Then verify "Table_Expand_Rows_Button" element visibility on "ML_Functions" wizard
-        * turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         Then verify "New_Function_Button" element visibility on "ML_Functions" wizard
         Then "New_Function_Button" element on "ML_Functions" should contains "New" value
@@ -626,13 +639,28 @@ Feature: Quick actions Page
         And wait load page
         Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        Then verify "Batch_Run_Button" element visibility on "Jobs_Monitor_Tab" wizard
-        Then "Batch_Run_Button" element on "Jobs_Monitor_Tab" should contains "Batch Run" value
-        Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Name_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
         Then verify "Table_FilterBy_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
+        Then verify "Status_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then verify "Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
+        Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+        Then verify "Batch_Run_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then "Batch_Run_Button" element on "Jobs_Monitor_Tab" should contains "Batch run" value
+        Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then "Resource_Monitoring_Button" element on "Jobs_Monitor_Tab" should contains "Resource monitoring" value
+        Then verify "Auto_Refresh_Checkbox" element visibility on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
 
     @MLPH
@@ -640,6 +668,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH015 - Check all mandatory components on Models tab on Project Home Page
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -660,7 +689,7 @@ Feature: Quick actions Page
         Then verify "Models_Table" element visibility on "Models" wizard
         Then verify "Train_Model_Button" element visibility on "Models" wizard
         Then "Train_Model_Button" element on "Models" should contains "Train model" value
-        * turn on demo mode
+        When turn on demo mode with query params "true"
         Then verify "Register_Model_Button" element visibility on "Models" wizard
         Then "Register_Model_Button" element on "Models" should contains "Register model" value
 
@@ -702,9 +731,24 @@ Feature: Quick actions Page
             | Model Endpoints |
         And wait load page
         Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
-        Then verify "Table_Label_Filter_Input" element visibility on "Model_Endpoints" wizard
-        Then verify "Table_Sort_By_Filter" element visibility on "Model_Endpoints" wizard
+        Then verify "Table_FilterBy_Button" element visibility on "Model_Endpoints" wizard
+        Then verify "Table_FilterBy_Button" element on "Model_Endpoints" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
+        Then click on "Table_FilterBy_Button" element on "Model_Endpoints" wizard
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+        Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
         Then verify "Table_Refresh_Button" element visibility on "Model_Endpoints" wizard
+        Then verify "Table_Refresh_Button" element on "Model_Endpoints" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
+        Then verify "Sort_By_Function" element visibility on "Model_Endpoints" wizard
+        Then verify "Sort_By_Name" element not exists on "Model_Endpoints" wizard
+        Then click on "Column_Name_Header" element on "Model_Endpoints" wizard
+        Then verify "Sort_By_Name" element visibility on "Model_Endpoints" wizard
+        Then verify "Sort_By_Function" element not exists on "Model_Endpoints" wizard
+        Then click on "Column_Function_Header" element on "Model_Endpoints" wizard
+        Then verify "Sort_By_Function" element visibility on "Model_Endpoints" wizard
+        Then verify "Sort_By_Name" element not exists on "Model_Endpoints" wizard
         Then verify "Model_Endpoints_Table" element visibility on "Model_Endpoints" wizard
 
     @MLPH

@@ -77,12 +77,6 @@ export const fetchWorkflows = createAsyncThunk(
           }
         }
 
-        if (filter.project) {
-          result = result.filter(workflow =>
-            workflow.project.includes(filter.project.toLowerCase())
-          )
-        }
-
         return parseWorkflows(result, page)
       } else {
         const response = await workflowApi.getWorkflows(project, filter, config)

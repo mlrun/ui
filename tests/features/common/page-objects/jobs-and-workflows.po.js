@@ -99,10 +99,8 @@ const jobsMonitorTable = {
             '.tooltip .tooltip__text span'
           )
         },
-        datetime:
-          '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(1)',
-        uid:
-          '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(2)',
+        datetime: '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(1)',
+        uid: '[data-testid="uid"] a .link',
         type: {
           componentType: labelComponent,
           structure: generateLabelGroup(
@@ -246,7 +244,7 @@ const scheduleMonitorTable = {
     row: {
       root: '.table-row',
       fields: {
-        name: '.table-body__cell:nth-of-type(1) > div',
+        name: '.table-body__cell:nth-of-type(1) .data-ellipsis > div',
         type: {
           componentType: labelComponent,
           structure: generateLabelGroup(
@@ -412,7 +410,7 @@ const pageHeaderButton = By.css(
 )
 const jobsTabSelector = commonTable(tabSelector)
 const tableRefreshButton = By.css(
-  '.content .content__action-bar-wrapper [data-testid="refresh"]'
+  '.content .content__action-bar-wrapper [data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]'
 )
 const commonStatusFilter = dropdownComponent(
   generateDropdownGroup(
@@ -471,9 +469,7 @@ module.exports = {
     Error_Message: commonErrorMessage,
     Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
     Arrow_Back: By.css('a.link-back__icon'),
-    Resource_Monitoring_Button: By.css(
-      '.content__action-bar-wrapper .action-bar button'
-    ),
+    Resource_Monitoring_Button: By.css('.action-bar .action-bar__actions button:nth-of-type(2)'),
     Auto_Refresh_Checkbox: checkboxComponent({
       root: '[data-testid="form-field-checkbox"]',
       elements: {
@@ -482,6 +478,7 @@ module.exports = {
         icon: ''
       }
     }),
+    Auto_Refresh_Checkbox_Element: By.css('[data-testid="form-field-checkbox"] input'),
     Table_Refresh_Button: tableRefreshButton,
     Status_Filter_Dropdown: commonStatusFilter,
     Table_Name_Filter_Input: commonTableNameFilter,

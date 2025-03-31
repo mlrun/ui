@@ -32,6 +32,8 @@ import {
   getFeatureVectorIdentifier
 } from '../utils/getUniqueIdentifier'
 import { parseFeatureVectors } from '../utils/parseFeatureVectors'
+import { isCommunityEdition } from '../utils/helper'
+import { REDISNOSQL } from '../components/FeatureSetsPanel/FeatureSetsPanelTargetStore/featureSetsPanelTargetStore.util'
 
 const initialState = {
   error: null,
@@ -95,7 +97,7 @@ const initialState = {
         },
         {
           name: 'nosql',
-          kind: 'nosql',
+          kind: isCommunityEdition() ? REDISNOSQL : 'nosql',
           online: true,
           path: ''
         }

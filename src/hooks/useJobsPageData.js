@@ -78,7 +78,9 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
   const [refreshAfterDeleteCallback, refreshAfterDeleteTrigger] = useRefreshAfterDelete(
     paginationConfigRunsRef,
     historyBackLink,
-    'runs'
+    'runs',
+    null,
+    Boolean(params.jobName)
   )
 
   const terminateAbortTasksPolling = useCallback(() => {
@@ -87,8 +89,10 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
   }, [])
 
   const refreshJobs = useCallback(
-    filters => {
-      if (params.jobName) {
+    (filters, { forceFetchJobs = false } = {}) => {
+      const isJobRunsRequest = params.jobName && !forceFetchJobs
+      
+      if (isJobRunsRequest) {
         setJobRuns(null)
       } else {
         setJobs([])
@@ -98,7 +102,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
 
       terminateAbortTasksPolling()
 
-      const fetchData = params.jobName ? fetchAllJobRuns : fetchJobs
+      const fetchData = isJobRunsRequest ? fetchAllJobRuns : fetchJobs
       const projectName = filters.project?.toLowerCase?.() || params.projectName || '*'
       const config = {
         ui: {
@@ -108,17 +112,17 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
         params: {}
       }
 
-      if (!params.jobName) {
+      if (!isJobRunsRequest) {
         config.params['partition-by'] = 'project_and_name'
         config.params['partition-sort-by'] = 'updated'
       }
 
-      if (!params.jobName && !isEmpty(paginationConfigJobsRef.current)) {
+      if (!isJobRunsRequest && !isEmpty(paginationConfigJobsRef.current)) {
         config.params.page = paginationConfigJobsRef.current[BE_PAGE]
         config.params['page-size'] = paginationConfigJobsRef.current[BE_PAGE_SIZE]
       }
 
-      if (params.jobName && !isEmpty(paginationConfigRunsRef.current)) {
+      if (isJobRunsRequest && !isEmpty(paginationConfigRunsRef.current)) {
         config.params.page = paginationConfigRunsRef.current[BE_PAGE]
         config.params['page-size'] = paginationConfigRunsRef.current[BE_PAGE_SIZE]
       }
@@ -126,7 +130,12 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
       lastCheckedJobIdRef.current = null
 
       return dispatch(
-        fetchData({ project: projectName, filters, config, jobName: params.jobName ?? false })
+        fetchData({
+          project: projectName,
+          filters,
+          config,
+          jobName: isJobRunsRequest ? params.jobName : false
+        })
       )
         .unwrap()
         .then(response => {
@@ -154,7 +163,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
               )
             }
 
-            if (params.jobName) {
+            if (isJobRunsRequest) {
               setJobRuns(parsedJobs)
               paginationConfigRunsRef.current.paginationResponse = response.pagination
             } else {
@@ -162,7 +171,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
               paginationConfigJobsRef.current.paginationResponse = response.pagination
             }
           } else {
-            if (params.jobName) {
+            if (isJobRunsRequest) {
               setJobRuns([])
             }
           }
@@ -170,7 +179,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
           return response
         })
         .catch(() => {
-          if (params.jobName) {
+          if (isJobRunsRequest) {
             setJobRuns([])
           }
         })
@@ -202,10 +211,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
               .map(job => parseJob(job, SCHEDULE_TAB))
               .filter(job => {
                 return (
-                  (!filters.type ||
-                    filters.type === FILTER_ALL_ITEMS ||
-                    job.type === filters.type) &&
-                  (!filters.project || job.project.includes(filters.project.toLowerCase()))
+                  !filters.type || filters.type === FILTER_ALL_ITEMS || job.type === filters.type
                 )
               })
 
@@ -219,10 +225,11 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
   const getWorkflows = useCallback(
     filters => {
       abortControllerRef.current = new AbortController()
+      const projectName = filters.project?.toLowerCase?.() || params.projectName || '*'
 
       dispatch(
         fetchWorkflows({
-          project: filters.project ? filters.project.toLowerCase() : params.projectName || '*',
+          project: projectName,
           filter: { ...filters, groupBy: GROUP_BY_WORKFLOW },
           config: {
             ui: {
@@ -265,7 +272,8 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
     refreshContent: refreshJobs,
     filters,
     paginationConfigRef: paginationConfigRunsRef,
-    resetPaginationTrigger: `${params.projectName}_${selectedTab}_${params.jobName}`
+    resetPaginationTrigger: `${params.projectName}_${selectedTab}_${params.jobName}`,
+    isAllVersions: Boolean(params.jobName)
   })
 
   return {

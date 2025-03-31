@@ -279,7 +279,7 @@ export const checkForSelectedArtifact = debounce(
                   return prevSearchParams
                 })
               } else if (tag && !artifact.tag && uid === artifact.uid) {
-                artifact.ui.infoMessage = `The ${getArtifactLabelByTabName(tab)} you are viewing was updated. Refresh the list to see the most current version.`
+                artifact.ui.infoMessage = `The ${getArtifactLabelByTabName(tab)} you are viewing was updated. Close the detail panel and refresh the list to see the current version.`
               } else {
                 artifact.ui.infoMessage = generateObjectNotInTheListMessage(
                   getArtifactLabelByTabName(tab)

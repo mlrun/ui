@@ -24,19 +24,17 @@ import classnames from 'classnames'
 
 import { Tip } from 'igz-controls/components'
 
-import { SLIDER_STYLE_1, SLIDER_STYLE_2, SLIDER_TABS } from '../../types'
+import { SLIDER_TABS } from '../../types'
 import { generateUrlFromRouterPath } from '../../utils/link-helper.util'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
-import './tabsSlider.scss'
-
 const TabsSlider = ({
+  fontSize = 'sm',
   initialTab = '',
   isDetailsPopUp = false,
   onClick = () => {},
   skipLink = false,
-  sliderStyle = SLIDER_STYLE_1,
   tabsList
 }) => {
   const [selectedTab, setSelectedTab] = useState(initialTab)
@@ -50,7 +48,6 @@ const TabsSlider = ({
   const menuOffsetHalfWidth = 2
   const tabOffset = 1.5
 
-  const tabsSliderClassNames = classnames('tabs-slider', sliderStyle)
   const leftArrowClassNames = classnames(
     'tabs-slider__arrow',
     'tabs-slider__arrow_left',
@@ -161,7 +158,7 @@ const TabsSlider = ({
   }, [isDetailsPopUp, params.tab, selectedTab, tabsList])
 
   return (
-    <div className={tabsSliderClassNames}>
+    <div className="content-menu">
       <div
         className={leftArrowClassNames}
         onClick={() => {
@@ -170,36 +167,41 @@ const TabsSlider = ({
       >
         <Arrow />
       </div>
-      <div className="tabs-slider__tabs-wrapper" ref={tabsWrapperRef}>
+      <div className="content-menu__tabs-wrapper" ref={tabsWrapperRef}>
         <div
           ref={tabsRef}
-          className="tabs-slider__tabs"
+          className="content-menu__tabs"
           style={{
             transform: `translateX(${-scrolledWidth}px)`
           }}
         >
           {tabsList.map(tab => {
             const tabClassName = classnames(
-              'tabs-slider__tab',
-              selectedTab === tab.id && 'tabs-slider__tab_active'
+              'content-menu__tab',
+              `content-menu__tab-${fontSize}`,
+              selectedTab === tab.id && 'content-menu__tab_active'
             )
 
             return (
               !tab.hidden &&
               (!skipLink ? (
-                <Link
-                  className={tabClassName}
-                  data-tab={tab.id}
-                  to={generateUrlFromRouterPath(
-                    `${window.location.pathname?.replace(/^$|([^/]+$)/, tab.id)}${location.search ?? ''}${tab.query ?? ''}`
-                  )}
-                  onClick={() => onSelectTab(tab)}
-                  key={tab.id}
-                >
-                  {tab.icon && <div className="tabs-slider__tab-icon">{tab.icon}</div>}
-                  {tab.label}
-                  {tab.tip && <Tip className="tabs-slider__tab-tip" text={tab.tip} />}
-                </Link>
+                <div className={tabClassName}>
+                  <Link
+                    className={
+                      (tab.icon && 'content-menu__tab-icon') || (tab.tip && 'content-menu__tab-tip')
+                    }
+                    data-tab={tab.id}
+                    to={generateUrlFromRouterPath(
+                      `${window.location.pathname?.replace(/^$|([^/]+$)/, tab.id)}${location.search ?? ''}${tab.query ?? ''}`
+                    )}
+                    onClick={() => onSelectTab(tab)}
+                    key={tab.id}
+                  >
+                    {tab.icon && <div>{tab.icon}</div>}
+                    {tab.label}
+                    {tab.tip && <Tip text={tab.tip} />}
+                  </Link>
+                </div>
               ) : (
                 <div
                   className={tabClassName}
@@ -207,9 +209,9 @@ const TabsSlider = ({
                   key={tab.id}
                   onClick={() => onSelectTab(tab.id)}
                 >
-                  {tab.icon && <div className="tabs-slider__tab-icon">{tab.icon}</div>}
+                  {tab.icon && <div className="content-menu_tab-icon">{tab.icon}</div>}
                   {tab.label}
-                  {tab.tip && <Tip className="tabs-slider__tab-tip" text={tab.tip} />}
+                  {tab.tip && <Tip className="content-menu__tab-tip" text={tab.tip} />}
                 </div>
               ))
             )
@@ -224,10 +226,10 @@ const TabsSlider = ({
 }
 
 TabsSlider.propTypes = {
+  fontSize: PropTypes.oneOf(['sm', 'md', 'lg']),
   initialTab: PropTypes.string,
   onClick: PropTypes.func,
   skipLink: PropTypes.bool,
-  sliderStyle: PropTypes.oneOf([SLIDER_STYLE_1, SLIDER_STYLE_2]),
   tabsList: SLIDER_TABS.isRequired
 }
 

@@ -233,7 +233,8 @@ export const generateActionsMenu = (
         label: 'Add a tag',
         hidden: isDetailsPopUp,
         icon: <TagIcon />,
-        onClick: handleAddTag
+        onClick: handleAddTag,
+        allowLeaveWarning: true
       },
       {
         label: 'Download',
@@ -292,7 +293,8 @@ export const generateActionsMenu = (
                 MODEL_TYPE
               )
             }
-          )
+          ),
+        allowLeaveWarning: true
       },
       {
         label: 'Delete all versions',
@@ -310,14 +312,15 @@ export const generateActionsMenu = (
                 modelMin.db_key,
                 modelMin.uid,
                 handleRefresh,
-                null,
+                refreshAfterDeleteCallback,
                 modelsFilters,
                 MODEL_TYPE,
                 MODEL_TYPE,
                 true
               )
             }
-          )
+          ),
+        allowLeaveWarning: true
       }
     ],
     [

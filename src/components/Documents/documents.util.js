@@ -138,7 +138,8 @@ export const generateActionsMenu = (
         label: 'Add a tag',
         hidden: isDetailsPopUp,
         icon: <TagIcon />,
-        onClick: handleAddTag
+        onClick: handleAddTag,
+        allowLeaveWarning: true
       },
       {
         label: 'Download',
@@ -189,7 +190,8 @@ export const generateActionsMenu = (
             filters,
             refreshArtifacts,
             refreshAfterDeleteCallback
-          })
+          }),
+        allowLeaveWarning: true
       },
       {
         label: 'Delete all versions',
@@ -207,14 +209,15 @@ export const generateActionsMenu = (
                 documentMin.db_key,
                 documentMin.uid,
                 refreshArtifacts,
-                null,
+                refreshAfterDeleteCallback,
                 filters,
                 DOCUMENT_TYPE,
                 DOCUMENT_TYPE,
                 true
               )
             }
-          )
+          ),
+        allowLeaveWarning: true
       }
     ],
     [

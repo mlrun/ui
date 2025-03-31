@@ -47,6 +47,7 @@ import './alerts.scss'
 const AlertsView = ({
   alertsFiltersConfig,
   alertsStore,
+  entityId,
   isAlertsPage = true,
   filters,
   filtersStore,
@@ -85,7 +86,7 @@ const AlertsView = ({
                   <div>Only 100 alerts are displayed. View all in</div>
                   <span
                     className="link"
-                    onClick={() => navigateToPerProjectAlertsPage(navigate, projectName)}
+                    onClick={() => navigateToPerProjectAlertsPage(navigate, projectName, entityId)}
                   >
                     alerts screen
                   </span>

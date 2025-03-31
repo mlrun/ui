@@ -29,7 +29,7 @@ import Loader from '../../common/Loader/Loader'
 
 import { DATASET_TYPE, MODEL_TYPE, TAG_LATEST } from '../../constants'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { addTag, fetchArtifacts } from '../../reducers/artifactsReducer'
+import { addTag, fetchAllArtifactKindsTags } from '../../reducers/artifactsReducer'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
@@ -115,7 +115,7 @@ const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag = () => {}, onResolve,
   useEffect(() => {
     setIsLoading(true)
     dispatch(
-      fetchArtifacts({
+      fetchAllArtifactKindsTags({
         project: projectName,
         filters: { name: artifact.db_key },
         config: {
@@ -127,9 +127,9 @@ const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag = () => {}, onResolve,
       })
     )
       .unwrap()
-      .then(artifacts => {
-        if (artifacts.length) {
-          setArtifactTags(artifacts.map(artifact => artifact.tag))
+      .then(tags => {
+        if (tags.length) {
+          setArtifactTags(tags)
         }
       })
       .finally(() => {

@@ -3,6 +3,36 @@
     {
       "kind": "project",
       "metadata": {
+        "name": "auto-generated-data",
+        "created": "2021-08-29T15:21:14.355864",
+        "labels": {
+          "auto": "data"
+        },
+        "annotations": null
+      },
+      "spec": {
+        "description": "auto generated data for different purposes",
+        "owner": null,
+        "goals": "test goals",
+        "params": {},
+        "functions": null,
+        "workflows": null,
+        "artifacts": null,
+        "artifact_path": "v3io:///projects/{{run.project}}/artifacts",
+        "conda": null,
+        "source": "https://github.com/mlrun/ui",
+        "subpath": null,
+        "origin_url": null,
+        "desired_state": "online",
+        "artifactPath": null
+      },
+      "status": {
+        "state": "online"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
         "name": "cat-vs-dog-classification",
         "created": "2021-08-29T15:21:14.286079",
         "labels": {},

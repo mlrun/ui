@@ -23,7 +23,7 @@ import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
-import { cloneDeep, isEmpty, set } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash'
 import { useParams } from 'react-router-dom'
 
 import {
@@ -109,7 +109,7 @@ const ProjectSettingsGeneral = ({
             [DEFAULT_IMAGE]: response?.data?.spec?.[DEFAULT_IMAGE],
             [DESCRIPTION]: response?.data?.spec?.[DESCRIPTION],
             [GOALS]: response?.data?.spec?.[GOALS],
-            [PARAMS]: parseObjectToKeyValue(response?.data?.spec?.[PARAMS]),
+            [PARAMS]: parseObjectToKeyValue(response?.data?.spec?.[PARAMS] || {}),
             [LABELS]: parseChipsData(
               response?.data?.metadata?.[LABELS],
               frontendSpec.internal_labels || []
@@ -148,7 +148,6 @@ const ProjectSettingsGeneral = ({
         frontendSpec.internal_labels || []
       )
 
-      set(formStateRef.current.initialValues, LABELS, parsedLabels)
       formStateRef.current.form.change(LABELS, parsedLabels)
       setLastEditedProjectValues(state => ({
         ...state,
