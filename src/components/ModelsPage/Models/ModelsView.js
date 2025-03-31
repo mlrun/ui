@@ -168,6 +168,7 @@ const ModelsView = React.forwardRef(
               <Details
                 actionsMenu={actionsMenu}
                 applyDetailsChanges={applyDetailsChanges}
+                applyDetailsChangesCallback={applyDetailsChangesCallback}
                 detailsMenu={pageData.details.menu}
                 formInitialValues={detailsFormInitialValues}
                 handleRefresh={getAndSetSelectedArtifact}

@@ -112,7 +112,8 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
     paginationConfigModelVersionsRef,
     historyBackLink,
     'artifacts',
-    params.id && getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : MODELS_TAB, true)
+    params.id && getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : MODELS_TAB, true),
+    isAllVersions
   )
 
   const { isDemoMode } = useMode()

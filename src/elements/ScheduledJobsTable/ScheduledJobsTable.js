@@ -110,7 +110,7 @@ const ScheduledJobsTable = ({
         })
         .catch(error => {
           const customErrorMsg =
-            error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
               ? 'You do not have permission to run a new job.'
               : getErrorMsg(error, 'Failed to start job')
 

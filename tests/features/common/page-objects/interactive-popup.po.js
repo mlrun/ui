@@ -632,7 +632,7 @@ const commonTitle = By.css('.pop-up-dialog .pop-up-dialog__header-text')
 const commonPopupTitle = By.css('.modal__header-title')
 const commonCloseButton = By.css('.modal__header-button button')
 const commonFormCancelButton = By.css('.modal__footer-actions .btn-tertiary')
-const commonFormConfirmButton = By.css('.modal__footer-actions .btn-secondary')
+const commonFormConfirmButton = By.css('.modal__footer-actions .btn-primary')
 const commonRegisterErrorMessage = By.css('[data-testid="error-message"] .error__message')
 const commonFormText = By.css('.form-text span')
 const commonFormSubtext = By.css('.form-text div p')
@@ -733,7 +733,7 @@ module.exports = {
     ),
     Cross_Cancel_Button: commonCrossCancelButton,
     Cancel_Button: commonCancelButton,
-    Create_Button: By.css('.pop-up-dialog .btn-secondary'),
+    Create_Button: By.css('.pop-up-dialog .btn-primary'),
     Error_Message: By.css('.pop-up-dialog .error__message'),
     New_Project_Labels_Table: commonTable(newProjectLabelsTable),
     Add_Label_Button: By.css(
@@ -844,7 +844,7 @@ module.exports = {
     Filter_Dropdown: {
       Title: By.css('.hub-filter h3.filters-wizard__header'),
       Clear_Button: By.css('.hub-filter .filters-wizard__modal-buttons .btn-tertiary'),
-      Apply_Button: By.css('.hub-filter .filters-wizard__modal-buttons .btn-secondary')
+      Apply_Button: By.css('.hub-filter .filters-wizard__modal-buttons .btn-primary')
     },
     Category_Selector_Dropdown: categorySelect,
     Checkbox_Category_Selector: commonTable(checkboxCategorySelector),
@@ -1449,6 +1449,11 @@ module.exports = {
     Cross_Cancel_Button: commonCrossCancelButton,
     YAML_Modal_Container: By.css('.pop-up-dialog .yaml-modal-container pre')
   },
+  jobLogsPopup: {
+    Title: By.css('#overlay_container .alerts-logs .modal__content .modal__header-title'),
+    Cross_Cancel_Button: By.css('#overlay_container .alerts-logs .modal__header-button .data-ellipsis'),
+    Alerts_Logs_Container: By.css('#overlay_container .alerts-logs .modal__body .table__item-logs-container')
+  },
   confirmPopup: {
     Title: By.css('.pop-up-dialog .pop-up-dialog__header'),
     Cross_Cancel_Button: commonCrossCancelButton,
@@ -1652,6 +1657,66 @@ module.exports = {
       generateInputGroup('[data-testid="labels-form-field-input"]', true, false, 'svg')
     ),
     Table_Project_Filter_Input: commonProjectFilterInput,
+    Project_Name_Filter_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="project-form-field-select"]',
+        '.form-field__control',
+        '.options-list [data-testid="select-option"]'
+      )
+    ),
+    Entity_Type_Filter_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="entity-type-form-field-select"]',
+        '.form-field__control',
+        '.options-list [data-testid="select-option"]'
+      )
+    ),
+    Entity_ID_Filter_Input: inputGroup(
+      generateInputGroup(
+        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="entity-form-field-input"]', 
+        true, 
+        false, 
+        true
+      )
+    ),
+    Endpoint_Application_Filter_Input: inputGroup(
+      generateInputGroup(
+        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="endpoint-application-form-field-input"]', 
+        true, 
+        false, 
+        true
+      )
+    ),
+    Endpoint_Result_Filter_Input: inputGroup(
+      generateInputGroup(
+        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="endpoint-result-form-field-input"]', 
+        true, 
+        false, 
+        true
+      )
+    ),
+    Job_Name_Filter_Input: inputGroup(
+      generateInputGroup(
+        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="job-name-form-field-input"]', 
+        true, 
+        false, 
+        true
+      )
+    ),
+    Severity_Filter_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="severity-form-field-select"]',
+        '.form-field__control',
+        '.options-list [data-testid="select-checkbox"]'
+      )
+    ),
+    Event_Type_Filter_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="event-type-form-field-select"]',
+        '.form-field__control',
+        '.options-list [data-testid="select-option"]'
+      )
+    ),
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
     Version_Tag_Value: inputGroup(
       generateInputGroup(
@@ -1825,7 +1890,7 @@ module.exports = {
         true
       )
     ),
-    Add_Button: By.css('[data-testid="modal"] .modal__footer .btn-secondary'),
+    Add_Button: By.css('[data-testid="modal"] .modal__footer .btn-primary'),
     Cancel_Button: By.css('[data-testid="modal"] .modal__footer .btn-tertiary')
   },
   deleteArtifactPopup: {
@@ -1852,7 +1917,7 @@ module.exports = {
   },
   schedulePopUp: {
     Schedule_For_Later: {
-      Schedule_Button: By.css('.schedule-wizard .modal__footer-actions .btn-secondary'),
+      Schedule_Button: By.css('.schedule-wizard .modal__footer-actions .btn-primary'),
       Time_unit_Dropdown: dropdownComponent(
         generateDropdownGroup(
           '.simple-schedule-item .form-field-select .form-field__wrapper',

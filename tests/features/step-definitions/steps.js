@@ -137,10 +137,10 @@ Given('open url', async function() {
 
 */
 
-When('turn on demo mode', async function() {
+When('turn on demo mode with query params {string}', async function(state) {
   const url = await this.driver.getCurrentUrl()
 
-  await navigateToPage(this.driver, `${url}?mode=demo`)
+  await navigateToPage(this.driver, `${url}${state === 'true' ? '&' : '?'}mode=demo`)
 })
 
 When('turn on staging mode', async function() {

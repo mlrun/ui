@@ -8,7 +8,7 @@ Feature: Models Page
   @smoke
   Scenario: MLM001 - Check all mandatory components on Models tab
     Given open url
-    And turn on demo mode
+    When turn on demo mode with query params "false"
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
@@ -284,7 +284,7 @@ Feature: Models Page
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
   Scenario: MLM009 - Check all mandatory components on Register Model Popup
     Given open url
-    And turn on demo mode
+    When turn on demo mode with query params "false"
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
@@ -378,7 +378,7 @@ Feature: Models Page
   Scenario: MLM010 - Verify behaviour on Register new Model
     # * set tear-down property "model" created in "default" project with "automation-model" value
     Given open url
-    And turn on demo mode
+    When turn on demo mode with query params "false"
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page

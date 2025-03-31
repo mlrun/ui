@@ -71,7 +71,7 @@ const DetailsDrillDownAlert = React.forwardRef(
                 data-testid="details-close-btn"
                 onClick={openAlertsLogsModal}
               >
-                <RoundedIcon tooltipText="Close" id="details-close">
+                <RoundedIcon id="full-view" tooltipText="Full view">
                   <EnlargeIcon />
                 </RoundedIcon>
               </div>

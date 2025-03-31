@@ -19,6 +19,8 @@ such restriction.
 */
 import React from 'react'
 
+import { isCommunityEdition } from '../../../utils/helper'
+
 import { ReactComponent as DB } from 'igz-controls/images/db-icon.svg'
 
 export const EXTERNAL_OFFLINE = 'externalOffline'
@@ -53,7 +55,7 @@ export const checkboxModels = {
 }
 
 export const onlineKindOptions = [
-  { label: 'V3IO', id: NOSQL, icon: <DB /> },
+  ...(isCommunityEdition() ? [] : [{ label: 'V3IO', id: NOSQL, icon: <DB /> }]),
   { label: 'REDIS', id: REDISNOSQL, icon: <DB /> }
 ]
 
@@ -108,7 +110,7 @@ export const partitionRadioButtonsInitialState = {
 
 export const onlineKindDataInitialState = {
   name: 'nosql',
-  kind: 'nosql',
+  kind: isCommunityEdition() ? REDISNOSQL : 'nosql',
   online: true,
   path: ''
 }

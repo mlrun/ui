@@ -17,8 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useLayoutEffect, useMemo, useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { defaultsDeep, isEmpty } from 'lodash'
 
@@ -41,8 +41,6 @@ import {
 } from '../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
-
-import './projectsJobsMonitoring.scss'
 import {
   getJobsFiltersConfig,
   getScheduledFiltersConfig,
@@ -52,6 +50,9 @@ import {
   parseWorkflowsQueryParamsCallback
 } from '../../utils/jobs.util'
 import { useJobsPageData } from '../../hooks/useJobsPageData'
+import projectsAction from '../../actions/projects'
+
+import './projectsJobsMonitoring.scss'
 
 export const ProjectJobsMonitoringContext = React.createContext({})
 
@@ -72,6 +73,9 @@ const ProjectsJobsMonitoring = () => {
   const workflowsStore = useSelector(store => store.workflowsStore)
   const functionsStore = useSelector(store => store.functionsStore)
   const filtersStore = useSelector(store => store.filtersStore)
+  const [, setProjectsRequestErrorMessage] = useState('')
+  const projectStore = useSelector(state => state.projectStore)
+  const dispatch = useDispatch()
 
   const jobsFiltersConfig = useMemo(
     () => getJobsFiltersConfig(params.jobName, true),
@@ -139,6 +143,16 @@ const ProjectsJobsMonitoring = () => {
     navigate(`/projects/*/${JOBS_MONITORING_PAGE}/${tabName}`)
   }
 
+  const fetchMinimalProjects = useCallback(() => {
+    dispatch(projectsAction.fetchProjects({ format: 'minimal' }, setProjectsRequestErrorMessage))
+  }, [dispatch])
+
+  useEffect(() => {
+    if (isEmpty(projectStore.projectsNames.data)) {
+      fetchMinimalProjects()
+    }
+  }, [fetchMinimalProjects, projectStore.projectsNames.data])
+
   useLayoutEffect(() => {
     setSelectedTab(
       location.pathname.includes(JOBS_MONITORING_WORKFLOWS_TAB)
@@ -194,6 +208,7 @@ const ProjectsJobsMonitoring = () => {
                   jobWizardIsOpened || jobsStore.loading || Boolean(jobsStore.jobLoadingCounter)
                 }
                 autoRefreshIsEnabled={filtersStore.autoRefresh}
+                internalAutoRefreshIsEnabled={filtersStore.internalAutoRefresh}
                 autoRefreshStopTrigger={!isEmpty(selectedJob)}
                 closeParamName={params.jobName}
                 filters={filters}

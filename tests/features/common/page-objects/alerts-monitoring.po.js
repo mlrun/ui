@@ -27,31 +27,7 @@ import {
   generateLabelGroup
 } from '../../common-tools/common-tools'
 import inputGroup from '../components/input-group.component'
-import checkboxComponent from '../components/checkbox.component'
 import datepicker from '../components/date-picker.component'
-import actionMenu from '../components/action-menu.component'
-
-const tabSelector = {
-  root: '.content .content-menu',
-  header: {},
-  body: {
-    root: '.content-menu__list',
-    row: {
-      root: '.content-menu__item',
-      fields: {
-        key: ''
-      }
-    }
-  }
-}
-
-const actionMenuStructure = {
-  root: '.actions-menu__container',
-  menuElements: {
-    open_button: 'button',
-    options: '.actions-menu__body .actions-menu__option'
-  }
-}
 
 const overallTable = {
   root: '.table__content',
@@ -72,108 +48,24 @@ const overallTable = {
     row: {
       root: '.table-row',
       fields: {
-        status: {
+        alertName: '[data-testid="alertName"] a .link',
+        projectName: '[data-testid="projectName"] .data-ellipsis',
+        eventType: '[data-testid="eventType"] .data-ellipsis',
+        entityId: '[data-testid="entityId"] .data-ellipsis',
+        entityType: {
           componentType: labelComponent,
           structure: generateLabelGroup(
-            '.table-body__cell:nth-of-type(1) .status',
-            'i',
-            true,
-            '.tooltip .tooltip__text span'
-          )
-        },
-        name: '[data-testid="name"] a .link',
-        uid: '[data-testid="uid"] a .link',
-        project_name: '[data-testid="projectName"] .data-ellipsis',
-        datetime:
-          '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(1)',
-        duration: '.table-body__cell:nth-of-type(3) .data-ellipsis',
-        owner: '.table-body__cell:nth-of-type(4) .data-ellipsis',
-        action_menu: {
-          componentType: actionMenu,
-          structure: actionMenuStructure
-        },
-        labels: {
-          componentType: dropdownComponent,
-          structure: generateDropdownGroup(
-            '.table-body__cell:nth-of-type(7)',
-            '.chip-block span.chips_button',
-            '.chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            '[data-testid="entityType"]',
+            'svg',
             false,
-            false
-          )
-        },
-        type: {
-          componentType: labelComponent,
-          structure: generateLabelGroup(
-            '.table-body__cell:nth-of-type(3)',
-            '.data-ellipsis',
-            true,
-            '.tooltip .tooltip__text span'
-          )
-        }
-      }
-    }
-  }
-}
-
-const scheduledTabTable = {
-  root: '.table__content',
-  header: {
-    root: '.table-head',
-    sorters: {
-      name: '.table-head__item:nth-of-type(1) .data-ellipsis',
-      type: '.table-head__item:nth-of-type(2) .data-ellipsis',
-      duration: '.table-head__item:nth-of-type(3) .data-ellipsis',
-      owner: '.table-head__item:nth-of-type(4) .data-ellipsis',
-      labels: '.table-head__item:nth-of-type(5) .data-ellipsis',
-      parameters: '.table-head__item:nth-of-type(6) .data-ellipsis',
-      results: '.table-head__item:nth-of-type(7) .data-ellipsis'
-    }
-  },
-  body: {
-    root: '.table-body',
-    row: {
-      root: '.table-row',
-      fields: {
-        name: '.table-cell-name.link',
-        uid: '[data-testid="uid"] a .link',
-        project_name: '[data-testid="projectName"] .data-ellipsis',
-        datetime:
-          '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(1)',
-        duration: '.table-body__cell:nth-of-type(3) .data-ellipsis',
-        owner: '.table-body__cell:nth-of-type(4) .data-ellipsis',
-        action_menu: {
-          componentType: actionMenu,
-          structure: actionMenuStructure
-        },
-        labels: {
-          componentType: dropdownComponent,
-          structure: generateDropdownGroup(
-            '.table-body__cell:nth-of-type(7)',
-            '.chip-block span.chips_button',
-            '.chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
-            false,
-            false
-          )
-        },
-        type: {
-          componentType: labelComponent,
-          structure: generateLabelGroup(
-            '.table-body__cell:nth-of-type(3)',
-            '.data-ellipsis',
-            true,
             '.tooltip .tooltip__text span'
           )
         },
-        status: {
-          componentType: labelComponent,
-          structure: generateLabelGroup(
-            '.table-body__cell:nth-of-type(1) .status',
-            'i',
-            true,
-            '.tooltip .tooltip__text span'
-          )
-        }
+        timestamp: '[data-testid="timestamp"] .data-ellipsis',
+        severity: '[data-testid="severity"] .data-ellipsis',
+        criteriaCount: '[data-testid="criteriaCount"] .data-ellipsis',
+        criteriaTime: '[data-testid="criteriaTime"] .data-ellipsis',
+        notifications: '[data-testid="notifications"] .data-ellipsis'
       }
     }
   }
@@ -275,51 +167,17 @@ const dateTimePickerCalendars = {
 }
 // datepicker end
 
-const commonRefreshButton = By.css('[data-testid="refresh"]')
 const commonErrorMessage = By.css('[data-testid="no-data"] h3')
 
 module.exports = {
-  crossJobsMonitorTab: {
-    Cross_Jobs_Tab_Selector: commonTable(tabSelector),
+  alertsMonitoring: {
     Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
-    Refresh_Button: commonRefreshButton,
+    Refresh_Button: By.css('[data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]'),
     Error_Message: commonErrorMessage,
-    Auto_Refresh_Checkbox: checkboxComponent({
-      root: '[data-testid="form-field-checkbox"]',
-      elements: {
-        checkbox: 'input', 
-        name: '',
-        icon: ''
-      }
-    }),
-    Auto_Refresh_Checkbox_Element: By.css('[data-testid="form-field-checkbox"] input'),
     Search_By_Name_Filter_Input: commonSearchByNameFilterInput,
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,
     Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
-    Jobs_Table: commonTable(overallTable),
-    Arrow_Back: By.css('a.link-back__icon')
-  },
-  crossWorkflowsMonitorTab: {
-    Cross_Jobs_Tab_Selector: commonTable(tabSelector),
-    Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
-    Search_By_Name_Filter_Input: commonSearchByNameFilterInput,
-    Date_Picker_Filter_Dropdown: commonDatePickerFilter,
-    Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
-    Date_Time_Picker: datepicker(dateTimePickerCalendars),
-    Refresh_Button: commonRefreshButton,
-    Error_Message: commonErrorMessage,
-    Workflows_Table: commonTable(overallTable)
-  },
-  crossScheduledMonitorTab: {
-    Cross_Jobs_Tab_Selector: commonTable(tabSelector),
-    Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
-    Search_By_Name_Filter_Input: commonSearchByNameFilterInput,
-    Date_Picker_Filter_Dropdown: commonDatePickerFilter,
-    Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
-    Date_Time_Picker: datepicker(dateTimePickerCalendars),
-    Refresh_Button: commonRefreshButton,
-    Error_Message: commonErrorMessage,
-    Scheduled_Table: commonTable(scheduledTabTable)
+    Alerts_Table: commonTable(overallTable)
   }
 }

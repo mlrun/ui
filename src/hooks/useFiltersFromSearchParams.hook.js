@@ -68,6 +68,12 @@ const getFiltersFromSearchParams = (filtersConfig, searchParams, paramsParsingCa
   })
 }
 
+export const getInitialFiltersByConfig = (filtersConfig = {}) => {
+  return mapValues(filtersConfig, (filterConfig) => {
+    return filterConfig.initialValue
+  })
+}
+
 export const useFiltersFromSearchParams = (
   filtersConfig = null,
   paramsParsingCallback = defaultParamsParsingCallback

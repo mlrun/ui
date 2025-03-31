@@ -71,7 +71,7 @@ const infoPaneOverviewHeaders = {
       root: 'li:not(li.details-item_hidden)',
       fields: {
         key: '.details-item__header',
-        link: '.details-item__data .link',
+        link: '.details-item__data.link',
         value: '.details-item__data'
       }
     }
@@ -84,6 +84,21 @@ const infoPaneOverviewProducerHeaders = {
   body: {
     row: {
       root: '.item-info__details',
+      fields: {
+        key: '.details-item__header',
+        link: '.details-item__data .link',
+        value: '.details-item__data'
+      }
+    }
+  }
+}
+
+const infoPaneOverviewProducerHeadersDoc = {
+  root: '.table__item .item-info__details-wrapper:nth-of-type(2)',
+  header: {},
+  body: {
+    row: {
+      root: '.item-info__details:nth-of-type(1)',
       fields: {
         key: '.details-item__header',
         link: '.details-item__data .link',
@@ -625,13 +640,57 @@ module.exports = {
     ),
     Overview_UID_Header: labelComponent(
       generateLabelGroup(
-        '.item-info__details-wrapper:nth-of-type(2) .item-info__details .details-item:nth-of-type(6) .details-item__header',
+        '.item-info__details-wrapper:nth-of-type(2) .item-info__details .details-item:nth-of-type(5) .details-item__header',
         false,
         true
       )
     ),
     Expand_Sources: By.css('.details-item .info-sources'),
     Info_Sources_Table: commonTable(filesInfoSourcesTable),
+    Overview_Table: commonTable(datasetOverviewTable),
+    Edit_btn_table_view: commonEditBtnTableView,
+    Edit_btn_full_view: commonEditBtnFullView,
+    Version_tag_Input_table_view: commonVersionTagInputTableView,
+    Version_tag_Input_full_view: commonVersionTagInputFullView,
+    Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
+    Version_tag_Input: commonVersionTagInput
+  },
+  documentsInfoPane: {
+    Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
+    Header: header,
+    Updated: updated,
+    Cancel_Button: cancelButton,
+    Apply_Changes_Button: applyChangesButton,
+    Apply_Button: applyButton,
+    Download_Button: commonDownloadButton,
+    Action_Menu: commonActionMenu,
+    Full_View_Button: fullViewButton,
+    Header_Full_View: By.css('.table__item_big .item-header__data h3'),
+    Updated_Full_View: By.css('.table__item_big .item-header__data span'),
+    Refresh_Button_Full_View: By.css(
+      '.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]'
+    ),
+    Action_Menu_Full_View: commonActionMenuFullView,
+    Tabel_View_Button: tabelViewButton,
+    Cross_Close_Button: crossCloseButton,
+    Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
+    Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]'),
+    Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
+    Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeadersDoc),
+    Overview_Hash_Header: labelComponent(
+      generateLabelGroup(
+        '.item-info__details:nth-of-type(1) .details-item:nth-of-type(2) .details-item__header',
+        false,
+        true
+      )
+    ),
+    Overview_UID_Header: labelComponent(
+      generateLabelGroup(
+        '.item-info__details-wrapper:nth-of-type(2) .item-info__details .details-item:nth-of-type(5) .details-item__header',
+        false,
+        true
+      )
+    ),
     Overview_Table: commonTable(datasetOverviewTable),
     Edit_btn_table_view: commonEditBtnTableView,
     Edit_btn_full_view: commonEditBtnFullView,
@@ -739,6 +798,7 @@ module.exports = {
     Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
     Header: header,
     Updated: updated,
+    Not_In_Filtered_List_Message: By.css('[data-testid="detailsPanel"] .item-header__status .info-banner'),
     Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Apply_Changes_Button: applyChangesButton,
@@ -775,8 +835,10 @@ module.exports = {
     Overview_Table: commonTable(artifactOverviewTable),
     Edit_btn_table_view: commonEditBtnTableView,
     Edit_btn_full_view: commonEditBtnFullView,
+    Click_To_Add_Button: By.css('[data-testid="detailsPanel"] .item-info__details-wrapper:nth-of-type(1) .details-item:nth-of-type(3)  .details-item__data-add-placeholder'),
     Version_tag_Input_table_view: commonVersionTagInputTableView,
     Version_tag_Input_full_view: commonVersionTagInputFullView,
+    Version_tag_Value_full_view: By.css('.table__item_big .item-info__details-wrapper:nth-of-type(1) .details-item:nth-of-type(3) .details-item__data .data-ellipsis'),
     Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
     Version_tag_Input: commonVersionTagInput
   },
@@ -894,5 +956,45 @@ module.exports = {
     FE_Pagination_Navigate_Prev: By.css('[data-testid="pagination-navigate-prev-btn"] button'),
     Pagination_Page_Number: By.css('.pagination-pages .pagination-page-number'),
     Pagination_Count: By.css('.pagination .pagination-items-count')
+  },
+  alertsJobsInfoPane: {
+    Header: header,
+    Cross_Close_Button: crossCloseButton,
+    Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
+    Job_Detail_PopUp_Link: By.css('.details-item:nth-of-type(6) .details-item__link'),
+    Overview_Trigger_Criteria: commonTable(infoPaneOverviewProducerHeaders),
+    Notifications_Header: By.css('[data-testid="additional-info"] .item-info__header:nth-of-type(2)'),
+    Notifications_Item: By.css('[data-testid="additional-info"] .notifications-item'),
+    Logs_Text_container: By.css('.table__item .table__item-logs-content'),
+    Logs_Refresh_Button: By.css('.table__item .logs-refresh'),
+    Full_View_Logs_Button: By.css('.alert-row__details-alert-logs [data-testid="details-close-btn"]')
+  },
+  alertsEndpointInfoPane: {
+    Header: header,
+    Cross_Close_Button: crossCloseButton,
+    Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
+    Overview_Trigger_Criteria: commonTable(infoPaneOverviewProducerHeaders),
+    Notifications_Header: By.css('[data-testid="additional-info"] .item-info__header:nth-of-type(2)'),
+    Notifications_Item: By.css('[data-testid="additional-info"] .notifications-item'),
+    Date_Picker_Filter_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '.item-info [data-testid="date-picker-container"]',
+        '[data-testid="date-picker-input"]',
+        '.date-picker__pop-up .select__item',
+        '.data-ellipsis .data-ellipsis',
+        false
+      )
+    ),
+    Metrics_App_Name: By.css('.item-info__details-metrics .alerts-table__metrics .metrics__app-name'),
+    Metrics_Stats_Card: By.css('.item-info__details-metrics .alerts-table__metrics .metrics__card'),
+    Metrics_Stats_Card_Empty: By.css('[data-testid="detailsPanel"] .metrics__empty-select')
+  },
+  alertsApplicationInfoPane: {
+    Header: header,
+    Cross_Close_Button: crossCloseButton,
+    Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
+    Overview_Trigger_Criteria: commonTable(infoPaneOverviewProducerHeaders),
+    Notifications_Header: By.css('[data-testid="additional-info"] .item-info__header:nth-of-type(2)'),
+    Notifications_Item: By.css('[data-testid="additional-info"] .notifications-item')
   }
 }

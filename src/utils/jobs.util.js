@@ -28,6 +28,7 @@ import {
   LABELS_FILTER,
   NAME_FILTER,
   PROJECT_FILTER,
+  PROJECTS_FILTER_ALL_ITEMS,
   STATUS_FILTER,
   TYPE_FILTER
 } from '../constants'
@@ -144,7 +145,12 @@ export const getJobsFiltersConfig = (jobName, crossProjects) => {
         crossProjects ? PAST_24_HOUR_DATE_OPTION : PAST_WEEK_DATE_OPTION
       )
     },
-    [PROJECT_FILTER]: { label: 'Project:', initialValue: '', isModal: true , hidden: Boolean(jobName) },
+    [PROJECT_FILTER]: {
+      label: 'Project:',
+      initialValue: PROJECTS_FILTER_ALL_ITEMS,
+      isModal: true,
+      hidden: Boolean(jobName)
+    },
     [STATUS_FILTER]: { label: 'Status:', initialValue: [FILTER_ALL_ITEMS], isModal: true },
     [TYPE_FILTER]: { label: 'Type:', initialValue: FILTER_ALL_ITEMS, isModal: true },
     [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
@@ -161,7 +167,7 @@ export const getWorkflowsFiltersConfig = crossProjects => {
         crossProjects ? PAST_24_HOUR_DATE_OPTION : PAST_WEEK_DATE_OPTION
       )
     },
-    [PROJECT_FILTER]: { label: 'Project:', initialValue: '', isModal: true },
+    [PROJECT_FILTER]: { label: 'Project:', initialValue: PROJECTS_FILTER_ALL_ITEMS, isModal: true },
     [STATUS_FILTER]: { label: 'Status:', initialValue: [FILTER_ALL_ITEMS], isModal: true },
     [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
   }
@@ -179,7 +185,7 @@ export const getScheduledFiltersConfig = crossProjects => {
         true
       )
     },
-    [PROJECT_FILTER]: { label: 'Project:', initialValue: '', isModal: true },
+    [PROJECT_FILTER]: { label: 'Project:', initialValue: PROJECTS_FILTER_ALL_ITEMS, isModal: true },
     [TYPE_FILTER]: { label: 'Type:', initialValue: FILTER_ALL_ITEMS, isModal: true },
     [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
   }

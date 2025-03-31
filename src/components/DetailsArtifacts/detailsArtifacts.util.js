@@ -79,7 +79,7 @@ export const generateArtifactsTabContent = (
       kind: artifact.kind,
       project: artifact.project || params.projectName,
       key: artifact.db_key || artifact.key,
-      iteration: artifact.iter,
+      iteration,
       uid: artifact.tree,
       tag: artifact.tag
     }

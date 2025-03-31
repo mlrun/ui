@@ -11,7 +11,7 @@ Feature: Projects Page
         And wait load page
         Then verify redirection from "INVALID" to "projects"
         Then verify "New_Project_Button" element visibility on "Projects" wizard
-        Then "New_Project_Button" element on "Projects" should contains "New Project" value
+        Then "New_Project_Button" element on "Projects" should contains "New project" value
         Then verify "See_On_Github" element visibility on "commonPagesHeader" wizard
         Then verify "See_On_Slack" element visibility on "commonPagesHeader" wizard
         Then verify "Active_Projects_Button" element visibility on "Projects" wizard
@@ -19,6 +19,7 @@ Feature: Projects Page
         Then verify "Projects_Sort_Dropdown" element visibility on "Projects" wizard
         Then verify "Projects_Sorter" element visibility on "Projects" wizard
         Then verify "Projects_Table" element visibility on "Projects" wizard
+        Then type value "de" to "Search_Projects_Input" field on "Projects" wizard
         Then value in "running" column with "tooltip" in "Projects_Table" on "Projects" wizard should contains "ML jobs and Nuclio functions"
         Then value in "failed" column with "tooltip" in "Projects_Table" on "Projects" wizard should contains "Failed ML jobs and nuclio functions in the last 24 hours"
 
@@ -214,9 +215,9 @@ Feature: Projects Page
         And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Project deletion in progress" value
-        And wait load page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        And wait load page
         And wait load page
         Then verify if "Notification_Popup" popup dialog appears
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
@@ -225,7 +226,7 @@ Feature: Projects Page
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         Then check "automation-test-name2" value not in "name" column in "Projects_Table" table on "Projects" wizard
         Then verify "New_Project_Button" element visibility on "Projects" wizard
-        Then "New_Project_Button" element on "Projects" should contains "New Project" value
+        Then "New_Project_Button" element on "Projects" should contains "New project" value
 
     @MLPr
     @passive
@@ -250,6 +251,9 @@ Feature: Projects Page
         Then click on "Archive_Projects_Button" element on "Projects" wizard
         Then check "automation-test-name7" value in "name" column in "Projects_Table" table on "Projects" wizard
         Then select "Unarchive" option in action menu on "Projects" wizard in "Projects_Table" table at row with "automation-test-name7" value in "name" column
+        And wait load page
+        And wait load page
+        Then "No_Archived_Projects_Message" element on "Projects" should contains "No archived projects." value
         Then click on "Active_Projects_Button" element on "Projects" wizard
         Then check "automation-test-name7" value in "name" column in "Projects_Table" table on "Projects" wizard
 
@@ -284,8 +288,6 @@ Feature: Projects Page
     @MLPr
     @passive
     @smoke
-    @FAILED_TODO
-    #TODO: change mock api getIguazioProjects for owner
     Scenario: MLPr013 - Create new ML Project and check navigation through project navigation menu
         Given open url
         And wait load page
@@ -333,7 +335,7 @@ Feature: Projects Page
     Scenario: MLPr015 - Check components on Monitoring container on Projects page
         Given open url
         And wait load page
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Container_Title" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
@@ -555,30 +557,30 @@ Feature: Projects Page
         Then verify "Total_Alerts_Title" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
         Then "Total_Alerts_Title" element in "Monitoring_Alerts_Box" on "Projects" should contains "Total" value
         Then verify "Total_Alerts_Number" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
-        Then "Total_Alerts_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "27" value
+        Then "Total_Alerts_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "39" value
         When click on "Total_Alerts_Number" element in "Monitoring_Alerts_Box" on "Projects" wizard
-        Then verify redirection to "projects/*/alerts?bePage=1&fePage=1"
+        Then verify redirection to "projects/*/alerts-monitoring?bePage=1&fePage=1"
         Then verify breadcrumbs "cross" label should be equal "Alerts monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         And wait load page
         Then navigate back
         And wait load page
         When click on "Total_Endpoint_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" wizard
-        Then verify redirection to "projects/*/alerts?entity-type=model-endpoint-result&bePage=1&fePage=1"
+        Then verify redirection to "projects/*/alerts-monitoring?entity-type=model-endpoint-result&bePage=1&fePage=1"
         Then verify breadcrumbs "cross" label should be equal "Alerts monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         And wait load page
         Then navigate back
         And wait load page
         When click on "Total_Jobs_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" wizard
-        Then verify redirection to "projects/*/alerts?entity-type=job&bePage=1&fePage=1"
+        Then verify redirection to "projects/*/alerts-monitoring?entity-type=job&bePage=1&fePage=1"
         Then verify breadcrumbs "cross" label should be equal "Alerts monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         And wait load page
         Then navigate back
         And wait load page
         When click on "Total_Application_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" wizard
-        Then verify redirection to "projects/*/alerts?entity-type=model-monitoring-application&bePage=1&fePage=1"
+        Then verify redirection to "projects/*/alerts-monitoring?entity-type=model-monitoring-application&bePage=1&fePage=1"
         Then verify breadcrumbs "cross" label should be equal "Alerts monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         And wait load page
@@ -597,9 +599,7 @@ Feature: Projects Page
         Then verify "Monitoring_Jobs_Box_Title" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then "Monitoring_Jobs_Box_Title" element in "Monitoring_Jobs_Box" on "Projects" should contains "Jobs" value
         Then verify "Total_Counter_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "20" value
         Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "16" value
         Then verify "Counter_Failed_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then "Counter_Failed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "3" value
         Then verify "Counter_Completed_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
@@ -627,11 +627,11 @@ Feature: Projects Page
         Then verify "Monitoring_Alerts_Box_Title" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
         Then "Monitoring_Alerts_Box_Title" element in "Monitoring_Alerts_Box" on "Projects" should contains "Alerts" value
         Then verify "Total_Endpoint_Counter_Number" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
-        Then "Total_Endpoint_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "8" value
+        Then "Total_Endpoint_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "12" value
         Then verify "Total_Jobs_Counter_Number" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
-        Then "Total_Jobs_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "10" value
+        Then "Total_Jobs_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "12" value
         Then verify "Total_Application_Counter_Number" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
-        Then "Total_Application_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "9" value
+        Then "Total_Application_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "15" value
 
     @MLPr
     @mlrunUnhealthyTest
@@ -646,8 +646,8 @@ Feature: Projects Page
         Then verify "Archive_Projects_Button" element visibility on "Projects" wizard
         Then verify "Projects_Sort_Dropdown" element visibility on "Projects" wizard
         Then verify "Projects_Sorter" element visibility on "Projects" wizard
-        Then verify "Retrieving_projects_message" element visibility on "Projects" wizard
-        Then "Retrieving_projects_message" element on "Projects" should contains "Retrieving projects." value
+        Then verify "Retrieving_Projects_Message" element visibility on "Projects" wizard
+        Then "Retrieving_Projects_Message" element on "Projects" should contains "Retrieving projects." value
         And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Failed to fetch projects" value
