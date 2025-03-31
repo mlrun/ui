@@ -185,8 +185,8 @@ const TabsSlider = ({
             )
 
             return (
-              !tab.hidden &&
-              (!skipLink ? (
+              <React.Fragment key={tab.id}>
+                ( !tab.hidden && (!skipLink ? (
                 <Link
                   className={tabClassName}
                   data-tab={tab.id}
@@ -200,7 +200,7 @@ const TabsSlider = ({
                   {tab.label}
                   {tab.tip && <Tip className="tabs-slider__tab-tip" text={tab.tip} />}
                 </Link>
-              ) : (
+                ) : (
                 <div
                   className={tabClassName}
                   data-tab={tab.id}
@@ -211,7 +211,8 @@ const TabsSlider = ({
                   {tab.label}
                   {tab.tip && <Tip className="tabs-slider__tab-tip" text={tab.tip} />}
                 </div>
-              ))
+                )) )
+              </React.Fragment>
             )
           })}
         </div>
