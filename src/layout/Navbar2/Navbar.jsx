@@ -53,9 +53,10 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
   const params = useParams()
   const navbarRef = useRef()
   const projectListRef = useRef()
+  const projectListWrapperRef = useRef()
   const projectStore = useSelector(state => state.projectStore)
 
-  useDetectOutsideClick(navbarRef, () => {
+  useDetectOutsideClick(projectListWrapperRef, () => {
     setShowProjectsList(false)
     setSearchValue('')
   })
@@ -119,7 +120,7 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
           {isPinned ? <UnPinIcon /> : <PinIcon />}
         </RoundedIcon>
       </div>
-      <div className="navbar__projects">
+      <div className="navbar__projects" ref={projectListWrapperRef}>
         <Button
           label={projectName}
           icon={<Caret />}
