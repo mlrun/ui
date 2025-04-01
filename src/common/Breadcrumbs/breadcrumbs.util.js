@@ -35,7 +35,10 @@ import {
   PROJECTS_PAGE_PATH,
   MONITORING_APP_PAGE,
   DOCUMENTS_PAGE,
-  LLM_PROMPTS_PAGE
+  LLM_PROMPTS_PAGE,
+  PROJECTS_SETTINGS_GENERAL_TAB,
+  PROJECTS_SETTINGS_MEMBERS_TAB,
+  PROJECTS_SETTINGS_SECRETS_TAB
 } from '../../constants'
 import { generateNuclioLink } from '../../utils'
 
@@ -129,5 +132,17 @@ export const generateTabsList = () => [
   {
     label: MODELS_TAB,
     id: MODELS_TAB
+  },
+  {
+    label: PROJECTS_SETTINGS_GENERAL_TAB,
+    id: PROJECTS_SETTINGS_GENERAL_TAB
+  },
+  {
+    label: PROJECTS_SETTINGS_MEMBERS_TAB,
+    id: PROJECTS_SETTINGS_MEMBERS_TAB
+  },
+  {
+    label: PROJECTS_SETTINGS_SECRETS_TAB,
+    id: PROJECTS_SETTINGS_SECRETS_TAB
   }
 ]
