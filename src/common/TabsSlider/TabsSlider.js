@@ -185,23 +185,25 @@ const TabsSlider = ({
             return (
               !tab.hidden &&
               (!skipLink ? (
-                <div className={tabClassName}>
-                  <Link
+                <Link
+                  to={generateUrlFromRouterPath(
+                    `${window.location.pathname?.replace(/^$|([^/]+$)/, tab.id)}${location.search ?? ''}${tab.query ?? ''}`
+                  )}
+                  className={tabClassName}
+                  key={tab.id}
+                >
+                  <span
                     className={
                       (tab.icon && 'content-menu__tab-icon') || (tab.tip && 'content-menu__tab-tip')
                     }
                     data-tab={tab.id}
-                    to={generateUrlFromRouterPath(
-                      `${window.location.pathname?.replace(/^$|([^/]+$)/, tab.id)}${location.search ?? ''}${tab.query ?? ''}`
-                    )}
                     onClick={() => onSelectTab(tab)}
-                    key={tab.id}
                   >
                     {tab.icon && <div>{tab.icon}</div>}
                     {tab.label}
                     {tab.tip && <Tip text={tab.tip} />}
-                  </Link>
-                </div>
+                  </span>
+                </Link>
               ) : (
                 <div
                   className={tabClassName}
