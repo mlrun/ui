@@ -25,6 +25,8 @@ import Input from '../Input/Input'
 import { SelectOption } from 'igz-controls/elements'
 import { PopUpDialog } from 'igz-controls/components'
 
+import { deleteUnsafeHtml } from '../../utils'
+
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
 
 import './search.scss'
@@ -91,7 +93,7 @@ const Search = ({
 
     onChange(value)
     setInputFocused(true)
-    setSearchValue(value)
+    setSearchValue(deleteUnsafeHtml(value))
   }
 
   const matchOnClick = item => {
@@ -155,24 +157,28 @@ const Search = ({
           }}
         >
           <ul data-testid="search-matches" className="search-matches">
-            {matches.map((item, index) => {
-              return (
-                <SelectOption
-                  item={{
-                    id: item,
-                    label: item,
-                    labelHtml: item.replace(
-                      new RegExp(searchValue.toLocaleLowerCase(), 'gi'),
-                      match => (match ? `<b>${match}</b>` : match)
-                    )
-                  }}
-                  name={item}
-                  key={item + index}
-                  onClick={() => matchOnClick(item)}
-                  tabIndex={index}
-                />
-              )
-            })}
+            {matches.reduce((options, item, index) => {
+              if (item?.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())) {
+                options.push(
+                  <SelectOption
+                    item={{
+                      id: item,
+                      label: item,
+                      labelHtml: item.replace(
+                        new RegExp(searchValue.toLocaleLowerCase(), 'gi'),
+                        match => (match ? `<b>${match}</b>` : match)
+                      )
+                    }}
+                    name={item}
+                    key={item + index}
+                    onClick={() => matchOnClick(item)}
+                    tabIndex={index}
+                  />
+                )
+              }
+
+              return options
+            }, [])}
           </ul>
         </PopUpDialog>
       )}
