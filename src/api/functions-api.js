@@ -19,6 +19,7 @@ such restriction.
 */
 import { functionTemplatesHttpClient, mainHttpClient, mainHttpClientV2 } from '../httpClient'
 import { DATES_FILTER, NAME_FILTER, SHOW_UNTAGGED_FILTER } from '../constants'
+import localStorageService from '../utils/localStorageService'
 
 const functionsApi = {
   createNewFunction: (project, data) =>
@@ -30,7 +31,22 @@ const functionsApi = {
     }),
   deleteSelectedFunction: (funcName, project) =>
     mainHttpClientV2.delete(`/projects/${project}/functions/${funcName}`),
-  deployFunction: data => mainHttpClient.post('/build/function', data),
+  deployFunction: data => {
+    const headers = {}
+    const mlrunVersion = localStorageService.getStorageValue('mlrunVersion')
+
+    if (mlrunVersion) {
+      headers['x-mlrun-client-version'] = mlrunVersion
+    }
+    
+    return mainHttpClient.post(
+      `/projects/${data.function.metadata.project}/nuclio/${data.function.metadata.name}/deploy`,
+      data,
+      {
+        headers
+      }
+    )
+  },
   getFunctions: (project, filters, config = {}, hash) => {
     const newConfig = {
       ...config,

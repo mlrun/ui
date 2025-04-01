@@ -2082,10 +2082,10 @@ module.exports = {
       '.new-item-side-panel .new-item-side-panel__buttons-container .btn-tertiary' 
     ),
     Deploy_Button: By.css(
-      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-secondary' 
+      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-primary' 
     ),
     Create_Button: By.css(
-      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-secondary' 
+      '.new-item-side-panel .new-item-side-panel__buttons-container .btn-primary' 
     )
   }
 }

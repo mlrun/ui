@@ -17,6 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { isCommunityEdition } from '../../utils/helper'
+
 export const V3IO = 'V3IO'
 export const CONFIG_MAP = 'Config Map'
 export const SECRET = 'Secret'
@@ -41,7 +43,7 @@ export const tableHeaders = [
 
 export const selectTypeOptions = {
   volumeType: [
-    { label: 'V3IO', id: V3IO },
+    ...(isCommunityEdition() ? [] : [{ label: 'V3IO', id: V3IO }]),
     { label: 'Config Map', id: CONFIG_MAP },
     { label: 'Secret', id: SECRET },
     { label: 'PVC', id: PVC }

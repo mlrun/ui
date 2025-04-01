@@ -307,6 +307,12 @@ const Details = ({
     window.dispatchEvent(new CustomEvent('discardChanges'))
   }, [blocker, cancelChanges, detailsStore.filtersWasHandled, dispatch, handleShowWarning])
 
+  const doNotLeavePage = useCallback(() => {
+    blocker.reset?.()
+    dispatch(showWarning(false))
+    window.dispatchEvent(new CustomEvent('cancelLeave'))
+  }, [blocker, dispatch])
+
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
       {formState => (
@@ -354,27 +360,19 @@ const Details = ({
           {(blocker.state === 'blocked' || detailsStore.showWarning) && (
             <ConfirmDialog
               cancelButton={{
-                handler: () => {
-                  blocker.reset?.()
-                  dispatch(showWarning(false))
-                },
-                label: detailsStore.filtersWasHandled ? "Don't refresh" : "Don't Leave",
+                handler: doNotLeavePage,
+                label: 'Cancel',
                 variant: TERTIARY_BUTTON
               }}
-              closePopUp={() => {
-                blocker.reset?.()
-                dispatch(showWarning(false))
-              }}
+              closePopUp={doNotLeavePage}
               confirmButton={{
                 handler: leavePage,
-                label: detailsStore.filtersWasHandled ? 'Refresh' : 'Leave',
+                label: 'Yes',
                 variant: PRIMARY_BUTTON
               }}
               header="You have unsaved changes."
               isOpen={blocker.state === 'blocked' || detailsStore.showWarning}
-              message={`${
-                detailsStore.filtersWasHandled ? 'Refreshing the list' : 'Leaving this page'
-              } will discard your changes.`}
+              message="Do you want to discard the changes?"
             />
           )}
           {!isDetailsPopUp && (

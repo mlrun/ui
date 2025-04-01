@@ -46,7 +46,12 @@ import { formatDatetime, generateLinkPath, parseUri } from '../../utils'
 import { isArtifactTagUnique } from '../../utils/artifacts.util'
 import { getFunctionImage } from '../FunctionsPage/functions.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { setChangesCounter, setChangesData } from '../../reducers/detailsReducer'
+import {
+  setChangesCounter,
+  setChangesData,
+  setFiltersWasHandled,
+  showWarning
+} from '../../reducers/detailsReducer'
 
 export const generateArtifactsContent = (
   detailsType,
@@ -83,7 +88,7 @@ export const generateArtifactsContent = (
           })
       },
       function_tag: {
-        value: selectedItem?.spec?.function_tag || 'latest'
+        value: selectedItem?.spec?.function_tag
       },
       monitoring_feature_set_uri: {
         value: monitoringFeatureSetUri,
@@ -577,4 +582,27 @@ export const generateArtifactIdentifiers = (
   }
 
   setArtifactsIdentifiers(newArtifactsIdentifiers)
+}
+
+export const performDetailsActionHelper = async (changes, dispatch, filtersWasHandled = false) => {
+  let actionCanBePerformed = Promise.resolve(true)
+
+  if (changes.counter > 0) {
+    actionCanBePerformed = await new Promise(resolve => {
+      const resolver = isSuccess => {
+        window.removeEventListener('discardChanges', resolver)
+        window.removeEventListener('cancelLeave', resolver)
+
+        resolve(isSuccess)
+      }
+
+      window.addEventListener('discardChanges', () => resolver(true))
+      window.addEventListener('cancelLeave', () => resolver(false))
+
+      dispatch(setFiltersWasHandled(filtersWasHandled))
+      dispatch(showWarning(true))
+    })
+  }
+
+  return actionCanBePerformed
 }

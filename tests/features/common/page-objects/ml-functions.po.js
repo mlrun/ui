@@ -100,6 +100,8 @@ module.exports = {
     Table_Refresh_Button: By.css(
       '.content [data-testid="refresh-tooltip-wrapper"]'
     ),
+    Expand_All_Button: By.css('.action-bar [data-testid="toggle-collapse-tooltip-wrapper"]'),
+    Table_Expand_Rows_Button: By.css('#main-table-body .table-body__cell.table-cell-name svg'),
     Functions_Table: commonTable(functionsTable),
     Date_Picker_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(

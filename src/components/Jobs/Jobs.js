@@ -241,6 +241,7 @@ const Jobs = () => {
                   jobWizardIsOpened || jobsStore.loading || Boolean(jobsStore.jobLoadingCounter)
                 }
                 autoRefreshIsEnabled={filtersStore.autoRefresh}
+                internalAutoRefreshIsEnabled={filtersStore.internalAutoRefresh}
                 autoRefreshStopTrigger={!isEmpty(selectedJob)}
                 closeParamName={params.jobName}
                 filters={filters}

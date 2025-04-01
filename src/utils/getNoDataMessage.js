@@ -197,8 +197,7 @@ const getVisibleFilterTypes = (filtersConfig, filters, filtersStore) => {
         type === ENDPOINT_RESULT ||
         type === JOB_NAME ||
         type === LABELS_FILTER ||
-        type === NAME_FILTER ||
-        type === PROJECT_FILTER) &&
+        type === NAME_FILTER) &&
       filters[type]?.length > 0
     const isStatusVisible =
       type === STATUS_FILTER && !isEqual(filters[STATUS_FILTER], [FILTER_ALL_ITEMS])

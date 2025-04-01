@@ -1,6 +1,10 @@
 .alerts-container {
   margin-top: 10px;
 
+  &__wrapper{
+    height: 100%;
+    display: flex;
+  }
   &__content-info {
     display: flex;
     gap: 2px;
@@ -19,8 +23,6 @@
   }
 
   .alerts-table {
-    min-width: 1120px;
-
     &__metrics {
       margin: 8px 12px;
     }

@@ -95,7 +95,8 @@ const Documents = ({ isAllVersions = false }) => {
     paginationConfigDocumentVersionsRef,
     historyBackLink,
     'artifacts',
-    params.id && getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : DOCUMENTS_TAB, true)
+    params.id && getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : DOCUMENTS_TAB, true),
+    isAllVersions
   )
 
   const detailsFormInitialValues = useMemo(

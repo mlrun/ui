@@ -186,7 +186,8 @@ export const generateActionsMenu = (
         label: 'Add a tag',
         hidden: isDetailsPopUp,
         icon: <TagIcon />,
-        onClick: handleAddTag
+        onClick: handleAddTag,
+        allowLeaveWarning: true
       },
       {
         label: 'Download',
@@ -254,7 +255,8 @@ export const generateActionsMenu = (
                     DATASET_TYPE
                   )
                 }
-              )
+              ),
+        allowLeaveWarning: true
       },
       {
         label: 'Delete all versions',
@@ -272,14 +274,15 @@ export const generateActionsMenu = (
                 datasetMin.db_key,
                 datasetMin.uid,
                 refreshArtifacts,
-                null,
+                refreshAfterDeleteCallback,
                 datasetsFilters,
                 DATASET_TYPE,
                 DATASET_TYPE,
                 true
               )
             }
-          )
+          ),
+        allowLeaveWarning: true
       }
     ],
     [

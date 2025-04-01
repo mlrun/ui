@@ -525,7 +525,8 @@ const FeatureSetsPanelTargetStore = ({
         }))
         setValidation(state => ({
           ...state,
-          [kindId === PARQUET ? 'isOfflineTargetPathValid' : 'isOnlineTargetPathValid']: true
+          [kindId === PARQUET ? 'isOfflineTargetPathValid' : 'isOnlineTargetPathValid']: true,
+          isTimestampKeyValid: true
         }))
 
         if (kindId === checkboxModels.externalOffline.id) {
@@ -993,7 +994,6 @@ const FeatureSetsPanelTargetStore = ({
 
 FeatureSetsPanelTargetStore.propTypes = {
   disableButtons: PropTypes.shape({}).isRequired,
-  featureStore: PropTypes.shape({}).isRequired,
   project: PropTypes.string.isRequired,
   setDisableButtons: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,

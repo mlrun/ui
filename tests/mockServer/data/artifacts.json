@@ -37550,6 +37550,47 @@
     {
       "kind": "document",
       "metadata": {
+        "key": "anxujkpvfi",
+        "project": "default",
+        "iter": 0,
+        "tree": "e1ddfe50-aac2-48e7-8242-d9d94e168c86",
+        "hash": "60da893a63e1752f21fbc6fd118757952ffac280",
+        "uid": "41f0d28bb7d876b7221cbf698fc50d5e8a083628",
+        "updated": "2025-02-17 18:12:56.518061+00:00",
+        "labels": {
+          "db_kind": "milvus",
+          "source": "oxspdjsv.csv"
+        },
+        "created": "2025-02-17 18:12:56.518164+00:00",
+        "tag": "latest"
+      },
+      "spec": {
+        "src_path": "oxspdjsv.csv",
+        "target_path": "v3io:///bigdata/fofmlxzr/anxujkpvfi.csv",
+        "size": 7559,
+        "license": "''",
+        "producer": {
+          "kind": "project",
+          "name": "default",
+          "tag": "e1ddfe50-aac2-48e7-8242-d9d94e168c86",
+          "owner": "normal-user"
+        },
+        "original_source": "oxspdjsv.csv",
+        "document_loader": {
+          "loader_class_name": "langchain_community.document_loaders.CSVLoader",
+          "src_name": "file_path",
+          "download_object": true
+        },
+        "db_key": "anxujkpvfi"
+      },
+      "status": {
+        "state": "created"
+      },
+      "project": "default"
+    },
+    {
+      "kind": "document",
+      "metadata": {
         "key": "dir_doc2ftmp2ftmp67f5ho0m2ftmp9r6irqk2.txt",
         "project": "default",
         "iter": 0,

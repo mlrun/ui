@@ -28,6 +28,7 @@ import {
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST
 } from '../constants'
+import localStorageService from '../utils/localStorageService'
 
 const fetchArtifacts = (project, filters, config = {}, withLatestTag, withExactName) => {
   const params = {}
@@ -38,7 +39,7 @@ const fetchArtifacts = (project, filters, config = {}, withLatestTag, withExactN
 
   if (filters?.iter === SHOW_ITERATIONS) {
     params['best-iteration'] = true
-  } else if (!isNil(filters.iter) && !isEmpty(filters.iter)) {
+  } else if (!isNil(filters?.iter) && !isEmpty(filters?.iter)) {
     params.iter = filters.iter
   }
 
@@ -62,7 +63,22 @@ const fetchArtifacts = (project, filters, config = {}, withLatestTag, withExactN
 
 const artifactsApi = {
   addTag: (project, tag, data) => mainHttpClient.put(`/projects/${project}/tags/${tag}`, data),
-  buildFunction: data => mainHttpClient.post('/build/function', data),
+  buildFunction: data => {
+    const headers = {}
+    const mlrunVersion = localStorageService.getStorageValue('mlrunVersion')
+
+    if (mlrunVersion) {
+      headers['x-mlrun-client-version'] = mlrunVersion
+    }
+    
+    return mainHttpClient.post(
+      `/projects/${data.function.metadata.project}/nuclio/${data.function.metadata.name}/deploy`,
+      data,
+      {
+        headers
+      }
+    )
+  },
   deleteArtifact: (project, key, uid, deletion_strategy, secrets = {}) => {
     const config = {
       params: {

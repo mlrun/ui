@@ -235,7 +235,7 @@ const DetailsMetrics = ({ selectedItem }) => {
 
   return (
     <div className="metrics-wrapper">
-      <div className="metrics__custom-filters">
+      <div className="metrics-wrapper__custom-filters">
         <MetricsSelector
           name="metrics"
           disabled={!hasMetricsList}
@@ -274,7 +274,7 @@ const DetailsMetrics = ({ selectedItem }) => {
           )
         ) : null
       ) : (
-        <div ref={metricsContainerRef} className="metrics-wrapper">
+        <div ref={metricsContainerRef} className="metrics">
           {generatedMetrics.map(([applicationName, applicationMetrics]) => {
             return (
               <React.Fragment key={applicationName}>

@@ -266,9 +266,7 @@ module.exports = {
     ),
     Models_Table: commonTable(modelsTable),
     Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
-    Register_Model_Button: By.css(
-      '.content__action-bar-wrapper .action-bar__actions .btn-secondary'
-    ),
+    Register_Model_Button: By.css('.content__action-bar-wrapper .action-bar__actions .btn-tertiary'),
     Train_Model_Button: By.css('.content__action-bar-wrapper .action-bar__actions .btn-primary'),
     Table_FilterBy_Button: By.css('.models .action-bar [data-testid="filter-menu-btn"]'),
     History_Back_Button: By.css('.history-back-link .history-back-link__icon'),

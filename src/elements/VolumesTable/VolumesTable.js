@@ -23,6 +23,7 @@ import PropTypes from 'prop-types'
 import VolumesTableView from './VolumesTableView'
 import { CONFIG_MAP, PVC, SECRET, V3IO } from './volumesTable.util'
 import { cloneDeep } from 'lodash'
+import { isCommunityEdition } from '../../utils/helper'
 
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
@@ -38,7 +39,7 @@ export const VolumesTable = ({
 }) => {
   const [newVolume, setNewVolume] = useState({
     name: '',
-    type: V3IO,
+    type: isCommunityEdition() ? CONFIG_MAP : V3IO,
     typeName: '',
     path: '',
     accessKey: '',
@@ -186,7 +187,7 @@ export const VolumesTable = ({
   const resetVolumesData = () => {
     setNewVolume({
       name: '',
-      type: V3IO,
+      type: isCommunityEdition() ? CONFIG_MAP : V3IO,
       typeName: '',
       path: '',
       accessKey: '',

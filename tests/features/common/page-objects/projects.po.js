@@ -102,15 +102,17 @@ const ProjectsTableSelector = {
 }
 
 module.exports = {
-  Retrieving_projects_message: By.css('[data-testid=no-data]'),
+  Retrieving_Projects_Message: By.css('[data-testid=no-data]'),
+  No_Archived_Projects_Message: By.css('.no-filtered-data'),
   New_Project_Button: By.css(
     '.projects__wrapper .projects-content-header-item .page-actions-container .btn_register'
   ),
   Refresh_Projects_Button: By.css('.projects-content-header .data-ellipsis button'),
   Projects_Table: commonTable(ProjectsTableSelector),
+  Project_Card_Alert_Icon: By.css('.project-card__header-title .project-card__alert'),
   Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
   Active_Projects_Button: By.css(
-    '.projects__wrapper .projects-content-header .projects-content-header-item [data-testid="active"] span'
+    '.projects__wrapper .projects-content-header .projects-content-header-item [data-testid="active"]'
   ),
   Archive_Projects_Button: By.css(
     '.projects__wrapper .projects-content-header .projects-content-header-item [data-testid=archived] a'

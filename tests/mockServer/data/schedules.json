@@ -23,7 +23,8 @@
             "labels": {
               "author": "yaronh",
               "v3io_user": "admin",
-              "owner": "admin"
+              "owner": "admin",
+              "kind": "job"
             }
           }
         },
@@ -59,7 +60,8 @@
       "labels": {
         "author": "yaronh",
         "v3io_user": "admin",
-        "owner": "admin"
+        "owner": "admin",
+        "kind": "job"
       },
       "concurrency_limit": 1,
       "credentials": {
@@ -104,7 +106,8 @@
               "author": "yasha",
               "framework": "xgboost",
               "v3io_user": "admin",
-              "owner": "admin"
+              "owner": "admin",
+              "kind": "job"
             }
           }
         },
@@ -186,7 +189,8 @@
         "author": "yasha",
         "framework": "xgboost",
         "v3io_user": "admin",
-        "owner": "admin"
+        "owner": "admin",
+        "kind": "job"
       },
       "concurrency_limit": 1,
       "credentials": {
@@ -231,7 +235,8 @@
               "author": "yasha",
               "framework": "xgboost",
               "v3io_user": "admin",
-              "owner": "admin"
+              "owner": "admin",
+              "kind": "job"
             }
           }
         },
@@ -318,7 +323,8 @@
         "author": "yasha",
         "framework": "xgboost",
         "v3io_user": "admin",
-        "owner": "admin"
+        "owner": "admin",
+        "kind": "job"
       },
       "concurrency_limit": 1,
       "credentials": {
@@ -464,7 +470,8 @@
             "project": "default",
             "labels": {
               "v3io_user": "admin",
-              "owner": "admin"
+              "owner": "admin",
+              "kind": "job"
             }
           }
         },
@@ -528,7 +535,8 @@
       "desired_state": null,
       "labels": {
         "v3io_user": "admin",
-        "owner": "admin"
+        "owner": "admin",
+        "kind": "job"
       },
       "concurrency_limit": 1,
       "credentials": {
@@ -568,7 +576,8 @@
             "project": "getting-started-tutorial-admin",
             "labels": {
               "v3io_user": "admin",
-              "owner": "admin"
+              "owner": "admin",
+              "kind": "job"
             }
           }
         },
@@ -640,7 +649,8 @@
       "desired_state": null,
       "labels": {
         "v3io_user": "admin",
-        "owner": "admin"
+        "owner": "admin",
+        "kind": "job"
       },
       "concurrency_limit": 1,
       "credentials": {
@@ -693,7 +703,7 @@
             "labels": {
               "author": "yjb",
               "framework": "sklearn",
-              "kind": " local",
+              "kind": "job",
               "some": "test",
               "v3io_user": "admin",
               "owner": "admin"
@@ -764,7 +774,7 @@
       "labels": {
         "author": "yjb",
         "framework": "sklearn",
-        "kind": " local",
+        "kind": "job",
         "some": "test",
         "v3io_user": "admin",
         "owner": "admin"

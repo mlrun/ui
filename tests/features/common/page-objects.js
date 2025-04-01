@@ -26,15 +26,23 @@ import interactivePopup from './page-objects/interactive-popup.po'
 import sidePanel from './page-objects/side-panel.po'
 import jobsAndWorkflows from './page-objects/jobs-and-workflows.po'
 import jobsMonitoring from './page-objects/jobs-monitoring.po'
+import alertsMonitoring from './page-objects/alerts-monitoring.po'
 import Functions from './page-objects/ml-functions.po'
 import projectsSettings from './page-objects/project-settings.po'
 import files from './page-objects/files.po'
 import models from './page-objects/models.po'
+import documents from './page-objects/documents.po'
+import alerts from './page-objects/alerts.po'
 
 module.exports = {
   Add_To_Feature_Vector_Popup: interactivePopup['addToFeatureVectorPopup'],
   Add_To_Feature_Vector_Tab: featureStore['addToFeatureVector'],
   Add_Tag_Popup: interactivePopup['addTagPopup'],
+  Alerts: alerts['alerts'],
+  Alerts_Monitoring: alertsMonitoring['alertsMonitoring'],
+  Alerts_Jobs_Info_Pane: infoPane['alertsJobsInfoPane'],
+  Alerts_Endpoint_Info_Pane: infoPane['alertsEndpointInfoPane'],
+  Alerts_Application_Info_Pane: infoPane['alertsApplicationInfoPane'],
   Analysis_Info_Pane: infoPane['analysisInfoPane'],
   Artifact_Preview_Popup: interactivePopup['artifactPreviewPopup'],
   Artifacts_Info_Pane: infoPane['artifactsInfoPane'],
@@ -53,6 +61,8 @@ module.exports = {
   Deploy_Model_Popup: interactivePopup['deployModelPopup'],
   Discard_Changes_Popup: interactivePopup['discardChangesPopup'],
   Delete_Artifact_Popup: interactivePopup['deleteArtifactPopup'],
+  Documents: documents['documents'],
+  Documents_Info_Pane: infoPane['documentsInfoPane'],
   Downloads_Popup: interactivePopup['downloadsPopUp'],
   Feature_Set_Schedule_Popup: interactivePopup['featureSetSchedulePopup'],
   Feature_Sets_Info_Pane: infoPane['featureSetsInfoPane'],
@@ -105,6 +115,7 @@ module.exports = {
   Statistics_Info_Pane: infoPane['statisticsInfoPane'],
   Transformations_Info_Pane: infoPane['transformationsInfoPane'],
   View_YAML: interactivePopup['viewYamlPopup'],
+  Job_Logs_YAML: interactivePopup['jobLogsPopup'],
   Workflows_Monitor_Tab: jobsAndWorkflows['WorkflowsMonitorTab'],
   Workflows_Monitor_Tab_Info_Pane: infoPane['workflowsMonitorTabInfoPane'],
   commonPagesHeader: commonPagesHeader

@@ -52,7 +52,7 @@ export const getCloseDetailsLink = (paramName, ignoreOrigin) => {
     pathname
       .split('/')
       .splice(0, pathname.split('/').lastIndexOf(paramName) + 1)
-      .join('/') + window.location.search
+      .join('/') + getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])
 
   return ignoreOrigin ? link : generateUrlFromRouterPath(link)
 }
@@ -80,7 +80,7 @@ export const generateLinkToDetailsPanel = (
     isNaN(parseInt(iter)) ? '' : `/${iter}`
   }/${detailsTab.toLowerCase()}${window.location.search}`
 
-export const parseFunctionUri = (functionUri, tab) => {
+export const parseFunctionUri = functionUri => {
   let [project, rest] = functionUri.split('/')
   let name = rest
   let hash = null
