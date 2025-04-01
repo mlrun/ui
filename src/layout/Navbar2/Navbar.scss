@@ -67,16 +67,21 @@
   &__projects {
     display: flex;
     position: relative;
-    padding: 10px 1rem 10px 24px;
+    padding: 10px 1rem;
+
+    input {
+      color: #eaeaea;
+    }
 
     .btn {
       flex: 1 0 auto;
       justify-content: space-between;
       background-color: transparent;
       border: none;
-      border-radius: 0;
+      border-radius: 8px;
       color: #a9b4d0;
-      padding: 0 8px 0 3px;
+      min-height: 48px;
+      padding: 0 8px 0 12px;
       opacity: 0;
       transition:
         opacity 0.3s ease-in-out,
@@ -92,10 +97,12 @@
       }
 
       &:hover {
-        background-color: transparent;
+        background-color: #404567;
       }
 
       &.navbar__projects-button_active {
+        background-color: #404567;
+
         svg {
           transform: rotate(0);
         }
@@ -169,11 +176,23 @@
   }
 
   .breadcrumbs__dropdown-wrapper {
-    top: 60px;
+    background-color: $black;
+    color: $white;
+    top: 64px;
+    border-radius: 8px;
 
     .breadcrumbs__dropdown {
       max-height: 300px;
-      max-width: 200px;
+      max-width: 220px;
+      min-width: 180px;
+
+      &-item:hover {
+        background-color: #404567;
+      }
+
+      &-search {
+        border-color: #404567;
+      }
     }
   }
 }
