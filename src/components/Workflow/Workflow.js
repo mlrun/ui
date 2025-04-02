@@ -24,6 +24,7 @@ import classnames from 'classnames'
 import { forEach, isEmpty } from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import { Button } from 'igz-controls/components'
 import Details from '../Details/Details'
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import Table from '../Table/Table'
@@ -47,6 +48,7 @@ import functionsActions from '../../actions/functions'
 import { ACTIONS_MENU } from '../../types'
 import {
   DEFAULT_EDGE,
+  FUNCTION_RUNNING_STATE,
   GREY_NODE,
   JOB_KIND_JOB,
   JOBS_PAGE,
@@ -63,6 +65,7 @@ import { useMode } from '../../hooks/mode.hook'
 import getState from '../../utils/getState'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 
+import { ReactComponent as Cancel } from 'igz-controls/images/cancel.svg'
 import { ReactComponent as ListView } from 'igz-controls/images/listview.svg'
 import { ReactComponent as Pipelines } from 'igz-controls/images/pipelines.svg'
 
@@ -72,6 +75,7 @@ const Workflow = ({
   actionsMenu,
   backLink,
   handleCancel,
+  handleConfirmTerminateJob,
   itemIsSelected,
   pageData,
   refresh,
@@ -222,31 +226,43 @@ const Workflow = ({
   return (
     <div className="workflow-container">
       <TableTop link={backLink} text={workflow?.run?.name.replace(`${params.projectName}-`, '')}>
-        <div className="actions">
-          <Tooltip
-            template={
-              <TextTooltipTemplate
-                text={
-                  workflowsViewMode === WORKFLOW_GRAPH_VIEW
-                    ? 'Switch to list view'
-                    : 'Switch to graph view'
-                }
-              />
-            }
-          >
-            <button
-              className="toggle-view-btn"
-              onClick={() =>
-                setWorkflowsViewMode(
-                  workflowsViewMode === WORKFLOW_GRAPH_VIEW
-                    ? WORKFLOW_LIST_VIEW
-                    : WORKFLOW_GRAPH_VIEW
-                )
+        <div className="workflow_btn-container">
+          <div className="actions">
+            <Tooltip
+              template={
+                <TextTooltipTemplate
+                  text={
+                    workflowsViewMode === WORKFLOW_GRAPH_VIEW
+                      ? 'Switch to list view'
+                      : 'Switch to graph view'
+                  }
+                />
               }
             >
-              {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? <ListView /> : <Pipelines />}
-            </button>
-          </Tooltip>
+              <button
+                className="toggle-view-btn"
+                onClick={() =>
+                  setWorkflowsViewMode(
+                    workflowsViewMode === WORKFLOW_GRAPH_VIEW
+                      ? WORKFLOW_LIST_VIEW
+                      : WORKFLOW_GRAPH_VIEW
+                  )
+                }
+              >
+                {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? <ListView /> : <Pipelines />}
+              </button>
+            </Tooltip>
+          </div>
+          <div>
+            <Button
+              className="workflow_btn"
+              disabled={workflow?.run?.status !== FUNCTION_RUNNING_STATE}
+              variant="danger"
+              icon={<Cancel />}
+              label="Terminal"
+              onClick={handleConfirmTerminateJob}
+            />
+          </div>
         </div>
       </TableTop>
 

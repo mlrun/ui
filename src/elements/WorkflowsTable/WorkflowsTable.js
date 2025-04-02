@@ -375,6 +375,10 @@ const WorkflowsTable = React.forwardRef(
       [dispatch, filters, location.pathname, navigate, params.workflowId, refreshWorkflow]
     )
 
+    const onTerminateJob = job => {
+      console.log('TERMINATE JOB!!')
+      console.log(job)
+    }
     const handleConfirmDeleteJob = useCallback(
       job => {
         setConfirmData({
@@ -395,6 +399,25 @@ const WorkflowsTable = React.forwardRef(
       [onDeleteJob, setConfirmData]
     )
 
+    const handleConfirmTerminateJob = useCallback(
+      job => {
+        setConfirmData({
+          item: job,
+          header: 'Terminate workflow',
+          message: `Are you sure you want to terminate the workflow ${job.name}(stop its execution)? Workflows termination cannot be undone.`,
+          btnConfirmLabel: 'Terminate',
+          btnConfirmType: DANGER_BUTTON,
+          rejectHandler: () => {
+            setConfirmData(null)
+          },
+          confirmHandler: () => {
+            onTerminateJob(job)
+            setConfirmData(null)
+          }
+        })
+      },
+      [onDeleteJob, setConfirmData]
+    )
     const handleRerun = useCallback(
       workflow => {
         dispatch(rerunWorkflow({ project: workflow.project, workflowId: workflow.id }))
@@ -428,6 +451,7 @@ const WorkflowsTable = React.forwardRef(
           appStore.frontendSpec.abortable_function_kinds,
           handleConfirmAbortJob,
           handleConfirmDeleteJob,
+          handleConfirmTerminateJob,
           toggleConvertedYaml,
           handleRerun,
           rerunIsDisabled
@@ -439,6 +463,7 @@ const WorkflowsTable = React.forwardRef(
       handleMonitoring,
       handleConfirmAbortJob,
       handleConfirmDeleteJob,
+      handleConfirmTerminateJob,
       toggleConvertedYaml,
       handleRerun,
       rerunIsDisabled
@@ -720,6 +745,7 @@ const WorkflowsTable = React.forwardRef(
                 actionsMenu={actionsMenu}
                 backLink={backLink}
                 handleCancel={handleCancel}
+                handleConfirmTerminateJob={handleConfirmTerminateJob}
                 itemIsSelected={itemIsSelected}
                 pageData={pageData}
                 refresh={handleRetry}

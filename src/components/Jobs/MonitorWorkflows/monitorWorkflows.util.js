@@ -21,6 +21,7 @@ import React from 'react'
 import { debounce } from 'lodash'
 
 import {
+  FUNCTION_RUNNING_STATE,
   FUNCTIONS_PAGE,
   GROUP_BY_NONE,
   GROUP_BY_WORKFLOW,
@@ -47,7 +48,8 @@ import { isEveryObjectValueEmpty } from '../../../utils/isEveryObjectValueEmpty'
 
 import { ReactComponent as MonitorIcon } from 'igz-controls/images/monitor-icon.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
-import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
+import { ReactComponent as Cancel } from 'igz-controls/images/cancel.svg'
+import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Rerun } from 'igz-controls/images/rerun.svg'
@@ -86,6 +88,7 @@ export const generateActionsMenu = (
   abortable_function_kinds,
   handleConfirmAbortJob,
   handleConfirmDeleteJob,
+  handleConfirmTerminateJob,
   toggleConvertedYaml,
   handleRerun,
   rerunIsDisabled
@@ -116,7 +119,7 @@ export const generateActionsMenu = (
         },
         {
           label: 'Abort',
-          icon: <Cancel />,
+          icon: <Close />,
           onClick: handleConfirmAbortJob,
           tooltip: jobKindIsAbortable
             ? jobIsAborting
@@ -156,9 +159,16 @@ export const generateActionsMenu = (
           icon: <Rerun />,
           label: 'Retry',
           onClick: () => handleRerun(job),
-          tooltip:
-            [PENDING_STATE, UNKNOWN_STATE].includes(job?.state?.value) &&
-            'Retry is unavailable while workflow status is pending, refresh the display to check for updates.'
+          tooltip: [PENDING_STATE, UNKNOWN_STATE].includes(job?.state?.value)
+            ? 'Retry is unavailable while workflow status is pending, refresh the display to check for updates.'
+            : ''
+        },
+        {
+          label: 'Terminate',
+          icon: <Cancel />,
+          className: 'danger',
+          onClick: handleConfirmTerminateJob,
+          disabled: job?.state?.value !== FUNCTION_RUNNING_STATE
         }
       ]
     ]
