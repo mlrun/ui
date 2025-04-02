@@ -25,7 +25,7 @@
     min-height: 48px;
     min-width: 48px;
     padding: 0 8px 0 18px;
-    color: #a9b4d0;
+    color: $primary;
     font-weight: normal;
     background-color: transparent;
     border: none;
@@ -38,27 +38,21 @@
       flex: 0 0 20px;
       width: 20px;
       height: 20px;
+      margin-right: 5px;
 
       & * {
-        fill: #a9b4d0;
+        fill: $topaz;
       }
     }
 
     &.active,
     &.active:hover {
-      color: $white;
-      background-color: #404567;
+      background-color: #efefef;
       cursor: default;
-
-      svg {
-        & * {
-          fill: $white;
-        }
-      }
 
       &::before {
         content: '';
-        border: 2px solid #0fddaf;
+        border: 2px solid $malibu;
         height: 100%;
         position: absolute;
         left: 0;
@@ -81,14 +75,13 @@
     &:focus-visible,
     &.expended {
       &:not(:disabled):not([class*='active']) {
-        color: #a9b4d0;
-        background-color: #404567;
+        background-color: #efefef;
         outline: none;
         transition: all 0.3s ease-in-out;
 
         svg {
           & * {
-            fill: #a9b4d0;
+            fill: $topaz;
           }
         }
       }
