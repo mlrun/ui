@@ -140,6 +140,7 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
             searchValue={searchValue}
             setSearchValue={setSearchValue}
             withSearch
+            withAllProjects
           />
         )}
       </div>
