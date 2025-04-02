@@ -144,6 +144,7 @@ const Projects = () => {
           generateAlerts(result, dispatch)
         }
       })
+      .catch(() => {})
 
     if (!isEmpty(deletingProjectsRef.current)) {
       dispatch(fetchBackgroundTasks({}))
@@ -422,6 +423,7 @@ const Projects = () => {
           )
         }
       })
+      .catch(() => {})
   }
 
   return (

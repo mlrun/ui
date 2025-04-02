@@ -143,6 +143,7 @@ const JobWizardFunctionSelection = ({
         .then(projects => {
           setProjects(generateProjectsList(projects, params.projectName))
         })
+        .catch(() => {})
     }
   }, [dispatch, params.projectName, projects.length])
 

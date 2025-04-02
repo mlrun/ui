@@ -161,6 +161,7 @@ export const getProjectsNames = (dispatch, setProjects, project) => {
     .then(projects => {
       return setProjects(generateProjectsList(projects ?? [], project))
     })
+    .catch(() => {})
 }
 
 export const getArtifacts = (dispatch, project, projectItemType, setArtifacts) => {

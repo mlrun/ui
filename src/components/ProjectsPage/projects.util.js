@@ -397,7 +397,7 @@ export const handleDeleteProject = (
         }
       }
     })
-    .catch(error => {
+    .catch(({ error }) => {
       handleDeleteProjectError(
         error,
         handleDeleteProject,

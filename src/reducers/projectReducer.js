@@ -155,7 +155,7 @@ export const createNewProject = createAsyncThunk('createNewProject', ({ postData
                 'The system already has the maximum number of projects. An existing project must be deleted before you can create another.'
               : error.message
 
-      thunkAPI.rejectWithValue(message)
+      return thunkAPI.rejectWithValue(message)
     })
 })
 export const deleteProject = createAsyncThunk(
@@ -278,7 +278,7 @@ export const fetchProjects = createAsyncThunk(
           null,
           setRequestErrorMessage
         )
-        thunkAPI.rejectWithValue(error)
+        return thunkAPI.rejectWithValue(error)
       })
   }
 )
@@ -290,7 +290,7 @@ export const fetchProjectsNames = createAsyncThunk('fetchProjectsNames', (_, thu
     })
     .catch(error => {
       showErrorNotification(thunkAPI.dispatch, error, '', 'Failed to fetch projects')
-      thunkAPI.rejectWithValue(error)
+      return thunkAPI.rejectWithValue(error)
     })
 })
 
@@ -335,7 +335,7 @@ export const fetchProjectsSummary = createAsyncThunk(
           }
         }
 
-        thunkAPI.rejectWithValue(err)
+        return thunkAPI.rejectWithValue(err)
       })
   }
 )

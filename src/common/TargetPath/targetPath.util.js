@@ -341,6 +341,7 @@ export const getProjectsNames = (dispatch, setDataInputState, projectName) => {
         projects: generateProjectsList(result ?? [], projectName)
       }))
     })
+    .catch(() => {})
 }
 
 export const getArtifacts = (dispatch, project, storePathType, setDataInputState) => {
