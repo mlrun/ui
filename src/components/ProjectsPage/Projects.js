@@ -250,7 +250,7 @@ const Projects = () => {
   const onArchiveProject = useCallback(
     project => {
       setConfirmData({
-        item: project,
+        item: project.metadata.name,
         header: 'Archive project',
         message:
           'Archived projects continue to consume resources.' +
@@ -323,7 +323,7 @@ const Projects = () => {
   const handleOnDeleteProject = useCallback(
     project =>
       onDeleteProject(
-        project,
+        project.metadata.name,
         setConfirmData,
         dispatch,
         deletingProjectsRef,

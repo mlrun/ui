@@ -307,7 +307,7 @@ const ProjectSettings = () => {
                   onClick={event => {
                     event.stopPropagation()
                     onDeleteProject(
-                      projectStore.project?.data,
+                      params.projectName,
                       setConfirmData,
                       dispatch,
                       deletingProjectsRef,
