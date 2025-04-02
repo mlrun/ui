@@ -17,24 +17,42 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useForm } from 'react-final-form'
 import { useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
 import StatusFilter from '../../../common/StatusFilter/StatusFilter'
 
 import {
+  FILTER_ALL_ITEMS,
   JOBS_MONITORING_JOBS_TAB,
   LABELS_FILTER,
   PROJECT_FILTER,
+  PROJECTS_FILTER_ALL_ITEMS,
   STATUS_FILTER_NAME
 } from '../../../constants'
 import { generateTypeFilter, jobsStatuses } from '../../FilterMenu/filterMenu.settings'
+import { generateProjectsList } from '../../../utils/projects'
+import { upperFirst } from 'lodash'
 
 const JobsMonitoringFilters = () => {
   const form = useForm()
   const params = useParams()
+  const projectStore = useSelector(state => state.projectStore)
+
+  const projectsList = useMemo(() => {
+    const generatedProjects = generateProjectsList(projectStore.projectsNames.data)
+
+    return [
+      {
+        id: PROJECTS_FILTER_ALL_ITEMS,
+        label: upperFirst(FILTER_ALL_ITEMS)
+      },
+      ...generatedProjects
+    ]
+  }, [projectStore.projectsNames.data])
 
   const handleInputChange = (value, inputName) => {
     form.change(inputName, value || '')
@@ -44,10 +62,11 @@ const JobsMonitoringFilters = () => {
     <>
       {!params.jobName && (
         <div className="form-row">
-          <FormInput name={PROJECT_FILTER} placeholder="Search by project name..." />
-          <FormOnChange
-            handler={value => handleInputChange(value, PROJECT_FILTER)}
+          <FormSelect
+            label="Project name"
             name={PROJECT_FILTER}
+            options={projectsList}
+            preventWidthOverflow
           />
         </div>
       )}

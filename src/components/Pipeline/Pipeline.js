@@ -63,9 +63,11 @@ const Pipeline = ({ content }) => {
   useEffect(() => {
     const selectedFunction = content.find(contentItem => contentItem.hash === params.pipelineId)
 
-    fetchAndParseFunction(selectedFunction, dispatch).then(func => {
-      return setPipeline(func)
-    })
+    if (selectedFunction) {
+      fetchAndParseFunction(selectedFunction, dispatch).then(func => {
+        return setPipeline(func)
+      })
+    }
   }, [content, dispatch, params.pipelineId])
 
   useEffect(() => {

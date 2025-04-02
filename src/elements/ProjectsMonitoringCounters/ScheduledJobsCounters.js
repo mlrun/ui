@@ -64,7 +64,9 @@ const ScheduledJobsCounters = () => {
                 )}
               </div>
             </div>
-            <ClockIcon className="project-card__info-icon" />
+            <div className="project-card__info-icon">
+              <ClockIcon />
+            </div>
             <span>Next 24 hours</span>
           </div>
         </StatsCard.Col>
