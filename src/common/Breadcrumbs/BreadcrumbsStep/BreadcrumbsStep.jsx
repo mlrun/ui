@@ -220,6 +220,7 @@ const BreadcrumbsStep = React.forwardRef(
                 setSearchValue={setSearchValue}
                 tab={urlParts.tab?.id}
                 withSearch
+                withAllProjects
               />
             </>
           )}

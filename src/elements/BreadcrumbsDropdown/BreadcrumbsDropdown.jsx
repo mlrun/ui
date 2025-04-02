@@ -26,6 +26,7 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import SearchIcon from 'igz-controls/images/search.svg?react'
 import CheckmarkIcon from 'igz-controls/images/checkmark.svg?react'
+import HomepageIcon from 'igz-controls/images/navbar/mlrun-project-home.svg?react'
 
 import './breadcrumbsDropdown.scss'
 
@@ -41,7 +42,8 @@ const BreadcrumbsDropdown = forwardRef(
       setSearchValue,
       selectedItem,
       tab = '',
-      withSearch = false
+      withSearch = false,
+      withAllProjects = false
     },
     ref
   ) => {
@@ -109,6 +111,23 @@ const BreadcrumbsDropdown = forwardRef(
               )
             })}
         </div>
+        {withAllProjects && (
+          <>
+            <div className="navbar__separator"></div>
+            <div className="breadcrumbs__dropdown-all-projects">
+              <Link
+                to="/"
+                id="all-projects"
+                data-testid="breadcrumbs-dropdown-item-all-projects"
+                key="all-projects"
+                className="breadcrumbs__dropdown-item"
+              >
+                <HomepageIcon />
+                <span>All Projects</span>
+              </Link>
+            </div>
+          </>
+        )}
       </div>
     )
   }
@@ -126,7 +145,8 @@ BreadcrumbsDropdown.propTypes = {
   selectedItem: PropTypes.string.isRequired,
   setSearchValue: PropTypes.func.isRequired,
   tab: PropTypes.string,
-  withSearch: PropTypes.bool
+  withSearch: PropTypes.bool,
+  withAllProjects: PropTypes.bool
 }
 
 export default BreadcrumbsDropdown
