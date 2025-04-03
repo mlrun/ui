@@ -165,10 +165,7 @@ describe('Search component', () => {
 
   it('should not display label if props matches is empty', () => {
     wrapper.rerender(
-      <Search
-        placeholder="Search by text, tags and keywords..."
-        onChange={jest.fn()}
-      />
+      <Search placeholder="Search by text, tags and keywords..." onChange={jest.fn()} />
     )
     const input = wrapper.getByPlaceholderText(/Search by text/i)
 
@@ -182,9 +179,7 @@ describe('Search component', () => {
   it('should not call "onChange" handler if props searchWhileTyping is "true" and input is empty and lick by search icon', () => {
     const mockOnChange = jest.fn()
 
-    wrapper.rerender(
-      <Search onChange={mockOnChange} searchWhileTyping={true} />
-    )
+    wrapper.rerender(<Search onChange={mockOnChange} searchWhileTyping={true} />)
 
     const searchIcon = wrapper.container.querySelector('search-icon')
 

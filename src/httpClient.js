@@ -36,8 +36,8 @@ const paramsSerializer = params => qs.stringify(params, { arrayFormat: 'repeat' 
 const MAX_CONSECUTIVE_ERRORS_COUNT = 2
 let consecutiveErrorsCount = 0
 
-export const mainBaseUrl = `${process.env.PUBLIC_URL}/api/v1`
-export const mainBaseUrlV2 = `${process.env.PUBLIC_URL}/api/v2`
+export const mainBaseUrl = `${import.meta.env.VITE_PUBLIC_URL}/api/v1`
+export const mainBaseUrlV2 = `${import.meta.env.VITE_PUBLIC_URL}/api/v2`
 
 export const mainHttpClient = axios.create({
   baseURL: mainBaseUrl,
@@ -52,17 +52,17 @@ export const mainHttpClientV2 = axios.create({
 })
 
 export const functionTemplatesHttpClient = axios.create({
-  baseURL: `${process.env.PUBLIC_URL}/function-catalog`,
+  baseURL: `${import.meta.env.VITE_PUBLIC_URL}/function-catalog`,
   headers
 })
 
 export const nuclioHttpClient = axios.create({
-  baseURL: `${process.env.PUBLIC_URL}/nuclio/api`,
+  baseURL: `${import.meta.env.VITE_PUBLIC_URL}/nuclio/api`,
   headers
 })
 
 export const iguazioHttpClient = axios.create({
-  baseURL: process.env.NODE_ENV === 'production' ? '/api' : '/iguazio/api',
+  baseURL: import.meta.env.MODE === 'production' ? '/api' : '/iguazio/api',
   headers
 })
 
@@ -157,9 +157,9 @@ const responseRejectInterceptor = error => {
 
       if (
         consecutiveErrorsCount === MAX_CONSECUTIVE_ERRORS_COUNT &&
-        window.location.pathname !== `${process.env.PUBLIC_URL}/${PROJECTS_PAGE_PATH}`
+        window.location.pathname !== `${import.meta.env.VITE_PUBLIC_URL}/${PROJECTS_PAGE_PATH}`
       ) {
-        window.location.href = `${process.env.PUBLIC_URL}/${PROJECTS_PAGE_PATH}`
+        window.location.href = `${import.meta.env.VITE_PUBLIC_URL}/${PROJECTS_PAGE_PATH}`
       }
     }
   }

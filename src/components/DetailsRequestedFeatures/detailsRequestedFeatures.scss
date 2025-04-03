@@ -1,5 +1,5 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
 
 .item-requested-features {
   overflow: auto;
@@ -14,12 +14,12 @@
       flex-direction: row;
       align-items: center;
       padding: 10px 18px;
-      color: $topaz;
+      color: colors.$topaz;
       font-weight: 700;
       font-size: 14px;
       line-height: 24px;
-      background-color: $white;
-      border-bottom: $secondaryBorder;
+      background-color: colors.$white;
+      border-bottom: borders.$secondaryBorder;
       z-index: 3;
     }
 
@@ -65,12 +65,12 @@
 
       &_feature-set {
         margin-right: 5px;
-        color: $primary;
+        color: colors.$primary;
       }
 
       &_tag {
         min-width: 45px;
-        color: $topaz;
+        color: colors.$topaz;
       }
 
       &_actions {
@@ -106,7 +106,7 @@
     &-row {
       display: flex;
       padding: 18px;
-      border-bottom: $secondaryBorder;
+      border-bottom: borders.$secondaryBorder;
 
       &:hover {
         .cell_actions {

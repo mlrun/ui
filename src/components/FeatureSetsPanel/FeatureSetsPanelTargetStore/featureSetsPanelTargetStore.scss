@@ -1,4 +1,4 @@
-@import '~igz-controls/scss/colors';
+@use 'igz-controls/scss/colors';
 
 .target-store {
   &__item,
@@ -29,7 +29,7 @@
       &:not(.checkbox_disabled) {
         svg.unchecked {
           path {
-            fill: $malibu;
+            fill: colors.$malibu;
           }
         }
       }
@@ -41,7 +41,7 @@
     flex-wrap: wrap;
     align-items: center;
     width: 80%;
-    color: $primary;
+    color: colors.$primary;
 
     .select {
       display: flex;
@@ -60,7 +60,7 @@
       margin-right: 5px;
 
       &__invalid {
-        color: $amaranth;
+        color: colors.$amaranth;
       }
     }
 
@@ -68,7 +68,7 @@
       margin-right: 5px;
 
       &__disabled {
-        color: $spunPearl;
+        color: colors.$spunPearl;
       }
     }
 
@@ -116,7 +116,7 @@
 
       .radio-button {
         margin: 5px 0;
-        color: $primary;
+        color: colors.$primary;
 
         .tip-container {
           top: 3px;

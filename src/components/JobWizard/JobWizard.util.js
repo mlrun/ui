@@ -612,7 +612,7 @@ export const parseDefaultDataInputs = (funcParams, runDataInputs = {}) => {
       const dataInputIsFromPreviousRun = has(runDataInputs, dataInput.name)
       const dataInputValue = dataInputIsFromPreviousRun
         ? runDataInputs[dataInput.name]
-        : dataInput.default ?? ''
+        : (dataInput.default ?? '')
 
       return {
         data: getDataInputData(
@@ -690,7 +690,7 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
             runParams[parameter.name] ?? runHyperParams[parameter.name],
             parameter.name in runHyperParams
           )
-        : parameter.type ?? ''
+        : (parameter.type ?? '')
 
       return {
         data: {
@@ -1070,10 +1070,10 @@ export const generateJobRequestData = (
         function:
           selectedFunction && !has(selectedFunction, 'status')
             ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
-            : formData.function ??
+            : (formData.function ??
               (selectedFunction
                 ? `${selectedFunction.metadata.project}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
-                : '')
+                : ''))
       }
     },
     function: {

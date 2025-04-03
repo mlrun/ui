@@ -1,6 +1,6 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/mixins';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/mixins';
 
 .edit-chip {
   &-container {
@@ -20,33 +20,33 @@
 
       &.item_edited {
         &::placeholder {
-          color: $spunPearl;
+          color: colors.$spunPearl;
         }
 
         &_invalid {
-          color: $amaranth;
+          color: colors.$amaranth;
         }
       }
 
       &::placeholder {
-        color: $primary;
+        color: colors.$primary;
       }
     }
 
     &-background {
-      @include chipBackground(false);
+      @include mixins.chipBackground(false);
     }
 
     &-border {
-      @include chipBorder();
+      @include mixins.chipBorder();
     }
 
     &-density {
-      @include chipDensity(true, false);
+      @include mixins.chipDensity(true, false);
     }
 
     &-font {
-      @include chipsFont(EditableChip);
+      @include mixins.chipsFont(EditableChip);
     }
   }
 

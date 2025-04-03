@@ -25,6 +25,4 @@ export const generateProjectsList = (projects = [], currentProject = '') =>
         id: project
       }
     })
-    .sort((prevProject, nextProject) =>
-      prevProject.label.localeCompare(nextProject.label)
-    )
+    .sort((prevProject, nextProject) => prevProject.label.localeCompare(nextProject.label))

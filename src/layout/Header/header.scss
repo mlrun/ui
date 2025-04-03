@@ -1,13 +1,13 @@
-@import '~igz-controls/scss/variables';
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/mixins';
-@import '~igz-controls/scss/shadows';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/variables';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/mixins';
+@use 'igz-controls/scss/shadows';
+@use 'igz-controls/scss/borders';
 
 .header {
   line-height: 1.5;
 
-  @include fixed;
+  @include mixins.fixed;
 
   z-index: 12;
   display: flex;
@@ -15,9 +15,9 @@
   width: 100%;
   min-height: 64px;
   padding: 0 24px;
-  color: $white;
-  background-color: $ebonyClay;
-  box-shadow: $mainHeaderShadow;
+  color: colors.$white;
+  background-color: colors.$ebonyClay;
+  box-shadow: shadows.$mainHeaderShadow;
 
   &__brand {
     display: flex;
@@ -60,21 +60,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: $cerulean;
+    background-color: colors.$cerulean;
     border-radius: 50%;
-    color: $white;
+    color: colors.$white;
     padding: 8px;
     transition: background-color 0.2s ease-in-out;
 
     & > * {
-      fill: $white;
+      fill: colors.$white;
     }
 
     &:hover {
-      background-color: $white;
+      background-color: colors.$white;
 
       & > * {
-        fill: $cerulean;
+        fill: colors.$cerulean;
       }
     }
   }

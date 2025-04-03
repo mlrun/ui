@@ -27,11 +27,9 @@ export const createAutoCorrectedDatePipe = (
 ) => {
   const dateFormats = dateFormat.split(datesDivider)
   const dateFormatArray = dateFormats.map(date => {
-    return date
-      .split(/[^dmyHMS]+/)
-      .sort((a, b) => formatOrder.indexOf(a) - formatOrder.indexOf(b))
+    return date.split(/[^dmyHMS]+/).sort((a, b) => formatOrder.indexOf(a) - formatOrder.indexOf(b))
   })
-  return function(conformedValue) {
+  return function (conformedValue) {
     const indexesOfPipedChars = []
     const maxValue = {
       dd: 31,
@@ -60,19 +58,17 @@ export const createAutoCorrectedDatePipe = (
     })
 
     // Check for invalid date
-    let validityArray = conformedValueStrings.map(
-      (conformedValueItem, index) => {
-        return checkValidity(
-          conformedValueItem,
-          dateFormats[index],
-          dateFormatArray[index],
-          minValue,
-          maxValue,
-          minYear,
-          maxYear
-        )
-      }
-    )
+    let validityArray = conformedValueStrings.map((conformedValueItem, index) => {
+      return checkValidity(
+        conformedValueItem,
+        dateFormats[index],
+        dateFormatArray[index],
+        minValue,
+        maxValue,
+        minYear,
+        maxYear
+      )
+    })
     if (validityArray.some(isInvalid => isInvalid)) {
       return false
     }
@@ -84,11 +80,7 @@ export const createAutoCorrectedDatePipe = (
       indexesOfPipedChars: datesDivider
         ? indexesOfPipedChars[0].concat(
             ...indexesOfPipedChars[1].map(
-              index =>
-                index +
-                conformedValueStrings[0].length -
-                1 +
-                datesDivider.length
+              index => index + conformedValueStrings[0].length - 1 + datesDivider.length
             )
           )
         : indexesOfPipedChars[0]
@@ -131,16 +123,13 @@ const checkValidity = (
   return dateFormatArray.some(format => {
     const position = dateFormat.indexOf(format)
     const length = format.length
-    const textValue = conformedValueItem
-      .substr(position, length)
-      .replace(/\D/g, '')
+    const textValue = conformedValueItem.substr(position, length).replace(/\D/g, '')
     const value = parseInt(textValue, 10)
 
     if (format === 'mm') {
       month = value || 0
     }
-    const maxValueForFormat =
-      format === 'dd' ? maxValueMonth[month] : maxValue[format]
+    const maxValueForFormat = format === 'dd' ? maxValueMonth[month] : maxValue[format]
 
     if (format === 'yyyy' && (minYear !== 1 || maxYear !== 9999)) {
       const scopedMaxValue = parseInt(
@@ -155,9 +144,6 @@ const checkValidity = (
       return value < scopedMinValue || value > scopedMaxValue
     }
 
-    return (
-      value > maxValueForFormat ||
-      (textValue.length === length && value < minValue[format])
-    )
+    return value > maxValueForFormat || (textValue.length === length && value < minValue[format])
   })
 }

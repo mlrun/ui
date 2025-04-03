@@ -1,4 +1,5 @@
-@import '~igz-controls/scss/shadows';
+@use 'igz-controls/scss/shadows';
+@use 'igz-controls/scss/colors';
 
 .actions-menu {
   &__icon {
@@ -12,7 +13,7 @@
     svg {
       path {
         &:first-child {
-          fill: $topaz;
+          fill: colors.$topaz;
         }
       }
     }
@@ -24,31 +25,31 @@
 
   &__option {
     padding: 10px;
-    color: $primary;
+    color: colors.$primary;
     cursor: pointer;
 
     &:hover {
-      background-color: $alabaster;
+      background-color: colors.$alabaster;
     }
 
     &_danger {
-      color: $amaranth;
+      color: colors.$amaranth;
 
       svg {
         path:first-child {
-          fill: $amaranth;
+          fill: colors.$amaranth;
         }
       }
     }
 
     &_disabled {
-      color: $spunPearl;
+      color: colors.$spunPearl;
       cursor: not-allowed;
 
       .actions-menu__icon {
         svg {
           path:first-child {
-            fill: rgba($black, 0.2);
+            fill: rgba(colors.$black, 0.2);
           }
         }
       }

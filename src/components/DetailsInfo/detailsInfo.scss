@@ -1,8 +1,12 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/mixins';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/mixins';
 
 $itemInfoWithoutPadding: item-info-without-padding;
+
+:root {
+  --itemInfoWithoutPadding: #{$itemInfoWithoutPadding};
+}
 
 .item-info {
   display: flex;
@@ -51,7 +55,7 @@ $itemInfoWithoutPadding: item-info-without-padding;
       padding: 10px 10px 10px 0;
 
       &:not(:last-child) {
-        border-bottom: $secondaryBorder;
+        border-bottom: borders.$secondaryBorder;
       }
 
       &__btn-copy {
@@ -82,7 +86,7 @@ $itemInfoWithoutPadding: item-info-without-padding;
         flex: 1;
         align-items: center;
         min-width: 110px;
-        color: $topaz;
+        color: colors.$topaz;
         word-break: break-word;
 
         &_multiline {
@@ -100,7 +104,7 @@ $itemInfoWithoutPadding: item-info-without-padding;
         }
 
         &-add-placeholder {
-          color: $spunPearl;
+          color: colors.$spunPearl;
           cursor: pointer;
         }
       }
@@ -149,7 +153,7 @@ $itemInfoWithoutPadding: item-info-without-padding;
       }
 
       &__link {
-        color: $cornflowerBlue;
+        color: colors.$cornflowerBlue;
       }
 
       &_disabled {
@@ -165,8 +169,4 @@ $itemInfoWithoutPadding: item-info-without-padding;
   &__full-width {
     width: 100%;
   }
-}
-
-:export {
-  iteminfowithoutpadding: $itemInfoWithoutPadding;
 }

@@ -1,6 +1,6 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/shadows';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/shadows';
+@use 'igz-controls/scss/borders';
 
 .combobox {
   position: relative;
@@ -8,16 +8,16 @@
   flex: 1;
   align-items: center;
   width: 100%;
-  border: $primaryBorder;
+  border: borders.$primaryBorder;
   border-radius: 4px;
 
   &_disabled {
     cursor: not-allowed;
-    border-color: $spunPearl;
+    border-color: colors.$spunPearl;
   }
 
   &_invalid {
-    border: $errorBorder;
+    border: borders.$errorBorder;
   }
 
   &-list {
@@ -33,7 +33,7 @@
       cursor: pointer;
 
       &:hover {
-        background-color: $alabaster;
+        background-color: colors.$alabaster;
       }
     }
   }
@@ -44,8 +44,8 @@
     z-index: 5;
     display: none;
     max-width: 350px;
-    background-color: $white;
-    box-shadow: $previewBoxShadow;
+    background-color: colors.$white;
+    box-shadow: shadows.$previewBoxShadow;
     opacity: 0;
 
     &_visible {
@@ -62,7 +62,7 @@
       display: flex;
       align-items: center;
       margin: 0 9px;
-      border-bottom: $dividerBorder;
+      border-bottom: borders.$dividerBorder;
 
       &-input {
         width: 100%;
@@ -92,8 +92,8 @@
       display: none;
       margin-top: 5px;
       max-width: 220px;
-      background-color: $white;
-      box-shadow: $previewBoxShadow;
+      background-color: colors.$white;
+      box-shadow: shadows.$previewBoxShadow;
 
       &-list {
         padding: 0;
@@ -109,17 +109,17 @@
         cursor: not-allowed;
 
         & > * {
-          color: $spunPearl;
+          color: colors.$spunPearl;
         }
       }
 
       &-label {
-        color: $topaz;
+        color: colors.$topaz;
         user-select: none;
         pointer-events: none;
 
         &_mandatory {
-          color: $amaranth;
+          color: colors.$amaranth;
         }
       }
     }
@@ -138,7 +138,7 @@
       cursor: not-allowed;
 
       & > * {
-        fill: $spunPearl;
+        fill: colors.$spunPearl;
       }
     }
 
@@ -161,14 +161,14 @@
       position: absolute;
       top: 18px;
       left: 54px;
-      color: $topaz;
+      color: colors.$topaz;
       user-select: none;
       pointer-events: none;
     }
 
     &:disabled {
       background-color: transparent;
-      color: $spunPearl;
+      color: colors.$spunPearl;
     }
   }
 

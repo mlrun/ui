@@ -1,9 +1,9 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/mixins';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/mixins';
 
 .functions-panel__title {
-  @include panelTitle;
+  @include mixins.panelTitle;
 
   h5 {
     margin: 4px 0;
@@ -19,6 +19,6 @@
   }
 
   a {
-    color: $cornflowerBlue;
+    color: colors.$cornflowerBlue;
   }
 }

@@ -1,44 +1,45 @@
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
 
 @mixin inputNode {
-  color: $white;
-  background-color: $hotPink;
-  fill: $hotPink;
-  border-color: $hotPink;
-  stroke: $hotPink;
-  box-shadow: 0 3px 14px rgba($hotPink, 0.34);
+  color: colors.$white;
+  background-color: colors.$hotPink;
+  fill: colors.$hotPink;
+  border-color: colors.$hotPink;
+  stroke: colors.$hotPink;
+  box-shadow: 0 3px 14px rgba(colors.$hotPink, 0.34);
 }
 
 @mixin outputNode {
-  color: $white;
-  background-color: $malibu;
-  fill: $malibu;
-  border-color: $malibu;
-  stroke: $malibu;
-  box-shadow: 0 3px 14px rgba($malibu, 0.5);
+  color: colors.$white;
+  background-color: colors.$malibu;
+  fill: colors.$malibu;
+  border-color: colors.$malibu;
+  stroke: colors.$malibu;
+  box-shadow: 0 3px 14px rgba(colors.$malibu, 0.5);
 }
 
 @mixin primaryNode {
-  color: $malibu;
-  background-color: $white;
-  border-color: $malibu;
-  stroke: $malibu;
+  color: colors.$malibu;
+  background-color: colors.$white;
+  border-color: colors.$malibu;
+  stroke: colors.$malibu;
 }
 
 @mixin secondaryNode {
-  color: $orchid;
-  background-color: $white;
-  border-color: $orchid;
-  stroke: $orchid;
+  color: colors.$orchid;
+  background-color: colors.$white;
+  border-color: colors.$orchid;
+  stroke: colors.$orchid;
 }
 
 @mixin greyNode {
-  color: rgba($black, 0.3);
-  background-color: $white;
+  color: rgba(colors.$black, 0.3);
+  background-color: colors.$white;
 
   &:not(.selected) {
-    border-color: $bombay;
-    stroke: $bombay;
+    border-color: colors.$bombay;
+    stroke: colors.$bombay;
   }
 }
 
@@ -78,21 +79,21 @@
 
 @mixin selectedNode {
   &.selected {
-    border-color: $brightTurquoise;
-    stroke: $brightTurquoise;
-    box-shadow: 0 4px 20px rgba($brightTurquoise, 0.5);
+    border-color: colors.$brightTurquoise;
+    stroke: colors.$brightTurquoise;
+    box-shadow: 0 4px 20px rgba(colors.$brightTurquoise, 0.5);
 
     &.status-error,
     &.status-failed {
-      border-color: $burntSienna;
-      stroke: $burntSienna;
-      box-shadow: 0 4px 20px rgba($burntSienna, 0.5);
+      border-color: colors.$burntSienna;
+      stroke: colors.$burntSienna;
+      box-shadow: 0 4px 20px rgba(colors.$burntSienna, 0.5);
     }
 
     &.status-running {
-      border-color: $pictonBlue;
-      stroke: $pictonBlue;
-      box-shadow: 0 4px 20px rgba($pictonBlue, 0.5);
+      border-color: colors.$pictonBlue;
+      stroke: colors.$pictonBlue;
+      box-shadow: 0 4px 20px rgba(colors.$pictonBlue, 0.5);
     }
   }
 }
@@ -140,7 +141,7 @@
         height: 20px;
 
         path {
-          fill: $bombay;
+          fill: colors.$bombay;
         }
       }
     }
@@ -168,8 +169,8 @@
     .react-flow__handle {
       width: 12px;
       height: 12px;
-      background: $white;
-      border: 2px solid $bombay;
+      background: colors.$white;
+      border: 2px solid colors.$bombay;
       pointer-events: auto;
 
       &-top {
@@ -191,29 +192,29 @@
       }
 
       &.status-succeeded {
-        background: $brightTurquoise;
+        background: colors.$brightTurquoise;
       }
 
       &.status-failed,
       &.status-error {
-        background: $burntSienna;
+        background: colors.$burntSienna;
       }
 
       &.status-omitted {
-        background: $silver;
+        background: colors.$silver;
       }
 
       &.status-running {
-        background: $pictonBlue;
+        background: colors.$pictonBlue;
       }
 
       &.status-skipped {
-        background: $gossamer;
-        border: 3px solid $brightTurquoise;
+        background: colors.$gossamer;
+        border: 3px solid colors.$brightTurquoise;
       }
 
       &.status-unknown {
-        background: $white;
+        background: colors.$white;
       }
     }
   }
@@ -221,25 +222,25 @@
   .react-flow__edge {
     path,
     polyline {
-      stroke: $bombay;
+      stroke: colors.$bombay;
       stroke-width: 2px;
     }
 
     .react-flow__arrowhead_closed {
       polyline {
-        fill: $bombay;
+        fill: colors.$bombay;
       }
     }
 
     &.selected {
       path,
       polyline {
-        stroke: $saltbox;
+        stroke: colors.$saltbox;
       }
 
       .react-flow__arrowhead_closed {
         polyline {
-          fill: $saltbox;
+          fill: colors.$saltbox;
         }
       }
     }
@@ -247,7 +248,7 @@
 }
 
 .react-flow__minimap {
-  background-color: $gallery;
+  background-color: colors.$gallery;
 
   svg {
     display: block;
@@ -255,14 +256,14 @@
     height: 110px;
 
     path {
-      fill: rgba($black, 0.2);
+      fill: rgba(colors.$black, 0.2);
     }
   }
 }
 
 .react-flow__minimap-node {
-  fill: $white;
+  fill: colors.$white;
 
   @include nodes();
-  @include selectedNode()
+  @include selectedNode();
 }

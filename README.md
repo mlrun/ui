@@ -6,36 +6,36 @@ Builds a production Docker image.
 
 You can pass the following environment variables to control the resulting image name:
 
-| Name  | Description | Default | Example |
-| ----- | ----------- | ------- | ------- |
-| `MLRUN_DOCKER_REGISTRY` | sets the Docker registy | (Dockerhub) | `quay.io/` |
-| `MLRUN_DOCKER_REPO` | sets the Docker repository | `mlrun` | `iguazio` |
-| `MLRUN_DOCKER_TAG` | sets the Docker image tag | `latest` | `0.4.9`, `unstable` |
+| Name                    | Description                | Default     | Example             |
+|-------------------------|----------------------------|-------------|---------------------|
+| `MLRUN_DOCKER_REGISTRY` | sets the Docker registy    | (Dockerhub) | `quay.io/`          |
+| `MLRUN_DOCKER_REPO`     | sets the Docker repository | `mlrun`     | `iguazio`           |
+| `MLRUN_DOCKER_TAG`      | sets the Docker image tag  | `latest`    | `0.4.9`, `unstable` |
 
 Note: the trailing forward-slash `/` in `MLRUN_DOCKER_REGISTRY`'s value is significant.
 
 Examples:
 
-| Command  | Resulting Docker image name |
-| ----- | ----------- |
-| `npm run docker` | `mlrun/mlrun-ui:latest` |
+| Command                                                                                          | Resulting Docker image name      |
+|--------------------------------------------------------------------------------------------------|----------------------------------|
+| `npm run docker`                                                                                 | `mlrun/mlrun-ui:latest`          |
 | `MLRUN_DOCKER_REGISTRY=quay.io/ MLRUN_DOCKER_REPO=iguazio MLRUN_DOCKER_TAG=0.4.9 npm run docker` | `quay.io/iguazio/mlrun-ui:0.4.9` |
 
 ### `docker run` environment variables
 
-The Docker container runs an Nginx server, which listens on exposed port number 8090, serves the web-app, and proxies to the backend API.
+The Docker container runs a Nginx server, which listens on exposed port number 8090, serves the web-app, and proxies to the backend API.
 
 You can pass the following environment variables to the `docker run` command to configure it:
 
-| Name  | Description |
-| ----- | ----------- |
-| `MLRUN_API_PROXY_URL` | Sets the base URL of the backend API<br />Default: `http://localhost:8090`<br />Example: `http://17.220.101.245:30080` |
-| `MLRUN_NUCLIO_MODE` | Sets the MLRun Nuclio integration mode<br />Default: `disabled`<br />Example: `enabled` |
-| `MLRUN_NUCLIO_API_URL` | Sets the base URL of the Nuclio API<br />Default: `http://localhost:8070`<br />Example: `http://17.220.101.245:30070` |
-| `MLRUN_NUCLIO_UI_URL` | Sets the base URL of the Nuclio UI<br />Default: `http://localhost:8070`<br />Example: `http://17.220.101.245:30070` |
-| `MLRUN_V3IO_ACCESS_KEY` | Sets the V3IO access key to use for accessing V3IO containers<br />Example: `a7097c94-6e8f-436d-9717-a84abe2861d1` |
-| `MLRUN_FUNCTION_CATALOG_URL` | Sets the base URL of the function-template catalog <br />Default: `https://raw.githubusercontent.com` |
-| `MLRUN_FUNCTION_CATALOG_PATH` | Sets the base URI of the function-template catalog <br />Default: `/mlrun/functions/master` |
+| Name                          | Description                                                                                                            |
+|-------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| `MLRUN_API_PROXY_URL`         | Sets the base URL of the backend API<br />Default: `http://localhost:8090`<br />Example: `http://17.220.101.245:30080` |
+| `MLRUN_NUCLIO_MODE`           | Sets the MLRun Nuclio integration mode<br />Default: `disabled`<br />Example: `enabled`                                |
+| `MLRUN_NUCLIO_API_URL`        | Sets the base URL of the Nuclio API<br />Default: `http://localhost:8070`<br />Example: `http://17.220.101.245:30070`  |
+| `MLRUN_NUCLIO_UI_URL`         | Sets the base URL of the Nuclio UI<br />Default: `http://localhost:8070`<br />Example: `http://17.220.101.245:30070`   |
+| `MLRUN_V3IO_ACCESS_KEY`       | Sets the V3IO access key to use for accessing V3IO containers<br />Example: `a7097c94-6e8f-436d-9717-a84abe2861d1`     |
+| `MLRUN_FUNCTION_CATALOG_URL`  | Sets the base URL of the function-template catalog <br />Default: `https://raw.githubusercontent.com`                  |
+| `MLRUN_FUNCTION_CATALOG_PATH` | Sets the base URI of the function-template catalog <br />Default: `/mlrun/functions/master`                            |
 
 Example:
 
@@ -75,16 +75,16 @@ Note: `npm install` should be run first.
 
 ### Environment variables
 
-All environemnt variables from production (described [here](#docker-run-environment-variables)) are expanded to environemt variables that could be used in development, via **.env** file.
-In order to override them, add a **.env.development.local** file next to **.env** file and override the desired variables.
+All environment variables from production (described [here](#docker-run-environment-variables)) are expanded to environment variables that could be used in development, via **.env.production** file.
+In order to override them, add a **.env.development** file next to **.env.production** file and override the desired variables.
 For example:
 
 ```
-REACT_APP_MLRUN_API_URL=http://3.129.154.119:30080
-REACT_APP_MLRUN_V3IO_ACCESS_KEY=2826d9df-033d-4ac2-b13a-1f8f9d14aaeb
-REACT_APP_NUCLIO_API_URL=http://localhost:8070
-REACT_APP_NUCLIO_UI_URL=http://localhost:8070
-REACT_APP_FUNCTION_CATALOG_URL=https://raw.githubusercontent.com/mlrun/functions/master
+VITE_MLRUN_API_URL=http://3.129.154.119:30080
+VITE_MLRUN_V3IO_ACCESS_KEY=2826d9df-033d-4ac2-b13a-1f8f9d14aaeb
+VITE_NUCLIO_API_URL=http://localhost:8070
+VITE_NUCLIO_UI_URL=http://localhost:8070
+VITE_FUNCTION_CATALOG_URL=https://raw.githubusercontent.com/mlrun/functions/master
 ```
 
 ### `npm start`

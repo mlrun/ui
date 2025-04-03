@@ -1,4 +1,4 @@
-@import '~igz-controls/scss/colors';
+@use 'igz-controls/scss/colors';
 
 .download {
   display: flex;
@@ -7,7 +7,7 @@
   cursor: pointer;
 
   &.download_disabled {
-    color: $topaz;
+    color: colors.$topaz;
     cursor: not-allowed;
 
     button[disabled] {
