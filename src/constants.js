@@ -143,6 +143,9 @@ export const CONSUMER_GROUPS_PAGE = 'CONSUMER_GROUPS'
 export const CONSUMER_GROUPS_FILTER = 'CONSUMER_GROUPS_FILTER'
 export const CONSUMER_GROUP_FILTER = 'CONSUMER_GROUP_FILTER'
 
+export const CONSUMER_GROUP_TAB = 'consumer-group'
+export const CONSUMER_GROUPS_TAB = 'consumer-groups'
+
 /*=========== JOBS =============*/
 
 export const FETCH_JOB_PODS_BEGIN = 'FETCH_JOB_PODS_BEGIN'
