@@ -17,73 +17,16 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import {
-  CREATE_NEW_FUNCTION_BEGIN,
-  CREATE_NEW_FUNCTION_FAILURE,
-  CREATE_NEW_FUNCTION_SUCCESS,
-  DEPLOY_FUNCTION_BEGIN,
-  DEPLOY_FUNCTION_FAILURE,
-  DEPLOY_FUNCTION_SUCCESS,
-  FETCH_FUNCTIONS_BEGIN,
-  FETCH_FUNCTIONS_FAILURE,
-  FETCH_FUNCTIONS_SUCCESS,
-  FETCH_FUNCTIONS_TEMPLATES_FAILURE,
-  FETCH_FUNCTION_NUCLIO_LOGS_BEGIN,
-  FETCH_FUNCTION_NUCLIO_LOGS_FAILURE,
-  FETCH_FUNCTION_NUCLIO_LOGS_SUCCESS,
-  FETCH_FUNCTION_LOGS_BEGIN,
-  FETCH_FUNCTION_LOGS_FAILURE,
-  FETCH_FUNCTION_LOGS_SUCCESS,
-  FETCH_FUNCTION_TEMPLATE_BEGIN,
-  FETCH_FUNCTION_TEMPLATE_FAILURE,
-  FETCH_FUNCTION_TEMPLATE_SUCCESS,
-  FETCH_HUB_FUNCTIONS_BEGIN,
-  FETCH_HUB_FUNCTIONS_FAILURE,
-  FETCH_HUB_FUNCTION_TEMPLATE_BEGIN,
-  FETCH_HUB_FUNCTION_TEMPLATE_FAILURE,
-  FETCH_HUB_FUNCTION_TEMPLATE_SUCCESS,
-  FUNCTION_TYPE_JOB,
-  GET_FUNCTION_BEGIN,
-  GET_FUNCTION_FAILURE,
-  GET_FUNCTION_SUCCESS,
-  PANEL_DEFAULT_ACCESS_KEY,
-  REMOVE_FUNCTION,
-  REMOVE_FUNCTIONS_ERROR,
-  REMOVE_FUNCTION_TEMPLATE,
-  REMOVE_HUB_FUNCTIONS,
-  REMOVE_NEW_FUNCTION,
-  RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE,
-  SET_FUNCTIONS_TEMPLATES,
-  SET_HUB_FUNCTIONS,
-  SET_NEW_FUNCTION,
-  SET_NEW_FUNCTION_BASE_IMAGE,
-  SET_NEW_FUNCTION_BUILD_IMAGE,
-  SET_NEW_FUNCTION_COMMANDS,
-  SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
-  SET_NEW_FUNCTION_DEFAULT_CLASS,
-  SET_NEW_FUNCTION_DESCRIPTION,
-  SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT,
-  SET_NEW_FUNCTION_ENV,
-  SET_NEW_FUNCTION_ERROR_STREAM,
-  SET_NEW_FUNCTION_FORCE_BUILD,
-  SET_NEW_FUNCTION_GRAPH,
-  SET_NEW_FUNCTION_HANDLER,
-  SET_NEW_FUNCTION_IMAGE,
-  SET_NEW_FUNCTION_KIND,
-  SET_NEW_FUNCTION_NAME,
-  SET_NEW_FUNCTION_PARAMETERS,
-  SET_NEW_FUNCTION_PREEMTION_MODE,
-  SET_NEW_FUNCTION_PRIORITY_CLASS_NAME,
-  SET_NEW_FUNCTION_PROJECT,
-  SET_NEW_FUNCTION_REQUIREMENTS,
-  SET_NEW_FUNCTION_RESOURCES,
-  SET_NEW_FUNCTION_SECRETS,
-  SET_NEW_FUNCTION_SOURCE_CODE,
-  SET_NEW_FUNCTION_TAG,
-  SET_NEW_FUNCTION_TRACK_MODELS,
-  SET_NEW_FUNCTION_VOLUMES,
-  SET_NEW_FUNCTION_VOLUME_MOUNTS
-} from '../constants'
+import { FUNCTION_TYPE_JOB, PANEL_DEFAULT_ACCESS_KEY } from '../constants'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import functionsApi from '../api/functions-api'
+import { hideLoading, showLoading } from './redux.util'
+import mlrunNuclioApi from '../api/mlrun-nuclio-api'
+import yaml from 'js-yaml'
+import { showErrorNotification } from '../utils/notifications.util'
+import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
+import { generateCategories, generateHubCategories } from '../utils/generateTemplatesCategories'
 
 const initialState = {
   hubFunctions: [],
@@ -140,557 +83,387 @@ const initialState = {
   template: {}
 }
 
-const functionReducer = (state = initialState, { type, payload }) => {
-  switch (type) {
-    case CREATE_NEW_FUNCTION_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case CREATE_NEW_FUNCTION_FAILURE:
-      return {
-        ...state,
-        error: payload,
-        loading: false
-      }
-    case CREATE_NEW_FUNCTION_SUCCESS:
-      return {
-        ...state,
-        error: null,
-        loading: false
-      }
-    case DEPLOY_FUNCTION_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case DEPLOY_FUNCTION_FAILURE:
-      return {
-        ...state,
-        loading: false
-      }
-    case DEPLOY_FUNCTION_SUCCESS:
-      return {
-        ...state,
-        error: null,
-        loading: false
-      }
-    case FETCH_FUNCTIONS_BEGIN:
-      return {
-        ...state,
-        loading: !payload
-      }
-    case FETCH_FUNCTIONS_SUCCESS:
-      return {
-        ...state,
-        functions: payload,
-        loading: false
-      }
-    case FETCH_FUNCTIONS_FAILURE:
-      return {
-        ...state,
-        functions: [],
-        loading: false,
-        error: payload
-      }
-    case FETCH_FUNCTION_LOGS_BEGIN:
-      return {
-        ...state,
-        logs: {
-          ...state.logs,
-          loading: true
-        }
-      }
-    case FETCH_FUNCTION_LOGS_FAILURE:
-      return {
-        ...state,
-        logs: {
-          loading: false,
-          error: payload
-        }
-      }
-    case FETCH_FUNCTION_LOGS_SUCCESS:
-      return {
-        ...state,
-        logs: {
-          loading: false,
-          error: null
-        }
-      }
-    case FETCH_FUNCTION_NUCLIO_LOGS_BEGIN:
-      return {
-        ...state,
-        nuclioLogs: {
-          ...state.nuclioLogs,
-          loading: true
-        }
-      }
-    case FETCH_FUNCTION_NUCLIO_LOGS_FAILURE:
-      return {
-        ...state,
-        nuclioLogs: {
-          loading: false,
-          error: payload
-        }
-      }
-    case FETCH_FUNCTION_NUCLIO_LOGS_SUCCESS:
-      return {
-        ...state,
-        nuclioLogs: {
-          loading: false,
-          error: null
-        }
-      }
-    case FETCH_FUNCTION_TEMPLATE_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case FETCH_FUNCTION_TEMPLATE_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        template: payload
-      }
-    case FETCH_FUNCTION_TEMPLATE_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        template: {},
-        error: payload
-      }
-    case FETCH_FUNCTIONS_TEMPLATES_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        templates: [],
-        templatesCatalog: {},
-        error: payload
-      }
-    case FETCH_HUB_FUNCTION_TEMPLATE_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case FETCH_HUB_FUNCTION_TEMPLATE_SUCCESS:
-      return {
-        ...state,
-        loading: false
-      }
-    case FETCH_HUB_FUNCTION_TEMPLATE_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: payload
-      }
-    case FETCH_HUB_FUNCTIONS_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case FETCH_HUB_FUNCTIONS_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        hubFunctions: [],
-        hubFunctionsCatalog: [],
-        error: payload
-      }
-    case GET_FUNCTION_BEGIN:
-      return {
-        ...state,
-        funcLoading: true
-      }
-    case GET_FUNCTION_FAILURE:
-      return {
-        ...state,
-        funcLoading: false,
-        func: {},
-        error: payload
-      }
-    case GET_FUNCTION_SUCCESS:
-      return {
-        ...state,
-        funcLoading: false,
-        func: payload,
-        error: null
-      }
-    case REMOVE_FUNCTION:
-      return {
-        ...state,
-        func: {}
-      }
-    case REMOVE_FUNCTION_TEMPLATE:
-      return {
-        ...state,
-        template: {}
-      }
-    case REMOVE_FUNCTIONS_ERROR:
-      return {
-        ...state,
-        error: null
-      }
-    case REMOVE_NEW_FUNCTION:
-      return {
-        ...state,
-        newFunction: initialState.newFunction
-      }
-    case REMOVE_HUB_FUNCTIONS:
-      return {
-        ...state,
-        hubFunctions: [],
-        hubFunctionsCatalog: []
-      }
-    case RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            build: {
-              ...state.newFunction.spec.build,
-              base_image: '',
-              commands: '',
-              image: ''
-            }
-          }
-        }
-      }
-    case SET_FUNCTIONS_TEMPLATES:
-      return {
-        ...state,
-        templates: payload.templates,
-        templatesCatalog: payload.templatesCategories
-      }
-    case SET_HUB_FUNCTIONS:
-      return {
-        ...state,
-        loading: false,
-        hubFunctions: payload.hubFunctions,
-        hubFunctionsCatalog: payload.hubFunctionsCategories,
-        error: null
-      }
-    case SET_NEW_FUNCTION:
-      return {
-        ...state,
-        newFunction: payload
-      }
-    case SET_NEW_FUNCTION_BASE_IMAGE:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            build: {
-              ...state.newFunction.spec.build,
-              base_image: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_BUILD_IMAGE:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            build: {
-              ...state.newFunction.spec.build,
-              image: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_COMMANDS:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            build: {
-              ...state.newFunction.spec.build,
-              commands: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_REQUIREMENTS:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            build: {
-              ...state.newFunction.spec.build,
-              requirements: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_DEFAULT_CLASS:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            default_class: payload
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_DESCRIPTION:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            description: payload
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            disable_auto_mount: payload
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_ENV:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            env: payload
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_ERROR_STREAM:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            error_stream: payload
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_FORCE_BUILD:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          skip_deployed: payload
-        }
-      }
-    case SET_NEW_FUNCTION_GRAPH:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            graph: payload
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_HANDLER:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            default_handler: payload
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_IMAGE:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            image: payload
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_KIND:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          kind: payload
-        }
-      }
-    case SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          metadata: {
-            ...state.newFunction.metadata,
-            credentials: {
-              ...state.newFunction.metadata.credentials,
-              access_key: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_NAME:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          metadata: {
-            ...state.newFunction.metadata,
-            name: payload
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_PARAMETERS:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            parameters: payload
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_PRIORITY_CLASS_NAME:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            priority_class_name: payload
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_PROJECT:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          metadata: {
-            ...state.newFunction.metadata,
-            project: payload
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_PREEMTION_MODE:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            preemption_mode: payload
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_RESOURCES:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            resources: {
-              ...state.newFunction.spec.resources,
-              ...payload
-            }
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_SECRETS:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            secret_sources: payload
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_SOURCE_CODE:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            build: {
-              ...state.newFunction.spec.build,
-              functionSourceCode: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_TAG:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          metadata: {
-            ...state.newFunction.metadata,
-            tag: payload
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_TRACK_MODELS:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            track_models: payload
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_VOLUME_MOUNTS:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            volume_mounts: payload
-          }
-        }
-      }
-    case SET_NEW_FUNCTION_VOLUMES:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          spec: {
-            ...state.newFunction.spec,
-            volumes: payload
-          }
-        }
-      }
-    default:
-      return state
-  }
-}
+export const createNewFunction = createAsyncThunk(
+  'createNewFunction',
+  ({ project, data }, thunkAPI) => {
+    return functionsApi.createNewFunction(project, data).catch(error => {
+      const message =
+        error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+          ? 'You do not have permission to create a new function'
+          : error.message
 
-export default functionReducer
+      thunkAPI.rejectWithValue(message)
+    })
+  }
+)
+export const deleteFunction = createAsyncThunk(
+  'deleteFunction',
+  ({ funcName, project }, thunkAPI) => {
+    return functionsApi
+      .deleteSelectedFunction(funcName, project)
+      .catch(error => thunkAPI.rejectWithValue(error))
+  }
+)
+export const deployFunction = createAsyncThunk('deployFunction', ({ data }, thunkAPI) => {
+  return functionsApi.deployFunction(data).catch(error => thunkAPI.rejectWithValue(error))
+})
+export const fetchFunctionLogs = createAsyncThunk(
+  'fetchFunctionLogs',
+  ({ project, name, tag }, thunkAPI) => {
+    return functionsApi
+      .getFunctionLogs(project, name, tag)
+      .catch(error => thunkAPI.rejectWithValue(error))
+  }
+)
+export const fetchFunctionNuclioLogs = createAsyncThunk(
+  'fetchFunctionNuclioLogs',
+  ({ project, name, tag }, thunkAPI) => {
+    const config = {
+      params: {}
+    }
+
+    if (tag) {
+      config.params.tag = tag
+    }
+
+    return mlrunNuclioApi
+      .getDeployLogs(project, name, config)
+      .catch(error => thunkAPI.rejectWithValue(error))
+  }
+)
+export const fetchFunctionTemplate = createAsyncThunk(
+  'fetchFunctionTemplate',
+  ({ path }, thunkAPI) => {
+    return functionsApi
+      .getFunctionTemplate(path)
+      .then(response => {
+        let parsedData = yaml.load(response.data)
+
+        return {
+          name: parsedData.metadata.name,
+          functions: parsedData.spec.entry_point ? [] : [parsedData]
+        }
+      })
+      .catch(error => {
+        showErrorNotification(thunkAPI.dispatch, error, "Function's template failed to load")
+        thunkAPI.rejectWithValue(error)
+      })
+  }
+)
+export const fetchFunctions = createAsyncThunk(
+  'fetchFunctions',
+  ({ project, filters, config, setRequestErrorMessage = () => {} }, thunkAPI) => {
+    const setRequestErrorMessageLocal = config?.ui?.setRequestErrorMessage || setRequestErrorMessage
+
+    setRequestErrorMessageLocal('')
+
+    return functionsApi
+      .getFunctions(project, filters, config)
+      .then(({ data }) => {
+        return data
+      })
+      .catch(error => {
+        largeResponseCatchHandler(
+          error,
+          'Failed to fetch functions',
+          thunkAPI.dispatch,
+          setRequestErrorMessageLocal
+        )
+        thunkAPI.rejectWithValue(error.message)
+      })
+  }
+)
+export const fetchFunctionsTemplates = createAsyncThunk(
+  'fetchFunctionsTemplates',
+  (_, thunkAPI) => {
+    return functionsApi
+      .getFunctionTemplatesCatalog()
+      .then(({ data: functionTemplates }) => {
+        return generateCategories(functionTemplates)
+      })
+      .catch(error => thunkAPI.rejectWithValue(error))
+  }
+)
+export const fetchHubFunction = createAsyncThunk(
+  'fetchHubFunction',
+  ({ hubFunctionName }, thunkAPI) => {
+    return functionsApi
+      .getHubFunction(hubFunctionName)
+      .then(response => {
+        return response.data
+      })
+      .catch(error => {
+        showErrorNotification(thunkAPI.dispatch, error, 'The function failed to load')
+        thunkAPI.rejectWithValue(error)
+      })
+  }
+)
+export const fetchHubFunctions = createAsyncThunk(
+  'fetchHubFunctions',
+  ({ allowedHubFunctions, setRequestErrorMessage = () => {} }, thunkAPI) => {
+    setRequestErrorMessage('')
+
+    return functionsApi
+      .getHubFunctions()
+      .then(({ data: functionTemplates }) => {
+        return generateHubCategories(functionTemplates.catalog, allowedHubFunctions)
+      })
+      .catch(error => {
+        largeResponseCatchHandler(
+          error,
+          'Failed to fetch functions',
+          thunkAPI.dispatch,
+          setRequestErrorMessage
+        )
+        thunkAPI.rejectWithValue(error)
+      })
+  }
+)
+export const fetchFunction = createAsyncThunk(
+  'fetchFunction',
+  ({ project, name, hash, tag }, thunkAPI) => {
+    return functionsApi
+      .getFunction(project, name, hash, tag)
+      .then(result => {
+        return result.data.func
+      })
+      .catch(error => thunkAPI.rejectWithValue(error))
+  }
+)
+
+const functionsSlice = createSlice({
+  name: 'functionsStore',
+  initialState,
+  reducers: {
+    removeHubFunctions(state) {
+      state.hubFunctions = []
+      state.hubFunctionsCatalog = []
+    },
+    removeFunctionsError(state) {
+      state.error = null
+    },
+    removeNewFunction(state) {
+      state.newFunction = initialState.newFunction
+    },
+    resetNewFunctionCodeCustomImage(state) {
+      state.newFunction.spec.build = {
+        ...state.newFunction.spec.build,
+        base_image: '',
+        commands: '',
+        image: ''
+      }
+    },
+    setNewFunction(state, action) {
+      state.newFunction = action.payload
+    },
+    setNewFunctionBaseImage(state, action) {
+      state.newFunction.spec.build.base_image = action.payload
+    },
+    setNewFunctionBuildImage(state, action) {
+      state.newFunction.spec.build.image = action.payload
+    },
+    setNewFunctionCommands(state, action) {
+      state.newFunction.spec.build.commands = action.payload
+    },
+    setNewFunctionRequirements(state, action) {
+      state.newFunction.spec.build.requirements = action.payload
+    },
+    setNewFunctionDefaultClass(state, action) {
+      state.newFunction.spec.default_class = action.payload
+    },
+    setNewFunctionDescription(state, action) {
+      state.newFunction.spec.description = action.payload
+    },
+    setNewFunctionDisableAutoMount(state, action) {
+      state.newFunction.spec.disable_auto_mount = action.payload
+    },
+    setNewFunctionEnv(state, action) {
+      state.newFunction.spec.env = action.payload
+    },
+    setNewFunctionErrorStream(state, action) {
+      state.newFunction.spec.error_stream = action.payload
+    },
+    setNewFunctionForceBuild(state, action) {
+      state.newFunction.skip_deployed = action.payload
+    },
+    setNewFunctionGraph(state, action) {
+      state.newFunction.spec.graph = action.payload
+    },
+    setNewFunctionHandler(state, action) {
+      state.newFunction.spec.default_handler = action.payload
+    },
+    setNewFunctionImage(state, action) {
+      state.newFunction.spec.image = action.payload
+    },
+    setNewFunctionKind(state, action) {
+      state.newFunction.kind = action.payload
+    },
+    setNewFunctionCredentialsAccessKey(state, action) {
+      state.newFunction.metadata.credentials.access_key = action.payload
+    },
+    setNewFunctionName(state, action) {
+      state.newFunction.metadata.name = action.payload
+    },
+    setNewFunctionParameters(state, action) {
+      state.newFunction.spec.parameters = action.payload
+    },
+    setNewFunctionPriorityClassName(state, action) {
+      state.newFunction.spec.priority_class_name = action.payload
+    },
+    setNewFunctionPreemtionMode(state, action) {
+      state.newFunction.spec.preemption_mode = action.payload
+    },
+    setNewFunctionProject(state, action) {
+      state.newFunction.metadata.project = action.payload
+    },
+    setNewFunctionResources(state, action) {
+      state.newFunction.spec.resources = action.payload
+    },
+    setNewFunctionSecretSources(state, action) {
+      state.newFunction.spec.secret_sources = action.payload
+    },
+    setNewFunctionSourceCode(state, action) {
+      state.newFunction.spec.build.functionSourceCode = action.payload
+    },
+    setNewFunctionTag(state, action) {
+      state.newFunction.metadata.tag = action.payload
+    },
+    setNewFunctionTrackModels(state, action) {
+      state.newFunction.spec.track_models = action.payload
+    },
+    setNewFunctionVolumeMounts(state, action) {
+      state.newFunction.spec.volume_mounts = action.payload
+    },
+    setNewFunctionVolumes(state, action) {
+      state.newFunction.spec.volumes = action.payload
+    }
+  },
+  extraReducers: builder => {
+    builder.addCase(createNewFunction.pending, showLoading)
+    builder.addCase(createNewFunction.fulfilled, state => {
+      state.loading = false
+      state.error = null
+    })
+    builder.addCase(createNewFunction.rejected, (state, action) => {
+      state.error = action.payload
+      state.loading = false
+    })
+    builder.addCase(deployFunction.pending, showLoading)
+    builder.addCase(deployFunction.fulfilled, state => {
+      state.loading = false
+      state.error = null
+    })
+    builder.addCase(deployFunction.rejected, hideLoading)
+    builder.addCase(fetchFunctionLogs.pending, state => {
+      state.logs.loading = true
+    })
+    builder.addCase(fetchFunctionLogs.fulfilled, state => {
+      state.logs.loading = false
+      state.logs.error = null
+    })
+    builder.addCase(fetchFunctionLogs.rejected, (state, action) => {
+      state.logs.error = action.payload
+      state.logs.loading = false
+    })
+    builder.addCase(fetchFunctionNuclioLogs.pending, state => {
+      state.nuclioLogs.loading = true
+    })
+    builder.addCase(fetchFunctionNuclioLogs.fulfilled, state => {
+      state.nuclioLogs.loading = false
+      state.nuclioLogs.error = null
+    })
+    builder.addCase(fetchFunctionNuclioLogs.rejected, (state, action) => {
+      state.nuclioLogs.error = action.payload
+      state.nuclioLogs.loading = false
+    })
+    builder.addCase(fetchFunctionTemplate.pending, showLoading)
+    builder.addCase(fetchFunctionTemplate.fulfilled, (state, action) => {
+      state.loading = false
+      state.template = action.payload
+    })
+    builder.addCase(fetchFunctionTemplate.rejected, (state, action) => {
+      state.error = action.payload
+      state.loading = false
+      state.template = {}
+    })
+    builder.addCase(fetchFunctions.pending, showLoading)
+    builder.addCase(fetchFunctions.fulfilled, (state, action) => {
+      state.loading = false
+      state.functions = action.payload.funcs
+    })
+    builder.addCase(fetchFunctions.rejected, (state, action) => {
+      state.error = action.payload
+      state.loading = false
+      state.functions = []
+    })
+    builder.addCase(fetchFunctionsTemplates.rejected, (state, action) => {
+      state.error = action.payload
+      state.loading = false
+      state.templates = []
+      state.templatesCatalog = {}
+    })
+    builder.addCase(fetchHubFunction.pending, showLoading)
+    builder.addCase(fetchHubFunction.fulfilled, hideLoading)
+    builder.addCase(fetchHubFunction.rejected, (state, action) => {
+      state.error = action.payload
+      state.loading = false
+    })
+    builder.addCase(fetchHubFunctions.pending, showLoading)
+    builder.addCase(fetchHubFunctions.rejected, (state, action) => {
+      state.error = action.payload
+      state.loading = false
+      state.hubFunctions = []
+      state.hubFunctionsCatalog = []
+    })
+    builder.addCase(fetchFunction.pending, state => {
+      state.funcLoading = true
+    })
+    builder.addCase(fetchFunction.fulfilled, (state, action) => {
+      state.funcLoading = false
+      state.func = action.payload.funcs
+      state.error = null
+    })
+    builder.addCase(fetchFunction.rejected, (state, action) => {
+      state.error = action.payload
+      state.funcLoading = false
+      state.func = {}
+    })
+  }
+})
+
+export const {
+  removeHubFunctions,
+  removeFunctionsError,
+  removeNewFunction,
+  resetNewFunctionCodeCustomImage,
+  setNewFunction,
+  setNewFunctionBaseImage,
+  setNewFunctionBuildImage,
+  setNewFunctionCommands,
+  setNewFunctionRequirements,
+  setNewFunctionDefaultClass,
+  setNewFunctionDescription,
+  setNewFunctionDisableAutoMount,
+  setNewFunctionEnv,
+  setNewFunctionErrorStream,
+  setNewFunctionForceBuild,
+  setNewFunctionGraph,
+  setNewFunctionHandler,
+  setNewFunctionImage,
+  setNewFunctionKind,
+  setNewFunctionCredentialsAccessKey,
+  setNewFunctionName,
+  setNewFunctionParameters,
+  setNewFunctionPriorityClassName,
+  setNewFunctionPreemtionMode,
+  setNewFunctionProject,
+  setNewFunctionResources,
+  setNewFunctionSecretSources,
+  setNewFunctionSourceCode,
+  setNewFunctionTag,
+  setNewFunctionTrackModels,
+  setNewFunctionVolumeMounts,
+  setNewFunctionVolumes
+} = functionsSlice.actions
+
+export default functionsSlice.reducer

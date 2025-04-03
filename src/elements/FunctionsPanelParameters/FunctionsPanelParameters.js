@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import FunctionsPanelParametersView from './FunctionsPanelParametersView'
@@ -31,18 +31,20 @@ import {
   setFunctionParameters,
   validationInitialState
 } from './functionsPanelParameters.util'
-import functionsActions from '../../actions/functions'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { setNewFunctionParameters } from '../../reducers/functionReducer'
 
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
-const FunctionsPanelParameters = ({ defaultData, functionsStore, setNewFunctionParameters }) => {
+const FunctionsPanelParameters = ({ defaultData }) => {
   const [showAddNewParameterRow, setShowAddNewParameterRow] = useState(false)
   const [newParameter, setNewParameter] = useState(newParameterInitialState)
   const [selectedParameter, setSelectedParameter] = useState(null)
   const [parameters, setParameters] = useState([])
   const [validation, setValidation] = useState(validationInitialState)
+  const dispatch = useDispatch()
+  const functionsStore = useSelector(store => store.functionsStore)
 
   useEffect(() => {
     if (!isEveryObjectValueEmpty(defaultData.parameters ?? {})) {
@@ -77,7 +79,7 @@ const FunctionsPanelParameters = ({ defaultData, functionsStore, setNewFunctionP
     setFunctionParameters(
       newParameter,
       newParameter.name,
-      setNewFunctionParameters,
+      dispatch,
       functionsStore.newFunction.spec.parameters
     )
     setParameters(state => [
@@ -116,12 +118,7 @@ const FunctionsPanelParameters = ({ defaultData, functionsStore, setNewFunctionP
         isEditValueValid: selectedParameter.data.value.length > 0
       }))
     }
-    setFunctionParameters(
-      selectedParameter.data,
-      key,
-      setNewFunctionParameters,
-      generatedParameters
-    )
+    setFunctionParameters(selectedParameter.data, key, dispatch, generatedParameters)
     setParameters(state =>
       state.map(parameter => {
         if (parameter.data.name === selectedParameter.data.name) {
@@ -149,9 +146,9 @@ const FunctionsPanelParameters = ({ defaultData, functionsStore, setNewFunctionP
       setParameters(state =>
         state.filter(stateParameter => stateParameter.data.name !== parameter.data.name)
       )
-      setNewFunctionParameters(generatedParameters)
+      dispatch(setNewFunctionParameters(generatedParameters))
     },
-    [functionsStore.newFunction.spec.parameters, setNewFunctionParameters]
+    [dispatch, functionsStore.newFunction.spec.parameters]
   )
 
   const generateActionsMenu = useCallback(
@@ -200,6 +197,4 @@ FunctionsPanelParameters.propTypes = {
   defaultData: PropTypes.shape({}).isRequired
 }
 
-export default connect(functionsStore => ({ ...functionsStore }), {
-  ...functionsActions
-})(FunctionsPanelParameters)
+export default FunctionsPanelParameters

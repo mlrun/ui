@@ -19,29 +19,26 @@ such restriction.
 */
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { isNil } from 'lodash'
 
 import FunctionsPanelTopologyView from './FunctionsPanelTopologyView'
 
-import functionsActions from '../../actions/functions'
+import { setNewFunctionGraph, setNewFunctionTrackModels } from '../../reducers/functionReducer'
 
-const FunctionsPanelTopology = ({
-  defaultData,
-  functionsStore,
-  setNewFunctionGraph,
-  setNewFunctionTrackModels
-}) => {
+const FunctionsPanelTopology = ({ defaultData }) => {
   const [data, setData] = useState({
     class_name: defaultData.graph?.class_name ?? 'none',
     track_models: defaultData.track_models ? 'trackModels' : ''
   })
+  const dispatch = useDispatch()
+  const functionsStore = useSelector(store => store.functionsStore)
 
   useEffect(() => {
     if (isNil(defaultData)) {
-      setNewFunctionGraph({ kind: 'router' })
+      dispatch(setNewFunctionGraph({ kind: 'router' }))
     }
-  }, [defaultData, setNewFunctionGraph])
+  }, [defaultData, dispatch])
 
   const selectRouterType = type => {
     const newFunctionGraph = { ...functionsStore.newFunction.spec.graph }
@@ -56,7 +53,7 @@ const FunctionsPanelTopology = ({
       ...state,
       class_name: type
     }))
-    setNewFunctionGraph(newFunctionGraph)
+    dispatch(setNewFunctionGraph(newFunctionGraph))
   }
 
   const handleTrackModels = id => {
@@ -64,7 +61,7 @@ const FunctionsPanelTopology = ({
       ...state,
       track_models: id === state.track_models ? '' : id
     }))
-    setNewFunctionTrackModels(id !== data.track_models)
+    dispatch(setNewFunctionTrackModels(id !== data.track_models))
   }
 
   return (
@@ -81,6 +78,4 @@ FunctionsPanelTopology.propTypes = {
   defaultData: PropTypes.shape({}).isRequired
 }
 
-export default connect(functionsStore => ({ ...functionsStore }), {
-  ...functionsActions
-})(FunctionsPanelTopology)
+export default FunctionsPanelTopology

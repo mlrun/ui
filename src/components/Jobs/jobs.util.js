@@ -211,13 +211,15 @@ export const getJobFunctionData = async (job, dispatch, fetchFunctionTemplate) =
   if (functionPath.startsWith('hub://') && fetchFunctionTemplate) {
     functionName = functionPath.replace('hub://', '')
 
-    promise = fetchFunctionTemplate(`${functionName}/function.yaml`).then(result => {
-      const funcData = result?.functions[0]
+    promise = dispatch(fetchFunctionTemplate({ path: `${functionName}/function.yaml` }))
+      .unwrap()
+      .then(result => {
+        const funcData = result?.functions[0]
 
-      if (funcData) {
-        return funcData
-      }
-    })
+        if (funcData) {
+          return funcData
+        }
+      })
   } else {
     ;[functionProject = '', functionNameWithHash = ''] = functionPath?.split('/') ?? []
     functionName = functionNameWithHash.replace(/@.*$/g, '')

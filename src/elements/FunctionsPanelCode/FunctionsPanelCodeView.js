@@ -20,6 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import { isEqual } from 'lodash'
+import { useDispatch } from 'react-redux'
 
 import CheckBox from '../../common/CheckBox/CheckBox'
 import EditorModal from '../../common/EditorModal/EditorModal'
@@ -40,7 +41,15 @@ import {
 } from './functionsPanelCode.util'
 import { FUNCTION_TYPE_SERVING, PANEL_EDIT_MODE } from '../../constants'
 import { LABEL_BUTTON } from 'igz-controls/constants'
-
+import {
+  setNewFunctionBaseImage,
+  setNewFunctionBuildImage,
+  setNewFunctionCommands,
+  setNewFunctionForceBuild,
+  setNewFunctionImage,
+  setNewFunctionRequirements,
+  setNewFunctionSourceCode
+} from '../../reducers/functionReducer'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 
 import './functionsPanelCode.scss'
@@ -56,16 +65,11 @@ const FunctionsPanelCodeView = ({
   mode,
   setData,
   setEditCode,
-  setNewFunctionBaseImage,
-  setNewFunctionBuildImage,
-  setNewFunctionRequirements,
-  setNewFunctionCommands,
-  setNewFunctionForceBuild,
-  setNewFunctionImage,
-  setNewFunctionSourceCode,
   setValidation,
   validation
 }) => {
+  const dispatch = useDispatch()
+
   return (
     <div className="functions-panel__item new-item-side-panel__item code">
       <PanelSection title="Code">
@@ -137,7 +141,7 @@ const FunctionsPanelCodeView = ({
                 <CheckBox
                   item={{ id: 'enabled', label: 'Force build' }}
                   onChange={() =>
-                    setNewFunctionForceBuild(!functionsStore.newFunction.skip_deployed)
+                    dispatch(setNewFunctionForceBuild(!functionsStore.newFunction.skip_deployed))
                   }
                   selectedId={functionsStore.newFunction.skip_deployed ? 'enabled' : ''}
                 />
@@ -161,7 +165,7 @@ const FunctionsPanelCodeView = ({
                   label="Image name"
                   onBlur={event => {
                     if (event.target.value !== functionsStore.newFunction.spec.image) {
-                      setNewFunctionImage(data.image)
+                      dispatch(setNewFunctionImage(data.image))
                     }
                   }}
                   onChange={image => setData(state => ({ ...state, image }))}
@@ -184,7 +188,7 @@ const FunctionsPanelCodeView = ({
                   label="Resulting Image"
                   onBlur={event => {
                     if (event.target.value !== functionsStore.newFunction.spec.build.image) {
-                      setNewFunctionBuildImage(data.build_image)
+                      dispatch(setNewFunctionBuildImage(data.build_image))
                     }
                   }}
                   onChange={build_image => setData(state => ({ ...state, build_image }))}
@@ -207,7 +211,7 @@ const FunctionsPanelCodeView = ({
                   label="Base image"
                   onBlur={event => {
                     if (event.target.value !== functionsStore.newFunction.spec.build.base_image) {
-                      setNewFunctionBaseImage(data.base_image)
+                      dispatch(setNewFunctionBaseImage(data.base_image))
                     }
                   }}
                   onChange={base_image => setData(state => ({ ...state, base_image }))}
@@ -246,7 +250,7 @@ const FunctionsPanelCodeView = ({
                   functionsStore.newFunction.spec.build.requirements
                 )
               ) {
-                setNewFunctionRequirements(splitTrim(data.requirements, ','))
+                dispatch(setNewFunctionRequirements(splitTrim(data.requirements, ',')))
               }
             }}
             setInvalid={value =>
@@ -276,7 +280,7 @@ const FunctionsPanelCodeView = ({
                   functionsStore.newFunction.spec.build.commands
                 )
               ) {
-                setNewFunctionCommands(trimSplit(data.commands, '\n'))
+                dispatch(setNewFunctionCommands(trimSplit(data.commands, '\n')))
               }
             }}
             setInvalid={value =>
@@ -295,7 +299,7 @@ const FunctionsPanelCodeView = ({
             defaultData={functionsStore.newFunction.spec.build.functionSourceCode}
             handleSaveCode={value => {
               setEditCode(false)
-              setNewFunctionSourceCode(value)
+              dispatch(setNewFunctionSourceCode(value))
             }}
           />
         )}
@@ -315,13 +319,6 @@ FunctionsPanelCodeView.propTypes = {
   mode: PropTypes.string.isRequired,
   setData: PropTypes.func.isRequired,
   setEditCode: PropTypes.func.isRequired,
-  setNewFunctionBaseImage: PropTypes.func.isRequired,
-  setNewFunctionBuildImage: PropTypes.func.isRequired,
-  setNewFunctionCommands: PropTypes.func.isRequired,
-  setNewFunctionForceBuild: PropTypes.func.isRequired,
-  setNewFunctionImage: PropTypes.func.isRequired,
-  setNewFunctionRequirements: PropTypes.func.isRequired,
-  setNewFunctionSourceCode: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({}).isRequired
 }

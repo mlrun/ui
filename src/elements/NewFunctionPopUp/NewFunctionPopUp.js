@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -27,25 +27,24 @@ import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
 import { Button, PopUpDialog } from 'igz-controls/components'
 
-import functionsActions from '../../actions/functions'
 import { runtimeOptions } from './newFuctionPopUp.util'
 import { useMode } from '../../hooks/mode.hook'
 import { useOpenPanel } from '../../hooks/openPanel.hook'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { FUNCTION_TYPE_JOB } from '../../constants'
-
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import {
+  setNewFunctionKind,
+  setNewFunctionName,
+  setNewFunctionTag
+} from '../../reducers/functionReducer'
 import './newFunctionPopUp.scss'
-import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
 
 const NewFunctionPopUp = ({
   action = null,
   closePopUp = null,
-  functionsStore,
   isCustomPosition = false,
   isOpened = false,
-  setNewFunctionKind,
-  setNewFunctionName,
-  setNewFunctionTag,
   setFunctionsPanelIsOpen
 }) => {
   const [data, setData] = useState({
@@ -63,6 +62,8 @@ const NewFunctionPopUp = ({
   const newFunctionBtn = useRef(null)
   const location = useLocation()
   const runtime = new URLSearchParams(location.search).get('runtime') // TODO: Delete after new wizard implemented
+  const dispatch = useDispatch()
+  const functionsStore = useSelector(store => store.functionsStore)
 
   const popUpClassNames = classnames(
     'new-function__pop-up',
@@ -88,22 +89,22 @@ const NewFunctionPopUp = ({
 
   const handleNameOnBlur = () => {
     if (data.name !== functionsStore.newFunction.metadata.name) {
-      setNewFunctionName(data.name)
+      dispatch(setNewFunctionName(data.name))
     }
   }
 
   const handleTagOnBlur = () => {
     if (data.tag !== functionsStore.newFunction.metadata.tag) {
-      setNewFunctionTag(data.tag)
+      dispatch(setNewFunctionTag(data.tag))
     }
   }
 
   const selectRuntime = useCallback(
     runtime => {
       setData(state => ({ ...state, runtime }))
-      setNewFunctionKind(runtime)
+      dispatch(setNewFunctionKind(runtime))
     },
-    [setNewFunctionKind]
+    [dispatch]
   )
 
   useEffect(() => {
@@ -218,9 +219,4 @@ NewFunctionPopUp.propTypes = {
   setFunctionsPanelIsOpen: PropTypes.func.isRequired
 }
 
-export default connect(
-  functionsStore => ({
-    ...functionsStore
-  }),
-  { ...functionsActions }
-)(NewFunctionPopUp)
+export default NewFunctionPopUp

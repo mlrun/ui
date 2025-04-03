@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
@@ -52,7 +52,6 @@ import {
   PAST_WEEK_DATE_OPTION
 } from '../../utils/datePicker.util'
 import createFunctionsRowData from '../../utils/createFunctionsRowData'
-import functionsActions from '../../actions/functions'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { transformSearchParams } from '../../utils/filter.util'
 import { isBackgroundTaskRunning } from '../../utils/poll.util'
@@ -67,17 +66,16 @@ import { toggleYaml } from '../../reducers/appReducer'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { useMode } from '../../hooks/mode.hook'
 import { usePagination } from '../../hooks/usePagination.hook'
-
-const Functions = ({
+import {
   deleteFunction,
   deployFunction,
   fetchFunction,
   fetchFunctions,
-  functionsStore,
-  isAllVersions = false,
   removeFunctionsError,
   removeNewFunction
-}) => {
+} from '../../reducers/functionReducer'
+
+const Functions = ({ isAllVersions = false }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [functions, setFunctions] = useState(null)
   const [functionVersions, setFunctionVersions] = useState(null)
@@ -102,6 +100,7 @@ const Functions = ({
   const location = useLocation()
   const dispatch = useDispatch()
   const lastCheckedFunctionIdRef = useRef(null)
+  const functionsStore = useSelector(store => store.functionsStore)
 
   const functionsFiltersConfig = useMemo(() => {
     return {
@@ -169,13 +168,20 @@ const Functions = ({
 
       lastCheckedFunctionIdRef.current = null
 
-      return fetchFunctions(params.projectName, filters, {
-        ui: {
-          controller: abortControllerRef.current,
-          setRequestErrorMessage
-        },
-        params: requestParams
-      })
+      return dispatch(
+        fetchFunctions({
+          project: params.projectName,
+          filters,
+          config: {
+            ui: {
+              controller: abortControllerRef.current,
+              setRequestErrorMessage
+            },
+            params: requestParams
+          }
+        })
+      )
+        .unwrap()
         .then(response => {
           if (response?.funcs) {
             if (isAllVersions) {
@@ -223,7 +229,6 @@ const Functions = ({
     },
     [
       dispatch,
-      fetchFunctions,
       isAllVersions,
       params.funcName,
       params.projectName,
@@ -243,55 +248,49 @@ const Functions = ({
 
   const removeFunction = useCallback(
     func => {
-      deleteFunction(func.name, params.projectName).then(response => {
-        if (isBackgroundTaskRunning(response)) {
-          dispatch(
-            setNotification({
-              status: 200,
-              id: Math.random(),
-              message: 'Function deletion in progress'
-            })
-          )
-
-          setDeletingFunctions(prevDeletingFunctions => {
-            const newDeletingFunctions = {
-              ...prevDeletingFunctions,
-              [response.data.metadata.name]: {
-                name: func.name
-              }
-            }
-
-            pollDeletingFunctions(
-              params.projectName,
-              terminatePollRef,
-              newDeletingFunctions,
-              () => fetchData(functionsFilters),
-              dispatch
+      dispatch(deleteFunction({ funcName: func.name, project: params.projectName }))
+        .unwrap()
+        .then(response => {
+          if (isBackgroundTaskRunning(response)) {
+            dispatch(
+              setNotification({
+                status: 200,
+                id: Math.random(),
+                message: 'Function deletion in progress'
+              })
             )
 
-            return newDeletingFunctions
-          })
+            setDeletingFunctions(prevDeletingFunctions => {
+              const newDeletingFunctions = {
+                ...prevDeletingFunctions,
+                [response.data.metadata.name]: {
+                  name: func.name
+                }
+              }
 
-          if (!isEmpty(selectedFunction)) {
-            setSelectedFunction({})
-            navigate(`/projects/${params.projectName}/functions${window.location.search}`, {
-              replace: true
+              pollDeletingFunctions(
+                params.projectName,
+                terminatePollRef,
+                newDeletingFunctions,
+                () => fetchData(functionsFilters),
+                dispatch
+              )
+
+              return newDeletingFunctions
             })
+
+            if (!isEmpty(selectedFunction)) {
+              setSelectedFunction({})
+              navigate(`/projects/${params.projectName}/functions${window.location.search}`, {
+                replace: true
+              })
+            }
           }
-        }
-      })
+        })
 
       setConfirmData(null)
     },
-    [
-      deleteFunction,
-      dispatch,
-      fetchData,
-      functionsFilters,
-      navigate,
-      params.projectName,
-      selectedFunction
-    ]
+    [dispatch, fetchData, functionsFilters, navigate, params.projectName, selectedFunction]
   )
 
   const toggleConvertedYaml = useCallback(
@@ -357,7 +356,8 @@ const Functions = ({
         }
       }
 
-      deployFunction(data)
+      dispatch(deployFunction({ data }))
+        .unwrap()
         .then(result => {
           const data = result.data.data
           const postData = {
@@ -415,7 +415,7 @@ const Functions = ({
           })
         })
     },
-    [deployFunction, dispatch, functionsFilters, refreshFunctions]
+    [dispatch, functionsFilters, refreshFunctions]
   )
 
   const showAllVersions = useCallback(
@@ -471,7 +471,6 @@ const Functions = ({
       buildAndRunFunc,
       deletingFunctions,
       selectedFunction,
-      fetchFunction,
       isAllVersions,
       showAllVersions
     ]
@@ -516,17 +515,17 @@ const Functions = ({
   const closePanel = () => {
     setFunctionsPanelIsOpen(false)
     setEditableItem(null)
-    removeNewFunction()
+    dispatch(removeNewFunction())
 
     if (functionsStore.error) {
-      removeFunctionsError()
+      dispatch(removeFunctionsError())
     }
   }
 
   const createFunctionSuccess = isEditMode => {
     setEditableItem(null)
     setFunctionsPanelIsOpen(false)
-    removeNewFunction()
+    dispatch(removeNewFunction())
 
     return fetchData().then(() => {
       dispatch(
@@ -547,7 +546,7 @@ const Functions = ({
 
     setFunctionsPanelIsOpen(false)
     setEditableItem(null)
-    removeNewFunction()
+    dispatch(removeNewFunction())
 
     return fetchData(functionsFilters).then(functions => {
       if (functions.length) {
@@ -574,7 +573,7 @@ const Functions = ({
     const { name, tag } = functionsStore.newFunction.metadata
 
     setFunctionsPanelIsOpen(false)
-    removeNewFunction()
+    dispatch(removeNewFunction())
 
     return fetchData().then(functions => {
       if (functions) {
@@ -665,7 +664,6 @@ const Functions = ({
     checkForSelectedFunction(
       isAllVersions ? paginatedFunctionVersions : paginatedFunctions,
       isAllVersions ? functionVersions : functions,
-      fetchFunction,
       params.id,
       params.funcName,
       navigate,
@@ -680,7 +678,6 @@ const Functions = ({
     )
   }, [
     dispatch,
-    fetchFunction,
     functionVersions,
     functions,
     isAllVersions,
@@ -741,6 +738,4 @@ const Functions = ({
   )
 }
 
-export default connect(({ functionsStore }) => ({ functionsStore }), {
-  ...functionsActions
-})(React.memo(Functions))
+export default React.memo(Functions)

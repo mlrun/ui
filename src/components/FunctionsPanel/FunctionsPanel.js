@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import { chain, cloneDeep } from 'lodash'
@@ -29,7 +29,14 @@ import arrayMutators from 'final-form-arrays'
 
 import FunctionsPanelView from './FunctionsPanelView'
 
-import functionsActions from '../../actions/functions'
+import {
+  createNewFunction,
+  deployFunction,
+  fetchFunction,
+  removeFunctionsError,
+  setNewFunction,
+  setNewFunctionProject
+} from '../../reducers/functionReducer'
 import { FUNCTION_PANEL_MODE } from '../../types'
 
 import {
@@ -38,25 +45,21 @@ import {
 } from '../../elements/FunctionsPanelCode/functionsPanelCode.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { convertChipsData, parseChipsData } from '../../utils/convertChipsData'
-import { FUNCTION_TYPE_SERVING, PANEL_CREATE_MODE, PANEL_DEFAULT_ACCESS_KEY, PANEL_EDIT_MODE } from '../../constants'
+import {
+  FUNCTION_TYPE_SERVING,
+  PANEL_CREATE_MODE,
+  PANEL_DEFAULT_ACCESS_KEY,
+  PANEL_EDIT_MODE
+} from '../../constants'
 import { LABEL_BUTTON, NOTFOUND_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-controls/constants'
 
 const FunctionsPanel = ({
-  appStore,
   closePanel,
   createFunctionSuccess,
-  createNewFunction,
   defaultData = null,
-  deployFunction,
-  fetchFunction,
-  functionsStore,
   handleDeployFunctionFailure,
   handleDeployFunctionSuccess,
-  mode,
-  removeFunctionsError,
-  setNewFunction,
-  setNewFunctionCredentialsAccessKey,
-  setNewFunctionProject
+  mode
 }) => {
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const [confirmData, setConfirmData] = useState(null)
@@ -96,6 +99,9 @@ const FunctionsPanel = ({
       onSubmit: () => {}
     })
   )
+  const dispatch = useDispatch()
+  const functionsStore = useSelector(store => store.functionsStore)
+  const appStore = useSelector(store => store.appStore)
 
   useEffect(() => {
     if (defaultData) {
@@ -156,15 +162,15 @@ const FunctionsPanel = ({
         }
       }
 
-      setNewFunction(data)
+      dispatch(setNewFunction(data))
     }
-  }, [defaultData, setNewFunction])
+  }, [defaultData, dispatch])
 
   useEffect(() => {
     if (!functionsStore.newFunction.metadata.project) {
-      setNewFunctionProject(params.projectName)
+      dispatch(setNewFunctionProject(params.projectName))
     }
-  }, [functionsStore.newFunction.metadata.project, params.projectName, setNewFunctionProject])
+  }, [dispatch, functionsStore.newFunction.metadata.project, params.projectName])
 
   const createFunction = deploy => {
     const functionPayload = cloneDeep(functionsStore.newFunction)
@@ -172,46 +178,48 @@ const FunctionsPanel = ({
 
     functionPayload.labels = convertChipsData(formRef.current.getFieldState('labels')?.value)
 
-    createNewFunction(params.projectName, functionPayload).then(result => {
-      if (deploy) {
-        const with_mlrun = functionsStore.newFunction.spec.build.requirements.includes(
-          appStore.frontendSpec?.function_deployment_mlrun_requirement
-        )
-        const skip_deployed = imageType === EXISTING_IMAGE
+    dispatch(createNewFunction({ project: params.projectName, data: functionPayload }))
+      .unwrap()
+      .then(result => {
+        if (deploy) {
+          const with_mlrun = functionsStore.newFunction.spec.build.requirements.includes(
+            appStore.frontendSpec?.function_deployment_mlrun_requirement
+          )
+          const skip_deployed = imageType === EXISTING_IMAGE
 
-        const data = {
-          function: {
-            ...functionsStore.newFunction,
-            spec: {
-              ...functionsStore.newFunction.spec,
-              build: {
-                ...functionsStore.newFunction.spec.build,
-                requirements:
-                  with_mlrun && functionsStore.newFunction.spec.build.requirements.length === 1
-                    ? []
-                    : functionsStore.newFunction.spec.build.requirements
+          const data = {
+            function: {
+              ...functionsStore.newFunction,
+              spec: {
+                ...functionsStore.newFunction.spec,
+                build: {
+                  ...functionsStore.newFunction.spec.build,
+                  requirements:
+                    with_mlrun && functionsStore.newFunction.spec.build.requirements.length === 1
+                      ? []
+                      : functionsStore.newFunction.spec.build.requirements
+                }
+              },
+              metadata: {
+                ...functionsStore.newFunction.metadata,
+                labels: convertChipsData(formRef.current.getFieldState('labels')?.value)
               }
             },
-            metadata: {
-              ...functionsStore.newFunction.metadata,
-              labels: convertChipsData(formRef.current.getFieldState('labels')?.value)
-            }
-          },
-          skip_deployed,
-          with_mlrun
+            skip_deployed,
+            with_mlrun
+          }
+
+          return handleDeploy(data)
         }
 
-        return handleDeploy(data)
-      }
-
-      if (result) {
-        createFunctionSuccess(mode === PANEL_EDIT_MODE).then(() => {
-          navigate(
-            `/projects/${params.projectName}/functions/${functionPayload.metadata.name}/:${funcTag}@${result.data.hash_key}/overview`
-          )
-        })
-      }
-    })
+        if (result) {
+          createFunctionSuccess(mode === PANEL_EDIT_MODE).then(() => {
+            navigate(
+              `/projects/${params.projectName}/functions/${functionPayload.metadata.name}/:${funcTag}@${result.data.hash_key}/overview`
+            )
+          })
+        }
+      })
   }
 
   const handleSave = deploy => {
@@ -241,16 +249,19 @@ const FunctionsPanel = ({
       }
 
       if (functionsStore.error) {
-        removeFunctionsError()
+        dispatch(removeFunctionsError())
       }
 
       if (mode === PANEL_CREATE_MODE) {
-        fetchFunction(
-          params.projectName,
-          functionsStore.newFunction.metadata.name,
-          null,
-          functionsStore.newFunction.metadata.tag
+        dispatch(
+          fetchFunction({
+            project: params.projectName,
+            name: functionsStore.newFunction.metadata.name,
+            hash: null,
+            tag: functionsStore.newFunction.metadata.tag
+          })
         )
+          .unwrap()
           .then(() => {
             setConfirmData({
               header: 'Overwrite function?',
@@ -268,7 +279,7 @@ const FunctionsPanel = ({
           })
           .catch(error => {
             if (error.response.status === NOTFOUND_ERROR_STATUS_CODE) {
-              removeFunctionsError()
+              dispatch(removeFunctionsError())
             }
 
             createFunction(deploy)
@@ -280,7 +291,8 @@ const FunctionsPanel = ({
   }
 
   const handleDeploy = data => {
-    deployFunction(data)
+    dispatch(deployFunction({ data }))
+      .unwrap()
       .then(response => {
         handleDeployFunctionSuccess(response.data.ready)
       })
@@ -312,9 +324,7 @@ const FunctionsPanel = ({
               loading={functionsStore.loading || functionsStore.funcLoading}
               mode={mode}
               newFunction={functionsStore.newFunction}
-              removeFunctionsError={removeFunctionsError}
               setImageType={setImageType}
-              setNewFunctionCredentialsAccessKey={setNewFunctionCredentialsAccessKey}
               setValidation={setValidation}
               validation={validation}
             />
@@ -345,6 +355,4 @@ FunctionsPanel.propTypes = {
   project: PropTypes.string.isRequired
 }
 
-export default connect(({ appStore, functionsStore }) => ({ appStore, functionsStore }), {
-  ...functionsActions
-})(FunctionsPanel)
+export default FunctionsPanel

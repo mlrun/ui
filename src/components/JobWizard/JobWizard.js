@@ -62,7 +62,6 @@ import {
   getNewJobErrorMsg,
   getSaveJobErrorMsg
 } from './JobWizard.util'
-import functionsActions from '../../actions/functions'
 import projectsAction from '../../actions/projects'
 import { FUNCTIONS_SELECTION_FUNCTIONS_TAB } from './JobWizardSteps/JobWizardFunctionSelection/jobWizardFunctionSelection.util'
 import { JOB_WIZARD_MODE } from '../../types'
@@ -73,15 +72,17 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { editJob, removeJobFunction, runNewJob } from '../../reducers/jobReducer'
+import {
+  fetchFunctionTemplate,
+  fetchHubFunction,
+  removeHubFunctions
+} from '../../reducers/functionReducer'
 
 import './jobWizard.scss'
 
 const JobWizard = ({
   defaultData = {},
-  fetchFunctionTemplate,
-  fetchHubFunction,
   frontendSpec,
-  functionsStore,
   isBatchInference = false,
   isOpen,
   isTrain = false,
@@ -92,7 +93,6 @@ const JobWizard = ({
   onWizardClose = null,
   params,
   prePopulatedData = {},
-  removeHubFunctions,
   tab = '',
   wizardTitle = 'Batch run'
 }) => {
@@ -122,6 +122,7 @@ const JobWizard = ({
   const dispatch = useDispatch()
   const scheduleButtonRef = useRef()
   const formStateRef = useRef(null)
+  const functionsStore = useSelector(store => store.functionsStore)
 
   const closeModal = useCallback(() => {
     if (showSchedule) {
@@ -151,28 +152,31 @@ const JobWizard = ({
       setTemplatesCategories([])
       setTemplates([])
       setShowSchedule(false)
-
-      removeHubFunctions()
+      dispatch(removeHubFunctions())
     }
-  }, [removeHubFunctions, setFunctions])
+  }, [dispatch, setFunctions])
 
   useEffect(() => {
     if (isBatchInference || isTrain) {
       const hubFunctionName = isBatchInference ? 'batch_inference_v2' : 'auto-trainer'
 
-      fetchHubFunction(hubFunctionName).then(hubFunction => {
-        if (hubFunction) {
-          const functionTemplatePath = `${hubFunction.spec.item_uri}${hubFunction.spec.assets.function}`
+      dispatch(fetchHubFunction({ hubFunctionName }))
+        .unwrap()
+        .then(hubFunction => {
+          if (hubFunction) {
+            const functionTemplatePath = `${hubFunction.spec.item_uri}${hubFunction.spec.assets.function}`
 
-          fetchFunctionTemplate(functionTemplatePath).then(functionData => {
-            setSelectedFunctionData(functionData)
-          })
-        } else {
-          resolveModal()
-        }
-      })
+            dispatch(fetchFunctionTemplate({ path: functionTemplatePath }))
+              .unwrap()
+              .then(functionData => {
+                setSelectedFunctionData(functionData)
+              })
+          } else {
+            resolveModal()
+          }
+        })
     }
-  }, [fetchFunctionTemplate, fetchHubFunction, isBatchInference, isTrain, resolveModal])
+  }, [dispatch, isBatchInference, isTrain, resolveModal])
 
   useEffect(() => {
     if (!isEmpty(jobsStore.jobFunc)) {
@@ -559,13 +563,11 @@ JobWizard.propTypes = {
 }
 
 export default connect(
-  ({ appStore, functionsStore, jobsStore }) => ({
+  ({ appStore, jobsStore }) => ({
     frontendSpec: appStore.frontendSpec,
-    functionsStore,
     jobsStore
   }),
   {
-    ...functionsActions,
     ...projectsAction
   }
 )(JobWizard)

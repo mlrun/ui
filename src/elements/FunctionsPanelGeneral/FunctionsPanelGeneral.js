@@ -19,29 +19,25 @@ such restriction.
 */
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import FunctionsPanelGeneralView from './FunctionsPanelGeneralView'
 
-import functionsActions from '../../actions/functions'
+import { setNewFunctionDescription } from '../../reducers/functionReducer'
 
-const FunctionsPanelGeneral = ({
-  defaultData = {},
-  formState,
-  frontendSpec,
-  functionsStore,
-  setNewFunctionDescription
-}) => {
+const FunctionsPanelGeneral = ({ defaultData = {}, formState, frontendSpec }) => {
+  const functionsStore = useSelector(store => store.functionsStore)
   const [data, setData] = useState({
     description: defaultData.description ?? '',
     kind: defaultData.type ?? functionsStore.newFunction.kind,
     name: defaultData.name ?? functionsStore.newFunction.metadata.name,
     tag: defaultData.tag ?? functionsStore.newFunction.metadata.tag
   })
+  const dispatch = useDispatch()
 
   const handleDescriptionOnBlur = () => {
     if (functionsStore.newFunction.spec.description !== data.description) {
-      setNewFunctionDescription(data.description)
+      dispatch(setNewFunctionDescription(data.description))
     }
   }
 
@@ -52,7 +48,6 @@ const FunctionsPanelGeneral = ({
       frontendSpec={frontendSpec}
       handleDescriptionOnBlur={handleDescriptionOnBlur}
       setData={setData}
-      setNewFunctionDescription={setNewFunctionDescription}
     />
   )
 }
@@ -61,6 +56,4 @@ FunctionsPanelGeneral.propTypes = {
   defaultData: PropTypes.shape({})
 }
 
-export default connect(functionsStore => ({ ...functionsStore }), {
-  ...functionsActions
-})(FunctionsPanelGeneral)
+export default FunctionsPanelGeneral

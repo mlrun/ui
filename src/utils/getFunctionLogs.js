@@ -22,6 +22,8 @@ import {
   TRANSIENT_FUNCTION_STATUSES
 } from '../components/FunctionsPage/functions.util'
 import { TAG_LATEST } from '../constants'
+import { fetchFunctionLogs, fetchFunctionNuclioLogs } from '../reducers/functionReducer'
+import { showErrorNotification } from './notifications.util'
 
 const isFunctionTransient = response => {
   return TRANSIENT_FUNCTION_STATUSES.includes(response.headers?.['x-mlrun-function-status'])
@@ -36,7 +38,6 @@ const clearLogsTimeout = timeoutRef => {
 
 export const getFunctionLogs = (
   dispatch,
-  fetchFunctionLogs,
   fetchFunctionLogsTimeout,
   projectName,
   name,
@@ -46,72 +47,80 @@ export const getFunctionLogs = (
   refreshFunctions,
   startedDeploying
 ) => {
-  dispatch(fetchFunctionLogs(projectName, name, tag)).then(response => {
-    if (isFunctionTransient(response)) {
-      clearLogsTimeout(fetchFunctionLogsTimeout)
+  dispatch(fetchFunctionLogs({ projectName, name, tag }))
+    .unwrap()
+    .then(response => {
+      if (isFunctionTransient(response)) {
+        clearLogsTimeout(fetchFunctionLogsTimeout)
 
-      fetchFunctionLogsTimeout.current = setTimeout(() => {
-        getFunctionLogs(
-          dispatch,
-          fetchFunctionLogs,
-          fetchFunctionLogsTimeout,
-          projectName,
-          name,
-          tag,
-          setDetailsLogs,
-          navigate,
-          refreshFunctions,
-          true
-        )
-      }, 2000)
-    } else {
-      if (
-        FUNCTIONS_READY_STATES.includes(response.headers?.['x-mlrun-function-status']) &&
-        startedDeploying
-      ) {
-        refreshFunctions().then(response => {
-          const hash = response.find(item => item.name === name && item.tag === TAG_LATEST).hash
+        fetchFunctionLogsTimeout.current = setTimeout(() => {
+          getFunctionLogs(
+            dispatch,
+            fetchFunctionLogsTimeout,
+            projectName,
+            name,
+            tag,
+            setDetailsLogs,
+            navigate,
+            refreshFunctions,
+            true
+          )
+        }, 2000)
+      } else {
+        if (
+          FUNCTIONS_READY_STATES.includes(response.headers?.['x-mlrun-function-status']) &&
+          startedDeploying
+        ) {
+          refreshFunctions().then(response => {
+            const hash = response.find(item => item.name === name && item.tag === TAG_LATEST).hash
 
-          if (hash) {
-            navigate(
-              `/projects/${projectName}/functions/${hash}/build-log${window.location.search}`
-            )
-          }
-        })
+            if (hash) {
+              navigate(
+                `/projects/${projectName}/functions/${hash}/build-log${window.location.search}`
+              )
+            }
+          })
+        }
+
+        clearTimeout(fetchFunctionLogsTimeout.current)
       }
 
-      clearTimeout(fetchFunctionLogsTimeout.current)
-    }
-
-    setDetailsLogs(response.data || '')
-  })
+      setDetailsLogs(response.data || '')
+    })
+    .catch(error => {
+      showErrorNotification(dispatch, error, "Function's logs failed to load")
+    })
 }
 
 export const getFunctionNuclioLogs = (
   dispatch,
-  fetchFunctionNuclioLogs,
   fetchFunctionNuclioLogsTimeoutRef,
   projectName,
   name,
   tag,
   setDetailsLogs
 ) => {
-  dispatch(fetchFunctionNuclioLogs(projectName, name, tag)).then(response => {
-    if (isFunctionTransient(response)) {
-      clearLogsTimeout(fetchFunctionNuclioLogsTimeoutRef)
+  dispatch(fetchFunctionNuclioLogs({ projectName, name, tag }))
+    .unwrap()
+    .then(response => {
+      if (isFunctionTransient(response)) {
+        clearLogsTimeout(fetchFunctionNuclioLogsTimeoutRef)
 
-      fetchFunctionNuclioLogsTimeoutRef.current = setTimeout(() => {
-        getFunctionNuclioLogs(
-          fetchFunctionNuclioLogs,
-          fetchFunctionNuclioLogsTimeoutRef,
-          projectName,
-          name,
-          tag,
-          setDetailsLogs
-        )
-      }, 2000)
-    }
+        fetchFunctionNuclioLogsTimeoutRef.current = setTimeout(() => {
+          getFunctionNuclioLogs(
+            dispatch,
+            fetchFunctionNuclioLogsTimeoutRef,
+            projectName,
+            name,
+            tag,
+            setDetailsLogs
+          )
+        }, 2000)
+      }
 
-    setDetailsLogs(response.data || '')
-  })
+      setDetailsLogs(response.data || '')
+    })
+    .catch(error => {
+      showErrorNotification(dispatch, error, "Function's logs failed to load")
+    })
 }

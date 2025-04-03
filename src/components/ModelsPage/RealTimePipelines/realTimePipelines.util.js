@@ -18,9 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { MODELS_PAGE, NAME_FILTER } from '../../../constants'
-import functionsActions from '../../../actions/functions'
 import { parseFunction } from '../../../utils/parseFunction'
 import { showErrorNotification } from '../../../utils/notifications.util'
+import { fetchFunction } from '../../../reducers/functionReducer'
 
 export const filtersConfig = {
   [NAME_FILTER]: { label: 'Name:', initialValue: '' }
@@ -34,13 +34,14 @@ export const generatePageData = hideFilterMenu => ({
 
 export const fetchAndParseFunction = (selectedFunction, dispatch) => {
   return dispatch(
-    functionsActions.fetchFunction(
-      selectedFunction.project,
-      selectedFunction.name,
-      selectedFunction.hash,
-      selectedFunction.tag
-    )
+    fetchFunction({
+      project: selectedFunction.project,
+      name: selectedFunction.name,
+      hash: selectedFunction.hash,
+      tag: selectedFunction.tag
+    })
   )
+    .unwrap()
     .then(func => {
       return parseFunction(func, selectedFunction.project.project)
     })
