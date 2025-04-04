@@ -47,7 +47,7 @@ export const getFunctionLogs = (
   refreshFunctions,
   startedDeploying
 ) => {
-  dispatch(fetchFunctionLogs({ projectName, name, tag }))
+  dispatch(fetchFunctionLogs({ project: projectName, name, tag }))
     .unwrap()
     .then(response => {
       if (isFunctionTransient(response)) {
@@ -100,7 +100,7 @@ export const getFunctionNuclioLogs = (
   tag,
   setDetailsLogs
 ) => {
-  dispatch(fetchFunctionNuclioLogs({ projectName, name, tag }))
+  dispatch(fetchFunctionNuclioLogs({ project: projectName, name, tag }))
     .unwrap()
     .then(response => {
       if (isFunctionTransient(response)) {
