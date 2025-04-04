@@ -180,10 +180,6 @@ const Features = () => {
     [dispatch, fetchData, fetchTags]
   )
 
-  const handleRefreshWithFilters = useCallback(() => {
-    handleRefresh(featuresFilters)
-  }, [featuresFilters, handleRefresh])
-
   const collapseRowCallback = useCallback(
     feature => {
       const newStoreSelectedRowData =
@@ -342,7 +338,6 @@ const Features = () => {
       filters={featuresFilters}
       getPopUpTemplate={getPopUpTemplate}
       handleRefresh={handleRefresh}
-      handleRefreshWithFilters={handleRefreshWithFilters}
       pageData={pageData}
       ref={{ featureStoreRef }}
       requestErrorMessage={requestErrorMessage}

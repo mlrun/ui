@@ -20,7 +20,7 @@ such restriction.
 import React, { useEffect, useCallback, useRef, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useLocation, useParams } from 'react-router-dom'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
@@ -30,14 +30,12 @@ import classnames from 'classnames'
 import { ConfirmDialog } from 'igz-controls/components'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import DetailsTabsContent from './DetailsTabsContent/DetailsTabsContent'
-
 import DetailsHeader from './DetailsHeader/DetailsHeader'
 import Loader from '../../common/Loader/Loader'
 import TabsSlider from '../../common/TabsSlider/TabsSlider'
 import BlockerSpy from '../../common/BlockerSpy/BlockerSpy'
 
 import { TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
-import detailsActions from '../../actions/details'
 import {
   ALERTS_PAGE,
   ARTIFACTS_PAGE,
@@ -63,6 +61,17 @@ import {
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { setFieldState } from 'igz-controls/utils/form.util'
+import {
+  removeDetailsPopUpInfoContent,
+  removeInfoContent,
+  removeModelFeatureVector,
+  resetChanges,
+  setDetailsPopUpInfoContent,
+  setEditMode,
+  setFiltersWasHandled,
+  setInfoContent,
+  showWarning
+} from '../../reducers/detailsReducer'
 
 import './details.scss'
 
@@ -79,22 +88,8 @@ const Details = ({
   isDetailsPopUp = false,
   isDetailsScreen = false,
   pageData,
-  removeDetailsPopUpInfoContent,
-  removeInfoContent,
-  removeModelFeatureVector = () => {},
-  resetChanges,
-  retryRequest = () => {},
   selectedItem,
-  setChanges,
-  setChangesCounter,
-  setChangesData,
-  setDetailsPopUpInfoContent,
   setDetailsPopUpSelectedTab,
-  setFiltersWasHandled,
-  setInfoContent,
-  setIteration,
-  setIterationOption,
-  showWarning,
   tab = '',
   withActionMenu = true
 }) => {
@@ -110,13 +105,7 @@ const Details = ({
     return isDetailsPopUp
       ? [setDetailsPopUpInfoContent, removeDetailsPopUpInfoContent]
       : [setInfoContent, removeInfoContent]
-  }, [
-    isDetailsPopUp,
-    removeDetailsPopUpInfoContent,
-    removeInfoContent,
-    setDetailsPopUpInfoContent,
-    setInfoContent
-  ])
+  }, [isDetailsPopUp])
   const previousPathnameRef = useRef(
     location.pathname.substring(0, location.pathname.lastIndexOf(params.tab))
   )
@@ -148,17 +137,17 @@ const Details = ({
   useEffect(() => {
     return () => {
       if (!isDetailsPopUp) {
-        resetChanges()
+        dispatch(resetChanges())
       }
     }
-  }, [isDetailsPopUp, resetChanges])
+  }, [dispatch, isDetailsPopUp])
 
   useEffect(() => {
     if (!isEveryObjectValueEmpty(selectedItem)) {
       if (pageData.details.type === JOBS_PAGE) {
-        setDetailsInfo(generateJobsContent(selectedItem))
+        dispatch(setDetailsInfo(generateJobsContent(selectedItem)))
       } else if (pageData.details.type === ALERTS_PAGE) {
-        setDetailsInfo(generateAlertsContent(selectedItem))
+        dispatch(setDetailsInfo(generateAlertsContent(selectedItem)))
       } else if (
         pageData.details.type === ARTIFACTS_PAGE ||
         pageData.details.type === FILES_TAB ||
@@ -167,20 +156,24 @@ const Details = ({
         pageData.details.type === DATASETS_TAB ||
         pageData.details.type === DOCUMENTS_TAB
       ) {
-        setDetailsInfo(
-          generateArtifactsContent(
-            pageData.details.type,
-            selectedItem,
-            params.projectName,
-            isDetailsPopUp,
-            frontendSpec.internal_labels
+        dispatch(
+          setDetailsInfo(
+            generateArtifactsContent(
+              pageData.details.type,
+              selectedItem,
+              params.projectName,
+              isDetailsPopUp,
+              frontendSpec.internal_labels
+            )
           )
         )
       } else if (pageData.details.type === FUNCTIONS_PAGE) {
-        setDetailsInfo(generateFunctionsContent(selectedItem))
+        dispatch(setDetailsInfo(generateFunctionsContent(selectedItem)))
       } else {
-        setDetailsInfo(
-          generateFeatureStoreContent(pageData.details.type, selectedItem, isDetailsPopUp)
+        dispatch(
+          setDetailsInfo(
+            generateFeatureStoreContent(pageData.details.type, selectedItem, isDetailsPopUp)
+          )
         )
       }
     }
@@ -191,24 +184,25 @@ const Details = ({
     pageData.details.type,
     params.projectName,
     setDetailsInfo,
-    selectedItem
+    selectedItem,
+    dispatch
   ])
 
   useEffect(() => {
     return () => {
       if (pageData.details.type === MODELS_TAB) {
-        removeModelFeatureVector()
+        dispatch(removeModelFeatureVector())
       }
 
-      removeDetailsInfo()
+      dispatch(removeDetailsInfo())
     }
-  }, [pageData.details.type, removeDetailsInfo, removeModelFeatureVector, selectedItem])
+  }, [dispatch, pageData.details.type, removeDetailsInfo, selectedItem])
 
   const handleShowWarning = useCallback(
     show => {
-      showWarning(show)
+      dispatch(showWarning(show))
     },
-    [showWarning]
+    [dispatch]
   )
 
   const handleRefreshClick = useCallback(
@@ -218,10 +212,10 @@ const Details = ({
         document.getElementById('refresh')?.contains(event.target)
       ) {
         handleShowWarning(true)
-        setFiltersWasHandled(true)
+        dispatch(setFiltersWasHandled(true))
       }
     },
-    [detailsStore.changes.counter, handleShowWarning, setFiltersWasHandled]
+    [detailsStore.changes.counter, dispatch, handleShowWarning]
   )
 
   useEffect(() => {
@@ -269,17 +263,17 @@ const Details = ({
 
     if (previousPathnameRef.current !== currentPathname && !isDetailsPopUp) {
       formRef.current.restart(formInitialValues)
-      dispatch(detailsActions.setEditMode(false))
+      dispatch(setEditMode(false))
       previousPathnameRef.current = currentPathname
     }
   }, [dispatch, formInitialValues, isDetailsPopUp, location.pathname, params.tab])
 
   const applyChanges = useCallback(() => {
     applyDetailsChanges(detailsStore.changes).then(() => {
-      resetChanges()
+      dispatch(resetChanges())
 
       const changes = cloneDeep(detailsStore.changes)
-      
+
       // todo [redux-toolkit] rework it after redux-toolkit will be added to the details store. Need to remove setTimeout and use a Promise that resolves after the state is updated.
       setTimeout(() => {
         applyDetailsChangesCallback(changes, selectedItem)
@@ -289,40 +283,33 @@ const Details = ({
     applyDetailsChanges,
     applyDetailsChangesCallback,
     detailsStore.changes,
-    resetChanges,
+    dispatch,
     selectedItem
   ])
 
   const cancelChanges = useCallback(() => {
     if (detailsStore.changes.counter > 0) {
-      resetChanges()
-
+      dispatch(resetChanges())
       formRef.current.reset(formInitialValues)
     }
-  }, [detailsStore.changes.counter, formInitialValues, resetChanges])
+  }, [detailsStore.changes.counter, dispatch, formInitialValues])
 
   const leavePage = useCallback(() => {
     cancelChanges()
     handleShowWarning(false)
 
     if (detailsStore.filtersWasHandled) {
-      setFiltersWasHandled(false)
+      dispatch(setFiltersWasHandled(false))
     } else {
       blocker.proceed?.()
     }
 
     window.dispatchEvent(new CustomEvent('discardChanges'))
-  }, [
-    blocker,
-    cancelChanges,
-    detailsStore.filtersWasHandled,
-    handleShowWarning,
-    setFiltersWasHandled
-  ])
+  }, [blocker, cancelChanges, detailsStore.filtersWasHandled, dispatch, handleShowWarning])
 
   const doNotLeavePage = useCallback(() => {
     blocker.reset?.()
-    dispatch(detailsActions.showWarning(false))
+    dispatch(showWarning(false))
     window.dispatchEvent(new CustomEvent('cancelLeave'))
   }, [blocker, dispatch])
 
@@ -346,7 +333,6 @@ const Details = ({
               handleShowWarning={handleShowWarning}
               pageData={pageData}
               selectedItem={selectedItem}
-              setIteration={setIteration}
               tab={tab}
               withActionMenu={withActionMenu}
             />
@@ -369,11 +355,6 @@ const Details = ({
               isDetailsPopUp={isDetailsPopUp}
               pageData={pageData}
               selectedItem={selectedItem}
-              setChanges={setChanges}
-              setChangesCounter={setChangesCounter}
-              setChangesData={setChangesData}
-              setIteration={setIteration}
-              setIterationOption={setIterationOption}
             />
           </div>
           {(blocker.state === 'blocked' || detailsStore.showWarning) && (
@@ -420,10 +401,8 @@ Details.propTypes = {
   handleRefresh: PropTypes.func,
   isDetailsScreen: PropTypes.bool,
   pageData: PropTypes.shape({}).isRequired,
-  removeModelFeatureVector: PropTypes.func,
-  retryRequest: PropTypes.func,
   selectedItem: PropTypes.shape({}).isRequired,
   tab: PropTypes.string
 }
 
-export default connect(null, { ...detailsActions })(Details)
+export default Details

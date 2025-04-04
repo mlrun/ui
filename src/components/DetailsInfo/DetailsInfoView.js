@@ -65,8 +65,7 @@ const DetailsInfoView = React.forwardRef(
       isDetailsPopUp,
       pageData,
       params,
-      selectedItem,
-      setChangesData
+      selectedItem
     },
     ref
   ) => {
@@ -194,7 +193,6 @@ const DetailsInfoView = React.forwardRef(
                         onClick={handleInfoItemClick}
                         params={params}
                         ref={ref}
-                        setChangesData={setChangesData}
                         state={state}
                       />
                     </>

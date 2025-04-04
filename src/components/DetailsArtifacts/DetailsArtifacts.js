@@ -39,6 +39,7 @@ import { ALLOW_SORT_BY, DEFAULT_SORT_BY, EXCLUDE_SORT_BY } from 'igz-controls/ty
 import { fetchArtifacts } from '../../reducers/artifactsReducer'
 import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
 import { fetchJob } from '../../reducers/jobReducer'
+import { setIteration, setIterationOption } from '../../reducers/detailsReducer'
 
 import './detailsArtifacts.scss'
 
@@ -49,9 +50,7 @@ const DetailsArtifacts = ({
   excludeSortBy = null,
   isDetailsPopUp = false,
   iteration,
-  selectedItem,
-  setIteration,
-  setIterationOption
+  selectedItem
 }) => {
   const [artifactsPreviewContent, setArtifactsPreviewContent] = useState([])
   const [artifactsIds, setArtifactsIds] = useState([])
@@ -114,29 +113,31 @@ const DetailsArtifacts = ({
         }
       })
 
-      setIterationOption(
-        iterationsList
-          .sort((a, b) => a - b)
-          .map(iteration => ({
-            label:
-              iteration === bestIteration ? `${bestIteration} (Best iteration)` : `${iteration}`,
-            id: `${iteration}`
-          }))
+      dispatch(
+        setIterationOption(
+          iterationsList
+            .sort((a, b) => a - b)
+            .map(iteration => ({
+              label:
+                iteration === bestIteration ? `${bestIteration} (Best iteration)` : `${iteration}`,
+              id: `${iteration}`
+            }))
+        )
       )
     }
-  }, [bestIteration, selectedItem.iterationStats, setIterationOption])
+  }, [bestIteration, dispatch, selectedItem.iterationStats])
 
   useEffect(() => {
     if (!isNaN(parseInt(bestIteration))) {
-      setIteration(`${bestIteration}`)
+      dispatch(setIteration(`${bestIteration}`))
     } else if (selectedItem.iterationStats?.length > 0 && iterationOptions?.length > 0) {
-      setIteration(iterationOptions[0].id)
+      dispatch(setIteration(iterationOptions[0].id))
     }
 
     return () => {
-      setIteration('')
+      dispatch(setIteration(''))
     }
-  }, [bestIteration, setIteration, selectedItem.iterationStats, iterationOptions])
+  }, [bestIteration, selectedItem.iterationStats, iterationOptions, dispatch])
 
   const getJobArtifacts = useCallback(
     (job, iteration) => {
@@ -150,13 +151,12 @@ const DetailsArtifacts = ({
         return dispatch(
           fetchJob({
             project: job.project || params.projectName,
-            jobId:  job.uid || params.jobId,
+            jobId: job.uid || params.jobId,
             iter: iteration
           })
         )
           .unwrap()
-          .then(
-          responseJob => {
+          .then(responseJob => {
             if (responseJob) {
               const selectedJob = getJobAccordingIteration(responseJob)
 
@@ -164,8 +164,7 @@ const DetailsArtifacts = ({
                 generateArtifactsPreviewContent(selectedJob, selectedJob.artifacts)
               )
             }
-          }
-        )
+          })
       } else {
         if (iteration) {
           config.params.iter = iteration
@@ -280,8 +279,7 @@ DetailsArtifacts.propTypes = {
   defaultDirection: PropTypes.string,
   excludeSortBy: EXCLUDE_SORT_BY,
   iteration: PropTypes.string.isRequired,
-  selectedItem: PropTypes.shape({}).isRequired,
-  setIterationOption: PropTypes.func.isRequired
+  selectedItem: PropTypes.shape({}).isRequired
 }
 
 export default DetailsArtifacts

@@ -47,7 +47,6 @@ const AddToFeatureVectorView = React.forwardRef(
       filtersConfig,
       filtersStore,
       handleRefresh,
-      handleRefreshWithFilters,
       pageData,
       requestErrorMessage,
       selectedRowData,
@@ -98,7 +97,6 @@ const AddToFeatureVectorView = React.forwardRef(
                   actionsMenu={actionsMenu}
                   hideActionsMenu={tableStore.isTablePanelOpen}
                   pageData={pageData}
-                  retryRequest={handleRefreshWithFilters}
                   tab={ADD_TO_FEATURE_VECTOR_TAB}
                   tableClassName="features-table"
                   tableHeaders={tableContent[0]?.content ?? []}
@@ -139,7 +137,6 @@ AddToFeatureVectorView.propTypes = {
   filtersConfig: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   handleRefresh: PropTypes.func.isRequired,
-  handleRefreshWithFilters: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedRowData: PropTypes.object.isRequired,

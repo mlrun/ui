@@ -49,7 +49,6 @@ const FeatureVectorsView = React.forwardRef(
       filters,
       filtersStore,
       handleRefresh,
-      handleRefreshWithFilters,
       pageData,
       requestErrorMessage,
       selectedFeatureVector,
@@ -107,7 +106,6 @@ const FeatureVectorsView = React.forwardRef(
               detailsFormInitialValues={detailsFormInitialValues}
               handleCancel={() => setSelectedFeatureVector({})}
               pageData={pageData}
-              retryRequest={handleRefreshWithFilters}
               selectedItem={selectedFeatureVector}
               tab={FEATURE_VECTORS_TAB}
               tableClassName="feature-vectors-table"
@@ -155,7 +153,6 @@ FeatureVectorsView.propTypes = {
   filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   handleRefresh: PropTypes.func.isRequired,
-  handleRefreshWithFilters: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedFeatureVector: PropTypes.object.isRequired,
