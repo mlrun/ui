@@ -123,13 +123,13 @@ export const fetchModelEndpointMetricsValues = createAsyncThunk(
         return parseMetrics(data, timeUnit)
       })
       .catch(error => {
-        thunkAPI.rejectWithValue(error?.message === DEFAULT_ABORT_MSG ? null : error)
         largeResponseCatchHandler(
           error,
           'Failed to fetch metrics',
           thunkAPI.dispatch,
           setRequestErrorMessage
         )
+        return thunkAPI.rejectWithValue(error?.message === DEFAULT_ABORT_MSG ? null : error)
       })
   }
 )
