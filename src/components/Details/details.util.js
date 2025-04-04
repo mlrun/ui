@@ -320,7 +320,8 @@ export const generateJobsContent = selectedItem => {
       shouldPopUp: !isEmpty(selectedItem.function),
       handleClick: () =>
         openPopUp(FunctionPopUp, {
-          funcUri: selectedItem.function
+          funcUri: selectedItem.function,
+          funcTag: selectedItem.ui?.functionTag ?? ''
         })
     },
     functionTag: {
