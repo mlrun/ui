@@ -18,14 +18,13 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useMemo, useState } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { isNumber } from 'lodash'
 import PropTypes from 'prop-types'
 
 import FunctionsPanelResourcesView from './FunctionsPanelResourcesView'
 
 import { createNewVolume } from '../../utils/createNewVolume'
-import functionsActions from '../../actions/functions'
 import {
   getDefaultVolumeMounts,
   VOLUME_MOUNT_AUTO_TYPE,
@@ -47,26 +46,23 @@ import { FUNCTION_PANEL_MODE } from '../../types'
 import { PANEL_CREATE_MODE } from '../../constants'
 import { getPreemptionMode } from '../../utils/getPreemptionMode'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-
-const FunctionsPanelResources = ({
-  defaultData,
-  frontendSpec,
-  functionsStore,
-  mode,
+import {
   setNewFunctionDisableAutoMount,
   setNewFunctionPreemtionMode,
   setNewFunctionPriorityClassName,
-  setNewFunctionVolumeMounts,
-  setNewFunctionVolumes,
   setNewFunctionResources,
-  setValidation,
-  validation
-}) => {
+  setNewFunctionVolumeMounts,
+  setNewFunctionVolumes
+} from '../../reducers/functionReducer'
+
+const FunctionsPanelResources = ({ defaultData, mode, setValidation, validation }) => {
+  const dispatch = useDispatch()
   const gpuType = useMemo(
     () => getLimitsGpuType(defaultData.resources?.limits),
     [defaultData.resources?.limits]
   )
-
+  const functionsStore = useSelector(store => store.functionsStore)
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const [podsPriorityClassName, setPodsPriorityClassName] = useState(
     defaultData.priority_class_name ||
       functionsStore.newFunction.spec.priority_class_name ||
@@ -137,43 +133,42 @@ const FunctionsPanelResources = ({
 
   useEffect(() => {
     if (mode === PANEL_CREATE_MODE) {
-      setNewFunctionPreemtionMode(preemptionMode)
-      setNewFunctionPriorityClassName(frontendSpec.default_function_priority_class_name ?? '')
+      dispatch(setNewFunctionPreemtionMode(preemptionMode))
+      dispatch(
+        setNewFunctionPriorityClassName(frontendSpec.default_function_priority_class_name ?? '')
+      )
 
-      setNewFunctionDisableAutoMount(false)
+      dispatch(setNewFunctionDisableAutoMount(false))
     }
-  }, [
-    frontendSpec.default_function_priority_class_name,
-    mode,
-    preemptionMode,
-    setNewFunctionDisableAutoMount,
-    setNewFunctionPreemtionMode,
-    setNewFunctionPriorityClassName
-  ])
+  }, [dispatch, frontendSpec.default_function_priority_class_name, mode, preemptionMode])
 
   useEffect(() => {
     if (isEveryObjectValueEmpty(functionsStore.newFunction.spec.resources)) {
-      setNewFunctionResources({
-        limits: {
-          cpu: defaultData.resources?.limits?.cpu ?? defaultPodsResources?.limits?.cpu ?? '',
-          memory:
-            defaultData.resources?.limits?.memory ?? defaultPodsResources?.limits?.memory ?? '',
-          [gpuType]:
-            defaultData.resources?.limits?.[gpuType] ?? defaultPodsResources?.limits?.gpu ?? ''
-        },
-        requests: {
-          cpu: defaultData.resources?.requests?.cpu ?? defaultPodsResources?.requests?.cpu ?? '',
-          memory:
-            defaultData.resources?.requests?.memory ?? defaultPodsResources?.requests?.memory ?? ''
-        }
-      })
+      dispatch(
+        setNewFunctionResources({
+          limits: {
+            cpu: defaultData.resources?.limits?.cpu ?? defaultPodsResources?.limits?.cpu ?? '',
+            memory:
+              defaultData.resources?.limits?.memory ?? defaultPodsResources?.limits?.memory ?? '',
+            [gpuType]:
+              defaultData.resources?.limits?.[gpuType] ?? defaultPodsResources?.limits?.gpu ?? ''
+          },
+          requests: {
+            cpu: defaultData.resources?.requests?.cpu ?? defaultPodsResources?.requests?.cpu ?? '',
+            memory:
+              defaultData.resources?.requests?.memory ??
+              defaultPodsResources?.requests?.memory ??
+              ''
+          }
+        })
+      )
     }
   }, [
     defaultData.resources,
     defaultPodsResources,
+    dispatch,
     functionsStore.newFunction.spec.resources,
-    gpuType,
-    setNewFunctionResources
+    gpuType
   ])
 
   const handleAddNewVolume = newVolume => {
@@ -193,14 +188,16 @@ const FunctionsPanelResources = ({
       volumeMounts: [...state.volumeMounts, generatedVolumeMount],
       volumes: [...state.volumes, generatedVolume]
     }))
-    setNewFunctionVolumeMounts([
-      ...functionsStore.newFunction.spec.volume_mounts,
-      {
-        name: generatedVolumeMount.data.name,
-        mountPath: generatedVolumeMount.data.mountPath
-      }
-    ])
-    setNewFunctionVolumes([...functionsStore.newFunction.spec.volumes, generatedVolume])
+    dispatch(
+      setNewFunctionVolumeMounts([
+        ...functionsStore.newFunction.spec.volume_mounts,
+        {
+          name: generatedVolumeMount.data.name,
+          mountPath: generatedVolumeMount.data.mountPath
+        }
+      ])
+    )
+    dispatch(setNewFunctionVolumes([...functionsStore.newFunction.spec.volumes, generatedVolume]))
   }
 
   const handleEditVolume = (volumes, volumeMounts) => {
@@ -209,12 +206,14 @@ const FunctionsPanelResources = ({
       volumeMounts,
       volumes
     }))
-    setNewFunctionVolumes([...volumes])
-    setNewFunctionVolumeMounts(
-      volumeMounts.map(volume => ({
-        name: volume.data.name,
-        mountPath: volume.data.mountPath
-      }))
+    dispatch(setNewFunctionVolumes([...volumes]))
+    dispatch(
+      setNewFunctionVolumeMounts(
+        volumeMounts.map(volume => ({
+          name: volume.data.name,
+          mountPath: volume.data.mountPath
+        }))
+      )
     )
   }
 
@@ -224,13 +223,15 @@ const FunctionsPanelResources = ({
       volumeMounts,
       volumes
     }))
-    setNewFunctionVolumeMounts(
-      volumeMounts.map(volume => ({
-        name: volume.data.name,
-        mountPath: volume.data.mountPath
-      }))
+    dispatch(
+      setNewFunctionVolumeMounts(
+        volumeMounts.map(volume => ({
+          name: volume.data.name,
+          mountPath: volume.data.mountPath
+        }))
+      )
     )
-    setNewFunctionVolumes(volumes)
+    dispatch(setNewFunctionVolumes(volumes))
   }
 
   const handleSelectPreemptionMode = value => {
@@ -238,7 +239,7 @@ const FunctionsPanelResources = ({
       ...state,
       preemptionMode: value
     }))
-    setNewFunctionPreemtionMode(value)
+    dispatch(setNewFunctionPreemtionMode(value))
   }
 
   const handleSelectVolumeMount = value => {
@@ -250,9 +251,9 @@ const FunctionsPanelResources = ({
           volumeMounts: [],
           volumeMount: value
         }))
-        setNewFunctionVolumes([])
-        setNewFunctionVolumeMounts([])
-        setNewFunctionDisableAutoMount(false)
+        dispatch(setNewFunctionVolumes([]))
+        dispatch(setNewFunctionVolumeMounts([]))
+        dispatch(setNewFunctionDisableAutoMount(false))
         break
       case VOLUME_MOUNT_NONE_TYPE:
         setData(state => ({
@@ -261,21 +262,21 @@ const FunctionsPanelResources = ({
           volumeMounts: [],
           volumeMount: value
         }))
-        setNewFunctionVolumes([])
-        setNewFunctionVolumeMounts([])
-        setNewFunctionDisableAutoMount(true)
+        dispatch(setNewFunctionVolumes([]))
+        dispatch(setNewFunctionVolumeMounts([]))
+        dispatch(setNewFunctionDisableAutoMount(true))
         break
       default:
         setData(state => ({
           ...state,
           volumeMount: value
         }))
-        setNewFunctionDisableAutoMount(true)
+        dispatch(setNewFunctionDisableAutoMount(true))
     }
   }
 
   const selectPodsPriorityClassName = value => {
-    setNewFunctionPriorityClassName(value)
+    dispatch(setNewFunctionPriorityClassName(value))
     setPodsPriorityClassName(value)
   }
 
@@ -295,15 +296,17 @@ const FunctionsPanelResources = ({
     }))
 
     if (data[type].memory.length > 0) {
-      setNewFunctionResources({
-        [type]:
-          data[type].memory.length > 0
-            ? {
-                ...functionsStore.newFunction.spec.resources[type],
-                memory: `${Number.parseInt(data[type].memory)}${value !== 'Bytes' ? unit : ''}`
-              }
-            : functionsStore.newFunction.spec.resources[type]
-      })
+      dispatch(
+        setNewFunctionResources({
+          [type]:
+            data[type].memory.length > 0
+              ? {
+                  ...functionsStore.newFunction.spec.resources[type],
+                  memory: `${Number.parseInt(data[type].memory)}${value !== 'Bytes' ? unit : ''}`
+                }
+              : functionsStore.newFunction.spec.resources[type]
+        })
+      )
     }
 
     setMemoryDropdownValidation(data, setValidation, type, value)
@@ -320,13 +323,15 @@ const FunctionsPanelResources = ({
         memory
       }
     }))
-    setNewFunctionResources({
-      ...functionsStore.newFunction.spec.resources,
-      [type]: {
-        ...functionsStore.newFunction.spec.resources[type],
-        memory
-      }
-    })
+    dispatch(
+      setNewFunctionResources({
+        ...functionsStore.newFunction.spec.resources,
+        [type]: {
+          ...functionsStore.newFunction.spec.resources[type],
+          memory
+        }
+      })
+    )
     setMemoryInputValidation(data, setValidation, type, validationField, convertedMemoryValue)
   }
 
@@ -349,15 +354,17 @@ const FunctionsPanelResources = ({
     }))
 
     if (data[type].cpu.length > 0) {
-      setNewFunctionResources({
-        [type]:
-          data[type].cpu.length > 0
-            ? {
-                ...functionsStore.newFunction.spec.resources[type],
-                cpu: selectedOption.onChange(data[type].cpu)
-              }
-            : functionsStore.newFunction.spec.resources[type]
-      })
+      dispatch(
+        setNewFunctionResources({
+          [type]:
+            data[type].cpu.length > 0
+              ? {
+                  ...functionsStore.newFunction.spec.resources[type],
+                  cpu: selectedOption.onChange(data[type].cpu)
+                }
+              : functionsStore.newFunction.spec.resources[type]
+        })
+      )
     }
   }
 
@@ -371,13 +378,15 @@ const FunctionsPanelResources = ({
         cpu: generateFullCpuValue(convertedValue, type, state)
       }
     }))
-    setNewFunctionResources({
-      ...functionsStore.newFunction.spec.resources,
-      [type]: {
-        ...functionsStore.newFunction.spec.resources[type],
-        cpu: generateFullCpuValue(convertedValue, type, data)
-      }
-    })
+    dispatch(
+      setNewFunctionResources({
+        ...functionsStore.newFunction.spec.resources,
+        [type]: {
+          ...functionsStore.newFunction.spec.resources[type],
+          cpu: generateFullCpuValue(convertedValue, type, data)
+        }
+      })
+    )
 
     setCpuValidation(data, setValidation, type, validationField, convertedValue)
   }
@@ -396,13 +405,15 @@ const FunctionsPanelResources = ({
         [gpuType]: String(value)
       }
     }))
-    setNewFunctionResources({
-      ...functionsStore.newFunction.spec.resources,
-      limits: {
-        ...functionsStore.newFunction.spec.resources.limits,
-        [gpuType]: String(value)
-      }
-    })
+    dispatch(
+      setNewFunctionResources({
+        ...functionsStore.newFunction.spec.resources,
+        limits: {
+          ...functionsStore.newFunction.spec.resources.limits,
+          [gpuType]: String(value)
+        }
+      })
+    )
     setValidation(prevState => ({ ...prevState, isGpuLimitValid: isValid }))
   }
 
@@ -424,7 +435,6 @@ const FunctionsPanelResources = ({
       setData={setData}
       setGpuValue={setGpuValue}
       setMemoryValue={setMemoryValue}
-      setNewFunctionResources={setNewFunctionResources}
       setValidation={setValidation}
       validFunctionPriorityClassNames={validFunctionPriorityClassNames}
       validation={validation}
@@ -443,12 +453,4 @@ FunctionsPanelResources.propTypes = {
   validation: PropTypes.shape({})
 }
 
-export default connect(
-  ({ functionsStore, appStore }) => ({
-    functionsStore,
-    frontendSpec: appStore.frontendSpec
-  }),
-  {
-    ...functionsActions
-  }
-)(FunctionsPanelResources)
+export default FunctionsPanelResources

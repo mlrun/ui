@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useMemo, useState } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -30,21 +30,21 @@ import ProjectDetailsHeader from '../../../common/ProjectDetailsHeader/ProjectDe
 import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewTableRow'
 import { ConfirmDialog } from 'igz-controls/components'
 
-import projectActions from '../../../actions/projects'
-
 import { handleClick, getInitialCards } from './ProjectOverview.util'
 import { handleFetchProjectError } from '../project.utils'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { useMode } from '../../../hooks/mode.hook'
+import { fetchProject } from '../../../reducers/projectReducer'
 
 import './ProjectOverview.scss'
 
-const ProjectOverview = ({ fetchProject, project }) => {
+const ProjectOverview = () => {
   const [confirmData, setConfirmData] = useState(null)
   const params = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { isDemoMode } = useMode()
+  const project = useSelector(store => store.projectStore.project)
 
   const cards = useMemo(() => {
     return params.projectName ? getInitialCards(params, navigate, isDemoMode) : {}
@@ -53,10 +53,10 @@ const ProjectOverview = ({ fetchProject, project }) => {
   const handlePathExecution = handleClick(navigate, openPopUp)
 
   useEffect(() => {
-    fetchProject(params.projectName).catch(error =>
-      handleFetchProjectError(error, navigate, setConfirmData, dispatch)
-    )
-  }, [dispatch, fetchProject, navigate, params.projectName])
+    dispatch(fetchProject({ project: params.projectName }))
+      .unwrap()
+      .catch(error => handleFetchProjectError(error, navigate, setConfirmData, dispatch))
+  }, [dispatch, navigate, params.projectName])
 
   if (project.error) {
     return (
@@ -135,13 +135,4 @@ const ProjectOverview = ({ fetchProject, project }) => {
   )
 }
 
-const actionCreators = {
-  fetchProject: projectActions.fetchProject
-}
-
-export default connect(
-  ({ projectStore }) => ({
-    project: projectStore.project
-  }),
-  { ...actionCreators }
-)(ProjectOverview)
+export default ProjectOverview

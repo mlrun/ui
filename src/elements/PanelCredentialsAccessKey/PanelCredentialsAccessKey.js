@@ -20,11 +20,13 @@ such restriction.
 import React, { useEffect, useState } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
-
-import { PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
+import { useDispatch } from 'react-redux'
 
 import CheckBox from '../../common/CheckBox/CheckBox'
 import Input from '../../common/Input/Input'
+
+import { setNewFunctionCredentialsAccessKey } from '../../reducers/functionReducer'
+import { PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
 
 import './panelCredentialsAccessKey.scss'
 
@@ -33,12 +35,11 @@ const PanelCredentialsAccessKey = ({
   credentialsAccessKey,
   isPanelEditMode = false,
   required = false,
-  setCredentialsAccessKey,
   setValidation,
   validation
 }) => {
   const [inputValue, setInputValue] = useState('')
-
+  const dispatch = useDispatch()
   const accessKeyClassNames = classnames(className, 'new-item-side-panel__item', 'access-key')
 
   useEffect(() => {
@@ -60,7 +61,7 @@ const PanelCredentialsAccessKey = ({
             setInputValue('')
           }
 
-          setCredentialsAccessKey(value === credentialsAccessKey ? '' : value)
+          dispatch(setNewFunctionCredentialsAccessKey(value === credentialsAccessKey ? '' : value))
           setValidation(state => ({
             ...state,
             isAccessKeyValid: true
@@ -75,7 +76,7 @@ const PanelCredentialsAccessKey = ({
           invalid={!validation.isAccessKeyValid}
           onBlur={event => {
             if (credentialsAccessKey !== event.target.value) {
-              setCredentialsAccessKey(event.target.value)
+              dispatch(setNewFunctionCredentialsAccessKey(event.target.value))
             }
           }}
           onChange={setInputValue}
@@ -99,7 +100,6 @@ PanelCredentialsAccessKey.propTypes = {
   credentialsAccessKey: PropTypes.string.isRequired,
   isPanelEditMode: PropTypes.bool,
   required: PropTypes.bool,
-  setCredentialsAccessKey: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({}).isRequired
 }

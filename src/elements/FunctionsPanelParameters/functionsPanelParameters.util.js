@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { isNil } from 'lodash'
+import { setNewFunctionParameters } from '../../reducers/functionReducer'
 
 export const STRING_TYPE = 'string'
 export const NUMBER_TYPE = 'number'
@@ -57,36 +58,39 @@ export const isEditableParameterValid = (parameter, parameters) => {
   }
 }
 
-export const setFunctionParameters = (
-  parameter,
-  key,
-  setNewFunctionParameters,
-  parameters
-) => {
+export const setFunctionParameters = (parameter, key, dispatch, parameters) => {
   switch (parameter.type) {
     case NUMBER_TYPE:
-      setNewFunctionParameters({
-        ...parameters,
-        [key]: Number(parameter.value)
-      })
+      dispatch(
+        setNewFunctionParameters({
+          ...parameters,
+          [key]: Number(parameter.value)
+        })
+      )
       break
     case BOOLEAN_TYPE:
-      setNewFunctionParameters({
-        ...parameters,
-        [key]: parameter.value !== 'false'
-      })
+      dispatch(
+        setNewFunctionParameters({
+          ...parameters,
+          [key]: parameter.value !== 'false'
+        })
+      )
       break
     case JSON_TYPE:
-      setNewFunctionParameters({
-        ...parameters,
-        [key]: JSON.parse(parameter.value)
-      })
+      dispatch(
+        setNewFunctionParameters({
+          ...parameters,
+          [key]: JSON.parse(parameter.value)
+        })
+      )
       break
     default:
-      setNewFunctionParameters({
-        ...parameters,
-        [key]: parameter.value
-      })
+      dispatch(
+        setNewFunctionParameters({
+          ...parameters,
+          [key]: parameter.value
+        })
+      )
   }
 }
 

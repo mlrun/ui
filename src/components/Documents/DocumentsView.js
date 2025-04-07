@@ -53,7 +53,6 @@ const DocumentsView = React.forwardRef(
       filtersStore,
       getAndSetSelectedArtifact,
       handleRefreshDocuments,
-      handleRefreshWithFilters,
       historyBackLink,
       isAllVersions,
       pageData,
@@ -119,10 +118,11 @@ const DocumentsView = React.forwardRef(
                     }
                     handleCancel={() => setSelectedDocument({})}
                     pageData={pageData}
-                    retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedDocument}
                     tableClassName="documents-table"
-                    tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
+                    tableHeaders={
+                      !isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)
+                    }
                     viewMode={viewMode}
                   >
                     {tableContent.map((tableItem, index) => (
@@ -175,7 +175,6 @@ DocumentsView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
   handleRefreshDocuments: PropTypes.func.isRequired,
-  handleRefreshWithFilters: PropTypes.func.isRequired,
   historyBackLink: PropTypes.string.isRequired,
   isAllVersions: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,

@@ -69,7 +69,6 @@ const FunctionsView = ({
   pageData,
   paginationConfigFunctionsRef,
   requestErrorMessage,
-  retryRequest,
   selectedFunction,
   setSearchFunctionsParams,
   tableContent
@@ -135,7 +134,6 @@ const FunctionsView = ({
                   }
                   handleCancel={handleCancel}
                   pageData={pageData}
-                  retryRequest={retryRequest}
                   selectedItem={selectedFunction}
                   tableClassName="functions-table"
                   tableHeaders={
@@ -225,7 +223,6 @@ FunctionsView.propTypes = {
   isAllVersions: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
-  retryRequest: PropTypes.func.isRequired,
   selectedFunction: PropTypes.object.isRequired,
   setSearchFunctionsParams: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired

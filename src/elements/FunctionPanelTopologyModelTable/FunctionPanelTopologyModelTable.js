@@ -18,27 +18,29 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import FunctionPanelTopologyModelTableView from './FunctionPanelTopologyModelTableView'
 
-import functionsActions from '../../actions/functions'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import {
   isRouteValid,
   newRouteInitialState,
   validationInitialState
 } from './functionPanelTopologyModelTable.util'
+import { setNewFunctionGraph } from '../../reducers/functionReducer'
 
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
-const FunctionPanelTopologyModelTable = ({ defaultData, functionsStore, setNewFunctionGraph }) => {
+const FunctionPanelTopologyModelTable = ({ defaultData }) => {
   const [data, setData] = useState([])
   const [newRoute, setNewRoute] = useState(newRouteInitialState)
   const [showAddNewRouteRow, setShowAddNewRouteRow] = useState(false)
   const [selectedRoute, setSelectedRoute] = useState(null)
   const [validation, setValidation] = useState(validationInitialState)
+  const dispatch = useDispatch()
+  const functionsStore = useSelector(store => store.functionsStore)
 
   useEffect(() => {
     if (!isEveryObjectValueEmpty(defaultData.graph?.routes ?? {})) {
@@ -90,10 +92,12 @@ const FunctionPanelTopologyModelTable = ({ defaultData, functionsStore, setNewFu
         }
       }
     ])
-    setNewFunctionGraph({
-      ...functionsStore.newFunction.spec.graph,
-      routes: generatedRoutes
-    })
+    dispatch(
+      setNewFunctionGraph({
+        ...functionsStore.newFunction.spec.graph,
+        routes: generatedRoutes
+      })
+    )
     setNewRoute(newRouteInitialState)
     setShowAddNewRouteRow(false)
   }
@@ -107,12 +111,14 @@ const FunctionPanelTopologyModelTable = ({ defaultData, functionsStore, setNewFu
       delete generatedRoutes[route.data.name]
 
       setData(state => state.filter(stateRoute => stateRoute.data.name !== route.data.name))
-      setNewFunctionGraph({
-        ...functionsStore.newFunction.spec.graph,
-        routes: generatedRoutes
-      })
+      dispatch(
+        setNewFunctionGraph({
+          ...functionsStore.newFunction.spec.graph,
+          routes: generatedRoutes
+        })
+      )
     },
-    [functionsStore.newFunction.spec.graph, setNewFunctionGraph]
+    [dispatch, functionsStore.newFunction.spec.graph]
   )
 
   const editRoute = () => {
@@ -158,10 +164,12 @@ const FunctionPanelTopologyModelTable = ({ defaultData, functionsStore, setNewFu
         return route
       })
     )
-    setNewFunctionGraph({
-      ...functionsStore.newFunction.spec.graph,
-      routes: generatedRoutes
-    })
+    dispatch(
+      setNewFunctionGraph({
+        ...functionsStore.newFunction.spec.graph,
+        routes: generatedRoutes
+      })
+    )
   }
 
   const discardChanges = () => {
@@ -213,6 +221,4 @@ const FunctionPanelTopologyModelTable = ({ defaultData, functionsStore, setNewFu
   )
 }
 
-export default connect(functionsStore => ({ ...functionsStore }), {
-  ...functionsActions
-})(FunctionPanelTopologyModelTable)
+export default FunctionPanelTopologyModelTable

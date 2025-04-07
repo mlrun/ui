@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useState, useMemo } from 'react'
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { forEach, isEmpty } from 'lodash'
@@ -43,7 +42,6 @@ import {
   isWorkflowStepVisible
 } from './workflow.util'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
-import functionsActions from '../../actions/functions'
 import { ACTIONS_MENU } from '../../types'
 import {
   DEFAULT_EDGE,
@@ -74,8 +72,6 @@ const Workflow = ({
   handleCancel,
   itemIsSelected,
   pageData,
-  refresh,
-  refreshJobs,
   selectedFunction = {},
   selectedJob = {},
   setWorkflowsViewMode,
@@ -266,7 +262,6 @@ const Workflow = ({
                 getCloseDetailsLink={() => getCloseDetailsLink(params.workflowId)}
                 handleCancel={handleCancel}
                 pageData={pageData}
-                retryRequest={refreshJobs}
                 selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
                 tab={MONITOR_WORKFLOWS_TAB}
               />
@@ -279,7 +274,6 @@ const Workflow = ({
             handleCancel={handleCancel}
             hideActionsMenu
             pageData={pageData}
-            retryRequest={refresh}
             selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
             tableHeaders={sortedTableContent[0]?.content ?? []}
           >
@@ -304,8 +298,6 @@ Workflow.propTypes = {
   handleCancel: PropTypes.func.isRequired,
   itemIsSelected: PropTypes.bool.isRequired,
   pageData: PropTypes.shape({}).isRequired,
-  refresh: PropTypes.func.isRequired,
-  refreshJobs: PropTypes.func.isRequired,
   selectedFunction: PropTypes.shape({}),
   selectedJob: PropTypes.shape({}),
   setWorkflowsViewMode: PropTypes.func.isRequired,
@@ -313,4 +305,4 @@ Workflow.propTypes = {
   workflowsViewMode: PropTypes.string.isRequired
 }
 
-export default connect(null, { ...functionsActions })(React.memo(Workflow))
+export default React.memo(Workflow)
