@@ -18,16 +18,14 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import Logs from './Logs'
 
 const DetailsLogs = ({
   additionalLogsTitle = '',
-  functionsStore,
   item,
-  jobsStore,
   logsTitle = '',
   noDataMessage = '',
   refreshAdditionalLogs,
@@ -40,6 +38,8 @@ const DetailsLogs = ({
   const [detailsAdditionalLogs, setDetailsAdditionalLogs] = useState('')
   const streamLogsRef = useRef()
   const streamAdditionalLogsRef = useRef()
+  const functionsStore = useSelector(store => store.functionsStore)
+  const jobsStore = useSelector(store => store.jobsStore)
 
   const mainLogsAreLoading = useMemo(() => {
     return functionsStore.logs.loading || jobsStore.logs.loading
@@ -116,7 +116,4 @@ DetailsLogs.propTypes = {
   withLogsRefreshBtn: PropTypes.bool.isRequired
 }
 
-export default connect(({ functionsStore, jobsStore }) => ({
-  functionsStore,
-  jobsStore
-}))(DetailsLogs)
+export default DetailsLogs
