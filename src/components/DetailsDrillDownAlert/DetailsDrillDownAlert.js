@@ -34,18 +34,7 @@ import { ReactComponent as EnlargeIcon } from 'igz-controls/images/ml-enlarge.sv
 import '../DetailsInfo/detailsInfo.scss'
 
 const DetailsDrillDownAlert = React.forwardRef(
-  (
-    {
-      detailsStore,
-      formState,
-      isDetailsPopUp,
-      pageData,
-      selectedItem,
-      setChangesCounter,
-      setChangesData
-    },
-    applyChangesRef
-  ) => {
+  ({ detailsStore, formState, isDetailsPopUp, pageData, selectedItem }, applyChangesRef) => {
     const openAlertsLogsModal = useCallback(() => {
       openPopUp(AlertLogsModal, { selectedItem, pageData })
     }, [pageData, selectedItem])
@@ -59,8 +48,6 @@ const DetailsDrillDownAlert = React.forwardRef(
           pageData={pageData}
           ref={applyChangesRef}
           selectedItem={selectedItem}
-          setChangesCounter={setChangesCounter}
-          setChangesData={setChangesData}
         />
         {pageData.details.entityType === JOB && (
           <>
@@ -97,9 +84,7 @@ DetailsDrillDownAlert.propTypes = {
   detailsStore: PropTypes.shape({}).isRequired,
   isDetailsPopUp: PropTypes.bool.isRequired,
   pageData: PropTypes.shape({}).isRequired,
-  selectedItem: PropTypes.shape({}).isRequired,
-  setChangesData: PropTypes.func.isRequired,
-  setChangesCounter: PropTypes.func.isRequired
+  selectedItem: PropTypes.shape({}).isRequired
 }
 
 DetailsInfo.displayName = 'DetailsDrillDownAlert'

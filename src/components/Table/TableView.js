@@ -41,7 +41,6 @@ const TableView = ({
   isTablePanelOpen,
   mainRowItemsCount,
   pageData,
-  retryRequest,
   selectedItem,
   sortProps = null,
   tab,
@@ -108,7 +107,6 @@ const TableView = ({
             getCloseDetailsLink={getCloseDetailsLink}
             handleCancel={handleCancel}
             pageData={pageData}
-            retryRequest={retryRequest}
             selectedItem={selectedItem}
             tab={tab}
             withActionMenu={withActionMenu}
@@ -129,7 +127,6 @@ TableView.propTypes = {
   hideActionsMenu: PropTypes.bool.isRequired,
   isTablePanelOpen: PropTypes.bool.isRequired,
   pageData: PropTypes.shape({}).isRequired,
-  retryRequest: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   sortProps: SORT_PROPS,
   tab: PropTypes.string,
