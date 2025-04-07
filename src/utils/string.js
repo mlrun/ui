@@ -35,7 +35,7 @@ export const joinDataOfArrayOrObject = (data, splitCharacter = ',') => {
 }
 
 export const deleteUnsafeHtml = unsafeStr => {
-  return unsafeStr.replace(/[&<>"'()]/g, '')
+  return unsafeStr.replace(/[&<>"'()\][]/g, '')
 }
 
 export const trimSplit = (value, delimiter) => {
