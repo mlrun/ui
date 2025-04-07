@@ -26,7 +26,6 @@ import ProjectMonitorView from './ProjectMonitorView'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelModal'
 
-import functionsActions from '../../actions/functions'
 import nuclioAction from '../../actions/nuclio'
 import {
   DATASET_TYPE,
@@ -52,15 +51,9 @@ import {
   removeProjectData,
   removeProjectSummary
 } from '../../reducers/projectReducer'
+import { removeFunctionsError, removeNewFunction } from '../../reducers/functionReducer'
 
-const ProjectMonitor = ({
-  fetchNuclioV3ioStreams,
-  functionsStore,
-  nuclioStore,
-  removeFunctionsError,
-  removeNewFunction,
-  removeV3ioStreams
-}) => {
+const ProjectMonitor = ({ fetchNuclioV3ioStreams, nuclioStore, removeV3ioStreams }) => {
   const [createFeatureSetPanelIsOpen, setCreateFeatureSetPanelIsOpen] = useState(false)
   const [isNewFunctionPopUpOpen, setIsNewFunctionPopUpOpen] = useState(false)
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
@@ -74,6 +67,7 @@ const ProjectMonitor = ({
   const projectSummariesAbortControllerRef = useRef(new AbortController())
   const v3ioStreamsAbortControllerRef = useRef(new AbortController())
   const frontendSpec = useSelector(state => state.appStore.frontendSpec)
+  const functionsStore = useSelector(store => store.functionsStore)
   const projectStore = useSelector(store => store.projectStore)
 
   const registerArtifactLink = useCallback(
@@ -193,10 +187,10 @@ const ProjectMonitor = ({
 
   const closeFunctionsPanel = () => {
     setShowFunctionsPanel(false)
-    removeNewFunction()
+    dispatch(removeNewFunction())
 
     if (functionsStore.error) {
-      removeFunctionsError()
+      dispatch(removeFunctionsError())
     }
   }
 
@@ -207,7 +201,7 @@ const ProjectMonitor = ({
 
   const createFunctionSuccess = async () => {
     setShowFunctionsPanel(false)
-    removeNewFunction()
+    dispatch(removeNewFunction())
 
     return dispatch(
       setNotification({
@@ -225,7 +219,7 @@ const ProjectMonitor = ({
     tag ||= 'latest'
 
     setShowFunctionsPanel(false)
-    removeNewFunction()
+    dispatch(removeNewFunction())
 
     const funcs = await dispatch(fetchProjectFunctions({ project: params.projectName }))
       .unwrap()
@@ -264,7 +258,7 @@ const ProjectMonitor = ({
     const { name, tag } = functionsStore.newFunction.metadata
 
     setShowFunctionsPanel(false)
-    removeNewFunction()
+    dispatch(removeNewFunction())
 
     const funcs = await dispatch(fetchProjectFunctions({ project: params.projectName }))
       .unwrap()
@@ -331,12 +325,10 @@ const ProjectMonitor = ({
 }
 
 export default connect(
-  ({ functionsStore, nuclioStore }) => ({
-    functionsStore,
+  ({ nuclioStore }) => ({
     nuclioStore
   }),
   {
-    ...functionsActions,
     ...nuclioAction
   }
 )(ProjectMonitor)

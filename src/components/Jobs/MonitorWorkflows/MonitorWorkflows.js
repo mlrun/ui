@@ -19,13 +19,13 @@ such restriction.
 */
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
 import WorkflowsTable from '../../../elements/WorkflowsTable/WorkflowsTable'
 
 import { MONITOR_WORKFLOWS_TAB, REQUEST_CANCELED } from '../../../constants'
-import { fetchInitialWorkflows, monitorWorkflowsActionCreator } from './monitorWorkflows.util'
+import { fetchInitialWorkflows } from './monitorWorkflows.util'
 import { JobsContext } from '../Jobs'
 import { createJobsWorkflowsTabContent } from '../../../utils/createJobsContent'
 import { setFilters } from '../../../reducers/filtersReducer'
@@ -36,7 +36,7 @@ import { deleteWorkflows } from '../../../reducers/workflowReducer'
 
 import './monitorWorkflows.scss'
 
-const MonitorWorkflows = ({ fetchFunctionLogs }) => {
+const MonitorWorkflows = () => {
   const [selectedFunction, setSelectedFunction] = useState({})
   const [workflowsAreLoaded, setWorkflowsAreLoaded] = useState(false)
   const [workflowIsLoaded, setWorkflowIsLoaded] = useState(false)
@@ -119,7 +119,6 @@ const MonitorWorkflows = ({ fetchFunctionLogs }) => {
       <WorkflowsTable
         backLink={`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}${window.location.search}`}
         context={JobsContext}
-        fetchFunctionLogs={fetchFunctionLogs}
         filters={filters}
         filtersConfig={workflowsFiltersConfig}
         getWorkflows={getWorkflows}
@@ -139,8 +138,4 @@ const MonitorWorkflows = ({ fetchFunctionLogs }) => {
   )
 }
 
-MonitorWorkflows.propTypes = {}
-
-export default connect(null, {
-  ...monitorWorkflowsActionCreator
-})(React.memo(MonitorWorkflows))
+export default React.memo(MonitorWorkflows)

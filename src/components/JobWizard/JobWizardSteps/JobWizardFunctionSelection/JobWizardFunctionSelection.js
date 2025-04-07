@@ -19,7 +19,6 @@ such restriction.
 */
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
-// import { OnChange } from 'react-final-form-listeners'
 import { useDispatch, useSelector } from 'react-redux'
 import { includes, isEmpty, intersection, isBoolean, pickBy, keys, uniqBy, cloneDeep } from 'lodash'
 
@@ -31,7 +30,6 @@ import NoData from '../../../../common/NoData/NoData'
 import Search from '../../../../common/Search/Search'
 import { FormOnChange, FormSelect } from 'igz-controls/components'
 
-import functionsActions from '../../../../actions/functions'
 import {
   FILTER_MENU_MODAL,
   FUNCTION_RUN_KINDS,
@@ -51,6 +49,11 @@ import {
   generateFunctionCardData,
   generateFunctionTemplateCardData
 } from './jobWizardFunctionSelection.util'
+import {
+  fetchFunctions,
+  fetchFunctionTemplate,
+  fetchHubFunctions
+} from '../../../../reducers/functionReducer'
 
 import './jobWizardFunctionSelection.scss'
 import { fetchProjectsNames } from '../../../../reducers/projectReducer'
@@ -251,47 +254,60 @@ const JobWizardFunctionSelection = ({
 
   const onSelectedProjectNameChange = currentValue => {
     dispatch(
-      functionsActions.fetchFunctions(currentValue, {}, {}, setFunctionsRequestErrorMessage)
-    ).then(response => {
-      if (response?.funcs) {
-        const validFunctions = response.funcs.filter(func => {
-          return includes(FUNCTION_RUN_KINDS, func.kind)
-        })
-
-        const groupedFunctions = Object.values(
-          validFunctions.reduce((prev, curr) => {
-            if (!prev[curr.metadata.name]) {
-              prev[curr.metadata.name] = {
-                name: curr.metadata.name,
-                functions: []
-              }
-            }
-
-            prev[curr.metadata.name].functions.push(curr)
-
-            return prev
-          }, {})
-        )
-
-        setFunctions(groupedFunctions)
-
-        if (filterByName.length > 0) {
-          const filteredFunctions = groupedFunctions.filter(func => {
-            return func.name.includes(filterByName)
+      fetchFunctions({
+        project: currentValue,
+        filters: {},
+        config: {},
+        setRequestErrorMessage: setFunctionsRequestErrorMessage
+      })
+    )
+      .unwrap()
+      .then(response => {
+        if (response?.funcs) {
+          const validFunctions = response.funcs.filter(func => {
+            return includes(FUNCTION_RUN_KINDS, func.kind)
           })
 
-          setFilteredFunctions(filteredFunctions)
+          const groupedFunctions = Object.values(
+            validFunctions.reduce((prev, curr) => {
+              if (!prev[curr.metadata.name]) {
+                prev[curr.metadata.name] = {
+                  name: curr.metadata.name,
+                  functions: []
+                }
+              }
+
+              prev[curr.metadata.name].functions.push(curr)
+
+              return prev
+            }, {})
+          )
+
+          setFunctions(groupedFunctions)
+
+          if (filterByName.length > 0) {
+            const filteredFunctions = groupedFunctions.filter(func => {
+              return func.name.includes(filterByName)
+            })
+
+            setFilteredFunctions(filteredFunctions)
+          }
         }
-      }
-    })
+      })
 
     formState.initialValues[FUNCTION_SELECTION_STEP].projectName = currentValue
   }
 
   useEffect(() => {
     if (activeTab === FUNCTIONS_SELECTION_HUB_TAB && !hubFunctionLoadedRef.current) {
-      dispatch(functionsActions.fetchHubFunctions({}, setHubFunctionsRequestErrorMessage)).then(
-        templatesObject => {
+      dispatch(
+        fetchHubFunctions({
+          allowedHubFunctions: {},
+          setRequestErrorMessage: setHubFunctionsRequestErrorMessage
+        })
+      )
+        .unwrap()
+        .then(templatesObject => {
           if (templatesObject) {
             setTemplatesCategories(templatesObject.hubFunctionsCategories)
             setTemplates(templatesObject.hubFunctions)
@@ -311,8 +327,7 @@ const JobWizardFunctionSelection = ({
 
             hubFunctionLoadedRef.current = true
           }
-        }
-      )
+        })
     }
   }, [activeTab, dispatch, formState.initialValues, setTemplates, setTemplatesCategories])
 
@@ -341,13 +356,15 @@ const JobWizardFunctionSelection = ({
     const selectNewFunction = () => {
       const functionTemplatePath = `${functionData.spec.item_uri}${functionData.spec.assets.function}`
 
-      dispatch(functionsActions.fetchFunctionTemplate(functionTemplatePath)).then(result => {
-        setSelectedFunctionData(result)
-        generateData(result)
-        setSelectedFunctionTab(FUNCTIONS_SELECTION_HUB_TAB)
-        setShowSchedule(false)
-        selectedActiveTab.current = activeTab
-      })
+      dispatch(fetchFunctionTemplate({ path: functionTemplatePath }))
+        .unwrap()
+        .then(result => {
+          setSelectedFunctionData(result)
+          generateData(result)
+          setSelectedFunctionTab(FUNCTIONS_SELECTION_HUB_TAB)
+          setShowSchedule(false)
+          selectedActiveTab.current = activeTab
+        })
     }
 
     if (

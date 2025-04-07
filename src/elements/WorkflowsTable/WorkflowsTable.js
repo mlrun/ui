@@ -45,7 +45,6 @@ import {
   generateActionsMenu,
   generatePageData
 } from '../../components/Jobs/MonitorWorkflows/monitorWorkflows.util'
-import functionsActions from '../../actions/functions'
 import getState from '../../utils/getState'
 import { DANGER_BUTTON } from 'igz-controls/constants'
 import { FILTERS_CONFIG } from '../../types'
@@ -71,6 +70,7 @@ import { useSortTable } from '../../hooks/useSortTable.hook'
 import { toggleYaml } from '../../reducers/appReducer'
 import { fetchJob } from '../../reducers/jobReducer'
 import { fetchWorkflow, rerunWorkflow, resetWorkflow } from '../../reducers/workflowReducer'
+import { fetchFunction } from '../../reducers/functionReducer'
 
 import cssVariables from '../../components/Jobs/MonitorWorkflows/monitorWorkflows.scss'
 
@@ -134,7 +134,6 @@ const WorkflowsTable = React.forwardRef(
       (item, projectName, setDetailsLogs) => {
         return getFunctionLogs(
           dispatch,
-          functionsActions.fetchFunctionLogs,
           fetchFunctionLogsTimeout,
           projectName,
           item.name,
@@ -527,12 +526,13 @@ const WorkflowsTable = React.forwardRef(
         ) {
           if (params.functionName !== selectedFunction.name) {
             dispatch(
-              functionsActions.fetchFunction(
-                params.workflowProjectName || params.projectName,
-                params.functionName,
-                params.functionHash === 'latest' ? '' : params.functionHash
-              )
+              fetchFunction({
+                project: params.workflowProjectName || params.projectName,
+                name: params.functionName,
+                hash: params.functionHash === 'latest' ? '' : params.functionHash
+              })
             )
+              .unwrap()
               .then(func => {
                 setSelectedFunction(
                   parseFunction(
@@ -554,11 +554,12 @@ const WorkflowsTable = React.forwardRef(
           !checkIfWorkflowItemIsJob()
         ) {
           dispatch(
-            functionsActions.fetchFunction(
-              params.workflowProjectName || params.projectName,
-              params.jobId
-            )
+            fetchFunction({
+              project: params.workflowProjectName || params.projectName,
+              name: params.jobId
+            })
           )
+            .unwrap()
             .then(func => {
               setSelectedFunction(
                 parseFunction(
@@ -762,7 +763,6 @@ const WorkflowsTable = React.forwardRef(
 WorkflowsTable.propTypes = {
   backLink: PropTypes.string.isRequired,
   context: PropTypes.object.isRequired,
-  fetchFunctionLogs: PropTypes.func.isRequired,
   filters: PropTypes.shape({}).isRequired,
   filtersConfig: FILTERS_CONFIG.isRequired,
   getWorkflows: PropTypes.func.isRequired,
