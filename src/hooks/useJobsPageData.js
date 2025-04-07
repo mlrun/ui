@@ -211,10 +211,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
               .map(job => parseJob(job, SCHEDULE_TAB))
               .filter(job => {
                 return (
-                  (!filters.type ||
-                    filters.type === FILTER_ALL_ITEMS ||
-                    job.type === filters.type) &&
-                  (!filters.project || job.project.includes(filters.project.toLowerCase()))
+                  !filters.type || filters.type === FILTER_ALL_ITEMS || job.type === filters.type
                 )
               })
 
@@ -228,10 +225,11 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
   const getWorkflows = useCallback(
     filters => {
       abortControllerRef.current = new AbortController()
+      const projectName = filters.project?.toLowerCase?.() || params.projectName || '*'
 
       dispatch(
         fetchWorkflows({
-          project: filters.project ? filters.project.toLowerCase() : params.projectName || '*',
+          project: projectName,
           filter: { ...filters, groupBy: GROUP_BY_WORKFLOW },
           config: {
             ui: {

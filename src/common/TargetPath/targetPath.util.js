@@ -34,10 +34,10 @@ import {
   V3IO_INPUT_PATH_SCHEME
 } from '../../constants'
 import { getArtifactReference, getFeatureReference, getParsedResource } from '../../utils/resources'
-import projectAction from '../../actions/projects'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
 import { fetchFeatureVector, fetchFeatureVectors } from '../../reducers/featureStoreReducer'
+import { fetchProjectsNames } from '../../reducers/projectReducer'
 import { isCommunityEdition } from '../../utils/helper'
 
 const targetPathRegex =
@@ -333,12 +333,15 @@ export const generateArtifactsReferencesList = artifacts => {
 }
 
 export const getProjectsNames = (dispatch, setDataInputState, projectName) => {
-  dispatch(projectAction.fetchProjectsNames()).then(result => {
-    setDataInputState(prev => ({
-      ...prev,
-      projects: generateProjectsList(result ?? [], projectName)
-    }))
-  })
+  dispatch(fetchProjectsNames())
+    .unwrap()
+    .then(result => {
+      setDataInputState(prev => ({
+        ...prev,
+        projects: generateProjectsList(result ?? [], projectName)
+      }))
+    })
+    .catch(() => {})
 }
 
 export const getArtifacts = (dispatch, project, storePathType, setDataInputState) => {

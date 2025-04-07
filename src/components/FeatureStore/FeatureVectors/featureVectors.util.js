@@ -110,7 +110,8 @@ export const generateActionsMenu = (
       hidden: isDetailsPopUp,
       icon: <Delete />,
       className: 'danger',
-      onClick: onDeleteFeatureVector
+      onClick: onDeleteFeatureVector,
+      allowLeaveWarning: true
     }
   ]
 ]

@@ -53,7 +53,6 @@ const FeatureSetsView = React.forwardRef(
       filtersStore,
       filters,
       handleRefresh,
-      handleRefreshWithFilters,
       pageData,
       requestErrorMessage,
       selectedFeatureSet,
@@ -115,7 +114,6 @@ const FeatureSetsView = React.forwardRef(
               detailsFormInitialValues={detailsFormInitialValues}
               handleCancel={() => setSelectedFeatureSetMin({})}
               pageData={pageData}
-              retryRequest={handleRefreshWithFilters}
               selectedItem={selectedFeatureSet}
               tab={FEATURE_SETS_TAB}
               tableClassName="feature-sets-table"
@@ -164,7 +162,6 @@ FeatureSetsView.propTypes = {
   featureStore: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   handleRefresh: PropTypes.func.isRequired,
-  handleRefreshWithFilters: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedFeatureSet: PropTypes.object.isRequired,

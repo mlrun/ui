@@ -21,7 +21,7 @@ import React, { useCallback, useRef, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { Button, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 import LoadButton from '../../../common/LoadButton/LoadButton'
@@ -43,6 +43,7 @@ import {
   getDefaultCloseDetailsLink
 } from '../../../utils/link-helper.util'
 import { getFilteredSearchParams } from '../../../utils/filter.util'
+import { setIteration } from '../../../reducers/detailsReducer'
 
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
@@ -65,7 +66,6 @@ const DetailsHeader = ({
   isDetailsPopUp,
   pageData,
   selectedItem,
-  setIteration,
   tab,
   withActionMenu = true
 }) => {
@@ -76,6 +76,7 @@ const DetailsHeader = ({
   const { actionButton, withToggleViewBtn, showAllVersions } = pageData.details
   const headerRef = useRef()
   const location = useLocation()
+  const dispatch = useDispatch()
 
   const errorMessage = useMemo(
     () =>
@@ -212,7 +213,7 @@ const DetailsHeader = ({
             key="Iteration"
             label="Iteration:"
             onClick={option => {
-              setIteration(option)
+              dispatch(setIteration(option))
             }}
             options={detailsStore.iterationOptions}
             selectedId={detailsStore.iteration}
@@ -350,7 +351,6 @@ DetailsHeader.propTypes = {
   isDetailsScreen: PropTypes.bool.isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
-  setIteration: PropTypes.func.isRequired,
   tab: PropTypes.string
 }
 

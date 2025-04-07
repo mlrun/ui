@@ -17,39 +17,18 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isEmpty } from 'lodash'
+import { DATE_FILTER_ANY_TIME, DEFAULT_ABORT_MSG } from '../constants'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import detailsApi from '../api/details-api'
+import { generatePods } from '../utils/generatePods'
+import modelEndpointsApi from '../api/modelEndpoints-api'
 import {
-  FETCH_JOB_PODS_SUCCESS,
-  FETCH_JOB_PODS_FAILURE,
-  REMOVE_JOB_PODS,
-  FETCH_MODEL_FEATURE_VECTOR_BEGIN,
-  FETCH_MODEL_FEATURE_VECTOR_FAILURE,
-  FETCH_MODEL_FEATURE_VECTOR_SUCCESS,
-  FETCH_ENDPOINT_METRICS_BEGIN,
-  FETCH_ENDPOINT_METRICS_SUCCESS,
-  FETCH_ENDPOINT_METRICS_FAILURE,
-  FETCH_ENDPOINT_METRICS_VALUES_BEGIN,
-  FETCH_ENDPOINT_METRICS_VALUES_SUCCESS,
-  FETCH_ENDPOINT_METRICS_VALUES_FAILURE,
-  REMOVE_MODEL_FEATURE_VECTOR,
-  SET_CHANGES_COUNTER,
-  SET_CHANGES,
-  SET_CHANGES_DATA,
-  SET_INFO_CONTENT,
-  SET_ITERATION,
-  SET_ITERATION_OPTIONS,
-  SHOW_WARNING,
-  REMOVE_INFO_CONTENT,
-  RESET_CHANGES,
-  SET_FILTERS_WAS_HANDLED,
-  SET_EDIT_MODE,
-  FETCH_JOB_PODS_BEGIN,
-  SET_SELECTED_METRICS_OPTIONS,
-  DATE_FILTER_ANY_TIME,
-  SET_DETAILS_DATES,
-  SET_DETAILS_POPUP_INFO_CONTENT,
-  REMOVE_DETAILS_POPUP_INFO_CONTENT
-} from '../constants'
+  generateMetricsItems,
+  parseMetrics
+} from '../components/DetailsMetrics/detailsMetrics.util'
+import { isEmpty } from 'lodash'
+import { TIME_FRAME_LIMITS } from '../utils/datePicker.util'
+import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 
 const initialState = {
   changes: {
@@ -85,79 +64,174 @@ const initialState = {
   }
 }
 
-const detailsReducer = (state = initialState, { type, payload }) => {
-  switch (type) {
-    case FETCH_JOB_PODS_BEGIN:
-      return {
-        ...state,
-        pods: {
-          ...state.pods,
-          loading: true
+export const fetchModelFeatureVector = createAsyncThunk(
+  'fetchModelFeatureVector',
+  ({ project, name, reference }, thunkAPI) => {
+    return detailsApi
+      .getModelFeatureVector(project, name, reference)
+      .then(response => {
+        return response.data.status
+      })
+      .catch(error => thunkAPI.rejectWithValue(error))
+  }
+)
+
+export const fetchJobPods = createAsyncThunk('fetchJobPods', ({ project, uid, kind }, thunkAPI) => {
+  return detailsApi
+    .getJobPods(project, uid, kind)
+    .then(({ data }) => {
+      return generatePods(project, uid, data)
+    })
+    .catch(error => thunkAPI.rejectWithValue(error))
+})
+
+export const fetchModelEndpointMetrics = createAsyncThunk(
+  'fetchEndpointMetrics',
+  ({ project, uid }, thunkAPI) => {
+    return modelEndpointsApi
+      .getModelEndpointMetrics(project, uid)
+      .then(({ data = [] }) => {
+        const metrics = generateMetricsItems(data)
+
+        return { endpointUid: uid, metrics }
+      })
+      .catch(error => thunkAPI.rejectWithValue(error))
+  }
+)
+
+export const fetchModelEndpointMetricsValues = createAsyncThunk(
+  'fetchModelEndpointMetricsValues',
+  ({ project, uid, params, abortController, setRequestErrorMessage = () => {} }, thunkAPI) => {
+    const config = {
+      params,
+      ui: {
+        controller: abortController,
+        setRequestErrorMessage,
+        customErrorMessage:
+          'The query result is too large to display. Reduce either the number of metrics or the time period.'
+      }
+    }
+
+    setRequestErrorMessage('')
+
+    return modelEndpointsApi
+      .getModelEndpointMetricsValues(project, uid, config)
+      .then(({ data = [] }) => {
+        const differenceInDays = params.end - params.start
+        const timeUnit = differenceInDays > TIME_FRAME_LIMITS['24_HOURS'] ? 'days' : 'hours'
+
+        return parseMetrics(data, timeUnit)
+      })
+      .catch(error => {
+        largeResponseCatchHandler(
+          error,
+          'Failed to fetch metrics',
+          thunkAPI.dispatch,
+          setRequestErrorMessage
+        )
+        return thunkAPI.rejectWithValue(error?.message === DEFAULT_ABORT_MSG ? null : error)
+      })
+  }
+)
+
+const detailsStoreSlice = createSlice({
+  name: 'detailsStore',
+  initialState,
+  reducers: {
+    removeDetailsPopUpInfoContent(state) {
+      state.detailsPopUpInfoContent = {}
+    },
+    removeInfoContent(state) {
+      state.infoContent = {}
+    },
+    removeModelFeatureVector(state) {
+      state.modelFeatureVectorData = initialState.modelFeatureVectorData
+    },
+    removePods(state) {
+      state.pods = initialState.pods
+    },
+    resetChanges(state) {
+      state.changes = initialState.changes
+    },
+    setChanges(state, action) {
+      state.changes = action.payload
+    },
+    setChangesCounter(state, action) {
+      state.changes.counter = action.payload
+    },
+    setChangesData(state, action) {
+      state.changes.data = action.payload
+    },
+    setDetailsDates(state, action) {
+      state.dates = action.payload
+    },
+    setDetailsPopUpInfoContent(state, action) {
+      state.detailsPopUpInfoContent = action.payload
+    },
+    setEditMode(state, action) {
+      state.editMode = action.payload
+    },
+    setFiltersWasHandled(state, action) {
+      state.filtersWasHandled = action.payload
+    },
+    setInfoContent(state, action) {
+      state.infoContent = action.payload
+    },
+    setIteration(state, action) {
+      state.iteration = action.payload
+    },
+    setIterationOption(state, action) {
+      state.iterationOptions = action.payload
+    },
+    setSelectedMetricsOptions(state, action) {
+      state.metricsOptions = {
+        ...state.metricsOptions,
+        lastSelected: action.payload.metrics,
+        selectedByEndpoint: {
+          ...state.metricsOptions.selectedByEndpoint,
+          [action.payload.endpointUid]: action.payload.metrics
         }
       }
-    case FETCH_JOB_PODS_FAILURE:
-      return {
-        ...state,
-        error: payload,
-        pods: {
-          ...initialState.pods,
-          loading: false
-        }
-      }
-    case FETCH_JOB_PODS_SUCCESS:
-      return {
-        ...state,
-        error: null,
-        pods: {
-          ...payload,
-          loading: false
-        }
-      }
-    case FETCH_MODEL_FEATURE_VECTOR_BEGIN:
-      return {
-        ...state,
-        loadingCounter: state.loadingCounter + 1
-      }
-    case FETCH_MODEL_FEATURE_VECTOR_SUCCESS:
-      return {
-        ...state,
-        error: null,
-        loadingCounter: state.loadingCounter - 1,
-        modelFeatureVectorData: {
-          ...payload
-        }
-      }
-    case FETCH_MODEL_FEATURE_VECTOR_FAILURE:
-      return {
-        ...state,
-        error: payload,
-        loadingCounter: state.loadingCounter - 1,
-        modelFeatureVectorData: {
-          ...initialState.modelFeatureVectorData
-        }
-      }
-    case REMOVE_MODEL_FEATURE_VECTOR:
-      return {
-        ...state,
-        modelFeatureVectorData: initialState.modelFeatureVectorData
-      }
-    case REMOVE_JOB_PODS:
-      return {
-        ...state,
-        pods: initialState.pods
-      }
-    case FETCH_ENDPOINT_METRICS_BEGIN:
-      return {
-        ...state,
-        loadingCounter: state.loadingCounter + 1
-      }
-    case FETCH_ENDPOINT_METRICS_SUCCESS: {
+    },
+    showWarning(state, action) {
+      state.showWarning = action.payload
+    }
+  },
+  extraReducers: builder => {
+    builder.addCase(fetchModelFeatureVector.pending, state => {
+      state.loadingCounter = state.loadingCounter + 1
+    })
+    builder.addCase(fetchModelFeatureVector.fulfilled, (state, action) => {
+      state.loadingCounter = state.loadingCounter - 1
+      state.modelFeatureVectorData = { ...action.payload }
+      state.error = null
+    })
+    builder.addCase(fetchModelFeatureVector.rejected, (state, action) => {
+      state.loadingCounter = state.loadingCounter - 1
+      state.modelFeatureVectorData = { ...initialState.modelFeatureVectorData }
+      state.error = action.payload
+    })
+    builder.addCase(fetchJobPods.pending, state => {
+      state.pods.loading = true
+    })
+    builder.addCase(fetchJobPods.fulfilled, (state, action) => {
+      state.pods = { ...action.payload, loading: false }
+      state.error = null
+    })
+    builder.addCase(fetchJobPods.rejected, (state, action) => {
+      state.pods.loading = false
+      state.error = action.payload
+    })
+    builder.addCase(fetchModelEndpointMetrics.pending, state => {
+      state.loadingCounter = state.loadingCounter + 1
+    })
+    builder.addCase(fetchModelEndpointMetrics.fulfilled, (state, action) => {
       const areMetricsSelectedForEndpoint = !isEmpty(
-        state.metricsOptions.selectedByEndpoint[payload.endpointUid]
+        state.metricsOptions.selectedByEndpoint[action.payload.endpointUid]
       )
       const selectedMetrics = areMetricsSelectedForEndpoint
-        ? state.metricsOptions.selectedByEndpoint[payload.endpointUid]
-        : payload.metrics.filter(metric => {
+        ? state.metricsOptions.selectedByEndpoint[action.payload.endpointUid]
+        : action.payload.metrics.filter(metric => {
             return state.metricsOptions.lastSelected.find(
               selectedMetric =>
                 selectedMetric.name === metric.name &&
@@ -166,141 +240,57 @@ const detailsReducer = (state = initialState, { type, payload }) => {
             )
           })
 
-      return {
-        ...state,
-        error: null,
-        loadingCounter: state.loadingCounter - 1,
-        metricsOptions: {
-          all: payload.metrics,
-          lastSelected: selectedMetrics,
-          preselected: selectedMetrics,
-          selectedByEndpoint: areMetricsSelectedForEndpoint
-            ? state.metricsOptions.selectedByEndpoint
-            : {
-                ...state.metricsOptions.selectedByEndpoint,
-                [payload.endpointUid]: selectedMetrics
-              }
-        }
+      state.error = null
+      state.loadingCounter = state.loadingCounter - 1
+      state.metricsOptions = {
+        all: action.payload.metrics,
+        lastSelected: selectedMetrics,
+        preselected: selectedMetrics,
+        selectedByEndpoint: areMetricsSelectedForEndpoint
+          ? state.metricsOptions.selectedByEndpoint
+          : {
+              ...state.metricsOptions.selectedByEndpoint,
+              [action.payload.endpointUid]: selectedMetrics
+            }
       }
-    }
-    case FETCH_ENDPOINT_METRICS_FAILURE:
-      return {
-        ...state,
-        error: payload,
-        loadingCounter: state.loadingCounter - 1,
-        metricsOptions: {
-          ...state.metricsOptions,
-          all: []
-        }
-      }
-    case FETCH_ENDPOINT_METRICS_VALUES_BEGIN:
-      return {
-        ...state,
-        loadingCounter: state.loadingCounter + 1
-      }
-    case FETCH_ENDPOINT_METRICS_VALUES_SUCCESS:
-      return {
-        ...state,
-        error: null,
-        loadingCounter: state.loadingCounter - 1
-      }
-    case FETCH_ENDPOINT_METRICS_VALUES_FAILURE:
-      return {
-        ...state,
-        error: payload,
-        loadingCounter: state.loadingCounter - 1
-      }
-    case REMOVE_INFO_CONTENT:
-      return {
-        ...state,
-        infoContent: {}
-      }
-    case REMOVE_DETAILS_POPUP_INFO_CONTENT:
-      return {
-        ...state,
-        detailsPopUpInfoContent: {}
-      }
-    case RESET_CHANGES:
-      return {
-        ...state,
-        changes: initialState.changes
-      }
-    case SET_CHANGES_COUNTER:
-      return {
-        ...state,
-        changes: {
-          ...state.changes,
-          counter: payload
-        }
-      }
-    case SET_CHANGES:
-      return {
-        ...state,
-        changes: payload
-      }
-    case SET_CHANGES_DATA:
-      return {
-        ...state,
-        changes: {
-          ...state.changes,
-          data: payload
-        }
-      }
-    case SET_DETAILS_DATES:
-      return {
-        ...state,
-        dates: payload
-      }
-    case SET_DETAILS_POPUP_INFO_CONTENT:
-      return {
-        ...state,
-        detailsPopUpInfoContent: payload
-      }
-    case SET_EDIT_MODE:
-      return {
-        ...state,
-        editMode: payload
-      }
-    case SET_FILTERS_WAS_HANDLED:
-      return {
-        ...state,
-        filtersWasHandled: payload
-      }
-    case SET_INFO_CONTENT:
-      return {
-        ...state,
-        infoContent: payload
-      }
-    case SET_ITERATION:
-      return {
-        ...state,
-        iteration: payload
-      }
-    case SET_ITERATION_OPTIONS:
-      return {
-        ...state,
-        iterationOptions: payload
-      }
-    case SHOW_WARNING:
-      return {
-        ...state,
-        showWarning: payload
-      }
-    case SET_SELECTED_METRICS_OPTIONS:
-      return {
-        ...state,
-        metricsOptions: {
-          ...state.metricsOptions,
-          lastSelected: payload.metrics,
-          selectedByEndpoint: {
-            ...state.metricsOptions.selectedByEndpoint,
-            [payload.endpointUid]: payload.metrics
-          }
-        }
-      }
-    default:
-      return state
+    })
+    builder.addCase(fetchModelEndpointMetrics.rejected, (state, action) => {
+      state.loadingCounter = state.loadingCounter - 1
+      state.error = action.payload
+      state.metricsOptions.all = []
+    })
+    builder.addCase(fetchModelEndpointMetricsValues.pending, state => {
+      state.loadingCounter = state.loadingCounter + 1
+    })
+    builder.addCase(fetchModelEndpointMetricsValues.fulfilled, (state, action) => {
+      state.loadingCounter = state.loadingCounter - 1
+      state.error = null
+    })
+    builder.addCase(fetchModelEndpointMetricsValues.rejected, (state, action) => {
+      state.loadingCounter = state.loadingCounter - 1
+      state.error = action.payload
+    })
   }
-}
+})
 
-export default detailsReducer
+export const {
+  removeDetailsPopUpInfoContent,
+  removeInfoContent,
+  removeModelFeatureVector,
+  removePods,
+  resetChanges,
+  setChanges,
+  setChangesCounter,
+  setChangesData,
+  setDetailsDates,
+  setDetailsPopUpInfoContent,
+  setEditMode,
+  setFiltersWasHandled,
+  setInfoContent,
+  setIteration,
+  setIterationOption,
+  setSelectedMetricsOptions,
+  showWarning
+} = detailsStoreSlice.actions
+
+export default detailsStoreSlice.reducer

@@ -18,16 +18,14 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useState } from 'react'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
 import FeatureSetsPanelDataSourceView from './FeatureSetsPanelDataSourceView'
 
-import projectsAction from '../../../actions/projects'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
-
 import { CSV, PARQUET } from './featureSetsPanelDataSource.util'
 import { isUrlInputValid } from '../UrlPath.utils'
 import {
@@ -175,6 +173,4 @@ FeatureSetsPanelDataSource.propTypes = {
   validation: PropTypes.shape({}).isRequired
 }
 
-export default connect(projectStore => ({ ...projectStore }), {
-  ...projectsAction
-})(FeatureSetsPanelDataSource)
+export default FeatureSetsPanelDataSource

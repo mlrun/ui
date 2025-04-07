@@ -17,19 +17,41 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useForm } from 'react-final-form'
+import { upperFirst } from 'lodash'
+import { useSelector } from 'react-redux'
 
-import { FormInput, FormOnChange } from 'igz-controls/components'
+import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
 import StatusFilter from '../../../common/StatusFilter/StatusFilter'
 
-import { LABELS_FILTER, PROJECT_FILTER, STATUS_FILTER_NAME } from '../../../constants'
+import {
+  FILTER_ALL_ITEMS,
+  LABELS_FILTER,
+  PROJECT_FILTER,
+  PROJECTS_FILTER_ALL_ITEMS,
+  STATUS_FILTER_NAME
+} from '../../../constants'
 import { workflowsStatuses } from '../../FilterMenu/filterMenu.settings'
 import { useMode } from '../../../hooks/mode.hook'
+import { generateProjectsList } from '../../../utils/projects'
 
 const WorkflowsMonitoringFilters = () => {
   const form = useForm()
   const { isDemoMode } = useMode()
+  const projectStore = useSelector(state => state.projectStore)
+
+  const projectsList = useMemo(() => {
+    const generatedProjects = generateProjectsList(projectStore.projectsNames.data)
+
+    return [
+      {
+        id: PROJECTS_FILTER_ALL_ITEMS,
+        label: upperFirst(FILTER_ALL_ITEMS)
+      },
+      ...generatedProjects
+    ]
+  }, [projectStore.projectsNames.data])
 
   const handleInputChange = (value, inputName) => {
     form.change(inputName, value || '')
@@ -38,10 +60,11 @@ const WorkflowsMonitoringFilters = () => {
   return (
     <div>
       <div className="form-row">
-        <FormInput name={PROJECT_FILTER} placeholder="Search by project name..." />
-        <FormOnChange
-          handler={value => handleInputChange(value, PROJECT_FILTER)}
+        <FormSelect
+          label="Project name"
           name={PROJECT_FILTER}
+          options={projectsList}
+          preventWidthOverflow
         />
       </div>
       <div className="form-row">
