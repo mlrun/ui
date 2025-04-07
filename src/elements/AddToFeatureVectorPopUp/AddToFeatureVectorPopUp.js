@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { connect, useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import { groupBy, uniqBy } from 'lodash'
 
@@ -37,7 +37,7 @@ import { ReactComponent as AddCircle } from 'igz-controls/images/add-circle.svg'
 import './addToFeatureVectorPopUp.scss'
 import { fetchFeatureVectors } from '../../reducers/featureStoreReducer'
 
-const AddToFeatureVectorPopUp = ({ action, currentProject, featureStore, projectStore }) => {
+const AddToFeatureVectorPopUp = ({ action, currentProject }) => {
   const [isPopUpOpen, setIsPopUpOpen] = useState(false)
   const [isCreateFeaturePopUpOpen, setIsCreateFeaturePopUpOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState('')
@@ -46,6 +46,8 @@ const AddToFeatureVectorPopUp = ({ action, currentProject, featureStore, project
   const [featureVectors, setFeatureVectors] = useState([])
   const [featureVectorsList, setFeatureVectorsList] = useState([])
   const [featureVectorTagsList, setFeatureVectorTagsList] = useState([])
+  const featureStore = useSelector(store => store.featureStore)
+  const projectStore = useSelector(store => store.projectStore)
   const [projectsList, setProjectsList] = useState(
     generateProjectsList(projectStore.projectsNames.data)
   )
@@ -285,10 +287,4 @@ AddToFeatureVectorPopUp.propTypes = {
   currentProject: PropTypes.string.isRequired
 }
 
-export default connect(
-  (projectStore, featureStore) => ({
-    ...projectStore,
-    ...featureStore
-  }),
-  {}
-)(AddToFeatureVectorPopUp)
+export default AddToFeatureVectorPopUp
