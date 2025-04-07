@@ -27,8 +27,8 @@ import BreadcrumbsStep from './BreadcrumbsStep/BreadcrumbsStep'
 import { useMode } from '../../hooks/mode.hook'
 import { generateMlrunScreens, generateTabsList } from './breadcrumbs.util'
 import { PROJECTS_PAGE_PATH } from '../../constants'
-import projectsAction from '../../actions/projects'
 import { generateProjectsList } from '../../utils/projects'
+import { fetchProjects } from '../../reducers/projectReducer'
 
 import './breadcrumbs.scss'
 
@@ -83,12 +83,8 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
   }, [location.pathname, params.projectName, mlrunScreens, projectTabs])
 
   useEffect(() => {
-    if (
-      projectsList.length === 0 &&
-      location.pathname !== '/projects' &&
-      !location.pathname.startsWith('/projects/*')
-    ) {
-      dispatch(projectsAction.fetchProjects({ format: 'minimal' }))
+    if (projectsList.length === 0 && location.pathname !== '/projects') {
+      dispatch(fetchProjects({ params: { format: 'minimal' } }))
     }
   }, [dispatch, location.pathname, projectsList.length])
 

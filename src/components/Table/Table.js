@@ -43,7 +43,6 @@ const Table = React.forwardRef(
       hideActionsMenu = false,
       mainRowItemsCount = 1,
       pageData,
-      retryRequest = () => {},
       selectedItem = {},
       sortProps = null,
       tab = '',
@@ -129,7 +128,6 @@ const Table = React.forwardRef(
         mainRowItemsCount={mainRowItemsCount}
         pageData={pageData}
         params={params}
-        retryRequest={retryRequest}
         selectedItem={selectedItem}
         sortProps={sortProps}
         tab={tab}
@@ -160,7 +158,6 @@ Table.propTypes = {
   hideActionsMenu: PropTypes.bool,
   mainRowItemsCount: PropTypes.number,
   pageData: PropTypes.shape({}).isRequired,
-  retryRequest: PropTypes.func,
   selectedItem: PropTypes.shape({}),
   sortProps: SORT_PROPS,
   tab: PropTypes.string,

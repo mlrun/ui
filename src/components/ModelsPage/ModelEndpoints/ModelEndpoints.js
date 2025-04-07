@@ -152,10 +152,6 @@ const ModelEndpoints = () => {
     [fetchData]
   )
 
-  const handleRefreshWithFilters = useCallback(() => {
-    handleRefresh(filters)
-  }, [filters, handleRefresh])
-
   const handleSelectItem = useCallback(
     modelEndpointMin => {
       chooseOrFetchModelEndpoint(dispatch, {}, modelEndpointMin).then(setSelectedModelEndpoint)
@@ -281,7 +277,6 @@ const ModelEndpoints = () => {
               <Table
                 actionsMenu={actionsMenu}
                 pageData={pageData}
-                retryRequest={handleRefreshWithFilters}
                 selectedItem={selectedModelEndpoint}
                 tab={MODEL_ENDPOINTS_TAB}
                 tableClassName="model-endpoints-table"

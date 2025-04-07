@@ -540,18 +540,5 @@ export const {
   setNewFeatureSetTarget,
   setNewFeatureSetVersion
 } = featureStoreSlice.actions
-export default featureStoreSlice.reducer
 
-// const featureStoreReducer = (state = initialState, { type, payload }) => {
-//     case START_FEATURE_SET_INGEST_SUCCESS:
-//       return {
-//         ...state,
-//         loading: false,
-//         error: null
-//       }
-//     default:
-//       return state
-//   }
-// }
-//
-// export default featureStoreReducer
+export default featureStoreSlice.reducer

@@ -30,7 +30,6 @@ import NoData from '../../../../common/NoData/NoData'
 import Search from '../../../../common/Search/Search'
 import { FormOnChange, FormSelect } from 'igz-controls/components'
 
-import projectsAction from '../../../../actions/projects'
 import {
   FILTER_MENU_MODAL,
   FUNCTION_RUN_KINDS,
@@ -57,6 +56,7 @@ import {
 } from '../../../../reducers/functionReducer'
 
 import './jobWizardFunctionSelection.scss'
+import { fetchProjectsNames } from '../../../../reducers/projectReducer'
 
 const JobWizardFunctionSelection = ({
   activeTab,
@@ -141,9 +141,12 @@ const JobWizardFunctionSelection = ({
 
   useEffect(() => {
     if (projects.length === 0) {
-      dispatch(projectsAction.fetchProjectsNames()).then(projects => {
-        setProjects(generateProjectsList(projects, params.projectName))
-      })
+      dispatch(fetchProjectsNames())
+        .unwrap()
+        .then(projects => {
+          setProjects(generateProjectsList(projects, params.projectName))
+        })
+        .catch(() => {})
     }
   }, [dispatch, params.projectName, projects.length])
 

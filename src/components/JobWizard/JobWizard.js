@@ -21,7 +21,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 import { isEmpty, get } from 'lodash'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -62,7 +62,6 @@ import {
   getNewJobErrorMsg,
   getSaveJobErrorMsg
 } from './JobWizard.util'
-import projectsAction from '../../actions/projects'
 import { FUNCTIONS_SELECTION_FUNCTIONS_TAB } from './JobWizardSteps/JobWizardFunctionSelection/jobWizardFunctionSelection.util'
 import { JOB_WIZARD_MODE } from '../../types'
 import { MODAL_MAX } from 'igz-controls/constants'
@@ -72,6 +71,7 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { editJob, removeJobFunction, runNewJob } from '../../reducers/jobReducer'
+import { fetchProject } from '../../reducers/projectReducer'
 import {
   fetchFunctionTemplate,
   fetchHubFunction,
@@ -82,11 +82,9 @@ import './jobWizard.scss'
 
 const JobWizard = ({
   defaultData = {},
-  frontendSpec,
   isBatchInference = false,
   isOpen,
   isTrain = false,
-  jobsStore,
   mode = PANEL_CREATE_MODE,
   onResolve,
   onSuccessRequest = () => {},
@@ -123,6 +121,8 @@ const JobWizard = ({
   const scheduleButtonRef = useRef()
   const formStateRef = useRef(null)
   const functionsStore = useSelector(store => store.functionsStore)
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+  const jobsStore = useSelector(store => store.jobsStore)
 
   const closeModal = useCallback(() => {
     if (showSchedule) {
@@ -138,7 +138,15 @@ const JobWizard = ({
 
   useEffect(() => {
     if (!isEditMode) {
-      dispatch(projectsAction.fetchProject(params.projectName, { format: 'minimal' }))
+      dispatch(
+        fetchProject({
+          project: params.projectName,
+          params: {
+            format: 'minimal'
+          }
+        })
+      )
+        .unwrap()
         .then(response => setCurrentProject(response?.data))
         .catch(error => {
           showErrorNotification(dispatch, error, 'The project failed to load')
@@ -562,12 +570,4 @@ JobWizard.propTypes = {
   wizardTitle: PropTypes.string
 }
 
-export default connect(
-  ({ appStore, jobsStore }) => ({
-    frontendSpec: appStore.frontendSpec,
-    jobsStore
-  }),
-  {
-    ...projectsAction
-  }
-)(JobWizard)
+export default JobWizard

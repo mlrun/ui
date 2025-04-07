@@ -61,7 +61,6 @@ const DetailsInfoItem = React.forwardRef(
       isFieldInEditMode = false,
       item = {},
       onClick = null,
-      setChangesData = () => {},
       state = ''
     },
     ref
@@ -89,7 +88,6 @@ const DetailsInfoItem = React.forwardRef(
           isFieldInEditMode={isFieldInEditMode}
           item={item}
           isEditable={!isDetailsPopUp}
-          setChangesData={setChangesData}
         />
       )
     } else if (item?.editModeEnabled && isFieldInEditMode && !isDetailsPopUp) {
@@ -338,7 +336,6 @@ DetailsInfoItem.propTypes = {
   isFieldInEditMode: PropTypes.bool,
   item: PropTypes.shape({}),
   onClick: PropTypes.func,
-  setChangesData: PropTypes.func,
   state: PropTypes.string
 }
 

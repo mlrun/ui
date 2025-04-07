@@ -126,10 +126,6 @@ const RealTimePipelines = () => {
     [fetchData]
   )
 
-  const handleRefreshWithFilters = useCallback(() => {
-    handleRefresh(filters)
-  }, [filters, handleRefresh])
-
   const tableContent = useMemo(() => {
     return createRealTimePipelinesContent(pipelines, params.projectName)
   }, [pipelines, params.projectName])
@@ -212,7 +208,6 @@ const RealTimePipelines = () => {
               <Table
                 actionsMenu={actionsMenu}
                 pageData={pageData}
-                retryRequest={handleRefreshWithFilters}
                 selectedItem={{}}
                 tab={REAL_TIME_PIPELINES_TAB}
                 tableClassName="pipelines-table"

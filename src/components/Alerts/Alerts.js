@@ -37,13 +37,12 @@ import {
   checkForSelectedAlert
 } from './alerts.util'
 import { getJobLogs } from '../../utils/getJobLogs.util'
-import projectsAction from '../../actions/projects'
 import { useAlertsPageData } from '../../hooks/useAlertsPageData'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import { removeProjects } from '../../reducers/projectReducer'
 
 const Alerts = () => {
   const [selectedAlert, setSelectedAlert] = useState({})
-  const [, setProjectsRequestErrorMessage] = useState('')
   const alertsStore = useSelector(state => state.alertsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const dispatch = useDispatch()
@@ -65,34 +64,18 @@ const Alerts = () => {
     lastCheckedAlertIdRef,
     paginatedAlerts,
     paginationConfigAlertsRef,
-    refreshAlerts,
     requestErrorMessage,
     searchParams,
-    setAlerts,
     setSearchParams
   } = useAlertsPageData(alertsFilters, true)
-
-  const handleRefreshWithFilters = useCallback(
-    filters => {
-      setAlerts(null)
-
-      return refreshAlerts(filters)
-    },
-    [refreshAlerts, setAlerts]
-  )
 
   const tableContent = useMemo(() => {
     return paginatedAlerts.map(alert => createAlertRowData(alert, isCrossProjects))
   }, [isCrossProjects, paginatedAlerts])
 
-  const fetchMinimalProjects = useCallback(() => {
-    dispatch(projectsAction.fetchProjects({ format: 'minimal' }, setProjectsRequestErrorMessage))
-  }, [dispatch])
-
   useEffect(() => {
-    dispatch(projectsAction.removeProjects())
-    isCrossProjects && fetchMinimalProjects()
-  }, [dispatch, isCrossProjects, fetchMinimalProjects])
+    dispatch(removeProjects())
+  }, [dispatch, isCrossProjects])
 
   const handleCancel = () => {
     setSelectedAlert({})
@@ -175,16 +158,14 @@ const Alerts = () => {
             filtersStore={filtersStore}
             handleCancel={handleCancel}
             handleRefreshAlerts={handleRefreshAlerts}
-            handleRefreshWithFilters={handleRefreshWithFilters}
             isCrossProjects={isCrossProjects}
-            pageData={pageData}
-            paginationConfigAlertsRef={paginationConfigAlertsRef}
-            requestErrorMessage={requestErrorMessage}
-            selectedAlert={selectedAlert}
-            setSearchParams={setSearchParams}
-            tableContent={tableContent}
-          />
-          <Pagination
+      pageData={pageData}
+      paginationConfigAlertsRef={paginationConfigAlertsRef}
+      requestErrorMessage={requestErrorMessage}
+      selectedAlert={selectedAlert}
+      setSearchParams={setSearchParams}
+      tableContent={tableContent}
+    /><Pagination
             closeParamName={ALERTS_PAGE_PATH}
             page={pageData.page}
             paginationConfig={paginationConfigAlertsRef.current}

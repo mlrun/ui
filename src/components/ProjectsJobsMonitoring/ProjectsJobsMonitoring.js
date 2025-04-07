@@ -50,7 +50,7 @@ import {
   parseWorkflowsQueryParamsCallback
 } from '../../utils/jobs.util'
 import { useJobsPageData } from '../../hooks/useJobsPageData'
-import projectsAction from '../../actions/projects'
+import { fetchProjects } from '../../reducers/projectReducer'
 
 import './projectsJobsMonitoring.scss'
 
@@ -144,7 +144,12 @@ const ProjectsJobsMonitoring = () => {
   }
 
   const fetchMinimalProjects = useCallback(() => {
-    dispatch(projectsAction.fetchProjects({ format: 'minimal' }, setProjectsRequestErrorMessage))
+    dispatch(
+      fetchProjects({
+        params: { format: 'minimal' },
+        setRequestErrorMessage: setProjectsRequestErrorMessage
+      })
+    )
   }, [dispatch])
 
   useEffect(() => {

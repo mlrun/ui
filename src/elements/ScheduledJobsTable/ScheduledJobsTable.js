@@ -148,10 +148,6 @@ const ScheduledJobsTable = ({
     [filters, params.projectName, refreshJobs, setConfirmData, dispatch]
   )
 
-  const handleRefreshWithFilters = useCallback(() => {
-    refreshJobs(filters)
-  }, [filters, refreshJobs])
-
   const onRemoveScheduledJob = useCallback(
     scheduledJob => {
       setConfirmData({
@@ -282,7 +278,6 @@ const ScheduledJobsTable = ({
           <Table
             actionsMenu={actionsMenu}
             pageData={pageData}
-            retryRequest={handleRefreshWithFilters}
             tab={SCHEDULE_TAB}
             tableClassName="scheduled-jobs-table"
             tableHeaders={tableContent[0]?.content ?? []}

@@ -561,10 +561,6 @@ const Functions = () => {
     refreshFunctions(filters)
   }
 
-  const retryRequestCallback = useCallback(() => {
-    refreshFunctions(functionsFilters)
-  }, [functionsFilters, refreshFunctions])
-
   const handleSelectFunction = item => {
     if (document.getElementsByClassName('view')[0]) {
       document.getElementsByClassName('view')[0].classList.remove('view')
@@ -721,7 +717,6 @@ const Functions = () => {
       isDemoMode={isDemoMode}
       pageData={pageData}
       requestErrorMessage={requestErrorMessage}
-      retryRequest={retryRequestCallback}
       selectedFunction={selectedFunction}
       setSearchParams={setSearchParams}
       tableContent={tableContent}
