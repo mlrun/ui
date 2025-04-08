@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
 import WorkflowsTable from '../../../elements/WorkflowsTable/WorkflowsTable'
@@ -33,11 +33,10 @@ import {
 import { createWorkflowsMonitoringContent } from '../../../utils/createJobsContent'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
-import { actionCreator } from './workflowsMonitoring.util'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 import { deleteWorkflows } from '../../../reducers/workflowReducer'
 
-const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
+const WorkflowsMonitoring = () => {
   const [selectedFunction, setSelectedFunction] = useState({})
   const [workflowsAreLoaded, setWorkflowsAreLoaded] = useState(false)
   const [workflowIsLoaded, setWorkflowIsLoaded] = useState(false)
@@ -108,7 +107,6 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
       <WorkflowsTable
         backLink={`/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_WORKFLOWS_TAB}${window.location.search}`}
         context={ProjectJobsMonitoringContext}
-        fetchFunctionLogs={fetchFunctionLogs}
         filters={filters}
         filtersConfig={workflowsFiltersConfig}
         getWorkflows={getWorkflows}
@@ -128,4 +126,4 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
   )
 }
 
-export default connect(null, { ...actionCreator })(WorkflowsMonitoring)
+export default WorkflowsMonitoring

@@ -18,60 +18,60 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import FunctionsPanelSecretsView from './FunctionsPanelSecretsView'
 
-import functionsActions from '../../actions/functions'
+import { setNewFunctionSecretSources } from '../../reducers/functionReducer'
 
-const FunctionsPanelSecrets = ({
-  functionsStore,
-  setNewFunctionSecretSources
-}) => {
+const FunctionsPanelSecrets = () => {
+  const dispatch = useDispatch()
+  const functionsStore = useSelector(store => store.functionsStore)
+
   const handleAddNewSecretSource = useCallback(
     secretSource => {
-      setNewFunctionSecretSources([
-        ...functionsStore.newFunction.spec.secret_sources,
-        { kind: secretSource.key, source: secretSource.value }
-      ])
+      dispatch(
+        setNewFunctionSecretSources([
+          ...functionsStore.newFunction.spec.secret_sources,
+          { kind: secretSource.key, source: secretSource.value }
+        ])
+      )
     },
-    [
-      functionsStore.newFunction.spec.secret_sources,
-      setNewFunctionSecretSources
-    ]
+    [dispatch, functionsStore.newFunction.spec.secret_sources]
   )
 
   const handleEditSecretSource = useCallback(
     secretSource => {
-      setNewFunctionSecretSources(
-        functionsStore.newFunction.spec.secret_sources.map((item, index) => {
-          if (index === secretSource.index) {
-            return {
-              ...item,
-              kind: secretSource.newKey || secretSource.key,
-              source: secretSource.value
+      dispatch(
+        setNewFunctionSecretSources(
+          functionsStore.newFunction.spec.secret_sources.map((item, index) => {
+            if (index === secretSource.index) {
+              return {
+                ...item,
+                kind: secretSource.newKey || secretSource.key,
+                source: secretSource.value
+              }
             }
-          }
 
-          return item
-        })
+            return item
+          })
+        )
       )
     },
-    [functionsStore.newFunction.spec.secret_sources, setNewFunctionSecretSources]
+    [dispatch, functionsStore.newFunction.spec.secret_sources]
   )
 
   const handleDeleteSecretSource = useCallback(
     secretSourceIndex => {
-      setNewFunctionSecretSources(
-        functionsStore.newFunction.spec.secret_sources.filter(
-          (secretSource, index) => index !== secretSourceIndex
+      dispatch(
+        setNewFunctionSecretSources(
+          functionsStore.newFunction.spec.secret_sources.filter(
+            (secretSource, index) => index !== secretSourceIndex
+          )
         )
       )
     },
-    [
-      functionsStore.newFunction.spec.secret_sources,
-      setNewFunctionSecretSources
-    ]
+    [dispatch, functionsStore.newFunction.spec.secret_sources]
   )
 
   return (
@@ -79,17 +79,12 @@ const FunctionsPanelSecrets = ({
       handleAddNewSecretSource={handleAddNewSecretSource}
       handleDeleteSecretSource={handleDeleteSecretSource}
       handleEditSecretSource={handleEditSecretSource}
-      secretSources={(functionsStore.newFunction.spec.secret_sources ?? []).map(
-        secretSource => ({
-          key: secretSource.kind,
-          value: secretSource.source
-        })
-      )}
+      secretSources={(functionsStore.newFunction.spec.secret_sources ?? []).map(secretSource => ({
+        key: secretSource.kind,
+        value: secretSource.source
+      }))}
     />
   )
 }
 
-export default connect(
-  functionsStore => ({ ...functionsStore }),
-  functionsActions
-)(FunctionsPanelSecrets)
+export default FunctionsPanelSecrets

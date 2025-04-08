@@ -99,8 +99,7 @@ const FunctionsPanelGeneralView = ({
 FunctionsPanelGeneralView.propTypes = {
   data: PropTypes.shape({}).isRequired,
   handleDescriptionOnBlur: PropTypes.func.isRequired,
-  setData: PropTypes.func.isRequired,
-  setNewFunctionDescription: PropTypes.func.isRequired
+  setData: PropTypes.func.isRequired
 }
 
 export default FunctionsPanelGeneralView

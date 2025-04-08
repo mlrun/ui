@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
@@ -46,7 +46,6 @@ import {
   setFullSelectedFunction
 } from './functionsOld.util'
 import createFunctionsRowData from '../../utils/createFunctionsRowData'
-import functionsActions from '../../actions/functions'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { isBackgroundTaskRunning } from '../../utils/poll.util'
@@ -68,18 +67,18 @@ import {
   PAST_WEEK_DATE_OPTION
 } from '../../utils/datePicker.util'
 import { toggleYaml } from '../../reducers/appReducer'
-
-import cssVariables from '../FunctionsPage/functions.scss'
-
-const Functions = ({
+import {
   deleteFunction,
   deployFunction,
   fetchFunction,
   fetchFunctions,
-  functionsStore,
   removeFunctionsError,
   removeNewFunction
-}) => {
+} from '../../reducers/functionReducer'
+
+import cssVariables from '../FunctionsPage/functions.scss'
+
+const Functions = () => {
   const [confirmData, setConfirmData] = useState(null)
   const [functions, setFunctions] = useState([])
   const [selectedFunctionMin, setSelectedFunctionMin] = useState({})
@@ -102,6 +101,7 @@ const Functions = ({
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
+  const functionsStore = useSelector(store => store.functionsStore)
 
   const functionsFiltersConfig = useMemo(() => {
     return {
@@ -126,64 +126,71 @@ const Functions = ({
       terminateDeleteTasksPolling()
       abortControllerRef.current = new AbortController()
 
-      return fetchFunctions(params.projectName, filters, {
-        ui: {
-          controller: abortControllerRef.current,
-          setRequestErrorMessage
-        },
-        params: {
-          format: 'minimal'
-        }
-      }).then(response => {
-        if (response?.funcs?.length > 0) {
-          const newFunctions = parseFunctions(response?.funcs, params.projectName)
-          const deletingFunctions = newFunctions.reduce((acc, func) => {
-            if (func.deletion_task_id && !func.deletion_error && !acc[func.deletion_task_id]) {
-              acc[func.deletion_task_id] = {
-                name: func.name
+      return dispatch(
+        fetchFunctions({
+          project: params.projectName,
+          filters,
+          config: {
+            ui: {
+              controller: abortControllerRef.current,
+              setRequestErrorMessage
+            },
+            params: {
+              format: 'minimal'
+            }
+          }
+        })
+      )
+        .unwrap()
+        .then(response => {
+          if (response?.funcs?.length > 0) {
+            const newFunctions = parseFunctions(response?.funcs, params.projectName)
+            const deletingFunctions = newFunctions.reduce((acc, func) => {
+              if (func.deletion_task_id && !func.deletion_error && !acc[func.deletion_task_id]) {
+                acc[func.deletion_task_id] = {
+                  name: func.name
+                }
               }
+
+              return acc
+            }, {})
+
+            if (!isEmpty(deletingFunctions)) {
+              setDeletingFunctions(deletingFunctions)
+              pollDeletingFunctions(
+                params.projectName,
+                terminatePollRef,
+                deletingFunctions,
+                () => fetchData(filters),
+                dispatch
+              )
             }
 
-            return acc
-          }, {})
+            setFunctions(newFunctions)
 
-          if (!isEmpty(deletingFunctions)) {
-            setDeletingFunctions(deletingFunctions)
-            pollDeletingFunctions(
+            return newFunctions
+          } else if ((params.funcName && params.tag) || params.hash) {
+            const paramsFunction = searchFunctionItem(
+              params.hash,
+              params.funcName,
+              params.tag,
               params.projectName,
-              terminatePollRef,
-              deletingFunctions,
-              () => fetchData(filters),
-              dispatch
+              [],
+              dispatch,
+              true
             )
+
+            if (!paramsFunction) {
+              navigate(`/projects/${params.projectName}/functions${window.location.search}`, {
+                replace: true
+              })
+            }
+            setFunctions([])
           }
-
-          setFunctions(newFunctions)
-
-          return newFunctions
-        } else if ((params.funcName && params.tag) || params.hash) {
-          const paramsFunction = searchFunctionItem(
-            params.hash,
-            params.funcName,
-            params.tag,
-            params.projectName,
-            [],
-            dispatch,
-            true
-          )
-
-          if (!paramsFunction) {
-            navigate(`/projects/${params.projectName}/functions${window.location.search}`, {
-              replace: true
-            })
-          }
-          setFunctions([])
-        }
-      })
+        })
     },
     [
       dispatch,
-      fetchFunctions,
       navigate,
       params.funcName,
       params.hash,
@@ -275,55 +282,49 @@ const Functions = ({
 
   const removeFunction = useCallback(
     func => {
-      deleteFunction(func.name, params.projectName).then(response => {
-        if (isBackgroundTaskRunning(response)) {
-          dispatch(
-            setNotification({
-              status: 200,
-              id: Math.random(),
-              message: 'Function deletion in progress'
-            })
-          )
-
-          setDeletingFunctions(prevDeletingFunctions => {
-            const newDeletingFunctions = {
-              ...prevDeletingFunctions,
-              [response.data.metadata.name]: {
-                name: func.name
-              }
-            }
-
-            pollDeletingFunctions(
-              params.projectName,
-              terminatePollRef,
-              newDeletingFunctions,
-              () => fetchData(functionsFilters),
-              dispatch
+      dispatch(deleteFunction({ funcName: func.name, project: params.projectName }))
+        .unwrap()
+        .then(response => {
+          if (isBackgroundTaskRunning(response)) {
+            dispatch(
+              setNotification({
+                status: 200,
+                id: Math.random(),
+                message: 'Function deletion in progress'
+              })
             )
 
-            return newDeletingFunctions
-          })
+            setDeletingFunctions(prevDeletingFunctions => {
+              const newDeletingFunctions = {
+                ...prevDeletingFunctions,
+                [response.data.metadata.name]: {
+                  name: func.name
+                }
+              }
 
-          if (!isEmpty(selectedFunction)) {
-            setSelectedFunctionMin({})
-            navigate(`/projects/${params.projectName}/functions${window.location.search}`, {
-              replace: true
+              pollDeletingFunctions(
+                params.projectName,
+                terminatePollRef,
+                newDeletingFunctions,
+                () => fetchData(functionsFilters),
+                dispatch
+              )
+
+              return newDeletingFunctions
             })
+
+            if (!isEmpty(selectedFunction)) {
+              setSelectedFunctionMin({})
+              navigate(`/projects/${params.projectName}/functions${window.location.search}`, {
+                replace: true
+              })
+            }
           }
-        }
-      })
+        })
 
       setConfirmData(null)
     },
-    [
-      deleteFunction,
-      dispatch,
-      fetchData,
-      functionsFilters,
-      navigate,
-      params.projectName,
-      selectedFunction
-    ]
+    [dispatch, fetchData, functionsFilters, navigate, params.projectName, selectedFunction]
   )
 
   const toggleConvertedYaml = useCallback(
@@ -389,7 +390,8 @@ const Functions = ({
         }
       }
 
-      deployFunction(data)
+      dispatch(deployFunction({ data }))
+        .unwrap()
         .then(result => {
           const data = result.data.data
           const postData = {
@@ -447,7 +449,7 @@ const Functions = ({
           })
         })
     },
-    [deployFunction, dispatch, functionsFilters, refreshFunctions]
+    [dispatch, functionsFilters, refreshFunctions]
   )
 
   const pageData = useMemo(
@@ -489,8 +491,7 @@ const Functions = ({
       toggleConvertedYaml,
       buildAndRunFunc,
       deletingFunctions,
-      selectedFunction,
-      fetchFunction
+      selectedFunction
     ]
   )
 
@@ -503,7 +504,7 @@ const Functions = ({
       setSelectedFunction,
       params.projectName
     )
-  }, [dispatch, fetchFunction, navigate, params.projectName, selectedFunctionMin])
+  }, [dispatch, navigate, params.projectName, selectedFunctionMin])
 
   useInitialTableFetch({
     fetchData,
@@ -569,17 +570,17 @@ const Functions = ({
   const closePanel = () => {
     setFunctionsPanelIsOpen(false)
     setEditableItem(null)
-    removeNewFunction()
+    dispatch(removeNewFunction())
 
     if (functionsStore.error) {
-      removeFunctionsError()
+      dispatch(removeFunctionsError())
     }
   }
 
   const createFunctionSuccess = isEditMode => {
     setEditableItem(null)
     setFunctionsPanelIsOpen(false)
-    removeNewFunction()
+    dispatch(removeNewFunction())
 
     return fetchData().then(() => {
       dispatch(
@@ -600,7 +601,7 @@ const Functions = ({
 
     setFunctionsPanelIsOpen(false)
     setEditableItem(null)
-    removeNewFunction()
+    dispatch(removeNewFunction())
 
     return fetchData(functionsFilters).then(functions => {
       if (functions.length) {
@@ -627,7 +628,7 @@ const Functions = ({
     const { name, tag } = functionsStore.newFunction.metadata
 
     setFunctionsPanelIsOpen(false)
-    removeNewFunction()
+    dispatch(removeNewFunction())
 
     return fetchData().then(functions => {
       if (functions) {
@@ -726,6 +727,4 @@ const Functions = ({
   )
 }
 
-export default connect(({ functionsStore }) => ({ functionsStore }), {
-  ...functionsActions
-})(React.memo(Functions))
+export default React.memo(Functions)
