@@ -93,7 +93,7 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, isAlertsPage = true }) =>
           abortController: metricsValuesAbortController.current,
           setRequestErrorMessage
         })
-      )
+      ).unwrap()
     },
     [dispatch, metricsValuesAbortController]
   )
