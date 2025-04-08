@@ -161,7 +161,7 @@ const Functions = ({
           setFunctions(newFunctions)
 
           return newFunctions
-        } else {
+        } else if ((params.funcName && params.tag) || params.hash) {
           const paramsFunction = searchFunctionItem(
             params.hash,
             params.funcName,
@@ -615,7 +615,7 @@ const Functions = ({
             `/projects/${params.projectName}/functions/${currentItem.hash}/${tab}${window.location.search}`
           )
         }
-        
+
         dispatch(
           setNotification({
             status: 200,
