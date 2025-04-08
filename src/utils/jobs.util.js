@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { cloneDeep, debounce } from 'lodash'
+import { cloneDeep, debounce, omit } from 'lodash'
 
 import {
   BE_PAGE,
@@ -136,7 +136,7 @@ export const getJobKindFromLabels = (labels = []) => {
 }
 
 export const getJobsFiltersConfig = (jobName, crossProjects) => {
-  return {
+  const filters = {
     [NAME_FILTER]: { label: 'Name:', hidden: Boolean(jobName), initialValue: '' },
     [DATES_FILTER]: {
       label: 'Start time:',
@@ -155,10 +155,16 @@ export const getJobsFiltersConfig = (jobName, crossProjects) => {
     [TYPE_FILTER]: { label: 'Type:', initialValue: FILTER_ALL_ITEMS, isModal: true },
     [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
   }
+
+  if (!crossProjects) {
+    return omit(filters, [PROJECT_FILTER])
+  }
+
+  return filters
 }
 
 export const getWorkflowsFiltersConfig = crossProjects => {
-  return {
+  const filters = {
     [NAME_FILTER]: { label: 'Name:', initialValue: '' },
     [DATES_FILTER]: {
       label: 'Created at:',
@@ -171,10 +177,16 @@ export const getWorkflowsFiltersConfig = crossProjects => {
     [STATUS_FILTER]: { label: 'Status:', initialValue: [FILTER_ALL_ITEMS], isModal: true },
     [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
   }
+
+  if (!crossProjects) {
+    return omit(filters, [PROJECT_FILTER])
+  }
+
+  return filters
 }
 
 export const getScheduledFiltersConfig = crossProjects => {
-  return {
+  const filters = {
     [NAME_FILTER]: { label: 'Name:', initialValue: '' },
     [DATES_FILTER]: {
       label: 'Scheduled at:',
@@ -189,6 +201,12 @@ export const getScheduledFiltersConfig = crossProjects => {
     [TYPE_FILTER]: { label: 'Type:', initialValue: FILTER_ALL_ITEMS, isModal: true },
     [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
   }
+
+  if (!crossProjects) {
+    return omit(filters, [PROJECT_FILTER])
+  }
+
+  return filters
 }
 
 export const parseJobsQueryParamsCallback = (paramName, paramValue) => {

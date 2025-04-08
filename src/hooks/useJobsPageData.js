@@ -91,7 +91,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
   const refreshJobs = useCallback(
     (filters, { forceFetchJobs = false } = {}) => {
       const isJobRunsRequest = params.jobName && !forceFetchJobs
-      
+
       if (isJobRunsRequest) {
         setJobRuns(null)
       } else {
