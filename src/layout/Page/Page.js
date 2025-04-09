@@ -34,7 +34,7 @@ import { fetchFrontendSpec, toggleYaml } from '../../reducers/appReducer'
 import { NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
 import { isProjectValid } from '../../utils/link-helper.util'
 import { generateProjectsList } from '../../utils/projects'
-import projectsAction from '../../actions/projects'
+import { fetchProjects } from '../../reducers/projectReducer'
 
 import './Page.scss'
 
@@ -65,15 +65,14 @@ const Page = () => {
   }, [projectsNames.data])
 
   useEffect(() => {
-    if (
-      projectsList.length === 0 &&
-      location.pathname !== '/projects' &&
-      !location.pathname.startsWith('/projects/*') //todo remove last condition when project filter (select) on cross project monitoring will be merged
-    ) {
-      dispatch(projectsAction.fetchProjects({ format: 'minimal' })).then(projects => {
-        isProjectValid(navigate, projects, projectName, dispatch)
-        setProjectFetched(true)
-      })
+    if (projectsList.length === 0 && location.pathname !== '/projects') {
+      dispatch(fetchProjects({ params: { format: 'minimal' } }))
+        .unwrap()
+        .then(projects => {
+          console.log(projectName)
+          isProjectValid(navigate, projects, projectName, dispatch)
+          setProjectFetched(true)
+        })
     } else {
       setProjectFetched(true)
     }
