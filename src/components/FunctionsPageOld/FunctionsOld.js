@@ -178,6 +178,8 @@ const Functions = ({
             })
           }
           setFunctions([])
+        } else {
+          setFunctions([])
         }
       })
     },
