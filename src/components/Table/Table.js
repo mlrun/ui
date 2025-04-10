@@ -44,6 +44,7 @@ const Table = React.forwardRef(
       mainRowItemsCount = 1,
       pageData,
       selectedItem = {},
+      skipTableWrapper = false,
       sortProps = null,
       tab = '',
       tableClassName = '',
@@ -129,6 +130,7 @@ const Table = React.forwardRef(
         pageData={pageData}
         params={params}
         selectedItem={selectedItem}
+        skipTableWrapper={skipTableWrapper}
         sortProps={sortProps}
         tab={tab}
         tableRef={tableRef}
@@ -159,6 +161,7 @@ Table.propTypes = {
   mainRowItemsCount: PropTypes.number,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}),
+  skipTableWrapper: PropTypes.bool,
   sortProps: SORT_PROPS,
   tab: PropTypes.string,
   tableClassName: PropTypes.string,
