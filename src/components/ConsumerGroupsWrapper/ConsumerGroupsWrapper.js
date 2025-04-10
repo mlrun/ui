@@ -19,27 +19,24 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams, Outlet } from 'react-router-dom'
-import { useDispatch, connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Loader from '../../common/Loader/Loader'
 
-import nuclioActions from '../../actions/nuclio'
 import { GROUP_BY_NONE } from '../../constants'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
 import { setFilters } from '../../reducers/filtersReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
+import { fetchNuclioV3ioStreams, resetV3ioStreamsError } from '../../reducers/nuclioReducer'
 
-const ConsumerGroupsWrapper = ({
-  fetchNuclioV3ioStreams,
-  frontendSpec,
-  resetV3ioStreamsError,
-  v3ioStreams
-}) => {
+const ConsumerGroupsWrapper = () => {
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const navigate = useNavigate()
   const params = useParams()
+  const frontendSpec = useSelector(state => state.appStore.frontendSpec)
+  const v3ioStreams = useSelector((store) => store.nuclioStore.v3ioStreams)
   const dispatch = useDispatch()
 
   const nuclioStreamsAreEnabled = useMemo(
@@ -53,8 +50,8 @@ const ConsumerGroupsWrapper = ({
 
   const refreshConsumerGroups = useCallback(() => {
     setRequestErrorMessage('')
-    fetchNuclioV3ioStreams(params.projectName)
-  }, [fetchNuclioV3ioStreams, params.projectName])
+    dispatch(fetchNuclioV3ioStreams({ project: params.projectName }))
+  }, [dispatch, params.projectName])
 
   useEffect(() => {
     if (v3ioStreams.error) {
@@ -67,9 +64,9 @@ const ConsumerGroupsWrapper = ({
         setRequestErrorMessage
       )
 
-      resetV3ioStreamsError()
+      dispatch(resetV3ioStreamsError())
     }
-  }, [dispatch, v3ioStreams.error, refreshConsumerGroups, resetV3ioStreamsError])
+  }, [dispatch, v3ioStreams.error, refreshConsumerGroups])
 
   useEffect(() => {
     if (!isEmpty(frontendSpec) && !nuclioStreamsAreEnabled) {
@@ -99,12 +96,4 @@ const ConsumerGroupsWrapper = ({
   )
 }
 
-export default connect(
-  ({ appStore, nuclioStore }) => ({
-    frontendSpec: appStore.frontendSpec,
-    v3ioStreams: nuclioStore.v3ioStreams
-  }),
-  {
-    ...nuclioActions
-  }
-)(ConsumerGroupsWrapper)
+export default ConsumerGroupsWrapper
