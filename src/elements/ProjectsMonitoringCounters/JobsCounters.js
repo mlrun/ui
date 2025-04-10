@@ -76,7 +76,7 @@ const JobsCounters = () => {
         {jobStats.counters.map(({ counter, label, link, statusClass, tooltip }) => (
           <StatsCard.Col key={`${statusClass}-jobs`}>
             <div className="stats__link" onClick={link} data-testid={`jobs_${statusClass}_counter`}>
-              <div className="stats__counter">
+              <div className="stats__counter stats__counter-large">
                 {projectStore.projectsSummary.loading ? (
                   <Loader section small secondary />
                 ) : (

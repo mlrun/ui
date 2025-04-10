@@ -52,6 +52,10 @@
       font-weight: 400;
       font-size: 28px;
 
+      &-large {
+        min-height: 34px;
+      }
+
       &:hover {
         @include counterLinkHover;
       }

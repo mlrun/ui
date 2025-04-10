@@ -79,11 +79,11 @@ const ContentMenu = ({
                     )}
                   </Link>
                 ) : (
-                  <span className={tab.icon && 'content-menu__item-icon'}>
+                  <span className={tab.icon && 'content-menu__tab-icon'}>
                     {tab.icon && <i>{tab.icon}</i>}
                     {tab.label ?? tab.id}
                     {window.mlrunConfig.betaMode === 'enabled' && tab.preview && (
-                      <span className="content-menu__item__preview"> (Beta)</span>
+                      <span className="content-menu__tab__preview"> (Beta)</span>
                     )}
                   </span>
                 )}

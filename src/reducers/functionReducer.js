@@ -409,6 +409,12 @@ const functionsSlice = createSlice({
       state.loading = false
     })
     builder.addCase(fetchHubFunctions.pending, showLoading)
+    builder.addCase(fetchHubFunctions.fulfilled, (state, action) => {
+      state.loading = false
+      state.hubFunctions = action.payload.hubFunctions
+      state.hubFunctionsCatalog = action.payload.hubFunctionsCategories
+      state.error = null
+    })
     builder.addCase(fetchHubFunctions.rejected, (state, action) => {
       state.error = action.payload
       state.loading = false
