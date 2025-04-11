@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo } from 'react'
+import React, { memo, useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 import HistogramChart from '../../common/MlChart/HistogramChart/HistogramChart'
@@ -132,4 +132,4 @@ DetailsFeaturesAnalysis.propTypes = {
   selectedItem: PropTypes.object.isRequired
 }
 
-export default DetailsFeaturesAnalysis
+export default memo(DetailsFeaturesAnalysis)
