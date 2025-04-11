@@ -633,7 +633,6 @@ Feature: Jobs and workflows
         Then verify "Artifacts_Table" element visibility on "Artifacts_Info_Pane" wizard
         When click on "sorter_icon" in "Artifacts_Table" table on "Artifacts_Info_Pane" wizard with sorters
         And wait load page
-        And select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then click on cell with row index 1 in "name" column in "Artifacts_Table" table on "Artifacts_Info_Pane" wizard
         Then click on "Artifact_Preview_Button" element on "Artifacts_Info_Pane" wizard
         And wait load page
@@ -2328,6 +2327,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @smoke
+    #TODO: Add V3IO checks
     Scenario: MLJW025 - Check Minimum CPU value on Batch Run wizard - Resources
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2371,6 +2371,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @smoke
+    #TODO: Add V3IO checks
     Scenario: MLJW026 - Check tip and warning messages in Volumes section on Batch Run wizard - Resources
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2429,6 +2430,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @smoke
+    #TODO: Add V3IO checks
     Scenario: MLJW031 - Check mandatory of Container and Resource Path fields for V3IO volume - Batch Run - Resources
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard

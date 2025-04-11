@@ -522,9 +522,9 @@ const functionSelectionTabs = {
   root: '.wizard-form__content .content-menu',
   header: {},
   body: {
-    root: '.content-menu__list',
+    root: '.content-menu__tabs',
     row: {
-      root: '.content-menu__item',
+      root: '.content-menu__tab',
       fields: {
         key: ''
       }
@@ -660,11 +660,11 @@ const actionMenuStructureTransitionPopup = {
 }
 
 const infoPaneTabSelector = {
-  root: '.table__item-popup .tabs-slider__tabs',
+  root: '.table__item-popup  .content-menu__tabs',
   header: {},
   body: {
     row: {
-      root: '.tabs-slider__tab',
+      root: '.content-menu__tab',
       fields: {
         key: '',
         hintButton: '.tip-container'
@@ -797,7 +797,7 @@ module.exports = {
       )
     },
     Metrics_Selector_Counter: By.css('[data-testid="metrics-selector-counter"]'),
-    Metrics_Apply_Button: By.css('[data-testid="metrics-selector-buttons"] .btn-secondary'),
+    Metrics_Apply_Button: By.css('[data-testid="metrics-selector-buttons"] .btn-primary'),
     Metrics_Clear_Button: By.css('[data-testid="metrics-selector-buttons"] .btn-tertiary')
   },
   modalTransitionPopup: {

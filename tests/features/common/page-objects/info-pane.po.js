@@ -50,11 +50,11 @@ const actionMenuStructureFullView = {
 }
 
 const infoPaneTabSelector = {
-  root: '.table__item .tabs-slider__tabs',
+  root: '.table__item .content-menu__tabs',
   header: {},
   body: {
     row: {
-      root: 'a',
+      root: '.content-menu__tab',
       fields: {
         key: '',
         hintButton: '.tip-container'
@@ -303,6 +303,21 @@ const previewInfoPaneTable = {
         gender: '.data-ellipsis:nth-of-type(5)',
         age: '.data-ellipsis:nth-of-type(6)'
       }
+    }
+  }
+}
+
+const artifactsPreviewInfoPaneTable = {
+  root: '.table__item .preview_container .artifact-preview',
+  header: {
+    root: '.artifact-preview__table-header',
+    sorters: {}
+  },
+  body: {
+    root: '.artifact-preview__table-body',
+    row: {
+      root: '.artifact-preview__table-row',
+      fields: {}
     }
   }
 }
@@ -840,7 +855,8 @@ module.exports = {
     Version_tag_Input_full_view: commonVersionTagInputFullView,
     Version_tag_Value_full_view: By.css('.table__item_big .item-info__details-wrapper:nth-of-type(1) .details-item:nth-of-type(3) .details-item__data .data-ellipsis'),
     Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
-    Version_tag_Input: commonVersionTagInput
+    Version_tag_Input: commonVersionTagInput,
+    Preview_Tab_Info_Pane_Table: commonTable(artifactsPreviewInfoPaneTable)
   },
   modelsInfoPane: {
     Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
@@ -915,16 +931,18 @@ module.exports = {
         false
       )
     ),
+    Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
+    Overview_Drift_Headers: commonTable(infoPaneDriftHeaders),
     Endpoint_Call_Count: By.css('.metrics .metrics__card-invocation'),
     Expand_Collapse_Invocation_Card_Button: By.css('[data-testid="invocation-card-toggle-icon"]'),
     Invocation_Title: By.css('.stats-card .stats-card__title'),
     Invocation_Collapse_Title: By.css('.stats-card .metrics__card-invocation-content-title'),
-    Invocation_Drift_Icon: By.css('.stats-card .metrics__card-invocation-header_drift-icon-container'),
-    Invocation_Drift_Down: By.css('.stats-card .metrics__card-invocation-header_drift_down'),
-    Invocation_Drift_Up: By.css('.stats-card .metrics__card-invocation-header_drift_up'),
-    Invocation_Selected_Date: By.css('.stats-card .metrics__card-invocation-header-selected-date'),
-    Invocation_Total_Title: By.css('.stats-card .metrics__card-invocation-header-total-title'),
-    Invocation_Total_Score: By.css('.stats-card .metrics__card-invocation-header-total-score'),
+    Invocation_Drift_Icon: By.css('.stats-card .metrics__card-invocation-header__drift-icon-container'),
+    Invocation_Drift_Down: By.css('.stats-card .metrics__card-invocation-header__drift_down'),
+    Invocation_Drift_Up: By.css('.stats-card .metrics__card-invocation-header__drift_up'),
+    Invocation_Selected_Date: By.css('.stats-card .metrics__card-invocation-header__selected-date'),
+    Invocation_Total_Title: By.css('.stats-card .metrics__card-invocation-header__total-title'),
+    Invocation_Total_Score: By.css('.stats-card .metrics__card-invocation-header__total-score'),
     Invocation_Graph: By.css('.stats-card .metrics__card-body-invocation'),
     Metrics_Empty_Select_Message: By.css('.metrics .metrics__empty-select'),
     Metric_App_Name: By.css('.metrics .metrics__app-name:nth-of-type(3)'),
