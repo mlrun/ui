@@ -34,9 +34,9 @@ const tabSelector = {
   root: '.content-menu',
   header: {},
   body: {
-    root: '.content-menu__list',
+    root: '.content-menu__tabs',
     row: {
-      root: '.content-menu__item',
+      root: '.content-menu__tab',
       fields: {
         key: ''
       }

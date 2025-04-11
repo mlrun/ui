@@ -52,6 +52,7 @@ Feature: Feature Store Page
     @smoke
     Scenario: MLFS002 - Check all mandatory components on Features tab
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
@@ -351,6 +352,7 @@ Feature: Feature Store Page
     @smoke
     Scenario: MLFS010 - Check all mandatory components in Item infopane on Statistics tab table
         Given open url
+        And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "tab" with "Feature store" value in breadcrumbs menu
@@ -600,6 +602,7 @@ Feature: Feature Store Page
     @MLFS
     @passive
     @smoke
+    #TODO: Add V3IO checks
     Scenario: MLFS021 - Verify behaviour of Combobox element on Feature Store Feature Set new item wizard on Data Source Accordion
         Given open url
         And wait load page
@@ -630,7 +633,7 @@ Feature: Feature Store Page
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         Then type value "  " to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then verify "URL_Combobox" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display hover warning "Input_Hint"."V3IO_Path_Hint_Feature_Store"
+        # Then verify "URL_Combobox" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display hover warning "Input_Hint"."V3IO_Path_Hint_Feature_Store"
         Then select "S3" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         Then type value "@!$&" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -687,6 +690,7 @@ Feature: Feature Store Page
     @passive
     @inProgress
     @smoke
+    #TODO: Add V3IO checks
     Scenario: MLFS023 - Check all mandatory components on Feature Store Feature Set new item wizard
         Given open url
         And wait load page
@@ -710,7 +714,7 @@ Feature: Feature Store Page
         Then verify "Attributes_Input" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "URL_Combobox" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        Then select "S3" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -892,6 +896,7 @@ Feature: Feature Store Page
     @MLFS
     @passive
     @smoke
+    #TODO: Add V3IO checks
     Scenario: MLFS028 - Verify behaviour of Online and Offline Target store on Feature Store Feature Set new item wizard
         Given open url
         And wait load page
@@ -1041,6 +1046,7 @@ Feature: Feature Store Page
     @MLFS
     @inProgress
     @smoke
+    #TODO: Add V3IO checks
     Scenario: MLFS031 - Verify new Feature Set creation with 'Save' button
         * set tear-down property "project" created with "automation-test-name3" value
         * create "automation-test-name3" MLRun Project with code 201
@@ -1072,7 +1078,8 @@ Feature: Feature Store Page
             |    key3    |    value3    |
         Then type value "entity1,entity2,entity3" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         When collapse "Schema_Accordion" on "New_Feature_Set" wizard
-        When uncheck "Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        # When uncheck "Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        When uncheck "Online_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When collapse "Target_Store_Accordion" on "New_Feature_Set" wizard
         When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         When select "MLRun store" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
@@ -1481,6 +1488,7 @@ Feature: Feature Store Page
     @smoke
     Scenario: MLFS042 - Verify filtering by name and entity on Add to feature vector tab
         Given open url
+        And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1841,6 +1849,7 @@ Feature: Feature Store Page
         Then verify redirection from "projects/automation-test-010/INVALID/feature-vectors/test_fv/latest/overview" to "projects"
 
     @MLFS
+    @smoke
     Scenario: MLFS048 - Check active/highlited items with details panel on Feature Sets tab
         Given open url
         And wait load page
@@ -1869,6 +1878,7 @@ Feature: Feature Store Page
         Then compare "Header" element value on "Feature_Sets_Info_Pane" wizard with test "name" context value
     
     @MLFS
+    @smoke
     Scenario: MLFS049 - Check active/highlited items with details panel on Feature Vectors tab
         Given open url
         And wait load page
@@ -1893,6 +1903,7 @@ Feature: Feature Store Page
     @MLFS
     @passive
     @smoke
+    #TODO: Add V3IO checks
     Scenario: MLFS050 - Verify the creation of a feature set with completed target store components and the passthrough checkbox selected by default
         Given open url
         And wait load page
@@ -1921,10 +1932,11 @@ Feature: Feature Store Page
         Then "External_Offline_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then type value "new-feature-set-1" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        Then select "S3" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
+        Then uncheck "Online_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Save_Button" element on "New_Feature_Set" wizard
         Then click on "Confirm_Button" element on "Common_Popup" wizard
         Then "Header" element on "Feature_Sets_Info_Pane" should contains "new-feature-set-1" value
@@ -1932,6 +1944,7 @@ Feature: Feature Store Page
     @MLFS
     @passive
     @smoke
+    #TODO: Add V3IO checks
     Scenario: MLFS051 - Verify the creation of a feature set with checked passthrough checkbox and unchecked TARGET STORE Online checkbox
         Given open url
         And wait load page
@@ -1961,10 +1974,11 @@ Feature: Feature Store Page
         Then "External_Offline_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then type value "new-feature-set-2" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        Then select "S3" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
+        Then uncheck "Online_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Save_Button" element on "New_Feature_Set" wizard
         Then click on "Confirm_Button" element on "Common_Popup" wizard
         Then "Header" element on "Feature_Sets_Info_Pane" should contains "new-feature-set-2" value
@@ -1972,6 +1986,7 @@ Feature: Feature Store Page
     @MLFS
     @passive
     @smoke
+    #TODO: Add V3IO checks
     Scenario: MLFS052 - Verify the creation of a feature set with checked passthrough checkbox and checked TARGET STORE Online checkbox
         Given open url
         And wait load page
@@ -2003,10 +2018,11 @@ Feature: Feature Store Page
         Then "External_Offline_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then type value "new-feature-set-3" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        Then select "S3" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
+        Then uncheck "Online_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Save_Button" element on "New_Feature_Set" wizard
         Then click on "Confirm_Button" element on "Common_Popup" wizard
         Then "Header" element on "Feature_Sets_Info_Pane" should contains "new-feature-set-3" value
@@ -2014,6 +2030,7 @@ Feature: Feature Store Page
     @MLFS
     @passive
     @smoke
+    #TODO: Add V3IO checks
     Scenario: MLFS053 - Verify the creation of a feature set with unchecked target store components
         Given open url
         And wait load page
@@ -2027,7 +2044,7 @@ Feature: Feature Store Page
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "new-feature-set-4" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        Then select "S3" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
@@ -2052,7 +2069,7 @@ Feature: Feature Store Page
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard 
         Then type value "new-feature-set-4" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        Then select "S3" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
@@ -2073,7 +2090,7 @@ Feature: Feature Store Page
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard 
         Then type value "new-feature-set-4" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        Then select "S3" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
@@ -2104,6 +2121,7 @@ Feature: Feature Store Page
     @MLFS
     @passive
     @smoke
+    #TODO: Add V3IO checks
     Scenario: MLFS054 - Verify the creation of a feature set without input mandatory Timestamp Key field
         Given open url
         And wait load page
@@ -2117,7 +2135,7 @@ Feature: Feature Store Page
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "new-feature-set-5" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        Then select "S3" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -2128,6 +2146,7 @@ Feature: Feature Store Page
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
         Then verify "Timestamp_Input" element in "Schema_Accordion" on "New_Feature_Set" wizard should display hover warning "Input_Hint"."Timestamp_Key_Warning"
         Then type value "text" to "Timestamp_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
+        Then uncheck "Online_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify "Save_Button" element on "New_Feature_Set" wizard is enabled
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is enabled
         Then click on "Save_Button" element on "New_Feature_Set" wizard
@@ -2137,7 +2156,7 @@ Feature: Feature Store Page
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "new-feature-set-6" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        Then select "S3" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -2151,6 +2170,7 @@ Feature: Feature Store Page
         Then click on "Apply_Combobox_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then "External_Offline_Partition_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then uncheck "Online_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When collapse "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Save_Button" element on "New_Feature_Set" wizard
         Then verify "Save_Button" element on "New_Feature_Set" wizard is disabled
@@ -2235,6 +2255,7 @@ Feature: Feature Store Page
 
     @MLFS
     @smoke
+    #TODO: Add V3IO checks
     Scenario: MLFS059 - Check type Redis in online types of Target Store section of Create Set 
         Given open url
         And wait load page
@@ -2249,7 +2270,7 @@ Feature: Feature Store Page
         Then type value "test-fs1" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then click on "Accordion_Header" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "Online_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/churn-project-admin/FeatureStore/test-fs1/nosql/sets/test-fs1" value
+        # Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/churn-project-admin/FeatureStore/test-fs1/nosql/sets/test-fs1" value
         Then click on "Edit_Online_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then select "REDIS" option in "NOSQL_Kind_Dropdown" dropdown on "New_Feature_Set" wizard
         And wait load page

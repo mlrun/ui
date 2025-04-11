@@ -641,7 +641,7 @@ Feature: Projects Page
         Given open url
         And wait load page
         Then verify "New_Project_Button" element visibility on "Projects" wizard
-        Then "New_Project_Button" element on "Projects" should contains "New Project" value
+        Then "New_Project_Button" element on "Projects" should contains "New project" value
         Then verify "Active_Projects_Button" element visibility on "Projects" wizard
         Then verify "Archive_Projects_Button" element visibility on "Projects" wizard
         Then verify "Projects_Sort_Dropdown" element visibility on "Projects" wizard

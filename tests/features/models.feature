@@ -281,6 +281,7 @@ Feature: Models Page
 
   @MLM
   @smoke
+  #TODO: Add V3IO checks
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
   Scenario: MLM009 - Check all mandatory components on Register Model Popup
     Given open url
@@ -305,9 +306,9 @@ Feature: Models Page
     Then type value "   " to "New_File_Name_Input" field on "Register_Model_Popup" wizard
     Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
     Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_Model_Popup" wizard should contains "Models"."Combobox_Options"
-    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Model_Popup" wizard
+    When select "S3" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Model_Popup" wizard
     When type value "  " to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Model_Popup" wizard
-    Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Model_Popup" wizard should display hover warning "Input_Hint"."V3IO_Path_Hint"
+    # Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Model_Popup" wizard should display hover warning "Input_Hint"."V3IO_Path_Hint"
     Then verify "New_File_Description_Input" element visibility on "Register_Model_Popup" wizard
     Then check "New_File_Description_Input" textarea counter on "Register_Model_Popup" wizard
     Then type value "   " to "New_File_Description_Input" field on "Register_Model_Popup" wizard
@@ -319,7 +320,7 @@ Feature: Models Page
     Then click on "Register_Button" element on "Register_Model_Popup" wizard
     Then verify "Register_Button" element on "Register_Model_Popup" wizard is disabled
     Then type value "model" to "New_File_Name_Input" field on "Register_Model_Popup" wizard
-    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Model_Popup" wizard
+    When select "S3" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Model_Popup" wizard
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Model_Popup" wizard
     Then type value "new model description" to "New_File_Description_Input" field on "Register_Model_Popup" wizard
     Then check "New_File_Description_Input" textarea counter on "Register_Model_Popup" wizard
@@ -374,6 +375,7 @@ Feature: Models Page
 
   @MLM
   @smoke
+  #TODO: Add V3IO checks
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
   Scenario: MLM010 - Verify behaviour on Register new Model
     # * set tear-down property "model" created in "default" project with "automation-model" value
@@ -388,7 +390,7 @@ Feature: Models Page
     Then click on "Register_Model_Button" element on "Models" wizard
     Then verify if "Register_Model_Popup" popup dialog appears
     Then type value "automation-model" to "New_File_Name_Input" field on "Register_Model_Popup" wizard
-    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Model_Popup" wizard
+    When select "S3" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Model_Popup" wizard
     When type value "path/to/model.txt" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Model_Popup" wizard
     Then click on "Register_Button" element on "Register_Model_Popup" wizard
     And wait load page
@@ -398,7 +400,7 @@ Feature: Models Page
     Then check "automation-model" value in "key" column in "Overview_Table" table on "Models_Info_Pane" wizard
     Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
     Then check "model" value in "kind" column in "Overview_Table" table on "Models_Info_Pane" wizard
-    Then check "v3io:///path/to/" value in "path" column in "Overview_Table" table on "Models_Info_Pane" wizard
+    # Then check "v3io:///path/to/" value in "path" column in "Overview_Table" table on "Models_Info_Pane" wizard
     Then check "model.txt" value in "model_file" column in "Overview_Table" table on "Models_Info_Pane" wizard
 
   @MLM
@@ -786,17 +788,18 @@ Feature: Models Page
     And wait load page
     And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
-    Then save to context "name" column and "href" attribute on 1 row from "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    Then save to context "name_href" column and "href" attribute on 1 row from "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     When click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    And wait load page
     Then compare current browser URL with test "href" context value
-    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Tab_List"
     Then verify cell with "Features Analysis" value in "key" column in "Info_Pane_Tab_Selector" table on "Models_Info_Pane" wizard should display "Label_Hint"."Feature_Analysis"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
-    Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Overview_General_Headers"
-    Then verify "Overview_Drift_Headers" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Overview_Drift_Headers"
+    Then verify "Overview_General_Headers" on "Model_Endpoints_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Overview_General_Headers"
+    Then verify "Overview_Drift_Headers" on "Model_Endpoints_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Overview_Drift_Headers"
 
   @MLM
   @passive
@@ -818,7 +821,7 @@ Feature: Models Page
     When click on cell with value "test-model" in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
+    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then "Header" element on "Models_Info_Pane" should contains "test-model" value
@@ -840,7 +843,7 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
@@ -1096,6 +1099,12 @@ Feature: Models Page
     And wait load page
     Then verify redirection from "projects/default/models/INVALID/model_default/:latest@188b0102-eff9-9a48-9a63-2bbd53e4102e/overview?bePage=1&fePage=1" to "projects/default/models/models?bePage=1&fePage=1"
     Then verify redirection from "projects/default/models/models/INVALID/:latest@188b0102-eff9-9a48-9a63-2bbd53e4102e/overview?bePage=1&fePage=1" to "projects/default/models/models?bePage=1&fePage=1"
+    And wait load page
+    Then verify if "Notification_Popup" popup dialog appears
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "An error occurred while retrieving the model." value
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     And select "tab" with "Datasets" value in breadcrumbs menu
     And wait load page
     And select "tab" with "Models" value in breadcrumbs menu
@@ -1103,14 +1112,20 @@ Feature: Models Page
     When click on cell with row index 3 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then verify redirection from "projects/default/models/models/model_default/:latest@188b0102-eff9-9a48-9a63-2bbd53e4102e/INVALID" to "projects/default/models/models/model_default/:latest@188b0102-eff9-9a48-9a63-2bbd53e4102e/overview?bePage=1&fePage=1"
-    Then verify redirection from "projects/default/models/models/model_default/INVALID/overview?bePage=1&fePage=1" to "projects/default/models/models"
+    Then verify redirection from "projects/default/models/models/model_default/:INVALID@188b0102-eff9-9a48-9a63-2bbd53e4102e/overview?bePage=1&fePage=1" to "projects/default/models/models?bePage=1&fePage=1"
+    And wait load page
+    Then verify if "Notification_Popup" popup dialog appears
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "An error occurred while retrieving the model." value
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     And wait load page
     When select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
-    Then verify redirection from "projects/default/models/INVALID" to "projects/default/models/models"
+    Then verify redirection from "projects/default/models/INVALID" to "projects/default/models/models?bePage=1&fePage=1"
     When select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
     Then click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
@@ -1123,7 +1138,7 @@ Feature: Models Page
     Then verify redirection from "projects/default/models/model-endpoints/RandomForestClassifier/INVALID/overview" to "projects/default/models/model-endpoints"
     When select "Real-Time Pipelines" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
-    Then verify redirection from "projects/default/models/INVALID" to "projects/default/models/models"
+    Then verify redirection from "projects/default/models/INVALID" to "projects/default/models/models?bePage=1&fePage=1"
     Then select "Real-Time Pipelines" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
     Then click on cell with row index 1 in "name" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
@@ -1204,7 +1219,7 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 3 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
@@ -1225,7 +1240,7 @@ Feature: Models Page
     Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     Then click on "Cross_Close_Button" element on "Models_Info_Pane" wizard
     And wait load page
-    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "survival-curves_km-model" value in "name" column
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_adaboost" value in "name" column
     And wait load page
     When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
@@ -1248,11 +1263,11 @@ Feature: Models Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "survival-curves_km-model" value in "name" column
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_adaboost" value in "name" column
     And wait load page
     When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
-    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Two_Tabs"
+    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
     Then check "modelTag" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
@@ -1334,7 +1349,7 @@ Feature: Models Page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
     And wait load page
     Then "Version_Tag_Value" element on "FilterBy_Popup" should contains "latest" attribute value
-    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then select "All tags" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"

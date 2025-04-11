@@ -50,9 +50,9 @@ const tabSelector = {
   root: '.content .content-menu',
   header: {},
   body: {
-    root: '.content-menu__list',
+    root: '.content-menu__tabs',
     row: {
-      root: '.content-menu__item',
+      root: '.content-menu__tab',
       fields: {
         key: ''
       }
@@ -142,6 +142,7 @@ const modelsEndpointTable = {
         function: '.table-body__cell:nth-of-type(2) .data-ellipsis',
         version: '.table-body__cell:nth-of-type(3) .data-ellipsis',
         class: '.table-body__cell:nth-of-type(4) .data-ellipsis',
+        name_href: '.table-body__cell:nth-of-type(1) a',
         labels: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
