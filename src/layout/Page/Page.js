@@ -69,7 +69,6 @@ const Page = () => {
       dispatch(fetchProjects({ params: { format: 'minimal' } }))
         .unwrap()
         .then(projects => {
-          console.log(projectName)
           isProjectValid(navigate, projects, projectName, dispatch)
           setProjectFetched(true)
         })
