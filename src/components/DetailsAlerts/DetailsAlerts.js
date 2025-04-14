@@ -107,6 +107,7 @@ const DetailsAlerts = () => {
           pageData={pageData}
           requestErrorMessage={requestErrorMessage}
           selectedAlert={selectedAlert}
+          skipTableWrapper={true}
           tableContent={tableContent}
           toggleRow={toggleRow}
         />

@@ -42,6 +42,7 @@ const TableView = ({
   mainRowItemsCount,
   pageData,
   selectedItem,
+  skipTableWrapper = false,
   sortProps = null,
   tab,
   tableBodyRef,
@@ -61,10 +62,12 @@ const TableView = ({
     !isEmpty(selectedItem) && 'table-with-details',
     tableClassName && tableClassName
   )
+  const tableWrapperClass = classnames(!skipTableWrapper && 'table__wrapper')
+
   return (
     <div className="table__flex">
       <div className="table__content" id="table-content" ref={tableContentRef}>
-        <div className="table__wrapper">
+        <div className={tableWrapperClass}>
           <table
             id={MAIN_TABLE_ID}
             className={tableClass}
@@ -128,6 +131,7 @@ TableView.propTypes = {
   isTablePanelOpen: PropTypes.bool.isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
+  skipTableWrapper: PropTypes.bool,
   sortProps: SORT_PROPS,
   tab: PropTypes.string,
   tableClassName: PropTypes.string.isRequired,

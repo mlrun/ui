@@ -43,6 +43,7 @@ const AlertsTable = ({
   pageData,
   requestErrorMessage,
   selectedAlert,
+  skipTableWrapper = false,
   tableContent,
   toggleRow
 }) => {
@@ -72,6 +73,7 @@ const AlertsTable = ({
             pageData={pageData}
             retryRequest={handleRefreshWithFilters}
             selectedItem={isAlertsPage ? selectedAlert : {}}
+            skipTableWrapper={skipTableWrapper}
             tableClassName="alerts-table"
             handleCancel={handleCancel}
             hideActionsMenu
@@ -120,6 +122,7 @@ AlertsTable.propTypes = {
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedAlert: PropTypes.object.isRequired,
+  skipTableWrapper: PropTypes.bool,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleRow: PropTypes.func
 }
