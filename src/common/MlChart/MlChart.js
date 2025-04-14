@@ -23,11 +23,13 @@ import { Chart } from 'chart.js/auto'
 import Loader from '../Loader/Loader'
 import classnames from 'classnames'
 
+const defaultOnChartCreated = () => {}
+
 const MlChart = ({
   chartRef,
   config,
   contextRef,
-  onChartCreated = () => {},
+  onChartCreated = defaultOnChartCreated,
   showLoader = true,
   smallLoader = false
 }) => {

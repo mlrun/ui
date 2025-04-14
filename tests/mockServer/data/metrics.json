@@ -5,11 +5,11 @@
       "project": "default",
       "metricsOptions": [
         {
+          "full_name": "default.mlrun-infra.metric.invocations-rate",
+          "type": "metric",
           "app": "mlrun-infra",
           "name": "invocations-rate",
-          "type": "metric",
-          "project": "default",
-          "full_name": "default.mlrun-infra.metric.invocations-rate"
+          "project": "default"
         },
         {
           "full_name": "default.histogram-data-drift-1.metric.tvdar_mean_1",
@@ -76,6 +76,22 @@
         }
       ],
       "metricsValues": [
+        {
+          "full_name": "default.rujmfi.result.data_drift_test",
+          "type": "result",
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.hskoyl.result.data_drift_test",
+          "type": "result",
+          "data": "true",
+          "values": [
+            5
+          ]
+        },
         {
           "full_name": "default.mlrun-infra.metric.invocations-rate",
           "type": "metric",

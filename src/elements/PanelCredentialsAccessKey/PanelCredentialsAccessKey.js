@@ -25,7 +25,7 @@ import { useDispatch } from 'react-redux'
 import CheckBox from '../../common/CheckBox/CheckBox'
 import Input from '../../common/Input/Input'
 
-import { setNewFunctionCredentialsAccessKey } from '../../reducers/functionReducer'
+import { setNewFeatureSetCredentialsAccessKey } from '../../reducers/featureStoreReducer'
 import { PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
 
 import './panelCredentialsAccessKey.scss'
@@ -61,7 +61,9 @@ const PanelCredentialsAccessKey = ({
             setInputValue('')
           }
 
-          dispatch(setNewFunctionCredentialsAccessKey(value === credentialsAccessKey ? '' : value))
+          dispatch(
+            setNewFeatureSetCredentialsAccessKey(value === credentialsAccessKey ? '' : value)
+          )
           setValidation(state => ({
             ...state,
             isAccessKeyValid: true
@@ -76,7 +78,7 @@ const PanelCredentialsAccessKey = ({
           invalid={!validation.isAccessKeyValid}
           onBlur={event => {
             if (credentialsAccessKey !== event.target.value) {
-              dispatch(setNewFunctionCredentialsAccessKey(event.target.value))
+              dispatch(setNewFeatureSetCredentialsAccessKey(event.target.value))
             }
           }}
           onChange={setInputValue}

@@ -27,6 +27,7 @@ import AlertsFilters from './AlertsFilters'
 import AlertsTable from '../../elements/AlertsTable/AlertsTable'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Pagination from '../../common/Pagination/Pagination'
+import Loader from '../../common/Loader/Loader'
 
 import { ALERTS_FILTERS, ALERTS_PAGE_PATH } from '../../constants'
 import { createAlertRowData } from '../../utils/createAlertsContent'
@@ -151,25 +152,31 @@ const Alerts = () => {
               <AlertsFilters isAlertsPage={alertsFilters} isCrossProjects={isCrossProjects} />
             </ActionBar>
           </div>
-          <AlertsTable
-            alertsFiltersConfig={alertsFiltersConfig}
-            alertsStore={alertsStore}
-            filters={alertsFilters}
-            filtersStore={filtersStore}
-            handleCancel={handleCancel}
-            handleRefreshAlerts={handleRefreshAlerts}
-            isCrossProjects={isCrossProjects}
-      pageData={pageData}
-      paginationConfigAlertsRef={paginationConfigAlertsRef}
-      requestErrorMessage={requestErrorMessage}
-      selectedAlert={selectedAlert}
-      setSearchParams={setSearchParams}
-      tableContent={tableContent}
-    /><Pagination
-            closeParamName={ALERTS_PAGE_PATH}
-            page={pageData.page}
-            paginationConfig={paginationConfigAlertsRef.current}
-          />
+          {alertsStore.loading && <Loader />}
+          {alertsStore.loading ? null : (
+            <>
+              <AlertsTable
+                alertsFiltersConfig={alertsFiltersConfig}
+                alertsStore={alertsStore}
+                filters={alertsFilters}
+                filtersStore={filtersStore}
+                handleCancel={handleCancel}
+                handleRefreshAlerts={handleRefreshAlerts}
+                isCrossProjects={isCrossProjects}
+                pageData={pageData}
+                paginationConfigAlertsRef={paginationConfigAlertsRef}
+                requestErrorMessage={requestErrorMessage}
+                selectedAlert={selectedAlert}
+                setSearchParams={setSearchParams}
+                tableContent={tableContent}
+              />
+              <Pagination
+                closeParamName={ALERTS_PAGE_PATH}
+                page={pageData.page}
+                paginationConfig={paginationConfigAlertsRef.current}
+              />
+            </>
+          )}
         </div>
       </div>
     </div>

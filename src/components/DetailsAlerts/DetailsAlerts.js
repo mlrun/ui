@@ -50,16 +50,7 @@ const DetailsAlerts = () => {
     parseAlertsQueryParamsCallback
   )
 
-  const { alerts, refreshAlerts, requestErrorMessage, setAlerts } = useRefreshAlerts(alertsFilters)
-
-  const handleRefreshWithFilters = useCallback(
-    filters => {
-      setAlerts([])
-
-      return refreshAlerts(filters)
-    },
-    [refreshAlerts, setAlerts]
-  )
+  const { alerts, requestErrorMessage } = useRefreshAlerts(alertsFilters)
 
   const tableContent = useMemo(() => {
     if (alerts) {
@@ -101,12 +92,12 @@ const DetailsAlerts = () => {
           alertsStore={alertsStore}
           filters={alertsFilters}
           filtersStore={filtersStore}
-          handleRefreshWithFilters={handleRefreshWithFilters}
           isAlertsPage={false}
           isCrossProjects={false}
           pageData={pageData}
           requestErrorMessage={requestErrorMessage}
           selectedAlert={selectedAlert}
+          skipTableWrapper={true}
           tableContent={tableContent}
           toggleRow={toggleRow}
         />

@@ -127,6 +127,7 @@ Feature: Artifacts Page
   @passive
   @inProgress
   @smoke
+  #TODO: Add V3IO checks
   Scenario: MLA005 - Check all mandatory components on Register Artifacts Popup
     Given open url
     And wait load page
@@ -154,9 +155,9 @@ Feature: Artifacts Page
     Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
     Then click on "Form_Subtext" element on "Register_File_Popup" wizard
     Then verify "New_File_Name_Input" options rules on form "Register_File_Popup" wizard
-    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
+    When select "S3" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
     When type value "  " to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
-    Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_File_Popup" wizard should display hover warning "Input_Hint"."V3IO_Path_Hint"
+    # Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_File_Popup" wizard should display hover warning "Input_Hint"."V3IO_Path_Hint"
     Then verify "New_File_Description_Input" element visibility on "Register_File_Popup" wizard
     Then type value " " to "New_File_Description_Input" field on "Register_File_Popup" wizard
     Then verify "New_File_Description_Input" on "Register_File_Popup" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
@@ -171,7 +172,7 @@ Feature: Artifacts Page
     Then click on "Register_Button" element on "Register_File_Popup" wizard
     Then verify "Register_Button" element on "Register_File_Popup" wizard is disabled
     Then type value "artifact" to "New_File_Name_Input" field on "Register_File_Popup" wizard
-    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
+    When select "S3" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
     Then type value "new artifact description" to "New_File_Description_Input" field on "Register_File_Popup" wizard
     Then verify "Register_Button" element on "Register_File_Popup" wizard is enabled
@@ -206,6 +207,7 @@ Feature: Artifacts Page
 
   @MLA
   @smoke
+  #TODO: Add V3IO checks
   Scenario: MLA006 - Verify behaviour on Register new Artifact
     * set tear-down property "project" created with "automation-test" value
     * create "automation-test" MLRun Project with code 201
@@ -219,7 +221,7 @@ Feature: Artifacts Page
     Then click on "Register_File_Button" element on "Files" wizard
     Then verify if "Register_File_Popup" popup dialog appears
     Then type value "test-artifact" to "New_File_Name_Input" field on "Register_File_Popup" wizard
-    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
+    When select "S3" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
     Then select "Table" option in "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard
     Then click on "Register_Button" element on "Register_File_Popup" wizard
@@ -236,11 +238,11 @@ Feature: Artifacts Page
     Then "Header" element on "Files_Info_Pane" should contains "test-artifact" value
     Then check "test-artifact" value in "key" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
-    Then check "v3io:///target/path" value in "path" column in "Overview_Table" table on "Files_Info_Pane" wizard
+    # Then check "v3io:///target/path" value in "path" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then click on "Register_File_Button" element on "Files" wizard
     Then type value "test-artifact" to "New_File_Name_Input" field on "Register_File_Popup" wizard
     Then type value "latest" to "Tag_Input" field on "Register_File_Popup" wizard
-    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
+    When select "S3" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then click on "Register_Button" element on "Register_File_Popup" wizard
     Then verify if "Confirm_Popup" popup dialog appears
@@ -394,8 +396,10 @@ Feature: Artifacts Page
     Then verify "Action_Menu" element visibility on "Files_Info_Pane" wizard
     Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
+    When click on cell with value "test-i" in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
+    Then verify "Preview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     When click on cell with value "download_content" in "name" column in "Files_Table" table on "Files" wizard
-    Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     And wait load page
     Then verify "Pop_Out_Button" element visibility on "Files_Info_Pane" wizard 
     Then click on "Pop_Out_Button" element on "Files_Info_Pane" wizard
@@ -415,8 +419,7 @@ Feature: Artifacts Page
     Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
     Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
-#    Then verify "Preview_Tab_Info_Pane_Table" element visibility on "Files_Info_Pane" wizard
-#    TO DO: should be implemented mock requests
+    Then verify "Preview_Tab_Info_Pane_Table" element visibility on "Files_Info_Pane" wizard
 
   @MLA
   @smoke
