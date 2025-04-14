@@ -38,7 +38,6 @@ const AlertsTable = ({
   filters,
   filtersStore,
   handleCancel,
-  handleRefreshWithFilters,
   isCrossProjects,
   pageData,
   requestErrorMessage,
@@ -71,7 +70,6 @@ const AlertsTable = ({
               getCloseDetailsLink(isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE_PATH)
             }
             pageData={pageData}
-            retryRequest={handleRefreshWithFilters}
             selectedItem={isAlertsPage ? selectedAlert : {}}
             skipTableWrapper={skipTableWrapper}
             tableClassName="alerts-table"
@@ -116,7 +114,6 @@ AlertsTable.propTypes = {
   filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   handleCancel: PropTypes.func,
-  handleRefreshWithFilters: PropTypes.func.isRequired,
   isAlertsPage: PropTypes.bool,
   isCrossProjects: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
