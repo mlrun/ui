@@ -39,7 +39,7 @@ export const fetchNuclioFunctions = createAsyncThunk(
   }
 )
 
-export const fetchAllNuclioFunctions = createAsyncThunk('fetchAllNuclioFunctions', ({ rejectWithValue }) => {
+export const fetchAllNuclioFunctions = createAsyncThunk('fetchAllNuclioFunctions', (_, { rejectWithValue }) => {
   return nuclioApi.getFunctions().then(({ data }) => {
     return groupBy(data, property(['metadata', 'labels', 'nuclio.io/project-name']))
   }).catch(rejectWithValue)
