@@ -135,6 +135,9 @@ export const FILES_TAB = 'files'
 export const DOCUMENTS_PAGE = 'DOCUMENTS'
 export const DOCUMENTS_TAB = 'documents'
 
+export const LLM_PROMPTS_PAGE = 'LLM-PROMPTS'
+export const LLM_PROMPTS_TAB = 'llm-prompts'
+
 export const PROJECT_MONITOR = 'monitor'
 
 export const PROJECT_QUICK_ACTIONS_PAGE = 'quick-actions'
