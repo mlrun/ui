@@ -120,6 +120,10 @@ const WorkflowsMonitoring = lazyRetry(
 const Documents = lazyRetry(() => import('./components/Documents/Documents'))
 const LLMPrompts = lazyRetry(() => import('./components/LLMPrompts/LLMPrompts'))
 
+const MonitoringApplication = lazyRetry(
+  () => import('./components/MonitoringApplication/MonitoringApplication')
+)
+
 const App = () => {
   const { isNuclioModeDisabled } = useNuclioMode()
   const { isDemoMode } = useMode()
@@ -313,6 +317,11 @@ const App = () => {
           ].map((path, index) => (
             <Fragment key={index}>
               <Route path={path} element={<Files isAllVersions={[2, 3].includes(index)} />} />
+            </Fragment>
+          ))}
+          {['projects/:projectName/monitoring-app'].map((path, index) => (
+            <Fragment key={index}>
+              <Route path={path} element={<MonitoringApplication />} />
             </Fragment>
           ))}
           {[

@@ -34,7 +34,8 @@ import {
   REAL_TIME_PIPELINES_TAB,
   JOBS_MONITORING_PAGE,
   PROJECTS_PAGE_PATH,
-  LLM_PROMPTS_TAB
+  LLM_PROMPTS_TAB,
+  MONITORING_APP_PAGE
 } from '../../constants'
 import { generateNuclioLink } from '../../utils'
 
@@ -55,6 +56,7 @@ export const generateMlrunScreens = params =>
         { label: 'LLM prompts', id: LLM_PROMPTS_TAB },
         { label: 'Artifacts', id: 'files' },
         { label: 'Models', id: 'models' },
+        { label: 'Monitoring app', id: MONITORING_APP_PAGE },
         { label: 'Jobs and workflows', id: 'jobs' },
         { label: 'ML functions', id: 'functions' },
         {
