@@ -18,47 +18,48 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useMemo } from 'react'
-import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { lowerCase, upperFirst } from 'lodash'
-import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
-import nuclioActions from '../../actions/nuclio'
 import { groupByUniqName } from '../../utils/groupByUniqName'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 import { generateNuclioLink } from '../../utils'
 import { ERROR_STATE, REQUEST_CANCELED } from '../../constants'
+import { fetchApiGateways, fetchNuclioFunctions } from '../../reducers/nuclioReducer'
 
-const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore }) => {
+const ProjectFunctions = () => {
   const params = useParams()
   const { isNuclioModeDisabled } = useNuclioMode()
+  const nuclioStore = useSelector((store) => store.nuclioStore)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (!isNuclioModeDisabled) {
       const abortController = new AbortController()
 
-      fetchNuclioFunctions(params.projectName, abortController.signal)
+      dispatch(fetchNuclioFunctions({ project: params.projectName, signal: abortController.signal }))
 
       return () => {
         abortController.abort(REQUEST_CANCELED)
       }
     }
-  }, [fetchNuclioFunctions, isNuclioModeDisabled, params.projectName])
+  }, [dispatch, isNuclioModeDisabled, params.projectName])
 
   useEffect(() => {
     if (!isNuclioModeDisabled) {
       const abortController = new AbortController()
 
-      fetchApiGateways(params.projectName, abortController.signal)
+      dispatch(fetchApiGateways({ project: params.projectName, signal: abortController.signal }))
 
       return () => {
         abortController.abort(REQUEST_CANCELED)
       }
     }
-  }, [fetchApiGateways, isNuclioModeDisabled, params.projectName])
+  }, [dispatch, isNuclioModeDisabled, params.projectName])
 
   const functions = useMemo(() => {
     const groupeFunctionsRunning = groupByUniqName(
@@ -160,16 +161,4 @@ const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore 
   )
 }
 
-ProjectFunctions.propTypes = {
-  fetchApiGateways: PropTypes.func.isRequired,
-  fetchNuclioFunctions: PropTypes.func.isRequired
-}
-
-export default connect(
-  nuclioStore => ({
-    ...nuclioStore
-  }),
-  {
-    ...nuclioActions
-  }
-)(React.memo(ProjectFunctions))
+export default React.memo(ProjectFunctions)

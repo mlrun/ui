@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
-import { useDispatch, connect, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { useParams } from 'react-router-dom'
 
@@ -30,7 +30,6 @@ import { RoundedIcon } from 'igz-controls/components'
 import ConsumerGroupShardLagTableRow from '../../elements/ConsumerGroupShardLagTableRow/ConsumerGroupShardLagTableRow'
 import Search from '../../common/Search/Search.js'
 
-import nuclioActions from '../../actions/nuclio'
 import { generatePageData } from './consumerGroup.util.js'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { showErrorNotification } from '../../utils/notifications.util'
@@ -39,19 +38,17 @@ import {
   CONSUMER_GROUP_PAGE,
   NAME_FILTER
 } from '../../constants.js'
+import { fetchNuclioV3ioStreamShardLags, resetV3ioStreamShardLagsError } from '../../reducers/nuclioReducer.js'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 
-const ConsumerGroup = ({
-  fetchNuclioV3ioStreamShardLags,
-  nuclioStore,
-  resetV3ioStreamShardLagsError
-}) => {
+const ConsumerGroup = () => {
   const [currentV3ioStream, setCurrentV3ioStream] = useState([])
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [filteredV3ioStreamShardLags, setFilteredV3ioStreamShardLags] = useState([])
   const filtersStore = useSelector(store => store.filtersStore)
+  const nuclioStore = useSelector((store) => store.nuclioStore)
   const [localFilters, setLocalFilters] = useState({ [NAME_FILTER]: '' })
   const params = useParams()
   const dispatch = useDispatch()
@@ -81,9 +78,9 @@ const ConsumerGroup = ({
         streamPath: currentV3ioStream.streamPath
       }
       setRequestErrorMessage('')
-      fetchNuclioV3ioStreamShardLags(params.projectName, fetchV3ioStreamBody)
+      dispatch(fetchNuclioV3ioStreamShardLags({ project: params.projectName, body: fetchV3ioStreamBody }))
     },
-    [fetchNuclioV3ioStreamShardLags, params.projectName]
+    [dispatch, params.projectName]
   )
 
   useEffect(() => {
@@ -110,15 +107,9 @@ const ConsumerGroup = ({
         () => refreshConsumerGroup(currentV3ioStream),
         setRequestErrorMessage
       )
-      resetV3ioStreamShardLagsError()
+      dispatch(resetV3ioStreamShardLagsError())
     }
-  }, [
-    currentV3ioStream,
-    dispatch,
-    nuclioStore.v3ioStreamShardLags.error,
-    refreshConsumerGroup,
-    resetV3ioStreamShardLagsError
-  ])
+  }, [currentV3ioStream, dispatch, nuclioStore.v3ioStreamShardLags.error, refreshConsumerGroup])
 
   const pageData = useMemo(() => generatePageData(), [])
 
@@ -186,11 +177,4 @@ const ConsumerGroup = ({
   )
 }
 
-export default connect(
-  ({ nuclioStore }) => ({
-    nuclioStore
-  }),
-  {
-    ...nuclioActions
-  }
-)(ConsumerGroup)
+export default ConsumerGroup
