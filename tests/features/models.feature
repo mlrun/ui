@@ -147,7 +147,7 @@ Feature: Models Page
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
     Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
-    And select "Models" tab in "Models_Tab_Selector" on "Models" wizard
+    Then click on "Table_Refresh_Button" element on "Models" wizard
     And wait load page
     Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
     Then verify "show_all_versions" option is present on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
@@ -188,6 +188,13 @@ Feature: Models Page
     Then verify "Models_Table" element visibility on "Models" wizard
     Then verify "History_Back_Button" element not exists on "Models" wizard
     Then verify "Version_History_Title" element not exists on "Models" wizard
+    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    And select "Models" tab in "Models_Tab_Selector" on "Models" wizard
+    And wait load page
+    Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    And wait load page
+    Then "Show_Iterations_Checkbox" element should be checked on "FilterBy_Popup" wizard
 
   @MLM
   @passive
@@ -281,7 +288,6 @@ Feature: Models Page
 
   @MLM
   @smoke
-  #TODO: Add V3IO checks
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
   Scenario: MLM009 - Check all mandatory components on Register Model Popup
     Given open url
@@ -306,9 +312,9 @@ Feature: Models Page
     Then type value "   " to "New_File_Name_Input" field on "Register_Model_Popup" wizard
     Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
     Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_Model_Popup" wizard should contains "Models"."Combobox_Options"
-    When select "S3" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Model_Popup" wizard
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Model_Popup" wizard
     When type value "  " to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Model_Popup" wizard
-    # Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Model_Popup" wizard should display hover warning "Input_Hint"."V3IO_Path_Hint"
+    Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Model_Popup" wizard should display hover warning "Input_Hint"."V3IO_Path_Hint"
     Then verify "New_File_Description_Input" element visibility on "Register_Model_Popup" wizard
     Then check "New_File_Description_Input" textarea counter on "Register_Model_Popup" wizard
     Then type value "   " to "New_File_Description_Input" field on "Register_Model_Popup" wizard
@@ -320,7 +326,7 @@ Feature: Models Page
     Then click on "Register_Button" element on "Register_Model_Popup" wizard
     Then verify "Register_Button" element on "Register_Model_Popup" wizard is disabled
     Then type value "model" to "New_File_Name_Input" field on "Register_Model_Popup" wizard
-    When select "S3" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Model_Popup" wizard
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Model_Popup" wizard
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Model_Popup" wizard
     Then type value "new model description" to "New_File_Description_Input" field on "Register_Model_Popup" wizard
     Then check "New_File_Description_Input" textarea counter on "Register_Model_Popup" wizard
@@ -375,7 +381,6 @@ Feature: Models Page
 
   @MLM
   @smoke
-  #TODO: Add V3IO checks
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
   Scenario: MLM010 - Verify behaviour on Register new Model
     # * set tear-down property "model" created in "default" project with "automation-model" value
@@ -390,7 +395,7 @@ Feature: Models Page
     Then click on "Register_Model_Button" element on "Models" wizard
     Then verify if "Register_Model_Popup" popup dialog appears
     Then type value "automation-model" to "New_File_Name_Input" field on "Register_Model_Popup" wizard
-    When select "S3" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Model_Popup" wizard
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Model_Popup" wizard
     When type value "path/to/model.txt" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Model_Popup" wizard
     Then click on "Register_Button" element on "Register_Model_Popup" wizard
     And wait load page
@@ -400,7 +405,7 @@ Feature: Models Page
     Then check "automation-model" value in "key" column in "Overview_Table" table on "Models_Info_Pane" wizard
     Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
     Then check "model" value in "kind" column in "Overview_Table" table on "Models_Info_Pane" wizard
-    # Then check "v3io:///path/to/" value in "path" column in "Overview_Table" table on "Models_Info_Pane" wizard
+    Then check "v3io:///path/to/" value in "path" column in "Overview_Table" table on "Models_Info_Pane" wizard
     Then check "model.txt" value in "model_file" column in "Overview_Table" table on "Models_Info_Pane" wizard
 
   @MLM
@@ -589,7 +594,7 @@ Feature: Models Page
     Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     Then click on "Cross_Close_Button" element on "Models_Info_Pane" wizard
     And wait load page
-    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_adaboost" value in "name" column
     And wait load page
     Then verify that 2 row elements are displayed in "Models_Table" on "Models" wizard
     Then click on "Table_FilterBy_Button" element on "Models" wizard
@@ -610,6 +615,10 @@ Feature: Models Page
     And wait load page
     Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
     Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Not_In_Filtered_List_Message" element visibility on "Models_Info_Pane" wizard
+    Then "Not_In_Filtered_List_Message" component on "Models_Info_Pane" should be equal "Models_Info_Pane"."Info_Banner_Message"
+    Then click on "Cross_Close_Button" element on "Models_Info_Pane" wizard
+    And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
     Then "No_Data_Message" element on "commonPagesHeader" should contains "No data matches the filter: \"Version tag: testTag\"" value
     Then click on "History_Back_Button" element on "Models" wizard
@@ -843,7 +852,7 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
@@ -1615,15 +1624,11 @@ Feature: Models Page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Model_Endpoints_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Tab_List"
     Then select "Alerts" tab in "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard
-    Then verify "Search_By_Name_Filter_Input" element visibility on "Model_Endpoints_Info_Pane" wizard
-    Then verify "Date_Picker_Filter_Dropdown" element visibility on "Model_Endpoints_Info_Pane" wizard
-    Then verify "Date_Picker_Filter_Dropdown" dropdown on "Model_Endpoints_Info_Pane" wizard selected option value "Past 24 hours"
-    Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Model_Endpoints_Info_Pane" wizard should contains "Dropdown_Options"."Metrics_Date_Picker_Filter_Options"
-    Then verify "Alerts_FilterBy_Button" element visibility on "Model_Endpoints_Info_Pane" wizard
-    Then click on "Alerts_FilterBy_Button" element on "Model_Endpoints_Info_Pane" wizard
-    Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
-    Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
-    Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
-    Then verify "Alerts_Refresh_Button" element visibility on "Model_Endpoints_Info_Pane" wizard
-    Then verify "Alerts_Refresh_Button" element on "Model_Endpoints_Info_Pane" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
-    Then click on "Alerts_Refresh_Button" element on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Alerts_Table" element visibility on "Model_Endpoints_Info_Pane" wizard       
+    Then click on cell with row index 1 in "expand_arrow" column in "Alerts_Table" table on "Model_Endpoints_Info_Pane" wizard
+    And wait load page
+    And wait load page
+    Then verify "Metrics_Stats_Card" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then click on cell with row index 1 in "expand_arrow" column in "Alerts_Table" table on "Model_Endpoints_Info_Pane" wizard
+    And wait load page
+    Then verify "Metrics_Stats_Card" element not exists on "Model_Endpoints_Info_Pane" wizard

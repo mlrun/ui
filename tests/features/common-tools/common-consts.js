@@ -117,6 +117,7 @@ module.exports = {
   },
   Datasets_Info_Pane: {
     Tab_List: ['Overview', 'Preview', 'Metadata'],
+    Info_Banner_Message: /The (.+?) is not in the filtered list\. Closing the details panel will return you to the current list\./,
     Overview_General_Headers: [
       'Hash:',
       'Key:',
@@ -246,6 +247,7 @@ module.exports = {
     Tab_List: ['Overview'],
     Tab_List_Two_Tabs: ['Overview', 'Preview'],
     Tab_List_Extended: ['Overview', 'Preview', 'Features', 'Statistics'],
+    Info_Banner_Message: /The (.+?) is not in the filtered list\. Closing the details panel will return you to the current list\./,
     Overview_General_Headers: [
       'Hash:',
       'Key:',

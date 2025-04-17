@@ -26,6 +26,10 @@ Before(async function () {
   await this.driver.manage().window()
   this.createdItems = []
   this.testContext = {}
+  await this.driver.get('http://localhost:3000')
+  await this.driver.executeScript(function() {
+    localStorage.setItem('igzFullVersion', '3.5.5')
+  })
 })
 
 After(async function (testCase) {

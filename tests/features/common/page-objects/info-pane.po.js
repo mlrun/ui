@@ -440,6 +440,27 @@ const artifactsTable = {
   }
 }
 
+const alertsTable = {
+  root: '.table__item .alerts-table',
+  header: {},
+  body: {
+    row: {
+      root: '.table-row',
+      fields: {
+        name: '.table-body__cell:nth-of-type(1)',
+        expand_arrow: '.table-body__cell:nth-of-type(1) svg',
+        event_type: '.table-body__cell[data-testid="eventType"]',
+        entity_id: '.table-body__cell[data-testid="entityId"]',
+        timestamp: '.table-body__cell[data-testid="timestamp"]',
+        criteria_count: '.table-body__cell[data-testid="criteriaCount"]',
+        criteria_time: '.table-body__cell[data-testid="criteriaTime"]',
+        notifications: '.table-body__cell[data-testid="notifications"]',
+        severity: '.table-body__cell[data-testid="severity"]'
+      }
+    }
+  }
+}
+
 const resultsTable = {
   root: '.table__item .table__item-results',
   header: {
@@ -667,8 +688,11 @@ module.exports = {
     Edit_btn_full_view: commonEditBtnFullView,
     Version_tag_Input_table_view: commonVersionTagInputTableView,
     Version_tag_Input_full_view: commonVersionTagInputFullView,
+    Version_tag_Value_full_view: By.css('.table__item_big .item-info__details-wrapper:nth-of-type(1) .details-item:nth-of-type(3) .details-item__data .data-ellipsis'),
     Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
-    Version_tag_Input: commonVersionTagInput
+    Version_tag_Input: commonVersionTagInput,
+    Click_To_Add_Button: By.css('[data-testid="detailsPanel"] .item-info__details-wrapper:nth-of-type(1) .details-item:nth-of-type(3)  .details-item__data-add-placeholder'),
+    Not_In_Filtered_List_Message: By.css('[data-testid="detailsPanel"] .item-header__status .info-banner')
   },
   documentsInfoPane: {
     Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
@@ -870,6 +894,7 @@ module.exports = {
     Full_View_Button: fullViewButton,
     Tabel_View_Button: tabelViewButton,
     Header_Full_View: By.css('.table__item_big .item-header__data h3'),
+    Not_In_Filtered_List_Message: By.css('[data-testid="detailsPanel"] .item-header__status .info-banner'),
     Action_Menu_Full_View: commonActionMenuFullView,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]'),
@@ -955,7 +980,9 @@ module.exports = {
       )
     ),
     Alerts_FilterBy_Button: By.css('[data-testid="detailsPanel"] [data-testid="filter-menu-btn-tooltip-wrapper"]'),
-    Alerts_Refresh_Button: By.css('[data-testid="detailsPanel"] [data-testid="refresh-tooltip-wrapper"]')
+    Alerts_Refresh_Button: By.css('[data-testid="detailsPanel"] [data-testid="refresh-tooltip-wrapper"]'),
+    Alerts_Table: commonTable(alertsTable),
+    Metrics_Stats_Card: By.css('.alert-row__expanded-row .alerts-table__metrics .stats-card')
   },
   modelsRealTimePipelineInfoPane: {
     Arrow_Back: commonArrowBack,

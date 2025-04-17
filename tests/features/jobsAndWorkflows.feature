@@ -2327,7 +2327,6 @@ Feature: Jobs and workflows
 
     @MLJW
     @smoke
-    #TODO: Add V3IO checks
     Scenario: MLJW025 - Check Minimum CPU value on Batch Run wizard - Resources
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2371,7 +2370,6 @@ Feature: Jobs and workflows
 
     @MLJW
     @smoke
-    #TODO: Add V3IO checks
     Scenario: MLJW026 - Check tip and warning messages in Volumes section on Batch Run wizard - Resources
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2430,7 +2428,6 @@ Feature: Jobs and workflows
 
     @MLJW
     @smoke
-    #TODO: Add V3IO checks
     Scenario: MLJW031 - Check mandatory of Container and Resource Path fields for V3IO volume - Batch Run - Resources
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
