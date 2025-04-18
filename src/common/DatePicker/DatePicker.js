@@ -60,6 +60,7 @@ const defaultProps = {
 
 const DatePicker = ({
   className = '',
+  customOptions = null,
   date = defaultProps.date,
   dateTo = defaultProps.dateTo,
   disabled = false,
@@ -105,10 +106,14 @@ const DatePicker = ({
   const startWeek = getWeekStart(decodeLocale(navigator.language))
 
   const datePickerOptions = useMemo(() => {
-    return (hasFutureOptions ? datePickerFutureOptions : datePickerPastOptions).filter(
-      option => option.timeFrameMilliseconds <= timeFrameLimit
-    )
-  }, [hasFutureOptions, timeFrameLimit])
+    return (
+      customOptions
+        ? customOptions
+        : hasFutureOptions
+          ? datePickerFutureOptions
+          : datePickerPastOptions
+    ).filter(option => option.timeFrameMilliseconds <= timeFrameLimit)
+  }, [customOptions, hasFutureOptions, timeFrameLimit])
 
   const handleCloseDatePickerOutside = useCallback(
     event => {
@@ -551,6 +556,7 @@ const DatePicker = ({
 
 DatePicker.propTypes = {
   className: PropTypes.string,
+  customOptions: PropTypes.array,
   date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   dateTo: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   disabled: PropTypes.bool,

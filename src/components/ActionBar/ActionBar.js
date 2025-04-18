@@ -375,6 +375,7 @@ const ActionBar = ({
                   {({ input }) => {
                     return (
                       <DatePicker
+                        customOptions={filtersConfig[DATES_FILTER].customOptions}
                         key={tab}
                         className="details-date-picker"
                         date={input.value.value[0]}

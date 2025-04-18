@@ -39,6 +39,7 @@ import { ReactComponent as NuclioIcon } from 'igz-controls/images/navbar/mlrun-r
 import { ReactComponent as FeatureStoreIcon } from 'igz-controls/images/navbar/mlrun-feature-store.svg'
 import { ReactComponent as Documents } from 'igz-controls/images/navbar/documents-icon.svg'
 import { ReactComponent as LLMPrompts } from 'igz-controls/images/navbar/llm-prompt-icon.svg'
+import { ReactComponent as ModelMonitoringIcon } from 'igz-controls/images/navbar/model-monitoring.svg'
 
 // import { ReactComponent as RTPiplinesIcon } from 'igz-controls/images/timer-outline-icon.svg'
 
@@ -93,6 +94,12 @@ export const getLinks = projectName => {
       id: 'models',
       label: 'Models',
       link: `${pathname}/models`
+    },
+    {
+      icon: <ModelMonitoringIcon />,
+      id: 'monitoring-app',
+      label: 'Monitoring app',
+      link: `${pathname}/monitoring-app`
     },
     {
       icon: <JobsWorkflowIcon />,
