@@ -44,8 +44,11 @@ export const scheduleActionType = {
   SCHEDULE_REPEAT_ACTIVE_OPTION: 'SCHEDULE_REPEAT_ACTIVE_OPTION',
   SCHEDULE_REPEAT_DAY: 'SCHEDULE_REPEAT_DAY',
   SCHEDULE_REPEAT_DAYS_OF_WEEK: 'SCHEDULE_REPEAT_DAYS_OF_WEEK',
+  SCHEDULE_REPEAT_END_ACTIVE_OPTION: 'SCHEDULE_REPEAT_END_ACTIVE_OPTION',
+  SCHEDULE_REPEAT_END_DATE: 'SCHEDULE_REPEAT_END_DATE',
   SCHEDULE_REPEAT_DAY_TIME: 'SCHEDULE_REPEAT_DAY_TIME',
   SCHEDULE_REPEAT_MONTH_TIME: 'SCHEDULE_REPEAT_MONTH_TIME',
+  SCHEDULE_REPEAT_END_OCCURRENCES: 'SCHEDULE_REPEAT_END_OCCURRENCES',
   SCHEDULE_REPEAT_HOUR: 'SCHEDULE_REPEAT_HOUR',
   SCHEDULE_REPEAT_MINUTE: 'SCHEDULE_REPEAT_MINUTE',
   SCHEDULE_REPEAT_WEEK_TIME: 'SCHEDULE_REPEAT_WEEK_TIME'
@@ -126,6 +129,30 @@ export const recurringReducer = (state, action) => {
           month: {
             time: action.payload
           }
+        }
+      }
+    case scheduleActionType.SCHEDULE_REPEAT_END_ACTIVE_OPTION:
+      return {
+        ...state,
+        scheduleRepeatEnd: {
+          ...state.scheduleRepeatEnd,
+          activeOption: action.payload
+        }
+      }
+    case scheduleActionType.SCHEDULE_REPEAT_END_OCCURRENCES:
+      return {
+        ...state,
+        scheduleRepeatEnd: {
+          ...state.scheduleRepeatEnd,
+          occurrences: action.payload
+        }
+      }
+    case scheduleActionType.SCHEDULE_REPEAT_END_DATE:
+      return {
+        ...state,
+        scheduleRepeatEnd: {
+          ...state.scheduleRepeatEnd,
+          date: action.payload
         }
       }
     default:
