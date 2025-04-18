@@ -37,7 +37,10 @@ import { FUNCTION_PANEL_MODE } from '../../types'
 import { runtimeSections } from './functionsPanel.util'
 import { JOB_KIND_JOB, PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
 import { LABEL_BUTTON, PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { removeFunctionsError } from '../../reducers/functionReducer'
+import {
+  removeFunctionsError,
+  setNewFunctionCredentialsAccessKey
+} from '../../reducers/functionReducer'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
@@ -161,6 +164,7 @@ const FunctionsPanelView = ({
                 functionsStore.newFunction.metadata.credentials.access_key !==
                 PANEL_DEFAULT_ACCESS_KEY
               }
+              setCredentialsAccessKey={value => dispatch(setNewFunctionCredentialsAccessKey(value))}
               setValidation={setValidation}
               validation={validation}
             />
