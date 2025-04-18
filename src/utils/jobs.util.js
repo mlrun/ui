@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { cloneDeep, debounce } from 'lodash'
+import { cloneDeep, debounce, omit } from 'lodash'
 
 import {
   BE_PAGE,
@@ -28,6 +28,7 @@ import {
   LABELS_FILTER,
   NAME_FILTER,
   PROJECT_FILTER,
+  PROJECTS_FILTER_ALL_ITEMS,
   STATUS_FILTER,
   TYPE_FILTER
 } from '../constants'
@@ -135,7 +136,7 @@ export const getJobKindFromLabels = (labels = []) => {
 }
 
 export const getJobsFiltersConfig = (jobName, crossProjects) => {
-  return {
+  const filters = {
     [NAME_FILTER]: { label: 'Name:', hidden: Boolean(jobName), initialValue: '' },
     [DATES_FILTER]: {
       label: 'Start time:',
@@ -144,15 +145,26 @@ export const getJobsFiltersConfig = (jobName, crossProjects) => {
         crossProjects ? PAST_24_HOUR_DATE_OPTION : PAST_WEEK_DATE_OPTION
       )
     },
-    [PROJECT_FILTER]: { label: 'Project:', initialValue: '', isModal: true , hidden: Boolean(jobName) },
+    [PROJECT_FILTER]: {
+      label: 'Project:',
+      initialValue: PROJECTS_FILTER_ALL_ITEMS,
+      isModal: true,
+      hidden: Boolean(jobName)
+    },
     [STATUS_FILTER]: { label: 'Status:', initialValue: [FILTER_ALL_ITEMS], isModal: true },
     [TYPE_FILTER]: { label: 'Type:', initialValue: FILTER_ALL_ITEMS, isModal: true },
     [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
   }
+
+  if (!crossProjects) {
+    return omit(filters, [PROJECT_FILTER])
+  }
+
+  return filters
 }
 
 export const getWorkflowsFiltersConfig = crossProjects => {
-  return {
+  const filters = {
     [NAME_FILTER]: { label: 'Name:', initialValue: '' },
     [DATES_FILTER]: {
       label: 'Created at:',
@@ -161,14 +173,20 @@ export const getWorkflowsFiltersConfig = crossProjects => {
         crossProjects ? PAST_24_HOUR_DATE_OPTION : PAST_WEEK_DATE_OPTION
       )
     },
-    [PROJECT_FILTER]: { label: 'Project:', initialValue: '', isModal: true },
+    [PROJECT_FILTER]: { label: 'Project:', initialValue: PROJECTS_FILTER_ALL_ITEMS, isModal: true },
     [STATUS_FILTER]: { label: 'Status:', initialValue: [FILTER_ALL_ITEMS], isModal: true },
     [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
   }
+
+  if (!crossProjects) {
+    return omit(filters, [PROJECT_FILTER])
+  }
+
+  return filters
 }
 
 export const getScheduledFiltersConfig = crossProjects => {
-  return {
+  const filters = {
     [NAME_FILTER]: { label: 'Name:', initialValue: '' },
     [DATES_FILTER]: {
       label: 'Scheduled at:',
@@ -179,10 +197,16 @@ export const getScheduledFiltersConfig = crossProjects => {
         true
       )
     },
-    [PROJECT_FILTER]: { label: 'Project:', initialValue: '', isModal: true },
+    [PROJECT_FILTER]: { label: 'Project:', initialValue: PROJECTS_FILTER_ALL_ITEMS, isModal: true },
     [TYPE_FILTER]: { label: 'Type:', initialValue: FILTER_ALL_ITEMS, isModal: true },
     [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
   }
+
+  if (!crossProjects) {
+    return omit(filters, [PROJECT_FILTER])
+  }
+
+  return filters
 }
 
 export const parseJobsQueryParamsCallback = (paramName, paramValue) => {

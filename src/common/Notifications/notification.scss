@@ -5,28 +5,28 @@
   position: relative;
   z-index: 1000;
   display: flex;
-  justify-content: space-between;
   align-self: flex-end;
+  justify-content: space-between;
+  max-height: 300px;
   margin-bottom: 1rem;
   padding: 8px;
+  overflow: hidden;
   color: $white;
   background-color: $darkPurple;
   border-radius: 5px;
   box-shadow: $tooltipShadow;
   cursor: pointer;
-  overflow: hidden;
   opacity: 0;
-  max-height: 300px;
 
   &__progress-bar {
     position: absolute;
     bottom: 0;
     left: 0;
+    z-index: 1;
     width: 100%;
     height: 5px;
-    z-index: 1;
-    opacity: 0.7;
     transform-origin: left;
+    opacity: 0.7;
     animation: notification__trackprogress-bar linear 1 forwards;
     animation-play-state: running;
 
@@ -84,10 +84,10 @@
     }
 
     &__message {
+      align-content: center;
       width: calc(100% - 30px);
       height: 100%;
       overflow-y: auto;
-      align-content: center;
     }
 
     ::-webkit-scrollbar-thumb {
@@ -100,6 +100,7 @@
 
     &__status {
       display: flex;
+      flex: 1 0 24px;
       align-items: center;
       justify-content: center;
       width: 24px;
@@ -122,6 +123,7 @@
   0% {
     transform: scaleX(1);
   }
+
   100% {
     transform: scaleX(0);
   }

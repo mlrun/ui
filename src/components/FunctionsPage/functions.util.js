@@ -43,7 +43,6 @@ import {
   FE_PAGE
 } from '../../constants'
 import tasksApi from '../../api/tasks-api'
-import functionsActions from '../../actions/functions'
 import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { parseFunction } from '../../utils/parseFunction'
 import { setNotification } from '../../reducers/notificationReducer'
@@ -51,6 +50,7 @@ import { showErrorNotification } from '../../utils/notifications.util'
 import { getFunctionLogs, getFunctionNuclioLogs } from '../../utils/getFunctionLogs'
 import { parseIdentifier } from '../../utils'
 import { setJobFunction } from '../../reducers/jobReducer'
+import { generateObjectNotInTheListMessage } from '../../utils/generateMessage.util'
 
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
@@ -58,7 +58,7 @@ import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
 import { ReactComponent as HistoryIcon } from 'igz-controls/images/history.svg'
-import { generateObjectNotInTheListMessage } from '../../utils/generateMessage.util'
+import { fetchFunction } from '../../reducers/functionReducer'
 
 export const page = 'FUNCTIONS'
 export const detailsMenu = [
@@ -109,7 +109,6 @@ const handleFetchFunctionLogs = (
 ) => {
   return getFunctionLogs(
     dispatch,
-    functionsActions.fetchFunctionLogs,
     fetchFunctionLogsTimeout,
     projectName,
     item.name,
@@ -125,12 +124,10 @@ const handleFetchFunctionApplicationLogs = (
   item,
   projectName,
   setDetailsLogs,
-  fetchFunctionNuclioLogs,
   fetchFunctionNuclioLogsTimeout
 ) => {
   return getFunctionNuclioLogs(
     dispatch,
-    fetchFunctionNuclioLogs,
     fetchFunctionNuclioLogsTimeout,
     projectName,
     item.name,
@@ -192,7 +189,6 @@ export const generateFunctionsPageData = (
             item,
             projectName,
             setDetailsLogs,
-            functionsActions.fetchFunctionNuclioLogs,
             fetchFunctionNuclioLogsTimeout
           )
         }
@@ -506,7 +502,10 @@ const fetchAndParseFunction = (
   funcTag,
   returnError
 ) => {
-  return fetchFunction(projectName, funcName, funcHash, funcTag)
+  return dispatch(
+    fetchFunction({ project: projectName, name: funcName, hash: funcHash, tag: funcTag })
+  )
+    .unwrap()
     .then(func => {
       return parseFunction(func, projectName)
     })
@@ -541,7 +540,6 @@ export const checkForSelectedFunction = debounce(
   (
     paginatedFunctions,
     functions,
-    fetchFunction,
     funcId,
     funcNameParam,
     navigate,
@@ -566,58 +564,52 @@ export const checkForSelectedFunction = debounce(
         const { tag, uid: hash } = parseIdentifier(funcId)
         lastCheckedFunctionIdRef.current = funcId
 
-        fetchAndParseFunction(
-          dispatch,
-          fetchFunction,
-          projectName,
-          funcNameParam,
-          hash,
-          tag
-        ).then((selectedFunction) => {
-          if (!selectedFunction) {
-            navigate(
-              `/projects/${projectName}/functions${isAllVersions ? `/${funcNameParam}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`,
-              { replace: true }
-            )
-          } else {
-            const findFunctionIndex = functions => {
-              return functions.findIndex(func => {
-                const funcData = func.data ?? func
+        fetchAndParseFunction(dispatch, fetchFunction, projectName, funcNameParam, hash, tag).then(
+          selectedFunction => {
+            if (!selectedFunction) {
+              navigate(
+                `/projects/${projectName}/functions${isAllVersions ? `/${funcNameParam}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`,
+                { replace: true }
+              )
+            } else {
+              const findFunctionIndex = functions => {
+                return functions.findIndex(func => {
+                  const funcData = func.data ?? func
 
-                if (tag) {
-                  return isEqual(funcData.tag, tag) && isEqual(funcData.name, funcNameParam)
+                  if (tag) {
+                    return isEqual(funcData.tag, tag) && isEqual(funcData.name, funcNameParam)
+                  } else {
+                    return isEqual(funcData.hash, hash) && isEqual(funcData.name, funcNameParam)
+                  }
+                })
+              }
+
+              const itemIndexInPaginatedList = findFunctionIndex(paginatedFunctions)
+              const itemIndexInMainList =
+                itemIndexInPaginatedList !== -1
+                  ? itemIndexInPaginatedList
+                  : findFunctionIndex(functions)
+
+              if (itemIndexInPaginatedList === -1) {
+                if (itemIndexInMainList > -1) {
+                  const { fePageSize } = paginationConfigRef.current
+
+                  setSearchParams(prevSearchParams => {
+                    prevSearchParams.set(FE_PAGE, Math.ceil((itemIndexInMainList + 1) / fePageSize))
+
+                    return prevSearchParams
+                  })
                 } else {
-                  return isEqual(funcData.hash, hash) && isEqual(funcData.name, funcNameParam)
+                  selectedFunction.ui.infoMessage = generateObjectNotInTheListMessage('function')
                 }
+              }
+
+              setSelectedFunction(prevState => {
+                return isEqual(prevState, selectedFunction) ? prevState : selectedFunction
               })
             }
-      
-            const itemIndexInPaginatedList = findFunctionIndex(paginatedFunctions)
-            const itemIndexInMainList =
-              itemIndexInPaginatedList !== -1
-                ? itemIndexInPaginatedList
-                : findFunctionIndex(functions)
-
-            if (itemIndexInPaginatedList === -1) {
-              if (itemIndexInMainList > -1) {
-                const { fePageSize } = paginationConfigRef.current
-  
-                setSearchParams(prevSearchParams => {
-                  prevSearchParams.set(FE_PAGE, Math.ceil((itemIndexInMainList + 1) / fePageSize))
-  
-                  return prevSearchParams
-                })
-              } else {
-                selectedFunction.ui.infoMessage = generateObjectNotInTheListMessage('function')
-              }
-            }
-
-            setSelectedFunction(prevState => {
-              return isEqual(prevState, selectedFunction) ? prevState : selectedFunction
-            })
-            
           }
-        })
+        )
       }
     } else {
       setSelectedFunction({})

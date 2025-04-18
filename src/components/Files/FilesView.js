@@ -56,7 +56,6 @@ const FilesView = React.forwardRef(
       filtersStore,
       getAndSetSelectedArtifact,
       handleRefreshFiles,
-      handleRefreshWithFilters,
       handleRegisterArtifact,
       historyBackLink,
       isAllVersions,
@@ -129,10 +128,11 @@ const FilesView = React.forwardRef(
                     }
                     handleCancel={() => setSelectedFile({})}
                     pageData={pageData}
-                    retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedFile}
                     tableClassName="files-table"
-                    tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
+                    tableHeaders={
+                      !isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)
+                    }
                     viewMode={viewMode}
                   >
                     {tableContent.map((tableItem, index) => (
@@ -188,7 +188,6 @@ FilesView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
   handleRefreshFiles: PropTypes.func.isRequired,
-  handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterArtifact: PropTypes.func.isRequired,
   historyBackLink: PropTypes.string.isRequired,
   isAllVersions: PropTypes.bool.isRequired,

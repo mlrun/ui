@@ -31,7 +31,8 @@ const action = {
       attributes1.includes('content-menu__item_active') ||
       attributes2.includes('details-menu__tab_active') ||
       attributes2.includes('active-tab')||
-      attributes2.includes('tabs-slider__tab_active')
+      attributes2.includes('tabs-slider__tab_active')||
+      attributes2.includes('content-menu__tab_active')
     expect(flag).equal(true)
   },
   isRowActive: async function(driver, component, indx) {

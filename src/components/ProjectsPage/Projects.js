@@ -34,8 +34,6 @@ import {
   projectDeletionWrapperKind,
   projectsSortOptions
 } from './projects.util'
-import nuclioActions from '../../actions/nuclio'
-import projectsAction from '../../actions/projects'
 import { BG_TASK_RUNNING } from '../../utils/poll.util'
 import { onDeleteProject } from './projects.util'
 import { PROJECT_ONLINE_STATUS } from '../../constants'
@@ -47,6 +45,18 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useMode } from '../../hooks/mode.hook'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
+import {
+  changeProjectState,
+  createNewProject,
+  fetchProject,
+  fetchProjects,
+  fetchProjectsNames,
+  fetchProjectsSummary,
+  removeNewProjectError,
+  removeProjects,
+  setDeletingProjects
+} from '../../reducers/projectReducer'
+import { fetchAllNuclioFunctions } from '../../reducers/nuclioReducer'
 
 const Projects = () => {
   const [actionsMenu, setActionsMenu] = useState({})
@@ -78,7 +88,12 @@ const Projects = () => {
   }, [projectStore.deletingProjects])
 
   const fetchMinimalProjects = useCallback(() => {
-    dispatch(projectsAction.fetchProjects({ format: 'minimal' }, setProjectsRequestErrorMessage))
+    dispatch(
+      fetchProjects({
+        params: { format: 'minimal' },
+        setRequestErrorMessage: setProjectsRequestErrorMessage
+      })
+    )
   }, [dispatch])
 
   const isValidProjectState = useCallback(
@@ -114,19 +129,22 @@ const Projects = () => {
     abortControllerRef.current = new AbortController()
 
     if (!isNuclioModeDisabled) {
-      dispatch(nuclioActions.fetchNuclioFunctions())
+      dispatch(fetchAllNuclioFunctions())
     }
 
-    dispatch(projectsAction.removeProjects())
+    dispatch(removeProjects())
     fetchMinimalProjects()
     dispatch(
-      projectsAction.fetchProjectsSummary(abortControllerRef.current.signal, refreshProjects)
-    ).then(result => {
-      if (result) {
-        generateMonitoringCounters(result, dispatch)
-        generateAlerts(result, dispatch)
-      }
-    })
+      fetchProjectsSummary({ signal: abortControllerRef.current.signal, refresh: refreshProjects })
+    )
+      .unwrap()
+      .then(result => {
+        if (result) {
+          generateMonitoringCounters(result, dispatch)
+          generateAlerts(result, dispatch)
+        }
+      })
+      .catch(() => {})
 
     if (!isEmpty(deletingProjectsRef.current)) {
       dispatch(fetchBackgroundTasks({}))
@@ -154,7 +172,7 @@ const Projects = () => {
           if (!isEmpty(newDeletingProjects)) {
             pollDeletingProjects(terminatePollRef, newDeletingProjects, refreshProjects, dispatch)
           } else {
-            dispatch(projectsAction.setDeletingProjects({}))
+            dispatch(setDeletingProjects({}))
           }
         })
         .catch(error => {
@@ -185,7 +203,8 @@ const Projects = () => {
 
   const handleArchiveProject = useCallback(
     project => {
-      dispatch(projectsAction.changeProjectState(project.metadata.name, 'archived'))
+      dispatch(changeProjectState({ project: project.metadata.name, status: 'archived' }))
+        .unwrap()
         .then(() => {
           fetchMinimalProjects()
         })
@@ -207,10 +226,12 @@ const Projects = () => {
   const handleUnarchiveProject = useCallback(
     project => {
       dispatch(
-        projectsAction.changeProjectState(project.metadata.name, PROJECT_ONLINE_STATUS)
-      ).then(() => {
-        fetchMinimalProjects()
-      })
+        changeProjectState({ project: project.metadata.name, status: PROJECT_ONLINE_STATUS })
+      )
+        .unwrap()
+        .then(() => {
+          fetchMinimalProjects()
+        })
     },
     [dispatch, fetchMinimalProjects]
   )
@@ -229,7 +250,7 @@ const Projects = () => {
   const onArchiveProject = useCallback(
     project => {
       setConfirmData({
-        item: project,
+        item: project.metadata.name,
         header: 'Archive project',
         message:
           'Archived projects continue to consume resources.' +
@@ -248,7 +269,8 @@ const Projects = () => {
   const exportYaml = useCallback(
     projectMinimal => {
       if (projectMinimal?.metadata?.name) {
-        dispatch(projectsAction.fetchProject(projectMinimal.metadata.name))
+        dispatch(fetchProject({ project: projectMinimal.metadata.name }))
+          .unwrap()
           .then(response => {
             var blob = new Blob([yaml.dump(response?.data, { lineWidth: -1 })])
 
@@ -268,7 +290,8 @@ const Projects = () => {
     projectMinimal => {
       const yamlByteSizeLimit = 2000000
       if (projectMinimal?.metadata?.name) {
-        dispatch(projectsAction.fetchProject(projectMinimal.metadata.name))
+        dispatch(fetchProject({ project: projectMinimal.metadata.name }))
+          .unwrap()
           .then(response => {
             if (response.headers.get('content-length') > yamlByteSizeLimit) {
               openPopUp(ConfirmDialog, {
@@ -297,15 +320,10 @@ const Projects = () => {
     [convertToYaml, dispatch, exportYaml]
   )
 
-  const removeNewProjectError = useCallback(
-    () => dispatch(projectsAction.removeNewProjectError()),
-    [dispatch]
-  )
-
   const handleOnDeleteProject = useCallback(
     project =>
       onDeleteProject(
-        project,
+        project.metadata.name,
         setConfirmData,
         dispatch,
         deletingProjectsRef,
@@ -366,41 +384,46 @@ const Projects = () => {
 
   const closeNewProjectPopUp = useCallback(() => {
     if (projectStore.newProject.error) {
-      removeNewProjectError()
+      dispatch(removeNewProjectError())
     }
 
     setCreateProject(false)
-  }, [projectStore.newProject.error, removeNewProjectError])
+  }, [dispatch, projectStore.newProject.error])
 
   const handleCreateProject = values => {
     dispatch(
-      projectsAction.createNewProject({
-        metadata: {
-          name: values.name,
-          labels:
-            values.labels?.reduce((acc, labelData) => {
-              acc[labelData.key] = labelData.value
-              return acc
-            }, {}) ?? {}
-        },
-        spec: {
-          description: values.description
+      createNewProject({
+        postData: {
+          metadata: {
+            name: values.name,
+            labels:
+              values.labels?.reduce((acc, labelData) => {
+                acc[labelData.key] = labelData.value
+                return acc
+              }, {}) ?? {}
+          },
+          spec: {
+            description: values.description
+          }
         }
       })
-    ).then(result => {
-      if (result) {
-        setCreateProject(false)
-        refreshProjects()
-        dispatch(projectsAction.fetchProjectsNames())
-        dispatch(
-          setNotification({
-            status: 200,
-            id: Math.random(),
-            message: `Project "${result.metadata?.name}" was created successfully`
-          })
-        )
-      }
-    })
+    )
+      .unwrap()
+      .then(result => {
+        if (result) {
+          setCreateProject(false)
+          refreshProjects()
+          dispatch(fetchProjectsNames())
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: `Project "${result.metadata?.name}" was created successfully`
+            })
+          )
+        }
+      })
+      .catch(() => {})
   }
 
   return (
@@ -422,7 +445,6 @@ const Projects = () => {
       projectsRequestErrorMessage={projectsRequestErrorMessage}
       projectStore={projectStore}
       refreshProjects={refreshProjects}
-      removeNewProjectError={removeNewProjectError}
       selectedProjectsState={selectedProjectsState}
       setCreateProject={setCreateProject}
       setFilterMatches={setFilterMatches}

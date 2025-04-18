@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import prettyBytes from 'pretty-bytes'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
+import { has } from 'lodash'
 
 import ArtifactsPreview from '../../components/ArtifactsPreview/ArtifactsPreview'
 import Download from '../../common/Download/Download'
@@ -91,7 +92,7 @@ const PreviewModal = ({ artifact }) => {
           <div className="preview-item">
             <div className="item-data item-data__header">Name</div>
             <div className="item-data item-data__path item-data__header">Path</div>
-            {(artifact.ui.size || artifact.size) && (
+            {(has(artifact, 'ui.size') || has(artifact, 'size')) && (
               <div className="item-data item-data__header">Size</div>
             )}
             <div className="item-data item-data__header">Updated</div>
@@ -108,7 +109,7 @@ const PreviewModal = ({ artifact }) => {
                 {artifact.target_path}
               </Tooltip>
             </div>
-            {(artifact.ui.size || artifact.size) && (
+            {(has(artifact, 'ui.size') || has(artifact, 'size')) && (
               <div className="item-data">
                 {artifact.ui.size
                   ? artifact.ui.size

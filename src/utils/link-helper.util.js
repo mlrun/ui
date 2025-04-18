@@ -19,6 +19,7 @@ such restriction.
 */
 import { DETAILS_OVERVIEW_TAB, VIEW_SEARCH_PARAMETER } from '../constants'
 import { getFilteredSearchParams } from './filter.util'
+import { showErrorNotification } from './notifications.util'
 
 export const isPageTabValid = (pageTab, tabs, navigate, location) => {
   if (!tabs.includes(pageTab)) {
@@ -27,13 +28,19 @@ export const isPageTabValid = (pageTab, tabs, navigate, location) => {
   }
 }
 
-export const isProjectValid = (navigate, projects, currentProjectName) => {
+export const isProjectValid = (navigate, projects, currentProjectName, dispatch) => {
   if (
     projects.length > 0 &&
     currentProjectName &&
     !projects.some(project => project?.metadata?.name === currentProjectName)
   ) {
     navigate('/projects', { replace: true })
+    showErrorNotification(
+      dispatch,
+      {},
+      '',
+      'This project does not exist'
+    )
   }
 }
 

@@ -22,8 +22,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
-import AlertsView from './AlertsView'
+import ActionBar from '../ActionBar/ActionBar'
+import AlertsFilters from './AlertsFilters'
+import AlertsTable from '../../elements/AlertsTable/AlertsTable'
+import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+import Pagination from '../../common/Pagination/Pagination'
+import Loader from '../../common/Loader/Loader'
 
+import { ALERTS_FILTERS, ALERTS_PAGE_PATH } from '../../constants'
 import { createAlertRowData } from '../../utils/createAlertsContent'
 import {
   getAlertsFiltersConfig,
@@ -32,13 +38,12 @@ import {
   checkForSelectedAlert
 } from './alerts.util'
 import { getJobLogs } from '../../utils/getJobLogs.util'
-import projectsAction from '../../actions/projects'
 import { useAlertsPageData } from '../../hooks/useAlertsPageData'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import { removeProjects } from '../../reducers/projectReducer'
 
 const Alerts = () => {
   const [selectedAlert, setSelectedAlert] = useState({})
-  const [, setProjectsRequestErrorMessage] = useState('')
   const alertsStore = useSelector(state => state.alertsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const dispatch = useDispatch()
@@ -60,34 +65,18 @@ const Alerts = () => {
     lastCheckedAlertIdRef,
     paginatedAlerts,
     paginationConfigAlertsRef,
-    refreshAlerts,
     requestErrorMessage,
     searchParams,
-    setAlerts,
     setSearchParams
   } = useAlertsPageData(alertsFilters, true)
-
-  const handleRefreshWithFilters = useCallback(
-    filters => {
-      setAlerts(null)
-
-      return refreshAlerts(filters)
-    },
-    [refreshAlerts, setAlerts]
-  )
 
   const tableContent = useMemo(() => {
     return paginatedAlerts.map(alert => createAlertRowData(alert, isCrossProjects))
   }, [isCrossProjects, paginatedAlerts])
 
-  const fetchMinimalProjects = useCallback(() => {
-    dispatch(projectsAction.fetchProjects({ format: 'minimal' }, setProjectsRequestErrorMessage))
-  }, [dispatch])
-
   useEffect(() => {
-    dispatch(projectsAction.removeProjects())
-    isCrossProjects && fetchMinimalProjects()
-  }, [dispatch, isCrossProjects, fetchMinimalProjects])
+    dispatch(removeProjects())
+  }, [dispatch, isCrossProjects])
 
   const handleCancel = () => {
     setSelectedAlert({})
@@ -142,23 +131,55 @@ const Alerts = () => {
   }, [lastCheckedAlertIdRef, selectedAlert])
 
   return (
-    <AlertsView
-      alerts={paginatedAlerts}
-      alertsFiltersConfig={alertsFiltersConfig}
-      alertsStore={alertsStore}
-      filters={alertsFilters}
-      filtersStore={filtersStore}
-      handleCancel={handleCancel}
-      handleRefreshAlerts={handleRefreshAlerts}
-      handleRefreshWithFilters={handleRefreshWithFilters}
-      isCrossProjects={isCrossProjects}
-      pageData={pageData}
-      paginationConfigAlertsRef={paginationConfigAlertsRef}
-      requestErrorMessage={requestErrorMessage}
-      selectedAlert={selectedAlert}
-      setSearchParams={setSearchParams}
-      tableContent={tableContent}
-    />
+    <div className="content-wrapper">
+      <div className="content__header">
+        <Breadcrumbs />
+      </div>
+      <div className="content">
+        <div className="table-container alerts-container">
+          <div className="content__action-bar-wrapper">
+            <ActionBar
+              autoRefreshIsStopped={true}
+              closeParamName={ALERTS_PAGE_PATH}
+              filterMenuName={ALERTS_FILTERS}
+              filters={alertsFilters}
+              filtersConfig={alertsFiltersConfig}
+              handleRefresh={handleRefreshAlerts}
+              setSearchParams={setSearchParams}
+              withRefreshButton
+              withoutExpandButton
+            >
+              <AlertsFilters isAlertsPage={alertsFilters} isCrossProjects={isCrossProjects} />
+            </ActionBar>
+          </div>
+          {alertsStore.loading && <Loader />}
+          {alertsStore.loading ? null : (
+            <>
+              <AlertsTable
+                alertsFiltersConfig={alertsFiltersConfig}
+                alertsStore={alertsStore}
+                filters={alertsFilters}
+                filtersStore={filtersStore}
+                handleCancel={handleCancel}
+                handleRefreshAlerts={handleRefreshAlerts}
+                isCrossProjects={isCrossProjects}
+                pageData={pageData}
+                paginationConfigAlertsRef={paginationConfigAlertsRef}
+                requestErrorMessage={requestErrorMessage}
+                selectedAlert={selectedAlert}
+                setSearchParams={setSearchParams}
+                tableContent={tableContent}
+              />
+              <Pagination
+                closeParamName={ALERTS_PAGE_PATH}
+                page={pageData.page}
+                paginationConfig={paginationConfigAlertsRef.current}
+              />
+            </>
+          )}
+        </div>
+      </div>
+    </div>
   )
 }
 

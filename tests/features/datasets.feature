@@ -150,14 +150,25 @@ Feature: Datasets Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with value "test-dataset" in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then verify "show_all_versions" option is present on "Datasets" wizard in "Datasets_Table" table with "test-dataset" value in "name" column    
+    Then verify "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-dataset" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions"
+    Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-dataset" value in "name" column
     And wait load page
-    Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
+    When click on cell with row index 1 in "uid" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "v1" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then click on "Edit_btn_table_view" element on "Datasets_Info_Pane" wizard
     And wait load page
     When type value "v2" to "Version_tag_Input" field on "Datasets_Info_Pane" wizard
     Then click on "Apply_Button" element on "Datasets_Info_Pane" wizard
     Then click on "Apply_Changes_Button" element on "Datasets_Info_Pane" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was updated" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then click on "History_Back_Button" element on "Datasets" wizard
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then select "v2" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
@@ -166,7 +177,6 @@ Feature: Datasets Page
     When click on cell with value "test-dataset" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Datasets_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
     Then "Header" element on "Datasets_Info_Pane" should contains "test-dataset" value
@@ -174,6 +184,13 @@ Feature: Datasets Page
     And wait load page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
     Then "Header" element on "Datasets_Info_Pane" should contains "test-dataset" value
+    Then click on "Table_FilterBy_Button" element on "Datasets" wizard
+    Then click on "Clear_Button" element on "FilterBy_Popup" wizard
+    And wait load page
+    When click on cell with value "auto-trainer-train_test_set" in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Datasets_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
   
   @MLD
   @passive
@@ -266,6 +283,12 @@ Feature: Datasets Page
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then click on "Register_Button" element on "Register_Dataset" wizard
     And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Register dataset initiated successfully" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     Then check "dataset-test" value in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then click on cell with value "dataset-test" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
@@ -369,12 +392,25 @@ Feature: Datasets Page
     Then uncheck "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then click on cell with row index 1 in "expand_btn" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "expand_btn" not presented in "Datasets_Table" on "Datasets" wizard
+    Then click on "Table_FilterBy_Button" element on "Datasets" wizard
+    Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column
     And wait load page
-    Then select "View YAML" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "latest" value in "name_expand_btn" column
+    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "5a44b12b-9ef3-4239-87e8-e0cbdae-21" value in "uid" column should contains "Common_Lists"."Action_Menu_List_Version_History"
+    Then select "View YAML" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "5a44b12b-9ef3-4239-87e8-e0cbdae-21" value in "uid" column
+    And wait load page
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+    Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+    When click on cell with row index 1 in "uid" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
+    Then select "View YAML" option in action menu on "Datasets_Info_Pane" wizard
+    Then verify if "View_YAML" popup dialog appears
+    Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+    Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+    Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Datasets_Info_Pane" wizard
 
   @MLD
   @smoke
@@ -387,31 +423,75 @@ Feature: Datasets Page
     And wait load page
     Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then verify that in action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column "Delete" option is enabled
+    Then verify that in action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column "Delete all versions" option is enabled
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then verify "Action_Menu" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Action_Menu" dropdown element on "Datasets_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
     Then check that "Delete" option in action menu on "Datasets_Info_Pane" wizard is enabled
-    Then click on "Edit_btn_table_view" element on "Datasets_Info_Pane" wizard
+    Then check that "Delete all versions" option in action menu on "Datasets_Info_Pane" wizard is enabled
+    Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    When type value "" to "Version_tag_Input" field on "Datasets_Info_Pane" wizard
-    Then click on "Apply_Button" element on "Datasets_Info_Pane" wizard
-    Then click on "Apply_Changes_Button" element on "Datasets_Info_Pane" wizard
+    Then verify "show_all_versions" option is present on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column
+    Then verify "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions"
+    Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column
     And wait load page
+    Then verify "History_Back_Button" element visibility on "Datasets" wizard
+    Then verify "Version_History_Title" element visibility on "Datasets" wizard
+    Then "Version_History_Title" element on "Datasets" should contains "Version history:" value
+    Then verify "Version_History_Model_Name" element visibility on "Datasets" wizard
+    Then "Version_History_Model_Name" element on "Datasets" should contains "test-regressor_cox-test-summary" value
+    Then verify "Table_Refresh_Button" element visibility on "Datasets" wizard
+    Then verify "Register_Dataset_Button" element visibility on "Datasets" wizard
     Then verify "Table_FilterBy_Button" element visibility on "Datasets" wizard
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
-    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
-    And wait load page
-    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column should contains "Common_Lists"."Action_Menu_List_Expanded"
-    Then verify that in action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column "Delete" option is enabled
+    Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "5a44b12b-9ef3-4239-87e8-e0cbdae-21" value in "uid" column should contains "Common_Lists"."Action_Menu_List_Version_History"
+    Then verify that in action menu on "Datasets" wizard in "Datasets_Table" table with "5a44b12b-9ef3-4239-87e8-e0cbdae-21" value in "uid" column "Delete" option is enabled
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then check "Click to add" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
-    Then verify "Action_Menu" dropdown element on "Datasets_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
+    Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
+    Then verify "Action_Menu" element visibility on "Datasets_Info_Pane" wizard
+    Then verify "Action_Menu" dropdown element on "Datasets_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List_Version_History"
     Then check that "Delete" option in action menu on "Datasets_Info_Pane" wizard is enabled
-  
+    Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
+    Then "Header" element on "Datasets_Info_Pane" should contains "test-regressor_cox-test-summary" value
+    Then click on "Register_Dataset_Button" element on "Datasets" wizard
+    Then verify if "Register_Dataset" popup dialog appears
+    Then type value "test-regressor_cox-test-summary" to "Name_Input" field on "Register_Dataset" wizard
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
+    When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
+    Then click on "Register_Button" element on "Register_Dataset" wizard
+    And wait load page
+    Then verify if "Confirm_Popup" popup dialog appears
+    Then "Title" element on "Confirm_Popup" should contains "Overwrite dataset?" value
+    When click on "Overwrite_Button" element on "Confirm_Popup" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Register dataset initiated successfully" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then click on "History_Back_Button" element on "Datasets" wizard
+    When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "An error occurred while retrieving the dataset." value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then click on "Table_Refresh_Button" element on "Datasets" wizard
+    And wait load page
+    When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
+    Then verify "Header" element visibility on "Files_Info_Pane" wizard
+    Then "Header" element on "Files_Info_Pane" should contains "test-regressor_cox-test-summary" value
+    #TODO: Verify text message 'The <artifact> you are viewing was updated. Close the detail panel and refresh the list to see the current version.' on Files_Info_Pane
+    #TODO: Verify that editing the tag to an empty string '' will delete the artifact instance
+
   @MLD
   @passive
   @smoke
@@ -475,14 +555,20 @@ Feature: Datasets Page
     And wait load page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then verify redirection from "projects/default/datasets/auto-trainer-train_test_set/latest/0/INVALID" to "projects/default/datasets/auto-trainer-train_test_set/latest/0/overview"
+    Then verify redirection from "projects/default/datasets/auto-trainer-train_test_set/:latest@5a44b12b-9ef3-4239-87e8-e0cbdae-97/INVALID?bePage=1&fePage=1" to "projects/default/datasets/auto-trainer-train_test_set/:latest@5a44b12b-9ef3-4239-87e8-e0cbdae-97/overview?bePage=1&fePage=1"
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     And wait load page
-    Then verify redirection from "projects/default/datasets/auto-trainer-train_test_set/latest/0/INVALID" to "projects/default/datasets/auto-trainer-train_test_set/latest/0/overview"
+    Then verify redirection from "projects/default/datasets/auto-trainer-train_test_set/:latest@5a44b12b-9ef3-4239-87e8-e0cbdae-97/INVALID?bePage=1&fePage=1" to "projects/default/datasets/auto-trainer-train_test_set/:latest@5a44b12b-9ef3-4239-87e8-e0cbdae-97/overview?bePage=1&fePage=1"
     And wait load page
-    Then verify redirection from "projects/INVALID/datasets/auto-trainer-train_test_set/latest/0/overview" to "projects"
+    Then verify redirection from "projects/INVALID/datasets/auto-trainer-train_test_set/:latest@5a44b12b-9ef3-4239-87e8-e0cbdae-97/overview?bePage=1&fePage=1" to "projects"
     And wait load page
-    Then verify redirection from "projects/default/INVALID/auto-trainer-train_test_set/latest/0/overview" to "projects"
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "This project does not exist" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify redirection from "projects/default/INVALID/auto-trainer-train_test_set/:latest@5a44b12b-9ef3-4239-87e8-e0cbdae-97/overview?bePage=1&fePage=1" to "projects"
     And wait load page
   
   @MLD
@@ -515,6 +601,7 @@ Feature: Datasets Page
   
   @MLD
   @smoke
+  #TODO: add the custom tag edditing 
   Scenario: MLD009 - Check that version tag is filled when edit it in table view and full view on Overview tab table on Datasets page
     Given open url
     And wait load page
@@ -523,19 +610,18 @@ Feature: Datasets Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    When click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
-    Then click on "Edit_btn_table_view" element on "Datasets_Info_Pane" wizard
-    And wait load page
-    Then verify "Version_tag_Input_table_view" on "Datasets_Info_Pane" wizard should contains "latest" value
+    Then verify "Edit_btn_table_view" element not exists on "Files_Info_Pane" wizard 
     Then click on "Full_View_Button" element on "Datasets_Info_Pane" wizard
+    And wait load page
     Then verify "Cross_Close_Button" element not exists on "Datasets_Info_Pane" wizard
-    Then click on "Edit_btn_full_view" element on "Datasets_Info_Pane" wizard
-    Then verify "Version_tag_Input_full_view" on "Datasets_Info_Pane" wizard should contains "latest" value   
+    Then verify "Edit_btn_table_view" element not exists on "Files_Info_Pane" wizard 
+    Then "Version_tag_Value_full_view" element on "Datasets_Info_Pane" should contains "latest" value  
     Then click on "Tabel_View_Button" element on "Datasets_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
 
@@ -555,12 +641,19 @@ Feature: Datasets Page
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
-    Then click on "Edit_btn_table_view" element on "Datasets_Info_Pane" wizard
+    Then verify "Edit_btn_table_view" element not exists on "Datasets_Info_Pane" wizard
+    Then select "Add a tag" option in action menu on "Datasets_Info_Pane" wizard
     And wait load page
-    When type value "newTag" to "Version_tag_Input" field on "Datasets_Info_Pane" wizard
-    Then click on "Apply_Button" element on "Datasets_Info_Pane" wizard
-    Then click on "Apply_Changes_Button" element on "Datasets_Info_Pane" wizard
+    Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
+    Then type value "newTag" to "Tag_Input" field on "Add_Tag_Popup" wizard
+    Then click on "Add_Button" element on "Add_Tag_Popup" wizard
     And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was added successfully" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     Then verify "Table_FilterBy_Button" element visibility on "Datasets" wizard
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then select "newTag" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
@@ -584,17 +677,25 @@ Feature: Datasets Page
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
-    Then click on "Edit_btn_table_view" element on "Datasets_Info_Pane" wizard
-    Then type value "" to "Version_tag_Input" field on "Datasets_Info_Pane" wizard
-    Then click on "Apply_Button" element on "Datasets_Info_Pane" wizard
-    Then click on "Apply_Changes_Button" element on "Datasets_Info_Pane" wizard
+    Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
+    Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "data_clean_encoded-data" value in "name" column
     And wait load page
-    Then click on "Table_FilterBy_Button" element on "Datasets" wizard
-    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    Then click on "Register_Dataset_Button" element on "Datasets" wizard
+    Then verify if "Register_Dataset" popup dialog appears
+    Then type value "data_clean_encoded-data" to "Name_Input" field on "Register_Dataset" wizard
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
+    When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
+    Then click on "Register_Button" element on "Register_Dataset" wizard
     And wait load page
-    When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then verify if "Confirm_Popup" popup dialog appears
+    Then "Title" element on "Confirm_Popup" should contains "Overwrite dataset?" value
+    When click on "Overwrite_Button" element on "Confirm_Popup" wizard
     And wait load page
+    When click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
+    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
+    Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"   
     Then "Version_Tag_Input_Placeholder" element on "Datasets_Info_Pane" should contains "Click to add" value
 
   @MLD
@@ -608,25 +709,33 @@ Feature: Datasets Page
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
-    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then select "All tags" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "cleaned_data" value in "name" column
     And wait load page
-    Then save to context "name" column on 2 row from "Datasets_Table" table on "Datasets" wizard
-    Then compare "Header" element value on "Datasets_Info_Pane" wizard with test "name" context value
-    Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
-    Then click on "Edit_btn_table_view" element on "Datasets_Info_Pane" wizard
+    Then click on "Register_Dataset_Button" element on "Datasets" wizard
+    Then verify if "Register_Dataset" popup dialog appears
+    Then type value "cleaned_data" to "Name_Input" field on "Register_Dataset" wizard
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
+    When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
+    Then click on "Register_Button" element on "Register_Dataset" wizard
+    And wait load page
+    Then verify if "Confirm_Popup" popup dialog appears
+    Then "Title" element on "Confirm_Popup" should contains "Overwrite dataset?" value
+    When click on "Overwrite_Button" element on "Confirm_Popup" wizard
+    And wait load page
+    When click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
+    Then "Version_Tag_Input_Placeholder" element on "Datasets_Info_Pane" should contains "Click to add" value
+    Then click on "Click_To_Add_Button" element on "Datasets_Info_Pane" wizard
     Then type value "latest123456" to "Version_tag_Input" field on "Datasets_Info_Pane" wizard
     Then click on "Apply_Button" element on "Datasets_Info_Pane" wizard
     Then click on "Apply_Changes_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
     Then check "latest123456" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
-    Then save to context "name" column on 2 row from "Datasets_Table" table on "Datasets" wizard
-    Then compare "Header" element value on "Datasets_Info_Pane" wizard with test "name" context value
 
   @MLD
   @smoke
@@ -814,7 +923,7 @@ Feature: Datasets Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 3 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then click on cell with value "test_new_structure2" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
@@ -1185,15 +1294,15 @@ Feature: Datasets Page
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
-    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then select "All tags" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then check "expand_btn" visibility in "Datasets_Table" on "Datasets" wizard with 0 offset
+    Then check "expand_btn" not presented in "Datasets_Table" on "Datasets" wizard
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
-    Then click on cell with row index 1 in "expand_btn" column in "Datasets_Table" table on "Datasets" wizard
+    Then click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
-    Then select "View YAML" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "latest" value in "name_expand_btn" column
+    Then select "View YAML" option in action menu on "Datasets_Info_Pane" wizard
     Then verify if "View_YAML" popup dialog appears
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
@@ -1204,14 +1313,12 @@ Feature: Datasets Page
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
-    Then click on cell with row index 1 in "expand_btn" column in "Datasets_Table" table on "Datasets" wizard
+    Then click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
 
   @MLD
-  @inProgress
   @smoke
-# Run this test case only on full screen
   Scenario: MLD027 - Verify dataset elements visibility on Datasets Table with high number of rows
     * create "new_dataset_10" Dataset with "set_10" tag in "churn-project-admin" project with code 200
     * create "new_dataset_11" Dataset with "set_11" tag in "churn-project-admin" project with code 200
@@ -1237,31 +1344,68 @@ Feature: Datasets Page
     And wait load page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    Then verify that 17 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then verify that 24 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then check "new_dataset_10" value in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then check "new_dataset_24" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "test-regressor_cox-test-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "survival-curves_coxhazard-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "iris_gen_iris_dataset" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "data_clean_cleaned-data" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
-    When scroll to the element with "test-regressor_cox-test-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    And wait load page
-    Then verify that 18 row elements are displayed in "Datasets_Table" on "Datasets" wizard
-    Then check "test-regressor_cox-test-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "iris_gen_iris_dataset" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "new_dataset_10" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then check "data_clean_cleaned-data" value in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "BE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "FE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
+    Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
+    Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
+    Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 24" value
+    
     Then click on cell with value "data_clean_cleaned-data" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then "Header" element on "Datasets_Info_Pane" should contains "data_clean_cleaned-data" value
+    
     Then type value "new_dataset_10" to "Table_Name_Filter_Input" field on "Datasets" wizard
     Then click on "Table_Refresh_Button" element on "Datasets" wizard
     And wait load page
+    Then "Header" element on "Datasets_Info_Pane" should contains "data_clean_cleaned-data" value
+    Then verify "Not_In_Filtered_List_Message" element visibility on "Datasets_Info_Pane" wizard
+    Then "Not_In_Filtered_List_Message" component on "Datasets_Info_Pane" should be equal "Datasets_Info_Pane"."Info_Banner_Message"
+    Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
+    And wait load page
+    Then verify "Header" element not exists on "Datasets_Info_Pane" wizard
+
+
+    
     Then value in "name" column with "text" in "Datasets_Table" on "Datasets" wizard should contains "new_dataset_10"
+    Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "BE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "FE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
+    Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
+    Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
+    Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 1" value
     Then type value "new_data" to "Table_Name_Filter_Input" field on "Datasets" wizard
     Then click on "Table_Refresh_Button" element on "Datasets" wizard
     And wait load page
     Then value in "name" column with "text" in "Datasets_Table" on "Datasets" wizard should contains "new_data"
+    Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "BE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "FE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
+    Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
+    Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
+    Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 15" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
@@ -1272,20 +1416,40 @@ Feature: Datasets Page
     And wait load page
     Then verify "Table_FilterBy_Button" element visibility on "Datasets" wizard
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
-    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then select "All tags" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then verify that 17 row elements are displayed in "Datasets_Table" on "Datasets" wizard
-    Then check "new_dataset_24" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "test-regressor_cox-test-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "survival-curves_coxhazard-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "iris_gen_iris_dataset" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then verify that 24 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "BE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "FE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
+    Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
+    Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
+    Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 24" value
     Then click on cell with value "test-regressor_cox-test-summary" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then check "new_dataset_10" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then verify that 18 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then verify that 24 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "BE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "FE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
+    Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
+    Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
+    Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
+    Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
+    Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 24" value
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
+    Then verify "Header" element not exists on "Datasets_Info_Pane" wizard
 
   @MLD
   @smoke
@@ -1356,7 +1520,7 @@ Feature: Datasets Page
     Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
     Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     Then check "survival-curves_coxhazard-summary" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
-    When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then click on cell with value "iris_gen_iris_dataset" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
     Then "Header" element on "Datasets_Info_Pane" should contains "iris_gen_iris_dataset" value

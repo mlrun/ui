@@ -18,13 +18,13 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import { isNil } from 'lodash'
+import { useParams } from 'react-router-dom'
 
 import FunctionsPanelCodeView from './FunctionsPanelCodeView'
 
-import functionsActions from '../../actions/functions'
 import {
   DEFAULT_ENTRY,
   DEFAULT_IMAGE,
@@ -34,25 +34,24 @@ import {
 } from './functionsPanelCode.util'
 import { FUNCTION_DEFAULT_HANDLER, PANEL_CREATE_MODE, TAG_LATEST } from '../../constants'
 import { splitTrim, trimSplit } from '../../utils'
-import { useParams } from 'react-router-dom'
-
-const FunctionsPanelCode = ({
-  appStore,
-  defaultData = {},
-  functionsStore,
-  imageType,
-  mode,
+import {
   resetNewFunctionCodeCustomImage,
-  setImageType,
   setNewFunctionBaseImage,
   setNewFunctionBuildImage,
   setNewFunctionCommands,
-  setNewFunctionRequirements,
   setNewFunctionDefaultClass,
-  setNewFunctionForceBuild,
   setNewFunctionHandler,
   setNewFunctionImage,
-  setNewFunctionSourceCode,
+  setNewFunctionRequirements,
+  setNewFunctionSourceCode
+} from '../../reducers/functionReducer'
+
+const FunctionsPanelCode = ({
+  defaultData = {},
+  imageType,
+  mode,
+  setImageType,
+  setNewFunctionForceBuild,
   setValidation,
   validation
 }) => {
@@ -68,26 +67,31 @@ const FunctionsPanelCode = ({
   })
   const [editCode, setEditCode] = useState(false)
   const params = useParams()
+  const dispatch = useDispatch()
+  const functionsStore = useSelector(store => store.functionsStore)
+  const appStore = useSelector(store => store.appStore)
 
   useEffect(() => {
     if (
       !functionsStore.newFunction.spec.build.functionSourceCode &&
       isNil(defaultData.build?.functionSourceCode)
     ) {
-      setNewFunctionSourceCode(sourceCodeInBase64[functionsStore.newFunction.kind])
+      dispatch(setNewFunctionSourceCode(sourceCodeInBase64[functionsStore.newFunction.kind]))
     }
   }, [
     defaultData.build,
+    dispatch,
     functionsStore.newFunction.kind,
-    functionsStore.newFunction.spec.build.functionSourceCode,
-    setNewFunctionSourceCode
+    functionsStore.newFunction.spec.build.functionSourceCode
   ])
 
   useEffect(() => {
     if (mode === PANEL_CREATE_MODE && imageType.length === 0) {
       if (appStore.frontendSpec.default_function_image_by_kind?.[functionsStore.newFunction.kind]) {
-        setNewFunctionImage(
-          appStore.frontendSpec.default_function_image_by_kind[functionsStore.newFunction.kind]
+        dispatch(
+          setNewFunctionImage(
+            appStore.frontendSpec.default_function_image_by_kind[functionsStore.newFunction.kind]
+          )
         )
         setImageType(EXISTING_IMAGE)
         setData(state => ({
@@ -101,16 +105,20 @@ const FunctionsPanelCode = ({
           .replace('{name}', functionsStore.newFunction.metadata.name)
           .replace('{tag}', functionsStore.newFunction.metadata.tag || TAG_LATEST)
 
-        setNewFunctionRequirements(
-          trimSplit(appStore.frontendSpec?.function_deployment_mlrun_requirement ?? '', ',')
+        dispatch(
+          setNewFunctionRequirements(
+            trimSplit(appStore.frontendSpec?.function_deployment_mlrun_requirement ?? '', ',')
+          )
         )
         setImageType(NEW_IMAGE)
-        setNewFunctionBaseImage(
-          appStore.frontendSpec?.default_function_image_by_kind?.[
-            functionsStore.newFunction.kind
-          ] ?? ''
+        dispatch(
+          setNewFunctionBaseImage(
+            appStore.frontendSpec?.default_function_image_by_kind?.[
+              functionsStore.newFunction.kind
+            ] ?? ''
+          )
         )
-        setNewFunctionBuildImage(buildImage)
+        dispatch(setNewFunctionBuildImage(buildImage))
         setData(state => ({
           ...state,
           requirements: appStore.frontendSpec?.function_deployment_mlrun_requirement ?? '',
@@ -129,7 +137,7 @@ const FunctionsPanelCode = ({
           defaultData.image?.length === 0)) &&
       imageType.length === 0
     ) {
-      setNewFunctionImage(defaultData.image || DEFAULT_IMAGE)
+      dispatch(setNewFunctionImage(defaultData.image || DEFAULT_IMAGE))
       setImageType(EXISTING_IMAGE)
       setData(state => ({
         ...state,
@@ -149,29 +157,25 @@ const FunctionsPanelCode = ({
     params.projectName,
     mode,
     setImageType,
-    setNewFunctionBaseImage,
-    setNewFunctionBuildImage,
-    setNewFunctionCommands,
-    setNewFunctionImage,
-    setNewFunctionRequirements
+    dispatch
   ])
 
   const handleClassOnBlur = () => {
     if (functionsStore.newFunction.spec.default_class !== data.default_class) {
-      setNewFunctionDefaultClass(data.default_class)
+      dispatch(setNewFunctionDefaultClass(data.default_class))
     }
   }
 
   const handleHandlerOnBlur = () => {
     if (functionsStore.newFunction.spec.default_handler !== data.handler) {
-      setNewFunctionHandler(data.handler)
+      dispatch(setNewFunctionHandler(data.handler))
     }
   }
 
   const handleImageTypeChange = type => {
     if (type === EXISTING_IMAGE) {
       if (mode === PANEL_CREATE_MODE) {
-        resetNewFunctionCodeCustomImage()
+        dispatch(resetNewFunctionCodeCustomImage())
         setData(state => ({
           ...state,
           base_image: '',
@@ -194,12 +198,14 @@ const FunctionsPanelCode = ({
             ''
         }))
       }
-      setNewFunctionImage(
-        data.image ||
-          appStore.frontendSpec?.default_function_image_by_kind?.[
-            functionsStore.newFunction.kind
-          ] ||
-          ''
+      dispatch(
+        setNewFunctionImage(
+          data.image ||
+            appStore.frontendSpec?.default_function_image_by_kind?.[
+              functionsStore.newFunction.kind
+            ] ||
+            ''
+        )
       )
     } else if (type === NEW_IMAGE) {
       const buildImage = (appStore.frontendSpec?.function_deployment_target_image_template || '')
@@ -208,7 +214,7 @@ const FunctionsPanelCode = ({
         .replace('{tag}', functionsStore.newFunction.metadata.tag || TAG_LATEST)
 
       if (mode === PANEL_CREATE_MODE) {
-        setNewFunctionImage('')
+        dispatch(setNewFunctionImage(''))
         setData(state => ({
           ...state,
           image: '',
@@ -236,20 +242,24 @@ const FunctionsPanelCode = ({
         }))
       }
 
-      setNewFunctionRequirements(
-        data.requirements.length > 0
-          ? splitTrim(data.requirements, ',')
-          : splitTrim(appStore.frontendSpec?.function_deployment_mlrun_requirement ?? '', ',')
+      dispatch(
+        setNewFunctionRequirements(
+          data.requirements.length > 0
+            ? splitTrim(data.requirements, ',')
+            : splitTrim(appStore.frontendSpec?.function_deployment_mlrun_requirement ?? '', ',')
+        )
       )
-      setNewFunctionCommands(trimSplit(data.commands, '\n') || '')
-      setNewFunctionBaseImage(
-        data.base_image ||
-          appStore.frontendSpec?.default_function_image_by_kind?.[
-            functionsStore.newFunction.kind
-          ] ||
-          ''
+      dispatch(setNewFunctionCommands(trimSplit(data.commands, '\n') || ''))
+      dispatch(
+        setNewFunctionBaseImage(
+          data.base_image ||
+            appStore.frontendSpec?.default_function_image_by_kind?.[
+              functionsStore.newFunction.kind
+            ] ||
+            ''
+        )
       )
-      setNewFunctionBuildImage(data.build_image || buildImage)
+      dispatch(setNewFunctionBuildImage(data.build_image || buildImage))
     }
 
     setImageType(type)
@@ -275,13 +285,7 @@ const FunctionsPanelCode = ({
       setData={setData}
       setEditCode={setEditCode}
       setValidation={setValidation}
-      setNewFunctionBaseImage={setNewFunctionBaseImage}
-      setNewFunctionBuildImage={setNewFunctionBuildImage}
-      setNewFunctionRequirements={setNewFunctionRequirements}
-      setNewFunctionCommands={setNewFunctionCommands}
       setNewFunctionForceBuild={setNewFunctionForceBuild}
-      setNewFunctionImage={setNewFunctionImage}
-      setNewFunctionSourceCode={setNewFunctionSourceCode}
       validation={validation}
     />
   )
@@ -296,6 +300,4 @@ FunctionsPanelCode.propTypes = {
   validation: PropTypes.shape({}).isRequired
 }
 
-export default connect((functionsStore, appStore) => ({ ...functionsStore, ...appStore }), {
-  ...functionsActions
-})(FunctionsPanelCode)
+export default FunctionsPanelCode

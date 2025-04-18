@@ -21,7 +21,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 import { isEmpty, get } from 'lodash'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -62,8 +62,6 @@ import {
   getNewJobErrorMsg,
   getSaveJobErrorMsg
 } from './JobWizard.util'
-import functionsActions from '../../actions/functions'
-import projectsAction from '../../actions/projects'
 import { FUNCTIONS_SELECTION_FUNCTIONS_TAB } from './JobWizardSteps/JobWizardFunctionSelection/jobWizardFunctionSelection.util'
 import { JOB_WIZARD_MODE } from '../../types'
 import { MODAL_MAX } from 'igz-controls/constants'
@@ -73,26 +71,26 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { editJob, removeJobFunction, runNewJob } from '../../reducers/jobReducer'
+import { fetchProject } from '../../reducers/projectReducer'
+import {
+  fetchFunctionTemplate,
+  fetchHubFunction,
+  removeHubFunctions
+} from '../../reducers/functionReducer'
 
 import './jobWizard.scss'
 
 const JobWizard = ({
   defaultData = {},
-  fetchFunctionTemplate,
-  fetchHubFunction,
-  frontendSpec,
-  functionsStore,
   isBatchInference = false,
   isOpen,
   isTrain = false,
-  jobsStore,
   mode = PANEL_CREATE_MODE,
   onResolve,
   onSuccessRequest = () => {},
   onWizardClose = null,
   params,
   prePopulatedData = {},
-  removeHubFunctions,
   tab = '',
   wizardTitle = 'Batch run'
 }) => {
@@ -122,6 +120,9 @@ const JobWizard = ({
   const dispatch = useDispatch()
   const scheduleButtonRef = useRef()
   const formStateRef = useRef(null)
+  const functionsStore = useSelector(store => store.functionsStore)
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+  const jobsStore = useSelector(store => store.jobsStore)
 
   const closeModal = useCallback(() => {
     if (showSchedule) {
@@ -137,7 +138,15 @@ const JobWizard = ({
 
   useEffect(() => {
     if (!isEditMode) {
-      dispatch(projectsAction.fetchProject(params.projectName, { format: 'minimal' }))
+      dispatch(
+        fetchProject({
+          project: params.projectName,
+          params: {
+            format: 'minimal'
+          }
+        })
+      )
+        .unwrap()
         .then(response => setCurrentProject(response?.data))
         .catch(error => {
           showErrorNotification(dispatch, error, 'The project failed to load')
@@ -151,28 +160,31 @@ const JobWizard = ({
       setTemplatesCategories([])
       setTemplates([])
       setShowSchedule(false)
-
-      removeHubFunctions()
+      dispatch(removeHubFunctions())
     }
-  }, [removeHubFunctions, setFunctions])
+  }, [dispatch, setFunctions])
 
   useEffect(() => {
     if (isBatchInference || isTrain) {
       const hubFunctionName = isBatchInference ? 'batch_inference_v2' : 'auto-trainer'
 
-      fetchHubFunction(hubFunctionName).then(hubFunction => {
-        if (hubFunction) {
-          const functionTemplatePath = `${hubFunction.spec.item_uri}${hubFunction.spec.assets.function}`
+      dispatch(fetchHubFunction({ hubFunctionName }))
+        .unwrap()
+        .then(hubFunction => {
+          if (hubFunction) {
+            const functionTemplatePath = `${hubFunction.spec.item_uri}${hubFunction.spec.assets.function}`
 
-          fetchFunctionTemplate(functionTemplatePath).then(functionData => {
-            setSelectedFunctionData(functionData)
-          })
-        } else {
-          resolveModal()
-        }
-      })
+            dispatch(fetchFunctionTemplate({ path: functionTemplatePath }))
+              .unwrap()
+              .then(functionData => {
+                setSelectedFunctionData(functionData)
+              })
+          } else {
+            resolveModal()
+          }
+        })
     }
-  }, [fetchFunctionTemplate, fetchHubFunction, isBatchInference, isTrain, resolveModal])
+  }, [dispatch, isBatchInference, isTrain, resolveModal])
 
   useEffect(() => {
     if (!isEmpty(jobsStore.jobFunc)) {
@@ -558,14 +570,4 @@ JobWizard.propTypes = {
   wizardTitle: PropTypes.string
 }
 
-export default connect(
-  ({ appStore, functionsStore, jobsStore }) => ({
-    frontendSpec: appStore.frontendSpec,
-    functionsStore,
-    jobsStore
-  }),
-  {
-    ...functionsActions,
-    ...projectsAction
-  }
-)(JobWizard)
+export default JobWizard

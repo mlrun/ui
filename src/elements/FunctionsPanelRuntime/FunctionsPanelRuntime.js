@@ -19,7 +19,7 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import FunctionsPanelRuntimeView from './FunctionsPanelRuntimeView'
 
@@ -27,12 +27,12 @@ import { useMode } from '../../hooks/mode.hook'
 
 const FunctionsPanelRuntime = ({
   defaultData = {},
-  functionsStore,
   sections,
   setValidation,
   validation
 }) => {
   const { isStagingMode } = useMode()
+  const functionsStore = useSelector(store => store.functionsStore)
 
   return (
     <FunctionsPanelRuntimeView
@@ -53,4 +53,4 @@ FunctionsPanelRuntime.propTypes = {
   validation: PropTypes.shape({}).isRequired
 }
 
-export default connect(functionsStore => ({ ...functionsStore }), {})(FunctionsPanelRuntime)
+export default FunctionsPanelRuntime

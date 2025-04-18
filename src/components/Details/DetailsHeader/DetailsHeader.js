@@ -17,12 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useRef, useEffect, useState, useMemo } from 'react'
+import React, { useCallback, useRef, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
-import { useSelector } from 'react-redux'
-import classNames from 'classnames'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { Button, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 import LoadButton from '../../../common/LoadButton/LoadButton'
@@ -44,6 +43,7 @@ import {
   getDefaultCloseDetailsLink
 } from '../../../utils/link-helper.util'
 import { getFilteredSearchParams } from '../../../utils/filter.util'
+import { setIteration } from '../../../reducers/detailsReducer'
 
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
@@ -66,11 +66,9 @@ const DetailsHeader = ({
   isDetailsPopUp,
   pageData,
   selectedItem,
-  setIteration,
   tab,
   withActionMenu = true
 }) => {
-  const [headerIsMultiline, setHeaderIsMultiline] = useState(false)
   const detailsStore = useSelector(store => store.detailsStore)
   const params = useParams()
   const navigate = useNavigate()
@@ -78,6 +76,7 @@ const DetailsHeader = ({
   const { actionButton, withToggleViewBtn, showAllVersions } = pageData.details
   const headerRef = useRef()
   const location = useLocation()
+  const dispatch = useDispatch()
 
   const errorMessage = useMemo(
     () =>
@@ -109,31 +108,9 @@ const DetailsHeader = ({
     }
   }, [detailsStore.changes.counter, handleCancel, isDetailsPopUp])
 
-  useEffect(() => {
-    if (!headerRef.current) return
-
-    let prevHeaderHeight = 0
-    const resizeObserver = new ResizeObserver(entries => {
-      for (let entry of entries) {
-        if (entry.contentRect.height !== prevHeaderHeight) {
-          prevHeaderHeight = entry.contentRect.height
-          if (entry.contentRect.height > 100) {
-            setHeaderIsMultiline(true)
-          } else {
-            setHeaderIsMultiline(false)
-          }
-        }
-      }
-    })
-
-    resizeObserver.observe(headerRef.current)
-
-    return () => resizeObserver.disconnect()
-  }, [])
-
   return (
     <div
-      className={classNames('item-header', headerIsMultiline && 'item-header_multiline')}
+      className='item-header'
       ref={headerRef}
     >
       <div className="item-header__data">
@@ -236,7 +213,7 @@ const DetailsHeader = ({
             key="Iteration"
             label="Iteration:"
             onClick={option => {
-              setIteration(option)
+              dispatch(setIteration(option))
             }}
             options={detailsStore.iterationOptions}
             selectedId={detailsStore.iteration}
@@ -374,7 +351,6 @@ DetailsHeader.propTypes = {
   isDetailsScreen: PropTypes.bool.isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
-  setIteration: PropTypes.func.isRequired,
   tab: PropTypes.string
 }
 
