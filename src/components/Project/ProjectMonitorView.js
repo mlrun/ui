@@ -179,7 +179,7 @@ const ProjectMonitorView = ({
                 <ProjectJobs />
               </div>
               <div className="d-flex">
-                <ProjectFunctions />
+                <ProjectFunctions nuclioStreamsAreEnabled={nuclioStreamsAreEnabled} />
               </div>
             </div>
           </div>

@@ -32,7 +32,12 @@ import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 import { generateNuclioLink } from '../../utils'
 import { ERROR_STATE, REQUEST_CANCELED } from '../../constants'
 
-const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore }) => {
+const ProjectFunctions = ({
+  fetchApiGateways,
+  fetchNuclioFunctions,
+  nuclioStore,
+  nuclioStreamsAreEnabled
+}) => {
   const params = useParams()
   const { isNuclioModeDisabled } = useNuclioMode()
 
@@ -93,9 +98,29 @@ const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore 
         label: 'API gateways',
         className: nuclioStore.apiGateways > 0 ? 'running' : 'default',
         href: generateNuclioLink(`/projects/${params.projectName}/api-gateways`)
-      }
+      },
+      ...(nuclioStreamsAreEnabled && {
+        consumerGroups: {
+          value: isNuclioModeDisabled
+            ? 'N/A'
+            : (Object.keys(nuclioStore.v3ioStreams.data).length ?? 0),
+          label: 'Consumer groups',
+          className:
+            Object.keys(nuclioStore.v3ioStreams.data ?? {}).length > 0 ? 'running' : 'default',
+          href: `/projects/${params.projectName}/monitor${
+            !isNuclioModeDisabled ? '/consumer-groups' : ''
+          }`
+        }
+      })
     }
-  }, [params.projectName, nuclioStore.apiGateways, nuclioStore.currentProjectFunctions])
+  }, [
+    nuclioStore.currentProjectFunctions,
+    nuclioStore.apiGateways,
+    nuclioStore.v3ioStreams.data,
+    params.projectName,
+    nuclioStreamsAreEnabled,
+    isNuclioModeDisabled
+  ])
 
   const functionsTable = useMemo(() => {
     if (nuclioStore.currentProjectFunctions.length > 0) {
@@ -129,7 +154,9 @@ const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore 
                 ? 'Running'
                 : func?.status?.state === 'ready' && func?.spec?.disable
                   ? 'Standby'
-                  : [ERROR_STATE, 'unhealthy', 'imported', 'scaledToZero'].includes(func?.status?.state)
+                  : [ERROR_STATE, 'unhealthy', 'imported', 'scaledToZero'].includes(
+                        func?.status?.state
+                      )
                     ? upperFirst(lowerCase(func.status.state))
                     : 'Building',
             className: funcClassName
@@ -162,7 +189,9 @@ const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore 
 
 ProjectFunctions.propTypes = {
   fetchApiGateways: PropTypes.func.isRequired,
-  fetchNuclioFunctions: PropTypes.func.isRequired
+  fetchNuclioFunctions: PropTypes.func.isRequired,
+  nuclioStore: PropTypes.object,
+  nuclioStreamsAreEnabled: PropTypes.bool
 }
 
 export default connect(
