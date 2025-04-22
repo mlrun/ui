@@ -25,7 +25,7 @@ import Select from '../../common/Select/Select'
 import DatePicker from '../../common/DatePicker/DatePicker'
 import TimePicker from '../../common/TimePicker/TimePicker'
 
-import { scheduleActionType } from '../../components/ScheduleJob/recurringReducer'
+import { scheduleActionType } from '../../components/FeatureSetsPanel/ScheduleFeatureSet/recurringReducer'
 import { selectOptions } from './scheduleRecurring.util'
 
 import './scheduleRecurring.scss'
@@ -44,8 +44,8 @@ const ScheduleRecurring = ({ daysOfWeek, handleDaysOfWeek, recurringDispatch, re
         selectedOption === 'minute'
           ? scheduleActionType.SCHEDULE_REPEAT_MINUTE
           : selectedOption === 'hour'
-          ? scheduleActionType.SCHEDULE_REPEAT_HOUR
-          : null,
+            ? scheduleActionType.SCHEDULE_REPEAT_HOUR
+            : null,
       payload: parseInt(value)
     })
   }
@@ -103,10 +103,10 @@ const ScheduleRecurring = ({ daysOfWeek, handleDaysOfWeek, recurringDispatch, re
           {scheduleRepeatActiveOption === 'minute'
             ? 'minutes'
             : scheduleRepeatActiveOption === 'hour'
-            ? 'hours at minute 0 past the hour'
-            : scheduleRepeatActiveOption === 'month'
-            ? 'on the 1st day in every month at'
-            : 'at'}
+              ? 'hours at minute 0 past the hour'
+              : scheduleRepeatActiveOption === 'month'
+                ? 'on the 1st day in every month at'
+                : 'at'}
         </span>
         {['day', 'month', 'week'].includes(scheduleRepeatActiveOption) && (
           <TimePicker
@@ -118,8 +118,8 @@ const ScheduleRecurring = ({ daysOfWeek, handleDaysOfWeek, recurringDispatch, re
                   scheduleRepeatActiveOption === 'week'
                     ? scheduleActionType.SCHEDULE_REPEAT_WEEK_TIME
                     : scheduleRepeatActiveOption === 'day'
-                    ? scheduleActionType.SCHEDULE_REPEAT_DAY_TIME
-                    : scheduleActionType.SCHEDULE_REPEAT_MONTH_TIME,
+                      ? scheduleActionType.SCHEDULE_REPEAT_DAY_TIME
+                      : scheduleActionType.SCHEDULE_REPEAT_MONTH_TIME,
                 payload: value
               })
             }}
