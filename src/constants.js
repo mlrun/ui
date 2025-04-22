@@ -132,6 +132,8 @@ export const ARTIFACTS_PAGE = 'ARTIFACTS'
 export const FILES_PAGE = 'FILES'
 export const FILES_TAB = 'files'
 
+export const MONITORING_APP_PAGE = 'monitoring-app'
+
 export const DOCUMENTS_PAGE = 'DOCUMENTS'
 export const DOCUMENTS_TAB = 'documents'
 
