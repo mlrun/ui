@@ -17,9 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams, Outlet, useNavigate } from 'react-router-dom'
+import { useParams, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import classNames from 'classnames'
 import { isEmpty } from 'lodash'
 import { createPortal } from 'react-dom'
@@ -27,20 +27,25 @@ import ModalContainer from 'react-modal-promise'
 
 import Navbar from '../Navbar/Navbar'
 import YamlModal from '../../common/YamlModal/YamlModal'
+import Loader from '../../common/Loader/Loader'
 
 import { getTransitionEndEventName } from 'igz-controls/utils/common.util'
 import { fetchFrontendSpec, toggleYaml } from '../../reducers/appReducer'
 import { NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
 import { isProjectValid } from '../../utils/link-helper.util'
+import { generateProjectsList } from '../../utils/projects'
+import { fetchProjects } from '../../reducers/projectReducer'
 
 import './Page.scss'
 
 const Page = () => {
   const [isNavbarPinned, setIsNavbarPinned] = useState(false)
+  const [isProjectsFetched, setProjectFetched] = useState(false)
   const { projectName } = useParams()
   const mainRef = useRef()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const location = useLocation()
   const transitionEndEventName = useMemo(() => getTransitionEndEventName(), [])
   const pinnedClasses = classNames(!(isNavbarPinned && projectName) && 'unpinned')
   const mainStyles = {
@@ -53,11 +58,24 @@ const Page = () => {
   const { frontendSpec, frontendSpecPopupIsOpened, convertedYaml } = useSelector(
     store => store.appStore
   )
-  const { projects } = useSelector(store => store.projectStore)
+  const { projectsNames } = useSelector(store => store.projectStore)
 
-  useLayoutEffect(() => {
-    isProjectValid(navigate, projects, projectName)
-  }, [navigate, projectName, projects])
+  const projectsList = useMemo(() => {
+    return generateProjectsList(projectsNames.data)
+  }, [projectsNames.data])
+
+  useEffect(() => {
+    if (projectsList.length === 0 && location.pathname !== '/projects') {
+      dispatch(fetchProjects({ params: { format: 'minimal' } }))
+        .unwrap()
+        .then(projects => {
+          isProjectValid(navigate, projects, projectName, dispatch)
+          setProjectFetched(true)
+        })
+    } else {
+      setProjectFetched(true)
+    }
+  }, [dispatch, location.pathname, navigate, projectName, projectsList.length])
 
   useEffect(() => {
     if (mainRef) {
@@ -89,9 +107,7 @@ const Page = () => {
     <>
       {projectName && <Navbar projectName={projectName} setIsNavbarPinned={setIsNavbarPinned} />}
       <main id="main" className={pinnedClasses} ref={mainRef} style={mainStyles}>
-        <div id="main-wrapper">
-          <Outlet />
-        </div>
+        <div id="main-wrapper">{isProjectsFetched ? <Outlet /> : <Loader />}</div>
       </main>
       {createPortal(<ModalContainer />, document.getElementById('overlay_container'))}
       {convertedYaml.length > 0 && (

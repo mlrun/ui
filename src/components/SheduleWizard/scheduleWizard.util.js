@@ -101,3 +101,8 @@ export const getDefaultSchedule = defaultCron => {
 
   return scheduleData
 }
+
+export const tabs = [
+  { label: 'Simple', id: 'simple' },
+  { label: 'Cronstring', id: 'cronstring' }
+]

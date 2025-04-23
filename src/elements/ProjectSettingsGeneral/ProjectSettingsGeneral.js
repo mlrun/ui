@@ -21,7 +21,7 @@ import React, { useCallback, useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
-import { connect, useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 import { cloneDeep, isEmpty } from 'lodash'
 import { useParams } from 'react-router-dom'
@@ -38,7 +38,6 @@ import {
 import ChangeOwnerPopUp from '../ChangeOwnerPopUp/ChangeOwnerPopUp'
 import Loader from '../../common/Loader/Loader'
 
-import projectsAction from '../../actions/projects'
 import projectsApi from '../../api/projects-api'
 import {
   ARTIFACT_PATH,
@@ -69,22 +68,21 @@ import { parseChipsData, convertChipsData } from '../../utils/convertChipsData'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { areNodeSelectorsSupported } from './projectSettingsGeneral.utils'
+import { fetchProject, removeProjectData } from '../../reducers/projectReducer'
 
 import './projectSettingsGeneral.scss'
 
 const ProjectSettingsGeneral = ({
   changeOwnerCallback,
-  fetchProject,
-  frontendSpec,
   membersState,
-  projectStore,
   projectMembershipIsEnabled,
-  projectOwnerIsShown,
-  removeProjectData
+  projectOwnerIsShown
 }) => {
   const [projectIsInitialized, setProjectIsInitialized] = useState(false)
   const [lastEditedProjectValues, setLastEditedProjectValues] = useState({})
   const internalLabelsValidatedRef = useRef(true)
+  const projectStore = useSelector(store => store.projectStore)
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   const formRef = useRef(
     createForm({
@@ -101,7 +99,8 @@ const ProjectSettingsGeneral = ({
     if (!projectIsInitialized) {
       setProjectIsInitialized(true)
 
-      fetchProject(params.projectName)
+      dispatch(fetchProject({ project: params.projectName }))
+        .unwrap()
         .then(response => {
           const newInitial = {
             [SOURCE_URL]: response?.data?.spec?.[SOURCE_URL],
@@ -136,14 +135,7 @@ const ProjectSettingsGeneral = ({
           showErrorNotification(dispatch, error, '', customErrorMsg)
         })
     }
-  }, [
-    params.pageTab,
-    params.projectName,
-    fetchProject,
-    dispatch,
-    frontendSpec,
-    projectIsInitialized
-  ])
+  }, [params.pageTab, params.projectName, dispatch, frontendSpec, projectIsInitialized])
 
   useEffect(() => {
     if (
@@ -167,10 +159,10 @@ const ProjectSettingsGeneral = ({
 
   useEffect(() => {
     return () => {
-      removeProjectData()
+      dispatch(removeProjectData())
       setProjectIsInitialized(false)
     }
-  }, [removeProjectData])
+  }, [dispatch])
 
   const sendProjectSettingsData = useCallback(
     projectData => {
@@ -427,10 +419,4 @@ ProjectSettingsGeneral.propTypes = {
   changeOwnerCallback: PropTypes.func.isRequired
 }
 
-export default connect(
-  ({ appStore, projectStore }) => ({
-    projectStore,
-    frontendSpec: appStore.frontendSpec
-  }),
-  { ...projectsAction }
-)(ProjectSettingsGeneral)
+export default ProjectSettingsGeneral

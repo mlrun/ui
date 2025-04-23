@@ -65,7 +65,9 @@ const WorkflowsCounters = () => {
                 )}
               </div>
             </div>
-            <ClockIcon className="project-card__info-icon" />
+            <div className="project-card__info-icon">
+                <ClockIcon />
+            </div>
             <span>Past 24 hours</span>
           </div>
         </StatsCard.Col>
@@ -101,7 +103,7 @@ const WorkflowsCounters = () => {
         {workflowsStats.counters.map(({ counter, label, link, statusClass, tooltip }) => (
           <StatsCard.Col key={`${statusClass}-jobs`}>
             <div className="stats__link" onClick={link} data-testid={`wf_${statusClass}_counter`}>
-              <div className="stats__counter">
+              <div className="stats__counter stats__counter-large">
                 {projectStore.projectsSummary.loading ? (
                   <Loader section small secondary />
                 ) : (

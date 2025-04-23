@@ -250,10 +250,6 @@ const FeatureVectors = () => {
     [fetchData, fetchTags]
   )
 
-  const handleRefreshWithFilters = useCallback(() => {
-    handleRefresh(featureVectorsFilters)
-  }, [featureVectorsFilters, handleRefresh])
-
   const collapseRowCallback = useCallback(
     featureVector => {
       const newStoreSelectedRowData = {
@@ -504,7 +500,6 @@ const FeatureVectors = () => {
       filters={featureVectorsFilters}
       filtersStore={filtersStore}
       handleRefresh={handleRefresh}
-      handleRefreshWithFilters={handleRefreshWithFilters}
       pageData={pageData}
       ref={{ featureStoreRef }}
       requestErrorMessage={requestErrorMessage}

@@ -41,8 +41,8 @@ const TableView = ({
   isTablePanelOpen,
   mainRowItemsCount,
   pageData,
-  retryRequest,
   selectedItem,
+  skipTableWrapper = false,
   sortProps = null,
   tab,
   tableBodyRef,
@@ -62,10 +62,12 @@ const TableView = ({
     !isEmpty(selectedItem) && 'table-with-details',
     tableClassName && tableClassName
   )
+  const tableWrapperClass = classnames(!skipTableWrapper && 'table__wrapper')
+
   return (
     <div className="table__flex">
       <div className="table__content" id="table-content" ref={tableContentRef}>
-        <div className="table__wrapper">
+        <div className={tableWrapperClass}>
           <table
             id={MAIN_TABLE_ID}
             className={tableClass}
@@ -108,7 +110,6 @@ const TableView = ({
             getCloseDetailsLink={getCloseDetailsLink}
             handleCancel={handleCancel}
             pageData={pageData}
-            retryRequest={retryRequest}
             selectedItem={selectedItem}
             tab={tab}
             withActionMenu={withActionMenu}
@@ -129,8 +130,8 @@ TableView.propTypes = {
   hideActionsMenu: PropTypes.bool.isRequired,
   isTablePanelOpen: PropTypes.bool.isRequired,
   pageData: PropTypes.shape({}).isRequired,
-  retryRequest: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
+  skipTableWrapper: PropTypes.bool,
   sortProps: SORT_PROPS,
   tab: PropTypes.string,
   tableClassName: PropTypes.string.isRequired,

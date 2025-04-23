@@ -52,6 +52,10 @@
       font-weight: 400;
       font-size: 28px;
 
+      &-large {
+        min-height: 34px;
+      }
+
       &:hover {
         @include counterLinkHover;
       }
@@ -76,7 +80,6 @@
 
   .project-card__info {
     display: flex;
-    align-items: baseline;
     align-items: center;
     justify-content: flex-end;
     margin-left: 1rem;

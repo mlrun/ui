@@ -17,7 +17,24 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const tabs = [
-  { label: 'Simple', id: 'simple' },
-  { label: 'Cronstring', id: 'cronstring' }
-]
+
+import { DATES_FILTER } from '../../constants'
+import {
+  datePickerPastMonthOptions,
+  getDatePickerFilterValue,
+  PAST_24_HOUR_DATE_OPTION,
+  TIME_FRAME_LIMITS
+} from '../../utils/datePicker.util'
+
+export const getFiltersConfig = () => ({
+  [DATES_FILTER]: {
+    customOptions: datePickerPastMonthOptions,
+    label: 'Time range:',
+    timeFrameLimit: TIME_FRAME_LIMITS.MONTH,
+    initialValue: getDatePickerFilterValue(
+      datePickerPastMonthOptions,
+      PAST_24_HOUR_DATE_OPTION,
+      true
+    )
+  }
+})

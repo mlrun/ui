@@ -56,7 +56,6 @@ const DatasetsView = React.forwardRef(
       filtersStore,
       getAndSetSelectedArtifact,
       handleRefreshDatasets,
-      handleRefreshWithFilters,
       handleRegisterDataset,
       historyBackLink,
       isAllVersions,
@@ -104,7 +103,8 @@ const DatasetsView = React.forwardRef(
                   <ArtifactsFilters artifacts={datasets} />
                 </ActionBar>
               </div>
-              {artifactsStore.loading ? null : tableContent.length === 0 && isEmpty(selectedDataset) ? (
+              {artifactsStore.loading ? null : tableContent.length === 0 &&
+                isEmpty(selectedDataset) ? (
                 <NoData
                   message={getNoDataMessage(
                     filters,
@@ -128,10 +128,11 @@ const DatasetsView = React.forwardRef(
                     }
                     handleCancel={() => setSelectedDataset({})}
                     pageData={pageData}
-                    retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedDataset}
                     tableClassName="datasets-table"
-                    tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
+                    tableHeaders={
+                      !isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)
+                    }
                     viewMode={viewMode}
                   >
                     {tableContent.map((tableItem, index) => (
@@ -187,7 +188,6 @@ DatasetsView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
   handleRefreshDatasets: PropTypes.func.isRequired,
-  handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterDataset: PropTypes.func.isRequired,
   historyBackLink: PropTypes.string.isRequired,
   isAllVersions: PropTypes.bool.isRequired,

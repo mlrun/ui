@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import Prism from 'prismjs'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
@@ -32,10 +32,11 @@ import { generatePods } from './detailsPods.util'
 
 import './detailsPods.scss'
 
-const DetailsPods = ({ detailsStore, noDataMessage = '' }) => {
+const DetailsPods = ({ noDataMessage = '' }) => {
   const [selectedPod, setSelectedPod] = useState(null)
   const [table, setTable] = useState([])
   const params = useParams()
+  const detailsStore = useSelector(store => store.detailsStore)
 
   useEffect(() => {
     setTable(generatePods(detailsStore.pods))
@@ -123,6 +124,4 @@ DetailsPods.propTypes = {
   noDataMessage: PropTypes.string
 }
 
-export default connect(({ detailsStore }) => ({
-  detailsStore
-}))(DetailsPods)
+export default DetailsPods

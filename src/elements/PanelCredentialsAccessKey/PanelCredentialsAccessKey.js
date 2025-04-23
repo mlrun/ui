@@ -21,10 +21,10 @@ import React, { useEffect, useState } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
-import { PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
-
 import CheckBox from '../../common/CheckBox/CheckBox'
 import Input from '../../common/Input/Input'
+
+import { PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
 
 import './panelCredentialsAccessKey.scss'
 
@@ -38,7 +38,6 @@ const PanelCredentialsAccessKey = ({
   validation
 }) => {
   const [inputValue, setInputValue] = useState('')
-
   const accessKeyClassNames = classnames(className, 'new-item-side-panel__item', 'access-key')
 
   useEffect(() => {
@@ -59,7 +58,6 @@ const PanelCredentialsAccessKey = ({
           if (value !== credentialsAccessKey && inputValue.length > 0) {
             setInputValue('')
           }
-
           setCredentialsAccessKey(value === credentialsAccessKey ? '' : value)
           setValidation(state => ({
             ...state,

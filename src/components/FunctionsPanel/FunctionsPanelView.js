@@ -19,6 +19,7 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
 
 import Accordion from '../../common/Accordion/Accordion'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
@@ -36,6 +37,10 @@ import { FUNCTION_PANEL_MODE } from '../../types'
 import { runtimeSections } from './functionsPanel.util'
 import { JOB_KIND_JOB, PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
 import { LABEL_BUTTON, PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import {
+  removeFunctionsError,
+  setNewFunctionCredentialsAccessKey
+} from '../../reducers/functionReducer'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
@@ -55,12 +60,12 @@ const FunctionsPanelView = ({
   loading,
   mode,
   newFunction,
-  removeFunctionsError,
   setImageType,
-  setNewFunctionCredentialsAccessKey,
   setValidation,
   validation
 }) => {
+  const dispatch = useDispatch()
+
   return (
     <>
       {confirmData && (
@@ -159,7 +164,7 @@ const FunctionsPanelView = ({
                 functionsStore.newFunction.metadata.credentials.access_key !==
                 PANEL_DEFAULT_ACCESS_KEY
               }
-              setCredentialsAccessKey={setNewFunctionCredentialsAccessKey}
+              setCredentialsAccessKey={value => dispatch(setNewFunctionCredentialsAccessKey(value))}
               setValidation={setValidation}
               validation={validation}
             />
@@ -168,7 +173,7 @@ const FunctionsPanelView = ({
                 <ErrorMessage
                   closeError={() => {
                     if (error) {
-                      removeFunctionsError()
+                      dispatch(removeFunctionsError())
                     }
                   }}
                   message={error}
@@ -214,8 +219,6 @@ FunctionsPanelView.propTypes = {
   loading: PropTypes.bool.isRequired,
   mode: FUNCTION_PANEL_MODE.isRequired,
   newFunction: PropTypes.shape({}).isRequired,
-  removeFunctionsError: PropTypes.func.isRequired,
-  setNewFunctionCredentialsAccessKey: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({})
 }

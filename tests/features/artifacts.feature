@@ -394,8 +394,10 @@ Feature: Artifacts Page
     Then verify "Action_Menu" element visibility on "Files_Info_Pane" wizard
     Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
+    When click on cell with value "test-i" in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
+    Then verify "Preview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     When click on cell with value "download_content" in "name" column in "Files_Table" table on "Files" wizard
-    Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     And wait load page
     Then verify "Pop_Out_Button" element visibility on "Files_Info_Pane" wizard 
     Then click on "Pop_Out_Button" element on "Files_Info_Pane" wizard
@@ -415,8 +417,7 @@ Feature: Artifacts Page
     Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
     Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
-#    Then verify "Preview_Tab_Info_Pane_Table" element visibility on "Files_Info_Pane" wizard
-#    TO DO: should be implemented mock requests
+    Then verify "Preview_Tab_Info_Pane_Table" element visibility on "Files_Info_Pane" wizard
 
   @MLA
   @smoke
@@ -486,6 +487,7 @@ Feature: Artifacts Page
   @MLA
   @passive
   @inProgress
+  @smoke
   Scenario: MLA017 - Check expand sources Item infopane on Overview tab table
     Given open url
     And wait load page
@@ -712,6 +714,7 @@ Feature: Artifacts Page
     And wait load page
 
   @MLA
+  @smoke
   Scenario: MLA021 - Check active/highlited items with details panel on Artifacts
     Given open url
     And wait load page
