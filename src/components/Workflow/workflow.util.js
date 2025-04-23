@@ -26,6 +26,7 @@ import {
   JOBS_MONITORING_WORKFLOWS_TAB,
   WORKFLOW_TYPE_SKIPPED
 } from '../../constants'
+import { setNotification } from '../../reducers/notificationReducer'
 
 const DAG_WORFLOW_STEP = 'DAG'
 const SKIPPED_PHASE = 'Skipped'
@@ -240,4 +241,15 @@ export const parseWorkflow = workflow => {
   })
 
   return newWorkflow
+}
+
+export const handleTerminateWorkflow = (job, dispatch) => {
+  //TODO: change when the server finish
+  return dispatch(
+    setNotification({
+      status: 200,
+      id: Math.random(),
+      message: `Workflow ${job.name} terminated successfully`
+    })
+  )
 }

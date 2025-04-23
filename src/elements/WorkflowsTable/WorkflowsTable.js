@@ -60,7 +60,10 @@ import {
   pollAbortingJobs
 } from '../../components/Jobs/jobs.util'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
-import { isWorkflowStepExecutable } from '../../components/Workflow/workflow.util'
+import {
+  isWorkflowStepExecutable,
+  handleTerminateWorkflow
+} from '../../components/Workflow/workflow.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseFunction } from '../../utils/parseFunction'
 import { parseJob } from '../../utils/parseJob'
@@ -360,6 +363,13 @@ const WorkflowsTable = React.forwardRef(
       [onAbortJob, setConfirmData]
     )
 
+    const onTerminateWorkflow = useCallback(
+      job => {
+        handleTerminateWorkflow(job, dispatch)
+      },
+      [dispatch]
+    )
+
     const onDeleteJob = useCallback(
       job => {
         handleDeleteJob(false, job, refreshWorkflow, null, filters, dispatch).then(() => {
@@ -427,6 +437,7 @@ const WorkflowsTable = React.forwardRef(
           appStore.frontendSpec.abortable_function_kinds,
           handleConfirmAbortJob,
           handleConfirmDeleteJob,
+          handleConfirmTerminateWorkflow,
           toggleConvertedYaml,
           handleRerun,
           rerunIsDisabled
@@ -482,6 +493,26 @@ const WorkflowsTable = React.forwardRef(
         return !['deploy', 'build'].includes(selectedWorkflowItem?.run_type)
       }
     }, [workflowsStore.activeWorkflow.data.graph, findSelectedWorkflowFunction])
+
+    const handleConfirmTerminateWorkflow = useCallback(
+      job => {
+        setConfirmData({
+          item: job,
+          header: 'Terminate workflow',
+          message: `Are you sure you want to terminate the workflow "${job.name}" (stop its execution)? Workflows termination cannot be undone.`,
+          btnConfirmLabel: 'Terminate',
+          btnConfirmType: DANGER_BUTTON,
+          rejectHandler: () => {
+            setConfirmData(null)
+          },
+          confirmHandler: () => {
+            onTerminateWorkflow(job)
+            setConfirmData(null)
+          }
+        })
+      },
+      [onTerminateWorkflow, setConfirmData]
+    )
 
     const handleCatchRequest = useCallback(
       (error, message) => {
@@ -721,6 +752,7 @@ const WorkflowsTable = React.forwardRef(
                 actionsMenu={actionsMenu}
                 backLink={backLink}
                 handleCancel={handleCancel}
+                handleConfirmTerminateWorkflow={handleConfirmTerminateWorkflow}
                 itemIsSelected={itemIsSelected}
                 pageData={pageData}
                 selectedFunction={selectedFunction}
