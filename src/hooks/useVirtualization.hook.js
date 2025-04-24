@@ -128,34 +128,35 @@ const useTableScroll = ({
     [content, expandedRowsData, headerRowHeight, rowHeight, rowHeightExtended, selectedItem]
   )
 
-  const handleSelectItemChanges = useCallback((identifier, content, getSpaceToSelectedItem, async = false) => {
-    const selectedItemIndex = content.findIndex(
-      item => item.data.ui.identifier === identifier
-    )
-    const triggerScroll = () => {
-      const tableElement = document.getElementById(MAIN_TABLE_ID)
+  const handleSelectItemChanges = useCallback(
+    (identifier, content, getSpaceToSelectedItem, async = false) => {
+      const selectedItemIndex = content.findIndex(item => item.data.ui.identifier === identifier)
+      const triggerScroll = () => {
+        const tableElement = document.getElementById(MAIN_TABLE_ID)
 
-      tableElement?.scroll({
-        top: getSpaceToSelectedItem(
-          {
-            ...lastSelectedItemDataRef.current,
-            index: selectedItemIndex
-          },
-          tableElement
-        )
-      })
-    }
-    
-    if (selectedItemIndex >= 0) {
-      if (async) {
-        requestAnimationFrame(() => {
-          triggerScroll()
+        tableElement?.scroll({
+          top: getSpaceToSelectedItem(
+            {
+              ...lastSelectedItemDataRef.current,
+              index: selectedItemIndex
+            },
+            tableElement
+          )
         })
-      } else {
-        triggerScroll()
       }
-    }
-  }, [])
+
+      if (selectedItemIndex >= 0) {
+        if (async) {
+          requestAnimationFrame(() => {
+            triggerScroll()
+          })
+        } else {
+          triggerScroll()
+        }
+      }
+    },
+    []
+  )
 
   useEffect(() => {
     if (!activateHook) return
@@ -191,7 +192,14 @@ const useTableScroll = ({
     } catch {
       lastSelectedItemDataRef.current = null
     }
-  }, [content, getSpaceToSelectedItem, selectedItem, expandedRowsData, activateHook, handleSelectItemChanges])
+  }, [
+    content,
+    getSpaceToSelectedItem,
+    selectedItem,
+    expandedRowsData,
+    activateHook,
+    handleSelectItemChanges
+  ])
 }
 
 /**

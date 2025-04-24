@@ -58,7 +58,7 @@ export const TIME_FRAME_LIMITS = {
   '24_HOURS': 86400000,
   WEEK: 604800000,
   MONTH: 2678400000, // 31 day
-  YEAR: 31536000000  // 365 days
+  YEAR: 31536000000 // 365 days
 }
 
 export const datePickerPastOptions = [
@@ -142,10 +142,14 @@ export const datePickerFutureOptions = [
     id: NEXT_HOUR_DATE_OPTION,
     label: 'Next hour',
     isPredefined: true,
-    handler: (isRange) => {
-      return getDates((fromDate, toDate) => {
-        fromDate.setHours(toDate.getHours() + 1)
-      }, true, isRange)
+    handler: isRange => {
+      return getDates(
+        (fromDate, toDate) => {
+          fromDate.setHours(toDate.getHours() + 1)
+        },
+        true,
+        isRange
+      )
     },
     timeFrameMilliseconds: TIME_FRAME_LIMITS.HOUR
   },
@@ -153,10 +157,14 @@ export const datePickerFutureOptions = [
     id: NEXT_24_HOUR_DATE_OPTION,
     label: 'Next 24 hours',
     isPredefined: true,
-    handler: (isRange) => {
-      return getDates((fromDate, toDate) => {
-        fromDate.setDate(toDate.getDate() + 1)
-      }, true, isRange)
+    handler: isRange => {
+      return getDates(
+        (fromDate, toDate) => {
+          fromDate.setDate(toDate.getDate() + 1)
+        },
+        true,
+        isRange
+      )
     },
     timeFrameMilliseconds: TIME_FRAME_LIMITS['24_HOURS']
   },
@@ -164,10 +172,14 @@ export const datePickerFutureOptions = [
     id: NEXT_WEEK_DATE_OPTION,
     label: 'Next week',
     isPredefined: true,
-    handler: (isRange) => {
-      return getDates((fromDate, toDate) => {
-        fromDate.setDate(toDate.getDate() + 7)
-      }, true, isRange)
+    handler: isRange => {
+      return getDates(
+        (fromDate, toDate) => {
+          fromDate.setDate(toDate.getDate() + 7)
+        },
+        true,
+        isRange
+      )
     },
     timeFrameMilliseconds: TIME_FRAME_LIMITS.WEEK
   },
@@ -175,10 +187,14 @@ export const datePickerFutureOptions = [
     id: NEXT_MONTH_DATE_OPTION,
     label: 'Next month',
     isPredefined: true,
-    handler: (isRange) => {
-      return getDates((fromDate, toDate) => {
-        fromDate.setMonth(toDate.getMonth() + 1)
-      }, true, isRange)
+    handler: isRange => {
+      return getDates(
+        (fromDate, toDate) => {
+          fromDate.setMonth(toDate.getMonth() + 1)
+        },
+        true,
+        isRange
+      )
     },
     timeFrameMilliseconds: TIME_FRAME_LIMITS.MONTH
   },
@@ -186,10 +202,14 @@ export const datePickerFutureOptions = [
     id: NEXT_YEAR_DATE_OPTION,
     label: 'Next year',
     isPredefined: true,
-    handler: (isRange) => {
-      return getDates((fromDate, toDate) => {
-        fromDate.setFullYear(toDate.getFullYear() + 1)
-      }, true, isRange)
+    handler: isRange => {
+      return getDates(
+        (fromDate, toDate) => {
+          fromDate.setFullYear(toDate.getFullYear() + 1)
+        },
+        true,
+        isRange
+      )
     },
     timeFrameMilliseconds: TIME_FRAME_LIMITS.YEAR
   },
@@ -397,7 +417,7 @@ export const decodeLocale = locale => {
   )[4]
 }
 
-export const getTimeFrameWarningMsg = (timeFrameLimit) => {
+export const getTimeFrameWarningMsg = timeFrameLimit => {
   const mappedTime = {
     [TIME_FRAME_LIMITS.HOUR]: '1 hour',
     [TIME_FRAME_LIMITS['24_HOURS']]: '24 hours',

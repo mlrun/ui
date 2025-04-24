@@ -1,5 +1,5 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
 
 $stickyHeaderHeight: 55px;
 
@@ -12,7 +12,7 @@ $stickyHeaderHeight: 55px;
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end;
-    background-color: $white;
+    background-color: colors.$white;
 
     > * {
       margin: 0 0 15px 0;
@@ -32,7 +32,7 @@ $stickyHeaderHeight: 55px;
     margin-bottom: 30px;
 
     &__app-name {
-      color: $primary;
+      color: colors.$primary;
       font-weight: 700;
       font-size: 20px;
     }
@@ -40,7 +40,7 @@ $stickyHeaderHeight: 55px;
     &__card {
       width: 100%;
       padding-bottom: 35px;
-      border: $primaryBorder;
+      border: borders.$primaryBorder;
       box-shadow: none;
 
       &.metrics__card-metric {
@@ -99,7 +99,7 @@ $stickyHeaderHeight: 55px;
           align-items: baseline;
           justify-content: end;
           height: 40px;
-          color: $primary;
+          color: colors.$primary;
           font-weight: 500;
           font-size: 14px;
 
@@ -116,16 +116,16 @@ $stickyHeaderHeight: 55px;
           }
 
           &__drift_up {
-            color: $brightTurquoise;
+            color: colors.$brightTurquoise;
           }
 
           &__drift_down {
-            color: $ceriseRed;
+            color: colors.$ceriseRed;
           }
 
           &__selected-date {
             margin-left: 4px;
-            color: $topaz;
+            color: colors.$topaz;
           }
 
           &__total-title {
@@ -167,7 +167,7 @@ $stickyHeaderHeight: 55px;
 
           &-title {
             margin-right: 24px;
-            color: $primary;
+            color: colors.$primary;
             font-size: 18px;
             text-align: center;
           }
@@ -192,12 +192,12 @@ $stickyHeaderHeight: 55px;
 
             &__drift_up {
               margin-right: 4px;
-              color: $brightTurquoise;
+              color: colors.$brightTurquoise;
             }
 
             &__drift_down {
               margin-right: 4px;
-              color: $ceriseRed;
+              color: colors.$ceriseRed;
             }
           }
 
@@ -248,19 +248,19 @@ $stickyHeaderHeight: 55px;
       }
 
       &-drift-status-possible_drift {
-        background-color: $grandis;
+        background-color: colors.$grandis;
       }
 
       &-drift-status-drift_detected {
-        background-color: $ceriseRed;
+        background-color: colors.$ceriseRed;
       }
 
       &-drift-status-no_drift {
-        background-color: $brightTurquoise;
+        background-color: colors.$brightTurquoise;
       }
 
       &-drift-no_status {
-        background-color: $doveGray;
+        background-color: colors.$doveGray;
       }
 
       &-header {
@@ -282,7 +282,7 @@ $stickyHeaderHeight: 55px;
           justify-content: center;
           width: max-content;
           overflow: hidden;
-          color: $topaz;
+          color: colors.$topaz;
           font-weight: 500;
           font-size: 14px;
           font-family: Roboto, sans-serif;
@@ -292,7 +292,7 @@ $stickyHeaderHeight: 55px;
         }
 
         &-data {
-          color: $topaz;
+          color: colors.$topaz;
           font-weight: 700;
           font-size: 18px;
           text-align: center;
@@ -410,5 +410,5 @@ $stickyHeaderHeight: 55px;
 .empty-invocation-card {
   z-index: 1;
   padding-bottom: 1em;
-  box-shadow: 0 -10px 0 0 $white;
+  box-shadow: 0 -10px 0 0 colors.$white;
 }

@@ -1,14 +1,14 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/shadows';
-@import '~igz-controls/scss/variables';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/shadows';
+@use 'igz-controls/scss/variables';
 
 .settings {
   display: flex;
   flex: 1;
   flex-direction: column;
   min-width: 100%;
-  background-color: $white;
+  background-color: colors.$white;
 
   &__content {
     position: relative;
@@ -17,11 +17,15 @@
 
   &__header {
     padding: 20px 24px;
-    background-color: $white;
-    box-shadow: $headerShadow;
+    background-color: colors.$white;
+    box-shadow: shadows.$headerShadow;
   }
 
   &__card {
+    width: 100%;
+    padding: 24px 0;
+    background-color: colors.$white;
+
     &-content {
       display: flex;
       flex-flow: row nowrap;
@@ -34,18 +38,14 @@
         min-width: 650px;
 
         &:not(:last-child) {
-          border-right: $dividerBorder;
+          border-right: borders.$dividerBorder;
         }
       }
     }
 
-    width: 100%;
-    padding: 24px 0;
-    background-color: $white;
-
     &-divider {
       margin: 16px 0;
-      border-top: $primaryBorder;
+      border-top: borders.$primaryBorder;
     }
 
     &-title {
@@ -81,7 +81,7 @@
     height: 20px;
 
     rect {
-      fill: $cornflowerBlue;
+      fill: colors.$cornflowerBlue;
     }
   }
 }

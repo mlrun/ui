@@ -1,9 +1,9 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/mixins';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/mixins';
 
 .feature-sets-panel__title {
-  @include panelTitle;
+  @include mixins.panelTitle;
 
   .panel-title__input {
     padding: 15px;

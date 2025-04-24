@@ -44,4 +44,6 @@ export const initialEditProjectData = {
   }
 }
 
-export const areNodeSelectorsSupported = isIgzVersionCompatible(REQUIRED_IGZ_VERSION_FOR_NODE_SELECTORS)
+export const areNodeSelectorsSupported = isIgzVersionCompatible(
+  REQUIRED_IGZ_VERSION_FOR_NODE_SELECTORS
+)

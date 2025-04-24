@@ -1,9 +1,9 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/mixins';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/mixins';
 
 .feature-set-panel__schedule {
-  @include schedule;
+  @include mixins.schedule;
 
   .schedule-title {
     display: flex;

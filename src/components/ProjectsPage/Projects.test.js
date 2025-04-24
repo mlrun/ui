@@ -31,10 +31,7 @@ import { mainHttpClient } from '../../httpClient'
 
 const renderWithRedux = (
   ui,
-  {
-    initialState,
-    store = createStore(reducer, initialState, applyMiddleware(thunk))
-  } = {}
+  { initialState, store = createStore(reducer, initialState, applyMiddleware(thunk)) } = {}
 ) => {
   return { ...render(<Provider store={store}>{ui}</Provider>) }
 }
@@ -114,8 +111,7 @@ jest.spyOn(mainHttpClient, 'get').mockImplementation(path => {
           alias: 'latest',
           build: {
             codeEntryType: 'sourceCode',
-            functionSourceCode:
-              'ZGVmIGhhbmRsZXIoY29udGV4dCwgZXZlbnQpOg0KICAgIHJldHVybiAiIg==',
+            functionSourceCode: 'ZGVmIGhhbmRsZXIoY29udGV4dCwgZXZlbnQpOg0KICAgIHJldHVybiAiIg==',
             noBaseImagesPull: true,
             offline: true,
             runtimeAttributes: { repositories: [] },

@@ -17,11 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import {
-  CONFIG_MAP,
-  SECRET,
-  V3IO
-} from '../elements/VolumesTable/volumesTable.util'
+import { CONFIG_MAP, SECRET, V3IO } from '../elements/VolumesTable/volumesTable.util'
 
 export const createNewVolume = newVolume => {
   switch (newVolume.type) {

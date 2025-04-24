@@ -69,7 +69,7 @@ export const parseJob = (job, tab, customState, customError) => {
       }
     }
   } else {
-    let jobParameters = { ...job.spec?.parameters } || {}
+    let jobParameters = { ...job.spec?.parameters }
     if ('context' in jobParameters && !jobParameters.context) delete jobParameters.context
 
     jobItem = {

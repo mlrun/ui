@@ -73,10 +73,7 @@ jest.spyOn(mainHttpClient, 'get').mockImplementation(path => {
 
 const renderWithRedux = (
   ui,
-  {
-    initialState,
-    store = createStore(reducer, initialState, applyMiddleware(thunk))
-  } = {}
+  { initialState, store = createStore(reducer, initialState, applyMiddleware(thunk)) } = {}
 ) => {
   return { ...render(<Provider store={store}>{ui}</Provider>) }
 }

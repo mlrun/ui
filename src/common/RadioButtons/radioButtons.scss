@@ -1,4 +1,4 @@
-@import '~igz-controls/scss/colors';
+@use 'igz-controls/scss/colors';
 
 .radio-buttons {
   display: flex;
@@ -23,7 +23,7 @@
       height: 16px;
       margin-right: 10px;
       background-color: transparent;
-      border: 1px solid $malibu;
+      border: 1px solid colors.$malibu;
       border-radius: 50%;
 
       &::after {
@@ -33,10 +33,10 @@
         display: none;
         width: 8px;
         height: 8px;
-        background: $malibu;
+        background: colors.$malibu;
         border-radius: 50%;
         transform: translate(-50%, -50%);
-        content: "";
+        content: '';
       }
     }
 
@@ -54,7 +54,7 @@
 
     &__info {
       margin: 10px 25px;
-      color: $topaz;
+      color: colors.$topaz;
     }
 
     &__label {
@@ -65,16 +65,16 @@
   }
 
   &.disabled {
-    color: $spunPearl;
+    color: colors.$spunPearl;
 
     .radio-button {
       cursor: not-allowed;
 
       .checkmark {
-        border-color: rgba($black, 0.2);
+        border-color: rgba(colors.$black, 0.2);
 
         &::after {
-          background: rgba($black, 0.2);
+          background: rgba(colors.$black, 0.2);
         }
       }
     }

@@ -1,8 +1,8 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
 
 @mixin counterLinkHover {
-  color: $topaz;
+  color: colors.$topaz;
   text-decoration: underline;
   cursor: pointer;
   text-underline-offset: 1px;
@@ -13,7 +13,7 @@
   flex-direction: column;
   flex-wrap: unset;
   justify-content: flex-start;
-  border: 1px solid $frenchLilac;
+  border: 1px solid colors.$frenchLilac;
 
   &.alerts-card {
     transition:
@@ -22,15 +22,15 @@
   }
 
   &.alerts-card_not-empty {
-    background-color: $carouselPink;
-    border: 1px solid $babyPink;
+    background-color: colors.$carouselPink;
+    border: 1px solid colors.$babyPink;
   }
 
   .stats {
     &__subtitle {
       display: inline-block;
       margin: 0;
-      color: $topaz;
+      color: colors.$topaz;
       font-weight: normal;
       font-size: 0.75rem;
     }
@@ -48,7 +48,7 @@
     }
 
     &__counter {
-      color: $primary;
+      color: colors.$primary;
       font-weight: 400;
       font-size: 28px;
 
@@ -83,7 +83,7 @@
     align-items: center;
     justify-content: flex-end;
     margin-left: 1rem;
-    color: $topaz;
+    color: colors.$topaz;
     font-size: 0.75rem;
 
     & *:not(:last-child) {
@@ -99,7 +99,7 @@
       flex: 0 1 12px;
 
       & * {
-        fill: $spunPearl;
+        fill: colors.$spunPearl;
       }
     }
 
@@ -122,7 +122,7 @@
         display: inline-block;
         width: 1px;
         margin: 3px 0;
-        background-color: $mulledWineThree;
+        background-color: colors.$mulledWineThree;
         content: '';
       }
     }

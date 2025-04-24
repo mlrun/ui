@@ -1,0 +1,20 @@
+@use '../../scss/mixins';
+@use 'igz-controls/scss/variables';
+
+$monitorWorkflowsRowHeight: variables.$rowHeightSmall;
+$monitorWorkflowsHeaderRowHeight: variables.$headerRowHeight;
+$monitorWorkflowsRowHeightExtended: variables.$rowHeightSmall;
+
+:root {
+  --monitorWorkflowsRowHeight: #{$monitorWorkflowsRowHeight};
+  --monitorWorkflowsHeaderRowHeight: #{$monitorWorkflowsHeaderRowHeight};
+  --monitorWorkflowsRowHeightExtended: #{$monitorWorkflowsRowHeightExtended};
+}
+
+.monitor-workflows-table {
+  @include mixins.rowsHeight(
+    $monitorWorkflowsHeaderRowHeight,
+    $monitorWorkflowsRowHeight,
+    $monitorWorkflowsRowHeightExtended
+  );
+}

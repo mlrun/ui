@@ -187,7 +187,7 @@ export const fetchProject = createAsyncThunk(
 )
 export const fetchProjectDataSets = createAsyncThunk(
   'fetchProjectDataSets',
-  ({ project, params, signal }, thunkAPI) => {
+  ({ project }, thunkAPI) => {
     return projectsApi
       .getProjectDataSets(project)
       .then(response => {

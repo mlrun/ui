@@ -22,10 +22,7 @@ const measureTime = (startTime, endTime) => {
   let now = new Date()
   let time = null
   if (endTime) {
-    time =
-      endTime.getTime() - startTime.getTime() > 0
-        ? endTime.getTime() - startTime.getTime()
-        : 0
+    time = endTime.getTime() - startTime.getTime() > 0 ? endTime.getTime() - startTime.getTime() : 0
   } else {
     time = now.getTime() - startTime.getTime()
   }

@@ -1,5 +1,5 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
 
 .data-source {
   &__inputs {
@@ -75,8 +75,8 @@
     min-width: 780px;
     margin: 0;
     padding: 16px;
-    background-color: $wildSand;
-    box-shadow: 0 6px 26px rgba($black, 0.24);
+    background-color: colors.$wildSand;
+    box-shadow: 0 6px 26px rgba(colors.$black, 0.24);
 
     &-content {
       position: relative;
@@ -93,7 +93,7 @@
 
     &-tumbler {
       padding: 0;
-      color: $malibu;
+      color: colors.$malibu;
       background-color: transparent;
       border: none;
 
@@ -110,7 +110,7 @@
         margin: 8px;
 
         path {
-          fill: $topaz;
+          fill: colors.$topaz;
         }
       }
     }

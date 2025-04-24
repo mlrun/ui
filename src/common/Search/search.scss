@@ -1,6 +1,6 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/shadows';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/shadows';
 
 .search {
   &-container {
@@ -11,7 +11,7 @@
 
     .input-wrapper {
       width: 100%;
-      background-color: $white;
+      background-color: colors.$white;
       border-radius: 4px;
     }
   }
@@ -21,7 +21,7 @@
     width: 100%;
     // todo: delete `!important` after replacing `Input` with `FormInput`
     padding: 10px 20px 10px 35px !important;
-    color: $topaz;
+    color: colors.$topaz;
   }
 
   &-label {
@@ -29,7 +29,7 @@
     top: 11px;
     left: 36px;
     z-index: 1;
-    color: $spunPearl;
+    color: colors.$spunPearl;
     user-select: none;
   }
 
@@ -47,11 +47,11 @@
 
     &__item {
       padding: 7px 15px;
-      color: $mulledWine;
+      color: colors.$mulledWine;
       list-style-type: none;
 
       &_active {
-        background-color: $gunsmoke;
+        background-color: colors.$gunsmoke;
       }
 
       &:active,
@@ -62,7 +62,7 @@
       }
 
       &:hover {
-        background-color: $alabaster;
+        background-color: colors.$alabaster;
         cursor: pointer;
       }
     }
@@ -77,7 +77,7 @@
     cursor: pointer;
 
     & * {
-      fill: $spunPearl;
+      fill: colors.$spunPearl;
     }
   }
 }

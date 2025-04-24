@@ -168,11 +168,7 @@ describe('DatePicker component', () => {
 
   it('should call React.memo if render second time', () => {
     wrapper.rerender(
-      <DatePicker
-        value={new Date('12.10.2020')}
-        onChange={jest.fn()}
-        splitCharacter="."
-      />
+      <DatePicker value={new Date('12.10.2020')} onChange={jest.fn()} splitCharacter="." />
     )
     const inputMask = wrapper.container.querySelector('input')
 
@@ -180,9 +176,7 @@ describe('DatePicker component', () => {
   })
 
   it('should datepicker input empty if props value is empty', () => {
-    wrapper.rerender(
-      <DatePicker value={''} onChange={jest.fn()} splitCharacter="." />
-    )
+    wrapper.rerender(<DatePicker value={''} onChange={jest.fn()} splitCharacter="." />)
 
     const input = wrapper.container.querySelector('input')
 

@@ -1,6 +1,6 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/mixins';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/mixins';
 
 .chips {
   &-wrapper {
@@ -34,19 +34,19 @@
       border-radius: 32px;
 
       &-background {
-        @include chipBackground(true);
+        @include mixins.chipBackground(true);
       }
 
       &_border {
-        @include chipBorder();
+        @include mixins.chipBorder();
       }
 
       &-density {
-        @include chipDensity(false, true);
+        @include mixins.chipDensity(false, true);
       }
 
       &-font {
-        @include chipsFont(ButtonAddChip);
+        @include mixins.chipsFont(ButtonAddChip);
       }
     }
   }

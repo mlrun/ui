@@ -1,5 +1,5 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
 
 .uploadfile {
   &-container {
@@ -9,16 +9,16 @@
     align-items: center;
     justify-content: center;
     padding: 30px;
-    border: $uploadFileIdleBorder;
+    border: borders.$uploadFileIdleBorder;
     border-radius: 4px;
 
     &__text {
       margin: 5px;
-      color: $topaz;
+      color: colors.$topaz;
 
       &-browse {
         margin-left: 5px;
-        color: $cornflowerBlueTwo;
+        color: colors.$cornflowerBlueTwo;
         cursor: pointer;
       }
     }
@@ -28,23 +28,23 @@
 
       &-name {
         margin-right: 5px;
-        color: $topaz;
+        color: colors.$topaz;
       }
 
       &-size {
-        color: rgba($black, 0.2);
+        color: rgba(colors.$black, 0.2);
       }
     }
 
     &__new-file {
-      color: $cornflowerBlueTwo;
+      color: colors.$cornflowerBlueTwo;
       cursor: pointer;
     }
 
     &.on-focus {
       position: relative;
       margin: -1px;
-      border: $uploadFileDragOverBorder;
+      border: borders.$uploadFileDragOverBorder;
 
       &::before {
         position: absolute;
@@ -57,7 +57,7 @@
     }
 
     &.selected-file {
-      border: $uploadFileDroppedBorder;
+      border: borders.$uploadFileDroppedBorder;
     }
 
     .warning-container {
@@ -73,6 +73,6 @@
   }
 
   &_required {
-    border: 1px dashed $amaranth;
+    border: 1px dashed colors.$amaranth;
   }
 }

@@ -1,16 +1,20 @@
-@import '~igz-controls/scss/variables';
-@import 'src/scss/mixins';
+@use 'igz-controls/scss/variables';
+@use '/src/scss/mixins';
 
-$pipelinesRowHeight: $rowHeight;
-$pipelinesHeaderRowHeight: $headerRowHeight;
-$pipelinesRowHeightExtended: $rowHeight;
+$pipelinesRowHeight: variables.$rowHeight;
+$pipelinesHeaderRowHeight: variables.$headerRowHeight;
+$pipelinesRowHeightExtended: variables.$rowHeight;
 
-.pipelines-table {
-  @include rowsHeight($pipelinesHeaderRowHeight, $pipelinesRowHeight, $pipelinesRowHeightExtended);
+:root {
+  --pipelinesRowHeight: #{$pipelinesRowHeight};
+  --pipelinesHeaderRowHeight: #{$pipelinesHeaderRowHeight};
+  --pipelinesRowHeightExtended: #{$pipelinesRowHeightExtended};
 }
 
-:export {
-  pipelinesRowHeight: $pipelinesRowHeight;
-  pipelinesHeaderRowHeight: $pipelinesHeaderRowHeight;
-  pipelinesRowHeightExtended: $pipelinesRowHeightExtended;
+.pipelines-table {
+  @include mixins.rowsHeight(
+    $pipelinesHeaderRowHeight,
+    $pipelinesRowHeight,
+    $pipelinesRowHeightExtended
+  );
 }
