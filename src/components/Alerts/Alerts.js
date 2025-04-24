@@ -29,7 +29,7 @@ import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Pagination from '../../common/Pagination/Pagination'
 import Loader from '../../common/Loader/Loader'
 
-import { ALERTS_FILTERS, ALERTS_PAGE_PATH } from '../../constants'
+import { ALERTS_FILTERS, ALERTS_PAGE_PATH, MONITOR_ALERTS_PAGE } from '../../constants'
 import { createAlertRowData } from '../../utils/createAlertsContent'
 import {
   getAlertsFiltersConfig,
@@ -171,7 +171,7 @@ const Alerts = () => {
                 tableContent={tableContent}
               />
               <Pagination
-                closeParamName={ALERTS_PAGE_PATH}
+                closeParamName={MONITOR_ALERTS_PAGE}
                 page={pageData.page}
                 paginationConfig={paginationConfigAlertsRef.current}
               />
