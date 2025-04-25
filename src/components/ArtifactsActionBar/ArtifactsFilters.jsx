@@ -71,7 +71,8 @@ const ArtifactsFilters = ({ artifacts, isAllVersions }) => {
 }
 
 ArtifactsFilters.propTypes = {
-  artifacts: PropTypes.arrayOf(PropTypes.object).isRequired
+  artifacts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  isAllVersions: PropTypes.bool.isRequired
 }
 
 export default ArtifactsFilters
