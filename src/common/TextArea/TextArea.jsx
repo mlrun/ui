@@ -253,7 +253,7 @@ const TextArea = React.forwardRef(
           </span>
         )}
         {!isEmpty(validationRules) && (
-          <OptionsMenu show={showValidationRules} ref={ref}>
+          <OptionsMenu show={showValidationRules} ref={{ refInputContainer: ref }}>
             {renderValidationRules}
           </OptionsMenu>
         )}
