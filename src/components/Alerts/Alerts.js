@@ -140,7 +140,7 @@ const Alerts = () => {
           <div className="content__action-bar-wrapper">
             <ActionBar
               autoRefreshIsStopped={true}
-              closeParamName={ALERTS_PAGE_PATH}
+              closeParamName={isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE_PATH}
               filterMenuName={ALERTS_FILTERS}
               filters={alertsFilters}
               filtersConfig={alertsFiltersConfig}
@@ -171,7 +171,7 @@ const Alerts = () => {
                 tableContent={tableContent}
               />
               <Pagination
-                closeParamName={MONITOR_ALERTS_PAGE}
+                closeParamName={isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE_PATH}
                 page={pageData.page}
                 paginationConfig={paginationConfigAlertsRef.current}
               />
