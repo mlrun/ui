@@ -72,8 +72,8 @@ export const generateCpuValue = (cpu = '') =>
   cpu.toString().match(/m/)
     ? cpu.toString().slice(0, cpu.toString().length - 1)
     : cpu
-    ? parseFloat(cpu).toFixed(3)
-    : ''
+      ? parseFloat(cpu).toFixed(3)
+      : ''
 
 export const generateMemoryValue = (memory = '') =>
   memory.toString().match(/[a-zA-Z]/)
@@ -213,8 +213,8 @@ export const generateFullMemoryValue = (value, type, data) => {
         data[type].memoryUnit.length === 0 || data[type].memoryUnit === 'Bytes'
           ? ''
           : data[type].memoryUnit.match(/i/)
-          ? data[type].memoryUnit.slice(0, 2)
-          : data[type].memoryUnit.slice(0, 1)
+            ? data[type].memoryUnit.slice(0, 2)
+            : data[type].memoryUnit.slice(0, 1)
       }`
 }
 

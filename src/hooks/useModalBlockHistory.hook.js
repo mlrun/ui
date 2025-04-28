@@ -27,7 +27,7 @@ export const useModalBlockHistory = (closeModal, form) => {
   const shouldBlock = useCallback(() => {
     const { initialValues, values } = form.getState()
 
-    const isFormDirty =  areFormValuesChanged(initialValues, values)
+    const isFormDirty = areFormValuesChanged(initialValues, values)
 
     if (!isFormDirty) {
       closeModal()
@@ -53,11 +53,7 @@ export const useModalBlockHistory = (closeModal, form) => {
 
     const showConfirmation = areFormValuesChanged(initialValues, values)
 
-    defaultCloseModalHandler(
-      showConfirmation,
-      resolveModal,
-      handleRejectConfirmation
-    )
+    defaultCloseModalHandler(showConfirmation, resolveModal, handleRejectConfirmation)
   }, [form, resolveModal, handleRejectConfirmation])
 
   useEffect(() => {

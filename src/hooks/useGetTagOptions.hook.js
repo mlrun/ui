@@ -109,7 +109,6 @@ export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName)
     }
   }, [category, dispatch, fetchTags, filters, modalFiltersName, paramTag, projectName, tagOptions])
 
-
   useEffect(() => {
     return () => {
       isInitialRequestSent.current = false

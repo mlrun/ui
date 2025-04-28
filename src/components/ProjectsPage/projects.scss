@@ -1,6 +1,10 @@
-@import '~igz-controls/scss/shadows';
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/shadows';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+
+.test {
+  background-color: colors.$topaz;
+}
 
 .projects {
   position: relative;
@@ -9,7 +13,7 @@
   width: 100%;
   height: 100%;
   overflow: inherit;
-  background-color: $white;
+  background-color: colors.$white;
 
   &__wrapper {
     position: relative;
@@ -71,7 +75,7 @@
           font-size: 20px;
 
           .select__value {
-            color: $topaz;
+            color: colors.$topaz;
             font-weight: 500;
           }
         }

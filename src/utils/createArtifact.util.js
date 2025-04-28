@@ -20,7 +20,7 @@ such restriction.
 const artifactSubTitle =
   'Assign it a unique combination of name and tag, and specify its path (for example, s3://mybucket/path).'
 
-  const getOverwriteConfirmMessage = (existingKind = '') =>
+const getOverwriteConfirmMessage = (existingKind = '') =>
   `That combination of name and tag is already in use in an existing ${existingKind}. If you proceed, the existing ${existingKind} will be overwritten`
 
 export const createArtifactMessages = {

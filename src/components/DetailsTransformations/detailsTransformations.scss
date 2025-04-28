@@ -1,4 +1,5 @@
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
 
 .transformations-tab {
   display: flex;
@@ -7,10 +8,10 @@
   .graph-pane {
     .config-item {
       height: 50px;
-      border-top: $secondaryBorder;
+      border-top: borders.$secondaryBorder;
 
       &:last-child {
-        border-bottom: $secondaryBorder;
+        border-bottom: borders.$secondaryBorder;
       }
 
       &__title {
@@ -30,7 +31,7 @@
 
           &-label {
             margin-right: 10px;
-            color: $spunPearl;
+            color: colors.$spunPearl;
             font-weight: bold;
             white-space: nowrap;
           }

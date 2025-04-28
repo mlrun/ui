@@ -1,12 +1,12 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/variables';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/variables';
 
 .key-value-table {
   max-height: 280px;
   overflow: hidden;
   overflow-y: auto;
-  background-color: $white;
+  background-color: colors.$white;
 
   &__btn {
     visibility: hidden;
@@ -16,10 +16,10 @@
     display: flex;
     align-items: center;
     min-height: 56px;
-    border-bottom: $primaryBorder;
+    border-bottom: borders.$primaryBorder;
 
     &:not(.no-hover):hover {
-      background-color: $alabaster;
+      background-color: colors.$alabaster;
 
       .key-value-table__btn {
         visibility: visible;
@@ -42,14 +42,14 @@
     font-weight: bold;
     font-size: 18px;
     background-color: inherit;
-    border-top: $primaryBorder;
+    border-top: borders.$primaryBorder;
   }
 
   .table-cell {
     display: flex;
     align-items: center;
     padding: 8px 5px 8px 10px;
-    color: $primary;
+    color: colors.$primary;
   }
 
   .table-cell__inputs-wrapper {
@@ -68,7 +68,7 @@
 
   .table-cell__actions {
     justify-content: flex-end;
-    min-width: $actionsCellWidth;
+    min-width: variables.$actionsCellWidth;
     padding: 0;
 
     & > * {
@@ -82,7 +82,7 @@
     justify-content: space-between;
     min-width: 44px;
     padding: 10px;
-    color: $cornflowerBlue;
+    color: colors.$cornflowerBlue;
     font-size: 15px;
     line-height: 18px;
 
@@ -91,7 +91,7 @@
       height: 20px;
 
       rect {
-        fill: $cornflowerBlue;
+        fill: colors.$cornflowerBlue;
       }
     }
   }
@@ -103,11 +103,11 @@
       width: 100%;
 
       &_edit {
-        border: $primaryBorder;
+        border: borders.$primaryBorder;
       }
 
       &_invalid {
-        border: $errorBorder;
+        border: borders.$errorBorder;
       }
     }
   }

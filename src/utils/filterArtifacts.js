@@ -20,7 +20,8 @@ such restriction.
 export const filterArtifacts = artifacts => [
   ...artifacts
     .reduce((artifactsMap, artifact) => {
-      if (!artifactsMap.has(artifact.db_key)) artifactsMap.set(artifact.db_key, { key: artifact.db_key, data: [] })
+      if (!artifactsMap.has(artifact.db_key))
+        artifactsMap.set(artifact.db_key, { key: artifact.db_key, data: [] })
 
       if ('link_iteration' in artifact) {
         artifactsMap.set(

@@ -1,4 +1,4 @@
-@import '~igz-controls/scss/colors';
+@use 'igz-controls/scss/colors';
 
 .history-back-link {
   display: flex;
@@ -22,7 +22,7 @@
 
     &-version {
       flex-shrink: 0;
-      color: $topaz;
+      color: colors.$topaz;
     }
 
     svg {

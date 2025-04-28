@@ -1,16 +1,20 @@
-@import '~igz-controls/scss/variables';
-@import 'src/scss/mixins';
+@use 'igz-controls/scss/variables';
+@use '/src/scss/mixins';
 
-$featureVectorsRowHeight: $rowHeight;
-$featureVectorsHeaderRowHeight: $headerRowHeight;
-$featureVectorsRowHeightExtended: $rowHeight;
+$featureVectorsRowHeight: variables.$rowHeight;
+$featureVectorsHeaderRowHeight: variables.$headerRowHeight;
+$featureVectorsRowHeightExtended: variables.$rowHeight;
 
-.feature-vectors-table {
-  @include rowsHeight($featureVectorsHeaderRowHeight, $featureVectorsRowHeight, $featureVectorsRowHeightExtended);
+:root {
+  --featureVectorsRowHeight: #{$featureVectorsRowHeight};
+  --featureVectorsHeaderRowHeight: #{$featureVectorsHeaderRowHeight};
+  --featureVectorsRowHeightExtended: #{$featureVectorsRowHeightExtended};
 }
 
-:export {
-  featureVectorsRowHeight: $featureVectorsRowHeight;
-  featureVectorsHeaderRowHeight: $featureVectorsHeaderRowHeight;
-  featureVectorsRowHeightExtended: $featureVectorsRowHeightExtended;
+.feature-vectors-table {
+  @include mixins.rowsHeight(
+    $featureVectorsHeaderRowHeight,
+    $featureVectorsRowHeight,
+    $featureVectorsRowHeightExtended
+  );
 }

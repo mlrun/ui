@@ -22,7 +22,14 @@ import { setNotification } from '../reducers/notificationReducer'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 
-export const showErrorNotification = (dispatch, error, defaultErrorMsg, customErrorMsg, retryCallback, showNotificationCallback) => {
+export const showErrorNotification = (
+  dispatch,
+  error,
+  defaultErrorMsg,
+  customErrorMsg,
+  retryCallback,
+  showNotificationCallback
+) => {
   const notificationData = {
     status: error?.response?.status || 400,
     id: Math.random(),

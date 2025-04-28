@@ -34,8 +34,8 @@ export const parseKeyValues = (object = {}) =>
                 : ` ${arrayItem} `
             })}]`
           : typeof value === 'object' && value !== null
-          ? `${key}: ${JSON.stringify(value, null, 1)}`
-          : `${key}: ${roundFloats(value, 4)}`
+            ? `${key}: ${JSON.stringify(value, null, 1)}`
+            : `${key}: ${roundFloats(value, 4)}`
       })
 
 // ["key: value", "key2: value2"] -> {key: "value", key2: "value2"}

@@ -19,12 +19,7 @@ such restriction.
 */
 import { TAG_FILTER_LATEST } from '../constants'
 
-export const handleArtifactTreeFilterChange = (
-  fetchData,
-  filters,
-  setFilter,
-  setContent
-) => {
+export const handleArtifactTreeFilterChange = (fetchData, filters, setFilter, setContent) => {
   setContent([])
   fetchData({
     ...filters,

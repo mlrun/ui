@@ -1,6 +1,6 @@
-@import '~igz-controls/scss/variables';
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/variables';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
 
 .btn-load {
   display: flex;
@@ -9,37 +9,37 @@
   min-width: 90px;
   height: 40px;
   padding: 0 16px;
-  color: $primary;
+  color: colors.$primary;
   font-weight: 500;
   font-size: 14px;
   font-style: normal;
   line-height: 16px;
-  background: $white;
-  border: $primaryBorder;
-  border-radius: $mainBorderRadius;
+  background: colors.$white;
+  border: borders.$primaryBorder;
+  border-radius: variables.$mainBorderRadius;
 
   svg {
     path {
-      fill: $white;
+      fill: colors.$white;
     }
   }
 
   &:active {
-    background: $gallery;
+    background: colors.$gallery;
   }
 
   &:hover {
-    background: $alabaster;
+    background: colors.$alabaster;
   }
 
   &:disabled {
-    color: $spunPearl;
-    background: $white;
+    color: colors.$spunPearl;
+    background: colors.$white;
     cursor: not-allowed;
 
     svg {
       path {
-        fill: $alto;
+        fill: colors.$alto;
       }
     }
   }
@@ -49,32 +49,32 @@
   }
 
   &-primary {
-    border-bottom: $applyBtnBorder;
+    border-bottom: borders.$applyBtnBorder;
 
     &:disabled {
-      border-bottom: 4px solid $hummingBird;
+      border-bottom: 4px solid colors.$hummingBird;
     }
   }
 
   &-secondary {
-    border-bottom: 4px solid $malibu;
+    border-bottom: 4px solid colors.$malibu;
 
     &:disabled {
-      border-bottom: 4px solid $titanWhite;
+      border-bottom: 4px solid colors.$titanWhite;
     }
   }
 
   &-tertiary {
-    border-bottom: 4px solid $spunPearl;
+    border-bottom: 4px solid colors.$spunPearl;
 
     svg {
       path {
-        fill: $primary;
+        fill: colors.$primary;
       }
     }
 
     &:disabled {
-      border-bottom: 4px solid $athensGray;
+      border-bottom: 4px solid colors.$athensGray;
     }
   }
 }

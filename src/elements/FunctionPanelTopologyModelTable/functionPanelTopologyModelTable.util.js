@@ -30,11 +30,7 @@ export const isNameNotUnique = (name, routes) => {
 }
 
 export const isRouteValid = route => {
-  return (
-    route.name.length > 0 &&
-    route.class_name.length > 0 &&
-    route.model_path.length > 0
-  )
+  return route.name.length > 0 && route.class_name.length > 0 && route.model_path.length > 0
 }
 
 export const isEditableRouteValid = (route, routes) => {

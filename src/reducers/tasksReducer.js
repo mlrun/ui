@@ -28,11 +28,9 @@ const initialState = {
 }
 
 export const fetchBackgroundTasks = createAsyncThunk('fetchBackgroundTasks', ({ kind = null }) => {
-  return tasksApi
-    .getBackgroundTasks(kind)
-    .then(response => {
-      return response?.data?.background_tasks
-    })
+  return tasksApi.getBackgroundTasks(kind).then(response => {
+    return response?.data?.background_tasks
+  })
 })
 
 const tasksSlice = createSlice({
