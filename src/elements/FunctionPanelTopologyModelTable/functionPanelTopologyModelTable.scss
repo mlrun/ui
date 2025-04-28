@@ -1,16 +1,16 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/mixins';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/mixins';
 
 .model-table {
-  @include newItemSidePanelTable;
+  @include mixins.newItemSidePanelTable;
 
   &__title {
     display: flex;
     align-items: center;
     width: 100%;
     margin: 18px 10px 10px;
-    color: $primary;
+    color: colors.$primary;
     font-weight: bold;
     font-size: 14px;
     line-height: 17px;

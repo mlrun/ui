@@ -20,7 +20,7 @@ such restriction.
 import { mainHttpClient } from '../httpClient'
 
 const tasksApi = {
-  getBackgroundTasks: (kind) => {
+  getBackgroundTasks: kind => {
     const config = {}
 
     if (kind) {

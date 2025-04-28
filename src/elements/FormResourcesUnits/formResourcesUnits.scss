@@ -1,5 +1,5 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
 
 .resources-units {
   display: grid;
@@ -19,11 +19,11 @@
     min-width: 280px;
     width: 100%;
     padding: 16px;
-    border: $primaryBorder;
+    border: borders.$primaryBorder;
     border-radius: 8px;
 
     &__title {
-      color: $primary;
+      color: colors.$primary;
       font-weight: 700;
       font-size: 18px;
     }

@@ -1,9 +1,9 @@
-@import '~igz-controls/scss/colors';
+@use 'igz-controls/scss/colors';
 
 .checkbox {
   display: flex;
   align-items: center;
-  color: $primary;
+  color: colors.$primary;
   cursor: pointer;
 
   &__label {
@@ -20,31 +20,31 @@
 
     &.checked {
       path {
-        fill: $malibu;
+        fill: colors.$malibu;
       }
     }
 
     &.unchecked {
       path {
-        fill: $spunPearl;
+        fill: colors.$spunPearl;
       }
     }
   }
 
   &_disabled {
-    color: $spunPearl;
+    color: colors.$spunPearl;
     cursor: not-allowed;
 
     svg {
       &.checked {
         path {
-          fill: $spunPearl;
+          fill: colors.$spunPearl;
         }
       }
 
       &.unchecked {
         path {
-          fill: $spunPearl;
+          fill: colors.$spunPearl;
         }
       }
     }

@@ -1,5 +1,5 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/variables';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/variables';
 
 .pagination {
   display: flex;
@@ -30,7 +30,7 @@
   }
 
   .pagination-btn {
-    color: $primary;
+    color: colors.$primary;
     cursor: default;
     box-sizing: border-box;
     display: flex;
@@ -46,12 +46,12 @@
     }
 
     &:disabled {
-      color: $bombay;
+      color: colors.$bombay;
       cursor: default;
     }
 
     &.pagination-btn_active {
-      color: $malibu;
+      color: colors.$malibu;
       font-weight: bold;
     }
 
@@ -65,7 +65,7 @@
     &.pagination-page-btn {
       &:hover:not(.pagination-btn_active) {
         .pagination-page-number {
-          border-bottom: 2px solid $primary;
+          border-bottom: 2px solid colors.$primary;
         }
       }
     }

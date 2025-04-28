@@ -1,5 +1,5 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
 
 .metrics-selector {
   &-header {
@@ -11,24 +11,24 @@
     justify-content: space-between;
     width: 280px;
     height: 40px;
-    color: $mulledWine;
+    color: colors.$mulledWine;
     background-color: transparent;
-    border: $primaryBorder;
+    border: borders.$primaryBorder;
     border-radius: 4px;
     cursor: pointer;
 
     &_open {
-      background-color: $alabaster;
+      background-color: colors.$alabaster;
     }
 
     &_disabled {
-      border: $disabledBorder;
-      color: $spunPearl;
+      border: borders.$disabledBorder;
+      color: colors.$spunPearl;
       cursor: not-allowed;
 
       .metrics-selector-header__icon {
         path {
-          fill: $spunPearl;
+          fill: colors.$spunPearl;
         }
       }
     }
@@ -105,7 +105,7 @@
 
               svg {
                 path {
-                  fill: $spunPearl;
+                  fill: colors.$spunPearl;
                 }
               }
             }
@@ -119,7 +119,7 @@
     &.accordion__container {
       height: 50px;
       overflow-y: hidden;
-      border-bottom: $dividerBorder;
+      border-bottom: borders.$dividerBorder;
 
       &:last-child {
         border: none;

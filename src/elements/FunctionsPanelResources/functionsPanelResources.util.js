@@ -28,9 +28,7 @@ export const getDefaultVolumeMounts = (volume_mounts, volumes, mode) =>
     .map(volumeMount => ({
       isDefault: true,
       data: {
-        type: getVolumeType(
-          volumes.find(volume => volume.name === volumeMount.name)
-        ),
+        type: getVolumeType(volumes.find(volume => volume.name === volumeMount.name)),
         name: volumeMount.name,
         mountPath: volumeMount.mountPath
       },

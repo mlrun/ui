@@ -1,5 +1,6 @@
-@import '~igz-controls/scss/variables';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/variables';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
 
 .change-owner {
   .owner-table {
@@ -8,7 +9,7 @@
       display: flex;
       align-items: center;
       margin-bottom: 15px;
-      border-bottom: $primaryBorder;
+      border-bottom: borders.$primaryBorder;
 
       .search-input {
         display: flex;
@@ -56,9 +57,9 @@
     width: 100%;
     max-height: 306px;
     overflow-y: auto;
-    background-color: $white;
-    border: $primaryBorder;
-    border-radius: 0 0 $mainBorderRadius $mainBorderRadius;
+    background-color: colors.$white;
+    border: borders.$primaryBorder;
+    border-radius: 0 0 variables.$mainBorderRadius variables.$mainBorderRadius;
 
     .member-row {
       display: flex;

@@ -1,12 +1,12 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/mixins';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/mixins';
 
 .sidebar {
-  @include fixed;
+  @include mixins.fixed;
 
   width: 90px;
   height: 100%;
-  background-color: $white;
+  background-color: colors.$white;
 
   &__wrapper {
     right: auto;
@@ -33,7 +33,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        color: $white;
+        color: colors.$white;
         text-decoration: none;
 
         img {

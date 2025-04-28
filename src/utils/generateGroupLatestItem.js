@@ -34,10 +34,10 @@ const findLatestByUpdated = group => {
     return isNaN(latestDate)
       ? current
       : isNaN(currentDate)
-      ? latest
-      : latestDate.getTime() >= currentDate.getTime()
-      ? latest
-      : current
+        ? latest
+        : latestDate.getTime() >= currentDate.getTime()
+          ? latest
+          : current
   })
 }
 

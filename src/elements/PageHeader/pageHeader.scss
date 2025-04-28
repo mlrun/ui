@@ -1,5 +1,5 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/variables';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/variables';
 
 .page-header {
   display: flex;
@@ -18,13 +18,13 @@
   }
 
   &__title {
-    color: $primaryTextColor;
+    color: variables.$primaryTextColor;
     font-weight: 300;
     font-size: 40px;
   }
 
   &__description {
     display: flex;
-    color: $secondaryTextColor;
+    color: variables.$secondaryTextColor;
   }
 }

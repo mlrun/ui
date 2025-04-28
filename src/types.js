@@ -64,7 +64,7 @@ export const CHIP_INPUT_LIST = PropTypes.arrayOf(
     id: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
     subLabel: PropTypes.string,
-    ui: PropTypes.shape({})
+    ui: PropTypes.object
   })
 )
 
@@ -306,4 +306,14 @@ export const PAGINATION_CONFIG = PropTypes.shape({
     'page-size': PropTypes.number,
     'page-token': PropTypes.string
   })
+})
+
+export const MEMBER = PropTypes.shape({
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  icon: PropTypes.node,
+  role: PropTypes.string.isRequired,
+  initialRole: PropTypes.string,
+  modification: PropTypes.string
 })

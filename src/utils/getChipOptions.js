@@ -65,5 +65,4 @@ const chipOptions = [
   }
 ]
 
-export const getChipOptions = variant =>
-  chipOptions.find(item => item.type === variant)
+export const getChipOptions = variant => chipOptions.find(item => item.type === variant)

@@ -1,6 +1,6 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/shadows';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/shadows';
+@use 'igz-controls/scss/borders';
 
 .breadcrumbs__dropdown {
   max-height: 384px;
@@ -16,8 +16,8 @@
     padding: 12px 0;
     font-size: 15px;
     line-height: 18px;
-    background: $white;
-    box-shadow: $dropdownShadow;
+    background: colors.$white;
+    box-shadow: shadows.$dropdownShadow;
   }
 
   &-item {
@@ -29,7 +29,7 @@
     padding: 11px 16px;
 
     &:hover {
-      background-color: $alabaster;
+      background-color: colors.$alabaster;
       cursor: pointer;
     }
 
@@ -47,7 +47,7 @@
       margin: 0 0 0 10px;
 
       path {
-        fill: $chateauGreen;
+        fill: colors.$chateauGreen;
       }
     }
   }
@@ -56,7 +56,7 @@
     display: flex;
     align-items: center;
     margin: 0 9px 4px;
-    border-bottom: $dividerBorder;
+    border-bottom: borders.$dividerBorder;
 
     .input {
       width: 100%;

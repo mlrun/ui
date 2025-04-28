@@ -1,18 +1,18 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
 
 .range {
   position: relative;
   display: flex;
   margin-right: 5px;
-  border: $primaryBorder;
+  border: borders.$primaryBorder;
   border-radius: 4px;
 
   &__label {
     position: absolute;
     top: -20px;
     left: 0;
-    color: $topaz;
+    color: colors.$topaz;
     font-weight: bold;
     font-size: 12px;
     line-height: 15px;
@@ -21,7 +21,7 @@
     pointer-events: none;
 
     &-mandatory {
-      color: $amaranth;
+      color: colors.$amaranth;
     }
 
     &-none {
@@ -31,7 +31,7 @@
         position: absolute;
         top: 55%;
         right: -10px;
-        color: $amaranth;
+        color: colors.$amaranth;
         transform: translateY(-50%);
       }
     }
@@ -74,37 +74,37 @@
     width: 100%;
     height: calc(50% + 1px);
     padding: 0;
-    background-color: $wildSand;
-    border: $primaryBorder;
+    background-color: colors.$wildSand;
+    border: borders.$primaryBorder;
     cursor: pointer;
 
     svg {
       path {
-        fill: $topaz;
+        fill: colors.$topaz;
       }
     }
 
     &:hover {
-      background-color: $mercury;
+      background-color: colors.$mercury;
 
       svg {
         path {
-          fill: $primary;
+          fill: colors.$primary;
         }
       }
     }
 
     &:focus {
-      border: $focusBorder;
+      border: borders.$focusBorder;
     }
 
     &:active {
-      background-color: rgba($black, 0.2);
-      border: $focusBorder;
+      background-color: rgba(colors.$black, 0.2);
+      border: borders.$focusBorder;
 
       svg {
         path {
-          fill: $primary;
+          fill: colors.$primary;
         }
       }
     }
@@ -112,22 +112,22 @@
     &:disabled {
       svg {
         path {
-          fill: $spunPearl;
+          fill: colors.$spunPearl;
         }
       }
     }
 
     &-increase {
       top: -1px;
-      border-bottom: $transparentBorder;
-      border-left: $transparentBorder;
+      border-bottom: borders.$transparentBorder;
+      border-left: borders.$transparentBorder;
       border-top-right-radius: 4px;
     }
 
     &-decrease {
       bottom: -1px;
-      border-top: $transparentBorder;
-      border-left: $transparentBorder;
+      border-top: borders.$transparentBorder;
+      border-left: borders.$transparentBorder;
       border-bottom-right-radius: 4px;
     }
 
@@ -153,25 +153,25 @@
   }
 
   &-warning {
-    border: $errorBorder;
+    border: borders.$errorBorder;
 
     &_asterisk {
       position: absolute;
       top: 50%;
       right: 35px;
-      color: $amaranth;
+      color: colors.$amaranth;
       transform: translateY(-50%);
     }
 
     .range__button {
       &-increase {
-        border-top: $errorBorder;
-        border-right: $errorBorder;
+        border-top: borders.$errorBorder;
+        border-right: borders.$errorBorder;
       }
 
       &-decrease {
-        border-right: $errorBorder;
-        border-bottom: $errorBorder;
+        border-right: borders.$errorBorder;
+        border-bottom: borders.$errorBorder;
       }
     }
   }

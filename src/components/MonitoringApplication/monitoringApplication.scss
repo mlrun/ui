@@ -1,7 +1,7 @@
-@import '~igz-controls/scss/colors';
+@use 'igz-controls/scss/colors';
 
 .monitoring-app-title {
-  color: $primary;
+  color: colors.$primary;
   font-weight: 400;
   font-size: 2.1em;
 }
