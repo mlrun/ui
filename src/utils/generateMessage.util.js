@@ -19,5 +19,5 @@ such restriction.
 */
 
 export const generateObjectNotInTheListMessage = (objectName = 'object') => {
-    return `The ${objectName} is not in the filtered list. Closing the details panel will return you to the current list.`
+  return `The ${objectName} is not in the filtered list. Closing the details panel will return you to the current list.`
 }

@@ -1,5 +1,5 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
 
 .project-data-card {
   &__statistics {
@@ -22,7 +22,7 @@
       cursor: pointer;
 
       &:hover {
-        background-color: $wildSand;
+        background-color: colors.$wildSand;
 
         .project-data-card__statistics-arrow {
           display: block;
@@ -59,7 +59,7 @@
       &:not(:last-child)::after {
         height: 28px;
         margin: auto 0;
-        border-right: $dividerBorder;
+        border-right: borders.$dividerBorder;
         content: '';
       }
 
@@ -71,7 +71,7 @@
     &-label {
       min-width: 100%;
       max-width: 100px;
-      color: $primary;
+      color: colors.$primary;
       text-align: center;
     }
 
@@ -84,19 +84,19 @@
 
       &.statistics {
         &_running {
-          color: $primary;
+          color: colors.$primary;
         }
 
         &_default {
-          color: $topaz;
+          color: colors.$topaz;
         }
 
         &_scheduled {
-          color: $supernova;
+          color: colors.$supernova;
         }
 
         &_failed {
-          color: $amaranth;
+          color: colors.$amaranth;
         }
       }
 

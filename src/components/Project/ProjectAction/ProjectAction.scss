@@ -1,4 +1,4 @@
-@import '~igz-controls/scss/colors';
+@use 'igz-controls/scss/colors';
 
 .project-overview-actions {
   display: inline-flex;
@@ -31,7 +31,7 @@
       &:hover,
       &:focus {
         .project-overview-actions__item-icon {
-          background-color: $hawkesBlue;
+          background-color: colors.$hawkesBlue;
         }
 
         .link {
@@ -55,7 +55,7 @@
       height: 68px;
       margin-bottom: 0.5rem;
       margin-right: 0;
-      background-color: $selago;
+      background-color: colors.$selago;
       border-radius: 50%;
       transition: background-color 0.3s ease-in-out;
 

@@ -1,5 +1,5 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
 
 .pods {
   display: flex;
@@ -26,10 +26,10 @@
       min-width: 150px;
       height: 55px;
       padding: 0 20px;
-      border-bottom: $secondaryBorder;
+      border-bottom: borders.$secondaryBorder;
 
       &:hover {
-        background-color: $alabaster;
+        background-color: colors.$alabaster;
       }
 
       .link {

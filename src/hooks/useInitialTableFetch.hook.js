@@ -21,13 +21,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { debounce } from 'lodash'
 
-
-export const useInitialTableFetch = ({
-  fetchData,
-  fetchTags,
-  filters,
-  requestTrigger
-} = {}) => {
+export const useInitialTableFetch = ({ fetchData, fetchTags, filters, requestTrigger } = {}) => {
   const params = useParams()
   const isInitialRequestSent = useRef(false)
 

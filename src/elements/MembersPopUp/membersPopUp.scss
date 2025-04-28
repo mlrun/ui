@@ -1,12 +1,13 @@
-@import '~igz-controls/scss/variables';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/variables';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
 
 .settings__members {
   .info-row {
     display: flex;
     justify-content: space-between;
     padding-bottom: 10px;
-    border-bottom: $dividerBorder;
+    border-bottom: borders.$dividerBorder;
 
     .members-overview {
       display: flex;
@@ -14,10 +15,10 @@
 
       .member-overview {
         margin-right: 5px;
-        color: $spunPearl;
+        color: colors.$spunPearl;
 
         .member-count {
-          color: $primary;
+          color: colors.$primary;
           font-weight: bold;
         }
       }
@@ -30,16 +31,16 @@
     .invite-new-members-btn {
       display: flex;
       align-items: center;
-      color: $cornflowerBlue;
+      color: colors.$cornflowerBlue;
       cursor: pointer;
 
       &.disabled {
-        color: $spunPearl;
+        color: colors.$spunPearl;
         cursor: default;
 
         .add-icon {
           rect {
-            fill: $spunPearl;
+            fill: colors.$spunPearl;
           }
         }
       }
@@ -48,7 +49,7 @@
         margin-right: 10px;
 
         rect {
-          fill: $cornflowerBlue;
+          fill: colors.$cornflowerBlue;
         }
       }
     }
@@ -56,8 +57,8 @@
 
   .invite-new-members {
     margin-top: 20px;
-    background-color: $wildSand;
-    border-radius: $mainBorderRadius;
+    background-color: colors.$wildSand;
+    border-radius: variables.$mainBorderRadius;
 
     .new-members-title {
       display: flex;
@@ -89,7 +90,7 @@
 
       .new-member-role {
         width: 30%;
-        background-color: $white;
+        background-color: colors.$white;
       }
 
       .auto-resizable-input {
@@ -115,8 +116,8 @@
     margin: 20px 0;
     padding: 0 20px;
     overflow-y: auto;
-    background-color: $white;
-    border-radius: $mainBorderRadius;
+    background-color: colors.$white;
+    border-radius: variables.$mainBorderRadius;
 
     .member-info {
       display: flex;
@@ -146,12 +147,12 @@
       justify-content: space-between;
       margin-bottom: 25px;
       padding: 15px 5px 0;
-      background-color: $white;
+      background-color: colors.$white;
 
       .member-info {
         margin-right: 5%;
         width: 65%;
-        border-bottom: $primaryBorder;
+        border-bottom: borders.$primaryBorder;
       }
     }
 
@@ -162,7 +163,7 @@
         padding: 15px 5px;
 
         &:not(:last-child) {
-          border-bottom: $dividerBorder;
+          border-bottom: borders.$dividerBorder;
         }
 
         &:hover {
@@ -178,7 +179,7 @@
             width: 8px;
             height: 8px;
             margin-right: 8px;
-            background-color: $brightTurquoise;
+            background-color: colors.$brightTurquoise;
             border-radius: 50%;
             visibility: hidden;
 
@@ -194,9 +195,9 @@
             width: 30px;
             height: 30px;
             margin-right: 15px;
-            color: $white;
+            color: colors.$white;
             font-size: 14px;
-            background-color: $kimberly;
+            background-color: colors.$kimberly;
             border-radius: 50%;
           }
 
@@ -209,7 +210,7 @@
             margin-right: 5px;
 
             path {
-              fill: rgba($black, 0.2);
+              fill: rgba(colors.$black, 0.2);
             }
           }
         }
@@ -239,7 +240,7 @@
   }
 
   .footer-annotation {
-    color: $topaz;
+    color: colors.$topaz;
     font-size: 12px;
     white-space: pre-line;
   }
@@ -248,8 +249,8 @@
 .delete-member__pop-up {
   .pop-up-dialog {
     width: 230px;
-    color: $white;
-    background-color: $primary;
+    color: colors.$white;
+    background-color: colors.$primary;
     box-shadow: unset;
 
     &__header {
@@ -258,19 +259,19 @@
     }
 
     &__header-text {
-      color: $white;
+      color: colors.$white;
       font-weight: normal;
     }
 
     &__header-close,
     &__btn_close {
       path {
-        fill: $white;
+        fill: colors.$white;
       }
     }
 
     .confirm-dialog__message {
-      color: $white;
+      color: colors.$white;
     }
   }
 

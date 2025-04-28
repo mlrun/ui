@@ -26,9 +26,5 @@ export const convertBytes = (bytes, decimals = 2) => {
 
   const sizesIndex = Math.floor(Math.log(bytes) / Math.log(kilobytes))
 
-  return (
-    parseFloat((bytes / Math.pow(kilobytes, sizesIndex)).toFixed(dm)) +
-    ' ' +
-    sizes[sizesIndex]
-  )
+  return parseFloat((bytes / Math.pow(kilobytes, sizesIndex)).toFixed(dm)) + ' ' + sizes[sizesIndex]
 }

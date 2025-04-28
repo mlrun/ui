@@ -1,6 +1,6 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/shadows';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/shadows';
 
 .item-artifacts__modal-preview {
   position: relative;
@@ -59,8 +59,8 @@
       display: flex;
       align-items: center;
       padding: 10px;
-      color: $mulledWine;
-      border-bottom: $secondaryBorder;
+      color: colors.$mulledWine;
+      border-bottom: borders.$secondaryBorder;
 
       .item {
         &-data {
@@ -73,7 +73,7 @@
           }
 
           &__name {
-            color: $cornflowerBlue;
+            color: colors.$cornflowerBlue;
           }
 
           &__path {
@@ -89,7 +89,7 @@
 
     &-message {
       margin: 15px 0 10px;
-      color: $mulledWine;
+      color: colors.$mulledWine;
     }
   }
 }

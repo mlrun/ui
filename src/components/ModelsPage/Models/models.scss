@@ -1,16 +1,10 @@
-@import '~igz-controls/scss/variables';
-@import 'src/scss/mixins';
+@use 'igz-controls/scss/variables';
+@use '/src/scss/mixins';
 
-$modelsRowHeight: $rowHeight;
-$modelsHeaderRowHeight: $headerRowHeightBig;
-$modelsRowHeightExtended: $rowHeightExtended;
+$modelsRowHeight: variables.$rowHeight;
+$modelsHeaderRowHeight: variables.$headerRowHeightBig;
+$modelsRowHeightExtended: variables.$rowHeightExtended;
 
 .models-table {
-  @include rowsHeight($modelsHeaderRowHeight, $modelsRowHeight, $modelsRowHeightExtended);
-}
-
-:export {
-  modelsRowHeight: $modelsRowHeight;
-  modelsHeaderRowHeight: $modelsHeaderRowHeight;
-  modelsRowHeightExtended: $modelsRowHeightExtended;
+  @include mixins.rowsHeight($modelsHeaderRowHeight, $modelsRowHeight, $modelsRowHeightExtended);
 }

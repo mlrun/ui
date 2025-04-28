@@ -22,7 +22,7 @@ import { capitalize, set } from 'lodash'
 import { mainHttpClient } from '../httpClient'
 import { GROUP_BY_WORKFLOW, FILTER_ALL_ITEMS } from '../constants'
 
-const generateQueryParams = (project, filter, config) => {
+const generateQueryParams = (project, filter) => {
   // Generating encoded JSON query string to send as a value to the filter query param
   // each "predicates" item is a single filter
   // key - type of filter (filter by name, by status, by dates)
@@ -97,7 +97,7 @@ const workflowsApi = {
       }
 
       if (filter?.groupBy === GROUP_BY_WORKFLOW) {
-        set(newConfig, ['params', 'filter'], generateQueryParams(project, filter, config))
+        set(newConfig, ['params', 'filter'], generateQueryParams(project, filter))
       }
 
       if (filter?.name) {

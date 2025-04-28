@@ -1,16 +1,14 @@
-@import '~igz-controls/scss/variables';
-@import '../../scss/mixins';
+@use 'igz-controls/scss/variables';
+@use '../../scss/mixins';
 
-$monitorJobsRowHeight: $rowHeight;
-$monitorJobsHeaderRowHeight: $headerRowHeight;
-$monitorJobsRowHeightExtended: $rowHeight;
+$monitorJobsRowHeight: variables.$rowHeight;
+$monitorJobsHeaderRowHeight: variables.$headerRowHeight;
+$monitorJobsRowHeightExtended: variables.$rowHeight;
 
 .monitor-jobs-table {
-  @include rowsHeight($monitorJobsHeaderRowHeight, $monitorJobsRowHeight, $monitorJobsRowHeightExtended);
-}
-
-:export {
-  monitorJobsRowHeight: $monitorJobsRowHeight;
-  monitorJobsHeaderRowHeight: $monitorJobsHeaderRowHeight;
-  monitorJobsRowHeightExtended: $monitorJobsRowHeightExtended;
+  @include mixins.rowsHeight(
+    $monitorJobsHeaderRowHeight,
+    $monitorJobsRowHeight,
+    $monitorJobsRowHeightExtended
+  );
 }

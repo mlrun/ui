@@ -317,7 +317,7 @@ export const setFullSelectedArtifact = (
           setSelectedArtifact(prevState => {
             return isEqual(prevState, artifact) ? prevState : artifact
           })
-        })   
+        })
       } else {
         setSelectedArtifact({})
       }

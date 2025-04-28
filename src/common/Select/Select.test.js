@@ -110,9 +110,7 @@ describe('Select component', () => {
 
     expect(mockClick).toHaveBeenCalledWith('test1')
 
-    wrapper.rerender(
-      <Select options={[{ label: 'Test1', id: 'test1' }]} selectedId="test1" />
-    )
+    wrapper.rerender(<Select options={[{ label: 'Test1', id: 'test1' }]} selectedId="test1" />)
 
     const selectedOption = wrapper.getByTestId('selected-option')
 
@@ -120,15 +118,11 @@ describe('Select component', () => {
   })
 
   it('should add className "select__label_floating" to select label if props floatingLabel "true"', () => {
-    expect(wrapper.getByTestId('select-label').className).toMatch(
-      'select__label_floating'
-    )
+    expect(wrapper.getByTestId('select-label').className).toMatch('select__label_floating')
   })
 
   it('should not open select body if props disabled set to "true"', () => {
-    wrapper.rerender(
-      <Select options={[{ label: 'Test1', id: 'test1' }]} disabled={true} />
-    )
+    wrapper.rerender(<Select options={[{ label: 'Test1', id: 'test1' }]} disabled={true} />)
 
     const select = wrapper.getByTestId('select')
 
@@ -145,11 +139,7 @@ describe('Select component', () => {
 
   it('should call handler callback if it exists in the option', () => {
     const mockHandler = jest.fn()
-    wrapper.rerender(
-      <Select
-        options={[{ label: 'Test1', id: 'test1', handler: mockHandler }]}
-      />
-    )
+    wrapper.rerender(<Select options={[{ label: 'Test1', id: 'test1', handler: mockHandler }]} />)
 
     const select = wrapper.getByTestId('select')
 

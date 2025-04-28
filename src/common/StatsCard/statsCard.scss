@@ -1,15 +1,15 @@
-@import '~igz-controls/scss/shadows';
-@import '~igz-controls/scss/colors';
+@use 'igz-controls/scss/shadows';
+@use 'igz-controls/scss/colors';
 
 .stats {
   &-card {
     display: flex;
     flex-wrap: wrap;
     position: relative;
-    color: $topaz;
-    background-color: $white;
+    color: colors.$topaz;
+    background-color: colors.$white;
     border-radius: 8px;
-    box-shadow: $previewBoxShadowInit;
+    box-shadow: shadows.$previewBoxShadowInit;
     padding: 15px;
     transition: all 0.3s ease-in-out;
 
@@ -43,7 +43,7 @@
       position: relative;
       display: flex;
       align-items: center;
-      color: $primary;
+      color: colors.$primary;
       font-weight: normal;
       font-size: 1rem;
       margin: 0;
@@ -79,7 +79,7 @@
           width: inherit;
 
           path {
-            fill: $ceriseRed;
+            fill: colors.$ceriseRed;
           }
         }
       }

@@ -262,7 +262,7 @@ const detailsStoreSlice = createSlice({
     builder.addCase(fetchModelEndpointMetricsValues.pending, state => {
       state.loadingCounter = state.loadingCounter + 1
     })
-    builder.addCase(fetchModelEndpointMetricsValues.fulfilled, (state, action) => {
+    builder.addCase(fetchModelEndpointMetricsValues.fulfilled, state => {
       state.loadingCounter = state.loadingCounter - 1
       state.error = null
     })

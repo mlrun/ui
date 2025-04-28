@@ -1,10 +1,9 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/mixins';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/mixins';
 
 .text-area {
-  @import '../../scss/main.scss';
-  @include fieldWrapperOld;
+  @include mixins.fieldWrapperOld;
 
   white-space: pre-wrap;
   resize: none;
@@ -26,14 +25,14 @@
   }
 
   &:invalid {
-    border: $errorBorder;
+    border: borders.$errorBorder;
   }
 
   &-wrapper {
     position: relative;
 
     .text-area.text-area_invalid {
-      border: $errorBorder;
+      border: borders.$errorBorder;
 
       & ~ .text-area__warning {
         display: block;
@@ -55,13 +54,13 @@
     position: sticky;
     top: 9px;
     left: 10px;
-    color: $topaz;
+    color: colors.$topaz;
     text-transform: capitalize;
     background-color: transparent;
     pointer-events: none;
 
     &-mandatory {
-      color: $amaranth;
+      color: colors.$amaranth;
     }
 
     &.active-label {
@@ -71,7 +70,7 @@
       line-height: 12px;
 
       .text-area__label-mandatory {
-        color: $topaz;
+        color: colors.$topaz;
       }
     }
 
@@ -82,7 +81,7 @@
       display: block;
       width: 100%;
       padding: 0 17px;
-      color: $topaz;
+      color: colors.$topaz;
       transition: 300ms ease all;
     }
 
@@ -92,13 +91,13 @@
   }
 
   &__counter {
-    color: $topaz;
+    color: colors.$topaz;
     font-size: 12px;
     text-align: right;
   }
 
   &:disabled {
-    color: $spunPearl;
+    color: colors.$spunPearl;
     cursor: not-allowed;
   }
 }

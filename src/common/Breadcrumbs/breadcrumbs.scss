@@ -1,15 +1,15 @@
-@import '~igz-controls/scss/mixins';
-@import '~igz-controls/scss/colors';
+@use 'igz-controls/scss/mixins';
+@use 'igz-controls/scss/colors';
 
 .breadcrumbs {
-  @include resetSpaces;
+  @include mixins.resetSpaces;
 
   font-size: 20px;
   line-height: 23px;
 }
 
 .breadcrumbs__list {
-  @include resetSpaces;
+  @include mixins.resetSpaces;
 
   display: flex;
   flex-wrap: wrap;
