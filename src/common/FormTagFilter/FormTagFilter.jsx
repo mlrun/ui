@@ -26,18 +26,18 @@ import classnames from 'classnames'
 
 import { PopUpDialog, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { tagFilterOptions } from '../../components/FilterMenu/filterMenu.settings'
+import { getTagFilterOptions } from '../../components/FilterMenu/filterMenu.settings'
 import { TAG_FILTER_LATEST } from '../../constants'
 
 import Caret from 'igz-controls/images/dropdown.svg?react'
 
 import './formTagFilters.scss'
 
-const FormTagFilter = ({ content = null, label, name }) => {
+const FormTagFilter = ({ content = null, label, name, onlyLatestByDefault = false }) => {
   const { input } = useField(name)
   const [isDropDownMenuOpen, setIsDropDownMenuOpen] = useState(false)
   const [tagFilter, setTagFilter] = useState(input.value)
-  const [tagOptions, setTagOptions] = useState(tagFilterOptions)
+  const [tagOptions, setTagOptions] = useState(getTagFilterOptions(onlyLatestByDefault))
   const tagFilterRef = useRef()
   const dropdownRef = useRef()
   const filtersStore = useSelector(store => store.filtersStore)
@@ -50,6 +50,7 @@ const FormTagFilter = ({ content = null, label, name }) => {
   }, [])
 
   const options = useMemo(() => {
+    const tagFilterOptions = getTagFilterOptions(onlyLatestByDefault)
     let newTagOptions = tagFilterOptions
     let pageTagList = []
 
@@ -88,7 +89,7 @@ const FormTagFilter = ({ content = null, label, name }) => {
     }
 
     return [...pageTagList, ...newTagOptions]
-  }, [content, filtersStore.tagOptions])
+  }, [content, filtersStore.tagOptions, onlyLatestByDefault])
 
   useEffect(() => {
     if (!isEqual(options, filtersStore.tagOptions)) {
@@ -118,6 +119,7 @@ const FormTagFilter = ({ content = null, label, name }) => {
   const handlerOverall = useCallback(
     event => {
       const elementPath = event.path ?? event.composedPath?.()
+      const tagFilterOptions = getTagFilterOptions(onlyLatestByDefault)
 
       if (
         !elementPath.includes(tagFilterRef.current) &&
@@ -136,7 +138,7 @@ const FormTagFilter = ({ content = null, label, name }) => {
         setIsDropDownMenuOpen(false)
       }
     },
-    [input, tagFilter]
+    [input, onlyLatestByDefault, tagFilter]
   )
 
   useEffect(() => {
@@ -161,7 +163,7 @@ const FormTagFilter = ({ content = null, label, name }) => {
 
       if (tagFilter.length === 0) {
         input.onChange(TAG_FILTER_LATEST)
-        setTagFilter(tagFilterOptions.find(tag => tag.id === TAG_FILTER_LATEST).label)
+        setTagFilter(getTagFilterOptions(onlyLatestByDefault).find(tag => tag.id === TAG_FILTER_LATEST).label)
       }
     }
   }
@@ -238,7 +240,8 @@ const FormTagFilter = ({ content = null, label, name }) => {
 FormTagFilter.propTypes = {
   content: PropTypes.arrayOf(PropTypes.object),
   label: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired
+  name: PropTypes.string.isRequired,
+  onlyLatestByDefault: PropTypes.bool
 }
 
 export default FormTagFilter
