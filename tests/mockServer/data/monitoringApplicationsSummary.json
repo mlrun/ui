@@ -1,0 +1,8 @@
+{
+  "default": {
+    "running_model_monitoring_functions": 16,
+    "failed_model_monitoring_functions": 8,
+    "real_time_model_endpoint_count": 75,
+    "batch_model_endpoint_count": 44
+  }
+}

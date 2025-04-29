@@ -265,12 +265,6 @@ export const datePickerPastMonthOptions = [
       })
     },
     timeFrameMilliseconds: TIME_FRAME_LIMITS.MONTH
-  },
-  {
-    id: CUSTOM_RANGE_DATE_OPTION,
-    label: 'Custom range',
-    handler: null,
-    timeFrameMilliseconds: 0
   }
 ]
 

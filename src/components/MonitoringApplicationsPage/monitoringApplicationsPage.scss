@@ -1,0 +1,67 @@
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/shadows';
+@use 'igz-controls/scss/variables';
+@use '/src/scss/mixins';
+
+$applicationRowHeight: variables.$rowHeight;
+$applicationHeaderRowHeight: variables.$headerRowHeight;
+$applicationRowHeightExtended: variables.$rowHeightExtended;
+
+.monitoring-apps-title {
+  color: colors.$primary;
+  font-weight: 400;
+  font-size: 2.1em;
+}
+
+.content__action-bar-wrapper {
+  margin-bottom: 15px;
+}
+
+.monitoring-apps {
+  flex: 1;
+}
+
+.monitoring-app_section {
+  display: grid;
+  gap: 15px;
+  margin-bottom: 25px;
+
+  &.section_small {
+    grid-template-columns: repeat(2, 1fr);
+    min-height: 200px;
+  }
+
+  &.section_big {
+    min-height: 300px;
+  }
+
+  .monitoring-app_section-item {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid colors.$frenchLilac;
+    color: colors.$topaz;
+    background-color: colors.$white;
+    border-radius: 8px;
+    box-shadow: shadows.$previewBoxShadowInit;
+    padding: 20px;
+    transition: all 0.3s ease-in-out;
+
+    .section-item_title {
+      display: flex;
+      align-items: center;
+      color: colors.$primary;
+      font-size: 1rem;
+      line-height: 23px;
+      margin-bottom: 20px;
+    }
+
+    .section-table {
+      width: 100%;
+      height: auto;
+    }
+
+    .applications-table {
+      @include mixins.rowsHeight($applicationHeaderRowHeight, $applicationRowHeight, $applicationRowHeightExtended);
+    }
+  }
+}

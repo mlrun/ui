@@ -43,7 +43,7 @@ import ModelMonitoringIcon from 'igz-controls/images/navbar/model-monitoring.svg
 
 // import RTPiplinesIcon from 'igz-controls/images/timer-outline-icon.svg?react'
 
-export const getLinks = projectName => {
+export const getLinks = (projectName, isDemoMode) => {
   const pathname = `/projects/${projectName}`
 
   return [
@@ -99,7 +99,8 @@ export const getLinks = projectName => {
       icon: <ModelMonitoringIcon />,
       id: 'monitoring-app',
       label: 'Monitoring app',
-      link: `${pathname}/monitoring-app`
+      link: `${pathname}/monitoring-app`,
+      hidden: !isDemoMode
     },
     {
       icon: <JobsWorkflowIcon />,

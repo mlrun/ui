@@ -421,6 +421,7 @@ const ActionBar = ({
                       variant={actionButton.variant}
                       label={actionButton.label}
                       className={actionButton.className}
+                      icon={actionButton.icon}
                       onClick={() => {
                         handleActionClick(actionButton.onClick)
                       }}
