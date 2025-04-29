@@ -115,7 +115,15 @@ export const filterSelectOptions = {
   [PROJECT_FILTER]: [{ label: 'Project', id: 'project' }]
 }
 
+// todo remove tagFilterOptions after filterMenu removed
 export const tagFilterOptions = [
   { label: 'All tags', id: TAG_FILTER_ALL_ITEMS },
   { label: 'latest', id: TAG_FILTER_LATEST }
 ]
+
+export const getTagFilterOptions = (isLatestOnly = false) => {
+  return [
+    { label: 'latest', id: TAG_FILTER_LATEST },
+    ...(isLatestOnly ? [] : [{ label: 'All tags', id: TAG_FILTER_ALL_ITEMS }]) 
+  ]
+}
