@@ -35,6 +35,7 @@ import {
   getInternalLabelsValidationRule
 } from 'igz-controls/utils/validation.util'
 import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
+import { useModalBlockHistory } from '../../../hooks/useModalBlockHistory.hook'
 
 import './createProjectDialog.scss'
 
@@ -50,22 +51,32 @@ const CreateProjectDialog = ({
     description: '',
     labels: []
   }
+
+  const createProject = data => {
+    handleCreateProject(data)
+    resolveModal()
+  }
+
   const formRef = React.useRef(
     createForm({
       initialValues,
       mutators: { ...arrayMutators, setFieldState },
-      onSubmit: handleCreateProject
+      onSubmit: createProject
     })
+  )
+  const { handleCloseModal, resolveModal } = useModalBlockHistory(
+    closeNewProjectPopUp,
+    formRef.current
   )
 
   return (
     <PopUpDialog
       headerText="Create new project"
       className="create-project-dialog"
-      closePopUp={closeNewProjectPopUp}
+      closePopUp={handleCloseModal}
     >
       {projectStore.loading && <Loader />}
-      <Form form={formRef.current} onSubmit={handleCreateProject}>
+      <Form form={formRef.current} onSubmit={createProject}>
         {formState => {
           return (
             <>
@@ -119,7 +130,7 @@ const CreateProjectDialog = ({
                   variant={TERTIARY_BUTTON}
                   label="Cancel"
                   className="pop-up-dialog__btn_cancel"
-                  onClick={closeNewProjectPopUp}
+                  onClick={handleCloseModal}
                 />
                 <Button
                   disabled={projectStore.loading || isSubmitDisabled(formState)}
