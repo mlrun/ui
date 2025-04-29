@@ -27,18 +27,18 @@ import BreadcrumbsDropdown from '../../elements/BreadcrumbsDropdown/BreadcrumbsD
 import NavbarLink from '../../elements/NavbarLink2/NavbarLink'
 import { Button, RoundedIcon } from 'igz-controls/components'
 
-import { getLinks } from './Navbar.utils'
+import { getLinks } from './navbar.utils'
 import { scrollToElement } from '../../utils/scroll.util'
 import { generateProjectsList } from '../../utils/projects'
 import localStorageService from '../../utils/localStorageService'
 import { ALERTS_PAGE_PATH, NAVBAR_WIDTH_OPENED } from '../../constants'
 import { useDetectOutsideClick } from 'igz-controls/hooks'
 
-import { ReactComponent as Alerts } from 'igz-controls/images/navbar/alerts-icon.svg'
-import { ReactComponent as PinIcon } from 'igz-controls/images/pin-icon.svg'
-import { ReactComponent as UnPinIcon } from 'igz-controls/images/unpin-icon.svg'
-import { ReactComponent as SettingsIcon } from 'igz-controls/images/navbar/mlrun-project-settings.svg'
-import { ReactComponent as Caret } from 'igz-controls/images/dropdown.svg'
+import Alerts from 'igz-controls/images/navbar/alerts-icon.svg?react'
+import PinIcon from 'igz-controls/images/pin-icon.svg?react'
+import UnPinIcon from 'igz-controls/images/unpin-icon.svg?react'
+import SettingsIcon from 'igz-controls/images/navbar/mlrun-project-settings.svg?react'
+import Caret from 'igz-controls/images/dropdown.svg?react'
 
 import './Navbar.scss'
 
