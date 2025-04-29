@@ -252,7 +252,9 @@ BreadcrumbsStep.propTypes = {
       label: PropTypes.string
     }),
     tab: PropTypes.shape({
-      id: PropTypes.string
+      id: PropTypes.string,
+      label: PropTypes.string
+
     })
   }).isRequired
 }

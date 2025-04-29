@@ -22,11 +22,12 @@ import { NavLink, useLocation } from 'react-router-dom'
 import classNames from 'classnames'
 import PropTypes from 'prop-types'
 
-import { ReactComponent as ArrowIcon } from 'igz-controls/images/arrow.svg'
+import ArrowIcon from 'igz-controls/images/arrow.svg?react'
 
 import './NavbarLink.scss'
 
-const NavbarLink = ({ externalLink = false, icon = null, label = '', link = '', ...props }) => {
+
+const NavbarLink = ({ externalLink = false, icon = null, label, link = '', ...props }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const { pathname } = useLocation()
 
@@ -61,8 +62,10 @@ const NavbarLink = ({ externalLink = false, icon = null, label = '', link = '', 
 NavbarLink.propTypes = {
   externalLink: PropTypes.bool,
   icon: PropTypes.object,
+  id: PropTypes.string,
   label: PropTypes.string.isRequired,
-  link: PropTypes.string
+  link: PropTypes.string,
+  nestedLinks: PropTypes.array
 }
 
 export default React.memo(NavbarLink)

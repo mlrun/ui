@@ -1,6 +1,6 @@
-@import '~igz-controls/scss/variables';
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/variables';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
 
 .navbar {
   display: flex;
@@ -15,7 +15,7 @@
   height: 100%;
   width: 245px;
   max-width: 57px;
-  border-right: $tertiaryBorder;
+  border-right: borders.$tertiaryBorder;
   background-color: #f9f8f8;
   transition: max-width 0.3s ease-in-out;
 
@@ -90,7 +90,7 @@
         transition: transform 0.3s ease-in-out;
 
         & > * {
-          fill: $topaz;
+          fill: colors.$topaz;
         }
       }
 
@@ -165,7 +165,7 @@
       background-color: #f9f8f8;
       border-radius: 0 8px 8px 0;
       border-width: 1px 1px 1px 0;
-      border-color: $mischka;
+      border-color: colors.$mischka;
       border-style: solid;
       visibility: hidden;
       transition: all 0.3s ease-in-out;
@@ -179,7 +179,7 @@
 
   .breadcrumbs__dropdown-wrapper {
     top: 64px;
-    color: $topaz;
+    color: colors.$topaz;
     overflow: hidden;
 
     .breadcrumbs__dropdown {
