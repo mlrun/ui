@@ -1,0 +1,37 @@
+@use 'igz-controls/scss/colors';
+
+.monitoring-application__statistics-section {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 15px;
+  margin-bottom: 25px;
+
+
+  .monitoring-stats {
+    flex: 1;
+    padding: 15px;
+
+    &__red {
+      background-color: colors.$carouselPink;
+      border: 1px solid colors.$babyPink;
+    }
+
+    .stats-card__row:last-child {
+      padding-bottom: 10px;
+    }
+
+    .stats__counter {
+      font-weight: 500;
+      color: colors.$primary;
+      font-size: 28px;
+    }
+
+    .stats__status {
+      margin-bottom: 10px;
+    }
+
+    .stats__subtitle {
+      margin-right: 5px;
+    }
+  }
+}
