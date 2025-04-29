@@ -23,12 +23,12 @@ import Loader from './Loader'
 const LoaderForSuspenseFallback = () => {
   useLayoutEffect(() => {
     const overlayContainer = document.getElementById('overlay_container')
-    const savedDisplayStyle = overlayContainer ? overlayContainer.style.display : 'flex'
+    const savedVisibilityStyle = overlayContainer ? overlayContainer.style.visibility : 'visible'
 
-    if (overlayContainer) overlayContainer.style.display = 'none'
+    if (overlayContainer) overlayContainer.style.visibility = 'hidden'
 
     return () => {
-      if (overlayContainer) overlayContainer.style.display = savedDisplayStyle
+      if (overlayContainer) overlayContainer.style.visibility = savedVisibilityStyle
     }
   }, [])
 
