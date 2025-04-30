@@ -82,6 +82,7 @@ const ProjectsView = ({
       )}
       {createProject && (
         <CreateProjectDialog
+          isOpen={createProject}
           closeNewProjectPopUp={closeNewProjectPopUp}
           handleCreateProject={handleCreateProject}
         />

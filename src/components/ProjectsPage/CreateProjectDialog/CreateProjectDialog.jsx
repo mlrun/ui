@@ -49,20 +49,15 @@ const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject }) => {
     labels: []
   }
 
-  const createProject = data => {
-    handleCreateProject(data)
-    resolveModal()
-  }
-
   const formRef = React.useRef(
     createForm({
       initialValues,
       mutators: { ...arrayMutators, setFieldState },
-      onSubmit: createProject
+      onSubmit: handleCreateProject
     })
   )
   const dispatch = useDispatch()
-  const { handleCloseModal, resolveModal } = useModalBlockHistory(
+  const { handleCloseModal } = useModalBlockHistory(
     closeNewProjectPopUp,
     formRef.current
   )
@@ -74,7 +69,7 @@ const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject }) => {
       closePopUp={handleCloseModal}
     >
       {projectStore.loading && <Loader />}
-      <Form form={formRef.current} onSubmit={createProject}>
+      <Form form={formRef.current} onSubmit={handleCreateProject}>
         {formState => {
           return (
             <>
