@@ -33,6 +33,7 @@ import files from './page-objects/files.po'
 import models from './page-objects/models.po'
 import documents from './page-objects/documents.po'
 import alerts from './page-objects/alerts.po'
+import monitoringApp from './page-objects/monitoring-app.po'
 
 module.exports = {
   Add_To_Feature_Vector_Popup: interactivePopup['addToFeatureVectorPopup'],
@@ -90,6 +91,7 @@ module.exports = {
   Models_Info_Pane: infoPane['modelsInfoPane'],
   Modal_Transition_Popup: interactivePopup['modalTransitionPopup'],
   Modal_Wizard_Form: interactivePopup['modalWizardForm'],
+  Monitoring_App: monitoringApp['monitoringApp'],
   New_Feature_Set: sidePanel['newFeatureSet'],
   New_Function: sidePanel['newFunction'],
   New_JobTemplate_Edit: sidePanel['newJobTemplateEdit'],
