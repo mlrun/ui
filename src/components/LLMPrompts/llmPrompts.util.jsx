@@ -19,32 +19,22 @@ such restriction.
 */
 import React from 'react'
 
-import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
-
 import {
-  ARTIFACTS_TAB,
   ARTIFACT_MAX_DOWNLOAD_SIZE,
-  ARTIFACT_OTHER_TYPE,
-  ARTIFACT_TYPE,
-  FILES_PAGE,
-  FILES_TAB,
   FULL_VIEW_MODE,
-  ITERATIONS_FILTER,
-  LABELS_FILTER,
-  NAME_FILTER,
-  TAG_FILTER,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST,
-  SHOW_ITERATIONS
+  LLM_PROMPT_TYPE,
+  LLM_PROMPTS_PAGE,
+  LLM_PROMPTS_TAB
 } from '../../constants'
-import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
-import { copyToClipboard } from '../../utils/copyToClipboard'
 import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
-import { showArtifactsPreview } from '../../reducers/artifactsReducer'
-import { generateUri } from '../../utils/resources'
-import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
-import { openDeleteConfirmPopUp, openPopUp } from 'igz-controls/utils/common.util'
+import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
+import { copyToClipboard } from '../../utils/copyToClipboard'
+import { generateUri } from '../../utils/resources'
+import { openDeleteConfirmPopUp, openPopUp } from 'igz-controls/utils/common.util'
+import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
+import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
+import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 
 import TagIcon from 'igz-controls/images/tag-icon.svg?react'
 import YamlIcon from 'igz-controls/images/yaml.svg?react'
@@ -54,49 +44,43 @@ import Delete from 'igz-controls/images/delete.svg?react'
 import DownloadIcon from 'igz-controls/images/download.svg?react'
 import HistoryIcon from 'igz-controls/images/history.svg?react'
 
-export const pageDataInitialState = {
-  details: {
-    menu: [],
-    infoHeaders: []
-  },
-  filters: [],
-  page: '',
-  registerArtifactDialogTitle: '',
-  tableHeaders: []
-}
-
 export const detailsMenu = [
   {
     label: 'overview',
     id: 'overview'
   },
   {
-    label: 'preview',
-    id: 'preview'
+    label: 'prompt-template',
+    id: 'Prompt template'
+  },
+  {
+    label: 'generation-configuration',
+    id: 'Generation configuration'
   }
 ]
 
 export const infoHeaders = [
+  { label: 'Key', id: 'db_key' },
   {
     label: 'Hash',
     id: 'hash',
     tip: 'Represents hash of the data. when the data changes the hash would change'
   },
-  { label: 'Key', id: 'db_key' },
   { label: 'Version tag', id: 'tag' },
+  { label: 'Original source', id: 'original_source' },
   { label: 'Iter', id: 'iter' },
-  { label: 'Size', id: 'size' },
-  { label: 'Path', id: 'target_path' },
   { label: 'URI', id: 'target_uri' },
+  { label: 'Path', id: 'target_path' },
+  { label: 'UID', id: 'uid' },
   { label: 'Updated', id: 'updated' },
   { label: 'Labels', id: 'labels' }
 ]
 
 export const generatePageData = viewMode => {
   return {
-    page: FILES_PAGE,
+    page: LLM_PROMPTS_PAGE,
     details: {
-      type: FILES_TAB,
+      type: LLM_PROMPTS_TAB,
       menu: detailsMenu,
       infoHeaders,
       hideBackBtn: viewMode === FULL_VIEW_MODE,
@@ -104,8 +88,6 @@ export const generatePageData = viewMode => {
     }
   }
 }
-
-export const registerArtifactTitle = 'Register artifact'
 
 export const handleApplyDetailsChanges = (
   changes,
@@ -118,7 +100,7 @@ export const handleApplyDetailsChanges = (
 }
 
 export const generateActionsMenu = (
-  fileMin,
+  llmPromptMin,
   frontendSpec,
   dispatch,
   toggleConvertedYaml,
@@ -126,16 +108,18 @@ export const generateActionsMenu = (
   projectName,
   refreshArtifacts,
   refreshAfterDeleteCallback,
-  filters,
-  selectedFile,
+  llmPromptsFilters,
+  selectedLLMPrompt,
   showAllVersions,
   isAllVersions,
   isDetailsPopUp = false
 ) => {
-  const isTargetPathValid = getIsTargetPathValid(fileMin ?? {}, frontendSpec)
+  const isTargetPathValid = getIsTargetPathValid(llmPromptMin ?? {}, frontendSpec)
+  const datasetDataCouldBeDeleted =
+    llmPromptMin?.target_path?.endsWith('.pq') || llmPromptMin?.target_path?.endsWith('.parquet')
 
-  const getFullFile = fileMin => {
-    return chooseOrFetchArtifact(dispatch, FILES_TAB, selectedFile, fileMin)
+  const getFullLLMPrompt = llmPromptMin => {
+    return chooseOrFetchArtifact(dispatch, LLM_PROMPTS_TAB, selectedLLMPrompt, llmPromptMin)
   }
 
   return [
@@ -151,20 +135,20 @@ export const generateActionsMenu = (
         label: 'Download',
         disabled:
           !isTargetPathValid ||
-          fileMin.size >
-            (frontendSpec?.artifact_limits?.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
+          llmPromptMin.size >
+            (frontendSpec.artifact_limits.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
         icon: <DownloadIcon />,
-        onClick: fileMin => {
-          getFullFile(fileMin).then(file => {
-            if (file) {
-              const downloadPath = `${fileMin?.target_path}${fileMin?.model_file || ''}`
+        onClick: llmPromptMin => {
+          getFullLLMPrompt(llmPromptMin).then(llmPrompt => {
+            if (llmPrompt) {
+              const downloadPath = `${llmPrompt?.target_path}${llmPrompt?.model_file || ''}`
               dispatch(
                 setDownloadItem({
                   path: downloadPath,
-                  user: file.producer?.owner,
+                  user: llmPrompt.producer?.owner,
                   id: downloadPath,
                   artifactLimits: frontendSpec?.artifact_limits,
-                  fileSize: file.size,
+                  fileSize: llmPrompt.size,
                   projectName
                 })
               )
@@ -176,12 +160,13 @@ export const generateActionsMenu = (
       {
         label: 'Copy URI',
         icon: <Copy />,
-        onClick: file => copyToClipboard(generateUri(file, ARTIFACTS_TAB), dispatch)
+        onClick: llmPromptMin =>
+          copyToClipboard(generateUri(llmPromptMin, LLM_PROMPTS_TAB), dispatch)
       },
       {
         label: 'View YAML',
         icon: <YamlIcon />,
-        onClick: fileMin => getFullFile(fileMin).then(toggleConvertedYaml)
+        onClick: llmPromptMin => getFullLLMPrompt(llmPromptMin).then(toggleConvertedYaml)
       },
       {
         label: 'Delete',
@@ -189,36 +174,53 @@ export const generateActionsMenu = (
         hidden: isDetailsPopUp,
         className: 'danger',
         onClick: () =>
-          openPopUp(DeleteArtifactPopUp, {
-            artifact: fileMin,
-            artifactType: ARTIFACT_TYPE,
-            category: ARTIFACT_OTHER_TYPE,
-            filters,
-            refreshArtifacts,
-            refreshAfterDeleteCallback
-          }),
+          datasetDataCouldBeDeleted
+            ? openPopUp(DeleteArtifactPopUp, {
+                artifact: llmPromptMin,
+                artifactType: LLM_PROMPT_TYPE,
+                category: LLM_PROMPT_TYPE,
+                filters: llmPromptsFilters,
+                refreshArtifacts,
+                refreshAfterDeleteCallback
+              })
+            : openDeleteConfirmPopUp(
+                'Delete LLM Prompt?',
+                `Do you want to delete the LLM Prompt "${llmPromptMin.db_key}"? Deleted LLM Prompt can not be restored.`,
+                () => {
+                  handleDeleteArtifact(
+                    dispatch,
+                    projectName,
+                    llmPromptMin.db_key,
+                    llmPromptMin.uid,
+                    refreshArtifacts,
+                    refreshAfterDeleteCallback,
+                    llmPromptsFilters,
+                    LLM_PROMPT_TYPE
+                  )
+                }
+              ),
         allowLeaveWarning: true
       },
       {
         label: 'Delete all versions',
         icon: <Delete />,
-        hidden: isAllVersions || isDetailsPopUp,
+        hidden: isDetailsPopUp || isAllVersions,
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(
-            'Delete artifact?',
-            `Do you want to delete all versions of the artifact "${fileMin.db_key}"? Deleted artifacts can not be restored.`,
+            'Delete LLM Prompt?',
+            `Do you want to delete all versions of the LLM Prompt "${llmPromptMin.db_key}"? Deleted LLM prompt can not be restored.`,
             () => {
               handleDeleteArtifact(
                 dispatch,
                 projectName,
-                fileMin.db_key,
-                fileMin.uid,
+                llmPromptMin.db_key,
+                llmPromptMin.uid,
                 refreshArtifacts,
                 refreshAfterDeleteCallback,
-                filters,
-                ARTIFACT_TYPE,
-                ARTIFACT_OTHER_TYPE,
+                llmPromptsFilters,
+                LLM_PROMPT_TYPE,
+                LLM_PROMPT_TYPE,
                 true
               )
             }
@@ -231,21 +233,21 @@ export const generateActionsMenu = (
         id: 'show-all-versions',
         label: 'Show all versions',
         icon: <HistoryIcon />,
-        onClick: () => showAllVersions(fileMin.db_key),
+        onClick: () => showAllVersions(llmPromptMin.db_key),
         hidden: isAllVersions
       },
       {
         label: 'Preview',
-        id: 'artifact-preview',
+        id: 'llm-prompt-preview',
         disabled: !isTargetPathValid,
         icon: <ArtifactView />,
-        onClick: fileMin => {
-          getFullFile(fileMin).then(file => {
-            if (file) {
+        onClick: llmPromptMin => {
+          getFullLLMPrompt(llmPromptMin).then(llmPrompt => {
+            if (llmPrompt) {
               dispatch(
                 showArtifactsPreview({
                   isPreview: true,
-                  selectedItem: file
+                  selectedItem: llmPrompt
                 })
               )
             }

@@ -25,14 +25,7 @@ import {
   DOCUMENT_TYPE,
   DOCUMENTS_PAGE,
   DOCUMENTS_TAB,
-  FULL_VIEW_MODE,
-  ITERATIONS_FILTER,
-  LABELS_FILTER,
-  NAME_FILTER,
-  SHOW_ITERATIONS,
-  TAG_FILTER,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST
+  FULL_VIEW_MODE
 } from '../../constants'
 import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
@@ -53,21 +46,6 @@ import Copy from 'igz-controls/images/copy-to-clipboard-icon.svg?react'
 import Delete from 'igz-controls/images/delete.svg?react'
 import DownloadIcon from 'igz-controls/images/download.svg?react'
 import HistoryIcon from 'igz-controls/images/history.svg?react'
-
-export const getFiltersConfig = isAllVersions => ({
-  [NAME_FILTER]: { label: 'Name:', initialValue: '', hidden: isAllVersions },
-  [TAG_FILTER]: {
-    label: 'Version tag:',
-    initialValue: isAllVersions ? TAG_FILTER_ALL_ITEMS : TAG_FILTER_LATEST,
-    isModal: true
-  },
-  [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
-  [ITERATIONS_FILTER]: {
-    label: 'Show best iteration only:',
-    initialValue: isAllVersions ? '' : SHOW_ITERATIONS,
-    isModal: true
-  }
-})
 
 export const detailsMenu = [
   {

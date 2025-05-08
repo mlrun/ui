@@ -43,7 +43,7 @@ import ModelMonitoringIcon from 'igz-controls/images/navbar/model-monitoring.svg
 
 // import RTPiplinesIcon from 'igz-controls/images/timer-outline-icon.svg?react'
 
-export const getLinks = projectName => {
+export const getLinks = (projectName, isDemoMode) => {
   const pathname = `/projects/${projectName}`
 
   return [
@@ -81,7 +81,8 @@ export const getLinks = projectName => {
       icon: <LLMPrompts />,
       id: LLM_PROMPTS_TAB,
       label: 'LLM prompts',
-      link: `${pathname}/${LLM_PROMPTS_TAB}`
+      link: `${pathname}/${LLM_PROMPTS_TAB}`,
+      hidden: !isDemoMode
     },
     {
       icon: <ArtifactsIcon />,

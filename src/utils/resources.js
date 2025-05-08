@@ -23,6 +23,7 @@ import {
   DOCUMENTS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
+  LLM_PROMPTS_TAB,
   MODELS_TAB
 } from '../constants'
 import { isNil } from 'lodash'
@@ -34,7 +35,8 @@ export const generateUri = (item, tab) => {
     tab === MODELS_TAB ||
     tab === DATASETS_TAB ||
     tab === ARTIFACTS_TAB ||
-    tab === DOCUMENTS_TAB
+    tab === DOCUMENTS_TAB ||
+    tab === LLM_PROMPTS_TAB
   ) {
     uri += item.db_key
     uri += getArtifactReference(item)

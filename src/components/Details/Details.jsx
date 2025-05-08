@@ -45,6 +45,7 @@ import {
   FILES_TAB,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
+  LLM_PROMPTS_TAB,
   MODEL_ENDPOINTS_TAB,
   MODELS_TAB,
   VIEW_SEARCH_PARAMETER
@@ -154,7 +155,8 @@ const Details = ({
         pageData.details.type === MODELS_TAB ||
         pageData.details.type === MODEL_ENDPOINTS_TAB ||
         pageData.details.type === DATASETS_TAB ||
-        pageData.details.type === DOCUMENTS_TAB
+        pageData.details.type === DOCUMENTS_TAB ||
+        pageData.details.type === LLM_PROMPTS_TAB
       ) {
         dispatch(
           setDetailsInfo(

@@ -464,6 +464,7 @@ export const DATASET_TYPE = 'dataset'
 export const DOCUMENT_TYPE = 'document'
 export const MODEL_TYPE = 'model'
 export const ARTIFACT_OTHER_TYPE = 'other'
+export const LLM_PROMPT_TYPE = 'llm-prompt'
 
 /*=========== ROLES =============*/
 

@@ -27,14 +27,7 @@ import {
   DATASET_TYPE,
   DATASETS_PAGE,
   DATASETS_TAB,
-  FULL_VIEW_MODE,
-  ITERATIONS_FILTER,
-  LABELS_FILTER,
-  NAME_FILTER,
-  TAG_FILTER,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST,
-  SHOW_ITERATIONS
+  FULL_VIEW_MODE
 } from '../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
@@ -71,21 +64,6 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' }
 ]
 
-export const getFiltersConfig = isAllVersions => ({
-  [NAME_FILTER]: { label: 'Name:', initialValue: '', hidden: isAllVersions },
-  [TAG_FILTER]: {
-    label: 'Version tag:',
-    initialValue: isAllVersions ? TAG_FILTER_ALL_ITEMS : TAG_FILTER_LATEST,
-    isModal: true
-  },
-  [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
-  [ITERATIONS_FILTER]: {
-    label: 'Show best iteration only:',
-    initialValue: isAllVersions ? '' : SHOW_ITERATIONS,
-    isModal: true
-  }
-})
-
 export const registerDatasetTitle = 'Register dataset'
 
 export const generateDataSetsDetailsMenu = (selectedItem, isDemoMode) => [
@@ -100,12 +78,12 @@ export const generateDataSetsDetailsMenu = (selectedItem, isDemoMode) => [
   {
     label: 'metadata',
     id: 'metadata',
-    hidden: !selectedItem.schema
+    hidden: !selectedItem?.schema
   },
   {
     label: 'analysis',
     id: 'analysis',
-    hidden: !isDemoMode || !selectedItem.extra_data
+    hidden: !isDemoMode || !selectedItem?.extra_data
   }
 ]
 

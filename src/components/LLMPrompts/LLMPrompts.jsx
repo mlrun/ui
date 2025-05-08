@@ -17,48 +17,47 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback } from 'react'
+
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 
 import Artifacts from '../Artifacts/Artifacts'
 
-import { DOCUMENT_TYPE, DOCUMENTS_TAB } from '../../constants'
-import { generatePageData, handleApplyDetailsChanges, generateActionsMenu } from './documents.util'
-import { createDocumentsRowData } from '../../utils/createArtifactsContent'
-import { fetchDocuments, removeDocuments } from '../../reducers/artifactsReducer'
-import { parseChipsData } from '../../utils/convertChipsData'
+import { LLM_PROMPT_TYPE, LLM_PROMPTS_TAB } from '../../constants'
+import { createLLMPromptsRowData } from '../../utils/createArtifactsContent'
+import { fetchLLMPrompts, removeDataSets } from '../../reducers/artifactsReducer'
+import { generateActionsMenu, generatePageData, handleApplyDetailsChanges } from './llmPrompts.util'
 
-const Documents = ({ isAllVersions = false }) => {
+const LLMPrompts = ({ isAllVersions }) => {
   const artifactsStore = useSelector(store => store.artifactsStore)
 
   const generateDetailsFormInitialValues = useCallback(
-    (selectedDocument, internal_labels) => ({
-      tag: selectedDocument?.tag ?? '',
-      labels: parseChipsData(selectedDocument?.labels ?? {}, internal_labels)
+    selectedLLMPrompt => ({
+      tag: selectedLLMPrompt.tag ?? ''
     }),
     []
   )
 
   return (
     <Artifacts
-      artifactType={DOCUMENT_TYPE}
-      createArtifactsRowData={createDocumentsRowData}
-      fetchArtifacts={fetchDocuments}
+      artifactType={LLM_PROMPT_TYPE}
+      createArtifactsRowData={createLLMPromptsRowData}
+      fetchArtifacts={fetchLLMPrompts}
       generateActionsMenu={generateActionsMenu}
       generateDetailsFormInitialValues={generateDetailsFormInitialValues}
       generatePageData={generatePageData}
       handleApplyDetailsChanges={handleApplyDetailsChanges}
       isAllVersions={isAllVersions}
-      removeArtifacts={removeDocuments}
-      storeArtifactTypeLoading={artifactsStore.documents.modelLoading}
-      tab={DOCUMENTS_TAB}
+      removeArtifacts={removeDataSets}
+      storeArtifactTypeLoading={artifactsStore.LLMPrompts.LLMPromptLoading}
+      tab={LLM_PROMPTS_TAB}
     />
   )
 }
 
-Documents.propTypes = {
+LLMPrompts.propTypes = {
   isAllVersions: PropTypes.bool.isRequired
 }
 
-export default Documents
+export default LLMPrompts
