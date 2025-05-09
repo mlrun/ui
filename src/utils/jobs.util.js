@@ -24,8 +24,10 @@ import {
   DATES_FILTER,
   FE_PAGE,
   FILTER_ALL_ITEMS,
+  JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_SCHEDULED_TAB,
   LABELS_FILTER,
+  MONITOR_JOBS_TAB,
   NAME_FILTER,
   PROJECT_FILTER,
   PROJECTS_FILTER_ALL_ITEMS,
@@ -56,6 +58,7 @@ export const checkForSelectedJob = debounce(
   (
     paginatedJobs,
     jobRuns,
+    jobs,
     jobName,
     jobId,
     projectName,
@@ -73,8 +76,9 @@ export const checkForSelectedJob = debounce(
     if (jobId && runProject) {
       const searchBePage = parseInt(searchParams.get(BE_PAGE))
       const configBePage = paginationConfigJobsRef.current[BE_PAGE]
+      const jobsList = jobName ? jobRuns : jobs
 
-      if (jobRuns && searchBePage === configBePage && lastCheckedJobIdRef.current !== jobId) {
+      if (jobsList && searchBePage === configBePage && lastCheckedJobIdRef.current !== jobId) {
         lastCheckedJobIdRef.current = jobId
 
         dispatch(
@@ -87,7 +91,7 @@ export const checkForSelectedJob = debounce(
           .then(job => {
             const parsedJob = parseJob(job)
             if (!parsedJob) {
-              navigate(getCloseDetailsLink(jobName, true), { replace: true })
+              navigate(getCloseDetailsLink(jobName || (projectName ? MONITOR_JOBS_TAB : JOBS_MONITORING_JOBS_TAB), true), { replace: true })
             } else if (parsedJob) {
               const findJobIndex = jobsList =>
                 jobsList.findIndex(job => {
@@ -96,7 +100,7 @@ export const checkForSelectedJob = debounce(
 
               const itemIndexInPaginatedList = findJobIndex(paginatedJobs)
               const itemIndexInMainList =
-                itemIndexInPaginatedList !== -1 ? itemIndexInPaginatedList : findJobIndex(jobRuns)
+                itemIndexInPaginatedList !== -1 ? itemIndexInPaginatedList : findJobIndex(jobsList)
 
               if (itemIndexInPaginatedList === -1) {
                 if (itemIndexInMainList > -1) {
@@ -116,6 +120,7 @@ export const checkForSelectedJob = debounce(
             }
           })
           .catch(error => {
+            navigate(getCloseDetailsLink(jobName || (projectName ? MONITOR_JOBS_TAB : JOBS_MONITORING_JOBS_TAB), true), { replace: true })
             showErrorNotification(
               dispatch,
               error,
