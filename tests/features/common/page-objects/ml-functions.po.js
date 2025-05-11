@@ -56,11 +56,6 @@ const functionsTable = {
     row: {
       root: '.table-row',  
       fields: {
-        expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link', 
-        tag: '.table-body__cell:nth-of-type(1) a .item-tag span',
-        name_expand_btn: '.table-body__cell:nth-of-type(1) a .name-wrapper .item-tag',
-        status: '.table-body__cell:nth-of-type(1) .status i',
         kind: {
           componentType: labelComponent,
           structure: generateLabelGroup(
@@ -70,6 +65,11 @@ const functionsTable = {
             '.tooltip .tooltip__text span' 
           )
         },
+        expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
+        name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link', 
+        tag: '.table-body__cell:nth-of-type(1) a .item-tag span',
+        name_expand_btn: '.table-body__cell:nth-of-type(1) a .name-wrapper .item-tag',
+        status: '.table-body__cell:nth-of-type(1) .status i',
         hash: '.table-body__cell:nth-of-type(3) .data-ellipsis span',
         updated: '.table-body__cell:nth-of-type(4) .data-ellipsis',
         command: '.table-body__cell:nth-of-type(5) .data-ellipsis',

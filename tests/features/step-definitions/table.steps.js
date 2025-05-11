@@ -1492,8 +1492,8 @@ Then(
 )
 
 Then(
-  'verify {string} option on {string} wizard in {string} table with {string} value in {string} column should display hover tooltip {string}.{string}',
-  async function (option, wizard, table, value, column, constStorage, constValue) {
+  'verify {string} option on {string} wizard in {string} table with {string} value in {string} column should display hover tooltip {string}.{string} with scroll {string}',
+  async function (option, wizard, table, value, column, constStorage, constValue, scroll) {
     const arr = await findRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][table],
@@ -1510,7 +1510,8 @@ Then(
 
     await hoverComponent(
       this.driver,
-      pageObjects[wizard][table]['tableFields'][column](indx)
+      pageObjects[wizard][table]['tableFields'][column](indx),
+      ...(scroll === 'false' ? [false] : [])
     )
     await this.driver.sleep(500)
 	  await checkComponentHintTextWithHover(
@@ -1545,8 +1546,8 @@ Then(
 )
 
 Then(
-  'click on {string} option on {string} wizard in {string} table with {string} value in {string} column',
-  async function (option, wizard, table, value, column) {
+  'click on {string} option on {string} wizard in {string} table with {string} value in {string} column with scroll {string}',
+  async function (option, wizard, table, value, column, scroll) {
     const arr = await findRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][table],
@@ -1563,7 +1564,8 @@ Then(
 
     await hoverComponent(
       this.driver,
-      pageObjects[wizard][table]['tableFields'][column](indx)
+      pageObjects[wizard][table]['tableFields'][column](indx),
+      ...(scroll === 'false' ? [false] : [])
     )
     await this.driver.sleep(250)
     await clickOnComponent(this.driver, actionMenuSel)

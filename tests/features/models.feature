@@ -8,6 +8,7 @@ Feature: Models Page
   @smoke
   Scenario: MLM001 - Check all mandatory components on Models tab
     Given open url
+    And wait load page
     When turn on demo mode with query params "false"
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -134,6 +135,7 @@ Feature: Models Page
   @smoke
   Scenario: MLM005 - Verify behaviour of Show iterations checkbox and Show all versions on Models tab
     Given open url
+    And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -151,8 +153,8 @@ Feature: Models Page
     And wait load page
     Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
     Then verify "show_all_versions" option is present on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
-    Then verify "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions"
-    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
+    Then verify "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions" with scroll "false"
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column with scroll "false"
     And wait load page
     Then verify "History_Back_Button" element visibility on "Models" wizard
     Then verify "Version_History_Title" element visibility on "Models" wizard
@@ -189,6 +191,7 @@ Feature: Models Page
     Then verify "History_Back_Button" element not exists on "Models" wizard
     Then verify "Version_History_Title" element not exists on "Models" wizard
     And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    And wait load page
     And select "Models" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
     Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
@@ -291,6 +294,7 @@ Feature: Models Page
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
   Scenario: MLM009 - Check all mandatory components on Register Model Popup
     Given open url
+    And wait load page
     When turn on demo mode with query params "false"
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -385,6 +389,7 @@ Feature: Models Page
   Scenario: MLM010 - Verify behaviour on Register new Model
     # * set tear-down property "model" created in "default" project with "automation-model" value
     Given open url
+    And wait load page
     When turn on demo mode with query params "false"
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -594,7 +599,7 @@ Feature: Models Page
     Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     Then click on "Cross_Close_Button" element on "Models_Info_Pane" wizard
     And wait load page
-    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_adaboost" value in "name" column
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_adaboost" value in "name" column with scroll "false"
     And wait load page
     Then verify that 2 row elements are displayed in "Models_Table" on "Models" wizard
     Then click on "Table_FilterBy_Button" element on "Models" wizard
@@ -623,15 +628,10 @@ Feature: Models Page
     Then "No_Data_Message" element on "commonPagesHeader" should contains "No data matches the filter: \"Version tag: testTag\"" value
     Then click on "History_Back_Button" element on "Models" wizard
     And wait load page
-    Then verify "Table_FilterBy_Button" element visibility on "Models" wizard
-    Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
-    And wait load page
     Then verify action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then verify that in action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column "Delete" option is enabled
     Then verify that in action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column "Delete all versions" option is enabled
-    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column with scroll "false"
     And wait load page
     Then verify that 1 row elements are displayed in "Models_Table" on "Models" wizard
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
@@ -652,7 +652,7 @@ Feature: Models Page
       And hover "MLRun_Logo" component on "commonPagesHeader" wizard
       And wait load page
       Then verify "preview" option is present on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
-      Then click on "preview" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
+      Then click on "preview" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column with scroll "false"
       And wait load page
       Then verify if "Preview_Popup" popup dialog appears
       Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
@@ -705,7 +705,7 @@ Feature: Models Page
       And hover "MLRun_Logo" component on "commonPagesHeader" wizard
       And wait load page
       Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
-      Then click on "deploy" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
+      Then click on "deploy" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column with scroll "false"
       Then verify if "Common_Popup" popup dialog appears
       Then "Title" element on "Common_Popup" should contains "Model cannot be deployed" value
       Then "Message" component on "Common_Popup" should contains "Messages"."How_To_Create"
@@ -715,7 +715,7 @@ Feature: Models Page
       And wait load page
       Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
       Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column
-      Then click on "deploy" option on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column
+      Then click on "deploy" option on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column with scroll "false"
       Then verify if "Deploy_Model_Popup" popup dialog appears
       Then verify "Title" element visibility on "Deploy_Model_Popup" wizard
       Then "Title" element on "Deploy_Model_Popup" should contains "Deploy Model" value
@@ -878,14 +878,14 @@ Feature: Models Page
     And wait load page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "automation-test-model" value in "name" column
-    Then click on "deploy" option on "Models" wizard in "Models_Table" table with "automation-test-model" value in "name" column
+    Then click on "deploy" option on "Models" wizard in "Models_Table" table with "automation-test-model" value in "name" column with scroll "false"
     Then verify if "Deploy_Model_Popup" popup dialog appears
     Then navigate back
     Then verify "Title" element not exists on "Deploy_Model_Popup" wizard
     Then navigate forward
     Then verify "Title" element not exists on "Deploy_Model_Popup" wizard
     Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "automation-test-model" value in "name" column
-    Then click on "deploy" option on "Models" wizard in "Models_Table" table with "automation-test-model" value in "name" column
+    Then click on "deploy" option on "Models" wizard in "Models_Table" table with "automation-test-model" value in "name" column with scroll "false"
     Then verify if "Deploy_Model_Popup" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "Deploy_Model_Popup" wizard
     Then verify "Serving_Function_Dropdown" element visibility on "Deploy_Model_Popup" wizard
@@ -952,7 +952,7 @@ Feature: Models Page
      And wait load page
      And hover "MLRun_Logo" component on "commonPagesHeader" wizard
      Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column
-     Then click on "deploy" option on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column
+     Then click on "deploy" option on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column with scroll "false"
      Then verify if "Deploy_Model_Popup" popup dialog appears
      When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
        | Class_Argument_Name_Input | Class_Argument_Value_Input | Add_New_Row_Button | Delete_New_Row_Button |
@@ -1249,7 +1249,7 @@ Feature: Models Page
     Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     Then click on "Cross_Close_Button" element on "Models_Info_Pane" wizard
     And wait load page
-    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_adaboost" value in "name" column
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_adaboost" value in "name" column with scroll "false"
     And wait load page
     When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
@@ -1272,7 +1272,7 @@ Feature: Models Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_adaboost" value in "name" column
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_adaboost" value in "name" column with scroll "false"
     And wait load page
     When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
@@ -1324,7 +1324,7 @@ Feature: Models Page
     Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     Then click on "Cross_Close_Button" element on "Models_Info_Pane" wizard
     And wait load page
-    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column with scroll "false"
     And wait load page
     When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
@@ -1355,13 +1355,13 @@ Feature: Models Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
+    Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
+    And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
     And wait load page
     Then "Version_Tag_Value" element on "FilterBy_Popup" should contains "latest" attribute value
-    Then select "All tags" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
     And wait load page
-    Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
     Then select "Add a tag" option in action menu on "Models" wizard in "Models_Table" table at row with "transaction_fraud_xgboost" value in "name" column
     And wait load page
     Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
@@ -1375,7 +1375,7 @@ Feature: Models Page
     And wait load page
     Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
     Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
-    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column with scroll "false"
     And wait load page
     Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
     Then click on "Table_FilterBy_Button" element on "Models" wizard
@@ -1397,12 +1397,28 @@ Feature: Models Page
     When save to context "versionHistoryName" page value from "Version_History_Model_Name" element on "Models" wizard
     Then compare "Header" element value on "Models_Info_Pane" wizard with test "versionHistoryName" context value
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then "Version_Tag_Value" element on "FilterBy_Popup" should contains "All" attribute value
+    Then "Version_Tag_Value" element on "FilterBy_Popup" should contains "All tags" attribute value
+    Then click on "History_Back_Button" element on "Models" wizard
+    And wait load page
+    Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
+    And wait load page
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then "Version_Tag_Value" element on "FilterBy_Popup" should contains "latest" attribute value
+    Then select "latest123456" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    And wait load page
+    Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
+    And wait load page
+    Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column with scroll "false"
+    And wait load page
+    Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
+    And wait load page
     Then click on "History_Back_Button" element on "Models" wizard
     And wait load page
     Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
+    And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then "Version_Tag_Value" element on "FilterBy_Popup" should contains "All" attribute value
+    Then "Version_Tag_Value" element on "FilterBy_Popup" should contains "latest123456" attribute value
 
   @MLM
   @smoke
