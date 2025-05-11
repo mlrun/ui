@@ -32,19 +32,19 @@ const NavbarLink = ({ externalLink = false, icon = null, label, link = '', ...pr
   const { pathname } = useLocation()
 
   const parentLinkClasses = classNames(
-    'nav-link__button btn btn-secondary nav-link__parent',
+    'nav-link__button btn nav-link__parent',
     pathname.includes(props.id || link) && 'active',
     isExpanded && 'expended'
   )
 
   return externalLink ? (
-    <a href={link} target="_top" className="nav-link__button btn btn-secondary">
-      {icon}
+    <a href={link} target="_top" className="nav-link__button btn">
+      <span className="nav-link__icon">{icon}</span>
       <span className="nav-link__label">{label}</span>
     </a>
   ) : props.nestedLinks ? (
     <div onClick={() => setIsExpanded(!isExpanded)} className={parentLinkClasses}>
-      {icon}
+      <span className="nav-link__icon">{icon}</span>
       <span className="nav-link__label">{label}</span>
 
       <span className="nav-link__arrow">
@@ -52,8 +52,8 @@ const NavbarLink = ({ externalLink = false, icon = null, label, link = '', ...pr
       </span>
     </div>
   ) : (
-    <NavLink to={link} className="nav-link__button btn btn-secondary" activeclassname="active">
-      {icon}
+    <NavLink to={link} className="nav-link__button btn" activeclassname="active">
+      <span className="nav-link__icon">{icon}</span>
       <span className="nav-link__label">{label}</span>
     </NavLink>
   )
