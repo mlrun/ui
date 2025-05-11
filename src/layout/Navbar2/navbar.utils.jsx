@@ -33,7 +33,7 @@ import NuclioIcon from 'igz-controls/images/navbar/mlrun-realtime-functions.svg?
 import FeatureStoreIcon from 'igz-controls/images/navbar/mlrun-feature-store.svg?react'
 import Documents from 'igz-controls/images/navbar/documents-icon.svg?react'
 
-export const getLinks = projectName => {
+export const getLinks = (projectName, isDemoMode) => {
   const pathname = `/projects/${projectName}`
 
   return [
@@ -43,11 +43,13 @@ export const getLinks = projectName => {
       label: 'Project monitoring',
       link: `${pathname}/${PROJECT_MONITOR}`
     },
+    // Remove this link and related page when the new navbar is approved is ready
     {
       icon: <HomepageIcon />,
       id: PROJECT_QUICK_ACTIONS_PAGE,
       label: 'Quick actions',
-      link: `${pathname}/${PROJECT_QUICK_ACTIONS_PAGE}`
+      link: `${pathname}/${PROJECT_QUICK_ACTIONS_PAGE}`,
+      hidden: !isDemoMode
     },
     {
       icon: <FeatureStoreIcon />,
