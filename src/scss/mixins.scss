@@ -5,7 +5,8 @@
     }
   }
 
-  .table-body-row:not(.parent-row_expanded), .row_grouped-by .table-row {
+  .table-body-row:not(.parent-row_expanded),
+  .row_grouped-by .table-row {
     height: #{$rowHeight}px;
   }
 

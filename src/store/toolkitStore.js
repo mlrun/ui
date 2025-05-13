@@ -53,11 +53,9 @@ const toolkitStore = configureStore({
     tasksStore,
     workflowsStore
   },
-  // todo: remove this when redux is removed and switched to redux-toolkit
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
-      serializableCheck: false,
-      immutableCheck: false
+      serializableCheck: false
     })
 })
 

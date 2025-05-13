@@ -1,4 +1,4 @@
-@import '~igz-controls/scss/colors';
+@use 'igz-controls/scss/colors';
 
 .feature-row {
   display: flex;
@@ -48,11 +48,11 @@
   }
 
   .feature-row__feature-set-tag {
-    color: $mineshaft;
+    color: colors.$mineshaft;
   }
 
   .feature-row__feature-alias-preposition {
-    color: $spunPearl;
+    color: colors.$spunPearl;
   }
 
   .feature-row__actions {
@@ -68,13 +68,13 @@
 
       path,
       rect {
-        fill: $malibu;
+        fill: colors.$malibu;
       }
 
       &:hover {
         path,
         rect {
-          fill: $cornflowerBlue;
+          fill: colors.$cornflowerBlue;
         }
       }
     }
@@ -89,4 +89,3 @@
     visibility: hidden;
   }
 }
-

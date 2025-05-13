@@ -1,7 +1,7 @@
-@import '~igz-controls/scss/mixins';
+@use 'igz-controls/scss/mixins';
 
 .parameters-table {
-  @include newItemSidePanelTable;
+  @include mixins.newItemSidePanelTable;
 
   .edit-row {
     .input-wrapper {

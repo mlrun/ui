@@ -1,11 +1,11 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
 
 .recurring-container {
   user-select: none;
 
   span {
-    color: $primary;
+    color: colors.$primary;
   }
 
   .repeat_container {
@@ -32,17 +32,17 @@
           width: 32px;
           height: 32px;
           margin-right: 4px;
-          color: $spunPearl;
+          color: colors.$spunPearl;
           line-height: 32px;
           text-align: center;
-          border: $primaryBorder;
+          border: borders.$primaryBorder;
           border-radius: 16px;
           cursor: pointer;
 
           &.active {
-            color: $white;
-            background-color: $malibu;
-            border: $transparentBorder;
+            color: colors.$white;
+            background-color: colors.$malibu;
+            border: borders.$transparentBorder;
           }
         }
       }

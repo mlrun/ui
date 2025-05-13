@@ -510,7 +510,7 @@ const artifactsSlice = createSlice({
     builder.addCase(fetchArtifactsFunction.pending, state => {
       state.pipelines.loading = true
     })
-    builder.addCase(fetchArtifactsFunction.fulfilled, (state, action) => {
+    builder.addCase(fetchArtifactsFunction.fulfilled, state => {
       state.error = null
       state.pipelines.loading = false
     })

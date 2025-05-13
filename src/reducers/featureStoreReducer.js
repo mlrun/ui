@@ -17,23 +17,23 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { PANEL_DEFAULT_ACCESS_KEY } from '../constants'
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import featureStoreApi from '../api/featureStore-api'
-import { showErrorNotification } from '../utils/notifications.util'
-import { hideLoading, showLoading } from './redux.util'
-import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import { parseFeatures } from '../utils/parseFeatures'
-import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
-import { parseFeatureSets } from '../utils/parseFeatureSets'
 import {
   getFeatureIdentifier,
   getFeatureSetIdentifier,
   getFeatureVectorIdentifier
 } from '../utils/getUniqueIdentifier'
-import { parseFeatureVectors } from '../utils/parseFeatureVectors'
-import { isCommunityEdition } from '../utils/helper'
+import featureStoreApi from '../api/featureStore-api'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { PANEL_DEFAULT_ACCESS_KEY } from '../constants'
 import { REDISNOSQL } from '../components/FeatureSetsPanel/FeatureSetsPanelTargetStore/featureSetsPanelTargetStore.util'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { hideLoading, showLoading } from './redux.util'
+import { isCommunityEdition } from '../utils/helper'
+import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
+import { parseFeatureSets } from '../utils/parseFeatureSets'
+import { parseFeatureVectors } from '../utils/parseFeatureVectors'
+import { parseFeatures } from '../utils/parseFeatures'
+import { showErrorNotification } from '../utils/notifications.util'
 
 const initialState = {
   error: null,
@@ -540,18 +540,5 @@ export const {
   setNewFeatureSetTarget,
   setNewFeatureSetVersion
 } = featureStoreSlice.actions
-export default featureStoreSlice.reducer
 
-// const featureStoreReducer = (state = initialState, { type, payload }) => {
-//     case START_FEATURE_SET_INGEST_SUCCESS:
-//       return {
-//         ...state,
-//         loading: false,
-//         error: null
-//       }
-//     default:
-//       return state
-//   }
-// }
-//
-// export default featureStoreReducer
+export default featureStoreSlice.reducer

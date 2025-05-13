@@ -1,0 +1,34 @@
+.alerts-container {
+  margin-top: 10px;
+
+  &__wrapper{
+    height: 100%;
+    display: flex;
+  }
+  &__content-info {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    margin-bottom: 15px;
+    line-height: 20px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .item-info {
+    align-content: flex-start;
+  }
+
+  .alerts-table {
+    &__metrics {
+      margin: 8px 12px;
+    }
+
+    &__content {
+      padding: 0;
+    }
+  }
+}

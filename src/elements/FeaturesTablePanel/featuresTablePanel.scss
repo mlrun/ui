@@ -1,5 +1,5 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
 
 .features-panel {
   display: flex;
@@ -18,7 +18,7 @@
 
   .features-panel__header-project {
     margin-bottom: 10px;
-    color: $topaz;
+    color: colors.$topaz;
     font-weight: bold;
     font-size: 14px;
   }
@@ -36,7 +36,7 @@
       &-tag {
         min-width: 25px;
         margin-left: 5px;
-        color: $topaz;
+        color: colors.$topaz;
         font-weight: normal;
         font-size: 16px;
       }
@@ -68,7 +68,7 @@
     justify-content: flex-end;
     width: 100%;
     padding: 10px 15px;
-    background-color: $white;
+    background-color: colors.$white;
 
     .btn {
       margin-right: 10px;
@@ -79,7 +79,7 @@
     width: 100%;
     height: 1px;
     margin: 15px 0;
-    border-bottom: $dividerBorder;
+    border-bottom: borders.$dividerBorder;
   }
 
   .features-panel__expand-item {
@@ -106,7 +106,7 @@
     }
 
     .features-panel__empty-content {
-      color: $topaz;
+      color: colors.$topaz;
     }
 
     .accordion__body {
@@ -126,11 +126,11 @@
     font-size: 15px;
 
     .feature-row__feature-set-tag {
-      color: $mineshaft;
+      color: colors.$mineshaft;
     }
 
     .feature-row__feature-alias-preposition {
-      color: $spunPearl;
+      color: colors.$spunPearl;
     }
 
     .feature-row__actions {

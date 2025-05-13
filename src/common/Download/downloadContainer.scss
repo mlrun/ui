@@ -1,5 +1,5 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/shadows';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/shadows';
 
 .download-container {
   position: relative;
@@ -10,10 +10,10 @@
   min-height: 90px;
   max-height: 200px;
   padding: 15px;
-  color: $white;
-  background-color: $darkPurple;
+  color: colors.$white;
+  background-color: colors.$darkPurple;
   border-radius: 5px;
-  box-shadow: $tooltipShadow;
+  box-shadow: shadows.$tooltipShadow;
   margin-right: 24px;
   margin-bottom: 10px;
 
@@ -40,11 +40,11 @@
 
       &__message {
         &_succeed {
-          color: $brightTurquoise;
+          color: colors.$brightTurquoise;
         }
 
         &_failed {
-          color: $burntSienna;
+          color: colors.$burntSienna;
         }
       }
 

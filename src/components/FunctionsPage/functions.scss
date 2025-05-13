@@ -1,12 +1,22 @@
-@import '~igz-controls/scss/variables';
-@import 'src/scss/mixins';
+@use 'igz-controls/scss/variables';
+@use '/src/scss/mixins';
 
-$functionsRowHeight: $rowHeight;
-$functionsHeaderRowHeight: $headerRowHeight;
-$functionsRowHeightExtended: $rowHeightExtended;
+$functionsRowHeight: variables.$rowHeight;
+$functionsHeaderRowHeight: variables.$headerRowHeight;
+$functionsRowHeightExtended: variables.$rowHeightExtended;
+
+:root {
+  --functionsRowHeight: #{$functionsRowHeight};
+  --functionsHeaderRowHeight: #{$functionsHeaderRowHeight};
+  --functionsRowHeightExtended: #{$functionsRowHeightExtended};
+}
 
 .functions-table {
-  @include rowsHeight($functionsHeaderRowHeight, $functionsRowHeight, $functionsRowHeightExtended);
+  @include mixins.rowsHeight(
+    $functionsHeaderRowHeight,
+    $functionsRowHeight,
+    $functionsRowHeightExtended
+  );
 
   .table {
     &-row {
@@ -17,10 +27,4 @@ $functionsRowHeightExtended: $rowHeightExtended;
       }
     }
   }
-}
-
-:export {
-  functionsRowHeight: $functionsRowHeight;
-  functionsHeaderRowHeight: $functionsHeaderRowHeight;
-  functionsRowHeightExtended: $functionsRowHeightExtended;
 }

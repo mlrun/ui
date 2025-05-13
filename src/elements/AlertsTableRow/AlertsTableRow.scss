@@ -1,9 +1,7 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
 
 .alert-row {
-  flex-wrap: wrap;
-
   .table-body__cell.alert-row-notification-cell {
     min-width: 150px;
   }
@@ -48,14 +46,14 @@
       left: 14px;
 
       path {
-        fill: $burntSienna;
+        fill: colors.$burntSienna;
       }
 
       svg {
         width: 14px;
         height: 14px;
         padding: 1px;
-        background-color: $white;
+        background-color: colors.$white;
         border-radius: 50%;
       }
     }
@@ -85,7 +83,7 @@
 
   &:not(:last-child) {
     margin-right: 12px;
-    border-right: $secondaryBorder;
+    border-right: borders.$secondaryBorder;
   }
 
   &_icon {
@@ -111,7 +109,7 @@
     font-size: 10px;
 
     &-text {
-      color: $topaz;
+      color: colors.$topaz;
       font-size: 15px;
 
       &_failed {
@@ -119,7 +117,7 @@
       }
 
       &_success {
-        color: $ceriseRed;
+        color: colors.$ceriseRed;
       }
     }
   }

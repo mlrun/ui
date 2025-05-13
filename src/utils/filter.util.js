@@ -39,7 +39,7 @@ export const saveAndTransformSearchParams = (
   return searchParams ? `${newSearchParams}${SAVED_PARAMS}=${btoa(searchParams)}` : ''
 }
 
-export const transformSearchParams = (params) => {
+export const transformSearchParams = params => {
   return params ? `${SAVED_PARAMS}=${btoa(params)}` : ''
 }
 

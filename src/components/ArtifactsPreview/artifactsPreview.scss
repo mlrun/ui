@@ -1,5 +1,5 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
 
 .accordion__container.open {
   height: auto;
@@ -21,7 +21,7 @@
         display: flex;
         align-items: center;
         margin: 0 0 15px 0;
-        color: $topaz;
+        color: colors.$topaz;
         font-weight: 500;
         font-size: 20px;
         line-height: 23px;

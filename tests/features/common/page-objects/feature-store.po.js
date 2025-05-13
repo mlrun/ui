@@ -34,9 +34,9 @@ const tabSelector = {
   root: '.content-menu',
   header: {},
   body: {
-    root: '.content-menu__list',
+    root: '.content-menu__tabs',
     row: {
-      root: '.content-menu__item',
+      root: '.content-menu__tab',
       fields: {
         key: ''
       }
@@ -298,6 +298,7 @@ const datasetsTable = {
       root: '.table-row',
       fields: {
         name: '.table-body__cell:nth-of-type(1) a .link',
+        uid:  '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
         tag: '.table-body__cell:nth-of-type(1) a .item-tag',
         name_expand_btn: '.table-body__cell:nth-of-type(1) a .name-wrapper .item-tag',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
@@ -422,7 +423,14 @@ module.exports = {
     Table_Name_Filter_Input: commonNameFilterInputDataset,
     Table_FilterBy_Button: tableFilterByButton,
     Table_Refresh_Button: tableRefreshButton,
-    Datasets_Table: commonTable(datasetsTable)
+    Datasets_Table: commonTable(datasetsTable),
+    History_Back_Button: By.css('.history-back-link .history-back-link__icon'),
+    Version_History_Title: By.css(
+      '.history-back-link .history-back-link__title [data-testid="version-history"]'
+    ),
+    Version_History_Model_Name: By.css(
+      '.history-back-link .history-back-link__title .data-ellipsis.tooltip-wrapper'
+    )
   },
   addToFeatureVector: {
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,

@@ -1,5 +1,5 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
 
 .card-template {
   flex: 0 0 40%;
@@ -10,8 +10,8 @@
   margin-right: 16px;
   margin-bottom: 16px;
   padding: 25px;
-  background-color: $white;
-  border: $primaryBorder;
+  background-color: colors.$white;
+  border: borders.$primaryBorder;
   border-radius: 4px;
   cursor: pointer;
 
@@ -27,11 +27,11 @@
   &__tag {
     display: inline-block;
     margin-right: 5px;
-    color: $primary;
+    color: colors.$primary;
   }
 
   &__description {
-    color: $topaz;
+    color: colors.$topaz;
     font-size: 13px;
     line-height: 21px;
     height: 42px;

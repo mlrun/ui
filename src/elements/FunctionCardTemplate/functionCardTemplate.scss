@@ -1,6 +1,6 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/shadows';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/shadows';
 
 .job-card-template {
   display: flex;
@@ -9,23 +9,23 @@
   min-height: 165px;
   position: relative;
   padding: 15px;
-  background-color: $white;
-  border: $primaryBorder;
+  background-color: colors.$white;
+  border: borders.$primaryBorder;
   border-radius: 8px;
   cursor: pointer;
   transition: box-shadow 0.3s ease-in-out;
 
   &:hover {
-    box-shadow: $previewBoxShadow;
+    box-shadow: shadows.$previewBoxShadow;
   }
 
   &.selected {
-    border: 1px solid $malibu;
-    outline: 1px solid $malibu;
+    border: 1px solid colors.$malibu;
+    outline: 1px solid colors.$malibu;
 
     .job-card-template__header,
     .job-card-template__sub-header {
-      color: $malibu;
+      color: colors.$malibu;
     }
   }
 
@@ -51,8 +51,8 @@
     margin: 0;
     padding: 6px;
     border-radius: 4px 0 0 4px;
-    color: $amethyst;
-    background-color: $frenchLilac;
+    color: colors.$amethyst;
+    background-color: colors.$frenchLilac;
     font-size: 10px;
     font-weight: bold;
   }
@@ -60,7 +60,7 @@
   &__description {
     height: 100%;
     margin-bottom: 10px;
-    color: $topaz;
+    color: colors.$topaz;
     font-size: 13px;
     white-space: normal;
   }

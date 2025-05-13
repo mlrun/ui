@@ -1,6 +1,6 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/variables';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/variables';
 
 .chips-input-container {
   position: relative;
@@ -9,9 +9,9 @@
   align-items: center;
   min-height: 40px;
   padding: 4px 0;
-  background-color: $white;
-  border: $primaryBorder;
-  border-radius: $mainBorderRadius;
+  background-color: colors.$white;
+  border: borders.$primaryBorder;
+  border-radius: variables.$mainBorderRadius;
 
   .suggestion-list {
     position: absolute;
@@ -19,9 +19,9 @@
     left: 0;
     z-index: 5;
     width: 100%;
-    background-color: $white;
-    border: $primaryBorder;
-    border-radius: $mainBorderRadius;
+    background-color: colors.$white;
+    border: borders.$primaryBorder;
+    border-radius: variables.$mainBorderRadius;
     max-height: 200px;
     overflow-y: auto;
 
@@ -32,13 +32,13 @@
       padding: 5px 15px;
 
       &:not(.disabled):hover {
-        background-color: $alabaster;
+        background-color: colors.$alabaster;
         cursor: pointer;
       }
 
       &.disabled {
         .suggestion-row-value {
-          color: $spunPearl;
+          color: colors.$spunPearl;
         }
       }
 
@@ -48,7 +48,7 @@
       }
 
       .suggestion-row-sub-label {
-        color: $spunPearl;
+        color: colors.$spunPearl;
         font-style: italic;
       }
 
@@ -62,7 +62,7 @@
         svg {
           rect,
           path {
-            fill: rgba($black, 0.2);
+            fill: rgba(colors.$black, 0.2);
           }
         }
       }

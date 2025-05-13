@@ -1,12 +1,13 @@
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
 
 .error {
   display: flex;
   justify-content: space-between;
   padding: 10px 14px;
-  color: $amaranth;
-  background-color: rgba($amaranth, 0.1);
-  border: $errorBorder;
+  color: colors.$amaranth;
+  background-color: rgba(colors.$amaranth, 0.1);
+  border: borders.$errorBorder;
 
   &__data {
     display: flex;
@@ -23,7 +24,7 @@
     height: 22px;
     margin-right: 10px;
     padding: 5px;
-    background-color: $burntSienna;
+    background-color: colors.$burntSienna;
     border-radius: 50%;
   }
 }

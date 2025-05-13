@@ -1,5 +1,6 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/mixins';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/mixins';
 
 .collections-list {
   display: flex;
@@ -8,13 +9,13 @@
   &__header {
     position: sticky;
     top: 0;
-    background-color: $white;
+    background-color: colors.$white;
 
     &-item {
       margin: 0;
       padding: 10px 0;
       font-size: 18px;
-      border-bottom: $secondaryBorder;
+      border-bottom: borders.$secondaryBorder;
     }
   }
 
@@ -26,7 +27,7 @@
       display: flex;
       align-items: center;
       height: 45px;
-      border-bottom: $secondaryBorder;
+      border-bottom: borders.$secondaryBorder;
     }
   }
 }

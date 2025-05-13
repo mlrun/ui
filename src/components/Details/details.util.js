@@ -46,7 +46,12 @@ import { formatDatetime, generateLinkPath, parseUri } from '../../utils'
 import { isArtifactTagUnique } from '../../utils/artifacts.util'
 import { getFunctionImage } from '../FunctionsPage/functions.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import detailsActions from '../../actions/details'
+import {
+  setChangesCounter,
+  setChangesData,
+  setFiltersWasHandled,
+  showWarning
+} from '../../reducers/detailsReducer'
 
 export const generateArtifactsContent = (
   detailsType,
@@ -320,7 +325,8 @@ export const generateJobsContent = selectedItem => {
       shouldPopUp: !isEmpty(selectedItem.function),
       handleClick: () =>
         openPopUp(FunctionPopUp, {
-          funcUri: selectedItem.function
+          funcUri: selectedItem.function,
+          funcTag: selectedItem.ui?.functionTag ?? ''
         })
     },
     functionTag: {
@@ -497,10 +503,9 @@ export const handleFinishEdit = (
   changes,
   detailsTabActions,
   detailsTabDispatch,
-  setChangesData,
-  setChangesCounter,
   currentField,
   formState,
+  dispatch,
   fields
 ) => {
   detailsTabDispatch({
@@ -540,8 +545,8 @@ export const handleFinishEdit = (
     })
   }
 
-  setChangesCounter(countChanges(changesData))
-  setChangesData({ ...changesData })
+  dispatch(setChangesCounter(countChanges(changesData)))
+  dispatch(setChangesData({ ...changesData }))
 }
 
 export const countChanges = changesData => {
@@ -595,8 +600,8 @@ export const performDetailsActionHelper = async (changes, dispatch, filtersWasHa
       window.addEventListener('discardChanges', () => resolver(true))
       window.addEventListener('cancelLeave', () => resolver(false))
 
-      dispatch(detailsActions.setFiltersWasHandled(filtersWasHandled))
-      dispatch(detailsActions.showWarning(true))
+      dispatch(setFiltersWasHandled(filtersWasHandled))
+      dispatch(showWarning(true))
     })
   }
 

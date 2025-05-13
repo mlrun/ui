@@ -1,5 +1,5 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
 
 .table-cell {
   &_big {
@@ -22,7 +22,7 @@
   &__table {
     min-width: fit-content;
     height: 100%;
-    border: $dividerBorder;
+    border: borders.$dividerBorder;
     border-radius: 8px;
 
     &-body {
@@ -35,7 +35,7 @@
       display: flex;
       flex: 1;
       flex-direction: row;
-      border-bottom: $tertiaryBorder;
+      border-bottom: borders.$tertiaryBorder;
     }
 
     &-link {
@@ -46,41 +46,41 @@
     &-cell {
       display: flex;
       padding: 10px 5px 10px 0;
-      color: $primary;
+      color: colors.$primary;
       line-height: 24px;
 
       &.status {
-        color: $supernova;
+        color: colors.$supernova;
         text-transform: none;
 
         &_completed,
         &_ready,
         &_running {
-          color: $java;
+          color: colors.$java;
         }
 
         &-nuclio {
           &_ready {
-            color: $brightTurquoise;
+            color: colors.$brightTurquoise;
 
             &.disabled {
-              color: $topaz;
+              color: colors.$topaz;
             }
           }
 
           &_scaledToZero {
-            color: $topaz;
+            color: colors.$topaz;
           }
         }
 
         &_failed,
         &_error,
         &_unhealthy {
-          color: $amaranth;
+          color: colors.$amaranth;
         }
 
         &_imported {
-          color: $topaz;
+          color: colors.$topaz;
         }
       }
 
@@ -107,10 +107,10 @@
       flex: 1;
       font-size: 14px;
       line-height: 24px;
-      border-bottom: $tertiaryBorder;
+      border-bottom: borders.$tertiaryBorder;
 
       .table-header-item {
-        color: $topaz;
+        color: colors.$topaz;
         font-weight: bold;
       }
     }

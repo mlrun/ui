@@ -1,13 +1,14 @@
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
 
 .warning {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
   padding: 10px 14px;
-  color: $sorbus;
-  background-color: rgba($sorbus, 0.1);
-  border: $parametersBorder;
+  color: colors.$sorbus;
+  background-color: rgba(colors.$sorbus, 0.1);
+  border: borders.$parametersBorder;
 
   &__data {
     display: flex;
@@ -23,7 +24,7 @@
     height: 22px;
     margin-right: 10px;
     padding: 5px;
-    background-color: $sorbus;
+    background-color: colors.$sorbus;
     border-radius: 50%;
   }
 }

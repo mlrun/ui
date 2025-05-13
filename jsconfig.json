@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "igz-controls/*": [
+        "node_modules/iguazio.dashboard-react-controls/dist/*"
+      ]
+    }
+  }
+}

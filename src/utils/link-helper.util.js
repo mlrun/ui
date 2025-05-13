@@ -19,6 +19,7 @@ such restriction.
 */
 import { DETAILS_OVERVIEW_TAB, VIEW_SEARCH_PARAMETER } from '../constants'
 import { getFilteredSearchParams } from './filter.util'
+import { showErrorNotification } from './notifications.util'
 
 export const isPageTabValid = (pageTab, tabs, navigate, location) => {
   if (!tabs.includes(pageTab)) {
@@ -27,13 +28,19 @@ export const isPageTabValid = (pageTab, tabs, navigate, location) => {
   }
 }
 
-export const isProjectValid = (navigate, projects, currentProjectName) => {
+export const isProjectValid = (navigate, projects, currentProjectName, dispatch) => {
   if (
     projects.length > 0 &&
     currentProjectName &&
     !projects.some(project => project?.metadata?.name === currentProjectName)
   ) {
     navigate('/projects', { replace: true })
+    showErrorNotification(
+      dispatch,
+      {},
+      '',
+      'This project does not exist'
+    )
   }
 }
 
@@ -44,8 +51,8 @@ export const generateUrlFromRouterPath = link => {
 export const getCloseDetailsLink = (paramName, ignoreOrigin) => {
   let pathname = window.location.pathname
 
-  if (ignoreOrigin && pathname.startsWith(process.env.PUBLIC_URL)) {
-    pathname = pathname.slice(process.env.PUBLIC_URL.length)
+  if (ignoreOrigin && pathname.startsWith(import.meta.env.VITE_PUBLIC_URL)) {
+    pathname = pathname.slice(import.meta.env.VITE_PUBLIC_URL.length)
   }
 
   const link =

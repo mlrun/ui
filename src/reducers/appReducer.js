@@ -105,7 +105,7 @@ const appSlice = createSlice({
         state.frontendSpec = payload
       }
     })
-    builder.addCase(fetchFrontendSpec.rejected, (state, action) => {
+    builder.addCase(fetchFrontendSpec.rejected, state => {
       state.frontendSpecPopupIsOpened = true
     })
   }
