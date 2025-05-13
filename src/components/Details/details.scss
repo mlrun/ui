@@ -273,6 +273,10 @@
     }
 
     .details-item {
+      &__buttons-block {
+        display: flex;
+      }
+
       &__apply-btn-wrapper {
         width: 30px;
       }

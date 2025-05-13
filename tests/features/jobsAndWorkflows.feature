@@ -68,6 +68,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW002 - Check all mandatory components on Workflows Monitor tab
         Given open url
+        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
@@ -127,6 +128,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW003 - Check all mandatory components on Schedule Monitor tab
         Given open url
+        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -878,6 +880,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW069 - Verify View YAML action on Workflows Monitor tab
         Given open url
+        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -936,6 +939,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW071 - Check all mandatory components on Workflow List View
         Given open url
+        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -956,6 +960,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW072 - Check all mandatory components on Overview tab Item infopane on Workflow List View Tab
         Given open url
+        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -984,6 +989,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW073 - Check all mandatory components on Logs tab Item infopane on Workflow List View Tab
         Given open url
+        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1007,6 +1013,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW074 - Check all mandatory components on Inputs tab Item infopane on Workflow List View Tab
         Given open url
+        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1029,6 +1036,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW075 - Check all mandatory components on Artifacts tab Item infopane on Workflow List View Tab
         Given open url
+        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1051,6 +1059,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW076 - Check all mandatory components on Results tab Item infopane on Workflow List View Tab
         Given open url
+        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1073,6 +1082,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW080 - Verify visibility of main components on Batch re-run Workflow wizard
         Given open url
+        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1144,6 +1154,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW082 - Check Artifacts preview action on Artifacts tab Item infopane on Workflow List View Tab
         Given open url
+        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1217,6 +1228,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW077 - Check options in action menu on Workflows Monitor tab
         Given open url
+        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1315,6 +1327,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW081 - Check visibility of main components on Workflow graph View
         Given open url
+        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1345,6 +1358,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW030 - Check redirect to project`s Function Infopane from Job Overview
         Given open url
+        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard       
@@ -1452,6 +1466,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW083 - Check redirection to Last Run Drill-down from Schedules tab
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1703,6 +1718,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW012 - Check all mandatory components on Batch Run wizard - Function selection
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1790,6 +1806,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW013 - Verify behaviour of Filter by category on Batch Run wizard - Function selection (Hub tab)
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1830,6 +1847,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW042 - Check all mandatory components on Batch Run wizard - Run Details without Method
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1892,6 +1910,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW044 - Check "Max Iterations", "Max errors" inputs field availability according to the strategy type in Hyperparameter strategy
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1924,6 +1943,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW051 - Check all mandatory components on Batch Run wizard - Run Details with Method
         Given open url
+        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1974,7 +1994,8 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW053 - Check changing "Method" after "Hyperparameter" check in Run Details section of Batch Run
         Given open url
-	    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+	    And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -1998,7 +2019,8 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW054 - Check "Image name" field in Run Details section of Batch Run
         Given open url
-	    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+	    And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -2020,6 +2042,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW039 - Check all mandatory components on Batch Run wizard - Data Inputs
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -2082,6 +2105,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW038 - Check all mandatory components on Batch Run wizard - Parameters
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -2306,6 +2330,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW043 - Check Batch-Run running after edit GPU limit in Resources section
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -2329,6 +2354,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW025 - Check Minimum CPU value on Batch Run wizard - Resources
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -2372,6 +2398,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW026 - Check tip and warning messages in Volumes section on Batch Run wizard - Resources
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -2430,6 +2457,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW031 - Check mandatory of Container and Resource Path fields for V3IO volume - Batch Run - Resources
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -2458,6 +2486,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW033 - Check autocomplete without tags MLRun Store path for datasets, artifacts, models, feature vectors - Batch Run - Data input
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -2497,6 +2526,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW034 - Check setting schedule for a job - Batch Run - Schedule for later 
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -2529,6 +2559,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW035 - Check environment variables table types components on Batch Run in Advanced section
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -2569,6 +2600,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW036 - Check setting schedule for a job - Batch Run - Schedule for later 
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -2676,6 +2708,7 @@ Feature: Jobs and workflows
     @smoke
     Scenario: MLJW046 - Check components in Parameters section on Batch Run wizard with checked Hyper
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -2776,6 +2809,7 @@ Feature: Jobs and workflows
     #TODO: need to add check Retry option for error and running status
     Scenario: MLJW087 - Check Retry option in action menu on Workflows Monitor tab
         Given open url
+        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard

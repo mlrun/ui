@@ -24,15 +24,15 @@ import classNames from 'classnames'
 import NavbarLink from '../../elements/NavbarLink/NavbarLink'
 import { RoundedIcon } from 'igz-controls/components'
 
-import { getLinks } from './navbar.util'
-import localStorageService from '../../utils/localStorageService'
 import { ALERTS_PAGE_PATH, NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
-import { useMode } from '../../hooks/mode.hook'
+import localStorageService from '../../utils/localStorageService'
+import { getLinks } from './navbar.util'
 
 import Alerts from 'igz-controls/images/navbar/alerts-icon.svg?react'
 import PinIcon from 'igz-controls/images/pin-icon.svg?react'
-import UnPinIcon from 'igz-controls/images/unpin-icon.svg?react'
 import SettingsIcon from 'igz-controls/images/navbar/mlrun-project-settings.svg?react'
+import UnPinIcon from 'igz-controls/images/unpin-icon.svg?react'
+import { useMode } from '../../hooks/mode.hook'
 
 import './Navbar.scss'
 
@@ -85,38 +85,35 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
       onMouseLeave={handleOnMouseLeave}
       style={navbarStyles}
     >
+      <div className="navbar__pin-icon">
+        <RoundedIcon
+          id="navabr-pin"
+          onClick={handlePinClick}
+          tooltipText={`${isPinned ? 'Unpin' : 'Pin'} Menu`}
+        >
+          {isPinned ? <UnPinIcon /> : <PinIcon />}
+        </RoundedIcon>
+      </div>
       <div className="navbar__body">
-        <div className="navbar__content">
-          <div className="navbar__pin-icon">
-            <RoundedIcon
-              id="navabr-pin"
-              onClick={handlePinClick}
-              tooltipText={`${isPinned ? 'Unpin' : 'Pin'} Menu`}
-            >
-              {isPinned ? <UnPinIcon /> : <PinIcon />}
-            </RoundedIcon>
-          </div>
-
-          <ul className="navbar-links">
-            {links.map(link => !link.hidden && <NavbarLink key={link.id} {...link} />)}
-          </ul>
-        </div>
-        <div className="navbar__additional">
-          <ul className="navbar-links">
-            <NavbarLink
-              icon={<Alerts />}
-              id="alerts"
-              label="Alerts"
-              link={`/projects/${projectName}/${ALERTS_PAGE_PATH}`}
-            />
-            <NavbarLink
-              id="project-settings"
-              icon={<SettingsIcon />}
-              label="Project settings"
-              link={`/projects/${projectName}/settings`}
-            />
-          </ul>
-        </div>
+        <ul className="navbar-links">
+          {links.map(link => !link.hidden && <NavbarLink key={link.id} {...link} />)}
+        </ul>
+      </div>
+      <div className="navbar__additional">
+        <ul className="navbar-links">
+          <NavbarLink
+            icon={<Alerts />}
+            id="alerts"
+            label="Alerts"
+            link={`/projects/${projectName}/${ALERTS_PAGE_PATH}`}
+          />
+          <NavbarLink
+            id="project-settings"
+            icon={<SettingsIcon />}
+            label="Project settings"
+            link={`/projects/${projectName}/settings`}
+          />
+        </ul>
       </div>
     </nav>
   )

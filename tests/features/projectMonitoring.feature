@@ -7,6 +7,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM002 - Check all mandatory components
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
@@ -44,6 +45,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM001 - Check all mandatory components on Navigation Bar
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         #check the default state of 'Navigation_Bar'
@@ -59,8 +61,11 @@ Feature: Project Monitoring Page
         Then verify "Quick_actions_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Feature_Store_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Datasets_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Documents_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "LLM_Prompts_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Artifacts_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Models_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Monitoring_App_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Jobs_And_Workflows_Button" element visibility on "commonPagesHeader" wizard
         Then verify "ML_Functions_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Real_Time_Functions_Button" element visibility on "commonPagesHeader" wizard
@@ -80,10 +85,16 @@ Feature: Project Monitoring Page
         Then verify "Feature_Store_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Datasets_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Datasets_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Documents_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Documents_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "LLM_Prompts_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "LLM_Prompts_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Artifacts_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Artifacts_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Models_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Models_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Monitoring_App_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Monitoring_App_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Jobs_And_Workflows_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Jobs_And_Workflows_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "ML_Functions_Button" element invisibility on "commonPagesHeader" wizard
@@ -156,6 +167,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM004 - Check all mandatory components on Register File Popup
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
@@ -206,6 +218,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM005 - Check all mandatory components on Register Model Popup
         Given open url
+        And wait load page
         When turn on demo mode with query params "false"
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -251,6 +264,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM006 - Check all mandatory components on Register Dataset Popup
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
@@ -295,6 +309,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM007 - Check all mandatory components on Batch run
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
@@ -389,6 +404,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM008 - Check all mandatory components on Create ML Function - Job runtime
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
@@ -449,6 +465,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM009 - Check all mandatory components on Create ML Function - Serving runtime
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
@@ -518,6 +535,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM010 - Check all mandatory components on Create New Feature Set
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
@@ -563,6 +581,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM011 - Check Project Counter redirection to Models page
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then click on "Model_Stats_Counter" element on "Project" wizard
@@ -584,6 +603,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM012 - Check Project Counter redirection to Feature Sets page
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then click on "FeatureSets_Stats_Counter" element on "Project" wizard
@@ -617,6 +637,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM013 - Check Project Counter redirection to Artifacts page
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then click on "Artifacts_Stats_Counter" element on "Project" wizard
@@ -636,6 +657,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM014 - Check Project Counter redirection to Monitor Jobs tab
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then click on cell with value "Running jobs" in "name" column in "Jobs_Info_Card_Statistics" table on "Project" wizard
@@ -659,6 +681,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM015 - Check Project Counter redirection to Schedules tab
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then click on cell with value "Scheduled" in "name" column in "Jobs_Info_Card_Statistics" table on "Project" wizard
@@ -677,6 +700,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM022 - Verify behaviour of Breadcrumbs menu
         Given open url
+        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
@@ -700,6 +724,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM016 - Check redirect to Jobs and workflows page using See All link
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
@@ -742,6 +767,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM017 - Check redirect to Job Info Pane overview from Project Monitoring Page
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And save to context "name" column and "href" attribute on 1 row from "Jobs_And_Workflows" table on "Project" wizard
@@ -859,6 +885,7 @@ Feature: Project Monitoring Page
     @smoke
     Scenario: MLPM023 - Check all mandatory components on Alerts page
         Given open url
+        And wait load page
         And click on row root with value "auto-generated-data" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then click on "Alerts_Stats_Total_Number" element on "Project" wizard

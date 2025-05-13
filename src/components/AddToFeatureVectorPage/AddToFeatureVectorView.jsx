@@ -35,6 +35,7 @@ import ActionBar from '../ActionBar/ActionBar'
 import AddToFeatureVectorFilters from './AddToFeatureVectorFilters'
 
 import './addToFeatureVector.scss'
+import '../FeatureStore/Features/features.scss'
 
 const AddToFeatureVectorView = React.forwardRef(
   (

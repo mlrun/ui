@@ -27,10 +27,9 @@ import { OptionsMenu, ValidationTemplate } from 'igz-controls/elements'
 import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import { checkPatternsValidity } from 'igz-controls/utils/validation.util'
 import { useDetectOutsideClick } from 'igz-controls/hooks'
-import { DENSITY_OPTIONS, INPUT_LINK } from '../../types'
+import { DENSITY_OPTIONS } from '../../types'
 
 import ExclamationMarkIcon from 'igz-controls/images/exclamation-mark.svg?react'
-import LinkIcon from 'igz-controls/images/link-icon.svg?react'
 import WarningIcon from 'igz-controls/images/warning.svg?react'
 
 import './input.scss'
@@ -51,7 +50,6 @@ const Input = React.forwardRef(
       invalid = false,
       invalidText = 'This field is invalid',
       label,
-      link = { show: '', value: '' },
       min = null,
       maxLength = null,
       onBlur = () => {},
@@ -266,20 +264,6 @@ const Input = React.forwardRef(
               {label}
               {required && <span className={inputLabelMandatoryClassNames}> *</span>}
             </label>
-            {floatingLabel && link && link.show && typedValue.trim() && (
-              <div className="input__link-icon">
-                <Tooltip template={<TextTooltipTemplate text={link.url || typedValue} />}>
-                  <a
-                    href={link.url || typedValue}
-                    onClick={event => event.stopPropagation()}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <LinkIcon />
-                  </a>
-                </Tooltip>
-              </div>
-            )}
           </div>
         )}
         {isInvalid && !isEmpty(validationRules) && (
@@ -328,7 +312,7 @@ const Input = React.forwardRef(
           </ul>
         )}
         {isInvalid && !isEmpty(validationRules) && (
-          <OptionsMenu show={showValidationRules} ref={ref}>
+          <OptionsMenu show={showValidationRules} ref={{ refInputContainer: ref }}>
             {renderValidationRules}
           </OptionsMenu>
         )}
@@ -353,7 +337,6 @@ Input.propTypes = {
   invalid: PropTypes.bool,
   invalidText: PropTypes.string,
   label: PropTypes.string,
-  link: INPUT_LINK,
   maxLength: PropTypes.number,
   min: PropTypes.number,
   onBlur: PropTypes.func,

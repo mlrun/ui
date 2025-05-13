@@ -36,6 +36,7 @@ import {
 } from 'igz-controls/utils/validation.util'
 import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
 import { removeNewProjectError } from '../../../reducers/projectReducer'
+import { useModalBlockHistory } from '../../../hooks/useModalBlockHistory.hook'
 
 import './createProjectDialog.scss'
 
@@ -47,6 +48,7 @@ const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject }) => {
     description: '',
     labels: []
   }
+
   const formRef = React.useRef(
     createForm({
       initialValues,
@@ -55,12 +57,16 @@ const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject }) => {
     })
   )
   const dispatch = useDispatch()
+  const { handleCloseModal } = useModalBlockHistory(
+    closeNewProjectPopUp,
+    formRef.current
+  )
 
   return (
     <PopUpDialog
       headerText="Create new project"
       className="create-project-dialog"
-      closePopUp={closeNewProjectPopUp}
+      closePopUp={handleCloseModal}
     >
       {projectStore.loading && <Loader />}
       <Form form={formRef.current} onSubmit={handleCreateProject}>
@@ -117,7 +123,7 @@ const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject }) => {
                   variant={TERTIARY_BUTTON}
                   label="Cancel"
                   className="pop-up-dialog__btn_cancel"
-                  onClick={closeNewProjectPopUp}
+                  onClick={handleCloseModal}
                 />
                 <Button
                   disabled={projectStore.loading || isSubmitDisabled(formState)}

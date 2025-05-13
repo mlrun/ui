@@ -6,19 +6,24 @@
   display: flex;
   flex-grow: 1;
   flex-shrink: 0;
+  flex-flow: column nowrap;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 11;
   height: 100%;
+  background-color: colors.$wildSand;
   border-right: borders.$tertiaryBorder;
   transition: max-width 0.3s ease-in-out;
 
   &.navbar_hovered,
   &.navbar_pinned {
     .navbar__body {
-      padding: 0.5rem 1rem 0;
       overflow-y: auto;
+    }
+
+    .navbar-links {
+      padding: 0 1rem;
     }
 
     .navbar__pin-icon {
@@ -35,37 +40,41 @@
     justify-content: space-between;
     width: 100%;
     height: 100%;
-    padding: 0.5rem 4px 0;
+    margin-bottom: 10px;
     overflow: hidden;
-    background-color: colors.$wildSand;
-    transition: padding 0.3s ease-in-out;
-  }
-
-  &__content {
-    display: flex;
-    flex: 1 0 auto;
-    flex-flow: column nowrap;
-    width: 100%;
   }
 
   &__additional {
     display: flex;
-    flex: 0 1 auto;
-    border-top: borders.$primaryBorder;
+    flex: 2 0 auto;
+
+    .navbar-links {
+      margin-bottom: 20px;
+
+      &::before {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 1px;
+        border-top: borders.$primaryBorder;
+        margin-bottom: 10px;
+      }
+    }
   }
 
   &-links {
     width: 100%;
-    margin: 10px 0;
-    padding: 0;
+    margin: 0;
+    padding: 0 4px;
     list-style-type: none;
+    transition: padding 0.3s ease-in-out;
   }
 
   &__pin {
     &-icon {
       display: flex;
       justify-content: flex-end;
-      padding: 0;
+      padding: 0.5rem;
       opacity: 0;
       visibility: hidden;
       transition: all 0.3s ease-in-out;

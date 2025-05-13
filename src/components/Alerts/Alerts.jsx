@@ -29,7 +29,7 @@ import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Pagination from '../../common/Pagination/Pagination'
 import Loader from '../../common/Loader/Loader'
 
-import { ALERTS_FILTERS, ALERTS_PAGE_PATH } from '../../constants'
+import { ALERTS_FILTERS, ALERTS_PAGE_PATH, MONITOR_ALERTS_PAGE } from '../../constants'
 import { createAlertRowData } from '../../utils/createAlertsContent'
 import {
   getAlertsFiltersConfig,
@@ -140,7 +140,7 @@ const Alerts = () => {
           <div className="content__action-bar-wrapper">
             <ActionBar
               autoRefreshIsStopped={true}
-              closeParamName={ALERTS_PAGE_PATH}
+              closeParamName={isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE_PATH}
               filterMenuName={ALERTS_FILTERS}
               filters={alertsFilters}
               filtersConfig={alertsFiltersConfig}
@@ -171,7 +171,7 @@ const Alerts = () => {
                 tableContent={tableContent}
               />
               <Pagination
-                closeParamName={ALERTS_PAGE_PATH}
+                closeParamName={isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE_PATH}
                 page={pageData.page}
                 paginationConfig={paginationConfigAlertsRef.current}
               />

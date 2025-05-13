@@ -82,7 +82,7 @@ let ArtifactsTable = ({
           withRefreshButton
           withoutExpandButton
         >
-          <ArtifactsFilters artifacts={artifacts} />
+          <ArtifactsFilters artifacts={artifacts} isAllVersions={isAllVersions} />
         </ActionBar>
       </div>
       {artifactsStore.loading ? null : tableContent.length === 0 && isEmpty(selectedArtifact) ? (
