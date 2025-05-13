@@ -1,4 +1,4 @@
-@import '~igz-controls/scss/colors';
+@use 'igz-controls/scss/colors';
 
 .table {
   .table-body__cell {
@@ -12,7 +12,7 @@
 
       .item {
         &-name {
-          color: $primary;
+          color: colors.$primary;
           font-weight: bold;
 
           &.function-name {
@@ -32,12 +32,12 @@
       .link {
         display: flex;
         width: 100%;
-        color: $primary;
+        color: colors.$primary;
       }
     }
 
     .link-subtext {
-      color: $topaz;
+      color: colors.$topaz;
     }
 
     .date-uid-row {

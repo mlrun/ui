@@ -52,7 +52,11 @@ const toolkitStore = configureStore({
     tableStore,
     tasksStore,
     workflowsStore
-  }
+  },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false
+    })
 })
 
 export default toolkitStore

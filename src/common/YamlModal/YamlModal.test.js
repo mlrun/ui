@@ -65,9 +65,7 @@ describe('YamlModal component', () => {
   })
 
   it('should remove class "modal-showed" if convertedYaml is empty', () => {
-    wrapper.rerender(
-      <YamlModal convertedYaml="" toggleConvertToYaml={jest.fn()} />
-    )
+    wrapper.rerender(<YamlModal convertedYaml="" toggleConvertToYaml={jest.fn()} />)
 
     const yaml = wrapper.getByTestId('yaml-modal')
 

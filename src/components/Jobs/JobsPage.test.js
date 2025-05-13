@@ -20,13 +20,7 @@ such restriction.
 import React from 'react'
 import { Provider } from 'react-redux'
 import { applyMiddleware, createStore } from 'redux'
-import {
-  act,
-  cleanup,
-  fireEvent,
-  render,
-  waitFor
-} from '@testing-library/react'
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import thunk from 'redux-thunk'
 
@@ -66,8 +60,7 @@ jest.spyOn(mainHttpClient, 'get').mockImplementation(path => {
             },
             spec: {
               data_stores: [],
-              function:
-                'default/file-utils@aa7050617e238d8977236c735a90bd950f73f5dd',
+              function: 'default/file-utils@aa7050617e238d8977236c735a90bd950f73f5dd',
               inputs: {},
               log_level: 'info',
               output_path: 'v3io:///users/pipelines/artifacts/default',
@@ -163,10 +156,7 @@ jest.spyOn(mainHttpClient, 'get').mockImplementation(path => {
 
 const renderWithRedux = (
   ui,
-  {
-    initialState,
-    store = createStore(reducer, initialState, applyMiddleware(thunk))
-  } = {}
+  { initialState, store = createStore(reducer, initialState, applyMiddleware(thunk)) } = {}
 ) => {
   return { ...render(<Provider store={store}>{ui}</Provider>), store }
 }
@@ -277,8 +267,7 @@ describe('Jobs component', () => {
           tab: 'info'
         },
         path: '/projects/:projectName/jobs/:pageTab/:jobId/:tab',
-        url:
-          '/projects/default/jobs/monitor/a6422d0d93d24a8f91059992a6b1529e/overview'
+        url: '/projects/default/jobs/monitor/a6422d0d93d24a8f91059992a6b1529e/overview'
       },
       history: { push: mockHistoryPush }
     }
@@ -291,9 +280,7 @@ describe('Jobs component', () => {
           </Router>
         ))
     )
-    expect(mockHistoryPush).toHaveBeenCalledWith(
-      '/projects/default/jobs/monitor'
-    )
+    expect(mockHistoryPush).toHaveBeenCalledWith('/projects/default/jobs/monitor')
   })
 
   it('should active schedule tab', async () => {

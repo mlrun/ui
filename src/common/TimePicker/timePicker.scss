@@ -1,8 +1,8 @@
-@import '~igz-controls/scss/mixins';
+@use 'igz-controls/scss/mixins';
 
 .time-picker-container {
   .time-picker {
-    @include inputSelectField;
+    @include mixins.inputSelectField;
 
     &__label {
       text-transform: none;

@@ -59,10 +59,7 @@ jest.spyOn(mainHttpClient, 'get').mockImplementation(path => {
 
 const renderWithRedux = (
   ui,
-  {
-    initialState,
-    store = createStore(reducer, initialState, applyMiddleware(thunk))
-  } = {}
+  { initialState, store = createStore(reducer, initialState, applyMiddleware(thunk)) } = {}
 ) => {
   return { ...render(<Provider store={store}>{ui}</Provider>), store }
 }
@@ -107,8 +104,7 @@ describe('Breadcrumbs component', () => {
     const props = {
       match: {
         path: '/projects/:projectName/jobs/:pageTab/:jobId/:tab',
-        url:
-          '/projects/default/jobs/monitor/a6422d0d93d24a8f91059992a6b1529e/overview',
+        url: '/projects/default/jobs/monitor/a6422d0d93d24a8f91059992a6b1529e/overview',
         params: {
           jobId: 'a6422d0d93d24a8f91059992a6b1529e',
           pageTab: 'monitor',

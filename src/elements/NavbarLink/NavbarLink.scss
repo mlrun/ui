@@ -1,4 +1,4 @@
-@import '~igz-controls/scss/colors';
+@use 'igz-controls/scss/colors';
 
 .nav-link {
   margin-bottom: 10px;
@@ -15,7 +15,7 @@
       min-height: 48px;
       min-width: 48px;
       padding: 0 16px 0 13px;
-      color: $poloBlue;
+      color: colors.$poloBlue;
       font-weight: normal;
       background-color: transparent;
       border: 2px solid transparent;
@@ -30,18 +30,18 @@
         height: 20px;
 
         & * {
-          fill: $poloBlue;
+          fill: colors.$poloBlue;
         }
       }
 
       &.active {
-        color: $white;
-        background-color: $malibu;
+        color: colors.$white;
+        background-color: colors.$malibu;
         cursor: default;
 
         svg {
           & * {
-            fill: $white;
+            fill: colors.$white;
           }
         }
       }
@@ -51,15 +51,15 @@
     &:focus-visible {
       &.btn {
         &:not(:disabled):not([class*='active']) {
-          color: $poloBlue;
+          color: colors.$poloBlue;
           background-color: transparent;
-          border-color: $poloBlue;
+          border-color: colors.$poloBlue;
           outline: none;
           transition: border-color 0.3s ease-in-out;
 
           svg {
             & * {
-              fill: $poloBlue;
+              fill: colors.$poloBlue;
             }
           }
         }

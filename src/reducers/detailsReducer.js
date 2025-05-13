@@ -76,6 +76,15 @@ export const fetchModelFeatureVector = createAsyncThunk(
   }
 )
 
+export const fetchDetailsJobPods = createAsyncThunk('fetchDetailsJobPods', ({ project, uid, kind }, thunkAPI) => {
+  return detailsApi
+      .getJobPods(project, uid, kind)
+      .then(({ data }) => {
+        return generatePods(project, uid, data)
+      })
+      .catch(error => thunkAPI.rejectWithValue(error))
+})
+
 export const fetchJobPods = createAsyncThunk('fetchJobPods', ({ project, uid, kind }, thunkAPI) => {
   return detailsApi
     .getJobPods(project, uid, kind)
@@ -262,7 +271,7 @@ const detailsStoreSlice = createSlice({
     builder.addCase(fetchModelEndpointMetricsValues.pending, state => {
       state.loadingCounter = state.loadingCounter + 1
     })
-    builder.addCase(fetchModelEndpointMetricsValues.fulfilled, (state, action) => {
+    builder.addCase(fetchModelEndpointMetricsValues.fulfilled, state => {
       state.loadingCounter = state.loadingCounter - 1
       state.error = null
     })

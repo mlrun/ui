@@ -1,5 +1,5 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/shadows';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/shadows';
 
 .notification {
   position: relative;
@@ -11,10 +11,10 @@
   margin-bottom: 1rem;
   padding: 8px;
   overflow: hidden;
-  color: $white;
-  background-color: $darkPurple;
+  color: colors.$white;
+  background-color: colors.$darkPurple;
   border-radius: 5px;
-  box-shadow: $tooltipShadow;
+  box-shadow: shadows.$tooltipShadow;
   cursor: pointer;
   opacity: 0;
 
@@ -45,11 +45,11 @@
     }
 
     &-success {
-      background-color: $brightTurquoise;
+      background-color: colors.$brightTurquoise;
     }
 
     &-alert {
-      background-color: $burntSienna;
+      background-color: colors.$burntSienna;
     }
   }
 
@@ -67,7 +67,7 @@
 
     &__button-retry {
       margin-left: 15px;
-      color: $portage;
+      color: colors.$portage;
       cursor: pointer;
     }
 
@@ -91,10 +91,10 @@
     }
 
     ::-webkit-scrollbar-thumb {
-      background-color: rgba($white, 0.4);
+      background-color: rgba(colors.$white, 0.4);
 
       &:hover {
-        background-color: rgba($white, 0.6);
+        background-color: rgba(colors.$white, 0.6);
       }
     }
 
@@ -110,11 +110,11 @@
     }
 
     &__icon-alert {
-      background-color: $burntSienna;
+      background-color: colors.$burntSienna;
     }
 
     &__icon-success {
-      background-color: $brightTurquoise;
+      background-color: colors.$brightTurquoise;
     }
   }
 }

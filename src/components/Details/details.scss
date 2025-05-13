@@ -1,7 +1,7 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/mixins';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/shadows';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/mixins';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/shadows';
 
 .table {
   &__item {
@@ -15,9 +15,9 @@
     height: 100%;
     padding: 20px 30px;
     overflow-y: auto;
-    color: $mulledWine;
-    background-color: $white;
-    border: 1px solid $magnoliaWhite;
+    color: colors.$mulledWine;
+    background-color: colors.$white;
+    border: 1px solid colors.$magnoliaWhite;
     border-radius: 0 4px 4px 0;
 
     &_big {
@@ -54,7 +54,7 @@
         }
 
         &__status {
-          color: $topaz;
+          color: colors.$topaz;
           line-height: 25px;
 
           &-row {
@@ -71,7 +71,7 @@
               max-width: 100%;
               height: 36px;
               padding: 4px 8px;
-              background-color: $magnoliaWhite;
+              background-color: colors.$magnoliaWhite;
               border-radius: 4px;
             }
           }
@@ -91,7 +91,7 @@
 
         &__pods {
           &-error {
-            color: $spunPearl;
+            color: colors.$spunPearl;
           }
         }
 
@@ -122,7 +122,7 @@
             &:not(:last-child) {
               margin-right: 1em;
               padding-right: 1em;
-              border-right: $secondaryBorder;
+              border-right: borders.$secondaryBorder;
             }
           }
         }
@@ -182,21 +182,21 @@
       }
 
       &__content {
-        border-top: $secondaryBorder;
+        border-top: borders.$secondaryBorder;
       }
     }
 
     &_inputs {
       width: 100%;
 
-      @include resetSpaces;
+      @include mixins.resetSpaces;
 
       &_item {
         display: flex;
         flex-direction: row;
         align-items: center;
         padding: 27px 24px;
-        border-bottom: $secondaryBorder;
+        border-bottom: borders.$secondaryBorder;
 
         div {
           min-width: 237px;
@@ -212,10 +212,10 @@
       width: 100%;
       min-height: 200px;
       padding: 10px 0;
-      color: $white;
+      color: colors.$white;
       font-family: 'Source Code Pro', 'Courier New', monospace;
       white-space: pre-wrap;
-      background-color: $black;
+      background-color: colors.$black;
 
       &:not(:last-child) {
         margin-bottom: 10px;
@@ -235,7 +235,7 @@
 
         /* Define the thumb style */
         &::-webkit-scrollbar-thumb {
-          background: $doveGray;
+          background: colors.$doveGray;
           border-radius: 5px;
         }
       }
@@ -273,6 +273,10 @@
     }
 
     .details-item {
+      &__buttons-block {
+        display: flex;
+      }
+
       &__apply-btn-wrapper {
         width: 30px;
       }
@@ -319,7 +323,7 @@
         &_popout {
           margin: 0;
           padding: 0;
-          background: $white;
+          background: colors.$white;
           border: none;
           outline: none;
           cursor: pointer;

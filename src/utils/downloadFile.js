@@ -19,7 +19,7 @@ such restriction.
 */
 const downloadFile = (fileName, response) => {
   const url = URL.createObjectURL(new Blob([response.data]))
-  const handleClick = function() {
+  const handleClick = function () {
     setTimeout(() => {
       URL.revokeObjectURL(url)
       this.removeEventListener('click', handleClick)

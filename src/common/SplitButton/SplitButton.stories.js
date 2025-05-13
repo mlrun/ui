@@ -21,7 +21,7 @@ import React from 'react'
 
 import SplitButton from './SplitButton'
 
-import { ReactComponent as EyeIcon } from 'igz-controls/images/eye-icon.svg'
+import EyeIcon from 'igz-controls/images/eye-icon.svg?react'
 
 export default {
   title: 'Example/SplitButton',

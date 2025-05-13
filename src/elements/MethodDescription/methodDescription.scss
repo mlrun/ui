@@ -1,10 +1,10 @@
-@import '~igz-controls/scss/colors';
+@use 'igz-controls/scss/colors';
 
 .description {
   &-container {
     display: flex;
     padding: 5px;
-    color: $mulledWineTwo;
+    color: colors.$mulledWineTwo;
 
     &-text {
       width: 100%;
@@ -24,10 +24,10 @@
       height: 17px;
       margin-left: 5px;
       padding: 0 5px 12px 5px;
-      color: $topaz;
+      color: colors.$topaz;
       font-weight: bold;
       font-size: 20px;
-      background: $iron;
+      background: colors.$iron;
       border-radius: 2px;
       cursor: pointer;
     }

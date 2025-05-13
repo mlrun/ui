@@ -1,6 +1,6 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/shadows';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/shadows';
 
 .project {
   &-wrapper {
@@ -13,15 +13,15 @@
   &__header {
     min-height: 70px;
     padding: 20px 24px;
-    background-color: $white;
-    box-shadow: $headerShadow;
+    background-color: colors.$white;
+    box-shadow: shadows.$headerShadow;
   }
 
   &__content {
     display: flex;
     flex: 1;
     padding: 24px 40px;
-    background-color: $white;
+    background-color: colors.$white;
 
     .general-info {
       display: flex;
@@ -34,7 +34,7 @@
         display: flex;
         justify-content: space-between;
         margin-top: 5px;
-        color: $primary;
+        color: colors.$primary;
 
         .row-label {
           display: inline-block;
@@ -59,7 +59,7 @@
 
         &-label {
           margin-bottom: 16px;
-          color: $primary;
+          color: colors.$primary;
         }
 
         &-link {
@@ -98,29 +98,29 @@
 
           &.launch-menu {
             display: none;
-            background-color: $white;
+            background-color: colors.$white;
 
             .select {
               &__label {
-                color: $primary;
+                color: colors.$primary;
               }
             }
           }
 
           &.create-new-menu {
-            background-color: $malibu;
+            background-color: colors.$malibu;
             border: none;
 
             .select {
               &__label {
-                color: $white;
+                color: colors.$white;
                 text-transform: none;
               }
             }
 
             svg {
               path {
-                fill: $white;
+                fill: colors.$white;
               }
             }
           }
@@ -149,10 +149,10 @@
         margin-right: 20px;
         padding: 15px;
         overflow-x: auto;
-        background-color: $white;
-        border: $dividerBorder;
+        background-color: colors.$white;
+        border: borders.$dividerBorder;
         border-radius: 8px;
-        box-shadow: $projectStatisticsShadow;
+        box-shadow: shadows.$projectStatisticsShadow;
 
         @media screen and (min-width: 1300px) {
           padding: 20px;
@@ -166,7 +166,7 @@
             display: flex;
             align-items: center;
             margin-bottom: 16px;
-            color: $primary;
+            color: colors.$primary;
             font-size: 1.25rem;
             line-height: 23px;
 
@@ -185,7 +185,7 @@
         }
 
         .no-data-block {
-          background-color: $white;
+          background-color: colors.$white;
         }
 
         &_small {
@@ -223,7 +223,7 @@
       .wrapper {
         position: relative;
         z-index: 1;
-        background-color: $white;
+        background-color: colors.$white;
       }
 
       &__statistics-section {
@@ -260,6 +260,6 @@
 
   &__error-container {
     margin: auto;
-    color: $primary;
+    color: colors.$primary;
   }
 }

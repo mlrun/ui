@@ -1,4 +1,4 @@
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/borders';
 
 .artifacts__preview {
   position: relative;
@@ -6,7 +6,7 @@
   flex-direction: column;
   height: auto;
   padding: 21px 26px;
-  border-bottom: $secondaryBorder;
+  border-bottom: borders.$secondaryBorder;
 }
 
 .icon-popout {

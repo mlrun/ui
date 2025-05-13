@@ -108,7 +108,7 @@ export const checkForSelectedJob = debounce(
                     return prevSearchParams
                   })
                 } else {
-                  parsedJob.ui.infoMessage = generateObjectNotInTheListMessage("job's run")
+                  parsedJob.ui.infoMessage = generateObjectNotInTheListMessage('job\'s run')
                 }
               }
 

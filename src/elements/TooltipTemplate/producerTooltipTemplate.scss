@@ -1,20 +1,20 @@
-@import '~igz-controls/scss/shadows';
-@import '~igz-controls/scss/colors';
+@use 'igz-controls/scss/shadows';
+@use 'igz-controls/scss/colors';
 
 .tooltip-container {
   display: flex;
   flex-direction: column;
   padding: 15px 10px;
-  background-color: $white;
+  background-color: colors.$white;
   border-radius: 4px;
-  box-shadow: $tooltipShadow;
+  box-shadow: shadows.$tooltipShadow;
 
   &__kind,
   &__owner {
-    color: $doveGray;
+    color: colors.$doveGray;
 
     span {
-      color: $doveGrayTwo;
+      color: colors.$doveGrayTwo;
       font-weight: bold;
       font-size: 14px;
       line-height: 24px;

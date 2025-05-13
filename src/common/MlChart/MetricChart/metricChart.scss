@@ -1,4 +1,4 @@
-@import '~igz-controls/scss/colors';
+@use 'igz-controls/scss/colors';
 
 div[id^='chartjs-tooltip'] {
   .tooltip-drift-content {
@@ -16,19 +16,19 @@ div[id^='chartjs-tooltip'] {
     border-radius: 50%;
 
     &-drift-possible_drift {
-      background-color: $grandis;
+      background-color: colors.$grandis;
     }
 
     &-drift-drift_detected {
-      background-color: $ceriseRed;
+      background-color: colors.$ceriseRed;
     }
 
     &-drift-no_drift {
-      background-color: $brightTurquoise;
+      background-color: colors.$brightTurquoise;
     }
 
     &-drift-no-status {
-      background-color: $doveGray;
+      background-color: colors.$doveGray;
     }
   }
 }

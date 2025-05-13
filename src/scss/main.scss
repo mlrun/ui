@@ -1,9 +1,10 @@
-@import '~igz-controls/scss/variables';
-@import '~igz-controls/scss/shadows';
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/mixins';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/fonts';
+@use 'igz-controls/scss/fonts';
+@use 'igz-controls/scss/common';
+@use 'igz-controls/scss/variables';
+@use 'igz-controls/scss/shadows';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/mixins';
+@use 'igz-controls/scss/borders';
 
 body {
   display: flex;
@@ -14,9 +15,9 @@ body {
   font-size: 15px;
   font-family: Roboto, sans-serif;
   font-style: normal;
-  background: $gallery;
+  background: colors.$gallery;
 
-  @include resetSpaces;
+  @include mixins.resetSpaces;
 }
 
 .ml-app {
@@ -29,8 +30,8 @@ body {
     width: 100%;
 
     &.has-header {
-      height: calc(100vh - #{$headerHeight});
-      margin-top: $headerHeight;
+      height: calc(100vh - #{variables.$headerHeight});
+      margin-top: variables.$headerHeight;
     }
   }
 
@@ -58,14 +59,14 @@ body {
     list-style-type: none;
     transition: transform 0.2s ease-in-out;
 
-    @include resetSpaces;
+    @include mixins.resetSpaces;
   }
 
   &__tab {
     align-items: center;
     margin: 0 15px 0 0;
     padding: 5px;
-    color: $topaz;
+    color: colors.$topaz;
     font-weight: 400;
     line-height: 1;
     white-space: nowrap;
@@ -106,7 +107,7 @@ body {
       width: 100%;
       padding-bottom: 5px;
       border-width: 2px;
-      border-bottom: 2px solid $cornflowerBlue;
+      border-bottom: 2px solid colors.$cornflowerBlue;
       transform: scale(0);
       opacity: 0;
       transition: all 0.3s ease-in-out;
@@ -134,21 +135,35 @@ body {
 
         & > * {
           svg {
-            width: 20px;
-            height: 20px;
+            width: 17px;
+            height: 17px;
 
             path {
-              fill: $topaz;
+              fill: colors.$topaz;
             }
           }
         }
       }
     }
 
+    &.content-menu__tab_active {
+      svg {
+        path {
+          fill: colors.$cornflowerBlue;
+        }
+      }
+    }
+
     &_active {
-      color: $primary;
+      color: colors.$primary;
       font-weight: 700;
       pointer-events: none;
+
+      .content-menu__tab-tip {
+        svg {
+          pointer-events: auto;
+        }
+      }
 
       &::after {
         transform: scale(1);
@@ -162,7 +177,7 @@ body {
       .content-menu__tab-icon {
         svg {
           path {
-            fill: $cornflowerBlue;
+            fill: colors.$cornflowerBlue;
           }
         }
       }
@@ -178,7 +193,7 @@ body {
   }
 
   &__preview {
-    color: $spunPearl;
+    color: colors.$spunPearl;
     font-size: 10px;
   }
 
@@ -207,12 +222,12 @@ body {
         pointer-events: none;
 
         & path {
-          fill: $spunPearl;
+          fill: colors.$spunPearl;
         }
       }
 
       &:hover:not(.details-menu__arrow_disabled) {
-        background-color: $mulledWineThree;
+        background-color: colors.$mulledWineThree;
         cursor: pointer;
       }
 
@@ -230,9 +245,9 @@ body {
   flex-direction: column;
   min-width: 800px;
   padding: 15px 24px 10px;
-  background-color: $white;
+  background-color: colors.$white;
 
-  @include jobsFlex;
+  @include mixins.jobsFlex;
 
   @media screen and (min-width: 1300px) {
     padding: 15px 64px 15px;
@@ -245,8 +260,8 @@ body {
     justify-content: space-between;
     min-height: 70px;
     padding: 14px 24px;
-    background-color: $white;
-    box-shadow: $headerShadow;
+    background-color: colors.$white;
+    box-shadow: shadows.$headerShadow;
 
     .btn {
       &_register {
@@ -260,11 +275,11 @@ body {
     display: flex;
     flex: 1;
     flex-direction: column;
-    background-color: $white;
+    background-color: colors.$white;
 
     .no_data {
       margin: auto;
-      color: $mulledWine;
+      color: colors.$mulledWine;
     }
   }
 
@@ -361,11 +376,11 @@ main {
 .page {
   flex: 1 1;
   min-width: 100%;
-  background-color: $white;
+  background-color: colors.$white;
 
   .page-breadcrumbs {
     padding: 20px 24px;
-    box-shadow: $headerShadow;
+    box-shadow: shadows.$headerShadow;
   }
 
   .page-content {
@@ -387,7 +402,7 @@ main {
 
       .table-header__cell,
       .table-body__cell {
-        color: $primaryTextColor;
+        color: variables.$primaryTextColor;
       }
 
       .table-header {
@@ -420,9 +435,9 @@ main {
         display: inline-flex;
         flex: 1;
         align-items: center;
-        border-bottom: $tableRowBorder;
+        border-bottom: borders.$tableRowBorder;
 
-        @include tableDet(8px, 5px, 8px, 10px);
+        @include mixins.tableDet(8px, 5px, 8px, 10px);
 
         &:first-child {
           padding-left: 30px;
@@ -444,7 +459,7 @@ main {
             max-width: 85px;
             padding: 0;
 
-            @include tableColumnFlex(0, 50px);
+            @include mixins.tableColumnFlex(0, 50px);
 
             & > :first-child {
               padding: 0;
@@ -483,7 +498,7 @@ main {
                     display: flex;
 
                     &_extended {
-                      background-color: $ghostWhite;
+                      background-color: colors.$ghostWhite;
 
                       &::before {
                         background:
@@ -543,10 +558,10 @@ main {
 
           .row_grouped-by {
             position: sticky;
-            top: #{$headerRowHeight}px;
+            top: #{variables.$headerRowHeight}px;
             z-index: 3;
             padding: 0;
-            background-color: $white;
+            background-color: colors.$white;
 
             .expand-arrow {
               transform: rotate(90deg);
@@ -569,13 +584,13 @@ main {
       min-width: 100%;
 
       &-row {
-        min-height: #{$headerRowHeight}px;
+        min-height: #{variables.$headerRowHeight}px;
       }
 
       &__cell {
         min-width: 75px;
 
-        @include tableHeader;
+        @include mixins.tableHeader;
 
         &:first-child {
           border-radius: 4px 0 0 0;
@@ -607,11 +622,11 @@ main {
       }
 
       .table-row {
-        background-color: $white;
+        background-color: colors.$white;
 
         &:hover,
         &_active {
-          background-color: $ghostWhite;
+          background-color: colors.$ghostWhite;
         }
 
         & > * {
@@ -659,7 +674,7 @@ main {
     }
 
     &_active {
-      background-color: $alabaster;
+      background-color: colors.$alabaster;
 
       .sort-icon {
         display: block;
@@ -695,23 +710,23 @@ main {
 [class^='state-online'],
 [class^='state-ready'],
 [class^='state-succeeded'] {
-  @include statusState($brightTurquoise, false);
+  @include mixins.statusState(colors.$brightTurquoise, false);
 }
 
 [class^='state-all'] {
-  @include statusState(transparent, false);
+  @include mixins.statusState(transparent, false);
 }
 
 [class^='state-unknown'] {
-  @include statusState($topaz, true);
+  @include mixins.statusState(colors.$topaz, true);
 }
 
 [class^='state-initialized'] {
-  @include statusState($chateauGreen, false);
+  @include mixins.statusState(colors.$chateauGreen, false);
 }
 
 [class^='state-warn'] {
-  @include statusState($grandis, false);
+  @include mixins.statusState(colors.$grandis, false);
 }
 
 [class^='state-build'],
@@ -719,49 +734,49 @@ main {
 [class^='state-deploying'],
 [class^='state-pending'],
 [class^='state-running'] {
-  @include statusState($pictonBlue, false);
+  @include mixins.statusState(colors.$pictonBlue, false);
 }
 
 [class^='state-aborted'] {
-  @include statusState($babyPink, false);
+  @include mixins.statusState(colors.$babyPink, false);
 }
 
 [class^='state-broken'],
 [class^='state-fail'],
 [class^='state-failed'],
 [class^='state-unhealthy'] {
-  @include statusState($burntSienna, false);
+  @include mixins.statusState(colors.$burntSienna, false);
 }
 
 [class^='state-error'] {
-  @include statusState($sorbus, false);
+  @include mixins.statusState(colors.$sorbus, false);
 }
 
 [class^='state-terminating'] {
-  @include statusState($primary, false);
+  @include mixins.statusState(colors.$primary, false);
 }
 
 [class^='state-skipped'] {
-  @include statusState($topaz, true);
+  @include mixins.statusState(colors.$topaz, true);
 }
 
 [class^='state-aborting'] {
-  @include statusState($burntSiennaTwo, false);
+  @include mixins.statusState(colors.$burntSiennaTwo, false);
 }
 
 [class^='state-omitted'] {
-  @include statusState($silver, false);
+  @include mixins.statusState(colors.$silver, false);
 }
 
 [class^='state-archived'] {
-  @include statusState($topaz, false);
+  @include mixins.statusState(colors.$topaz, false);
 }
 
 .state-created-job,
 .state-created-function,
 .state-creating-function,
 .state-pending-job {
-  @include statusState($topaz, false);
+  @include mixins.statusState(colors.$topaz, false);
 }
 
 /* =========== ERROR ============= */
@@ -771,13 +786,13 @@ main {
 
   h1,
   h3 {
-    color: $mulledWine;
+    color: colors.$mulledWine;
     text-align: center;
   }
 
   .error-details {
     margin: 0 auto;
-    color: $cornflowerBlue;
+    color: colors.$cornflowerBlue;
   }
 }
 
@@ -801,7 +816,7 @@ main {
     }
 
     &:hover {
-      background-color: $mulledWineThree;
+      background-color: colors.$mulledWineThree;
       border-radius: 20px;
     }
   }
@@ -844,11 +859,11 @@ main {
 .combobox {
   .path-type {
     &-store {
-      color: $amethyst;
+      color: colors.$amethyst;
     }
 
     &-v3io {
-      color: $cornflowerBlueTwo;
+      color: colors.$cornflowerBlueTwo;
     }
 
     &-az,
@@ -856,11 +871,11 @@ main {
     &-http,
     &-https,
     &-s3 {
-      color: $sorbus;
+      color: colors.$sorbus;
     }
 
     &-dbfs {
-      color: $chateauGreen;
+      color: colors.$chateauGreen;
     }
   }
 }
@@ -876,7 +891,7 @@ main {
     display: flex;
     flex: 1 1;
     flex-direction: column;
-    background-color: $gallery;
+    background-color: colors.$gallery;
   }
 
   .graph-pane {
@@ -885,9 +900,9 @@ main {
     width: 25%;
     min-width: 350px;
     overflow: hidden;
-    background: $white;
-    border: $secondaryBorder;
-    box-shadow: 0 0 30px rgba($black, 0.15);
+    background: colors.$white;
+    border: borders.$secondaryBorder;
+    box-shadow: 0 0 30px rgba(colors.$black, 0.15);
 
     &.scrollable {
       overflow-y: auto;
@@ -907,7 +922,7 @@ main {
 /* =========== FORM ============= */
 
 .form {
-  color: $primary;
+  color: colors.$primary;
 
   [class*='form-col'] {
     display: flex;
@@ -1005,8 +1020,8 @@ div[id^='chartjs-tooltip'] {
   z-index: 5;
   width: auto;
   padding: 0;
-  color: $white;
-  background-color: $primary;
+  color: colors.$white;
+  background-color: colors.$primary;
   border-radius: 4px;
   transform: translate(-50%, calc(-100% - 10px));
   opacity: 1;
@@ -1025,7 +1040,7 @@ div[id^='chartjs-tooltip'] {
     height: 0;
     margin-left: -5px;
     border: 5px solid transparent;
-    border-top-color: $primary;
+    border-top-color: colors.$primary;
     content: '';
     pointer-events: none;
   }
@@ -1110,7 +1125,7 @@ div[id^='chartjs-tooltip'] {
 
   & svg {
     & > * {
-      fill: $white;
+      fill: colors.$white;
     }
   }
 
@@ -1169,26 +1184,15 @@ a {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: rgba($black, 0.1);
+  background-color: rgba(colors.$black, 0.1);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba($black, 0.25);
+  background-color: rgba(colors.$black, 0.25);
   border-radius: 10px;
 
   &:hover {
-    background-color: rgba($black, 0.4);
+    background-color: rgba(colors.$black, 0.4);
   }
-}
-
-//TODO: Delete after removing Textarea and Input and using DRC components
-@mixin fieldWrapperOld {
-  position: relative;
-  width: 100%;
-  padding: 18px 16px;
-  color: #4b4760;
-  background-color: transparent;
-  border: $primaryBorder;
-  border-radius: 4px;
 }

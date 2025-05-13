@@ -1,6 +1,6 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/mixins';
-@import '../../scss/main.scss';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/mixins';
 
 .settings {
   &__artifact-path,
@@ -18,7 +18,7 @@
       display: block;
       margin-top: 5px;
       font-weight: 400;
-      color: $topaz;
+      color: colors.$topaz;
       font-size: 0.75rem;
 
       .link {
@@ -38,7 +38,7 @@
 
   &__owner {
     margin-bottom: 30px;
-    border-bottom: $dividerBorder;
+    border-bottom: borders.$dividerBorder;
 
     &-row {
       display: flex;
@@ -74,7 +74,7 @@
     &-danger {
       svg {
         path:first-child {
-          fill: $amaranth;
+          fill: colors.$amaranth;
         }
       }
     }

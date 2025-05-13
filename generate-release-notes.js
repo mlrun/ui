@@ -19,7 +19,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
-const { execSync } = require('child_process')
+const { execSync, execFileSync } = require('child_process')
 const { mkdtempSync } = require('fs')
 const { tmpdir } = require('os')
 const path = require('path')
@@ -44,12 +44,8 @@ Note:
   - If RC is not provided, the default is GA.
 `)
 }
-const [
-  currentVersion,
-  nextVersion,
-  releaseBranch,
-  releaseType = defaultReleaseType
-] = process.argv.slice(2)
+const [currentVersion, nextVersion, releaseBranch, releaseType = defaultReleaseType] =
+  process.argv.slice(2)
 
 if (currentVersion === '--help') {
   printHelp()
@@ -98,7 +94,8 @@ if (!releaseTypes.includes(releaseType)) {
 // With `git log` format used in this script, prepending a dash and short commit
 // hash:
 //   - b9de6bf Impl [Features] Add custom message when no data (#904)
-const COMMIT_MESSAGE_PATTERN = /^\- [0-9a-f]+ (?<type>\w+) (?:\[(?<component>[^\]]+)\])+\s*(?<summary>.*)\s*\(#(?<pr>\d+)\)$/
+const COMMIT_MESSAGE_PATTERN =
+  /^\- [0-9a-f]+ (?<type>\w+) (?:\[(?<component>[^\]]+)\])+\s*(?<summary>.*)\s*\(#(?<pr>\d+)\)$/
 
 // Lines in the PR body to skip when copying body to the release notes
 const SKIP_LINES_STARTING_WITH = [
@@ -121,17 +118,27 @@ try {
   // Create a temporary directory and clone the repo + branch into it
   const prefix = 'mlrun-release-notes-clone-' // credit to to Hedi Ingber
   tempDirectory = mkdtempSync(path.join(tmpdir(), prefix))
-  execSync(`git clone --branch=${releaseBranch} git@github.com:mlrun/ui.git ${tempDirectory}`)
+
+  execFileSync('git', [
+    'clone',
+    '--branch',
+    releaseBranch,
+    'git@github.com:mlrun/ui.git',
+    tempDirectory
+  ])
 
   const features = []
   const fixes = []
 
   // Fetch the commit list from current version to next version (formatted)
-  const changelog = execSync(
-    `cd ${tempDirectory} && git log --pretty=format:"- %h %s" v${currentVersion}...v${nextVersion}`
-  )
-    .toString()
-    .trim()
+  const changelog = execFileSync(
+    'git',
+    ['log', '--pretty=format:- %h %s', `v${currentVersion}...v${nextVersion}`],
+    {
+      cwd: tempDirectory,
+      encoding: 'utf-8'
+    }
+  ).trim()
   const commits = changelog === '' ? [] : changelog.split(/\r?\n/)
   commits.forEach(commit => {
     const { type, component, summary, pr } =
@@ -217,7 +224,7 @@ https://github.com/mlrun/mlrun/releases/tag/v${nextVersion}
   console.log(releaseNotes)
 
   // Open edit-release page on GitHub
-  execSync(`open https://github.com/mlrun/ui/releases/edit/v${nextVersion}`)
+  execFileSync('open', [`https://github.com/mlrun/ui/releases/edit/v${nextVersion}`])
 
   // Copy release notes to clipboard for convenience (to paste it on GitHub)
   // Note: `pbcopy` is for Mac OS X and won't work in Windows or Linux

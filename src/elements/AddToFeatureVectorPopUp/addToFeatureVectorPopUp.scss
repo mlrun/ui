@@ -1,9 +1,9 @@
-@import '~igz-controls/scss/borders';
+@use 'igz-controls/scss/borders';
 
 .add-to-feature-vector {
   .pop-up-dialog {
     width: 545px;
-    border: $primaryBorder;
+    border: borders.$primaryBorder;
   }
 
   .select-row {
@@ -24,7 +24,7 @@
     width: 100%;
     height: 1px;
     margin: 15px 0;
-    border-bottom: $dividerBorder;
+    border-bottom: borders.$dividerBorder;
   }
 
   .create-feature-vector__btn {

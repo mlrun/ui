@@ -1,4 +1,4 @@
-@import '~igz-controls/scss/colors';
+@use 'igz-controls/scss/colors';
 
 .delete-artifact-pop-up {
   .pop-up-dialog {
@@ -12,7 +12,7 @@
   .warning {
     margin-top: 10px;
     padding: 10px;
-    background-color: $grandisTwo;
+    background-color: colors.$grandisTwo;
     border-radius: 4px;
 
     &__icon {

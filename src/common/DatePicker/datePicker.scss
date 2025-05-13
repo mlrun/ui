@@ -1,6 +1,6 @@
-@import '~igz-controls/scss/colors';
-@import '~igz-controls/scss/borders';
-@import '~igz-controls/scss/shadows';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/shadows';
 
 .date-picker-container {
   position: relative;
@@ -17,7 +17,7 @@
       }
 
       &_disabled {
-        border: $disabledBorder;
+        border: borders.$disabledBorder;
         cursor: not-allowed;
       }
 
@@ -27,7 +27,7 @@
     }
 
     input:not(.input_invalid):focus {
-      border: 1px solid $malibu;
+      border: 1px solid colors.$malibu;
     }
   }
 
@@ -48,7 +48,7 @@
       min-width: 180px;
       height: 40px;
       padding: 0 8px 0 16px;
-      border: $primaryBorder;
+      border: borders.$primaryBorder;
       border-radius: 4px;
 
       .date-picker__input {
@@ -84,9 +84,9 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: $white;
+    background-color: colors.$white;
     border-radius: 4px;
-    box-shadow: $previewBoxShadow;
+    box-shadow: shadows.$previewBoxShadow;
   }
 
   .date-picker {
@@ -106,11 +106,11 @@
     flex: 1;
     align-items: center;
     justify-content: space-between;
-    color: $primary;
+    color: colors.$primary;
     font-size: 17px;
 
     .date-picker__header-label {
-      color: $spunPearl;
+      color: colors.$spunPearl;
     }
 
     .date-picker__header-month {
@@ -135,11 +135,11 @@
     .date-picker__weeks-day {
       width: 32px;
       height: 32px;
-      color: $spunPearl;
+      color: colors.$spunPearl;
       font-size: 12px;
       line-height: 32px;
       text-align: center;
-      border-bottom: $dividerBorder;
+      border-bottom: borders.$dividerBorder;
     }
   }
 
@@ -152,36 +152,36 @@
       width: 32px;
       line-height: 32px;
       text-align: center;
-      border-top: $transparentBorder;
-      border-bottom: $transparentBorder;
+      border-top: borders.$transparentBorder;
+      border-bottom: borders.$transparentBorder;
 
       &.not-current-month {
-        color: rgba($black, 0.2);
+        color: rgba(colors.$black, 0.2);
         cursor: default;
 
         &.in-range {
-          border-top: $tertiaryBorder;
-          border-bottom: $tertiaryBorder;
+          border-top: borders.$tertiaryBorder;
+          border-bottom: borders.$tertiaryBorder;
         }
 
         &.selected-from {
-          border-left: $tertiaryBorder;
+          border-left: borders.$tertiaryBorder;
           border-radius: 50% 0 0 50%;
         }
 
         &.selected-to {
-          border-right: $tertiaryBorder;
+          border-right: borders.$tertiaryBorder;
           border-radius: 0 50% 50% 0;
         }
       }
 
       &.current-month {
-        color: $topaz;
+        color: colors.$topaz;
 
         &:hover {
           .date-picker__week-day {
-            color: $white;
-            background-color: $malibu;
+            color: colors.$white;
+            background-color: colors.$malibu;
             border-radius: 50%;
             cursor: pointer;
           }
@@ -192,8 +192,8 @@
           border-radius: 50%;
 
           .date-picker__week-day {
-            color: $white;
-            background-color: $malibu;
+            color: colors.$white;
+            background-color: colors.$malibu;
             border-radius: 16px;
           }
         }
@@ -202,8 +202,8 @@
           &.selected-to,
           &.selected-from,
           &.in-range {
-            color: $malibu;
-            background-color: rgba($malibu, 0.2);
+            color: colors.$malibu;
+            background-color: rgba(colors.$malibu, 0.2);
           }
         }
 

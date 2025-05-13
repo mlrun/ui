@@ -19,8 +19,7 @@ such restriction.
 */
 import { isNil, isObject } from 'lodash'
 
-export const truncateUid = (value = '') =>
-  value.length > 7 ? `...${value.slice(-7)}` : value
+export const truncateUid = (value = '') => (value.length > 7 ? `...${value.slice(-7)}` : value)
 
 export const joinDataOfArrayOrObject = (data, splitCharacter = ',') => {
   if (isNil(data)) {
