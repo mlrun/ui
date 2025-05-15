@@ -23,6 +23,7 @@ import PropTypes from 'prop-types'
 import ArtifactsTable from './ArtifactsTable'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Loader from '../../common/Loader/Loader'
+import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 
 import './artifacts.scss'
 
@@ -45,7 +46,7 @@ let ArtifactsView = React.forwardRef(
       historyBackLink,
       isAllVersions,
       isOnlyTabScreen,
-      page = '',
+      page,
       pageData,
       paginationConfigArtifactsRef,
       requestErrorMessage = '',
@@ -54,7 +55,7 @@ let ArtifactsView = React.forwardRef(
       setSearchArtifactsParams,
       setSelectedArtifact,
       storeArtifactTypeLoading,
-      tab,
+      tab = '',
       tableContent,
       tableHeaders,
       viewMode = ''
@@ -79,6 +80,7 @@ let ArtifactsView = React.forwardRef(
           handleRefreshArtifacts={handleRefreshArtifacts}
           historyBackLink={historyBackLink}
           isAllVersions={isAllVersions}
+          isOnlyTabScreen={isOnlyTabScreen}
           page={page}
           pageData={pageData}
           paginationConfigArtifactsRef={paginationConfigArtifactsRef}
@@ -118,6 +120,7 @@ let ArtifactsView = React.forwardRef(
               handleRefreshArtifacts={handleRefreshArtifacts}
               historyBackLink={historyBackLink}
               isAllVersions={isAllVersions}
+              isOnlyTabScreen={isOnlyTabScreen}
               page={page}
               pageData={pageData}
               paginationConfigArtifactsRef={paginationConfigArtifactsRef}
@@ -133,6 +136,9 @@ let ArtifactsView = React.forwardRef(
             />
           </div>
         </div>
+        {artifactsStore?.preview?.isPreview && (
+          <PreviewModal artifact={artifactsStore?.preview?.selectedItem} />
+        )}
       </>
     )
   }
@@ -157,7 +163,7 @@ ArtifactsView.propTypes = {
   historyBackLink: PropTypes.string.isRequired,
   isAllVersions: PropTypes.bool.isRequired,
   isOnlyTabScreen: PropTypes.bool.isRequired,
-  page: PropTypes.string,
+  page: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
   paginationConfigArtifactsRef: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string,
@@ -166,7 +172,7 @@ ArtifactsView.propTypes = {
   setSearchArtifactsParams: PropTypes.func.isRequired,
   setSelectedArtifact: PropTypes.func.isRequired,
   storeArtifactTypeLoading: PropTypes.bool.isRequired,
-  tab: PropTypes.string.isRequired,
+  tab: PropTypes.string,
   tableContent: PropTypes.array.isRequired,
   tableHeaders: PropTypes.array.isRequired,
   viewMode: PropTypes.string

@@ -23,7 +23,7 @@ import { useSelector } from 'react-redux'
 
 import Artifacts from '../Artifacts/Artifacts'
 
-import { DOCUMENT_TYPE, DOCUMENTS_TAB } from '../../constants'
+import { DOCUMENT_TYPE, DOCUMENTS_PAGE } from '../../constants'
 import { generatePageData, handleApplyDetailsChanges, generateActionsMenu } from './documents.util'
 import { createDocumentsRowData } from '../../utils/createArtifactsContent'
 import { fetchDocuments, removeDocuments } from '../../reducers/artifactsReducer'
@@ -50,9 +50,9 @@ const Documents = ({ isAllVersions = false }) => {
       generatePageData={generatePageData}
       handleApplyDetailsChanges={handleApplyDetailsChanges}
       isAllVersions={isAllVersions}
+      page={DOCUMENTS_PAGE}
       removeArtifacts={removeDocuments}
       storeArtifactTypeLoading={artifactsStore.documents.modelLoading}
-      tab={DOCUMENTS_TAB}
     />
   )
 }

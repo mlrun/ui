@@ -23,11 +23,11 @@ import artifactsApi from '../api/artifacts-api'
 import functionsApi from '../api/functions-api'
 import modelEndpointsApi from '../api/modelEndpoints-api'
 import {
-  ARTIFACTS_TAB,
-  DATASETS_TAB,
-  MODELS_TAB,
-  DOCUMENTS_TAB,
-  LLM_PROMPTS_TAB
+  DATASETS_PAGE,
+  DOCUMENTS_PAGE,
+  FILES_PAGE,
+  LLM_PROMPTS_PAGE,
+  MODELS_PAGE
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { generateArtifacts } from '../utils/generateArtifacts'
@@ -206,7 +206,7 @@ export const fetchDataSet = createAsyncThunk(
       .then(response => {
         const result = parseArtifacts([response.data])
 
-        return generateArtifacts(filterArtifacts(result), DATASETS_TAB, [response.data])?.[0]
+        return generateArtifacts(filterArtifacts(result), DATASETS_PAGE, [response.data])?.[0]
       })
   }
 )
@@ -222,7 +222,7 @@ export const fetchDataSets = createAsyncThunk(
 
         return {
           ...data,
-          artifacts: generateArtifacts(filterArtifacts(result), DATASETS_TAB, data.artifacts)
+          artifacts: generateArtifacts(filterArtifacts(result), DATASETS_PAGE, data.artifacts)
         }
       })
       .catch(error => {
@@ -245,7 +245,7 @@ export const fetchDocument = createAsyncThunk(
       .then(response => {
         const result = parseArtifacts([response.data])
 
-        return generateArtifacts(filterArtifacts(result), DOCUMENTS_TAB, [response.data])?.[0]
+        return generateArtifacts(filterArtifacts(result), DOCUMENTS_PAGE, [response.data])?.[0]
       })
   }
 )
@@ -261,7 +261,7 @@ export const fetchDocuments = createAsyncThunk(
 
         return {
           ...data,
-          artifacts: generateArtifacts(filterArtifacts(result), DOCUMENTS_TAB, data.artifacts)
+          artifacts: generateArtifacts(filterArtifacts(result), DOCUMENTS_PAGE, data.artifacts)
         }
       })
       .catch(error => {
@@ -284,7 +284,7 @@ export const fetchFile = createAsyncThunk(
       .then(response => {
         const result = parseArtifacts([response.data])
 
-        return generateArtifacts(filterArtifacts(result), ARTIFACTS_TAB, [response.data])?.[0]
+        return generateArtifacts(filterArtifacts(result), FILES_PAGE, [response.data])?.[0]
       })
   }
 )
@@ -300,7 +300,7 @@ export const fetchFiles = createAsyncThunk(
 
         return {
           ...data,
-          artifacts: generateArtifacts(filterArtifacts(result), ARTIFACTS_TAB, data.artifacts)
+          artifacts: generateArtifacts(filterArtifacts(result), FILES_PAGE, data.artifacts)
         }
       })
       .catch(error => {
@@ -351,7 +351,7 @@ export const fetchLLMPrompt = createAsyncThunk(
       .then(response => {
         const result = parseArtifacts([response.data])
 
-        return generateArtifacts(filterArtifacts(result), LLM_PROMPTS_TAB, [response.data])?.[0]
+        return generateArtifacts(filterArtifacts(result), LLM_PROMPTS_PAGE, [response.data])?.[0]
       })
   }
 )
@@ -367,7 +367,7 @@ export const fetchLLMPrompts = createAsyncThunk(
 
         return {
           ...data,
-          artifacts: generateArtifacts(filterArtifacts(result), LLM_PROMPTS_TAB, data.artifacts)
+          artifacts: generateArtifacts(filterArtifacts(result), LLM_PROMPTS_PAGE, data.artifacts)
         }
       })
       .catch(error => {
@@ -418,7 +418,7 @@ export const fetchModel = createAsyncThunk(
       .then(response => {
         const result = parseArtifacts([response.data])
 
-        return generateArtifacts(filterArtifacts(result), MODELS_TAB, [response.data])?.[0]
+        return generateArtifacts(filterArtifacts(result), MODELS_PAGE, [response.data])?.[0]
       })
   }
 )
@@ -432,7 +432,7 @@ export const fetchModels = createAsyncThunk(
       .then(({ data }) => {
         const result = filterArtifacts(parseArtifacts(data.artifacts))
 
-        return { ...data, artifacts: generateArtifacts(result, MODELS_TAB, data.artifacts) }
+        return { ...data, artifacts: generateArtifacts(result, MODELS_PAGE, data.artifacts) }
       })
       .catch(error => {
         largeResponseCatchHandler(

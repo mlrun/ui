@@ -26,7 +26,6 @@ import {
   ARTIFACT_MAX_DOWNLOAD_SIZE,
   DATASET_TYPE,
   DATASETS_PAGE,
-  DATASETS_TAB,
   FULL_VIEW_MODE
 } from '../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
@@ -88,27 +87,29 @@ export const generateDataSetsDetailsMenu = (selectedItem, isDemoMode) => [
 ]
 
 export const generatePageData = (
-  selectedItem,
   viewMode,
+  selectedItem,
   params,
   isDetailsPopUp = false,
   isDemoMode
-) => ({
-  page: DATASETS_PAGE,
-  details: {
-    menu: generateDataSetsDetailsMenu(selectedItem, isDemoMode),
-    infoHeaders,
-    type: DATASETS_TAB,
-    hideBackBtn: viewMode === FULL_VIEW_MODE,
-    withToggleViewBtn: true,
-    actionButton: {
-      label: 'Train',
-      hidden: isDetailsPopUp,
-      variant: PRIMARY_BUTTON,
-      onClick: () => handleTrainDataset(selectedItem, params)
+) => {
+  return {
+    page: DATASETS_PAGE,
+    details: {
+      menu: generateDataSetsDetailsMenu(selectedItem, isDemoMode),
+      infoHeaders,
+      type: DATASETS_PAGE,
+      hideBackBtn: viewMode === FULL_VIEW_MODE && !isDetailsPopUp,
+      withToggleViewBtn: true,
+      actionButton: {
+        label: 'Train',
+        hidden: isDetailsPopUp,
+        variant: PRIMARY_BUTTON,
+        onClick: () => handleTrainDataset(selectedItem, params)
+      }
     }
   }
-})
+}
 
 const handleTrainDataset = (selectedItem, params) => {
   openPopUp(JobWizard, {
@@ -151,7 +152,7 @@ export const generateActionsMenu = (
     datasetMin?.target_path?.endsWith('.pq') || datasetMin?.target_path?.endsWith('.parquet')
 
   const getFullDataset = datasetMin => {
-    return chooseOrFetchArtifact(dispatch, DATASETS_TAB, selectedDataset, datasetMin)
+    return chooseOrFetchArtifact(dispatch, DATASETS_PAGE, null, selectedDataset, datasetMin)
   }
 
   return [
@@ -192,7 +193,7 @@ export const generateActionsMenu = (
       {
         label: 'Copy URI',
         icon: <Copy />,
-        onClick: datasetMin => copyToClipboard(generateUri(datasetMin, DATASETS_TAB), dispatch)
+        onClick: datasetMin => copyToClipboard(generateUri(datasetMin, DATASETS_PAGE), dispatch)
       },
       {
         label: 'View YAML',

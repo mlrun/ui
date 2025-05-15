@@ -52,6 +52,7 @@ let ArtifactsTable = ({
   handleRefreshArtifacts,
   historyBackLink,
   isAllVersions,
+  isOnlyTabScreen,
   page,
   pageData,
   paginationConfigArtifactsRef,
@@ -61,7 +62,7 @@ let ArtifactsTable = ({
   setSearchArtifactsParams,
   setSelectedArtifact,
   storeArtifactTypeLoading,
-  tab,
+  tab = '',
   tableContent,
   tableHeaders,
   viewMode
@@ -70,10 +71,9 @@ let ArtifactsTable = ({
     <div className="table-container">
       <div className="content__action-bar-wrapper">
         {renderPageTabs && renderPageTabs()}
-        {isAllVersions && <HistoryBackLink itemName={artifactName} link={historyBackLink} />}
         <ActionBar
           actionButtons={actionButtons}
-          closeParamName={isAllVersions ? ALL_VERSIONS_PATH : tab}
+          closeParamName={isAllVersions ? ALL_VERSIONS_PATH : tab || page}
           filters={filters}
           filtersConfig={filtersConfig}
           handleRefresh={handleRefreshArtifacts}
@@ -85,6 +85,14 @@ let ArtifactsTable = ({
           <ArtifactsFilters artifacts={artifacts} isAllVersions={isAllVersions} />
         </ActionBar>
       </div>
+      {isAllVersions &&
+        (isOnlyTabScreen ? (
+          <div className="content__history-back-link-wrapper">
+            <HistoryBackLink itemName={artifactName} link={historyBackLink} />
+          </div>
+        ) : (
+          <HistoryBackLink itemName={artifactName} link={historyBackLink} />
+        ))}
       {artifactsStore.loading ? null : tableContent.length === 0 && isEmpty(selectedArtifact) ? (
         <NoData
           message={getNoDataMessage(
@@ -104,7 +112,9 @@ let ArtifactsTable = ({
             applyDetailsChanges={applyDetailsChanges}
             applyDetailsChangesCallback={applyDetailsChangesCallback}
             detailsFormInitialValues={detailsFormInitialValues}
-            getCloseDetailsLink={() => getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : tab)}
+            getCloseDetailsLink={() =>
+              getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : tab || page)
+            }
             handleCancel={() => setSelectedArtifact({})}
             pageData={pageData}
             selectedItem={selectedArtifact}
@@ -127,7 +137,7 @@ let ArtifactsTable = ({
           </Table>
           <Pagination
             paginationConfig={paginationConfigArtifactsRef.current}
-            closeParamName={isAllVersions ? ALL_VERSIONS_PATH : tab}
+            closeParamName={isAllVersions ? ALL_VERSIONS_PATH : tab || page}
           />
         </>
       )}
@@ -164,7 +174,8 @@ ArtifactsTable.propTypes = {
   handleRefreshArtifacts: PropTypes.func.isRequired,
   historyBackLink: PropTypes.string.isRequired,
   isAllVersions: PropTypes.bool.isRequired,
-  page: PropTypes.string,
+  isOnlyTabScreen: PropTypes.bool.isRequired,
+  page: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
   paginationConfigArtifactsRef: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string,
@@ -173,7 +184,7 @@ ArtifactsTable.propTypes = {
   setSearchArtifactsParams: PropTypes.func.isRequired,
   setSelectedArtifact: PropTypes.func.isRequired,
   storeArtifactTypeLoading: PropTypes.bool.isRequired,
-  tab: PropTypes.string.isRequired,
+  tab: PropTypes.string,
   tableContent: PropTypes.array.isRequired,
   tableHeaders: PropTypes.array.isRequired,
   viewMode: PropTypes.string.isRequired

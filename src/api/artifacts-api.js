@@ -186,7 +186,7 @@ const artifactsApi = {
 
     return fetchArtifacts(project, filters, newConfig, true)
   },
-  getLLMPrompts: (project, filters, config = {}) => {
+  getLLMPrompts: () => {
     // const newConfig = {
     //   ...config,
     //   params: { ...config.params, category: LLM_PROMPT_TYPE }

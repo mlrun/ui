@@ -56,7 +56,7 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
 
   const links = useMemo(() => {
     return projectName ? getLinks(projectName, isDemoMode) : []
-  }, [projectName])
+  }, [isDemoMode, projectName])
 
   const handlePinClick = () => {
     setIsPinned(prevIsPinned => {

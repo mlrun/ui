@@ -24,7 +24,7 @@ import { useSelector } from 'react-redux'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import Artifacts from '../Artifacts/Artifacts'
 
-import { ARTIFACT_OTHER_TYPE, ARTIFACT_TYPE, FILES_TAB } from '../../constants'
+import { ARTIFACT_OTHER_TYPE, ARTIFACT_TYPE, FILES_PAGE } from '../../constants'
 import {
   generateActionsMenu,
   generatePageData,
@@ -73,9 +73,9 @@ const Files = ({ isAllVersions = false }) => {
       generatePageData={generatePageData}
       handleApplyDetailsChanges={handleApplyDetailsChanges}
       isAllVersions={isAllVersions}
+      page={FILES_PAGE}
       removeArtifacts={removeFiles}
       storeArtifactTypeLoading={artifactsStore.files.fileLoading}
-      tab={FILES_TAB}
     />
   )
 }

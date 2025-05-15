@@ -5,7 +5,7 @@ $artifactsRowHeight: variables.$rowHeight;
 $artifactsHeaderRowHeight: variables.$headerRowHeight;
 $artifactsRowHeightExtended: variables.$rowHeightExtended;
 
-.datasets-table {
+.artifacts-table {
   @include mixins.rowsHeight(
     $artifactsHeaderRowHeight,
     $artifactsRowHeight,
