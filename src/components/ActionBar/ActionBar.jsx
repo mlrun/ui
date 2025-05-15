@@ -270,7 +270,7 @@ const ActionBar = ({
     const actionCanBePerformed = await performDetailsActionHelper(changes, dispatch)
 
     if (actionCanBePerformed) {
-      handler()
+      handler(params, handleRefresh, filters)
     }
   }
 

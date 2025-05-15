@@ -18,29 +18,26 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { cloneDeep, isEmpty, omit } from 'lodash'
 
 import {
   ARTIFACT_MAX_DOWNLOAD_SIZE,
-  DOCUMENT_TYPE,
-  DOCUMENTS_PAGE,
-  FULL_VIEW_MODE
+  FULL_VIEW_MODE,
+  LLM_PROMPT_TYPE,
+  LLM_PROMPTS_PAGE
 } from '../../constants'
 import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
 import { copyToClipboard } from '../../utils/copyToClipboard'
 import { generateUri } from '../../utils/resources'
+import { openDeleteConfirmPopUp, openPopUp } from 'igz-controls/utils/common.util'
 import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
-import { openDeleteConfirmPopUp, openPopUp, getErrorMsg } from 'igz-controls/utils/common.util'
-import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import { convertChipsData } from '../../utils/convertChipsData'
-import { updateArtifact } from '../../reducers/artifactsReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 
 import TagIcon from 'igz-controls/images/tag-icon.svg?react'
 import YamlIcon from 'igz-controls/images/yaml.svg?react'
+import ArtifactView from 'igz-controls/images/eye-icon.svg?react'
 import Copy from 'igz-controls/images/copy-to-clipboard-icon.svg?react'
 import Delete from 'igz-controls/images/delete.svg?react'
 import DownloadIcon from 'igz-controls/images/download.svg?react'
@@ -52,8 +49,12 @@ export const detailsMenu = [
     id: 'overview'
   },
   {
-    label: 'collections',
-    id: 'collections'
+    label: 'prompt-template',
+    id: 'Prompt template'
+  },
+  {
+    label: 'generation-configuration',
+    id: 'Generation configuration'
   }
 ]
 
@@ -76,9 +77,9 @@ export const infoHeaders = [
 
 export const generatePageData = viewMode => {
   return {
-    page: DOCUMENTS_PAGE,
+    page: LLM_PROMPTS_PAGE,
     details: {
-      type: DOCUMENTS_PAGE,
+      type: LLM_PROMPTS_PAGE,
       menu: detailsMenu,
       infoHeaders,
       hideBackBtn: viewMode === FULL_VIEW_MODE,
@@ -87,8 +88,18 @@ export const generatePageData = viewMode => {
   }
 }
 
+export const handleApplyDetailsChanges = (
+  changes,
+  projectName,
+  selectedItem,
+  setNotification,
+  dispatch
+) => {
+  return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
+}
+
 export const generateActionsMenu = (
-  documentMin,
+  llmPromptMin,
   frontendSpec,
   dispatch,
   toggleConvertedYaml,
@@ -96,16 +107,18 @@ export const generateActionsMenu = (
   projectName,
   refreshArtifacts,
   refreshAfterDeleteCallback,
-  filters,
-  selectedDocument,
+  llmPromptsFilters,
+  selectedLLMPrompt,
   showAllVersions,
   isAllVersions,
   isDetailsPopUp = false
 ) => {
-  const isTargetPathValid = getIsTargetPathValid(documentMin ?? {}, frontendSpec)
+  const isTargetPathValid = getIsTargetPathValid(llmPromptMin ?? {}, frontendSpec)
+  const datasetDataCouldBeDeleted =
+    llmPromptMin?.target_path?.endsWith('.pq') || llmPromptMin?.target_path?.endsWith('.parquet')
 
-  const getFullDocument = documentMin => {
-    return chooseOrFetchArtifact(dispatch, DOCUMENTS_PAGE, null, selectedDocument, documentMin)
+  const getFullLLMPrompt = llmPromptMin => {
+    return chooseOrFetchArtifact(dispatch, LLM_PROMPTS_PAGE, null, selectedLLMPrompt, llmPromptMin)
   }
 
   return [
@@ -121,20 +134,20 @@ export const generateActionsMenu = (
         label: 'Download',
         disabled:
           !isTargetPathValid ||
-          documentMin.size >
-            (frontendSpec?.artifact_limits?.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
+          llmPromptMin.size >
+            (frontendSpec.artifact_limits.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
         icon: <DownloadIcon />,
-        onClick: documentMin => {
-          getFullDocument(documentMin).then(document => {
-            if (document) {
-              const downloadPath = `${documentMin?.target_path}${documentMin?.model_file || ''}`
+        onClick: llmPromptMin => {
+          getFullLLMPrompt(llmPromptMin).then(llmPrompt => {
+            if (llmPrompt) {
+              const downloadPath = `${llmPrompt?.target_path}${llmPrompt?.model_file || ''}`
               dispatch(
                 setDownloadItem({
                   path: downloadPath,
-                  user: document.producer?.owner,
+                  user: llmPrompt.producer?.owner,
                   id: downloadPath,
                   artifactLimits: frontendSpec?.artifact_limits,
-                  fileSize: document.size,
+                  fileSize: llmPrompt.size,
                   projectName
                 })
               )
@@ -146,12 +159,13 @@ export const generateActionsMenu = (
       {
         label: 'Copy URI',
         icon: <Copy />,
-        onClick: document => copyToClipboard(generateUri(document, DOCUMENTS_PAGE), dispatch)
+        onClick: llmPromptMin =>
+          copyToClipboard(generateUri(llmPromptMin, LLM_PROMPTS_PAGE), dispatch)
       },
       {
         label: 'View YAML',
         icon: <YamlIcon />,
-        onClick: documentMin => getFullDocument(documentMin).then(toggleConvertedYaml)
+        onClick: llmPromptMin => getFullLLMPrompt(llmPromptMin).then(toggleConvertedYaml)
       },
       {
         label: 'Delete',
@@ -159,36 +173,53 @@ export const generateActionsMenu = (
         hidden: isDetailsPopUp,
         className: 'danger',
         onClick: () =>
-          openPopUp(DeleteArtifactPopUp, {
-            artifact: documentMin,
-            artifactType: DOCUMENT_TYPE,
-            category: DOCUMENT_TYPE,
-            filters,
-            refreshArtifacts,
-            refreshAfterDeleteCallback
-          }),
+          datasetDataCouldBeDeleted
+            ? openPopUp(DeleteArtifactPopUp, {
+                artifact: llmPromptMin,
+                artifactType: LLM_PROMPT_TYPE,
+                category: LLM_PROMPT_TYPE,
+                filters: llmPromptsFilters,
+                refreshArtifacts,
+                refreshAfterDeleteCallback
+              })
+            : openDeleteConfirmPopUp(
+                'Delete LLM Prompt?',
+                `Do you want to delete the LLM Prompt "${llmPromptMin.db_key}"? Deleted LLM Prompt can not be restored.`,
+                () => {
+                  handleDeleteArtifact(
+                    dispatch,
+                    projectName,
+                    llmPromptMin.db_key,
+                    llmPromptMin.uid,
+                    refreshArtifacts,
+                    refreshAfterDeleteCallback,
+                    llmPromptsFilters,
+                    LLM_PROMPT_TYPE
+                  )
+                }
+              ),
         allowLeaveWarning: true
       },
       {
         label: 'Delete all versions',
         icon: <Delete />,
-        hidden: isAllVersions || isDetailsPopUp,
+        hidden: isDetailsPopUp || isAllVersions,
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(
-            'Delete artifact?',
-            `Do you want to delete all versions of the artifact "${documentMin.db_key}"? Deleted artifacts can not be restored.`,
+            'Delete LLM Prompt?',
+            `Do you want to delete all versions of the LLM Prompt "${llmPromptMin.db_key}"? Deleted LLM prompt can not be restored.`,
             () => {
               handleDeleteArtifact(
                 dispatch,
                 projectName,
-                documentMin.db_key,
-                documentMin.uid,
+                llmPromptMin.db_key,
+                llmPromptMin.uid,
                 refreshArtifacts,
                 refreshAfterDeleteCallback,
-                filters,
-                DOCUMENT_TYPE,
-                DOCUMENT_TYPE,
+                llmPromptsFilters,
+                LLM_PROMPT_TYPE,
+                LLM_PROMPT_TYPE,
                 true
               )
             }
@@ -201,68 +232,27 @@ export const generateActionsMenu = (
         id: 'show-all-versions',
         label: 'Show all versions',
         icon: <HistoryIcon />,
-        onClick: () => showAllVersions(documentMin.db_key),
+        onClick: () => showAllVersions(llmPromptMin.db_key),
         hidden: isAllVersions
+      },
+      {
+        label: 'Preview',
+        id: 'llm-prompt-preview',
+        disabled: !isTargetPathValid,
+        icon: <ArtifactView />,
+        onClick: llmPromptMin => {
+          getFullLLMPrompt(llmPromptMin).then(llmPrompt => {
+            if (llmPrompt) {
+              dispatch(
+                showArtifactsPreview({
+                  isPreview: true,
+                  selectedItem: llmPrompt
+                })
+              )
+            }
+          })
+        }
       }
     ]
   ]
-}
-
-export const handleApplyDetailsChanges = (
-  changes,
-  projectName,
-  selectedItem,
-  setNotification,
-  dispatch
-) => {
-  const isNewFormat =
-    selectedItem.ui.originalContent.metadata && selectedItem.ui.originalContent.spec
-  const artifactItem = cloneDeep(
-    isNewFormat ? selectedItem.ui.originalContent : omit(selectedItem, ['ui'])
-  )
-
-  if (!isEmpty(omit(changes.data, ['tag']))) {
-    Object.keys(changes.data).forEach(key => {
-      if (key === 'labels') {
-        isNewFormat
-          ? (artifactItem.metadata[key] = changes.data[key].currentFieldValue)
-          : (artifactItem[key] = changes.data[key].currentFieldValue)
-      }
-    })
-
-    const labels = convertChipsData(artifactItem.metadata?.labels || artifactItem.labels)
-
-    if (isNewFormat) {
-      artifactItem.metadata.labels = labels
-    } else {
-      artifactItem.labels = labels
-    }
-
-    return dispatch(updateArtifact({ project: projectName, data: artifactItem }))
-      .unwrap()
-      .then(response => {
-        dispatch(
-          setNotification({
-            status: response.status,
-            id: Math.random(),
-            message: 'Document was updated successfully'
-          })
-        )
-      })
-      .catch(error => {
-        const customErrorMsg =
-          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'Permission denied'
-            : getErrorMsg(error, 'Failed to update the document')
-
-        showErrorNotification(dispatch, error, '', customErrorMsg, () =>
-          handleApplyDetailsChanges(changes, projectName, selectedItem, setNotification, dispatch)
-        )
-      })
-      .finally(() => {
-        return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
-      })
-  } else {
-    return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
-  }
 }

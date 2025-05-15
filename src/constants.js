@@ -109,7 +109,7 @@ export const SEVERITY_HIGH = 'high'
 export const SEVERITY_CRITICAL = 'critical'
 export const ALERTS_DISPLAY_LIMIT = 100
 
-export const MODELS_PAGE = 'MODELS'
+export const MODELS_PAGE = 'models'
 export const MODELS_TAB = 'models'
 export const MODEL_ENDPOINTS_TAB = 'model-endpoints'
 export const REAL_TIME_PIPELINES_TAB = 'real-time-pipelines'
@@ -122,23 +122,19 @@ export const FEATURE_SETS_TAB = 'feature-sets'
 export const FEATURE_VECTORS_TAB = 'feature-vectors'
 export const ADD_TO_FEATURE_VECTOR_TAB = 'add-to-feature-vector'
 
-export const DATASETS_PAGE = 'DATASETS'
-export const DATASETS_TAB = 'datasets'
+export const DATASETS_PAGE = 'datasets'
 
 export const FUNCTIONS_PAGE = 'FUNCTIONS'
 export const FUNCTIONS_PAGE_PATH = 'functions'
-export const ARTIFACTS_PAGE = 'ARTIFACTS'
+export const ARTIFACTS_PAGE = 'artifacts'
 
-export const FILES_PAGE = 'FILES'
-export const FILES_TAB = 'files'
+export const FILES_PAGE = 'files'
 
 export const MONITORING_APP_PAGE = 'monitoring-app'
 
-export const DOCUMENTS_PAGE = 'DOCUMENTS'
-export const DOCUMENTS_TAB = 'documents'
+export const DOCUMENTS_PAGE = 'documents'
 
-export const LLM_PROMPTS_PAGE = 'LLM-PROMPTS'
-export const LLM_PROMPTS_TAB = 'llm-prompts'
+export const LLM_PROMPTS_PAGE = 'llm-prompts'
 
 export const PROJECT_MONITOR = 'monitor'
 
@@ -464,6 +460,7 @@ export const DATASET_TYPE = 'dataset'
 export const DOCUMENT_TYPE = 'document'
 export const MODEL_TYPE = 'model'
 export const ARTIFACT_OTHER_TYPE = 'other'
+export const LLM_PROMPT_TYPE = 'llm-prompt'
 
 /*=========== ROLES =============*/
 

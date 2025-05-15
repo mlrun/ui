@@ -20,8 +20,8 @@ such restriction.
 import React from 'react'
 
 import {
-  DOCUMENTS_TAB,
-  LLM_PROMPTS_TAB,
+  DOCUMENTS_PAGE,
+  LLM_PROMPTS_PAGE,
   PROJECT_MONITOR,
   PROJECT_QUICK_ACTIONS_PAGE
 } from '../../constants'
@@ -43,7 +43,7 @@ import ModelMonitoringIcon from 'igz-controls/images/navbar/model-monitoring.svg
 
 // import RTPiplinesIcon from 'igz-controls/images/timer-outline-icon.svg?react'
 
-export const getLinks = projectName => {
+export const getLinks = (projectName, isDemoMode) => {
   const pathname = `/projects/${projectName}`
 
   return [
@@ -73,15 +73,16 @@ export const getLinks = projectName => {
     },
     {
       icon: <Documents />,
-      id: DOCUMENTS_TAB,
+      id: DOCUMENTS_PAGE,
       label: 'Documents',
-      link: `${pathname}/${DOCUMENTS_TAB}`
+      link: `${pathname}/${DOCUMENTS_PAGE}`
     },
     {
       icon: <LLMPrompts />,
-      id: LLM_PROMPTS_TAB,
+      id: LLM_PROMPTS_PAGE,
       label: 'LLM prompts',
-      link: `${pathname}/${LLM_PROMPTS_TAB}`
+      link: `${pathname}/${LLM_PROMPTS_PAGE}`,
+      hidden: !isDemoMode
     },
     {
       icon: <ArtifactsIcon />,

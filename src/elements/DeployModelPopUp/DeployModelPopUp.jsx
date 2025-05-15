@@ -35,7 +35,7 @@ import {
   FormOnChange
 } from 'igz-controls/components'
 
-import { MODELS_TAB } from '../../constants'
+import { MODELS_PAGE } from '../../constants'
 import { MODAL_SM, PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { buildFunction, fetchArtifactsFunction } from '../../reducers/artifactsReducer'
 import { generateUri } from '../../utils/resources'
@@ -140,7 +140,7 @@ const DeployModelPopUp = ({
           routes: {
             [values.modelName]: {
               class_args: {
-                model_path: generateUri(model, MODELS_TAB),
+                model_path: generateUri(model, MODELS_PAGE),
                 ...classArguments
               },
               class_name: values.className,

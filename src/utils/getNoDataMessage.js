@@ -63,7 +63,8 @@ import {
   TAG_FILTER,
   TAG_FILTER_ALL_ITEMS,
   TYPE_FILTER,
-  PROJECTS_FILTER_ALL_ITEMS
+  PROJECTS_FILTER_ALL_ITEMS,
+  LLM_PROMPTS_PAGE
 } from '../constants'
 
 const messageNamesList = {
@@ -87,6 +88,9 @@ const messageNamesList = {
   },
   [FILES_PAGE]: {
     plural: 'Files'
+  },
+  [LLM_PROMPTS_PAGE]: {
+    plural: 'LLM prompt artifacts'
   },
   [FUNCTIONS_PAGE]: {
     plural: 'Functions'
