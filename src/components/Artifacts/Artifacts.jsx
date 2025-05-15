@@ -55,6 +55,7 @@ import { usePagination } from '../../hooks/usePagination.hook'
 import { checkForSelectedArtifact, setFullSelectedArtifact } from '../../utils/artifacts.util'
 import { getFeatureVectorData } from '../ModelsPage/Models/models.util'
 import { fetchModelFeatureVector } from '../../reducers/detailsReducer'
+import { useMode } from '../../hooks/mode.hook'
 
 const Artifacts = ({
   actionButtons = [],
@@ -67,11 +68,11 @@ const Artifacts = ({
   handleApplyDetailsChanges,
   handleDeployArtifactFailure = null,
   isAllVersions = false,
-  page = '',
+  page,
   renderPageTabs = null,
   removeArtifacts,
   storeArtifactTypeLoading,
-  tab
+  tab = ''
 }) => {
   const [artifacts, setArtifacts] = useState(null)
   const [artifactVersions, setArtifactVersions] = useState(null)
@@ -82,6 +83,7 @@ const Artifacts = ({
   const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+  const { isDemoMode } = useMode()
   const dispatch = useDispatch()
   const location = useLocation()
   const navigate = useNavigate()
@@ -96,7 +98,7 @@ const Artifacts = ({
 
   const historyBackLink = useMemo(
     () =>
-      `/projects/${params.projectName}/${page ? `${page.toLowerCase()}/` : ''}${tab}${getSavedSearchParams(location.search)}`,
+      `/projects/${params.projectName}/${page}${tab ? `/${tab}` : ''}${getSavedSearchParams(location.search)}`,
     [location.search, page, params.projectName, tab]
   )
   const filtersConfig = useMemo(() => getFiltersConfig(isAllVersions), [isAllVersions])
@@ -105,12 +107,12 @@ const Artifacts = ({
     paginationConfigArtifactVersionsRef,
     historyBackLink,
     'artifacts',
-    params.id && getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : tab, true),
+    params.id && getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : tab || page, true),
     isAllVersions
   )
   const pageData = useMemo(
-    () => generatePageData(viewMode, selectedArtifact),
-    [generatePageData, selectedArtifact, viewMode]
+    () => generatePageData(viewMode, selectedArtifact, params, false, isDemoMode),
+    [generatePageData, isDemoMode, params, selectedArtifact, viewMode]
   )
   const detailsFormInitialValues = useMemo(() => {
     return generateDetailsFormInitialValues(selectedArtifact, frontendSpec.internal_labels)
@@ -242,7 +244,7 @@ const Artifacts = ({
   const showAllVersions = useCallback(
     artifactName => {
       navigate(
-        `/projects/${params.projectName}/${page ? `${page.toLowerCase()}/` : ''}${tab}/${artifactName}/${ALL_VERSIONS_PATH}?${transformSearchParams(window.location.search)}`
+        `/projects/${params.projectName}/${page}${tab ? `/${tab}` : ''}/${artifactName}/${ALL_VERSIONS_PATH}?${transformSearchParams(window.location.search)}`
       )
     },
     [navigate, page, params.projectName, tab]
@@ -273,7 +275,7 @@ const Artifacts = ({
 
             if (functionOptions.length > 0) {
               openPopUp(DeployModelPopUp, {
-                artifact,
+                model: artifact,
                 functionList: functions,
                 functionOptionList: functionOptions
               })
@@ -343,7 +345,7 @@ const Artifacts = ({
       }
 
       navigate(
-        `/projects/${params.projectName}/${page ? `${page.toLowerCase()}/` : ''}/${tab}/${params.artifactName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/${
+        `/projects/${params.projectName}/${page}${tab ? `/${tab}` : ''}/${params.artifactName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/${
           changes.data.tag.currentFieldValue ? `:${changes.data.tag.currentFieldValue}` : ''
         }@${selectedItem.uid}/overview${window.location.search}`,
         { replace: true }
@@ -397,6 +399,7 @@ const Artifacts = ({
 
   const getAndSetSelectedArtifact = useCallback(() => {
     setFullSelectedArtifact(
+      page,
       tab,
       dispatch,
       navigate,
@@ -406,7 +409,16 @@ const Artifacts = ({
       params.id,
       isAllVersions
     )
-  }, [tab, dispatch, navigate, params.artifactName, params.projectName, params.id, isAllVersions])
+  }, [
+    page,
+    tab,
+    dispatch,
+    navigate,
+    params.artifactName,
+    params.projectName,
+    params.id,
+    isAllVersions
+  ])
 
   useEffect(() => {
     if (params.id && pageData.details.menu.length > 0) {
@@ -438,7 +450,8 @@ const Artifacts = ({
       setSelectedArtifact: setSelectedArtifact,
       setSelectedArtifactIsBeyondTheList,
       lastCheckedArtifactIdRef,
-      tab: tab
+      page,
+      tab
     })
   }, [
     artifactVersions,
@@ -446,6 +459,7 @@ const Artifacts = ({
     dispatch,
     isAllVersions,
     navigate,
+    page,
     paginatedArtifactVersions,
     paginatedArtifacts,
     params.artifactName,
@@ -516,7 +530,7 @@ const Artifacts = ({
       }
       historyBackLink={historyBackLink}
       isAllVersions={isAllVersions}
-      isOnlyTabScreen={Boolean(page)}
+      isOnlyTabScreen={Boolean(tab)}
       isSelectedArtifactBeyondTheList={isSelectedArtifactBeyondTheList}
       page={page}
       pageData={pageData}
@@ -551,11 +565,11 @@ Artifacts.propTypes = {
   handleApplyDetailsChanges: PropTypes.func.isRequired,
   handleDeployArtifactFailure: PropTypes.func,
   isAllVersions: PropTypes.bool,
-  page: PropTypes.string,
+  page: PropTypes.string.isRequired,
   renderPageTabs: PropTypes.func,
   removeArtifacts: PropTypes.func.isRequired,
   storeArtifactTypeLoading: PropTypes.bool.isRequired,
-  tab: PropTypes.string.isRequired
+  tab: PropTypes.string
 }
 
 export default Artifacts

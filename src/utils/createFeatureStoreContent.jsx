@@ -133,7 +133,7 @@ export const createFeatureSetsRowData = (featureSet, project, pageTab, showExpan
         value: '',
         className: 'table-cell-icon',
         type: BUTTON_COPY_URI_CELL_TYPE,
-        actionHandler: item => generateUri(item, pageTab)
+        actionHandler: item => generateUri(item, null, pageTab)
       }
     ]
   }
@@ -350,7 +350,7 @@ export const createFeatureVectorsRowData = (featureVector, pageTab, project, sho
         value: '',
         className: 'table-cell-icon',
         type: BUTTON_COPY_URI_CELL_TYPE,
-        actionHandler: item => generateUri(item, pageTab)
+        actionHandler: item => generateUri(item, null, pageTab)
       },
       {
         id: `uid.${featureVector.ui.identifierUnique}`,

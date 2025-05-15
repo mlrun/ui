@@ -23,8 +23,7 @@ import {
   ARTIFACT_MAX_DOWNLOAD_SIZE,
   FULL_VIEW_MODE,
   LLM_PROMPT_TYPE,
-  LLM_PROMPTS_PAGE,
-  LLM_PROMPTS_TAB
+  LLM_PROMPTS_PAGE
 } from '../../constants'
 import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
@@ -80,7 +79,7 @@ export const generatePageData = viewMode => {
   return {
     page: LLM_PROMPTS_PAGE,
     details: {
-      type: LLM_PROMPTS_TAB,
+      type: LLM_PROMPTS_PAGE,
       menu: detailsMenu,
       infoHeaders,
       hideBackBtn: viewMode === FULL_VIEW_MODE,
@@ -119,7 +118,7 @@ export const generateActionsMenu = (
     llmPromptMin?.target_path?.endsWith('.pq') || llmPromptMin?.target_path?.endsWith('.parquet')
 
   const getFullLLMPrompt = llmPromptMin => {
-    return chooseOrFetchArtifact(dispatch, LLM_PROMPTS_TAB, selectedLLMPrompt, llmPromptMin)
+    return chooseOrFetchArtifact(dispatch, LLM_PROMPTS_PAGE, null, selectedLLMPrompt, llmPromptMin)
   }
 
   return [
@@ -161,7 +160,7 @@ export const generateActionsMenu = (
         label: 'Copy URI',
         icon: <Copy />,
         onClick: llmPromptMin =>
-          copyToClipboard(generateUri(llmPromptMin, LLM_PROMPTS_TAB), dispatch)
+          copyToClipboard(generateUri(llmPromptMin, LLM_PROMPTS_PAGE), dispatch)
       },
       {
         label: 'View YAML',

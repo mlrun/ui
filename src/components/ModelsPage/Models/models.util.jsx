@@ -200,7 +200,7 @@ export const generateActionsMenu = (
   const isTargetPathValid = getIsTargetPathValid(modelMin ?? {}, frontendSpec)
 
   const getFullModel = modelMin => {
-    return chooseOrFetchArtifact(dispatch, MODELS_TAB, selectedModel, modelMin)
+    return chooseOrFetchArtifact(dispatch, MODELS_PAGE, MODELS_TAB, selectedModel, modelMin)
   }
 
   return [
@@ -241,7 +241,7 @@ export const generateActionsMenu = (
       {
         label: 'Copy URI',
         icon: <Copy />,
-        onClick: model => copyToClipboard(generateUri(model, MODELS_TAB), dispatch)
+        onClick: model => copyToClipboard(generateUri(model, MODELS_PAGE), dispatch)
       },
       {
         label: 'View YAML',

@@ -24,7 +24,6 @@ import {
   ARTIFACT_MAX_DOWNLOAD_SIZE,
   DOCUMENT_TYPE,
   DOCUMENTS_PAGE,
-  DOCUMENTS_TAB,
   FULL_VIEW_MODE
 } from '../../constants'
 import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
@@ -79,7 +78,7 @@ export const generatePageData = viewMode => {
   return {
     page: DOCUMENTS_PAGE,
     details: {
-      type: DOCUMENTS_TAB,
+      type: DOCUMENTS_PAGE,
       menu: detailsMenu,
       infoHeaders,
       hideBackBtn: viewMode === FULL_VIEW_MODE,
@@ -106,7 +105,7 @@ export const generateActionsMenu = (
   const isTargetPathValid = getIsTargetPathValid(documentMin ?? {}, frontendSpec)
 
   const getFullDocument = documentMin => {
-    return chooseOrFetchArtifact(dispatch, DOCUMENTS_TAB, selectedDocument, documentMin)
+    return chooseOrFetchArtifact(dispatch, DOCUMENTS_PAGE, null, selectedDocument, documentMin)
   }
 
   return [
@@ -147,7 +146,7 @@ export const generateActionsMenu = (
       {
         label: 'Copy URI',
         icon: <Copy />,
-        onClick: document => copyToClipboard(generateUri(document, DOCUMENTS_TAB), dispatch)
+        onClick: document => copyToClipboard(generateUri(document, DOCUMENTS_PAGE), dispatch)
       },
       {
         label: 'View YAML',

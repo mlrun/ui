@@ -35,7 +35,7 @@ export const parseFeatureSets = featureSets =>
       ...item,
       state: getState(featureSet.status.state),
       usage_example: generateUsageSnippets(FEATURE_SETS_TAB, item),
-      URI: generateUri(item, FEATURE_SETS_TAB),
+      URI: generateUri(item, null, FEATURE_SETS_TAB),
       ui: {
         originalContent: featureSet,
         identifier: getFeatureSetIdentifier(item),

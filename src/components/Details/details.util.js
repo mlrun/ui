@@ -31,7 +31,7 @@ import {
 
 import {
   DATASETS_PAGE,
-  DOCUMENTS_TAB,
+  DOCUMENTS_PAGE,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   FEATURE_VECTORS_TAB,
@@ -216,7 +216,7 @@ export const generateArtifactsContent = (
           name: 'labels'
         },
         editModeEnabled:
-          !isDetailsPopUp && (detailsType === MODELS_TAB || detailsType === DOCUMENTS_TAB),
+          !isDetailsPopUp && (detailsType === MODELS_TAB || detailsType === DOCUMENTS_PAGE),
         editModeType: 'chips',
         validationRules: {
           key: getValidationRules(

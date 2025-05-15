@@ -24,7 +24,7 @@ import { useSelector } from 'react-redux'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import Artifacts from '../Artifacts/Artifacts'
 
-import { DATASETS_TAB, DATASET_TYPE } from '../../constants'
+import { DATASET_TYPE, DATASETS_PAGE } from '../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import {
   generateActionsMenu,
@@ -72,9 +72,9 @@ const Datasets = ({ isAllVersions = false }) => {
       generatePageData={generatePageData}
       handleApplyDetailsChanges={handleApplyDetailsChanges}
       isAllVersions={isAllVersions}
+      page={DATASETS_PAGE}
       removeArtifacts={removeDataSets}
       storeArtifactTypeLoading={artifactsStore.datasets.datasetLoading}
-      tab={DATASETS_TAB}
     />
   )
 }

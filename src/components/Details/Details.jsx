@@ -38,14 +38,14 @@ import BlockerSpy from '../../common/BlockerSpy/BlockerSpy'
 import {
   ALERTS_PAGE,
   ARTIFACTS_PAGE,
-  DATASETS_TAB,
+  DATASETS_PAGE,
   DETAILS_OVERVIEW_TAB,
-  DOCUMENTS_TAB,
+  DOCUMENTS_PAGE,
   EMPTY_OBJECT,
-  FILES_TAB,
+  FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
-  LLM_PROMPTS_TAB,
+  LLM_PROMPTS_PAGE,
   MODEL_ENDPOINTS_TAB,
   MODELS_TAB,
   VIEW_SEARCH_PARAMETER
@@ -151,12 +151,12 @@ const Details = ({
         dispatch(setDetailsInfo(generateAlertsContent(selectedItem)))
       } else if (
         pageData.details.type === ARTIFACTS_PAGE ||
-        pageData.details.type === FILES_TAB ||
+        pageData.details.type === FILES_PAGE ||
         pageData.details.type === MODELS_TAB ||
         pageData.details.type === MODEL_ENDPOINTS_TAB ||
-        pageData.details.type === DATASETS_TAB ||
-        pageData.details.type === DOCUMENTS_TAB ||
-        pageData.details.type === LLM_PROMPTS_TAB
+        pageData.details.type === DATASETS_PAGE ||
+        pageData.details.type === DOCUMENTS_PAGE ||
+        pageData.details.type === LLM_PROMPTS_PAGE
       ) {
         dispatch(
           setDetailsInfo(

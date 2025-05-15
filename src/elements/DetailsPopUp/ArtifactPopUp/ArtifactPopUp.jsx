@@ -44,10 +44,10 @@ import {
 } from '../../../components/Documents/documents.util'
 import {
   DATASET_TYPE,
-  DATASETS_TAB,
+  DATASETS_PAGE,
   DOCUMENT_TYPE,
-  DOCUMENTS_TAB,
-  FILES_TAB,
+  DOCUMENTS_PAGE,
+  FILES_PAGE,
   MODEL_TYPE,
   MODELS_TAB
 } from '../../../constants'
@@ -65,29 +65,29 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
   const viewMode = getViewMode(window.location.search)
 
   const artifactContext = useMemo(() => {
-    return [DATASETS_TAB, DATASET_TYPE].includes(artifactData.kind)
+    return [DATASETS_PAGE, DATASET_TYPE].includes(artifactData.kind)
       ? {
-          type: DATASETS_TAB,
+          type: DATASETS_PAGE,
           generateActionsMenu: generateDatasetActionsMenu,
-          pageData: generateDatasetPageData(selectedArtifact, viewMode, {}, true),
+          pageData: generateDatasetPageData(viewMode, selectedArtifact, {}, true),
           fetchArtifact: artifactsApi.getDataSets
         }
       : [MODELS_TAB, MODEL_TYPE].includes(artifactData.kind)
         ? {
             type: MODELS_TAB,
             generateActionsMenu: generateModelActionsMenu,
-            pageData: generateModelPageData(selectedArtifact, viewMode),
+            pageData: generateModelPageData(viewMode, selectedArtifact),
             fetchArtifact: artifactsApi.getModels
           }
-        : [DOCUMENTS_TAB, DOCUMENT_TYPE].includes(artifactData.kind)
+        : [DOCUMENTS_PAGE, DOCUMENT_TYPE].includes(artifactData.kind)
           ? {
-              type: DOCUMENTS_TAB,
+              type: DOCUMENTS_PAGE,
               generateActionsMenu: generateDocumentActionsMenu,
               pageData: generateDocumentPageData(viewMode),
               fetchArtifact: artifactsApi.getDocuments
             }
           : {
-              type: FILES_TAB,
+              type: FILES_PAGE,
               generateActionsMenu: generateFileActionsMenu,
               pageData: generateFilePageData(viewMode),
               fetchArtifact: artifactsApi.getFiles
@@ -115,7 +115,11 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
       .fetchArtifact(artifactData.project, artifactMin)
       .then(({ data }) => {
         const result = parseArtifacts(data.artifacts)
-        const artifacts = generateArtifacts(filterArtifacts(result), DATASETS_TAB, data.artifacts)
+        const artifacts = generateArtifacts(
+          filterArtifacts(result),
+          artifactContext.type,
+          data.artifacts
+        )
 
         if (artifacts?.length > 0) {
           const selectedArtifact =

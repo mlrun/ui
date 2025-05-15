@@ -24,7 +24,7 @@ import { useSelector } from 'react-redux'
 
 import Artifacts from '../Artifacts/Artifacts'
 
-import { LLM_PROMPT_TYPE, LLM_PROMPTS_TAB } from '../../constants'
+import { LLM_PROMPT_TYPE, LLM_PROMPTS_PAGE } from '../../constants'
 import { createLLMPromptsRowData } from '../../utils/createArtifactsContent'
 import { fetchLLMPrompts, removeDataSets } from '../../reducers/artifactsReducer'
 import { generateActionsMenu, generatePageData, handleApplyDetailsChanges } from './llmPrompts.util'
@@ -49,9 +49,9 @@ const LLMPrompts = ({ isAllVersions }) => {
       generatePageData={generatePageData}
       handleApplyDetailsChanges={handleApplyDetailsChanges}
       isAllVersions={isAllVersions}
+      page={LLM_PROMPTS_PAGE}
       removeArtifacts={removeDataSets}
       storeArtifactTypeLoading={artifactsStore.LLMPrompts.LLMPromptLoading}
-      tab={LLM_PROMPTS_TAB}
     />
   )
 }
