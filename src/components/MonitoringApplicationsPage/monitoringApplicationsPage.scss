@@ -21,7 +21,7 @@ $applicationRowHeightExtended: variables.$rowHeightExtended;
   flex: 1;
 }
 
-.monitoring-app_section {
+.monitoring-app__section {
   display: grid;
   gap: 15px;
   margin-bottom: 25px;
@@ -35,7 +35,7 @@ $applicationRowHeightExtended: variables.$rowHeightExtended;
     min-height: 300px;
   }
 
-  .monitoring-app_section-item {
+  .monitoring-app__section-item {
     display: flex;
     flex-direction: column;
     border: 1px solid colors.$frenchLilac;

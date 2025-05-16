@@ -183,38 +183,39 @@ const TabsSlider = ({
             )
 
             return (
-              <React.Fragment key={tab.id}>
-                {!tab.hidden &&
-                  (!skipLink ? (
-                    <div className={tabClassName}>
-                      <Link
-                        className={
-                          (tab.icon && 'content-menu__tab-icon') ||
-                          (tab.tip && 'content-menu__tab-tip')
-                        }
-                        data-tab={tab.id}
-                        to={generateUrlFromRouterPath(
-                          `${window.location.pathname?.replace(/^$|([^/]+$)/, tab.id)}${location.search ?? ''}${tab.query ?? ''}`
-                        )}
-                        onClick={() => onSelectTab(tab)}
-                      >
-                        {tab.icon && <div>{tab.icon}</div>}
-                        {tab.label}
-                        {tab.tip && <Tip text={tab.tip} />}
-                      </Link>
-                    </div>
-                  ) : (
-                    <div
-                      className={tabClassName}
-                      data-tab={tab.id}
-                      onClick={() => onSelectTab(tab.id)}
-                    >
-                      {tab.icon && <div className="content-menu_tab-icon">{tab.icon}</div>}
-                      {tab.label}
-                      {tab.tip && <Tip className="content-menu__tab-tip" text={tab.tip} />}
-                    </div>
-                  ))}
-              </React.Fragment>
+              !tab.hidden &&
+              (!skipLink ? (
+                <Link
+                  to={generateUrlFromRouterPath(
+                    `${window.location.pathname?.replace(/^$|([^/]+$)/, tab.id)}${location.search ?? ''}${tab.query ?? ''}`
+                  )}
+                  className={tabClassName}
+                  key={tab.id}
+                >
+                  <span
+                    className={
+                      (tab.icon && 'content-menu__tab-icon') || (tab.tip && 'content-menu__tab-tip')
+                    }
+                    data-tab={tab.id}
+                    onClick={() => onSelectTab(tab)}
+                  >
+                    {tab.icon && <div>{tab.icon}</div>}
+                    {tab.label}
+                    {tab.tip && <Tip text={tab.tip} />}
+                  </span>
+                </Link>
+              ) : (
+                <div
+                  className={tabClassName}
+                  data-tab={tab.id}
+                  key={tab.id}
+                  onClick={() => onSelectTab(tab.id)}
+                >
+                  {tab.icon && <div className="content-menu_tab-icon">{tab.icon}</div>}
+                  {tab.label}
+                  {tab.tip && <Tip className="content-menu__tab-tip" text={tab.tip} />}
+                </div>
+              ))
             )
           })}
         </div>

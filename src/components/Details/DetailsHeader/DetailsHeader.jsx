@@ -88,6 +88,10 @@ const DetailsHeader = ({
     [selectedItem.error, selectedItem.reason]
   )
 
+  const podsData = useMemo(() => {
+    return isDetailsPopUp ? selectedItem?.ui?.podsData : detailsStore.pods
+  }, [detailsStore.pods, isDetailsPopUp, selectedItem])
+
   const {
     value: stateValue,
     label: stateLabel,
@@ -109,10 +113,7 @@ const DetailsHeader = ({
   }, [detailsStore.changes.counter, handleCancel, isDetailsPopUp])
 
   return (
-    <div
-      className='item-header'
-      ref={headerRef}
-    >
+    <div className="item-header" ref={headerRef}>
       <div className="item-header__data">
         <h3 className="item-header__title">
           {isDetailsScreen && !pageData.details.hideBackBtn && !isDetailsPopUp && (
@@ -182,9 +183,9 @@ const DetailsHeader = ({
                 {errorMessage}
               </Tooltip>
             )}
-            {!isEmpty(detailsStore.pods.podsPending) && (
+            {!isEmpty(podsData?.podsPending) && (
               <span className="left-margin">
-                {`${detailsStore.pods.podsPending.length} of ${detailsStore.pods.podsList.length} pods are pending`}
+                {`${podsData.podsPending.length} of ${podsData.podsList.length} pods are pending`}
               </span>
             )}
             {detailsStore.pods.error && (

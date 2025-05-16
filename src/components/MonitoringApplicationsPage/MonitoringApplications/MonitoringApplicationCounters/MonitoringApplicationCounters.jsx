@@ -25,7 +25,7 @@ import MonitoringApplicationCard from './MonitoringApplicationCard/MonitoringApp
 
 import { generateCountersContent } from './monitoringApplicationCounters.util'
 
-import './monitoringApplicationCard.scss'
+import './monitoringApplicationCounters.scss'
 
 const MonitoringApplicationCounters = () => {
   const params = useParams()

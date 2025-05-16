@@ -27,6 +27,7 @@ import SectionTable from '../../../elements/SectionTable/SectionTable'
 import { Tip } from 'igz-controls/components'
 import ApplicationTableRow from '../../../elements/ApplicationTableRow/ApplicationTableRow'
 
+import { MONITORING_APPLICATIONS_NO_DATA_MESSAGE } from '../MonitoringApplicationsPage.util'
 import { generateOperatingFunctionsTable } from './monitoringApplications.util'
 import { createApplicationContent } from '../../../utils/createApplicationContent'
 import { removeMonitoringApplications } from '../../../reducers/monitoringApplicationsReducer'
@@ -75,33 +76,33 @@ const MonitoringApplications = () => {
 
   return (
     <div className="monitoring-apps">
-      <div className="monitoring-app_section section_small">
-        <div className="monitoring-app_section-item">
+      <div className="monitoring-app__section section_small">
+        <div className="monitoring-app__section-item">
           <div className="section-item_title">
             <span>Controller calls</span>
             <Tip text="The number of controller's calls to the monitoring apps" />
           </div>
-          <NoData message="No data is available for the chosen period" />
+          <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
         </div>
-        <div className="monitoring-app_section-item">
+        <div className="monitoring-app__section-item">
           <div className="section-item_title">
             <span>Operating functions</span>
             <Tip text="System functions that are used for the monitoring application operation" />
           </div>
           {operatingFunctions.length === 0 ? (
-            <NoData message="No data is available for the chosen period" />
+            <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
           ) : (
             <SectionTable params={params} table={operatingFunctionsTable} />
           )}
         </div>
       </div>
-      <div className="monitoring-app_section section_big">
-        <div className="monitoring-app_section-item">
+      <div className="monitoring-app__section section_big">
+        <div className="monitoring-app__section-item">
           <div className="section-item_title">
             <span>All Applications</span>
           </div>
           {applications.length === 0 ? (
-            <NoData message="No data is available for the chosen period" />
+            <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
           ) : (
             <Table
               actionsMenu={applicationsTableActionsMenu}

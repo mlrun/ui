@@ -24,6 +24,7 @@ import { splitApplicationsContent } from '../utils/applications.utils'
 import monitoringApplicationsApi from '../api/monitoringApplications-api'
 import { DATES_FILTER } from '../constants'
 
+// TODO: delete initialState data in ML-10005
 const initialState = {
   applicationsSummary: {
     running_model_monitoring_functions: 16,

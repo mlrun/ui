@@ -221,53 +221,6 @@ export const datePickerFutureOptions = [
   }
 ]
 
-export const datePickerPastMonthOptions = [
-  {
-    id: PAST_HOUR_DATE_OPTION,
-    label: 'Past hour',
-    isPredefined: true,
-    handler: () => {
-      return getDates((fromDate, toDate) => {
-        fromDate.setHours(toDate.getHours() - 1)
-      })
-    },
-    timeFrameMilliseconds: TIME_FRAME_LIMITS.HOUR
-  },
-  {
-    id: PAST_24_HOUR_DATE_OPTION,
-    label: 'Past 24 hours',
-    isPredefined: true,
-    handler: () => {
-      return getDates((fromDate, toDate) => {
-        fromDate.setDate(toDate.getDate() - 1)
-      })
-    },
-    timeFrameMilliseconds: TIME_FRAME_LIMITS['24_HOURS']
-  },
-  {
-    id: PAST_WEEK_DATE_OPTION,
-    label: 'Past week',
-    isPredefined: true,
-    handler: () => {
-      return getDates((fromDate, toDate) => {
-        fromDate.setDate(toDate.getDate() - 7)
-      })
-    },
-    timeFrameMilliseconds: TIME_FRAME_LIMITS.WEEK
-  },
-  {
-    id: PAST_MONTH_DATE_OPTION,
-    label: 'Past month',
-    isPredefined: true,
-    handler: () => {
-      return getDates((fromDate, toDate) => {
-        fromDate.setMonth(toDate.getMonth() - 1)
-      })
-    },
-    timeFrameMilliseconds: TIME_FRAME_LIMITS.MONTH
-  }
-]
-
 const getDates = (setDate, isFutureTime, isRange) => {
   let fromDate = new Date()
   let toDate = new Date()

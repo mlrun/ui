@@ -17,25 +17,23 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-const OPERATING_FUNCTIONS_NAMES_LIST = [
-    'model-monitoring-controller',
-    'model-monitoring-stream',
-    'model-monitoring-writer'
-]
 
-export const splitApplicationsContent = (functions = []) => {
-    const monitoringApplicationsData = {
-        operatingFunctions: [],
-        applications: []
-    }
+import { DATES_FILTER } from '../../constants'
+import {
+  datePickerPastOptions,
+  getDatePickerFilterValue,
+  PAST_24_HOUR_DATE_OPTION,
+  TIME_FRAME_LIMITS
+} from '../../utils/datePicker.util'
 
-    functions.forEach(func => {
-        if (OPERATING_FUNCTIONS_NAMES_LIST.includes(func.name)) {
-            monitoringApplicationsData.operatingFunctions.push(func)
-        } else {
-            monitoringApplicationsData.applications.push(func)
-        }
-    })
+export const MONITORING_APPLICATIONS_NO_DATA_MESSAGE = 'No data is available for the chosen period'
 
-    return monitoringApplicationsData
-}
+export const getFiltersConfig = () => ({
+  [DATES_FILTER]: {
+    customOptions: datePickerPastOptions,
+    excludeCustomRange: true,
+    label: 'Time range:',
+    timeFrameLimit: TIME_FRAME_LIMITS.MONTH,
+    initialValue: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION, true)
+  }
+})
