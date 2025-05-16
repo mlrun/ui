@@ -133,47 +133,49 @@ const ActionsMenu = ({
           )}
         </div>
       )}
-      <div className="actions-menu" data-testid="actions-menu">
-        <RoundedIcon
-          className="actions-menu-button"
-          isActive={isShowMenu}
-          id="actions-menu-button"
-          onClick={() => {
-            setIsShowMenu(prevValue => !prevValue)
-          }}
-          ref={actionMenuBtnRef}
-          tooltipText="More actions"
-        >
-          <ActionMenuIcon />
-        </RoundedIcon>
-        {isShowMenu && (
-          <PopUpDialog
-            className="actions-menu__body"
-            customPosition={{
-              element: actionMenuBtnRef,
-              position: 'bottom-left',
-              autoVerticalPosition: true
+      {actionMenu[0].length > 0 && (
+        <div className="actions-menu" data-testid="actions-menu">
+          <RoundedIcon
+            className="actions-menu-button"
+            isActive={isShowMenu}
+            id="actions-menu-button"
+            onClick={() => {
+              setIsShowMenu(prevValue => !prevValue)
             }}
-            headerIsHidden
-            ref={dropDownMenuRef}
+            ref={actionMenuBtnRef}
+            tooltipText="More actions"
           >
-            <ul data-testid="actions-drop-down-menu" className="actions-menu__list">
-              {actionMenu[0].map(
-                (menuItem, idx) =>
-                  !menuItem.hidden && (
-                    <ActionsMenuItem
-                      dataItem={dataItem}
-                      index={idx}
-                      isIconDisplayed={isIconDisplayed}
-                      key={menuItem.label}
-                      menuItem={menuItem}
-                    />
-                  )
-              )}
-            </ul>
-          </PopUpDialog>
-        )}
-      </div>
+            <ActionMenuIcon />
+          </RoundedIcon>
+          {isShowMenu && (
+            <PopUpDialog
+              className="actions-menu__body"
+              customPosition={{
+                element: actionMenuBtnRef,
+                position: 'bottom-left',
+                autoVerticalPosition: true
+              }}
+              headerIsHidden
+              ref={dropDownMenuRef}
+            >
+              <ul data-testid="actions-drop-down-menu" className="actions-menu__list">
+                {actionMenu[0].map(
+                  (menuItem, idx) =>
+                    !menuItem.hidden && (
+                      <ActionsMenuItem
+                        dataItem={dataItem}
+                        index={idx}
+                        isIconDisplayed={isIconDisplayed}
+                        key={menuItem.label}
+                        menuItem={menuItem}
+                      />
+                    )
+                )}
+              </ul>
+            </PopUpDialog>
+          )}
+        </div>
+      )}
     </div>
   )
 }

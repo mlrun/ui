@@ -80,7 +80,10 @@ const TableLinkCell = ({
               </Tooltip>
 
               {data.showStatus && stateValue && stateLabel && (
-                <Tooltip className="status" template={<TextTooltipTemplate text={stateLabel} />}>
+                <Tooltip
+                  className="status"
+                  template={<TextTooltipTemplate text={stateLabel} />}
+                >
                   <i className={stateClassName} />
                 </Tooltip>
               )}

@@ -28,6 +28,7 @@ import featureStore from '../reducers/featureStoreReducer'
 import filtersStore from '../reducers/filtersReducer'
 import functionsStore from '../reducers/functionReducer'
 import jobsStore from '../reducers/jobReducer'
+import monitoringApplicationsStore from '../reducers/monitoringApplicationsReducer'
 import notificationStore from '../reducers/notificationReducer'
 import nuclioStore from '../reducers/nuclioReducer'
 import projectStore from '../reducers/projectReducer'
@@ -46,6 +47,7 @@ const toolkitStore = configureStore({
     filtersStore,
     functionsStore,
     jobsStore,
+    monitoringApplicationsStore,
     notificationStore,
     nuclioStore,
     projectStore,

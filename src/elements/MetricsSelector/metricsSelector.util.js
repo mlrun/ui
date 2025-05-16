@@ -19,10 +19,11 @@ such restriction.
 */
 import { chain, isEmpty } from 'lodash'
 import { ML_RUN_INFRA } from '../../components/DetailsMetrics/detailsMetrics.util'
+import { METRIC_TYPE, RESULT_TYPE } from '../../constants'
 
 export const metricsTypes = {
-  metric: 'metric',
-  result: 'result'
+  metric: METRIC_TYPE,
+  result: RESULT_TYPE
 }
 
 export const filterMetrics = (metricsByApplication, nameFilter) => {

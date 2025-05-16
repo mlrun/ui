@@ -500,3 +500,7 @@ export const EMPTY_OBJECT = {}
 /*========= PROTOCOLS =============*/
 export const HTTP = 'http://'
 export const HTTPS = 'https://'
+
+/*========= METRICS TYPES =============*/
+export const METRIC_TYPE = 'metric'
+export const RESULT_TYPE = 'result'

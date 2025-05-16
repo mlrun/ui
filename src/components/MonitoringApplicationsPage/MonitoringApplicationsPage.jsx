@@ -1,0 +1,154 @@
+/*
+Copyright 2019 Iguazio Systems Ltd.
+
+Licensed under the Apache License, Version 2.0 (the "License") with
+an addition restriction as set forth herein. You may not use this
+file except in compliance with the License. You may obtain a copy of
+the License at http://www.apache.org/licenses/LICENSE-2.0.
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+In addition, you may not use the software for any purposes that are
+illegal under applicable law, and the grant of the foregoing license
+under the Apache 2.0 license is conditioned upon your compliance with
+such restriction.
+*/
+import React, { useCallback, useMemo } from 'react'
+import { Outlet, useParams, useSearchParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+
+import ActionBar from '../ActionBar/ActionBar'
+import Loader from '../../common/Loader/Loader'
+import TableTop from '../../elements/TableTop/TableTop'
+import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+import MonitoringApplicationCounters from './MonitoringApplications/MonitoringApplicationCounters/MonitoringApplicationCounters'
+
+import { getFiltersConfig } from './MonitoringApplicationsPage.util'
+import { showErrorNotification } from '../../utils/notifications.util'
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import {
+  fetchMonitoringApplication,
+  fetchMonitoringApplications,
+  fetchMonitoringApplicationsSummary
+} from '../../reducers/monitoringApplicationsReducer'
+import { fetchArtifacts } from '../../reducers/artifactsReducer'
+
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
+import { MONITORING_APP_PAGE } from '../../constants'
+
+import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
+
+import './monitoringApplicationsPage.scss'
+
+const MonitoringApplicationsPage = () => {
+  const dispatch = useDispatch()
+  const params = useParams()
+  const monitoringApplicationsStore = useSelector(store => store.monitoringApplicationsStore)
+  const filtersConfig = useMemo(() => getFiltersConfig(), [])
+  const filters = useFiltersFromSearchParams(filtersConfig)
+  const [, setSearchParams] = useSearchParams()
+
+  const refreshMonitoringApplications = useCallback(
+    filters => {
+      dispatch(fetchMonitoringApplicationsSummary({ project: params.projectName }))
+        .unwrap()
+        .catch(error => {
+          showErrorNotification(dispatch, error, '', 'Failed to fetch applications summary')
+        })
+      dispatch(fetchMonitoringApplications({ project: params.projectName, filters }))
+        .unwrap()
+        .catch(error => {
+          showErrorNotification(dispatch, error, '', 'Failed to fetch monitoring applications')
+        })
+    },
+    [dispatch, params.projectName]
+  )
+
+  const refreshMonitoringApplication = useCallback(
+    filters => {
+      dispatch(
+        fetchArtifacts({
+          project: params.projectName,
+          filters: {
+            ...filters,
+            labels: `mlrun/app-name=${params.name}`
+          }
+        })
+      )
+        .unwrap()
+        .catch(error => {
+          showErrorNotification(dispatch, error, '', 'Failed to fetch artifacts')
+        })
+      dispatch(
+        fetchMonitoringApplication({
+          project: params.projectName,
+          functionName: params.name,
+          filters
+        })
+      )
+        .unwrap()
+        .catch(error => {
+          showErrorNotification(dispatch, error, '', 'Failed to fetch monitoring application')
+        })
+    },
+    [dispatch, params.name, params.projectName]
+  )
+
+  // TODO: uncomment in ML-10005
+  // useEffect(() => {
+  //   if (params.name) {
+  //     refreshMonitoringApplication(filters)
+  //   } else {
+  //     refreshMonitoringApplications(filters)
+  //   }
+  // }, [params.name, refreshMonitoringApplications, refreshMonitoringApplication, filters])
+
+  return (
+    <div className="content-wrapper">
+      <div className="content__header">
+        <Breadcrumbs />
+      </div>
+      <div className="content">
+        <div className="content__action-bar-wrapper">
+          <span className="monitoring-apps-title">
+            {params.name && (
+              <TableTop
+                link={`/projects/${params.projectName}/${MONITORING_APP_PAGE}/${window.location.search}`}
+                text={params.name}
+              />
+            )}
+          </span>
+          <ActionBar
+            actionButtons={[
+              {
+                variant: PRIMARY_BUTTON,
+                label: 'Application metrics',
+                className: 'action-button',
+                hidden: !params.name,
+                onClick: () => {},
+                icon: <PresentMetricsIcon />
+              }
+            ]}
+            filters={filters}
+            filtersConfig={filtersConfig}
+            handleRefresh={
+              params.name ? refreshMonitoringApplication : refreshMonitoringApplications
+            }
+            setSearchParams={setSearchParams}
+            withRefreshButton
+            withoutExpandButton
+          />
+          <MonitoringApplicationCounters />
+          {monitoringApplicationsStore.loading && <Loader />}
+          <Outlet />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default MonitoringApplicationsPage

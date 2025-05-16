@@ -407,6 +407,9 @@ const artifactsSlice = createSlice({
         selectedItem: {}
       }
     },
+    removeArtifacts(state) {
+      state.artifacts = initialState.artifacts
+    },
     removeDataSet(state, action) {
       state.dataSets.selectedRowData = {
         content: action.payload,
@@ -632,6 +635,7 @@ const artifactsSlice = createSlice({
 export const {
   showArtifactsPreview,
   closeArtifactsPreview,
+  removeArtifacts,
   removeDataSet,
   removeDataSets,
   removeDocuments,

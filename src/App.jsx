@@ -124,8 +124,18 @@ const WorkflowsMonitoring = lazyRetry(
 const Documents = lazyRetry(() => import('./components/Documents/Documents'))
 const LLMPrompts = lazyRetry(() => import('./components/LLMPrompts/LLMPrompts'))
 
+const MonitoringApplicationsPage = lazyRetry(
+  () => import('./components/MonitoringApplicationsPage/MonitoringApplicationsPage')
+)
+const MonitoringApplications = lazyRetry(
+  () =>
+    import('./components/MonitoringApplicationsPage/MonitoringApplications/MonitoringApplications')
+)
 const MonitoringApplication = lazyRetry(
-  () => import('./components/MonitoringApplication/MonitoringApplication')
+  () =>
+    import(
+      './components/MonitoringApplicationsPage/MonitoringApplications/MonitoringApplication/MonitoringApplication'
+    )
 )
 
 const App = () => {
@@ -323,11 +333,17 @@ const App = () => {
               <Route path={path} element={<Files isAllVersions={[2, 3].includes(index)} />} />
             </Fragment>
           ))}
-          {['projects/:projectName/monitoring-app'].map((path, index) => (
-            <Fragment key={index}>
-              <Route path={path} element={<MonitoringApplication />} />
-            </Fragment>
-          ))}
+          <Route
+            path="projects/:projectName/monitoring-app/*"
+            element={<MonitoringApplicationsPage />}
+          >
+            <Route path="" element={<MonitoringApplications />} />
+            {[':name'].map((path, index) => (
+              <Fragment key={index}>
+                <Route path={path} element={<MonitoringApplication />} />
+              </Fragment>
+            ))}
+          </Route>
           {[
             'projects/:projectName/documents',
             'projects/:projectName/documents/:documentName/:id/:tab',

@@ -25,7 +25,7 @@ import { isEmpty } from 'lodash'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
-import ProjectTable from '../ProjectTable/ProjectTable'
+import SectionTable from '../SectionTable/SectionTable'
 import { Tip } from 'igz-controls/components'
 
 const ProjectDataCard = ({
@@ -74,7 +74,7 @@ const ProjectDataCard = ({
         <NoData />
       ) : (
         <>
-          <ProjectTable params={params} table={table} />
+          <SectionTable params={params} table={table} />
           {href ? (
             <a href={href} target="_top" className="link project-data-card__see-all-link">
               See all
