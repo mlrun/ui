@@ -8,6 +8,7 @@ Feature: Quick actions Page
         * set tear-down property "project" created with "automation-test-1002" value
         * create "automation-test-1002" MLRun Project with code 201
         Given open url
+        And wait load page
         And click on row root with value "automation-test-1002" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "automation-test-1002" value
@@ -86,6 +87,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH002 - Verify behaviour on Register Model Popup on Project Home Page
         Given open url
+        And wait load page
         When turn on demo mode with query params "false"
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -140,6 +142,7 @@ Feature: Quick actions Page
     @passive
     Scenario: MLPH003 - Check all mandatory components on Create New Feature Set on Project Home Page
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -190,6 +193,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH004 - Check all mandatory components on Register Dataset Popup on Project Home Page
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -250,6 +254,7 @@ Feature: Quick actions Page
         * set tear-down property "project" created with "automation-test-1003" value
         * create "automation-test-1003" MLRun Project with code 201
         Given open url
+        And wait load page
         When turn on demo mode with query params "false"
         And click on row root with value "automation-test-1003" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -281,6 +286,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH006 - Check all mandatory components on Batch run wizard
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -383,6 +389,7 @@ Feature: Quick actions Page
     @passive
     Scenario: MLPH007 - Check all mandatory components on Register File Popup on Project Home Page
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -446,6 +453,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH008 - Check all mandatory components on Create a Feature Vector Popup on Project Home Page
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -470,6 +478,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH009 - Check all mandatory components on Feature Set tab on Project Home Page
         Given open url
+        And wait load page
         When turn on demo mode with query params "false"
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -512,6 +521,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH010 - Check all mandatory components on Files tab on Project Home Page
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -538,6 +548,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH011 - Check all mandatory components on Datasets tab on Project Home Page
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -563,6 +574,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH012 - Check all mandatory components on Feature Vectors tab on Project Home Page
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -592,6 +604,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH013 - Check all mandatory components on ML Functions tab on Project Home Page
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -627,6 +640,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH014 - Check all mandatory components on Monitor Jobs tab on Project Home Page
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -698,6 +712,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH016 - Check all mandatory components on Monitor Workflows tab on Project Home Page
         Given open url
+        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -720,6 +735,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH017 - Check all mandatory components on Models Endpoint tab on Project Home Page
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -756,6 +772,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH018 - Check all mandatory components on Real-Time Piplines tab on Project Home Page
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -776,6 +793,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH019 - Check all mandatory components on Monitoring tab on Project Home Page
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -801,6 +819,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH020 - Check all mandatory components on Batch inference in Advanced section
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -915,6 +934,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH023 - Check components - batch inference_v2, preview text, path type
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -941,6 +961,7 @@ Feature: Quick actions Page
     @smoke
     Scenario: MLPH024 - Check Train model wizard opens up
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard

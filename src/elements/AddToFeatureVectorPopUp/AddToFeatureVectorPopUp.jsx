@@ -109,31 +109,34 @@ const AddToFeatureVectorPopUp = ({ action, currentProject }) => {
   const createFeatureVector = featureVectorData => {
     setIsPopUpOpen(false)
     setIsCreateFeaturePopUpOpen(false)
-    dispatch(
-      setFeaturesPanelData({
-        currentProject: currentProject,
-        featureVector: {
-          kind: 'FeatureVector',
-          metadata: {
-            name: featureVectorData.name,
-            project: currentProject,
-            tag: featureVectorData.tag,
-            labels: featureVectorData.labels
+
+    if (projectStore?.projectsNames?.data?.includes(currentProject)) {
+      dispatch(
+        setFeaturesPanelData({
+          currentProject: currentProject,
+          featureVector: {
+            kind: 'FeatureVector',
+            metadata: {
+              name: featureVectorData.name,
+              project: currentProject,
+              tag: featureVectorData.tag,
+              labels: featureVectorData.labels
+            },
+            spec: {
+              description: featureVectorData.description,
+              features: [],
+              label_feature: ''
+            },
+            status: {}
           },
-          spec: {
-            description: featureVectorData.description,
-            features: [],
-            label_feature: ''
+          groupedFeatures: {
+            [currentProject]: []
           },
-          status: {}
-        },
-        groupedFeatures: {
-          [currentProject]: []
-        },
-        isNewFeatureVector: true
-      })
-    )
-    dispatch(setTablePanelOpen(true))
+          isNewFeatureVector: true
+        })
+      )
+      dispatch(setTablePanelOpen(true))
+    }
   }
 
   const resetData = () => {

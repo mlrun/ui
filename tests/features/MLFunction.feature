@@ -37,8 +37,8 @@ Feature: ML Functions
         And wait load page
         Then verify "Functions_Table" element visibility on "ML_Functions" wizard
         Then verify "show_all_versions" option is present on "ML_Functions" wizard in "Functions_Table" table with "vizro" value in "name" column
-        Then verify "show_all_versions" option on "ML_Functions" wizard in "Functions_Table" table with "vizro" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions"
-        Then click on "show_all_versions" option on "ML_Functions" wizard in "Functions_Table" table with "vizro" value in "name" column
+        Then verify "show_all_versions" option on "ML_Functions" wizard in "Functions_Table" table with "vizro" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions" with scroll "false"
+        Then click on "show_all_versions" option on "ML_Functions" wizard in "Functions_Table" table with "vizro" value in "name" column with scroll "false"
         And wait load page
         Then verify "History_Back_Button" element visibility on "ML_Functions" wizard
         Then verify "Version_History_Title" element visibility on "ML_Functions" wizard
@@ -53,7 +53,7 @@ Feature: ML Functions
         Then click on "Table_FilterBy_Button" element on "ML_Functions" wizard
         Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
         Then verify "Show_Untagged" element visibility on "FilterBy_Popup" wizard
-        Then "Show_Untagged" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Show_Untagged" element should be checked on "FilterBy_Popup" wizard
         Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
@@ -1478,9 +1478,10 @@ Feature: ML Functions
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
         Then value in "kind" column with "tooltip" in "Functions_Table" on "ML_Functions" wizard should contains "Serving"
+        And wait load page
         Then verify that "Serving" type is displayed in "kind" kind on "ML_Functions" wizard in "Functions_Table" table with "churn-server" value in "name" column
         Then verify "deploy" option is present on "ML_Functions" wizard in "Functions_Table" table with "churn-server" value in "name" column
-        Then click on "deploy" option on "ML_Functions" wizard in "Functions_Table" table with "churn-server" value in "name" column
+        Then click on "deploy" option on "ML_Functions" wizard in "Functions_Table" table with "churn-server" value in "name" column with scroll "false"
         And wait load page
         Then verify "Function_Name" element visibility in "General_Accordion" on "New_Function" wizard
         Then "Function_Name" element in "General_Accordion" on "New_Function" should contains "churn-server" value

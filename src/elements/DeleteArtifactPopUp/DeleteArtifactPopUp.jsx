@@ -133,6 +133,7 @@ const DeleteArtifactPopUp = ({
         variant: DANGER_BUTTON,
         disabled: disableConfirmButton
       }}
+      closePopUp={handleCancel}
       header={`Delete ${artifactType}?`}
       isOpen={Boolean(isConfirmDialogOpen)}
       message={`Are you sure you want to delete the ${artifactType} "${artifact.db_key}" metadata? Deleted metadata can not be restored.`}

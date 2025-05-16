@@ -37,10 +37,12 @@ const defaultParamsParsingCallback = (_, value) => value
 const getFiltersFromSearchParams = (filtersConfig, searchParams, paramsParsingCallback) => {
   if (!filtersConfig) return {}
 
+  // todo add in 1.10.0 pickBy(filtersConfig, (configValue) => !configValue.) and fix all error where we use hidden configs
   return mapValues(filtersConfig, (filterConfig, filterName) => {
     const searchParamValue = searchParams.get(filterName)?.trim?.()
 
-    if (isNil(searchParamValue)) return filterConfig.initialValue
+    // todo remove '|| filterConfig.hidden' after fix above
+    if (isNil(searchParamValue) || filterConfig.hidden) return filterConfig.initialValue
 
     let parsedValue = paramsParsingCallback(filterName, searchParamValue)
 

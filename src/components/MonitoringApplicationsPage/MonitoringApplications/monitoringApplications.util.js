@@ -20,28 +20,7 @@ such restriction.
 import { capitalize } from 'lodash'
 import classnames from 'classnames'
 
-import {
-  datePickerPastMonthOptions,
-  getDatePickerFilterValue,
-  PAST_24_HOUR_DATE_OPTION,
-  TIME_FRAME_LIMITS
-} from '../../../utils/datePicker.util'
 import { formatDatetime, generateNuclioLink } from '../../../utils'
-
-import { DATES_FILTER } from '../../../constants'
-
-export const getFiltersConfig = () => ({
-  [DATES_FILTER]: {
-    customOptions: datePickerPastMonthOptions,
-    label: 'Time range:',
-    timeFrameLimit: TIME_FRAME_LIMITS.MONTH,
-    initialValue: getDatePickerFilterValue(
-      datePickerPastMonthOptions,
-      PAST_24_HOUR_DATE_OPTION,
-      true
-    )
-  }
-})
 
 export const generateOperatingFunctionsTable = functions => {
   const tableHeaders = [

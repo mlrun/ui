@@ -8,6 +8,7 @@ Feature: Project Settings page
     @smoke
     Scenario: MLPS001 - Verify all mandatory components on General Tab
         Given open url
+        And wait load page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "cat-vs-dog-classification" value
@@ -79,6 +80,7 @@ Feature: Project Settings page
     @smoke
     Scenario: MLPS002 - Verify behaviour of editing labels on General tab
         Given open url
+        And wait load page
         Then type value "cat-vs-dog-classification" to "Search_Projects_Input" field on "Projects" wizard
         Then value in "description" column with "text" in "Projects_Table" on "Projects" wizard should contains "123"
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -155,6 +157,7 @@ Feature: Project Settings page
     @smoke
     Scenario: MLPS003 - Verify Parameters Table on General Tab
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -287,6 +290,7 @@ Feature: Project Settings page
     @smoke
     Scenario: MLPS009 - Check all mandatory components on Project Owner
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -308,6 +312,7 @@ Feature: Project Settings page
     @smoke
     Scenario: MLPS010 - Check all mandatory components on Members tab
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -331,6 +336,7 @@ Feature: Project Settings page
     #TODO: owner igz_nobody, iguazioUsers, change getIguazioProjects implementation
     Scenario: MLPS004 - Verify behaviour of Invite New Members on Members tab
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard

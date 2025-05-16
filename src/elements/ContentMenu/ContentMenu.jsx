@@ -65,29 +65,23 @@ const ContentMenu = ({
 
           return (
             !tab.hidden && (
-              <li data-testid={tab.id} className={tabClassNames} key={tab.id}>
-                {activeTab !== tab.id ? (
-                  <Link
-                    to={generateRedirectLink(tab.id)}
-                    className={tab.icon && 'content-menu__tab-icon'}
-                    onClick={onClick && (e => handleClick(e, tab.id))}
-                  >
-                    {tab.icon && <i>{tab.icon}</i>}
-                    {tab.label ?? tab.id}
-                    {window.mlrunConfig.betaMode === 'enabled' && tab.preview && (
-                      <span className="content-menu__tab__preview"> (Beta)</span>
-                    )}
-                  </Link>
-                ) : (
-                  <span className={tab.icon && 'content-menu__tab-icon'}>
-                    {tab.icon && <i>{tab.icon}</i>}
-                    {tab.label ?? tab.id}
-                    {window.mlrunConfig.betaMode === 'enabled' && tab.preview && (
-                      <span className="content-menu__tab__preview"> (Beta)</span>
-                    )}
-                  </span>
-                )}
-              </li>
+              <Link
+                to={generateRedirectLink(tab.id)}
+                data-testid={tab.id}
+                className={tabClassNames}
+                key={tab.id}
+              >
+                <span
+                  className={tab.icon && 'content-menu__tab-icon'}
+                  onClick={onClick && (e => handleClick(e, tab.id))}
+                >
+                  {tab.icon && <i>{tab.icon}</i>}
+                  {tab.label ?? tab.id}
+                  {window.mlrunConfig.betaMode === 'enabled' && tab.preview && (
+                    <span className="content-menu__tab__preview"> (Beta)</span>
+                  )}
+                </span>
+              </Link>
             )
           )
         })}

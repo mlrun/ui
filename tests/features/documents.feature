@@ -6,6 +6,7 @@ Feature: Documents Page
   @smoke
   Scenario: MLDoc001 - Check components on Documents page
     Given open url
+    And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
@@ -86,6 +87,7 @@ Feature: Documents Page
   @smoke
   Scenario: MLDoc002 - Verify behaviour of Show iterations checkbox on Documents page
     Given open url
+    And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -108,7 +110,7 @@ Feature: Documents Page
     Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
     Then click on "Table_FilterBy_Button" element on "Documents" wizard
     Then verify "show_all_versions" option is present on "Documents" wizard in "Documents_Table" table with "loaded-doc" value in "name" column
-    Then verify "show_all_versions" option on "Documents" wizard in "Documents_Table" table with "loaded-doc" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions"
+    Then verify "show_all_versions" option on "Documents" wizard in "Documents_Table" table with "loaded-doc" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions" with scroll "false"
     Then click on cell with row index 3 in "name" column in "Documents_Table" table on "Documents" wizard
     And wait load page
     Then verify "Header" element visibility on "Documents_Info_Pane" wizard
@@ -166,6 +168,7 @@ Feature: Documents Page
   @smoke
   Scenario: MLDoc004 - Check filtering by name on Documents page
     Given open url
+    And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard

@@ -76,6 +76,15 @@ export const fetchModelFeatureVector = createAsyncThunk(
   }
 )
 
+export const fetchDetailsJobPods = createAsyncThunk('fetchDetailsJobPods', ({ project, uid, kind }, thunkAPI) => {
+  return detailsApi
+      .getJobPods(project, uid, kind)
+      .then(({ data }) => {
+        return generatePods(project, uid, data)
+      })
+      .catch(error => thunkAPI.rejectWithValue(error))
+})
+
 export const fetchJobPods = createAsyncThunk('fetchJobPods', ({ project, uid, kind }, thunkAPI) => {
   return detailsApi
     .getJobPods(project, uid, kind)

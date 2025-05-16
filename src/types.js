@@ -148,11 +148,6 @@ export const ADDITIONAL_SPLIT_BUTTON = PropTypes.shape({
   variant: BUTTON_VARIANTS
 })
 
-export const INPUT_LINK = PropTypes.shape({
-  show: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-  url: PropTypes.string
-})
-
 export const CONTENT_MENU_TABS = PropTypes.arrayOf(
   PropTypes.shape({
     id: PropTypes.string.isRequired,

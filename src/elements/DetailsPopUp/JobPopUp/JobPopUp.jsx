@@ -31,7 +31,7 @@ import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { enrichRunWithFunctionFields, monitorJob } from '../../../components/Jobs/jobs.util'
 import { generateActionsMenu } from '../../../components/Jobs/MonitorJobs/monitorJobs.util'
 import { showErrorNotification } from '../../../utils/notifications.util'
-import { usePods } from '../../../hooks/usePods.hook'
+import { useDetailsPods } from '../../../hooks/usePods.hook'
 import { toggleYaml } from '../../../reducers/appReducer'
 import { fetchJob } from '../../../reducers/jobReducer'
 
@@ -42,7 +42,7 @@ const JobPopUp = ({ isOpen, jobData, onResolve }) => {
   const [isLoading, setIsLoading] = useState(true)
   const fetchJobFunctionsPromiseRef = useRef()
 
-  usePods(dispatch, selectedJob)
+  useDetailsPods(dispatch, selectedJob)
 
   const toggleConvertedYaml = useCallback(
     data => {

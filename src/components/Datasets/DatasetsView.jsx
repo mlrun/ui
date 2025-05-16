@@ -99,7 +99,7 @@ const DatasetsView = React.forwardRef(
                   withRefreshButton
                   withoutExpandButton
                 >
-                  <ArtifactsFilters artifacts={datasets} />
+                  <ArtifactsFilters artifacts={datasets} isAllVersions={isAllVersions}/>
                 </ActionBar>
               </div>
               {artifactsStore.loading ? null : tableContent.length === 0 &&

@@ -27,18 +27,20 @@ import TableTop from '../../elements/TableTop/TableTop'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import MonitoringApplicationCounters from './MonitoringApplications/MonitoringApplicationCounters/MonitoringApplicationCounters'
 
-import { getFiltersConfig } from './MonitoringApplications/monitoringApplications.util'
+import { getFiltersConfig } from './MonitoringApplicationsPage.util'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
-import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
-import { PRIMARY_BUTTON } from 'igz-controls/constants'
-import { MONITORING_APP_PAGE } from '../../constants'
 import {
   fetchMonitoringApplication,
   fetchMonitoringApplications,
   fetchMonitoringApplicationsSummary
 } from '../../reducers/monitoringApplicationsReducer'
 import { fetchArtifacts } from '../../reducers/artifactsReducer'
+
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
+import { MONITORING_APP_PAGE } from '../../constants'
+
+import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
 
 import './monitoringApplicationsPage.scss'
 
@@ -96,6 +98,7 @@ const MonitoringApplicationsPage = () => {
     [dispatch, params.name, params.projectName]
   )
 
+  // TODO: uncomment in ML-10005
   // useEffect(() => {
   //   if (params.name) {
   //     refreshMonitoringApplication(filters)

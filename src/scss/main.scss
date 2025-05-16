@@ -135,8 +135,8 @@ body {
 
         & > * {
           svg {
-            width: 20px;
-            height: 20px;
+            width: 17px;
+            height: 17px;
 
             path {
               fill: colors.$topaz;
@@ -146,10 +146,24 @@ body {
       }
     }
 
+    &.content-menu__tab_active {
+      svg {
+        path {
+          fill: colors.$cornflowerBlue;
+        }
+      }
+    }
+
     &_active {
       color: colors.$primary;
       font-weight: 700;
       pointer-events: none;
+
+      .content-menu__tab-tip {
+        svg {
+          pointer-events: auto;
+        }
+      }
 
       &::after {
         transform: scale(1);

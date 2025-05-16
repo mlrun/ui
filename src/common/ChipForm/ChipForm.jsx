@@ -265,7 +265,7 @@ const ChipForm = React.forwardRef(
           />
         </div>
         {validationRules.length > 0 && (
-          <OptionsMenu show={validationRules.length > 0} ref={refInputContainer}>
+          <OptionsMenu show={validationRules.length > 0} ref={{ refInputContainer }}>
             {getValidationRules()}
           </OptionsMenu>
         )}

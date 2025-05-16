@@ -80,6 +80,7 @@ const FeatureVectors = () => {
   const params = useParams()
   const [, setSearchParams] = useSearchParams()
   const featureStore = useSelector(store => store.featureStore)
+  const projectStore = useSelector(store => store.projectStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const featureVectorsFilters = useFiltersFromSearchParams(filtersConfig)
   const featureStoreRef = useRef(null)
@@ -385,32 +386,34 @@ const FeatureVectors = () => {
   )
 
   const createFeatureVector = featureVectorData => {
-    setCreateVectorPopUpIsOpen(false)
-    dispatch(
-      setFeaturesPanelData({
-        currentProject: params.projectName,
-        featureVector: {
-          kind: 'FeatureVector',
-          metadata: {
-            name: featureVectorData.name,
-            project: params.projectName,
-            tag: featureVectorData.tag,
-            labels: featureVectorData.labels
+    if (projectStore?.projectsNames?.data?.includes(params.projectName)) {
+      setCreateVectorPopUpIsOpen(false)
+      dispatch(
+        setFeaturesPanelData({
+          currentProject: params.projectName,
+          featureVector: {
+            kind: 'FeatureVector',
+            metadata: {
+              name: featureVectorData.name,
+              project: params.projectName,
+              tag: featureVectorData.tag,
+              labels: featureVectorData.labels
+            },
+            spec: {
+              description: featureVectorData.description,
+              features: [],
+              label_feature: ''
+            },
+            status: {}
           },
-          spec: {
-            description: featureVectorData.description,
-            features: [],
-            label_feature: ''
+          groupedFeatures: {
+            [params.projectName]: []
           },
-          status: {}
-        },
-        groupedFeatures: {
-          [params.projectName]: []
-        },
-        isNewFeatureVector: true
-      })
-    )
-    navigate(`/projects/${params.projectName}/feature-store/add-to-feature-vector`)
+          isNewFeatureVector: true
+        })
+      )
+      navigate(`/projects/${params.projectName}/feature-store/add-to-feature-vector`)
+    }
   }
 
   useEffect(() => {
