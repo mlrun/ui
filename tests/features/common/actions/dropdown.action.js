@@ -79,6 +79,11 @@ const action = {
     const txt = await element.getText()
     expect(txt).equal(option)
   },
+  checkDropdownSelectedOptionWithAttribute: async function(driver, dropdown, option) {
+    const element = await driver.findElement(dropdown.open_button)
+    const attributeTxt = await element.getAttribute('value')
+    expect(attributeTxt).equal(option)
+  },
   checkDropdownOptions: async function(driver, dropdown, values) {
     const options = await getOptionValues(driver, dropdown.options)
     const diff = differenceWith(options, values, isEqual)

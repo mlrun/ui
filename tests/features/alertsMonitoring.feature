@@ -76,6 +76,10 @@ Feature: Alerts Monitoring Page
         Then verify "Table_FilterBy_Button" element on "Alerts_Monitoring" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
         Then click on "Table_FilterBy_Button" element on "Alerts_Monitoring" wizard
         Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+        Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Clear_Button" element on "FilterBy_Popup" wizard is enabled
+        Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
         Then verify "Project_Name_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then verify "Entity_Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
@@ -93,10 +97,6 @@ Feature: Alerts Monitoring Page
         Then verify "Event_Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
         Then verify "Event_Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then verify "Event_Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Event_Type_Endpoint_Filter_Options"
-        Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
-        Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
-        Then verify "Clear_Button" element on "FilterBy_Popup" wizard is enabled
-        Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then click on breadcrumbs "projectsPage" label on "commonPagesHeader" wizard
         And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard

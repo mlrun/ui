@@ -62,6 +62,7 @@ import {
   checkDropdownContainsOptions,
   checkDropdownOptions,
   checkDropdownSelectedOption,
+  checkDropdownSelectedOptionWithAttribute,
   openDropdown,
   selectOptionInDropdown,
   selectOptionInDropdownWithoutCheck
@@ -179,7 +180,7 @@ Then(
     const expectedUrl = `http://${test_url}:${test_port}/${expectedPath}`
 
     await navigateToPage(this.driver, invalidUrl)
-    await this.driver.sleep(250)
+    await this.driver.sleep(1000)
     const afterURL = await this.driver.getCurrentUrl()
 
     expect(expectedUrl).equal(
@@ -743,6 +744,17 @@ When(
     await checkDropdownSelectedOption(
       this.driver,
       pageObjects[wizardName][accordionName][dropdownName],
+      optionValue
+    )
+  }
+)
+
+Then(
+  'verify {string} dropdown on {string} wizard selected attribute option value {string}',
+  async function(dropdownName, wizardName, optionValue) {
+    await checkDropdownSelectedOptionWithAttribute(
+      this.driver,
+      pageObjects[wizardName][dropdownName],
       optionValue
     )
   }

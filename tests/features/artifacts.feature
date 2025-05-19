@@ -33,7 +33,7 @@ Feature: Artifacts Page
     Then verify "Files_Table" element visibility on "Files" wizard
     Then verify "Register_File_Button" element visibility on "Files" wizard
     Then "Register_File_Button" element on "Files" should contains "Register artifact" value
-    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options_Main_Table"
 
   @MLA
   @passive
@@ -317,7 +317,7 @@ Feature: Artifacts Page
     And wait load page
     Then verify "Table_FilterBy_Button" element on "Files" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
     Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then select "All tags" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then select "test" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     When click on cell with value "test-file" in "name" column in "Files_Table" table on "Files" wizard
@@ -527,6 +527,7 @@ Feature: Artifacts Page
     And wait load page
     Then select "Download" option in action menu on "Modal_Transition_Popup" wizard
     And wait load page
+    And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
     Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
@@ -576,6 +577,7 @@ Feature: Artifacts Page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     And click on "MLRun_Logo" element on "commonPagesHeader" wizard
+    And wait load page
     And wait load page
     Then verify "Projects_Table" element visibility on "Projects" wizard
 
@@ -845,6 +847,28 @@ Feature: Artifacts Page
     And wait load page
     Then click on "show_all_versions" option on "Files" wizard in "Files_Table" table with "images" value in "name" column with scroll "false"
     And wait load page
+    Then verify "History_Back_Button" element visibility on "Files" wizard
+    Then verify "Version_History_Title" element visibility on "Files" wizard
+    Then "Version_History_Title" element on "Files" should contains "Version history:" value
+    Then verify "Version_History_Model_Name" element visibility on "Files" wizard
+    Then "Version_History_Model_Name" element on "Files" should contains "images" value
+    Then verify "Table_Refresh_Button" element visibility on "Files" wizard
+    Then verify "Register_File_Button" element visibility on "Files" wizard
+    Then verify "Table_FilterBy_Button" element visibility on "Files" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    And wait load page
+    Then verify "Title" element visibility on "FilterBy_Popup" wizard
+    Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+    Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+    Then verify "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected attribute option value "All tags"
+    Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
+    Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+    Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+    Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
+    Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+    Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then verify "Files_Table" element visibility on "Files" wizard
     Then click on "Register_File_Button" element on "Files" wizard
     Then verify if "Register_File_Popup" popup dialog appears
     Then type value "images" to "New_File_Name_Input" field on "Register_File_Popup" wizard
@@ -868,6 +892,9 @@ Feature: Artifacts Page
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"
     Then check "latest123456" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    And wait load page
+    Then verify "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected attribute option value "All tags"
 
   @MLA
   @smoke

@@ -34,7 +34,7 @@ Feature: Documents Page
     Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
     Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
     Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
-    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options_Main_Table"
     Then click on "Title" element on "FilterBy_Popup" wizard
     Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
     Then "Checkbox_Label" element on "FilterBy_Popup" should contains "Show best iteration only" value
