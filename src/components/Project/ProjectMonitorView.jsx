@@ -153,24 +153,6 @@ const ProjectMonitorView = ({
                 />
               </div>
               <div className="main-info__statistics-section_right">
-                {nuclioStreamsAreEnabled && (
-                  <ProjectSummaryCard
-                    counterValue={
-                      isNuclioModeDisabled ? 'N/A' : (Object.keys(v3ioStreams.data).length ?? 0)
-                    }
-                    link={`/projects/${params.projectName}/monitor${
-                      !isNuclioModeDisabled ? '/consumer-groups' : ''
-                    }`}
-                    projectSummary={v3ioStreams}
-                    title="Consumer groups"
-                    tooltipText={
-                      isNuclioModeDisabled
-                        ? 'Consumer group feature works when Nuclio is deployed'
-                        : ''
-                    }
-                  />
-                )}
-
                 <AlertsCounters />
               </div>
             </div>
