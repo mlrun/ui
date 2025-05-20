@@ -24,19 +24,12 @@ import Prism from 'prismjs'
 import { PopUpDialog } from 'igz-controls/components'
 
 import {
-  NAME_FILTER,
   MODELS_PAGE,
   MODELS_TAB,
   TAG_LATEST,
   FULL_VIEW_MODE,
   MODEL_TYPE,
-  ARTIFACT_MAX_DOWNLOAD_SIZE,
-  LABELS_FILTER,
-  TAG_FILTER,
-  ITERATIONS_FILTER,
-  TAG_FILTER_LATEST,
-  TAG_FILTER_ALL_ITEMS,
-  SHOW_ITERATIONS
+  ARTIFACT_MAX_DOWNLOAD_SIZE
 } from '../../../constants'
 import { showArtifactsPreview, updateArtifact } from '../../../reducers/artifactsReducer'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
@@ -58,21 +51,6 @@ import Delete from 'igz-controls/images/delete.svg?react'
 import DeployIcon from 'igz-controls/images/deploy-icon.svg?react'
 import DownloadIcon from 'igz-controls/images/download.svg?react'
 import HistoryIcon from 'igz-controls/images/history.svg?react'
-
-export const getFiltersConfig = isAllVersions => ({
-  [NAME_FILTER]: { label: 'Name:', initialValue: '', hidden: isAllVersions },
-  [TAG_FILTER]: {
-    label: 'Version tag:',
-    initialValue: isAllVersions ? TAG_FILTER_ALL_ITEMS : TAG_FILTER_LATEST,
-    isModal: true
-  },
-  [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
-  [ITERATIONS_FILTER]: {
-    label: 'Show best iteration only:',
-    initialValue: isAllVersions ? '' : SHOW_ITERATIONS,
-    isModal: true
-  }
-})
 
 export const infoHeaders = [
   {
@@ -127,7 +105,7 @@ export const generateModelsDetailsMenu = selectedModel => [
   }
 ]
 
-export const generatePageData = (selectedItem, viewMode) => ({
+export const generatePageData = (viewMode, selectedItem) => ({
   page: MODELS_PAGE,
   details: {
     menu: generateModelsDetailsMenu(selectedItem),
@@ -222,7 +200,7 @@ export const generateActionsMenu = (
   const isTargetPathValid = getIsTargetPathValid(modelMin ?? {}, frontendSpec)
 
   const getFullModel = modelMin => {
-    return chooseOrFetchArtifact(dispatch, MODELS_TAB, selectedModel, modelMin)
+    return chooseOrFetchArtifact(dispatch, MODELS_PAGE, MODELS_TAB, selectedModel, modelMin)
   }
 
   return [
@@ -263,7 +241,7 @@ export const generateActionsMenu = (
       {
         label: 'Copy URI',
         icon: <Copy />,
-        onClick: model => copyToClipboard(generateUri(model, MODELS_TAB), dispatch)
+        onClick: model => copyToClipboard(generateUri(model, MODELS_PAGE), dispatch)
       },
       {
         label: 'View YAML',

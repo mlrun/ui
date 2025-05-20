@@ -32,6 +32,7 @@ import Alerts from 'igz-controls/images/navbar/alerts-icon.svg?react'
 import PinIcon from 'igz-controls/images/pin-icon.svg?react'
 import SettingsIcon from 'igz-controls/images/navbar/mlrun-project-settings.svg?react'
 import UnPinIcon from 'igz-controls/images/unpin-icon.svg?react'
+import { useMode } from '../../hooks/mode.hook'
 
 import './Navbar.scss'
 
@@ -40,6 +41,7 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
   const [isPinned, setIsPinned] = useState(
     localStorageService.getStorageValue('mlrunUi.navbarStatic', false) === 'true'
   )
+  const { isDemoMode } = useMode()
 
   const navbarClasses = classNames(
     'navbar',
@@ -53,8 +55,8 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
   }
 
   const links = useMemo(() => {
-    return projectName ? getLinks(projectName) : []
-  }, [projectName])
+    return projectName ? getLinks(projectName, isDemoMode) : []
+  }, [isDemoMode, projectName])
 
   const handlePinClick = () => {
     setIsPinned(prevIsPinned => {

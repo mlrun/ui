@@ -17,7 +17,27 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import {
+  ITERATIONS_FILTER,
+  LABELS_FILTER,
+  NAME_FILTER,
+  SHOW_ITERATIONS,
+  TAG_FILTER,
+  TAG_FILTER_ALL_ITEMS,
+  TAG_FILTER_LATEST
+} from '../../constants'
 
-const LLMPrompts = () => {}
-
-export default LLMPrompts
+export const getFiltersConfig = isAllVersions => ({
+  [NAME_FILTER]: { label: 'Name:', initialValue: '', hidden: isAllVersions },
+  [TAG_FILTER]: {
+    label: 'Version tag:',
+    initialValue: isAllVersions ? TAG_FILTER_ALL_ITEMS : TAG_FILTER_LATEST,
+    isModal: true
+  },
+  [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
+  [ITERATIONS_FILTER]: {
+    label: 'Show best iteration only:',
+    initialValue: isAllVersions ? '' : SHOW_ITERATIONS,
+    isModal: true
+  }
+})

@@ -1,0 +1,14 @@
+@use 'igz-controls/scss/variables';
+@use '/src/scss/mixins';
+
+$artifactsRowHeight: variables.$rowHeight;
+$artifactsHeaderRowHeight: variables.$headerRowHeight;
+$artifactsRowHeightExtended: variables.$rowHeightExtended;
+
+.artifacts-table {
+  @include mixins.rowsHeight(
+    $artifactsHeaderRowHeight,
+    $artifactsRowHeight,
+    $artifactsRowHeightExtended
+  );
+}

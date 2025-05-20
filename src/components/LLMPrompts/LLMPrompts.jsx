@@ -17,70 +17,47 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 
-import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import Artifacts from '../Artifacts/Artifacts'
 
-import { DATASET_TYPE, DATASETS_PAGE } from '../../constants'
-import { PRIMARY_BUTTON } from 'igz-controls/constants'
-import {
-  generateActionsMenu,
-  generatePageData,
-  handleApplyDetailsChanges,
-  registerDatasetTitle
-} from './datasets.util'
-import { createDatasetsRowData } from '../../utils/createArtifactsContent'
-import { fetchDataSets, removeDataSets } from '../../reducers/artifactsReducer'
-import { openPopUp } from 'igz-controls/utils/common.util'
+import { LLM_PROMPT_TYPE, LLM_PROMPTS_PAGE } from '../../constants'
+import { createLLMPromptsRowData } from '../../utils/createArtifactsContent'
+import { fetchLLMPrompts, removeDataSets } from '../../reducers/artifactsReducer'
+import { generateActionsMenu, generatePageData, handleApplyDetailsChanges } from './llmPrompts.util'
 
-const Datasets = ({ isAllVersions = false }) => {
+const LLMPrompts = ({ isAllVersions }) => {
   const artifactsStore = useSelector(store => store.artifactsStore)
+
   const generateDetailsFormInitialValues = useCallback(
-    selectedDataset => ({
-      tag: selectedDataset.tag ?? ''
+    selectedLLMPrompt => ({
+      tag: selectedLLMPrompt.tag ?? ''
     }),
     []
   )
 
-  const handleRegisterDataset = useCallback((params, refreshDatasets, datasetsFilters) => {
-    openPopUp(RegisterArtifactModal, {
-      artifactKind: DATASET_TYPE,
-      params,
-      refresh: () => refreshDatasets(datasetsFilters),
-      title: registerDatasetTitle
-    })
-  }, [])
-
   return (
     <Artifacts
-      actionButtons={[
-        {
-          variant: PRIMARY_BUTTON,
-          label: registerDatasetTitle,
-          className: 'action-button',
-          onClick: handleRegisterDataset
-        }
-      ]}
-      artifactType={DATASET_TYPE}
-      createArtifactsRowData={createDatasetsRowData}
-      fetchArtifacts={fetchDataSets}
+      artifactType={LLM_PROMPT_TYPE}
+      createArtifactsRowData={createLLMPromptsRowData}
+      fetchArtifacts={fetchLLMPrompts}
       generateActionsMenu={generateActionsMenu}
       generateDetailsFormInitialValues={generateDetailsFormInitialValues}
       generatePageData={generatePageData}
       handleApplyDetailsChanges={handleApplyDetailsChanges}
       isAllVersions={isAllVersions}
-      page={DATASETS_PAGE}
+      page={LLM_PROMPTS_PAGE}
       removeArtifacts={removeDataSets}
-      storeArtifactTypeLoading={artifactsStore.datasets.datasetLoading}
+      storeArtifactTypeLoading={artifactsStore.LLMPrompts.LLMPromptLoading}
     />
   )
 }
 
-Datasets.propTypes = {
+LLMPrompts.propTypes = {
   isAllVersions: PropTypes.bool.isRequired
 }
 
-export default Datasets
+export default LLMPrompts
