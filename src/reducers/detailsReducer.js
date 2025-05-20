@@ -41,6 +41,12 @@ const initialState = {
     isPredefined: false
   },
   detailsPopUpInfoContent: {},
+  detailsJobPods: {
+    loading: true,
+    podsList: [],
+    podsPending: [],
+    podsTooltip: []
+  },
   editMode: false,
   error: null,
   infoContent: {},
@@ -76,14 +82,17 @@ export const fetchModelFeatureVector = createAsyncThunk(
   }
 )
 
-export const fetchDetailsJobPods = createAsyncThunk('fetchDetailsJobPods', ({ project, uid, kind }, thunkAPI) => {
-  return detailsApi
+export const fetchDetailsJobPods = createAsyncThunk(
+  'fetchDetailsJobPods',
+  ({ project, uid, kind }, thunkAPI) => {
+    return detailsApi
       .getJobPods(project, uid, kind)
       .then(({ data }) => {
         return generatePods(project, uid, data)
       })
       .catch(error => thunkAPI.rejectWithValue(error))
-})
+  }
+)
 
 export const fetchJobPods = createAsyncThunk('fetchJobPods', ({ project, uid, kind }, thunkAPI) => {
   return detailsApi
@@ -147,6 +156,9 @@ const detailsStoreSlice = createSlice({
   name: 'detailsStore',
   initialState,
   reducers: {
+    removeDetailsPods(state) {
+      state.detailsJobPods = initialState.detailsJobPods
+    },
     removeDetailsPopUpInfoContent(state) {
       state.detailsPopUpInfoContent = {}
     },
@@ -220,6 +232,17 @@ const detailsStoreSlice = createSlice({
       state.modelFeatureVectorData = { ...initialState.modelFeatureVectorData }
       state.error = action.payload
     })
+    builder.addCase(fetchDetailsJobPods.pending, state => {
+      state.detailsJobPods.loading = true
+    })
+    builder.addCase(fetchDetailsJobPods.fulfilled, (state, action) => {
+      state.detailsJobPods = { ...action.payload, loading: false }
+      state.error = null
+    })
+    builder.addCase(fetchDetailsJobPods.rejected, (state, action) => {
+      state.detailsJobPods.loading = false
+      state.error = action.payload
+    })
     builder.addCase(fetchJobPods.pending, state => {
       state.pods.loading = true
     })
@@ -283,6 +306,7 @@ const detailsStoreSlice = createSlice({
 })
 
 export const {
+  removeDetailsPods,
   removeDetailsPopUpInfoContent,
   removeInfoContent,
   removeModelFeatureVector,

@@ -89,8 +89,8 @@ const DetailsHeader = ({
   )
 
   const podsData = useMemo(() => {
-    return isDetailsPopUp ? selectedItem?.ui?.podsData : detailsStore.pods
-  }, [detailsStore.pods, isDetailsPopUp, selectedItem])
+    return isDetailsPopUp ? detailsStore.detailsJobPods : detailsStore.pods
+  }, [detailsStore.detailsJobPods, detailsStore.pods, isDetailsPopUp])
 
   const {
     value: stateValue,
