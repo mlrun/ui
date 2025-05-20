@@ -50,6 +50,8 @@ import alerts from './data/alerts.json'
 import frontendSpec from './data/frontendSpec.json'
 import projects from './data/projects.json'
 import projectsSummary from './data/summary.json'
+import monitoringApplications from './data/monitoringApplications.json'
+import monitoringApplicationsSummary from './data/monitoringApplicationsSummary.json'
 import artifacts from './data/artifacts.json'
 import featureSets from './data/featureSets.json'
 import features from './data/features.json'
@@ -796,6 +798,54 @@ function getProjectSummary(req, res) {
   res.send(collectedProject)
 }
 
+function getMonitoringApplications(req, res) {
+  const collectedMonitoringApplications = (monitoringApplications[req.params['project']] || []).map(
+    application => ({
+      ...application,
+      stats: omit(application.stats, ['shards', 'processed_model_endpoints', 'metrics'])
+    })
+  )
+
+  if (collectedMonitoringApplications.length === 0) {
+    res.statusCode = 404
+    res.send({
+      detail: "MLRunNotFoundError('Monitoring application not found')"
+    })
+  } else {
+    res.send(collectedMonitoringApplications)
+  }
+}
+
+function getMonitoringApplicationsSummary(req, res) {
+  const collectedMonitoringApplications = monitoringApplicationsSummary[req.params['project']] || []
+
+  if (collectedMonitoringApplications.length === 0) {
+    res.statusCode = 404
+    res.send({
+      detail: "MLRunNotFoundError('Monitoring application not found')"
+    })
+  } else {
+    res.send(collectedMonitoringApplications)
+  }
+}
+
+function getMonitoringApplicationData(req, res) {
+  const monitoringApplication = (monitoringApplications[req.params['project']] || []).find(
+    application => {
+      return application.name === req.params['func']
+    }
+  )
+
+  if (monitoringApplication.length === 0) {
+    res.statusCode = 404
+    res.send({
+      detail: "MLRunNotFoundError('Monitoring application not found')"
+    })
+  } else {
+    res.send(monitoringApplication)
+  }
+}
+
 function getRuns(req, res) {
   let collectedRuns = runs.runs
   //get runs for Projects Monitoring page
@@ -1338,7 +1388,7 @@ function getProjectsArtifactTags(req, res) {
 
   const tags = collectedArtifacts.map(artifact => artifact.metadata.tag)
 
-  res.send({project: req.params.project, tags})
+  res.send({ project: req.params.project, tags })
 }
 
 function getArtifacts(req, res) {
@@ -2722,6 +2772,15 @@ app.delete(`${mlrunAPIIngress}/projects/:project/secrets`, deleteSecretKeys)
 
 app.get(`${mlrunAPIIngress}/project-summaries`, getProjectsSummaries)
 app.get(`${mlrunAPIIngress}/project-summaries/:project`, getProjectSummary)
+app.get(
+  `${mlrunAPIIngress}/projects/:project/model-monitoring/function-summaries`,
+  getMonitoringApplications
+)
+app.get(`${mlrunAPIIngress}/project-summary/:project`, getMonitoringApplicationsSummary)
+app.get(
+  `${mlrunAPIIngress}/projects/:project/model-monitoring/function-summary/:func`,
+  getMonitoringApplicationData
+)
 
 app.get(`${mlrunAPIIngress}/projects/:project/runs`, getRuns)
 app.get(`${mlrunAPIIngress}/projects/*/runs`, getRuns)

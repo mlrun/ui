@@ -18,13 +18,13 @@
   }
 }
 
-.project-data-card {
-  &__table {
-    min-width: fit-content;
-    height: 100%;
-    border: borders.$dividerBorder;
-    border-radius: 8px;
+.section-table {
+  min-width: fit-content;
+  height: 100%;
+  border: borders.$dividerBorder;
+  border-radius: 8px;
 
+  &__table {
     &-body {
       display: flex;
       flex: 1;

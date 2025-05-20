@@ -27,12 +27,12 @@ import { RoundedIcon } from 'igz-controls/components'
 import { ALERTS_PAGE_PATH, NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
 import localStorageService from '../../utils/localStorageService'
 import { getLinks } from './navbar.util'
+import { useMode } from '../../hooks/mode.hook'
 
 import Alerts from 'igz-controls/images/navbar/alerts-icon.svg?react'
 import PinIcon from 'igz-controls/images/pin-icon.svg?react'
 import SettingsIcon from 'igz-controls/images/navbar/mlrun-project-settings.svg?react'
 import UnPinIcon from 'igz-controls/images/unpin-icon.svg?react'
-import { useMode } from '../../hooks/mode.hook'
 
 import './Navbar.scss'
 

@@ -100,7 +100,8 @@ export const getLinks = (projectName, isDemoMode) => {
       icon: <ModelMonitoringIcon />,
       id: 'monitoring-app',
       label: 'Monitoring app',
-      link: `${pathname}/monitoring-app`
+      link: `${pathname}/monitoring-app`,
+      hidden: !isDemoMode
     },
     {
       icon: <JobsWorkflowIcon />,
