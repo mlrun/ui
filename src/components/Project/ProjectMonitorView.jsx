@@ -54,7 +54,6 @@ const ProjectMonitorView = ({
   handleDeployFunctionSuccess,
   handleLaunchIDE,
   isNewFunctionPopUpOpen,
-  isNuclioModeDisabled,
   nuclioStreamsAreEnabled,
   params,
   project,
@@ -62,8 +61,7 @@ const ProjectMonitorView = ({
   refresh,
   setIsNewFunctionPopUpOpen,
   setShowFunctionsPanel,
-  showFunctionsPanel,
-  v3ioStreams
+  showFunctionsPanel
 }) => {
   return (
     <div className="project-wrapper">
@@ -208,7 +206,6 @@ ProjectMonitorView.propTypes = {
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
   isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
-  isNuclioModeDisabled: PropTypes.bool.isRequired,
   nuclioStreamsAreEnabled: PropTypes.bool.isRequired,
   params: PropTypes.object.isRequired,
   project: PropTypes.object.isRequired,
@@ -216,8 +213,7 @@ ProjectMonitorView.propTypes = {
   refresh: PropTypes.func.isRequired,
   setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
   setShowFunctionsPanel: PropTypes.func.isRequired,
-  showFunctionsPanel: PropTypes.bool.isRequired,
-  v3ioStreams: PropTypes.object.isRequired
+  showFunctionsPanel: PropTypes.bool.isRequired
 }
 
 export default ProjectMonitorView

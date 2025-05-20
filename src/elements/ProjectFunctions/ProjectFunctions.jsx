@@ -33,7 +33,7 @@ import { generateNuclioLink } from '../../utils'
 import { groupByUniqName } from '../../utils/groupByUniqName'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
-const ProjectFunctions = nuclioStreamsAreEnabled => {
+const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
   const params = useParams()
   const { isNuclioModeDisabled } = useNuclioMode()
   const nuclioStore = useSelector(store => store.nuclioStore)
