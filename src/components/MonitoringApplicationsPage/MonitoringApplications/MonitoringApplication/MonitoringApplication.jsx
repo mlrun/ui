@@ -27,7 +27,7 @@ import SectionTable from '../../../../elements/SectionTable/SectionTable'
 
 import { removeMonitoringApplication } from '../../../../reducers/monitoringApplicationsReducer'
 import { removeArtifacts } from '../../../../reducers/artifactsReducer'
-import { FILES_TAB, NAME_FILTER } from '../../../../constants'
+import { FILES_PAGE, NAME_FILTER } from '../../../../constants'
 
 import {
   generateArtifactsTableContent,
@@ -182,7 +182,7 @@ const MonitoringApplication = () => {
               <SectionTable params={params} table={artifactsTable} />
               <Link
                 className="link monitoring-app__see-all-link"
-                to={`/projects/${params.projectName}/${FILES_TAB}?${NAME_FILTER}=${params.name}`}
+                to={`/projects/${params.projectName}/${FILES_PAGE}?${NAME_FILTER}=${params.name}`}
               >
                 See all
               </Link>

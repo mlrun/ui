@@ -37,11 +37,11 @@ import UnPinIcon from 'igz-controls/images/unpin-icon.svg?react'
 import './Navbar.scss'
 
 const Navbar = ({ projectName, setIsNavbarPinned }) => {
-  const { isDemoMode } = useMode()
   const [isHovered, setIsHovered] = useState(false)
   const [isPinned, setIsPinned] = useState(
     localStorageService.getStorageValue('mlrunUi.navbarStatic', false) === 'true'
   )
+  const { isDemoMode } = useMode()
 
   const navbarClasses = classNames(
     'navbar',
@@ -56,7 +56,7 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
 
   const links = useMemo(() => {
     return projectName ? getLinks(projectName, isDemoMode) : []
-  }, [projectName, isDemoMode])
+  }, [isDemoMode, projectName])
 
   const handlePinClick = () => {
     setIsPinned(prevIsPinned => {

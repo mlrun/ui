@@ -28,12 +28,12 @@ import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelM
 
 import {
   DATASET_TYPE,
-  DATASETS_TAB,
   DETAILS_BUILD_LOG_TAB,
-  FILES_TAB,
   MODELS_TAB,
   MODEL_TYPE,
-  REQUEST_CANCELED
+  REQUEST_CANCELED,
+  DATASETS_PAGE,
+  FILES_PAGE
 } from '../../constants'
 import {
   fetchProject,
@@ -69,7 +69,7 @@ const ProjectMonitor = () => {
   const frontendSpec = useSelector(state => state.appStore.frontendSpec)
   const functionsStore = useSelector(store => store.functionsStore)
   const projectStore = useSelector(store => store.projectStore)
-  const nuclioStore = useSelector((store) => store.nuclioStore)
+  const nuclioStore = useSelector(store => store.nuclioStore)
 
   const registerArtifactLink = useCallback(
     artifactKind =>
@@ -77,8 +77,8 @@ const ProjectMonitor = () => {
         artifactKind === MODEL_TYPE
           ? MODELS_TAB
           : artifactKind === DATASET_TYPE
-            ? DATASETS_TAB
-            : FILES_TAB
+            ? DATASETS_PAGE
+            : FILES_PAGE
       }`,
     [params.projectName]
   )
@@ -171,7 +171,12 @@ const ProjectMonitor = () => {
     if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {
       v3ioStreamsAbortControllerRef.current = new AbortController()
 
-      dispatch(fetchNuclioV3ioStreams({ project: params.projectName, signal: v3ioStreamsAbortControllerRef.current.signal }))
+      dispatch(
+        fetchNuclioV3ioStreams({
+          project: params.projectName,
+          signal: v3ioStreamsAbortControllerRef.current.signal
+        })
+      )
     }
   }, [isNuclioModeDisabled, params.projectName, nuclioStreamsAreEnabled, dispatch])
 
@@ -285,7 +290,12 @@ const ProjectMonitor = () => {
     if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {
       v3ioStreamsAbortControllerRef.current = new AbortController()
 
-      dispatch(fetchNuclioV3ioStreams({ project: params.projectName, signal: v3ioStreamsAbortControllerRef.current.signal }))
+      dispatch(
+        fetchNuclioV3ioStreams({
+          project: params.projectName,
+          signal: v3ioStreamsAbortControllerRef.current.signal
+        })
+      )
     }
   }
 
