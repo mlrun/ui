@@ -312,7 +312,7 @@ const ApplicationMetrics = () => {
                         <DetailsMetrics
                           applicationNameProp={params.appName}
                           selectedItem={selectedModelEndpoint}
-                          title={() => (
+                          renderTitle={() => (
                             <Link
                               to={`/projects/${params.projectName}/${MODELS_PAGE}/${MODEL_ENDPOINTS_TAB}/${selectedModelEndpoint.metadata.name}/${selectedModelEndpoint.metadata.uid}/${DETAILS_OVERVIEW_TAB}${window.location.search}`}
                               className="data-ellipsis"
