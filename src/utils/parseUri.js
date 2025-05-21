@@ -115,12 +115,11 @@ const generateLinkPath = (uri = '') => {
 }
 
 const generateNuclioLink = pathname => {
-  const linkUrl = new URL(`${window.mlrunConfig.nuclioUiUrl}${pathname}`)
+  const linkUrl = new URL(`${window?.mlrunConfig?.nuclioUiUrl}${pathname}`)
 
-  if (window.location.origin !== window.mlrunConfig.nuclioUiUrl) {
+  if (window.location.origin !== window?.mlrunConfig.nuclioUiUrl) {
     linkUrl.searchParams.set?.('origin', window.location.origin)
   }
-
   return linkUrl.toString()
 }
 

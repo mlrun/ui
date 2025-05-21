@@ -353,7 +353,7 @@ const App = () => {
         </Route>
       </>
     ),
-    { basename: import.meta.env.VITE_PUBLIC_URL }
+    { basename: import.meta.env.VITE_REACT_ROUTER_BASE_NAME }
   )
 
   return (

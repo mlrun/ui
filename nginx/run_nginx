@@ -8,7 +8,8 @@ envsubst '${MLRUN_API_PROXY_URL} \
           ${MLRUN_NUCLIO_API_URL} \
           ${MLRUN_NUCLIO_MODE} \
           ${MLRUN_NUCLIO_UI_URL} \
-          ${MLRUN_V3IO_ACCESS_KEY}' \
+          ${MLRUN_V3IO_ACCESS_KEY} \
+          ${MLRUN_IGZ_UI_ALLOWED_ORIGIN}' \
 < /etc/nginx/conf.d/nginx.conf.tmpl \
 > /etc/nginx/conf.d/nginx.conf
 

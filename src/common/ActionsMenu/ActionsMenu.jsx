@@ -56,7 +56,7 @@ const ActionsMenu = ({
 
   const clickHandler = useCallback(
     event => {
-      if (!event.target.closest('.actions-menu-button')) {
+      if (!event?.target?.closest('.actions-menu-button')) {
         setIsShowMenu(false)
       }
     },
@@ -65,7 +65,8 @@ const ActionsMenu = ({
 
   const scrollHandler = useCallback(
     event => {
-      if (!event.target.closest('.actions-menu__body')) {
+      // if (!event?.target?.closest('.actions-menu__body')) {
+      if (!(event?.target instanceof Element) || !event.target.closest('.actions-menu__body')) {
         setIsShowMenu(false)
       }
     },

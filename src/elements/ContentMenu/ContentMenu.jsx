@@ -29,7 +29,7 @@ const ContentMenu = ({
   disabled = false,
   fontSize = 'md',
   onClick = null,
-  screen= '',
+  screen = '',
   tabs = []
 }) => {
   const params = useParams()
@@ -77,7 +77,7 @@ const ContentMenu = ({
                 >
                   {tab.icon && <i>{tab.icon}</i>}
                   {tab.label ?? tab.id}
-                  {window.mlrunConfig.betaMode === 'enabled' && tab.preview && (
+                  {window?.mlrunConfig?.betaMode === 'enabled' && tab.preview && (
                     <span className="content-menu__tab__preview"> (Beta)</span>
                   )}
                 </span>
