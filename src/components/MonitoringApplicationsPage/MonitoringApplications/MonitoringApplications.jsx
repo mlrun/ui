@@ -32,6 +32,7 @@ import { MONITORING_APPLICATIONS_NO_DATA_MESSAGE } from '../MonitoringApplicatio
 import { generateOperatingFunctionsTable } from './monitoringApplications.util'
 import { createApplicationContent } from '../../../utils/createApplicationContent'
 import { removeMonitoringApplications } from '../../../reducers/monitoringApplicationsReducer'
+import { MODEL_ENDPOINTS_TAB, MONITORING_APP_PAGE } from '../../../constants'
 
 import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
 
@@ -51,11 +52,11 @@ const MonitoringApplications = () => {
           id: 'open-metrics',
           label: 'Open metrics',
           icon: <PresentMetricsIcon />,
-          onClick: data => navigate(data.name)
+          onClick: data => navigate(`/projects/${params.projectName}/${MONITORING_APP_PAGE}/${data.name}/${MODEL_ENDPOINTS_TAB}${window.location.search}`)
         }
       ]
     ],
-    [navigate]
+    [navigate, params.projectName]
   )
   const operatingFunctionsTable = useMemo(
     () => generateOperatingFunctionsTable(operatingFunctions),

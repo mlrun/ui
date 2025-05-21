@@ -22,8 +22,8 @@
     }
 
     &_disabled {
-      border: borders.$disabledBorder;
       color: colors.$spunPearl;
+      border: borders.$disabledBorder;
       cursor: not-allowed;
 
       .metrics-selector-header__icon {
@@ -79,7 +79,6 @@
 
         .select__item {
           height: 50px;
-          padding-left: 35px;
 
           label {
             overflow: hidden;
@@ -127,6 +126,10 @@
 
       &.open {
         height: 100%;
+      }
+
+      .select__item {
+        padding-left: 35px;
       }
     }
 
