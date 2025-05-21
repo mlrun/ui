@@ -11,6 +11,7 @@
 
 # production
 /build
+.__mf__temp/
 
 # misc
 .DS_Store

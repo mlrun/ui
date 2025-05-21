@@ -26,40 +26,23 @@ import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
 import toolkitStore from './store/toolkitStore'
-import { HTTP, HTTPS } from './constants'
+import { loadRemoteConfig } from './loadRemoteConfig'
 
 if (!window.location.pathname.includes(import.meta.env.VITE_PUBLIC_URL)) {
   window.location.href = import.meta.env.VITE_PUBLIC_URL
 }
 
-fetch(`${import.meta.env.VITE_PUBLIC_URL}/config.json`, { cache: 'no-store' })
-  .then(response => response.json())
-  .then(config => {
-    if (config.nuclioUiUrl) {
-      const mlrunProtocol =
-        config.nuclioUiUrl.startsWith(HTTP) || config.nuclioUiUrl.startsWith(HTTPS)
-          ? ''
-          : `${window.location.protocol}//`
+loadRemoteConfig().then(() => {
+  const root = createRoot(document.getElementById('root'))
 
-      window.mlrunConfig = {
-        ...config,
-        nuclioUiUrl: `${mlrunProtocol}${config.nuclioUiUrl}`
-      }
-    } else {
-      window.mlrunConfig = config
-    }
-  })
-  .then(() => {
-    const root = createRoot(document.getElementById('root'))
-
-    root.render(
-      <Provider store={toolkitStore}>
-        <ErrorBoundary>
-          <App />
-        </ErrorBoundary>
-      </Provider>
-    )
-  })
+  root.render(
+    <Provider store={toolkitStore}>
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    </Provider>
+  )
+})
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

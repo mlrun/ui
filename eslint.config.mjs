@@ -6,11 +6,11 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import eslintPluginImport from 'eslint-plugin-import'
 
 export default [
-  { ignores: ['dist'] },
+  { ignores: ['dist', '.__mf__temp'] },
   js.configs.recommended,
   eslintConfigPrettier,
   {
-    files: ['**/*.{js,jsx,ts,tsx}'],
+    files: ['**/*.{js,mjs, jsx,ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2021,
       globals: {
@@ -22,7 +22,8 @@ export default [
         ecmaFeatures: {
           jsx: true
         }
-      }
+      },
+      sourceType: 'module' // ✅ Optional, helps with ESM imports
     },
     plugins: {
       react: react,
@@ -34,6 +35,7 @@ export default [
         version: 'detect'
       }
     },
+
     rules: {
       ...reactHooks.configs.recommended.rules,
       ...react.configs.recommended.rules,
