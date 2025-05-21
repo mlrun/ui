@@ -28,12 +28,12 @@ import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelM
 
 import {
   DATASET_TYPE,
-  DATASETS_TAB,
   DETAILS_BUILD_LOG_TAB,
-  FILES_TAB,
   MODELS_TAB,
   MODEL_TYPE,
-  REQUEST_CANCELED
+  REQUEST_CANCELED,
+  DATASETS_PAGE,
+  FILES_PAGE
 } from '../../constants'
 import {
   fetchProject,
@@ -76,8 +76,8 @@ const ProjectMonitor = () => {
         artifactKind === MODEL_TYPE
           ? MODELS_TAB
           : artifactKind === DATASET_TYPE
-            ? DATASETS_TAB
-            : FILES_TAB
+            ? DATASETS_PAGE
+            : FILES_PAGE
       }`,
     [params.projectName]
   )

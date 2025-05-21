@@ -127,15 +127,7 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, isAlertsPage = true }) =>
       .catch(() => {
         setMetrics([])
       })
-  }, [
-    isAlertsPage,
-    filters,
-    detailsStore.dates.value,
-    fetchData,
-    selectedItem.fullName,
-    selectedItem.project,
-    selectedItem.uid
-  ])
+  }, [isAlertsPage, filters, detailsStore.dates.value, fetchData, selectedItem])
 
   useEffect(() => {
     fetchMetrics()

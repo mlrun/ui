@@ -20,21 +20,20 @@ such restriction.
 
 import { DATES_FILTER } from '../../constants'
 import {
-  datePickerPastMonthOptions,
+  datePickerPastOptions,
   getDatePickerFilterValue,
   PAST_24_HOUR_DATE_OPTION,
   TIME_FRAME_LIMITS
 } from '../../utils/datePicker.util'
 
+export const MONITORING_APPLICATIONS_NO_DATA_MESSAGE = 'No data is available for the chosen period'
+
 export const getFiltersConfig = () => ({
   [DATES_FILTER]: {
-    customOptions: datePickerPastMonthOptions,
+    customOptions: datePickerPastOptions,
+    excludeCustomRange: true,
     label: 'Time range:',
     timeFrameLimit: TIME_FRAME_LIMITS.MONTH,
-    initialValue: getDatePickerFilterValue(
-      datePickerPastMonthOptions,
-      PAST_24_HOUR_DATE_OPTION,
-      true
-    )
+    initialValue: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION, true)
   }
 })

@@ -615,4 +615,76 @@ export const createDatasetsRowData = (artifact, project, isAllVersions) => {
   }
 }
 
+export const createLLMPromptsRowData = (artifact, project, isAllVersions) => {
+  return {
+    data: {
+      ...artifact
+    },
+    content: [
+      {
+        id: `key.${artifact.ui.identifierUnique}`,
+        headerId: isAllVersions ? 'uid' : 'name',
+        headerLabel: isAllVersions ? 'UID' : 'Name',
+        value: isAllVersions ? artifact.uid : artifact.db_key,
+        className: 'table-cell-name',
+        getLink: tab =>
+          getArtifactsDetailsLink(artifact, 'llm-prompts', tab, project, isAllVersions),
+        showTag: true
+      },
+      {
+        id: `labels.${artifact.ui.identifierUnique}`,
+        headerId: 'labels',
+        headerLabel: 'Labels',
+        value: parseKeyValues(artifact.labels),
+        className: 'table-cell-1',
+        type: 'labels'
+      },
+      {
+        id: `producer.${artifact.ui.identifierUnique}`,
+        headerId: 'producer',
+        headerLabel: 'Producer',
+        value: artifact.producer?.name || '',
+        template: (
+          <TableProducerCell
+            bodyCellClassName="table-cell-1"
+            id="producer"
+            producer={artifact.producer}
+          />
+        ),
+        className: 'table-cell-1',
+        type: 'producer'
+      },
+      {
+        id: `owner.${artifact.ui.identifierUnique}`,
+        headerId: 'owner',
+        headerLabel: 'Owner',
+        value: artifact.producer?.owner,
+        className: 'table-cell-1',
+        type: 'owner'
+      },
+      {
+        id: `updated.${artifact.ui.identifierUnique}`,
+        headerId: 'updated',
+        headerLabel: 'Updated',
+        value: formatDatetime(artifact.updated, 'N/A'),
+        className: 'table-cell-1'
+      },
+      {
+        id: `size.${artifact.ui.identifierUnique}`,
+        headerId: 'size',
+        headerLabel: 'Size',
+        value: isNumber(artifact.size) && artifact.size >= 0 ? prettyBytes(artifact.size) : 'N/A',
+        className: 'table-cell-1'
+      },
+      {
+        id: `version.${artifact.ui.identifierUnique}`,
+        headerId: 'tag',
+        value: artifact.tag,
+        className: 'table-cell-1',
+        type: 'hidden'
+      }
+    ]
+  }
+}
+
 export default createArtifactsContent

@@ -38,7 +38,7 @@ import {
   getWorkflowDetailsLink,
   getWorkflowMonitoringDetailsLink
 } from '../components/Workflow/workflow.util'
-import measureTime from './measureTime'
+import { measureTime } from './measureTime'
 import { formatDatetime } from './datetime'
 import { generateLinkToDetailsPanel } from './link-helper.util'
 import { getJobIdentifier, getWorkflowJobIdentifier } from './getUniqueIdentifier'
