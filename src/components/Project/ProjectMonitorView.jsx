@@ -54,7 +54,6 @@ const ProjectMonitorView = ({
   handleDeployFunctionSuccess,
   handleLaunchIDE,
   isNewFunctionPopUpOpen,
-  isNuclioModeDisabled,
   nuclioStreamsAreEnabled,
   params,
   project,
@@ -62,8 +61,7 @@ const ProjectMonitorView = ({
   refresh,
   setIsNewFunctionPopUpOpen,
   setShowFunctionsPanel,
-  showFunctionsPanel,
-  v3ioStreams
+  showFunctionsPanel
 }) => {
   return (
     <div className="project-wrapper">
@@ -153,24 +151,6 @@ const ProjectMonitorView = ({
                 />
               </div>
               <div className="main-info__statistics-section_right">
-                {nuclioStreamsAreEnabled && (
-                  <ProjectSummaryCard
-                    counterValue={
-                      isNuclioModeDisabled ? 'N/A' : (Object.keys(v3ioStreams.data).length ?? 0)
-                    }
-                    link={`/projects/${params.projectName}/monitor${
-                      !isNuclioModeDisabled ? '/consumer-groups' : ''
-                    }`}
-                    projectSummary={v3ioStreams}
-                    title="Consumer groups"
-                    tooltipText={
-                      isNuclioModeDisabled
-                        ? 'Consumer group feature works when Nuclio is deployed'
-                        : ''
-                    }
-                  />
-                )}
-
                 <AlertsCounters />
               </div>
             </div>
@@ -179,7 +159,7 @@ const ProjectMonitorView = ({
                 <ProjectJobs />
               </div>
               <div className="d-flex">
-                <ProjectFunctions />
+                <ProjectFunctions nuclioStreamsAreEnabled={nuclioStreamsAreEnabled} />
               </div>
             </div>
           </div>
@@ -226,7 +206,6 @@ ProjectMonitorView.propTypes = {
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
   isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
-  isNuclioModeDisabled: PropTypes.bool.isRequired,
   nuclioStreamsAreEnabled: PropTypes.bool.isRequired,
   params: PropTypes.object.isRequired,
   project: PropTypes.object.isRequired,
@@ -234,8 +213,7 @@ ProjectMonitorView.propTypes = {
   refresh: PropTypes.func.isRequired,
   setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
   setShowFunctionsPanel: PropTypes.func.isRequired,
-  showFunctionsPanel: PropTypes.bool.isRequired,
-  v3ioStreams: PropTypes.object.isRequired
+  showFunctionsPanel: PropTypes.bool.isRequired
 }
 
 export default ProjectMonitorView

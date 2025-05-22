@@ -69,7 +69,6 @@ const ProjectMonitor = () => {
   const frontendSpec = useSelector(state => state.appStore.frontendSpec)
   const functionsStore = useSelector(store => store.functionsStore)
   const projectStore = useSelector(store => store.projectStore)
-  const nuclioStore = useSelector(store => store.nuclioStore)
 
   const registerArtifactLink = useCallback(
     artifactKind =>
@@ -313,7 +312,6 @@ const ProjectMonitor = () => {
         handleDeployFunctionSuccess={handleDeployFunctionSuccess}
         handleLaunchIDE={handleLaunchIDE}
         isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
-        isNuclioModeDisabled={isNuclioModeDisabled}
         navigate={navigate}
         nuclioStreamsAreEnabled={nuclioStreamsAreEnabled}
         params={params}
@@ -323,7 +321,6 @@ const ProjectMonitor = () => {
         setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}
         setShowFunctionsPanel={setShowFunctionsPanel}
         showFunctionsPanel={showFunctionsPanel}
-        v3ioStreams={nuclioStore.v3ioStreams}
       />
     </>
   )
