@@ -100,6 +100,7 @@ const DetailsTabsContent = ({
       return (
         !isJobKindDask(selectedItem?.labels) && (
           <DetailsPods
+            isDetailsPopUp={isDetailsPopUp}
             noDataMessage={
               selectedItem.reason
                 ? selectedItem.reason
