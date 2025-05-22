@@ -62,7 +62,8 @@ import {
   JOBS_MONITORING_PAGE,
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_WORKFLOWS_TAB,
-  JOBS_MONITORING_SCHEDULED_TAB
+  JOBS_MONITORING_SCHEDULED_TAB,
+  INACTIVE_JOBS_TAB
 } from './constants'
 
 import 'reactflow/dist/style.css'
@@ -216,6 +217,9 @@ const App = () => {
             {[
               `${MONITOR_JOBS_TAB}/:jobName/:jobId/:tab`,
               `${MONITOR_JOBS_TAB}/:jobId/:tab`,
+              /*/!* Adding for backwards compatibility, it redirects from INACTIVE_JOBS_TAB in Jobs.jxs to MONITOR_JOBS_TAB *!/*/
+              `${INACTIVE_JOBS_TAB}/:jobId/:tab`,
+              /*/!***********************************************************************************************************!/*/
               `${MONITOR_JOBS_TAB}/:jobName`,
               `${MONITOR_JOBS_TAB}`
             ].map((path, index) => {

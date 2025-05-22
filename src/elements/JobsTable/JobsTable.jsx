@@ -30,7 +30,7 @@ import NoData from '../../common/NoData/NoData'
 import Pagination from '../../common/Pagination/Pagination'
 import Table from '../../components/Table/Table'
 
-import { JOB_KIND_JOB, JOBS_PAGE, MONITOR_JOBS_TAB, PANEL_RERUN_MODE } from '../../constants'
+import { JOB_KIND_JOB, JOBS_MONITORING_JOBS_TAB, JOBS_PAGE, MONITOR_JOBS_TAB, PANEL_RERUN_MODE } from '../../constants'
 import {
   enrichRunWithFunctionFields,
   handleAbortJob,
@@ -62,6 +62,7 @@ const JobsTable = React.forwardRef(
       context,
       filters,
       filtersConfig,
+      jobs,
       jobRuns = null,
       paginatedJobs,
       refreshJobs,
@@ -331,6 +332,7 @@ const JobsTable = React.forwardRef(
       checkForSelectedJob(
         paginatedJobs,
         jobRuns,
+        jobs,
         params.jobName,
         params.jobId,
         params.projectName,
@@ -356,7 +358,8 @@ const JobsTable = React.forwardRef(
       modifyAndSelectRun,
       dispatch,
       setSearchParams,
-      lastCheckedJobIdRef
+      lastCheckedJobIdRef,
+      jobs
     ])
 
     useEffect(() => {
@@ -384,7 +387,7 @@ const JobsTable = React.forwardRef(
             <>
               <Table
                 actionsMenu={actionsMenu}
-                getCloseDetailsLink={() => getCloseDetailsLink(params.jobName)}
+                getCloseDetailsLink={() => getCloseDetailsLink(params.jobName || (params.projectName ? MONITOR_JOBS_TAB : JOBS_MONITORING_JOBS_TAB))}
                 handleCancel={() => setSelectedJob({})}
                 pageData={pageData}
                 selectedItem={selectedJob}
