@@ -438,8 +438,10 @@ Feature: Jobs and workflows
         Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
         Then check "Auto_Refresh_Checkbox" element on "Jobs_Monitor_Tab" wizard
         Then "Auto_Refresh_Checkbox" element should be checked on "Jobs_Monitor_Tab" wizard
-        When pick up "Custom range" from "11/07/2021 18:00" to "11/08/2021 18:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
-        Then verify from "11/07/2021 18:00" to "11/08/2021 18:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "11/07/2021 17:00" to "11/08/2021 17:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify from "11/07/2021 17:00" to "11/08/2021 17:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        And wait load page
         Then value in "datetime" column in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should be from "11/07/2021 18:00" to "11/08/2021 18:00"
 
     @MLJW
@@ -1475,9 +1477,6 @@ Feature: Jobs and workflows
         And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then select "Run now" option in action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table at row with "erann-test" value in "name" column
-        And wait load page
-        Then click on "Table_Refresh_Button" element on "Schedule_Monitor_Tab" wizard
-        And wait load page
         And wait load page
         Then click on "Table_Refresh_Button" element on "Schedule_Monitor_Tab" wizard
         And wait load page
@@ -2843,6 +2842,7 @@ Feature: Jobs and workflows
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And wait load page
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then value in "status" column with "tooltip" in "Workflows_Monitor_Table" on "Workflows_Monitor_Tab" wizard should contains "Completed"

@@ -310,7 +310,7 @@ module.exports = {
     Alerts_Stats_Total_Number: By.css('.main-info__statistics-section_right .stats-card:nth-of-type(2) [data-testid="alerts_total_counter"] .stats__counter'),
     Alerts_Stats_Endpoint_Number: By.css('.main-info__statistics-section_right .stats-card:nth-of-type(2) [data-testid="alerts_endpoint_counter"] .stats__counter'),
     Alerts_Stats_Jobs_Number: By.css('.main-info__statistics-section_right .stats-card:nth-of-type(2) [data-testid="alerts_jobs_counter"] .stats__counter'),
-    Alerts_Stats_Application_Number: By.css('.main-info__statistics-section_right .stats-card:nth-of-type(2) [data-testid="alerts_application_counter"] .stats__counter'),
+    Alerts_Stats_Application_Number: By.css('.main-info__statistics-section_right .stats-card:nth-of-type(2) [data-testid="alerts_application_counter stats__counter-large"] .stats__counter'),
     Jobs_Info_Card_Statistics: commonTable(generalInfoJobsCardStat),
     Real_Time_Functions_Card_Statistics: commonTable(
       generalInfoRealTimeFunctionsCardStat

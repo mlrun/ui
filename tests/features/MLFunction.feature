@@ -1087,6 +1087,7 @@ Feature: ML Functions
         And wait load page
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
+        And wait load page
         Then verify "Projects_Table" element visibility on "Projects" wizard
 
     @MLF
@@ -1109,7 +1110,7 @@ Feature: ML Functions
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
-        Then click on cell with row index 9 in "expand_btn" column in "Functions_Table" table on "ML_Functions" wizard
+        Then click on cell with row index 8 in "expand_btn" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
         Then select "View YAML" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "Nov 23, 2021, 11:31:51 AM" value in "name" column
         Then verify if "View_YAML" popup dialog appears
@@ -1156,8 +1157,8 @@ Feature: ML Functions
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
-        Then verify options in action menu on "ML_Functions" wizard in "Functions_Table" table with "Job" value in "kind" column should contains "ML_Functions_Tab"."Common_Action_Menu_Options"
-        Then verify options in action menu on "ML_Functions" wizard in "Functions_Table" table with "Serving" value in "kind" column should contains "ML_Functions_Tab"."Serving_Action_Menu_Options"
+        Then verify options in action menu on "ML_Functions" wizard in "Functions_Table" table with "Job" value in "kind" column should contains "ML_Functions_Tab"."Common_Action_Menu_Options_Demo"
+        Then verify options in action menu on "ML_Functions" wizard in "Functions_Table" table with "Serving" value in "kind" column should contains "ML_Functions_Tab"."Serving_Action_Menu_Options_Demo"
         #TODO: check if serving function can be edited
 
     @MLF
@@ -1180,7 +1181,7 @@ Feature: ML Functions
         When click on cell with row index 3 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
         Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
-        Then verify "Action_Menu" dropdown element on "ML_Function_Info_Pane" wizard should contains "ML_Functions_Tab"."Common_Action_Menu_Options"
+        Then verify "Action_Menu" dropdown element on "ML_Function_Info_Pane" wizard should contains "ML_Functions_Tab"."Common_Action_Menu_Options_Demo"
 
     @MLF
     @passive
@@ -1203,7 +1204,7 @@ Feature: ML Functions
         When click on cell with row index 9 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
         Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
-        Then verify "Action_Menu" dropdown element on "ML_Function_Info_Pane" wizard should contains "ML_Functions_Tab"."Serving_Action_Menu_Options"
+        Then verify "Action_Menu" dropdown element on "ML_Function_Info_Pane" wizard should contains "ML_Functions_Tab"."Serving_Action_Menu_Options_Demo"
         #TODO: check if serving function can be edited
 
     @MLF
@@ -1350,7 +1351,7 @@ Feature: ML Functions
         And wait load page
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
-        Then verify redirection from "projects/default/functions/INVALID/latest/overview" to "projects/default/functions"
+        Then verify redirection from "projects/default/functions/INVALID/latest/overview?dates=anyTime" to "projects/default/functions?dates=anyTime"
         And wait load page
         And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard

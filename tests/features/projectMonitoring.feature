@@ -62,7 +62,6 @@ Feature: Project Monitoring Page
         Then verify "Feature_Store_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Datasets_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Documents_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "LLM_Prompts_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Artifacts_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Models_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Monitoring_App_Button" element visibility on "commonPagesHeader" wizard
@@ -85,15 +84,13 @@ Feature: Project Monitoring Page
         Then verify "Feature_Store_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Datasets_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Datasets_Icon" element visibility on "commonPagesHeader" wizard
-        Then verify "Documents_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Documents_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Documents_Icon" element visibility on "commonPagesHeader" wizard
-        Then verify "LLM_Prompts_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "LLM_Prompts_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Artifacts_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Artifacts_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Models_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Models_Icon" element visibility on "commonPagesHeader" wizard
-        Then verify "Monitoring_App_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Monitoring_App_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Monitoring_App_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Jobs_And_Workflows_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Jobs_And_Workflows_Icon" element visibility on "commonPagesHeader" wizard
@@ -149,6 +146,12 @@ Feature: Project Monitoring Page
         Then verify "Quick_actions_Active" not input element on "commonPagesHeader" wizard is active
         Then click on "Project_Monitoring_Second_Instance" element on "commonPagesHeader" wizard
         Then verify "Project_Monitoring_Active" not input element on "commonPagesHeader" wizard is active
+        #check visibility of menu buttons in demo mode
+        When turn on demo mode with query params "false"
+        And wait load page
+        And wait load page
+        Then verify "LLM_Prompts_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "LLM_Prompts_Icon" element visibility on "commonPagesHeader" wizard
 
     @MLPM
     @passive
@@ -159,6 +162,7 @@ Feature: Project Monitoring Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
+        And wait load page
         And wait load page
         Then verify "Projects_Table" element visibility on "Projects" wizard
 
