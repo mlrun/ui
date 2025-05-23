@@ -78,7 +78,7 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
     },
     {
       id: 'runningFrequency',
-      title: 'Running frequency',
+      title: 'Running interval',
       counterData: [
         {
           title: `Every ${formatMinutesToString(monitoringApplications.applications?.[0]?.base_period)}`
@@ -91,7 +91,6 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
     {
       id: 'appStatus',
       title: 'App Status',
-      tip: 'Some tip',
       counterData: [
         {
           id: 'appStatus',

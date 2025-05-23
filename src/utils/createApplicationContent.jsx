@@ -72,7 +72,7 @@ export const createApplicationContent = application => {
         headerId: 'possibleDetections',
         headerLabel: 'Possible detections',
         value: application.stats.potential_detections,
-        className: 'table-cell-1'
+        className: 'table-cell-2'
       },
       {
         id: `class.${identifierUnique}`,
@@ -81,13 +81,7 @@ export const createApplicationContent = application => {
         value: application.application_class,
         className: 'table-cell-2'
       },
-      {
-        id: `startedAt.${identifierUnique}`,
-        headerId: 'startedAt',
-        headerLabel: 'Started at',
-        value: formatDatetime(application.started_at, 'N/A'),
-        className: 'table-cell-2'
-      },
+
       {
         id: `updated.${identifierUnique}`,
         headerId: 'updated',

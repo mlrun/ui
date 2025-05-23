@@ -79,8 +79,7 @@ const MonitoringApplications = () => {
       <div className="monitoring-app__section section_small">
         <div className="monitoring-app__section-item">
           <div className="section-item_title">
-            <span>Controller calls</span>
-            <Tip text="The number of controller's calls to the monitoring apps" />
+            <span>Model Endpoints with detections</span>
           </div>
           <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
         </div>

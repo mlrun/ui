@@ -204,7 +204,6 @@ const MonitoringApplication = () => {
         <div className="monitoring-app__section-item">
           <div className="section-item_title">
             <span>Metrics</span>
-            <Tip text="Metrics tip" />
           </div>
           {metricsTable.body.length === 0 ? (
             <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
