@@ -40,7 +40,7 @@ import { useModalBlockHistory } from '../../../hooks/useModalBlockHistory.hook'
 
 import './createProjectDialog.scss'
 
-const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject }) => {
+const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject, isOpen = false}) => {
   const projectStore = useSelector(store => store.projectStore)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const initialValues = {
@@ -67,6 +67,7 @@ const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject }) => {
       headerText="Create new project"
       className="create-project-dialog"
       closePopUp={handleCloseModal}
+      isOpen={isOpen}
     >
       {projectStore.loading && <Loader />}
       <Form form={formRef.current} onSubmit={handleCreateProject}>
@@ -142,7 +143,8 @@ const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject }) => {
 
 CreateProjectDialog.propTypes = {
   closeNewProjectPopUp: PropTypes.func.isRequired,
-  handleCreateProject: PropTypes.func.isRequired
+  handleCreateProject: PropTypes.func.isRequired,
+  isOpen: PropTypes.bool
 }
 
 export default CreateProjectDialog

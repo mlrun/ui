@@ -38,6 +38,41 @@
     {
       "kind": "run",
       "metadata": {
+        "name": "main3",
+        "uid": "6cb91b3b1cac4cf6894e5595b2063bdd",
+        "iteration": 0,
+        "project": "cat-vs-dog-classification",
+        "labels": {
+          "v3io_user": "admin",
+          "owner": "admin",
+          "kind": "job"
+        },
+        "annotations": {}
+      },
+      "spec": {
+        "function": "cat-vs-dog-classification/sef@9e535e175aebfbff61e4ca85506813e3287d1aab",
+        "log_level": "info",
+        "parameters": {},
+        "handler": "dg",
+        "outputs": [],
+        "output_path": "v3io:///projects/cat-vs-dog-classification/artifacts/cf842616c89347c7bb7bca2c9e840a21",
+        "inputs": {},
+        "hyperparams": {},
+        "hyper_param_options": {},
+        "data_stores": []
+      },
+      "status": {
+        "state": "error",
+        "results": {},
+        "start_time": "2021-11-08T16:24:30.312181+00:00",
+        "last_update": "2021-11-08T16:24:30.472758+00:00",
+        "artifacts": [],
+        "error": "handler dg not found in main.py"
+      }
+    },
+    {
+      "kind": "run",
+      "metadata": {
         "name": "seff",
         "uid": "b94aea3f78784162a9ed1383cfc2c5b8",
         "iteration": 0,

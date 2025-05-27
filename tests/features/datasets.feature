@@ -7,6 +7,7 @@ Feature: Datasets Page
   @smoke
   Scenario: MLD001 - Check components on Datasets page
     Given open url
+    And wait load page
     And click on row root with value "getting-started-tutorial-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
@@ -35,7 +36,7 @@ Feature: Datasets Page
     Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
     Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
     Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
-    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options_Main_Table"
     Then click on "Title" element on "FilterBy_Popup" wizard
     Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
     Then "Checkbox_Label" element on "FilterBy_Popup" should contains "Show best iteration only" value
@@ -49,6 +50,7 @@ Feature: Datasets Page
   @smoke
   Scenario: MLD002 - Verify behaviour of Show iterations checkbox on Datasets page
     Given open url
+    And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -71,7 +73,7 @@ Feature: Datasets Page
     Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then verify "show_all_versions" option is present on "Datasets" wizard in "Datasets_Table" table with "survival-curves_coxhazard-summary" value in "name" column
-    Then verify "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "survival-curves_coxhazard-summary" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions"
+    Then verify "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "survival-curves_coxhazard-summary" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions" with scroll "false"
     Then click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
@@ -151,8 +153,8 @@ Feature: Datasets Page
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     Then verify "show_all_versions" option is present on "Datasets" wizard in "Datasets_Table" table with "test-dataset" value in "name" column    
-    Then verify "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-dataset" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions"
-    Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-dataset" value in "name" column
+    Then verify "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-dataset" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions" with scroll "false"
+    Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-dataset" value in "name" column with scroll "false"
     And wait load page
     When click on cell with row index 1 in "uid" column in "Datasets_Table" table on "Datasets" wizard
     Then check "v1" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
@@ -197,6 +199,7 @@ Feature: Datasets Page
   @smoke
   Scenario: MLD006 - Check all mandatory components on Register Dataset form
     Given open url
+    And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "tab" with "Datasets" value in breadcrumbs menu
@@ -318,6 +321,7 @@ Feature: Datasets Page
   @smoke
   Scenario: MLD014 - Check filtering by name on Datasets page
     Given open url
+    And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -394,7 +398,7 @@ Feature: Datasets Page
     And wait load page
     Then check "expand_btn" not presented in "Datasets_Table" on "Datasets" wizard
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
-    Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column
+    Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column with scroll "false"
     And wait load page
     Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "5a44b12b-9ef3-4239-87e8-e0cbdae-21" value in "uid" column should contains "Common_Lists"."Action_Menu_List_Version_History"
     Then select "View YAML" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "5a44b12b-9ef3-4239-87e8-e0cbdae-21" value in "uid" column
@@ -434,8 +438,8 @@ Feature: Datasets Page
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then verify "show_all_versions" option is present on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column
-    Then verify "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions"
-    Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column
+    Then verify "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions" with scroll "false"
+    Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column with scroll "false"
     And wait load page
     Then verify "History_Back_Button" element visibility on "Datasets" wizard
     Then verify "Version_History_Title" element visibility on "Datasets" wizard
@@ -678,7 +682,7 @@ Feature: Datasets Page
     Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
-    Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "data_clean_encoded-data" value in "name" column
+    Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "data_clean_encoded-data" value in "name" column with scroll "false"
     And wait load page
     Then click on "Register_Dataset_Button" element on "Datasets" wizard
     Then verify if "Register_Dataset" popup dialog appears
@@ -708,12 +712,30 @@ Feature: Datasets Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
+    Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "cleaned_data" value in "name" column with scroll "false"
+    And wait load page
+    Then verify "History_Back_Button" element visibility on "Datasets" wizard
+    Then verify "Version_History_Title" element visibility on "Datasets" wizard
+    Then "Version_History_Title" element on "Datasets" should contains "Version history:" value
+    Then verify "Version_History_Model_Name" element visibility on "Datasets" wizard
+    Then "Version_History_Model_Name" element on "Datasets" should contains "cleaned_data" value
+    Then verify "Table_Refresh_Button" element visibility on "Datasets" wizard
+    Then verify "Register_Dataset_Button" element visibility on "Datasets" wizard
+    Then verify "Table_FilterBy_Button" element visibility on "Datasets" wizard
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
-    Then select "All tags" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "cleaned_data" value in "name" column
-    And wait load page
+    Then verify "Title" element visibility on "FilterBy_Popup" wizard
+    Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+    Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+    Then verify "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected attribute option value "All tags"
+    Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
+    Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+    Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+    Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
+    Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+    Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+    Then click on "Table_FilterBy_Button" element on "Datasets" wizard
+    Then verify "Datasets_Table" element visibility on "Datasets" wizard
     Then click on "Register_Dataset_Button" element on "Datasets" wizard
     Then verify if "Register_Dataset" popup dialog appears
     Then type value "cleaned_data" to "Name_Input" field on "Register_Dataset" wizard
@@ -1293,10 +1315,6 @@ Feature: Datasets Page
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
-    Then click on "Table_FilterBy_Button" element on "Datasets" wizard
-    Then select "All tags" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
-    And wait load page
     Then check "expand_btn" not presented in "Datasets_Table" on "Datasets" wizard
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
@@ -1360,11 +1378,9 @@ Feature: Datasets Page
     Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
     Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
     Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 24" value
-    
     Then click on cell with value "data_clean_cleaned-data" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then "Header" element on "Datasets_Info_Pane" should contains "data_clean_cleaned-data" value
-    
     Then type value "new_dataset_10" to "Table_Name_Filter_Input" field on "Datasets" wizard
     Then click on "Table_Refresh_Button" element on "Datasets" wizard
     And wait load page
@@ -1374,9 +1390,6 @@ Feature: Datasets Page
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then verify "Header" element not exists on "Datasets_Info_Pane" wizard
-
-
-    
     Then value in "name" column with "text" in "Datasets_Table" on "Datasets" wizard should contains "new_dataset_10"
     Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
     Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
@@ -1413,11 +1426,6 @@ Feature: Datasets Page
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
-    And wait load page
-    Then verify "Table_FilterBy_Button" element visibility on "Datasets" wizard
-    Then click on "Table_FilterBy_Button" element on "Datasets" wizard
-    Then select "All tags" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then verify that 24 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard

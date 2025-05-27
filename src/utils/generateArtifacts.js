@@ -23,7 +23,7 @@ import { generateArtifactPreviewData } from './generateArtifactPreviewData'
 import { generateUri } from './resources'
 import { ARTIFACT_TYPE, TAG_LATEST } from '../constants'
 
-export const generateArtifacts = (artifacts, tab, originalContent) => {
+export const generateArtifacts = (artifacts, page, originalContent) => {
   return flatten(
     artifacts
       .map(artifact => {
@@ -62,7 +62,7 @@ export const generateArtifacts = (artifacts, tab, originalContent) => {
               }
             }
 
-            item.URI = generateUri(item, tab)
+            item.URI = generateUri(item, page)
 
             item.labels = isEmpty(generatedArtifact.labels) ? [] : generatedArtifact.labels
 

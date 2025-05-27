@@ -17,7 +17,14 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { mainHttpClient } from '../httpClient'
 
-const LLMPrompts = () => {}
+const monitoringApplications = {
+  getMonitoringApplication: (project, functionName, params) =>
+    mainHttpClient.get(`projects/${project}/model-monitoring/function-summary/${functionName}`, { params }),
+  getMonitoringApplications: (project, params) =>
+    mainHttpClient.get(`projects/${project}/model-monitoring/function-summaries`, { params }),
+  getMonitoringApplicationsSummary: project => mainHttpClient.get(`project-summary/${project}`)
+}
 
-export default LLMPrompts
+export default monitoringApplications

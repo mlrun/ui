@@ -19,7 +19,6 @@ such restriction.
 */
 import {
   ALERTS_PAGE_PATH,
-  DOCUMENTS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
   FEATURES_TAB,
@@ -34,12 +33,13 @@ import {
   REAL_TIME_PIPELINES_TAB,
   JOBS_MONITORING_PAGE,
   PROJECTS_PAGE_PATH,
-  LLM_PROMPTS_TAB,
-  MONITORING_APP_PAGE
+  MONITORING_APP_PAGE,
+  DOCUMENTS_PAGE,
+  LLM_PROMPTS_PAGE
 } from '../../constants'
 import { generateNuclioLink } from '../../utils'
 
-export const generateMlrunScreens = params =>
+export const generateMlrunScreens = (params, isDemo) =>
   params.projectName
     ? [
         {
@@ -52,11 +52,11 @@ export const generateMlrunScreens = params =>
         },
         { label: 'Feature store', id: 'feature-store' },
         { label: 'Datasets', id: 'datasets' },
-        { label: 'Documents', id: DOCUMENTS_TAB },
-        { label: 'LLM prompts', id: LLM_PROMPTS_TAB },
+        { label: 'Documents', id: DOCUMENTS_PAGE },
+        { label: 'LLM prompts', id: LLM_PROMPTS_PAGE, hidden: !isDemo },
         { label: 'Artifacts', id: 'files' },
         { label: 'Models', id: 'models' },
-        { label: 'Monitoring app', id: MONITORING_APP_PAGE },
+        { label: 'Monitoring app', id: MONITORING_APP_PAGE, hidden: !isDemo },
         { label: 'Jobs and workflows', id: 'jobs' },
         { label: 'ML functions', id: 'functions' },
         {

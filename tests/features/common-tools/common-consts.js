@@ -191,7 +191,9 @@ module.exports = {
   },
   ML_Functions_Tab: {
     Common_Action_Menu_Options: ['Edit', 'View YAML', 'Delete'],
-    Serving_Action_Menu_Options: ['Edit', 'View YAML', 'Delete']
+    Common_Action_Menu_Options_Demo: ['Edit', 'View YAML', 'Delete all versions'],
+    Serving_Action_Menu_Options: ['Edit', 'View YAML', 'Delete'],
+    Serving_Action_Menu_Options_Demo: ['Edit', 'View YAML', 'Delete all versions']
   },
   ML_Function_Info_Pane: {
     Initialized_State: 'Initialized',
@@ -607,6 +609,7 @@ module.exports = {
   },
   Dropdown_Options: {
     Tag_Filer_Options: ['All tags', 'latest'],
+    Tag_Filer_Options_Main_Table: ['latest'],
     Status_Filter_Options: ['All', 'Completed', 'Running', 'Pending', 'Error', 'Aborted'],
     Entity_Type_Filter_Options: ['All', 'Job', 'Endpoint', 'Application'],
     Severity_Filter_Options: ['All', 'High', 'Medium', 'Low'],

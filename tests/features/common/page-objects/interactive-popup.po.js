@@ -645,8 +645,8 @@ const commonProjectFilterInput = inputGroup(
 
 const commonTableTreeFilterDropdown = dropdownComponent(
   generateDropdownGroup(
-    '#overlay_container .form-tag-filter .form-tag-filter__input-wrapper',
-    '.form-tag-filter__dropdown-button',
+    '.filters-wizard .form-tag-filter',
+    '.form-tag-filter__input-wrapper input',
     '.form-tag-filter__dropdown .form-tag-filter__dropdown-item'
   )
 )

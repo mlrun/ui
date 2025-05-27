@@ -88,6 +88,7 @@ export const generateActionsMenu = (
   handleConfirmAbortJob,
   handleConfirmDeleteJob,
   handleConfirmTerminateWorkflow,
+  isReadOnlyUser,
   toggleConvertedYaml,
   handleRerun,
   rerunIsDisabled
@@ -164,10 +165,9 @@ export const generateActionsMenu = (
         },
         {
           label: 'Terminate',
-          // icon: <Cancel />,
           className: 'danger',
           onClick: handleConfirmTerminateWorkflow,
-          disabled: job?.state?.value === FUNCTION_RUNNING_STATE
+          disabled: job?.state?.value === FUNCTION_RUNNING_STATE || isReadOnlyUser
         }
       ]
     ]

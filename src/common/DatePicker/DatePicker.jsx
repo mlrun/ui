@@ -64,6 +64,7 @@ const DatePicker = ({
   date = defaultProps.date,
   dateTo = defaultProps.dateTo,
   disabled = false,
+  excludeCustomRange = false,
   externalInvalid = null,
   externalInvalidMessage = 'This field is invalid',
   hasFutureOptions = false,
@@ -112,8 +113,13 @@ const DatePicker = ({
         : hasFutureOptions
           ? datePickerFutureOptions
           : datePickerPastOptions
-    ).filter(option => option.timeFrameMilliseconds <= timeFrameLimit)
-  }, [customOptions, hasFutureOptions, timeFrameLimit])
+    ).filter(
+      option =>
+        option.timeFrameMilliseconds <= timeFrameLimit &&
+        (!excludeCustomRange ||
+        option.id !== CUSTOM_RANGE_DATE_OPTION)
+    )
+  }, [customOptions, excludeCustomRange, hasFutureOptions, timeFrameLimit])
 
   const handleCloseDatePickerOutside = useCallback(
     event => {
@@ -560,6 +566,7 @@ DatePicker.propTypes = {
   date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   dateTo: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   disabled: PropTypes.bool,
+  excludeCustomRange: PropTypes.bool,
   externalInvalid: PropTypes.bool,
   externalInvalidMessage: PropTypes.string,
   hasFutureOptions: PropTypes.bool,

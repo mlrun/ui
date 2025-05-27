@@ -271,7 +271,7 @@ module.exports = {
       '.stats-card:nth-of-type(4) [data-testid="alerts_jobs_counter"] .stats__subtitle'
     ),
     Total_Application_Counter_Number: By.css(
-      '.stats-card:nth-of-type(4) [data-testid="alerts_application_counter"] .stats__counter'
+      '.stats-card:nth-of-type(4) [data-testid="alerts_application_counter stats__counter-large"] .stats__counter'
     ),
     Total_Application_Counter_Title: By.css(
       '.stats-card:nth-of-type(4) [data-testid="alerts_application_counter"] .stats__subtitle'

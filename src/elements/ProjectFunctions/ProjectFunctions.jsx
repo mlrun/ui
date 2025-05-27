@@ -18,6 +18,8 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useMemo } from 'react'
+import PropTypes from 'prop-types'
+
 import classnames from 'classnames'
 import { lowerCase, upperFirst } from 'lodash'
 import { useParams } from 'react-router-dom'
@@ -31,17 +33,19 @@ import { generateNuclioLink } from '../../utils'
 import { groupByUniqName } from '../../utils/groupByUniqName'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
-const ProjectFunctions = () => {
+const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
   const params = useParams()
   const { isNuclioModeDisabled } = useNuclioMode()
-  const nuclioStore = useSelector((store) => store.nuclioStore)
+  const nuclioStore = useSelector(store => store.nuclioStore)
   const dispatch = useDispatch()
 
   useEffect(() => {
     if (!isNuclioModeDisabled) {
       const abortController = new AbortController()
 
-      dispatch(fetchNuclioFunctions({ project: params.projectName, signal: abortController.signal }))
+      dispatch(
+        fetchNuclioFunctions({ project: params.projectName, signal: abortController.signal })
+      )
 
       return () => {
         abortController.abort(REQUEST_CANCELED)
@@ -94,9 +98,29 @@ const ProjectFunctions = () => {
         label: 'API gateways',
         className: nuclioStore.apiGateways > 0 ? 'running' : 'default',
         href: generateNuclioLink(`/projects/${params.projectName}/api-gateways`)
-      }
+      },
+      ...(nuclioStreamsAreEnabled && {
+        consumerGroups: {
+          value: isNuclioModeDisabled
+            ? 'N/A'
+            : (Object.keys(nuclioStore.v3ioStreams.data).length ?? 0),
+          label: 'Consumer groups',
+          className:
+            Object.keys(nuclioStore.v3ioStreams.data ?? {}).length > 0 ? 'running' : 'default',
+          href: `/projects/${params.projectName}/monitor${
+            !isNuclioModeDisabled ? '/consumer-groups' : ''
+          }`
+        }
+      })
     }
-  }, [params.projectName, nuclioStore.apiGateways, nuclioStore.currentProjectFunctions])
+  }, [
+    nuclioStore.currentProjectFunctions,
+    nuclioStore.apiGateways,
+    nuclioStore.v3ioStreams.data,
+    params.projectName,
+    nuclioStreamsAreEnabled,
+    isNuclioModeDisabled
+  ])
 
   const functionsTable = useMemo(() => {
     if (nuclioStore.currentProjectFunctions.length > 0) {
@@ -163,4 +187,7 @@ const ProjectFunctions = () => {
   )
 }
 
+ProjectFunctions.propTypes = {
+  nuclioStreamsAreEnabled: PropTypes.bool.isRequired
+}
 export default React.memo(ProjectFunctions)

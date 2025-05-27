@@ -22,20 +22,11 @@ import React from 'react'
 import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
 
 import {
-  ARTIFACTS_TAB,
   ARTIFACT_MAX_DOWNLOAD_SIZE,
   ARTIFACT_OTHER_TYPE,
   ARTIFACT_TYPE,
   FILES_PAGE,
-  FILES_TAB,
-  FULL_VIEW_MODE,
-  ITERATIONS_FILTER,
-  LABELS_FILTER,
-  NAME_FILTER,
-  TAG_FILTER,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST,
-  SHOW_ITERATIONS
+  FULL_VIEW_MODE
 } from '../../constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
 import { copyToClipboard } from '../../utils/copyToClipboard'
@@ -53,32 +44,6 @@ import Copy from 'igz-controls/images/copy-to-clipboard-icon.svg?react'
 import Delete from 'igz-controls/images/delete.svg?react'
 import DownloadIcon from 'igz-controls/images/download.svg?react'
 import HistoryIcon from 'igz-controls/images/history.svg?react'
-
-export const getFiltersConfig = isAllVersions => ({
-  [NAME_FILTER]: { label: 'Name:', initialValue: '', hidden: isAllVersions },
-  [TAG_FILTER]: {
-    label: 'Version tag:',
-    initialValue: isAllVersions ? TAG_FILTER_ALL_ITEMS : TAG_FILTER_LATEST,
-    isModal: true
-  },
-  [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
-  [ITERATIONS_FILTER]: {
-    label: 'Show best iteration only:',
-    initialValue: isAllVersions ? '' : SHOW_ITERATIONS,
-    isModal: true
-  }
-})
-
-export const pageDataInitialState = {
-  details: {
-    menu: [],
-    infoHeaders: []
-  },
-  filters: [],
-  page: '',
-  registerArtifactDialogTitle: '',
-  tableHeaders: []
-}
 
 export const detailsMenu = [
   {
@@ -111,7 +76,7 @@ export const generatePageData = viewMode => {
   return {
     page: FILES_PAGE,
     details: {
-      type: FILES_TAB,
+      type: FILES_PAGE,
       menu: detailsMenu,
       infoHeaders,
       hideBackBtn: viewMode === FULL_VIEW_MODE,
@@ -150,7 +115,7 @@ export const generateActionsMenu = (
   const isTargetPathValid = getIsTargetPathValid(fileMin ?? {}, frontendSpec)
 
   const getFullFile = fileMin => {
-    return chooseOrFetchArtifact(dispatch, FILES_TAB, selectedFile, fileMin)
+    return chooseOrFetchArtifact(dispatch, FILES_PAGE, null, selectedFile, fileMin)
   }
 
   return [
@@ -191,7 +156,7 @@ export const generateActionsMenu = (
       {
         label: 'Copy URI',
         icon: <Copy />,
-        onClick: file => copyToClipboard(generateUri(file, ARTIFACTS_TAB), dispatch)
+        onClick: file => copyToClipboard(generateUri(file, FILES_PAGE), dispatch)
       },
       {
         label: 'View YAML',

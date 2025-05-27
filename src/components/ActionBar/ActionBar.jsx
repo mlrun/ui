@@ -270,7 +270,7 @@ const ActionBar = ({
     const actionCanBePerformed = await performDetailsActionHelper(changes, dispatch)
 
     if (actionCanBePerformed) {
-      handler()
+      handler(params, handleRefresh, filters)
     }
   }
 
@@ -376,6 +376,7 @@ const ActionBar = ({
                     return (
                       <DatePicker
                         customOptions={filtersConfig[DATES_FILTER].customOptions}
+                        excludeCustomRange={filtersConfig[DATES_FILTER].excludeCustomRange}
                         key={tab}
                         className="details-date-picker"
                         date={input.value.value[0]}
@@ -421,6 +422,7 @@ const ActionBar = ({
                       variant={actionButton.variant}
                       label={actionButton.label}
                       className={actionButton.className}
+                      icon={actionButton.icon}
                       onClick={() => {
                         handleActionClick(actionButton.onClick)
                       }}

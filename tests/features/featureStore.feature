@@ -100,6 +100,7 @@ Feature: Feature Store Page
     @smoke
     Scenario: MLFS003 - Check all mandatory components on Feature Vectors tab
         Given open url
+        And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "fsdemo-admin" value
@@ -217,6 +218,7 @@ Feature: Feature Store Page
         And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Header" element visibility on "Feature_Vectors_Info_Pane" wizard
@@ -254,6 +256,7 @@ Feature: Feature Store Page
         And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         When select "test-tag" option in "Table_Tree_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
@@ -276,6 +279,7 @@ Feature: Feature Store Page
     @smoke
     Scenario: MLFS007 - Check all mandatory components in Item infopane on Features tab table
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "tab" with "Feature store" value in breadcrumbs menu
@@ -301,6 +305,7 @@ Feature: Feature Store Page
     @smoke
     Scenario: MLFS008 - Check all mandatory components in Item infopane on Transformations tab table
         Given open url
+        And wait load page
         And click on row root with value "fraud-demo2-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "tab" with "Feature store" value in breadcrumbs menu
@@ -327,6 +332,7 @@ Feature: Feature Store Page
     @smoke
     Scenario: MLFS009 - Check all mandatory components in Item infopane on Preview tab table
         Given open url
+        And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "tab" with "Feature store" value in breadcrumbs menu
@@ -379,6 +385,7 @@ Feature: Feature Store Page
     # Moved analyses tabs to Demo mode in `1.8.0` ML-9059
     Scenario: MLFS011 - Check all mandatory components in Item infopane on Analysis tab table
         Given open url
+        And wait load page
         When turn on demo mode with query params "false"
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -405,6 +412,7 @@ Feature: Feature Store Page
     @smoke
     Scenario: MLFS012 - Check filtering by Name on Feature Store Feature Sets Tab
         Given open url
+        And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "tab" with "Feature store" value in breadcrumbs menu
@@ -450,6 +458,7 @@ Feature: Feature Store Page
     @smoke
     Scenario: MLFS014 - Check filtering by Name on Feature Store Features Tab
         Given open url
+        And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "tab" with "Feature store" value in breadcrumbs menu
@@ -497,6 +506,7 @@ Feature: Feature Store Page
     @smoke
     Scenario: MLFS016 - Check filtering by Name on Feature Store Feature Vectors Tab
         Given open url
+        And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "tab" with "Feature store" value in breadcrumbs menu
@@ -541,6 +551,7 @@ Feature: Feature Store Page
     @smoke
     Scenario: MLFS018 - Check filtering by Tag on Feature Store Feature Sets Tab
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "tab" with "Feature store" value in breadcrumbs menu
@@ -557,6 +568,7 @@ Feature: Feature Store Page
     @smoke
     Scenario: MLFS019 - Check filtering by Tag on Feature Store Feature Vectors Tab
         Given open url
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "tab" with "Feature store" value in breadcrumbs menu
@@ -1255,6 +1267,7 @@ Feature: Feature Store Page
     @smoke
     Scenario: MLFS038 - Check all mandatory components on Add to feature vector popup
         Given open url
+        And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "tab" with "Feature store" value in breadcrumbs menu
@@ -1279,6 +1292,7 @@ Feature: Feature Store Page
     @smoke
     Scenario: MLFS060 - Check Feature set transition pop-up components on Features tab
         Given open url
+        And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "tab" with "Feature store" value in breadcrumbs menu
@@ -1342,6 +1356,7 @@ Feature: Feature Store Page
     @smoke
     Scenario: MLFS039 - Check all mandatory components on Create feature vector popup
         Given open url
+        And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1397,6 +1412,7 @@ Feature: Feature Store Page
     #TODO: add check tag validation rules
     Scenario: MLFS040 - Check all mandatory components on Edit feature vector Popup
         Given open url
+        And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1437,6 +1453,7 @@ Feature: Feature Store Page
     @smoke
     Scenario: MLFS041 - Check all mandatory components on Add to feature vector tab
         Given open url
+        And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1609,6 +1626,7 @@ Feature: Feature Store Page
     @smoke
     Scenario: MLFS044 - Check all mandatory components in Item infopane on Requested Features tab on Feature Vectors tab
         Given open url
+        And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1713,6 +1731,7 @@ Feature: Feature Store Page
     Scenario: MLFS045 - Verify Feature Label icon on Requested Features tab on Feature Vectors tab
         And set tear-down property "featureVector" created in "default" project with "test_vector" value
         Given open url
+        And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1747,6 +1766,7 @@ Feature: Feature Store Page
         * set tear-down property "project" created with "automation-test-name001" value
         * create "automation-test-name001" MLRun Project with code 201
         Given open url
+        And wait load page
         When turn on demo mode with query params "false"
         And wait load page
         And click on row root with value "automation-test-name001" in "name" column in "Projects_Table" table on "Projects" wizard

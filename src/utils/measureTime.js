@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-const measureTime = (startTime, endTime) => {
+export const measureTime = (startTime, endTime) => {
   let d, h, m, s
   let now = new Date()
   let time = null
@@ -41,4 +41,15 @@ const generateTime = (...args) => {
   return args.map(el => (el < 10 ? '0' + el : el)).join(':')
 }
 
-export default measureTime
+export const formatMinutesToString = (time = 0) => {
+  const minutes = parseInt(time, 10)
+  const hrs = Math.floor(minutes / 60)
+  const mins = minutes % 60
+
+  const hourStr = hrs > 0 ? `${hrs} hour${hrs > 1 ? 's' : ''}` : ''
+  const minuteStr = mins > 0 ? `${mins} minute${mins > 1 ? 's' : ''}` : ''
+
+  if (hourStr && minuteStr) return `${hourStr} and ${minuteStr}`
+
+  return hourStr || minuteStr || '0 minutes'
+}

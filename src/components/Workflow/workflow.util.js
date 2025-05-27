@@ -253,3 +253,19 @@ export const handleTerminateWorkflow = (job, dispatch) => {
     })
   )
 }
+
+import projectsIguazioApi from '../../api/projects-iguazio-api'
+
+/**
+ * Checks if the user is read-only in the current project (based on owner permissions).
+ * @param {string} projectName
+ * @returns {Promise<boolean>} true if user is read-only
+ */
+export const checkIfUserIsReadOnly = async projectName => {
+  try {
+    await projectsIguazioApi.getProjectOwnerVisibility(projectName)
+    return false
+  } catch {
+    return true
+  }
+}

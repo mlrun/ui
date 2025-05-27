@@ -38,7 +38,7 @@ import {
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
   PANEL_RERUN_MODE,
-  WORKFLOW_GRAPH_VIEW,
+  WORKFLOW_GRAPH_VIEW
 } from '../../constants'
 import {
   generateActionsMenu,
@@ -62,7 +62,11 @@ import { getJobLogs } from '../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
-import { isWorkflowStepExecutable,handleTerminateWorkflow } from '../../components/Workflow/workflow.util'
+import {
+  isWorkflowStepExecutable,
+  handleTerminateWorkflow,
+  checkIfUserIsReadOnly
+} from '../../components/Workflow/workflow.util'
 import { openPopUp, getScssVariableValue } from 'igz-controls/utils/common.util'
 import { parseFunction } from '../../utils/parseFunction'
 import { parseJob } from '../../utils/parseJob'
@@ -105,7 +109,15 @@ const WorkflowsTable = React.forwardRef(
     const navigate = useNavigate()
     const location = useLocation()
     const fetchJobFunctionsPromiseRef = useRef()
+    const [isReadOnlyUser, setIsReadOnlyUser] = useState(false)
+
     let fetchFunctionLogsTimeout = useRef(null)
+
+    useEffect(() => {
+      if (params.projectName) {
+        checkIfUserIsReadOnly(params.projectName).then(setIsReadOnlyUser)
+      }
+    }, [params.projectName])
 
     const monitorWorkflowsRowHeight = useMemo(
       () => getScssVariableValue('--monitorWorkflowsRowHeight'),
@@ -447,17 +459,18 @@ const WorkflowsTable = React.forwardRef(
           handleConfirmAbortJob,
           handleConfirmDeleteJob,
           handleConfirmTerminateWorkflow,
+          isReadOnlyUser,
           toggleConvertedYaml,
           handleRerun,
           rerunIsDisabled
         )
     }, [
       handleRerunJob,
-      appStore.frontendSpec.jobs_dashboard_url,
-      appStore.frontendSpec.abortable_function_kinds,
+      appStore,
       handleMonitoring,
       handleConfirmAbortJob,
       handleConfirmDeleteJob,
+      isReadOnlyUser,
       toggleConvertedYaml,
       handleRerun,
       rerunIsDisabled
