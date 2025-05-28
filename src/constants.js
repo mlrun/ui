@@ -40,8 +40,6 @@ export const DEFAULT_ABORT_MSG = 'canceled'
 
 export const MODEL_PATH_DATA_INPUT = 'model_path'
 
-export const NAVBAR_WIDTH_CLOSED = 57
-export const NAVBAR_WIDTH_OPENED = 245
 export const CANCEL_REQUEST_TIMEOUT = 120000
 
 export const PROJECT_ONLINE_STATUS = 'online'
@@ -142,9 +140,6 @@ export const CONSUMER_GROUP_PAGE = 'CONSUMER_GROUP'
 export const CONSUMER_GROUPS_PAGE = 'CONSUMER_GROUPS'
 export const CONSUMER_GROUPS_FILTER = 'CONSUMER_GROUPS_FILTER'
 export const CONSUMER_GROUP_FILTER = 'CONSUMER_GROUP_FILTER'
-
-export const CONSUMER_GROUP_TAB = 'consumer-group'
-export const CONSUMER_GROUPS_TAB = 'consumer-groups'
 
 /*=========== JOBS =============*/
 
