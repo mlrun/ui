@@ -19,7 +19,10 @@ such restriction.
 */
 import React from 'react'
 
-import { DOCUMENTS_TAB, PROJECT_MONITOR, PROJECT_QUICK_ACTIONS_PAGE } from '../../constants'
+import {
+  DOCUMENTS_PAGE, FEATURE_STORE_PAGE_PATH, FILES_PAGE, JOBS_PAGE_PATH,
+  LLM_PROMPTS_PAGE, MODELS_PAGE, PROJECT_MONITOR, PROJECT_QUICK_ACTIONS_PAGE
+} from '../../constants'
 import { generateNuclioLink } from '../../utils'
 
 import HomepageIcon from 'igz-controls/images/navbar/mlrun-project-home.svg?react'
@@ -32,6 +35,7 @@ import ModelsIcon from 'igz-controls/images/navbar/mlrun-models.svg?react'
 import NuclioIcon from 'igz-controls/images/navbar/mlrun-realtime-functions.svg?react'
 import FeatureStoreIcon from 'igz-controls/images/navbar/mlrun-feature-store.svg?react'
 import Documents from 'igz-controls/images/navbar/documents-icon.svg?react'
+import LLMPrompts from 'igz-controls/images/navbar/llm-prompt-icon.svg?react'
 
 export const getLinks = (projectName, isDemoMode) => {
   const pathname = `/projects/${projectName}`
@@ -53,24 +57,24 @@ export const getLinks = (projectName, isDemoMode) => {
     },
     {
       icon: <FeatureStoreIcon />,
-      id: 'feature-store',
+      id: FEATURE_STORE_PAGE_PATH,
       label: 'Feature store',
-      link: `${pathname}/feature-store/`,
+      link: `${pathname}/${FEATURE_STORE_PAGE_PATH}/`,
       nestedLinks: [
         {
           id: 'feature-sets',
           label: 'Feature sets',
-          link: `${pathname}/feature-store/feature-sets`
+          link: `${pathname}/${FEATURE_STORE_PAGE_PATH}/feature-sets`
         },
         {
           id: 'features',
           label: 'Features',
-          link: `${pathname}/feature-store/features`
+          link: `${pathname}/${FEATURE_STORE_PAGE_PATH}/features`
         },
         {
           id: 'feature-vectors',
           label: 'Feature vectors',
-          link: `${pathname}/feature-store/feature-vectors`
+          link: `${pathname}/${FEATURE_STORE_PAGE_PATH}/feature-vectors`
         }
       ]
     },
@@ -82,59 +86,72 @@ export const getLinks = (projectName, isDemoMode) => {
     },
     {
       icon: <Documents />,
-      id: DOCUMENTS_TAB,
+      id: DOCUMENTS_PAGE,
       label: 'Documents',
-      link: `${pathname}/${DOCUMENTS_TAB}`
+      link: `${pathname}/${DOCUMENTS_PAGE}`
+    },
+    {
+      icon: <LLMPrompts />,
+      id: LLM_PROMPTS_PAGE,
+      label: 'LLM prompts',
+      link: `${pathname}/${LLM_PROMPTS_PAGE}`,
+      hidden: !isDemoMode
     },
     {
       icon: <ArtifactsIcon />,
-      id: 'files',
+      id: FILES_PAGE,
       label: 'Artifacts',
-      link: `${pathname}/files`
+      link: `${pathname}/${FILES_PAGE}`
     },
     {
       icon: <ModelsIcon />,
-      id: 'models',
+      id: MODELS_PAGE,
       label: 'Models',
-      link: `${pathname}/models/`,
+      link: `${pathname}/${MODELS_PAGE}/`,
       nestedLinks: [
         {
           id: 'models-artifacts',
           label: 'Model artifacts',
-          link: `${pathname}/models/models`
+          link: `${pathname}/${MODELS_PAGE}/models`
         },
         {
           id: 'models-endpoints',
           label: 'Model endpoints',
-          link: `${pathname}/models/model-endpoints`
+          link: `${pathname}/${MODELS_PAGE}/model-endpoints`
         },
         {
           id: 'real-time-pipelines',
           label: 'Real-time pipelines',
-          link: `${pathname}/models/real-time-pipelines`
+          link: `${pathname}/${MODELS_PAGE}/real-time-pipelines`
+        },
+        {
+          id: 'monitoring-app',
+          label: 'Monitoring app',
+          link: `${pathname}/monitoring-app`,
+          hidden: !isDemoMode
         }
       ]
     },
     {
       icon: <JobsWorkflowIcon />,
-      id: 'jobs',
+      id: JOBS_PAGE_PATH,
       label: 'Batch',
-      link: `${pathname}/jobs/`,
+      link: `${pathname}/${JOBS_PAGE_PATH}/`,
       nestedLinks: [
         {
           id: 'monitor-jobs',
           label: 'Monitor Jobs',
-          link: `${pathname}/jobs/monitor-jobs`
+          link: `${pathname}/${JOBS_PAGE_PATH}/monitor-jobs`
         },
         {
           id: 'monitor-workflows',
           label: 'Monitor Workflows',
-          link: `${pathname}/jobs/monitor-workflows`
+          link: `${pathname}/${JOBS_PAGE_PATH}/monitor-workflows`
         },
         {
           id: 'schedule',
           label: 'Schedule',
-          link: `${pathname}/jobs/schedule`
+          link: `${pathname}/${JOBS_PAGE_PATH}/schedule`
         }
       ]
     },
