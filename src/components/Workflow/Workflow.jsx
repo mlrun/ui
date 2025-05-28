@@ -36,6 +36,7 @@ import {
   getWorkflowSourceHandle
 } from '../../common/ReactFlow/mlReactFlow.util'
 import {
+  checkIfUserIsReadOnly,
   getWorkflowDetailsLink,
   getWorkflowMonitoringDetailsLink,
   isWorkflowStepCondition,
@@ -63,7 +64,7 @@ import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { useMode } from '../../hooks/mode.hook'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 
-// import Cancel from 'igz-controls/images/cancel.svg'
+import Cancel from 'igz-controls/images/cancel.svg'
 import ListView from 'igz-controls/images/listview.svg?react'
 import Pipelines from 'igz-controls/images/pipelines.svg?react'
 
@@ -88,6 +89,7 @@ const Workflow = ({
   const params = useParams()
   const navigate = useNavigate()
   const { isStagingMode } = useMode()
+  const [isReadOnlyUser, setIsReadOnlyUser] = useState(false)
 
   const graphViewClassNames = classnames(
     'graph-view',
@@ -117,6 +119,10 @@ const Workflow = ({
     content: tableContent,
     sortConfig: { defaultSortBy: 'startedAt' }
   })
+
+  useEffect(() => {
+    checkIfUserIsReadOnly(params.projectName).then(setIsReadOnlyUser)
+  }, [params.projectName])
 
   useEffect(() => {
     const newEdges = []
@@ -249,14 +255,16 @@ const Workflow = ({
               </button>
             </Tooltip>
           </div>
-          <Button
-            className="workflow_btn"
-            disabled={workflow?.run?.status === FUNCTION_RUNNING_STATE}
-            variant="danger"
-            // icon={<Cancel />}
-            label="Terminal"
-            onClick={() => handleConfirmTerminateWorkflow(workflow?.run)}
-          />
+          {!isReadOnlyUser && (
+            <Button
+              className="workflow_btn"
+              disabled={workflow?.run?.status === FUNCTION_RUNNING_STATE}
+              variant="danger"
+              icon={<Cancel />}
+              label="Terminate"
+              onClick={() => handleConfirmTerminateWorkflow(workflow?.run)}
+            />
+          )}
         </div>
       </TableTop>
 

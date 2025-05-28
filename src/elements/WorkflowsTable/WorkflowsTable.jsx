@@ -109,15 +109,12 @@ const WorkflowsTable = React.forwardRef(
     const navigate = useNavigate()
     const location = useLocation()
     const fetchJobFunctionsPromiseRef = useRef()
+    let fetchFunctionLogsTimeout = useRef(null)
     const [isReadOnlyUser, setIsReadOnlyUser] = useState(false)
 
-    let fetchFunctionLogsTimeout = useRef(null)
-
     useEffect(() => {
-      if (params.projectName) {
-        checkIfUserIsReadOnly(params.projectName).then(setIsReadOnlyUser)
-      }
-    }, [params.projectName])
+      checkIfUserIsReadOnly(params.projectName).then(setIsReadOnlyUser)
+    }, [params.projectName, isReadOnlyUser])
 
     const monitorWorkflowsRowHeight = useMemo(
       () => getScssVariableValue('--monitorWorkflowsRowHeight'),
@@ -425,6 +422,26 @@ const WorkflowsTable = React.forwardRef(
       [onDeleteJob, setConfirmData]
     )
 
+    const handleConfirmTerminateWorkflow = useCallback(
+      job => {
+        setConfirmData({
+          item: job,
+          header: 'Terminate workflow',
+          message: `Are you sure you want to terminate the workflow "${job.name}" (stop its execution)? Workflows termination cannot be undone.`,
+          btnConfirmLabel: 'Terminate',
+          btnConfirmType: DANGER_BUTTON,
+          rejectHandler: () => {
+            setConfirmData(null)
+          },
+          confirmHandler: () => {
+            onTerminateWorkflow(job)
+            setConfirmData(null)
+          }
+        })
+      },
+      [onTerminateWorkflow, setConfirmData]
+    )
+
     const handleRerun = useCallback(
       workflow => {
         dispatch(rerunWorkflow({ project: workflow.project, workflowId: workflow.id }))
@@ -470,6 +487,7 @@ const WorkflowsTable = React.forwardRef(
       handleMonitoring,
       handleConfirmAbortJob,
       handleConfirmDeleteJob,
+      handleConfirmTerminateWorkflow,
       isReadOnlyUser,
       toggleConvertedYaml,
       handleRerun,
@@ -515,26 +533,6 @@ const WorkflowsTable = React.forwardRef(
         return !['deploy', 'build'].includes(selectedWorkflowItem?.run_type)
       }
     }, [workflowsStore.activeWorkflow.data.graph, findSelectedWorkflowFunction])
-
-    const handleConfirmTerminateWorkflow = useCallback(
-      job => {
-        setConfirmData({
-          item: job,
-          header: 'Terminate workflow',
-          message: `Are you sure you want to terminate the workflow "${job.name}" (stop its execution)? Workflows termination cannot be undone.`,
-          btnConfirmLabel: 'Terminate',
-          btnConfirmType: DANGER_BUTTON,
-          rejectHandler: () => {
-            setConfirmData(null)
-          },
-          confirmHandler: () => {
-            onTerminateWorkflow(job)
-            setConfirmData(null)
-          }
-        })
-      },
-      [onTerminateWorkflow, setConfirmData]
-    )
 
     const handleCatchRequest = useCallback(
       (error, message) => {
@@ -774,6 +772,7 @@ const WorkflowsTable = React.forwardRef(
                 backLink={backLink}
                 handleCancel={handleCancel}
                 handleConfirmTerminateWorkflow={handleConfirmTerminateWorkflow}
+                isReadOnlyUser={isReadOnlyUser}
                 itemIsSelected={itemIsSelected}
                 pageData={pageData}
                 selectedFunction={selectedFunction}

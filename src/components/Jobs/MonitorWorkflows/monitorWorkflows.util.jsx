@@ -47,7 +47,7 @@ import { isEveryObjectValueEmpty } from '../../../utils/isEveryObjectValueEmpty'
 
 import MonitorIcon from 'igz-controls/images/monitor-icon.svg?react'
 import Run from 'igz-controls/images/run.svg?react'
-// import Cancel from 'igz-controls/images/cencel.svg?react'
+import Cancel from 'igz-controls/images/cencel.svg?react'
 import Close from 'igz-controls/images/close.svg?react'
 import Yaml from 'igz-controls/images/yaml.svg?react'
 import Delete from 'igz-controls/images/delete.svg?react'
@@ -165,9 +165,11 @@ export const generateActionsMenu = (
         },
         {
           label: 'Terminate',
+          icon: <Cancel />,
           className: 'danger',
           onClick: handleConfirmTerminateWorkflow,
-          disabled: job?.state?.value === FUNCTION_RUNNING_STATE || isReadOnlyUser
+          hidden: isReadOnlyUser,
+          disabled: job?.state?.value === FUNCTION_RUNNING_STATE
         }
       ]
     ]

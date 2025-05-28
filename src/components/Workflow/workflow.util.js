@@ -17,9 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+
 import { cloneDeep, forEach, isEmpty, set } from 'lodash'
 
 import { page } from '../Jobs/jobs.util'
+import projectsIguazioApi from '../../api/projects-iguazio-api'
 import {
   DETAILS_OVERVIEW_TAB,
   JOBS_MONITORING_PAGE,
@@ -253,8 +255,6 @@ export const handleTerminateWorkflow = (job, dispatch) => {
     })
   )
 }
-
-import projectsIguazioApi from '../../api/projects-iguazio-api'
 
 /**
  * Checks if the user is read-only in the current project (based on owner permissions).
