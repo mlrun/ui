@@ -43,7 +43,7 @@ const NavbarLink = ({ externalLink = false, icon = null, label, link = '', ...pr
       <span className="nav-link__label">{label}</span>
     </a>
   ) : props.nestedLinks ? (
-    <div onClick={() => setIsExpanded(!isExpanded)} className={parentLinkClasses}>
+    <div onClick={() => setIsExpanded(prevState => !prevState)} className={parentLinkClasses}>
       <span className="nav-link__icon">{icon}</span>
       <span className="nav-link__label">{label}</span>
 

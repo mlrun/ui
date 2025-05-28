@@ -19,8 +19,6 @@ such restriction.
 */
 import {
   ALERTS_PAGE_PATH,
-  CONSUMER_GROUP_TAB,
-  CONSUMER_GROUPS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
   FEATURES_TAB,
@@ -146,13 +144,5 @@ export const generateTabsList = () => [
   {
     label: PROJECTS_SETTINGS_SECRETS_TAB,
     id: PROJECTS_SETTINGS_SECRETS_TAB
-  },
-  {
-    label: CONSUMER_GROUP_TAB,
-    id: CONSUMER_GROUP_TAB
-  },
-  {
-    label: CONSUMER_GROUPS_TAB,
-    id: CONSUMER_GROUPS_TAB
   }
 ]
