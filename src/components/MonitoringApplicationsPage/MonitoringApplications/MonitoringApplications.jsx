@@ -32,6 +32,7 @@ import { generateOperatingFunctionsTable } from './monitoringApplications.util'
 import { createApplicationContent } from '../../../utils/createApplicationContent'
 import { removeMonitoringApplications } from '../../../reducers/monitoringApplicationsReducer'
 import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
+import MEPsWithDetections from './MEPsWithDetections'
 
 const MonitoringApplications = () => {
   const dispatch = useDispatch()
@@ -77,13 +78,7 @@ const MonitoringApplications = () => {
   return (
     <div className="monitoring-apps">
       <div className="monitoring-app__section section_small">
-        <div className="monitoring-app__section-item">
-          <div className="section-item_title">
-            <span>Controller calls</span>
-            <Tip text="The number of controller's calls to the monitoring apps" />
-          </div>
-          <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
-        </div>
+        <MEPsWithDetections />
         <div className="monitoring-app__section-item">
           <div className="section-item_title">
             <span>Operating functions</span>
