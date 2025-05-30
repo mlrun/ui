@@ -29,7 +29,7 @@ const ContentMenu = ({
   disabled = false,
   fontSize = 'md',
   onClick = null,
-  screen= '',
+  screen = '',
   tabs = []
 }) => {
   const params = useParams()
@@ -93,7 +93,7 @@ const ContentMenu = ({
 ContentMenu.propTypes = {
   activeTab: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
-  fontSize: PropTypes.oneOf(['sm', 'md', 'lg']),
+  fontSize: PropTypes.oneOf(['xs', 'sm', 'md', 'lg']),
   onClick: PropTypes.func,
   screen: PropTypes.string,
   tabs: CONTENT_MENU_TABS.isRequired
