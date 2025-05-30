@@ -115,6 +115,7 @@ export const generateArtifactsContent = (
       }
     }
   } else {
+    console.log(selectedItem)
     return {
       hash: {
         value: selectedItem.hash ?? '',
