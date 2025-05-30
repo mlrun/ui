@@ -49,12 +49,12 @@ export const detailsMenu = [
     id: 'overview'
   },
   {
-    label: 'prompt-template',
-    id: 'Prompt template'
+    label: 'Prompt template',
+    id: 'prompt-template'
   },
   {
-    label: 'generation-configuration',
-    id: 'Generation configuration'
+    label: 'Generation configuration',
+    id: 'generation-configuration'
   }
 ]
 

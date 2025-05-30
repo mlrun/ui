@@ -63,12 +63,14 @@ import {
   DETAILS_OVERVIEW_TAB,
   DETAILS_PODS_TAB,
   DETAILS_PREVIEW_TAB,
+  DETAILS_PROMPT_TEMPLATE_TAB,
   DETAILS_REQUESTED_FEATURES_TAB,
   DETAILS_RESULTS_TAB,
   DETAILS_RETURNED_FEATURES_TAB,
   DETAILS_STATISTICS_TAB,
   DETAILS_TRANSFORMATIONS_TAB
 } from '../../../constants'
+import DetailsPromptTemplate from '../DetailsPromptTemplate/DetailsPromptTemplate'
 
 const DetailsTabsContent = ({
   applyChangesRef,
@@ -235,6 +237,8 @@ const DetailsTabsContent = ({
       )
     case DETAILS_COLLECTIONS_TAB:
       return <DetailsCollections selectedItem={selectedItem} />
+    case DETAILS_PROMPT_TEMPLATE_TAB:
+      return <DetailsPromptTemplate />
     default:
       return null
   }

@@ -1,0 +1,58 @@
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+
+.search-navigator {
+  display: flex;
+  align-items: center;
+  min-width: 280px;
+  border: borders.$primaryBorder;
+  border-radius: 4px;
+
+  &__counter {
+    display: flex;
+    font-size: 13px;
+    color: colors.$topaz;
+
+    &:after {
+      display: none;
+      content: '';
+      width: 5px;
+      height: 15px;
+      margin: 0 5px 0 8px;
+      border-right: borders.$primaryBorder;
+    }
+
+    &_with-divider {
+      &:after {
+        display: block;
+      }
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    padding-right: 10px;
+  }
+
+  &__button {
+    .round-icon-cp__circle {
+      width: 26px;
+      height: 26px;
+    }
+
+    &_back {
+      rotate: -90deg;
+    }
+
+    &_next {
+      rotate: 90deg;
+    }
+
+    &_cancel {
+      .round-icon-cp__circle {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+}

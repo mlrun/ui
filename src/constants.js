@@ -135,6 +135,8 @@ export const MONITORING_APP_PAGE = 'monitoring-app'
 export const DOCUMENTS_PAGE = 'documents'
 
 export const LLM_PROMPTS_PAGE = 'llm-prompts'
+export const PROMPT_TAB = 'prompt'
+export const ARGUMENTS_TAB = 'arguments'
 
 export const PROJECT_MONITOR = 'monitor'
 
@@ -317,6 +319,7 @@ export const DETAILS_RESULTS_TAB = 'results'
 export const DETAILS_RETURNED_FEATURES_TAB = 'returned-features'
 export const DETAILS_STATISTICS_TAB = 'statistics'
 export const DETAILS_TRANSFORMATIONS_TAB = 'transformations'
+export const DETAILS_PROMPT_TEMPLATE_TAB = 'prompt-template'
 export const FETCH_MODEL_FEATURE_VECTOR_BEGIN = 'FETCH_MODEL_FEATURE_VECTOR_BEGIN'
 export const FETCH_MODEL_FEATURE_VECTOR_FAILURE = 'FETCH_MODEL_FEATURE_VECTOR_FAILURE'
 export const FETCH_MODEL_FEATURE_VECTOR_SUCCESS = 'FETCH_MODEL_FEATURE_VECTOR_SUCCESS'

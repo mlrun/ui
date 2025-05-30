@@ -37,6 +37,7 @@ import {
   FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
+  LLM_PROMPTS_PAGE,
   MODELS_PAGE
 } from '../../constants'
 import { parseKeyValues } from '../../utils'
@@ -90,7 +91,8 @@ const DetailsInfoView = React.forwardRef(
               pageData.page === FUNCTIONS_PAGE ||
               pageData.page === MODELS_PAGE ||
               pageData.page === FEATURE_STORE_PAGE ||
-              pageData.page === DOCUMENTS_PAGE) &&
+              pageData.page === DOCUMENTS_PAGE ||
+              pageData.page === LLM_PROMPTS_PAGE) &&
               params.pageTab !== FEATURE_SETS_TAB && <h3 className="item-info__header">General</h3>}
             <ul className="item-info__details">
               {pageData.details.infoHeaders?.map(header => {
@@ -139,7 +141,8 @@ const DetailsInfoView = React.forwardRef(
                   pageData.page === FILES_PAGE ||
                   pageData.page === MODELS_PAGE ||
                   pageData.page === FEATURE_STORE_PAGE ||
-                  pageData.page === DOCUMENTS_PAGE
+                  pageData.page === DOCUMENTS_PAGE ||
+                  pageData.page === LLM_PROMPTS_PAGE
                 ) {
                   if (header.id === 'labels') {
                     chipsData.validationRules = infoContent[header.id]?.validationRules
