@@ -19,11 +19,12 @@ such restriction.
 */
 import React, { memo, useMemo } from 'react'
 import moment from 'moment'
+import PropTypes from 'prop-types'
 
 import MlChart from '../../../common/MlChart/MlChart'
 import { Tip } from 'igz-controls/components'
-import PropTypes from 'prop-types'
 import NoData from '../../../common/NoData/NoData'
+
 import { MONITORING_APPLICATIONS_NO_DATA_MESSAGE } from '../MonitoringApplicationsPage.util'
 import { getMEPsWithDetectionChartConfig } from '../../../utils/getChartConfig'
 import { groupDataToBins } from './monitoringApplications.util'
@@ -42,15 +43,13 @@ const generateDummyData = (startTime, endTime) => {
   return data
 }
 
-
-
 const MEPsWithDetections = ({
   // data,
   startTime = '2025-05-22T13:32:26.685Z',
   endTime = '2025-05-23T13:22:26.685Z'
 }) => {
   const barConfig = useMemo(() => getMEPsWithDetectionChartConfig(), [])
-  const data = generateDummyData(startTime, endTime) // todo remove and use real data
+  const data = generateDummyData(startTime, endTime) // TODO: remove and use real data
 
   const barChartConfig = useMemo(() => {
     const datasets = groupDataToBins(data, startTime, endTime)
