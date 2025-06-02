@@ -26,13 +26,14 @@ import NoData from '../../../common/NoData/NoData'
 import SectionTable from '../../../elements/SectionTable/SectionTable'
 import { Tip } from 'igz-controls/components'
 import ApplicationTableRow from '../../../elements/ApplicationTableRow/ApplicationTableRow'
+import MEPsWithDetections from './MEPsWithDetections'
 
 import { MONITORING_APPLICATIONS_NO_DATA_MESSAGE } from '../MonitoringApplicationsPage.util'
 import { generateOperatingFunctionsTable } from './monitoringApplications.util'
 import { createApplicationContent } from '../../../utils/createApplicationContent'
 import { removeMonitoringApplications } from '../../../reducers/monitoringApplicationsReducer'
+
 import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
-import MEPsWithDetections from './MEPsWithDetections'
 
 const MonitoringApplications = () => {
   const dispatch = useDispatch()
