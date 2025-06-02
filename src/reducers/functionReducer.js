@@ -169,7 +169,7 @@ export const fetchFunctions = createAsyncThunk(
           thunkAPI.dispatch,
           setRequestErrorMessageLocal
         )
-        thunkAPI.rejectWithValue(error.message)
+        return thunkAPI.rejectWithValue(error)
       })
   }
 )
