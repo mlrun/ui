@@ -28,19 +28,19 @@ import {
   deleteAPISchedule
 } from '../common/actions/api.actions'
 
-module.exports = {
-  locatorBuilder: function (strings, ...keys) {
-    return function (...values) {
-      const dict = values[values.length - 1] || {}
-      const result = [strings[0]]
-      keys.forEach(function (key, i) {
-        const value = Number.isInteger(key) ? values[key] : dict[key]
-        result.push(value, strings[i + 1])
-      })
-      return result.join('')
-    }
-  },
-  generateInputGroup: function (
+export function locatorBuilder(strings, ...keys) {
+  return function (...values) {
+    const dict = values[values.length - 1] || {}
+    const result = [strings[0]]
+    keys.forEach(function (key, i) {
+      const value = Number.isInteger(key) ? values[key] : dict[key]
+      result.push(value, strings[i + 1])
+    })
+    return result.join('')
+  }
+}
+
+export function generateInputGroup (
     root,
     label = false,
     hint = false,
@@ -62,8 +62,9 @@ module.exports = {
     }
 
     return structure
-  },
-  generateNumberInputGroup: function (
+  }
+
+export function generateNumberInputGroup (
     root,
     incDecBtn = false,
     label = false,
@@ -91,8 +92,9 @@ module.exports = {
     }
 
     return structure
-  },
-  generateLabelGroup: function (root, label = false, hintButton = false, hint = false) {
+  }
+
+export function generateLabelGroup (root, label = false, hintButton = false, hint = false) {
     const structure = { elements: {} }
     structure.root = root
 
@@ -108,8 +110,9 @@ module.exports = {
     }
 
     return structure
-  },
-  generateDropdownGroup: function (
+  }
+
+export function generateDropdownGroup (
     root,
     open_button = false,
     options = false,
@@ -129,8 +132,9 @@ module.exports = {
     structure.optionsInRoot = options_in_root
 
     return structure
-  },
-  generateCheckboxGroup: function (root, checkbox, name, icon) {
+  }
+
+export function  generateCheckboxGroup (root, checkbox, name, icon) {
     const structure = { root, elements: {} }
 
     structure.elements.checkbox = checkbox ? 'svg[class]' : ''
@@ -140,8 +144,9 @@ module.exports = {
     structure.elements.icon = icon ? 'svg:not([class])' : ''
 
     return structure
-  },
-  generateTextAreaGroup: function (root, counter = '.form-field__counter') {
+  }
+
+export function generateTextAreaGroup (root, counter = '.form-field__counter') {
     return {
       root,
       elements: {
@@ -152,8 +157,9 @@ module.exports = {
         counter
       }
     }
-  },
-  parseString: function (string) {
+  }
+
+export function parseString (string) {
     const rulesArray = string.split('\n')
     const lengthRule = getLength(rulesArray)
     const validCharactersRule = getRule(rulesArray, 'valid characters')
@@ -172,8 +178,9 @@ module.exports = {
       notStartWith,
       notConsecutiveCharacters
     )
-  },
-  clearBackendAfterTest: function (driver, items) {
+  }
+
+export function clearBackendAfterTest (driver, items) {
     items.forEach(item => {
       switch (item.type) {
         case 'project':
@@ -194,15 +201,15 @@ module.exports = {
           return null
       }
     })
-  },
-  setRequestsFailureCondition: async shouldFail => {
-    try {
-      const response = await axios.post('http://localhost:30000/set-failure-condition', {
-        shouldFail
-      })
-      console.log(response.data)
-    } catch (error) {
-      console.error(`Error setting failure condition: ${error}`)
-    }
+  }
+
+export async function setRequestsFailureCondition(shouldFail) {
+  try {
+    const response = await axios.post('http://localhost:30000/set-failure-condition', {
+      shouldFail
+    })
+    console.log(response.data)
+  } catch (error) {
+    console.error(`Error setting failure condition: ${error}`)
   }
 }

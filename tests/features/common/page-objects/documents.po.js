@@ -83,7 +83,7 @@ const documentsTable = {
   }
 }
 
-module.exports = {
+export default {
   documents: {
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(

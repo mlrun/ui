@@ -47,7 +47,7 @@ const actionMenuStructure = {
 }
 
 const projectDashboardRealtimeFunctionsTable = {
-  root: '.main-info__statistics-section .d-flex:nth-of-type(2) .project-data-card .project-data-card__table',
+  root: '.main-info__statistics-section .d-flex:nth-of-type(2) .project-data-card',
   header: {
     root: '.project-data-card__table-header',
     sorters: {
@@ -56,19 +56,19 @@ const projectDashboardRealtimeFunctionsTable = {
     }
   },
   body: {
-    root: '.project-data-card__table-body',
+    root: '.section-table__table-body',
     row: {
-      root: '.project-data-card__table-row',
+      root: '.section-table__table-row',
       fields: {
-        name: '.project-data-card__table-cell:nth-of-type(1) .data-ellipsis',
-        status: '.project-data-card__table-cell:nth-of-type(2) .data-ellipsis'
+        name: '.table-cell_big .data-ellipsis',
+        status: '.status-cell .data-ellipsis'
       }
     }
   }
 }
 
 const projectJobsAndWorkflows = {
-  root: '.main-info__statistics-section:nth-of-type(4) .project-data-card:nth-of-type(1)',
+  root: '.main-info__statistics-section:nth-of-type(4) .d-flex:nth-of-type(1) .project-data-card',
   header: {
     root: '.project-data-card__table-header',
     sorters: {
@@ -80,16 +80,16 @@ const projectJobsAndWorkflows = {
     }
   },
   body: {
-    root: '.project-data-card__table-body',
+    root: '.section-table__table-body',
     row: {
-      root: '.project-data-card__table-row',
+      root: '.section-table__table-row',
       fields: {
-        name: '.project-data-card__table-cell:nth-of-type(1) .link',
-        type: '.project-data-card__table-cell:nth-of-type(2) .data-ellipsis',
-        status: '.project-data-card__table-cell:nth-of-type(2) .data-ellipsis',
+        name: '.table-cell_big:nth-of-type(1) .data-ellipsis',
+        type: '.table-cell_small .data-ellipsis',
+        status: '.status-cell .data-ellipsis',
         started_at:
-          '.project-data-card__table-cell:nth-of-type(2) .data-ellipsis',
-        duration: '.project-data-card__table-cell:nth-of-type(2) .data-ellipsis'
+          '.table-cell_big:nth-of-type(4) .data-ellipsis',
+        duration: '.table-cell_medium:nth-of-type(5) .data-ellipsis'
       }
     }
   }
@@ -282,7 +282,7 @@ const shardLagsTable = {
   }
 }
 
-module.exports = {
+export default {
   project: {
     Create_New: createNewObject,
     Refresh_Button: By.css('.main-info__toolbar [data-testid="refresh"]'),
@@ -304,13 +304,17 @@ module.exports = {
     Artifacts_Stats_Title: By.css('.main-info__statistics-section_left .stats-card:nth-of-type(3) .stats-card__row:nth-of-type(1) .stats-card__title span'),
     Artifacts_Stats_Tip: By.css('.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(1) [data-testid="tip"]'),
     Artifacts_Stats_Counter: By.css('.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) [data-testid="monitoring-Artifacts"] .stats__counter'),
-    ConsumerGroups_Stats_Title: By.css('.main-info__statistics-section_right .stats-card:nth-of-type(1) .stats-card__row:nth-of-type(1) .stats-card__title span'),
-    ConsumerGroups_Stats_Counter: By.css('.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) [data-testid="monitoring-Consumer groups"] .stats__counter'),
-    Alerts_Stats_Title: By.css('.main-info__statistics-section_right .stats-card:nth-of-type(2) .stats-card__row:nth-of-type(1) .stats-card__title span'),
-    Alerts_Stats_Total_Number: By.css('.main-info__statistics-section_right .stats-card:nth-of-type(2) [data-testid="alerts_total_counter"] .stats__counter'),
-    Alerts_Stats_Endpoint_Number: By.css('.main-info__statistics-section_right .stats-card:nth-of-type(2) [data-testid="alerts_endpoint_counter"] .stats__counter'),
-    Alerts_Stats_Jobs_Number: By.css('.main-info__statistics-section_right .stats-card:nth-of-type(2) [data-testid="alerts_jobs_counter"] .stats__counter'),
-    Alerts_Stats_Application_Number: By.css('.main-info__statistics-section_right .stats-card:nth-of-type(2) [data-testid="alerts_application_counter stats__counter-large"] .stats__counter'),
+    ConsumerGroups_Stats_Title: By.css('.main-info__statistics-section:nth-of-type(4) .d-flex:nth-of-type(2) .project-data-card__header .project-data-card__statistics-item:nth-of-type(4) .project-data-card__statistics-label'),
+    ConsumerGroups_Stats_Counter: By.css('.main-info__statistics-section:nth-of-type(4) .d-flex:nth-of-type(2) .project-data-card__header .project-data-card__statistics-item:nth-of-type(4) .project-data-card__statistics-value'),
+    Alerts_Stats_Title: By.css('.main-info__statistics-section_right .stats-card__title span'),
+    Alerts_Stats_Total_Title: By.css('.main-info__statistics-section_right [data-testid="alerts_total_counter"] span'),
+    Alerts_Stats_Total_Number: By.css('.main-info__statistics-section_right [data-testid="alerts_total_counter"] .stats__counter'),
+    Alerts_Stats_Endpoint_Number: By.css('.main-info__statistics-section_right [data-testid="alerts_endpoint_counter"] .stats__counter'),
+    Alerts_Stats_Endpoint_Title: By.css('.main-info__statistics-section_right [data-testid="alerts_endpoint_counter"] .stats__subtitle'),
+    Alerts_Stats_Jobs_Number: By.css('.main-info__statistics-section_right [data-testid="alerts_jobs_counter"] .stats__counter'),
+    Alerts_Stats_Jobs_Title: By.css('.main-info__statistics-section_right [data-testid="alerts_jobs_counter"] .stats__subtitle'),
+    Alerts_Stats_Application_Number: By.css('.main-info__statistics-section_right [data-testid="alerts_application_counter stats__counter-large"] .stats__counter'),
+    Alerts_Stats_Application_Title: By.css('.main-info__statistics-section_right [data-testid="alerts_application_counter stats__counter-large"] .stats__subtitle'),
     Jobs_Info_Card_Statistics: commonTable(generalInfoJobsCardStat),
     Real_Time_Functions_Card_Statistics: commonTable(
       generalInfoRealTimeFunctionsCardStat

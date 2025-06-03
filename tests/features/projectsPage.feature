@@ -5,7 +5,6 @@ Feature: Projects Page
     @MLPr
     @passive
     @smoke
-    #TODO: last two steps are unstable on small screen extensions because scroll change the screen coordinates, it needs another solution
     Scenario: MLPr001 - Check all mandatory components
         Given open url
         And wait load page
@@ -252,10 +251,14 @@ Feature: Projects Page
         Then check "automation-test-name7" value in "name" column in "Projects_Table" table on "Projects" wizard
         Then select "Unarchive" option in action menu on "Projects" wizard in "Projects_Table" table at row with "automation-test-name7" value in "name" column
         And wait load page
+        Then select "Unarchive" option in action menu on "Projects" wizard in "Projects_Table" table at row with "hedi-proj" value in "name" column
         And wait load page
         Then "No_Archived_Projects_Message" element on "Projects" should contains "No archived projects." value
         Then click on "Active_Projects_Button" element on "Projects" wizard
         Then check "automation-test-name7" value in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then check "hedi-proj" value in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
 
     @MLPr
     @passive

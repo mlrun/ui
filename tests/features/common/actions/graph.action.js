@@ -39,8 +39,7 @@ function diffMapper(array0, array1, deviation) {
   return tmpDiff
 }
 
-const action = {
-  checkNodesConnectionsNPandas: async function(driver, graphComponent) {
+export const checkNodesConnectionsNPandas = async (driver, graphComponent) => {
     const nodesGeometry = await getNamedRowsGeometry(
       driver,
       graphComponent.nodesTable
@@ -133,6 +132,3 @@ const action = {
       expect(numjs.sum(endMarks.slice([i]))).equal(true, 'Arrow not ended')
     }
   }
-}
-
-module.exports = action

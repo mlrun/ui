@@ -123,7 +123,7 @@ const secretsTable = {
   }
 }
 
-module.exports = {
+export default {
   generalTab: {
     Project_Settings_Tab_Selector: commonTable(tabSelector),
     Source_URL_Input: inputGroup(
