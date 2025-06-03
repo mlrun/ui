@@ -80,10 +80,7 @@ const TableLinkCell = ({
               </Tooltip>
 
               {data.showStatus && stateValue && stateLabel && (
-                <Tooltip
-                  className="status"
-                  template={<TextTooltipTemplate text={stateLabel} />}
-                >
+                <Tooltip className="status" template={<TextTooltipTemplate text={stateLabel} />}>
                   <i className={stateClassName} />
                 </Tooltip>
               )}
@@ -99,7 +96,8 @@ const TableLinkCell = ({
               link.match(/models/) ||
               link.match(/files/) ||
               link.match(/datasets/) ||
-              link.match(/documents/)) &&
+              link.match(/documents/) ||
+              link.match(/llm-prompts/)) &&
               Object.values(selectedItem).length !== 0)) && (
             <div className="date-uid-row">
               {(item.startTime || item.updated) && (
@@ -108,7 +106,8 @@ const TableLinkCell = ({
                     (link.match(/functions/) ||
                     link.match(/models/) ||
                     link.match(/files/) ||
-                    link.match(/datasets/)
+                    link.match(/datasets/) ||
+                    link.match(/llm-prompts/)
                       ? formatDatetime(item.updated, 'N/A')
                       : formatDatetime(
                           item.startTime || item.created,
