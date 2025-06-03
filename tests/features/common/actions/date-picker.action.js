@@ -87,8 +87,7 @@ async function setPickerTime(driver, dateTimePicker, datetimePoint) {
   await timeInput.sendKeys(timeString)
 }
 
-const action = {
-  verifyTimeFilterBand: async function(driver, dropdown, diff) {
+export const verifyTimeFilterBand = async (driver, dropdown, diff) => {
     const selectedBand = await driver.findElement(dropdown.open_button)
     const datetimePointsText = await selectedBand.getAttribute('value')
     const datetimePoints = datetimePointsText.split('-')
@@ -102,13 +101,14 @@ const action = {
       result = datetimeDiff - diff === 0
     }
     expect(result).to.equal(true)
-  },
-  pickUpCustomDatetimeRange: async function(
+  }
+
+export const pickUpCustomDatetimeRange = async (
     driver,
     datetimePicker,
     fromDatetime,
     toDatetime
-  ) {
+  ) => {
     await selectMonthYear(driver, datetimePicker.fromDatePicker, fromDatetime)
     await selectCalendarDay(driver, datetimePicker.fromDatePicker, fromDatetime)
     await setPickerTime(driver, datetimePicker.fromDatePicker, fromDatetime)
@@ -116,11 +116,10 @@ const action = {
     await selectMonthYear(driver, datetimePicker.toDatePicker, toDatetime)
     await selectCalendarDay(driver, datetimePicker.toDatePicker, toDatetime)
     await setPickerTime(driver, datetimePicker.toDatePicker, toDatetime)
-  },
-  applyDatetimePickerRange: async function(driver, datetimePicker) {
+  }
+
+export const applyDatetimePickerRange = async (driver, datetimePicker) => {
     const applyButton = await driver.findElement(datetimePicker.applyButton)
     await applyButton.click()
   }
-}
-
-module.exports = action
+  

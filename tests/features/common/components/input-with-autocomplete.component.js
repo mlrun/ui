@@ -20,7 +20,7 @@ such restriction.
 import { By } from 'selenium-webdriver'
 import { locatorBuilder } from '../../common-tools/common-tools'
 
-module.exports = function(inputStructure) {
+export default function(inputStructure) {
   const options = locatorBuilder`${0} ${1} ${2}`
   const option = locatorBuilder`${0} ${1}:nth-of-type(${2}) ${3}`
 

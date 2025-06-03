@@ -157,6 +157,7 @@ Feature: Datasets Page
     Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-dataset" value in "name" column with scroll "false"
     And wait load page
     When click on cell with row index 1 in "uid" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then check "v1" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then click on "Edit_btn_table_view" element on "Datasets_Info_Pane" wizard
     And wait load page

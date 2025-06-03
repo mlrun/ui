@@ -113,7 +113,7 @@ const dateTimePickerCalendars = {
 }
 // datepicker end
 
-module.exports = {
+export default {
   monitoringApp: {
     Refresh_Button: By.css('[data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]'),
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,

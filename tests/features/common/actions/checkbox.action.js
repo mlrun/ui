@@ -19,41 +19,42 @@ such restriction.
 */
 import { expect } from 'chai'
 
-const action = {
-  isCheckboxChecked: async function(driver, checkbox) {
+export const isCheckboxChecked = async (driver, checkbox) => {
     const checkboxElement = await driver.findElement(checkbox['checkbox'])
     const classes = await checkboxElement.getAttribute('class')
     expect(classes.includes('unchecked')).equal(false)
-  },
-  isCheckboxUnchecked: async function(driver, checkbox) {
+  }
+
+export const isCheckboxUnchecked = async (driver, checkbox) => {
     const checkboxElement = await driver.findElement(checkbox['checkbox'])
     const classes = await checkboxElement.getAttribute('class')
     expect(classes.includes('unchecked')).equal(true)
-  },
-  checkCheckbox: async function(driver, checkbox) {
+  }
+
+export const  checkCheckbox = async (driver, checkbox) => {
     const checkboxElement = await driver.findElement(checkbox['checkbox'])
     const classes = await checkboxElement.getAttribute('class')
     if (classes.includes('unchecked')) {
       await checkboxElement.click()
     }
-  },
-  uncheckCheckbox: async function(driver, checkbox) {
+  }
+
+export const uncheckCheckbox = async (driver, checkbox) => {
     const checkboxElement = await driver.findElement(checkbox['checkbox'])
     const classes = await checkboxElement.getAttribute('class')
     if (!classes.includes('unchecked')) {
       await checkboxElement.click()
     }
-  },
-  verifyCheckboxEnabled: async function(driver, component) {
+  }
+
+export const verifyCheckboxEnabled = async (driver, component) => {
     const element = await driver.findElement(component)
     const flag = await element.getAttribute('class')
     expect(flag).equal('checkbox')
-  },
-  verifyCheckboxDisabled: async function(driver, component) {
+  }
+
+export const verifyCheckboxDisabled = async (driver, component) => {
     const element = await driver.findElement(component)
     const flag = await element.getAttribute('class') 
     expect(flag).equal('checkbox checkbox_disabled')
   }
-}
-
-module.exports = action

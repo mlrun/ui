@@ -29,11 +29,21 @@ Feature: Project Monitoring Page
         Then verify "Artifacts_Stats_Tip" element on "Project" wizard should display hover hint "Label_Hint"."Artifacts_Stats_Tip"
         Then verify "Artifacts_Stats_Counter" element visibility on "Project" wizard
         Then verify "Alerts_Stats_Title" element visibility on "Project" wizard
+        Then "Alerts_Stats_Title" element on "Project" should contains "Alerts" value
+        Then verify "Alerts_Stats_Total_Title" element visibility on "Project" wizard
+        Then "Alerts_Stats_Total_Title" element on "Project" should contains "Total" value
         Then verify "Alerts_Stats_Total_Number" element visibility on "Project" wizard
+        Then verify "Alerts_Stats_Endpoint_Title" element visibility on "Project" wizard
+        Then "Alerts_Stats_Endpoint_Title" element on "Project" should contains "Endpoint" value
         Then verify "Alerts_Stats_Endpoint_Number" element visibility on "Project" wizard
+        Then verify "Alerts_Stats_Jobs_Title" element visibility on "Project" wizard
+        Then "Alerts_Stats_Jobs_Title" element on "Project" should contains "Jobs" value
         Then verify "Alerts_Stats_Jobs_Number" element visibility on "Project" wizard
+        Then verify "Alerts_Stats_Application_Title" element visibility on "Project" wizard
+        Then "Alerts_Stats_Application_Title" element on "Project" should contains "Application" value
         Then verify "Alerts_Stats_Application_Number" element visibility on "Project" wizard
         Then verify "ConsumerGroups_Stats_Title" element visibility on "Project" wizard
+        Then "ConsumerGroups_Stats_Title" element on "Project" should contains "Consumer groups" value
         Then verify "ConsumerGroups_Stats_Counter" element visibility on "Project" wizard
         Then verify "Jobs_Info_Card_Statistics" element visibility on "Project" wizard
         Then verify "Real_Time_Functions_Card_Statistics" element visibility on "Project" wizard
@@ -64,7 +74,6 @@ Feature: Project Monitoring Page
         Then verify "Documents_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Artifacts_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Models_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Monitoring_App_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Jobs_And_Workflows_Button" element visibility on "commonPagesHeader" wizard
         Then verify "ML_Functions_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Real_Time_Functions_Button" element visibility on "commonPagesHeader" wizard
@@ -90,8 +99,6 @@ Feature: Project Monitoring Page
         Then verify "Artifacts_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Models_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Models_Icon" element visibility on "commonPagesHeader" wizard
-        Then verify "Monitoring_App_Button" element invisibility on "commonPagesHeader" wizard
-        Then verify "Monitoring_App_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Jobs_And_Workflows_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Jobs_And_Workflows_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "ML_Functions_Button" element invisibility on "commonPagesHeader" wizard
@@ -150,6 +157,8 @@ Feature: Project Monitoring Page
         When turn on demo mode with query params "false"
         And wait load page
         And wait load page
+        Then verify "Monitoring_App_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Monitoring_App_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "LLM_Prompts_Button" element visibility on "commonPagesHeader" wizard
         Then verify "LLM_Prompts_Icon" element visibility on "commonPagesHeader" wizard
 
@@ -798,12 +807,14 @@ Feature: Project Monitoring Page
         And wait load page
         Then click on "ConsumerGroups_Stats_Counter" element on "Project" wizard
         And wait load page
+        And wait load page
         Then "Title" element on "Consumer_Groups" should contains "Consumer groups (v3io stream)" value
         Then "Description" element on "Consumer_Groups" should contains "This report displays the project's consumer groups for Iguazio v3io streams" value
         Then verify "Arrow_Back" element visibility on "Consumer_Groups" wizard
         Then verify "Search_Input" element visibility on "Consumer_Groups" wizard
         Then verify "Consumer_Groups_Table" element visibility on "Consumer_Groups" wizard
         Then click on "Arrow_Back" element on "Consumer_Groups" wizard
+        And wait load page
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
         Then verify "Create_New" element visibility on "Project" wizard
@@ -823,6 +834,7 @@ Feature: Project Monitoring Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then click on "ConsumerGroups_Stats_Counter" element on "Project" wizard
+        And wait load page
         And wait load page
         Then verify "Search_Input" element visibility on "Consumer_Groups" wizard
         Then verify "Consumer_Groups_Table" element visibility on "Consumer_Groups" wizard
@@ -848,6 +860,7 @@ Feature: Project Monitoring Page
         Then select "project" with "default" value in breadcrumbs menu
         And wait load page
         Then click on "ConsumerGroups_Stats_Counter" element on "Project" wizard
+        And wait load page
         And wait load page
         And save to context "consumer_group_name" column and "href" attribute on 1 row from "Consumer_Groups_Table" table on "Consumer_Groups" wizard
         And click on cell with row index 1 in "consumer_group_name" column in "Consumer_Groups_Table" table on "Consumer_Groups" wizard

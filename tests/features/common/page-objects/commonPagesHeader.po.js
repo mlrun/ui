@@ -35,7 +35,7 @@ const generalInfoQuickLinks = {
   }
 }
 
-module.exports = {
+export default {
   loader: By.css('.loader-wrapper .loader'),
   See_On_Github: By.css('header.header a[alt="MLRUN on Gihub"]'),
   See_On_Slack: By.css('header.header a[alt="MLRUN on Slack"]'),

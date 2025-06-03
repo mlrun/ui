@@ -19,7 +19,7 @@ such restriction.
 */
 import { By } from 'selenium-webdriver'
 
-module.exports = function(radiobuttonStructure) {
+export default function(radiobuttonStructure) {
   const element = {}
   element.root = By.css(radiobuttonStructure.root)
   element.radiobutton = By.css(

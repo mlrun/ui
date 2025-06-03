@@ -589,7 +589,7 @@ const commonVersionTagInput = inputGroup(
 const commonVersionTagInputFullView = By.css('.table__item_big .details-item__input-wrapper input')
 const commonLabelsApplyButton = By.css('.item-info__details-wrapper .details-item .details-item__data-chips .details-item__apply-btn-wrapper')
 
-module.exports = {
+export default {
   featureSetsInfoPane: {
     Header: header,
     Updated: updated,
