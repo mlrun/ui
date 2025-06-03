@@ -64,7 +64,7 @@ import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { useMode } from '../../hooks/mode.hook'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 
-import Cancel from 'igz-controls/images/cancel.svg'
+import Cancel from 'igz-controls/images/cancel.svg?react'
 import ListView from 'igz-controls/images/listview.svg?react'
 import Pipelines from 'igz-controls/images/pipelines.svg?react'
 

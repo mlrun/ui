@@ -113,8 +113,10 @@ const WorkflowsTable = React.forwardRef(
     const [isReadOnlyUser, setIsReadOnlyUser] = useState(false)
 
     useEffect(() => {
-      checkIfUserIsReadOnly(params.projectName).then(setIsReadOnlyUser)
-    }, [params.projectName, isReadOnlyUser])
+      checkIfUserIsReadOnly(params.projectName).then(result => {
+        setIsReadOnlyUser(result)
+      })
+    }, [params.projectName])
 
     const monitorWorkflowsRowHeight = useMemo(
       () => getScssVariableValue('--monitorWorkflowsRowHeight'),
