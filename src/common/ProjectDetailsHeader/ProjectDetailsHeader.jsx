@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
 
-import { getDateAndTimeByFormat } from '../../utils/'
+import { getDateAndTimeByFormat } from 'igz-controls/utils/datetime.util'
 import { PROJECT_MONITOR, PROJECT_QUICK_ACTIONS_PAGE } from '../../constants'
 
 import './ProjectDetailsHeader.scss'

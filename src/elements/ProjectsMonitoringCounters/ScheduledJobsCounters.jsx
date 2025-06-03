@@ -22,7 +22,7 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import StatsCard from '../../common/StatsCard/StatsCard'
-import Loader from '../../common/Loader/Loader'
+import { Loader } from 'igz-controls/components'
 
 import { generateMonitoringStats } from '../../utils/generateMonitoringData'
 import { JOBS_MONITORING_SCHEDULED_TAB } from '../../constants'

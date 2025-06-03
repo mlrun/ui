@@ -24,12 +24,9 @@ import { useParams } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import { isEmpty } from 'lodash'
 
-import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
-import Loader from '../../common/Loader/Loader'
-import TableCell from '../TableCell/TableCell'
+import { ErrorMessage, Loader, ActionsMenu, TableCell } from 'igz-controls/components'
 
-import { ACTIONS_MENU } from '../../types'
+import { ACTIONS_MENU } from 'igz-controls/types'
 import { DETAILS_OVERVIEW_TAB, TABLE_CONTAINER } from '../../constants'
 import { generateTableRowTestId } from '../../utils/generateTableRowTestId'
 import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
@@ -86,7 +83,7 @@ const FeatureStoreTableRow = ({
                       !data.hidden && (
                         <TableCell
                           className={cellClassName}
-                          data={data}
+                          cellData={data}
                           firstCell={index === 0}
                           item={rowItem}
                           key={data.id}
@@ -148,7 +145,7 @@ const FeatureStoreTableRow = ({
                                 !value.hidden && (
                                   <TableCell
                                     className={cellClassNames}
-                                    data={
+                                    cellData={
                                       value.expandedCellContent ? value.expandedCellContent : value
                                     }
                                     item={tableContentItem.data}
@@ -186,7 +183,7 @@ const FeatureStoreTableRow = ({
               !value.hidden && (
                 <TableCell
                   className={cellClassNames}
-                  data={value}
+                  cellData={value}
                   firstCell={index === 0}
                   item={rowItem.data}
                   key={value.id}

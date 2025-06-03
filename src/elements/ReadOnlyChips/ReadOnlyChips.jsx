@@ -20,14 +20,14 @@ such restriction.
 import React from 'react'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
+import PropTypes from 'prop-types'
 import arrayMutators from 'final-form-arrays'
 
 import { FormChipCell } from 'igz-controls/components'
 
-import { getChipOptions } from '../../utils/getChipOptions'
+import { getChipOptions } from 'igz-controls/utils/chips.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
-import PropTypes from 'prop-types'
-import { CHIP_OPTIONS } from '../../types.js'
+import { CHIP_OPTIONS } from 'igz-controls/types'
 
 const ReadOnlyChips = ({ labels = [], chipOptions = getChipOptions('metrics'), ...args }) => {
   const formRef = React.useRef(

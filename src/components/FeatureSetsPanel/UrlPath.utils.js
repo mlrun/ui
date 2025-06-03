@@ -35,7 +35,7 @@ import {
   generateArtifactsReferencesList,
   generateProjectsList
 } from '../../utils/panelPathScheme'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
 import { fetchProjectsNames } from '../../reducers/projectReducer'
 import { isCommunityEdition } from '../../utils/helper'

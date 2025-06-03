@@ -21,7 +21,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import MembersPopUp from '../MembersPopUp/MembersPopUp'
-import Loader from '../../common/Loader/Loader'
+import { Loader } from 'igz-controls/components'
 
 import Users from 'igz-controls/images/users.svg?react'
 

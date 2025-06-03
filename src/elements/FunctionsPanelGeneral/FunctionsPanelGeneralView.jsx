@@ -26,7 +26,7 @@ import TextArea from '../../common/TextArea/TextArea'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { getInternalLabelsValidationRule } from 'igz-controls/utils/validation.util'
-import { getChipOptions } from '../../utils/getChipOptions'
+import { getChipOptions } from 'igz-controls/utils/chips.util'
 
 import { TAG_LATEST } from '../../constants'
 

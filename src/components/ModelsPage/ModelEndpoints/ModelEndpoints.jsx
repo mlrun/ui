@@ -24,11 +24,11 @@ import { isEmpty } from 'lodash'
 
 import ActionBar from '../../ActionBar/ActionBar'
 import ArtifactsTableRow from '../../../elements/ArtifactsTableRow/ArtifactsTableRow'
-import Loader from '../../../common/Loader/Loader'
 import ModelEndpointsFilters from './ModelEndpointsFilters'
 import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
+import { Loader } from 'igz-controls/components'
 
 import {
   GROUP_BY_NONE,

@@ -25,7 +25,7 @@ import { isNil } from 'lodash'
 import Input from '../Input/Input'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { DENSITY_OPTIONS } from '../../types'
+import { DENSITY_OPTIONS } from 'igz-controls/types'
 
 import Arrow from 'igz-controls/images/range-arrow-small.svg?react'
 import ExclamationMarkIcon from 'igz-controls/images/exclamation-mark.svg?react'

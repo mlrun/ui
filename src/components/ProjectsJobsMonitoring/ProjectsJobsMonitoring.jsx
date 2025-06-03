@@ -22,15 +22,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { defaultsDeep, isEmpty } from 'lodash'
 
+import { ConfirmDialog, Loader } from 'igz-controls/components'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
-import { ConfirmDialog } from 'igz-controls/components'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import ActionBar from '../ActionBar/ActionBar'
 import JobsMonitoringFilters from './JobsMonitoring/JobsMonitoringFilters'
 import ScheduledMonitoringFilters from './ScheduledMonitoring/ScheduledMonitoringFilters'
 import WorkflowsMonitoringFilters from './WorkflowsMonitoring/WorkflowsMonitoringFilters'
-import Loader from '../../common/Loader/Loader'
 
 import { STATS_TOTAL_CARD, tabs } from './projectsJobsMotinoring.util'
 import {

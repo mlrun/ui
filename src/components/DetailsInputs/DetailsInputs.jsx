@@ -25,9 +25,8 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import ArtifactsPreviewController from '../ArtifactsPreview/ArtifactsPreviewController'
-import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, Loader } from 'igz-controls/components'
 
 import {
   ARTIFACT_OTHER_TYPE,

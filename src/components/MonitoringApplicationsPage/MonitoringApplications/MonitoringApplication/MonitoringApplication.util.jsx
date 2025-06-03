@@ -20,9 +20,9 @@ such restriction.
 import prettyBytes from 'pretty-bytes'
 import { capitalize, isNumber } from 'lodash'
 
-import { parseChipsData } from '../../../../utils/convertChipsData'
-import { formatDatetime } from '../../../../utils'
 import { METRIC_TYPE, RESULT_TYPE } from '../../../../constants'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
+import { parseChipsData } from '../../../../utils/convertChipsData'
 
 export const generateArtifactsTableContent = (artifacts = []) => {
   const tableHeaders = [

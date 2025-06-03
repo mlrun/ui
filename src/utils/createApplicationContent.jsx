@@ -19,7 +19,7 @@ such restriction.
 */
 import { capitalize } from 'lodash'
 
-import { formatDatetime } from './datetime'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { generateNuclioLink } from './parseUri'
 
 export const createApplicationContent = application => {

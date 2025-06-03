@@ -1,6 +1,8 @@
 import { useCallback, useState } from 'react'
-import { ARGUMENTS_TAB, PROMPT_TAB } from '../../../constants'
+
 import PromptTab from './PromptTab'
+
+import { ARGUMENTS_TAB, PROMPT_TAB } from '../../../constants'
 
 import './detailsPromptTemplate.scss'
 

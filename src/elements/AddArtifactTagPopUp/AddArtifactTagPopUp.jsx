@@ -24,15 +24,14 @@ import { useLocation } from 'react-router-dom'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 
-import { Button, FormInput, Modal } from 'igz-controls/components'
-import Loader from '../../common/Loader/Loader'
+import { Button, FormInput, Modal, Loader } from 'igz-controls/components'
 
 import { DATASET_TYPE, MODEL_TYPE, TAG_LATEST } from '../../constants'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { addTag, fetchAllArtifactKindsTags } from '../../reducers/artifactsReducer'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { isSubmitDisabled } from 'igz-controls/utils/form.util'
 

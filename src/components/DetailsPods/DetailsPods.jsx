@@ -23,10 +23,9 @@ import { useSelector } from 'react-redux'
 import Prism from 'prismjs'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
-import Loader from '../../common/Loader/Loader'
 
 import NoData from '../../common/NoData/NoData'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, Loader } from 'igz-controls/components'
 
 import { generatePods } from './detailsPods.util'
 
