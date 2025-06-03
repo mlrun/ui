@@ -258,7 +258,7 @@ const Workflow = ({
           {!isReadOnlyUser && (
             <Button
               className="workflow_btn"
-              disabled={workflow?.run?.status === FUNCTION_RUNNING_STATE}
+              disabled={workflow?.run?.status !== FUNCTION_RUNNING_STATE}
               variant="danger"
               icon={<Cancel />}
               label="Terminate"

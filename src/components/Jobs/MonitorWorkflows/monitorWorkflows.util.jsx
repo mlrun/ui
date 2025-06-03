@@ -169,7 +169,7 @@ export const generateActionsMenu = (
           className: 'danger',
           onClick: handleConfirmTerminateWorkflow,
           hidden: isReadOnlyUser,
-          disabled: job?.state?.value === FUNCTION_RUNNING_STATE
+          disabled: job?.state?.value !== FUNCTION_RUNNING_STATE
         }
       ]
     ]
