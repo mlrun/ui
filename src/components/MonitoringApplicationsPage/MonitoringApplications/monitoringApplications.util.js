@@ -19,6 +19,7 @@ such restriction.
 */
 import { capitalize } from 'lodash'
 import classnames from 'classnames'
+import moment from 'moment'
 
 import { formatDatetime, generateNuclioLink } from '../../../utils'
 
@@ -75,4 +76,81 @@ export const generateOperatingFunctionsTable = functions => {
     header: tableHeaders,
     body: tableBody
   }
+}
+
+export function groupDataToBins(data, startTime, endTime) {
+  const grouped = new Map()
+  const endDate = new Date(endTime).setMinutes(0, 0, 0)
+  const basePeriod =
+    (new Date(endTime) - new Date(startTime)) / (1000 * 60 * 60) > 24 ? 'day' : 'hour'
+
+  const roundDate = date => {
+    const dateToRound = new Date(date)
+    basePeriod === 'hour' ? dateToRound.setMinutes(0, 0, 0) : dateToRound.setHours(0, 0, 0, 0)
+
+    return dateToRound
+  }
+
+  // generate bins
+  for (
+    const period = roundDate(startTime);
+    period.getTime() <= endDate && grouped.size < 33;
+    basePeriod === 'hour'
+      ? period.setHours(period.getHours() + 1)
+      : period.setDate(period.getDate() + 1)
+  ) {
+    grouped.set(period.toISOString(), 0)
+  }
+
+  data.forEach(([timestamp, value]) => {
+    const date = roundDate(timestamp)
+    const dateKey = date.toISOString()
+
+    grouped.set(dateKey, grouped.get(dateKey) + value)
+  })
+
+  const getLabel = (from, to) => {
+    const fromDate = moment(from)
+    const toDate = moment(to || from)
+    const shortFormatString = basePeriod === 'hour' ? 'HH-mm' : 'MM-DD'
+    const fullFormatString = 'YY/MM/DD, hh:mm A'
+
+    if (!to) {
+      toDate.add(1, basePeriod)
+    }
+
+    return {
+      label: `${fromDate.format(shortFormatString)} - ${toDate.format(shortFormatString)}`,
+      fullDate: `${fromDate.format(fullFormatString)} - ${toDate.format(fullFormatString)}`
+    }
+  }
+
+  const groupedData = Array.from(grouped.entries())
+  const dataset = groupedData.reduce((dataset, [date, value]) => {
+    const labelData = getLabel(date)
+    dataset.push({
+      x: labelData.label,
+      y: value,
+      fullDate: labelData.fullDate
+    })
+
+    return dataset
+  }, [])
+
+  if (dataset.length) {
+    // update first and last label to include more specific time
+    const firstLabel = getLabel(startTime, groupedData.length > 1 ? groupedData[1][0] : startTime)
+
+    dataset[0].x = firstLabel.label
+    dataset[0].fullDate = firstLabel.fullDate
+
+    if (groupedData.length > 1) {
+      const lastLabel = getLabel(endDate, endTime)
+
+      dataset[dataset.length - 1].x = lastLabel.label
+      dataset[dataset.length - 1].fullDate = lastLabel.fullDate
+    }
+  }
+
+  return dataset
 }
