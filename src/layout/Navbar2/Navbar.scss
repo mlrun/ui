@@ -38,7 +38,6 @@
       }
 
       .nav-link__icon {
-        width: 0;
         opacity: 0;
       }
     }
@@ -68,9 +67,7 @@
       display: flex;
       opacity: 1;
       flex: 0 0 auto;
-      transition:
-        opacity 0.3s ease-in-out,
-        width 0.3s ease-in-out;
+      transition: opacity 0.3s ease-in-out;
 
       svg {
         flex: 0 0 20px;
@@ -95,6 +92,10 @@
     position: relative;
     margin: 10px 18px;
     min-height: 48px;
+
+    .nav-link__icon {
+      position: absolute;
+    }
 
     .btn {
       justify-content: space-between;
