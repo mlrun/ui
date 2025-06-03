@@ -167,6 +167,7 @@ const InvocationsMetricCard = forwardRef(
               <MetricChart
                 config={chartConfig}
                 isInvocationCardExpanded={isInvocationCardExpanded}
+                isInvocationChart
               />
             </div>
           </div>
