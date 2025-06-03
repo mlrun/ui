@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useMemo } from 'react'
-import { Outlet, useParams, useSearchParams } from 'react-router-dom'
+import { Outlet, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import ActionBar from '../ActionBar/ActionBar'
@@ -27,6 +27,7 @@ import TableTop from '../../elements/TableTop/TableTop'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import MonitoringApplicationCounters from './MonitoringApplications/MonitoringApplicationCounters/MonitoringApplicationCounters'
 
+import { MODEL_ENDPOINTS_TAB, MONITORING_APP_PAGE } from '../../constants'
 import { getFiltersConfig } from './MonitoringApplicationsPage.util'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
@@ -38,7 +39,6 @@ import {
 import { fetchArtifacts } from '../../reducers/artifactsReducer'
 
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
-import { MONITORING_APP_PAGE } from '../../constants'
 
 import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
 
@@ -47,6 +47,7 @@ import './monitoringApplicationsPage.scss'
 const MonitoringApplicationsPage = () => {
   const dispatch = useDispatch()
   const params = useParams()
+  const navigate = useNavigate()
   const monitoringApplicationsStore = useSelector(store => store.monitoringApplicationsStore)
   const filtersConfig = useMemo(() => getFiltersConfig(), [])
   const filters = useFiltersFromSearchParams(filtersConfig)
@@ -129,7 +130,7 @@ const MonitoringApplicationsPage = () => {
                 label: 'Application metrics',
                 className: 'action-button',
                 hidden: !params.name,
-                onClick: () => {},
+                onClick: () => {navigate(`/projects/${params.projectName}/${MONITORING_APP_PAGE}/${params.name}/${MODEL_ENDPOINTS_TAB}${window.location.search}`)},
                 icon: <PresentMetricsIcon />
               }
             ]}

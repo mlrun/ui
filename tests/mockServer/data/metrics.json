@@ -33,9 +33,9 @@
           "project": "default"
         },
         {
-          "full_name": "default.evidently-app-test.result.hellinger_mean_1",
+          "full_name": "default.monitorAppV1.result.hellinger_mean_1",
           "type": "result",
-          "app": "evidently-app-test",
+          "app": "monitorAppV1",
           "name": "hellinger_mean_1",
           "project": "default"
         },
@@ -122,7 +122,7 @@
           "data": false
         },
         {
-          "full_name": "default.evidently-app-test.result.hellinger_mean_1",
+          "full_name": "default.monitorAppV1.result.hellinger_mean_1",
           "type": "result",
           "result_kind": 0,
           "data": "true",
