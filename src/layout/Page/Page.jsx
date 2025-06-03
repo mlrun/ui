@@ -66,11 +66,15 @@ const Page = () => {
 
   useEffect(() => {
     if (projectsList.length === 0 && location.pathname !== '/projects') {
-      dispatch(fetchProjects({ params: { format: 'minimal' } }))
+      dispatch(fetchProjects({ params: { format: 'minimal' }, showNotification: false }))
         .unwrap()
         .then(projects => {
           isProjectValid(navigate, projects, projectName, dispatch)
           setProjectFetched(true)
+        })
+        .catch(() => {
+          setProjectFetched(true)
+          navigate('/projects')
         })
     } else {
       setProjectFetched(true)

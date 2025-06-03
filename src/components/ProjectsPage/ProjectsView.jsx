@@ -77,7 +77,7 @@ const ProjectsView = ({
       {(projectStore.loading || projectStore.project.loading || tasksStore.loading) && <Loader />}
       {projectStore.mlrunUnhealthy.isUnhealthy && (
         <PopUpDialog headerIsHidden>
-          MMLRun seems to be down. Try again in a few minutes.
+          MLRun seems to be down. Try again in a few minutes.
         </PopUpDialog>
       )}
       {createProject && (
