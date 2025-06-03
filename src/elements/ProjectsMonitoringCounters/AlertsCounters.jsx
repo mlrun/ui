@@ -22,8 +22,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import classNames from 'classnames'
 
-import Loader from '../../common/Loader/Loader'
 import StatsCard from '../../common/StatsCard/StatsCard'
+import { Loader } from 'igz-controls/components'
 
 import { generateAlertsStats } from '../../utils/generateAlertsStats'
 

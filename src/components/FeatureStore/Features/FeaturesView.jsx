@@ -20,20 +20,20 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import ActionBar from '../../ActionBar/ActionBar'
+import FeatureStoreFilters from '../FeatureStoreFilters'
+import FeatureStorePageTabs from '../FeatureStorePageTabs/FeatureStorePageTabs'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
-import FeatureStorePageTabs from '../FeatureStorePageTabs/FeatureStorePageTabs'
 
 import { FEATURE_STORE_PAGE, FEATURES_TAB } from '../../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
-import { VIRTUALIZATION_CONFIG } from '../../../types'
+import { VIRTUALIZATION_CONFIG } from 'igz-controls/types'
+import { addToFeatureVectorTitle } from '../featureStore.util'
 import { filtersConfig } from './features.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered } from '../../../hooks/useVirtualization.hook'
-import ActionBar from '../../ActionBar/ActionBar'
-import FeatureStoreFilters from '../FeatureStoreFilters'
-import { addToFeatureVectorTitle } from '../featureStore.util'
 
 const FeaturesView = React.forwardRef(
   (

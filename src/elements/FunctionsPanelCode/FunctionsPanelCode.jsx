@@ -33,7 +33,7 @@ import {
   sourceCodeInBase64
 } from './functionsPanelCode.util'
 import { FUNCTION_DEFAULT_HANDLER, PANEL_CREATE_MODE, TAG_LATEST } from '../../constants'
-import { splitTrim, trimSplit } from '../../utils'
+import { splitTrim, trimSplit } from 'igz-controls/utils/string.util'
 import {
   resetNewFunctionCodeCustomImage,
   setNewFunctionBaseImage,

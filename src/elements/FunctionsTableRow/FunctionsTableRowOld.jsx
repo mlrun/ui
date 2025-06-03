@@ -23,10 +23,9 @@ import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
-import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import TableCell from '../TableCell/TableCell'
+import { ActionsMenu, TableCell } from 'igz-controls/components'
 
-import { ACTIONS_MENU } from '../../types'
+import { ACTIONS_MENU } from 'igz-controls/types'
 import { DETAILS_OVERVIEW_TAB } from '../../constants'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { generateTableRowTestId } from '../../utils/generateTableRowTestId'
@@ -80,7 +79,7 @@ const FunctionsTableRowOld = ({
                       !data.hidden && (
                         <TableCell
                           className={cellClassName}
-                          data={data}
+                          cellData={data}
                           firstCell={index === 0}
                           item={rowItem}
                           key={data.id}
@@ -127,7 +126,7 @@ const FunctionsTableRowOld = ({
                           !value.hidden && (
                             <TableCell
                               className={cellClassNames}
-                              data={value.expandedCellContent ? value.expandedCellContent : value}
+                              cellData={value.expandedCellContent ? value.expandedCellContent : value}
                               item={func.data}
                               link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
                               key={value.id}
@@ -157,7 +156,7 @@ const FunctionsTableRowOld = ({
             return (
               !value.hidden && (
                 <TableCell
-                  data={value}
+                  cellData={value}
                   firstCell={index === 0}
                   item={rowItem.data}
                   key={value.id}

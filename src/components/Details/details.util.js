@@ -42,16 +42,17 @@ import {
   MODELS_TAB,
   TAG_LATEST
 } from '../../constants'
-import { formatDatetime, generateLinkPath, parseUri } from '../../utils'
+import { generateLinkPath, parseUri } from '../../utils'
 import { isArtifactTagUnique } from '../../utils/artifacts.util'
 import { getFunctionImage } from '../FunctionsPage/functions.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import {
   setChangesCounter,
   setChangesData,
   setFiltersWasHandled,
   showWarning
-} from '../../reducers/detailsReducer'
+} from 'igz-controls/reducers/commonDetailsReducer'
 
 export const generateArtifactsContent = (
   detailsType,
@@ -147,10 +148,10 @@ export const generateArtifactsContent = (
             ]
           }
         },
-        handleDiscardChanges: (formState, detailsStore) => {
+        handleDiscardChanges: (formState, commonDetailsStore) => {
           formState.form.change(
             'tag',
-            detailsStore.changes.data.tag?.currentFieldValue ?? formState.initialValues.tag
+            commonDetailsStore.changes.data.tag?.currentFieldValue ?? formState.initialValues.tag
           )
         }
       },
@@ -407,10 +408,10 @@ export const generateFeatureSetsOverviewContent = (selectedItem, isDetailsPopUp)
     fieldData: {
       name: 'description'
     },
-    handleDiscardChanges: (formState, detailsStore) => {
+    handleDiscardChanges: (formState, commonDetailsStore) => {
       formState.form.change(
         'description',
-        detailsStore.changes.data.description?.currentFieldValue ??
+        commonDetailsStore.changes.data.description?.currentFieldValue ??
           formState.initialValues.description
       )
     }
@@ -462,10 +463,10 @@ export const generateFeatureVectorsOverviewContent = (selectedItem, isDetailsPop
     fieldData: {
       name: 'description'
     },
-    handleDiscardChanges: (formState, detailsStore) => {
+    handleDiscardChanges: (formState, commonDetailsStore) => {
       formState.form.change(
         'description',
-        detailsStore.changes.data.description?.currentFieldValue ??
+        commonDetailsStore.changes.data.description?.currentFieldValue ??
           formState.initialValues.description
       )
     }

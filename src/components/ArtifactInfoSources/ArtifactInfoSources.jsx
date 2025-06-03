@@ -22,13 +22,12 @@ import PropTypes from 'prop-types'
 
 import FeatureVectorPopUp from '../../elements/DetailsPopUp/FeatureVectorPopUp/FeatureVectorPopUp'
 import ArtifactPopUp from '../../elements/DetailsPopUp/ArtifactPopUp/ArtifactPopUp'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, CopyToClipboard } from 'igz-controls/components'
 
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { FEATURE_VECTORS_TAB } from '../../constants'
 
 import './artifactInfoSources.scss'
-import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
 
 const ArtifactInfoSources = ({ isDetailsPopUp = false, sources = {} }) => {
   const handleOpenSourceDetails = sourceData => {

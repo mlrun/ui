@@ -34,9 +34,8 @@ import JobWizardHyperparameterStrategy from './JobWizardSteps/JobWizardHyperpara
 import JobWizardParameters from './JobWizardSteps/JobWizardParameters/JobWizardParameters'
 import JobWizardResources from './JobWizardSteps/JobWizardResources/JobWizardResources'
 import JobWizardRunDetails from './JobWizardSteps/JobWizardRunDetails/JobWizardRunDetails'
-import Loader from '../../common/Loader/Loader'
 import ScheduleWizard from '../SheduleWizard/ScheduleWizard'
-import { Wizard } from 'igz-controls/components'
+import { Wizard, Loader } from 'igz-controls/components'
 
 import {
   ADVANCED_STEP,
@@ -73,8 +72,8 @@ import { editJob, removeJobFunction, runNewJob } from '../../reducers/jobReducer
 import { fetchProject } from '../../reducers/projectReducer'
 import { resetModalFilter } from '../../reducers/filtersReducer'
 import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 
 import './jobWizard.scss'

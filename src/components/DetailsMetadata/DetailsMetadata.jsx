@@ -21,9 +21,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import ChipCell from '../../common/ChipCell/ChipCell'
 import NoData from '../../common/NoData/NoData'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, ChipCell } from 'igz-controls/components'
 
 import { generateMetadata } from './detailsMetadata.util'
 
