@@ -57,7 +57,7 @@ import {
   WORKFLOW_LIST_VIEW
 } from '../../constants'
 import getState from '../../utils/getState'
-import { ACTIONS_MENU } from '../../types'
+import { ACTIONS_MENU } from 'igz-controls/types'
 import { createJobsWorkflowContent } from '../../utils/createJobsContent'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { useMode } from '../../hooks/mode.hook'

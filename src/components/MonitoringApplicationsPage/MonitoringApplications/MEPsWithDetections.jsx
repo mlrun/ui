@@ -22,8 +22,8 @@ import moment from 'moment'
 import PropTypes from 'prop-types'
 
 import MlChart from '../../../common/MlChart/MlChart'
-import { Tip } from 'igz-controls/components'
 import NoData from '../../../common/NoData/NoData'
+import { Tip } from 'igz-controls/components'
 
 import { MONITORING_APPLICATIONS_NO_DATA_MESSAGE } from '../MonitoringApplicationsPage.util'
 import { getMEPsWithDetectionChartConfig } from '../../../utils/getChartConfig'

@@ -43,7 +43,7 @@ import {
 } from '../../../../constants'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { areFormValuesChanged } from 'igz-controls/utils/form.util'
-import { getChipOptions } from '../../../../utils/getChipOptions'
+import { getChipOptions } from 'igz-controls/utils/chips.util'
 import {
   getValidationRules,
   getInternalLabelsValidationRule

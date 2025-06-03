@@ -19,24 +19,24 @@ such restriction.
 */
 import { cloneDeep, forEach, isEmpty, set } from 'lodash'
 
-import { page } from '../Jobs/jobs.util'
 import {
-  pollTask,
   BG_TASK_FAILED,
   BG_TASK_SUCCEEDED,
-  isBackgroundTaskRunning
+  isBackgroundTaskRunning,
+  pollTask
 } from '../../utils/poll.util'
-import tasksApi from '../../api/tasks-api'
-import projectsIguazioApi from '../../api/projects-iguazio-api'
-import { setNotification } from '../../reducers/notificationReducer'
-import { setAccessibleProjectsMap } from '../../reducers/projectReducer'
-import workflowsApi from '../../api/workflow-api'
 import {
   DETAILS_OVERVIEW_TAB,
   JOBS_MONITORING_PAGE,
   JOBS_MONITORING_WORKFLOWS_TAB,
   WORKFLOW_TYPE_SKIPPED
 } from '../../constants'
+import projectsIguazioApi from '../../api/projects-iguazio-api'
+import tasksApi from '../../api/tasks-api'
+import workflowsApi from '../../api/workflow-api'
+import { page } from '../Jobs/jobs.util'
+import { setAccessibleProjectsMap } from '../../reducers/projectReducer'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
 
 const DAG_WORFLOW_STEP = 'DAG'
 const SKIPPED_PHASE = 'Skipped'

@@ -35,10 +35,10 @@ import {
 import { detailsInfoActions, detailsInfoReducer, initialState } from './detailsInfoReducer'
 import { handleFinishEdit } from '../Details/details.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { setEditMode } from '../../reducers/detailsReducer'
+import { setEditMode } from 'igz-controls/reducers/commonDetailsReducer'
 
 const DetailsInfo = React.forwardRef(
-  ({ detailsStore, formState, isDetailsPopUp, pageData, selectedItem }, applyChangesRef) => {
+  ({ commonDetailsStore, formState, isDetailsPopUp, pageData, selectedItem }, applyChangesRef) => {
     const location = useLocation()
     const [detailsInfoState, detailsInfoDispatch] = useReducer(detailsInfoReducer, initialState)
     const params = useParams()
@@ -128,7 +128,7 @@ const DetailsInfo = React.forwardRef(
         dispatch(setEditMode(false))
 
         return handleFinishEdit(
-          detailsStore.changes,
+          commonDetailsStore.changes,
           detailsInfoActions,
           detailsInfoDispatch,
           currentField,
@@ -136,7 +136,7 @@ const DetailsInfo = React.forwardRef(
           dispatch
         )
       },
-      [detailsStore.changes, dispatch, formState]
+      [commonDetailsStore.changes, dispatch, formState]
     )
 
     return (
@@ -144,7 +144,7 @@ const DetailsInfo = React.forwardRef(
         additionalInfo={{ alerts, configuration, document_loader, drift, producer, sources }}
         detailsInfoDispatch={detailsInfoDispatch}
         detailsInfoState={detailsInfoState}
-        detailsStore={detailsStore}
+        commonDetailsStore={commonDetailsStore}
         formState={formState}
         handleDiscardChanges={handleDiscardChanges}
         handleFinishEdit={finishEdit}
@@ -162,7 +162,7 @@ const DetailsInfo = React.forwardRef(
 DetailsInfo.displayName = 'DetailsInfo'
 
 DetailsInfo.propTypes = {
-  detailsStore: PropTypes.object.isRequired,
+  commonDetailsStore: PropTypes.object.isRequired,
   formState: PropTypes.object.isRequired,
   isDetailsPopUp: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,

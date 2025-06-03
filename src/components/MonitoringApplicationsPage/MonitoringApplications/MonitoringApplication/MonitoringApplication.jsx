@@ -22,12 +22,8 @@ import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import NoData from '../../../../common/NoData/NoData'
-import { Tip } from 'igz-controls/components'
 import SectionTable from '../../../../elements/SectionTable/SectionTable'
-
-import { removeMonitoringApplication } from '../../../../reducers/monitoringApplicationsReducer'
-import { removeArtifacts } from '../../../../reducers/artifactsReducer'
-import { FILES_PAGE, NAME_FILTER } from '../../../../constants'
+import { Tip } from 'igz-controls/components'
 
 import {
   generateArtifactsTableContent,
@@ -35,7 +31,10 @@ import {
   generateResultsTableContent,
   generateShardsStatusTableContent
 } from './MonitoringApplication.util'
+import { FILES_PAGE, NAME_FILTER } from '../../../../constants'
 import { MONITORING_APPLICATIONS_NO_DATA_MESSAGE } from '../../MonitoringApplicationsPage.util'
+import { removeArtifacts } from '../../../../reducers/artifactsReducer'
+import { removeMonitoringApplication } from '../../../../reducers/monitoringApplicationsReducer'
 
 import './monitoringApplication.scss'
 

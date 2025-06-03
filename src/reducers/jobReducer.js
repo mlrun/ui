@@ -31,7 +31,7 @@ import {
 } from '../constants'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 import functionsApi from '../api/functions-api'
-import { showErrorNotification } from '../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { getNewJobErrorMsg } from '../components/JobWizard/JobWizard.util'
 
 const initialState = {

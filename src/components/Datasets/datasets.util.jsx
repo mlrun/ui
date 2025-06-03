@@ -25,17 +25,15 @@ import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifa
 import {
   ARTIFACT_MAX_DOWNLOAD_SIZE,
   DATASET_TYPE,
-  DATASETS_PAGE,
-  FULL_VIEW_MODE
+  DATASETS_PAGE
 } from '../../constants'
-import { PRIMARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON, FULL_VIEW_MODE } from 'igz-controls/constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
-import { copyToClipboard } from '../../utils/copyToClipboard'
 import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { generateUri } from '../../utils/resources'
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
-import { openPopUp, openDeleteConfirmPopUp } from 'igz-controls/utils/common.util'
+import { openPopUp, openDeleteConfirmPopUp, copyToClipboard } from 'igz-controls/utils/common.util'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
 
 import TagIcon from 'igz-controls/images/tag-icon.svg?react'

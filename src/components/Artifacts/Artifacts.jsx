@@ -21,17 +21,13 @@ such restriction.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { chain, isEmpty, isNil } from 'lodash'
 import PropTypes from 'prop-types'
 
+import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import ArtifactsView from './ArtifactsView'
+import DeployModelPopUp from '../../elements/DeployModelPopUp/DeployModelPopUp'
 
-import { getViewMode } from '../../utils/helper'
-import { getSavedSearchParams, transformSearchParams } from '../../utils/filter.util'
-import { getFiltersConfig } from './artifacts.util'
-import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
-import { useRefreshAfterDelete } from '../../hooks/useRefreshAfterDelete.hook'
-import { getCloseDetailsLink, isDetailsTabExists } from '../../utils/link-helper.util'
-import { openPopUp } from 'igz-controls/utils/common.util'
 import {
   ALL_VERSIONS_PATH,
   BE_PAGE,
@@ -44,18 +40,21 @@ import {
   TAG_FILTER,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
-import { toggleYaml } from '../../reducers/appReducer'
-import { chain, isEmpty, isNil } from 'lodash'
-import { fetchArtifactsFunctions, fetchArtifactTags } from '../../reducers/artifactsReducer'
-import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
-import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
-import DeployModelPopUp from '../../elements/DeployModelPopUp/DeployModelPopUp'
-import { setNotification } from '../../reducers/notificationReducer'
-import { usePagination } from '../../hooks/usePagination.hook'
 import { checkForSelectedArtifact, setFullSelectedArtifact } from '../../utils/artifacts.util'
-import { getFeatureVectorData } from '../ModelsPage/Models/models.util'
+import { fetchArtifactsFunctions, fetchArtifactTags } from '../../reducers/artifactsReducer'
 import { fetchModelFeatureVector } from '../../reducers/detailsReducer'
+import { getCloseDetailsLink, isDetailsTabExists } from '../../utils/link-helper.util'
+import { getFeatureVectorData } from '../ModelsPage/Models/models.util'
+import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
+import { getFiltersConfig } from './artifacts.util'
+import { getSavedSearchParams, transformSearchParams } from 'igz-controls/utils/filter.util'
+import { openPopUp, getViewMode } from 'igz-controls/utils/common.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { toggleYaml } from '../../reducers/appReducer'
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { useMode } from '../../hooks/mode.hook'
+import { usePagination } from '../../hooks/usePagination.hook'
+import { useRefreshAfterDelete } from '../../hooks/useRefreshAfterDelete.hook'
 
 const Artifacts = ({
   actionButtons = [],

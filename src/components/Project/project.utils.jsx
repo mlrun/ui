@@ -24,7 +24,7 @@ import JobWizard from '../JobWizard/JobWizard'
 import { ARTIFACT_TYPE, DATASET_TYPE } from '../../constants'
 import { PRIMARY_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 import Jupyter from 'igz-controls/images/jupyter.svg?react'
 import VSCode from 'igz-controls/images/vs-code.svg?react'

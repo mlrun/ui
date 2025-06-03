@@ -88,7 +88,7 @@ const ActionBar = ({
     internalAutoRefreshIsEnabled
   )
   const filtersStore = useSelector(store => store.filtersStore)
-  const changes = useSelector(store => store.detailsStore.changes)
+  const changes = useSelector(store => store.commonDetailsStore.changes)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const params = useParams()
