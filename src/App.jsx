@@ -124,6 +124,9 @@ const WorkflowsMonitoring = lazyRetry(
 )
 const Documents = lazyRetry(() => import('./components/Documents/Documents'))
 const LLMPrompts = lazyRetry(() => import('./components/LLMPrompts/LLMPrompts'))
+const ApplicationMetrics = lazyRetry(
+  () => import('./components/ApplicationMetrics/ApplicationMetrics')
+)
 
 const MonitoringApplicationsPage = lazyRetry(
   () => import('./components/MonitoringApplicationsPage/MonitoringApplicationsPage')
@@ -335,6 +338,14 @@ const App = () => {
           ].map((path, index) => (
             <Fragment key={index}>
               <Route path={path} element={<Files isAllVersions={[2, 3].includes(index)} />} />
+            </Fragment>
+          ))}
+          {[
+            `projects/:projectName/monitoring-app/:appName/${MODEL_ENDPOINTS_TAB}`,
+            `projects/:projectName/monitoring-app/:appName/${MODEL_ENDPOINTS_TAB}/:id`
+          ].map((path, index) => (
+            <Fragment key={index}>
+              <Route path={path} element={<ApplicationMetrics />} />
             </Fragment>
           ))}
           <Route
