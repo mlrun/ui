@@ -378,16 +378,17 @@ const JobWizard = ({
             setShowSchedule(state => !state)
           }
           resolveModal()
-          onSuccessRequest && onSuccessRequest()
-          dispatch(
-            setNotification({
-              status: 200,
-              id: Math.random(),
-              message: 'Job saved successfully'
-            })
-          )
+
+          return onSuccessRequest && onSuccessRequest()
         })
         .then(() => {
+          dispatch(
+              setNotification({
+                status: 200,
+                id: Math.random(),
+                message: 'Job saved successfully'
+              })
+          )
           navigate(`/projects/${params.projectName}/jobs/${SCHEDULE_TAB}${window.location.search}`)
         })
         .catch(error => {
@@ -472,9 +473,7 @@ const JobWizard = ({
               formState={formState}
               id="jobWizard"
               isWizardOpen={isOpen}
-              onWizardResolve={() => {
-                handleCloseModal()
-              }}
+              onWizardResolve={handleCloseModal}
               previewText={isBatchInference ? 'Tech Preview' : ''}
               size={MODAL_MAX}
               stepsConfig={getStepsConfig(formState)}

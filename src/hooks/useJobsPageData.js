@@ -196,7 +196,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
       setScheduledJobs([])
       abortControllerRef.current = new AbortController()
 
-      dispatch(
+      return dispatch(
         fetchScheduledJobs({
           project: filters.project ? filters.project.toLowerCase() : params.projectName || '*',
           filters,
