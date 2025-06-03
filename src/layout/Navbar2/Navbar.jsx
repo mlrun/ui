@@ -50,6 +50,7 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
   )
   const [isShowProjectsList, setShowProjectsList] = useState(false)
   const [searchValue, setSearchValue] = useState('')
+  const [selectedIndex, setSelectedIndex] = useState(null)
 
   const { pathname } = useLocation()
   const params = useParams()
@@ -153,10 +154,10 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
       <div className="navbar__body">
         <ul className="navbar-links">
           {links.map(
-            link =>
+            (link, index) =>
               !link.hidden && (
                 <li className="nav-link" data-testid={`nav-link-${link.id}`} key={link.id}>
-                  <NavbarLink {...link} />
+                  <NavbarLink {...link} index={index} setSelectedIndex={setSelectedIndex} selectedIndex={selectedIndex} />
                   {link.nestedLinks && (
                     <ul className="navbar-links navbar-links_nested">
                       {link.nestedLinks.map(nestedLink => (

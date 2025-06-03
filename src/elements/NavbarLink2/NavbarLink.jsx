@@ -27,15 +27,23 @@ import ArrowIcon from 'igz-controls/images/arrow.svg?react'
 import './NavbarLink.scss'
 
 
-const NavbarLink = ({ externalLink = false, icon = null, label, link = '', ...props }) => {
-  const [isExpanded, setIsExpanded] = useState(false)
+const NavbarLink = ({ externalLink = false, icon = null, index = null, label, link = '', selectedIndex = null, setSelectedIndex, ...props }) => {
   const { pathname } = useLocation()
 
   const parentLinkClasses = classNames(
     'nav-link__button btn nav-link__parent',
     pathname.includes(props.id || link) && 'active',
-    isExpanded && 'expended'
+    index === selectedIndex && 'expended'
   )
+
+  const handleExpanded = () => {
+    if (index !== selectedIndex) {
+      setSelectedIndex && setSelectedIndex(index)
+    } else {
+      setSelectedIndex && setSelectedIndex(null)
+    }
+
+  }
 
   return externalLink ? (
     <a href={link} target="_top" className="nav-link__button btn">
@@ -43,7 +51,7 @@ const NavbarLink = ({ externalLink = false, icon = null, label, link = '', ...pr
       <span className="nav-link__label">{label}</span>
     </a>
   ) : props.nestedLinks ? (
-    <div onClick={() => setIsExpanded(prevState => !prevState)} className={parentLinkClasses}>
+    <div onClick={handleExpanded} className={parentLinkClasses}>
       <span className="nav-link__icon">{icon}</span>
       <span className="nav-link__label">{label}</span>
 
@@ -52,7 +60,7 @@ const NavbarLink = ({ externalLink = false, icon = null, label, link = '', ...pr
       </span>
     </div>
   ) : (
-    <NavLink to={link} className="nav-link__button btn" activeclassname="active">
+    <NavLink to={link} onClick={handleExpanded} className="nav-link__button btn" activeclassname="active">
       <span className="nav-link__icon">{icon}</span>
       <span className="nav-link__label">{label}</span>
     </NavLink>
@@ -63,9 +71,12 @@ NavbarLink.propTypes = {
   externalLink: PropTypes.bool,
   icon: PropTypes.object,
   id: PropTypes.string,
+  index: PropTypes.number,
   label: PropTypes.string.isRequired,
   link: PropTypes.string,
-  nestedLinks: PropTypes.array
+  nestedLinks: PropTypes.array,
+  selectedIndex: PropTypes.number,
+  setSelectedIndex: PropTypes.func,
 }
 
 export default React.memo(NavbarLink)
