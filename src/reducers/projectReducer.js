@@ -262,7 +262,7 @@ export const fetchProjectSummary = createAsyncThunk(
 )
 export const fetchProjects = createAsyncThunk(
   'fetchProjects',
-  ({ params, setRequestErrorMessage = () => {} }, thunkAPI) => {
+  ({ params, setRequestErrorMessage = () => {}, showNotification = true }, thunkAPI) => {
     setRequestErrorMessage('')
 
     return projectsApi
@@ -271,14 +271,17 @@ export const fetchProjects = createAsyncThunk(
         return parseProjects(response.data.projects)
       })
       .catch(error => {
-        showErrorNotification(
-          thunkAPI.dispatch,
-          error,
-          'Failed to fetch projects',
-          null,
-          null,
-          setRequestErrorMessage
-        )
+        if (showNotification) {
+          showErrorNotification(
+            thunkAPI.dispatch,
+            error,
+            'Failed to fetch projects',
+            null,
+            null,
+            setRequestErrorMessage
+          )
+        }
+
         return thunkAPI.rejectWithValue(error)
       })
   }
