@@ -19,7 +19,7 @@ such restriction.
 */
 import { By } from 'selenium-webdriver'
 
-module.exports = function (textAreaStructure) {
+export default (textAreaStructure) => {
   const element = {}
   element.root = By.css(textAreaStructure.root)
   element.inputField = By.css(`${textAreaStructure.root} ${textAreaStructure.elements.input}`)

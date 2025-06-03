@@ -86,7 +86,7 @@ const functionsTable = {
   }
 }
 
-module.exports = {
+export default {
   mlFunctions: {
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(

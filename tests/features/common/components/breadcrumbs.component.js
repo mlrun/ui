@@ -17,10 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-const { By } = require('selenium-webdriver')
-const inputWithAutocomplete = require('./input-with-autocomplete.component')
+import { By } from 'selenium-webdriver'
+import inputWithAutocomplete from './input-with-autocomplete.component'
 
-module.exports = {
+export default {
   root: By.css('nav.breadcrumbs'),
   projectsPageLabel: By.css('.breadcrumbs__item:nth-of-type(1)'),
   projectLabel: By.css('.breadcrumbs__item:nth-of-type(3)'),

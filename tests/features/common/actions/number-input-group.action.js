@@ -17,21 +17,18 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-const action = {
-  incrementValue: async function(driver, inputGroup, value) {
+export const incrementValue = async (driver, inputGroup, value) => {
     const inc_btn = await driver.findElement(inputGroup.inc_btn)
     for (let i = 0; i < value; i++) {
       await inc_btn.click()
       await driver.sleep(100)
     }
-  },
-  decrementValue: async function(driver, inputGroup, value) {
+  }
+
+export const decrementValue = async (driver, inputGroup, value) => {
     const dec_btn = await driver.findElement(inputGroup.dec_btn)
     for (let i = 0; i < value; i++) {
       await dec_btn.click()
       await driver.sleep(100)
     }
   }
-}
-
-module.exports = action

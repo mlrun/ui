@@ -19,7 +19,7 @@ such restriction.
 */
 import { By } from 'selenium-webdriver'
 
-module.exports = function(labelStructure) {
+export default function(labelStructure) {
   const element = {}
   element.root = By.css(labelStructure.root)
   element.label = By.css(

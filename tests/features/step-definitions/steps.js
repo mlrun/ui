@@ -821,14 +821,14 @@ When(
       pageObjects[wizardName][dropdownName],
       optionValue
     )
-    await this.driver.sleep(200)
+    await this.driver.sleep(1000)
     await pickUpCustomDatetimeRange(
       this.driver,
       pageObjects[wizardName][datetimePicker],
       fromDatetime,
       toDatetime
     )
-    await this.driver.sleep(200)
+    await this.driver.sleep(1000)
     await applyDatetimePickerRange(
       this.driver,
       pageObjects[wizardName][datetimePicker]
