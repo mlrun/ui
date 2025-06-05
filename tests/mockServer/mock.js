@@ -471,6 +471,24 @@ function createProjectsFeatureSet(req, res) {
   res.send(featureSet)
 }
 
+function updateProjectsFeatureSet(req, res) {
+  let featureSet = req.body
+
+  featureSet.metadata.updated = new Date().toISOString()
+
+  const featureSetIndex = featureSets.feature_sets.findIndex(
+    featureSetItem =>
+      req.params.project === featureSetItem.metadata.project &&
+      req.params.name === featureSetItem.metadata.name &&
+      req.params.tag === featureSetItem.metadata.tag &&
+      featureSet.metadata.uid === featureSetItem.metadata.uid
+  )
+
+  featureSets.feature_sets[featureSetIndex] = featureSet
+
+  res.send(featureSet)
+}
+
 function deleteFeatureSet(req, res) {
   const collecledFeatureSet = featureSets.feature_sets
     .filter(featureSet => featureSet.metadata.project === req.params.project)
@@ -1248,6 +1266,18 @@ function invokeSchedule(req, res) {
   res.send(respTemplate)
 }
 
+function updateSchedule(req, res) {
+  const existingScheduledJobIndex = schedules.schedules.find(
+    schedule =>
+      schedule.name === req.params.schedule &&
+      schedule.project === req.body.scheduled_object.task.metadata.project
+  )
+
+  existingScheduledJobIndex.scheduled_object = req.body.scheduled_object
+
+  return res.send()
+}
+
 function getProjectsFeaturesEntities(req, res) {
   const artifact = req.path.substring(req.path.lastIndexOf('/') + 1)
   let collectedArtifacts = []
@@ -1436,8 +1466,7 @@ function getArtifacts(req, res) {
         break
       default:
         collectedArtifacts = collectedArtifacts.filter(
-          artifact =>
-            artifact.metadata?.tag === req.query['tag'] || artifact.tag === req.query['tag']
+          artifact => artifact.metadata?.tag === req.query['tag']
         )
         break
     }
@@ -2211,24 +2240,36 @@ function deleteTags(req, res) {
 
 function getArtifact(req, res) {
   let resData
-  let requestedArtifact = artifacts.artifacts.find(
-    artifact =>
+  let artifactMatchedByUID = null
+  let requestedArtifact = artifacts.artifacts.find(artifact => {
+    if (
+      !isNil(req.query.uid) &&
+      (artifact.metadata?.project === req.params.project ||
+        artifact.project === req.params.project) &&
+      (artifact.spec?.db_key === req.params.key || artifact?.db_key === req.params.key) &&
+      artifact.metadata?.uid === req.query.uid
+    ) {
+      artifactMatchedByUID = artifact
+    }
+
+    return (
       (artifact.metadata?.project === req.params.project ||
         artifact.project === req.params.project) &&
       (artifact.spec?.db_key === req.params.key || artifact?.db_key === req.params.key) &&
       (isNil(req.query.iter) ||
         +req.query.iter === artifact?.iter ||
         +req.query.iter === artifact.metadata?.iter) &&
-      (isNil(req.query.tag) ||
-        artifact.metadata?.tag === req.query.tag ||
-        artifact?.tag === req.query.tag) &&
+      (isNil(req.query.tag) || artifact.metadata?.tag === req.query.tag) &&
       (isNil(req.query.tree) ||
         artifact.metadata?.tree === req.query.tree ||
         artifact?.tree === req.query.tree) &&
       (isNil(req.query.uid) ||
         artifact.metadata?.uid === req.query.uid ||
         artifact?.uid === req.query.uid)
-  )
+    )
+  })
+
+  requestedArtifact = requestedArtifact ?? artifactMatchedByUID
 
   if (requestedArtifact) {
     resData = requestedArtifact
@@ -2755,7 +2796,7 @@ app.get(`${mlrunAPIIngress}/projects/:project/feature-sets`, getFeatureSet)
 app.post(`${mlrunAPIIngress}/projects/:project/feature-sets`, createProjectsFeatureSet)
 app.put(
   `${mlrunAPIIngress}/projects/:project/feature-sets/:name/references/:tag`,
-  createProjectsFeatureSet
+  updateProjectsFeatureSet
 )
 app.delete(`${mlrunAPIIngress}/projects/:project/feature-sets/:featureSet`, deleteFeatureSet)
 
@@ -2803,6 +2844,7 @@ app.get(`${mlrunAPIIngress}/projects/*/schedules`, getProjectsSchedules)
 app.get(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, getProjectsSchedule)
 app.delete(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, deleteSchedule)
 app.post(`${mlrunAPIIngress}/projects/:project/schedules/:schedule/invoke`, invokeSchedule)
+app.put(`${mlrunAPIIngress}/projects/:project/schedules/:schedule/`, updateSchedule)
 
 app.get(`${mlrunAPIIngress}/projects/:project/pipelines`, getPipelines)
 app.get(`${mlrunAPIIngress}/projects/*/pipelines`, getPipelines)
