@@ -65,7 +65,7 @@ import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.
 import {
   isWorkflowStepExecutable,
   handleTerminateWorkflow,
-  checkIfUserIsReadOnly
+  fetchMissingProjectsPermissions
 } from '../../components/Workflow/workflow.util'
 import { openPopUp, getScssVariableValue } from 'igz-controls/utils/common.util'
 import { parseFunction } from '../../utils/parseFunction'
@@ -110,13 +110,16 @@ const WorkflowsTable = React.forwardRef(
     const location = useLocation()
     const fetchJobFunctionsPromiseRef = useRef()
     let fetchFunctionLogsTimeout = useRef(null)
-    const [isReadOnlyUser, setIsReadOnlyUser] = useState(false)
+    const readOnlyProjectsMap = useSelector(state => state.projectStore.readOnlyProjectsMap)
+    const [permissionsLoading, setPermissionsLoading] = useState(false)
 
     useEffect(() => {
-      checkIfUserIsReadOnly(params.projectName).then(result => {
-        setIsReadOnlyUser(result)
+      const projectNames = workflowsStore.workflows.data.map(w => w.project)
+      setPermissionsLoading(true)
+      fetchMissingProjectsPermissions(projectNames, readOnlyProjectsMap, dispatch).then(() => {
+        setPermissionsLoading(false)
       })
-    }, [params.projectName])
+    }, [dispatch, workflowsStore.workflows.data, readOnlyProjectsMap])
 
     const monitorWorkflowsRowHeight = useMemo(
       () => getScssVariableValue('--monitorWorkflowsRowHeight'),
@@ -478,7 +481,7 @@ const WorkflowsTable = React.forwardRef(
           handleConfirmAbortJob,
           handleConfirmDeleteJob,
           handleConfirmTerminateWorkflow,
-          isReadOnlyUser,
+          readOnlyProjectsMap,
           toggleConvertedYaml,
           handleRerun,
           rerunIsDisabled
@@ -490,7 +493,7 @@ const WorkflowsTable = React.forwardRef(
       handleConfirmAbortJob,
       handleConfirmDeleteJob,
       handleConfirmTerminateWorkflow,
-      isReadOnlyUser,
+      readOnlyProjectsMap,
       toggleConvertedYaml,
       handleRerun,
       rerunIsDisabled
@@ -751,7 +754,7 @@ const WorkflowsTable = React.forwardRef(
 
     return (
       <>
-        {workflowsStore.workflows.loading && <Loader />}
+        {(workflowsStore.workflows.loading || permissionsLoading) && <Loader />}
         {workflowsStore.workflows.loading ? null : (!workflowsStore.workflows.loading &&
             !params.workflowId &&
             workflowsStore.workflows.data.length === 0) ||
@@ -774,7 +777,6 @@ const WorkflowsTable = React.forwardRef(
                 backLink={backLink}
                 handleCancel={handleCancel}
                 handleConfirmTerminateWorkflow={handleConfirmTerminateWorkflow}
-                isReadOnlyUser={isReadOnlyUser}
                 itemIsSelected={itemIsSelected}
                 pageData={pageData}
                 selectedFunction={selectedFunction}

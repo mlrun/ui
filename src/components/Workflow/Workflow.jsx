@@ -36,7 +36,7 @@ import {
   getWorkflowSourceHandle
 } from '../../common/ReactFlow/mlReactFlow.util'
 import {
-  checkIfUserIsReadOnly,
+  fetchMissingProjectPermission,
   getWorkflowDetailsLink,
   getWorkflowMonitoringDetailsLink,
   isWorkflowStepCondition,
@@ -63,6 +63,7 @@ import { createJobsWorkflowContent } from '../../utils/createJobsContent'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { useMode } from '../../hooks/mode.hook'
 import { useSortTable } from '../../hooks/useSortTable.hook'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Cancel from 'igz-controls/images/cancel.svg?react'
 import ListView from 'igz-controls/images/listview.svg?react'
@@ -89,7 +90,13 @@ const Workflow = ({
   const params = useParams()
   const navigate = useNavigate()
   const { isStagingMode } = useMode()
-  const [isReadOnlyUser, setIsReadOnlyUser] = useState(false)
+  const projectName = params.workflowProjectName || params.projectName
+  const dispatch = useDispatch()
+  const readOnlyProjectsMap = useSelector(state => state.projectStore.readOnlyProjectsMap)
+
+  useEffect(() => {
+    fetchMissingProjectPermission(projectName, readOnlyProjectsMap, dispatch)
+  }, [dispatch, projectName, readOnlyProjectsMap])
 
   const graphViewClassNames = classnames(
     'graph-view',
@@ -119,10 +126,6 @@ const Workflow = ({
     content: tableContent,
     sortConfig: { defaultSortBy: 'startedAt' }
   })
-
-  useEffect(() => {
-    checkIfUserIsReadOnly(params.projectName).then(setIsReadOnlyUser)
-  }, [params.projectName])
 
   useEffect(() => {
     const newEdges = []
@@ -255,7 +258,7 @@ const Workflow = ({
               </button>
             </Tooltip>
           </div>
-          {!isReadOnlyUser && (
+          {!readOnlyProjectsMap[projectName] && (
             <Button
               className="workflow_btn"
               disabled={workflow?.run?.status !== FUNCTION_RUNNING_STATE}

@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-
 import { cloneDeep, forEach, isEmpty, set } from 'lodash'
 
 import { page } from '../Jobs/jobs.util'
@@ -29,6 +28,7 @@ import {
   WORKFLOW_TYPE_SKIPPED
 } from '../../constants'
 import { setNotification } from '../../reducers/notificationReducer'
+import { setReadOnlyProjectsMap } from '../../reducers/projectReducer'
 
 const DAG_WORFLOW_STEP = 'DAG'
 const SKIPPED_PHASE = 'Skipped'
@@ -255,17 +255,35 @@ export const handleTerminateWorkflow = (job, dispatch) => {
     })
   )
 }
+export const fetchMissingProjectsPermissions = async (projectNames, currentMap, dispatch) => {
+  const uniqueProjects = [...new Set(projectNames)]
+  const missingProjects = uniqueProjects.filter(name => !(name in currentMap))
+  if (missingProjects.length === 0) return
 
-/**
- * Checks if the user is read-only in the current project (based on owner permissions).
- * @param {string} projectName
- * @returns {Promise<boolean>} true if user is read-only
- */
-export const checkIfUserIsReadOnly = async projectName => {
+  const newMap = Object.fromEntries(
+    await Promise.all(
+      missingProjects.map(async name => {
+        try {
+          await projectsIguazioApi.getProjectOwnerVisibility(name)
+          return [name, false]
+        } catch {
+          return [name, true]
+        }
+      })
+    )
+  )
+
+  const mergedMap = { ...currentMap, ...newMap }
+  dispatch(setReadOnlyProjectsMap(mergedMap))
+}
+
+export const fetchMissingProjectPermission = async (projectName, currentMap, dispatch) => {
+  if (projectName in currentMap) return
+
   try {
     await projectsIguazioApi.getProjectOwnerVisibility(projectName)
-    return false
+    dispatch(setReadOnlyProjectsMap({ [projectName]: false }))
   } catch {
-    return true
+    dispatch(setReadOnlyProjectsMap({ [projectName]: true }))
   }
 }

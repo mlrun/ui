@@ -50,6 +50,7 @@ const initialState = {
     isUnhealthy: false,
     retrying: false
   },
+  readOnlyProjectsMap: {},
   project: {
     data: null,
     error: null,
@@ -374,6 +375,12 @@ const projectStoreSlice = createSlice({
     },
     setProjectTotalAlerts(state, action) {
       state.projectTotalAlerts = { ...action.payload }
+    },
+    setReadOnlyProjectsMap(state, action) {
+      state.readOnlyProjectsMap = {
+        ...state.readOnlyProjectsMap,
+        ...action.payload
+      }
     }
   },
   extraReducers: builder => {
@@ -576,7 +583,8 @@ export const {
   setMlrunIsUnhealthy,
   setMlrunUnhealthyRetrying,
   setJobsMonitoringData,
-  setProjectTotalAlerts
+  setProjectTotalAlerts,
+  setReadOnlyProjectsMap
 } = projectStoreSlice.actions
 
 export default projectStoreSlice.reducer
