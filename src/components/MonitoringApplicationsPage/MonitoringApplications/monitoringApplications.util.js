@@ -21,7 +21,8 @@ import { capitalize } from 'lodash'
 import classnames from 'classnames'
 import moment from 'moment'
 
-import { formatDatetime, generateNuclioLink } from '../../../utils'
+import { generateNuclioLink } from '../../../utils'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
 
 export const generateOperatingFunctionsTable = functions => {
   const tableHeaders = [

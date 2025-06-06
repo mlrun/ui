@@ -22,8 +22,8 @@ import PropTypes from 'prop-types'
 
 import ArtifactsTable from './ArtifactsTable'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import Loader from '../../common/Loader/Loader'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
+import { Loader } from 'igz-controls/components'
 
 import './artifacts.scss'
 

@@ -22,12 +22,12 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
+import { Loader } from 'igz-controls/components'
 import ActionBar from '../ActionBar/ActionBar'
 import AlertsFilters from './AlertsFilters'
 import AlertsTable from '../../elements/AlertsTable/AlertsTable'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Pagination from '../../common/Pagination/Pagination'
-import Loader from '../../common/Loader/Loader'
 
 import { ALERTS_FILTERS, ALERTS_PAGE_PATH, MONITOR_ALERTS_PAGE } from '../../constants'
 import { createAlertRowData } from '../../utils/createAlertsContent'

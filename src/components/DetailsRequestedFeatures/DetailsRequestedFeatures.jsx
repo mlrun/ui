@@ -24,8 +24,12 @@ import { useDispatch } from 'react-redux'
 
 import DetailsRequestedFeaturesView from './DetailsRequestedFeaturesView'
 
+import {
+  setChanges,
+  setChangesCounter,
+  setChangesData
+} from 'igz-controls/reducers/commonDetailsReducer'
 import { countChanges } from '../Details/details.util'
-import { setChanges, setChangesCounter, setChangesData } from '../../reducers/detailsReducer'
 
 const DetailsRequestedFeatures = ({ changes, formState, isDetailsPopUp = false, selectedItem }) => {
   const [confirmDialogData, setConfirmDialogData] = useState({

@@ -32,11 +32,11 @@ import {
   PRIMARY_BUTTON,
   TERTIARY_BUTTON
 } from 'igz-controls/constants'
-import { deleteUnsafeHtml } from '../../utils'
+import { deleteUnsafeHtml } from 'igz-controls/utils/string.util'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
 import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { useDetectOutsideClick } from 'igz-controls/hooks'
 
 import { USER_ROLE } from '../../constants'

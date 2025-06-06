@@ -41,7 +41,7 @@ import {
   MODELS_PAGE
 } from '../../constants'
 import { parseKeyValues } from '../../utils'
-import { getChipOptions } from '../../utils/getChipOptions'
+import { getChipOptions } from 'igz-controls/utils/chips.util'
 
 import RightArrow from 'igz-controls/images/ic_arrow-right.svg?react'
 
@@ -58,7 +58,7 @@ const DetailsInfoView = React.forwardRef(
       },
       detailsInfoDispatch,
       detailsInfoState,
-      detailsStore,
+      commonDetailsStore,
       formState,
       handleDiscardChanges,
       handleFinishEdit,
@@ -71,8 +71,8 @@ const DetailsInfoView = React.forwardRef(
     ref
   ) => {
     const infoContent = useMemo(
-      () => (isDetailsPopUp ? detailsStore.detailsPopUpInfoContent : detailsStore.infoContent),
-      [detailsStore.infoContent, detailsStore.detailsPopUpInfoContent, isDetailsPopUp]
+      () => (isDetailsPopUp ? commonDetailsStore.detailsPopUpInfoContent : commonDetailsStore.infoContent),
+      [commonDetailsStore.infoContent, commonDetailsStore.detailsPopUpInfoContent, isDetailsPopUp]
     )
     const wrapperClassNames = classnames(
       !isEveryObjectValueEmpty(additionalInfo)
@@ -160,8 +160,8 @@ const DetailsInfoView = React.forwardRef(
                     chipsData.delimiter = <RightArrow />
                   }
 
-                  info = !isNil(detailsStore.changes.data[header.id])
-                    ? detailsStore.changes.data[header.id].currentFieldValue
+                  info = !isNil(commonDetailsStore.changes.data[header.id])
+                    ? commonDetailsStore.changes.data[header.id].currentFieldValue
                     : selectedItem && infoContent[header.id]?.value
                 } else if (pageData.page === FUNCTIONS_PAGE) {
                   info =
@@ -269,7 +269,7 @@ DetailsInfoView.propTypes = {
   }),
   detailsInfoDispatch: PropTypes.func.isRequired,
   detailsInfoState: PropTypes.object.isRequired,
-  detailsStore: PropTypes.object.isRequired,
+  commonDetailsStore: PropTypes.object.isRequired,
   formState: PropTypes.object,
   handleDiscardChanges: PropTypes.func.isRequired,
   handleFinishEdit: PropTypes.func.isRequired,

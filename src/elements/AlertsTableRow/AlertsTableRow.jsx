@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import DetailsAlertsMetrics from '../../components/DetailsDrillDownAlert/DetailsAlertsMetrics'
-import TableCell from '../TableCell/TableCell'
+import { TableCell } from 'igz-controls/components'
 
 import { ALERTS_PAGE } from '../../constants'
 import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
@@ -56,7 +56,7 @@ const AlertsTableRow = ({
             !value.hidden && (
               <React.Fragment key={value.id}>
                 <TableCell
-                  data={value}
+                  cellData={value}
                   className={className}
                   firstCell={index === 0}
                   item={rowItem.data}
@@ -90,7 +90,7 @@ AlertsTableRow.propTypes = {
   isRowSelected: PropTypes.bool,
   rowItem: PropTypes.object.isRequired,
   selectedItem: PropTypes.object.isRequired,
-  toggleRow: PropTypes.func,
+  toggleRow: PropTypes.func
 }
 
 export default AlertsTableRow

@@ -17,18 +17,18 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useRef } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
-import TableView from './TableView'
+import Details from '../Details/Details'
 
-import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../types'
-import { SORT_PROPS } from 'igz-controls/types'
 import { EMPTY_OBJECT } from '../../constants'
+import { FULL_VIEW_MODE } from 'igz-controls/constants'
+import { SORT_PROPS, VIRTUALIZATION_CONFIG, ACTIONS_MENU } from 'igz-controls/types'
+import { useTable } from 'igz-controls/hooks/useTable.hook'
 
-import './table.scss'
+import 'igz-controls/scss/table.scss'
 
 const Table = React.forwardRef(
   (
@@ -59,93 +59,60 @@ const Table = React.forwardRef(
     },
     ref
   ) => {
-    const tableRefLocal = useRef(null)
-    const tableBodyRefLocal = useRef(null)
-    const tableRef = ref?.tableRef ?? tableRefLocal
-    const tableBodyRef = ref?.tableBodyRef ?? tableBodyRefLocal
-    const tableContentRef = useRef(null)
-    const tablePanelRef = useRef(null)
-    const tableHeadRef = useRef(null)
-    const params = useParams()
-    const tableStore = useSelector(store => store.tableStore)
-
-    useEffect(() => {
-      const calculatePanelHeight = () => {
-        if (tableHeadRef?.current && tableContentRef?.current && tablePanelRef?.current) {
-          const tableContentHeight = tableContentRef.current.getBoundingClientRect().height
-          const tableHeadCords = tableHeadRef.current.getBoundingClientRect()
-          const panelHeight = window.innerHeight - tableHeadCords.top
-
-          tablePanelRef.current.style.height =
-            tableContentHeight > panelHeight
-              ? `${panelHeight}px`
-              : `${panelHeight - (panelHeight - tableContentHeight)}px`
-        }
-      }
-
-      if (tableStore.isTablePanelOpen && tablePanelRef.current) {
-        calculatePanelHeight()
-
-        document.getElementById('main-wrapper').addEventListener('scroll', calculatePanelHeight)
-        window.addEventListener('resize', calculatePanelHeight)
-      }
-      return () => {
-        window.removeEventListener('scroll', calculatePanelHeight)
-        window.removeEventListener('resize', calculatePanelHeight)
-      }
-    }, [tableStore.isTablePanelOpen])
-
-    const handleTableHScroll = useCallback(
-      e => {
-        if (tableRef.current) {
-          const tableScrollPosition = e.target.scrollLeft
-
-          if (tableScrollPosition > 0) {
-            tableRef.current.classList.add('table__scrolled')
-          } else {
-            tableRef.current.classList.remove('table__scrolled')
-          }
-        }
-      },
-      [tableRef]
-    )
-
-    useEffect(() => {
-      window.addEventListener('scroll', handleTableHScroll, true)
-
-      return () => window.removeEventListener('scroll', handleTableHScroll, true)
-    }, [handleTableHScroll])
+    const {
+      TableContainer,
+      tableBodyRef,
+      tableClass,
+      tableContentRef,
+      tableHeadRef,
+      tablePanelRef,
+      tableRef,
+      tableStore,
+      tableWrapperClass
+    } = useTable({
+      ref,
+      selectedItem,
+      skipTableWrapper,
+      tableClassName
+    })
 
     return (
-      <TableView
-        actionsMenu={actionsMenu}
-        applyDetailsChanges={applyDetailsChanges}
-        applyDetailsChangesCallback={applyDetailsChangesCallback}
-        detailsFormInitialValues={detailsFormInitialValues}
-        getCloseDetailsLink={getCloseDetailsLink}
-        handleCancel={handleCancel}
+      <TableContainer
         hideActionsMenu={hideActionsMenu}
-        isTablePanelOpen={tableStore.isTablePanelOpen}
         mainRowItemsCount={mainRowItemsCount}
         pageData={pageData}
-        params={params}
-        selectedItem={selectedItem}
-        skipTableWrapper={skipTableWrapper}
         sortProps={sortProps}
-        tab={tab}
-        tableRef={tableRef}
-        tableClassName={tableClassName}
         tableBodyRef={tableBodyRef}
-        tableContentRef={tableContentRef}
-        tableHeaders={tableHeaders}
+        tableClass={tableClass}
         tableHeadRef={tableHeadRef}
+        tableHeaders={tableHeaders}
         tablePanelRef={tablePanelRef}
-        viewMode={viewMode}
+        tableRef={tableRef}
+        tableStore={tableStore}
+        tableWrapperClass={tableWrapperClass}
         virtualizationConfig={virtualizationConfig}
-        withActionMenu={withActionMenu}
+        tableContentRef={tableContentRef}
+        renderDetails={() =>
+          !isEmpty(selectedItem) &&
+          viewMode !== FULL_VIEW_MODE && (
+            <Details
+              actionsMenu={actionsMenu}
+              applyDetailsChanges={applyDetailsChanges}
+              applyDetailsChangesCallback={applyDetailsChangesCallback}
+              detailsMenu={pageData.details.menu}
+              formInitialValues={detailsFormInitialValues}
+              getCloseDetailsLink={getCloseDetailsLink}
+              handleCancel={handleCancel}
+              pageData={pageData}
+              selectedItem={selectedItem}
+              tab={tab}
+              withActionMenu={withActionMenu}
+            />
+          )
+        }
       >
         {children}
-      </TableView>
+      </TableContainer>
     )
   }
 )

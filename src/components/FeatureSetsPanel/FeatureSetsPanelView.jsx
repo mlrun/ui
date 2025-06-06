@@ -26,9 +26,8 @@ import FeatureSetsPanelDataSource from './FeatureSetsPanelDataSource/FeatureSets
 import FeatureSetsPanelSchema from './FeatureSetsPanelSchema/FeatureSetsPanelSchema'
 import FeatureSetsPanelTargetStore from './FeatureSetsPanelTargetStore/FeatureSetsPanelTargetStore'
 import FeatureSetsPanelTitle from './FeatureSetsPanelTitle/FeatureSetsPanelTitle'
-import Loader from '../../common/Loader/Loader'
 import PanelCredentialsAccessKey from '../../elements/PanelCredentialsAccessKey/PanelCredentialsAccessKey'
-import { Button, ConfirmDialog } from 'igz-controls/components'
+import { Button, ConfirmDialog, Loader } from 'igz-controls/components'
 
 import { PRIMARY_BUTTON, TERTIARY_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { setNewFeatureSetCredentialsAccessKey } from '../../reducers/featureStoreReducer'

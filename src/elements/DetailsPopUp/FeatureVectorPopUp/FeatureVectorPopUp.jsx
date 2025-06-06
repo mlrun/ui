@@ -24,7 +24,7 @@ import PropTypes from 'prop-types'
 
 import DetailsPopUp from '../DetailsPopUp'
 
-import { showErrorNotification } from '../../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { parseFeatureVectors } from '../../../utils/parseFeatureVectors'
 import {
   generateActionsMenu,

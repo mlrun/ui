@@ -27,11 +27,10 @@ import FunctionsFilters from './FunctionsFilters'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
 import HistoryBackLink from '../../common/HistoryBackLink/historyBackLink'
-import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Pagination from '../../common/Pagination/Pagination'
 import Table from '../Table/Table'
-import { ConfirmDialog } from 'igz-controls/components'
+import { ConfirmDialog, Loader } from 'igz-controls/components'
 
 import {
   FUNCTIONS_PAGE,
@@ -44,7 +43,7 @@ import { FILTERS_CONFIG } from '../../types'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { getSavedSearchParams } from '../../utils/filter.util'
+import { getSavedSearchParams } from 'igz-controls/utils/filter.util'
 import { isEmpty } from 'lodash'
 
 const FunctionsView = ({

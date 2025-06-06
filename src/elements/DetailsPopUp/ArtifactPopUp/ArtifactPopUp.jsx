@@ -25,7 +25,7 @@ import PropTypes from 'prop-types'
 import DetailsPopUp from '../DetailsPopUp'
 
 import { showArtifactErrorNotification } from '../../../utils/artifacts.util'
-import { getViewMode } from '../../../utils/helper'
+import { getViewMode } from 'igz-controls/utils/common.util'
 import {
   generateActionsMenu as generateFileActionsMenu,
   generatePageData as generateFilePageData

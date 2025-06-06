@@ -34,14 +34,15 @@ import {
   MODEL_ENDPOINTS_TAB,
   MLRUN_STORAGE_INPUT_PATH_SCHEME
 } from '../../constants'
-import { formatDatetime, parseKeyValues, parseUri } from '../../utils'
+import { parseKeyValues, parseUri } from '../../utils'
 import { getTriggerCriticalTimePeriod } from '../../utils/createAlertsContent'
-import { getChipOptions } from '../../utils/getChipOptions'
+import { getChipOptions } from 'igz-controls/utils/chips.util'
 import { getLimitsGpuType } from '../../elements/FormResourcesUnits/formResourcesUnits.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { roundFloats } from '../../utils/roundFloats'
+import { roundFloats } from 'igz-controls/utils/common.util'
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
 
 export const generateTriggerInfoContent = criteria => {
   if (criteria) {

@@ -25,7 +25,6 @@ import AlertsCounters from '../../elements/ProjectsMonitoringCounters/AlertsCoun
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
-import Loader from '../../common/Loader/Loader'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 import NoData from '../../common/NoData/NoData'
 import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
@@ -33,7 +32,7 @@ import ProjectDetailsHeader from '../../common/ProjectDetailsHeader/ProjectDetai
 import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
 import ProjectSummaryCard from '../../elements/ProjectSummaryCard/ProjectSummaryCard'
 import Select from '../../common/Select/Select'
-import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
+import { ConfirmDialog, RoundedIcon, Loader } from 'igz-controls/components'
 
 import { PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions, generateTipMessageForCounter } from './project.utils'

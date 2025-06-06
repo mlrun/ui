@@ -22,12 +22,12 @@ import PropTypes from 'prop-types'
 
 import ScheduleFeatureSetView from './ScheduleFeatureSetView'
 
-import { tabs } from './scheduleFeatureSet.util'
-import { initialState, recurringReducer, scheduleActionType } from './recurringReducer'
 import { decodeLocale, getWeekDays, getWeekStart } from '../../../utils/datePicker.util'
-import { getFormatTime } from '../../../utils'
 import { generateCronInitialValue } from '../../../utils/generateCronInitialValue'
 import { getDefaultSchedule } from '../../../utils/getDefaultSchedule'
+import { getFormatTime } from 'igz-controls/utils/datetime.util'
+import { initialState, recurringReducer, scheduleActionType } from './recurringReducer'
+import { tabs } from './scheduleFeatureSet.util'
 
 const ScheduleFeatureSet = ({ defaultCron = '', setNewFeatureSetSchedule, setShowSchedule }) => {
   const [activeTab, setActiveTab] = useState(tabs[0].id)
