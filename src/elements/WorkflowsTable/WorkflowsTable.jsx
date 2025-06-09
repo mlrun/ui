@@ -110,16 +110,19 @@ const WorkflowsTable = React.forwardRef(
     const location = useLocation()
     const fetchJobFunctionsPromiseRef = useRef()
     let fetchFunctionLogsTimeout = useRef(null)
-    const readOnlyProjectsMap = useSelector(state => state.projectStore.readOnlyProjectsMap)
+    const accessibleProjectsMap = useSelector(state => state.projectStore.accessibleProjectsMap)
     const [permissionsLoading, setPermissionsLoading] = useState(false)
 
     useEffect(() => {
-      const projectNames = workflowsStore.workflows.data.map(w => w.project)
+      const projectNames = workflowsStore.workflows.data.map(workflow => workflow.project)
       setPermissionsLoading(true)
-      fetchMissingProjectsPermissions(projectNames, readOnlyProjectsMap, dispatch).then(() => {
-        setPermissionsLoading(false)
-      })
-    }, [dispatch, workflowsStore.workflows.data, readOnlyProjectsMap])
+      projectNames &&
+        fetchMissingProjectsPermissions(projectNames, accessibleProjectsMap, dispatch).finally(
+          () => {
+            setPermissionsLoading(false)
+          }
+        )
+    }, [dispatch, workflowsStore.workflows.data, accessibleProjectsMap])
 
     const monitorWorkflowsRowHeight = useMemo(
       () => getScssVariableValue('--monitorWorkflowsRowHeight'),
@@ -457,7 +460,7 @@ const WorkflowsTable = React.forwardRef(
               setNotification({
                 status: 200,
                 id: Math.random(),
-                message: 'Workflow ran successfully.'
+                message: 'Workflow run successfully.'
               })
             )
           })
@@ -481,19 +484,20 @@ const WorkflowsTable = React.forwardRef(
           handleConfirmAbortJob,
           handleConfirmDeleteJob,
           handleConfirmTerminateWorkflow,
-          readOnlyProjectsMap,
+          accessibleProjectsMap,
           toggleConvertedYaml,
           handleRerun,
           rerunIsDisabled
         )
     }, [
       handleRerunJob,
-      appStore,
+      appStore.frontendSpec.jobs_dashboard_url,
+      appStore.frontendSpec.abortable_function_kinds,
       handleMonitoring,
       handleConfirmAbortJob,
       handleConfirmDeleteJob,
       handleConfirmTerminateWorkflow,
-      readOnlyProjectsMap,
+      accessibleProjectsMap,
       toggleConvertedYaml,
       handleRerun,
       rerunIsDisabled

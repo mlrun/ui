@@ -20,16 +20,15 @@ such restriction.
 import React, { useEffect, useState, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { forEach, isEmpty } from 'lodash'
+import { forEach, isEmpty, lowerCase } from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { Button } from 'igz-controls/components'
 import Details from '../Details/Details'
 import JobsFunctionsTableRow from './JobsFunctionsTableRow/JobsFunctionsTableRow'
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import Table from '../Table/Table'
 import TableTop from '../../elements/TableTop/TableTop'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Button, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import {
   getLayoutedElements,
@@ -92,11 +91,11 @@ const Workflow = ({
   const { isStagingMode } = useMode()
   const projectName = params.workflowProjectName || params.projectName
   const dispatch = useDispatch()
-  const readOnlyProjectsMap = useSelector(state => state.projectStore.readOnlyProjectsMap)
+  const accessibleProjectsMap = useSelector(state => state.projectStore.accessibleProjectsMap)
 
   useEffect(() => {
-    fetchMissingProjectPermission(projectName, readOnlyProjectsMap, dispatch)
-  }, [dispatch, projectName, readOnlyProjectsMap])
+    fetchMissingProjectPermission(projectName, accessibleProjectsMap, dispatch)
+  }, [dispatch, projectName, accessibleProjectsMap])
 
   const graphViewClassNames = classnames(
     'graph-view',
@@ -231,7 +230,7 @@ const Workflow = ({
   return (
     <div className="workflow-container">
       <TableTop link={backLink} text={workflow?.run?.name.replace(`${params.projectName}-`, '')}>
-        <div className="workflow_btn-container">
+        <div className="workflow__actions-container">
           <div className="actions">
             <Tooltip
               template={
@@ -258,14 +257,14 @@ const Workflow = ({
               </button>
             </Tooltip>
           </div>
-          {!readOnlyProjectsMap[projectName] && (
+          {accessibleProjectsMap[projectName] && (
             <Button
               className="workflow_btn"
-              disabled={workflow?.run?.status !== FUNCTION_RUNNING_STATE}
+              disabled={lowerCase(workflow?.run?.status) !== FUNCTION_RUNNING_STATE}
               variant="danger"
               icon={<Cancel />}
               label="Terminate"
-              onClick={() => handleConfirmTerminateWorkflow(workflow?.run)}
+              onClick={() => handleConfirmTerminateWorkflow(workflow?.run, dispatch)}
             />
           )}
         </div>

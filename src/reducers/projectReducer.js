@@ -50,7 +50,7 @@ const initialState = {
     isUnhealthy: false,
     retrying: false
   },
-  readOnlyProjectsMap: {},
+  accessibleProjectsMap: {},
   project: {
     data: null,
     error: null,
@@ -379,9 +379,9 @@ const projectStoreSlice = createSlice({
     setProjectTotalAlerts(state, action) {
       state.projectTotalAlerts = { ...action.payload }
     },
-    setReadOnlyProjectsMap(state, action) {
-      state.readOnlyProjectsMap = {
-        ...state.readOnlyProjectsMap,
+    setAccessibleProjectsMap(state, action) {
+      state.accessibleProjectsMap = {
+        ...state.accessibleProjectsMap,
         ...action.payload
       }
     }
@@ -587,7 +587,7 @@ export const {
   setMlrunUnhealthyRetrying,
   setJobsMonitoringData,
   setProjectTotalAlerts,
-  setReadOnlyProjectsMap
+  setAccessibleProjectsMap
 } = projectStoreSlice.actions
 
 export default projectStoreSlice.reducer

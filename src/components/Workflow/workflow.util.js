@@ -20,15 +20,23 @@ such restriction.
 import { cloneDeep, forEach, isEmpty, set } from 'lodash'
 
 import { page } from '../Jobs/jobs.util'
+import {
+  pollTask,
+  BG_TASK_FAILED,
+  BG_TASK_SUCCEEDED,
+  isBackgroundTaskRunning
+} from '../../utils/poll.util'
+import tasksApi from '../../api/tasks-api'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
+import { setNotification } from '../../reducers/notificationReducer'
+import { setAccessibleProjectsMap } from '../../reducers/projectReducer'
+import workflowsApi from '../../api/workflow-api'
 import {
   DETAILS_OVERVIEW_TAB,
   JOBS_MONITORING_PAGE,
   JOBS_MONITORING_WORKFLOWS_TAB,
   WORKFLOW_TYPE_SKIPPED
 } from '../../constants'
-import { setNotification } from '../../reducers/notificationReducer'
-import { setReadOnlyProjectsMap } from '../../reducers/projectReducer'
 
 const DAG_WORFLOW_STEP = 'DAG'
 const SKIPPED_PHASE = 'Skipped'
@@ -245,36 +253,74 @@ export const parseWorkflow = workflow => {
   return newWorkflow
 }
 
-export const handleTerminateWorkflow = (job, dispatch) => {
-  //TODO: change when the server finish
-  return dispatch(
-    setNotification({
-      status: 200,
-      id: Math.random(),
-      message: `Workflow ${job.name} terminated successfully`
-    })
-  )
+export const handleTerminateWorkflow = async (job, dispatch) => {
+  try {
+    const response = await workflowsApi.terminateWorkflow(job.project, job.id)
+    const { data } = response
+
+    if (!isBackgroundTaskRunning(response)) {
+      dispatch(
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: `Failed to start termination for workflow "${job.name}"`
+        })
+      )
+      return
+    }
+
+    const taskId = data.metadata.name
+
+    const pollMethod = () => tasksApi.getProjectBackgroundTask(job.project, taskId)
+
+    const isDone = task => {
+      const state = task?.data?.status?.state
+      return [BG_TASK_SUCCEEDED, BG_TASK_FAILED].includes(state)
+    }
+
+    const finalResult = await pollTask(pollMethod, isDone)
+    const finalState = finalResult?.data?.status?.state
+
+    const success = finalState === BG_TASK_SUCCEEDED
+
+    dispatch(
+      setNotification({
+        status: success ? 200 : 400,
+        id: Math.random(),
+        message: `Workflow "${job.name}" ${success ? 'terminated successfully' : 'failed to terminate'}`
+      })
+    )
+  } catch {
+    dispatch(
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        message: `Workflow "${job.name} failed to terminate`
+      })
+    )
+  }
 }
+
 export const fetchMissingProjectsPermissions = async (projectNames, currentMap, dispatch) => {
   const uniqueProjects = [...new Set(projectNames)]
-  const missingProjects = uniqueProjects.filter(name => !(name in currentMap))
+  const missingProjects = uniqueProjects.filter(projectName => !(projectName in currentMap))
   if (missingProjects.length === 0) return
 
   const newMap = Object.fromEntries(
     await Promise.all(
-      missingProjects.map(async name => {
+      missingProjects.map(async projectName => {
         try {
-          await projectsIguazioApi.getProjectOwnerVisibility(name)
-          return [name, false]
+          await projectsIguazioApi.getProjectOwnerVisibility(projectName)
+          return [projectName, true]
         } catch {
-          return [name, true]
+          return [projectName, false]
         }
       })
     )
   )
 
   const mergedMap = { ...currentMap, ...newMap }
-  dispatch(setReadOnlyProjectsMap(mergedMap))
+  dispatch(setAccessibleProjectsMap(mergedMap))
 }
 
 export const fetchMissingProjectPermission = async (projectName, currentMap, dispatch) => {
@@ -282,8 +328,8 @@ export const fetchMissingProjectPermission = async (projectName, currentMap, dis
 
   try {
     await projectsIguazioApi.getProjectOwnerVisibility(projectName)
-    dispatch(setReadOnlyProjectsMap({ [projectName]: false }))
+    dispatch(setAccessibleProjectsMap({ [projectName]: true }))
   } catch {
-    dispatch(setReadOnlyProjectsMap({ [projectName]: true }))
+    dispatch(setAccessibleProjectsMap({ [projectName]: false }))
   }
 }
