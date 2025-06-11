@@ -110,6 +110,17 @@
     .pop-up-dialog {
       width: 100%;
       padding: 0;
+
+      .select__item {
+        svg {
+          width: 20px;
+          height: 20px;
+
+          path{
+            fill: colors.$topaz;
+          }
+        }
+      }
     }
   }
 

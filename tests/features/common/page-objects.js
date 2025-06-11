@@ -35,7 +35,7 @@ import documents from './page-objects/documents.po'
 import alerts from './page-objects/alerts.po'
 import monitoringApp from './page-objects/monitoring-app.po'
 
-module.exports = {
+export default {
   Add_To_Feature_Vector_Popup: interactivePopup['addToFeatureVectorPopup'],
   Add_To_Feature_Vector_Tab: featureStore['addToFeatureVector'],
   Add_Tag_Popup: interactivePopup['addTagPopup'],

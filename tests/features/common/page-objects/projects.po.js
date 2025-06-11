@@ -101,7 +101,7 @@ const ProjectsTableSelector = {
   }
 }
 
-module.exports = {
+export default {
   Retrieving_Projects_Message: By.css('[data-testid=no-data]'),
   No_Archived_Projects_Message: By.css('.no-filtered-data'),
   New_Project_Button: By.css(
@@ -115,7 +115,7 @@ module.exports = {
     '.projects__wrapper .projects-content-header .projects-content-header-item [data-testid="active"]'
   ),
   Archive_Projects_Button: By.css(
-    '.projects__wrapper .projects-content-header .projects-content-header-item [data-testid=archived] a'
+    '.projects__wrapper .projects-content-header .projects-content-header-item [data-testid=archived]'
   ),
   Projects_Sorter: By.css('.projects-content-header-item .sort .split-btn__button:nth-of-type(1)'),
   Projects_Sort_Dropdown: dropdownComponent(
@@ -274,7 +274,7 @@ module.exports = {
       '.stats-card:nth-of-type(4) [data-testid="alerts_application_counter stats__counter-large"] .stats__counter'
     ),
     Total_Application_Counter_Title: By.css(
-      '.stats-card:nth-of-type(4) [data-testid="alerts_application_counter"] .stats__subtitle'
+      '.stats-card:nth-of-type(4) [data-testid="alerts_application_counter stats__counter-large"] .stats__subtitle'
     ),
     Total_Alerts_Title: By.css(
       '.stats-card:nth-of-type(4) .stats-card__col > div > div > span'

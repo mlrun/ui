@@ -26,11 +26,14 @@ import NoData from '../../../common/NoData/NoData'
 import SectionTable from '../../../elements/SectionTable/SectionTable'
 import { Tip } from 'igz-controls/components'
 import ApplicationTableRow from '../../../elements/ApplicationTableRow/ApplicationTableRow'
+import MEPsWithDetections from './MEPsWithDetections'
 
 import { MONITORING_APPLICATIONS_NO_DATA_MESSAGE } from '../MonitoringApplicationsPage.util'
 import { generateOperatingFunctionsTable } from './monitoringApplications.util'
 import { createApplicationContent } from '../../../utils/createApplicationContent'
 import { removeMonitoringApplications } from '../../../reducers/monitoringApplicationsReducer'
+import { MODEL_ENDPOINTS_TAB, MONITORING_APP_PAGE } from '../../../constants'
+
 import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
 
 const MonitoringApplications = () => {
@@ -49,11 +52,11 @@ const MonitoringApplications = () => {
           id: 'open-metrics',
           label: 'Open metrics',
           icon: <PresentMetricsIcon />,
-          onClick: data => navigate(data.name)
+          onClick: data => navigate(`/projects/${params.projectName}/${MONITORING_APP_PAGE}/${data.name}/${MODEL_ENDPOINTS_TAB}${window.location.search}`)
         }
       ]
     ],
-    [navigate]
+    [navigate, params.projectName]
   )
   const operatingFunctionsTable = useMemo(
     () => generateOperatingFunctionsTable(operatingFunctions),
@@ -77,13 +80,7 @@ const MonitoringApplications = () => {
   return (
     <div className="monitoring-apps">
       <div className="monitoring-app__section section_small">
-        <div className="monitoring-app__section-item">
-          <div className="section-item_title">
-            <span>Controller calls</span>
-            <Tip text="The number of controller's calls to the monitoring apps" />
-          </div>
-          <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
-        </div>
+        <MEPsWithDetections />
         <div className="monitoring-app__section-item">
           <div className="section-item_title">
             <span>Operating functions</span>

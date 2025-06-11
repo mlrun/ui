@@ -23,8 +23,8 @@ import firefox from 'selenium-webdriver/firefox'
 import { setWorldConstructor, setDefaultTimeout } from '@cucumber/cucumber'
 import { timeout, browser, headless, screen_size } from '../../config'
 
-require('chromedriver')
-require('geckodriver')
+import 'chromedriver'
+import 'geckodriver'
 
 class World {
   constructor({ attach, log, parameters }) {

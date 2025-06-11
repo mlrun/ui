@@ -41,6 +41,7 @@ const Search = ({
   placeholder = '',
   searchWhileTyping = false,
   value = '',
+  withoutBorder = false,
   wrapperClassName = ''
 }) => {
   const [searchValue, setSearchValue] = useState(value ?? '')
@@ -112,6 +113,12 @@ const Search = ({
     }
   }
 
+  useEffect(() => {
+    if (searchValue.length > 0 && value !== searchValue) {
+      setSearchValue(value)
+    }
+  }, [searchValue, value])
+
   return (
     <div
       data-testid="search-container"
@@ -141,6 +148,7 @@ const Search = ({
           }
         }}
         value={searchValue}
+        withoutBorder={withoutBorder}
       />
       {matches.length > 0 && label.length > 0 && inputIsFocused && (
         <PopUpDialog
@@ -196,6 +204,7 @@ Search.propTypes = {
   placeholder: PropTypes.string,
   searchWhileTyping: PropTypes.bool,
   value: PropTypes.string,
+  withoutBorder: PropTypes.bool,
   wrapperClassName: PropTypes.string
 }
 

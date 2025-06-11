@@ -1153,7 +1153,7 @@ export const getNewJobErrorMsg = error => {
 }
 
 export const getSaveJobErrorMsg = error => {
-  return error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+  return error?.response?.status === FORBIDDEN_ERROR_STATUS_CODE
     ? 'You do not have permission to run a new job.'
     : getErrorDetail(error) || 'Unable to save the job.'
 }

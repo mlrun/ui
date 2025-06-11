@@ -53,13 +53,12 @@ const newJobTemplate = {
   }
 }
 
-const action = {
-  deleteAPIMLProject: async function(
+export const deleteAPIMLProject =  async (
     driver,
     mlProjectName,
     expectedStatusCode,
     deleteNonEmpty = false
-  ) {
+  ) => {
     await driver.sleep(1000)
     await mainHttpClient
       .delete(
@@ -75,7 +74,7 @@ const action = {
       })
       .catch(error => {
         if (error.response?.status === 412) {
-          action.deleteAPIMLProject(
+          deleteAPIMLProject(
             driver,
             mlProjectName,
             expectedStatusCode,
@@ -83,12 +82,13 @@ const action = {
           )
         }
       })
-  },
-  deleteAPIFeatureSet: async function(
+  }
+
+export const deleteAPIFeatureSet = async (
     projectName,
     featureSetName,
     expectedStatusCode
-  ) {
+  ) => {
     await mainHttpClient
       .delete(
         `${REACT_APP_MLRUN_API_URL}/projects/${projectName}/feature-sets/${featureSetName}`
@@ -96,12 +96,13 @@ const action = {
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
       })
-  },
-  deleteAPIFeatureVector: async function(
+  }
+
+export const deleteAPIFeatureVector = async (
     projectName,
     featureVectorName,
     expectedStatusCode
-  ) {
+  ) => {
     await mainHttpClient
       .delete(
         `${REACT_APP_MLRUN_API_URL}/projects/${projectName}/feature-vectors/${featureVectorName}`
@@ -109,12 +110,13 @@ const action = {
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
       })
-  },
-  deleteAPIFunction: async function(
+  }
+
+export const deleteAPIFunction = async (
     projectName,
     functionName,
     expectedStatusCode
-  ) {
+  ) => {
     await mainHttpClient
       .delete(
         `${REACT_APP_MLRUN_API_URL_V2}/projects/${projectName}/functions/${functionName}`
@@ -122,12 +124,13 @@ const action = {
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
       })
-  },
-  deleteAPISchedule: async function(
+  }
+
+export const deleteAPISchedule = async (
     projectName,
     scheduleName,
     expectedStatusCode
-  ) {
+  ) => {
     await mainHttpClient
       .delete(
         `${REACT_APP_MLRUN_API_URL}/projects/${projectName}/schedules/${scheduleName}`
@@ -135,12 +138,13 @@ const action = {
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
       })
-  },
-  deleteAPIArtifact: async function(
+  }
+
+export const deleteAPIArtifact = async (
     projectName,
     artifactName,
     expectedStatusCode
-  ) {
+  ) => {
     await mainHttpClient
       .delete(
         `${REACT_APP_MLRUN_API_URL}/artifacts?project=${projectName}&name=${artifactName}`
@@ -148,8 +152,9 @@ const action = {
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
       })
-  },
-  createAPIMLProject: async function(mlProjectName, expectedStatusCode) {
+  }
+
+export const createAPIMLProject = async (mlProjectName, expectedStatusCode) => {
     const project_data = {
       metadata: {
         name: mlProjectName
@@ -164,13 +169,13 @@ const action = {
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
       })
-  },
+  }
 
-  createAPISchedule: async function(
+export const createAPISchedule = async (
     mlProjectName,
     mlScheduleName,
     expectedStatusCode
-  ) {
+  ) => {
     const data = newJobTemplate
     data.task.metadata.name = mlScheduleName
     data.task.metadata.project = mlProjectName
@@ -180,14 +185,15 @@ const action = {
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
       })
-  },
-  createAPIFunction: async function(
+  }
+
+export const createAPIFunction = async (
     mlProjectName,
     mlFunctionKind,
     mlFunctionTag,
     mlFunctionName,
     expectedStatusCode
-  ) {
+  ) => {
     const data = {
       kind: mlFunctionKind,
       metadata: {
@@ -216,12 +222,13 @@ const action = {
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
       })
-  },
-  createAPIFeatureSet: async function(
+  }
+
+export const createAPIFeatureSet = async (
     mlProjectName,
     mlFeatureSetName,
     expectedStatusCode
-  ) {
+  ) => {
     const data = {
       kind: 'FeatureSet',
       metadata: {
@@ -244,12 +251,13 @@ const action = {
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
       })
-  },
-  createAPIFeatureVector: async function(
+  }
+
+export const createAPIFeatureVector = async (
     mlProjectName,
     mlFeatureVectorName,
     expectedStatusCode
-  ) {
+  ) => {
     const data = {
       kind: 'FeatureVector',
       metadata: {
@@ -270,19 +278,16 @@ const action = {
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
       })
-  },
-  createAPIArtifact: async function(
+  }
+
+export const createAPIArtifact = async (
     mlProjectName,
     mlArtifactName,
     mlArtifactTag,
     mlArtifactType,
     expectedStatusCode
-  ) {
+  ) => {
     const uid = uuidv4()
-    //TODO: description ML-4583
-    // const data = {
-    //   description: '',
-    // }
 
     const data = {
       kind: mlArtifactType === 'file' ? '' : mlArtifactType,
@@ -332,14 +337,10 @@ const action = {
       .then(res => {
         expect(res.status).equal(expectedStatusCode)
       })
-  },
-  getProjects: () => {
-    return mainHttpClient
-      .get(`${REACT_APP_MLRUN_API_URL}/projects`)
-      .then(res => {
-        return res.data.projects
-      })
   }
-}
 
-module.exports = action
+export const getProjects = async () => {
+    const res = await mainHttpClient.get(`${REACT_APP_MLRUN_API_URL}/projects`)
+  
+    return res.data.projects
+  }

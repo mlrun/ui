@@ -54,7 +54,7 @@ import MetricsIcon from 'igz-controls/images/metrics-icon.svg?react'
 
 import './DetailsMetrics.scss'
 
-const DetailsMetrics = ({ selectedItem }) => {
+const DetailsMetrics = ({ applicationNameProp = '', selectedItem, renderTitle = null }) => {
   const [metrics, setMetrics] = useState([])
   const [selectedDate, setSelectedDate] = useState('')
   const [previousTotalInvocation, setPreviousTotalInvocation] = useState(0)
@@ -118,12 +118,13 @@ const DetailsMetrics = ({ selectedItem }) => {
     dispatch(
       fetchModelEndpointMetrics({
         project: selectedItem.metadata.project,
-        uid: selectedItem.metadata.uid
+        uid: selectedItem.metadata.uid,
+        applicationName: applicationNameProp
       })
     )
       .unwrap()
       .then(() => setMetricOptionsAreLoaded(true))
-  }, [dispatch, selectedItem.metadata.project, selectedItem.metadata.uid])
+  }, [applicationNameProp, dispatch, selectedItem.metadata.project, selectedItem.metadata.uid])
 
   useEffect(() => {
     const selectedDate = detailsStore.dates.selectedOptionId
@@ -234,32 +235,36 @@ const DetailsMetrics = ({ selectedItem }) => {
 
   return (
     <div className="metrics-wrapper">
-      <div className="metrics-wrapper__custom-filters">
-        <MetricsSelector
-          name="metrics"
-          disabled={!hasMetricsList}
-          metrics={detailsStore.metricsOptions.all}
-          onSelect={metrics =>
-            dispatch(
-              setSelectedMetricsOptions({
-                endpointUid: selectedItem.metadata.uid,
-                metrics
-              })
-            )
-          }
-          preselectedMetrics={detailsStore.metricsOptions.preselected}
-        />
-        <DatePicker
-          className="details-date-picker"
-          date={detailsStore.dates.value[0]}
-          dateTo={detailsStore.dates.value[1]}
-          selectedOptionId={detailsStore.dates.selectedOptionId}
-          label=""
-          onChange={handleChangeDates}
-          type="date-range-time"
-          timeFrameLimit={TIME_FRAME_LIMITS.MONTH}
-          withLabels
-        />
+      <div className="metrics-wrapper__header">
+        {renderTitle && <h3 className="metrics-wrapper__header__title">{renderTitle()}</h3>}
+        <div className="metrics-wrapper__header__custom-filters">
+          <MetricsSelector
+            applicationName={applicationNameProp}
+            name="metrics"
+            disabled={!hasMetricsList}
+            metrics={detailsStore.metricsOptions.all}
+            onSelect={metrics =>
+              dispatch(
+                setSelectedMetricsOptions({
+                  endpointUid: selectedItem.metadata.uid,
+                  metrics
+                })
+              )
+            }
+            preselectedMetrics={detailsStore.metricsOptions.preselected}
+          />
+          <DatePicker
+            className="details-date-picker"
+            date={detailsStore.dates.value[0]}
+            dateTo={detailsStore.dates.value[1]}
+            selectedOptionId={detailsStore.dates.selectedOptionId}
+            label=""
+            onChange={handleChangeDates}
+            type="date-range-time"
+            timeFrameLimit={TIME_FRAME_LIMITS.MONTH}
+            withLabels
+          />
+        </div>
       </div>
       {generatedMetrics.length === 0 ? (
         !detailsStore.loadingCounter ? (
@@ -278,7 +283,7 @@ const DetailsMetrics = ({ selectedItem }) => {
             return (
               <React.Fragment key={applicationName}>
                 <div className="metrics__app-name">
-                  {applicationName === ML_RUN_INFRA ? '' : applicationName}
+                  {applicationName === ML_RUN_INFRA || applicationNameProp ? '' : applicationName}
                 </div>
                 {applicationMetrics.map(metric => {
                   if (applicationName === ML_RUN_INFRA) {
@@ -326,7 +331,9 @@ const DetailsMetrics = ({ selectedItem }) => {
 }
 
 DetailsMetrics.propTypes = {
-  selectedItem: PropTypes.object,
+  applicationNameProp: PropTypes.string,
+  selectedItem: PropTypes.object.isRequired,
+  renderTitle: PropTypes.func
 }
 
 export default React.memo(DetailsMetrics)

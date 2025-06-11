@@ -42,6 +42,7 @@ import {
   removeProjectData,
   removeProjectSummary
 } from '../../reducers/projectReducer'
+import { generateNuclioLink } from '../../utils'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
 import { fetchNuclioV3ioStreams } from '../../reducers/nuclioReducer'
 import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
@@ -111,9 +112,7 @@ const ProjectMonitor = () => {
       navigate,
       params,
       openRegisterArtifactModal,
-      openRegisterModelModal,
-      setCreateFeatureSetPanelIsOpen,
-      setIsNewFunctionPopUpOpen,
+      generateNuclioLink,
       isDemoMode
     )
 
