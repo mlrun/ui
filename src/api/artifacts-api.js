@@ -157,6 +157,34 @@ const artifactsApi = {
       newConfig.params.iter = iter
     }
 
+    // return Promise.resolve({
+    //   data: {
+    //     kind: 'dataset',
+    //     metadata: {
+    //       key: 'test3',
+    //       project: 'default',
+    //       tree: '3c9a5fe2-1ffc-4c4c-864b-a712a8899fe0',
+    //       description: '',
+    //       iter: null,
+    //       uid: 'c4dc3113a581a11ed69ef09258fdc0584d590f74',
+    //       updated: '2025-05-06 08:50:01.714000+00:00',
+    //       created: '2025-05-06 08:50:01.714000+00:00',
+    //       tag: 'latest'
+    //     },
+    //     spec: {
+    //       target_path: 'v3io:///asd/asd',
+    //       producer: {
+    //         kind: 'api',
+    //         name: 'UI',
+    //         uri: 'dashboard.default-tenant.app.vmdev63.lab.iguazeng.com'
+    //       },
+    //       db_key: 'test3'
+    //     },
+    //     status: {},
+    //     project: 'default'
+    //   }
+    // })
+
     return mainHttpClientV2.get(`/projects/${projectName}/artifacts/${artifactName}`, newConfig)
   },
   getArtifacts: (project, filters, config, withExactName) => {

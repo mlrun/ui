@@ -378,7 +378,7 @@ const commonTableTreeFilterDropdown = dropdownComponent(
   )
 )
 
-module.exports = {
+export default {
   featureSetsTab: {
     Table_FilterBy_Button: tableFilterByButton,
     Table_Refresh_Button: tableRefreshButton,

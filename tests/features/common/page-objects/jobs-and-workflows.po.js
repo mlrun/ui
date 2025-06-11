@@ -460,7 +460,7 @@ const commonCustomRangeFilter = dropdownComponent(
   )
 )
 
-module.exports = {
+export default {
   JobsMonitorTab: {
     Jobs_Tab_Selector: jobsTabSelector,
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,

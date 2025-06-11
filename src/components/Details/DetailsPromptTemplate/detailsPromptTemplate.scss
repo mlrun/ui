@@ -1,0 +1,42 @@
+@use 'igz-controls/scss/borders';
+
+.prompt-template {
+  .prompt-tab {
+    &__header {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+      padding-bottom: 10px;
+      background-color: white;
+    }
+
+    &__template {
+      max-height: 425px;
+      padding: 25px 15px;
+      overflow-y: scroll;
+      border: borders.$primaryBorder;
+      border-radius: 4px;
+    }
+
+    &__copy-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 135px;
+      padding: 11px 18px;
+      border: borders.$primaryBorder;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+
+      &-wrapper {
+        margin-left: 10px;
+      }
+
+      svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+}

@@ -278,7 +278,7 @@ const dateTimePickerCalendars = {
 const commonRefreshButton = By.css('[data-testid="refresh"]')
 const commonErrorMessage = By.css('[data-testid="no-data"] h3')
 
-module.exports = {
+export default {
   crossJobsMonitorTab: {
     Cross_Jobs_Tab_Selector: commonTable(tabSelector),
     Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),

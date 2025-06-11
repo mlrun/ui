@@ -23,6 +23,8 @@ import { Chart } from 'chart.js/auto'
 import Loader from '../Loader/Loader'
 import classnames from 'classnames'
 
+import './mlChart.scss'
+
 const defaultOnChartCreated = () => {}
 
 const MlChart = ({

@@ -169,7 +169,7 @@ const dateTimePickerCalendars = {
 
 const commonErrorMessage = By.css('[data-testid="no-data"] h3')
 
-module.exports = {
+export default {
   alertsMonitoring: {
     Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
     Refresh_Button: By.css('[data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]'),

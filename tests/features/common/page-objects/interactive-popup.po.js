@@ -37,8 +37,7 @@ import {
   generateCheckboxGroup
 } from '../../common-tools/common-tools'
 import inputWithAutocomplete from '../components/input-with-autocomplete.component'
-
-const { By } = require('selenium-webdriver')
+import { By } from 'selenium-webdriver'
 
 const memberOverviewLabelsTable = {
   root: '.settings__members',
@@ -717,7 +716,7 @@ const infoPaneOverviewSourcesHeaders = {
   }
 }
 
-module.exports = {
+export default {
   createNewProject: {
     Title: commonTitle,
     Name_Input: inputGroup(

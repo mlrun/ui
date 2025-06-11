@@ -26,7 +26,7 @@ import { setChartGradient } from './metricChart.util'
 
 import './metricChart.scss'
 
-const MetricChart = ({ config, isInvocationCardExpanded = false }) => {
+const MetricChart = ({ config, isInvocationCardExpanded = false, isInvocationChart = false }) => {
   const chartRef = useRef(null)
   const contextRef = useRef(null)
 
@@ -76,7 +76,7 @@ const MetricChart = ({ config, isInvocationCardExpanded = false }) => {
   )
 
   useEffect(() => {
-    if (chartRef?.current) {
+    if (chartRef?.current && isInvocationChart) {
       if (chartRef.current.options.scales.x.grid.display !== isInvocationCardExpanded) {
         chartRef.current.options.scales.x.grid.display = isInvocationCardExpanded
         chartRef.current.options.scales.y.grid.display = isInvocationCardExpanded
@@ -92,7 +92,7 @@ const MetricChart = ({ config, isInvocationCardExpanded = false }) => {
 
       chartRef.current.update()
     }
-  }, [backgroundColor, config.gradient, isInvocationCardExpanded])
+  }, [backgroundColor, config.gradient, isInvocationCardExpanded, isInvocationChart])
 
   return (
     <MlChart
@@ -107,6 +107,7 @@ const MetricChart = ({ config, isInvocationCardExpanded = false }) => {
 MetricChart.propTypes = {
   config: PropTypes.object.isRequired,
   isInvocationCardExpanded: PropTypes.bool,
+  isInvocationChart: PropTypes.bool
 }
 
 export default memo(MetricChart)
