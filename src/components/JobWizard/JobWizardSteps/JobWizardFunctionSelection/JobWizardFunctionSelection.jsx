@@ -280,7 +280,7 @@ const JobWizardFunctionSelection = ({
               prev[curr.metadata.name].functions.push(curr)
 
               return prev
-            }, {})
+            }, Object.create(null))
           )
 
           setFunctions(groupedFunctions)
