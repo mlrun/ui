@@ -21,6 +21,17 @@ import { cloneDeep, forEach, isEmpty, set } from 'lodash'
 
 import { page } from '../Jobs/jobs.util'
 import {
+  pollTask,
+  BG_TASK_FAILED,
+  BG_TASK_SUCCEEDED,
+  isBackgroundTaskRunning
+} from '../../utils/poll.util'
+import tasksApi from '../../api/tasks-api'
+import projectsIguazioApi from '../../api/projects-iguazio-api'
+import { setNotification } from '../../reducers/notificationReducer'
+import { setAccessibleProjectsMap } from '../../reducers/projectReducer'
+import workflowsApi from '../../api/workflow-api'
+import {
   DETAILS_OVERVIEW_TAB,
   JOBS_MONITORING_PAGE,
   JOBS_MONITORING_WORKFLOWS_TAB,
@@ -240,4 +251,85 @@ export const parseWorkflow = workflow => {
   })
 
   return newWorkflow
+}
+
+export const handleTerminateWorkflow = async (job, dispatch) => {
+  try {
+    const response = await workflowsApi.terminateWorkflow(job.project, job.id)
+    const { data } = response
+
+    if (!isBackgroundTaskRunning(response)) {
+      dispatch(
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: `Failed to start termination for workflow "${job.name}"`
+        })
+      )
+      return
+    }
+
+    const taskId = data.metadata.name
+
+    const pollMethod = () => tasksApi.getProjectBackgroundTask(job.project, taskId)
+
+    const isDone = task => {
+      const state = task?.data?.status?.state
+      return [BG_TASK_SUCCEEDED, BG_TASK_FAILED].includes(state)
+    }
+
+    const finalResult = await pollTask(pollMethod, isDone)
+    const finalState = finalResult?.data?.status?.state
+
+    const success = finalState === BG_TASK_SUCCEEDED
+
+    dispatch(
+      setNotification({
+        status: success ? 200 : 400,
+        id: Math.random(),
+        message: `Workflow "${job.name}" ${success ? 'terminated successfully' : 'failed to terminate'}`
+      })
+    )
+  } catch {
+    dispatch(
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        message: `Workflow "${job.name} failed to terminate`
+      })
+    )
+  }
+}
+
+export const fetchMissingProjectsPermissions = async (projectNames, currentMap, dispatch) => {
+  const uniqueProjects = [...new Set(projectNames)]
+  const missingProjects = uniqueProjects.filter(projectName => !(projectName in currentMap))
+  if (missingProjects.length === 0) return
+
+  const newMap = Object.fromEntries(
+    await Promise.all(
+      missingProjects.map(async projectName => {
+        try {
+          await projectsIguazioApi.getProjectOwnerVisibility(projectName)
+          return [projectName, true]
+        } catch {
+          return [projectName, false]
+        }
+      })
+    )
+  )
+
+  const mergedMap = { ...currentMap, ...newMap }
+  dispatch(setAccessibleProjectsMap(mergedMap))
+}
+
+export const fetchMissingProjectPermission = async (projectName, currentMap, dispatch) => {
+  if (projectName in currentMap) return
+
+  try {
+    await projectsIguazioApi.getProjectOwnerVisibility(projectName)
+    dispatch(setAccessibleProjectsMap({ [projectName]: true }))
+  } catch {
+    dispatch(setAccessibleProjectsMap({ [projectName]: false }))
+  }
 }
