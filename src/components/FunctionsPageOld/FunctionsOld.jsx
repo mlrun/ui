@@ -196,6 +196,8 @@ const Functions = () => {
               })
             }
           }
+        }).catch(() => {
+          setFunctions([])
         })
     },
     [
