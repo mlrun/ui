@@ -113,14 +113,18 @@ const SectionTable = ({ params, table }) => {
                                 )
                               })
                             ) : (
-                              <Tooltip template={<TextTooltipTemplate text={body[key].value} />}>
+                              <Tooltip template={<TextTooltipTemplate text={body[key].tooltip || body[key].value} />}>
                                 {body[key].value}
                               </Tooltip>
                             )}
                           </>
                         ) : (
                           <>
-                            <Tooltip template={<TextTooltipTemplate text={body[key].value} />}>
+                            <Tooltip
+                              template={
+                                <TextTooltipTemplate text={body[key].tooltip || body[key].value} />
+                              }
+                            >
                               {body[key].value}
                             </Tooltip>
                             {body[key].status && (

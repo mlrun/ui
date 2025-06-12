@@ -63,7 +63,7 @@ const initialState = {
           time: '2025-05-07T09:07:14+00:00',
           name: 'some_result',
           kind: 'data-drift',
-          status: 'Detection',
+          status: '2',
           value: 0.95
         },
         {

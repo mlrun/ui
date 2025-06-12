@@ -391,7 +391,7 @@ export const createDocumentsRowData = (artifact, project, isAllVersions) => {
   }
 }
 
-const getDriftStatusData = driftStatus => {
+export const getDriftStatusData = driftStatus => {
   switch (String(driftStatus)) {
     case '0':
     case 'NO_DRIFT':

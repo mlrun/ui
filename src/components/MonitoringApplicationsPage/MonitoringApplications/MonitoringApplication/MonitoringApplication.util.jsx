@@ -23,6 +23,7 @@ import { capitalize, isNumber } from 'lodash'
 import { parseChipsData } from '../../../../utils/convertChipsData'
 import { formatDatetime } from '../../../../utils'
 import { METRIC_TYPE, RESULT_TYPE } from '../../../../constants'
+import { getDriftStatusData } from '../../../../utils/createArtifactsContent'
 
 export const generateArtifactsTableContent = (artifacts = []) => {
   const tableHeaders = [
@@ -30,8 +31,8 @@ export const generateArtifactsTableContent = (artifacts = []) => {
       value: 'Name',
       className: 'table-cell_big'
     },
-    { value: 'Type', className: 'table-cell_medium' },
-    { value: 'Labels', className: 'table-cell_medium' },
+    { value: 'Type', className: 'table-cell_small' },
+    { value: 'Labels', className: 'table-cell_big' },
     { value: 'Producer', className: 'table-cell_small' },
     { value: 'Owner', className: 'table-cell_small' },
     { value: 'Updated', className: 'table-cell_medium' },
@@ -46,11 +47,11 @@ export const generateArtifactsTableContent = (artifacts = []) => {
       },
       artifactType: {
         value: artifact.kind || 'artifact',
-        className: 'table-cell_medium'
+        className: 'table-cell_small'
       },
       labels: {
         value: parseChipsData(artifact.labels),
-        className: 'table-cell_medium'
+        className: 'table-cell_big'
       },
       producer: {
         value: artifact.producer.name,
@@ -84,7 +85,7 @@ export const generateResultsTableContent = (metrics = []) => {
       className: 'table-cell_medium'
     },
     { value: 'Kind', className: 'table-cell_medium' },
-    { value: 'Value (latest result)', className: 'table-cell_medium' },
+    { value: 'Value (latest)', className: 'table-cell_medium' },
     { value: 'Time (latest result)', className: 'table-cell_medium' },
     { value: 'Status', className: 'table-cell_small' }
   ]
@@ -92,6 +93,8 @@ export const generateResultsTableContent = (metrics = []) => {
   const tableBody = metrics
     .filter(metric => metric.type === RESULT_TYPE)
     .map(result => {
+      const driftStatusData = getDriftStatusData(result.status)
+
       return {
         name: {
           value: capitalize(result.name),
@@ -110,8 +113,9 @@ export const generateResultsTableContent = (metrics = []) => {
           className: 'table-cell_medium'
         },
         status: {
-          value: result.status,
-          className: 'table-cell_small'
+          value: driftStatusData.value,
+          className: 'table-cell_small',
+          tooltip: driftStatusData.tooltip
         }
       }
     })
@@ -128,7 +132,7 @@ export const generateMetricsTableContent = (metrics = []) => {
       value: 'Name',
       className: 'table-cell_medium'
     },
-    { value: 'Value (latest result)', className: 'table-cell_medium' },
+    { value: 'Value (latest)', className: 'table-cell_medium' },
     { value: 'Time (latest result)', className: 'table-cell_medium' }
   ]
 
