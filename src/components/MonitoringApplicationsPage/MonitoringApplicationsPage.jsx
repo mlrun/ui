@@ -22,23 +22,22 @@ import { Outlet, useNavigate, useParams, useSearchParams } from 'react-router-do
 import { useDispatch, useSelector } from 'react-redux'
 
 import ActionBar from '../ActionBar/ActionBar'
-import Loader from '../../common/Loader/Loader'
-import TableTop from '../../elements/TableTop/TableTop'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import MonitoringApplicationCounters from './MonitoringApplications/MonitoringApplicationCounters/MonitoringApplicationCounters'
+import TableTop from '../../elements/TableTop/TableTop'
+import { Loader } from 'igz-controls/components'
 
-import { MODEL_ENDPOINTS_TAB, MONITORING_APP_PAGE } from '../../constants'
-import { getFiltersConfig } from './MonitoringApplicationsPage.util'
-import { showErrorNotification } from '../../utils/notifications.util'
-import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import {
   fetchMonitoringApplication,
   fetchMonitoringApplications,
   fetchMonitoringApplicationsSummary
 } from '../../reducers/monitoringApplicationsReducer'
-import { fetchArtifacts } from '../../reducers/artifactsReducer'
-
+import { MODEL_ENDPOINTS_TAB, MONITORING_APP_PAGE } from '../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
+import { fetchArtifacts } from '../../reducers/artifactsReducer'
+import { getFiltersConfig } from './MonitoringApplicationsPage.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 
 import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
 
@@ -130,7 +129,11 @@ const MonitoringApplicationsPage = () => {
                 label: 'Application metrics',
                 className: 'action-button',
                 hidden: !params.name,
-                onClick: () => {navigate(`/projects/${params.projectName}/${MONITORING_APP_PAGE}/${params.name}/${MODEL_ENDPOINTS_TAB}${window.location.search}`)},
+                onClick: () => {
+                  navigate(
+                    `/projects/${params.projectName}/${MONITORING_APP_PAGE}/${params.name}/${MODEL_ENDPOINTS_TAB}${window.location.search}`
+                  )
+                },
                 icon: <PresentMetricsIcon />
               }
             ]}

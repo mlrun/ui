@@ -31,6 +31,7 @@ import { ERROR_STATE, REQUEST_CANCELED } from '../../constants'
 import { fetchApiGateways, fetchNuclioFunctions } from '../../reducers/nuclioReducer'
 import { generateNuclioLink } from '../../utils'
 import { groupByUniqName } from '../../utils/groupByUniqName'
+import { typesOfJob } from '../../utils/jobs.util'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
 const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
@@ -159,6 +160,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
                       )
                     ? upperFirst(lowerCase(func.status.state))
                     : 'Building',
+            types: typesOfJob,
             className: funcClassName
           }
         }

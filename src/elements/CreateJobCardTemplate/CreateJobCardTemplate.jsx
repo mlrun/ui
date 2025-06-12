@@ -23,7 +23,7 @@ import classnames from 'classnames'
 
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { truncateUid } from '../../utils'
+import { truncateUid } from 'igz-controls/utils/string.util'
 
 import './createJobCardTemplate.scss'
 

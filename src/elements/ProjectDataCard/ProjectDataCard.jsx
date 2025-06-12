@@ -22,11 +22,10 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
-import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
 import SectionTable from '../SectionTable/SectionTable'
-import { Tip } from 'igz-controls/components'
+import { Tip, Loader } from 'igz-controls/components'
 
 const ProjectDataCard = ({
   content,

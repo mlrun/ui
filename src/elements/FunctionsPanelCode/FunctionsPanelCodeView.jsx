@@ -49,7 +49,7 @@ import {
 } from '../../reducers/functionReducer'
 import { FUNCTION_TYPE_SERVING, PANEL_EDIT_MODE } from '../../constants'
 import { LABEL_BUTTON } from 'igz-controls/constants'
-import { splitTrim, trimSplit } from '../../utils'
+import { splitTrim, trimSplit } from 'igz-controls/utils/string.util'
 
 import Edit from 'igz-controls/images/edit.svg?react'
 

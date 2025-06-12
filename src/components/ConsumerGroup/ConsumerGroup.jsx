@@ -22,13 +22,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { useParams } from 'react-router-dom'
 
-import Loader from '../../common/Loader/Loader'
+import ConsumerGroupShardLagTableRow from '../../elements/ConsumerGroupShardLagTableRow/ConsumerGroupShardLagTableRow'
 import NoData from '../../common/NoData/NoData'
 import PageHeader from '../../elements/PageHeader/PageHeader'
-import Table from '../Table/Table'
-import { RoundedIcon } from 'igz-controls/components'
-import ConsumerGroupShardLagTableRow from '../../elements/ConsumerGroupShardLagTableRow/ConsumerGroupShardLagTableRow'
 import Search from '../../common/Search/Search'
+import Table from '../Table/Table'
+import { RoundedIcon, Loader } from 'igz-controls/components'
 
 import {
   CONSUMER_GROUP_PAGE,
@@ -38,7 +37,7 @@ import createConsumerGroupContent from '../../utils/createConsumerGroupContent'
 import { fetchNuclioV3ioStreamShardLags, resetV3ioStreamShardLagsError } from '../../reducers/nuclioReducer.js'
 import { generatePageData } from './consumerGroup.util.js'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 import RefreshIcon from 'igz-controls/images/refresh.svg?react'
 

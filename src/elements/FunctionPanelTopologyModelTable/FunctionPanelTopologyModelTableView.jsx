@@ -22,10 +22,9 @@ import { map } from 'lodash'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
-import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import AddRouteRow from './AddRouteRow'
 import EditableRouteRow from './EditableRouteRow'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, ActionsMenu } from 'igz-controls/components'
 
 import { tableHeaders } from './functionPanelTopologyModelTable.util'
 

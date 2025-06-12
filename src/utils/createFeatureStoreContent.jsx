@@ -26,16 +26,16 @@ import FeatureSetPopUp from '../elements/DetailsPopUp/FeatureSetPopUp/FeatureSet
 import {
   FEATURE_STORE_PAGE,
   FEATURE_SETS_TAB,
-  FEATURE_VECTORS_TAB,
-  BUTTON_COPY_URI_CELL_TYPE
+  FEATURE_VECTORS_TAB
 } from '../constants'
-import { parseKeyValues } from './object'
-import { formatDatetime } from './datetime'
-import { generateUri } from './resources'
-import { truncateUid } from '../utils'
+import { BUTTON_COPY_URI_CELL_TYPE } from 'igz-controls/constants'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { generateLinkToDetailsPanel } from './link-helper.util'
-import { validateArguments } from './validateArguments'
+import { generateUri } from './resources'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { parseKeyValues } from './object'
+import { truncateUid } from 'igz-controls/utils/string.util'
+import { validateArguments } from './validateArguments'
 
 import Nosql from 'igz-controls/images/nosql.svg?react'
 import Stream from 'igz-controls/images/stream.svg?react'

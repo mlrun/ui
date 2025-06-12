@@ -32,9 +32,11 @@ import {
   LLM_PROMPTS_PAGE,
   MODEL_TYPE,
   MODELS_PAGE,
-  VIEW_SEARCH_PARAMETER
+  TAG_FILTER_ALL_ITEMS,
+  TAG_FILTER_LATEST,
+  ALL_VERSIONS_PATH
 } from '../constants'
-import { TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST, ALL_VERSIONS_PATH } from '../constants'
+import { VIEW_SEARCH_PARAMETER } from 'igz-controls/constants'
 import {
   deleteTag,
   editTag,
@@ -49,8 +51,8 @@ import { getArtifactIdentifier } from './getUniqueIdentifier'
 import { parseArtifacts } from './parseArtifacts'
 import { parseIdentifier } from './parseUri'
 import { setFilters, setModalFiltersValues } from '../reducers/filtersReducer'
-import { showErrorNotification } from './notifications.util'
-import { getFilteredSearchParams } from './filter.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
+import { getFilteredSearchParams } from 'igz-controls/utils/filter.util'
 import { generateObjectNotInTheListMessage } from './generateMessage.util'
 
 export const applyTagChanges = (changes, artifactItem, projectName, dispatch, setNotification) => {

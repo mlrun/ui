@@ -27,7 +27,7 @@ import { OptionsMenu, ValidationTemplate } from 'igz-controls/elements'
 import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import { checkPatternsValidity } from 'igz-controls/utils/validation.util'
 import { useDetectOutsideClick } from 'igz-controls/hooks'
-import { DENSITY_OPTIONS } from '../../types'
+import { DENSITY_OPTIONS } from 'igz-controls/types'
 
 import ExclamationMarkIcon from 'igz-controls/images/exclamation-mark.svg?react'
 import WarningIcon from 'igz-controls/images/warning.svg?react'

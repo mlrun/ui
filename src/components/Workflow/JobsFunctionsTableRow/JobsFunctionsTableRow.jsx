@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 
-import TableCell from '../../../elements/TableCell/TableCell'
+import { TableCell } from 'igz-controls/components'
 
 import { DETAILS_OVERVIEW_TAB } from '../../../constants'
 import { isWorkflowJobSelected } from '../workflow.util'
@@ -41,7 +41,7 @@ const JobsFunctionsTableRow = ({ handleSelectItem = () => {}, rowItem, selectedI
         return (
           !rowItemProp.hidden && (
             <TableCell
-              data={rowItemProp}
+              cellData={rowItemProp}
               item={rowItem.data}
               key={`${rowItem.data.id}.${rowItemProp.header}.${index}`}
               firstCell={index === 0}

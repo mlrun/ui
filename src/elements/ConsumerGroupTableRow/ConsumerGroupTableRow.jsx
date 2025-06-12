@@ -21,7 +21,7 @@ import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import TableCell from '../TableCell/TableCell'
+import { TableCell } from 'igz-controls/components'
 
 import { getV3ioStreamIdentifier } from '../../utils/getUniqueIdentifier'
 
@@ -38,7 +38,7 @@ const ConsumerGroupTableRow = ({ content, rowItem }) => {
         return (
           !rowItemProp.hidden && (
             <TableCell
-              data={rowItemProp}
+              cellData={rowItemProp}
               item={currentItem}
               key={rowItemProp.id}
               link={rowItemProp.getLink ? rowItemProp.getLink?.() : ''}

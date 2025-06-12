@@ -20,8 +20,7 @@ such restriction.
 import React from 'react'
 import classnames from 'classnames'
 
-import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
-import { RoundedIcon, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
+import { RoundedIcon, TextTooltipTemplate, Tooltip, CopyToClipboard } from 'igz-controls/components'
 import ArtifactPopUp from '../../elements/DetailsPopUp/ArtifactPopUp/ArtifactPopUp'
 import FeatureVectorPopUp from '../../elements/DetailsPopUp/FeatureVectorPopUp/FeatureVectorPopUp'
 

@@ -27,7 +27,7 @@ import ModalContainer from 'react-modal-promise'
 
 import Navbar from '../Navbar/Navbar'
 import YamlModal from '../../common/YamlModal/YamlModal'
-import Loader from '../../common/Loader/Loader'
+import { Loader } from 'igz-controls/components'
 
 import { getTransitionEndEventName } from 'igz-controls/utils/common.util'
 import { fetchFrontendSpec, toggleYaml } from '../../reducers/appReducer'
