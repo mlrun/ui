@@ -28,38 +28,33 @@ export const getJobsStatistics = (projectCounter, projectName) => {
   return {
     running: {
       value: projectCounter.error ? 'N/A' : projectCounter.data.runs_running_count,
-      label: 'Running jobs',
+      label: 'Running',
       className:
         projectCounter.error || projectCounter.data.runs_running_count === 0
           ? 'default'
           : 'running',
+      status: 'running',
       link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`
-    },
-    workflows: {
-      value: projectCounter.error ? 'N/A' : projectCounter.data.pipelines_running_count,
-      label: 'Running workflows',
-      className:
-        projectCounter.error || projectCounter.data.pipelines_running_count === 0
-          ? 'default'
-          : 'running',
-      link: `/projects/${projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`
     },
     failed: {
       value: projectCounter.error ? 'N/A' : projectCounter.data.runs_failed_recent_count,
       label: 'Failed',
       className:
-        projectCounter.data.runs_failed_recent_count > 0 && !projectCounter.error
-          ? 'failed'
-          : 'default',
-      counterTooltip: 'Past 24 hours',
+        projectCounter.error || projectCounter.data.runs_failed_recent_count === 0
+          ? 'default'
+          : 'failed',
+      status: 'failed',
       link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`
     },
-    scheduled: {
-      value: projectCounter.error ? 'N/A' : projectCounter.data.distinct_schedules_count,
-      label: 'Scheduled',
+    succeeded: {
+      value: projectCounter.error ? 'N/A' : projectCounter.data.runs_completed_recent_count,
+      label: 'Succeeded',
+      status: 'succeeded',
       className:
-        projectCounter.error || projectCounter.data.schedules_count === 0 ? 'default' : 'scheduled',
-      link: `/projects/${projectName}/jobs/${SCHEDULE_TAB}`
+        projectCounter.error || projectCounter.data.runs_failed_recent_count === 0
+          ? 'default'
+          : 'succeeded',
+      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`
     }
   }
 }
