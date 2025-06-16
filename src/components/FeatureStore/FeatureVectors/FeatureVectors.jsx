@@ -65,7 +65,6 @@ import { sortListByDate } from '../../../utils'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
-import { useMode } from '../../../hooks/mode.hook'
 import { useOpenPanel } from '../../../hooks/openPanel.hook'
 import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 
@@ -89,7 +88,6 @@ const FeatureVectors = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
-  const { isDemoMode } = useMode()
 
   const {
     createVectorPopUpIsOpen,
@@ -112,8 +110,8 @@ const FeatureVectors = () => {
     []
   )
   const pageData = useMemo(
-    () => generatePageData(selectedFeatureVector, isDemoMode),
-    [isDemoMode, selectedFeatureVector]
+    () => generatePageData(selectedFeatureVector),
+    [selectedFeatureVector]
   )
 
   const detailsFormInitialValues = useMemo(
