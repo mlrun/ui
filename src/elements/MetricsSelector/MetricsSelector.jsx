@@ -261,7 +261,7 @@ const MetricsSelector = ({
                         const renderMetrics = metricsList => {
                           return (
                             <ul className="metrics-selector-options">
-                              {metricsList.metrics.map(metricItem => {
+                              {metricsList?.metrics?.map(metricItem => {
                                 return (
                                   <SelectOption
                                     key={metricItem.id}
