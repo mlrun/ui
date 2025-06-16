@@ -547,3 +547,9 @@ div[id^='chartjs-tooltip'] {
     opacity: 1;
   }
 }
+
+/* =========== OVERRIDE ARTIFACT DIALOG ============= */
+
+.override-artifact-dialog {
+  z-index: 10;
+}

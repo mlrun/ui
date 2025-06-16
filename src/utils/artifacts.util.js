@@ -54,6 +54,10 @@ import { setFilters, setModalFiltersValues } from '../reducers/filtersReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { getFilteredSearchParams } from 'igz-controls/utils/filter.util'
 import { generateObjectNotInTheListMessage } from './generateMessage.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { ConfirmDialog } from 'igz-controls/components'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { createArtifactMessages } from './createArtifact.util'
 
 export const applyTagChanges = (changes, artifactItem, projectName, dispatch, setNotification) => {
   let updateTagMsg = 'Tag was updated'
@@ -115,6 +119,87 @@ export const applyTagChanges = (changes, artifactItem, projectName, dispatch, se
   } else {
     return updateTagPromise
   }
+}
+
+export const processActionAfterTagUniquesValidation = ({
+  tag = '',
+  artifact,
+  projectName,
+  dispatch,
+  actionCallback,
+  showLoader = () => {},
+  hideLoader = () => {},
+  getCustomErrorMsg = () => 'Failed to update a tag',
+  onErrorCallback,
+  throwError = false
+}) => {
+  showLoader()
+
+  if (tag === '') {
+    return actionCallback().finally(hideLoader)
+  }
+
+  const messagesByKind = createArtifactMessages[artifact.kind.toLowerCase()]
+
+  return artifactApi
+    .getExpandedArtifact(projectName, artifact.key, tag)
+    .then(response => {
+      if (response?.data) {
+        if (!isEmpty(response.data.artifacts)) {
+          return new Promise((resolve, _reject) => {
+            const reject = (...args) => {
+              hideLoader()
+
+              return _reject(...args)
+            }
+
+            openPopUp(ConfirmDialog, {
+              confirmButton: {
+                label: 'Overwrite',
+                variant: PRIMARY_BUTTON,
+                handler: () => {
+                  actionCallback().then(resolve).catch(reject).finally(hideLoader)
+                }
+              },
+              cancelButton: {
+                label: 'Cancel',
+                variant: TERTIARY_BUTTON,
+                handler: () => reject()
+              },
+              closePopUp: () => reject(),
+              header: messagesByKind.overwriteConfirmTitle,
+              message: messagesByKind.getOverwriteConfirmMessage(
+                response.data.artifacts[0].kind || ARTIFACT_TYPE
+              ),
+              className: 'override-artifact-dialog'
+            })
+          })
+        } else {
+          return actionCallback().finally(hideLoader)
+        }
+      }
+    })
+    .catch(error => {
+      if (error) {
+        showErrorNotification(dispatch, error, '', getCustomErrorMsg(error), () =>
+          processActionAfterTagUniquesValidation({
+            tag,
+            artifact,
+            projectName,
+            dispatch,
+            actionCallback,
+            getCustomErrorMsg,
+            onErrorCallback,
+            throwError
+          })
+        )
+      }
+
+      onErrorCallback?.()
+      hideLoader()
+      
+      if (throwError) throw error
+    })
 }
 
 export const isArtifactTagUnique = (projectName, category, artifact) => async value => {
