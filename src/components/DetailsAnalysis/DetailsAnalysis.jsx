@@ -27,7 +27,7 @@ import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 
 import { REQUEST_CANCELED } from '../../constants'
 import { fetchArtifactPreviewFromPath } from '../../utils/getArtifactPreview'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 const DetailsAnalysis = ({ artifact }) => {
   const [preview, setPreview] = useState([])
