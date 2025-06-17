@@ -63,7 +63,7 @@ export const infoHeaders = [
 
 export const registerDatasetTitle = 'Register dataset'
 
-export const generateDataSetsDetailsMenu = (selectedItem, isDemoMode) => [
+export const generateDataSetsDetailsMenu = (selectedItem) => [
   {
     label: 'overview',
     id: 'overview'
@@ -80,7 +80,7 @@ export const generateDataSetsDetailsMenu = (selectedItem, isDemoMode) => [
   {
     label: 'analysis',
     id: 'analysis',
-    hidden: !isDemoMode || !selectedItem?.extra_data
+    hidden: !selectedItem?.extra_data
   }
 ]
 
@@ -88,13 +88,12 @@ export const generatePageData = (
   viewMode,
   selectedItem,
   params,
-  isDetailsPopUp = false,
-  isDemoMode
+  isDetailsPopUp = false
 ) => {
   return {
     page: DATASETS_PAGE,
     details: {
-      menu: generateDataSetsDetailsMenu(selectedItem, isDemoMode),
+      menu: generateDataSetsDetailsMenu(selectedItem),
       infoHeaders,
       type: DATASETS_PAGE,
       hideBackBtn: viewMode === FULL_VIEW_MODE && !isDetailsPopUp,
