@@ -82,7 +82,11 @@ let ArtifactsTable = ({
           withRefreshButton
           withoutExpandButton
         >
-          <ArtifactsFilters artifacts={artifacts} isAllVersions={isAllVersions} />
+          <ArtifactsFilters
+            artifacts={artifacts}
+            filtersConfig={filtersConfig}
+            isAllVersions={isAllVersions}
+          />
         </ActionBar>
       </div>
       {isAllVersions &&

@@ -27,7 +27,12 @@ import Artifacts from '../Artifacts/Artifacts'
 import { LLM_PROMPT_TYPE, LLM_PROMPTS_PAGE } from '../../constants'
 import { createLLMPromptsRowData } from '../../utils/createArtifactsContent'
 import { fetchLLMPrompts, removeDataSets } from '../../reducers/artifactsReducer'
-import { generateActionsMenu, generatePageData, handleApplyDetailsChanges } from './llmPrompts.util'
+import {
+  generateActionsMenu,
+  generatePageData,
+  getFiltersConfig,
+  handleApplyDetailsChanges
+} from './llmPrompts.util'
 
 const LLMPrompts = ({ isAllVersions }) => {
   const artifactsStore = useSelector(store => store.artifactsStore)
@@ -47,6 +52,7 @@ const LLMPrompts = ({ isAllVersions }) => {
       generateActionsMenu={generateActionsMenu}
       generateDetailsFormInitialValues={generateDetailsFormInitialValues}
       generatePageData={generatePageData}
+      getArtifactFiltersConfig={getFiltersConfig}
       handleApplyDetailsChanges={handleApplyDetailsChanges}
       isAllVersions={isAllVersions}
       page={LLM_PROMPTS_PAGE}

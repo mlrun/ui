@@ -24,6 +24,8 @@ import {
   DATASET_TYPE,
   DOCUMENT_TYPE,
   // LLM_PROMPT_TYPE,
+  MODEL_NAME_FILTER,
+  MODEL_TAG_FILTER,
   MODEL_TYPE,
   SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS,
@@ -54,6 +56,10 @@ const fetchArtifacts = (project, filters, config = {}, withLatestTag, withExactN
 
   if (filters?.tree) {
     params.tree = filters.tree
+  }
+
+  if (filters?.[MODEL_NAME_FILTER]) {
+    params.parent = `${filters[MODEL_NAME_FILTER]}:${filters[MODEL_TAG_FILTER] || '*'}`
   }
 
   return mainHttpClientV2.get(`/projects/${project}/artifacts`, {
@@ -219,7 +225,7 @@ const artifactsApi = {
     //   ...config,
     //   params: { ...config.params, category: LLM_PROMPT_TYPE }
     // }
-
+    //
     // return fetchArtifacts(project, filters, newConfig, true)
     return Promise.resolve({
       data: {
