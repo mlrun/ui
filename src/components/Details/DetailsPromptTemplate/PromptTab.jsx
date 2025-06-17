@@ -17,51 +17,85 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
 
 import ContentMenu from '../../../elements/ContentMenu/ContentMenu'
 import SearchNavigator from '../../../common/SearchNavigator/SearchNavigator'
 import CopyToClipboard from '../../../common/CopyToClipboard/CopyToClipboard'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+
+import { ARGUMENTS_TAB } from '../../../constants'
 
 import Copy from 'igz-controls/images/copy-to-clipboard-icon.svg?react'
 
-const PromptTab = ({ handleTabChange, selectedTab, tabs }) => {
-  const [promptTemplate] = useState(
-    'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\n' +
-      '\n' +
-      'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\n' +
-      '\n' +
-      'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\n' +
-      '\n' +
-      'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\n' +
-      '\n' +
-      'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\n' +
-      '\n' +
-      'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\n' +
-      '\n' +
-      'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\n' +
-      '\n' +
-      'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\n' +
-      '\n' +
-      'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\n' +
-      '\n' +
-      'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.'
-  )
+const PromptTab = ({
+  handleTabChange,
+  selectedItem,
+  selectedTab,
+  setSelectedArgument,
+  setSelectedTab,
+  tabs
+}) => {
+  const [promptTemplate, setPromptTemplate] = useState([])
   const [searchResult, setSearchResult] = useState('')
+  const [rawPromptString, setRawPromptString] = useState('')
 
-  const createMarkup = html => {
-    return { __html: html }
-  }
+  useEffect(() => {
+    if (!isEmpty(selectedItem.prompt_string) && !isEmpty(selectedItem.prompt_legend)) {
+      const legendMap = Object.fromEntries(
+        selectedItem.prompt_legend.map(({ field, description }) => [field, description])
+      )
+
+      const regex = new RegExp(
+        `\\b(${selectedItem.prompt_legend.map(l => l.field).join('|')})\\b`,
+        'g'
+      )
+
+      const jsxContent = selectedItem.prompt_string.split(regex).map((part, index) => {
+        if (legendMap[part]) {
+          const currentArgument = selectedItem.prompt_legend.find(legend => legend.field === part)
+
+          return (
+            <Tooltip key={index} template={<TextTooltipTemplate text={legendMap[part]} />} textShow>
+              <span
+                key={index}
+                style={{ color: 'blue', cursor: 'pointer' }}
+                onClick={() => {
+                  setSelectedArgument(currentArgument)
+                  setSelectedTab(ARGUMENTS_TAB)
+                }}
+              >
+                {`{${part}}`}
+              </span>
+            </Tooltip>
+          )
+        }
+
+        return part
+      })
+
+      setPromptTemplate(jsxContent)
+      setRawPromptString(selectedItem.prompt_string)
+    } else if (!isEmpty(selectedItem.prompt_string)) {
+      setPromptTemplate([selectedItem.prompt_string])
+      setRawPromptString(selectedItem.prompt_string)
+    }
+  }, [selectedItem.prompt_string, selectedItem.prompt_legend, setSelectedArgument, setSelectedTab])
 
   return (
     <div className="prompt-tab">
       <div className="prompt-tab__header">
         <ContentMenu activeTab={selectedTab} fontSize="sm" onClick={handleTabChange} tabs={tabs} />
-        <SearchNavigator promptTemplate={promptTemplate} setSearchResult={setSearchResult} />
+        <SearchNavigator
+          promptTemplate={promptTemplate}
+          rawPromptString={rawPromptString}
+          setSearchResult={setSearchResult}
+        />
         <CopyToClipboard
           className="prompt-tab__copy-btn-wrapper"
-          textToCopy={promptTemplate}
+          textToCopy={selectedItem.prompt_string}
           tooltipText="Copy prompt"
         >
           <span className="prompt-tab__copy-btn">
@@ -70,10 +104,7 @@ const PromptTab = ({ handleTabChange, selectedTab, tabs }) => {
           </span>
         </CopyToClipboard>
       </div>
-      <div
-        className="prompt-tab__template"
-        dangerouslySetInnerHTML={createMarkup(searchResult || promptTemplate)}
-      ></div>
+      <div className="prompt-tab__template">{searchResult || promptTemplate}</div>
     </div>
   )
 }
@@ -81,6 +112,9 @@ const PromptTab = ({ handleTabChange, selectedTab, tabs }) => {
 PromptTab.propTypes = {
   handleTabChange: PropTypes.func.isRequired,
   selectedTab: PropTypes.string.isRequired,
+  selectedItem: PropTypes.object.isRequired,
+  setSelectedArgument: PropTypes.func.isRequired,
+  setSelectedTab: PropTypes.func.isRequired,
   tabs: PropTypes.array.isRequired
 }
 

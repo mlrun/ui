@@ -23,7 +23,7 @@ import {
   ARTIFACT_OTHER_TYPE,
   DATASET_TYPE,
   DOCUMENT_TYPE,
-  // LLM_PROMPT_TYPE,
+  LLM_PROMPT_TYPE,
   MODEL_TYPE,
   SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS,
@@ -157,34 +157,6 @@ const artifactsApi = {
       newConfig.params.iter = iter
     }
 
-    // return Promise.resolve({
-    //   data: {
-    //     kind: 'dataset',
-    //     metadata: {
-    //       key: 'test3',
-    //       project: 'default',
-    //       tree: '3c9a5fe2-1ffc-4c4c-864b-a712a8899fe0',
-    //       description: '',
-    //       iter: null,
-    //       uid: 'c4dc3113a581a11ed69ef09258fdc0584d590f74',
-    //       updated: '2025-05-06 08:50:01.714000+00:00',
-    //       created: '2025-05-06 08:50:01.714000+00:00',
-    //       tag: 'latest'
-    //     },
-    //     spec: {
-    //       target_path: 'v3io:///asd/asd',
-    //       producer: {
-    //         kind: 'api',
-    //         name: 'UI',
-    //         uri: 'dashboard.default-tenant.app.vmdev63.lab.iguazeng.com'
-    //       },
-    //       db_key: 'test3'
-    //     },
-    //     status: {},
-    //     project: 'default'
-    //   }
-    // })
-
     return mainHttpClientV2.get(`/projects/${projectName}/artifacts/${artifactName}`, newConfig)
   },
   getArtifacts: (project, filters, config, withExactName) => {
@@ -214,99 +186,13 @@ const artifactsApi = {
 
     return fetchArtifacts(project, filters, newConfig, true)
   },
-  getLLMPrompts: () => {
-    // const newConfig = {
-    //   ...config,
-    //   params: { ...config.params, category: LLM_PROMPT_TYPE }
-    // }
+  getLLMPrompts: (project, filters, config = {}) => {
+    const newConfig = {
+      ...config,
+      params: { ...config.params, category: LLM_PROMPT_TYPE }
+    }
 
-    // return fetchArtifacts(project, filters, newConfig, true)
-    return Promise.resolve({
-      data: {
-        artifacts: [
-          {
-            kind: 'dataset',
-            metadata: {
-              key: 'test3',
-              project: 'default',
-              tree: '3c9a5fe2-1ffc-4c4c-864b-a712a8899fe0',
-              description: '',
-              iter: null,
-              uid: 'c4dc3113a581a11ed69ef09258fdc0584d590f74',
-              updated: '2025-05-06 08:50:01.714000+00:00',
-              created: '2025-05-06 08:50:01.714000+00:00',
-              tag: 'latest'
-            },
-            status: {},
-            project: 'default',
-            spec: {
-              producer: {
-                kind: 'api',
-                name: 'UI',
-                uri: 'dashboard.default-tenant.app.vmdev63.lab.iguazeng.com'
-              },
-              db_key: 'test3',
-              target_path: 'v3io:///asd/asd'
-            }
-          },
-          {
-            kind: 'dataset',
-            metadata: {
-              key: 'test2',
-              project: 'default',
-              tree: '31fc16e0-ce4d-4076-baf3-53e29553bf44',
-              description: '',
-              iter: null,
-              uid: '28ac191a940dcada5f2c09117416db06c21f0b4a',
-              updated: '2025-05-06 08:49:15.869000+00:00',
-              created: '2025-05-06 08:49:15.869000+00:00',
-              tag: 'latest'
-            },
-            status: {},
-            project: 'default',
-            spec: {
-              producer: {
-                kind: 'api',
-                name: 'UI',
-                uri: 'dashboard.default-tenant.app.vmdev63.lab.iguazeng.com'
-              },
-              db_key: 'test2',
-              target_path: 'v3io:///hj/b'
-            }
-          },
-          {
-            kind: 'dataset',
-            metadata: {
-              key: 'test',
-              project: 'default',
-              tree: '10b8405b-366b-428f-a84a-ac1e3caf52e1',
-              description: '',
-              iter: null,
-              uid: '7ef62fca9189261fa2443bd3fd0ebef5f03f182d',
-              updated: '2025-04-24 09:53:08.584000+00:00',
-              created: '2025-04-24 09:53:08.584000+00:00',
-              tag: 'latest'
-            },
-            status: {},
-            project: 'default',
-            spec: {
-              producer: {
-                kind: 'api',
-                name: 'UI',
-                uri: 'localhost:3000'
-              },
-              db_key: 'test',
-              target_path: 's3://dfg/fg'
-            }
-          }
-        ],
-        pagination: {
-          page: 1,
-          'page-size': 1000,
-          'page-token': null
-        }
-      }
-    })
+    return fetchArtifacts(project, filters, newConfig, true)
   },
   getModels: (project, filters, config = {}) => {
     const newConfig = {

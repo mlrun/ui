@@ -75,7 +75,7 @@ const CopyToClipboard = ({
 }
 
 CopyToClipboard.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+  children: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.element]),
   className: PropTypes.string,
   disabled: PropTypes.bool,
   textToCopy: PropTypes.string,

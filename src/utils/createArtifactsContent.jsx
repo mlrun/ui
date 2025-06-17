@@ -43,6 +43,7 @@ import { validateArguments } from './validateArguments'
 import SeverityOk from 'igz-controls/images/severity-ok.svg?react'
 import SeverityWarning from 'igz-controls/images/severity-warning.svg?react'
 import SeverityError from 'igz-controls/images/severity-error.svg?react'
+import TableModelCell from '../elements/TableModelCell/TableModelCell'
 
 export const createArtifactsContent = (artifacts, page, pageTab, project, isAllVersions) => {
   return (artifacts.filter(artifact => !artifact.link_iteration) ?? []).map(artifact => {
@@ -630,6 +631,21 @@ export const createLLMPromptsRowData = (artifact, project, isAllVersions) => {
         getLink: tab =>
           getArtifactsDetailsLink(artifact, 'llm-prompts', tab, project, isAllVersions),
         showTag: true
+      },
+      {
+        id: `model.${artifact.ui.identifierUnique}`,
+        headerId: 'modelName',
+        headerLabel: 'Model name',
+        value: artifact.parent_uri || '',
+        template: (
+          <TableModelCell
+            bodyCellClassName="table-cell-1"
+            id="modelName"
+            modelUri={artifact.parent_uri}
+          />
+        ),
+        className: 'table-cell-1',
+        type: 'modelName'
       },
       {
         id: `labels.${artifact.ui.identifierUnique}`,

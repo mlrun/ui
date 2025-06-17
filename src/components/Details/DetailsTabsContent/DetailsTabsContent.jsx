@@ -42,9 +42,10 @@ import DetailsStatistics from '../../DetailsStatistics/DetailsStatistics'
 import DetailsTransformations from '../../DetailsTransformations/DetailsTransformations'
 import NoData from '../../../common/NoData/NoData'
 import DetailsCollections from '../../DetailsCollections/DetailsCollections'
+import DetailsPromptTemplate from '../DetailsPromptTemplate/DetailsPromptTemplate'
+import DetailsGenerationConfiguration from '../DetailsGenerationConfiguration/DetailsGenerationConfiguration'
 
 import { isJobKindDask, JOB_STEADY_STATES } from '../../Jobs/jobs.util'
-
 import {
   DETAILS_ALERT_APPLICATION,
   DETAILS_ALERTS_TAB,
@@ -56,6 +57,7 @@ import {
   DETAILS_DRIFT_ANALYSIS_TAB,
   DETAILS_FEATURES_ANALYSIS_TAB,
   DETAILS_FEATURES_TAB,
+  DETAILS_GENERATION_CONFIGURATION_TAB,
   DETAILS_INPUTS_TAB,
   DETAILS_LOGS_TAB,
   DETAILS_METADATA_TAB,
@@ -70,7 +72,6 @@ import {
   DETAILS_STATISTICS_TAB,
   DETAILS_TRANSFORMATIONS_TAB
 } from '../../../constants'
-import DetailsPromptTemplate from '../DetailsPromptTemplate/DetailsPromptTemplate'
 
 const DetailsTabsContent = ({
   applyChangesRef,
@@ -239,7 +240,9 @@ const DetailsTabsContent = ({
     case DETAILS_COLLECTIONS_TAB:
       return <DetailsCollections selectedItem={selectedItem} />
     case DETAILS_PROMPT_TEMPLATE_TAB:
-      return <DetailsPromptTemplate />
+      return <DetailsPromptTemplate selectedItem={selectedItem} />
+    case DETAILS_GENERATION_CONFIGURATION_TAB:
+      return <DetailsGenerationConfiguration selectedItem={selectedItem} />
     default:
       return null
   }
