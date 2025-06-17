@@ -21,9 +21,9 @@ import { isEmpty } from 'lodash'
 
 import { LABELS_FILTER, MODEL_ENDPOINTS_TAB, MODELS_PAGE } from '../../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
-import { showErrorNotification } from '../../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { fetchModelEndpoint } from '../../../reducers/artifactsReducer'
-import { formatDatetime } from '../../../utils'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
 
 import Alert from 'igz-controls/images/alerts.svg?react'
 

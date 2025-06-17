@@ -33,8 +33,8 @@ import 'prismjs/components/prism-yaml.min.js'
 import 'prismjs/components/prism-json.min.js'
 import 'prismjs/components/prism-python.min.js'
 
+import { LoaderForSuspenseFallback } from 'igz-controls/components'
 import Header from './layout/Header/Header'
-import LoaderForSuspenseFallback from './common/Loader/LoaderForSuspenseFallback'
 import Notifications from './common/Notifications/Notifications'
 
 import localStorageService from './utils/localStorageService'

@@ -34,7 +34,7 @@ import {
   V3IO_INPUT_PATH_SCHEME
 } from '../../constants'
 import { getArtifactReference, getFeatureReference, getParsedResource } from '../../utils/resources'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
 import { fetchFeatureVector, fetchFeatureVectors } from '../../reducers/featureStoreReducer'
 import { fetchProjectsNames } from '../../reducers/projectReducer'

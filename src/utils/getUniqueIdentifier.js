@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { get } from 'lodash'
 import {
   ADD_TO_FEATURE_VECTOR_TAB,
   ALERTS_PAGE,
@@ -116,12 +117,20 @@ export const getFeatureVectorIdentifier = (featureVector, unique) => {
   return identifier
 }
 
-export const getV3ioStreamIdentifier = v3ioStream => {
-  return `${v3ioStream?.consumerGroup || ''}`
+export const getV3ioStreamIdentifier = (v3ioStream, consumerGroupIsObject) => {
+  return get(
+    v3ioStream,
+    consumerGroupIsObject ? 'consumerGroup.identifierUnique' : 'consumerGroup',
+    ''
+  )
 }
 
-export const getV3ioStreamShardLagIdentifier = v3ioStream => {
-  return `${v3ioStream?.shardLagId || ''}`
+export const getV3ioStreamShardLagIdentifier = (v3ioStream, shardLagIdIsObject) => {
+  return get(
+    v3ioStream,
+    shardLagIdIsObject ? 'shardLagId.identifierUnique' : 'shardLagId',
+    ''
+  )
 }
 
 export const getIdentifierMethod = tab => {

@@ -21,9 +21,9 @@ import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
 import AlertsTableRow from '../../elements/AlertsTableRow/AlertsTableRow'
-import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Table from '../../components/Table/Table'
+import { Loader } from 'igz-controls/components'
 
 import { ALERTS_PAGE, ALERTS_PAGE_PATH, MONITOR_ALERTS_PAGE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'

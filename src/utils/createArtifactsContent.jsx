@@ -32,13 +32,13 @@ import {
   ALL_VERSIONS_PATH
 } from '../constants'
 import { parseKeyValues } from './object'
-import { formatDatetime } from './datetime'
 import prettyBytes from 'pretty-bytes'
 import { parseUri } from './parseUri'
 import { generateLinkToDetailsPanel } from './link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { validateArguments } from './validateArguments'
-// import { roundFloats } from './roundFloats'
+// import { roundFloats } from 'igz-controls/utils/common.util'
 
 import SeverityOk from 'igz-controls/images/severity-ok.svg?react'
 import SeverityWarning from 'igz-controls/images/severity-warning.svg?react'
@@ -138,7 +138,9 @@ export const createModelsRowData = (artifact, project, isAllVersions, metricsCou
       className: 'table-cell-name',
       getLink: tab =>
         getArtifactsDetailsLink(artifact, 'models/models', tab, project, isAllVersions),
-      showTag: true
+      showTag: true,
+      showSelectedUid: true,
+      showUpdatedDate: true
     },
     {
       id: `labels.${artifact.ui.identifierUnique}`,
@@ -269,7 +271,9 @@ export const createFilesRowData = (artifact, project, isAllVersions) => {
         value: isAllVersions ? artifact.uid : artifact.db_key,
         className: 'table-cell-name',
         getLink: tab => getArtifactsDetailsLink(artifact, 'files', tab, project, isAllVersions),
-        showTag: true
+        showTag: true,
+        showSelectedUid: true,
+        showUpdatedDate: true
       },
       {
         id: `version.${artifact.ui.identifierUnique}`,
@@ -347,7 +351,9 @@ export const createDocumentsRowData = (artifact, project, isAllVersions) => {
         value: isAllVersions ? artifact.uid : artifact.db_key,
         className: 'table-cell-name',
         getLink: tab => getArtifactsDetailsLink(artifact, 'documents', tab, project, isAllVersions),
-        showTag: true
+        showTag: true,
+        showSelectedUid: true,
+        showUpdatedDate: true
       },
       {
         id: `updated.${artifact.ui.identifierUnique}`,
@@ -557,7 +563,9 @@ export const createDatasetsRowData = (artifact, project, isAllVersions) => {
         value: isAllVersions ? artifact.uid : artifact.db_key,
         className: 'table-cell-name',
         getLink: tab => getArtifactsDetailsLink(artifact, 'datasets', tab, project, isAllVersions),
-        showTag: true
+        showTag: true,
+        showSelectedUid: true,
+        showUpdatedDate: true
       },
       {
         id: `labels.${artifact.ui.identifierUnique}`,
@@ -629,7 +637,9 @@ export const createLLMPromptsRowData = (artifact, project, isAllVersions) => {
         className: 'table-cell-name',
         getLink: tab =>
           getArtifactsDetailsLink(artifact, 'llm-prompts', tab, project, isAllVersions),
-        showTag: true
+        showTag: true,
+        showSelectedUid: true,
+        showUpdatedDate: true
       },
       {
         id: `labels.${artifact.ui.identifierUnique}`,

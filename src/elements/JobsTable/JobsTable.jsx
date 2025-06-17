@@ -25,10 +25,10 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import JobWizard from '../../components/JobWizard/JobWizard'
 import JobsTableRow from '../JobsTableRow/JobsTableRow'
-import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Pagination from '../../common/Pagination/Pagination'
 import Table from '../../components/Table/Table'
+import { Loader } from 'igz-controls/components'
 
 import { JOB_KIND_JOB, JOBS_MONITORING_JOBS_TAB, JOBS_PAGE, MONITOR_JOBS_TAB, PANEL_RERUN_MODE } from '../../constants'
 import {
@@ -47,7 +47,7 @@ import { getCloseDetailsLink, isDetailsTabExists } from '../../utils/link-helper
 import { getJobLogs } from '../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { setNotification } from '../../reducers/notificationReducer'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { toggleYaml } from '../../reducers/appReducer'
 import { usePods } from '../../hooks/usePods.hook'
 import { getInitialFiltersByConfig } from '../../hooks/useFiltersFromSearchParams.hook'

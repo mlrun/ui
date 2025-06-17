@@ -17,9 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { formatDatetime } from './datetime'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { getFunctionImage } from '../components/FunctionsPage/functions.util'
 import { ALL_VERSIONS_PATH } from '../constants'
+import { typesOfJob } from './jobs.util'
 
 const createFunctionsRowData = (func, projectName, isAllVersions, showExpandButton, oldVersion) => {
   return {
@@ -49,6 +50,8 @@ const createFunctionsRowData = (func, projectName, isAllVersions, showExpandButt
           showStatus: true
         },
         showTag: true,
+        showSelectedUid: true,
+        showUpdatedDate: true,
         showStatus: true,
         showExpandButton
       },
@@ -58,7 +61,8 @@ const createFunctionsRowData = (func, projectName, isAllVersions, showExpandButt
         headerLabel: 'Kind',
         value: func.type,
         className: 'table-cell-small',
-        type: 'type'
+        type: 'type',
+        types: typesOfJob
       },
       {
         id: `hash.${func.ui.identifierUnique}`,

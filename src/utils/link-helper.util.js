@@ -17,9 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { DETAILS_OVERVIEW_TAB, VIEW_SEARCH_PARAMETER } from '../constants'
-import { getFilteredSearchParams } from './filter.util'
-import { showErrorNotification } from './notifications.util'
+import { DETAILS_OVERVIEW_TAB } from '../constants'
+import { VIEW_SEARCH_PARAMETER } from 'igz-controls/constants'
+import { generateUrlFromRouterPath } from 'igz-controls/utils/common.util'
+import { getFilteredSearchParams } from 'igz-controls/utils/filter.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 export const isPageTabValid = (pageTab, tabs, navigate, location) => {
   if (!tabs.includes(pageTab)) {
@@ -35,17 +37,8 @@ export const isProjectValid = (navigate, projects, currentProjectName, dispatch)
     !projects.some(project => project?.metadata?.name === currentProjectName)
   ) {
     navigate('/projects', { replace: true })
-    showErrorNotification(
-      dispatch,
-      {},
-      '',
-      'This project does not exist'
-    )
+    showErrorNotification(dispatch, {}, '', 'This project does not exist')
   }
-}
-
-export const generateUrlFromRouterPath = link => {
-  return new URL(link, window.location.origin).toString()
 }
 
 export const getCloseDetailsLink = (paramName, ignoreOrigin) => {

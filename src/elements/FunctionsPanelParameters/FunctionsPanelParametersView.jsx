@@ -22,11 +22,10 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { map } from 'lodash'
 
-import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import AddFunctionParameterRow from './AddFunctionParameterRow'
 import EditableFunctionParameterRow from './EditableFunctionParameterRow'
 import PanelSection from '../PanelSection/PanelSection'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, ActionsMenu } from 'igz-controls/components'
 
 import { tableHeaders } from './functionsPanelParameters.util'
 

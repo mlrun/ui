@@ -28,7 +28,7 @@ import {
   TAG_FILTER,
   TAG_FILTER_LATEST
 } from '../../../constants'
-import { showErrorNotification } from '../../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { fetchFeatureSet } from '../../../reducers/featureStoreReducer'
 
 import Yaml from 'igz-controls/images/yaml.svg?react'

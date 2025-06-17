@@ -19,9 +19,10 @@ such restriction.
 */
 import { orderBy } from 'lodash'
 
-import { MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB } from '../../constants'
-import { formatDatetime } from '../../utils'
 import { measureTime } from '../../utils/measureTime'
+import { MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB } from '../../constants'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
+import { typesOfJob } from '../../utils/jobs.util'
 
 export const getJobsStatistics = (projectCounter, projectName) => {
   return {
@@ -76,7 +77,8 @@ export const getJobsTableData = (jobs, projectName) => {
         },
         type: {
           value: job[0].metadata.kind ?? job[0].metadata.labels?.kind ?? '',
-          className: 'section-table__table-cell table-cell_small'
+          className: 'section-table__table-cell table-cell_small',
+          types: typesOfJob
         },
         status: {
           value: job.map(item => item.status.state),

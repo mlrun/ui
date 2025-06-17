@@ -25,7 +25,7 @@ import classNames from 'classnames'
 import NoData from '../../common/NoData/NoData'
 import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { roundFloats } from '../../utils/roundFloats'
+import { roundFloats } from 'igz-controls/utils/common.util'
 import { generateResultsContent } from '../../utils/resultsTable'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 import { ALLOW_SORT_BY, DEFAULT_SORT_BY, EXCLUDE_SORT_BY } from 'igz-controls/types'

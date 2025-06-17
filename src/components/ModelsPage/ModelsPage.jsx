@@ -22,8 +22,8 @@ import { Outlet } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import Loader from '../../common/Loader/Loader'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
+import { Loader } from 'igz-controls/components'
 
 import { ModelsPageProvider } from './ModelsPage.context'
 
