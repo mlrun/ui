@@ -188,6 +188,6 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
 }
 
 ProjectFunctions.propTypes = {
-  nuclioStreamsAreEnabled: PropTypes.bool.isRequired
+  nuclioStreamsAreEnabled: PropTypes.bool
 }
 export default React.memo(ProjectFunctions)

@@ -6,14 +6,29 @@
   text-decoration: underline;
   cursor: pointer;
   text-underline-offset: 1px;
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 1px;
+}
+
+.card_small-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 15px;
+
+  @container (max-width: 950px) {
+    flex-direction: row;
+    display: contents;
+  }
 }
 
 .monitoring-stats {
+  height: 100%;
   flex-direction: column;
   flex-wrap: unset;
   justify-content: flex-start;
   border: 1px solid colors.$frenchLilac;
+  min-width: 0;
+  flex: 1;
 
   &.alerts-card {
     transition:
@@ -32,67 +47,79 @@
       margin: 0;
       color: colors.$topaz;
       font-weight: normal;
-      font-size: 0.75rem;
+      font-size: 14px;
     }
 
     &-card__row {
+      margin-bottom: 0;
       flex: unset;
-
-      &:last-child {
-        padding: 10px 0;
+      font-weight: 400;
+      font-size: 14px;
+      & > * {
+        color: colors.$primary;
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        padding-bottom: 0.5rem;
+        width: 100%;
       }
     }
-
-    &-card__col:not(:last-child) {
-      padding-right: 0.75em;
-    }
-
-    &__counter {
-      color: colors.$primary;
-      font-weight: 400;
-      font-size: 28px;
 
       &-large {
         min-height: 34px;
       }
 
+    &__counter_header {
+      font-weight: 600;
+      font-size: 26px;
+    }
+
+    &__link {
       &:hover {
         @include counterLinkHover;
       }
     }
 
+    &__line {
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background-color: colors.$mulledWineThree;
+      }
+    }
+
+    &__details {
+      margin-top: 0.5em;
+      & > * {
+        margin-bottom: 0.5em;
+      }
+      @container (max-width: 950px) {
+        display: none;
+      }
+    }
     &__status {
       i[class^='state-'] {
         margin-left: 5px;
       }
     }
-
-    &__link {
-      cursor: pointer;
-
-      &:hover {
-        .stats__counter {
-          @include counterLinkHover;
-        }
-      }
-    }
   }
 
   .project-card__info {
+    width: 80px;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    margin-left: 1rem;
+    margin-left: 0.5em;
     color: colors.$topaz;
     font-size: 0.75rem;
 
     & *:not(:last-child) {
       margin-right: 5px;
-    }
-
-    .stats__link {
-      display: flex;
-      align-items: center;
     }
 
     &-icon {
@@ -103,32 +130,12 @@
       }
     }
 
+    @container (max-width: 950px) {
+      display: none;
+    }
+
     .stats__subtitle {
-      margin: 0 5px 0 0;
       font-size: inherit;
-    }
-
-    .stats__counter {
-      position: relative;
-      margin-right: 0.6em;
-      padding-right: 0.75em;
-      font-size: 1rem;
-
-      &::after {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        display: inline-block;
-        width: 1px;
-        margin: 3px 0;
-        background-color: colors.$mulledWineThree;
-        content: '';
-      }
-    }
-
-    .project-card__info-icon {
-      position: relative;
     }
   }
 
@@ -137,6 +144,42 @@
 
     .input-wrapper .input.date-picker__input {
       padding: 10px;
+    }
+  }
+}
+
+
+
+.card-popup {
+
+  .pop-up-dialog {
+    min-width: 100%;
+    max-width: 600px;
+    width: max-content;
+    z-index: 9999;
+    margin-top: -10px;
+    background: colors.$primary;
+    padding: 0;
+
+  }
+
+  &_text {
+    font-size: 12px;
+    padding: 10px;
+    line-height: 20px;
+    color: colors.$white;
+    white-space: nowrap;
+    overflow-x: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    &_link {
+      &:hover {
+        @include counterLinkHover;
+        color: white;
+      }
     }
   }
 }

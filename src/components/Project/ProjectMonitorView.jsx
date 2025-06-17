@@ -21,7 +21,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
-import AlertsCounters from '../../elements/ProjectsMonitoringCounters/AlertsCounters'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
@@ -31,12 +30,12 @@ import NoData from '../../common/NoData/NoData'
 import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
 import ProjectDetailsHeader from '../../common/ProjectDetailsHeader/ProjectDetailsHeader'
 import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
-import ProjectSummaryCard from '../../elements/ProjectSummaryCard/ProjectSummaryCard'
+import ProjectsMonitoring from '../ProjectsPage/ProjectsMonitoring/ProjectsMonitoring'
 import Select from '../../common/Select/Select'
 import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
 
 import { PANEL_CREATE_MODE } from '../../constants'
-import { launchIDEOptions, generateTipMessageForCounter } from './project.utils'
+import { launchIDEOptions } from './project.utils'
 
 import RefreshIcon from 'igz-controls/images/refresh.svg?react'
 
@@ -54,10 +53,8 @@ const ProjectMonitorView = ({
   handleDeployFunctionSuccess,
   handleLaunchIDE,
   isNewFunctionPopUpOpen,
-  nuclioStreamsAreEnabled,
   params,
   project,
-  projectSummary,
   refresh,
   setIsNewFunctionPopUpOpen,
   setShowFunctionsPanel,
@@ -124,42 +121,13 @@ const ProjectMonitorView = ({
                 </RoundedIcon>
               </div>
             </div>
-            <div className="main-info__statistics-section">
-              <div className="main-info__statistics-section_left">
-                <ProjectSummaryCard
-                  counterValue={projectSummary.data.models_count ?? 0}
-                  link={`/projects/${params.projectName}/models`}
-                  projectSummary={projectSummary}
-                  tip={generateTipMessageForCounter('model', 'Models')}
-                  title="Models"
-                />
-
-                <ProjectSummaryCard
-                  counterValue={projectSummary.data.feature_sets_count ?? 0}
-                  link={`/projects/${params.projectName}/feature-store`}
-                  projectSummary={projectSummary}
-                  tip={generateTipMessageForCounter('feature set', 'Feature store')}
-                  title="Feature sets"
-                />
-
-                <ProjectSummaryCard
-                  counterValue={projectSummary.data.files_count ?? 0}
-                  link={`/projects/${params.projectName}/files`}
-                  projectSummary={projectSummary}
-                  tip={generateTipMessageForCounter('artifact', 'Artifacts')}
-                  title="Artifacts"
-                />
-              </div>
-              <div className="main-info__statistics-section_right">
-                <AlertsCounters />
-              </div>
-            </div>
+            <ProjectsMonitoring />
             <div className="main-info__statistics-section">
               <div className="d-flex">
                 <ProjectJobs />
               </div>
               <div className="d-flex">
-                <ProjectFunctions nuclioStreamsAreEnabled={nuclioStreamsAreEnabled} />
+                <ProjectFunctions />
               </div>
             </div>
           </div>
@@ -206,10 +174,8 @@ ProjectMonitorView.propTypes = {
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
   isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
-  nuclioStreamsAreEnabled: PropTypes.bool.isRequired,
   params: PropTypes.object.isRequired,
   project: PropTypes.object.isRequired,
-  projectSummary: PropTypes.object.isRequired,
   refresh: PropTypes.func.isRequired,
   setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
   setShowFunctionsPanel: PropTypes.func.isRequired,

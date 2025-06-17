@@ -14,7 +14,7 @@
     transition: all 0.3s ease-in-out;
 
     @media screen and (min-width: 1500px) {
-      padding: 20px 25px 15px;
+      padding: 20px 20px 5px;
     }
 
     &__row {
@@ -43,6 +43,7 @@
       position: relative;
       display: flex;
       align-items: center;
+      gap: 6px;
       color: colors.$primary;
       font-weight: normal;
       font-size: 1rem;
@@ -87,6 +88,11 @@
 
     &__title-tip {
       margin-left: 5px;
+    }
+
+    &__title-wrapper {
+      display: flex;
+      align-items: normal;
     }
   }
 }

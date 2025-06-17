@@ -33,6 +33,7 @@ import {
 import { ANY_TIME_DATE_OPTION } from './datePicker.util'
 
 const IN_PROCESS = 'In Process'
+const RUNNING = 'Running'
 const FAILED = 'Failed'
 const SUCCEEDED = 'Succeeded'
 
@@ -57,7 +58,7 @@ export const generateMonitoringStats = (data, navigate, tab) => {
               }),
             statusClass: 'running',
             tooltip: 'Aborting, Pending, Running',
-            label: IN_PROCESS
+            label: RUNNING
           },
           {
             counter: data.failed || 0,

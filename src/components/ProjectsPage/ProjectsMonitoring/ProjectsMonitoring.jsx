@@ -17,23 +17,39 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import ApplicationCounter from '../../../elements/ProjectsMonitoringCounters/ApplicationCounter'
 import AlertsCounters from '../../../elements/ProjectsMonitoringCounters/AlertsCounters'
-import JobsCounters from '../../../elements/ProjectsMonitoringCounters/JobsCounters'
+import DataAndArtifactsCounter from '../../../elements/ProjectsMonitoringCounters/ArtifactsCounter'
+import ModelsAndApplication from '../../../elements/ProjectsMonitoringCounters/ModelsCounter'
 import PageHeader from '../../../elements/PageHeader/PageHeader'
 import ScheduledJobsCounters from '../../../elements/ProjectsMonitoringCounters/ScheduledJobsCounters'
 import WorkflowsCounters from '../../../elements/ProjectsMonitoringCounters/WorkflowsCounters'
 
 import './projectsMonitoring.scss'
+import classNames from 'classnames'
+import { useParams } from 'react-router-dom'
+import RunCounter from '../../../elements/ProjectsMonitoringCounters/RunsCounter'
 
 const ProjectsMonitoring = () => {
+  const { projectName } = useParams()
   return (
     <div className="projects-monitoring-container">
       <PageHeader title="Monitoring" />
-      <div className="projects-monitoring-stats">
-        <JobsCounters />
+      <div
+        className={classNames(
+          'projects-monitoring-stats',
+          !projectName ? 'projects-monitoring-stats--wide' : 'projects-monitoring-stats--narrow'
+        )}
+      >
+        <DataAndArtifactsCounter />
+        {!projectName && <RunCounter />}
         {/* Todo: Delete WorkflowsCounters after ML-5460 is impplemented */}
         <WorkflowsCounters />
         <ScheduledJobsCounters />
+        <div className="card_small-container">
+          <ModelsAndApplication />
+          <ApplicationCounter />
+        </div>
         <AlertsCounters />
         {/* Todo: implement as part of ML-5460
         <ModelEndpointsCounters /> */}
