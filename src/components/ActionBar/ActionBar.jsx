@@ -75,6 +75,7 @@ const ActionBar = ({
   hidden = false,
   internalAutoRefreshIsEnabled = false,
   removeSelectedItem = null,
+  selectedItemName = '',
   setSearchParams,
   setSelectedRowData = null,
   tab = '',
@@ -191,7 +192,7 @@ const ActionBar = ({
 
       if (actionCanBePerformed) {
         if (closeParamName) {
-          navigate(getCloseDetailsLink(closeParamName, true), { replace: true })
+          navigate(getCloseDetailsLink(closeParamName, true, selectedItemName), { replace: true })
         }
 
         if (
@@ -224,7 +225,8 @@ const ActionBar = ({
       setSelectedRowData,
       toggleAllRows,
       handleRefresh,
-      navigate
+      navigate,
+      selectedItemName
     ]
   )
 
@@ -512,6 +514,7 @@ ActionBar.propTypes = {
   hidden: PropTypes.bool,
   internalAutoRefreshIsEnabled: PropTypes.bool,
   removeSelectedItem: PropTypes.func,
+  selectedItemName: PropTypes.string,
   setSearchParams: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func,
   tab: PropTypes.string,

@@ -105,6 +105,7 @@ const FunctionsView = ({
                 filtersConfig={functionsFiltersConfig}
                 handleRefresh={handleRefreshFunctions}
                 setSearchParams={setSearchFunctionsParams}
+                selectedItemName={params.funcName}
                 withoutExpandButton
               >
                 <FunctionsFilters />
@@ -129,7 +130,7 @@ const FunctionsView = ({
                 <Table
                   actionsMenu={actionsMenu}
                   getCloseDetailsLink={() =>
-                    getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : FUNCTIONS_PAGE_PATH)
+                    getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : FUNCTIONS_PAGE_PATH, false, params.funcName)
                   }
                   handleCancel={handleCancel}
                   pageData={pageData}
@@ -159,6 +160,7 @@ const FunctionsView = ({
                 <Pagination
                   paginationConfig={paginationConfigFunctionsRef.current}
                   closeParamName={isAllVersions ? ALL_VERSIONS_PATH : FUNCTIONS_PAGE_PATH}
+                  selectedItemName={params.funcName}
                 />
               </>
             )}

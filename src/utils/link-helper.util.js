@@ -41,18 +41,21 @@ export const isProjectValid = (navigate, projects, currentProjectName, dispatch)
   }
 }
 
-export const getCloseDetailsLink = (paramName, ignoreOrigin) => {
+export const getCloseDetailsLink = (paramName, ignoreOrigin, objectName) => {
   let pathname = window.location.pathname
 
   if (ignoreOrigin && pathname.startsWith(import.meta.env.VITE_PUBLIC_URL)) {
     pathname = pathname.slice(import.meta.env.VITE_PUBLIC_URL.length)
   }
 
-  const link =
+  let linkParts =
     pathname
       .split('/')
       .splice(0, pathname.split('/').lastIndexOf(paramName) + 1)
-      .join('/') + getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])
+      
+  if (objectName && paramName === objectName && linkParts[linkParts.length - 1] === objectName) linkParts.pop()
+
+  const link = linkParts.join('/') + getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])
 
   return ignoreOrigin ? link : generateUrlFromRouterPath(link)
 }
