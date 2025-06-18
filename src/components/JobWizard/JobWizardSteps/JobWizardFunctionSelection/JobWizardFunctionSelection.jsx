@@ -294,6 +294,9 @@ const JobWizardFunctionSelection = ({
           }
         }
       })
+      .catch(() => {
+        setFunctions([])
+      })
 
     formState.initialValues[FUNCTION_SELECTION_STEP].projectName = currentValue
   }
