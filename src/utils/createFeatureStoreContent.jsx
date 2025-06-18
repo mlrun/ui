@@ -26,12 +26,10 @@ import FeatureSetPopUp from '../elements/DetailsPopUp/FeatureSetPopUp/FeatureSet
 import {
   FEATURE_STORE_PAGE,
   FEATURE_SETS_TAB,
-  FEATURE_VECTORS_TAB,
-  BUTTON_COPY_URI_CELL_TYPE
+  FEATURE_VECTORS_TAB
 } from '../constants'
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
-import { generateUri } from './resources'
 import { truncateUid } from '../utils'
 import { generateLinkToDetailsPanel } from './link-helper.util'
 import { validateArguments } from './validateArguments'
@@ -126,14 +124,6 @@ export const createFeatureSetsRowData = (featureSet, project, pageTab, showExpan
         headerLabel: 'Updated',
         value: featureSet.updated ? formatDatetime(featureSet.updated, 'N/A') : 'N/A',
         className: 'table-cell-2'
-      },
-      {
-        id: `buttonCopy.${featureSet.ui.identifierUnique}`,
-        headerId: 'copy',
-        value: '',
-        className: 'table-cell-icon',
-        type: BUTTON_COPY_URI_CELL_TYPE,
-        actionHandler: item => generateUri(item, null, pageTab)
       }
     ]
   }
@@ -343,14 +333,6 @@ export const createFeatureVectorsRowData = (featureVector, pageTab, project, sho
         className: 'table-cell-2',
         showTag: true,
         showStatus: true
-      },
-      {
-        id: `buttonCopy.${featureVector.ui.identifierUnique}`,
-        headerId: 'copy',
-        value: '',
-        className: 'table-cell-icon',
-        type: BUTTON_COPY_URI_CELL_TYPE,
-        actionHandler: item => generateUri(item, null, pageTab)
       },
       {
         id: `uid.${featureVector.ui.identifierUnique}`,

@@ -45,7 +45,8 @@ const FeatureStoreTableRow = ({
   rowItem,
   selectedItem = {},
   selectedRowData,
-  toggleRow = () => {}
+  toggleRow = () => {},
+  withQuickActions = false
 }) => {
   const parent = useRef()
   const params = useParams()
@@ -202,7 +203,11 @@ const FeatureStoreTableRow = ({
           })}
           {!hideActionsMenu && (
             <td className="table-body__cell table-cell-icon">
-              <ActionsMenu dataItem={rowItem.data} menu={actionsMenu} />
+              <ActionsMenu
+                dataItem={rowItem.data}
+                menu={actionsMenu}
+                withQuickActions={withQuickActions}
+              />
             </td>
           )}
         </>
@@ -221,7 +226,8 @@ FeatureStoreTableRow.propTypes = {
   rowItem: PropTypes.object.isRequired,
   selectedItem: PropTypes.object,
   selectedRowData: PropTypes.object.isRequired,
-  toggleRow: PropTypes.func
+  toggleRow: PropTypes.func,
+  withQuickActions: PropTypes.bool
 }
 
 export default React.memo(FeatureStoreTableRow)

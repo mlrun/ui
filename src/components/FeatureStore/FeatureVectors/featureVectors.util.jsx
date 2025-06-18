@@ -29,9 +29,12 @@ import {
 } from '../../../constants'
 import { parseFeatureTemplate } from '../../../utils/parseFeatureTemplate'
 import { parseChipsData } from '../../../utils/convertChipsData'
+import { copyToClipboard } from '../../../utils/copyToClipboard'
+import { generateUri } from '../../../utils/resources'
 
 import Delete from 'igz-controls/images/delete.svg?react'
 import Yaml from 'igz-controls/images/yaml.svg?react'
+import Copy from 'igz-controls/images/copy-to-clipboard-icon.svg?react'
 
 export const generateFeatureVectorsDetailsMenu = (selectedItem, isDemoMode) => [
   {
@@ -95,6 +98,7 @@ export const generatePageData = (selectedFeatureSet, isDemoMode) => {
 }
 
 export const generateActionsMenu = (
+  dispatch,
   onDeleteFeatureVector,
   toggleConvertedYaml,
   isDetailsPopUp = false
@@ -112,6 +116,14 @@ export const generateActionsMenu = (
       className: 'danger',
       onClick: onDeleteFeatureVector,
       allowLeaveWarning: true
+    }
+  ],
+  [
+    {
+      label: 'Copy URI',
+      icon: <Copy />,
+      onClick: featureSet =>
+        copyToClipboard(generateUri(featureSet, null, FEATURE_VECTORS_TAB), dispatch)
     }
   ]
 ]

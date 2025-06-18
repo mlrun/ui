@@ -360,8 +360,6 @@ export const TABLE_CONTAINER = 'table-container'
 export const MAIN_TABLE_ID = 'main-table'
 export const MAIN_TABLE_BODY_ID = 'main-table-body'
 
-export const BUTTON_COPY_URI_CELL_TYPE = 'buttonCopyURI'
-
 /*=========== FILTERS =============*/
 
 export const DATE_FILTER_ANY_TIME = ['', '']

@@ -29,8 +29,11 @@ import {
   TAG_FILTER_LATEST
 } from '../../../constants'
 import { showErrorNotification } from '../../../utils/notifications.util'
+import { copyToClipboard } from '../../../utils/copyToClipboard'
+import { generateUri } from '../../../utils/resources'
 import { fetchFeatureSet } from '../../../reducers/featureStoreReducer'
 
+import Copy from 'igz-controls/images/copy-to-clipboard-icon.svg?react'
 import Yaml from 'igz-controls/images/yaml.svg?react'
 
 export const generateFeatureSetsDetailsMenu = (selectedItem, isDemoMode) => [
@@ -104,6 +107,14 @@ export const generateActionsMenu = (dispatch, selectedFeatureSet, toggleConverte
         chooseOrFetchFeatureSet(dispatch, selectedFeatureSet, featureSetMin).then(
           toggleConvertedYaml
         )
+    }
+  ],
+  [
+    {
+      label: 'Copy URI',
+      icon: <Copy />,
+      onClick: featureSet =>
+        copyToClipboard(generateUri(featureSet, null, FEATURE_SETS_TAB), dispatch)
     }
   ]
 ]

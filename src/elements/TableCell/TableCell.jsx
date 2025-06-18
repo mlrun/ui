@@ -24,13 +24,12 @@ import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
-import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
 import Download from '../../common/Download/Download'
 import TableLinkCell from '../TableLinkCell/TableLinkCell'
 import TableTypeCell from '../TableTypeCell/TableTypeCell'
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
-import { BUTTON_COPY_URI_CELL_TYPE, DATASET_TYPE, MODEL_TYPE } from '../../constants'
+import { DATASET_TYPE, MODEL_TYPE } from '../../constants'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { truncateUid } from '../../utils'
@@ -163,16 +162,6 @@ const TableCell = ({
           path={`${item?.target_path}${item?.model_file ? item.model_file : ''}`}
           user={item?.producer?.owner || item.user}
           projectName={params.projectName}
-        />
-      </td>
-    )
-  } else if (data.type === BUTTON_COPY_URI_CELL_TYPE) {
-    return (
-      <td data-testid={data.headerId} className={cellClassNames}>
-        <CopyToClipboard
-          tooltipText="Copy URI"
-          textToCopy={data.actionHandler(item)}
-          disabled={data.disabled}
         />
       </td>
     )

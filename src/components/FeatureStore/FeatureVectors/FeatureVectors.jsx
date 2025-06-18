@@ -249,8 +249,8 @@ const FeatureVectors = () => {
   )
 
   const actionsMenu = useMemo(
-    () => generateActionsMenu(onDeleteFeatureVector, toggleConvertedYaml),
-    [onDeleteFeatureVector, toggleConvertedYaml]
+    () => generateActionsMenu(dispatch, onDeleteFeatureVector, toggleConvertedYaml),
+    [onDeleteFeatureVector, toggleConvertedYaml, dispatch]
   )
 
   const handleRefresh = useCallback(
