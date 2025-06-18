@@ -4,7 +4,8 @@
 
 .project {
   &-wrapper {
-    display: flex;
+    container-type: inline-size;
+    display: block;
     flex: 1 1;
     flex-direction: column;
     min-width: 100%;
@@ -253,6 +254,9 @@
           &.alerts-card {
             flex: 2;
           }
+        }
+        @container (max-width: 950px) {
+          grid-template-columns: repeat(1, 2fr);
         }
       }
     }

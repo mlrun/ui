@@ -113,6 +113,7 @@ const initialState = {
     }
   },
   projectTotalAlerts: {},
+  projectTotalModels: 0,
   projects: [],
   projectsNames: {
     error: null,
@@ -360,6 +361,9 @@ const projectStoreSlice = createSlice({
         loading: false,
         data: []
       }
+    },
+    setProjectTotalModels(state, action) {
+      state.projectTotalModels = action.payload
     },
     removeProjects(state) {
       state.projects = []

@@ -16,8 +16,9 @@
   background-color: colors.$white;
 
   &__wrapper {
+    container-type: inline-size;
+    display: block;
     position: relative;
-    display: flex;
     flex-flow: column nowrap;
     height: 100%;
     padding: 50px 24px 0;

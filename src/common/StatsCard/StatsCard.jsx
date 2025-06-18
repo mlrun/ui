@@ -21,7 +21,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
-import { Tip } from 'igz-controls/components'
+import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import './statsCard.scss'
 
@@ -43,8 +43,10 @@ StatsCard.Header = ({ children = null, icon = null, iconClass = '', title = '', 
     <div className="stats-card__row">
       <div className={titleClass}>
         {icon && <i className={iconClass}>{icon}</i>}
-        {title && <span>{title}</span>}
-        {tip && <Tip className="stats-card__title-tip" text={tip} />}
+        <div className="stats-card__title-wrapper data-ellipsis">
+          <Tooltip template={<TextTooltipTemplate text={title} />}>{title}</Tooltip>
+          {tip && <Tip className="stats-card__title-tip" text={tip} />}
+        </div>
       </div>
       {children}
     </div>
