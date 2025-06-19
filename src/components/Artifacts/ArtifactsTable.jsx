@@ -79,6 +79,7 @@ let ArtifactsTable = ({
           filtersConfig={filtersConfig}
           handleRefresh={handleRefreshArtifacts}
           setSearchParams={setSearchArtifactsParams}
+          selectedItemName={artifactName}
           tab={tab}
           withRefreshButton
           withoutExpandButton
@@ -114,7 +115,11 @@ let ArtifactsTable = ({
             applyDetailsChangesCallback={applyDetailsChangesCallback}
             detailsFormInitialValues={detailsFormInitialValues}
             getCloseDetailsLink={() =>
-              getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : tab || page)
+              getCloseDetailsLink(
+                isAllVersions ? ALL_VERSIONS_PATH : tab || page,
+                false,
+                artifactName
+              )
             }
             handleCancel={() => setSelectedArtifact({})}
             pageData={pageData}
@@ -139,6 +144,7 @@ let ArtifactsTable = ({
           <Pagination
             paginationConfig={paginationConfigArtifactsRef.current}
             closeParamName={isAllVersions ? ALL_VERSIONS_PATH : tab || page}
+            selectedItemName={artifactName}
           />
         </>
       )}

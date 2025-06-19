@@ -106,7 +106,7 @@ const Artifacts = ({
     paginationConfigArtifactVersionsRef,
     historyBackLink,
     'artifacts',
-    params.id && getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : tab || page, true),
+    params.id && getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : tab || page, true, params.artifactName),
     isAllVersions
   )
   const pageData = useMemo(
