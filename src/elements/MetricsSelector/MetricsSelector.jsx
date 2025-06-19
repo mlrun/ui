@@ -284,7 +284,7 @@ const MetricsSelector = ({
                         return (
                           <>
                             {applicationName
-                              ? renderMetrics(filteredMetrics[0] || [])
+                              ? renderMetrics(filteredMetrics[0] || {})
                               : filteredMetrics.map(metricsGroup => {
                                   return !isEmpty(metricsGroup.metrics) ? (
                                     <Accordion
