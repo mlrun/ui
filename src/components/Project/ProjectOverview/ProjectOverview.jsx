@@ -23,12 +23,11 @@ import { isEmpty } from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import Breadcrumbs from '../../../common/Breadcrumbs/Breadcrumbs'
-import Loader from '../../../common/Loader/Loader'
 import NoData from '../../../common/NoData/NoData'
 import ProjectAction from '../ProjectAction/ProjectAction'
 import ProjectDetailsHeader from '../../../common/ProjectDetailsHeader/ProjectDetailsHeader'
 import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewTableRow'
-import { ConfirmDialog } from 'igz-controls/components'
+import { ConfirmDialog, Loader } from 'igz-controls/components'
 
 import { handleClick, getInitialCards } from './ProjectOverview.util'
 import { handleFetchProjectError } from '../project.utils'

@@ -21,9 +21,8 @@ import React, { useCallback, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import Loader from '../../common/Loader/Loader'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import { ConfirmDialog } from 'igz-controls/components'
+import { ConfirmDialog, Loader } from 'igz-controls/components'
 
 import { TABLE_CONTAINER } from '../../constants'
 import { toggleYaml } from '../../reducers/appReducer'

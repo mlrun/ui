@@ -26,10 +26,9 @@ import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import FunctionsFilters from '../FunctionsPage/FunctionsFilters'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import FunctionsTableRowOld from '../../elements/FunctionsTableRow/FunctionsTableRowOld'
-import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Table from '../Table/Table'
-import { ConfirmDialog } from 'igz-controls/components'
+import { ConfirmDialog, Loader } from 'igz-controls/components'
 
 import {
   FUNCTIONS_PAGE,
@@ -38,7 +37,8 @@ import {
   PANEL_EDIT_MODE
 } from '../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
-import { FILTERS_CONFIG, VIRTUALIZATION_CONFIG } from '../../types'
+import { VIRTUALIZATION_CONFIG } from 'igz-controls/types'
+import { FILTERS_CONFIG } from '../../types'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isRowRendered } from '../../hooks/useVirtualization.hook'
 

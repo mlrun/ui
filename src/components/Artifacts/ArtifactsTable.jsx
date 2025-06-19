@@ -22,7 +22,6 @@ import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
 import NoData from '../../common/NoData/NoData'
-import Loader from '../../common/Loader/Loader'
 import Table from '../Table/Table'
 import ArtifactsFilters from '../ArtifactsActionBar/ArtifactsFilters'
 import ActionBar from '../ActionBar/ActionBar'
@@ -30,11 +29,13 @@ import HistoryBackLink from '../../common/HistoryBackLink/historyBackLink'
 import Details from '../Details/Details'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import Pagination from '../../common/Pagination/Pagination'
+import { Loader } from 'igz-controls/components'
 
-import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { ALL_VERSIONS_PATH, FULL_VIEW_MODE } from '../../constants'
+import { ALL_VERSIONS_PATH } from '../../constants'
+import { FULL_VIEW_MODE } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { getDefaultFirstHeader } from '../../utils/createArtifactsContent'
+import { getNoDataMessage } from '../../utils/getNoDataMessage'
 
 let ArtifactsTable = ({
   actionButtons,

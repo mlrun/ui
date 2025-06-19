@@ -25,7 +25,7 @@ import Input from '../Input/Input'
 import { SelectOption } from 'igz-controls/elements'
 import { PopUpDialog } from 'igz-controls/components'
 
-import { deleteUnsafeHtml } from '../../utils'
+import { deleteUnsafeHtml } from 'igz-controls/utils/string.util'
 
 import SearchIcon from 'igz-controls/images/search.svg?react'
 

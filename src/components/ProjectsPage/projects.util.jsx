@@ -40,8 +40,8 @@ import {
 import tasksApi from '../../api/tasks-api'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { PROJECT_ONLINE_STATUS } from '../../constants'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 import ArchiveIcon from 'igz-controls/images/archive-icon.svg?react'
 import Delete from 'igz-controls/images/delete.svg?react'

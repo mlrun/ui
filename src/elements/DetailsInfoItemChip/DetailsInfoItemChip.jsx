@@ -30,16 +30,16 @@ import {
   getInternalLabelsValidationRule
 } from 'igz-controls/utils/validation.util'
 import { detailsInfoActions } from '../../components/DetailsInfo/detailsInfoReducer'
-import { setEditMode } from '../../reducers/detailsReducer'
+import { setEditMode } from 'igz-controls/reducers/commonDetailsReducer'
 
 import Close from 'igz-controls/images/close.svg?react'
 import Checkmark from 'igz-controls/images/checkmark2.svg?react'
 
 const DetailsInfoItemChip = ({
   chipsData,
+  commonDetailsStore,
   currentField,
   detailsInfoDispatch,
-  detailsStore,
   editableFieldType,
   formState,
   handleFinishEdit,
@@ -61,7 +61,7 @@ const DetailsInfoItemChip = ({
       !isFieldInEditMode &&
       !isEqual(
         formState.values[item.fieldData.name],
-        detailsStore.changes.data?.[item.fieldData.name]?.currentFieldValue
+        commonDetailsStore.changes.data?.[item.fieldData.name]?.currentFieldValue
       )
     ) {
       detailsInfoDispatch({
@@ -78,7 +78,7 @@ const DetailsInfoItemChip = ({
   }, [
     currentField,
     detailsInfoDispatch,
-    detailsStore.changes.data,
+    commonDetailsStore.changes.data,
     dispatch,
     formState.form,
     formState.values,
@@ -94,7 +94,7 @@ const DetailsInfoItemChip = ({
       !formState.form.getFieldState(item.fieldData.name).pristine &&
       !isEqual(
         formState.values[item.fieldData.name],
-        detailsStore.changes.data?.[item.fieldData.name]?.currentFieldValue
+        commonDetailsStore.changes.data?.[item.fieldData.name]?.currentFieldValue
       ) &&
       !isFieldInEditMode
     ) {
@@ -109,7 +109,7 @@ const DetailsInfoItemChip = ({
     } else if (
       !isEmpty(formState.initialValues[item.fieldData.name]) &&
       isEmpty(formState.values[item.fieldData.name]) &&
-      !detailsStore.changes.data?.[item.fieldData.name] &&
+      !commonDetailsStore.changes.data?.[item.fieldData.name] &&
       !isFieldInEditMode
     ) {
       detailsInfoDispatch({
@@ -124,7 +124,7 @@ const DetailsInfoItemChip = ({
   }, [
     currentField,
     detailsInfoDispatch,
-    detailsStore.changes.data,
+    commonDetailsStore.changes.data,
     dispatch,
     formState.form,
     formState.initialValues,
@@ -151,7 +151,7 @@ const DetailsInfoItemChip = ({
   const discardChanges = () => {
     formState.form.change(
       item.fieldData.name,
-      detailsStore.changes.data[item.fieldData.name]?.currentFieldValue ??
+      commonDetailsStore.changes.data[item.fieldData.name]?.currentFieldValue ??
         formState.initialValues[item.fieldData.name]
     )
     dispatch(setEditMode(false))
@@ -196,9 +196,9 @@ const DetailsInfoItemChip = ({
 
 DetailsInfoItemChip.propTypes = {
   chipsData: PropTypes.object.isRequired,
+  commonDetailsStore: PropTypes.object.isRequired,
   currentField: PropTypes.string.isRequired,
   detailsInfoDispatch: PropTypes.func.isRequired,
-  detailsStore: PropTypes.object.isRequired,
   editableFieldType: PropTypes.string.isRequired,
   formState: PropTypes.object.isRequired,
   handleFinishEdit: PropTypes.func.isRequired,

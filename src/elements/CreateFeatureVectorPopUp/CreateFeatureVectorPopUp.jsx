@@ -42,7 +42,7 @@ import {
 } from 'igz-controls/utils/validation.util'
 import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
 import { TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
-import { getChipOptions } from '../../utils/getChipOptions'
+import { getChipOptions } from 'igz-controls/utils/chips.util'
 import { convertChipsData, parseChipsData } from '../../utils/convertChipsData'
 
 import './createFeatureVectorPopUp.scss'

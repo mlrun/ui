@@ -449,7 +449,7 @@ Feature: Projects Page
         Then verify "Counter_Running_Status_Subtitle" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then "Counter_Running_Status_Subtitle" element in "Monitoring_Workflows_Box" on "Projects" should contains "In Process" value
         Then verify "Counter_Running_Status_Icon" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
-        Then verify "Counter_Running_Status_Icon" element in "Monitoring_Workflows_Box" on "Projects" wizard should display hover tooltip "Common_Tooltips"."In_Process_Workflows"
+        Then verify "Counter_Running_Status_Icon" element in "Monitoring_Workflows_Box" on "Projects" wizard should display hover tooltip "Common_Tooltips"."Running_Tip"
         Then verify "Counter_Failed_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then verify "Counter_Failed_Status_Subtitle" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then "Counter_Failed_Status_Subtitle" element in "Monitoring_Workflows_Box" on "Projects" should contains "Failed" value

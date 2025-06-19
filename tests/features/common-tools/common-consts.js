@@ -381,10 +381,13 @@ export default {
     FilterBy_Button: 'Filter',
     FilterBy_Button_1: 'Filter (1)',
     Show_All_Versions: 'Show all versions',
+    Open_Metrics: 'Open metrics',
     Refresh_Button: 'Refresh',
+    Back_Button: 'Back',
     Expand_All_Button: 'Expand all',
     In_Process_Jobs: 'Aborting, Pending, Running',
-    In_Process_Workflows: 'Running',
+    Running_Tip: 'Running',
+    Failed_Tip: 'Failed',
     Failed_Jobs: 'Aborted, Error',
     Failed_Worflows: 'Error, Failed',
     Succeeded: 'Completed',
@@ -524,7 +527,16 @@ export default {
       ' You can browse them in the Feature store page.',
     Artifacts_Stats_Tip:  
       'Each artifact can have multiple versions, produced by multiple runs and given multiple tags.\n' +
-      ' You can browse them in the Artifacts page.'
+      ' You can browse them in the Artifacts page.',
+    Model_Endpoint_With_Detections:
+      'This chart displays the number of model endpoints that had at least one detected issue, in any monitoring application, in the relevant time period',
+    Operating_Functions: 'System functions that are used for the monitoring application operation',
+    Lag: 'Number of messages currently waiting in the app\'s queue',
+    Commited_Offset: 'Total number of messages handled by the app',
+    App_Status_Tip: 'Some tip',
+    Endpoints_Tip: 'Model endpoints processed by the monitoring app during the selected time frame',
+    Metrics_Tip: 'Metrics tip',
+    Shards_Partitions_Status_Tip: 'This table displays the current status of each shard'
   },
   Descriptions: {
     Archive_Project:
@@ -671,6 +683,12 @@ export default {
       'Past week',
       'Past month',
       'Custom range'
+    ],
+    Date_Picker_Filter_Options_Monitoring_App: [
+      'Past hour',
+      'Past 24 hours',
+      'Past week',
+      'Past month'
     ],
     Scheduled_Date_Picker_Filter_Options: [
       'Any time',

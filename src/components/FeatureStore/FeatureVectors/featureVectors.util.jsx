@@ -36,7 +36,7 @@ import Delete from 'igz-controls/images/delete.svg?react'
 import Yaml from 'igz-controls/images/yaml.svg?react'
 import Copy from 'igz-controls/images/copy-to-clipboard-icon.svg?react'
 
-export const generateFeatureVectorsDetailsMenu = (selectedItem, isDemoMode) => [
+export const generateFeatureVectorsDetailsMenu = (selectedItem) => [
   {
     label: 'overview',
     id: 'overview'
@@ -62,8 +62,7 @@ export const generateFeatureVectorsDetailsMenu = (selectedItem, isDemoMode) => [
   },
   {
     label: 'analysis',
-    id: 'analysis',
-    hidden: !isDemoMode
+    id: 'analysis'
   }
 ]
 
@@ -86,12 +85,12 @@ export const filtersConfig = {
   [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
 }
 
-export const generatePageData = (selectedFeatureSet, isDemoMode) => {
+export const generatePageData = (selectedFeatureSet) => {
   return {
     page: FEATURE_STORE_PAGE,
     details: {
       type: FEATURE_VECTORS_TAB,
-      menu: generateFeatureVectorsDetailsMenu(selectedFeatureSet, isDemoMode),
+      menu: generateFeatureVectorsDetailsMenu(selectedFeatureSet),
       infoHeaders: featureSetsInfoHeaders
     }
   }

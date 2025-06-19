@@ -60,12 +60,11 @@ import { getScssVariableValue } from 'igz-controls/utils/common.util'
 import { isDetailsTabExists } from '../../../utils/link-helper.util'
 import { parseChipsData } from '../../../utils/convertChipsData'
 import { parseFeatureSets } from '../../../utils/parseFeatureSets'
-import { setNotification } from '../../../reducers/notificationReducer'
-import { sortListByDate } from '../../../utils'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { sortListByDate } from 'igz-controls/utils/datetime.util'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
-import { useMode } from '../../../hooks/mode.hook'
 import { useOpenPanel } from '../../../hooks/openPanel.hook'
 import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 
@@ -88,7 +87,6 @@ const FeatureSets = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
-  const { isDemoMode } = useMode()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const detailsFormInitialValues = useMemo(
     () => ({
@@ -112,8 +110,8 @@ const FeatureSets = () => {
     []
   )
   const pageData = useMemo(
-    () => generatePageData(selectedFeatureSet, isDemoMode),
-    [isDemoMode, selectedFeatureSet]
+    () => generatePageData(selectedFeatureSet),
+    [selectedFeatureSet]
   )
   const actionsMenu = useMemo(
     () => generateActionsMenu(dispatch, selectedFeatureSet, toggleConvertedYaml),

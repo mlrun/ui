@@ -28,12 +28,12 @@ import {
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB
 } from '../constants'
-import { parseKeyValues } from './object'
-import { formatDatetime } from './datetime'
-import { truncateUid } from '../utils'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { generateLinkToDetailsPanel } from './link-helper.util'
-import { validateArguments } from './validateArguments'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { parseKeyValues } from './object'
+import { truncateUid } from 'igz-controls/utils/string.util'
+import { validateArguments } from './validateArguments'
 
 import Nosql from 'igz-controls/images/nosql.svg?react'
 import Stream from 'igz-controls/images/stream.svg?react'

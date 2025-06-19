@@ -34,13 +34,6 @@ export const V3IO_INPUT_PATH_SCHEME = 'v3io:///'
 export const TAG_LATEST = 'latest'
 export const TAG_NA = 'na'
 
-export const DENSITY_DENSE = 'dense'
-export const DENSITY_NORMAL = 'normal'
-export const DENSITY_MEDIUM = 'medium'
-export const DENSITY_CHUNKY = 'chunky'
-
-export const FULL_VIEW_MODE = 'full'
-
 export const LARGE_REQUEST_CANCELED = 'Large request canceled'
 export const REQUEST_CANCELED = 'Request canceled'
 export const DEFAULT_ABORT_MSG = 'canceled'
@@ -58,8 +51,6 @@ export const FAIL_STATE = 'fail'
 export const FAILED_STATE = 'failed'
 export const PENDING_STATE = 'pending'
 export const UNKNOWN_STATE = 'unknown'
-
-export const VIEW_SEARCH_PARAMETER = 'view'
 
 /*=========== PAGINATION =============*/
 
@@ -357,8 +348,7 @@ export const KEY_CODES = {
 /*=========== TABLE =============*/
 
 export const TABLE_CONTAINER = 'table-container'
-export const MAIN_TABLE_ID = 'main-table'
-export const MAIN_TABLE_BODY_ID = 'main-table-body'
+
 
 /*=========== FILTERS =============*/
 

@@ -23,9 +23,15 @@ import MaskedInput from 'react-text-mask'
 import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 
-import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import TimePicker from '../TimePicker/TimePicker'
-import { Button, Tip, Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
+import {
+  Button,
+  Tip,
+  Tooltip,
+  TextTooltipTemplate,
+  PopUpDialog,
+  ErrorMessage
+} from 'igz-controls/components'
 import { SelectOption } from 'igz-controls/elements'
 
 import { PRIMARY_BUTTON } from 'igz-controls/constants'

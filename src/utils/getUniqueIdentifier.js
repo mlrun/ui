@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { get } from 'lodash'
 import {
   ADD_TO_FEATURE_VECTOR_TAB,
   ALERTS_PAGE,
@@ -41,7 +42,7 @@ export const getArtifactIdentifier = (artifact, unique) => {
     if (artifact?.metadata?.tag) identifier += `.${artifact?.metadata?.tag}`
   }
 
-  return identifier
+  return identifier && `id.${identifier}`
 }
 
 export const getFunctionIdentifier = (func, unique) => {
@@ -52,13 +53,13 @@ export const getFunctionIdentifier = (func, unique) => {
     if (func?.tag) identifier += `.${func.tag}`
   }
 
-  return identifier
+  return identifier && `id.${identifier}`
 }
 export const getAlertIdentifier = (alert, unique) => {
   let identifier = `${alert?.name || ''}`
 
   if (unique && alert?.id) identifier += `.${alert.id}`
-  return identifier
+  return identifier && `id.${identifier}`
 }
 
 export const getJobIdentifier = (job, unique) => {
@@ -66,7 +67,7 @@ export const getJobIdentifier = (job, unique) => {
 
   if (unique && job?.uid) identifier += `.${job.uid}`
 
-  return identifier
+  return identifier && `id.${identifier}`
 }
 
 export const getWorkflowJobIdentifier = (job, unique) => {
@@ -85,7 +86,7 @@ export const getWorkflowJobIdentifier = (job, unique) => {
 
   if (jobId) identifier += `.${jobId}`
 
-  return identifier
+  return identifier && `id.${identifier}`
 }
 
 export const getFeatureIdentifier = (feature, unique) => {
@@ -95,7 +96,7 @@ export const getFeatureIdentifier = (feature, unique) => {
   if (feature.metadata?.name) identifier += `.${feature.metadata.name}`
   if (feature.ui?.type) identifier += `.${feature.ui.type}`
 
-  return identifier
+  return identifier && `id.${identifier}`
 }
 
 export const getFeatureSetIdentifier = (featureSet, unique) => {
@@ -104,7 +105,7 @@ export const getFeatureSetIdentifier = (featureSet, unique) => {
   if (unique && featureSet?.tag) identifier += `.${featureSet.tag}`
   if (unique && featureSet?.uid) identifier += `.${featureSet.uid}`
 
-  return identifier
+  return identifier && `id.${identifier}`
 }
 
 export const getFeatureVectorIdentifier = (featureVector, unique) => {
@@ -113,15 +114,27 @@ export const getFeatureVectorIdentifier = (featureVector, unique) => {
   if (unique && featureVector?.tag) identifier += `.${featureVector.tag}`
   if (unique && featureVector?.uid) identifier += `.${featureVector.uid}`
 
-  return identifier
+  return identifier && `id.${identifier}`
 }
 
-export const getV3ioStreamIdentifier = v3ioStream => {
-  return `${v3ioStream?.consumerGroup || ''}`
+export const getV3ioStreamIdentifier = (v3ioStream, consumerGroupIsObject) => {
+  const identifier = get(
+    v3ioStream,
+    consumerGroupIsObject ? 'consumerGroup.identifierUnique' : 'consumerGroup',
+    ''
+  )
+
+  return consumerGroupIsObject ? identifier : `id.${identifier}`
 }
 
-export const getV3ioStreamShardLagIdentifier = v3ioStream => {
-  return `${v3ioStream?.shardLagId || ''}`
+export const getV3ioStreamShardLagIdentifier = (v3ioStream, shardLagIdIsObject) => {
+  const identifier = get(
+    v3ioStream,
+    shardLagIdIsObject ? 'shardLagId.identifierUnique' : 'shardLagId',
+    ''
+  )
+
+  return shardLagIdIsObject ? identifier : `id.${identifier}`
 }
 
 export const getIdentifierMethod = tab => {

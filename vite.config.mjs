@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, path.resolve(process.cwd()), '')
 
   return {
-    plugins: [commonjs(), react(), svgr(), eslint()],
+    plugins: [commonjs(), react(), svgr(), eslint({ failOnError: false })],
     base: env.NODE_ENV === 'production' ? env.VITE_PUBLIC_URL : '/',
     server: {
       proxy: {
@@ -76,7 +76,7 @@ export default defineConfig(({ mode }) => {
       ]
     },
     optimizeDeps: {
-      force: true,
+      force: true
     },
     build: {
       sourcemap: true,

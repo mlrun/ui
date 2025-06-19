@@ -21,18 +21,17 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import { Button, PopUpDialog } from 'igz-controls/components'
+import { Button, PopUpDialog, ErrorMessage } from 'igz-controls/components'
 import ScheduleWizardSimple from './ScheduleWizardSimple'
 import ScheduleWizardCronstring from './ScheduleWizardCronstring'
-import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
-import { decodeLocale, getWeekDays, getWeekStart } from '../../utils/datePicker.util'
-import { getFormatTime } from '../../utils'
-import { generateCronInitialValue } from '../../utils/generateCronInitialValue'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { getDefaultSchedule, scheduleDataInitialState, tabs } from './scheduleWizard.util'
 import { SCHEDULE_DATA } from '../../types'
 import { SIMPLE_SCHEDULE, CRONSTRING_SCHEDULE } from '../../constants'
+import { decodeLocale, getWeekDays, getWeekStart } from '../../utils/datePicker.util'
+import { generateCronInitialValue } from '../../utils/generateCronInitialValue'
+import { getDefaultSchedule, scheduleDataInitialState, tabs } from './scheduleWizard.util'
+import { getFormatTime } from 'igz-controls/utils/datetime.util'
 
 import Schedule from 'igz-controls/images/clock.svg?react'
 
