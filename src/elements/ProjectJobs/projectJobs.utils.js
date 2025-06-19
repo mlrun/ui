@@ -117,7 +117,7 @@ export const getJobsTableData = (jobs, projectName) => {
 }
 
 export const groupByName = content => {
-  const groupedItems = {}
+  const groupedItems = Object.create(null)
 
   content.forEach(contentItem => {
     groupedItems[contentItem.metadata.name]

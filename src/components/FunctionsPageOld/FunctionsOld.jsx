@@ -196,6 +196,8 @@ const Functions = () => {
               })
             }
           }
+        }).catch(() => {
+          setFunctions([])
         })
     },
     [
@@ -228,7 +230,7 @@ const Functions = () => {
         return {
           ...state,
           [funcIdentifier]: {
-            content: content[func.name].map(contentItem =>
+            content: content[funcIdentifier].map(contentItem =>
               createFunctionsRowData(contentItem, params.projectName, false, false, true)
             )
           }

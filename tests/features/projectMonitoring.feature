@@ -17,6 +17,7 @@ Feature: Project Monitoring Page
         Then verify "Jobs_And_Workflows" element visibility on "Project" wizard
         Then verify "Mono_Values_Cards" element visibility on "Project" wizard
         Then verify "Model_Stats_Title" element visibility on "Project" wizard
+        Then "Model_Stats_Title" element on "Project" should contains "Models" value
         Then verify "Model_Stats_Tip" element visibility on "Project" wizard
         Then verify "Model_Stats_Tip" element on "Project" wizard should display hover hint "Label_Hint"."Model_Stats_Tip"
         Then verify "Model_Stats_Counter" element visibility on "Project" wizard

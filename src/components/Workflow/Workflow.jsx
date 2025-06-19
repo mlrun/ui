@@ -260,6 +260,7 @@ const Workflow = ({
           {accessibleProjectsMap[projectName] && (
             <Button
               className="workflow_btn"
+              id="terminate_btn"
               disabled={lowerCase(workflow?.run?.status) !== FUNCTION_RUNNING_STATE}
               variant="danger"
               icon={<Cancel />}

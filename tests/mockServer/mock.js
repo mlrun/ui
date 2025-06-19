@@ -431,9 +431,13 @@ function getFeatureSet(req, res) {
   }
 
   if (req.query['name']) {
-    collectedFeatureSets = collectedFeatureSets.filter(featureSet =>
-      featureSet.metadata.name.includes(req.query['name'].slice(1))
-    )
+    collectedFeatureSets = collectedFeatureSets.filter(featureSet => {
+      if (req.query['name'].startsWith?.('~')) {
+        return featureSet.metadata.name.includes(req.query['name'].slice(1))
+      }
+
+      return featureSet.metadata.name === req.query['name']
+    })
   }
 
   if (req.query['label']) {
@@ -2264,8 +2268,8 @@ function getArtifact(req, res) {
         artifact.metadata?.tree === req.query.tree ||
         artifact?.tree === req.query.tree) &&
       (isNil(req.query.uid) ||
-        artifact.metadata?.uid === req.query.uid ||
-        artifact?.uid === req.query.uid)
+        artifact.metadata?.uid === req.query['object-uid'] ||
+        artifact?.uid === req.query['object-uid'])
     )
   })
 
