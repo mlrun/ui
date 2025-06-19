@@ -32,7 +32,7 @@ export const generateOperatingFunctionsTable = functions => {
     },
     { value: 'Status', className: 'table-cell_small' },
     {
-      value: 'Started at',
+      value: 'Updated',
       className: 'table-cell_medium'
     },
     {
