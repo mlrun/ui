@@ -28,10 +28,8 @@ import {
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB
 } from '../constants'
-import { BUTTON_COPY_URI_CELL_TYPE } from 'igz-controls/constants'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { generateLinkToDetailsPanel } from './link-helper.util'
-import { generateUri } from './resources'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseKeyValues } from './object'
 import { truncateUid } from 'igz-controls/utils/string.util'
@@ -126,14 +124,6 @@ export const createFeatureSetsRowData = (featureSet, project, pageTab, showExpan
         headerLabel: 'Updated',
         value: featureSet.updated ? formatDatetime(featureSet.updated, 'N/A') : 'N/A',
         className: 'table-cell-2'
-      },
-      {
-        id: `buttonCopy.${featureSet.ui.identifierUnique}`,
-        headerId: 'copy',
-        value: '',
-        className: 'table-cell-icon',
-        type: BUTTON_COPY_URI_CELL_TYPE,
-        actionHandler: item => generateUri(item, null, pageTab)
       }
     ]
   }
@@ -343,14 +333,6 @@ export const createFeatureVectorsRowData = (featureVector, pageTab, project, sho
         className: 'table-cell-2',
         showTag: true,
         showStatus: true
-      },
-      {
-        id: `buttonCopy.${featureVector.ui.identifierUnique}`,
-        headerId: 'copy',
-        value: '',
-        className: 'table-cell-icon',
-        type: BUTTON_COPY_URI_CELL_TYPE,
-        actionHandler: item => generateUri(item, null, pageTab)
       },
       {
         id: `uid.${featureVector.ui.identifierUnique}`,

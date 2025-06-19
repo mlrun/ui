@@ -132,6 +132,7 @@ const FeatureSetsView = React.forwardRef(
                       selectedItem={selectedFeatureSet}
                       selectedRowData={selectedRowData}
                       toggleRow={toggleRow}
+                      withQuickActions={true}
                     />
                   )
               )}

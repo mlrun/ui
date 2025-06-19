@@ -124,6 +124,7 @@ const FeatureVectorsView = React.forwardRef(
                       selectedItem={selectedFeatureVector}
                       selectedRowData={selectedRowData}
                       toggleRow={toggleRow}
+                      withQuickActions={true}
                     />
                   )
               )}
