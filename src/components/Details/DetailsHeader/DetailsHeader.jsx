@@ -57,6 +57,7 @@ const DetailsHeader = ({
     DetailsHeaderContainer,
     actionButton,
     commonDetailsStore,
+    handleActionClick,
     handleBackClick,
     handleCancelClick,
     headerRef,
@@ -248,6 +249,7 @@ const DetailsHeader = ({
       commonDetailsStore={commonDetailsStore}
       getCloseDetailsLink={getCloseDetailsLink}
       getDefaultCloseDetailsLink={getDefaultCloseDetailsLink}
+      handleActionClick={handleActionClick}
       handleCancelClick={handleCancelClick}
       handleRefresh={handleRefresh}
       headerRef={headerRef}
