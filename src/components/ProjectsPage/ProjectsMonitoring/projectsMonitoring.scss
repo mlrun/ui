@@ -17,15 +17,16 @@
       grid-template-columns: repeat(5, 1fr);
 
       @container (max-width: 950px) {
-        grid-template-columns:  repeat(6, 1fr);
+        grid-template-columns: repeat(6, 1fr);
         gap: 10px;
       }
     }
 
     &--wide {
       grid-template-columns: repeat(6, 1fr);
+
       @container (max-width: 950px) {
-        grid-template-columns:  repeat(7, 1fr);
+        grid-template-columns: repeat(7, 1fr);
         gap: 10px;
       }
     }

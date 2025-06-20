@@ -17,11 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
-import PropTypes from 'prop-types'
 import classNames from 'classnames'
+import PropTypes from 'prop-types'
 
-import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { TextTooltipTemplate, Tip, Tooltip } from 'igz-controls/components'
 
 import './statsCard.scss'
 

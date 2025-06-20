@@ -255,6 +255,7 @@
             flex: 2;
           }
         }
+
         @container (max-width: 950px) {
           grid-template-columns: repeat(1, 2fr);
         }

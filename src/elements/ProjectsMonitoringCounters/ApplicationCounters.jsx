@@ -14,17 +14,19 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
+import { APPLICATION } from '../../constants'
 import StatsCard from '../../common/StatsCard/StatsCard'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Loader } from 'igz-controls/components'
-import classNames from 'classnames'
+
+import { generateMonitoringStats } from '../../utils/generateMonitoringData'
 
 import './projectsMonitoringCounters.scss'
 
-const ModelsAndApplication = () => {
+const ApplicationCounter = () => {
   const projectStore = useSelector(store => store.projectStore)
   const { projectName } = useParams()
   const navigate = useNavigate()
@@ -33,24 +35,25 @@ const ModelsAndApplication = () => {
     ? projectStore.projectSummary.data?.application_count || 0
     : projectStore.jobsMonitoringData?.application?.total || 0
 
+  const data = useMemo(
+    () => generateMonitoringStats(applicationData, navigate, APPLICATION, projectName),
+    [applicationData, navigate, projectName]
+  )
+
   return (
     <StatsCard className="monitoring-stats">
       <StatsCard.Header title="Application"></StatsCard.Header>
       <StatsCard.Row>
         <div
-          className={classNames('stats__counter_header', {
-            stats__link: projectName
-          })}
+          className={data?.application?.className}
           data-testid="application_total_counter"
-          onClick={() => {
-            projectName && navigate(`/projects/${projectName}/monitoring-app`)
-          }}
+          onClick={data?.application?.link}
         >
           <div className="stats__counter">
-            {projectStore.projectsSummary.loading ? (
+            {projectStore?.projectsSummary?.loading ? (
               <Loader section small secondary />
             ) : (
-              applicationData.toLocaleString()
+              data?.application?.counter?.toLocaleString()
             )}
           </div>
         </div>
@@ -59,4 +62,4 @@ const ModelsAndApplication = () => {
   )
 }
 
-export default React.memo(ModelsAndApplication)
+export default React.memo(ApplicationCounter)

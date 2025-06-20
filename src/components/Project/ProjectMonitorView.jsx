@@ -26,11 +26,12 @@ import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 import NoData from '../../common/NoData/NoData'
-import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
 import ProjectDetailsHeader from '../../common/ProjectDetailsHeader/ProjectDetailsHeader'
+import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
 import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
 import ProjectsMonitoring from '../ProjectsPage/ProjectsMonitoring/ProjectsMonitoring'
 import Select from '../../common/Select/Select'
+
 import { ConfirmDialog, RoundedIcon, Loader } from 'igz-controls/components'
 
 import { PANEL_CREATE_MODE } from '../../constants'

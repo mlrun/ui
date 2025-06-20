@@ -21,34 +21,38 @@ import React, { useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
+import { Loader, PopUpDialog, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import StatsCard from '../../common/StatsCard/StatsCard'
-import { Tooltip, TextTooltipTemplate, PopUpDialog, Loader } from 'igz-controls/components'
 
 import { generateMonitoringStats } from '../../utils/generateMonitoringData'
 import { JOBS_MONITORING_WORKFLOWS_TAB } from '../../constants'
 
 import ClockIcon from 'igz-controls/images/clock.svg?react'
-import classNames from 'classnames'
 
 import './projectsMonitoringCounters.scss'
 
 const WorkflowsCounters = () => {
+  const anchorRef = useRef(null)
+  const [showPopup, setShowPopup] = useState(false)
+  const { projectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
-  const { projectName } = useParams()
-  const [showPopup, setShowPopup] = useState(false)
-  const anchorRef = useRef(null)
+  const timeLabel = projectName ? '24 hrs' : 'Past 24 hrs'
 
   const handleOpenPopUp = () => {
-    const width = anchorRef.current?.offsetWidth ?? 0
-    setShowPopup(width < 110)
+    const isHidden = !document.querySelector('.stats__details')?.offsetParent
+    setShowPopup(isHidden)
+  }
+
+  const handleClosePopUp = () => {
+    setShowPopup(false)
   }
 
   const workflowsData = useMemo(() => {
     if (projectName) {
-      const completed = projectStore.projectSummary.data?.pipelines_completed_recent_count || 0
-      const failed = projectStore.projectSummary.data?.pipelines_failed_recent_count || 0
-      const running = projectStore.projectSummary.data?.pipelines_running_count || 0
+      const completed = projectStore?.projectSummary.data?.pipelines_completed_recent_count || 0
+      const failed = projectStore?.projectSummary.data?.pipelines_failed_recent_count || 0
+      const running = projectStore?.projectSummary.data?.pipelines_running_count || 0
 
       return {
         completed,
@@ -80,84 +84,85 @@ const WorkflowsCounters = () => {
   )
 
   return (
-    <StatsCard className="monitoring-stats">
-      <div onMouseEnter={handleOpenPopUp} onMouseLeave={() => setShowPopup(false)} ref={anchorRef}>
-        <StatsCard.Header title="Workflows">
-          <div className="project-card__info">
-            <ClockIcon className="project-card__info-icon" />
-            {projectName ? <span>24 hrs</span> : <span>Past 24 hrs</span>}
-          </div>
-        </StatsCard.Header>
-        <StatsCard.Row>
-          <div
-            className="stats__link stats__counter_header"
-            data-testid="scheduled_total_counter"
-            onClick={workflowsStats.total.link}
-          >
-            <div className="stats__counter">
-              {projectStore.projectsSummary.loading ? (
-                <Loader section small secondary />
-              ) : (
-                workflowsStats.total.counter.toLocaleString()
-              )}
+    <div onMouseEnter={e => handleOpenPopUp(e)} onMouseLeave={handleClosePopUp}>
+      <StatsCard className="monitoring-stats">
+        <div ref={anchorRef}>
+          <StatsCard.Header title="Workflows">
+            <div className="project-card__info">
+              <ClockIcon className="project-card__info-icon" />
+              <span>{timeLabel}</span>
             </div>
-          </div>
-        </StatsCard.Row>
+          </StatsCard.Header>
+          <StatsCard.Row>
+            <div
+              className="stats__link stats__counter_header"
+              data-testid="scheduled_total_counter"
+              onClick={workflowsStats?.total?.link}
+            >
+              <div className="stats__counter">
+                {projectStore?.projectsSummary?.loading ? (
+                  <Loader section small secondary />
+                ) : (
+                  workflowsStats?.total?.counter?.toLocaleString()
+                )}
+              </div>
+            </div>
+          </StatsCard.Row>
 
-        <div className="stats__details">
-          {workflowsStats.counters.map(({ counter, label, link, statusClass, tooltip }, index) => {
-            const isLast = index === workflowsStats.counters.length - 1
-            const linkClassName = classNames('stats__link', !isLast && 'stats__line')
-            return (
-              <StatsCard.Row key={`${statusClass}-jobs`}>
-                <div
-                  className={linkClassName}
-                  onClick={link}
-                  data-testid={`wf_${statusClass}_counter`}
-                >
-                  <div data-testid={`wf_${statusClass}_status`} className="stats__status">
-                    <Tooltip textShow template={<TextTooltipTemplate text={tooltip} />}>
-                      <h6 className="stats__subtitle">{label}</h6>
-                      <i className={`state-${statusClass}`} />
-                    </Tooltip>
+          <div className="stats__details">
+            {workflowsStats.counters.map(
+              ({ counter, className, label, link, statusClass, tooltip }) => {
+                return (
+                  <StatsCard.Row key={`${statusClass}-jobs`}>
+                    <div
+                      className={className}
+                      onClick={link}
+                      data-testid={`wf_${statusClass}_counter`}
+                    >
+                      <div data-testid={`wf_${statusClass}_status`} className="stats__status">
+                        <Tooltip textShow template={<TextTooltipTemplate text={tooltip} />}>
+                          <h6 className="stats__subtitle">{label}</h6>
+                          <i className={`state-${statusClass}`} />
+                        </Tooltip>
+                      </div>
+                      <div className="stats__counter">
+                        {projectStore?.projectsSummary?.loading ? (
+                          <Loader section small secondary />
+                        ) : (
+                          counter?.toLocaleString()
+                        )}
+                      </div>
+                    </div>
+                  </StatsCard.Row>
+                )
+              }
+            )}
+          </div>
+
+          {showPopup && (
+            <PopUpDialog
+              className="card-popup"
+              customPosition={{
+                element: anchorRef,
+                position: 'bottom-right'
+              }}
+              headerIsHidden
+            >
+              <div className="card-popup_text">
+                {workflowsStats?.counters?.map(({ link, counter, label, statusClass }) => (
+                  <div onClick={link} key={label}>
+                    <i className={`state-${statusClass}`} />{' '}
+                    <span className="card-popup_text_link">
+                      {label}: {counter}
+                    </span>
                   </div>
-                  <div className="stats__counter">
-                    {projectStore.projectsSummary.loading ? (
-                      <Loader section small secondary />
-                    ) : (
-                      counter.toLocaleString()
-                    )}
-                  </div>
-                </div>
-              </StatsCard.Row>
-            )
-          })}
+                ))}
+              </div>
+            </PopUpDialog>
+          )}
         </div>
-
-        {showPopup && (
-          <PopUpDialog
-            className="card-popup"
-            headerIsHidden
-            customPosition={{
-              element: anchorRef,
-              position: 'bottom-right'
-            }}
-          >
-            <div className="card-popup_text">
-              {workflowsStats.counters.map(({ link, counter, label, statusClass }) => (
-                <div onClick={link} key={label} className="card-popup_text_link">
-                  <i className={`state-${statusClass}`} />
-                  <span className="stats__subtitle">
-                    {' '}
-                    {label}: {counter}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </PopUpDialog>
-        )}
-      </div>
-    </StatsCard>
+      </StatsCard>
+    </div>
   )
 }
 

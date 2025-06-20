@@ -14,35 +14,44 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useMemo, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
 
+import React, { useMemo, useRef, useState } from 'react'
+import classNames from 'classnames'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+
+import { ARTIFACTS_PAGE } from '../../constants'
+import { Loader, PopUpDialog } from 'igz-controls/components'
 import StatsCard from '../../common/StatsCard/StatsCard'
-import { PopUpDialog, Loader } from 'igz-controls/components'
+
 import ClockIcon from 'igz-controls/images/clock.svg?react'
 
 import './projectsMonitoringCounters.scss'
-import classNames from 'classnames'
+import { generateMonitoringStats } from '../../utils/generateMonitoringData'
 
-const DataAndArtifactsCounters = () => {
+const ArtifactsCounters = () => {
+  const anchorRef = useRef(null)
+  const [showPopup, setShowPopup] = useState(false)
   const { projectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
-  const [showPopup, setShowPopup] = useState(false)
-  const anchorRef = useRef(null)
+  const timeLabel = projectName ? '24 hrs' : 'Past 24 hrs'
 
   const handleOpenPopUp = () => {
-    const width = anchorRef.current?.offsetWidth ?? 0
-    setShowPopup(width < 110)
+    const isHidden = !document.querySelector('.stats__details')?.offsetParent
+    setShowPopup(isHidden)
+  }
+
+  const handleClosePopUp = () => {
+    setShowPopup(false)
   }
 
   const dataStats = useMemo(() => {
     if (projectName) {
-      const llm_prompts = projectStore.projectSummary.data?.llm_prompts || 0
-      const files = projectStore.projectSummary.data?.files_count || 0
-      const documents = projectStore.projectSummary.data?.documents_count || 0
-      const datasets = projectStore.projectSummary.data?.datasets_count || 0
+      const llm_prompts = projectStore?.projectSummary?.data?.llm_prompts || 0
+      const files = projectStore?.projectSummary?.data?.files_count || 0
+      const documents = projectStore?.projectSummary?.data?.documents_count || 0
+      const datasets = projectStore?.projectSummary?.data?.datasets_count || 0
 
       return {
         llm_prompts,
@@ -63,116 +72,85 @@ const DataAndArtifactsCounters = () => {
     )
   }, [projectName, projectStore.jobsMonitoringData.artifacts, projectStore.projectSummary.data])
 
-  const generateLink = useCallback(
-    tab => projectName && `/projects/${projectName}/${tab}`,
-    [projectName]
+  const data = useMemo(
+    () => generateMonitoringStats(dataStats, navigate, ARTIFACTS_PAGE, projectName),
+    [dataStats, navigate, projectName]
   )
 
   return (
-    <StatsCard className="monitoring-stats">
-      <div onMouseEnter={handleOpenPopUp} onMouseLeave={() => setShowPopup(false)} ref={anchorRef}>
-        <StatsCard.Header title="Artifacts">
-          <div className="project-card__info">
-            <ClockIcon className="project-card__info-icon" />
-            {projectName ? <span>24 hrs</span> : <span>Past 24 hrs</span>}
+    <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
+      <StatsCard className="monitoring-stats">
+        <div ref={anchorRef}>
+          <StatsCard.Header title="Artifacts">
+            <div className="project-card__info">
+              <ClockIcon className="project-card__info-icon" />
+              <span>{timeLabel}</span>
+            </div>
+          </StatsCard.Header>
+          <StatsCard.Row>
+            <div className="stats__counter_header" data-testid="data_total_counter">
+              <div className="stats__counter">
+                {projectStore.projectsSummary.loading ? (
+                  <Loader section small secondary />
+                ) : (
+                  data?.total?.counter?.toLocaleString()
+                )}
+              </div>
+            </div>
+          </StatsCard.Row>
+          <div className="stats__details">
+            <StatsCard.Row>
+              <div className={data?.files?.className} onClick={data?.files?.link}>
+                <h6 className="stats__subtitle">Files</h6>
+                <div className="stats__counter">{data?.files?.counter?.toLocaleString()}</div>
+              </div>
+            </StatsCard.Row>
+            <StatsCard.Row>
+              <div className={data?.datasets?.className} onClick={data?.datasets?.link}>
+                <h6 className="stats__subtitle">Datasets</h6>
+                <div className="stats__counter">{data?.datasets.counter?.toLocaleString()}</div>
+              </div>
+            </StatsCard.Row>
+            <StatsCard.Row>
+              <div className={data?.documents?.className} onClick={data?.documents?.link}>
+                <h6 className="stats__subtitle">Documents</h6>
+                <div className="stats__counter">{data?.documents?.counter?.toLocaleString()}</div>
+              </div>
+            </StatsCard.Row>
+            <StatsCard.Row>
+              <div className={data.llm_prompt.className} onClick={data.llm_prompt.link}>
+                <h6 className="stats__subtitle">LLM Prompts</h6>
+                <div className="stats__counter">{data?.llm_prompt?.counter?.toLocaleString()}</div>
+              </div>
+            </StatsCard.Row>
           </div>
-        </StatsCard.Header>
 
-        <StatsCard.Row>
-          <div
-            className={'stats__counter_header'}
-            onClick={() => navigate(generateLink('artifacts'))}
-            data-testid="data_total_counter"
-          >
-            <div className="stats__counter">
-              {projectStore.projectsSummary.loading ? (
-                <Loader section small secondary />
-              ) : (
-                dataStats.total.toLocaleString()
-              )}
-            </div>
-          </div>
-        </StatsCard.Row>
-
-        <div className="stats__details">
-          <StatsCard.Row>
-            <div
-              className={classNames('stats__line', {
-                stats__link: projectName
-              })}
-              onClick={() => navigate(generateLink('files'))}
+          {showPopup && (
+            <PopUpDialog
+              className="card-popup"
+              customPosition={{
+                element: anchorRef,
+                position: 'bottom-right'
+              }}
+              headerIsHidden
             >
-              <h6 className="stats__subtitle">Files</h6>
-              <div className="stats__counter">{dataStats.files.toLocaleString()}</div>
-            </div>
-          </StatsCard.Row>
-          <StatsCard.Row>
-            <div
-              className={classNames('stats__line', {
-                stats__link: projectName
-              })}
-              onClick={() => navigate(generateLink('datasets'))}
-            >
-              <h6 className="stats__subtitle">Datasets</h6>
-              <div className="stats__counter">{dataStats.datasets.toLocaleString()}</div>
-            </div>
-          </StatsCard.Row>
-          <StatsCard.Row>
-            <div
-              className={classNames('stats__line', {
-                stats__link: projectName
-              })}
-              onClick={() => navigate(generateLink('documents'))}
-            >
-              <h6 className="stats__subtitle">Documents</h6>
-              <div className="stats__counter">{dataStats.documents.toLocaleString()}</div>
-            </div>
-          </StatsCard.Row>
-          <StatsCard.Row>
-            <div
-              className={classNames({
-                stats__link: projectName
-              })}
-              onClick={() => navigate(generateLink('llm-prompts'))}
-            >
-              <h6 className="stats__subtitle">LLM Prompts</h6>
-              <div className="stats__counter">{dataStats.llm_prompts.toLocaleString()}</div>
-            </div>
-          </StatsCard.Row>
+              <div className="card-popup_text">
+                {data.list.map(item => (
+                  <div
+                    key={item.key}
+                    className={classNames({ 'card-popup_text_link': projectName })}
+                    onClick={data[item.key].link}
+                  >
+                    {item.label}: {data[item.key].counter.toLocaleString()}
+                  </div>
+                ))}
+              </div>
+            </PopUpDialog>
+          )}
         </div>
-
-        {showPopup && (
-          <PopUpDialog
-            className="card-popup"
-            headerIsHidden
-            customPosition={{
-              element: anchorRef,
-              position: 'bottom-right'
-            }}
-          >
-            <div className="card-popup_text">
-              {[
-                { label: 'Files', value: dataStats.files, tab: 'files' },
-                { label: 'Datasets', value: dataStats.datasets, tab: 'datasets' },
-                { label: 'Documents', value: dataStats.documents, tab: 'documents' },
-                { label: 'LLM Prompts', value: dataStats.llm_prompts, tab: 'llm-prompts' }
-              ].map(item => (
-                <div
-                  key={item.tab}
-                  className={classNames({
-                    'card-popup_text_link': projectName
-                  })}
-                  onClick={() => navigate(generateLink(item.tab))}
-                >
-                  {item.label}: {item.value}
-                </div>
-              ))}
-            </div>
-          </PopUpDialog>
-        )}
-      </div>
-    </StatsCard>
+      </StatsCard>
+    </div>
   )
 }
 
-export default React.memo(DataAndArtifactsCounters)
+export default React.memo(ArtifactsCounters)

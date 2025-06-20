@@ -9,26 +9,26 @@
   text-decoration-thickness: 1px;
 }
 
-.card_small-container {
+.card__small-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   gap: 15px;
+  justify-content: space-between;
 
   @container (max-width: 950px) {
-    flex-direction: row;
     display: contents;
+    flex-direction: row;
   }
 }
 
 .monitoring-stats {
-  height: 100%;
+  flex: 1;
   flex-direction: column;
   flex-wrap: unset;
   justify-content: flex-start;
-  border: 1px solid colors.$frenchLilac;
   min-width: 0;
-  flex: 1;
+  height: 100%;
+  border: 1px solid colors.$frenchLilac;
 
   &.alerts-card {
     transition:
@@ -51,23 +51,24 @@
     }
 
     &-card__row {
-      margin-bottom: 0;
       flex: unset;
+      margin-bottom: 0;
       font-weight: 400;
       font-size: 14px;
+
       & > * {
-        color: colors.$primary;
+        position: relative;
         display: flex;
         justify-content: space-between;
-        position: relative;
-        padding-bottom: 0.5rem;
         width: 100%;
+        padding-bottom: 0.5rem;
+        color: colors.$primary;
       }
     }
 
-      &-large {
-        min-height: 34px;
-      }
+    &-large {
+      min-height: 34px;
+    }
 
     &__counter_header {
       font-weight: 600;
@@ -82,25 +83,28 @@
 
     &__line {
       &::after {
-        content: '';
         position: absolute;
+        right: 0;
         bottom: 0;
         left: 0;
-        right: 0;
         height: 1px;
         background-color: colors.$mulledWineThree;
+        content: '';
       }
     }
 
     &__details {
       margin-top: 0.5em;
+
       & > * {
         margin-bottom: 0.5em;
       }
+
       @container (max-width: 950px) {
         display: none;
       }
     }
+
     &__status {
       i[class^='state-'] {
         margin-left: 5px;
@@ -109,11 +113,11 @@
   }
 
   .project-card__info {
-    width: 80px;
-    flex-shrink: 0;
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: flex-end;
+    width: 80px;
     margin-left: 0.5em;
     color: colors.$topaz;
     font-size: 0.75rem;
@@ -148,36 +152,32 @@
   }
 }
 
-
-
 .card-popup {
-
   .pop-up-dialog {
+    z-index: 9999;
+    width: max-content;
     min-width: 100%;
     max-width: 600px;
-    width: max-content;
-    z-index: 9999;
     margin-top: -10px;
-    background: colors.$primary;
     padding: 0;
-
+    background: colors.$primary;
   }
 
   &_text {
-    font-size: 12px;
-    padding: 10px;
-    line-height: 20px;
-    color: colors.$white;
-    white-space: nowrap;
-    overflow-x: auto;
-
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    padding: 10px;
+    overflow-x: auto;
+    color: colors.$white;
+    font-size: 12px;
+    line-height: 20px;
+    white-space: nowrap;
 
     &_link {
       &:hover {
         @include counterLinkHover;
+
         color: white;
       }
     }

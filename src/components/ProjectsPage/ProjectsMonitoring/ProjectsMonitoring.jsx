@@ -17,36 +17,37 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import ApplicationCounter from '../../../elements/ProjectsMonitoringCounters/ApplicationCounters'
+import classNames from 'classnames'
+import { useParams } from 'react-router-dom'
+
 import AlertsCounters from '../../../elements/ProjectsMonitoringCounters/AlertsCounters'
+import ApplicationCounter from '../../../elements/ProjectsMonitoringCounters/ApplicationCounters'
 import DataAndArtifactsCounter from '../../../elements/ProjectsMonitoringCounters/ArtifactsCounters'
 import ModelsAndApplication from '../../../elements/ProjectsMonitoringCounters/ModelsCounters'
 import PageHeader from '../../../elements/PageHeader/PageHeader'
+import RunCounter from '../../../elements/ProjectsMonitoringCounters/RunsCounters'
 import ScheduledJobsCounters from '../../../elements/ProjectsMonitoringCounters/ScheduledJobsCounters'
 import WorkflowsCounters from '../../../elements/ProjectsMonitoringCounters/WorkflowsCounters'
 
 import './projectsMonitoring.scss'
-import classNames from 'classnames'
-import { useParams } from 'react-router-dom'
-import RunCounter from '../../../elements/ProjectsMonitoringCounters/RunsCounters'
 
 const ProjectsMonitoring = () => {
   const { projectName } = useParams()
+  const monitoringStatsClassName = classNames(
+    'projects-monitoring-stats',
+    projectName ? 'projects-monitoring-stats--narrow' : 'projects-monitoring-stats--wide'
+  )
+
   return (
     <div className="projects-monitoring-container">
       <PageHeader title="Monitoring" />
-      <div
-        className={classNames(
-          'projects-monitoring-stats',
-          !projectName ? 'projects-monitoring-stats--wide' : 'projects-monitoring-stats--narrow'
-        )}
-      >
+      <div className={monitoringStatsClassName}>
         <DataAndArtifactsCounter />
         {!projectName && <RunCounter />}
         {/* Todo: Delete WorkflowsCounters after ML-5460 is impplemented */}
         <WorkflowsCounters />
         <ScheduledJobsCounters />
-        <div className="card_small-container">
+        <div className="card__small-container">
           <ModelsAndApplication />
           <ApplicationCounter />
         </div>

@@ -25,7 +25,6 @@ import { generateMonitoringStats } from '../../utils/generateMonitoringData'
 import { JOBS_MONITORING_JOBS_TAB } from '../../constants'
 
 import ClockIcon from 'igz-controls/images/clock.svg?react'
-import classNames from 'classnames'
 
 import './projectsMonitoringCounters.scss'
 
@@ -72,16 +71,10 @@ const RunCounter = () => {
         </StatsCard.Row>
 
         <div className="stats__details">
-          {jobStats.counters.map(({ counter, label, link, statusClass, tooltip }, index) => {
-            const isLast = index === jobStats.counters.length - 1
-            const linkClassName = classNames('stats__link', !isLast && 'stats__line')
+          {jobStats?.counters?.map(({ counter, className, label, link, statusClass, tooltip }) => {
             return (
               <StatsCard.Row key={`${statusClass}-jobs`}>
-                <div
-                  className={linkClassName}
-                  onClick={link}
-                  data-testid={`wf_${statusClass}_counter`}
-                >
+                <div className={className} onClick={link} data-testid={`wf_${statusClass}_counter`}>
                   <div data-testid={`wf_${statusClass}_status`} className="stats__status">
                     <Tooltip textShow template={<TextTooltipTemplate text={tooltip} />}>
                       <h6 className="stats__subtitle">{label}</h6>
@@ -89,7 +82,7 @@ const RunCounter = () => {
                     </Tooltip>
                   </div>
                   <div className="stats__counter">
-                    {projectStore.projectsSummary.loading ? (
+                    {projectStore?.projectsSummary?.loading ? (
                       <Loader section small secondary />
                     ) : (
                       counter.toLocaleString()

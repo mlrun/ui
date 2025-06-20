@@ -14,15 +14,16 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import StatsCard from '../../common/StatsCard/StatsCard'
 import { Loader } from 'igz-controls/components'
+import { MODELS_PAGE } from '../../constants'
 import { useNavigate, useParams } from 'react-router-dom'
-import classNames from 'classnames'
 
 import './projectsMonitoringCounters.scss'
+import { generateMonitoringStats } from '../../utils/generateMonitoringData'
 
 const ModelsAndApplication = () => {
   const projectStore = useSelector(store => store.projectStore)
@@ -33,24 +34,25 @@ const ModelsAndApplication = () => {
     ? projectStore.projectSummary.data?.models_count || 0
     : projectStore.jobsMonitoringData?.models?.total || 0
 
+  const data = useMemo(
+    () => generateMonitoringStats(modelsData, navigate, MODELS_PAGE, projectName),
+    [modelsData, navigate, projectName]
+  )
+
   return (
     <StatsCard className="monitoring-stats">
       <StatsCard.Header title="Models"></StatsCard.Header>
       <StatsCard.Row>
         <div
-          className={classNames('stats__counter_header', {
-            stats__link: projectName
-          })}
-          data-testid="scheduled_total_counter"
-          onClick={() => {
-            projectName && navigate(`/projects/${projectName}/models`)
-          }}
+          className={data?.models?.className}
+          data-testid="models_total_counter"
+          onClick={data.models.link}
         >
           <div className="stats__counter">
-            {projectStore.projectsSummary.loading ? (
+            {projectStore?.projectsSummary?.loading ? (
               <Loader section small secondary />
             ) : (
-              modelsData.toLocaleString()
+              data?.models?.counter?.toLocaleString()
             )}
           </div>
         </div>

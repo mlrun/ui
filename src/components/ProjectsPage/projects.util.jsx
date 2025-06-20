@@ -297,10 +297,10 @@ export const generateMonitoringCounters = (data, dispatch) => {
       total: 0
     },
     artifacts: {
-      llm_prompts: 0,
+      documents: 0,
       datasets: 0,
       files: 0,
-      documents: 0,
+      llm_prompts: 0,
       total: 0
     }
   }

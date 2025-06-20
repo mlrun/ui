@@ -18,11 +18,11 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useMemo, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
+import { Loader, PopUpDialog } from 'igz-controls/components'
 import StatsCard from '../../common/StatsCard/StatsCard'
-import { PopUpDialog, Loader } from 'igz-controls/components'
 
 import { generateMonitoringStats } from '../../utils/generateMonitoringData'
 import { JOBS_MONITORING_SCHEDULED_TAB } from '../../constants'
@@ -37,17 +37,22 @@ const ScheduledJobsCounters = () => {
   const projectStore = useSelector(store => store.projectStore)
   const [showPopup, setShowPopup] = useState(false)
   const anchorRef = useRef(null)
+  const timeLabel = projectName ? '24 hrs' : 'Past 24 hrs'
 
   const handleOpenPopUp = () => {
-    const width = anchorRef.current?.offsetWidth ?? 0
-    setShowPopup(width < 110)
+    const isHidden = !document.querySelector('.stats__details')?.offsetParent
+    setShowPopup(isHidden)
+  }
+
+  const handleClosePopUp = () => {
+    setShowPopup(false)
   }
 
   const scheduledData = useMemo(() => {
     if (projectName) {
-      const jobs = projectStore.projectSummary.data?.distinct_scheduled_jobs_pending_count || 0
+      const jobs = projectStore.projectSummary?.data?.distinct_scheduled_jobs_pending_count || 0
       const workflows =
-        projectStore.projectSummary.data?.distinct_scheduled_pipelines_pending_count || 0
+        projectStore.projectSummary?.data?.distinct_scheduled_pipelines_pending_count || 0
 
       return {
         jobs,
@@ -56,7 +61,7 @@ const ScheduledJobsCounters = () => {
       }
     }
     return (
-      projectStore.jobsMonitoringData.scheduled || {
+      projectStore?.jobsMonitoringData.scheduled || {
         jobs: 0,
         workflows: 0,
         total: 0
@@ -64,9 +69,9 @@ const ScheduledJobsCounters = () => {
     )
   }, [
     projectName,
-    projectStore.projectSummary.data?.distinct_scheduled_jobs_pending_count,
-    projectStore.projectSummary.data?.distinct_scheduled_pipelines_pending_count,
-    projectStore.jobsMonitoringData.scheduled
+    projectStore.projectSummary?.data?.distinct_scheduled_jobs_pending_count,
+    projectStore.projectSummary?.data?.distinct_scheduled_pipelines_pending_count,
+    projectStore.jobsMonitoringData?.scheduled
   ])
 
   const scheduledStats = useMemo(
@@ -75,84 +80,86 @@ const ScheduledJobsCounters = () => {
   )
 
   return (
-    <StatsCard className="monitoring-stats">
-      <div onMouseEnter={handleOpenPopUp} onMouseLeave={() => setShowPopup(false)} ref={anchorRef}>
-        <StatsCard.Header title="Scheduled">
-          <div className="project-card__info">
-            <ClockIcon className="project-card__info-icon" />
-            {projectName ? <span>24 hrs</span> : <span>Next 24 hrs</span>}
-          </div>
-        </StatsCard.Header>
-        <StatsCard.Row>
-          <div
-            onClick={scheduledStats.total.link}
-            className="stats__counter_header stats__link"
-            data-testid="scheduled_total_counter"
-          >
-            <div className="stats__counter">
-              {projectStore.projectsSummary.loading ? (
-                <Loader section small secondary />
-              ) : (
-                scheduledStats.total.counter.toLocaleString()
-              )}
+    <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
+      <StatsCard className="monitoring-stats">
+        <div ref={anchorRef}>
+          <StatsCard.Header title="Scheduled">
+            <div className="project-card__info">
+              <ClockIcon className="project-card__info-icon" />
+              <span>{timeLabel}</span>
             </div>
-          </div>
-        </StatsCard.Row>
-        <div className="stats__details">
+          </StatsCard.Header>
           <StatsCard.Row>
             <div
-              className="stats__link stats__line"
-              onClick={scheduledStats.jobs.link}
-              data-testid="scheduled_jobs_counter"
+              className="stats__counter_header stats__link"
+              data-testid="scheduled_total_counter"
+              onClick={scheduledStats?.total?.link}
             >
-              <h6 className="stats__subtitle">Jobs</h6>
               <div className="stats__counter">
-                {projectStore.projectsSummary.loading ? (
+                {projectStore?.projectsSummary?.loading ? (
                   <Loader section small secondary />
                 ) : (
-                  scheduledStats.jobs.counter.toLocaleString()
+                  scheduledStats.total.counter
                 )}
               </div>
             </div>
           </StatsCard.Row>
-          <StatsCard.Row>
-            <div
-              className="stats__link stats__line"
-              onClick={scheduledStats.workflows.link}
-              data-testid="scheduled_workflows_counter"
-            >
-              <h6 className="stats__subtitle">Workflows</h6>
-              <div className="stats__counter">
-                {projectStore.projectsSummary.loading ? (
-                  <Loader section small secondary />
-                ) : (
-                  scheduledStats.workflows.counter.toLocaleString()
-                )}
+          <div className="stats__details">
+            <StatsCard.Row>
+              <div
+                className="stats__link stats__line"
+                onClick={scheduledStats?.jobs?.link}
+                data-testid="scheduled_jobs_counter"
+              >
+                <h6 className="stats__subtitle">Jobs</h6>
+                <div className="stats__counter">
+                  {projectStore.projectsSummary.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    scheduledStats.jobs.counter.toLocaleString()
+                  )}
+                </div>
               </div>
-            </div>
-          </StatsCard.Row>
+            </StatsCard.Row>
+            <StatsCard.Row>
+              <div
+                className="stats__link stats__line"
+                onClick={scheduledStats.workflows.link}
+                data-testid="scheduled_workflows_counter"
+              >
+                <h6 className="stats__subtitle">Workflows</h6>
+                <div className="stats__counter">
+                  {projectStore.projectsSummary.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    scheduledStats.workflows.counter.toLocaleString()
+                  )}
+                </div>
+              </div>
+            </StatsCard.Row>
+          </div>
+          {showPopup && (
+            <PopUpDialog
+              className="card-popup"
+              customPosition={{
+                element: anchorRef,
+                position: 'bottom-right'
+              }}
+              headerIsHidden
+            >
+              <div className={'card-popup_text'}>
+                <div className="card-popup_text_link" onClick={scheduledStats.jobs.link}>
+                  Runs: {scheduledStats.workflows.counter}
+                </div>
+                <div className="card-popup_text_link" onClick={scheduledStats.workflows.link}>
+                  Workflows: {scheduledStats.workflows.counter}
+                </div>
+              </div>
+            </PopUpDialog>
+          )}
         </div>
-        {showPopup && (
-          <PopUpDialog
-            className="card-popup"
-            headerIsHidden
-            customPosition={{
-              element: anchorRef,
-              position: 'bottom-right'
-            }}
-          >
-            <div className={'card-popup_text'}>
-              <div className="card-popup_text_link" onClick={scheduledStats.jobs.link}>
-                Runs: {scheduledStats.workflows.counter}
-              </div>
-              <div className="card-popup_text_link" onClick={scheduledStats.workflows.link}>
-                Workflows: {scheduledStats.workflows.counter}
-              </div>
-            </div>
-          </PopUpDialog>
-        )}
-      </div>
-    </StatsCard>
+      </StatsCard>
+    </div>
   )
 }
 
