@@ -352,6 +352,12 @@ export const generateJobsContent = selectedItem => {
           : selectedItem.iterationStats?.length
             ? selectedItem.iterationStats.length - 1
             : 'N/A'
+    },
+    retryCount: {
+      value: selectedItem.retryCount
+    },
+    maxRetries: {
+      value: selectedItem.maxRetries
     }
   }
 }
