@@ -56,7 +56,7 @@ import { filterSelectOptions, tagFilterOptions } from './filterMenu.settings'
 import { generateProjectsList } from '../../utils/projects'
 import { getDefaultCloseDetailsLink } from '../../utils/link-helper.util'
 import { removeFilters, setFilterProjectOptions, setFilters } from '../../reducers/filtersReducer'
-import { setFiltersWasHandled, showWarning } from '../../reducers/detailsReducer'
+import { setFiltersWasHandled, showWarning } from 'igz-controls/reducers/commonDetailsReducer'
 
 import './filterMenu.scss'
 
@@ -84,7 +84,7 @@ const FilterMenu = ({
   const dispatch = useDispatch()
   const filtersStore = useSelector(store => store.filtersStore)
   const projectStore = useSelector(store => store.projectStore)
-  const changes = useSelector(store => store.detailsStore.changes)
+  const changes = useSelector(store => store.commonDetailsStore.changes)
 
   useEffect(() => {
     setLabels(filtersStore.labels)

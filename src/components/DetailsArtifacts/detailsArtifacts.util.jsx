@@ -19,13 +19,13 @@ such restriction.
 */
 import prettyBytes from 'pretty-bytes'
 
-import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
+import { RoundedIcon, TextTooltipTemplate, Tooltip, CopyToClipboard } from 'igz-controls/components'
 import Download from '../../common/Download/Download'
-import { RoundedIcon, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 import ArtifactPopUp from '../../elements/DetailsPopUp/ArtifactPopUp/ArtifactPopUp'
 
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { formatDatetime, parseKeyValues } from '../../utils'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
+import { parseKeyValues } from '../../utils'
 import { parseArtifacts } from '../../utils/parseArtifacts'
 
 import DetailsIcon from 'igz-controls/images/view-details.svg?react'

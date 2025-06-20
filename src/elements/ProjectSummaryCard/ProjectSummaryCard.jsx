@@ -21,8 +21,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import Loader from '../../common/Loader/Loader'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, Loader } from 'igz-controls/components'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
 const ProjectSummaryCard = ({

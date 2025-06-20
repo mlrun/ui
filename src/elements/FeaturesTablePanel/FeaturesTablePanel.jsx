@@ -24,7 +24,7 @@ import PropTypes from 'prop-types'
 
 import FeaturesTablePanelView from './FeaturesTablePanelView'
 
-import { setNotification } from '../../reducers/notificationReducer'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import {
   setLabelFeature,
   setTablePanelOpen,
@@ -33,7 +33,7 @@ import {
   updateGroupedFeatures
 } from '../../reducers/tableReducer'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { createNewFeatureVector, updateFeatureVectorData } from '../../reducers/featureStoreReducer'
 
 const FeaturesTablePanel = ({ projectName = '', handleCancel = null, onSubmit = null }) => {

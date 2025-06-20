@@ -24,7 +24,7 @@ import { get } from 'lodash'
 
 import { FormChipCell, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { getChipOptions } from '../../utils/getChipOptions'
+import { getChipOptions } from 'igz-controls/utils/chips.util'
 
 import './functionCardTemplate.scss'
 

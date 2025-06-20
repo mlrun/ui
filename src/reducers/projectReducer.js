@@ -28,7 +28,7 @@ import {
 } from 'igz-controls/constants'
 import { DEFAULT_ABORT_MSG, PROJECT_ONLINE_STATUS, REQUEST_CANCELED } from '../constants'
 import { parseProjects } from '../utils/parseProjects'
-import { showErrorNotification } from '../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { parseSummaryData } from '../utils/parseSummaryData'
 import { mlrunUnhealthyErrors } from '../components/ProjectsPage/projects.util'
 
@@ -50,6 +50,7 @@ const initialState = {
     isUnhealthy: false,
     retrying: false
   },
+  accessibleProjectsMap: {},
   project: {
     data: null,
     error: null,
@@ -377,6 +378,12 @@ const projectStoreSlice = createSlice({
     },
     setProjectTotalAlerts(state, action) {
       state.projectTotalAlerts = { ...action.payload }
+    },
+    setAccessibleProjectsMap(state, action) {
+      state.accessibleProjectsMap = {
+        ...state.accessibleProjectsMap,
+        ...action.payload
+      }
     }
   },
   extraReducers: builder => {
@@ -579,7 +586,8 @@ export const {
   setMlrunIsUnhealthy,
   setMlrunUnhealthyRetrying,
   setJobsMonitoringData,
-  setProjectTotalAlerts
+  setProjectTotalAlerts,
+  setAccessibleProjectsMap
 } = projectStoreSlice.actions
 
 export default projectStoreSlice.reducer

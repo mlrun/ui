@@ -24,7 +24,8 @@ import classNames from 'classnames'
 import { ConfirmDialog, Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
 import { SelectOption } from 'igz-controls/elements'
 
-import { DENSITY_OPTIONS, SELECT_OPTIONS } from '../../types'
+import { SELECT_OPTIONS } from '../../types'
+import { DENSITY_OPTIONS } from 'igz-controls/types'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import Caret from 'igz-controls/images/dropdown.svg?react'

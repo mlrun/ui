@@ -17,8 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { setNotification } from '../reducers/notificationReducer'
-import { showErrorNotification } from './notifications.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 export const copyToClipboard = (textToCopy, dispatch) => {
   if (!navigator.clipboard?.writeText) {

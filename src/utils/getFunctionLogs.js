@@ -23,7 +23,7 @@ import {
 } from '../components/FunctionsPage/functions.util'
 import { TAG_LATEST } from '../constants'
 import { fetchFunctionLogs, fetchFunctionNuclioLogs } from '../reducers/functionReducer'
-import { showErrorNotification } from './notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 const isFunctionTransient = response => {
   return TRANSIENT_FUNCTION_STATUSES.includes(response.headers?.['x-mlrun-function-status'])

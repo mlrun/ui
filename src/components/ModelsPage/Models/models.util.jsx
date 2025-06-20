@@ -27,21 +27,24 @@ import {
   MODELS_PAGE,
   MODELS_TAB,
   TAG_LATEST,
-  FULL_VIEW_MODE,
   MODEL_TYPE,
   ARTIFACT_MAX_DOWNLOAD_SIZE
 } from '../../../constants'
+import {
+  getErrorMsg,
+  openPopUp,
+  openDeleteConfirmPopUp,
+  copyToClipboard
+} from 'igz-controls/utils/common.util'
 import { showArtifactsPreview, updateArtifact } from '../../../reducers/artifactsReducer'
-import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { FORBIDDEN_ERROR_STATUS_CODE, FULL_VIEW_MODE } from 'igz-controls/constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../../utils/artifacts.util'
 import { convertChipsData } from '../../../utils/convertChipsData'
-import { copyToClipboard } from '../../../utils/copyToClipboard'
 import { getIsTargetPathValid } from '../../../utils/createArtifactsContent'
 import { generateUri } from '../../../utils/resources'
-import { getErrorMsg, openPopUp, openDeleteConfirmPopUp } from 'igz-controls/utils/common.util'
 import { handleDeleteArtifact } from '../../../utils/handleDeleteArtifact'
 import { setDownloadItem, setShowDownloadsList } from '../../../reducers/downloadReducer'
-import { showErrorNotification } from '../../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 import TagIcon from 'igz-controls/images/tag-icon.svg?react'
 import YamlIcon from 'igz-controls/images/yaml.svg?react'

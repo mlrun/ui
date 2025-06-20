@@ -22,12 +22,13 @@ import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
-import DetailsDrillDownAlert from '../../DetailsDrillDownAlert/DetailsDrillDownAlert'
 import DetailsAlerts from '../../DetailsAlerts/DetailsAlerts'
 import DetailsAnalysis from '../../DetailsAnalysis/DetailsAnalysis'
 import DetailsArtifacts from '../../DetailsArtifacts/DetailsArtifacts'
 import DetailsCode from '../../DetailsCode/DetailsCode'
+import DetailsCollections from '../../DetailsCollections/DetailsCollections'
 import DetailsDriftAnalysis from '../../DetailsDriftAnalysis/DetailsDriftAnalysis'
+import DetailsDrillDownAlert from '../../DetailsDrillDownAlert/DetailsDrillDownAlert'
 import DetailsFeatureAnalysis from '../../DetailsFeaturesAnalysis/DetailsFeaturesAnalysis'
 import DetailsInfo from '../../DetailsInfo/DetailsInfo'
 import DetailsInputs from '../../DetailsInputs/DetailsInputs'
@@ -36,18 +37,16 @@ import DetailsMetadata from '../../DetailsMetadata/DetailsMetadata'
 import DetailsMetrics from '../../DetailsMetrics/DetailsMetrics'
 import DetailsPods from '../../DetailsPods/DetailsPods'
 import DetailsPreview from '../../DetailsPreview/DetailsPreview'
+import DetailsPromptTemplate from '../DetailsPromptTemplate/DetailsPromptTemplate'
 import DetailsRequestedFeatures from '../../DetailsRequestedFeatures/DetailsRequestedFeatures'
 import DetailsResults from '../../DetailsResults/DetailsResults'
 import DetailsStatistics from '../../DetailsStatistics/DetailsStatistics'
 import DetailsTransformations from '../../DetailsTransformations/DetailsTransformations'
 import NoData from '../../../common/NoData/NoData'
-import DetailsCollections from '../../DetailsCollections/DetailsCollections'
-
-import { isJobKindDask, JOB_STEADY_STATES } from '../../Jobs/jobs.util'
 
 import {
-  DETAILS_ALERT_APPLICATION,
   DETAILS_ALERTS_TAB,
+  DETAILS_ALERT_APPLICATION,
   DETAILS_ANALYSIS_TAB,
   DETAILS_ARTIFACTS_TAB,
   DETAILS_BUILD_LOG_TAB,
@@ -70,7 +69,7 @@ import {
   DETAILS_STATISTICS_TAB,
   DETAILS_TRANSFORMATIONS_TAB
 } from '../../../constants'
-import DetailsPromptTemplate from '../DetailsPromptTemplate/DetailsPromptTemplate'
+import { isJobKindDask, JOB_STEADY_STATES } from '../../Jobs/jobs.util'
 
 const DetailsTabsContent = ({
   applyChangesRef,
@@ -82,13 +81,14 @@ const DetailsTabsContent = ({
   selectedItem
 }) => {
   const detailsStore = useSelector(store => store.detailsStore)
+  const commonDetailsStore = useSelector(store => store.commonDetailsStore)
   const params = useParams()
 
   switch (isDetailsPopUp ? detailsPopUpSelectedTab : params.tab) {
     case DETAILS_OVERVIEW_TAB:
       return (
         <DetailsInfo
-          detailsStore={detailsStore}
+          commonDetailsStore={commonDetailsStore}
           formState={formState}
           isDetailsPopUp={isDetailsPopUp}
           pageData={pageData}
@@ -219,7 +219,7 @@ const DetailsTabsContent = ({
     case DETAILS_REQUESTED_FEATURES_TAB:
       return (
         <DetailsRequestedFeatures
-          changes={detailsStore.changes}
+          changes={commonDetailsStore.changes}
           formState={formState}
           isDetailsPopUp={isDetailsPopUp}
           selectedItem={selectedItem}
@@ -228,7 +228,7 @@ const DetailsTabsContent = ({
     case DETAILS_ALERT_APPLICATION:
       return (
         <DetailsDrillDownAlert
-          detailsStore={detailsStore}
+          commonDetailsStore={commonDetailsStore}
           formState={formState}
           isDetailsPopUp={isDetailsPopUp}
           pageData={pageData}

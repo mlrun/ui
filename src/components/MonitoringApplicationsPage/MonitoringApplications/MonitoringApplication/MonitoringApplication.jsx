@@ -22,12 +22,8 @@ import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import NoData from '../../../../common/NoData/NoData'
-import { Tip } from 'igz-controls/components'
 import SectionTable from '../../../../elements/SectionTable/SectionTable'
-
-import { removeMonitoringApplication } from '../../../../reducers/monitoringApplicationsReducer'
-import { removeArtifacts } from '../../../../reducers/artifactsReducer'
-import { FILES_PAGE, NAME_FILTER } from '../../../../constants'
+import { Tip } from 'igz-controls/components'
 
 import {
   generateArtifactsTableContent,
@@ -35,7 +31,10 @@ import {
   generateResultsTableContent,
   generateShardsStatusTableContent
 } from './MonitoringApplication.util'
+import { FILES_PAGE, NAME_FILTER } from '../../../../constants'
 import { MONITORING_APPLICATIONS_NO_DATA_MESSAGE } from '../../MonitoringApplicationsPage.util'
+import { removeArtifacts } from '../../../../reducers/artifactsReducer'
+import { removeMonitoringApplication } from '../../../../reducers/monitoringApplicationsReducer'
 
 import './monitoringApplication.scss'
 
@@ -194,6 +193,7 @@ const MonitoringApplication = () => {
         <div className="monitoring-app__section-item">
           <div className="section-item_title">
             <span>Results</span>
+            <Tip text="This table displays the values of the last results captured by the monitoring application. If there are results for more than one model endpoint at the same time, the table displays only one of those." />
           </div>
           {resultsTable.body.length === 0 ? (
             <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
@@ -204,7 +204,7 @@ const MonitoringApplication = () => {
         <div className="monitoring-app__section-item">
           <div className="section-item_title">
             <span>Metrics</span>
-            <Tip text="Metrics tip" />
+            <Tip text="This table displays the values of the last metrics captured by the monitoring application. If there are metrics for more than one model endpoint at the same time, the table displays only one of those." />
           </div>
           {metricsTable.body.length === 0 ? (
             <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />

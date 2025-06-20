@@ -21,7 +21,7 @@ import React from 'react'
 
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { roundFloats } from '../../utils/roundFloats'
+import { roundFloats } from 'igz-controls/utils/common.util'
 
 import Primary from 'igz-controls/images/ic-key.svg?react'
 import LabelColumn from 'igz-controls/images/ic_target-with-dart.svg?react'

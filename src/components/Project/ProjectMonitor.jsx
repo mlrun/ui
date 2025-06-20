@@ -49,8 +49,8 @@ import { generateCreateNewOptions, handleFetchProjectError } from './project.uti
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { removeFunctionsError, removeNewFunction } from '../../reducers/functionReducer'
 import { removeNewFeatureSet } from '../../reducers/featureStoreReducer'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { useMode } from '../../hooks/mode.hook'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
