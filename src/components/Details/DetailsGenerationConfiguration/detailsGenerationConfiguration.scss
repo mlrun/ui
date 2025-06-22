@@ -1,0 +1,21 @@
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+
+.generation-configuration-tab {
+  &__row {
+    display: flex;
+    padding: 10px 0;
+    font-size: 15px;
+    line-height: 20px;
+    border-bottom: borders.$secondaryBorder;
+
+    &-key {
+      min-width: 150px;
+      font-weight: 500;
+    }
+
+    &-value {
+      color: colors.$topaz;
+    }
+  }
+}
