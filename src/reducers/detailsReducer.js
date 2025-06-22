@@ -31,25 +31,18 @@ import { TIME_FRAME_LIMITS } from '../utils/datePicker.util'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 
 const initialState = {
-  changes: {
-    counter: 0,
-    data: {}
-  },
   dates: {
     value: DATE_FILTER_ANY_TIME,
     selectedOptionId: '',
     isPredefined: false
   },
-  detailsPopUpInfoContent: {},
   detailsJobPods: {
     loading: true,
     podsList: [],
     podsPending: [],
     podsTooltip: []
   },
-  editMode: false,
   error: null,
-  infoContent: {},
   iteration: '',
   iterationOptions: [],
   loadingCounter: 0,
@@ -60,8 +53,6 @@ const initialState = {
     podsPending: [],
     podsTooltip: []
   },
-  filtersWasHandled: false,
-  showWarning: false,
   metricsOptions: {
     all: [],
     lastSelected: [],
@@ -159,44 +150,14 @@ const detailsStoreSlice = createSlice({
     removeDetailsPods(state) {
       state.detailsJobPods = initialState.detailsJobPods
     },
-    removeDetailsPopUpInfoContent(state) {
-      state.detailsPopUpInfoContent = {}
-    },
-    removeInfoContent(state) {
-      state.infoContent = {}
-    },
     removeModelFeatureVector(state) {
       state.modelFeatureVectorData = initialState.modelFeatureVectorData
     },
     removePods(state) {
       state.pods = initialState.pods
     },
-    resetChanges(state) {
-      state.changes = initialState.changes
-    },
-    setChanges(state, action) {
-      state.changes = action.payload
-    },
-    setChangesCounter(state, action) {
-      state.changes.counter = action.payload
-    },
-    setChangesData(state, action) {
-      state.changes.data = action.payload
-    },
     setDetailsDates(state, action) {
       state.dates = action.payload
-    },
-    setDetailsPopUpInfoContent(state, action) {
-      state.detailsPopUpInfoContent = action.payload
-    },
-    setEditMode(state, action) {
-      state.editMode = action.payload
-    },
-    setFiltersWasHandled(state, action) {
-      state.filtersWasHandled = action.payload
-    },
-    setInfoContent(state, action) {
-      state.infoContent = action.payload
     },
     setIteration(state, action) {
       state.iteration = action.payload
@@ -213,9 +174,6 @@ const detailsStoreSlice = createSlice({
           [action.payload.endpointUid]: action.payload.metrics
         }
       }
-    },
-    showWarning(state, action) {
-      state.showWarning = action.payload
     }
   },
   extraReducers: builder => {
@@ -307,23 +265,12 @@ const detailsStoreSlice = createSlice({
 
 export const {
   removeDetailsPods,
-  removeDetailsPopUpInfoContent,
-  removeInfoContent,
   removeModelFeatureVector,
   removePods,
-  resetChanges,
-  setChanges,
-  setChangesCounter,
-  setChangesData,
   setDetailsDates,
-  setDetailsPopUpInfoContent,
-  setEditMode,
-  setFiltersWasHandled,
-  setInfoContent,
   setIteration,
   setIterationOption,
-  setSelectedMetricsOptions,
-  showWarning
+  setSelectedMetricsOptions
 } = detailsStoreSlice.actions
 
 export default detailsStoreSlice.reducer

@@ -49,7 +49,8 @@ const Pagination = ({
   closeParamName = '',
   disableNextDoubleBtn = false,
   disabledNextDoubleBtnTooltip = '',
-  paginationConfig
+  paginationConfig,
+  selectedItemName = '',
 }) => {
   const [, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
@@ -84,9 +85,9 @@ const Pagination = ({
 
   const handlePageChange = useCallback(() => {
     if (closeParamName) {
-      navigate(getCloseDetailsLink(closeParamName, true), { replace: true })
+      navigate(getCloseDetailsLink(closeParamName, true, selectedItemName), { replace: true })
     }
-  }, [closeParamName, navigate])
+  }, [closeParamName, navigate, selectedItemName])
 
   const paginationItems = useMemo(() => {
     if (!paginationConfig[FE_PAGE]) return []
@@ -319,7 +320,8 @@ Pagination.propTypes = {
   closeParamName: PropTypes.string,
   disableNextDoubleBtn: PropTypes.bool,
   disabledNextDoubleBtnTooltip: PropTypes.string,
-  paginationConfig: PAGINATION_CONFIG.isRequired
+  paginationConfig: PAGINATION_CONFIG.isRequired,
+  selectedItemName: PropTypes.string
 }
 
 export default Pagination

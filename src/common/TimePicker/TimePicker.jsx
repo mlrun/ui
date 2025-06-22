@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 import MaskedInput from 'react-text-mask'
 import classNames from 'classnames'
 
-import { DENSITY_OPTIONS } from '../../types'
+import { DENSITY_OPTIONS } from 'igz-controls/types'
 
 import './timePicker.scss'
 

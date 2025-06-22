@@ -36450,7 +36450,6 @@
     },
     {
       "kind": "table",
-      "tag": "latest",
       "metadata": {
         "uid": "5a44b12b-9ef3-4239-87e8-e0cbdae-98",
         "key": "iteration_results",

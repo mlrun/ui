@@ -21,10 +21,9 @@ import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
+import { CopyToClipboard,Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import ContentMenu from '../../../elements/ContentMenu/ContentMenu'
 import SearchNavigator from '../../../common/SearchNavigator/SearchNavigator'
-import CopyToClipboard from '../../../common/CopyToClipboard/CopyToClipboard'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { ARGUMENTS_TAB } from '../../../constants'
 

@@ -25,17 +25,16 @@ import {
   ARTIFACT_MAX_DOWNLOAD_SIZE,
   ARTIFACT_OTHER_TYPE,
   ARTIFACT_TYPE,
-  FILES_PAGE,
-  FULL_VIEW_MODE
+  FILES_PAGE
 } from '../../constants'
+import { FULL_VIEW_MODE } from 'igz-controls/constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
-import { copyToClipboard } from '../../utils/copyToClipboard'
-import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
-import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { generateUri } from '../../utils/resources'
+import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
-import { openDeleteConfirmPopUp, openPopUp } from 'igz-controls/utils/common.util'
+import { openDeleteConfirmPopUp, openPopUp, copyToClipboard } from 'igz-controls/utils/common.util'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
+import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 
 import TagIcon from 'igz-controls/images/tag-icon.svg?react'
 import YamlIcon from 'igz-controls/images/yaml.svg?react'

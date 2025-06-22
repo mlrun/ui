@@ -24,7 +24,7 @@ import PropTypes from 'prop-types'
 import { TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 import ArtifactPopUp from '../DetailsPopUp/ArtifactPopUp/ArtifactPopUp'
 
-import { openPopUp } from '../../../../dashboard-react-controls/dist/utils/common.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseUri } from '../../utils'
 
 const TableModelCell = ({ id, modelUri, bodyCellClassName = '' }) => {

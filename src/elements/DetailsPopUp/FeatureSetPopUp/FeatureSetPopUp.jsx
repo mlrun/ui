@@ -28,7 +28,7 @@ import {
   generatePageData,
   generateActionsMenu
 } from '../../../components/FeatureStore/FeatureSets/featureSets.util'
-import { showErrorNotification } from '../../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 import { toggleYaml } from '../../../reducers/appReducer'
 import { fetchFeatureSet } from '../../../reducers/featureStoreReducer'

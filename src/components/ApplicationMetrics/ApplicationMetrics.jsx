@@ -27,7 +27,6 @@ import classNames from 'classnames'
 
 import HistoryBackLink from '../../common/HistoryBackLink/historyBackLink'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import Loader from '../../common/Loader/Loader'
 import DetailsMetrics from '../DetailsMetrics/DetailsMetrics'
 import NoData from '../../common/NoData/NoData'
 import {
@@ -36,7 +35,8 @@ import {
   FormOnChange,
   RoundedIcon,
   TextTooltipTemplate,
-  Tooltip
+  Tooltip,
+  Loader
 } from 'igz-controls/components'
 
 import { fetchModelEndpoints } from '../../reducers/artifactsReducer'
