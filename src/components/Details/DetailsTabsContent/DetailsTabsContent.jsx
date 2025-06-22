@@ -30,14 +30,15 @@ import DetailsCollections from '../../DetailsCollections/DetailsCollections'
 import DetailsDriftAnalysis from '../../DetailsDriftAnalysis/DetailsDriftAnalysis'
 import DetailsDrillDownAlert from '../../DetailsDrillDownAlert/DetailsDrillDownAlert'
 import DetailsFeatureAnalysis from '../../DetailsFeaturesAnalysis/DetailsFeaturesAnalysis'
+import DetailsGenerationConfiguration from '../DetailsGenerationConfiguration/DetailsGenerationConfiguration'
 import DetailsInfo from '../../DetailsInfo/DetailsInfo'
 import DetailsInputs from '../../DetailsInputs/DetailsInputs'
 import DetailsLogs from '../../DetailsLogs/DetailsLogs'
 import DetailsMetadata from '../../DetailsMetadata/DetailsMetadata'
 import DetailsMetrics from '../../DetailsMetrics/DetailsMetrics'
 import DetailsPods from '../../DetailsPods/DetailsPods'
-import DetailsPreview from '../../DetailsPreview/DetailsPreview'
 import DetailsPromptTemplate from '../DetailsPromptTemplate/DetailsPromptTemplate'
+import DetailsPreview from '../../DetailsPreview/DetailsPreview'
 import DetailsRequestedFeatures from '../../DetailsRequestedFeatures/DetailsRequestedFeatures'
 import DetailsResults from '../../DetailsResults/DetailsResults'
 import DetailsStatistics from '../../DetailsStatistics/DetailsStatistics'
@@ -55,6 +56,7 @@ import {
   DETAILS_DRIFT_ANALYSIS_TAB,
   DETAILS_FEATURES_ANALYSIS_TAB,
   DETAILS_FEATURES_TAB,
+  DETAILS_GENERATION_CONFIGURATION_TAB,
   DETAILS_INPUTS_TAB,
   DETAILS_LOGS_TAB,
   DETAILS_METADATA_TAB,
@@ -239,7 +241,9 @@ const DetailsTabsContent = ({
     case DETAILS_COLLECTIONS_TAB:
       return <DetailsCollections selectedItem={selectedItem} />
     case DETAILS_PROMPT_TEMPLATE_TAB:
-      return <DetailsPromptTemplate />
+      return <DetailsPromptTemplate selectedItem={selectedItem} />
+    case DETAILS_GENERATION_CONFIGURATION_TAB:
+      return <DetailsGenerationConfiguration selectedItem={selectedItem} />
     default:
       return null
   }
