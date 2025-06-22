@@ -116,7 +116,7 @@
           width: 20px;
           height: 20px;
 
-          path{
+          path {
             fill: colors.$topaz;
           }
         }
@@ -125,8 +125,8 @@
   }
 
   &.disabled {
-    cursor: not-allowed;
     border-color: colors.$spunPearl;
+    cursor: not-allowed;
 
     .select__label,
     .select__value {
