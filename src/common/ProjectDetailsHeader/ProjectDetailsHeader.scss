@@ -36,20 +36,19 @@
   &__details {
     display: flex;
     flex-flow: column nowrap;
-    list-style-type: none;
     margin: 1rem 0;
     padding: 0;
     line-height: 1.5;
+    list-style-type: none;
 
     &-label {
-     font-size: 14px;
+      font-size: 14px;
 
       &:not(:last-child)::after {
-        content: "";
         margin: 8px;
         border-right: borders.$dividerBorder;
+        content: "";
       }
-
     }
 
     i[class^='state-'] {
