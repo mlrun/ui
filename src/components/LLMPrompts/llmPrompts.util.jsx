@@ -23,10 +23,18 @@ import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifa
 
 import {
   ARTIFACT_MAX_DOWNLOAD_SIZE,
+  ITERATIONS_FILTER,
+  LABELS_FILTER,
   LLM_PROMPT_TYPE,
-  LLM_PROMPTS_PAGE
+  LLM_PROMPTS_PAGE,
+  MODEL_NAME_FILTER,
+  MODEL_TAG_FILTER,
+  NAME_FILTER,
+  SHOW_ITERATIONS,
+  TAG_FILTER,
+  TAG_FILTER_ALL_ITEMS,
+  TAG_FILTER_LATEST
 } from '../../constants'
-import { FULL_VIEW_MODE } from 'igz-controls/constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
 import { copyToClipboard } from '../../utils/copyToClipboard'
 import { generateUri } from '../../utils/resources'
@@ -35,6 +43,7 @@ import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
 import { openDeleteConfirmPopUp, openPopUp } from 'igz-controls/utils/common.util'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
+import { FULL_VIEW_MODE } from 'igz-controls/constants'
 
 import TagIcon from 'igz-controls/images/tag-icon.svg?react'
 import YamlIcon from 'igz-controls/images/yaml.svg?react'
@@ -115,7 +124,7 @@ export const generateActionsMenu = (
   isDetailsPopUp = false
 ) => {
   const isTargetPathValid = getIsTargetPathValid(llmPromptMin ?? {}, frontendSpec)
-  const datasetDataCouldBeDeleted =
+  const llmPromptDataCouldBeDeleted =
     llmPromptMin?.target_path?.endsWith('.pq') || llmPromptMin?.target_path?.endsWith('.parquet')
 
   const getFullLLMPrompt = llmPromptMin => {
@@ -174,7 +183,7 @@ export const generateActionsMenu = (
         hidden: isDetailsPopUp,
         className: 'danger',
         onClick: () =>
-          datasetDataCouldBeDeleted
+          llmPromptDataCouldBeDeleted
             ? openPopUp(DeleteArtifactPopUp, {
                 artifact: llmPromptMin,
                 artifactType: LLM_PROMPT_TYPE,
@@ -257,3 +266,30 @@ export const generateActionsMenu = (
     ]
   ]
 }
+
+export const getFiltersConfig = isAllVersions => ({
+  [NAME_FILTER]: { label: 'Name:', initialValue: '', hidden: isAllVersions },
+  [TAG_FILTER]: {
+    label: 'LLM prompt version tag:',
+    initialValue: isAllVersions ? TAG_FILTER_ALL_ITEMS : TAG_FILTER_LATEST,
+    isModal: true
+  },
+  [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
+  [ITERATIONS_FILTER]: {
+    label: 'Show best iteration only',
+    initialValue: isAllVersions ? '' : SHOW_ITERATIONS,
+    isModal: true
+  },
+  [MODEL_NAME_FILTER]: {
+    label: 'Model name:',
+    initialValue: '',
+    isModal: true,
+    hidden: isAllVersions
+  },
+  [MODEL_TAG_FILTER]: {
+    label: 'Model version tag:',
+    initialValue: '',
+    isModal: true,
+    hidden: isAllVersions
+  }
+})
