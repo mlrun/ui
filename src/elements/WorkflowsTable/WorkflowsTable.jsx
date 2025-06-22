@@ -25,10 +25,10 @@ import { find, isEmpty } from 'lodash'
 
 import JobWizard from '../../components/JobWizard/JobWizard'
 import JobsTableRow from '../JobsTableRow/JobsTableRow'
-import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Table from '../../components/Table/Table'
 import Workflow from '../../components/Workflow/Workflow'
+import { Loader } from 'igz-controls/components'
 
 import {
   ERROR_STATE,
@@ -70,8 +70,8 @@ import {
 import { openPopUp, getScssVariableValue } from 'igz-controls/utils/common.util'
 import { parseFunction } from '../../utils/parseFunction'
 import { parseJob } from '../../utils/parseJob'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { toggleYaml } from '../../reducers/appReducer'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 

@@ -19,9 +19,10 @@ such restriction.
 */
 import React from 'react'
 
+import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
+
 import {
   ARTIFACT_MAX_DOWNLOAD_SIZE,
-  FULL_VIEW_MODE,
   ITERATIONS_FILTER,
   LABELS_FILTER,
   LLM_PROMPT_TYPE,
@@ -34,15 +35,15 @@ import {
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST
 } from '../../constants'
-import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
-import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
 import { copyToClipboard } from '../../utils/copyToClipboard'
 import { generateUri } from '../../utils/resources'
-import { openDeleteConfirmPopUp, openPopUp } from 'igz-controls/utils/common.util'
-import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
+import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
+import { openDeleteConfirmPopUp, openPopUp } from 'igz-controls/utils/common.util'
+import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
+import { FULL_VIEW_MODE } from 'igz-controls/constants'
 
 import TagIcon from 'igz-controls/images/tag-icon.svg?react'
 import YamlIcon from 'igz-controls/images/yaml.svg?react'

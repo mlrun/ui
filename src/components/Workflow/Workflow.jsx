@@ -57,7 +57,7 @@ import {
   WORKFLOW_LIST_VIEW
 } from '../../constants'
 import getState from '../../utils/getState'
-import { ACTIONS_MENU } from '../../types'
+import { ACTIONS_MENU } from 'igz-controls/types'
 import { createJobsWorkflowContent } from '../../utils/createJobsContent'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { useMode } from '../../hooks/mode.hook'
@@ -260,6 +260,7 @@ const Workflow = ({
           {accessibleProjectsMap[projectName] && (
             <Button
               className="workflow_btn"
+              id="terminate_btn"
               disabled={lowerCase(workflow?.run?.status) !== FUNCTION_RUNNING_STATE}
               variant="danger"
               icon={<Cancel />}

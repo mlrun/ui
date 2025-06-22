@@ -24,7 +24,7 @@ import functionsApi from '../api/functions-api'
 import { hideLoading, showLoading } from './redux.util'
 import mlrunNuclioApi from '../api/mlrun-nuclio-api'
 import yaml from 'js-yaml'
-import { showErrorNotification } from '../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 import { generateCategories, generateHubCategories } from '../utils/generateTemplatesCategories'
 
@@ -169,7 +169,7 @@ export const fetchFunctions = createAsyncThunk(
           thunkAPI.dispatch,
           setRequestErrorMessageLocal
         )
-        thunkAPI.rejectWithValue(error.message)
+        return thunkAPI.rejectWithValue(error)
       })
   }
 )

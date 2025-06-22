@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Link } from 'react-router-dom'
 
-import TableTypeCell from '../TableTypeCell/TableTypeCell'
+import { TableTypeCell } from 'igz-controls/elements'
 import { TextTooltipTemplate, Tooltip, Tip } from 'igz-controls/components'
 import ReadOnlyChips from '../ReadOnlyChips/ReadOnlyChips'
 
@@ -69,7 +69,7 @@ const SectionTable = ({ params, table }) => {
                     )
 
                     return key === 'type' ? (
-                      <TableTypeCell key={body[key].value + index} data={body[key]} />
+                      <TableTypeCell key={body[key].value + index} cellData={body[key]} />
                     ) : (
                       <td key={body[key].value + index + key} className={tableValueClassName}>
                         {key === 'name' ? (

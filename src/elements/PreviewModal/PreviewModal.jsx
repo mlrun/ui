@@ -29,7 +29,7 @@ import Download from '../../common/Download/Download'
 import { Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
 import ArtifactsExtraData from '../ArtifactsExtraData/ArtifactsExtraData'
 
-import { formatDatetime } from '../../utils'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { getArtifactPreview } from '../../utils/getArtifactPreview'
 import { closeArtifactsPreview } from '../../reducers/artifactsReducer'
 import { REQUEST_CANCELED } from '../../constants'

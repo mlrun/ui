@@ -70,14 +70,13 @@ const ProjectJobs = () => {
   return (
     <ProjectDataCard
       content={projectStore.project.jobs}
+      footerLinkText={'All jobs'}
       headerLink={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
       link={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
       params={params}
       statistics={jobsData.statistics}
       table={jobsData.table}
-      tip="Each job and workflow can have multiple versions, produced by multiple runs and given multiple tags.
-           You can browse them in the Jobs and workflows page."
-      title="Jobs and workflows"
+      title="Runs"
     />
   )
 }

@@ -152,7 +152,7 @@ const artifactsApi = {
   },
   getArtifact: (projectName, artifactName, uid, tree, tag, iter) => {
     const newConfig = {
-      params: { tree, uid }
+      params: { tree, 'object-uid': uid }
     }
 
     if (tag) {

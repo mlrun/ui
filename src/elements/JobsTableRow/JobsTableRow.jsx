@@ -22,11 +22,10 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 
-import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import TableCell from '../TableCell/TableCell'
+import { ActionsMenu, TableCell } from 'igz-controls/components'
 
 import { DETAILS_OVERVIEW_TAB } from '../../constants'
-import { ACTIONS_MENU } from '../../types'
+import { ACTIONS_MENU } from 'igz-controls/types'
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
 
 const JobsTableRow = ({ actionsMenu, handleSelectJob = () => {}, rowItem, selectedJob = {} }) => {
@@ -44,7 +43,7 @@ const JobsTableRow = ({ actionsMenu, handleSelectJob = () => {}, rowItem, select
         return (
           !rowItemProp.hidden && (
             <TableCell
-              data={rowItemProp}
+              cellData={rowItemProp}
               item={rowItem.data}
               key={`${rowItem.data.id}.${rowItemProp.header}.${index}`}
               link={

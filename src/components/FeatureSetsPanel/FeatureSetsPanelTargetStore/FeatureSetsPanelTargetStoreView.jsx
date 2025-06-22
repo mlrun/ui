@@ -23,13 +23,18 @@ import { CSSTransition } from 'react-transition-group'
 import classNames from 'classnames'
 
 import CheckBox from '../../../common/CheckBox/CheckBox'
-import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
 import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanelSection'
 import Input from '../../../common/Input/Input'
 import PartitionFields from '../../../elements/PartitionFields/PartitionFields'
 import Select from '../../../common/Select/Select'
 import UrlPath from '../UrlPath'
-import { Tip, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
+import {
+  Tip,
+  Tooltip,
+  TextTooltipTemplate,
+  RoundedIcon,
+  ErrorMessage
+} from 'igz-controls/components'
 
 import {
   MLRUN_STORAGE_INPUT_PATH_SCHEME,

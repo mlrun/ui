@@ -20,9 +20,9 @@ such restriction.
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 
+import { CopyToClipboard } from 'igz-controls/components'
 import ContentMenu from '../../../elements/ContentMenu/ContentMenu'
 import SearchNavigator from '../../../common/SearchNavigator/SearchNavigator'
-import CopyToClipboard from '../../../common/CopyToClipboard/CopyToClipboard'
 
 import Copy from 'igz-controls/images/copy-to-clipboard-icon.svg?react'
 

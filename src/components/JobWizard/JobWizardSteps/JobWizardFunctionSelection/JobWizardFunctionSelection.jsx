@@ -280,7 +280,7 @@ const JobWizardFunctionSelection = ({
               prev[curr.metadata.name].functions.push(curr)
 
               return prev
-            }, {})
+            }, Object.create(null))
           )
 
           setFunctions(groupedFunctions)
@@ -293,6 +293,9 @@ const JobWizardFunctionSelection = ({
             setFilteredFunctions(filteredFunctions)
           }
         }
+      })
+      .catch(() => {
+        setFunctions([])
       })
 
     formState.initialValues[FUNCTION_SELECTION_STEP].projectName = currentValue

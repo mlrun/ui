@@ -21,12 +21,12 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, useOutletContext } from 'react-router-dom'
 
-import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import PageHeader from '../../elements/PageHeader/PageHeader'
 import Search from '../../common/Search/Search'
 import Table from '../Table/Table'
 import ConsumerGroupTableRow from '../../elements/ConsumerGroupTableRow/ConsumerGroupTableRow'
+import { Loader } from 'igz-controls/components'
 
 import createConsumerGroupsContent from '../../utils/createConsumerGroupsContent'
 import { CONSUMER_GROUPS_PAGE, GROUP_BY_NONE, NAME_FILTER } from '../../constants'

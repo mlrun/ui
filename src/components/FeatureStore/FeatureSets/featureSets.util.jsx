@@ -28,12 +28,12 @@ import {
   TAG_FILTER,
   TAG_FILTER_LATEST
 } from '../../../constants'
-import { showErrorNotification } from '../../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { fetchFeatureSet } from '../../../reducers/featureStoreReducer'
 
 import Yaml from 'igz-controls/images/yaml.svg?react'
 
-export const generateFeatureSetsDetailsMenu = (selectedItem, isDemoMode) => [
+export const generateFeatureSetsDetailsMenu = (selectedItem) => [
   {
     label: 'overview',
     id: 'overview'
@@ -59,8 +59,7 @@ export const generateFeatureSetsDetailsMenu = (selectedItem, isDemoMode) => [
   },
   {
     label: 'analysis',
-    id: 'analysis',
-    hidden: !isDemoMode
+    id: 'analysis'
   }
 ]
 
@@ -84,12 +83,12 @@ export const filtersConfig = {
   [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
 }
 
-export const generatePageData = (selectedFeatureSet, isDemoMode) => {
+export const generatePageData = (selectedFeatureSet) => {
   return {
     page: FEATURE_STORE_PAGE,
     details: {
       type: FEATURE_SETS_TAB,
-      menu: generateFeatureSetsDetailsMenu(selectedFeatureSet, isDemoMode),
+      menu: generateFeatureSetsDetailsMenu(selectedFeatureSet),
       infoHeaders: featureSetsInfoHeaders
     }
   }

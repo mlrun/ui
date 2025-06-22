@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
-import { sortListByDate } from './datetime'
+import { sortListByDate } from 'igz-controls/utils/datetime.util'
 
 export const PARENT_ROW_EXPANDED_CLASS = 'parent-row_expanded'
 

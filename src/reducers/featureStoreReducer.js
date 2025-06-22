@@ -33,7 +33,7 @@ import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 import { parseFeatureSets } from '../utils/parseFeatureSets'
 import { parseFeatureVectors } from '../utils/parseFeatureVectors'
 import { parseFeatures } from '../utils/parseFeatures'
-import { showErrorNotification } from '../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 const initialState = {
   error: null,

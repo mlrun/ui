@@ -37,10 +37,6 @@ import {
   ERROR_STATE,
   FAILED_STATE
 } from '../../constants'
-import { generateKeyValues, parseKeyValues, truncateUid } from '../../utils'
-import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
 import {
   abortJob,
   deleteAllJobRuns,
@@ -48,7 +44,12 @@ import {
   fetchJobFunction,
   fetchJobFunctions
 } from '../../reducers/jobReducer'
+import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
+import { generateKeyValues, parseKeyValues } from '../../utils'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
+import { truncateUid } from 'igz-controls/utils/string.util'
 
 export const page = JOBS_PAGE
 const LOG_LEVEL_ID = 'logLevel'

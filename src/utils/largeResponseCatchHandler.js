@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { DEFAULT_ABORT_MSG, LARGE_REQUEST_CANCELED, REQUEST_CANCELED } from '../constants'
-import { showErrorNotification } from './notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 export const largeResponseCatchHandler = (
   error,

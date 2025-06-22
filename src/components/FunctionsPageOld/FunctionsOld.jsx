@@ -67,8 +67,8 @@ import { openPopUp, getScssVariableValue } from 'igz-controls/utils/common.util'
 import { parseFunctions } from '../../utils/parseFunctions'
 import { runNewJob } from '../../reducers/jobReducer'
 import { setFilters } from '../../reducers/filtersReducer'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { toggleYaml } from '../../reducers/appReducer'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
@@ -196,6 +196,8 @@ const Functions = () => {
               })
             }
           }
+        }).catch(() => {
+          setFunctions([])
         })
     },
     [
@@ -228,7 +230,7 @@ const Functions = () => {
         return {
           ...state,
           [funcIdentifier]: {
-            content: content[func.name].map(contentItem =>
+            content: content[funcIdentifier].map(contentItem =>
               createFunctionsRowData(contentItem, params.projectName, false, false, true)
             )
           }
