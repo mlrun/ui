@@ -43,58 +43,66 @@ const RunCounter = () => {
   )
 
   return (
-    <StatsCard className="monitoring-stats">
-      <div>
-        <StatsCard.Header
-          title="Runs"
-          tip="Number of Job runs, clicking on the counters navigates to jobs screen."
-        >
-          <div className="project-card__info">
-            <ClockIcon className="project-card__info-icon" />
-            <span>Past 24 hrs</span>
-          </div>
-        </StatsCard.Header>
-        <StatsCard.Row>
-          <div
-            className="stats__link stats__counter_header"
-            data-testid="scheduled_total_counter"
-            onClick={jobStats.total.link}
+    <div>
+      <StatsCard className="monitoring-stats">
+        <div>
+          <StatsCard.Header
+            title="Runs"
+            tip="Number of Job runs, clicking on the counters navigates to jobs screen."
           >
-            <div className="stats__counter">
-              {projectStore.projectsSummary.loading ? (
-                <Loader section small secondary />
-              ) : (
-                jobStats.total.counter.toLocaleString()
-              )}
+            <div className="project-card__info">
+              <ClockIcon className="project-card__info-icon" />
+              <span>Past 24 hrs</span>
             </div>
-          </div>
-        </StatsCard.Row>
+          </StatsCard.Header>
+          <StatsCard.Row>
+            <div
+              className="stats__link stats__counter_header"
+              data-testid="scheduled_total_counter"
+              onClick={jobStats.total.link}
+            >
+              <div className="stats__counter">
+                {projectStore.projectsSummary.loading ? (
+                  <Loader section small secondary />
+                ) : (
+                  jobStats.total.counter.toLocaleString()
+                )}
+              </div>
+            </div>
+          </StatsCard.Row>
 
-        <div className="stats__details">
-          {jobStats?.counters?.map(({ counter, className, label, link, statusClass, tooltip }) => {
-            return (
-              <StatsCard.Row key={`${statusClass}-jobs`}>
-                <div className={className} onClick={link} data-testid={`wf_${statusClass}_counter`}>
-                  <div data-testid={`wf_${statusClass}_status`} className="stats__status">
-                    <Tooltip textShow template={<TextTooltipTemplate text={tooltip} />}>
-                      <h6 className="stats__subtitle">{label}</h6>
-                      <i className={`state-${statusClass}`} />
-                    </Tooltip>
-                  </div>
-                  <div className="stats__counter">
-                    {projectStore?.projectsSummary?.loading ? (
-                      <Loader section small secondary />
-                    ) : (
-                      counter.toLocaleString()
-                    )}
-                  </div>
-                </div>
-              </StatsCard.Row>
-            )
-          })}
+          <div className="stats__details">
+            {jobStats?.counters?.map(
+              ({ counter, className, label, link, statusClass, tooltip }) => {
+                return (
+                  <StatsCard.Row key={`${statusClass}-jobs`}>
+                    <div
+                      className={className}
+                      onClick={link}
+                      data-testid={`wf_${statusClass}_counter`}
+                    >
+                      <div data-testid={`wf_${statusClass}_status`} className="stats__status">
+                        <Tooltip textShow template={<TextTooltipTemplate text={tooltip} />}>
+                          <h6 className="stats__subtitle">{label}</h6>
+                          <i className={`state-${statusClass}`} />
+                        </Tooltip>
+                      </div>
+                      <div className="stats__counter">
+                        {projectStore?.projectsSummary?.loading ? (
+                          <Loader section small secondary />
+                        ) : (
+                          counter.toLocaleString()
+                        )}
+                      </div>
+                    </div>
+                  </StatsCard.Row>
+                )
+              }
+            )}
+          </div>
         </div>
-      </div>
-    </StatsCard>
+      </StatsCard>
+    </div>
   )
 }
 

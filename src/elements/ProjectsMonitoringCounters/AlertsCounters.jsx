@@ -26,6 +26,7 @@ import { Loader, PopUpDialog } from 'igz-controls/components'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
 import { generateAlertsStats } from '../../utils/generateAlertsStats'
+import useIsNavbarPinned from '../../hooks/useIsNavbarPinned'
 
 import Alerts from 'igz-controls/images/alerts.svg?react'
 import ClockIcon from 'igz-controls/images/clock.svg?react'
@@ -39,6 +40,7 @@ const AlertsCounters = () => {
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
   const timeLabel = paramProjectName ? '24 hrs' : 'Past 24 hrs'
+  const isNavbarPinned = useIsNavbarPinned()
 
   const handleOpenPopUp = () => {
     const isHidden = !document.querySelector('.stats__details')?.offsetParent
@@ -96,13 +98,15 @@ const AlertsCounters = () => {
     'alerts-card',
     alertsData.data.total && 'alerts-card_not-empty'
   )
+  const statsDetailsClass = classNames('stats__details', isNavbarPinned && 'isNavbarPinned')
+  const projectInfoClass = classNames('project-card__info', isNavbarPinned && 'isNavbarPinned')
 
   return (
     <div onMouseEnter={e => handleOpenPopUp(e)} onMouseLeave={handleClosePopUp}>
       <StatsCard className={alertsCardClass}>
         <div ref={anchorRef}>
           <StatsCard.Header title="Alerts" icon={<Alerts />} iconClass="stats-card__title-icon">
-            <div className="project-card__info stats__details">
+            <div className={projectInfoClass}>
               <ClockIcon className="project-card__info-icon" />
               <span>{timeLabel}</span>
             </div>
@@ -123,58 +127,56 @@ const AlertsCounters = () => {
             </div>
           </StatsCard.Row>
           <StatsCard.Col></StatsCard.Col>
-          <StatsCard.Col>
-            <div className="stats__details">
-              <StatsCard.Row>
-                <div
-                  onClick={alertsStats.endpoints.link}
-                  className="stats__line stats__link"
-                  data-testid="alerts_endpoints_counter"
-                >
-                  <h6 className="stats__subtitle">Endpoint</h6>
-                  <div>
-                    {projectStore?.projectsSummary?.loading ? (
-                      <Loader section small secondary />
-                    ) : (
-                      alertsData?.data?.endpoint?.toLocaleString()
-                    )}
-                  </div>
+          <div className={statsDetailsClass}>
+            <StatsCard.Row>
+              <div
+                onClick={alertsStats.endpoints.link}
+                className="stats__line stats__link"
+                data-testid="alerts_endpoints_counter"
+              >
+                <h6 className="stats__subtitle">Endpoint</h6>
+                <div>
+                  {projectStore?.projectsSummary?.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    alertsData?.data?.endpoint?.toLocaleString()
+                  )}
                 </div>
-              </StatsCard.Row>
-              <StatsCard.Row>
-                <div
-                  className="stats__line stats__link"
-                  data-testid="alerts_job_counter"
-                  onClick={alertsStats?.job?.link}
-                >
-                  <h6 className="stats__subtitle">Jobs</h6>
-                  <div>
-                    {projectStore?.projectsSummary?.loading ? (
-                      <Loader section small secondary />
-                    ) : (
-                      alertsData?.data?.jobs?.toLocaleString()
-                    )}
-                  </div>
+              </div>
+            </StatsCard.Row>
+            <StatsCard.Row>
+              <div
+                className="stats__line stats__link"
+                data-testid="alerts_job_counter"
+                onClick={alertsStats?.job?.link}
+              >
+                <h6 className="stats__subtitle">Jobs</h6>
+                <div>
+                  {projectStore?.projectsSummary?.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    alertsData?.data?.jobs?.toLocaleString()
+                  )}
                 </div>
-              </StatsCard.Row>
-              <StatsCard.Row>
-                <div
-                  onClick={alertsStats.application.link}
-                  className="stats__link"
-                  data-testid="alerts_application_counter"
-                >
-                  <div className="stats__subtitle">Application</div>
-                  <div>
-                    {projectStore.projectsSummary.loading ? (
-                      <Loader section small secondary />
-                    ) : (
-                      alertsData?.data?.application?.toLocaleString()
-                    )}
-                  </div>
+              </div>
+            </StatsCard.Row>
+            <StatsCard.Row>
+              <div
+                onClick={alertsStats.application.link}
+                className="stats__link"
+                data-testid="alerts_application_counter"
+              >
+                <div className="stats__subtitle">Application</div>
+                <div>
+                  {projectStore.projectsSummary.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    alertsData?.data?.application?.toLocaleString()
+                  )}
                 </div>
-              </StatsCard.Row>
-            </div>
-          </StatsCard.Col>
+              </div>
+            </StatsCard.Row>
+          </div>
           {showPopup && (
             <PopUpDialog
               className="card-popup"

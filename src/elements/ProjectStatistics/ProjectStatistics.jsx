@@ -44,9 +44,10 @@ const ProjectStatistics = ({ statistics }) => {
         [DATES_FILTER]: PAST_24_HOUR_DATE_OPTION,
         [STATUS_FILTER]: ['error', 'aborted']
       }
-    } else if (key === 'scheduled') {
+    } else if (key === 'success') {
       filters = {
-        [DATES_FILTER]: ANY_TIME_DATE_OPTION
+        [DATES_FILTER]: PAST_24_HOUR_DATE_OPTION,
+        [STATUS_FILTER]: ['completed']
       }
     }
 

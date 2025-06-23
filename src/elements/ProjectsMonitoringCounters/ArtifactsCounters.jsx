@@ -28,6 +28,7 @@ import ClockIcon from 'igz-controls/images/clock.svg?react'
 
 import './projectsMonitoringCounters.scss'
 import { generateMonitoringStats } from '../../utils/generateMonitoringData'
+import useIsNavbarPinned from '../../hooks/useIsNavbarPinned'
 
 const ArtifactsCounters = () => {
   const anchorRef = useRef(null)
@@ -36,6 +37,7 @@ const ArtifactsCounters = () => {
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
   const timeLabel = projectName ? '24 hrs' : 'Past 24 hrs'
+  const isNavbarPinned = useIsNavbarPinned()
 
   const handleOpenPopUp = () => {
     const isHidden = !document.querySelector('.stats__details')?.offsetParent
@@ -77,12 +79,15 @@ const ArtifactsCounters = () => {
     [dataStats, navigate, projectName]
   )
 
+  const statsDetailsClass = classNames('stats__details', isNavbarPinned && 'isNavbarPinned')
+  const projectInfoClass = classNames('project-card__info', isNavbarPinned && 'isNavbarPinned')
+
   return (
     <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
       <StatsCard className="monitoring-stats">
         <div ref={anchorRef}>
           <StatsCard.Header title="Artifacts">
-            <div className="project-card__info">
+            <div className={projectInfoClass}>
               <ClockIcon className="project-card__info-icon" />
               <span>{timeLabel}</span>
             </div>
@@ -98,7 +103,7 @@ const ArtifactsCounters = () => {
               </div>
             </div>
           </StatsCard.Row>
-          <div className="stats__details">
+          <div className={statsDetailsClass}>
             <StatsCard.Row>
               <div className={data?.files?.className} onClick={data?.files?.link}>
                 <h6 className="stats__subtitle">Files</h6>

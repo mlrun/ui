@@ -29,6 +29,7 @@ import { Tip, Loader } from 'igz-controls/components'
 
 const ProjectDataCard = ({
   content,
+  footerLinkText = 'See all',
   href = '',
   link = '',
   params,
@@ -76,11 +77,11 @@ const ProjectDataCard = ({
           <SectionTable params={params} table={table} />
           {href ? (
             <a href={href} target="_top" className="link project-data-card__see-all-link">
-              See all
+              {footerLinkText}
             </a>
           ) : (
             <Link className="link project-data-card__see-all-link" to={link}>
-              See all
+              {footerLinkText}
             </Link>
           )}
         </>
@@ -91,6 +92,7 @@ const ProjectDataCard = ({
 
 ProjectDataCard.propTypes = {
   content: PropTypes.object.isRequired,
+  footerLinkText: PropTypes.string,
   href: PropTypes.string,
   link: PropTypes.string,
   params: PropTypes.object.isRequired,

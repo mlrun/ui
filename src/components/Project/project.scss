@@ -4,8 +4,7 @@
 
 .project {
   &-wrapper {
-    container-type: inline-size;
-    display: block;
+    display: flex;
     flex: 1 1;
     flex-direction: column;
     min-width: 100%;
@@ -256,9 +255,15 @@
           }
         }
 
-        @container (max-width: 950px) {
+        @media (max-width: 1050px) {
           grid-template-columns: repeat(1, 2fr);
         }
+      }
+    }
+
+    .main-info__statistics-section.isNavbarPinned {
+      @media (max-width: 1250px) {
+        grid-template-columns: repeat(1, 2fr);
       }
     }
   }

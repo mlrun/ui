@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
+import classNames from 'classnames'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
@@ -34,6 +35,7 @@ import Select from '../../common/Select/Select'
 
 import { ConfirmDialog, RoundedIcon, Loader } from 'igz-controls/components'
 
+import useIsNavbarPinned from '../../hooks/useIsNavbarPinned'
 import { PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions } from './project.utils'
 
@@ -60,6 +62,12 @@ const ProjectMonitorView = ({
   setShowFunctionsPanel,
   showFunctionsPanel
 }) => {
+  const isNavbarPinned = useIsNavbarPinned()
+  const statisticClassName = classNames(
+    'main-info__statistics-section',
+    isNavbarPinned && 'isNavbarPinned'
+  )
+
   return (
     <div className="project-wrapper">
       <div className="project__header">
@@ -122,7 +130,7 @@ const ProjectMonitorView = ({
               </div>
             </div>
             <ProjectsMonitoring />
-            <div className="main-info__statistics-section">
+            <div className={statisticClassName}>
               <div className="d-flex">
                 <ProjectJobs />
               </div>

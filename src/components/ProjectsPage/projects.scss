@@ -17,11 +17,10 @@
 
   &__wrapper {
     position: relative;
-    display: block;
+    display: flex;
     flex-flow: column nowrap;
     height: 100%;
     padding: 50px 24px 0;
-    container-type: inline-size;
 
     .projects-content-header {
       &__row {

@@ -15,7 +15,14 @@
   gap: 15px;
   justify-content: space-between;
 
-  @container (max-width: 950px) {
+  @media (max-width: 1050px) {
+    display: contents;
+    flex-direction: row;
+  }
+}
+
+.card__small-container.isNavbarPinned {
+  @media (max-width: 1250px) {
     display: contents;
     flex-direction: row;
   }
@@ -39,6 +46,12 @@
   &.alerts-card_not-empty {
     background-color: colors.$carouselPink;
     border: 1px solid colors.$babyPink;
+  }
+
+  .stats__details.isNavbarPinned {
+    @media (max-width: 1250px) {
+      display: none;
+    }
   }
 
   .stats {
@@ -100,7 +113,7 @@
         margin-bottom: 0.5em;
       }
 
-      @container (max-width: 950px) {
+      @media (max-width: 1050px) {
         display: none;
       }
     }
@@ -134,12 +147,18 @@
       }
     }
 
-    @container (max-width: 950px) {
+    @media (max-width: 1050px) {
       display: none;
     }
 
     .stats__subtitle {
       font-size: inherit;
+    }
+  }
+
+  .project-card__info.isNavbarPinned {
+    @media (max-width: 1250px) {
+      display: none;
     }
   }
 

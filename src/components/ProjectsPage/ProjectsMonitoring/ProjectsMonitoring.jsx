@@ -29,15 +29,22 @@ import RunCounter from '../../../elements/ProjectsMonitoringCounters/RunsCounter
 import ScheduledJobsCounters from '../../../elements/ProjectsMonitoringCounters/ScheduledJobsCounters'
 import WorkflowsCounters from '../../../elements/ProjectsMonitoringCounters/WorkflowsCounters'
 
+import useIsNavbarPinned from '../../../hooks/useIsNavbarPinned'
+
 import './projectsMonitoring.scss'
 
 const ProjectsMonitoring = () => {
   const { projectName } = useParams()
+  const isNavbarPinned = useIsNavbarPinned()
   const monitoringStatsClassName = classNames(
     'projects-monitoring-stats',
-    projectName ? 'projects-monitoring-stats--narrow' : 'projects-monitoring-stats--wide'
+    projectName ? 'projects-monitoring-stats--narrow' : 'projects-monitoring-stats--wide',
+    isNavbarPinned && 'isNavbarPinned'
   )
-
+  const smallCardContainerClassName = classNames(
+    'card__small-container',
+    isNavbarPinned && 'isNavbarPinned'
+  )
   return (
     <div className="projects-monitoring-container">
       <PageHeader title="Monitoring" />
@@ -47,7 +54,7 @@ const ProjectsMonitoring = () => {
         {/* Todo: Delete WorkflowsCounters after ML-5460 is impplemented */}
         <WorkflowsCounters />
         <ScheduledJobsCounters />
-        <div className="card__small-container">
+        <div className={smallCardContainerClassName}>
           <ModelsAndApplication />
           <ApplicationCounter />
         </div>

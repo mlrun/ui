@@ -52,7 +52,7 @@ const Documents = ({ isAllVersions = false }) => {
       isAllVersions={isAllVersions}
       page={DOCUMENTS_PAGE}
       removeArtifacts={removeDocuments}
-      storeArtifactTypeLoading={artifactsStore.documents.modelLoading}
+      storeArtifactTypeLoading={artifactsStore.documents.documentLoading}
     />
   )
 }
