@@ -1,4 +1,5 @@
 @use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
 
 .prompt-template {
   .prompt-tab {
@@ -13,9 +14,13 @@
     &__template {
       max-height: 425px;
       padding: 25px 15px;
-      overflow-y: scroll;
+      overflow-y: auto;
       border: borders.$primaryBorder;
       border-radius: 4px;
+
+      .tooltip-wrapper {
+        display: inline;
+      }
     }
 
     &__copy-btn {
@@ -36,6 +41,36 @@
       svg {
         width: 14px;
         height: 14px;
+      }
+    }
+  }
+
+  .arguments-tab {
+    &__header {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+      padding-bottom: 10px;
+    }
+
+    &__row {
+      display: flex;
+      padding: 10px 0;
+      font-size: 15px;
+      line-height: 20px;
+      border-bottom: borders.$secondaryBorder;
+
+      &_selected {
+        background-color: colors.$ghostWhite;
+      }
+
+      &-key {
+        min-width: 150px;
+        font-weight: 500;
+      }
+
+      &-value {
+        color: colors.$topaz;
       }
     }
   }

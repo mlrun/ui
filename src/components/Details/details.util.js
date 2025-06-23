@@ -160,9 +160,7 @@ export const generateArtifactsContent = (
       },
       kind: {
         value:
-          detailsType !== FEATURE_STORE_PAGE &&
-          detailsType !== FILES_PAGE &&
-          detailsType !== DATASETS_PAGE
+          detailsType !== FILES_PAGE && detailsType !== DATASETS_PAGE
             ? selectedItem.kind || ' '
             : null
       },

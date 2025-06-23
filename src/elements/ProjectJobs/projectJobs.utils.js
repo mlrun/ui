@@ -20,7 +20,7 @@ such restriction.
 import { orderBy } from 'lodash'
 
 import { measureTime } from '../../utils/measureTime'
-import { MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB } from '../../constants'
+import { MONITOR_JOBS_TAB } from '../../constants'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { typesOfJob } from '../../utils/jobs.util'
 

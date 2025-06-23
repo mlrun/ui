@@ -64,6 +64,7 @@ const Artifacts = ({
   generateActionsMenu,
   generateDetailsFormInitialValues,
   generatePageData,
+  getArtifactFiltersConfig = null,
   handleApplyDetailsChanges,
   handleDeployArtifactFailure = null,
   isAllVersions = false,
@@ -100,7 +101,10 @@ const Artifacts = ({
       `/projects/${params.projectName}/${page}${tab ? `/${tab}` : ''}${getSavedSearchParams(location.search)}`,
     [location.search, page, params.projectName, tab]
   )
-  const filtersConfig = useMemo(() => getFiltersConfig(isAllVersions), [isAllVersions])
+  const filtersConfig = useMemo(
+    () => (getArtifactFiltersConfig || getFiltersConfig)(isAllVersions),
+    [getArtifactFiltersConfig, isAllVersions]
+  )
   const artifactsFilters = useFiltersFromSearchParams(filtersConfig)
   const [refreshAfterDeleteCallback, refreshAfterDeleteTrigger] = useRefreshAfterDelete(
     paginationConfigArtifactVersionsRef,
@@ -561,6 +565,7 @@ Artifacts.propTypes = {
   generateActionsMenu: PropTypes.func.isRequired,
   generateDetailsFormInitialValues: PropTypes.func.isRequired,
   generatePageData: PropTypes.func.isRequired,
+  getArtifactFiltersConfig: PropTypes.func,
   handleApplyDetailsChanges: PropTypes.func.isRequired,
   handleDeployArtifactFailure: PropTypes.func,
   isAllVersions: PropTypes.bool,
