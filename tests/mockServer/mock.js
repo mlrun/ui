@@ -1730,6 +1730,50 @@ function getPipeline(req, res) {
   res.send(collectedPipeline)
 }
 
+function pipelineRetry(req, res) {
+  const originalPipelineID = pipelineIDs.find(
+      item => item.run.id === req.params.pipelineID && item.run.project === req.params.project
+  )
+  const originalPipeline = (pipelines[req.params.project]?.runs ?? []).find(pipeline => {
+    return pipeline.id = req.params.pipelineID
+  })
+  if (originalPipeline) {
+    const runID = makeUID(32)
+    const newPipelineID = {
+      ...originalPipelineID,
+      run: {
+        ...originalPipelineID.run,
+        id: runID,
+        name: `Retry of ${originalPipelineID.run.name}`,
+        status: 'Running'
+      }
+    }
+    const newPipeline = {
+      ...originalPipeline,
+      id: runID,
+      name: `Retry of ${originalPipeline.name}`,
+      status: 'Running'
+    }
+
+    pipelines[req.params.project]?.runs.push(newPipeline)
+    pipelineIDs.push(newPipelineID)
+
+    setTimeout(() => {
+      newPipelineID.run.status = 'Failed'
+      newPipeline.status = 'Failed'
+    }, 5000)
+
+    res.send(runID)
+  } else {
+    res.statusCode = 404
+    res.send({
+      detail: {
+        reason: `MLRunNotFoundError('Workflow not found ${req.params.project}/${req.params.pipelineID}')`
+      }
+    })
+  }
+}
+
 function getFuncs(req, res) {
   const dt = parseInt(Date.now())
   const collectedFuncsByPrjTime = funcs.funcs
@@ -2853,6 +2897,7 @@ app.put(`${mlrunAPIIngress}/projects/:project/schedules/:schedule/`, updateSched
 app.get(`${mlrunAPIIngress}/projects/:project/pipelines`, getPipelines)
 app.get(`${mlrunAPIIngress}/projects/*/pipelines`, getPipelines)
 app.get(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID`, getPipeline)
+app.post(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID/retry`, pipelineRetry)
 
 app.get(`${mlrunAPIIngress}/projects/:project/artifact-tags`, getProjectsArtifactTags)
 app.get(`${mlrunAPIIngressV2}/projects/:project/artifacts`, getArtifacts)
