@@ -26,7 +26,6 @@ import { Loader, PopUpDialog } from 'igz-controls/components'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
 import { generateAlertsStats } from '../../utils/generateAlertsStats'
-import useIsNavbarPinned from '../../hooks/useIsNavbarPinned'
 
 import Alerts from 'igz-controls/images/alerts.svg?react'
 import ClockIcon from 'igz-controls/images/clock.svg?react'
@@ -35,15 +34,16 @@ import './projectsMonitoringCounters.scss'
 
 const AlertsCounters = () => {
   const anchorRef = useRef(null)
+  const detailsRef = useRef(null)
   const [showPopup, setShowPopup] = useState(false)
   const { projectName: paramProjectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
   const timeLabel = paramProjectName ? '24 hrs' : 'Past 24 hrs'
-  const isNavbarPinned = useIsNavbarPinned()
+  const isNavbarPinned = useSelector(state => state.appStore.isNavbarPinned)
 
   const handleOpenPopUp = () => {
-    const isHidden = !document.querySelector('.stats__details')?.offsetParent
+    const isHidden = !detailsRef.current?.offsetParent
     setShowPopup(isHidden)
   }
 
@@ -98,11 +98,18 @@ const AlertsCounters = () => {
     'alerts-card',
     alertsData.data.total && 'alerts-card_not-empty'
   )
-  const statsDetailsClass = classNames('stats__details', isNavbarPinned && 'isNavbarPinned')
-  const projectInfoClass = classNames('project-card__info', isNavbarPinned && 'isNavbarPinned')
+  const statsDetailsClass = classNames(
+    'stats__details',
+    isNavbarPinned && 'stats__details_navbar-pinned'
+  )
+
+  const projectInfoClass = classNames(
+    'project-card__info',
+    isNavbarPinned && 'project-card__info_navbar-pinned'
+  )
 
   return (
-    <div onMouseEnter={e => handleOpenPopUp(e)} onMouseLeave={handleClosePopUp}>
+    <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
       <StatsCard className={alertsCardClass}>
         <div ref={anchorRef}>
           <StatsCard.Header title="Alerts" icon={<Alerts />} iconClass="stats-card__title-icon">
@@ -127,7 +134,7 @@ const AlertsCounters = () => {
             </div>
           </StatsCard.Row>
           <StatsCard.Col></StatsCard.Col>
-          <div className={statsDetailsClass}>
+          <div ref={detailsRef} className={statsDetailsClass}>
             <StatsCard.Row>
               <div
                 onClick={alertsStats.endpoints.link}

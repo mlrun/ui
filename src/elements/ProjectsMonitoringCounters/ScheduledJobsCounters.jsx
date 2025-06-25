@@ -26,7 +26,6 @@ import StatsCard from '../../common/StatsCard/StatsCard'
 
 import { generateMonitoringStats } from '../../utils/generateMonitoringData'
 import { JOBS_MONITORING_SCHEDULED_TAB } from '../../constants'
-import useIsNavbarPinned from '../../hooks/useIsNavbarPinned'
 
 import ClockIcon from 'igz-controls/images/clock.svg?react'
 
@@ -39,14 +38,21 @@ const ScheduledJobsCounters = () => {
   const projectStore = useSelector(store => store.projectStore)
   const [showPopup, setShowPopup] = useState(false)
   const anchorRef = useRef(null)
-  const timeLabel = projectName ? '24 hrs' : 'Past 24 hrs'
-  const isNavbarPinned = useIsNavbarPinned()
+  const detailsRef = useRef(null)
+  const timeLabel = projectName ? '24 hrs' : 'Next 24 hrs'
+  const isNavbarPinned = useSelector(state => state.appStore.isNavbarPinned)
 
-  const statsDetailsClass = classNames('stats__details', isNavbarPinned && 'isNavbarPinned')
-  const projectInfoClass = classNames('project-card__info', isNavbarPinned && 'isNavbarPinned')
+  const statsDetailsClass = classNames(
+    'stats__details',
+    isNavbarPinned && 'stats__details_navbar-pinned'
+  )
 
+  const projectInfoClass = classNames(
+    'project-card__info',
+    isNavbarPinned && 'project-card__info_navbar-pinned'
+  )
   const handleOpenPopUp = () => {
-    const isHidden = !document.querySelector('.stats__details')?.offsetParent
+    const isHidden = !detailsRef.current?.offsetParent
     setShowPopup(isHidden)
   }
 
@@ -110,7 +116,7 @@ const ScheduledJobsCounters = () => {
               </div>
             </div>
           </StatsCard.Row>
-          <div className={statsDetailsClass}>
+          <div ref={detailsRef} className={statsDetailsClass}>
             <StatsCard.Row>
               <div
                 className="stats__link stats__line"

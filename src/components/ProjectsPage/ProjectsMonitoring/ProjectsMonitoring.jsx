@@ -29,22 +29,23 @@ import RunCounter from '../../../elements/ProjectsMonitoringCounters/RunsCounter
 import ScheduledJobsCounters from '../../../elements/ProjectsMonitoringCounters/ScheduledJobsCounters'
 import WorkflowsCounters from '../../../elements/ProjectsMonitoringCounters/WorkflowsCounters'
 
-import useIsNavbarPinned from '../../../hooks/useIsNavbarPinned'
-
 import './projectsMonitoring.scss'
+import { useSelector } from 'react-redux'
 
 const ProjectsMonitoring = () => {
   const { projectName } = useParams()
-  const isNavbarPinned = useIsNavbarPinned()
+  const isNavbarPinned = useSelector(state => state.appStore.isNavbarPinned)
   const monitoringStatsClassName = classNames(
     'projects-monitoring-stats',
-    projectName ? 'projects-monitoring-stats--narrow' : 'projects-monitoring-stats--wide',
-    isNavbarPinned && 'isNavbarPinned'
+    projectName ? 'projects-monitoring-stats_narrow' : 'projects-monitoring-stats_wide',
+    isNavbarPinned && 'projects-monitoring-stats_narrow-navbar-pinned'
   )
+
   const smallCardContainerClassName = classNames(
     'card__small-container',
-    isNavbarPinned && 'isNavbarPinned'
+    isNavbarPinned && 'card__small-container_navbar-pinned'
   )
+
   return (
     <div className="projects-monitoring-container">
       <PageHeader title="Monitoring" />

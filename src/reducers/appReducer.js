@@ -30,7 +30,8 @@ import localStorageService from '../utils/localStorageService'
 const initialState = {
   convertedYaml: '',
   frontendSpec: {},
-  frontendSpecPopupIsOpened: false
+  frontendSpecPopupIsOpened: false,
+  isNavbarPinned: false
 }
 
 export const fetchFrontendSpec = createAsyncThunk(
@@ -97,6 +98,9 @@ const appSlice = createSlice({
     },
     toggleFrontendSpecPopup(state, action) {
       state.frontendSpecPopupIsOpened = action.payload
+    },
+    toggleNavbarPin(state, action) {
+      state.isNavbarPinned = action.payload
     }
   },
   extraReducers: builder => {
@@ -111,6 +115,6 @@ const appSlice = createSlice({
   }
 })
 
-export const { toggleYaml } = appSlice.actions
+export const { toggleYaml, toggleNavbarPin } = appSlice.actions
 
 export default appSlice.reducer

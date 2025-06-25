@@ -13,7 +13,7 @@
     display: grid;
     gap: 15px;
 
-    &--narrow {
+    &_narrow {
       grid-template-columns: repeat(5, 1fr);
 
       @media (max-width: 1050px) {
@@ -22,7 +22,7 @@
       }
     }
 
-    &--wide {
+    &_wide {
       grid-template-columns: repeat(6, 1fr);
 
       @media (max-width: 1050px) {
@@ -31,7 +31,7 @@
       }
     }
 
-    &--narrow.isNavbarPinned {
+    &_narrow-navbar-pinned {
       @media (max-width: 1250px) {
         grid-template-columns: repeat(6, 1fr);
         gap: 10px;

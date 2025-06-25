@@ -39,8 +39,8 @@ import { fetchProjects } from '../../reducers/projectReducer'
 import './Page.scss'
 
 const Page = () => {
-  const [isNavbarPinned, setIsNavbarPinned] = useState(false)
   const [isProjectsFetched, setProjectFetched] = useState(false)
+  const isNavbarPinned = useSelector(state => state.appStore.isNavbarPinned)
   const { projectName } = useParams()
   const mainRef = useRef()
   const dispatch = useDispatch()
@@ -109,7 +109,7 @@ const Page = () => {
 
   return (
     <>
-      {projectName && <Navbar projectName={projectName} setIsNavbarPinned={setIsNavbarPinned} />}
+      {projectName && <Navbar projectName={projectName} />}
       <main id="main" className={pinnedClasses} ref={mainRef} style={mainStyles}>
         <div id="main-wrapper">{isProjectsFetched ? <Outlet /> : <Loader />}</div>
       </main>

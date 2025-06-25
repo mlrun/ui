@@ -16,31 +16,31 @@ such restriction.
 */
 
 import React, { useMemo, useRef, useState } from 'react'
-import classNames from 'classnames'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import classNames from 'classnames'
 
-import { ARTIFACTS_PAGE } from '../../constants'
 import { Loader, PopUpDialog } from 'igz-controls/components'
-import StatsCard from '../../common/StatsCard/StatsCard'
-
 import ClockIcon from 'igz-controls/images/clock.svg?react'
 
-import './projectsMonitoringCounters.scss'
+import { ARTIFACTS_PAGE } from '../../constants'
+import StatsCard from '../../common/StatsCard/StatsCard'
 import { generateMonitoringStats } from '../../utils/generateMonitoringData'
-import useIsNavbarPinned from '../../hooks/useIsNavbarPinned'
+
+import './projectsMonitoringCounters.scss'
 
 const ArtifactsCounters = () => {
   const anchorRef = useRef(null)
+  const detailsRef = useRef(null)
   const [showPopup, setShowPopup] = useState(false)
   const { projectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
-  const timeLabel = projectName ? '24 hrs' : 'Past 24 hrs'
-  const isNavbarPinned = useIsNavbarPinned()
+  const timeLabel = projectName ? '24 hrs' : 'Next 24 hrs'
+  const isNavbarPinned = useSelector(state => state.appStore.isNavbarPinned)
 
   const handleOpenPopUp = () => {
-    const isHidden = !document.querySelector('.stats__details')?.offsetParent
+    const isHidden = !detailsRef.current?.offsetParent
     setShowPopup(isHidden)
   }
 
@@ -79,9 +79,15 @@ const ArtifactsCounters = () => {
     [dataStats, navigate, projectName]
   )
 
-  const statsDetailsClass = classNames('stats__details', isNavbarPinned && 'isNavbarPinned')
-  const projectInfoClass = classNames('project-card__info', isNavbarPinned && 'isNavbarPinned')
+  const statsDetailsClass = classNames(
+    'stats__details',
+    isNavbarPinned && 'stats__details_navbar-pinned'
+  )
 
+  const projectInfoClass = classNames(
+    'project-card__info',
+    isNavbarPinned && 'project-card__info_navbar-pinned'
+  )
   return (
     <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
       <StatsCard className="monitoring-stats">
@@ -103,7 +109,7 @@ const ArtifactsCounters = () => {
               </div>
             </div>
           </StatsCard.Row>
-          <div className={statsDetailsClass}>
+          <div ref={detailsRef} className={statsDetailsClass}>
             <StatsCard.Row>
               <div className={data?.files?.className} onClick={data?.files?.link}>
                 <h6 className="stats__subtitle">Files</h6>

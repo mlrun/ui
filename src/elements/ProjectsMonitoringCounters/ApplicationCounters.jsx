@@ -16,12 +16,12 @@ such restriction.
 */
 import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
+import { useNavigate, useParams } from 'react-router-dom'
+
+import { Loader } from 'igz-controls/components'
 
 import { APPLICATION } from '../../constants'
 import StatsCard from '../../common/StatsCard/StatsCard'
-import { useNavigate, useParams } from 'react-router-dom'
-import { Loader } from 'igz-controls/components'
-
 import { generateMonitoringStats } from '../../utils/generateMonitoringData'
 
 import './projectsMonitoringCounters.scss'

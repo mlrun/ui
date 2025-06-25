@@ -35,13 +35,13 @@ import Select from '../../common/Select/Select'
 
 import { ConfirmDialog, RoundedIcon, Loader } from 'igz-controls/components'
 
-import useIsNavbarPinned from '../../hooks/useIsNavbarPinned'
 import { PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions } from './project.utils'
 
 import RefreshIcon from 'igz-controls/images/refresh.svg?react'
 
 import './project.scss'
+import { useSelector } from 'react-redux'
 
 const ProjectMonitorView = ({
   closeFeatureSetPanel,
@@ -63,10 +63,10 @@ const ProjectMonitorView = ({
   setShowFunctionsPanel,
   showFunctionsPanel
 }) => {
-  const isNavbarPinned = useIsNavbarPinned()
+  const isNavbarPinned = useSelector(state => state.appStore.isNavbarPinned)
   const statisticClassName = classNames(
     'main-info__statistics-section',
-    isNavbarPinned && 'isNavbarPinned'
+    isNavbarPinned && 'main-info__statistics-section_navbar-pinned'
   )
 
   return (

@@ -261,7 +261,7 @@
       }
     }
 
-    .main-info__statistics-section.isNavbarPinned {
+    .main-info__statistics-section_navbar-pinned {
       @media (max-width: 1250px) {
         grid-template-columns: repeat(1, 2fr);
       }

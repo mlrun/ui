@@ -15,15 +15,16 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useMemo } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
-import StatsCard from '../../common/StatsCard/StatsCard'
 import { Loader } from 'igz-controls/components'
+
+import StatsCard from '../../common/StatsCard/StatsCard'
 import { MODELS_PAGE } from '../../constants'
-import { useNavigate, useParams } from 'react-router-dom'
+import { generateMonitoringStats } from '../../utils/generateMonitoringData'
 
 import './projectsMonitoringCounters.scss'
-import { generateMonitoringStats } from '../../utils/generateMonitoringData'
 
 const ModelsAndApplication = () => {
   const projectStore = useSelector(store => store.projectStore)

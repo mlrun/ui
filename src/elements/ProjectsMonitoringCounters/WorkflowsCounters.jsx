@@ -20,32 +20,37 @@ such restriction.
 import React, { useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import classNames from 'classnames'
 
-import { Loader, PopUpDialog, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
-import StatsCard from '../../common/StatsCard/StatsCard'
-
-import { generateMonitoringStats } from '../../utils/generateMonitoringData'
-import { JOBS_MONITORING_WORKFLOWS_TAB } from '../../constants'
-import useIsNavbarPinned from '../../hooks/useIsNavbarPinned'
-
+import { Loader, PopUpDialog, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 import ClockIcon from 'igz-controls/images/clock.svg?react'
 
+import StatsCard from '../../common/StatsCard/StatsCard'
+import { generateMonitoringStats } from '../../utils/generateMonitoringData'
+import { JOBS_MONITORING_WORKFLOWS_TAB } from '../../constants'
+
 import './projectsMonitoringCounters.scss'
-import classNames from 'classnames'
 
 const WorkflowsCounters = () => {
   const anchorRef = useRef(null)
+  const detailsRef = useRef(null)
   const [showPopup, setShowPopup] = useState(false)
   const { projectName } = useParams()
   const navigate = useNavigate()
+  const isNavbarPinned = useSelector(state => state.appStore.isNavbarPinned)
   const projectStore = useSelector(store => store.projectStore)
   const timeLabel = projectName ? '24 hrs' : 'Past 24 hrs'
-  const isNavbarPinned = useIsNavbarPinned()
-  const statsDetailsClass = classNames('stats__details', isNavbarPinned && 'isNavbarPinned')
-  const projectInfoClass = classNames('project-card__info', isNavbarPinned && 'isNavbarPinned')
+  const statsDetailsClass = classNames(
+    'stats__details',
+    isNavbarPinned && 'stats__details_navbar-pinned'
+  )
 
+  const projectInfoClass = classNames(
+    'project-card__info',
+    isNavbarPinned && 'project-card__info_navbar-pinned'
+  )
   const handleOpenPopUp = () => {
-    const isHidden = !document.querySelector('.stats__details')?.offsetParent
+    const isHidden = !detailsRef.current?.offsetParent
     setShowPopup(isHidden)
   }
 
@@ -89,8 +94,12 @@ const WorkflowsCounters = () => {
   )
 
   return (
-    <div onMouseEnter={e => handleOpenPopUp(e)} onMouseLeave={handleClosePopUp}>
-      <StatsCard className="monitoring-stats">
+    <div>
+      <StatsCard
+        onMouseLeave={handleClosePopUp}
+        onMouseEnter={handleOpenPopUp}
+        className="monitoring-stats"
+      >
         <div ref={anchorRef}>
           <StatsCard.Header title="Workflows">
             <div className={projectInfoClass}>
@@ -114,7 +123,7 @@ const WorkflowsCounters = () => {
             </div>
           </StatsCard.Row>
 
-          <div className={statsDetailsClass}>
+          <div ref={detailsRef} className={statsDetailsClass}>
             {workflowsStats.counters.map(
               ({ counter, className, label, link, statusClass, tooltip }) => {
                 return (
