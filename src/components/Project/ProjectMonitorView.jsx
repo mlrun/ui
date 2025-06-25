@@ -55,6 +55,7 @@ const ProjectMonitorView = ({
   handleDeployFunctionSuccess,
   handleLaunchIDE,
   isNewFunctionPopUpOpen,
+  nuclioStreamsAreEnabled,
   params,
   project,
   refresh,
@@ -135,7 +136,7 @@ const ProjectMonitorView = ({
                 <ProjectJobs />
               </div>
               <div className="d-flex">
-                <ProjectFunctions />
+                <ProjectFunctions nuclioStreamsAreEnabled={nuclioStreamsAreEnabled} />
               </div>
             </div>
           </div>
@@ -182,6 +183,7 @@ ProjectMonitorView.propTypes = {
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
   isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
+  nuclioStreamsAreEnabled: PropTypes.bool.isRequired,
   params: PropTypes.object.isRequired,
   project: PropTypes.object.isRequired,
   refresh: PropTypes.func.isRequired,
