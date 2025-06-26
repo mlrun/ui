@@ -36,8 +36,7 @@ const ArtifactsCounters = () => {
   const { projectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
-  const timeLabel = projectName ? '24 hrs' : 'Next 24 hrs'
-  const isNavbarPinned = useSelector(state => state.appStore.isNavbarPinned)
+  const timeLabel = projectName ? '24 hrs' : 'Past 24 hrs'
 
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent
@@ -79,21 +78,12 @@ const ArtifactsCounters = () => {
     [dataStats, navigate, projectName]
   )
 
-  const statsDetailsClass = classNames(
-    'stats__details',
-    isNavbarPinned && 'stats__details_navbar-pinned'
-  )
-
-  const projectInfoClass = classNames(
-    'project-card__info',
-    isNavbarPinned && 'project-card__info_navbar-pinned'
-  )
   return (
     <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
       <StatsCard className="monitoring-stats">
         <div ref={anchorRef}>
           <StatsCard.Header title="Artifacts">
-            <div className={projectInfoClass}>
+            <div className="project-card__info">
               <ClockIcon className="project-card__info-icon" />
               <span>{timeLabel}</span>
             </div>
@@ -109,7 +99,7 @@ const ArtifactsCounters = () => {
               </div>
             </div>
           </StatsCard.Row>
-          <div ref={detailsRef} className={statsDetailsClass}>
+          <div ref={detailsRef} className="stats__details">
             <StatsCard.Row>
               <div className={data?.files?.className} onClick={data?.files?.link}>
                 <h6 className="stats__subtitle">Files</h6>

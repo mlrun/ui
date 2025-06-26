@@ -255,15 +255,9 @@
           }
         }
 
-        @media (max-width: 1050px) {
+        @media (max-width: 1250px) {
           grid-template-columns: repeat(1, 2fr);
         }
-      }
-    }
-
-    .main-info__statistics-section_navbar-pinned {
-      @media (max-width: 1250px) {
-        grid-template-columns: repeat(1, 2fr);
       }
     }
   }
@@ -271,5 +265,17 @@
   &__error-container {
     margin: auto;
     color: colors.$primary;
+  }
+}
+
+main.unpinned {
+  .main-info__statistics-section {
+    @media (max-width: 1250px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 1050px) {
+      grid-template-columns: repeat(1, 2fr);
+    }
   }
 }

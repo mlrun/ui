@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useMemo, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
@@ -28,7 +27,6 @@ import { RoundedIcon } from 'igz-controls/components'
 import { ALERTS_PAGE_PATH, NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
 import localStorageService from '../../utils/localStorageService'
 import { getLinks } from './navbar.util'
-import { toggleNavbarPin } from '../../reducers/appReducer'
 import { useMode } from '../../hooks/mode.hook'
 
 import Alerts from 'igz-controls/images/navbar/alerts-icon.svg?react'
@@ -38,8 +36,7 @@ import UnPinIcon from 'igz-controls/images/unpin-icon.svg?react'
 
 import './Navbar.scss'
 
-const Navbar = ({ projectName }) => {
-  const dispatch = useDispatch()
+const Navbar = ({ projectName, setIsNavbarPinned }) => {
   const [isHovered, setIsHovered] = useState(false)
   const [isPinned, setIsPinned] = useState(
     localStorageService.getStorageValue('mlrunUi.navbarStatic', false) === 'true'
@@ -63,10 +60,8 @@ const Navbar = ({ projectName }) => {
 
   const handlePinClick = () => {
     setIsPinned(prevIsPinned => {
-      const newValue = !prevIsPinned
-      localStorageService.setStorageValue('mlrunUi.navbarStatic', newValue)
-      dispatch(toggleNavbarPin(newValue))
-      return newValue
+      localStorageService.setStorageValue('mlrunUi.navbarStatic', !prevIsPinned)
+      return !prevIsPinned
     })
   }
 
@@ -79,8 +74,8 @@ const Navbar = ({ projectName }) => {
   }
 
   useEffect(() => {
-    dispatch(toggleNavbarPin(isPinned))
-  }, [isPinned, dispatch])
+    setIsNavbarPinned(isPinned)
+  }, [isPinned, setIsNavbarPinned])
 
   return (
     <nav
@@ -125,7 +120,8 @@ const Navbar = ({ projectName }) => {
 }
 
 Navbar.propTypes = {
-  projectName: PropTypes.string.isRequired
+  projectName: PropTypes.string.isRequired,
+  setIsNavbarPinned: PropTypes.func.isRequired
 }
 
 export default React.memo(Navbar)

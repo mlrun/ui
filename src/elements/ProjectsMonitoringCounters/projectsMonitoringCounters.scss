@@ -15,13 +15,6 @@
   gap: 15px;
   justify-content: space-between;
 
-  @media (max-width: 1050px) {
-    display: contents;
-    flex-direction: row;
-  }
-}
-
-.card__small-container_navbar-pinned {
   @media (max-width: 1250px) {
     display: contents;
     flex-direction: row;
@@ -38,20 +31,12 @@
   border: 1px solid colors.$frenchLilac;
 
   &.alerts-card {
-    transition:
-      background-color 0s,
-      border-color 0s;
+    transition: background-color 0s, border-color 0s;
   }
 
   &.alerts-card_not-empty {
     background-color: colors.$carouselPink;
     border: 1px solid colors.$babyPink;
-  }
-
-  .stats__details_navbar-pinned {
-    @media (max-width: 1250px) {
-      display: none;
-    }
   }
 
   .stats {
@@ -61,6 +46,18 @@
       color: colors.$topaz;
       font-weight: normal;
       font-size: 14px;
+    }
+
+    &__details {
+      margin-top: 0.5em;
+
+      & > * {
+        margin-bottom: 0.5em;
+      }
+
+      @media (max-width: 1250px) {
+        display: none;
+      }
     }
 
     &-card__row {
@@ -108,18 +105,6 @@
       }
     }
 
-    &__details {
-      margin-top: 0.5em;
-
-      & > * {
-        margin-bottom: 0.5em;
-      }
-
-      @media (max-width: 1050px) {
-        display: none;
-      }
-    }
-
     &__status {
       i[class^='state-'] {
         margin-left: 5px;
@@ -149,18 +134,12 @@
       }
     }
 
-    @media (max-width: 1050px) {
+    @media (max-width: 1250px) {
       display: none;
     }
 
     .stats__subtitle {
       font-size: inherit;
-    }
-  }
-
-  .project-card__info_navbar-pinned {
-    @media (max-width: 1250px) {
-      display: none;
     }
   }
 
@@ -200,6 +179,37 @@
         @include counterLinkHover;
 
         color: white;
+      }
+    }
+  }
+}
+
+main.unpinned {
+  .card__small-container {
+    @media (max-width: 1250px) {
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (max-width: 1050px) {
+      display: contents;
+      flex-direction: row;
+    }
+  }
+
+  .monitoring-stats {
+    .project-card__info,
+    .stats__details {
+      @media (max-width: 1250px) {
+        display: flex;
+
+        &.stats__details {
+          display: block;
+        }
+      }
+
+      @media (max-width: 1050px) {
+        display: none;
       }
     }
   }

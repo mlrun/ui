@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import classNames from 'classnames'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
@@ -41,7 +40,6 @@ import { launchIDEOptions } from './project.utils'
 import RefreshIcon from 'igz-controls/images/refresh.svg?react'
 
 import './project.scss'
-import { useSelector } from 'react-redux'
 
 const ProjectMonitorView = ({
   closeFeatureSetPanel,
@@ -63,12 +61,6 @@ const ProjectMonitorView = ({
   setShowFunctionsPanel,
   showFunctionsPanel
 }) => {
-  const isNavbarPinned = useSelector(state => state.appStore.isNavbarPinned)
-  const statisticClassName = classNames(
-    'main-info__statistics-section',
-    isNavbarPinned && 'main-info__statistics-section_navbar-pinned'
-  )
-
   return (
     <div className="project-wrapper">
       <div className="project__header">
@@ -131,7 +123,7 @@ const ProjectMonitorView = ({
               </div>
             </div>
             <ProjectsMonitoring />
-            <div className={statisticClassName}>
+            <div className="main-info__statistics-section">
               <div className="d-flex">
                 <ProjectJobs />
               </div>

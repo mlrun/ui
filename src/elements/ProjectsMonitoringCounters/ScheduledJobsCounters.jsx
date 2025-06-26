@@ -30,7 +30,6 @@ import { JOBS_MONITORING_SCHEDULED_TAB } from '../../constants'
 import ClockIcon from 'igz-controls/images/clock.svg?react'
 
 import './projectsMonitoringCounters.scss'
-import classNames from 'classnames'
 
 const ScheduledJobsCounters = () => {
   const navigate = useNavigate()
@@ -40,17 +39,7 @@ const ScheduledJobsCounters = () => {
   const anchorRef = useRef(null)
   const detailsRef = useRef(null)
   const timeLabel = projectName ? '24 hrs' : 'Next 24 hrs'
-  const isNavbarPinned = useSelector(state => state.appStore.isNavbarPinned)
 
-  const statsDetailsClass = classNames(
-    'stats__details',
-    isNavbarPinned && 'stats__details_navbar-pinned'
-  )
-
-  const projectInfoClass = classNames(
-    'project-card__info',
-    isNavbarPinned && 'project-card__info_navbar-pinned'
-  )
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent
     setShowPopup(isHidden)
@@ -96,7 +85,7 @@ const ScheduledJobsCounters = () => {
       <StatsCard className="monitoring-stats">
         <div ref={anchorRef}>
           <StatsCard.Header title="Scheduled">
-            <div className={projectInfoClass}>
+            <div className="project-card__info">
               <ClockIcon className="project-card__info-icon" />
               <span>{timeLabel}</span>
             </div>
@@ -116,7 +105,7 @@ const ScheduledJobsCounters = () => {
               </div>
             </div>
           </StatsCard.Row>
-          <div ref={detailsRef} className={statsDetailsClass}>
+          <div ref={detailsRef} className="stats__details">
             <StatsCard.Row>
               <div
                 className="stats__link stats__line"

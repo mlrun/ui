@@ -40,7 +40,6 @@ const AlertsCounters = () => {
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
   const timeLabel = paramProjectName ? '24 hrs' : 'Past 24 hrs'
-  const isNavbarPinned = useSelector(state => state.appStore.isNavbarPinned)
 
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent
@@ -98,22 +97,13 @@ const AlertsCounters = () => {
     'alerts-card',
     alertsData.data.total && 'alerts-card_not-empty'
   )
-  const statsDetailsClass = classNames(
-    'stats__details',
-    isNavbarPinned && 'stats__details_navbar-pinned'
-  )
-
-  const projectInfoClass = classNames(
-    'project-card__info',
-    isNavbarPinned && 'project-card__info_navbar-pinned'
-  )
 
   return (
     <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
       <StatsCard className={alertsCardClass}>
         <div ref={anchorRef}>
           <StatsCard.Header title="Alerts" icon={<Alerts />} iconClass="stats-card__title-icon">
-            <div className={projectInfoClass}>
+            <div className="project-card__info">
               <ClockIcon className="project-card__info-icon" />
               <span>{timeLabel}</span>
             </div>
@@ -134,7 +124,7 @@ const AlertsCounters = () => {
             </div>
           </StatsCard.Row>
           <StatsCard.Col></StatsCard.Col>
-          <div ref={detailsRef} className={statsDetailsClass}>
+          <div ref={detailsRef} className="stats__details">
             <StatsCard.Row>
               <div
                 onClick={alertsStats.endpoints.link}

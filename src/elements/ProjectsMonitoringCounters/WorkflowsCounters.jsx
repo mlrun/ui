@@ -20,7 +20,6 @@ such restriction.
 import React, { useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import classNames from 'classnames'
 
 import { Loader, PopUpDialog, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 import ClockIcon from 'igz-controls/images/clock.svg?react'
@@ -37,18 +36,9 @@ const WorkflowsCounters = () => {
   const [showPopup, setShowPopup] = useState(false)
   const { projectName } = useParams()
   const navigate = useNavigate()
-  const isNavbarPinned = useSelector(state => state.appStore.isNavbarPinned)
   const projectStore = useSelector(store => store.projectStore)
   const timeLabel = projectName ? '24 hrs' : 'Past 24 hrs'
-  const statsDetailsClass = classNames(
-    'stats__details',
-    isNavbarPinned && 'stats__details_navbar-pinned'
-  )
 
-  const projectInfoClass = classNames(
-    'project-card__info',
-    isNavbarPinned && 'project-card__info_navbar-pinned'
-  )
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent
     setShowPopup(isHidden)
@@ -94,15 +84,11 @@ const WorkflowsCounters = () => {
   )
 
   return (
-    <div>
-      <StatsCard
-        onMouseLeave={handleClosePopUp}
-        onMouseEnter={handleOpenPopUp}
-        className="monitoring-stats"
-      >
+    <div onMouseLeave={handleClosePopUp} onMouseEnter={handleOpenPopUp}>
+      <StatsCard className="monitoring-stats">
         <div ref={anchorRef}>
           <StatsCard.Header title="Workflows">
-            <div className={projectInfoClass}>
+            <div className="project-card__info">
               <ClockIcon className="project-card__info-icon" />
               <span>{timeLabel}</span>
             </div>
@@ -123,7 +109,7 @@ const WorkflowsCounters = () => {
             </div>
           </StatsCard.Row>
 
-          <div ref={detailsRef} className={statsDetailsClass}>
+          <div ref={detailsRef} className="stats__details">
             {workflowsStats.counters.map(
               ({ counter, className, label, link, statusClass, tooltip }) => {
                 return (
