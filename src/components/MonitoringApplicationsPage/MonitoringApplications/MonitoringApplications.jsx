@@ -83,7 +83,7 @@ const MonitoringApplications = () => {
         <MEPsWithDetections />
         <div className="monitoring-app__section-item">
           <div className="section-item_title">
-            <span>Operating functions</span>
+            <span>System functions</span>
             <Tip text="System functions that are used for the monitoring application operation" />
           </div>
           {operatingFunctions.length === 0 ? (

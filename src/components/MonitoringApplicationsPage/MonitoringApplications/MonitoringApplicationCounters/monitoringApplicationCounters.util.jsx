@@ -50,13 +50,13 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
           id: 'running',
           title: applicationsSummary.running_model_monitoring_functions,
           subtitle: 'Running',
-          status: 'running'
+          subtitleStatus: 'running'
         },
         {
           id: 'failed',
           title: applicationsSummary.failed_model_monitoring_functions,
           subtitle: 'Failed',
-          status: 'failed'
+          subtitleStatus: 'failed'
         }
       ]
     },
