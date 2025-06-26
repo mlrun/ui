@@ -568,11 +568,14 @@ export default {
     Running_Job_Action_Menu_Options: ['Run\'s resource monitoring', 'Abort', 'View YAML'],
     Delete_Run_Message: /Are you sure you want to delete the run with the UID "(.+?)" of the job "(.+?)"\? Deleted runs can not be restored./,
     Delete_All_Runs_Message: /Are you sure you want to delete all runs of the job "(.+?)"\? Deleted runs can not be restored./,
-    Workflows_Action_Menu_Options: ['View YAML', 'Retry'],
-    Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
+    Terminate_Workflow_Message: /Are you sure you want to terminate the workflow "(.+?)" \(stop its execution\)\? Workflows termination cannot be undone\./,
+    Workflows_Action_Menu_Options: ['View YAML', 'Retry', 'Terminate'],
+    Workflows_Running_Action_Menu_Options: ['View YAML', 'Terminate'],
+    Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete', 'Terminate'],
     Pending_Job_Action_Menu_Options: ['Batch re-run', 'Run\'s resource monitoring', 'Abort', 'View YAML'],
     Schedule_Action_Menu_Options: ['Run now', 'Edit', 'Delete', 'View YAML'],
-    Workflows_Unsuccessful_Run_Message: 'Workflow did not run successfully\nRETRY'
+    Workflows_Unsuccessful_Run_Message: 'Workflow did not run successfully\nRETRY',
+    Workflows_Unsuccessful_Terminate_Message: 'Workflow "stocks-admin-main 2021-08-30 05-36-35 failed to terminate'
   },
   Jobs_Monitor_Tab_Info_Pane: {
     Pending_State: 'Pending',
@@ -732,10 +735,10 @@ export default {
   },
   No_Data_Message: {
     Common_Message_Jobs_Monitoring:
-      /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
+      /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
     Common_Message_Monitor_Jobs_Name: /No data matches the filter: "Name: (.+?)"/,
     Common_Message_Jobs_Monitoring_Workflow_Project:
-      /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
+      /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
     Common_Message_Jobs_Monitoring_Status:
       /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Status: (.+?)"/,
     Common_Message_Jobs_Monitoring_Type:
@@ -743,7 +746,7 @@ export default {
     Common_Message_Monitor_Jobs:
       /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}"/,
     Common_Message_Jobs_Monitoring_Scheduled:
-      /No data matches the filter: "Scheduled at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
+      /No data matches the filter: "Scheduled at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
     Common_Message: 'No data matches the filter: "Version Tag: latest, Name: ccccc"',
     Common_Message_Feature: 'No data matches the filter: "Version Tag: latest"',
     Common_Message_Feature_Vector_Tab:
