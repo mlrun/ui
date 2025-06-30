@@ -49,6 +49,7 @@ const MonitoringApplicationCard = ({
                 <div data-testid={`monitoring-app-${counter.id}`}>
                   <div className="stats__counter">
                     {loading ? <Loader section small secondary /> : error ? 'N/A' : counter.title}
+                    {counter.status && <i className={`state-${counter.status}`} />}
                   </div>
                 </div>
                 {counter.subtitle && (
@@ -58,7 +59,7 @@ const MonitoringApplicationCard = ({
                       template={<TextTooltipTemplate text={counter.subtitle} />}
                     >
                       <span className="stats__subtitle">{counter.subtitle}</span>
-                      <i className={`state-${counter.status}`} />
+                      {counter.subtitleStatus && <i className={`state-${counter.subtitleStatus}`} />}
                     </Tooltip>
                   </div>
                 )}

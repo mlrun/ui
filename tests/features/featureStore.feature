@@ -774,6 +774,7 @@ Feature: Feature Store Page
         Then verify "Feature_Set_Name_Input" on "New_Feature_Set" wizard should display options "Input_Hint"."Feature_Set_Name_Hint"
         When click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Feature_Set_Name_Input" options rules on "New_Feature_Set" wizard
+        And wait load page
         Then type value "   " to "Version_Input" field on "New_Feature_Set" wizard
         Then verify "Version_Input" on "New_Feature_Set" wizard should display options "Input_Hint"."Feature_Set_Version_Hint"
         When click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard

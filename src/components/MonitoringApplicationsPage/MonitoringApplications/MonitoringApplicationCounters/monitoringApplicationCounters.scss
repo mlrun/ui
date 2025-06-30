@@ -34,8 +34,8 @@
       margin-bottom: 10px;
     }
 
-    .stats__subtitle {
-      margin-right: 5px;
+    [class^="state"] {
+      margin-left: 5px;
     }
   }
 }
