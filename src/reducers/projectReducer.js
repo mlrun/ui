@@ -497,7 +497,7 @@ const projectStoreSlice = createSlice({
     })
     builder.addCase(fetchProjectSecrets.fulfilled, (state, action) => {
       state.project.secrets = {
-        data: action.payload,
+        data: action.payload.data,
         error: null,
         loading: false
       }
