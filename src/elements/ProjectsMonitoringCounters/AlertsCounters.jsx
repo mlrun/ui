@@ -17,13 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
+import classNames from 'classnames'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import classNames from 'classnames'
 
+import { Loader, PopUpDialog } from 'igz-controls/components'
 import StatsCard from '../../common/StatsCard/StatsCard'
-import { Loader } from 'igz-controls/components'
 
 import { generateAlertsStats } from '../../utils/generateAlertsStats'
 
@@ -33,9 +33,22 @@ import ClockIcon from 'igz-controls/images/clock.svg?react'
 import './projectsMonitoringCounters.scss'
 
 const AlertsCounters = () => {
+  const anchorRef = useRef(null)
+  const detailsRef = useRef(null)
+  const [showPopup, setShowPopup] = useState(false)
   const { projectName: paramProjectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
+  const timeLabel = paramProjectName ? '24 hrs' : 'Past 24 hrs'
+
+  const handleOpenPopUp = () => {
+    const isHidden = !detailsRef.current?.offsetParent
+    setShowPopup(isHidden)
+  }
+
+  const handleClosePopUp = () => {
+    setShowPopup(false)
+  }
 
   const alertsData = useMemo(() => {
     const projectName = paramProjectName ? paramProjectName : '*'
@@ -86,82 +99,106 @@ const AlertsCounters = () => {
   )
 
   return (
-    <StatsCard className={alertsCardClass}>
-      <StatsCard.Header title="Alerts" icon={<Alerts />} iconClass="stats-card__title-icon">
-        <StatsCard.Col>
-          <div className="project-card__info">
+    <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
+      <StatsCard className={alertsCardClass}>
+        <div ref={anchorRef}>
+          <StatsCard.Header title="Alerts" icon={<Alerts />} iconClass="stats-card__title-icon">
+            <div className="project-card__info">
+              <ClockIcon className="project-card__info-icon" />
+              <span>{timeLabel}</span>
+            </div>
+          </StatsCard.Header>
+          <StatsCard.Row>
             <div
-              className="stats__link"
+              className="stats__counter_header stats__link"
               data-testid="alerts_total_counter"
-              onClick={alertsStats.total.link}
+              onClick={alertsStats?.total?.link}
             >
-              <span className="stats__subtitle">Total</span>
-              <div className="stats__counter">
-                {projectStore.projectsSummary.loading ? (
+              <div>
+                {projectStore?.projectsSummary?.loading ? (
                   <Loader section small secondary />
                 ) : (
-                  (alertsData.data.total || 0).toLocaleString()
+                  alertsData?.data?.total?.toLocaleString()
                 )}
               </div>
             </div>
-            <div className="project-card__info-icon">
-              <ClockIcon />
-            </div>
-            <span>Past 24 hours</span>
+          </StatsCard.Row>
+          <StatsCard.Col></StatsCard.Col>
+          <div ref={detailsRef} className="stats__details">
+            <StatsCard.Row>
+              <div
+                onClick={alertsStats.endpoints.link}
+                className="stats__line stats__link"
+                data-testid="alerts_endpoints_counter"
+              >
+                <h6 className="stats__subtitle">Endpoint</h6>
+                <div>
+                  {projectStore?.projectsSummary?.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    alertsData?.data?.endpoint?.toLocaleString()
+                  )}
+                </div>
+              </div>
+            </StatsCard.Row>
+            <StatsCard.Row>
+              <div
+                className="stats__line stats__link"
+                data-testid="alerts_job_counter"
+                onClick={alertsStats?.job?.link}
+              >
+                <h6 className="stats__subtitle">Jobs</h6>
+                <div>
+                  {projectStore?.projectsSummary?.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    alertsData?.data?.jobs?.toLocaleString()
+                  )}
+                </div>
+              </div>
+            </StatsCard.Row>
+            <StatsCard.Row>
+              <div
+                onClick={alertsStats.application.link}
+                className="stats__link"
+                data-testid="alerts_application_counter"
+              >
+                <div className="stats__subtitle">Application</div>
+                <div>
+                  {projectStore.projectsSummary.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    alertsData?.data?.application?.toLocaleString()
+                  )}
+                </div>
+              </div>
+            </StatsCard.Row>
           </div>
-        </StatsCard.Col>
-      </StatsCard.Header>
-      <StatsCard.Row>
-        <StatsCard.Col>
-          <div
-            className="stats__link"
-            onClick={alertsStats.endpoints.link}
-            data-testid="alerts_endpoint_counter"
-          >
-            <div className="stats__counter stats__counter-large">
-              {projectStore.projectsSummary.loading ? (
-                <Loader section small secondary />
-              ) : (
-                (alertsData.data.endpoint || 0).toLocaleString()
-              )}
-            </div>
-            <h6 className="stats__subtitle">Endpoint</h6>
-          </div>
-        </StatsCard.Col>
-        <StatsCard.Col>
-          <div
-            className="stats__link"
-            onClick={alertsStats.job.link}
-            data-testid="alerts_jobs_counter"
-          >
-            <div className="stats__counter stats__counter-large">
-              {projectStore.projectsSummary.loading ? (
-                <Loader section small secondary />
-              ) : (
-                (alertsData.data.jobs || 0).toLocaleString()
-              )}
-            </div>
-            <h6 className="stats__subtitle">Jobs</h6>
-          </div>
-        </StatsCard.Col>
-        <StatsCard.Col>
-          <div
-            className="stats__link"
-            onClick={alertsStats.application.link}
-            data-testid="alerts_application_counter stats__counter-large"
-          >
-            <div className="stats__counter">
-              {projectStore.projectsSummary.loading ? (
-                <Loader section small secondary />
-              ) : (
-                (alertsData.data.application || 0).toLocaleString()
-              )}
-            </div>
-            <h6 className="stats__subtitle">Application</h6>
-          </div>
-        </StatsCard.Col>
-      </StatsCard.Row>
-    </StatsCard>
+          {showPopup && (
+            <PopUpDialog
+              className="card-popup"
+              customPosition={{
+                element: anchorRef,
+                position: 'bottom-right'
+              }}
+              headerIsHidden
+            >
+              <div className="card-popup_text">
+                <div className="card-popup_text_link" onClick={alertsStats?.endpoints?.link}>
+                  Endpoint: {alertsData?.data?.endpoint}
+                </div>
+                <div className="card-popup_text_link" onClick={alertsStats?.job?.link}>
+                  Jobs: {alertsData?.data?.jobs}
+                </div>
+                <div className="card-popup_text_link" onClick={alertsStats?.application?.link}>
+                  Application: {alertsData?.data?.application}
+                </div>
+              </div>
+            </PopUpDialog>
+          )}
+        </div>
+      </StatsCard>
+    </div>
   )
 }
 

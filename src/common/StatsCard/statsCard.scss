@@ -3,26 +3,26 @@
 
 .stats {
   &-card {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
-    position: relative;
+    padding: 15px;
     color: colors.$topaz;
     background-color: colors.$white;
     border-radius: 8px;
     box-shadow: shadows.$previewBoxShadowInit;
-    padding: 15px;
     transition: all 0.3s ease-in-out;
 
     @media screen and (min-width: 1500px) {
-      padding: 20px 25px 15px;
+      padding: 20px 20px 5px;
     }
 
     &__row {
       display: flex;
-      flex-flow: row nowrap;
       flex: 1 0 100%;
-      justify-content: space-between;
+      flex-flow: row nowrap;
       align-items: baseline;
+      justify-content: space-between;
 
       &:not(:last-child) {
         margin-bottom: 1em;
@@ -42,11 +42,12 @@
     &__title {
       position: relative;
       display: flex;
+      gap: 6px;
       align-items: center;
+      margin: 0;
       color: colors.$primary;
       font-weight: normal;
       font-size: 1rem;
-      margin: 0;
       transition: font-size 0.3s ease-in-out;
 
       @media screen and (min-width: 1600px) {
@@ -63,20 +64,20 @@
 
       &-icon {
         position: absolute;
-        left: 0;
         top: 1px;
-        height: 16px;
+        left: 0;
         width: 16px;
+        height: 16px;
         transition: all 0.3s ease-in-out;
 
         @media screen and (min-width: 1600px) {
-          height: 20px;
           width: 20px;
+          height: 20px;
         }
 
         svg {
-          height: inherit;
           width: inherit;
+          height: inherit;
 
           path {
             fill: colors.$ceriseRed;
@@ -87,6 +88,11 @@
 
     &__title-tip {
       margin-left: 5px;
+    }
+
+    &__title-wrapper {
+      display: flex;
+      align-items: normal;
     }
   }
 }
