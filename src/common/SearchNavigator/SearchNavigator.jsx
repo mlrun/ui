@@ -17,19 +17,21 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import Search from '../Search/Search'
 import { RoundedIcon } from 'igz-controls/components'
 
+import { highlightMatches } from './searchNavigator.util'
+
 import Arrow from 'igz-controls/images/arrow.svg?react'
 import Close from 'igz-controls/images/close.svg?react'
 
 import './searchNavigator.scss'
 
-const SearchNavigator = ({ promptTemplate, setSearchResult }) => {
+const SearchNavigator = ({ promptTemplate, rawPromptString, setSearchResult }) => {
   const [matchCount, setMatchCount] = useState(0)
   const [activeMatchIndex, setActiveMatchIndex] = useState(0)
   const [matches, setMatches] = useState([])
@@ -53,62 +55,45 @@ const SearchNavigator = ({ promptTemplate, setSearchResult }) => {
         return clearResults()
       }
 
-      const regex = new RegExp(value, 'gi')
-      const allMatches = [...promptTemplate.matchAll(regex)]
-      const count = allMatches.length
-      let index = 0
-
-      const highlighted = promptTemplate.replace(regex, match => {
-        const marker = `<mark 
-        data-index="${index}" 
-        style="background: ${index === 0 ? '#FFAE4E' : '#FFE37E'}; color: #483f56;">${match}</mark>`
-
-        index++
-
-        return marker
-      })
+      const regex = new RegExp(`(${value})`, 'gi')
+      const allMatches = [...rawPromptString.matchAll(regex)]
+      const highlighted = highlightMatches(promptTemplate, regex, 0)
 
       setSearchResult(highlighted)
-      setMatchCount(count)
+      setMatchCount(allMatches.length)
       setMatches(allMatches)
       setActiveMatchIndex(0)
       setSearchValue(value)
     },
-    [clearResults, promptTemplate, setSearchResult]
+    [clearResults, rawPromptString, promptTemplate, setSearchResult]
   )
 
   const highlightMatch = useCallback(
     index => {
       if (!matches.length) return
 
-      const regex = new RegExp(promptTemplate.match(matches[0])[0], 'gi')
-      let current = 0
-
-      const highlighted = promptTemplate.replace(regex, match => {
-        const marker = `<mark 
-        data-index="${current}" 
-        style="background: ${current === index ? '#FFAE4E' : '#FFE37E'}; color: #483f56;">${match}</mark>`
-
-        current++
-
-        return marker
-      })
+      const regex = new RegExp(`(${searchValue})`, 'gi')
+      const highlighted = highlightMatches(promptTemplate, regex, index)
 
       setSearchResult(highlighted)
       setActiveMatchIndex(index)
     },
-    [matches, promptTemplate, setSearchResult]
+    [matches, promptTemplate, searchValue, setSearchResult]
   )
 
   const goToPrevMatch = () => {
     if (!matches.length) return
+
     const prevIndex = (activeMatchIndex - 1 + matchCount) % matchCount
+
     highlightMatch(prevIndex)
   }
 
   const goToNextMatch = () => {
     if (!matches.length) return
+
     const nextIndex = (activeMatchIndex + 1) % matchCount
+
     highlightMatch(nextIndex)
   }
 
@@ -164,7 +149,8 @@ const SearchNavigator = ({ promptTemplate, setSearchResult }) => {
 }
 
 SearchNavigator.propTypes = {
-  promptTemplate: PropTypes.string.isRequired,
+  promptTemplate: PropTypes.array.isRequired,
+  rawPromptString: PropTypes.string.isRequired,
   setSearchResult: PropTypes.func.isRequired
 }
 

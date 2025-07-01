@@ -313,6 +313,7 @@ Feature: Projects Page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
+        And wait load page
         Then verify breadcrumbs "tab" label should be equal "Feature store" value
         And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
@@ -512,6 +513,7 @@ Feature: Projects Page
         Then "Total_Scheduled_Title" element in "Monitoring_Scheduled_Box" on "Projects" should contains "Total" value
         Then verify "Total_Scheduled_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         When click on "Total_Scheduled_Number" element in "Monitoring_Scheduled_Box" on "Projects" wizard
+        And wait load page
         Then verify redirection to "projects/*/jobs-monitoring/scheduled?type=all"
         Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
@@ -562,6 +564,7 @@ Feature: Projects Page
         Then verify "Total_Alerts_Number" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
         Then "Total_Alerts_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "39" value
         When click on "Total_Alerts_Number" element in "Monitoring_Alerts_Box" on "Projects" wizard
+        And wait load page
         Then verify redirection to "projects/*/alerts-monitoring?bePage=1&fePage=1"
         Then verify breadcrumbs "cross" label should be equal "Alerts monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value

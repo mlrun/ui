@@ -162,6 +162,13 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           value: job.updated || new Date(job.finished_at),
           className: 'table-cell-1',
           type: 'hidden'
+        },
+        {
+          headerId: 'retries',
+          headerLabel: 'Retries',
+          id: `retries.${identifierUnique}`,
+          value: job.maxRetries ? `${job.retryCount} out of ${job.maxRetries}` : '',
+          className: 'table-cell-1',
         }
       ]
     }
@@ -556,6 +563,13 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
           value: job.updated || new Date(job.finished_at),
           className: 'table-cell-1',
           type: 'hidden'
+        },
+        {
+          headerId: 'retries',
+          headerLabel: 'Retries',
+          id: `retries.${identifierUnique}`,
+          value: job.maxRetries ? `${job.retryCount} out of ${job.maxRetries}` : '',
+          className: 'table-cell-1',
         }
       ]
     }

@@ -33,7 +33,6 @@ import {
   DATASETS_PAGE,
   DOCUMENTS_PAGE,
   FEATURE_SETS_TAB,
-  FEATURE_STORE_PAGE,
   FEATURE_VECTORS_TAB,
   FILES_PAGE,
   FUNCTION_TYPE_APPLICATION,
@@ -160,9 +159,7 @@ export const generateArtifactsContent = (
       },
       kind: {
         value:
-          detailsType !== FEATURE_STORE_PAGE &&
-          detailsType !== FILES_PAGE &&
-          detailsType !== DATASETS_PAGE
+          detailsType !== FILES_PAGE && detailsType !== DATASETS_PAGE
             ? selectedItem.kind || ' '
             : null
       },
@@ -352,6 +349,12 @@ export const generateJobsContent = selectedItem => {
           : selectedItem.iterationStats?.length
             ? selectedItem.iterationStats.length - 1
             : 'N/A'
+    },
+    retryCount: {
+      value: selectedItem.retryCount
+    },
+    maxRetries: {
+      value: selectedItem.maxRetries
     }
   }
 }

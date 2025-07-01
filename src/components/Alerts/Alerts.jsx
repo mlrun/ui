@@ -149,7 +149,7 @@ const Alerts = () => {
               withRefreshButton
               withoutExpandButton
             >
-              <AlertsFilters isAlertsPage={alertsFilters} isCrossProjects={isCrossProjects} />
+              <AlertsFilters isAlertsPage isCrossProjects={isCrossProjects} />
             </ActionBar>
           </div>
           {alertsStore.loading && <Loader />}

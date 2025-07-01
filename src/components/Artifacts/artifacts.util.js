@@ -36,7 +36,7 @@ export const getFiltersConfig = isAllVersions => ({
   },
   [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
   [ITERATIONS_FILTER]: {
-    label: 'Show best iteration only:',
+    label: 'Show best iteration only',
     initialValue: isAllVersions ? '' : SHOW_ITERATIONS,
     isModal: true
   }

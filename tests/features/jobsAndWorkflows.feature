@@ -749,7 +749,7 @@ Feature: Jobs and workflows
         Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
         Then "Title" element on "Modal_Transition_Popup" should contains "aggregate" value
         Then verify "Data_Status" element visibility on "Modal_Transition_Popup" wizard
-        Then "Data_Status" element on "Modal_Transition_Popup" should contains "Nov 25, 2021, 05:20:00 PM" value
+        Then "Data_Status" element on "Modal_Transition_Popup" should contains "Nov 25, 2021, 04:20:00 PM" value
         Then verify "State_Icon" element visibility on "Modal_Transition_Popup" wizard
         Then verify "State_Icon" element on "Modal_Transition_Popup" wizard should display hover tooltip "ML_Function_Info_Pane"."Initialized_State"
         Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
@@ -960,8 +960,99 @@ Feature: Jobs and workflows
         Then verify "Workflows_Monitor_Table" element visibility on "Workflows_Monitor_Tab" wizard
         When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
+        Then verify "Terminate_Button" element visibility on "Workflows_Monitor_Tab" wizard
+        Then "Terminate_Button" element on "Workflows_Monitor_Tab" should contains "Terminate" value
+        Then verify "Terminate_Button" element on "Workflows_Monitor_Tab" wizard is disabled
+        Then verify "Toggle_View_Button" element visibility on "Workflows_Monitor_Tab" wizard
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
+        And wait load page
         Then verify "Workflow_List_View_Table" element visibility on "Workflows_Monitor_Tab" wizard
+        Then verify "Terminate_Button" element visibility on "Workflows_Monitor_Tab" wizard
+        Then "Terminate_Button" element on "Workflows_Monitor_Tab" should contains "Terminate" value
+        Then verify "Terminate_Button" element on "Workflows_Monitor_Tab" wizard is disabled
+        When click on cell with row index 1 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Header" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Updated" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Cross_Close_Button" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Info_Pane_Tab_Selector" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Tab_List"
+        Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Terminate_Button" element visibility on "Workflows_Monitor_Tab" wizard
+        Then "Terminate_Button" element on "Workflows_Monitor_Tab" should contains "Terminate" value
+        Then verify "Terminate_Button" element on "Workflows_Monitor_Tab" wizard is disabled
+        Then select "project" with "stocks-admin" value in breadcrumbs menu
+        And wait load page
+        Then verify breadcrumbs "project" label should be equal "stocks-admin" value
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Terminate_Button" element visibility on "Workflows_Monitor_Tab" wizard
+        Then "Terminate_Button" element on "Workflows_Monitor_Tab" should contains "Terminate" value
+        Then verify "Terminate_Button" element on "Workflows_Monitor_Tab" wizard is enabled
+        Then click on "Terminate_Button" element on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then "Title" element on "Confirm_Popup" should contains "Terminate workflow" value
+        Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
+        Then verify "Confirm_Dialog_Message" element visibility on "Confirm_Popup" wizard
+        Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Jobs_And_Workflows"."Terminate_Workflow_Message"
+        Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
+        Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
+        Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
+        Then "Delete_Button" element on "Confirm_Popup" should contains "Terminate" value
+        When click on "Cancel_Button" element on "Confirm_Popup" wizard
+        Then click on "Terminate_Button" element on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
+        When click on "Cross_Cancel_Button" element on "Confirm_Popup" wizard
+        Then click on "Terminate_Button" element on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
+        When click on "Delete_Button" element on "Confirm_Popup" wizard
+        And wait load page
+        Then verify if "Notification_Popup" popup dialog appears
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Unsuccessful_Terminate_Message"
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then verify "Terminate_Button" element on "Workflows_Monitor_Tab" wizard is enabled
+        Then verify "Workflow_List_View_Table" element visibility on "Workflows_Monitor_Tab" wizard
+        Then verify "Terminate_Button" element visibility on "Workflows_Monitor_Tab" wizard
+        Then "Terminate_Button" element on "Workflows_Monitor_Tab" should contains "Terminate" value
+        Then verify "Terminate_Button" element on "Workflows_Monitor_Tab" wizard is enabled
+        When click on cell with row index 1 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Header" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Updated" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Cross_Close_Button" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Info_Pane_Tab_Selector" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Tab_List"
+        Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then click on "Terminate_Button" element on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then "Title" element on "Confirm_Popup" should contains "Terminate workflow" value
+        Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
+        Then verify "Confirm_Dialog_Message" element visibility on "Confirm_Popup" wizard
+        Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Jobs_And_Workflows"."Terminate_Workflow_Message"
+        Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
+        Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
+        Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
+        Then "Delete_Button" element on "Confirm_Popup" should contains "Terminate" value
+        When click on "Cancel_Button" element on "Confirm_Popup" wizard
+        Then click on "Terminate_Button" element on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
+        When click on "Delete_Button" element on "Confirm_Popup" wizard
+        And wait load page
+        Then verify if "Notification_Popup" popup dialog appears
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Unsuccessful_Terminate_Message"
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
 
     @MLJW 
     @passive
@@ -1250,6 +1341,37 @@ Feature: Jobs and workflows
         And wait load page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify options in action menu on "Workflows_Monitor_Tab" wizard in "Workflows_Monitor_Table" table with "Completed" value in "status" column should contains "Jobs_And_Workflows"."Workflows_Action_Menu_Options"
+        Then check that "Terminate" option in action menu on "Workflows_Monitor_Tab" wizard is disabled
+        Then select "project" with "stocks-admin" value in breadcrumbs menu
+        And wait load page
+        Then verify breadcrumbs "project" label should be equal "stocks-admin" value
+        Then verify options in action menu on "Workflows_Monitor_Tab" wizard in "Workflows_Monitor_Table" table with "Running" value in "status" column should contains "Jobs_And_Workflows"."Workflows_Running_Action_Menu_Options"
+        Then check that "Terminate" option in action menu on "Workflows_Monitor_Tab" wizard is enabled
+        Then select "Terminate" option in action menu on "Workflows_Monitor_Tab" wizard in "Workflows_Monitor_Table" table at row with "main 2021-08-30 05-36-35" value in "name" column
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then "Title" element on "Confirm_Popup" should contains "Terminate workflow" value
+        Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
+        Then verify "Confirm_Dialog_Message" element visibility on "Confirm_Popup" wizard
+        Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Jobs_And_Workflows"."Terminate_Workflow_Message"
+        Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
+        Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
+        Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
+        Then "Delete_Button" element on "Confirm_Popup" should contains "Terminate" value
+        When click on "Cancel_Button" element on "Confirm_Popup" wizard
+        Then select "Terminate" option in action menu on "Workflows_Monitor_Tab" wizard in "Workflows_Monitor_Table" table at row with "main 2021-08-30 05-36-35" value in "name" column
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
+        When click on "Cross_Cancel_Button" element on "Confirm_Popup" wizard
+        Then select "Terminate" option in action menu on "Workflows_Monitor_Tab" wizard in "Workflows_Monitor_Table" table at row with "main 2021-08-30 05-36-35" value in "name" column
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
+        When click on "Delete_Button" element on "Confirm_Popup" wizard
+        And wait load page
+        Then verify if "Notification_Popup" popup dialog appears
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Unsuccessful_Terminate_Message"
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
 
     @MLJW
     @passive
@@ -1483,6 +1605,7 @@ Feature: Jobs and workflows
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
+        And wait load page
         And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then select "Run now" option in action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table at row with "erann-test" value in "name" column
@@ -1556,6 +1679,7 @@ Feature: Jobs and workflows
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
         And wait load page
         And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
