@@ -24,6 +24,7 @@ import classnames from 'classnames'
 import { Tooltip, TextTooltipTemplate, Loader } from 'igz-controls/components'
 
 import Arrow from 'igz-controls/images/arrow.svg?react'
+import { isNil } from 'lodash'
 
 const ProjectStatisticsCounter = ({ counterObject }) => {
   const MAX_VISIBLE_COUNTER = 999999
@@ -34,19 +35,25 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
   )
 
   const generatedCountersContent = useMemo(() => {
-    const displayValue = counterObject?.value?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    if (!isNil(counterObject.value)) {
+      const displayValue = counterObject.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
-    if (Number(counterObject.value) < MAX_VISIBLE_COUNTER) {
+      if (Number(counterObject.value) < MAX_VISIBLE_COUNTER) {
+        return {
+          value: displayValue
+        }
+      }
+
+      const truncatedValue = Math.floor(counterObject.value / 100000) / 10
+
       return {
-        value: displayValue
+        value: (truncatedValue % 1 === 0 ? Math.floor(truncatedValue) : truncatedValue) + 'M',
+        tooltip: ` (${displayValue})`
       }
     }
 
-    const truncatedValue = Math.floor(counterObject.value / 100000) / 10
-
     return {
-      value: (truncatedValue % 1 === 0 ? Math.floor(truncatedValue) : truncatedValue) + 'M',
-      tooltip: ` (${displayValue})`
+      value: counterObject.value
     }
   }, [counterObject.value])
 

@@ -124,7 +124,7 @@ const ScheduledJobsCounters = () => {
             </StatsCard.Row>
             <StatsCard.Row>
               <div
-                className="stats__link stats__line"
+                className="stats__link"
                 onClick={scheduledStats.workflows.link}
                 data-testid="scheduled_workflows_counter"
               >
