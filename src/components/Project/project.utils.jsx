@@ -23,7 +23,6 @@ import JobWizard from '../JobWizard/JobWizard'
 
 import { ARTIFACT_TYPE, DATASET_TYPE } from '../../constants'
 import { PRIMARY_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import { openPopUp } from 'igz-controls/utils/common.util'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 import Api from 'igz-controls/images/mlrun-api-gateways.svg?react'
@@ -52,7 +51,8 @@ export const generateCreateNewOptions = (
   navigate,
   params,
   openRegisterArtifactModal,
-  generateNuclioLink
+  generateNuclioLink,
+  openPopUp
 ) => [
   {
     label: 'Register dataset',
@@ -109,11 +109,8 @@ export const generateCreateNewOptions = (
     label: 'Create real-time function',
     id: 'createRealTimeFunction',
     icon: <Realtime />,
-    handler: () => {
-      window.top.location.href = generateNuclioLink(
-        `/projects/${params.projectName}/create-function`
-      )
-    }
+    handler: () =>
+      window.open(generateNuclioLink(`/projects/${params.projectName}/create-function`), '_blank')
   }
 ]
 
