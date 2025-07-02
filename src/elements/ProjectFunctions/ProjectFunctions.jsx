@@ -110,7 +110,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
           label: 'Consumer groups',
           className:
             Object.keys(nuclioStore.v3ioStreams.data ?? {}).length > 0 ? 'running' : 'default',
-          href: `/projects/${params.projectName}/monitor${
+          link: `/projects/${params.projectName}/monitor${
             !isNuclioModeDisabled ? '/consumer-groups' : ''
           }`
         }
