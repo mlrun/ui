@@ -292,6 +292,16 @@ export const generateMonitoringCounters = (data, dispatch) => {
       jobs: 0,
       application: 0,
       total: 0
+    },
+    models: {
+      total: 0
+    },
+    artifacts: {
+      documents: 0,
+      datasets: 0,
+      files: 0,
+      llm_prompts: 0,
+      total: 0
     }
   }
 
@@ -325,6 +335,18 @@ export const generateMonitoringCounters = (data, dispatch) => {
       monitoringCounters.alerts.endpoint +
       monitoringCounters.alerts.jobs +
       monitoringCounters.alerts.application
+
+    monitoringCounters.models.total += project.models_count || 0
+
+    monitoringCounters.artifacts.llm_prompts += project.llm_prompts_count || 0
+    monitoringCounters.artifacts.datasets += project.datasets_count || 0
+    monitoringCounters.artifacts.files += project.files_count || 0
+    monitoringCounters.artifacts.documents += project.documents_count || 0
+    monitoringCounters.artifacts.total =
+      monitoringCounters.artifacts.llm_prompts +
+      monitoringCounters.artifacts.datasets +
+      monitoringCounters.artifacts.files +
+      monitoringCounters.artifacts.documents
   })
 
   dispatch(setJobsMonitoringData(monitoringCounters))

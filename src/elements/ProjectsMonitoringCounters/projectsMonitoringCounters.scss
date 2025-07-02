@@ -6,19 +6,32 @@
   text-decoration: underline;
   cursor: pointer;
   text-underline-offset: 1px;
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 1px;
+}
+
+.card__small-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  justify-content: space-between;
+
+  @media (max-width: 1250px) {
+    display: contents;
+    flex-direction: row;
+  }
 }
 
 .monitoring-stats {
+  flex: 1;
   flex-direction: column;
   flex-wrap: unset;
   justify-content: flex-start;
+  min-width: 0;
+  height: 100%;
   border: 1px solid colors.$frenchLilac;
 
   &.alerts-card {
-    transition:
-      background-color 0s,
-      border-color 0s;
+    transition: background-color 0s, border-color 0s;
   }
 
   &.alerts-card_not-empty {
@@ -32,32 +45,63 @@
       margin: 0;
       color: colors.$topaz;
       font-weight: normal;
-      font-size: 0.75rem;
+      font-size: 14px;
     }
 
     &-card__row {
       flex: unset;
-
-      &:last-child {
-        padding: 10px 0;
-      }
-    }
-
-    &-card__col:not(:last-child) {
-      padding-right: 0.75em;
-    }
-
-    &__counter {
-      color: colors.$primary;
+      margin-bottom: 0;
       font-weight: 400;
-      font-size: 28px;
+      font-size: 14px;
 
-      &-large {
-        min-height: 34px;
+      & > * {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding-bottom: 0.5rem;
+        color: colors.$primary;
+      }
+    }
+
+    &-large {
+      min-height: 34px;
+    }
+
+    &__counter_header {
+      font-weight: 600;
+      font-size: 26px;
+    }
+
+    &__details {
+      margin-top: 0.5em;
+
+      & > * {
+        margin-bottom: 0.5em;
       }
 
+      @media (max-width: 1250px) {
+        display: none;
+      }
+    }
+
+    &__link {
       &:hover {
-        @include counterLinkHover;
+        * {
+          @include counterLinkHover;
+        }
+      }
+    }
+
+    &__line {
+      &::after {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 1px;
+        background-color: colors.$mulledWineThree;
+        content: '';
       }
     }
 
@@ -66,33 +110,20 @@
         margin-left: 5px;
       }
     }
-
-    &__link {
-      cursor: pointer;
-
-      &:hover {
-        .stats__counter {
-          @include counterLinkHover;
-        }
-      }
-    }
   }
 
   .project-card__info {
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: flex-end;
-    margin-left: 1rem;
+    width: 80px;
+    margin-left: 0.5em;
     color: colors.$topaz;
     font-size: 0.75rem;
 
     & *:not(:last-child) {
       margin-right: 5px;
-    }
-
-    .stats__link {
-      display: flex;
-      align-items: center;
     }
 
     &-icon {
@@ -103,32 +134,12 @@
       }
     }
 
+    @media (max-width: 1250px) {
+      display: none;
+    }
+
     .stats__subtitle {
-      margin: 0 5px 0 0;
       font-size: inherit;
-    }
-
-    .stats__counter {
-      position: relative;
-      margin-right: 0.6em;
-      padding-right: 0.75em;
-      font-size: 1rem;
-
-      &::after {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        display: inline-block;
-        width: 1px;
-        margin: 3px 0;
-        background-color: colors.$mulledWineThree;
-        content: '';
-      }
-    }
-
-    .project-card__info-icon {
-      position: relative;
     }
   }
 
@@ -137,6 +148,74 @@
 
     .input-wrapper .input.date-picker__input {
       padding: 10px;
+    }
+  }
+}
+
+.card-popup {
+  .pop-up-dialog {
+    z-index: 9999;
+    width: max-content;
+    min-width: 100%;
+    max-width: 600px;
+    margin-top: -10px;
+    padding: 0;
+    background: colors.$primary;
+  }
+
+  &_text {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 10px;
+    overflow-x: auto;
+    color: colors.$white;
+    font-size: 12px;
+    line-height: 20px;
+    white-space: nowrap;
+
+    &_link {
+      &:hover {
+        @include counterLinkHover;
+
+        color: white;
+      }
+    }
+  }
+}
+
+main.unpinned {
+  .card__small-container {
+    @media (max-width: 1250px) {
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (max-width: 1100px) {
+      display: contents;
+      flex-direction: row;
+    }
+  }
+
+  .monitoring-stats {
+    .stats__details {
+      @media (max-width: 1250px) {
+        display: block;
+      }
+
+      @media (max-width: 1100px) {
+        display: none;
+      }
+    }
+
+    .project-card__info {
+      @media (max-width: 1250px) {
+        display: flex;
+      }
+
+      @media (max-width: 1100px) {
+        display: none;
+      }
     }
   }
 }
