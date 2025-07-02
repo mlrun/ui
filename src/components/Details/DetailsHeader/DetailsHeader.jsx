@@ -27,11 +27,11 @@ import Select from '../../../common/Select/Select'
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import { ACTIONS_MENU } from 'igz-controls/types'
-import { DETAILS_ARTIFACTS_TAB, JOBS_PAGE } from '../../../constants'
+import { DETAILS_ARTIFACTS_TAB, DETAILS_LOGS_TAB, JOBS_PAGE } from '../../../constants'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { generateUrlFromRouterPath } from 'igz-controls/utils/common.util'
 import { getDefaultCloseDetailsLink } from '../../../utils/link-helper.util'
-import { setIteration } from '../../../reducers/detailsReducer'
+import { setIteration, setRunAttempt } from '../../../reducers/detailsReducer'
 import { useDetailsHeader } from 'igz-controls/hooks/useDetailsHeader.hook'
 
 import Back from 'igz-controls/images/back-arrow.svg?react'
@@ -220,24 +220,47 @@ const DetailsHeader = ({
   ])
 
   const renderCustomElements = useCallback(() => {
-    return (
-      params.tab === DETAILS_ARTIFACTS_TAB &&
-      detailsStore.iteration &&
-      detailsStore.iterationOptions &&
-      !isDetailsPopUp && (
-        <Select
-          density="dense"
-          key="Iteration"
-          label="Iteration:"
-          onClick={option => {
-            dispatch(setIteration(option))
-          }}
-          options={detailsStore.iterationOptions}
-          selectedId={detailsStore.iteration}
-        />
-      )
-    )
-  }, [params.tab, detailsStore.iteration, detailsStore.iterationOptions, isDetailsPopUp, dispatch])
+    switch (params.tab) {
+      case DETAILS_ARTIFACTS_TAB: {
+        return (
+          detailsStore.iteration &&
+          detailsStore.iterationOptions &&
+          !isDetailsPopUp && (
+            <Select
+              density="dense"
+              key="Iteration"
+              label="Iteration:"
+              onClick={option => {
+                dispatch(setIteration(option))
+              }}
+              options={detailsStore.iterationOptions}
+              selectedId={detailsStore.iteration}
+            />
+          )
+        )
+      }
+      case DETAILS_LOGS_TAB: {
+        return (
+          detailsStore.runAttempt &&
+          !isEmpty(detailsStore.runAttemptOptions) &&
+          !isDetailsPopUp && (
+            <Select
+              density="dense"
+              key="Attempts"
+              label="Attempt:"
+              onClick={option => {
+                dispatch(setRunAttempt(option))
+              }}
+              options={detailsStore.runAttemptOptions}
+              selectedId={detailsStore.runAttempt}
+            />
+          )
+        )
+      }
+      default:
+        return null
+    }
+  }, [params.tab, detailsStore.iteration, detailsStore.iterationOptions, detailsStore.runAttempt, detailsStore.runAttemptOptions, isDetailsPopUp, dispatch])
 
   return (
     <DetailsHeaderContainer

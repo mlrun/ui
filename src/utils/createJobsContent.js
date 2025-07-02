@@ -167,7 +167,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           headerId: 'retries',
           headerLabel: 'Retries',
           id: `retries.${identifierUnique}`,
-          value: job.maxRetries ? `${job.retryCount} out of ${job.maxRetries}` : '',
+          value: `${job.retryCountWithInitialAttempt} out of ${job.maxRetriesWithInitialAttempt}`,
           className: 'table-cell-1',
         }
       ]
@@ -568,7 +568,7 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
           headerId: 'retries',
           headerLabel: 'Retries',
           id: `retries.${identifierUnique}`,
-          value: job.maxRetries ? `${job.retryCount} out of ${job.maxRetries}` : '',
+          value: `${job.retryCountWithInitialAttempt} out of ${job.maxRetries}`,
           className: 'table-cell-1',
         }
       ]

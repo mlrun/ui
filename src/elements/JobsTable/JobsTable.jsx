@@ -110,8 +110,8 @@ const JobsTable = React.forwardRef(
     )
 
     const handleFetchJobLogs = useCallback(
-      (item, projectName, setDetailsLogs, streamLogsRef) => {
-        return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, dispatch)
+      (item, projectName, setDetailsLogs, streamLogsRef, runAttempt, signal) => {
+        return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, dispatch, runAttempt, signal)
       },
       [dispatch]
     )

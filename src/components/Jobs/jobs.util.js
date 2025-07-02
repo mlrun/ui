@@ -74,8 +74,8 @@ export const getInfoHeaders = (isSpark, selectedJob) => {
     { label: 'Log level', id: LOG_LEVEL_ID },
     { label: 'Output path', id: 'outputPath' },
     { label: 'Total iterations', id: 'iterations' },
-    { label: 'Retry count', id: 'retryCount' },
-    { label: 'Maximum retries', id: 'maxRetries' }
+    { label: 'Retry count', id: 'retryCountWithInitialAttempt' },
+    { label: 'Maximum retries', id: 'maxRetriesWithInitialAttempt' }
   ]
 
   if (isSpark) {

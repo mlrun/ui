@@ -42,7 +42,7 @@ const initialState = {
   jobRuns: [],
   jobs: [],
   logs: {
-    loading: false,
+    loadingCounter: 0,
     error: null
   },
   loading: false,
@@ -194,8 +194,8 @@ export const fetchJobFunctions = createAsyncThunk('fetchJobFunctions', ({ projec
     return res.data?.funcs
   })
 })
-export const fetchJobLogs = createAsyncThunk('fetchJobLogs', ({ id, project }) => {
-  return jobsApi.getJobLogs(id, project).then(result => {
+export const fetchJobLogs = createAsyncThunk('fetchJobLogs', ({ id, project, attempt, signal }) => {
+  return jobsApi.getJobLogs(id, project, attempt, signal).then(result => {
     return result
   })
 })
@@ -382,15 +382,15 @@ const jobsSlice = createSlice({
       state.jobLoadingCounter--
     })
     builder.addCase(fetchJobLogs.pending, state => {
-      state.logs.loading = true
+      state.logs.loadingCounter++
       state.logs.error = null
     })
     builder.addCase(fetchJobLogs.fulfilled, state => {
       state.logs.error = null
-      state.logs.loading = false
+      state.logs.loadingCounter--
     })
     builder.addCase(fetchJobLogs.rejected, (state, action) => {
-      state.logs.loading = false
+      state.logs.loadingCounter--
       state.logs.error = action.payload
     })
     builder.addCase(fetchJobs.pending, showLoading)
