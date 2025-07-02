@@ -110,12 +110,23 @@
     .pop-up-dialog {
       width: 100%;
       padding: 0;
+
+      .select__item {
+        svg {
+          width: 20px;
+          height: 20px;
+
+          path {
+            fill: colors.$topaz;
+          }
+        }
+      }
     }
   }
 
   &.disabled {
-    cursor: not-allowed;
     border-color: colors.$spunPearl;
+    cursor: not-allowed;
 
     .select__label,
     .select__value {

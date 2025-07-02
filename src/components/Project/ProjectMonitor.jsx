@@ -46,6 +46,7 @@ import { areNuclioStreamsEnabled } from '../../utils/helper'
 import { fetchNuclioV3ioStreams } from '../../reducers/nuclioReducer'
 import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { generateNuclioLink } from '../../utils'
 import { removeFunctionsError, removeNewFunction } from '../../reducers/functionReducer'
 import { removeNewFeatureSet } from '../../reducers/featureStoreReducer'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
@@ -111,10 +112,8 @@ const ProjectMonitor = () => {
       navigate,
       params,
       openRegisterArtifactModal,
-      openRegisterModelModal,
-      setCreateFeatureSetPanelIsOpen,
-      setIsNewFunctionPopUpOpen,
-      isDemoMode
+      generateNuclioLink,
+      openPopUp
     )
 
     return {

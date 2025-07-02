@@ -109,7 +109,10 @@ const ProjectMonitorView = ({
                   className="main-info__toolbar-menu create-new-menu"
                   density="dense"
                   hideSelectedOption
-                  label="Create new"
+                  position="bottom-left"
+                  width="auto"
+                  popUpClassName=""
+                  label="Quick actions"
                   options={createNewOptions}
                 />
                 <RoundedIcon
