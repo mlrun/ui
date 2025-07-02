@@ -1782,7 +1782,6 @@ function pipelineTerminate(req, res) {
     item => item.run.id === pipelineID && item.run.project === project
   )
 
-  console.log({ pipeline, pipelineMeta })
   if (!pipeline || !pipelineMeta) {
     return res.status(404).send({
       detail: {
