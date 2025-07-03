@@ -57,7 +57,6 @@ const DetailsLogs = ({
     (item, project, setDetailsLogs, streamLogsRef, runAttempt) => {
       refreshLogsAbortControllerRef.current?.abort?.(REQUEST_CANCELED)
       streamLogsRef.current = null
-
       refreshLogsAbortControllerRef.current = new AbortController()
 
       return refreshLogs(
