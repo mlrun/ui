@@ -45,6 +45,8 @@ const initialState = {
   error: null,
   iteration: '',
   iterationOptions: [],
+  runAttempt: '0',
+  runAttemptOptions: [],
   loadingCounter: 0,
   modelFeatureVectorData: {},
   pods: {
@@ -165,6 +167,12 @@ const detailsStoreSlice = createSlice({
     setIterationOption(state, action) {
       state.iterationOptions = action.payload
     },
+    setRunAttempt(state, action) {
+      state.runAttempt = action.payload
+    },
+    setRunAttemptOptions(state, action) {
+      state.runAttemptOptions = action.payload
+    },
     setSelectedMetricsOptions(state, action) {
       state.metricsOptions = {
         ...state.metricsOptions,
@@ -270,6 +278,8 @@ export const {
   setDetailsDates,
   setIteration,
   setIterationOption,
+  setRunAttempt,
+  setRunAttemptOptions,
   setSelectedMetricsOptions
 } = detailsStoreSlice.actions
 

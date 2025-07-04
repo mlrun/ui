@@ -17,11 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import Logs from './Logs'
+import { setRunAttempt, setRunAttemptOptions } from '../../reducers/detailsReducer'
+import { REQUEST_CANCELED } from '../../constants'
 
 const DetailsLogs = ({
   additionalLogsTitle = '',
@@ -40,24 +42,45 @@ const DetailsLogs = ({
   const streamAdditionalLogsRef = useRef()
   const functionsStore = useSelector(store => store.functionsStore)
   const jobsStore = useSelector(store => store.jobsStore)
+  const runAttempt = useSelector(store => store.detailsStore.runAttempt)
+  const dispatch = useDispatch()
+  const refreshLogsAbortControllerRef = useRef(new AbortController())
 
   const mainLogsAreLoading = useMemo(() => {
-    return functionsStore.logs.loading || jobsStore.logs.loading
-  }, [functionsStore.logs.loading, jobsStore.logs.loading])
+    return functionsStore.logs.loading || jobsStore.logs.loadingCounter > 0
+  }, [functionsStore.logs.loading, jobsStore.logs.loadingCounter])
   const additionalLogsAreLoading = useMemo(() => {
     return functionsStore.nuclioLogs.loading
   }, [functionsStore.nuclioLogs.loading])
 
+  const refreshLogsHandler = useCallback(
+    (item, project, setDetailsLogs, streamLogsRef, runAttempt) => {
+      refreshLogsAbortControllerRef.current?.abort?.(REQUEST_CANCELED)
+      streamLogsRef.current = null
+      refreshLogsAbortControllerRef.current = new AbortController()
+
+      return refreshLogs(
+        item,
+        project,
+        setDetailsLogs,
+        streamLogsRef,
+        runAttempt,
+        refreshLogsAbortControllerRef.current?.signal
+      )
+    },
+    [refreshLogs]
+  )
+
   useEffect(() => {
     if (refreshLogs) {
-      refreshLogs(item, item.project, setDetailsLogs, streamLogsRef)
+      refreshLogsHandler(item, item.project, setDetailsLogs, streamLogsRef, runAttempt)
 
       return () => {
         setDetailsLogs('')
         removeLogs()
       }
     }
-  }, [item, refreshLogs, removeLogs, withLogsRefreshBtn])
+  }, [item, refreshLogs, removeLogs, withLogsRefreshBtn, runAttempt, refreshLogsHandler])
 
   useEffect(() => {
     refreshAdditionalLogs &&
@@ -69,12 +92,37 @@ const DetailsLogs = ({
     }
   }, [item, withLogsRefreshBtn, refreshAdditionalLogs, removeAdditionalLogs])
 
+  useEffect(() => {
+    if (item?.retryCount > 0) {
+      const attemptsList = Array.from({ length: item.retryCount + 1 }, (_, index) => ({
+        id: `${index + 1}`,
+        label: `${index + 1}`
+      }))
+      
+      attemptsList[attemptsList.length - 1].id = '0'
+
+      dispatch(setRunAttemptOptions(attemptsList))
+
+      return () => {
+        dispatch(setRunAttemptOptions([]))
+        dispatch(setRunAttempt('0'))
+        refreshLogsAbortControllerRef.current?.abort?.(REQUEST_CANCELED)
+      }
+    } else {
+      return () => {
+        refreshLogsAbortControllerRef.current?.abort?.(REQUEST_CANCELED)
+      }
+    }
+  }, [dispatch, item])
+
   return (
     <div className="table__item-logs-container">
       {logsTitle && <h3>{logsTitle}</h3>}
       <Logs
         isLoading={mainLogsAreLoading}
-        refreshLogs={() => refreshLogs(item, item.project, setDetailsLogs, streamLogsRef)}
+        refreshLogs={() =>
+          refreshLogsHandler(item, item.project, setDetailsLogs, streamLogsRef, runAttempt)
+        }
         ref={streamLogsRef}
         withLogsRefreshBtn={withLogsRefreshBtn}
         detailsLogs={detailsLogs}
