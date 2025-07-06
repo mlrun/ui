@@ -24,7 +24,6 @@ import { isEmpty } from 'lodash'
 
 import ProjectMonitorView from './ProjectMonitorView'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
-import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelModal'
 
 import {
   DATASET_TYPE,
@@ -51,7 +50,6 @@ import { removeFunctionsError, removeNewFunction } from '../../reducers/function
 import { removeNewFeatureSet } from '../../reducers/featureStoreReducer'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
-import { useMode } from '../../hooks/mode.hook'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
 const ProjectMonitor = () => {
@@ -61,7 +59,6 @@ const ProjectMonitor = () => {
   const [confirmData, setConfirmData] = useState(null)
   const navigate = useNavigate()
   const params = useParams()
-  const { isDemoMode } = useMode()
   const dispatch = useDispatch()
   const { isNuclioModeDisabled } = useNuclioMode()
   const projectAbortControllerRef = useRef(new AbortController())
@@ -100,13 +97,6 @@ const ProjectMonitor = () => {
     [navigate, params, registerArtifactLink]
   )
 
-  const openRegisterModelModal = useCallback(() => {
-    openPopUp(RegisterModelModal, {
-      params: params,
-      refresh: () => navigate(registerArtifactLink(MODEL_TYPE))
-    })
-  }, [params, navigate, registerArtifactLink])
-
   const { createNewOptions } = useMemo(() => {
     const createNewOptions = generateCreateNewOptions(
       navigate,
@@ -119,7 +109,7 @@ const ProjectMonitor = () => {
     return {
       createNewOptions
     }
-  }, [isDemoMode, navigate, params, openRegisterArtifactModal, openRegisterModelModal])
+  }, [navigate, params, openRegisterArtifactModal])
 
   const fetchProjectDataAndSummary = useCallback(() => {
     projectAbortControllerRef.current = new AbortController()

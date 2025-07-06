@@ -28,7 +28,6 @@ import {
   MONITOR_ALERTS_PAGE,
   MONITOR_WORKFLOWS_TAB,
   PROJECT_MONITOR,
-  PROJECT_QUICK_ACTIONS_PAGE,
   SCHEDULE_TAB,
   REAL_TIME_PIPELINES_TAB,
   JOBS_MONITORING_PAGE,
@@ -45,10 +44,6 @@ export const generateMlrunScreens = (params, isDemo) =>
         {
           label: 'Project monitoring',
           id: PROJECT_MONITOR
-        },
-        {
-          label: 'Quick actions',
-          id: PROJECT_QUICK_ACTIONS_PAGE
         },
         { label: 'Feature store', id: 'feature-store' },
         { label: 'Datasets', id: 'datasets' },

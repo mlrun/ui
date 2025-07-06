@@ -56,7 +56,6 @@ import {
   PIPELINE_SUB_PAGE,
   PROJECTS_SETTINGS_GENERAL_TAB,
   PROJECT_MONITOR,
-  PROJECT_QUICK_ACTIONS_PAGE,
   REAL_TIME_PIPELINES_TAB,
   SCHEDULE_TAB,
   JOBS_MONITORING_PAGE,
@@ -97,9 +96,6 @@ const ConsumerGroupsWrapper = lazyRetry(
 )
 const ConsumerGroup = lazyRetry(() => import('./components/ConsumerGroup/ConsumerGroup'))
 const ConsumerGroups = lazyRetry(() => import('./components/ConsumerGroups/ConsumerGroups'))
-const ProjectOverview = lazyRetry(
-  () => import('./components/Project/ProjectOverview/ProjectOverview')
-)
 const ProjectSettings = lazyRetry(() => import('./components/ProjectSettings/ProjectSettings'))
 const AddToFeatureVectorPage = lazyRetry(
   () => import('./components/AddToFeatureVectorPage/AddToFeatureVectorPage')
@@ -202,10 +198,6 @@ const App = () => {
               <Route path=":functionName/:streamName" exact element={<ConsumerGroup />} />
             </Route>
           )}
-          <Route
-            path={`projects/:projectName/${PROJECT_QUICK_ACTIONS_PAGE}`}
-            element={<ProjectOverview />}
-          />
           <Route
             path="projects/:projectName/settings"
             element={<Navigate to={`${PROJECTS_SETTINGS_GENERAL_TAB}`} replace />}
