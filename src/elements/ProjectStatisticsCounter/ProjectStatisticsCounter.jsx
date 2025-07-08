@@ -58,14 +58,7 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
   }, [counterObject.value])
 
   return counterObject.counterTooltip ? (
-    <Tooltip
-      template={
-        <TextTooltipTemplate
-          text={counterObject.counterTooltip + (generatedCountersContent.tooltip || '')}
-        />
-      }
-      textShow
-    >
+    <Tooltip template={<TextTooltipTemplate text={counterObject.counterTooltip} />} textShow>
       <div className={dataCardStatisticsValueClassNames}>
         {counterObject.loading ? (
           <Loader section small secondary />
@@ -77,12 +70,13 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
         )}
       </div>
       <div className="project-data-card__statistics-label">
-        <Tooltip
-          className={counterObject.labelClassName || ''}
-          template={<TextTooltipTemplate text={counterObject.label} />}
+        <div
+          className="project-data-card__statistics-label"
+          key={counterObject.label + Math.random()}
         >
-          {counterObject.label}
-        </Tooltip>
+          <span>{counterObject.label}</span>
+          {counterObject.status && <i className={`state-${counterObject.status}`} />}
+        </div>
       </div>
     </Tooltip>
   ) : (

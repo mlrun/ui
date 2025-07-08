@@ -29,32 +29,29 @@ export const getJobsStatistics = (projectCounter, projectName) => {
     running: {
       value: projectCounter.error ? 'N/A' : projectCounter.data.runs_running_count,
       label: 'Running',
-      className:
-        projectCounter.error || projectCounter.data.runs_running_count === 0
-          ? 'default'
-          : 'running',
+      className: 'running',
       status: 'running',
-      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`
+      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`,
+      counterTooltip: 'Aborting, Pending, Running'
     },
     failed: {
       value: projectCounter.error ? 'N/A' : projectCounter.data.runs_failed_recent_count,
       label: 'Failed',
       className:
         projectCounter.error || projectCounter.data.runs_failed_recent_count === 0
-          ? 'default'
+          ? 'running'
           : 'failed',
       status: 'failed',
-      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`
+      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`,
+      counterTooltip: 'Aborted, Error'
     },
     succeeded: {
       value: projectCounter.error ? 'N/A' : projectCounter.data.runs_completed_recent_count,
       label: 'Succeeded',
       status: 'succeeded',
-      className:
-        projectCounter.error || projectCounter.data.runs_failed_recent_count === 0
-          ? 'default'
-          : 'succeeded',
-      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`
+      className: 'running',
+      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`,
+      counterTooltip: 'Completed'
     }
   }
 }
