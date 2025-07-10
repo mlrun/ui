@@ -24,6 +24,7 @@ import { isEmpty } from 'lodash'
 
 import ProjectMonitorView from './ProjectMonitorView'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
+import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelModal'
 
 import {
   DATASET_TYPE,
@@ -96,7 +97,6 @@ const ProjectMonitor = () => {
     },
     [navigate, params, registerArtifactLink]
   )
-
   const { createNewOptions } = useMemo(() => {
     const createNewOptions = generateCreateNewOptions(
       navigate,

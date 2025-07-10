@@ -19,10 +19,16 @@ such restriction.
 */
 import React from 'react'
 
-import { DOCUMENTS_PAGE, LLM_PROMPTS_PAGE, PROJECT_MONITOR } from '../../constants'
+import {
+  DOCUMENTS_PAGE,
+  LLM_PROMPTS_PAGE,
+  PROJECT_MONITOR,
+  PROJECT_QUICK_ACTIONS_PAGE
+} from '../../constants'
 import { generateNuclioLink } from '../../utils'
 
 import APIIcon from 'igz-controls/images/navbar/mlrun-api-gateways.svg?react'
+import HomepageIcon from 'igz-controls/images/navbar/mlrun-project-home.svg?react'
 import DatasetsIcon from 'igz-controls/images/navbar/mlrun-datasets.svg?react'
 import MonitoringIcon from 'igz-controls/images/navbar/mlrun-project-monitoring.svg?react'
 import ArtifactsIcon from 'igz-controls/images/navbar/mlrun-artifacts.svg?react'
@@ -46,6 +52,13 @@ export const getLinks = (projectName, isDemoMode) => {
       id: PROJECT_MONITOR,
       label: 'Project monitoring',
       link: `${pathname}/${PROJECT_MONITOR}`
+    },
+    {
+      icon: <HomepageIcon />,
+      id: PROJECT_QUICK_ACTIONS_PAGE,
+      label: 'Quick actions',
+      link: `${pathname}/${PROJECT_QUICK_ACTIONS_PAGE}`,
+      hidden: true
     },
     {
       icon: <FeatureStoreIcon />,
