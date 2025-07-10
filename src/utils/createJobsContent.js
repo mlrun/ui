@@ -49,6 +49,7 @@ import { formatDatetime } from 'igz-controls/utils/datetime.util'
 
 export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
   return jobs.map(job => {
+    console.log(job)
     const identifierUnique = getJobIdentifier(job, true)
     const type = getJobKindFromLabels(job.labels)
     const getLink = tab => {
@@ -568,7 +569,7 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
           headerId: 'retries',
           headerLabel: 'Retries',
           id: `retries.${identifierUnique}`,
-          value: `${job.retryCountWithInitialAttempt} out of ${job.maxRetries}`,
+          value: `${job.retryCountWithInitialAttempt} out of ${job.maxRetriesWithInitialAttempt}`,
           className: 'table-cell-1',
         }
       ]
