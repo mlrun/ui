@@ -52,7 +52,8 @@ export const jobsStatuses = [
   { label: 'Completed', id: 'completed', status: 'completed' },
   { label: 'Error', id: ERROR_STATE, status: ERROR_STATE },
   { label: 'Running', id: 'running', status: 'running' },
-  { label: 'Pending', id: 'pending', status: 'pending' }
+  { label: 'Pending', id: 'pending', status: 'pending' },
+  { label: 'Pending retry', id: 'pendingRetry', status: 'pendingRetry' }
 ]
 
 export const workflowsStatuses = [

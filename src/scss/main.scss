@@ -186,6 +186,10 @@ main {
   @include mixins.statusState(colors.$topaz, false);
 }
 
+[class^='state-pendingRetry'] {
+  @include mixins.statusState(colors.$fuchsiaPink, false);
+}
+
 .state-created-job,
 .state-created-function,
 .state-creating-function,
