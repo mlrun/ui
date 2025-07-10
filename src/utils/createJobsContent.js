@@ -49,7 +49,6 @@ import { formatDatetime } from 'igz-controls/utils/datetime.util'
 
 export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
   return jobs.map(job => {
-    console.log(job)
     const identifierUnique = getJobIdentifier(job, true)
     const type = getJobKindFromLabels(job.labels)
     const getLink = tab => {
