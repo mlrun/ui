@@ -27,8 +27,7 @@ import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
 
 import RegisterArtifactModalForm from '../../elements/RegisterArtifactModalForm/RegisterArtifactModalForm'
-import { Button, Modal } from 'igz-controls/components'
-import Loader from '../..//common/Loader/Loader'
+import { Button, Modal, Loader } from 'igz-controls/components'
 
 import {
   FORBIDDEN_ERROR_STATUS_CODE,

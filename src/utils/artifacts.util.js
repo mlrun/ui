@@ -142,7 +142,7 @@ export const processActionAfterTagUniquesValidation = ({
   const messagesByKind = createArtifactMessages[artifact.kind.toLowerCase()]
 
   return artifactApi
-    .getExpandedArtifact(projectName, artifact.key, tag)
+    .getExpandedArtifact(projectName, artifact.key || artifact.metadata.key, tag)
     .then(response => {
       if (response?.data) {
         if (!isEmpty(response.data.artifacts)) {

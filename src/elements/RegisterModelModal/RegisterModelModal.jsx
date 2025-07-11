@@ -26,9 +26,8 @@ import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { v4 as uuidv4 } from 'uuid'
 
-import Loader from '../../common/Loader/Loader'
 import TargetPath from '../../common/TargetPath/TargetPath'
-import { Button, Modal, FormChipCell, FormInput, FormTextarea } from 'igz-controls/components'
+import { Button, Modal, FormChipCell, FormInput, FormTextarea, Loader } from 'igz-controls/components'
 
 import artifactApi from '../../api/artifacts-api'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
