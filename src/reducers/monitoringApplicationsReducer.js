@@ -277,7 +277,7 @@ export const fetchMonitoringApplications = createAsyncThunk(
       start: filters[DATES_FILTER].value[0].getTime()
     }
 
-    if(filters[DATES_FILTER].value[1]) {
+    if (filters[DATES_FILTER].value[1]) {
       params.end = filters[DATES_FILTER].value[1].getTime()
     }
 

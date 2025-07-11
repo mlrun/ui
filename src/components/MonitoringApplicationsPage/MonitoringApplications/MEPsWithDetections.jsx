@@ -92,7 +92,6 @@ const MEPsWithDetections = () => {
           yAxisCtx.canvas.style.width = `${chart.currentDevicePixelRatio === 1 ? yAxisCtx.canvas.width : copyWidth}px`
           yAxisCtx.canvas.style.height = `${chart.currentDevicePixelRatio === 1 ? yAxisCtx.canvas.height : copyHeight}px`
 
-
           yAxisCtx.drawImage(
             sourceCanvas,
             0,
@@ -153,15 +152,15 @@ const MEPsWithDetections = () => {
         <span>Model Endpoints with suspected/detected issue</span>
         <Tip text="This chart displays the number of model endpoints that had at least one detected issue, in any monitoring application, in the relevant time period" />
       </div>
-      {(isLoading || isLoadingAPI) && <Loader section secondary />}
-      <div
-        className={classNames(
-          'section-item_chart-wrapper',
-          (isLoading || isLoadingAPI) && 'loading'
-        )}
-      >
+      <div className="section-item_chart-wrapper">
         <div className="section-item_chart">
-          <div className="section-item_chart-area">
+          {(isLoading || isLoadingAPI) && <Loader section secondary />}
+          <div
+            className={classNames(
+              'section-item_chart-area',
+              (isLoading || isLoadingAPI) && 'loading'
+            )}
+          >
             <canvas id="chart-y-axis" ref={chartYAxisRef} width={0} height={0} />
             <div className="section-item_ml-chart-wrapper" ref={chartWrapperRef}>
               <MlChart config={barChartConfig} />

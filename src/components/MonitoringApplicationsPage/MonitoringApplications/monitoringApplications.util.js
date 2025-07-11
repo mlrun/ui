@@ -104,16 +104,19 @@ export function groupDataToBins(data, startTime, endTime) {
     return dateToRound
   }
 
+  const incrementPeriod = period => {
+    if (basePeriod === HOUR) {
+      period.setHours(period.getHours() + 1)
+    } else if (basePeriod === MINUTES) {
+      period.setMinutes(period.getMinutes() + 10)
+    } else {
+      period.setDate(period.getDate() + 1)
+    }
+    
+    return period
+  }
   // generate bins
-  for (
-    const period = roundDate(startTime);
-    period.getTime() <= endTime;
-    basePeriod === HOUR
-      ? period.setHours(period.getHours() + 1)
-      : basePeriod === MINUTES
-        ? period.setMinutes(period.getMinutes() + 10)
-        : period.setDate(period.getDate() + 1)
-  ) {
+  for (const period = roundDate(startTime); period.getTime() <= endTime; incrementPeriod(period)) {
     grouped.set(period.toISOString(), 0)
   }
 
