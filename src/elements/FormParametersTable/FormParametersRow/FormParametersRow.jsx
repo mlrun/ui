@@ -233,7 +233,7 @@ const FormParametersRow = ({
         }
 
         const stringValueIsRetained =
-          (fieldCurrentData.data.value === 'string' || isFinite(parsedNumber)) &&
+          (typeof fieldCurrentData.data.value === 'string' || isFinite(parsedNumber)) &&
           fieldCurrentData.data.value !== '' &&
           (fieldIsHyper ||
             (![parameterTypeInt, parameterTypeFloat, parameterTypeBool].includes(fieldType) &&
@@ -253,9 +253,9 @@ const FormParametersRow = ({
           formState.form.mutators.setFieldState(`${rowPath}.data.value`, {
             modified: stringValueIsRetained || numberValueIsRetained
           })
-        })
 
-        setTypeIsChanging(false)
+          setTypeIsChanging(false)
+        })
       })
     }
   }
