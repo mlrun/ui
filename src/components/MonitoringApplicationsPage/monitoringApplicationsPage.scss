@@ -61,7 +61,11 @@ $applicationRowHeightExtended: variables.$rowHeightExtended;
     }
 
     .applications-table {
-      @include mixins.rowsHeight($applicationHeaderRowHeight, $applicationRowHeight, $applicationRowHeightExtended);
+      @include mixins.rowsHeight(
+        $applicationHeaderRowHeight,
+        $applicationRowHeight,
+        $applicationRowHeightExtended
+      );
     }
 
     .section-item_chart-wrapper {
@@ -69,12 +73,35 @@ $applicationRowHeightExtended: variables.$rowHeightExtended;
       width: 100%;
       height: 268px;
 
+      &.loading {
+        display: none;
+      }
+
       .section-item_chart {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
+
+        .section-item_chart-area {
+          height: 100%;
+          overflow-x: auto;
+
+          .section-item_ml-chart-wrapper {
+            width: 100%;
+            min-width: 100%;
+            height: 100%;
+          }
+
+          & > canvas#chart-y-axis {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: white;
+            pointer-events: none;
+          }
+        }
       }
     }
   }
