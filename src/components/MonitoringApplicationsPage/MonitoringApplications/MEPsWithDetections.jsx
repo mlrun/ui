@@ -153,7 +153,7 @@ const MEPsWithDetections = () => {
         <span>Model Endpoints with suspected/detected issue</span>
         <Tip text="This chart displays the number of model endpoints that had at least one detected issue, in any monitoring application, in the relevant time period" />
       </div>
-      {isLoading && <Loader section secondary />}
+      {(isLoading || isLoadingAPI) && <Loader section secondary />}
       <div
         className={classNames(
           'section-item_chart-wrapper',
