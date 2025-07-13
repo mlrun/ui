@@ -32,7 +32,8 @@ export const getJobsStatistics = (projectCounter, projectName) => {
       className: 'running',
       status: 'running',
       link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`,
-      counterTooltip: 'Aborting, Pending, Running'
+      counterTooltip: 'Aborting, Pending, Running',
+      loading: projectCounter.loading
     },
     failed: {
       value: projectCounter.error ? 'N/A' : projectCounter.data.runs_failed_recent_count,
@@ -43,7 +44,8 @@ export const getJobsStatistics = (projectCounter, projectName) => {
           : 'failed',
       status: 'failed',
       link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`,
-      counterTooltip: 'Aborted, Error'
+      counterTooltip: 'Aborted, Error',
+      loading: projectCounter.loading
     },
     succeeded: {
       value: projectCounter.error ? 'N/A' : projectCounter.data.runs_completed_recent_count,
@@ -51,7 +53,8 @@ export const getJobsStatistics = (projectCounter, projectName) => {
       status: 'succeeded',
       className: 'running',
       link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`,
-      counterTooltip: 'Completed'
+      counterTooltip: 'Completed',
+      loading: projectCounter.loading
     }
   }
 }

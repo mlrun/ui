@@ -87,20 +87,23 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
         label: 'Running',
         className: 'running',
         status: 'running',
-        href: generateNuclioLink(`/projects/${params.projectName}/functions`)
+        href: generateNuclioLink(`/projects/${params.projectName}/functions`),
+        loading: nuclioStore.loading
       },
       failed: {
         value: functionsFailed,
         label: 'Failed',
         status: 'failed',
         className: functionsFailed > 0 ? 'failed' : 'running',
-        href: generateNuclioLink(`/projects/${params.projectName}/functions`)
+        href: generateNuclioLink(`/projects/${params.projectName}/functions`),
+        loading: nuclioStore.loading
       },
       apiGateways: {
         value: nuclioStore.apiGateways,
         label: 'API gateways',
         className: 'running',
-        href: generateNuclioLink(`/projects/${params.projectName}/api-gateways`)
+        href: generateNuclioLink(`/projects/${params.projectName}/api-gateways`),
+        loading: nuclioStore.loading
       },
       ...(nuclioStreamsAreEnabled && {
         consumerGroups: {
@@ -111,12 +114,14 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
           className: 'running',
           link: `/projects/${params.projectName}/monitor${
             !isNuclioModeDisabled ? '/consumer-groups' : ''
-          }`
+          }`,
+          loading: nuclioStore.loading
         }
       })
     }
   }, [
     nuclioStore.currentProjectFunctions,
+    nuclioStore.loading,
     nuclioStore.apiGateways,
     nuclioStore.v3ioStreams.data,
     params.projectName,

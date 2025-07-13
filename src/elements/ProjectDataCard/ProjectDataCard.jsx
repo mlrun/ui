@@ -63,13 +63,9 @@ const ProjectDataCard = ({
             </span>
           )}
         </div>
-        {content.loading ? (
-          <Loader section />
-        ) : (
-          <div className="project-data-card__statistics">
-            <ProjectStatistics statistics={statistics} />
-          </div>
-        )}
+        <div className="project-data-card__statistics">
+          <ProjectStatistics statistics={statistics} />
+        </div>
       </div>
       <div className="project-data-card__recent-text">
         {subTitle && <span>{subTitle}</span>}
