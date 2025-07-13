@@ -12,7 +12,7 @@
 .card__small-container {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
   justify-content: space-between;
 
   @media (max-width: 1250px) {
@@ -26,7 +26,6 @@
   flex-direction: column;
   flex-wrap: unset;
   justify-content: flex-start;
-  min-width: 0;
   height: 100%;
   border: 1px solid colors.$frenchLilac;
 
@@ -40,6 +39,10 @@
   }
 
   .stats {
+    &__failed {
+      color: colors.$ceriseRed;
+    }
+
     &__subtitle {
       display: inline-block;
       margin: 0;
@@ -85,10 +88,30 @@
       }
     }
 
+    &-icon {
+      flex: 0 1 12px;
+
+      & * {
+        fill: colors.$spunPearl;
+      }
+    }
+
+    & *:not(:last-child) {
+      margin-right: 5px;
+    }
+
     &__link {
       &:hover {
-        * {
+        *:not(.stats__failed) {
           @include counterLinkHover;
+        }
+
+        .stats__failed {
+          color: colors.$amaranth;
+          text-decoration: underline;
+          cursor: pointer;
+          text-underline-offset: 1px;
+          text-decoration-thickness: 1px;
         }
       }
     }
@@ -122,18 +145,6 @@
     color: colors.$topaz;
     font-size: 0.75rem;
 
-    & *:not(:last-child) {
-      margin-right: 5px;
-    }
-
-    &-icon {
-      flex: 0 1 12px;
-
-      & * {
-        fill: colors.$spunPearl;
-      }
-    }
-
     @media (max-width: 1250px) {
       display: none;
     }
@@ -148,6 +159,45 @@
 
     .input-wrapper .input.date-picker__input {
       padding: 10px;
+    }
+  }
+}
+
+.monitoring-stats.application-card {
+  .stats {
+    &__counter_header {
+      display: none;
+
+      @media (max-width: 1250px) {
+        display: flex;
+      }
+    }
+
+    &__container {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+
+    &__counter {
+      font-weight: 600;
+      font-size: 26px;
+    }
+
+    &__link {
+      &:hover {
+        @include counterLinkHover;
+      }
+    }
+
+    &__label {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      color: colors.$topaz;
+      font-size: 12px;
     }
   }
 }
@@ -197,7 +247,23 @@ main.unpinned {
     }
   }
 
+  .monitoring-stats.application-card {
+    .stats__counter_header {
+      display: none;
+
+      @media (max-width: 1100px) {
+        display: flex;
+      }
+    }
+  }
+
   .monitoring-stats {
+    @media (max-width: 1250px) {
+      .stats__counter_header.application-total {
+        display: flex;
+      }
+    }
+
     .stats__details {
       @media (max-width: 1250px) {
         display: block;

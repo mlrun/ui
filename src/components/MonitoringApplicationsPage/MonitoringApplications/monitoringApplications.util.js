@@ -81,25 +81,42 @@ export const generateOperatingFunctionsTable = functions => {
 
 export function groupDataToBins(data, startTime, endTime) {
   const grouped = new Map()
-  const endDate = new Date(endTime).setMinutes(0, 0, 0)
-  const basePeriod =
-    (new Date(endTime) - new Date(startTime)) / (1000 * 60 * 60) > 24 ? 'day' : 'hour'
+  const allowedDeviation = 1000
+  const DAY = 'day'
+  const HOUR = 'hour'
+  const MINUTES = 'minutes' // "minutes" represents 10 minutes
+  const timeDiffInHours = (new Date(endTime) - new Date(startTime) - allowedDeviation) / (1000 * 60 * 60)
+  const basePeriod = timeDiffInHours > 72 ? DAY : timeDiffInHours > 6 ? HOUR : MINUTES 
 
   const roundDate = date => {
     const dateToRound = new Date(date)
-    basePeriod === 'hour' ? dateToRound.setMinutes(0, 0, 0) : dateToRound.setHours(0, 0, 0, 0)
+
+    if (basePeriod === HOUR) {
+      dateToRound.setMinutes(0, 0, 0)
+    } else if (basePeriod === MINUTES) {
+      const mins = dateToRound.getMinutes()
+      const roundedMins = Math.floor(mins / 10) * 10
+      dateToRound.setMinutes(roundedMins, 0, 0)
+    } else {
+      dateToRound.setHours(0, 0, 0, 0)
+    }
 
     return dateToRound
   }
 
+  const incrementPeriod = period => {
+    if (basePeriod === HOUR) {
+      period.setHours(period.getHours() + 1)
+    } else if (basePeriod === MINUTES) {
+      period.setMinutes(period.getMinutes() + 10)
+    } else {
+      period.setDate(period.getDate() + 1)
+    }
+    
+    return period
+  }
   // generate bins
-  for (
-    const period = roundDate(startTime);
-    period.getTime() <= endDate && grouped.size < 33;
-    basePeriod === 'hour'
-      ? period.setHours(period.getHours() + 1)
-      : period.setDate(period.getDate() + 1)
-  ) {
+  for (const period = roundDate(startTime); period.getTime() <= endTime; incrementPeriod(period)) {
     grouped.set(period.toISOString(), 0)
   }
 
@@ -113,44 +130,40 @@ export function groupDataToBins(data, startTime, endTime) {
   const getLabel = (from, to) => {
     const fromDate = moment(from)
     const toDate = moment(to || from)
-    const shortFormatString = basePeriod === 'hour' ? 'HH-mm' : 'MM-DD'
-    const fullFormatString = 'YY/MM/DD, hh:mm A'
+    const shortFormatString = basePeriod === MINUTES ? 'hh:mm A' : basePeriod === HOUR ? 'MM/DD, hh:mm A' : 'MM/DD/YY'
+    const fullFormatString = 'MM/DD/YY, hh:mm A'
 
     if (!to) {
-      toDate.add(1, basePeriod)
+      toDate.add(basePeriod === MINUTES ? 10 : 1, basePeriod)
     }
 
     return {
-      label: `${fromDate.format(shortFormatString)} - ${toDate.format(shortFormatString)}`,
+      label: `${fromDate.format(shortFormatString)}`,
       fullDate: `${fromDate.format(fullFormatString)} - ${toDate.format(fullFormatString)}`
     }
   }
 
   const groupedData = Array.from(grouped.entries())
-  const dataset = groupedData.reduce((dataset, [date, value]) => {
+  const dataset = groupedData.reduce((dataset, [date, value], index) => {
+    if (index === 0) {
+      // cut the first bin if it is not full
+      if (startTime > new Date(date)) return dataset
+    }
+
     const labelData = getLabel(date)
-    dataset.push({
-      x: labelData.label,
-      y: value,
-      fullDate: labelData.fullDate
-    })
+
+    dataset.values.push(value)
+    dataset.labels.push(labelData.label)
+    dataset.dates.push(labelData.fullDate)
 
     return dataset
-  }, [])
+  }, {values: [], labels: [], dates: []})
 
-  if (dataset.length) {
-    // update first and last label to include more specific time
-    const firstLabel = getLabel(startTime, groupedData.length > 1 ? groupedData[1][0] : startTime)
-
-    dataset[0].x = firstLabel.label
-    dataset[0].fullDate = firstLabel.fullDate
-
-    if (groupedData.length > 1) {
-      const lastLabel = getLabel(endDate, endTime)
-
-      dataset[dataset.length - 1].x = lastLabel.label
-      dataset[dataset.length - 1].fullDate = lastLabel.fullDate
-    }
+  // cut the last bin if it is not full
+  if (dataset.values.length && endTime > new Date(groupedData[groupedData.length - 1][0])) {
+    dataset.values.pop()
+    dataset.labels.pop()
+    dataset.dates.pop()
   }
 
   return dataset

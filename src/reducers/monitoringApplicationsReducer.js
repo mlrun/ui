@@ -277,6 +277,10 @@ export const fetchMonitoringApplications = createAsyncThunk(
       start: filters[DATES_FILTER].value[0].getTime()
     }
 
+    if (filters[DATES_FILTER].value[1]) {
+      params.end = filters[DATES_FILTER].value[1].getTime()
+    }
+
     return monitoringApplicationsApi.getMonitoringApplications(project, params).then(response => {
       return splitApplicationsContent(response.data)
     })

@@ -58,11 +58,11 @@ const MlChart = ({
           ...config.options,
           animation: {
             ...config.options.animation,
-            onComplete: () => {
+            onComplete: (...args) => {
               showLoader && setIsLoading(false)
 
               if (config?.options?.animation?.onComplete) {
-                config.options.animation.onComplete()
+                config.options.animation.onComplete(...args)
               }
             }
           }

@@ -17,49 +17,123 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { memo, useMemo } from 'react'
+import React, { memo, useMemo, useRef, useState } from 'react'
 import moment from 'moment'
-import PropTypes from 'prop-types'
+import classNames from 'classnames'
 
 import MlChart from '../../../common/MlChart/MlChart'
 import NoData from '../../../common/NoData/NoData'
-import { Tip } from 'igz-controls/components'
+import { Loader, Tip } from 'igz-controls/components'
 
-import { MONITORING_APPLICATIONS_NO_DATA_MESSAGE } from '../MonitoringApplicationsPage.util'
+import {
+  getFiltersConfig,
+  MONITORING_APPLICATIONS_NO_DATA_MESSAGE
+} from '../MonitoringApplicationsPage.util'
 import { getMEPsWithDetectionChartConfig } from '../../../utils/getChartConfig'
 import { groupDataToBins } from './monitoringApplications.util'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
+import { DATES_FILTER } from '../../../constants'
 
-const generateDummyData = (startTime, endTime) => {
+// TODO: remove and use real data
+const generateDummyData = (startTime, endTime, setIsLoadingAPI) => {
   const data = []
   const endDate = moment(endTime)
-
-  for (const startDate = moment(startTime); startDate < endDate; startDate.add(30, 'minute')) {
+  setIsLoadingAPI(true)
+  for (const startDate = moment(startTime); startDate < endDate; startDate.add(1, 'minute')) {
     data.push([
       startDate.utc().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
-      Math.floor(Math.random() * 11)
+      // Math.floor(Math.random() * 11)
+      1
     ])
   }
+  setIsLoadingAPI(false)
 
   return data
 }
 
-const MEPsWithDetections = ({
-  // data,
-  startTime = '2025-05-22T13:32:26.685Z',
-  endTime = '2025-05-23T13:22:26.685Z'
-}) => {
+const MEPsWithDetections = () => {
+  const [isLoading, setIsLoading] = useState(true)
+  const [isLoadingAPI, setIsLoadingAPI] = useState(true) // TODO: remove and use from redux
+  const chartYAxisRef = useRef()
+  const chartWrapperRef = useRef()
+  const filtersConfig = useMemo(() => getFiltersConfig(), [])
+  const filters = useFiltersFromSearchParams(filtersConfig)
+  const startTime = useMemo(() => filters[DATES_FILTER].value[0].getTime(), [filters])
+  const endTime = useMemo(() => (filters[DATES_FILTER].value[1] || new Date()).getTime(), [filters])
   const barConfig = useMemo(() => getMEPsWithDetectionChartConfig(), [])
-  const data = generateDummyData(startTime, endTime) // TODO: remove and use real data
+  const data = useMemo(
+    () => generateDummyData(startTime, endTime, setIsLoadingAPI),
+    [endTime, startTime]
+  ) // TODO: remove and use real data
+  const renderPlugin = useMemo(() => {
+    let savedCopyWidth = 0
+    let savedCopyHeight = 0
+
+    return {
+      id: 'renderTracker',
+      afterDatasetsDraw(chart) {
+        const copyWidth = chart.scales.x.left
+        const copyHeight = chart.scales.y.height + 20
+
+        if (
+          (copyWidth !== savedCopyWidth || copyHeight !== savedCopyHeight) &&
+          chartYAxisRef.current &&
+          chartWrapperRef.current
+        ) {
+          savedCopyWidth = copyWidth
+          savedCopyHeight = copyHeight
+          const sourceCanvas = chart.ctx.canvas
+          const copyWidthWithRatio = copyWidth * chart.currentDevicePixelRatio
+          const copyHeightWithRatio = copyHeight * chart.currentDevicePixelRatio
+          const yAxisCtx = chartYAxisRef.current.getContext('2d')
+          const spaceForBar = 32
+          yAxisCtx.canvas.width = copyWidthWithRatio
+          yAxisCtx.canvas.height = copyHeightWithRatio
+          yAxisCtx.canvas.style.width = `${chart.currentDevicePixelRatio === 1 ? yAxisCtx.canvas.width : copyWidth}px`
+          yAxisCtx.canvas.style.height = `${chart.currentDevicePixelRatio === 1 ? yAxisCtx.canvas.height : copyHeight}px`
+
+          yAxisCtx.drawImage(
+            sourceCanvas,
+            0,
+            0,
+            copyWidthWithRatio,
+            copyHeightWithRatio,
+            0,
+            0,
+            copyWidthWithRatio,
+            copyHeightWithRatio
+          )
+
+          chartWrapperRef.current.style.width = `${copyWidth + (chart.scales.x?.ticks?.length || 1) * spaceForBar}px`
+        }
+      }
+    }
+  }, [])
 
   const barChartConfig = useMemo(() => {
-    const datasets = groupDataToBins(data, startTime, endTime)
+    const { labels, values, dates } = groupDataToBins(data, startTime, endTime)
 
     return {
       ...barConfig,
+      options: {
+        ...barConfig.options,
+        plugins: {
+          ...barConfig.options.plugins,
+          renderTracker: {}
+        },
+        animation: {
+          ...barConfig.options.animation,
+          onComplete: () => {
+            setIsLoading(false)
+          }
+        }
+      },
       data: {
+        labels,
         datasets: [
           {
-            data: datasets,
+            data: values,
+            dates,
             chartType: 'bar',
             tension: 0.2,
             borderWidth: 2,
@@ -67,31 +141,37 @@ const MEPsWithDetections = ({
             borderColor: '#13bbb1'
           }
         ]
-      }
+      },
+      plugins: [renderPlugin]
     }
-  }, [barConfig, data, endTime, startTime])
+  }, [barConfig, data, endTime, renderPlugin, startTime])
 
   return data?.length ? (
     <div className="monitoring-app__section-item">
       <div className="section-item_title">
-        <span>Model Endpoint with detections</span>
+        <span>Model Endpoints with suspected/detected issue</span>
         <Tip text="This chart displays the number of model endpoints that had at least one detected issue, in any monitoring application, in the relevant time period" />
       </div>
       <div className="section-item_chart-wrapper">
         <div className="section-item_chart">
-          <MlChart config={barChartConfig} />
+          {(isLoading || isLoadingAPI) && <Loader section secondary />}
+          <div
+            className={classNames(
+              'section-item_chart-area',
+              (isLoading || isLoadingAPI) && 'loading'
+            )}
+          >
+            <canvas id="chart-y-axis" ref={chartYAxisRef} width={0} height={0} />
+            <div className="section-item_ml-chart-wrapper" ref={chartWrapperRef}>
+              <MlChart config={barChartConfig} />
+            </div>
+          </div>
         </div>
       </div>
     </div>
   ) : (
     <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
   )
-}
-
-MEPsWithDetections.propTypes = {
-  // data: PropTypes.array,
-  startTime: PropTypes.string,
-  endTime: PropTypes.string
 }
 
 export default memo(MEPsWithDetections)

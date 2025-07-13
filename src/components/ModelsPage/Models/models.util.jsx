@@ -38,13 +38,21 @@ import {
 } from 'igz-controls/utils/common.util'
 import { showArtifactsPreview, updateArtifact } from '../../../reducers/artifactsReducer'
 import { FORBIDDEN_ERROR_STATUS_CODE, FULL_VIEW_MODE } from 'igz-controls/constants'
-import { applyTagChanges, chooseOrFetchArtifact } from '../../../utils/artifacts.util'
+import {
+  applyTagChanges,
+  chooseOrFetchArtifact,
+  processActionAfterTagUniquesValidation
+} from '../../../utils/artifacts.util'
 import { convertChipsData } from '../../../utils/convertChipsData'
 import { getIsTargetPathValid } from '../../../utils/createArtifactsContent'
 import { generateUri } from '../../../utils/resources'
 import { handleDeleteArtifact } from '../../../utils/handleDeleteArtifact'
 import { setDownloadItem, setShowDownloadsList } from '../../../reducers/downloadReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
+import {
+  decreaseDetailsLoadingCounter,
+  increaseDetailsLoadingCounter
+} from '../../../reducers/detailsReducer'
 
 import TagIcon from 'igz-controls/images/tag-icon.svg?react'
 import YamlIcon from 'igz-controls/images/yaml.svg?react'
@@ -132,56 +140,69 @@ export const handleApplyDetailsChanges = (
   setNotification,
   dispatch
 ) => {
-  const isNewFormat =
-    selectedItem.ui.originalContent.metadata && selectedItem.ui.originalContent.spec
-  const artifactItem = cloneDeep(
-    isNewFormat ? selectedItem.ui.originalContent : omit(selectedItem, ['ui'])
-  )
+  const updateModel = () => {
+    const isNewFormat =
+      selectedItem.ui.originalContent.metadata && selectedItem.ui.originalContent.spec
+    const artifactItem = cloneDeep(
+      isNewFormat ? selectedItem.ui.originalContent : omit(selectedItem, ['ui'])
+    )
 
-  if (!isEmpty(omit(changes.data, ['tag']))) {
-    Object.keys(changes.data).forEach(key => {
-      if (key === 'labels') {
-        isNewFormat
-          ? (artifactItem.metadata[key] = changes.data[key].currentFieldValue)
-          : (artifactItem[key] = changes.data[key].currentFieldValue)
+    if (!isEmpty(omit(changes.data, ['tag']))) {
+      Object.keys(changes.data).forEach(key => {
+        if (key === 'labels') {
+          isNewFormat
+            ? (artifactItem.metadata[key] = changes.data[key].currentFieldValue)
+            : (artifactItem[key] = changes.data[key].currentFieldValue)
+        }
+      })
+
+      const labels = convertChipsData(artifactItem.metadata?.labels || artifactItem.labels)
+
+      if (isNewFormat) {
+        artifactItem.metadata.labels = labels
+      } else {
+        artifactItem.labels = labels
       }
-    })
 
-    const labels = convertChipsData(artifactItem.metadata?.labels || artifactItem.labels)
+      return dispatch(updateArtifact({ project: projectName, data: artifactItem }))
+        .unwrap()
+        .then(response => {
+          dispatch(
+            setNotification({
+              status: response.status,
+              id: Math.random(),
+              message: 'Model was updated successfully'
+            })
+          )
+        })
+        .catch(error => {
+          const customErrorMsg =
+            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'Permission denied'
+              : getErrorMsg(error, 'Failed to update the model')
 
-    if (isNewFormat) {
-      artifactItem.metadata.labels = labels
+          showErrorNotification(dispatch, error, '', customErrorMsg, () =>
+            handleApplyDetailsChanges(changes, projectName, selectedItem, setNotification, dispatch)
+          )
+        })
+        .finally(() => {
+          return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
+        })
     } else {
-      artifactItem.labels = labels
+      return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
     }
-
-    return dispatch(updateArtifact({ project: projectName, data: artifactItem }))
-      .unwrap()
-      .then(response => {
-        dispatch(
-          setNotification({
-            status: response.status,
-            id: Math.random(),
-            message: 'Model was updated successfully'
-          })
-        )
-      })
-      .catch(error => {
-        const customErrorMsg =
-          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'Permission denied'
-            : getErrorMsg(error, 'Failed to update the model')
-
-        showErrorNotification(dispatch, error, '', customErrorMsg, () =>
-          handleApplyDetailsChanges(changes, projectName, selectedItem, setNotification, dispatch)
-        )
-      })
-      .finally(() => {
-        return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
-      })
-  } else {
-    return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
   }
+
+  return processActionAfterTagUniquesValidation({
+    tag: changes?.data?.tag?.currentFieldValue,
+    artifact: selectedItem,
+    projectName,
+    dispatch,
+    actionCallback: updateModel,
+    throwError: true,
+    showLoader: () => dispatch(increaseDetailsLoadingCounter()),
+    hideLoader: () => dispatch(decreaseDetailsLoadingCounter())
+  }).finally(() => {})
 }
 
 export const generateActionsMenu = (

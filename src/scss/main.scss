@@ -186,6 +186,10 @@ main {
   @include mixins.statusState(colors.$topaz, false);
 }
 
+[class^='state-pendingRetry'] {
+  @include mixins.statusState(colors.$fuchsiaPink, false);
+}
+
 .state-created-job,
 .state-created-function,
 .state-creating-function,
@@ -546,4 +550,10 @@ div[id^='chartjs-tooltip'] {
   &:hover {
     opacity: 1;
   }
+}
+
+/* =========== OVERRIDE ARTIFACT DIALOG ============= */
+
+.override-artifact-dialog {
+  z-index: 10;
 }

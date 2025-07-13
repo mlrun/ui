@@ -182,7 +182,13 @@ const detailsStoreSlice = createSlice({
           [action.payload.endpointUid]: action.payload.metrics
         }
       }
-    }
+    },
+    increaseDetailsLoadingCounter(state) {
+      state.loadingCounter = state.loadingCounter + 1
+    },
+    decreaseDetailsLoadingCounter(state) {
+      state.loadingCounter = state.loadingCounter - 1
+    },
   },
   extraReducers: builder => {
     builder.addCase(fetchModelFeatureVector.pending, state => {
@@ -280,7 +286,9 @@ export const {
   setIterationOption,
   setRunAttempt,
   setRunAttemptOptions,
-  setSelectedMetricsOptions
+  setSelectedMetricsOptions,
+  increaseDetailsLoadingCounter,
+  decreaseDetailsLoadingCounter,
 } = detailsStoreSlice.actions
 
 export default detailsStoreSlice.reducer
