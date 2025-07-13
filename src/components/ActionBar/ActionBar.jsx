@@ -186,8 +186,8 @@ const ActionBar = ({
   )
 
   const applyFilters = useCallback(
-    async (formValues, filters) => {
-      const actionCanBePerformed = await performDetailsActionHelper(changes, dispatch, true)
+    async (formValues, filters, actionCanBePerformedChecked) => {
+      const actionCanBePerformed = actionCanBePerformedChecked || await performDetailsActionHelper(changes, dispatch, true)
       const newFilters = { ...filters, ...formValues }
 
       if (actionCanBePerformed) {
@@ -404,9 +404,10 @@ const ActionBar = ({
           </div>
           {!isEmpty(filterMenuModalInitialState) && (
             <FilterMenuModal
-              applyChanges={filterMenuModal => applyFilters(formState.values, filterMenuModal)}
+              applyChanges={(filterMenuModal, actionCanBePerformedChecked) => applyFilters(formState.values, filterMenuModal, actionCanBePerformedChecked)}
               initialValues={filterMenuModalInitialState}
               values={filterMenuModal}
+              detailsChanges={changes}
             >
               {children}
             </FilterMenuModal>
