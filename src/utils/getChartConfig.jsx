@@ -109,9 +109,11 @@ const setMetricChartText = (context, tooltipModel, tooltipEl, chartType) => {
 const setMEPWithDetectionChartText = (context, tooltipModel, tooltipEl) => {
   if (tooltipModel.body) {
     let innerHtml = '<div class="tooltip-container">'
+    const fullDate =
+      context.tooltip.dataPoints[0].dataset?.dates?.[context.tooltip.dataPoints[0].dataIndex]
    
-    innerHtml += `<div class="tooltip-container-date">Date: ${context.tooltip.dataPoints[0].raw.fullDate}</div>`
-    innerHtml += `<div class="tooltip-container-value">Value: ${context.tooltip.dataPoints[0].raw.y}</div>`
+    innerHtml += `<div class="tooltip-container-date">Date: ${fullDate}</div>`
+    innerHtml += `<div class="tooltip-container-value">Value: ${context.tooltip.dataPoints[0].raw}</div>`
 
     innerHtml += '</div>'
 

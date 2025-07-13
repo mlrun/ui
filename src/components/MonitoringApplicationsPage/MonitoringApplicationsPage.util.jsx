@@ -31,7 +31,6 @@ export const MONITORING_APPLICATIONS_NO_DATA_MESSAGE = 'No data is available for
 export const getFiltersConfig = () => ({
   [DATES_FILTER]: {
     customOptions: datePickerPastOptions,
-    excludeCustomRange: true,
     label: 'Time range:',
     timeFrameLimit: TIME_FRAME_LIMITS.MONTH,
     initialValue: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION, true)
