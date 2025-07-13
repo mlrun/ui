@@ -28,7 +28,7 @@ export const getJobsStatistics = (projectCounter, projectName) => {
   return {
     running: {
       value: projectCounter.error ? 'N/A' : projectCounter.data.runs_running_count,
-      label: 'Running',
+      label: 'In Progress',
       className:
         projectCounter.error || projectCounter.data.runs_running_count === 0
           ? 'default'

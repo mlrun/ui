@@ -111,7 +111,7 @@ const WorkflowsCounters = () => {
 
           <div ref={detailsRef} className="stats__details">
             {workflowsStats.counters.map(
-              ({ counter, className, label, link, statusClass, tooltip }) => {
+              ({ counter, className, counterClassName, label, link, statusClass, tooltip }) => {
                 return (
                   <StatsCard.Row key={`${statusClass}-jobs`}>
                     <div
@@ -125,7 +125,7 @@ const WorkflowsCounters = () => {
                           <i className={`state-${statusClass}`} />
                         </Tooltip>
                       </div>
-                      <div className="stats__counter">
+                      <div className={counterClassName}>
                         {projectStore?.projectsSummary?.loading ? (
                           <Loader section small secondary />
                         ) : (

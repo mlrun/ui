@@ -12,7 +12,7 @@
 .card__small-container {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
   justify-content: space-between;
 
   @media (max-width: 1250px) {
@@ -21,139 +21,186 @@
   }
 }
 
-.projects-monitoring-stats {
-  .monitoring-stats {
-    flex: 1;
-    flex-direction: column;
-    flex-wrap: unset;
-    justify-content: flex-start;
-    min-width: 0;
-    height: 100%;
-    border: 1px solid colors.$frenchLilac;
+.monitoring-stats {
+  flex: 1;
+  flex-direction: column;
+  flex-wrap: unset;
+  justify-content: flex-start;
+  height: 100%;
+  border: 1px solid colors.$frenchLilac;
 
-    &.alerts-card {
-      transition: background-color 0s, border-color 0s;
+  &.alerts-card {
+    transition: background-color 0s, border-color 0s;
+  }
+
+  &.alerts-card_not-empty {
+    background-color: colors.$carouselPink;
+    border: 1px solid colors.$babyPink;
+  }
+
+  .stats {
+    &__failed {
+      color: colors.$ceriseRed;
     }
 
-    &.alerts-card_not-empty {
-      background-color: colors.$carouselPink;
-      border: 1px solid colors.$babyPink;
-    }
-
-    .stats {
-      &__subtitle {
-        display: inline-block;
-        margin: 0;
-        color: colors.$topaz;
-        font-weight: normal;
-        font-size: 14px;
-      }
-
-      &-card__row {
-        flex: unset;
-        margin-bottom: 0;
-        font-weight: 400;
-        font-size: 14px;
-
-        & > * {
-          position: relative;
-          display: flex;
-          justify-content: space-between;
-          width: 100%;
-          padding-bottom: 0.5rem;
-          color: colors.$primary;
-        }
-      }
-
-      &-large {
-        min-height: 34px;
-      }
-
-      &__counter_header {
-        font-weight: 600;
-        font-size: 26px;
-      }
-
-      &__details {
-        margin-top: 0.5em;
-
-        & > * {
-          margin-bottom: 0.5em;
-        }
-
-        @media (max-width: 1250px) {
-          display: none;
-        }
-      }
-
-      &__link {
-        &:hover {
-          * {
-            @include counterLinkHover;
-          }
-        }
-      }
-
-      &__line {
-        &::after {
-          position: absolute;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          height: 1px;
-          background-color: colors.$mulledWineThree;
-          content: '';
-        }
-      }
-
-      &__status {
-        i[class^='state-'] {
-          margin-left: 5px;
-        }
-      }
-    }
-
-    .project-card__info {
-      display: flex;
-      flex-shrink: 0;
-      align-items: center;
-      justify-content: flex-end;
-      width: 80px;
-      margin-left: 0.5em;
+    &__subtitle {
+      display: inline-block;
+      margin: 0;
       color: colors.$topaz;
-      font-size: 0.75rem;
+      font-weight: normal;
+      font-size: 14px;
+    }
 
-      & *:not(:last-child) {
-        margin-right: 5px;
+    &-card__row {
+      flex: unset;
+      margin-bottom: 0;
+      font-weight: 400;
+      font-size: 14px;
+
+      & > * {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding-bottom: 0.5rem;
+        color: colors.$primary;
       }
+    }
 
-      &-icon {
-        flex: 0 1 12px;
+    &-large {
+      min-height: 34px;
+    }
 
-        & * {
-          fill: colors.$spunPearl;
-        }
+    &__counter_header {
+      font-weight: 600;
+      font-size: 26px;
+    }
+
+    &__details {
+      margin-top: 0.5em;
+
+      & > * {
+        margin-bottom: 0.5em;
       }
 
       @media (max-width: 1250px) {
         display: none;
       }
+    }
 
-      .stats__subtitle {
-        font-size: inherit;
+    &-icon {
+      flex: 0 1 12px;
+
+      & * {
+        fill: colors.$spunPearl;
       }
     }
 
-    .date-picker-container {
-      margin-left: 15px;
+    & *:not(:last-child) {
+      margin-right: 5px;
+    }
 
-      .input-wrapper .input.date-picker__input {
-        padding: 10px;
+    &__link {
+      &:hover {
+        *:not(.stats__failed) {
+          @include counterLinkHover;
+        }
+
+        .stats__failed {
+          color: colors.$amaranth;
+          text-decoration: underline;
+          cursor: pointer;
+          text-underline-offset: 1px;
+          text-decoration-thickness: 1px;
+        }
       }
+    }
+
+    &__line {
+      &::after {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 1px;
+        background-color: colors.$mulledWineThree;
+        content: '';
+      }
+    }
+
+    &__status {
+      i[class^='state-'] {
+        margin-left: 5px;
+      }
+    }
+  }
+
+  .project-card__info {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: flex-end;
+    width: 80px;
+    margin-left: 0.5em;
+    color: colors.$topaz;
+    font-size: 0.75rem;
+
+    @media (max-width: 1250px) {
+      display: none;
+    }
+
+    .stats__subtitle {
+      font-size: inherit;
+    }
+  }
+
+  .date-picker-container {
+    margin-left: 15px;
+
+    .input-wrapper .input.date-picker__input {
+      padding: 10px;
     }
   }
 }
 
+.monitoring-stats.application-card {
+  .stats {
+    &__counter_header {
+      display: none;
+
+      @media (max-width: 1250px) {
+        display: flex;
+      }
+    }
+
+    &__container {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+
+    &__counter {
+      font-weight: 600;
+      font-size: 26px;
+    }
+
+    &__link {
+      &:hover {
+        @include counterLinkHover;
+      }
+    }
+
+    &__label {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      color: colors.$topaz;
+      font-size: 12px;
+    }
+  }
+}
 
 .card-popup {
   .pop-up-dialog {
@@ -188,8 +235,7 @@
 }
 
 main.unpinned {
-  .projects-monitoring-stats {
-    .card__small-container {
+  .card__small-container {
     @media (max-width: 1250px) {
       display: flex;
       flex-direction: column;
@@ -201,7 +247,23 @@ main.unpinned {
     }
   }
 
+  .monitoring-stats.application-card {
+    .stats__counter_header {
+      display: none;
+
+      @media (max-width: 1100px) {
+        display: flex;
+      }
+    }
+  }
+
   .monitoring-stats {
+    @media (max-width: 1250px) {
+      .stats__counter_header.application-total {
+        display: flex;
+      }
+    }
+
     .stats__details {
       @media (max-width: 1250px) {
         display: block;
@@ -221,6 +283,5 @@ main.unpinned {
         display: none;
       }
     }
-  }
   }
 }

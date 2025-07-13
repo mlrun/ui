@@ -28,13 +28,21 @@ import {
   FILES_PAGE
 } from '../../constants'
 import { FULL_VIEW_MODE } from 'igz-controls/constants'
-import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
+import {
+  processActionAfterTagUniquesValidation,
+  applyTagChanges,
+  chooseOrFetchArtifact
+} from '../../utils/artifacts.util'
 import { generateUri } from '../../utils/resources'
 import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
 import { openDeleteConfirmPopUp, openPopUp, copyToClipboard } from 'igz-controls/utils/common.util'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
+import {
+  decreaseDetailsLoadingCounter,
+  increaseDetailsLoadingCounter
+} from '../../reducers/detailsReducer'
 
 import TagIcon from 'igz-controls/images/tag-icon.svg?react'
 import YamlIcon from 'igz-controls/images/yaml.svg?react'
@@ -93,7 +101,17 @@ export const handleApplyDetailsChanges = (
   setNotification,
   dispatch
 ) => {
-  return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
+  return processActionAfterTagUniquesValidation({
+    tag: changes?.data?.tag?.currentFieldValue,
+    artifact: selectedItem,
+    projectName,
+    dispatch,
+    actionCallback: () =>
+      applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification),
+    throwError: true,
+    showLoader: () => dispatch(increaseDetailsLoadingCounter()),
+    hideLoader: () => dispatch(decreaseDetailsLoadingCounter())
+  })
 }
 
 export const generateActionsMenu = (

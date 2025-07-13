@@ -21,7 +21,6 @@ import { useSelector } from 'react-redux'
 import classNames from 'classnames'
 
 import { Loader, PopUpDialog } from 'igz-controls/components'
-import ClockIcon from 'igz-controls/images/clock.svg?react'
 
 import { ARTIFACTS_PAGE } from '../../constants'
 import StatsCard from '../../common/StatsCard/StatsCard'
@@ -36,7 +35,6 @@ const ArtifactsCounters = () => {
   const { projectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
-  const timeLabel = projectName ? '24 hrs' : 'Past 24 hrs'
 
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent
@@ -82,12 +80,7 @@ const ArtifactsCounters = () => {
     <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
       <StatsCard className="monitoring-stats">
         <div ref={anchorRef}>
-          <StatsCard.Header title="Artifacts">
-            <div className="project-card__info">
-              <ClockIcon className="project-card__info-icon" />
-              <span>{timeLabel}</span>
-            </div>
-          </StatsCard.Header>
+          <StatsCard.Header title="Artifacts"></StatsCard.Header>
           <StatsCard.Row>
             <div className="stats__counter_header" data-testid="data_total_counter">
               <div className="stats__counter">
@@ -101,27 +94,51 @@ const ArtifactsCounters = () => {
           </StatsCard.Row>
           <div ref={detailsRef} className="stats__details">
             <StatsCard.Row>
-              <div className={data?.files?.className} onClick={data?.files?.link}>
-                <h6 className="stats__subtitle">Files</h6>
-                <div className="stats__counter">{data?.files?.counter?.toLocaleString()}</div>
-              </div>
-            </StatsCard.Row>
-            <StatsCard.Row>
               <div className={data?.datasets?.className} onClick={data?.datasets?.link}>
                 <h6 className="stats__subtitle">Datasets</h6>
-                <div className="stats__counter">{data?.datasets.counter?.toLocaleString()}</div>
+                <div className="stats__counter">
+                  {projectStore.projectsSummary.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    <div className="stats__counter">{data?.datasets.counter?.toLocaleString()}</div>
+                  )}
+                </div>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
               <div className={data?.documents?.className} onClick={data?.documents?.link}>
                 <h6 className="stats__subtitle">Documents</h6>
-                <div className="stats__counter">{data?.documents?.counter?.toLocaleString()}</div>
+                <div className="stats__counter">
+                  {projectStore.projectsSummary.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    <div className="stats__counter">
+                      {data?.documents?.counter?.toLocaleString()}
+                    </div>
+                  )}
+                </div>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
               <div className={data.llm_prompt.className} onClick={data.llm_prompt.link}>
                 <h6 className="stats__subtitle">LLM Prompts</h6>
-                <div className="stats__counter">{data?.llm_prompt?.counter?.toLocaleString()}</div>
+                {projectStore.projectsSummary.loading ? (
+                  <Loader section small secondary />
+                ) : (
+                  <div className="stats__counter">
+                    {data?.llm_prompt?.counter?.toLocaleString()}
+                  </div>
+                )}
+              </div>
+            </StatsCard.Row>
+            <StatsCard.Row>
+              <div className={data?.files?.className} onClick={data?.files?.link}>
+                <h6 className="stats__subtitle">Other Artifacts</h6>
+                {projectStore.projectsSummary.loading ? (
+                  <Loader section small secondary />
+                ) : (
+                  <div className="stats__counter">{data?.files?.counter?.toLocaleString()}</div>
+                )}
               </div>
             </StatsCard.Row>
           </div>
