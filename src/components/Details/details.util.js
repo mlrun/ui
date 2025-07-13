@@ -134,12 +134,6 @@ export const generateArtifactsContent = (
             name: 'common.tag',
             additionalRules: [
               {
-                name: 'tagUniqueness',
-                label: 'Tag name must be unique',
-                pattern: isArtifactTagUnique(projectName, detailsType, selectedItem),
-                async: true
-              },
-              {
                 name: 'latest',
                 label: 'Tag name "latest" is reserved',
                 pattern: value => value !== TAG_LATEST
