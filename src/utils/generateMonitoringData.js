@@ -68,11 +68,11 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
             className: classNames('stats__link', 'stats__line'),
             link: () =>
               navigateToJobsMonitoringPage({
-                [STATUS_FILTER]: ['running', 'pending', 'aborting'],
+                [STATUS_FILTER]: ['running', 'pending', 'pendingRetry', 'aborting'],
                 [DATES_FILTER]: ANY_TIME_DATE_OPTION
               }),
             statusClass: 'running',
-            tooltip: 'Aborting, Pending, Running',
+            tooltip: 'Aborting, Pending, Pending retry, Running',
             label: RUNNING
           },
           {
