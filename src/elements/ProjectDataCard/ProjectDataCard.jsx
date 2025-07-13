@@ -32,8 +32,8 @@ import ClockIcon from 'igz-controls/images/clock.svg?react'
 const ProjectDataCard = ({
   content,
   footerLinkText = 'See all',
-  href = '',
   hasUpdateDate = false,
+  href = '',
   link = '',
   params,
   statistics = {},
@@ -100,15 +100,15 @@ const ProjectDataCard = ({
 ProjectDataCard.propTypes = {
   content: PropTypes.object.isRequired,
   footerLinkText: PropTypes.string,
-  href: PropTypes.string,
   hasUpdateDate: PropTypes.bool,
+  href: PropTypes.string,
   link: PropTypes.string,
   params: PropTypes.object.isRequired,
   statistics: PropTypes.object,
+  subTitle: PropTypes.string,
   table: PropTypes.object,
   tip: PropTypes.string,
-  title: PropTypes.string,
-  subTitle: PropTypes.string
+  title: PropTypes.string
 }
 
 export default ProjectDataCard
