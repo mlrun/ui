@@ -38,6 +38,7 @@ import { ANY_TIME_DATE_OPTION } from './datePicker.util'
 import classNames from 'classnames'
 
 const IN_PROCESS = 'In Process'
+const RUNNING = 'Running'
 const FAILED = 'Failed'
 const SUCCEEDED = 'Succeeded'
 
