@@ -44,12 +44,12 @@ export const generateMlrunScreens = (params, isDemo) =>
     ? [
         {
           label: 'Project monitoring',
-          id: PROJECT_MONITOR,
-          hidden: true
+          id: PROJECT_MONITOR
         },
         {
           label: 'Quick actions',
-          id: PROJECT_QUICK_ACTIONS_PAGE
+          id: PROJECT_QUICK_ACTIONS_PAGE,
+          hidden: true
         },
         { label: 'Feature store', id: 'feature-store' },
         { label: 'Datasets', id: 'datasets' },
