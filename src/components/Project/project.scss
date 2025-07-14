@@ -165,6 +165,7 @@
           &-text {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             margin-bottom: 16px;
             color: colors.$primary;
             font-size: 1.25rem;
@@ -172,6 +173,25 @@
 
             @media screen and (min-width: 1600px) {
               font-size: 1.25rem;
+            }
+          }
+
+          &-info {
+            display: flex;
+            align-items: center;
+            color: colors.$topaz;
+            font-size: 12px;
+
+            &-icon {
+              flex: 0 1 12px;
+
+              & * {
+                fill: colors.$spunPearl;
+              }
+            }
+
+            & *:not(:last-child) {
+              margin-right: 5px;
             }
           }
 

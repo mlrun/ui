@@ -350,7 +350,6 @@ export const KEY_CODES = {
 
 export const TABLE_CONTAINER = 'table-container'
 
-
 /*=========== FILTERS =============*/
 
 export const DATE_FILTER_ANY_TIME = ['', '']

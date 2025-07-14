@@ -30,15 +30,15 @@ import {
   JOB_KIND_JOB,
   JOB_KIND_WORKFLOW,
   MODELS_PAGE,
+  MONITORING_APP_PAGE,
+  MONITOR_WORKFLOWS_TAB,
   STATUS_FILTER,
-  TYPE_FILTER,
-  MONITORING_APP_PAGE
+  TYPE_FILTER
 } from '../constants'
 import { ANY_TIME_DATE_OPTION } from './datePicker.util'
 import classNames from 'classnames'
 
 const IN_PROCESS = 'In Process'
-const RUNNING = 'Running'
 const FAILED = 'Failed'
 const SUCCEEDED = 'Succeeded'
 
@@ -54,7 +54,9 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
   }
 
   const navigateToJobsMonitoringPage = (filters = {}) => {
-    navigate(`/projects/*/${JOBS_MONITORING_PAGE}/${tab}?${new URLSearchParams(filters)}`)
+    projectName
+      ? navigate(`/projects/${projectName}/jobs/${tab}?${new URLSearchParams(filters)}`)
+      : navigate(`/projects/*/${JOBS_MONITORING_PAGE}/${tab}?${new URLSearchParams(filters)}`)
   }
 
   return tab === JOBS_MONITORING_JOBS_TAB
@@ -97,7 +99,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
           }
         ]
       }
-    : tab === JOBS_MONITORING_WORKFLOWS_TAB
+    : [JOBS_MONITORING_WORKFLOWS_TAB, MONITOR_WORKFLOWS_TAB].includes(tab)
       ? {
           total: {
             counter: data.total || 0,
@@ -207,15 +209,15 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
             : {
                 total: {
                   counter: data.total || 0,
-                  link: () => navigateToJobsMonitoringPage({ [TYPE_FILTER]: FILTER_ALL_ITEMS }, {})
+                  link: () => navigateToJobsMonitoringPage({ [TYPE_FILTER]: FILTER_ALL_ITEMS })
                 },
                 jobs: {
                   counter: data.jobs || 0,
-                  link: () => navigateToJobsMonitoringPage({ [TYPE_FILTER]: JOB_KIND_JOB }, {})
+                  link: () => navigateToJobsMonitoringPage({ [TYPE_FILTER]: JOB_KIND_JOB })
                 },
                 workflows: {
                   counter: data.workflows || 0,
-                  link: () => navigateToJobsMonitoringPage({ [TYPE_FILTER]: JOB_KIND_WORKFLOW }, {})
+                  link: () => navigateToJobsMonitoringPage({ [TYPE_FILTER]: JOB_KIND_WORKFLOW })
                 }
               }
 }

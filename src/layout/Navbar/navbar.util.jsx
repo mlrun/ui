@@ -57,7 +57,8 @@ export const getLinks = (projectName, isDemoMode) => {
       icon: <HomepageIcon />,
       id: PROJECT_QUICK_ACTIONS_PAGE,
       label: 'Quick actions',
-      link: `${pathname}/${PROJECT_QUICK_ACTIONS_PAGE}`
+      link: `${pathname}/${PROJECT_QUICK_ACTIONS_PAGE}`,
+      hidden: true
     },
     {
       icon: <FeatureStoreIcon />,
