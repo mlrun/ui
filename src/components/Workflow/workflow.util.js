@@ -313,7 +313,12 @@ export const fetchMissingProjectsPermissions = async (projectNames, currentMap, 
           await projectsIguazioApi.getProjectOwnerVisibility(projectName)
           return [projectName, true]
         } catch {
-          return [projectName, false]
+          try {
+            await projectsIguazioApi.getProjectWorkflowsUpdateAuthorization(projectName)
+            return [projectName, true]
+          } catch {
+            return [projectName, false]
+          }
         }
       })
     )
@@ -326,10 +331,15 @@ export const fetchMissingProjectsPermissions = async (projectNames, currentMap, 
 export const fetchMissingProjectPermission = async (projectName, currentMap, dispatch) => {
   if (projectName in currentMap) return
 
-  try {
-    await projectsIguazioApi.getProjectOwnerVisibility(projectName)
-    dispatch(setAccessibleProjectsMap({ [projectName]: true }))
-  } catch {
-    dispatch(setAccessibleProjectsMap({ [projectName]: false }))
-  }
+  const hasPermission = await projectsIguazioApi
+    .getProjectOwnerVisibility(projectName)
+    .then(() => true)
+    .catch(() =>
+      projectsIguazioApi
+        .getProjectWorkflowsUpdateAuthorization(projectName)
+        .then(() => true)
+        .catch(() => false)
+    )
+
+  dispatch(setAccessibleProjectsMap({ [projectName]: hasPermission }))
 }
