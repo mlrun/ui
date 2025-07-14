@@ -34,27 +34,30 @@ export const getJobsStatistics = (projectCounter, projectName) => {
           ? 'default'
           : 'running',
       status: 'running',
-      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`
+      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`,
+      counterTooltip: 'Aborting, Pending, Running',
+      loading: projectCounter.loading
     },
     failed: {
       value: projectCounter.error ? 'N/A' : projectCounter.data.runs_failed_recent_count,
       label: 'Failed',
       className:
         projectCounter.error || projectCounter.data.runs_failed_recent_count === 0
-          ? 'default'
+          ? 'running'
           : 'failed',
       status: 'failed',
-      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`
+      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`,
+      counterTooltip: 'Aborted, Error',
+      loading: projectCounter.loading
     },
     succeeded: {
       value: projectCounter.error ? 'N/A' : projectCounter.data.runs_completed_recent_count,
       label: 'Succeeded',
       status: 'succeeded',
-      className:
-        projectCounter.error || projectCounter.data.runs_failed_recent_count === 0
-          ? 'default'
-          : 'succeeded',
-      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`
+      className: 'running',
+      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`,
+      counterTooltip: 'Completed',
+      loading: projectCounter.loading
     }
   }
 }

@@ -72,10 +72,13 @@ const ProjectJobs = () => {
       content={projectStore.project.jobs}
       footerLinkText={'All jobs'}
       headerLink={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
+      hasUpdateDate={true}
       link={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
       params={params}
       statistics={jobsData.statistics}
+      subTitle="Recent jobs"
       table={jobsData.table}
+      tip="Number of Job runs, clicking on the counters navigates to jobs screen."
       title="Runs"
     />
   )
