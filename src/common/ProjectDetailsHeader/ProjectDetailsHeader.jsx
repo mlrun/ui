@@ -29,7 +29,7 @@ const ProjectDetailsHeader = ({ projectData, projectName }) => {
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   return (
-    <div className="project-details">
+    <div>
       <div className="project-details__header">{projectName}</div>
       {projectData && (
         <div>

@@ -81,7 +81,7 @@ export const generateCreateNewOptions = (
     }
   },
   {
-    label: 'Train Model',
+    label: 'Train model',
     id: 'trainModel',
     icon: <Models />,
     handler: () => {
@@ -94,7 +94,7 @@ export const generateCreateNewOptions = (
     }
   },
   {
-    label: 'Batch Inference',
+    label: 'Batch inference',
     id: 'batchInference',
     icon: <Api />,
     handler: () => {
