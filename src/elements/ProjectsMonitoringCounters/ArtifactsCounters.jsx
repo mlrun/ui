@@ -89,7 +89,7 @@ const ArtifactsCounters = () => {
             </div>
           </StatsCard.Header>
           <StatsCard.Row>
-            <div className="stats__counter_header" data-testid="data_total_counter">
+            <div className="stats__counter_header" data-testid="artifacts_total_counter">
               <div className="stats__counter">
                 {projectStore.projectsSummary.loading ? (
                   <Loader section small secondary />
