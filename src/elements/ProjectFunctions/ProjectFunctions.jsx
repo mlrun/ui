@@ -85,22 +85,25 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
       running: {
         value: functionsRunning,
         label: 'Running',
-        className: functionsRunning > 0 ? 'running' : 'default',
+        className: 'running',
         status: 'running',
-        href: generateNuclioLink(`/projects/${params.projectName}/functions`)
+        href: generateNuclioLink(`/projects/${params.projectName}/functions`),
+        loading: nuclioStore.loading
       },
       failed: {
         value: functionsFailed,
         label: 'Failed',
         status: 'failed',
-        className: functionsFailed > 0 ? 'failed' : 'default',
-        href: generateNuclioLink(`/projects/${params.projectName}/functions`)
+        className: functionsFailed > 0 ? 'failed' : 'running',
+        href: generateNuclioLink(`/projects/${params.projectName}/functions`),
+        loading: nuclioStore.loading
       },
       apiGateways: {
         value: nuclioStore.apiGateways,
         label: 'API gateways',
-        className: nuclioStore.apiGateways > 0 ? 'running' : 'default',
-        href: generateNuclioLink(`/projects/${params.projectName}/api-gateways`)
+        className: 'running',
+        href: generateNuclioLink(`/projects/${params.projectName}/api-gateways`),
+        loading: nuclioStore.loading
       },
       ...(nuclioStreamsAreEnabled && {
         consumerGroups: {
@@ -108,16 +111,17 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
             ? 'N/A'
             : (Object.keys(nuclioStore.v3ioStreams.data).length ?? 0),
           label: 'Consumer groups',
-          className:
-            Object.keys(nuclioStore.v3ioStreams.data ?? {}).length > 0 ? 'running' : 'default',
+          className: 'running',
           link: `/projects/${params.projectName}/monitor${
             !isNuclioModeDisabled ? '/consumer-groups' : ''
-          }`
+          }`,
+          loading: nuclioStore.loading
         }
       })
     }
   }, [
     nuclioStore.currentProjectFunctions,
+    nuclioStore.loading,
     nuclioStore.apiGateways,
     nuclioStore.v3ioStreams.data,
     params.projectName,
@@ -182,10 +186,11 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
         error: isNuclioModeDisabled ? 'Nuclio is not deployed' : nuclioStore.error,
         loading: nuclioStore.loading
       }}
-      footerLinkText={'All ML functions'}
+      footerLinkText="All real-time functions"
       href={generateNuclioLink(`/projects/${params.projectName}/functions`)}
       params={params}
       statistics={functions}
+      subTitle="Recent real-time functions"
       table={functionsTable}
       title="Real-time functions (Nuclio)"
     />

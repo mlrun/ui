@@ -69,23 +69,22 @@
     }
 
     &-label {
-      font-weight: 400;
-      font-size: 14px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      justify-content: center;
       min-width: 100%;
       max-width: 100px;
       color: colors.$topaz;
+      font-weight: 400;
+      font-size: 14px;
       text-align: center;
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-
       i[class^="state-"] {
+        display: inline-block;
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        display: inline-block;
       }
     }
 
@@ -97,7 +96,7 @@
       text-align: center;
 
       &.statistics {
-        font-size: 26px;
+        font-size: 50px;
 
         &_running {
           color: colors.$primary;
