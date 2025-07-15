@@ -33,8 +33,7 @@ import {
   MONITORING_APP_PAGE,
   MONITOR_WORKFLOWS_TAB,
   STATUS_FILTER,
-  TYPE_FILTER,
-  MONITORING_APP_PAGE
+  TYPE_FILTER
 } from '../constants'
 import { ANY_TIME_DATE_OPTION } from './datePicker.util'
 import classNames from 'classnames'
