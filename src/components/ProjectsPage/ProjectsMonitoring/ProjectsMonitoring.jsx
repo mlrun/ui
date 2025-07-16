@@ -40,7 +40,7 @@ const ProjectsMonitoring = () => {
 
   return (
     <div className="projects-monitoring-container">
-      <PageHeader title="Monitoring" />
+      <PageHeader title={projectName ? '' : 'Monitoring'} />
       <div className={monitoringStatsClassName}>
         <DataAndArtifactsCounter />
         {!projectName && <RunCounter />}

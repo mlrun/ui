@@ -14,12 +14,12 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import StatsCard from '../../common/StatsCard/StatsCard'
-import { Tooltip, TextTooltipTemplate, Loader } from 'igz-controls/components'
+import { Loader, PopUpDialog, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 
 import { generateMonitoringStats } from '../../utils/generateMonitoringData'
 import { JOBS_MONITORING_JOBS_TAB } from '../../constants'
@@ -29,9 +29,20 @@ import ClockIcon from 'igz-controls/images/clock.svg?react'
 import './projectsMonitoringCounters.scss'
 
 const RunCounter = () => {
+  const anchorRef = useRef(null)
+  const detailsRef = useRef(null)
+  const [showPopup, setShowPopup] = useState(false)
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
 
+  const handleOpenPopUp = () => {
+    const isHidden = !detailsRef.current?.offsetParent
+    setShowPopup(isHidden)
+  }
+
+  const handleClosePopUp = () => {
+    setShowPopup(false)
+  }
   const jobStats = useMemo(
     () =>
       generateMonitoringStats(
@@ -43,9 +54,9 @@ const RunCounter = () => {
   )
 
   return (
-    <div>
+    <div onMouseLeave={handleClosePopUp} onMouseEnter={handleOpenPopUp}>
       <StatsCard className="monitoring-stats">
-        <div>
+        <div ref={anchorRef}>
           <StatsCard.Header
             title="Runs"
             tip="Number of Job runs, clicking on the counters navigates to jobs screen."
@@ -71,9 +82,9 @@ const RunCounter = () => {
             </div>
           </StatsCard.Row>
 
-          <div className="stats__details">
+          <div ref={detailsRef} className="stats__details">
             {jobStats?.counters?.map(
-              ({ counter, className, label, link, statusClass, tooltip }) => {
+              ({ counter, className, counterClassName, label, link, statusClass, tooltip }) => {
                 return (
                   <StatsCard.Row key={`${statusClass}-jobs`}>
                     <div
@@ -87,7 +98,7 @@ const RunCounter = () => {
                           <i className={`state-${statusClass}`} />
                         </Tooltip>
                       </div>
-                      <div className="stats__counter">
+                      <div className={counterClassName}>
                         {projectStore?.projectsSummary?.loading ? (
                           <Loader section small secondary />
                         ) : (
@@ -100,6 +111,27 @@ const RunCounter = () => {
               }
             )}
           </div>
+          {showPopup && (
+            <PopUpDialog
+              className="card-popup"
+              customPosition={{
+                element: anchorRef,
+                position: 'bottom-right'
+              }}
+              headerIsHidden
+            >
+              <div className="card-popup_text">
+                {jobStats?.counters?.map(({ link, counter, label, statusClass }) => (
+                  <div onClick={link} key={label}>
+                    <i className={`state-${statusClass}`} />{' '}
+                    <span className="card-popup_text_link">
+                      {label}: {counter}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </PopUpDialog>
+          )}
         </div>
       </StatsCard>
     </div>

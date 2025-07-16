@@ -296,6 +296,11 @@ export const generateMonitoringCounters = (data, dispatch) => {
     models: {
       total: 0
     },
+    monitoring_app: {
+      total: 0,
+      succeeded: 0,
+      failed: 0
+    },
     artifacts: {
       documents: 0,
       datasets: 0,
@@ -337,6 +342,11 @@ export const generateMonitoringCounters = (data, dispatch) => {
       monitoringCounters.alerts.application
 
     monitoringCounters.models.total += project.models_count || 0
+
+    monitoringCounters.monitoring_app.succeeded += project.running_model_monitoring_functions || 0
+    monitoringCounters.monitoring_app.failed += project.failed_model_monitoring_functions || 0
+    monitoringCounters.monitoring_app.total =
+      monitoringCounters.monitoring_app.failed + monitoringCounters.monitoring_app.succeeded
 
     monitoringCounters.artifacts.llm_prompts += project.llm_prompts_count || 0
     monitoringCounters.artifacts.datasets += project.datasets_count || 0

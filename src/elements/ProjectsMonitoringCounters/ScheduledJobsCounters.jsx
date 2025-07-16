@@ -25,7 +25,7 @@ import { Loader, PopUpDialog } from 'igz-controls/components'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
 import { generateMonitoringStats } from '../../utils/generateMonitoringData'
-import { JOBS_MONITORING_SCHEDULED_TAB } from '../../constants'
+import { JOBS_MONITORING_SCHEDULED_TAB, SCHEDULE_TAB } from '../../constants'
 
 import ClockIcon from 'igz-controls/images/clock.svg?react'
 
@@ -76,8 +76,14 @@ const ScheduledJobsCounters = () => {
   ])
 
   const scheduledStats = useMemo(
-    () => generateMonitoringStats(scheduledData, navigate, JOBS_MONITORING_SCHEDULED_TAB),
-    [navigate, scheduledData]
+    () =>
+      generateMonitoringStats(
+        scheduledData,
+        navigate,
+        projectName ? SCHEDULE_TAB : JOBS_MONITORING_SCHEDULED_TAB,
+        projectName
+      ),
+    [navigate, projectName, scheduledData]
   )
 
   return (

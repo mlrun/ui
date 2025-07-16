@@ -37,7 +37,8 @@ const ProjectStatistics = ({ statistics }) => {
     if (['running', 'workflows'].includes(key)) {
       filters = {
         [DATES_FILTER]: ANY_TIME_DATE_OPTION,
-        [STATUS_FILTER]: key === 'workflows' ? ['running'] : ['running', 'pending', 'pendingRetry', 'aborting']
+        [STATUS_FILTER]:
+          key === 'workflows' ? ['running'] : ['running', 'pending', 'pendingRetry', 'aborting']
       }
     } else if (key === FAILED_STATE) {
       filters = {
