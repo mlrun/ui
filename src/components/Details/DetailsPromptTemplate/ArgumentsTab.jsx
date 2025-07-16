@@ -37,17 +37,17 @@ const ArgumentsTab = ({
       <div className="arguments-tab__header">
         <ContentMenu activeTab={selectedTab} fontSize="sm" onClick={handleTabChange} tabs={tabs} />
       </div>
-      {selectedItem.prompt_legend?.map(legend => {
+      {Object.values(selectedItem.prompt_legend ?? {}).map(legend => {
         const rowClassNames = classNames(
           'arguments-tab__row',
-          selectedArgument.field + selectedArgument.description ===
-            legend.field + legend.description && 'arguments-tab__row_selected'
+          selectedArgument.field + selectedArgument.des === legend.field + legend.des &&
+            'arguments-tab__row_selected'
         )
 
         return (
-          <div className={rowClassNames} key={legend.field + legend.description}>
+          <div className={rowClassNames} key={legend.field + legend.des}>
             <div className="arguments-tab__row-key">{legend.field}</div>
-            <div className="arguments-tab__row-value">{legend.description}</div>
+            <div className="arguments-tab__row-value">{legend.des}</div>
           </div>
         )
       })}
