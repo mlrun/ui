@@ -59,7 +59,7 @@ const fetchArtifacts = (project, filters, config = {}, withLatestTag, withExactN
   }
 
   if (filters?.[MODEL_NAME_FILTER]) {
-    params.parent = `${filters[MODEL_NAME_FILTER]}:${filters[MODEL_TAG_FILTER] || '*'}`
+    params.parent = `${filters[MODEL_NAME_FILTER]}${filters[MODEL_TAG_FILTER] ? `:${filters[MODEL_TAG_FILTER]}` : ''}`
   }
 
   return mainHttpClientV2.get(`/projects/${project}/artifacts`, {

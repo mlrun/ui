@@ -21,7 +21,7 @@ import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
-import { CopyToClipboard,Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { CopyToClipboard, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import ContentMenu from '../../../elements/ContentMenu/ContentMenu'
 import SearchNavigator from '../../../common/SearchNavigator/SearchNavigator'
 
@@ -43,21 +43,19 @@ const PromptTab = ({
 
   useEffect(() => {
     if (!isEmpty(selectedItem.prompt_string) && !isEmpty(selectedItem.prompt_legend)) {
-      const legendMap = Object.fromEntries(
-        selectedItem.prompt_legend.map(({ field, description }) => [field, description])
-      )
-
-      const regex = new RegExp(
-        `\\b(${selectedItem.prompt_legend.map(l => l.field).join('|')})\\b`,
-        'g'
-      )
+      const legendMap = { ...selectedItem.prompt_legend }
+      const regex = new RegExp(`\\b(${Object.keys(selectedItem.prompt_legend).join('|')})\\b`, 'g')
 
       const jsxContent = selectedItem.prompt_string.split(regex).map((part, index) => {
         if (legendMap[part]) {
-          const currentArgument = selectedItem.prompt_legend.find(legend => legend.field === part)
+          const currentArgument = selectedItem.prompt_legend[part]
 
           return (
-            <Tooltip key={index} template={<TextTooltipTemplate text={legendMap[part]} />} textShow>
+            <Tooltip
+              key={index}
+              template={<TextTooltipTemplate text={legendMap[part]?.des} />}
+              textShow
+            >
               <span
                 key={index}
                 style={{ color: 'blue', cursor: 'pointer' }}
