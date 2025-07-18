@@ -12,7 +12,7 @@
       },
       "spec": {
         "description": "auto generated data for different purposes",
-        "owner": null,
+        "owner": "admin",
         "goals": "test goals",
         "params": {},
         "functions": null,
@@ -40,7 +40,7 @@
       },
       "spec": {
         "description": "123",
-        "owner": null,
+        "owner": "igz_nobody",
         "goals": "321",
         "params": {
           "se": "fg"
@@ -193,7 +193,7 @@
       },
       "spec": {
         "description": "",
-        "owner": null,
+        "owner": "igz_nobody",
         "goals": "bbbbb",
         "params": {
           "a": "a",
@@ -360,7 +360,7 @@
       },
       "spec": {
         "description": "test summary",
-        "owner": null,
+        "owner": "igz_nobody",
         "goals": "test goals",
         "params": {},
         "functions": null,
@@ -388,7 +388,7 @@
       },
       "spec": {
         "description": null,
-        "owner": null,
+        "owner": "igz_nobody",
         "goals": null,
         "params": null,
         "functions": [],
@@ -419,7 +419,7 @@
       },
       "spec": {
         "description": "",
-        "owner": null,
+        "owner": "igz_nobody",
         "goals": "",
         "params": {},
         "functions": null,
@@ -446,7 +446,7 @@
       },
       "spec": {
         "description": null,
-        "owner": null,
+        "owner": "igz_nobody",
         "goals": null,
         "params": null,
         "functions": [
@@ -500,7 +500,7 @@
       },
       "spec": {
         "description": null,
-        "owner": null,
+        "owner": "admin",
         "goals": null,
         "params": null,
         "functions": null,
@@ -527,7 +527,7 @@
       },
       "spec": {
         "description": null,
-        "owner": null,
+        "owner": "igz_nobody",
         "goals": null,
         "params": null,
         "functions": [],
@@ -555,7 +555,7 @@
       },
       "spec": {
         "description": null,
-        "owner": null,
+        "owner": "admin",
         "goals": null,
         "params": null,
         "functions": [
@@ -1272,7 +1272,7 @@
       },
       "spec": {
         "description": "test",
-        "owner": null,
+        "owner": "admin",
         "goals": null,
         "params": null,
         "functions": null,
@@ -1303,7 +1303,7 @@
       },
       "spec": {
         "description": null,
-        "owner": null,
+        "owner": "admin",
         "goals": null,
         "params": null,
         "functions": null,
@@ -1330,7 +1330,7 @@
       },
       "spec": {
         "description": null,
-        "owner": null,
+        "owner": "admin",
         "goals": null,
         "params": null,
         "functions": [
@@ -1425,7 +1425,7 @@
       },
       "spec": {
         "description": null,
-        "owner": null,
+        "owner": "admin",
         "goals": null,
         "params": null,
         "functions": [
@@ -1533,7 +1533,7 @@
       },
       "spec": {
         "description": null,
-        "owner": null,
+        "owner": "admin",
         "goals": null,
         "params": null,
         "functions": [],
@@ -1561,7 +1561,7 @@
       },
       "spec": {
         "description": null,
-        "owner": null,
+        "owner": "admin",
         "goals": null,
         "params": {
           "PROJECT_NAME": "stocks-admin"
@@ -1625,7 +1625,7 @@
       },
       "spec": {
         "description": "",
-        "owner": null,
+        "owner": "admin",
         "goals": null,
         "params": null,
         "functions": null,
