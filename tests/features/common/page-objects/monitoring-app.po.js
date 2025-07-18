@@ -322,7 +322,6 @@ export default {
     Application_Metrics_Button: By.css('.action-bar [data-testid="btn"] span'),
     Refresh_Button: By.css('.action-bar [data-testid="refresh"] button'),
     App_Status_Title: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(1) .stats-card__title span'),
-    App_Status_Tip: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(1) [data-testid="tip"] svg'),
     App_Status_SubTitle: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(1) [data-testid="monitoring-app-appStatus"] .stats__counter'),
     Endpoints_Title: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(2) .stats-card__title span'),
     Endpoints_Tip: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(2) [data-testid="tip"] svg'),

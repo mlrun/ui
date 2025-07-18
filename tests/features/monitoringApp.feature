@@ -82,7 +82,7 @@ Feature: Monitoring app Page
     Then "Endpoints_RealTime_SubTitle" element on "Monitoring_App" should contains "Real-time" value
     Then verify "Endpoints_RealTime_Counter" element visibility on "Monitoring_App" wizard
     Then verify "RunningFrequency_Stats_Title" element visibility on "Monitoring_App" wizard
-    Then "RunningFrequency_Stats_Title" element on "Monitoring_App" should contains "Running frequency" value
+    Then "RunningFrequency_Stats_Title" element on "Monitoring_App" should contains "Running interval" value
     Then verify "RunningFrequency_Value_Title" element visibility on "Monitoring_App" wizard
     Then "RunningFrequency_Value_Title" element on "Monitoring_App" should contains "Every 10 minutes" value
 
@@ -231,8 +231,6 @@ Feature: Monitoring app Page
     Then verify "Back_Button" element visibility on "Application_Monitoring" wizard
     Then verify "App_Status_Title" element visibility on "Application_Monitoring" wizard
     Then "App_Status_Title" element on "Application_Monitoring" should contains "App Status" value
-    Then verify "App_Status_Tip" element visibility on "Application_Monitoring" wizard
-    Then verify "App_Status_Tip" element on "Application_Monitoring" wizard should display hover hint "Label_Hint"."App_Status_Tip"
     Then verify "App_Status_SubTitle" element visibility on "Application_Monitoring" wizard
     Then "App_Status_SubTitle" element on "Application_Monitoring" should contains "Ready" value
     Then verify "Endpoints_Title" element visibility on "Application_Monitoring" wizard
@@ -337,7 +335,6 @@ Feature: Monitoring app Page
 
   @MLMA
   @smoke
-  #TODO: Scroll to the Shards/partitions status section
   Scenario: MLMA010 - Check Shards/partitions status section components on Application monitoring page
     Given open url
     And wait load page
@@ -355,6 +352,7 @@ Feature: Monitoring app Page
     Then "All_Applications_Title" element on "Monitoring_App" should contains "All Applications" value
     Then click on cell with value "Monitorappv1" in "name" column in "All_Applications_Table" table on "Monitoring_App" wizard
     And wait load page
+    When scroll to the "Shards_Partitions_Status_Title" element on "Application_Monitoring" wizard
     Then verify "Shards_Partitions_Status_Title" element visibility on "Application_Monitoring" wizard
     Then "Shards_Partitions_Status_Title" element on "Application_Monitoring" should contains "Shards/partitions status" value
     Then verify "Shards_Partitions_Status_Tip" element visibility on "Application_Monitoring" wizard

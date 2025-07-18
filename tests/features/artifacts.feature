@@ -480,11 +480,11 @@ Feature: Artifacts Page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
-    Then "Header" element on "Files_Info_Pane" should contains "test-file" value
-    #TODO: Verify text message 'The <artifact> you are viewing was updated. Close the detail panel and refresh the list to see the current version.' on Files_Info_Pane
+    Then "Header" element on "Files_Info_Pane" should contains "survival-curves_km-survival" value
+    Then verify "Not_In_Filtered_List_Message" element visibility on "Files_Info_Pane" wizard
+    Then "Not_In_Filtered_List_Message" component on "Files_Info_Pane" should be equal "Files_Info_Pane"."Info_Banner_Message"
     #TODO: Verify that editing the tag to an empty string '' will delete the artifact instance
     
-
   @MLA
   @passive
   @inProgress

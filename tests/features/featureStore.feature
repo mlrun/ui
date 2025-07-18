@@ -209,7 +209,6 @@ Feature: Feature Store Page
     @passive
     @inProgress
     @smoke
-    # Moved analyses tabs to Demo mode in `1.8.0` ML-9059
     Scenario: MLFS005 - Check all mandatory components in Item infopane on Overview tab table on Feature Vectors tab
         Given open url
         And wait load page
@@ -2300,6 +2299,7 @@ Feature: Feature Store Page
 
     @MLFS
     @smoke
+    #TODO: check the loader after select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table
     Scenario: MLFS061 - Check Feature vector deletion 
         Given open url
         And wait load page
@@ -2313,7 +2313,6 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "patient-deterioration" value in "name" column
-        And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         Then "Title" element on "Confirm_Popup" should contains "Delete feature vector?" value
         Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
@@ -2328,7 +2327,6 @@ Feature: Feature Store Page
         When click on "Cancel_Button" element on "Confirm_Popup" wizard
         And wait load page
         Then select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "patient-deterioration" value in "name" column
-        And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
         When click on "Cross_Cancel_Button" element on "Confirm_Popup" wizard
@@ -2341,13 +2339,11 @@ Feature: Feature Store Page
         And wait load page
         Then check "expand_btn" visibility in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard with 0 offset
         Then select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "patient-deterioration" value in "name" column
-        And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         When click on "Cancel_Button" element on "Confirm_Popup" wizard
         And wait load page
         Then click on cell with row index 2 in "expand_btn" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "latest" value in "name_expand_btn" column
-        And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         Then "Title" element on "Confirm_Popup" should contains "Delete feature vector?" value
         Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
@@ -2362,13 +2358,11 @@ Feature: Feature Store Page
         When click on "Cancel_Button" element on "Confirm_Popup" wizard
         And wait load page
         Then select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "latest" value in "name_expand_btn" column
-        And wait load page
         When click on "Cancel_Button" element on "Confirm_Popup" wizard
         And wait load page
         When click on cell with row index 2 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Header" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then select "Delete" option in action menu on "Feature_Vectors_Info_Pane" wizard
-        And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         Then "Title" element on "Confirm_Popup" should contains "Delete feature vector?" value
         Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
@@ -2385,13 +2379,11 @@ Feature: Feature Store Page
         When click on cell with row index 2 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Header" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then select "Delete" option in action menu on "Feature_Vectors_Info_Pane" wizard
-        And wait load page
         When click on "Cancel_Button" element on "Confirm_Popup" wizard
         And wait load page
         When click on cell with row index 2 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Header" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then select "Delete" option in action menu on "Feature_Vectors_Info_Pane" wizard
-        And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         When click on "Delete_Button" element on "Confirm_Popup" wizard
         And wait load page
@@ -2404,7 +2396,6 @@ Feature: Feature Store Page
         Then verify that 3 row elements are displayed in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard
         Then click on cell with row index 1 in "expand_btn" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "7" value in "name_expand_btn" column
-        And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         When click on "Delete_Button" element on "Confirm_Popup" wizard
         And wait load page
@@ -2415,7 +2406,6 @@ Feature: Feature Store Page
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         Then verify that 2 row elements are displayed in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard
         Then select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "erann-fv" value in "name" column
-        And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         When click on "Delete_Button" element on "Confirm_Popup" wizard
         And wait load page
@@ -2429,7 +2419,6 @@ Feature: Feature Store Page
         Then click on "Clear_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "patient-deterioration" value in "name" column
-        And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         When click on "Delete_Button" element on "Confirm_Popup" wizard
         And wait load page

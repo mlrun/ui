@@ -90,6 +90,8 @@ Feature: Projects Page
     Scenario: MLPr005 - Verify all mandatory components on Archive ML Project
         Given open url
         And wait load page
+        When scroll to the element with "churn-project-admin" value in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
         Then select "Archive" option in action menu on "Projects" wizard in "Projects_Table" table at row with "churn-project-admin" value in "name" column
         Then verify if "Common_Popup" popup dialog appears
         Then "Description" component on "Common_Popup" should contains "Descriptions"."Archive_Project"
@@ -103,6 +105,8 @@ Feature: Projects Page
     @smoke
     Scenario: MLPr006 - Verify all mandatory components on Delete existing ML Project
         Given open url
+        And wait load page
+        When scroll to the element with "churn-project-admin" value in "name" column in "Projects_Table" table on "Projects" wizard 
         And wait load page
         Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "churn-project-admin" value in "name" column
         And wait load page
@@ -143,12 +147,16 @@ Feature: Projects Page
         Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Project_Confirm_Message"
         Then click on "Delete_Button" element on "Common_Popup" wizard
         And wait load page
+        And select "Archived" tab in "Projects_Tab_Selector" on "Projects" wizard
+        Then verify "Archived" tab is active in "Projects_Tab_Selector" on "Projects" wizard
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Project deletion in progress" value
         And wait load page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         And wait load page
+        And select "Active" tab in "Projects_Tab_Selector" on "Projects" wizard
+        Then verify "Active" tab is active in "Projects_Tab_Selector" on "Projects" wizard
         Then verify if "Notification_Popup" popup dialog appears
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Project \"empty-project\" was deleted successfully" value
@@ -171,10 +179,15 @@ Feature: Projects Page
         And click on "Add_Label_Button" element on "Create_New_Project" wizard
         Then type value "/" to "Labels_Key" field on "Create_New_Project" wizard
         Then verify labels warning should display options "Input_Hint"."Projects_Labels_Warning_Key"
+        Then type value "/" to "Labels_Value" field on "Create_New_Project" wizard
+        Then verify labels warning should display options "Input_Hint"."Projects_Labels_Warning_Value"
         Then verify "Labels_Key" options rules on "Create_New_Project" wizard with labels
+        And wait load page
+        Then type into "Description_Input" on "Create_New_Project" popup dialog "automation test description new" value
         Then type value "/" to "Labels_Value" field on "Create_New_Project" wizard
         Then verify labels warning should display options "Input_Hint"."Projects_Labels_Warning_Value"
         Then verify "Labels_Value" options rules on "Create_New_Project" wizard with labels
+        And wait load page
         Then type value "/" to "Labels_Key" field on "Create_New_Project" wizard
         Then type value "/" to "Labels_Value" field on "Create_New_Project" wizard
         When click on "Title" element on "Create_New_Project" wizard
@@ -211,12 +224,16 @@ Feature: Projects Page
         Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "automation-test-name2" value in "name" column
         Then verify if "Common_Popup" popup dialog appears
         Then click on "Delete_Button" element on "Common_Popup" wizard
+        And select "Archived" tab in "Projects_Tab_Selector" on "Projects" wizard
+        Then verify "Archived" tab is active in "Projects_Tab_Selector" on "Projects" wizard
         And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Project deletion in progress" value
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         And wait load page
+        And select "Active" tab in "Projects_Tab_Selector" on "Projects" wizard
+        Then verify "Active" tab is active in "Projects_Tab_Selector" on "Projects" wizard
         And wait load page
         Then verify if "Notification_Popup" popup dialog appears
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
@@ -266,6 +283,7 @@ Feature: Projects Page
     Scenario: MLPr011 - Verify View YAML action
         Given open url
         And wait load page
+        When scroll to the element with "default" value in "name" column in "Projects_Table" table on "Projects" wizard
         Then select "View YAML" option in action menu on "Projects" wizard in "Projects_Table" table at row with "default" value in "name" column
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
@@ -380,15 +398,15 @@ Feature: Projects Page
         Then "Monitoring_Container_Title" element in "Projects_Monitoring_Container" on "Projects" should contains "Monitoring" value
         Then verify "Monitoring_Jobs_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Jobs_Box_Title" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Monitoring_Jobs_Box_Title" element in "Monitoring_Jobs_Box" on "Projects" should contains "Jobs" value
+        Then "Monitoring_Jobs_Box_Title" element in "Monitoring_Jobs_Box" on "Projects" should contains "Runs" value
+        Then verify "Monitoring_Jobs_Box_Title_Tip" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
+        Then verify "Monitoring_Jobs_Box_Title_Tip" element in "Monitoring_Jobs_Box" on "Projects" wizard should display hover hint "Common_Tooltips"."Monitoring_Jobs_Box_Title_Tip"
         Then verify "Filtering_Time_Period" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Filtering_Time_Period" element in "Monitoring_Jobs_Box" on "Projects" should contains "Past 24 hours" value
-        Then verify "Total_Counter_Title" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Total_Counter_Title" element in "Monitoring_Jobs_Box" on "Projects" should contains "Total" value
+        Then "Filtering_Time_Period" element in "Monitoring_Jobs_Box" on "Projects" should contains "Past 24 hrs" value
         Then verify "Total_Counter_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then verify "Counter_Running_Status_Subtitle" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Counter_Running_Status_Subtitle" element in "Monitoring_Jobs_Box" on "Projects" should contains "In Process" value
+        Then "Counter_Running_Status_Subtitle" element in "Monitoring_Jobs_Box" on "Projects" should contains "Running" value
         Then verify "Counter_Running_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then verify "Counter_Running_Status_Icon" element in "Monitoring_Jobs_Box" on "Projects" wizard should display hover tooltip "Common_Tooltips"."In_Process_Jobs"
         Then verify "Counter_Failed_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
@@ -400,11 +418,12 @@ Feature: Projects Page
         Then verify "Counter_Completed_Status_Subtitle" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then "Counter_Completed_Status_Subtitle" element in "Monitoring_Jobs_Box" on "Projects" should contains "Succeeded" value
         Then verify "Counter_Completed_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
+        Then verify "Counter_Running_Status_Icon" element in "Monitoring_Jobs_Box" on "Projects" wizard should display hover tooltip "Common_Tooltips"."In_Process_Jobs"
         Then verify "Counter_Completed_Status_Icon" element in "Monitoring_Jobs_Box" on "Projects" wizard should display hover tooltip "Common_Tooltips"."Succeeded"
         Then "Counter_Completed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "1" value
         When click on "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/*/jobs-monitoring/jobs?state=running%2Cpending%2Caborting&dates=anyTime&bePage=1&fePage=1"
+        Then verify redirection to "projects/*/jobs-monitoring/jobs?state=running%2Cpending%2CpendingRetry%2Caborting&dates=anyTime&bePage=1&fePage=1"
         Then navigate back
         And wait load page
         When click on "Counter_Failed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
@@ -443,8 +462,6 @@ Feature: Projects Page
         Then "Monitoring_Workflows_Box_Title" element in "Monitoring_Workflows_Box" on "Projects" should contains "Workflows" value
         Then verify "Filtering_Time_Period" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then "Filtering_Time_Period" element in "Monitoring_Workflows_Box" on "Projects" should contains "Past 24 hours" value
-        Then verify "Total_Counter_Title" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
-        Then "Total_Counter_Title" element in "Monitoring_Workflows_Box" on "Projects" should contains "Total" value
         Then verify "Total_Counter_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then verify "Counter_Running_Status_Subtitle" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
@@ -613,9 +630,9 @@ Feature: Projects Page
         Then verify "Monitoring_Workflows_Box_Title" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then "Monitoring_Workflows_Box_Title" element in "Monitoring_Workflows_Box" on "Projects" should contains "Workflows" value
         Then verify "Total_Counter_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
-        Then "Total_Counter_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "3" value
+        Then "Total_Counter_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "4" value
         Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
-        Then "Counter_Running_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "0" value
+        Then "Counter_Running_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "1" value
         Then verify "Counter_Failed_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then "Counter_Failed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "1" value
         Then verify "Counter_Completed_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard

@@ -3,7 +3,6 @@ Feature: Quick actions Page
     Testcases that verifies functionality on MLRun Quick actions Page
 
     @MLPH
-    @smoke
     Scenario: MLPH001 - Check all mandatory components on Project Home
         * set tear-down property "project" created with "automation-test-1002" value
         * create "automation-test-1002" MLRun Project with code 201
@@ -84,7 +83,6 @@ Feature: Quick actions Page
             |     Monitoring      |
     
     @MLPH
-    @smoke
     Scenario: MLPH002 - Verify behaviour on Register Model Popup on Project Home Page
         Given open url
         And wait load page
@@ -139,7 +137,6 @@ Feature: Quick actions Page
         Then check "v3io:///target/" value in "path" column in "Overview_Table" table on "Models_Info_Pane" wizard
     
     @MLPH
-    @smoke
     @passive
     Scenario: MLPH003 - Check all mandatory components on Create New Feature Set on Project Home Page
         Given open url
@@ -191,7 +188,6 @@ Feature: Quick actions Page
     
     @MLPH
     @passive
-    @smoke
     Scenario: MLPH004 - Check all mandatory components on Register Dataset Popup on Project Home Page
         Given open url
         And wait load page
@@ -250,7 +246,6 @@ Feature: Quick actions Page
     
     @MLPH 
     @passive
-    @smoke
     Scenario: MLPH005 - Check all mandatory components on Create ML Function on Project Home Page
         * set tear-down property "project" created with "automation-test-1003" value
         * create "automation-test-1003" MLRun Project with code 201
@@ -285,7 +280,6 @@ Feature: Quick actions Page
 
     @MLPH
     @passive
-    @smoke
     Scenario: MLPH006 - Check all mandatory components on Batch run wizard
         Given open url
         And wait load page
@@ -452,7 +446,6 @@ Feature: Quick actions Page
     
     @MLPH
     @passive
-    @smoke
     Scenario: MLPH008 - Check all mandatory components on Create a Feature Vector Popup on Project Home Page
         Given open url
         And wait load page
@@ -477,7 +470,6 @@ Feature: Quick actions Page
 
     @MLPH
     @passive
-    @smoke
     Scenario: MLPH009 - Check all mandatory components on Feature Set tab on Project Home Page
         Given open url
         And wait load page
@@ -520,7 +512,6 @@ Feature: Quick actions Page
 
     @MLPH
     @passive
-    @smoke
     Scenario: MLPH010 - Check all mandatory components on Files tab on Project Home Page
         Given open url
         And wait load page
@@ -547,7 +538,6 @@ Feature: Quick actions Page
 
     @MLPH
     @passive
-    @smoke
     Scenario: MLPH011 - Check all mandatory components on Datasets tab on Project Home Page
         Given open url
         And wait load page
@@ -573,7 +563,6 @@ Feature: Quick actions Page
 
     @MLPH
     @passive
-    @smoke
     Scenario: MLPH012 - Check all mandatory components on Feature Vectors tab on Project Home Page
         Given open url
         And wait load page
@@ -603,7 +592,6 @@ Feature: Quick actions Page
 
     @MLPH
     @passive
-    @smoke
     Scenario: MLPH013 - Check all mandatory components on ML Functions tab on Project Home Page
         Given open url
         And wait load page
@@ -639,7 +627,6 @@ Feature: Quick actions Page
 
     @MLPH
     @passive
-    @smoke
     Scenario: MLPH014 - Check all mandatory components on Monitor Jobs tab on Project Home Page
         Given open url
         And wait load page
@@ -681,7 +668,6 @@ Feature: Quick actions Page
 
     @MLPH
     @passive
-    @smoke
     Scenario: MLPH015 - Check all mandatory components on Models tab on Project Home Page
         Given open url
         And wait load page
@@ -712,7 +698,6 @@ Feature: Quick actions Page
 
     @MLPH
     @passive
-    @smoke
     Scenario: MLPH016 - Check all mandatory components on Monitor Workflows tab on Project Home Page
         Given open url
         And wait load page
@@ -735,7 +720,6 @@ Feature: Quick actions Page
 
     @MLPH
     @passive
-    @smoke
     Scenario: MLPH017 - Check all mandatory components on Models Endpoint tab on Project Home Page
         Given open url
         And wait load page
@@ -772,7 +756,6 @@ Feature: Quick actions Page
 
     @MLPH
     @passive
-    @smoke
     Scenario: MLPH018 - Check all mandatory components on Real-Time Piplines tab on Project Home Page
         Given open url
         And wait load page
@@ -793,7 +776,6 @@ Feature: Quick actions Page
 
     @MLPH
     @passive
-    @smoke
     Scenario: MLPH019 - Check all mandatory components on Monitoring tab on Project Home Page
         Given open url
         And wait load page
@@ -819,7 +801,6 @@ Feature: Quick actions Page
         Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
     
     @MLPH
-    @smoke
     Scenario: MLPH020 - Check all mandatory components on Batch inference in Advanced section
         Given open url
         And wait load page
@@ -934,7 +915,6 @@ Feature: Quick actions Page
     
     @MLPH
     @inProgress
-    @smoke
     Scenario: MLPH023 - Check components - batch inference_v2, preview text, path type
         Given open url
         And wait load page
@@ -961,7 +941,6 @@ Feature: Quick actions Page
         #TODO: check Data Inputs path type (Data_Inputs_Inference_Table)
 
     @MLPH
-    @smoke
     Scenario: MLPH024 - Check Train model wizard opens up
         Given open url
         And wait load page

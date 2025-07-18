@@ -1488,7 +1488,7 @@ export default {
       }
     }),
     Discard_Button: By.css('.apply-discard-buttons .pop-up-dialog__btn_cancel'),
-    Apply_Button: By.css('.apply-discard-buttons button.btn-secondary')
+    Apply_Button: By.css('.apply-discard-buttons .btn-primary')
   },
   projectMembersPopup: {
     Cross_Cancel_Button: commonCrossCancelButton,
@@ -1551,7 +1551,7 @@ export default {
       }
     }),
     Discard_Button: By.css('.apply-discard-buttons .pop-up-dialog__btn_cancel'),
-    Apply_Button: By.css('.apply-discard-buttons button.btn-secondary'),
+    Apply_Button: By.css('.apply-discard-buttons .btn-primary'),
     Footer_Annotation_Label: By.css('.footer-annotation')
   },
   createNewSecretPopup: {
@@ -1737,7 +1737,7 @@ export default {
       generateDropdownGroup(
         '[data-testid="type-form-field-select"]',
         '[data-testid="select-header"]',
-        '[data-testid="select-option"] [data-testid="tooltip-wrapper"]'
+        '.options-list .select__item:not(.hidden) .tooltip-wrapper'
       )
     ),
     Show_Iterations_Checkbox: checkboxComponent({
@@ -1790,6 +1790,14 @@ export default {
     }),
     Status_Pending_Checkbox: checkboxComponent({
       root: '[data-testid="select-checkbox"]:nth-of-type(7)',
+      elements: {
+        checkbox: 'input',
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Status_Pending_retry_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(8)',
       elements: {
         checkbox: 'input',
         name: 'label',
