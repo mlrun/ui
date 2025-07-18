@@ -8,11 +8,13 @@
       "base_period": 10,
       "nuclio_function_uri": "default/functions/default-modelMonitoringController/",
       "stats": {
-        "detections": 1245,
-        "potential_detections": 98,
+        "detected": 1245,
+        "potential_detection": 98,
         "stream_stats": {
-          "lag": 12,
-          "committed": 398742
+          "0": {
+            "lag": 12,
+            "committed": 398742
+          }
         }
       },
       "status": "ready"
@@ -25,11 +27,13 @@
       "base_period": 10,
       "nuclio_function_uri": "default/functions/default-modelMonitoringStream/",
       "stats": {
-        "detections": 567,
-        "potential_detections": 34,
+        "detected": 567,
+        "potential_detection": 34,
         "stream_stats": {
-          "lag": 12,
-          "committed": 221232
+          "0": {
+            "lag": 12,
+            "committed": 39874222
+          }
         }
       },
       "status": "ready"
@@ -42,11 +46,13 @@
       "base_period": 10,
       "nuclio_function_uri": "default/functions/default-modelMonitoringWriter/",
       "stats": {
-        "detections": 2567,
-        "potential_detections": 134,
+        "detected": 2567,
+        "potential_detection": 134,
         "stream_stats": {
-          "lag": 12,
-          "committed": 123213213
+          "0": {
+            "lag": 11,
+            "committed": 328742
+          }
         }
       },
       "status": "ready"
@@ -59,11 +65,13 @@
       "base_period": 10,
       "nuclio_function_uri": "my-project/functions/my-project-monitorAppV1/",
       "stats": {
-        "detections": 1245,
-        "potential_detections": 98,
+        "detected": 1245,
+        "potential_detection": 98,
         "stream_stats": {
-          "lag": 12,
-          "committed": 48484
+          "0": {
+            "lag": 1222,
+            "committed": 22742
+          }
         },
         "shards": {
           "1": {
@@ -80,7 +88,7 @@
           {
             "type": "result",
             "time": "2025-05-07T09:07:14+00:00",
-            "name": "some_result",
+            "result_name": "some_result",
             "kind": "data-drift",
             "status": "Detection",
             "value": 0.95
@@ -88,7 +96,7 @@
           {
             "type": "metric",
             "time": "2025-05-07T09:07:14+00:00",
-            "name": "some_metric",
+            "metric_name": "some_metric",
             "value": 0.4
           }
         ]
@@ -103,11 +111,13 @@
       "base_period": 10,
       "nuclio_function_uri": "default/functions/default-monitorAppV2/",
       "stats": {
-        "detections": 567,
-        "potential_detections": 34,
+        "detected": 567,
+        "potential_detection": 34,
         "stream_stats": {
-          "lag": 0,
-          "committed": 2222222
+          "0": {
+            "lag": 2,
+            "committed": 742
+          }
         },
         "shards": {
           "1": {
@@ -124,7 +134,7 @@
           {
             "type": "result",
             "time": "2025-05-07T09:07:14+00:00",
-            "name": "some_result",
+            "result_name": "some_result",
             "kind": 0,
             "status": 2,
             "value": 0.95
@@ -132,7 +142,7 @@
           {
             "type": "metric",
             "time": "2025-05-07T09:07:14+00:00",
-            "name": "some_metric",
+            "metric_name": "some_metric",
             "value": 0.4
           }
         ]
@@ -147,11 +157,13 @@
       "base_period": 15,
       "nuclio_function_uri": "default/functions/default-monitorAppV3/",
       "stats": {
-        "detections": 850,
-        "potential_detections": 60,
+        "detected": 850,
+        "potential_detection": 60,
         "stream_stats": {
-          "lag": 5,
-          "committed": 1232131
+          "0": {
+            "lag": 5,
+            "committed": 42
+          }
         },
         "shards": {
           "1": {
@@ -168,7 +180,7 @@
           {
             "type": "result",
             "time": "2025-05-07T09:07:14+00:00",
-            "name": "some_result",
+            "result_name": "some_result",
             "kind": 0,
             "status": 2,
             "value": 0.95
@@ -176,7 +188,7 @@
           {
             "type": "metric",
             "time": "2025-05-07T09:07:14+00:00",
-            "name": "some_metric",
+            "metric_name": "some_metric",
             "value": 0.4
           }
         ]
