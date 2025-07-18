@@ -1369,14 +1369,14 @@ Feature: ML Functions
         And wait load page
         When click on cell with row index 2 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
-        Then verify redirection from "projects/default/functions/model-monitoring-stream/latest/INVALID" to "projects/default/functions/model-monitoring-stream/latest/overview"
+        Then verify redirection from "projects/default/functions/model-monitoring-stream/latest/INVALID?dates=anyTime" to "projects/default/functions/model-monitoring-stream/latest/overview?dates=anyTime"
         Then select "Code" tab in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
         And wait load page
-        Then verify redirection from "projects/default/functions/model-monitoring-stream/latest/INVALID" to "projects/default/functions/model-monitoring-stream/latest/overview"
+        Then verify redirection from "projects/default/functions/model-monitoring-stream/latest/CodeINVALID?dates=anyTime" to "projects/default/functions/model-monitoring-stream/latest/overview?dates=anyTime"
         Then select "Build Log" tab in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
         And wait load page
-        Then verify redirection from "projects/default/functions/model-monitoring-stream/latest/INVALID" to "projects/default/functions/model-monitoring-stream/latest/overview"
-        Then verify redirection from "projects/default/INVALID/model-monitoring-stream/latest/overview" to "projects"
+        Then verify redirection from "projects/default/functions/model-monitoring-stream/latest/BuildLogINVALID?dates=anyTime" to "projects/default/functions/model-monitoring-stream/latest/overview?dates=anyTime"
+        Then verify redirection from "projects/default/INVALID/model-monitoring-stream/latest/overview?dates=anyTime" to "projects"
 
     @MLF
     @smoke
@@ -1445,6 +1445,8 @@ Feature: ML Functions
         Then verify "New_Function_Build_Commands_Text_Area" not input element in "Code_Accordion" on "New_Function" wizard is enabled
         Then click on "Save_Button" element on "New_Function" wizard
         And wait load page
+        When turn on staging mode with query params "true"
+        And wait load page
         Then check "demo-function-02" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
         Then verify "Table_FilterBy_Button" element visibility on "ML_Functions" wizard
         Then click on "Table_FilterBy_Button" element on "ML_Functions" wizard
@@ -1456,6 +1458,7 @@ Feature: ML Functions
         And wait load page
         Then check "demo-function-02" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
         When click on cell with value "demo-function-02" in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        And wait load page
         Then check "demo-function-02" value in "name" column in "Overview_Table" table on "ML_Function_Info_Pane" wizard
         Then "Header" element on "ML_Function_Info_Pane" should contains "demo-function-02" value
 
