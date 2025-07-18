@@ -87,6 +87,15 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
     }
   ]
 
+  const aggregatedStreamStats = Object.values(monitoringApplication?.stats?.stream_stats || {}).reduce(
+    (acc, { committed, lag }) => {
+      acc.committed += committed
+      acc.lag += lag
+
+      return acc
+    },
+    { committed: 0, lag: 0 }
+  )
   const applicationCountersContent = [
     {
       id: 'appStatus',
@@ -110,26 +119,26 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
     {
       id: 'detections',
       title: 'Detections',
-      counterData: [{ id: 'detections', title: monitoringApplication?.stats?.detections }]
+      counterData: [{ id: 'detections', title: monitoringApplication?.stats?.detected }]
     },
     {
       id: 'possibleDetections',
       title: 'Possible Detections',
       counterData: [
-        { id: 'possibleDetections', title: monitoringApplication?.stats?.potential_detections }
+        { id: 'possibleDetections', title: monitoringApplication?.stats?.potential_detection }
       ]
     },
     {
       id: 'lag',
       title: 'Lag',
       tip: "Number of messages currently waiting in the app's queue",
-      counterData: [{ id: 'lag', title: monitoringApplication?.stats?.lag }]
+      counterData: [{ id: 'lag', title: aggregatedStreamStats.lag }]
     },
     {
       id: 'commitedOffset',
       title: 'Commited Offset',
       tip: 'Total number of messages handled by the app',
-      counterData: [{ id: 'commitedOffset', title: monitoringApplication?.stats?.committed_offset }]
+      counterData: [{ id: 'commitedOffset', title: aggregatedStreamStats.committed }]
     }
   ]
 
