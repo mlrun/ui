@@ -22,9 +22,8 @@ import { capitalize } from 'lodash'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { generateNuclioLink } from './parseUri'
 
-export const createApplicationContent = application => {
+export const createApplicationContent = (application, projectName) => {
   const identifierUnique = 'identifierUnique.' + application.name + application.application_class
-  const nuclioFunctionName = application.nuclio_function_uri.split('/')[2]
 
   return {
     data: {
@@ -49,7 +48,7 @@ export const createApplicationContent = application => {
         headerId: 'lag',
         headerLabel: 'Lag',
         tip: "Number of messages currently waiting in the app's queue",
-        value: application.stats.lag,
+        value: application.stats.stream_stats?.lag ?? 0,
         className: 'table-cell-1'
       },
       {
@@ -57,21 +56,21 @@ export const createApplicationContent = application => {
         headerId: 'commitedOffset',
         tip: 'Total number of messages handled by the app',
         headerLabel: 'Commited offset',
-        value: application.stats.committed_offset,
+        value: application.stats.stream_stats.committed ?? 0,
         className: 'table-cell-2'
       },
       {
         id: `detections.${identifierUnique}`,
         headerId: 'detections',
         headerLabel: 'Detections',
-        value: application.stats.detections,
+        value: application.stats.detected,
         className: 'table-cell-1'
       },
       {
         id: `possibleDetections.${identifierUnique}`,
         headerId: 'possibleDetections',
         headerLabel: 'Possible detections',
-        value: application.stats.potential_detections,
+        value: application.stats.potential_detection,
         className: 'table-cell-2'
       },
       {
@@ -93,9 +92,9 @@ export const createApplicationContent = application => {
         id: `nuclioFunction.${identifierUnique}`,
         headerId: 'nuclioFunction',
         headerLabel: 'Nuclio function',
-        value: nuclioFunctionName,
+        value: application.name,
         className: 'table-cell-2',
-        getLink: () => generateNuclioLink(`/projects/${application.nuclio_function_uri}`),
+        getLink: () => generateNuclioLink(`/projects/${projectName}/functions/${application.name}`),
         showStatus: true
       }
     ]

@@ -17,17 +17,17 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { Outlet, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import ActionBar from '../ActionBar/ActionBar'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import MonitoringApplicationCounters from './MonitoringApplications/MonitoringApplicationCounters/MonitoringApplicationCounters'
 import TableTop from '../../elements/TableTop/TableTop'
-import { Loader } from 'igz-controls/components'
 
 import {
+  fetchMEPWithDetections,
   fetchMonitoringApplication,
   fetchMonitoringApplications,
   fetchMonitoringApplicationsSummary
@@ -47,7 +47,6 @@ const MonitoringApplicationsPage = () => {
   const dispatch = useDispatch()
   const params = useParams()
   const navigate = useNavigate()
-  const monitoringApplicationsStore = useSelector(store => store.monitoringApplicationsStore)
   const filtersConfig = useMemo(() => getFiltersConfig(), [])
   const filters = useFiltersFromSearchParams(filtersConfig)
   const [, setSearchParams] = useSearchParams()
@@ -63,6 +62,21 @@ const MonitoringApplicationsPage = () => {
         .unwrap()
         .catch(error => {
           showErrorNotification(dispatch, error, '', 'Failed to fetch monitoring applications')
+        })
+      dispatch(
+        fetchMEPWithDetections({
+          project: params.projectName,
+          filters: filters
+        })
+      )
+        .unwrap()
+        .catch(error => {
+          showErrorNotification(
+            dispatch,
+            error,
+            '',
+            'Failed to fetch Model Endpoints with suspected/detected issue'
+          )
         })
     },
     [dispatch, params.projectName]
@@ -83,6 +97,7 @@ const MonitoringApplicationsPage = () => {
         .catch(error => {
           showErrorNotification(dispatch, error, '', 'Failed to fetch artifacts')
         })
+
       dispatch(
         fetchMonitoringApplication({
           project: params.projectName,
@@ -93,19 +108,22 @@ const MonitoringApplicationsPage = () => {
         .unwrap()
         .catch(error => {
           showErrorNotification(dispatch, error, '', 'Failed to fetch monitoring application')
+          navigate(
+            `/projects/${params.projectName}/${MONITORING_APP_PAGE}${window.location.search}`,
+            { replace: true }
+          )
         })
     },
-    [dispatch, params.name, params.projectName]
+    [dispatch, navigate, params.name, params.projectName]
   )
 
-  // TODO: uncomment in ML-10005
-  // useEffect(() => {
-  //   if (params.name) {
-  //     refreshMonitoringApplication(filters)
-  //   } else {
-  //     refreshMonitoringApplications(filters)
-  //   }
-  // }, [params.name, refreshMonitoringApplications, refreshMonitoringApplication, filters])
+  useEffect(() => {
+    if (params.name) {
+      refreshMonitoringApplication(filters)
+    } else {
+      refreshMonitoringApplications(filters)
+    }
+  }, [params.name, refreshMonitoringApplications, refreshMonitoringApplication, filters])
 
   return (
     <div className="content-wrapper">
@@ -147,7 +165,6 @@ const MonitoringApplicationsPage = () => {
             withoutExpandButton
           />
           <MonitoringApplicationCounters />
-          {monitoringApplicationsStore.loading && <Loader />}
           <Outlet />
         </div>
       </div>

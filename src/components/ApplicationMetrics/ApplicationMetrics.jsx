@@ -41,6 +41,7 @@ import {
 
 import { fetchModelEndpoints } from '../../reducers/artifactsReducer'
 import {
+  DATES_FILTER,
   DETAILS_OVERVIEW_TAB,
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE,
@@ -57,6 +58,11 @@ import SearchIcon from 'igz-controls/images/search.svg?react'
 import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
 
 import './ApplicationMetrics.scss'
+import {
+  datePickerPastOptions,
+  getDatePickerFilterValue,
+  PAST_24_HOUR_DATE_OPTION
+} from '../../utils/datePicker.util'
 
 export const LIST_ID = 'LIST_ID'
 export const LIST_ITEMS_ID = 'LIST_ITEMS_ID'
@@ -150,13 +156,23 @@ const ApplicationMetrics = () => {
   useEffect(() => {
     if (
       applicationsStore.monitoringApplications.applications?.find(
-        app => app.name === params.appName
+        app => app.name.toLowerCase() === params.appName.toLowerCase()
       )
     ) {
       fetchModelEndpointsData()
     } else {
       dispatch(
-        fetchMonitoringApplication({ project: params.projectName, functionName: params.appName })
+        fetchMonitoringApplication({
+          project: params.projectName,
+          functionName: params.appName,
+          filters: {
+            [DATES_FILTER]: getDatePickerFilterValue(
+              datePickerPastOptions,
+              PAST_24_HOUR_DATE_OPTION,
+              false
+            )
+          }
+        })
       )
         .unwrap()
         .then(app => {

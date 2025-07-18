@@ -19,6 +19,7 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
+import { isNil } from 'lodash'
 
 import StatsCard from '../../../../../common/StatsCard/StatsCard'
 import { Tooltip, TextTooltipTemplate, Loader } from 'igz-controls/components'
@@ -48,7 +49,13 @@ const MonitoringApplicationCard = ({
               >
                 <div data-testid={`monitoring-app-${counter.id}`}>
                   <div className="stats__counter">
-                    {loading ? <Loader section small secondary /> : error ? 'N/A' : counter.title}
+                    {loading ? (
+                      <Loader section small secondary />
+                    ) : error || isNil(counter.title) ? (
+                      'N/A'
+                    ) : (
+                      counter.title
+                    )}
                     {counter.status && <i className={`state-${counter.status}`} />}
                   </div>
                 </div>
@@ -59,7 +66,9 @@ const MonitoringApplicationCard = ({
                       template={<TextTooltipTemplate text={counter.subtitle} />}
                     >
                       <span className="stats__subtitle">{counter.subtitle}</span>
-                      {counter.subtitleStatus && <i className={`state-${counter.subtitleStatus}`} />}
+                      {counter.subtitleStatus && (
+                        <i className={`state-${counter.subtitleStatus}`} />
+                      )}
                     </Tooltip>
                   </div>
                 )}

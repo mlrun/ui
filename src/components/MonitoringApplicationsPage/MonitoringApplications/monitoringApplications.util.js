@@ -24,7 +24,7 @@ import moment from 'moment'
 import { generateNuclioLink } from '../../../utils'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 
-export const generateOperatingFunctionsTable = functions => {
+export const generateOperatingFunctionsTable = (functions, projectName) => {
   const tableHeaders = [
     {
       value: 'Name',
@@ -51,23 +51,23 @@ export const generateOperatingFunctionsTable = functions => {
     return {
       name: {
         value: capitalize(func.name),
-        link: generateNuclioLink(`/projects/${func.nuclio_function_uri}`),
+        link: generateNuclioLink(`/projects/${projectName}/functions/${func.name}`),
         className: 'table-cell_big'
       },
       status: {
         value: func.status,
         className: classnames('table-cell_small', 'status', `state-${func.status}`)
       },
-      startedAt: {
-        value: formatDatetime(func.started_at, 'N/A'),
+      updatedTime: {
+        value: formatDatetime(func.updated_time, 'N/A'),
         className: 'table-cell_medium'
       },
       lag: {
-        value: func.stats.lag,
+        value: func.stats.stream_stats.lag,
         className: 'table-cell_small'
       },
       commitedOffset: {
-        value: func.stats.committed_offset,
+        value: func.stats.stream_stats.committed,
         className: 'table-cell_small'
       }
     }

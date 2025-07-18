@@ -20,11 +20,19 @@ such restriction.
 import { mainHttpClient } from '../httpClient'
 
 const monitoringApplications = {
+  getMEPWithDetections: (project, params) =>
+    mainHttpClient.get(`projects/${project}/model-endpoints/drift-over-time`, {
+      params
+    }),
   getMonitoringApplication: (project, functionName, params) =>
-    mainHttpClient.get(`projects/${project}/model-monitoring/function-summary/${functionName}`, { params }),
+    mainHttpClient.get(`projects/${project}/model-monitoring/function-summaries/${functionName}`, {
+      params
+    }),
   getMonitoringApplications: (project, params) =>
-    mainHttpClient.get(`projects/${project}/model-monitoring/function-summaries`, { params }),
-  getMonitoringApplicationsSummary: project => mainHttpClient.get(`project-summary/${project}`)
+    mainHttpClient.get(`projects/${project}/model-monitoring/function-summaries`, {
+      params
+    }),
+  getMonitoringApplicationsSummary: project => mainHttpClient.get(`project-summaries/${project}`)
 }
 
 export default monitoringApplications

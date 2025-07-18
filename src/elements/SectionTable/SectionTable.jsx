@@ -23,29 +23,34 @@ import classnames from 'classnames'
 import { Link } from 'react-router-dom'
 
 import { TableTypeCell } from 'igz-controls/elements'
-import { TextTooltipTemplate, Tooltip, Tip } from 'igz-controls/components'
+import { TextTooltipTemplate, Tooltip, Tip, Loader } from 'igz-controls/components'
 import ReadOnlyChips from '../ReadOnlyChips/ReadOnlyChips'
 
 import './SectionTable.scss'
 
-const SectionTable = ({ params, table }) => {
-  return (
+const SectionTable = ({ loading = false, params, table }) => {
+  return loading ? (
+    <Loader section secondary />
+  ) : (
     <>
       <table className="section-table" cellPadding="0" cellSpacing="0">
         <thead>
           <tr className="section-table__table-header">
             <>
-              {table.header.map(header => (
-                <th
-                  key={header.value}
-                  className={`section-table__table-cell ${header.className} table-header-item`}
-                >
-                  <Tooltip template={<TextTooltipTemplate text={header.value} />}>
-                    {header.value}
-                  </Tooltip>
-                  {header.tip && <Tip text={header.tip} />}
-                </th>
-              ))}
+              {table.header.map(
+                header =>
+                  !header.hidden && (
+                    <th
+                      key={header.value}
+                      className={`section-table__table-cell ${header.className} table-header-item`}
+                    >
+                      <Tooltip template={<TextTooltipTemplate text={header.value} />}>
+                        {header.value}
+                      </Tooltip>
+                      {header.tip && <Tip text={header.tip} />}
+                    </th>
+                  )
+              )}
             </>
           </tr>
         </thead>
@@ -68,76 +73,87 @@ const SectionTable = ({ params, table }) => {
                         `status_${body?.[key]?.value?.toLowerCase?.()} capitalize`
                     )
 
-                    return key === 'type' ? (
-                      <TableTypeCell key={body[key].value + index} cellData={body[key]} />
-                    ) : (
-                      <td key={body[key].value + index + key} className={tableValueClassName}>
-                        {key === 'name' ? (
-                          body[key].href ? (
-                            <a
-                              href={body[key].href}
-                              target="_top"
-                              className="link section-table__table-link"
-                            >
-                              <Tooltip
-                                template={<TextTooltipTemplate text={extractedItemName} />}
-                                textShow={true}
+                    return (
+                      !body[key].hidden &&
+                      (key === 'type' ? (
+                        <TableTypeCell key={body[key].value + index} cellData={body[key]} />
+                      ) : (
+                        <td key={body[key].value + index + key} className={tableValueClassName}>
+                          {key === 'name' ? (
+                            body[key].href ? (
+                              <a
+                                href={body[key].href}
+                                target="_top"
+                                className="link section-table__table-link"
                               >
-                                {extractedItemName}
-                              </Tooltip>
-                            </a>
-                          ) : body[key].link ? (
-                            <Link className="link section-table__table-link" to={body[key].link}>
+                                <Tooltip
+                                  template={<TextTooltipTemplate text={extractedItemName} />}
+                                  textShow={true}
+                                >
+                                  {extractedItemName}
+                                </Tooltip>
+                              </a>
+                            ) : body[key].link ? (
+                              <Link className="link section-table__table-link" to={body[key].link}>
+                                <Tooltip template={<TextTooltipTemplate text={body[key].value} />}>
+                                  {body[key].value}
+                                </Tooltip>
+                              </Link>
+                            ) : (
                               <Tooltip template={<TextTooltipTemplate text={body[key].value} />}>
                                 {body[key].value}
                               </Tooltip>
-                            </Link>
+                            )
+                          ) : key === 'labels' ? (
+                            <ReadOnlyChips labels={body.labels.value} shortChips />
+                          ) : key === 'status' ? (
+                            <>
+                              {Array.isArray(body.status.value) ? (
+                                body.status.value.map((status, index) => {
+                                  return (
+                                    <Tooltip
+                                      key={body.status.value + index}
+                                      template={<TextTooltipTemplate text={status} />}
+                                    >
+                                      <i className={`state-${status}-job status-icon`} />
+                                    </Tooltip>
+                                  )
+                                })
+                              ) : (
+                                <Tooltip
+                                  template={
+                                    <TextTooltipTemplate
+                                      text={body[key].tooltip || body[key].value}
+                                    />
+                                  }
+                                >
+                                  {body[key].value}
+                                </Tooltip>
+                              )}
+                            </>
                           ) : (
-                            <Tooltip template={<TextTooltipTemplate text={body[key].value} />}>
-                              {body[key].value}
-                            </Tooltip>
-                          )
-                        ) : key === 'labels' ? (
-                          <ReadOnlyChips labels={body.labels.value} shortChips />
-                        ) : key === 'status' ? (
-                          <>
-                            {Array.isArray(body.status.value) ? (
-                              body.status.value.map((status, index) => {
-                                return (
-                                  <Tooltip
-                                    key={body.status.value + index}
-                                    template={<TextTooltipTemplate text={status} />}
-                                  >
-                                    <i className={`state-${status}-job status-icon`} />
-                                  </Tooltip>
-                                )
-                              })
-                            ) : (
-                              <Tooltip template={<TextTooltipTemplate text={body[key].tooltip || body[key].value} />}>
+                            <>
+                              <Tooltip
+                                template={
+                                  <TextTooltipTemplate
+                                    text={body[key].tooltip || body[key].value}
+                                  />
+                                }
+                              >
                                 {body[key].value}
                               </Tooltip>
-                            )}
-                          </>
-                        ) : (
-                          <>
-                            <Tooltip
-                              template={
-                                <TextTooltipTemplate text={body[key].tooltip || body[key].value} />
-                              }
-                            >
-                              {body[key].value}
-                            </Tooltip>
-                            {body[key].status && (
-                              <Tooltip
-                                key={body[key].status + index}
-                                template={<TextTooltipTemplate text={body[key].status} />}
-                              >
-                                <i className={`state-${body[key].status}-job status-icon`} />
-                              </Tooltip>
-                            )}
-                          </>
-                        )}
-                      </td>
+                              {body[key].status && (
+                                <Tooltip
+                                  key={body[key].status + index}
+                                  template={<TextTooltipTemplate text={body[key].status} />}
+                                >
+                                  <i className={`state-${body[key].status}-job status-icon`} />
+                                </Tooltip>
+                              )}
+                            </>
+                          )}
+                        </td>
+                      ))
                     )
                   })}
                 </>
@@ -151,6 +167,7 @@ const SectionTable = ({ params, table }) => {
 }
 
 SectionTable.propTypes = {
+  loading: PropTypes.bool,
   params: PropTypes.object.isRequired,
   table: PropTypes.object.isRequired
 }
