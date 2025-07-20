@@ -1732,10 +1732,10 @@ function getPipeline(req, res) {
 
 function pipelineRetry(req, res) {
   const originalPipelineID = pipelineIDs.find(
-      item => item.run.id === req.params.pipelineID && item.run.project === req.params.project
+    item => item.run.id === req.params.pipelineID && item.run.project === req.params.project
   )
   const originalPipeline = (pipelines[req.params.project]?.runs ?? []).find(pipeline => {
-    return pipeline.id = req.params.pipelineID
+    return (pipeline.id = req.params.pipelineID)
   })
   if (originalPipeline) {
     const runID = makeUID(32)
@@ -1772,6 +1772,43 @@ function pipelineRetry(req, res) {
       }
     })
   }
+}
+
+function pipelineTerminate(req, res) {
+  const { project, pipelineID } = req.params
+
+  const pipeline = (pipelines[project]?.runs ?? []).find(p => p.id === pipelineID)
+  const pipelineMeta = pipelineIDs.find(
+    item => item.run.id === pipelineID && item.run.project === project
+  )
+
+  if (!pipeline || !pipelineMeta) {
+    return res.status(404).send({
+      detail: {
+        reason: `MLRunNotFoundError('Workflow not found ${project}/${pipelineID}')`
+      }
+    })
+  }
+
+  pipeline.status = 'terminating'
+  pipelineMeta.run.status = 'terminating'
+
+  const taskFunc = () => {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        pipeline.status = 'failed'
+        pipelineMeta.run.status = 'failed'
+        resolve()
+      }, 6000)
+    })
+  }
+
+  const task = createTask(project, {
+    taskFunc,
+    kind: `pipeline.termination.wrapper.${pipelineID}`
+  })
+
+  res.status(202).send(task)
 }
 
 function getFuncs(req, res) {
@@ -2898,6 +2935,7 @@ app.get(`${mlrunAPIIngress}/projects/:project/pipelines`, getPipelines)
 app.get(`${mlrunAPIIngress}/projects/*/pipelines`, getPipelines)
 app.get(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID`, getPipeline)
 app.post(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID/retry`, pipelineRetry)
+app.post(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID/terminate`, pipelineTerminate)
 
 app.get(`${mlrunAPIIngress}/projects/:project/artifact-tags`, getProjectsArtifactTags)
 app.get(`${mlrunAPIIngressV2}/projects/:project/artifacts`, getArtifacts)
