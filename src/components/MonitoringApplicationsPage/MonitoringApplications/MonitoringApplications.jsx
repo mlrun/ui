@@ -26,13 +26,13 @@ import MEPsWithDetections from './MEPsWithDetections'
 import NoData from '../../../common/NoData/NoData'
 import SectionTable from '../../../elements/SectionTable/SectionTable'
 import Table from '../../Table/Table'
-import { Tip } from 'igz-controls/components'
+import { Loader, Tip } from 'igz-controls/components'
 
 import { MODEL_ENDPOINTS_TAB, MONITORING_APP_PAGE } from '../../../constants'
 import { MONITORING_APPLICATIONS_NO_DATA_MESSAGE } from '../MonitoringApplicationsPage.util'
 import { createApplicationContent } from '../../../utils/createApplicationContent'
 import { generateOperatingFunctionsTable } from './monitoringApplications.util'
-import { removeMonitoringApplications } from '../../../reducers/monitoringApplicationsReducer'
+import { removeMonitoringApplications, removeMEPWithDetections } from '../../../reducers/monitoringApplicationsReducer'
 
 import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
 
@@ -41,7 +41,8 @@ const MonitoringApplications = () => {
   const params = useParams()
   const navigate = useNavigate()
   const {
-    monitoringApplications: { applications = [], operatingFunctions = [] }
+    monitoringApplications: { applications = [], operatingFunctions = [] },
+    loading
   } = useSelector(store => store.monitoringApplicationsStore)
 
   const applicationsTableActionsMenu = useMemo(
@@ -52,19 +53,24 @@ const MonitoringApplications = () => {
           id: 'open-metrics',
           label: 'Open metrics',
           icon: <PresentMetricsIcon />,
-          onClick: data => navigate(`/projects/${params.projectName}/${MONITORING_APP_PAGE}/${data.name}/${MODEL_ENDPOINTS_TAB}${window.location.search}`)
+          onClick: data =>
+            navigate(
+              `/projects/${params.projectName}/${MONITORING_APP_PAGE}/${data.name}/${MODEL_ENDPOINTS_TAB}${window.location.search}`
+            )
         }
       ]
     ],
     [navigate, params.projectName]
   )
   const operatingFunctionsTable = useMemo(
-    () => generateOperatingFunctionsTable(operatingFunctions),
-    [operatingFunctions]
+    () => generateOperatingFunctionsTable(operatingFunctions, params.projectName),
+    [operatingFunctions, params.projectName]
   )
   const applicationsTableContent = useMemo(() => {
-    return applications.map(contentItem => createApplicationContent(contentItem))
-  }, [applications])
+    return applications.map(contentItem =>
+      createApplicationContent(contentItem, params.projectName)
+    )
+  }, [applications, params.projectName])
 
   const applicationsTableHeaders = useMemo(
     () => applicationsTableContent[0]?.content ?? [],
@@ -74,6 +80,7 @@ const MonitoringApplications = () => {
   useEffect(() => {
     return () => {
       dispatch(removeMonitoringApplications())
+      dispatch(removeMEPWithDetections())
     }
   }, [dispatch, params.projectName])
 
@@ -86,10 +93,10 @@ const MonitoringApplications = () => {
             <span>System functions</span>
             <Tip text="System functions that are used for the monitoring application operation" />
           </div>
-          {operatingFunctions.length === 0 ? (
+          {operatingFunctions.length === 0 && !loading ? (
             <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
           ) : (
-            <SectionTable params={params} table={operatingFunctionsTable} />
+            <SectionTable loading={loading} params={params} table={operatingFunctionsTable} />
           )}
         </div>
       </div>
@@ -98,8 +105,10 @@ const MonitoringApplications = () => {
           <div className="section-item_title">
             <span>All Applications</span>
           </div>
-          {applications.length === 0 ? (
+          {applications.length === 0 && !loading ? (
             <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
+          ) : loading ? (
+            <Loader section secondary />
           ) : (
             <Table
               actionsMenu={applicationsTableActionsMenu}

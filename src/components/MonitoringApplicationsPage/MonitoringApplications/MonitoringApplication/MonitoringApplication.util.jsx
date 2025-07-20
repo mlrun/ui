@@ -79,25 +79,16 @@ export const generateArtifactsTableContent = (artifacts = []) => {
 }
 
 export const generateResultsTableContent = (metrics = []) => {
-  const tableHeaders = [
-    {
-      value: 'Name',
-      className: 'table-cell_medium'
-    },
-    { value: 'Kind', className: 'table-cell_medium' },
-    { value: 'Value (latest)', className: 'table-cell_medium' },
-    { value: 'Time (latest result)', className: 'table-cell_medium' },
-    { value: 'Status', className: 'table-cell_small' }
-  ]
-
+  let timeColumnIsHidden = false
   const tableBody = metrics
     .filter(metric => metric.type === RESULT_TYPE)
     .map(result => {
       const driftStatusData = getDriftStatusData(result.status)
+      timeColumnIsHidden = !result.time
 
       return {
         name: {
-          value: capitalize(result.name),
+          value: capitalize(result.result_name),
           className: 'table-cell_medium'
         },
         kind: {
@@ -109,7 +100,8 @@ export const generateResultsTableContent = (metrics = []) => {
           className: 'table-cell_medium'
         },
         time: {
-          value: result.time,
+          hidden: timeColumnIsHidden,
+          value:  formatDatetime(result.time, 'N/A'),
           className: 'table-cell_medium'
         },
         status: {
@@ -119,6 +111,16 @@ export const generateResultsTableContent = (metrics = []) => {
         }
       }
     })
+  const tableHeaders = [
+    {
+      value: 'Name',
+      className: 'table-cell_medium'
+    },
+    { value: 'Kind', className: 'table-cell_medium' },
+    { value: 'Value (latest)', className: 'table-cell_medium' },
+    { value: 'Time (latest result)', className: 'table-cell_medium', hidden: timeColumnIsHidden },
+    { value: 'Status', className: 'table-cell_small' }
+  ]
 
   return {
     header: tableHeaders,
@@ -127,21 +129,15 @@ export const generateResultsTableContent = (metrics = []) => {
 }
 
 export const generateMetricsTableContent = (metrics = []) => {
-  const tableHeaders = [
-    {
-      value: 'Name',
-      className: 'table-cell_medium'
-    },
-    { value: 'Value (latest)', className: 'table-cell_medium' },
-    { value: 'Time (latest result)', className: 'table-cell_medium' }
-  ]
-
+  let timeColumnIsHidden = false
   const tableBody = metrics
     .filter(metric => metric.type === METRIC_TYPE)
     .map(metric => {
+      timeColumnIsHidden = !metric.time
+
       return {
         name: {
-          value: capitalize(metric.name),
+          value: capitalize(metric.metric_name),
           className: 'table-cell_medium'
         },
         value: {
@@ -149,11 +145,20 @@ export const generateMetricsTableContent = (metrics = []) => {
           className: 'table-cell_medium'
         },
         time: {
+          hidden: timeColumnIsHidden,
           value: formatDatetime(metric.time, 'N/A'),
           className: 'table-cell_medium'
         }
       }
     })
+  const tableHeaders = [
+    {
+      value: 'Name',
+      className: 'table-cell_medium'
+    },
+    { value: 'Value (latest)', className: 'table-cell_medium' },
+    { value: 'Time (latest metric)', className: 'table-cell_medium', hidden: timeColumnIsHidden}
+  ]
 
   return {
     header: tableHeaders,

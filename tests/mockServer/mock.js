@@ -45,6 +45,7 @@ import {
   set
 } from 'lodash'
 import mime from 'mime-types'
+import moment from 'moment'
 
 import alerts from './data/alerts.json'
 import frontendSpec from './data/frontendSpec.json'
@@ -854,11 +855,11 @@ function getMonitoringApplicationsSummary(req, res) {
 function getMonitoringApplicationData(req, res) {
   const monitoringApplication = (monitoringApplications[req.params['project']] || []).find(
     application => {
-      return application.name === req.params['func']
+      return application.name.toLowerCase() === req.params['func']
     }
   )
 
-  if (monitoringApplication.length === 0) {
+  if (!monitoringApplication) {
     res.statusCode = 404
     res.send({
       detail: "MLRunNotFoundError('Monitoring application not found')"
@@ -866,6 +867,27 @@ function getMonitoringApplicationData(req, res) {
   } else {
     res.send(monitoringApplication)
   }
+}
+
+function getMonitoringApplicationDrift(req, res) {
+  const data = []
+  const endDate = moment(Number(req.query.end) || new Date())
+
+  for (
+    const startDate = moment(Number(req.query.start));
+    startDate < endDate;
+    startDate.add(1, 'minute')
+  ) {
+    data.push([
+      startDate.utc().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
+      Math.floor(Math.random() * 11),
+      Math.floor(Math.random() * 11)
+    ])
+  }
+
+  res.send({
+    values: data
+  })
 }
 
 function getRuns(req, res) {
@@ -2902,10 +2924,14 @@ app.get(
   `${mlrunAPIIngress}/projects/:project/model-monitoring/function-summaries`,
   getMonitoringApplications
 )
-app.get(`${mlrunAPIIngress}/project-summary/:project`, getMonitoringApplicationsSummary)
+app.get(`${mlrunAPIIngress}/project-summaries/:project`, getMonitoringApplicationsSummary)
 app.get(
-  `${mlrunAPIIngress}/projects/:project/model-monitoring/function-summary/:func`,
+  `${mlrunAPIIngress}/projects/:project/model-monitoring/function-summaries/:func`,
   getMonitoringApplicationData
+)
+app.get(
+  `${mlrunAPIIngress}/projects/:project/model-endpoints/drift-over-time`,
+  getMonitoringApplicationDrift
 )
 
 app.get(`${mlrunAPIIngress}/projects/:project/runs`, getRuns)
