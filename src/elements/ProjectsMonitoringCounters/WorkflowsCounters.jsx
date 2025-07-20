@@ -26,7 +26,7 @@ import ClockIcon from 'igz-controls/images/clock.svg?react'
 
 import StatsCard from '../../common/StatsCard/StatsCard'
 import { generateMonitoringStats } from '../../utils/generateMonitoringData'
-import { JOBS_MONITORING_WORKFLOWS_TAB } from '../../constants'
+import { JOBS_MONITORING_WORKFLOWS_TAB, MONITOR_WORKFLOWS_TAB } from '../../constants'
 
 import './projectsMonitoringCounters.scss'
 
@@ -79,8 +79,14 @@ const WorkflowsCounters = () => {
   ])
 
   const workflowsStats = useMemo(
-    () => generateMonitoringStats(workflowsData, navigate, JOBS_MONITORING_WORKFLOWS_TAB),
-    [navigate, workflowsData]
+    () =>
+      generateMonitoringStats(
+        workflowsData,
+        navigate,
+        projectName ? MONITOR_WORKFLOWS_TAB : JOBS_MONITORING_WORKFLOWS_TAB,
+        projectName
+      ),
+    [navigate, projectName, workflowsData]
   )
 
   return (
@@ -111,7 +117,7 @@ const WorkflowsCounters = () => {
 
           <div ref={detailsRef} className="stats__details">
             {workflowsStats.counters.map(
-              ({ counter, className, label, link, statusClass, tooltip }) => {
+              ({ counter, className, counterClassName, label, link, statusClass, tooltip }) => {
                 return (
                   <StatsCard.Row key={`${statusClass}-jobs`}>
                     <div
@@ -125,7 +131,7 @@ const WorkflowsCounters = () => {
                           <i className={`state-${statusClass}`} />
                         </Tooltip>
                       </div>
-                      <div className="stats__counter">
+                      <div className={counterClassName}>
                         {projectStore?.projectsSummary?.loading ? (
                           <Loader section small secondary />
                         ) : (

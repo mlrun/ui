@@ -91,6 +91,14 @@ Then(
 )
 
 When(
+  'scroll to the {string} element on {string} wizard',
+  async function (component, wizard) {
+    await waiteUntilComponent(this.driver, pageObjects[wizard][component])
+    await scrollToElement(this.driver, pageObjects[wizard][component])
+  }
+)
+
+When(
   'scroll to the element with {string} value in {string} column in {string} table on {string} wizard',
   async function (value, columnName, table, wizard) {
     const arr = await findRowIndexesByColumnValue(

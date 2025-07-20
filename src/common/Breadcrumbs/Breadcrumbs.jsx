@@ -26,7 +26,7 @@ import BreadcrumbsStep from './BreadcrumbsStep/BreadcrumbsStep'
 
 import { useMode } from '../../hooks/mode.hook'
 import { generateMlrunScreens, generateTabsList } from './breadcrumbs.util'
-import { PROJECTS_PAGE_PATH } from '../../constants'
+import { MONITORING_APP_PAGE, PROJECTS_PAGE_PATH } from '../../constants'
 import { generateProjectsList } from '../../utils/projects'
 
 import './breadcrumbs.scss'
@@ -57,12 +57,16 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
     if (params.projectName) {
       const [projects, projectName, screenName] = location.pathname.split('/').slice(1, 4)
       const screen = mlrunScreens.find(screen => screen.id === screenName)
-      const tab = projectTabs.find(tab =>
+      let tab = projectTabs.find(tab =>
         location.pathname
           .split('/')
           .slice(3)
           .find(pathItem => pathItem === tab.id)
       )
+
+      if (screen.id === MONITORING_APP_PAGE) {
+        tab = {}
+      }
 
       return {
         pathItems: [projects, projectName, screen?.label || screenName],

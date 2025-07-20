@@ -88,6 +88,7 @@ Feature: Datasets Page
   @MLD
   @passive
   @smoke
+  #TODO:  Datasets Analysis tab - add the data to verify
   Scenario: MLD003 - Check all mandatory components in Item infopane on Overview tab table on Datasets page
     Given open url
     And wait load page
@@ -142,6 +143,7 @@ Feature: Datasets Page
   @MLD
   @passive
   @smoke
+  #TODO:  Datasets Analysis tab - add the data to verify
   Scenario: MLD005 - Check Details panel still active on page refresh
 #     * set tear-down property "dataset" created in "automation-test" project with "test-file" value
     * create "test-dataset" Dataset with "v1" tag in "default" project with code 200
@@ -468,7 +470,6 @@ Feature: Datasets Page
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then click on "Register_Button" element on "Register_Dataset" wizard
-    And wait load page
     Then verify if "Confirm_Popup" popup dialog appears
     Then "Title" element on "Confirm_Popup" should contains "Overwrite dataset?" value
     When click on "Overwrite_Button" element on "Confirm_Popup" wizard
@@ -482,19 +483,22 @@ Feature: Datasets Page
     Then click on "History_Back_Button" element on "Datasets" wizard
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-    And wait load page
-    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "An error occurred while retrieving the dataset." value
-    And wait load page
-    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
+    Then "Header" element on "Datasets_Info_Pane" should contains "test-regressor_cox-test-summary" value
+    Then verify "Not_In_Filtered_List_Message" element visibility on "Datasets_Info_Pane" wizard
+    Then "Not_In_Filtered_List_Message" component on "Datasets_Info_Pane" should be equal "Datasets_Info_Pane"."Info_Banner_Message"
     Then click on "Table_Refresh_Button" element on "Datasets" wizard
     And wait load page
+    Then "Header" element on "Datasets_Info_Pane" should contains "test-regressor_cox-test-summary" value
+    Then verify "Not_In_Filtered_List_Message" element not exists on "Datasets_Info_Pane" wizard
+    Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
+    And wait load page
+    Then verify "Datasets_Table" element visibility on "Datasets" wizard
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then verify "Header" element visibility on "Files_Info_Pane" wizard
+    Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
     Then "Header" element on "Files_Info_Pane" should contains "test-regressor_cox-test-summary" value
-    #TODO: Verify text message 'The <artifact> you are viewing was updated. Close the detail panel and refresh the list to see the current version.' on Files_Info_Pane
+    Then verify "Not_In_Filtered_List_Message" element not exists on "Datasets_Info_Pane" wizard
     #TODO: Verify that editing the tag to an empty string '' will delete the artifact instance
 
   @MLD
@@ -668,6 +672,7 @@ Feature: Datasets Page
 
   @MLD
   @smoke
+  #TODO: check the loader after click on "Register_Button" element on "Register_Dataset" wizard
   Scenario: MLD011 - Check that version tag has "Click to add" status when it's empty after edited
     Given open url
     And wait load page
@@ -691,7 +696,6 @@ Feature: Datasets Page
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then click on "Register_Button" element on "Register_Dataset" wizard
-    And wait load page
     Then verify if "Confirm_Popup" popup dialog appears
     Then "Title" element on "Confirm_Popup" should contains "Overwrite dataset?" value
     When click on "Overwrite_Button" element on "Confirm_Popup" wizard
@@ -705,6 +709,7 @@ Feature: Datasets Page
 
   @MLD
   @smoke
+  #TODO: check the loader after click on "Register_Button" element on "Register_Dataset" wizard
   Scenario: MLD012 - Check filter by "All" tag is performed when version tag was edited
     Given open url
     And wait load page
@@ -743,7 +748,6 @@ Feature: Datasets Page
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then click on "Register_Button" element on "Register_Dataset" wizard
-    And wait load page
     Then verify if "Confirm_Popup" popup dialog appears
     Then "Title" element on "Confirm_Popup" should contains "Overwrite dataset?" value
     When click on "Overwrite_Button" element on "Confirm_Popup" wizard

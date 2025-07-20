@@ -31,7 +31,7 @@ import {
   generateResultsTableContent,
   generateShardsStatusTableContent
 } from './MonitoringApplication.util'
-import { FILES_PAGE, NAME_FILTER } from '../../../../constants'
+import { FILES_PAGE, LABELS_FILTER } from '../../../../constants'
 import { MONITORING_APPLICATIONS_NO_DATA_MESSAGE } from '../../MonitoringApplicationsPage.util'
 import { removeArtifacts } from '../../../../reducers/artifactsReducer'
 import { removeMonitoringApplication } from '../../../../reducers/monitoringApplicationsReducer'
@@ -40,116 +40,13 @@ import './monitoringApplication.scss'
 
 const MonitoringApplication = () => {
   const dispatch = useDispatch()
-  // const { artifacts } = useSelector(store => store.artifactsStore)
-  const artifactsMock = useMemo(
-    () => [
-      {
-        kind: '',
-        project: 'default',
-        uid: '5a44b12b-9ef3-4239-87e8-e0cbdae-2',
-        key: 'content',
-        iter: 0,
-        tree: '1f8b29a5-cdab-4b84-aad7-7f9bc20daf0b',
-        updated: '2021-08-29T20:01:03.457008+00:00',
-        tag: 'latest',
-        labels: {
-          'my-key': 'my-value',
-          'mlrun/app-name': 'monitorAppV1',
-          owner: 'admin',
-          v3io_user: 'admin'
-        },
-        created: '2021-08-29T20:01:03.457008+00:00',
-        target_path: 'v3io://artifacts/image_mock_data.png',
-        size: 20480,
-        db_key: 'download_content',
-        producer: {
-          name: 'download',
-          kind: 'run',
-          uri: 'default/59f8e3d6f3db4dd8ab890c4bf84a0a23',
-          owner: 'admin',
-          workflow: '1f8b29a5-cdab-4b84-aad7-7f9bc20daf0b'
-        },
-        sources: [
-          {
-            name: 'archive_url',
-            path: 'https://s3.wasabisys.com/iguazio/data/image-classification/catsndogs.zip'
-          }
-        ],
-        status: {}
-      },
-      {
-        kind: '',
-        project: 'default',
-        uid: '5a44b12b-9ef3-4239-87e8-e0cbdae-2',
-        key: 'content',
-        iter: 0,
-        tree: '1f8b29a5-cdab-4b84-aad7-7f9bc20daf0b',
-        updated: '2021-08-29T20:01:03.457008+00:00',
-        tag: 'latest',
-        labels: {
-          'my-key': 'my-value',
-          'mlrun/app-name': 'monitorAppV1',
-          owner: 'admin',
-          v3io_user: 'admin'
-        },
-        created: '2021-08-29T20:01:03.457008+00:00',
-        target_path: 'v3io://artifacts/image_mock_data.png',
-        size: 20480,
-        db_key: 'download_content',
-        producer: {
-          name: 'download',
-          kind: 'run',
-          uri: 'default/59f8e3d6f3db4dd8ab890c4bf84a0a23',
-          owner: 'admin',
-          workflow: '1f8b29a5-cdab-4b84-aad7-7f9bc20daf0b'
-        },
-        sources: [
-          {
-            name: 'archive_url',
-            path: 'https://s3.wasabisys.com/iguazio/data/image-classification/catsndogs.zip'
-          }
-        ],
-        status: {}
-      },
-      {
-        kind: 'dataset',
-        hash: '1bc83ed07eecbc358d0de91598dfc1d4',
-        description: '',
-        framework: '',
-        project: 'default',
-        uid: '5a44b12b-9ef3-4239-87e8-e0cbdae-24',
-        key: 'cleaned_data',
-        iter: 0,
-        tree: '27ec4218-34c8-4315-a053-236e326ed645',
-        labels: {
-          'my-key': 'my-value',
-          v3io_user: 'admin',
-          owner: 'admin',
-          type: 'dataset',
-          'mlrun/app-name': 'monitorAppV1'
-        },
-        updated: '2022-07-18T14:20:04.121Z',
-        tag: 'latest',
-        created: '2022-07-18T14:20:04.121Z',
-        target_path: 'path',
-        size: null,
-        db_key: 'cleaned_data',
-        producer: {
-          kind: 'api',
-          uri: 'localhost:3000'
-        },
-        sources: [],
-        status: {}
-      }
-    ],
-    []
-  )
-  const { monitoringApplication } = useSelector(store => store.monitoringApplicationsStore)
+  const { artifacts } = useSelector(store => store.artifactsStore)
+  const { monitoringApplication, loading } = useSelector(store => store.monitoringApplicationsStore)
   const params = useParams()
 
   const artifactsTable = useMemo(() => {
-    return generateArtifactsTableContent(artifactsMock)
-  }, [artifactsMock])
+    return generateArtifactsTableContent(artifacts)
+  }, [artifacts])
   const resultsTable = useMemo(() => {
     return generateResultsTableContent(monitoringApplication?.stats?.metrics)
   }, [monitoringApplication?.stats?.metrics])
@@ -157,7 +54,7 @@ const MonitoringApplication = () => {
     return generateMetricsTableContent(monitoringApplication?.stats?.metrics)
   }, [monitoringApplication?.stats?.metrics])
   const shardsTable = useMemo(() => {
-    return generateShardsStatusTableContent(monitoringApplication?.stats?.shards)
+    return generateShardsStatusTableContent(monitoringApplication?.stats?.stream_stats)
   }, [monitoringApplication])
 
   useEffect(() => {
@@ -165,7 +62,7 @@ const MonitoringApplication = () => {
       dispatch(removeArtifacts())
       dispatch(removeMonitoringApplication())
     }
-  }, [dispatch])
+  }, [dispatch, params.projectName])
 
   return (
     <div className="monitoring-apps">
@@ -174,14 +71,14 @@ const MonitoringApplication = () => {
           <div className="section-item_title">
             <span>Artifacts</span>
           </div>
-          {artifactsMock.length === 0 ? (
+          {artifacts.length === 0 && !loading ? (
             <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
           ) : (
             <>
-              <SectionTable params={params} table={artifactsTable} />
+              <SectionTable loading={loading} params={params} table={artifactsTable} />
               <Link
                 className="link monitoring-app__see-all-link"
-                to={`/projects/${params.projectName}/${FILES_PAGE}?${NAME_FILTER}=${params.name}`}
+                to={`/projects/${params.projectName}/${FILES_PAGE}?${LABELS_FILTER}=mlrun/app-name=${params.name}`}
               >
                 See all
               </Link>
@@ -195,10 +92,10 @@ const MonitoringApplication = () => {
             <span>Results</span>
             <Tip text="This table displays the values of the last results captured by the monitoring application. If there are results for more than one model endpoint at the same time, the table displays only one of those." />
           </div>
-          {resultsTable.body.length === 0 ? (
+          {resultsTable.body.length === 0 && !loading ? (
             <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
           ) : (
-            <SectionTable params={params} table={resultsTable} />
+            <SectionTable loading={loading} params={params} table={resultsTable} />
           )}
         </div>
         <div className="monitoring-app__section-item">
@@ -206,10 +103,10 @@ const MonitoringApplication = () => {
             <span>Metrics</span>
             <Tip text="This table displays the values of the last metrics captured by the monitoring application. If there are metrics for more than one model endpoint at the same time, the table displays only one of those." />
           </div>
-          {metricsTable.body.length === 0 ? (
+          {metricsTable.body.length === 0 && !loading ? (
             <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
           ) : (
-            <SectionTable params={params} table={metricsTable} />
+            <SectionTable loading={loading} params={params} table={metricsTable} />
           )}
         </div>
       </div>
@@ -219,10 +116,10 @@ const MonitoringApplication = () => {
             <span>Shards/partitions status</span>
             <Tip text="This table displays the current status of each shard" />
           </div>
-          {shardsTable.body.length === 0 ? (
+          {shardsTable.body.length === 0 && !loading ? (
             <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
           ) : (
-            <SectionTable params={params} table={shardsTable} />
+            <SectionTable loading={loading} params={params} table={shardsTable} />
           )}
         </div>
       </div>

@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { memo, useMemo, useRef, useState } from 'react'
-import moment from 'moment'
 import classNames from 'classnames'
 
 import MlChart from '../../../common/MlChart/MlChart'
@@ -33,27 +32,10 @@ import { getMEPsWithDetectionChartConfig } from '../../../utils/getChartConfig'
 import { groupDataToBins } from './monitoringApplications.util'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 import { DATES_FILTER } from '../../../constants'
-
-// TODO: remove and use real data
-const generateDummyData = (startTime, endTime, setIsLoadingAPI) => {
-  const data = []
-  const endDate = moment(endTime)
-  setIsLoadingAPI(true)
-  for (const startDate = moment(startTime); startDate < endDate; startDate.add(1, 'minute')) {
-    data.push([
-      startDate.utc().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
-      // Math.floor(Math.random() * 11)
-      1
-    ])
-  }
-  setIsLoadingAPI(false)
-
-  return data
-}
+import { useSelector } from 'react-redux'
 
 const MEPsWithDetections = () => {
   const [isLoading, setIsLoading] = useState(true)
-  const [isLoadingAPI, setIsLoadingAPI] = useState(true) // TODO: remove and use from redux
   const chartYAxisRef = useRef()
   const chartWrapperRef = useRef()
   const filtersConfig = useMemo(() => getFiltersConfig(), [])
@@ -61,10 +43,10 @@ const MEPsWithDetections = () => {
   const startTime = useMemo(() => filters[DATES_FILTER].value[0].getTime(), [filters])
   const endTime = useMemo(() => (filters[DATES_FILTER].value[1] || new Date()).getTime(), [filters])
   const barConfig = useMemo(() => getMEPsWithDetectionChartConfig(), [])
-  const data = useMemo(
-    () => generateDummyData(startTime, endTime, setIsLoadingAPI),
-    [endTime, startTime]
-  ) // TODO: remove and use real data
+  const {
+    endpointsWithDetections: { data: endpointsWithDetectionsData, loading }
+  } = useSelector(store => store.monitoringApplicationsStore)
+
   const renderPlugin = useMemo(() => {
     let savedCopyWidth = 0
     let savedCopyHeight = 0
@@ -111,7 +93,11 @@ const MEPsWithDetections = () => {
   }, [])
 
   const barChartConfig = useMemo(() => {
-    const { labels, values, dates } = groupDataToBins(data, startTime, endTime)
+    const { labels, values, dates } = groupDataToBins(
+      endpointsWithDetectionsData,
+      startTime,
+      endTime
+    )
 
     return {
       ...barConfig,
@@ -144,33 +130,32 @@ const MEPsWithDetections = () => {
       },
       plugins: [renderPlugin]
     }
-  }, [barConfig, data, endTime, renderPlugin, startTime])
+  }, [barConfig, endTime, endpointsWithDetectionsData, renderPlugin, startTime])
 
-  return data?.length ? (
+  return (
     <div className="monitoring-app__section-item">
       <div className="section-item_title">
         <span>Model Endpoints with suspected/detected issue</span>
         <Tip text="This chart displays the number of model endpoints that had at least one detected issue, in any monitoring application, in the relevant time period" />
       </div>
-      <div className="section-item_chart-wrapper">
-        <div className="section-item_chart">
-          {(isLoading || isLoadingAPI) && <Loader section secondary />}
-          <div
-            className={classNames(
-              'section-item_chart-area',
-              (isLoading || isLoadingAPI) && 'loading'
-            )}
-          >
-            <canvas id="chart-y-axis" ref={chartYAxisRef} width={0} height={0} />
-            <div className="section-item_ml-chart-wrapper" ref={chartWrapperRef}>
-              <MlChart config={barChartConfig} />
+      {endpointsWithDetectionsData?.length === 0 && !(isLoading || loading) ? (
+        <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
+      ) : (
+        <div className="section-item_chart-wrapper">
+          <div className="section-item_chart">
+            {(isLoading || loading) && <Loader section secondary />}
+            <div
+              className={classNames('section-item_chart-area', (isLoading || loading) && 'loading')}
+            >
+              <canvas id="chart-y-axis" ref={chartYAxisRef} width={0} height={0} />
+              <div className="section-item_ml-chart-wrapper" ref={chartWrapperRef}>
+                <MlChart config={barChartConfig} />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
-  ) : (
-    <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
   )
 }
 

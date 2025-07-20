@@ -47,7 +47,7 @@ const tabSelector = {
 const actionMenuStructure = {
   root: '.actions-menu__container',
   menuElements: {
-    open_button: 'button',
+    open_button: '[data-testid="actions-menu"]',
     options: '.actions-menu__body .actions-menu__option'
   }
 }

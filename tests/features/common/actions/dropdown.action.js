@@ -102,13 +102,32 @@ export const checkDropdownContainsOptions = async (driver, dropdown, values) => 
         notPresent.push(option)
       }
     }
+
+    let extraPresent = []
+    for (let option of options) {
+      if (values.every(item => item !== option)) {
+        extraPresent.push(option)
+      }
+    }
+
     expect(notPresent.length).equal(
       0,
       '\nOptions not present: ' +
         notPresent +
         '\noptions: ' +
         options +
-        '\nconst: ' +
+        '\nexpected: ' +
+        values +
+        '\n'
+    )
+
+    expect(extraPresent.length).equal(
+      0,
+      '\nExtra unexpected options: ' +
+        extraPresent +
+        '\noptions: ' +
+        options +
+        '\nexpected: ' +
         values +
         '\n'
     )

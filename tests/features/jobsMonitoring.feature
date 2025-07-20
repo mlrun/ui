@@ -58,7 +58,7 @@ Feature: Jobs Monitoring Page
         Then verify "Jobs" tab is active in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Jobs_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Workflows_Tab" wizard selected option value "Any time"
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
-        Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "3 items selected"
+        Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "4 items selected"
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         And wait load page
         Then click on "Status_Filter_Element" element on "FilterBy_Popup" wizard
@@ -66,6 +66,7 @@ Feature: Jobs Monitoring Page
         Then "Status_Aborting_Checkbox" element should be checked on "FilterBy_Popup" wizard
         Then "Status_Jobs_Running_Checkbox" element should be checked on "FilterBy_Popup" wizard
         Then "Status_Pending_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Status_Pending_retry_Checkbox" element should be checked on "FilterBy_Popup" wizard
         Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
         Then click on breadcrumbs "projectsPage" label on "commonPagesHeader" wizard
         And wait load page

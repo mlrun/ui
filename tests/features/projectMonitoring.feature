@@ -674,13 +674,27 @@ Feature: Project Monitoring Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on cell with value "Running jobs" in "name" column in "Jobs_Info_Card_Statistics" table on "Project" wizard
+        Then click on cell with value "Running" in "name" column in "Jobs_Info_Card_Statistics" table on "Project" wizard
         And wait load page
         Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Name_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Any time"
         Then verify "Table_FilterBy_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
+        Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "4 items selected"
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        And wait load page
+        Then click on "Status_Filter_Element" element on "FilterBy_Popup" wizard
+        Then "Status_All_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Status_Aborting_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Status_Jobs_Running_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Status_Pending_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Status_Pending_retry_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Status_Aborted_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Status_Jobs_Error_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Status_Jobs_Completed_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
         Then verify "Batch_Run_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then "Batch_Run_Button" element on "Jobs_Monitor_Tab" should contains "Batch run" value
         Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab" wizard
@@ -688,8 +702,11 @@ Feature: Project Monitoring Page
         Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
+        Then navigate back
+        And wait load page
+        Then click on cell with value "Failed" in "name" column in "Jobs_Info_Card_Statistics" table on "Project" wizard
+        And wait load page
         
-
     @MLPM
     @passive
     @smoke

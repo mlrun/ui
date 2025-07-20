@@ -627,6 +627,7 @@ Feature: Jobs and workflows
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
+        And wait load page
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
@@ -671,6 +672,7 @@ Feature: Jobs and workflows
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And wait load page
         And wait load page
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
@@ -749,7 +751,7 @@ Feature: Jobs and workflows
         Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
         Then "Title" element on "Modal_Transition_Popup" should contains "aggregate" value
         Then verify "Data_Status" element visibility on "Modal_Transition_Popup" wizard
-        Then "Data_Status" element on "Modal_Transition_Popup" should contains "Nov 25, 2021, 04:20:00 PM" value
+        Then "Data_Status" element on "Modal_Transition_Popup" should contains "Nov 25, 2021, 05:20:00 PM" value
         Then verify "State_Icon" element visibility on "Modal_Transition_Popup" wizard
         Then verify "State_Icon" element on "Modal_Transition_Popup" wizard should display hover tooltip "ML_Function_Info_Pane"."Initialized_State"
         Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
