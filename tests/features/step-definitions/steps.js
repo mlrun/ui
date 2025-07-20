@@ -144,10 +144,10 @@ When('turn on demo mode with query params {string}', async function(state) {
   await navigateToPage(this.driver, `${url}${state === 'true' ? '&' : '?'}mode=demo`)
 })
 
-When('turn on staging mode', async function() {
+When('turn on staging mode with query params {string}', async function(state) {
   const url = await this.driver.getCurrentUrl()
 
-  await navigateToPage(this.driver, `${url}?mode=staging`)
+  await navigateToPage(this.driver, `${url}${state === 'true' ? '&' : '?'}mode=staging`)
 })
 
 Then('turn Off MLRun CE mode', async function() {
@@ -1106,6 +1106,18 @@ Then(
       this.driver,
       pageObjects[wizard][accordion][inputField],
       pageObjects['commonPagesHeader']['Common_Tolltip'],
+      pageObjectsConsts[constStorage][constValue]
+    )
+  }
+)
+
+Then(
+  'verify {string} element in {string} on {string} wizard should display hover hint {string}.{string}',
+  async function(inputField, accordion, wizard, constStorage, constValue) {
+    await checkComponentHintTextWithHover(
+      this.driver,
+      pageObjects[wizard][accordion][inputField],
+      pageObjects['commonPagesHeader']['Common_Hint'],
       pageObjectsConsts[constStorage][constValue]
     )
   }
