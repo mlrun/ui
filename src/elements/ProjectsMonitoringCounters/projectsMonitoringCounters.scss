@@ -12,7 +12,7 @@
 .card__small-container {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
   justify-content: space-between;
 
   @media (max-width: 1250px) {
@@ -41,6 +41,10 @@
     }
 
     .stats {
+      &__failed {
+        color: colors.$ceriseRed;
+      }
+
       &__subtitle {
         display: inline-block;
         margin: 0;
@@ -86,10 +90,31 @@
         }
       }
 
+      &-icon {
+        flex: 0 1 12px;
+
+        & * {
+          fill: colors.$spunPearl;
+        }
+      }
+
+      & *:not(:last-child) {
+        margin-right: 5px;
+      }
+
       &__link {
+        cursor: pointer;
+
         &:hover {
-          * {
+          *:not(.stats__failed) {
             @include counterLinkHover;
+          }
+
+          .stats__failed {
+            color: colors.$amaranth;
+            text-decoration: underline;
+            text-underline-offset: 1px;
+            text-decoration-thickness: 1px;
           }
         }
       }
@@ -123,6 +148,10 @@
       color: colors.$topaz;
       font-size: 0.75rem;
 
+      @media (max-width: 1250px) {
+        display: none;
+      }
+
       & *:not(:last-child) {
         margin-right: 5px;
       }
@@ -154,6 +183,44 @@
   }
 }
 
+.monitoring-stats.application-card {
+  .stats {
+    &__counter_header {
+      display: none;
+
+      @media (max-width: 1250px) {
+        display: flex;
+      }
+    }
+
+    &__container {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+
+    &__counter {
+      font-weight: 600;
+      font-size: 26px;
+    }
+
+    &__link {
+      &:hover {
+        @include counterLinkHover;
+      }
+    }
+
+    &__label {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      color: colors.$topaz;
+      font-size: 12px;
+    }
+  }
+}
 
 .card-popup {
   .pop-up-dialog {
@@ -190,37 +257,47 @@
 main.unpinned {
   .projects-monitoring-stats {
     .card__small-container {
-    @media (max-width: 1250px) {
-      display: flex;
-      flex-direction: column;
-    }
-
-    @media (max-width: 1100px) {
-      display: contents;
-      flex-direction: row;
-    }
-  }
-
-  .monitoring-stats {
-    .stats__details {
-      @media (max-width: 1250px) {
-        display: block;
-      }
-
-      @media (max-width: 1100px) {
-        display: none;
-      }
-    }
-
-    .project-card__info {
       @media (max-width: 1250px) {
         display: flex;
+        flex-direction: column;
       }
 
       @media (max-width: 1100px) {
-        display: none;
+        display: contents;
+        flex-direction: row;
       }
     }
-  }
+
+    .monitoring-stats {
+      .stats__details {
+        @media (max-width: 1250px) {
+          display: block;
+        }
+
+        @media (max-width: 1100px) {
+          display: none;
+        }
+      }
+
+      .project-card__info {
+        @media (max-width: 1250px) {
+          display: flex;
+        }
+
+        @media (max-width: 1100px) {
+          display: none;
+        }
+      }
+
+      &.application-card {
+        .stats__counter_header {
+          display: none;
+
+          @media (max-width: 1100px) {
+            display: flex;
+          }
+        }
+      }
+    }
   }
 }

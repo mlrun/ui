@@ -14,11 +14,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { Loader } from 'igz-controls/components'
+import { Loader, PopUpDialog } from 'igz-controls/components'
 
 import { APPLICATION } from '../../constants'
 import StatsCard from '../../common/StatsCard/StatsCard'
@@ -27,38 +27,114 @@ import { generateMonitoringStats } from '../../utils/generateMonitoringData'
 import './projectsMonitoringCounters.scss'
 
 const ApplicationCounter = () => {
-  const projectStore = useSelector(store => store.projectStore)
+  const anchorRef = useRef(null)
+  const detailsRef = useRef(null)
+  const [showPopup, setShowPopup] = useState(false)
   const { projectName } = useParams()
   const navigate = useNavigate()
+  const projectStore = useSelector(store => store.projectStore)
 
-  const applicationData = projectName
-    ? projectStore.projectSummary.data?.application_count || 0
-    : projectStore.jobsMonitoringData?.application?.total || 0
+  const handleOpenPopUp = () => {
+    const isHidden = !detailsRef.current?.offsetParent
+    setShowPopup(isHidden)
+  }
 
-  const data = useMemo(
+  const handleClosePopUp = () => {
+    setShowPopup(false)
+  }
+
+  const applicationData = useMemo(() => {
+    if (projectName) {
+      const succeeded = projectStore.projectSummary.data?.running_model_monitoring_functions || 0
+      const failed = projectStore.projectSummary.data?.failed_model_monitoring_functions || 0
+
+      return {
+        succeeded,
+        failed,
+        total: succeeded + failed
+      }
+    }
+    return (
+      projectStore.jobsMonitoringData?.monitoring_app || {
+        succeeded: 0,
+        failed: 0,
+        total: 0
+      }
+    )
+  }, [
+    projectName,
+    projectStore.projectSummary.data?.running_model_monitoring_functions,
+    projectStore.projectSummary.data?.failed_model_monitoring_functions,
+    projectStore.jobsMonitoringData?.monitoring_app
+  ])
+
+  const applicationStats = useMemo(
     () => generateMonitoringStats(applicationData, navigate, APPLICATION, projectName),
     [applicationData, navigate, projectName]
   )
 
   return (
-    <StatsCard className="monitoring-stats">
-      <StatsCard.Header title="Application"></StatsCard.Header>
-      <StatsCard.Row>
-        <div
-          className={data?.application?.className}
-          data-testid="application_total_counter"
-          onClick={data?.application?.link}
-        >
-          <div className="stats__counter">
-            {projectStore?.projectsSummary?.loading ? (
-              <Loader section small secondary />
-            ) : (
-              data?.application?.counter?.toLocaleString()
-            )}
+    <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
+      <StatsCard className="monitoring-stats application-card">
+        <div ref={anchorRef}>
+          <StatsCard.Header title="Monitoring App"></StatsCard.Header>
+          <StatsCard.Row>
+            <div
+              className={applicationStats.total.className}
+              data-testid="application_total_counter"
+              onClick={applicationStats?.total?.link}
+            >
+              <div className="stats__counter">
+                {projectStore.projectsSummary.loading ? (
+                  <Loader section small secondary />
+                ) : (
+                  applicationStats?.total?.counter?.toLocaleString()
+                )}
+              </div>
+            </div>
+          </StatsCard.Row>
+          <div ref={detailsRef} className="stats__details">
+            <StatsCard.Row>
+              {applicationStats.counters.map(({ counter, className, label, statusClass, link }) => (
+                <div key={`${statusClass}-app`} className="stats__container">
+                  <div className={className} onClick={link}>
+                    {projectStore?.projectsSummary?.loading ? (
+                      <Loader section small secondary />
+                    ) : (
+                      counter.toLocaleString()
+                    )}
+                  </div>
+                  <div className="stats__label">
+                    {label}
+                    <i className={`state-${statusClass}`} />
+                  </div>
+                </div>
+              ))}
+            </StatsCard.Row>
           </div>
+          {showPopup && (
+            <PopUpDialog
+              className="card-popup"
+              customPosition={{
+                element: anchorRef,
+                position: 'bottom-right'
+              }}
+              headerIsHidden
+            >
+              <div className="card-popup_text">
+                {applicationStats?.counters?.map(({ link, counter, label, popUpClassName }) => (
+                  <div onClick={link} key={label}>
+                    <span className={popUpClassName}>
+                      {label}: {counter}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </PopUpDialog>
+          )}
         </div>
-      </StatsCard.Row>
-    </StatsCard>
+      </StatsCard>
+    </div>
   )
 }
 
