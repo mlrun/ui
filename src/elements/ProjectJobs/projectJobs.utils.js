@@ -35,7 +35,7 @@ export const getJobsStatistics = (projectCounter, projectName) => {
           : 'running',
       status: 'running',
       link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`,
-      counterTooltip: 'Aborting, Pending, Running',
+      counterTooltip: 'Aborting, Pending, Pending retry, Running',
       loading: projectCounter.loading
     },
     failed: {
