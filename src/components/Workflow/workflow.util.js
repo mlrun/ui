@@ -287,7 +287,7 @@ export const handleTerminateWorkflow = async (job, dispatch) => {
       setNotification({
         status: success ? 200 : 400,
         id: Math.random(),
-        message: `Workflow "${job.name}" ${success ? 'terminated successfully' : 'failed to terminate'}`
+        message: `Workflow "${job.name}" ${success ? 'terminated successfully' : 'was not terminated since it already reached its end state'}`
       })
     )
   } catch {
@@ -295,7 +295,7 @@ export const handleTerminateWorkflow = async (job, dispatch) => {
       setNotification({
         status: 400,
         id: Math.random(),
-        message: `Workflow "${job.name} failed to terminate`
+        message: `Workflow "${job.name} was not terminated since it already reached its end state`
       })
     )
   }
