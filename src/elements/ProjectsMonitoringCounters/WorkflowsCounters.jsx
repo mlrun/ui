@@ -102,7 +102,7 @@ const WorkflowsCounters = () => {
           <StatsCard.Row>
             <div
               className="stats__link stats__counter_header"
-              data-testid="scheduled_total_counter"
+              data-testid="wf_total_counter"
               onClick={workflowsStats?.total?.link}
             >
               <div className="stats__counter">

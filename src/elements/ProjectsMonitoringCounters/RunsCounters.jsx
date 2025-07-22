@@ -86,13 +86,13 @@ const RunCounter = () => {
             {jobStats?.counters?.map(
               ({ counter, className, counterClassName, label, link, statusClass, tooltip }) => {
                 return (
-                  <StatsCard.Row key={`${statusClass}-jobs`}>
+                  <StatsCard.Row key={`${statusClass}-runs`}>
                     <div
                       className={className}
                       onClick={link}
-                      data-testid={`wf_${statusClass}_counter`}
+                      data-testid={`run_${statusClass}_counter`}
                     >
-                      <div data-testid={`wf_${statusClass}_status`} className="stats__status">
+                      <div data-testid={`run_${statusClass}_status`} className="stats__status">
                         <Tooltip textShow template={<TextTooltipTemplate text={tooltip} />}>
                           <h6 className="stats__subtitle">{label}</h6>
                           <i className={`state-${statusClass}`} />

@@ -52,7 +52,7 @@ const JobsCounters = () => {
           <div className="project-card__info">
             <div
               className="stats__link"
-              data-testid="scheduled_total_counter"
+              data-testid="jobs_total_counter"
               onClick={jobStats.total.link}
             >
               <span className="stats__subtitle">Total</span>
