@@ -19,15 +19,15 @@ such restriction.
 */
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { isEmpty } from 'lodash'
+import { capitalize, isEmpty } from 'lodash'
 
-import { CopyToClipboard, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import ContentMenu from '../../../elements/ContentMenu/ContentMenu'
 import SearchNavigator from '../../../common/SearchNavigator/SearchNavigator'
 
 import { ARGUMENTS_TAB } from '../../../constants'
 
-import Copy from 'igz-controls/images/copy-to-clipboard-icon.svg?react'
+import ExpandableText from '../../../common/ExpandableText/ExpandableText'
 
 const PromptTab = ({
   handleTabChange,
@@ -39,47 +39,59 @@ const PromptTab = ({
 }) => {
   const [promptTemplate, setPromptTemplate] = useState([])
   const [searchResult, setSearchResult] = useState('')
-  const [rawPromptString, setRawPromptString] = useState('')
+  const [forceExpandAll, setForceExpandAll] = useState(false)
 
   useEffect(() => {
-    if (!isEmpty(selectedItem.prompt_string) && !isEmpty(selectedItem.prompt_legend)) {
+    if (Array.isArray(selectedItem.prompt_template) && !isEmpty(selectedItem.prompt_legend)) {
       const legendMap = { ...selectedItem.prompt_legend }
-      const regex = new RegExp(`\\b(${Object.keys(selectedItem.prompt_legend).join('|')})\\b`, 'g')
+      const regex = new RegExp(`\\b(${Object.keys(legendMap).join('|')})\\b`, 'g')
 
-      const jsxContent = selectedItem.prompt_string.split(regex).map((part, index) => {
-        if (legendMap[part]) {
-          const currentArgument = selectedItem.prompt_legend[part]
+      const jsxContent = selectedItem.prompt_template.map((item, idx) => {
+        const parts = item.content.split(regex).map((part, i) => {
+          if (legendMap[part]) {
+            const currentArgument = legendMap[part]
 
-          return (
-            <Tooltip
-              key={index}
-              template={<TextTooltipTemplate text={legendMap[part]?.des} />}
-              textShow
-            >
-              <span
-                key={index}
-                style={{ color: 'blue', cursor: 'pointer' }}
-                onClick={() => {
-                  setSelectedArgument(currentArgument)
-                  setSelectedTab(ARGUMENTS_TAB)
-                }}
+            return (
+              <Tooltip
+                key={i}
+                template={<TextTooltipTemplate text={legendMap[part].description} />}
+                textShow
               >
-                {`{${part}}`}
-              </span>
-            </Tooltip>
-          )
-        }
+                <span
+                  style={{ color: 'blue', cursor: 'pointer' }}
+                  onClick={() => {
+                    setSelectedArgument(currentArgument)
+                    setSelectedTab(ARGUMENTS_TAB)
+                  }}
+                >
+                  {`{${part}}`}
+                </span>
+              </Tooltip>
+            )
+          }
 
-        return part
+          return part
+        })
+
+        return (
+          <div key={idx} className="prompt-tab__row">
+            <div className="prompt-tab__role">{capitalize(item.role)}</div>
+            <div className="prompt-tab__content">
+              <ExpandableText forceExpand={forceExpandAll}>{parts}</ExpandableText>
+            </div>
+          </div>
+        )
       })
 
       setPromptTemplate(jsxContent)
-      setRawPromptString(selectedItem.prompt_string)
-    } else if (!isEmpty(selectedItem.prompt_string)) {
-      setPromptTemplate([selectedItem.prompt_string])
-      setRawPromptString(selectedItem.prompt_string)
     }
-  }, [selectedItem.prompt_string, selectedItem.prompt_legend, setSelectedArgument, setSelectedTab])
+  }, [
+    selectedItem.prompt_legend,
+    setSelectedArgument,
+    setSelectedTab,
+    forceExpandAll,
+    selectedItem.prompt_template
+  ])
 
   return (
     <div className="prompt-tab">
@@ -87,21 +99,17 @@ const PromptTab = ({
         <ContentMenu activeTab={selectedTab} fontSize="sm" onClick={handleTabChange} tabs={tabs} />
         <SearchNavigator
           promptTemplate={promptTemplate}
-          rawPromptString={rawPromptString}
           setSearchResult={setSearchResult}
+          searchOnChange={() => setForceExpandAll(true)}
         />
-        <CopyToClipboard
-          className="prompt-tab__copy-btn-wrapper"
-          textToCopy={selectedItem.prompt_string}
-          tooltipText="Copy prompt"
-        >
-          <span className="prompt-tab__copy-btn">
-            <Copy />
-            <span>Copy prompt</span>
-          </span>
-        </CopyToClipboard>
       </div>
-      <div className="prompt-tab__template">{searchResult || promptTemplate}</div>
+      <div className="prompt-tab__table">
+        <div className="prompt-tab__table-header prompt-tab__row">
+          <div className="prompt-tab__role">Role</div>
+          <div className="prompt-tab__content">Content</div>
+        </div>
+        {searchResult || promptTemplate}
+      </div>
     </div>
   )
 }
