@@ -144,7 +144,7 @@ export const generateActionsMenu = (
       ]
     ]
   } else {
-    const runningStates = ['running', 'pending']
+    const runningStates = ['running', 'pending', 'terminating']
 
     return [
       [
