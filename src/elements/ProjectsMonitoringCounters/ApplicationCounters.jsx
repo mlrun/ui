@@ -74,10 +74,10 @@ const ApplicationCounter = () => {
   )
 
   return (
-    <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
-      <StatsCard className="monitoring-stats application-card">
-        <div ref={anchorRef}>
-          <StatsCard.Header title="Monitoring App"></StatsCard.Header>
+    <StatsCard className="monitoring-stats application-card">
+      <div ref={anchorRef}>
+        <StatsCard.Header title="Monitoring App"></StatsCard.Header>
+        <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
           <StatsCard.Row>
             <div
               className={applicationStats.total.className}
@@ -95,21 +95,23 @@ const ApplicationCounter = () => {
           </StatsCard.Row>
           <div ref={detailsRef} className="stats__details">
             <StatsCard.Row>
-              {applicationStats.counters.map(({ counter, className, label, statusClass, link }) => (
-                <div key={`${statusClass}-app`} className="stats__container">
-                  <div className={className} onClick={link}>
-                    {projectStore?.projectsSummary?.loading ? (
-                      <Loader section small secondary />
-                    ) : (
-                      counter.toLocaleString()
-                    )}
+              {applicationStats.counters.map(
+                ({ counter, className, label, statusClass, link, counterClassName }) => (
+                  <div key={`${statusClass}-app`} className="stats__container">
+                    <div className={className} onClick={link}>
+                      {projectStore?.projectsSummary?.loading ? (
+                        <Loader section small secondary />
+                      ) : (
+                        <span className={counterClassName}> {counter.toLocaleString()}</span>
+                      )}
+                    </div>
+                    <div className="stats__label">
+                      {label}
+                      <i className={`state-${statusClass}`} />
+                    </div>
                   </div>
-                  <div className="stats__label">
-                    {label}
-                    <i className={`state-${statusClass}`} />
-                  </div>
-                </div>
-              ))}
+                )
+              )}
             </StatsCard.Row>
           </div>
           {showPopup && (
@@ -122,19 +124,22 @@ const ApplicationCounter = () => {
               headerIsHidden
             >
               <div className="card-popup_text">
-                {applicationStats?.counters?.map(({ link, counter, label, popUpClassName }) => (
-                  <div onClick={link} key={label}>
-                    <span className={popUpClassName}>
-                      {label}: {counter}
-                    </span>
-                  </div>
-                ))}
+                {applicationStats?.counters?.map(
+                  ({ link, counter, label, statusClass, popUpClassName }) => (
+                    <div onClick={link} key={label}>
+                      <i className={`state-${statusClass}`} />{' '}
+                      <span className={popUpClassName}>
+                        {label}: {counter}
+                      </span>
+                    </div>
+                  )
+                )}
               </div>
             </PopUpDialog>
           )}
         </div>
-      </StatsCard>
-    </div>
+      </div>
+    </StatsCard>
   )
 }
 
