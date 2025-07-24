@@ -95,23 +95,21 @@ const ApplicationCounter = () => {
           </StatsCard.Row>
           <div ref={detailsRef} className="stats__details">
             <StatsCard.Row>
-              {applicationStats.counters.map(
-                ({ counter, className, label, statusClass, link, counterClassName }) => (
-                  <div key={`${statusClass}-app`} className="stats__container">
-                    <div className={className} onClick={link}>
-                      {projectStore?.projectsSummary?.loading ? (
-                        <Loader section small secondary />
-                      ) : (
-                        <span className={counterClassName}> {counter.toLocaleString()}</span>
-                      )}
-                    </div>
-                    <div className="stats__label">
-                      {label}
-                      <i className={`state-${statusClass}`} />
-                    </div>
+              {applicationStats.counters.map(({ counter, className, label, statusClass, link }) => (
+                <div key={`${statusClass}-app`} className="stats__container">
+                  <div className={className} onClick={link}>
+                    {projectStore?.projectsSummary?.loading ? (
+                      <Loader section small secondary />
+                    ) : (
+                      counter.toLocaleString()
+                    )}
                   </div>
-                )
-              )}
+                  <div className="stats__label">
+                    {label}
+                    <i className={`state-${statusClass}`} />
+                  </div>
+                </div>
+              ))}
             </StatsCard.Row>
           </div>
           {showPopup && (

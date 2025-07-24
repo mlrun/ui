@@ -198,14 +198,13 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                   },
                   {
                     counter: data.failed || 0,
-                    className: classNames('stats__counter', projectName && 'stats__link'),
+                    className: classNames('stats__counter', projectName && 'stats__link', {
+                      stats__failed: data.failed > 0
+                    }),
                     link: () => navigateToTab(projectName, MONITORING_APP_PAGE),
                     statusClass: 'failed',
                     label: FAILED,
-                    popUpClassName: classNames({ 'card-popup_text_link': projectName }),
-                    counterClassName: classNames({
-                      stats__failed: data.failed > 0
-                    })
+                    popUpClassName: classNames({ 'card-popup_text_link': projectName })
                   }
                 ]
               }
