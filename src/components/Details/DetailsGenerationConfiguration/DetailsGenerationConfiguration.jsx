@@ -23,10 +23,12 @@ import { isEmpty } from 'lodash'
 
 import NoData from '../../../common/NoData/NoData'
 
+import './detailsGenerationConfiguration.scss'
+
 const DetailsGenerationConfiguration = ({ selectedItem }) => {
   return (
-    <div className="generstion-configuration-tab">
-      {Object.entries(selectedItem.generation_configuration || {}).map(([key, value]) => {
+    <div className="generation-configuration-tab">
+      {Object.entries(selectedItem.model_configuration || {}).map(([key, value]) => {
         return (
           <div className="generation-configuration-tab__row" key={key + value}>
             <div className="generation-configuration-tab__row-key">{key}</div>
@@ -34,7 +36,7 @@ const DetailsGenerationConfiguration = ({ selectedItem }) => {
           </div>
         )
       })}
-      {isEmpty(selectedItem.generation_configuration) && <NoData />}
+      {isEmpty(selectedItem.model_configuration) && <NoData />}
     </div>
   )
 }

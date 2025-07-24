@@ -24,6 +24,7 @@ import { isEmpty } from 'lodash'
 
 import ContentMenu from '../../../elements/ContentMenu/ContentMenu'
 import NoData from '../../../common/NoData/NoData'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 const ArgumentsTab = ({
   handleTabChange,
@@ -40,14 +41,18 @@ const ArgumentsTab = ({
       {Object.values(selectedItem.prompt_legend ?? {}).map(legend => {
         const rowClassNames = classNames(
           'arguments-tab__row',
-          selectedArgument.field + selectedArgument.des === legend.field + legend.des &&
-            'arguments-tab__row_selected'
+          selectedArgument.field + selectedArgument.description ===
+            legend.field + legend.description && 'arguments-tab__row_selected'
         )
 
         return (
-          <div className={rowClassNames} key={legend.field + legend.des}>
-            <div className="arguments-tab__row-key">{legend.field}</div>
-            <div className="arguments-tab__row-value">{legend.des}</div>
+          <div className={rowClassNames} key={legend.field + legend.description}>
+            <div className="arguments-tab__row-key">
+              <Tooltip template={<TextTooltipTemplate text={legend.field} />}>
+                {legend.field}
+              </Tooltip>
+            </div>
+            <div className="arguments-tab__row-value">{legend.description}</div>
           </div>
         )
       })}

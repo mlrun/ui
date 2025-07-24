@@ -24,14 +24,14 @@ import classnames from 'classnames'
 import Search from '../Search/Search'
 import { RoundedIcon } from 'igz-controls/components'
 
-import { highlightMatches } from './searchNavigator.util'
+import { countMatchesInTemplate, highlightMatches } from './searchNavigator.util'
 
 import Arrow from 'igz-controls/images/arrow.svg?react'
 import Close from 'igz-controls/images/close.svg?react'
 
 import './searchNavigator.scss'
 
-const SearchNavigator = ({ promptTemplate, rawPromptString, setSearchResult }) => {
+const SearchNavigator = ({ promptTemplate, setSearchResult, searchOnChange = null }) => {
   const [matchCount, setMatchCount] = useState(0)
   const [activeMatchIndex, setActiveMatchIndex] = useState(0)
   const [matches, setMatches] = useState([])
@@ -56,16 +56,17 @@ const SearchNavigator = ({ promptTemplate, rawPromptString, setSearchResult }) =
       }
 
       const regex = new RegExp(`(${value})`, 'gi')
-      const allMatches = [...rawPromptString.matchAll(regex)]
       const highlighted = highlightMatches(promptTemplate, regex, 0)
+      const jsxMatchCount = countMatchesInTemplate(highlighted, regex)
 
       setSearchResult(highlighted)
-      setMatchCount(allMatches.length)
-      setMatches(allMatches)
+      setMatchCount(jsxMatchCount)
+      setMatches(new Array(jsxMatchCount).fill(null))
       setActiveMatchIndex(0)
       setSearchValue(value)
+      searchOnChange?.()
     },
-    [clearResults, rawPromptString, promptTemplate, setSearchResult]
+    [promptTemplate, setSearchResult, searchOnChange, clearResults]
   )
 
   const highlightMatch = useCallback(
@@ -150,8 +151,8 @@ const SearchNavigator = ({ promptTemplate, rawPromptString, setSearchResult }) =
 
 SearchNavigator.propTypes = {
   promptTemplate: PropTypes.array.isRequired,
-  rawPromptString: PropTypes.string.isRequired,
-  setSearchResult: PropTypes.func.isRequired
+  setSearchResult: PropTypes.func.isRequired,
+  searchOnChange: PropTypes.func
 }
 
 export default SearchNavigator

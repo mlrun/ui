@@ -82,8 +82,7 @@ export const getLinks = (projectName, isDemoMode) => {
       icon: <LLMPrompts />,
       id: LLM_PROMPTS_PAGE,
       label: 'LLM prompts',
-      link: `${pathname}/${LLM_PROMPTS_PAGE}`,
-      hidden: !isDemoMode
+      link: `${pathname}/${LLM_PROMPTS_PAGE}`
     },
     {
       icon: <ArtifactsIcon />,
