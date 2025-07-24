@@ -99,15 +99,15 @@ const AlertsCounters = () => {
   )
 
   return (
-    <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
-      <StatsCard className={alertsCardClass}>
-        <div ref={anchorRef}>
-          <StatsCard.Header title="Alerts" icon={<Alerts />} iconClass="stats-card__title-icon">
-            <div className="project-card__info">
-              <ClockIcon className="project-card__info-icon" />
-              <span>{timeLabel}</span>
-            </div>
-          </StatsCard.Header>
+    <StatsCard className={alertsCardClass}>
+      <div ref={anchorRef}>
+        <StatsCard.Header title="Alerts" icon={<Alerts />} iconClass="stats-card__title-icon">
+          <div className="project-card__info">
+            <ClockIcon className="project-card__info-icon" />
+            <span>{timeLabel}</span>
+          </div>
+        </StatsCard.Header>
+        <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
           <StatsCard.Row>
             <div
               className="stats__counter_header stats__link"
@@ -197,8 +197,8 @@ const AlertsCounters = () => {
             </PopUpDialog>
           )}
         </div>
-      </StatsCard>
-    </div>
+      </div>
+    </StatsCard>
   )
 }
 

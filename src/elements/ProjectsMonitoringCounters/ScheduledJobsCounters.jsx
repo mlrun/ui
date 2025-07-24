@@ -87,15 +87,15 @@ const ScheduledJobsCounters = () => {
   )
 
   return (
-    <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
-      <StatsCard className="monitoring-stats">
-        <div ref={anchorRef}>
-          <StatsCard.Header title="Scheduled">
-            <div className="project-card__info">
-              <ClockIcon className="project-card__info-icon" />
-              <span>{timeLabel}</span>
-            </div>
-          </StatsCard.Header>
+    <StatsCard className="monitoring-stats">
+      <div ref={anchorRef}>
+        <StatsCard.Header title="Scheduled">
+          <div className="project-card__info">
+            <ClockIcon className="project-card__info-icon" />
+            <span>{timeLabel}</span>
+          </div>
+        </StatsCard.Header>
+        <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
           <StatsCard.Row>
             <div
               className="stats__counter_header stats__link"
@@ -165,8 +165,8 @@ const ScheduledJobsCounters = () => {
             </PopUpDialog>
           )}
         </div>
-      </StatsCard>
-    </div>
+      </div>
+    </StatsCard>
   )
 }
 
