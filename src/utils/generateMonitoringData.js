@@ -76,7 +76,8 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
               }),
             statusClass: 'running',
             tooltip: 'Aborting, Pending, Pending retry, Running',
-            label: IN_PROCESS
+            label: IN_PROCESS,
+            counterClassName: 'stats__counter'
           },
           {
             counter: data.failed || 0,
@@ -85,7 +86,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
             statusClass: 'failed',
             tooltip: 'Aborted, Error',
             label: FAILED,
-            counterClassName: classNames({
+            counterClassName: classNames('stats__counter', {
               stats__failed: data.failed > 0
             })
           },
@@ -95,7 +96,8 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
             link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: ['completed'] }),
             statusClass: 'completed',
             tooltip: 'Completed',
-            label: SUCCEEDED
+            label: SUCCEEDED,
+            counterClassName: 'stats__counter'
           }
         ]
       }
@@ -116,7 +118,8 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
               className: classNames('stats__link', 'stats__line'),
               statusClass: 'running',
               tooltip: 'Running, Terminating',
-              label: IN_PROCESS
+              label: IN_PROCESS,
+              counterClassName: 'stats__counter'
             },
             {
               counter: data.failed || 0,
@@ -126,7 +129,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
               statusClass: 'failed',
               tooltip: 'Error, Failed',
               label: FAILED,
-              counterClassName: classNames({
+              counterClassName: classNames('stats__counter', {
                 stats__failed: data.failed > 0
               })
             },
@@ -136,7 +139,8 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
               link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: ['completed'] }),
               statusClass: 'completed',
               tooltip: 'Completed',
-              label: SUCCEEDED
+              label: SUCCEEDED,
+              counterClassName: 'stats__counter'
             }
           ]
         }
