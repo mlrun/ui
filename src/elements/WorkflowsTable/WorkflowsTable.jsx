@@ -391,7 +391,7 @@ const WorkflowsTable = React.forwardRef(
 
     const onTerminateWorkflow = useCallback(
       job => {
-        handleTerminateWorkflow(job, dispatch)
+        handleTerminateWorkflow(job, dispatch).then(handleRetry())
       },
       [dispatch]
     )
@@ -444,6 +444,7 @@ const WorkflowsTable = React.forwardRef(
           confirmHandler: () => {
             onTerminateWorkflow(job)
             setConfirmData(null)
+            handleRetry()
           }
         })
       },
