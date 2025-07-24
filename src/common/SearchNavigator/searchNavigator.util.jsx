@@ -70,11 +70,29 @@ export function highlightMatches(template, regex, activeIndex = 0) {
         newChildren = children
       }
 
-      return React.cloneElement(element, { key: keyPrefix }, newChildren)
+      return React.cloneElement(element, { ...element.props, key: keyPrefix }, newChildren)
     }
 
     return element
   }
 
   return template.map((el, index) => processElement(el, `root-${index}`))
+}
+
+export function countMatchesInTemplate(template, regex) {
+  let count = 0
+
+  const traverse = node => {
+    if (typeof node === 'string') {
+      count += (node.match(regex) || []).length
+    } else if (Array.isArray(node)) {
+      node.forEach(child => traverse(child))
+    } else if (React.isValidElement(node)) {
+      traverse(node.props.children)
+    }
+  }
+
+  template.forEach(el => traverse(el))
+
+  return count
 }
