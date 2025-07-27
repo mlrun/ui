@@ -97,7 +97,11 @@ const ApplicationCounter = () => {
             <StatsCard.Row>
               {applicationStats.counters.map(({ counter, className, label, statusClass, link }) => (
                 <div key={`${statusClass}-app`} className="stats__container">
-                  <div className={className} onClick={link}>
+                  <div
+                    data-testid={`app_${statusClass}_counter`}
+                    className={className}
+                    onClick={link}
+                  >
                     {projectStore?.projectsSummary?.loading ? (
                       <Loader section small secondary />
                     ) : (
