@@ -27,7 +27,6 @@ import { RoundedIcon } from 'igz-controls/components'
 import { ALERTS_PAGE_PATH, NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
 import localStorageService from '../../utils/localStorageService'
 import { getLinks } from './navbar.util'
-import { useMode } from '../../hooks/mode.hook'
 
 import Alerts from 'igz-controls/images/navbar/alerts-icon.svg?react'
 import PinIcon from 'igz-controls/images/pin-icon.svg?react'
@@ -41,7 +40,6 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
   const [isPinned, setIsPinned] = useState(
     localStorageService.getStorageValue('mlrunUi.navbarStatic', false) === 'true'
   )
-  const { isDemoMode } = useMode()
 
   const navbarClasses = classNames(
     'navbar',
@@ -55,8 +53,8 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
   }
 
   const links = useMemo(() => {
-    return projectName ? getLinks(projectName, isDemoMode) : []
-  }, [isDemoMode, projectName])
+    return projectName ? getLinks(projectName) : []
+  }, [projectName])
 
   const handlePinClick = () => {
     setIsPinned(prevIsPinned => {
