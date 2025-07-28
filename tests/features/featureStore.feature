@@ -8,9 +8,9 @@ Feature: Feature Store Page
     Scenario: MLFS001 - Check all mandatory components on Feature Store tab
         Given open url
         And wait load page
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "fraud-demo2-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then verify breadcrumbs "project" label should be equal "default" value
+        Then verify breadcrumbs "project" label should be equal "fraud-demo2-admin" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
@@ -53,9 +53,9 @@ Feature: Feature Store Page
     Scenario: MLFS002 - Check all mandatory components on Features tab
         Given open url
         And wait load page
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "fraud-demo2-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then verify breadcrumbs "project" label should be equal "default" value
+        Then verify breadcrumbs "project" label should be equal "fraud-demo2-admin" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
@@ -101,9 +101,9 @@ Feature: Feature Store Page
     Scenario: MLFS003 - Check all mandatory components on Feature Vectors tab
         Given open url
         And wait load page
-        And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "fraud-demo2-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then verify breadcrumbs "project" label should be equal "fsdemo-admin" value
+        Then verify breadcrumbs "project" label should be equal "fraud-demo2-admin" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
@@ -127,6 +127,8 @@ Feature: Feature Store Page
         Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
         Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
+        Then select "project" with "fsdemo-admin" value in breadcrumbs menu
+        And wait load page
         Then verify "Feature_Vectors_Table" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
 
     @MLFS
@@ -381,7 +383,6 @@ Feature: Feature Store Page
     @passive
     @inProgress
     @smoke
-    # Moved analyses tabs to Demo mode in `1.8.0` ML-9059
     Scenario: MLFS011 - Check all mandatory components in Item infopane on Analysis tab table
         Given open url
         And wait load page
@@ -397,7 +398,7 @@ Feature: Feature Store Page
         Then select "Analysis" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         Then verify "Analysis" tab is active in "Info_Pane_Tab_Selector" on "Analysis_Info_Pane" wizard
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        Then verify "Info_Pane_Tab_Selector" on "Analysis_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Tab_List_Demo"
+        Then verify "Info_Pane_Tab_Selector" on "Analysis_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Tab_List"
         Then verify "Info_Pane_Tab_Selector" element visibility on "Analysis_Info_Pane" wizard
         Then verify "Header" element visibility on "Analysis_Info_Pane" wizard
         Then verify "Updated" element visibility on "Analysis_Info_Pane" wizard
