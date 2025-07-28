@@ -39,7 +39,7 @@ const AlertsCounters = () => {
   const { projectName: paramProjectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
-  const timeLabel = paramProjectName ? '24 hrs' : 'Past 24 hrs'
+  const timeLabel = paramProjectName ? '24 hrs' : 'Last 24 hrs'
 
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent
