@@ -277,6 +277,7 @@ export const generateActionsMenu = (
         icon: <Delete />,
         className: 'danger',
         hidden: isDetailsPopUp,
+        disabled: modelMin?.has_children,
         onClick: () =>
           openDeleteConfirmPopUp(
             'Delete model?',
@@ -300,6 +301,7 @@ export const generateActionsMenu = (
         label: 'Delete all versions',
         icon: <Delete />,
         hidden: isAllVersions || isDetailsPopUp,
+        disabled: modelMin?.has_children,
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(
