@@ -37,7 +37,7 @@ const WorkflowsCounters = () => {
   const { projectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
-  const timeLabel = projectName ? '24 hrs' : 'Past 24 hrs'
+  const timeLabel = projectName ? '24 hrs' : 'Last 24 hrs'
 
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent
