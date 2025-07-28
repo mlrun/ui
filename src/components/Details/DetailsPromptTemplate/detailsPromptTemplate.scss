@@ -11,16 +11,10 @@
       background-color: white;
     }
 
-    &__table-header {
-      font-weight: bold;
-    }
-
-    &__template {
-      max-height: 425px;
-      padding: 25px 15px;
-      overflow-y: auto;
-      border: borders.$primaryBorder;
-      border-radius: 4px;
+    &__table {
+      &-header {
+        font-weight: bold;
+      }
 
       .tooltip-wrapper {
         display: inline;
