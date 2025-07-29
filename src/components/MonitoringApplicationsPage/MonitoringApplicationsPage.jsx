@@ -52,7 +52,9 @@ const MonitoringApplicationsPage = () => {
   const [, setSearchParams] = useSearchParams()
 
   const refreshMonitoringApplications = useCallback(
-    filters => {
+    (filters, isFilterApply) => {
+      if (isFilterApply) return // avoid redundant request, we listen to filter changes in the useEffect
+
       dispatch(fetchMonitoringApplicationsSummary({ project: params.projectName }))
         .unwrap()
         .catch(error => {
@@ -83,7 +85,9 @@ const MonitoringApplicationsPage = () => {
   )
 
   const refreshMonitoringApplication = useCallback(
-    filters => {
+    (filters, isFilterApply) => {
+      if (isFilterApply) return // avoid redundant request, we listen to filter changes in the useEffect
+
       dispatch(
         fetchArtifacts({
           project: params.projectName,
