@@ -327,7 +327,7 @@ const JobWizard = ({
             setShowSchedule(state => !state)
           }
           resolveModal()
-          onSuccessRequest && onSuccessRequest(true)
+          onSuccessRequest && onSuccessRequest(true, isSchedule)
           dispatch(
             setNotification({
               status: 200,
@@ -337,7 +337,7 @@ const JobWizard = ({
           )
         })
         .then(() => {
-          return navigate(
+          navigate(
             `/projects/${params.projectName}/jobs/${isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB}`
           )
         })

@@ -33,6 +33,7 @@ import { FILTERS_CONFIG } from '../../types'
 import { JOB_KIND_WORKFLOW, JOBS_PAGE, PANEL_EDIT_MODE, SCHEDULE_TAB } from '../../constants'
 import { fetchFunctionTemplate } from '../../reducers/functionReducer'
 import { getErrorMsg, openPopUp, getScssVariableValue } from 'igz-controls/utils/common.util'
+import { getInitialFiltersByConfig } from '../../hooks/useFiltersFromSearchParams.hook'
 import { getJobFunctionData } from '../../components/Jobs/jobs.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { handleRunScheduledJob, removeScheduledJob } from '../../reducers/jobReducer'
@@ -88,6 +89,17 @@ const ScheduledJobsTable = ({
   const tableContent = useMemo(() => {
     return createTableContent()
   }, [createTableContent])
+
+
+  const refreshJobsWithFilters = useCallback(
+    (useInitialFilter, isSchedule) => {
+      if (isSchedule) {
+        const initialJobFilters = getInitialFiltersByConfig(filtersConfig)
+        refreshJobs(useInitialFilter ? initialJobFilters : filters)
+      }
+    },
+    [refreshJobs, filtersConfig, filters]
+  )
 
   const toggleConvertedYaml = useCallback(
     data => {
@@ -238,7 +250,7 @@ const ScheduledJobsTable = ({
         defaultData: jobWizardMode === PANEL_EDIT_MODE ? editableItem?.scheduled_object : {},
         mode: jobWizardMode,
         wizardTitle: jobWizardMode === PANEL_EDIT_MODE ? 'Edit job' : undefined,
-        onSuccessRequest: () => refreshJobs(filters)
+        onSuccessRequest: refreshJobsWithFilters
       })
 
       setJobWizardIsOpened(true)
@@ -246,9 +258,9 @@ const ScheduledJobsTable = ({
   }, [
     editableItem?.project,
     editableItem?.scheduled_object,
-    filters,
     jobWizardIsOpened,
     jobWizardMode,
+    refreshJobsWithFilters,
     params,
     refreshJobs,
     setEditableItem,
