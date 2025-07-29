@@ -30,7 +30,7 @@ import { setFilters } from '../../../reducers/filtersReducer'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 
 const ScheduledJobs = () => {
-  const [dataIsLoaded, setDataIsLoaded] = useState(false)
+  const [, setDataIsLoaded] = useState(false)
   const {
     abortControllerRef,
     initialTabData,
@@ -48,11 +48,15 @@ const ScheduledJobs = () => {
   )
 
   useEffect(() => {
-    if (!dataIsLoaded) {
-      refreshJobs(filters)
-      setDataIsLoaded(true)
-    }
-  }, [dataIsLoaded, filters, refreshJobs])
+    setDataIsLoaded((prevState) => {
+      if (!prevState) {
+        refreshJobs(filters)
+        return true
+      } else {
+        return prevState
+      }
+    })
+  }, [filters, refreshJobs])
 
   useEffect(() => {
     const abortControllerRefCurrent = abortControllerRef.current

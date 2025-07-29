@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 
 import ScheduledJobsTable from '../../../elements/ScheduledJobsTable/ScheduledJobsTable'
 import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
@@ -28,8 +27,7 @@ import { JOBS_MONITORING_SCHEDULED_TAB } from '../../../constants'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 
 const ScheduledMonitoring = () => {
-  const [dataIsLoaded, setDataIsLoaded] = useState(false)
-  const dispatch = useDispatch()
+  const [, setDataIsLoaded] = useState(false)
   const {
     initialTabData,
     requestErrorMessage,
@@ -45,11 +43,15 @@ const ScheduledMonitoring = () => {
   )
 
   useEffect(() => {
-    if (!dataIsLoaded) {
-      refreshScheduled(filters)
-      setDataIsLoaded(true)
-    }
-  }, [dataIsLoaded, dispatch, refreshScheduled, filters])
+    setDataIsLoaded((prevState) => {
+      if (!prevState) {
+        refreshScheduled(filters)
+        return true
+      } else {
+        return prevState
+      }
+    })
+  }, [filters, refreshScheduled])
 
   useEffect(() => {
     return () => {
