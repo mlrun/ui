@@ -35,7 +35,7 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
   )
 
   const generatedCountersContent = useMemo(() => {
-    if (!isNil(counterObject.value)) {
+    if (!isNil(counterObject.value) && isFinite(Number(counterObject.value))) {
       const displayValue = counterObject.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
       if (Number(counterObject.value) < MAX_VISIBLE_COUNTER) {

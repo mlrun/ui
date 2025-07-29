@@ -37,7 +37,7 @@ const WorkflowsCounters = () => {
   const { projectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
-  const timeLabel = projectName ? '24 hrs' : 'Past 24 hrs'
+  const timeLabel = projectName ? '24 hrs' : 'Last 24 hrs'
 
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent
@@ -90,19 +90,19 @@ const WorkflowsCounters = () => {
   )
 
   return (
-    <div onMouseLeave={handleClosePopUp} onMouseEnter={handleOpenPopUp}>
-      <StatsCard className="monitoring-stats">
-        <div ref={anchorRef}>
-          <StatsCard.Header title="Workflows">
-            <div className="project-card__info">
-              <ClockIcon className="project-card__info-icon" />
-              <span>{timeLabel}</span>
-            </div>
-          </StatsCard.Header>
+    <StatsCard className="monitoring-stats">
+      <div ref={anchorRef}>
+        <StatsCard.Header title="Workflows">
+          <div className="project-card__info">
+            <ClockIcon className="project-card__info-icon" />
+            <span>{timeLabel}</span>
+          </div>
+        </StatsCard.Header>
+        <div onMouseLeave={handleClosePopUp} onMouseEnter={handleOpenPopUp}>
           <StatsCard.Row>
             <div
               className="stats__link stats__counter_header"
-              data-testid="scheduled_total_counter"
+              data-testid="wf_total_counter"
               onClick={workflowsStats?.total?.link}
             >
               <div className="stats__counter">
@@ -167,8 +167,8 @@ const WorkflowsCounters = () => {
             </PopUpDialog>
           )}
         </div>
-      </StatsCard>
-    </div>
+      </div>
+    </StatsCard>
   )
 }
 

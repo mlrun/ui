@@ -77,12 +77,12 @@ const ArtifactsCounters = () => {
   )
 
   return (
-    <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
-      <StatsCard className="monitoring-stats">
-        <div ref={anchorRef}>
-          <StatsCard.Header title="Artifacts"></StatsCard.Header>
+    <StatsCard className="monitoring-stats">
+      <div ref={anchorRef}>
+        <StatsCard.Header title="Artifacts"></StatsCard.Header>
+        <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
           <StatsCard.Row>
-            <div className="stats__counter_header" data-testid="data_total_counter">
+            <div className="stats__counter_header" data-testid="artifacts_total_counter">
               <div className="stats__counter">
                 {projectStore.projectsSummary.loading ? (
                   <Loader section small secondary />
@@ -94,50 +94,58 @@ const ArtifactsCounters = () => {
           </StatsCard.Row>
           <div ref={detailsRef} className="stats__details">
             <StatsCard.Row>
-              <div className={data?.datasets?.className} onClick={data?.datasets?.link}>
+              <div
+                className={data?.datasets?.className}
+                data-testid="artifacts_datasets_counter"
+                onClick={data?.datasets?.link}
+              >
                 <h6 className="stats__subtitle">Datasets</h6>
-                <div className="stats__counter">
-                  {projectStore.projectsSummary.loading ? (
-                    <Loader section small secondary />
-                  ) : (
-                    <div className="stats__counter">{data?.datasets.counter?.toLocaleString()}</div>
-                  )}
-                </div>
-              </div>
-            </StatsCard.Row>
-            <StatsCard.Row>
-              <div className={data?.documents?.className} onClick={data?.documents?.link}>
-                <h6 className="stats__subtitle">Documents</h6>
-                <div className="stats__counter">
-                  {projectStore.projectsSummary.loading ? (
-                    <Loader section small secondary />
-                  ) : (
-                    <div className="stats__counter">
-                      {data?.documents?.counter?.toLocaleString()}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </StatsCard.Row>
-            <StatsCard.Row>
-              <div className={data.llm_prompt.className} onClick={data.llm_prompt.link}>
-                <h6 className="stats__subtitle">LLM Prompts</h6>
                 {projectStore.projectsSummary.loading ? (
                   <Loader section small secondary />
                 ) : (
-                  <div className="stats__counter">
-                    {data?.llm_prompt?.counter?.toLocaleString()}
-                  </div>
+                  data?.datasets.counter?.toLocaleString()
                 )}
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
-              <div className={data?.files?.className} onClick={data?.files?.link}>
+              <div
+                data-testid="artifacts_documents_counter"
+                className={data?.documents?.className}
+                onClick={data?.documents?.link}
+              >
+                <h6 className="stats__subtitle">Documents</h6>
+                {projectStore.projectsSummary.loading ? (
+                  <Loader section small secondary />
+                ) : (
+                  data?.documents?.counter?.toLocaleString()
+                )}
+              </div>
+            </StatsCard.Row>
+            <StatsCard.Row>
+              <div
+                data-testid="artifacts_llm_counter"
+                className={data.llm_prompt.className}
+                onClick={data.llm_prompt.link}
+              >
+                <h6 className="stats__subtitle">LLM Prompts</h6>
+                {projectStore.projectsSummary.loading ? (
+                  <Loader section small secondary />
+                ) : (
+                  data?.llm_prompt?.counter?.toLocaleString()
+                )}
+              </div>
+            </StatsCard.Row>
+            <StatsCard.Row>
+              <div
+                data-testid="artifacts_other_counter"
+                className={data?.files?.className}
+                onClick={data?.files?.link}
+              >
                 <h6 className="stats__subtitle">Other Artifacts</h6>
                 {projectStore.projectsSummary.loading ? (
                   <Loader section small secondary />
                 ) : (
-                  <div className="stats__counter">{data?.files?.counter?.toLocaleString()}</div>
+                  data?.files?.counter?.toLocaleString()
                 )}
               </div>
             </StatsCard.Row>
@@ -166,8 +174,8 @@ const ArtifactsCounters = () => {
             </PopUpDialog>
           )}
         </div>
-      </StatsCard>
-    </div>
+      </div>
+    </StatsCard>
   )
 }
 
