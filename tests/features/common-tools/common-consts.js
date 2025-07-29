@@ -19,19 +19,24 @@ such restriction.
 */
 export default {
   Project: {
-    Create_New_Options: [
-      'Batch run',
-      'Feature set',
+    Quick_Actions_Options: [
+      'Register dataset',
       'Register artifact',
-      'Register dataset'
-    ],
-    Create_New_Options_Demo: [
       'Batch run',
+      'Train model',
+      'Batch inference',
+      'Create real-time function'
+    ],
+    Quick_Actions_Options_Demo: [
+      'Register dataset',
+      'Register artifact',
+      'Batch run',
+      'Train model',
+      'Batch inference',
+      'Create real-time function',
       'ML function',
       'Feature set',
-      'Register artifact',
-      'Register model',
-      'Register dataset'
+      'Register model'
     ],
     Online_Status: 'online',
     Data_Collection_Description:
@@ -385,7 +390,7 @@ export default {
     Back_Button: 'Back',
     Expand_All_Button: 'Expand all',
     In_Process_Jobs: 'Aborting, Pending, Pending retry, Running',
-    Running_Tip: 'Running',
+    Running_Tip: 'Running, Terminating',
     Failed_Tip: 'Failed',
     Failed_Jobs: 'Aborted, Error',
     Failed_Worflows: 'Error, Failed',
@@ -535,7 +540,8 @@ export default {
     Commited_Offset: 'Total number of messages handled by the app',
     Endpoints_Tip: 'Model endpoints processed by the monitoring app during the selected time frame',
     Metrics_Tip: 'This table displays the values of the last metrics captured by the monitoring application. If there are metrics for more than one model endpoint at the same time, the table displays only one of those.',
-    Shards_Partitions_Status_Tip: 'This table displays the current status of each shard'
+    Shards_Partitions_Status_Tip: 'This table displays the current status of each shard',
+    Runs_Statistic_Section_Title_Tip: 'Number of Job runs, clicking on the counters navigates to jobs screen.'
   },
   Descriptions: {
     Archive_Project:
@@ -595,7 +601,9 @@ export default {
       'Labels:',
       'Log level:',
       'Output path:',
-      'Total iterations:'
+      'Total iterations:',
+      'Retry count:',
+      'Maximum retries:'
     ]
   },
   Jobs_Monitor_Tab: {
@@ -641,7 +649,7 @@ export default {
       'Pending',
       'Pending retry'
     ],
-    Workflows_Status_Filter_Options: ['All', 'Error', 'Failed', 'Running', 'Completed'],
+    Workflows_Status_Filter_Options: ['All', 'Error', 'Failed', 'Running', 'Completed', 'Terminating'],
     Jobs_Type_Filter_Options: [
       'All',
       'Job',
@@ -741,12 +749,18 @@ export default {
       /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
     Common_Message_Jobs_Monitoring_Status:
       /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Status: (.+?)"/,
+    Common_Message_Monitoring_Workflow:
+      /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}"/,
+    Common_Message_Monitoring_Workflow_Status:
+      /No data matches the filter: "Status: (.+?)"/,
     Common_Message_Jobs_Monitoring_Type:
       /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Type: (.+?)"/,
     Common_Message_Monitor_Jobs:
       /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}"/,
     Common_Message_Jobs_Monitoring_Scheduled:
       /No data matches the filter: "Scheduled at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
+    Common_Message_Scheduled_Type:
+      /No data matches the filter: "Type: (.+?)"/,
     Common_Message: 'No data matches the filter: "Version Tag: latest, Name: ccccc"',
     Common_Message_Feature: 'No data matches the filter: "Version Tag: latest"',
     Common_Message_Feature_Vector_Tab:
