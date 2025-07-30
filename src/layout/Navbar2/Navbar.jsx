@@ -157,17 +157,19 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
             (link, index) =>
               !link.hidden && (
                 <li className="nav-link" data-testid={`nav-link-${link.id}`} key={link.id}>
-                  <NavbarLink {...link} index={index} setSelectedIndex={setSelectedIndex} selectedIndex={selectedIndex} />
+                  {!link.hidden && <NavbarLink {...link} index={index} setSelectedIndex={setSelectedIndex} selectedIndex={selectedIndex} />}
                   {link.nestedLinks && (
                     <ul className="navbar-links navbar-links_nested">
                       {link.nestedLinks.map(nestedLink => (
-                        <li
-                          className="nav-link"
-                          data-testid={`nav-link-${nestedLink.id}`}
-                          key={nestedLink.id}
-                        >
-                          <NavbarLink {...nestedLink} />
-                        </li>
+                        nestedLink.hidden ? null : (
+                          <li
+                            className="nav-link"
+                            data-testid={`nav-link-${nestedLink.id}`}
+                            key={nestedLink.id}
+                          >
+                            <NavbarLink {...nestedLink} />
+                          </li>
+                        )
                       ))}
                     </ul>
                   )}
@@ -185,6 +187,7 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
               id="alerts"
               label="Alerts"
               link={`/projects/${projectName}/${ALERTS_PAGE_PATH}`}
+              setSelectedIndex={setSelectedIndex}
             />
           </li>
           <li className="nav-link" data-testid="nav-link-project-settings">
@@ -193,6 +196,7 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
               icon={<SettingsIcon />}
               label="Project settings"
               link={`/projects/${projectName}/settings`}
+              setSelectedIndex={setSelectedIndex}
             />
           </li>
         </ul>

@@ -70,7 +70,7 @@ const Breadcrumbs = ({ onClick = () => { } }) => {
       return {
         pathItems: [projects, projectName, screen?.label || screenName],
         screen,
-        tab: { ...tab, label: startCase(tab?.label.replace('-', ' ')) || '' }
+        tab: { ...tab, label: startCase(tab?.label?.replace('-', ' ')) || '' }
       }
     } else {
       const [page] = location.pathname.split('/').slice(3, 4)
