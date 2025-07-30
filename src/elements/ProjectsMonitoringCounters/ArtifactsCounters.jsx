@@ -127,7 +127,7 @@ const ArtifactsCounters = () => {
                 className={data.llm_prompt.className}
                 onClick={data.llm_prompt.link}
               >
-                <h6 className="stats__subtitle">LLM Prompts</h6>
+                <h6 className="stats__subtitle">LLM prompt artifacts</h6>
                 {projectStore.projectsSummary.loading ? (
                   <Loader section small secondary />
                 ) : (
@@ -141,7 +141,7 @@ const ArtifactsCounters = () => {
                 className={data?.files?.className}
                 onClick={data?.files?.link}
               >
-                <h6 className="stats__subtitle">Other Artifacts</h6>
+                <h6 className="stats__subtitle">Other artifacts</h6>
                 {projectStore.projectsSummary.loading ? (
                   <Loader section small secondary />
                 ) : (

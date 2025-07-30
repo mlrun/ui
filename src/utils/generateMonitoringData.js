@@ -35,10 +35,14 @@ import {
   STATUS_FILTER,
   TYPE_FILTER
 } from '../constants'
-import { ANY_TIME_DATE_OPTION } from './datePicker.util'
+import {
+  ANY_TIME_DATE_OPTION,
+  PAST_24_HOUR_DATE_OPTION,
+  NEXT_24_HOUR_DATE_OPTION
+} from './datePicker.util'
 import classNames from 'classnames'
 
-const IN_PROCESS = 'In Process'
+const IN_PROCESS = 'In process'
 const FAILED = 'Failed'
 const SUCCEEDED = 'Succeeded'
 
@@ -63,7 +67,11 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
     ? {
         total: {
           counter: data.total || 0,
-          link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: [FILTER_ALL_ITEMS] })
+          link: () =>
+            navigateToJobsMonitoringPage({
+              [STATUS_FILTER]: [FILTER_ALL_ITEMS],
+              [DATES_FILTER]: PAST_24_HOUR_DATE_OPTION
+            })
         },
         counters: [
           {
@@ -82,7 +90,11 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
           {
             counter: data.failed || 0,
             className: classNames('stats__link', 'stats__line'),
-            link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: [ERROR_STATE, 'aborted'] }),
+            link: () =>
+              navigateToJobsMonitoringPage({
+                [STATUS_FILTER]: [ERROR_STATE, 'aborted'],
+                [DATES_FILTER]: PAST_24_HOUR_DATE_OPTION
+              }),
             statusClass: 'failed',
             tooltip: 'Aborted, Error',
             label: FAILED,
@@ -93,7 +105,11 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
           {
             counter: data.completed || 0,
             className: classNames('stats__link'),
-            link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: ['completed'] }),
+            link: () =>
+              navigateToJobsMonitoringPage({
+                [STATUS_FILTER]: ['completed'],
+                [DATES_FILTER]: PAST_24_HOUR_DATE_OPTION
+              }),
             statusClass: 'completed',
             tooltip: 'Completed',
             label: SUCCEEDED,
@@ -105,7 +121,11 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
       ? {
           total: {
             counter: data.total || 0,
-            link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: [FILTER_ALL_ITEMS] })
+            link: () =>
+              navigateToJobsMonitoringPage({
+                [STATUS_FILTER]: [FILTER_ALL_ITEMS],
+                [DATES_FILTER]: PAST_24_HOUR_DATE_OPTION
+              })
           },
           counters: [
             {
@@ -125,7 +145,10 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
               counter: data.failed || 0,
               className: classNames('stats__link', 'stats__line'),
               link: () =>
-                navigateToJobsMonitoringPage({ [STATUS_FILTER]: [ERROR_STATE, FAILED_STATE] }),
+                navigateToJobsMonitoringPage({
+                  [STATUS_FILTER]: [ERROR_STATE, FAILED_STATE],
+                  [DATES_FILTER]: PAST_24_HOUR_DATE_OPTION
+                }),
               statusClass: 'failed',
               tooltip: 'Error, Failed',
               label: FAILED,
@@ -136,7 +159,11 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
             {
               counter: data.completed || 0,
               className: classNames('stats__link'),
-              link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: ['completed'] }),
+              link: () =>
+                navigateToJobsMonitoringPage({
+                  [STATUS_FILTER]: ['completed'],
+                  [DATES_FILTER]: PAST_24_HOUR_DATE_OPTION
+                }),
               statusClass: 'completed',
               tooltip: 'Completed',
               label: SUCCEEDED,
@@ -172,8 +199,8 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
             list: [
               { key: 'datasets', label: 'Datasets' },
               { key: 'documents', label: 'Documents' },
-              { key: 'llm_prompt', label: 'LLM Prompts' },
-              { key: 'files', label: 'Other Artifacts' }
+              { key: 'llm_prompt', label: 'LLM prompt artifacts' },
+              { key: 'files', label: 'Other artifacts' }
             ]
           }
         : tab === MODELS_PAGE
@@ -215,15 +242,27 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
             : {
                 total: {
                   counter: data.total || 0,
-                  link: () => navigateToJobsMonitoringPage({ [TYPE_FILTER]: FILTER_ALL_ITEMS })
+                  link: () =>
+                    navigateToJobsMonitoringPage({
+                      [TYPE_FILTER]: FILTER_ALL_ITEMS,
+                      [DATES_FILTER]: NEXT_24_HOUR_DATE_OPTION
+                    })
                 },
                 jobs: {
                   counter: data.jobs || 0,
-                  link: () => navigateToJobsMonitoringPage({ [TYPE_FILTER]: JOB_KIND_JOB })
+                  link: () =>
+                    navigateToJobsMonitoringPage({
+                      [TYPE_FILTER]: JOB_KIND_JOB,
+                      [DATES_FILTER]: NEXT_24_HOUR_DATE_OPTION
+                    })
                 },
                 workflows: {
                   counter: data.workflows || 0,
-                  link: () => navigateToJobsMonitoringPage({ [TYPE_FILTER]: JOB_KIND_WORKFLOW })
+                  link: () =>
+                    navigateToJobsMonitoringPage({
+                      [TYPE_FILTER]: JOB_KIND_WORKFLOW,
+                      [DATES_FILTER]: NEXT_24_HOUR_DATE_OPTION
+                    })
                 }
               }
 }
