@@ -92,7 +92,7 @@ const ConsumerGroup = () => {
     setFilteredV3ioStreamShardLags(
       nuclioStore.v3ioStreamShardLags.parsedData.filter(shardLag =>
         localFilters[NAME_FILTER]
-          ? shardLag.shardLagId.toLowerCase().includes(localFilters[NAME_FILTER])
+          ? shardLag.shardLagId.toLowerCase().includes(localFilters[NAME_FILTER].toLowerCase())
           : true
       )
     )
@@ -120,7 +120,7 @@ const ConsumerGroup = () => {
   )
 
   const searchOnChangeHandler = value => {
-    setLocalFilters({ [NAME_FILTER]: value.toLowerCase() })
+    setLocalFilters({ [NAME_FILTER]: value })
   }
 
   return (
