@@ -58,11 +58,13 @@ export const fetchMEPWithDetections = createAsyncThunk(
       params.end = filters[DATES_FILTER].value[1].getTime()
     }
 
+    const savedStartDate = filters[DATES_FILTER].value[0].getTime()
     const savedEndDate = (filters[DATES_FILTER].value[1] || new Date()).getTime()
+    
     return monitoringApplicationsApi.getMEPWithDetections(project, params).then(response => {
       return {
          values: response.data.values.map(([date, suspected, detected]) => [date, suspected + detected]),
-         start: filters[DATES_FILTER].value[0].getTime(),
+         start: savedStartDate,
          end: savedEndDate
       }
     })
