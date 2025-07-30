@@ -24,6 +24,7 @@ import { useLocation, useNavigate, useParams, useSearchParams } from 'react-rout
 import ActionBar from '../../ActionBar/ActionBar'
 import ArtifactsTableRow from '../../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import ModelEndpointsFilters from './ModelEndpointsFilters'
+import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import { Loader } from 'igz-controls/components'
@@ -253,6 +254,7 @@ const ModelEndpoints = () => {
       <div className="models" ref={modelEndpointsRef}>
         <div className="table-container">
           <div className="content__action-bar-wrapper">
+            <ModelsPageTabs />
             <ActionBar
               filters={filters}
               filtersConfig={filtersConfig}
