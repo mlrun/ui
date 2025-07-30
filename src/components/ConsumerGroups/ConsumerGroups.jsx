@@ -57,7 +57,7 @@ const ConsumerGroups = () => {
     setFilteredV3ioStreams(
       nuclioStore.v3ioStreams.parsedData.filter(v3ioStreamData =>
         localFilters[NAME_FILTER]
-          ? v3ioStreamData.consumerGroup.toLowerCase().includes(localFilters[NAME_FILTER])
+          ? v3ioStreamData.consumerGroup.toLowerCase().includes(localFilters[NAME_FILTER].toLowerCase())
           : true
       )
     )
@@ -71,7 +71,7 @@ const ConsumerGroups = () => {
   )
 
   const searchOnChangeHandler = value => {
-    setLocalFilters({ [NAME_FILTER]: value.toLowerCase() })
+    setLocalFilters({ [NAME_FILTER]: value })
   }
 
   return (
@@ -105,8 +105,8 @@ const ConsumerGroups = () => {
             localFilters,
             filtersConfig,
             requestErrorMessage ||
-              (!nuclioStore.v3ioStreams.parsedData?.length &&
-                'You haven’t created any consumer group yet'),
+            (!nuclioStore.v3ioStreams.parsedData?.length &&
+              'You haven’t created any consumer group yet'),
             CONSUMER_GROUPS_PAGE,
             null,
             filtersStore
