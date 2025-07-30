@@ -71,7 +71,7 @@ const BreadcrumbsStep = React.forwardRef(
       'breadcrumbs__separator',
       ((urlParts.pathItems[index + 1] === urlParts.screen?.id && !isParam) ||
         urlParts.pathItems[index + 1] === params.projectName) &&
-        'breadcrumbs__separator_tumbler'
+      'breadcrumbs__separator_tumbler'
     )
 
     const handleSelectDropdownItem = separatorRef => {
@@ -166,7 +166,7 @@ const BreadcrumbsStep = React.forwardRef(
           className="breadcrumbs__item"
           key={`${index}${urlPart}`}
         >
-          <span>{label}</span>
+          {label}
         </li>
         {urlParts.tab?.label && (
           <>
@@ -174,7 +174,7 @@ const BreadcrumbsStep = React.forwardRef(
               <ArrowIcon />
             </li>
             <li data-testid="breadcrumbs-tab" className="breadcrumbs__item">
-              <span>{urlParts.tab.label}</span>
+              {urlParts.tab.label}
             </li>
           </>
         )}

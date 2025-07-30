@@ -42,7 +42,7 @@ import {
 } from '../../constants'
 import { generateNuclioLink } from '../../utils'
 
-export const generateMlrunScreens = params =>
+export const generateMlrunScreens = (params) =>
   params.projectName
     ? [
         {
