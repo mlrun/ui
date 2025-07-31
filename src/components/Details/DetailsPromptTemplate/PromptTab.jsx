@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useEffect, useState } from 'react'
+import { useEffect, useState, createContext } from 'react'
 import PropTypes from 'prop-types'
 import { capitalize, isEmpty } from 'lodash'
 
@@ -28,6 +28,8 @@ import SearchNavigator from '../../../common/SearchNavigator/SearchNavigator'
 import { ARGUMENTS_TAB } from '../../../constants'
 
 import ExpandableText from '../../../common/ExpandableText/ExpandableText'
+
+export const ExpandContext = createContext({})
 
 const PromptTab = ({
   handleTabChange,
@@ -77,7 +79,7 @@ const PromptTab = ({
           <div key={idx} className="prompt-tab__row">
             <div className="prompt-tab__role">{capitalize(item.role)}</div>
             <div className="prompt-tab__content">
-              <ExpandableText forceExpand={forceExpandAll}>{parts}</ExpandableText>
+              <ExpandableText context={ExpandContext}>{parts}</ExpandableText>
             </div>
           </div>
         )
@@ -89,7 +91,6 @@ const PromptTab = ({
     selectedItem.prompt_legend,
     setSelectedArgument,
     setSelectedTab,
-    forceExpandAll,
     selectedItem.prompt_template
   ])
 
@@ -100,7 +101,7 @@ const PromptTab = ({
         <SearchNavigator
           promptTemplate={promptTemplate}
           setSearchResult={setSearchResult}
-          searchOnChange={() => setForceExpandAll(true)}
+          searchOnChange={value => setForceExpandAll(Boolean(value))}
         />
       </div>
       <div className="prompt-tab__table">
@@ -108,7 +109,9 @@ const PromptTab = ({
           <div className="prompt-tab__role">Role</div>
           <div className="prompt-tab__content">Content</div>
         </div>
-        {searchResult || promptTemplate}
+        <ExpandContext.Provider value={{ contextForceExpand: forceExpandAll }}>
+          {searchResult || promptTemplate}
+        </ExpandContext.Provider>
       </div>
     </div>
   )

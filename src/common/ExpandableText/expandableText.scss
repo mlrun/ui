@@ -5,7 +5,7 @@
 }
 
 .expandable-text {
-  display: flex;
+  display: block;
   transition: max-height 0.3s ease;
   position: relative;
   overflow: hidden;

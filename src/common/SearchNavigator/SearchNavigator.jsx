@@ -47,7 +47,8 @@ const SearchNavigator = ({ promptTemplate, setSearchResult, searchOnChange = nul
     setActiveMatchIndex(0)
     setSearchValue('')
     setMatchCount(0)
-  }, [promptTemplate, setSearchResult])
+    searchOnChange?.('')
+  }, [promptTemplate, searchOnChange, setSearchResult])
 
   const searchOnChangeHandler = useCallback(
     value => {
@@ -64,7 +65,7 @@ const SearchNavigator = ({ promptTemplate, setSearchResult, searchOnChange = nul
       setMatches(new Array(jsxMatchCount).fill(null))
       setActiveMatchIndex(0)
       setSearchValue(value)
-      searchOnChange?.()
+      searchOnChange?.(value)
     },
     [promptTemplate, setSearchResult, searchOnChange, clearResults]
   )

@@ -17,21 +17,27 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
 
 import './expandableText.scss'
 
-const ExpandableText = ({ children, collapsedHeight = 95, forceExpand = false }) => {
+const ExpandableText = ({
+  children,
+  context = null,
+  collapsedHeight = 95,
+  forceExpand = false
+}) => {
   const [expanded, setExpanded] = useState(false)
   const [isOverflowing, setIsOverflowing] = useState(false)
   const contentRef = useRef(null)
+  const { contextForceExpand } = useContext(context)
 
   useEffect(() => {
-    if (forceExpand) {
-      setExpanded(forceExpand)
+    if (forceExpand || contextForceExpand) {
+      setExpanded(forceExpand || contextForceExpand)
     }
-  }, [forceExpand])
+  }, [contextForceExpand, forceExpand])
 
   useEffect(() => {
     const element = contentRef.current
@@ -76,6 +82,7 @@ const ExpandableText = ({ children, collapsedHeight = 95, forceExpand = false })
 
 ExpandableText.propTypes = {
   children: PropTypes.node.isRequired,
+  context: PropTypes.object,
   collapsedHeight: PropTypes.number,
   forceExpand: PropTypes.bool
 }

@@ -241,6 +241,7 @@ export const generateActionsMenu = (
         disabled:
           !isTargetPathValid ||
           modelMin.size >
+            modelMin.size >
             (frontendSpec?.artifact_limits?.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
         icon: <DownloadIcon />,
         onClick: modelMin => {
@@ -278,6 +279,9 @@ export const generateActionsMenu = (
         className: 'danger',
         hidden: isDetailsPopUp,
         disabled: modelMin?.has_children,
+        tooltip: modelMin?.has_children
+          ? 'There are llm-prompt artifacts pointing to this model. The model cannot be deleted'
+          : null,
         onClick: () =>
           openDeleteConfirmPopUp(
             'Delete model?',
@@ -302,6 +306,9 @@ export const generateActionsMenu = (
         icon: <Delete />,
         hidden: isAllVersions || isDetailsPopUp,
         disabled: modelMin?.has_children,
+        tooltip: modelMin?.has_children
+          ? 'There are llm-prompt artifacts pointing to this model. The model cannot be deleted'
+          : null,
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(
