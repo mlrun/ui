@@ -181,7 +181,9 @@ const generateNoEntriesFoundMessage = (visibleFilterTypes, filtersConfig, filter
         : filters[filterType]
     const isLastElement = index === visibleFilterTypes.length - 1
 
-    return message + `${label} ${value}${isLastElement ? '"' : ', '}`
+    return (
+      message + `${label.endsWith(':') ? label : `${label}:`} ${value}${isLastElement ? '"' : ', '}`
+    )
   }, 'No data matches the filter: "')
 }
 
