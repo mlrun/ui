@@ -2,14 +2,15 @@
 
 .monitoring-application__statistics-section {
   display: flex;
-  gap: 15px;
   flex-direction: row;
-  margin-bottom: 25px;
+  gap: 15px;
   width: 100%;
+  margin-bottom: 25px;
 
   .monitoring-stats {
     flex: 1;
     padding: 15px;
+    border: 1px solid colors.$frenchLilac;
 
     &__alert {
       background-color: colors.$carouselPink;
@@ -25,8 +26,8 @@
     }
 
     .stats__counter {
-      font-weight: 500;
       color: colors.$primary;
+      font-weight: 500;
       font-size: 28px;
     }
 
