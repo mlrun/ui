@@ -45,14 +45,9 @@
       top: 9px;
       left: 14px;
 
-      path {
-        fill: colors.$burntSienna;
-      }
-
       svg {
         width: 14px;
         height: 14px;
-        padding: 1px;
         background-color: colors.$white;
         border-radius: 50%;
       }
@@ -127,8 +122,8 @@
   &.modal {
     .modal__header {
       align-items: flex-start;
-      padding: 1rem 2rem;
       min-height: auto;
+      padding: 1rem 2rem;
 
       &-title {
         font-size: 18px;

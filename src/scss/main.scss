@@ -557,3 +557,16 @@ div[id^='chartjs-tooltip'] {
 .override-artifact-dialog {
   z-index: 10;
 }
+
+/* =========== ICONS ============= */
+
+.table-severity-warning-icon {
+  svg {
+    width: 32px;
+    height: 32px;
+
+    path {
+      fill: colors.$supernova;
+    }
+  }
+}
