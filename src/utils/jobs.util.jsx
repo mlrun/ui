@@ -132,7 +132,13 @@ export const checkForSelectedJob = debounce(
           .then(job => {
             const parsedJob = parseJob(job)
             if (!parsedJob) {
-              navigate(getCloseDetailsLink(jobName || (projectName ? MONITOR_JOBS_TAB : JOBS_MONITORING_JOBS_TAB), true), { replace: true })
+              navigate(
+                getCloseDetailsLink(
+                  jobName || (projectName ? MONITOR_JOBS_TAB : JOBS_MONITORING_JOBS_TAB),
+                  true
+                ),
+                { replace: true }
+              )
             } else if (parsedJob) {
               const findJobIndex = jobsList =>
                 jobsList.findIndex(job => {
@@ -153,7 +159,7 @@ export const checkForSelectedJob = debounce(
                     return prevSearchParams
                   })
                 } else {
-                  parsedJob.ui.infoMessage = generateObjectNotInTheListMessage('job\'s run')
+                  parsedJob.ui.infoMessage = generateObjectNotInTheListMessage("job's run")
                 }
               }
 
@@ -161,7 +167,13 @@ export const checkForSelectedJob = debounce(
             }
           })
           .catch(error => {
-            navigate(getCloseDetailsLink(jobName || (projectName ? MONITOR_JOBS_TAB : JOBS_MONITORING_JOBS_TAB), true), { replace: true })
+            navigate(
+              getCloseDetailsLink(
+                jobName || (projectName ? MONITOR_JOBS_TAB : JOBS_MONITORING_JOBS_TAB),
+                true
+              ),
+              { replace: true }
+            )
             showErrorNotification(
               dispatch,
               error,
@@ -183,7 +195,11 @@ export const getJobKindFromLabels = (labels = []) => {
 
 export const getJobsFiltersConfig = (jobName, crossProjects) => {
   const filters = {
-    [NAME_FILTER]: { label: 'Name:', hidden: Boolean(jobName), initialValue: '' },
+    [NAME_FILTER]: {
+      label: 'Name:',
+      initialValue: '',
+      hidden: Boolean(jobName)
+    },
     [DATES_FILTER]: {
       label: 'Start time:',
       initialValue: getDatePickerFilterValue(
@@ -195,7 +211,8 @@ export const getJobsFiltersConfig = (jobName, crossProjects) => {
       label: 'Project:',
       initialValue: PROJECTS_FILTER_ALL_ITEMS,
       isModal: true,
-      hidden: Boolean(jobName)
+      hidden: Boolean(jobName),
+      applyHidden: true
     },
     [STATUS_FILTER]: { label: 'Status:', initialValue: [FILTER_ALL_ITEMS], isModal: true },
     [TYPE_FILTER]: { label: 'Type:', initialValue: FILTER_ALL_ITEMS, isModal: true },
