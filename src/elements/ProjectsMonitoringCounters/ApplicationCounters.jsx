@@ -74,10 +74,10 @@ const ApplicationCounter = () => {
   )
 
   return (
-    <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
-      <StatsCard className="monitoring-stats application-card">
-        <div ref={anchorRef}>
-          <StatsCard.Header title="Monitoring App"></StatsCard.Header>
+    <StatsCard className="monitoring-stats application-card">
+      <div ref={anchorRef}>
+        <StatsCard.Header title="Monitoring App"></StatsCard.Header>
+        <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
           <StatsCard.Row>
             <div
               className={applicationStats.total.className}
@@ -126,19 +126,22 @@ const ApplicationCounter = () => {
               headerIsHidden
             >
               <div className="card-popup_text">
-                {applicationStats?.counters?.map(({ link, counter, label, popUpClassName }) => (
-                  <div onClick={link} key={label}>
-                    <span className={popUpClassName}>
-                      {label}: {counter}
-                    </span>
-                  </div>
-                ))}
+                {applicationStats?.counters?.map(
+                  ({ link, counter, label, statusClass, popUpClassName }) => (
+                    <div onClick={link} key={label}>
+                      <i className={`state-${statusClass}`} />{' '}
+                      <span className={popUpClassName}>
+                        {label}: {counter}
+                      </span>
+                    </div>
+                  )
+                )}
               </div>
             </PopUpDialog>
           )}
         </div>
-      </StatsCard>
-    </div>
+      </div>
+    </StatsCard>
   )
 }
 

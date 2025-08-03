@@ -57,7 +57,7 @@ export const generateMlrunScreens = (params, isDemo) =>
         { label: 'LLM prompts', id: LLM_PROMPTS_PAGE, hidden: !isDemo },
         { label: 'Artifacts', id: 'files' },
         { label: 'Models', id: 'models' },
-        { label: 'Monitoring app', id: MONITORING_APP_PAGE, hidden: !isDemo },
+        { label: 'Monitoring app', id: MONITORING_APP_PAGE },
         { label: 'Jobs and workflows', id: 'jobs' },
         { label: 'ML functions', id: 'functions' },
         {

@@ -54,18 +54,18 @@ const RunCounter = () => {
   )
 
   return (
-    <div onMouseLeave={handleClosePopUp} onMouseEnter={handleOpenPopUp}>
-      <StatsCard className="monitoring-stats">
-        <div ref={anchorRef}>
-          <StatsCard.Header
-            title="Runs"
-            tip="Number of Job runs, clicking on the counters navigates to jobs screen."
-          >
-            <div className="project-card__info">
-              <ClockIcon className="project-card__info-icon" />
-              <span>Past 24 hrs</span>
-            </div>
-          </StatsCard.Header>
+    <StatsCard className="monitoring-stats">
+      <div ref={anchorRef}>
+        <StatsCard.Header
+          title="Runs"
+          tip="Number of Job runs, clicking on the counters navigates to jobs screen."
+        >
+          <div className="project-card__info">
+            <ClockIcon className="project-card__info-icon" />
+            <span>Last 24 hrs</span>
+          </div>
+        </StatsCard.Header>
+        <div onMouseLeave={handleClosePopUp} onMouseEnter={handleOpenPopUp}>
           <StatsCard.Row>
             <div
               className="stats__link stats__counter_header"
@@ -133,8 +133,8 @@ const RunCounter = () => {
             </PopUpDialog>
           )}
         </div>
-      </StatsCard>
-    </div>
+      </div>
+    </StatsCard>
   )
 }
 

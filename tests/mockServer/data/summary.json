@@ -20,7 +20,10 @@
       "distinct_scheduled_pipelines_pending_count": 0,
       "pipelines_completed_recent_count": 0,
       "pipelines_failed_recent_count": 0,
-      "pipelines_running_count": 0
+      "pipelines_running_count": 0,
+      "datasets_count": 2,
+      "documents_count": 3,
+      "llm_prompts_count": 1
     },
     {
       "name": "cat-vs-dog-classification",
@@ -42,7 +45,10 @@
       "distinct_scheduled_pipelines_pending_count": 0,
       "pipelines_completed_recent_count": 0,
       "pipelines_failed_recent_count": 0,
-      "pipelines_running_count": 0
+      "pipelines_running_count": 0,
+      "datasets_count": 1,
+      "documents_count": 4,
+      "llm_prompts_count": 2
     },
     {
       "name": "churn-project-admin",
@@ -61,7 +67,10 @@
       "distinct_scheduled_pipelines_pending_count": 0,
       "pipelines_completed_recent_count": 0,
       "pipelines_failed_recent_count": 0,
-      "pipelines_running_count": 0
+      "pipelines_running_count": 0,
+      "datasets_count": 4,
+      "documents_count": 2,
+      "llm_prompts_count": 3
     },
     {
       "name": "default",
@@ -83,7 +92,10 @@
       "distinct_scheduled_pipelines_pending_count": 0,
       "pipelines_completed_recent_count": 0,
       "pipelines_failed_recent_count": 0,
-      "pipelines_running_count": 0
+      "pipelines_running_count": 0,
+      "datasets_count": 2,
+      "documents_count": 1,
+      "llm_prompts_count": 4
     },
     {
       "name": "fraud-demo2-admin",
@@ -105,7 +117,10 @@
       "distinct_scheduled_pipelines_pending_count": 0,
       "pipelines_completed_recent_count": 0,
       "pipelines_failed_recent_count": 0,
-      "pipelines_running_count": 0
+      "pipelines_running_count": 0,
+      "datasets_count": 3,
+      "documents_count": 2,
+      "llm_prompts_count": 2
     },
     {
       "name": "fsdemo-admin",
@@ -143,7 +158,10 @@
       "distinct_scheduled_pipelines_pending_count": 0,
       "pipelines_completed_recent_count": 0,
       "pipelines_failed_recent_count": 0,
-      "pipelines_running_count": 0
+      "pipelines_running_count": 0,
+      "datasets_count": 2,
+      "documents_count": 1,
+      "llm_prompts_count": 4
     },
     {
       "name": "hedi-proj",
@@ -162,7 +180,10 @@
       "distinct_scheduled_pipelines_pending_count": 0,
       "pipelines_completed_recent_count": 0,
       "pipelines_failed_recent_count": 0,
-      "pipelines_running_count": 0
+      "pipelines_running_count": 0,
+      "datasets_count": 2,
+      "documents_count": 1,
+      "llm_prompts_count": 4
     },
     {
       "name": "mask-detection",
@@ -181,7 +202,10 @@
       "distinct_scheduled_pipelines_pending_count": 0,
       "pipelines_completed_recent_count": 0,
       "pipelines_failed_recent_count": 0,
-      "pipelines_running_count": 0
+      "pipelines_running_count": 0,
+      "datasets_count": 2,
+      "documents_count": 1,
+      "llm_prompts_count": 4
     },
     {
       "name": "model-deployment-pipeline-admin",
@@ -200,7 +224,10 @@
       "distinct_scheduled_pipelines_pending_count": 0,
       "pipelines_completed_recent_count": 0,
       "pipelines_failed_recent_count": 0,
-      "pipelines_running_count": 0
+      "pipelines_running_count": 0,
+      "datasets_count": 2,
+      "documents_count": 1,
+      "llm_prompts_count": 4
     },
     {
       "name": "moreofthesame",
@@ -219,7 +246,10 @@
       "distinct_scheduled_pipelines_pending_count": 0,
       "pipelines_completed_recent_count": 0,
       "pipelines_failed_recent_count": 0,
-      "pipelines_running_count": 0
+      "pipelines_running_count": 0,
+      "datasets_count": 2,
+      "documents_count": 1,
+      "llm_prompts_count": 4
     },
     {
       "name": "network-operations",
@@ -238,7 +268,10 @@
       "distinct_scheduled_pipelines_pending_count": 0,
       "pipelines_completed_recent_count": 0,
       "pipelines_failed_recent_count": 0,
-      "pipelines_running_count": 0
+      "pipelines_running_count": 0,
+      "datasets_count": 2,
+      "documents_count": 1,
+      "llm_prompts_count": 4
     },
     {
       "name": "network-operations-admin",
@@ -257,7 +290,10 @@
       "distinct_scheduled_pipelines_pending_count": 0,
       "pipelines_completed_recent_count": 0,
       "pipelines_failed_recent_count": 0,
-      "pipelines_running_count": 0
+      "pipelines_running_count": 0,
+      "datasets_count": 2,
+      "documents_count": 1,
+      "llm_prompts_count": 4
     },
     {
       "name": "sk-project-admin",
@@ -276,7 +312,10 @@
       "distinct_scheduled_pipelines_pending_count": 0,
       "pipelines_completed_recent_count": 0,
       "pipelines_failed_recent_count": 0,
-      "pipelines_running_count": 0
+      "pipelines_running_count": 0,
+      "datasets_count": 2,
+      "documents_count": 1,
+      "llm_prompts_count": 4
     },
     {
       "name": "stocks",
@@ -295,7 +334,10 @@
       "distinct_scheduled_pipelines_pending_count": 0,
       "pipelines_completed_recent_count": 0,
       "pipelines_failed_recent_count": 0,
-      "pipelines_running_count": 0
+      "pipelines_running_count": 0,
+      "datasets_count": 2,
+      "documents_count": 1,
+      "llm_prompts_count": 4
     },
     {
       "name": "stocks-admin",
@@ -313,7 +355,10 @@
       "distinct_scheduled_pipelines_pending_count": 0,
       "pipelines_completed_recent_count": 0,
       "pipelines_failed_recent_count": 0,
-      "pipelines_running_count": 0
+      "pipelines_running_count": 0,
+      "datasets_count": 2,
+      "documents_count": 1,
+      "llm_prompts_count": 4
     },
     {
       "name": "test-test",
@@ -331,7 +376,10 @@
       "distinct_scheduled_pipelines_pending_count": 0,
       "pipelines_completed_recent_count": 0,
       "pipelines_failed_recent_count": 0,
-      "pipelines_running_count": 0
+      "pipelines_running_count": 0,
+      "datasets_count": 2,
+      "documents_count": 1,
+      "llm_prompts_count": 4
     }
   ]
 }

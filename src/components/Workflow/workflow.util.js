@@ -263,7 +263,7 @@ export const handleTerminateWorkflow = async (job, dispatch) => {
         setNotification({
           status: 400,
           id: Math.random(),
-          message: `Failed to start termination for workflow "${job.name}"`
+          message: `Workflow "${job.name} was not terminated since it already reached its end state`
         })
       )
       return
@@ -287,7 +287,9 @@ export const handleTerminateWorkflow = async (job, dispatch) => {
       setNotification({
         status: success ? 200 : 400,
         id: Math.random(),
-        message: `Workflow "${job.name}" ${success ? 'terminated successfully' : 'was not terminated since it already reached its end state'}`
+        message: success
+          ? `A request to terminate workflow "${job.name}" was issued`
+          : `Workflow "${job.name}" was not terminated because it already reached its end state`
       })
     )
   } catch {
@@ -313,7 +315,12 @@ export const fetchMissingProjectsPermissions = async (projectNames, currentMap, 
           await projectsIguazioApi.getProjectOwnerVisibility(projectName)
           return [projectName, true]
         } catch {
-          return [projectName, false]
+          try {
+            await projectsIguazioApi.getProjectWorkflowsUpdateAuthorization(projectName)
+            return [projectName, true]
+          } catch {
+            return [projectName, false]
+          }
         }
       })
     )
@@ -326,10 +333,15 @@ export const fetchMissingProjectsPermissions = async (projectNames, currentMap, 
 export const fetchMissingProjectPermission = async (projectName, currentMap, dispatch) => {
   if (projectName in currentMap) return
 
-  try {
-    await projectsIguazioApi.getProjectOwnerVisibility(projectName)
-    dispatch(setAccessibleProjectsMap({ [projectName]: true }))
-  } catch {
-    dispatch(setAccessibleProjectsMap({ [projectName]: false }))
-  }
+  const hasPermission = await projectsIguazioApi
+    .getProjectOwnerVisibility(projectName)
+    .then(() => true)
+    .catch(() =>
+      projectsIguazioApi
+        .getProjectWorkflowsUpdateAuthorization(projectName)
+        .then(() => true)
+        .catch(() => false)
+    )
+
+  dispatch(setAccessibleProjectsMap({ [projectName]: hasPermission }))
 }

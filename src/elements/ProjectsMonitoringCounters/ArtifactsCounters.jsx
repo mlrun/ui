@@ -77,10 +77,10 @@ const ArtifactsCounters = () => {
   )
 
   return (
-    <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
-      <StatsCard className="monitoring-stats">
-        <div ref={anchorRef}>
-          <StatsCard.Header title="Artifacts"></StatsCard.Header>
+    <StatsCard className="monitoring-stats">
+      <div ref={anchorRef}>
+        <StatsCard.Header title="Artifacts"></StatsCard.Header>
+        <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
           <StatsCard.Row>
             <div className="stats__counter_header" data-testid="artifacts_total_counter">
               <div className="stats__counter">
@@ -174,8 +174,8 @@ const ArtifactsCounters = () => {
             </PopUpDialog>
           )}
         </div>
-      </StatsCard>
-    </div>
+      </div>
+    </StatsCard>
   )
 }
 

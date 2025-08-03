@@ -284,9 +284,11 @@ const JobsTable = React.forwardRef(
     ])
 
     const refreshJobsWithFilters = useCallback(
-      useInitialFilter => {
-        const initialJobFilters = getInitialFiltersByConfig(filtersConfig)
-        refreshJobs(useInitialFilter ? initialJobFilters : filters, { forceFetchJobs: true })
+      (useInitialFilter, isSchedule) => {
+        if (!isSchedule) {
+          const initialJobFilters = getInitialFiltersByConfig(filtersConfig)
+          refreshJobs(useInitialFilter ? initialJobFilters : filters, { forceFetchJobs: true })
+        }
       },
       [filters, refreshJobs, filtersConfig]
     )
@@ -320,7 +322,6 @@ const JobsTable = React.forwardRef(
       editableItem?.rerun_object,
       jobWizardIsOpened,
       jobWizardMode,
-      filters,
       params,
       refreshJobsWithFilters,
       setEditableItem,

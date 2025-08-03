@@ -31,17 +31,22 @@ export const filtersConfig = {
   [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
 }
 
-const infoHeaders = [
-  { label: 'UID', id: 'uid' },
-  { label: 'Model class', id: 'model_class' },
-  { label: 'Model artifact', id: 'model_artifact' },
-  { label: 'Function URI', id: 'function_uri' },
-  { label: 'Function Tag', id: 'function_tag' },
-  { label: 'Feature set', id: 'monitoring_feature_set_uri' },
-  { label: 'Sampling percentage', id: 'sampling_percentage' },
-  { label: 'Last prediction', id: 'last_prediction' },
-  { label: 'Error count', id: 'error_count' }
-]
+const generateInfoHeaders = model_path => {
+  return [
+    { label: 'UID', id: 'uid' },
+    { label: 'Model class', id: 'model_class' },
+    {
+      label: model_path.includes('llm-prompts') ? 'LLM Prompt artifact' : 'Model artifact',
+      id: 'model_artifact'
+    },
+    { label: 'Function URI', id: 'function_uri' },
+    { label: 'Function Tag', id: 'function_tag' },
+    { label: 'Feature set', id: 'monitoring_feature_set_uri' },
+    { label: 'Sampling percentage', id: 'sampling_percentage' },
+    { label: 'Last prediction', id: 'last_prediction' },
+    { label: 'Error count', id: 'error_count' }
+  ]
+}
 
 const detailsMenu = [
   {
@@ -74,7 +79,7 @@ export const generatePageData = (
   hidePageActionMenu: true,
   details: {
     menu: detailsMenu,
-    infoHeaders,
+    infoHeaders: generateInfoHeaders(selectedItem?.spec?.model_path || ''),
     type: MODEL_ENDPOINTS_TAB,
     actionButton: {
       label: 'Resource monitoring',

@@ -5,49 +5,171 @@ Feature: Project Monitoring Page
     @MLPM
     @passive
     @smoke
-    Scenario: MLPM002 - Check all mandatory components
+    Scenario: MLPM002 - Check components on the header details and the project monitoring container
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
-        Then verify "Create_New" element visibility on "Project" wizard
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+        Then verify "Project_Name" element visibility on "Project" wizard
+        Then "Project_Name" element on "Project" should contains "default" value
+        Then verify "Created_Details" element visibility on "Project" wizard
+        Then "Created_Details" element on "Project" should contains "Created: 08/29/2021, 15:21:14 PM" value
+        Then verify "Owner_Details" element visibility on "Project" wizard
+        Then "Owner_Details" element on "Project" should contains "Owner: igz_nobody" value
+        Then verify "Info_Baner" element visibility on "Project" wizard
+        Then "Info_Baner" element on "Project" should contains "Counters use a caching mechanism, and are not auto-refreshed." value
+        Then verify "Quick_Actions" element visibility on "Project" wizard
+        Then verify "Quick_Actions" dropdown element on "Project" wizard should contains "Project"."Quick_Actions_Options"
         Then verify "Refresh_Button" element visibility on "Project" wizard
-        Then verify "Dashboard_Realtime_Functions_Table" element visibility on "Project" wizard
-        Then verify "Jobs_And_Workflows" element visibility on "Project" wizard
+        Then verify "Refresh_Button" element on "Project" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
         Then verify "Mono_Values_Cards" element visibility on "Project" wizard
-        Then verify "Model_Stats_Title" element visibility on "Project" wizard
-        Then "Model_Stats_Title" element on "Project" should contains "Models" value
-        Then verify "Model_Stats_Tip" element visibility on "Project" wizard
-        Then verify "Model_Stats_Tip" element on "Project" wizard should display hover hint "Label_Hint"."Model_Stats_Tip"
-        Then verify "Model_Stats_Counter" element visibility on "Project" wizard
-        Then verify "FeatureSets_Stats_Title" element visibility on "Project" wizard
-        Then verify "FeatureSets_Stats_Tip" element visibility on "Project" wizard
-        Then verify "FeatureSets_Stats_Tip" element on "Project" wizard should display hover hint "Label_Hint"."FeatureSets_Stats_Tip"
-        Then verify "FeatureSets_Stats_Counter" element visibility on "Project" wizard
-        Then verify "Artifacts_Stats_Title" element visibility on "Project" wizard
-        Then verify "Artifacts_Stats_Tip" element visibility on "Project" wizard
-        Then verify "Artifacts_Stats_Tip" element on "Project" wizard should display hover hint "Label_Hint"."Artifacts_Stats_Tip"
-        Then verify "Artifacts_Stats_Counter" element visibility on "Project" wizard
-        Then verify "Alerts_Stats_Title" element visibility on "Project" wizard
-        Then "Alerts_Stats_Title" element on "Project" should contains "Alerts" value
-        Then verify "Alerts_Stats_Total_Title" element visibility on "Project" wizard
-        Then "Alerts_Stats_Total_Title" element on "Project" should contains "Total" value
-        Then verify "Alerts_Stats_Total_Number" element visibility on "Project" wizard
-        Then verify "Alerts_Stats_Endpoint_Title" element visibility on "Project" wizard
-        Then "Alerts_Stats_Endpoint_Title" element on "Project" should contains "Endpoint" value
-        Then verify "Alerts_Stats_Endpoint_Number" element visibility on "Project" wizard
-        Then verify "Alerts_Stats_Jobs_Title" element visibility on "Project" wizard
-        Then "Alerts_Stats_Jobs_Title" element on "Project" should contains "Jobs" value
-        Then verify "Alerts_Stats_Jobs_Number" element visibility on "Project" wizard
-        Then verify "Alerts_Stats_Application_Title" element visibility on "Project" wizard
-        Then "Alerts_Stats_Application_Title" element on "Project" should contains "Application" value
-        Then verify "Alerts_Stats_Application_Number" element visibility on "Project" wizard
-        Then verify "ConsumerGroups_Stats_Title" element visibility on "Project" wizard
-        Then "ConsumerGroups_Stats_Title" element on "Project" should contains "Consumer groups" value
-        Then verify "ConsumerGroups_Stats_Counter" element visibility on "Project" wizard
-        Then verify "Jobs_Info_Card_Statistics" element visibility on "Project" wizard
-        Then verify "Real_Time_Functions_Card_Statistics" element visibility on "Project" wizard
+        Then verify "Artifacts_Stats_Title" element visibility in "Artifacts_Stats_Container" on "Project" wizard
+        Then "Artifacts_Stats_Title" element in "Artifacts_Stats_Container" on "Project" should contains "Artifacts" value
+        Then verify "Artifacts_Stats_Counter" element visibility in "Artifacts_Stats_Container" on "Project" wizard
+        Then verify "Datasets_Counter_Subtitle" element visibility in "Artifacts_Stats_Container" on "Project" wizard
+        Then "Datasets_Counter_Subtitle" element in "Artifacts_Stats_Container" on "Project" should contains "Datasets" value
+        Then verify "Datasets_Counter_Number" element visibility in "Artifacts_Stats_Container" on "Project" wizard
+        Then verify "Documents_Counter_Subtitle" element visibility in "Artifacts_Stats_Container" on "Project" wizard
+        Then "Documents_Counter_Subtitle" element in "Artifacts_Stats_Container" on "Project" should contains "Documents" value
+        Then verify "Documents_Counter_Number" element visibility in "Artifacts_Stats_Container" on "Project" wizard
+        Then verify "LLM_Prompts_Counter_Subtitle" element visibility in "Artifacts_Stats_Container" on "Project" wizard
+        Then "LLM_Prompts_Counter_Subtitle" element in "Artifacts_Stats_Container" on "Project" should contains "LLM Prompts" value
+        Then verify "LLM_Prompts_Counter_Number" element visibility in "Artifacts_Stats_Container" on "Project" wizard
+        Then verify "Other_Artifacts_Counter_Subtitle" element visibility in "Artifacts_Stats_Container" on "Project" wizard
+        Then "Other_Artifacts_Counter_Subtitle" element in "Artifacts_Stats_Container" on "Project" should contains "Other Artifacts" value
+        Then verify "Other_Artifacts_Counter_Number" element visibility in "Artifacts_Stats_Container" on "Project" wizard
+        Then verify "Workflows_Stats_Title" element visibility in "Workflows_Stats_Container" on "Project" wizard
+        Then "Workflows_Stats_Title" element in "Workflows_Stats_Container" on "Project" should contains "Workflows" value
+        Then verify "Filtering_Time_Period" element visibility in "Workflows_Stats_Container" on "Project" wizard
+        Then "Filtering_Time_Period" element in "Workflows_Stats_Container" on "Project" should contains "24 hrs" value
+        Then verify "Workflows_Stats_Counter" element visibility in "Workflows_Stats_Container" on "Project" wizard
+        Then verify "In_Process_Counter_Subtitle" element visibility in "Workflows_Stats_Container" on "Project" wizard
+        Then "In_Process_Counter_Subtitle" element in "Workflows_Stats_Container" on "Project" should contains "In Process" value
+        Then verify "In_Process_Counter_Status_Icon" element visibility in "Workflows_Stats_Container" on "Project" wizard
+        Then verify "In_Process_Counter_Status_Icon" element in "Workflows_Stats_Container" on "Project" wizard should display hover tooltip "Common_Tooltips"."Running_Tip"
+        Then verify "In_Process_Counter_Number" element visibility in "Workflows_Stats_Container" on "Project" wizard
+        Then verify "Failed_Counter_Subtitle" element visibility in "Workflows_Stats_Container" on "Project" wizard
+        Then "Failed_Counter_Subtitle" element in "Workflows_Stats_Container" on "Project" should contains "Failed" value
+        Then verify "Failed_Counter_Status_Icon" element visibility in "Workflows_Stats_Container" on "Project" wizard
+        Then verify "Failed_Counter_Status_Icon" element in "Workflows_Stats_Container" on "Project" wizard should display hover tooltip "Common_Tooltips"."Failed_Worflows"
+        Then verify "Failed_Counter_Number" element visibility in "Workflows_Stats_Container" on "Project" wizard
+        Then verify "Succeeded_Counter_Subtitle" element visibility in "Workflows_Stats_Container" on "Project" wizard
+        Then "Succeeded_Counter_Subtitle" element in "Workflows_Stats_Container" on "Project" should contains "Succeeded" value
+        Then verify "Succeeded_Counter_Status_Icon" element visibility in "Workflows_Stats_Container" on "Project" wizard
+        Then verify "In_Process_Counter_Status_Icon" element in "Workflows_Stats_Container" on "Project" wizard should display hover tooltip "Common_Tooltips"."Running_Tip"
+        Then verify "Succeeded_Counter_Status_Icon" element in "Workflows_Stats_Container" on "Project" wizard should display hover tooltip "Common_Tooltips"."Succeeded"
+        Then verify "Succeeded_Counter_Number" element visibility in "Workflows_Stats_Container" on "Project" wizard
+        Then verify "Scheduled_Stats_Title" element visibility in "Scheduled_Stats_Container" on "Project" wizard
+        Then "Scheduled_Stats_Title" element in "Scheduled_Stats_Container" on "Project" should contains "Scheduled" value
+        Then verify "Filtering_Time_Period" element visibility in "Scheduled_Stats_Container" on "Project" wizard
+        Then "Filtering_Time_Period" element in "Scheduled_Stats_Container" on "Project" should contains "24 hrs" value
+        Then verify "Scheduled_Stats_Counter" element visibility in "Scheduled_Stats_Container" on "Project" wizard
+        Then verify "Jobs_Counter_Subtitle" element visibility in "Scheduled_Stats_Container" on "Project" wizard
+        Then "Jobs_Counter_Subtitle" element in "Scheduled_Stats_Container" on "Project" should contains "Jobs" value
+        Then verify "Jobs_Counter_Number" element visibility in "Scheduled_Stats_Container" on "Project" wizard
+        Then verify "Workflows_Counter_Subtitle" element visibility in "Scheduled_Stats_Container" on "Project" wizard
+        Then "Workflows_Counter_Subtitle" element in "Scheduled_Stats_Container" on "Project" should contains "Workflows" value
+        Then verify "Workflows_Counter_Number" element visibility in "Scheduled_Stats_Container" on "Project" wizard
+        Then verify "Models_Stats_Title" element visibility in "Models_Stats_Container" on "Project" wizard
+        Then "Models_Stats_Title" element in "Models_Stats_Container" on "Project" should contains "Models" value
+        Then verify "Model_Stats_Counter" element visibility in "Models_Stats_Container" on "Project" wizard
+        Then verify "Monitoring_App_Stats_Title" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
+        Then "Monitoring_App_Stats_Title" element in "Monitoring_App_Stats_Container" on "Project" should contains "Monitoring App" value
+        Then verify "Monitoring_App_Succeeded_Stats_Counter" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
+        Then verify "Monitoring_App_Succeeded_Counter_Subtitle" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
+        Then "Monitoring_App_Succeeded_Counter_Subtitle" element in "Monitoring_App_Stats_Container" on "Project" should contains "Succeeded" value
+        Then verify "Monitoring_App_Succeeded_Counter_Status_Icon" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
+        Then verify "Monitoring_App_Failed_Stats_Counter" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
+        Then verify "Monitoring_App_Failed_Counter_Subtitle" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
+        Then "Monitoring_App_Failed_Counter_Subtitle" element in "Monitoring_App_Stats_Container" on "Project" should contains "Failed" value
+        Then verify "Monitoring_App_Failed_Counter_Status_Icon" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
+        Then verify "Alerts_Stats_Title" element visibility in "Alerts_Stats_Container" on "Project" wizard
+        Then "Alerts_Stats_Title" element in "Alerts_Stats_Container" on "Project" should contains "Alerts" value
+        Then verify "Alerts_Stats_Title_Icon" element visibility in "Alerts_Stats_Container" on "Project" wizard
+        Then verify "Filtering_Time_Period" element visibility in "Alerts_Stats_Container" on "Project" wizard
+        Then "Filtering_Time_Period" element in "Alerts_Stats_Container" on "Project" should contains "24 hrs" value
+        Then verify "Alerts_Stats_Counter" element visibility in "Alerts_Stats_Container" on "Project" wizard
+        Then verify "Alerts_Stats_Endpoint_Subtitle" element visibility in "Alerts_Stats_Container" on "Project" wizard
+        Then "Alerts_Stats_Endpoint_Subtitle" element in "Alerts_Stats_Container" on "Project" should contains "Endpoint" value
+        Then verify "Alerts_Stats_Endpoint_Counter" element visibility in "Alerts_Stats_Container" on "Project" wizard
+        Then verify "Alerts_Stats_Jobs_Subtitle" element visibility in "Alerts_Stats_Container" on "Project" wizard
+        Then "Alerts_Stats_Jobs_Subtitle" element in "Alerts_Stats_Container" on "Project" should contains "Jobs" value
+        Then verify "Alerts_Stats_Jobs_Counter" element visibility in "Alerts_Stats_Container" on "Project" wizard
+        Then verify "Alerts_Stats_Application_Subtitle" element visibility in "Alerts_Stats_Container" on "Project" wizard
+        Then "Alerts_Stats_Application_Subtitle" element in "Alerts_Stats_Container" on "Project" should contains "Application" value
+        Then verify "Alerts_Stats_Application_Counter" element visibility in "Alerts_Stats_Container" on "Project" wizard
+
+    @MLPM
+    @passive
+    @smoke
+    Scenario: MLPM023 - Check components on on the header details and the statistics section
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then verify breadcrumbs "project" label should be equal "default" value
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+        Then verify "Project_Name" element visibility on "Project" wizard
+        Then "Project_Name" element on "Project" should contains "default" value
+        Then verify "Created_Details" element visibility on "Project" wizard
+        Then "Created_Details" element on "Project" should contains "Created: 08/29/2021, 15:21:14 PM" value
+        Then verify "Owner_Details" element visibility on "Project" wizard
+        Then "Owner_Details" element on "Project" should contains "Owner: igz_nobody" value
+        Then verify "Info_Baner" element visibility on "Project" wizard
+        Then "Info_Baner" element on "Project" should contains "Counters use a caching mechanism, and are not auto-refreshed." value
+        Then verify "Quick_Actions" element visibility on "Project" wizard
+        Then verify "Quick_Actions" dropdown element on "Project" wizard should contains "Project"."Quick_Actions_Options"
+        Then verify "Refresh_Button" element visibility on "Project" wizard
+        Then verify "Refresh_Button" element on "Project" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
+        Then verify "Runs_Statistic_Table" element visibility on "Project" wizard
+        Then verify visibility of header column "title" in "Runs_Statistic_Table" table on "Project" wizard
+        Then check "Runs" header value in "title" column in "Runs_Statistic_Table" table on "Project" wizard
+        Then verify "Runs_Statistic_Section_Title_Tip" element visibility in "Runs_Statistic_Section_Container" on "Project" wizard
+        Then verify "Runs_Statistic_Section_Title_Tip" element in "Runs_Statistic_Section_Container" on "Project" wizard should display hover hint "Label_Hint"."Runs_Statistic_Section_Title_Tip"
+        Then verify visibility of header column "time_period" in "Runs_Statistic_Table" table on "Project" wizard
+        Then check "Last 24 hrs" header value in "time_period" column in "Runs_Statistic_Table" table on "Project" wizard
+        Then verify visibility of header column "in_process_counter_number" in "Runs_Statistic_Table" table on "Project" wizard
+        Then verify visibility of header column "in_process_counter_subtitle" in "Runs_Statistic_Table" table on "Project" wizard
+        Then check "In Progress" header value in "in_process_counter_subtitle" column in "Runs_Statistic_Table" table on "Project" wizard
+        Then verify visibility of header column "in_process_counter_icon" in "Runs_Statistic_Table" table on "Project" wizard
+        Then verify "In_Process_Counter_Subtitle" element in "Runs_Statistic_Section_Container" on "Project" wizard should display hover tooltip "Common_Tooltips"."In_Process_Jobs"
+        Then verify visibility of header column "failed_counter_number" in "Runs_Statistic_Table" table on "Project" wizard
+        Then verify visibility of header column "failed_counter_subtitle" in "Runs_Statistic_Table" table on "Project" wizard
+        Then check "Failed" header value in "failed_counter_subtitle" column in "Runs_Statistic_Table" table on "Project" wizard
+        Then verify visibility of header column "failed_counter_icon" in "Runs_Statistic_Table" table on "Project" wizard
+        Then verify "Failed_Counter_Subtitle" element in "Runs_Statistic_Section_Container" on "Project" wizard should display hover tooltip "Common_Tooltips"."Failed_Jobs"
+        Then verify visibility of header column "succeeded_counter_number" in "Runs_Statistic_Table" table on "Project" wizard
+        Then verify visibility of header column "succeeded_counter_subtitle" in "Runs_Statistic_Table" table on "Project" wizard
+        Then check "Succeeded" header value in "succeeded_counter_subtitle" column in "Runs_Statistic_Table" table on "Project" wizard
+        Then verify visibility of header column "succeeded_counter_icon" in "Runs_Statistic_Table" table on "Project" wizard
+        Then verify "Succeeded_Counter_Subtitle" element in "Runs_Statistic_Section_Container" on "Project" wizard should display hover tooltip "Common_Tooltips"."Succeeded"
+        Then verify "Recent_Text" element visibility in "Runs_Statistic_Section_Container" on "Project" wizard
+        Then "Recent_Text" element in "Runs_Statistic_Section_Container" on "Project" should contains "Recent jobs" value
+        Then "Recent_Text_Sm" element in "Runs_Statistic_Section_Container" on "Project" should contains "(last 7 days)" value
+        Then check "erann-test" value in "name" column in "Runs_Statistic_Table" table on "Project" wizard
+        When scroll to the element with "erann-test" value in "name" column in "Runs_Statistic_Table" table on "Project" wizard
+        And wait load page
+        Then verify "All_Jobs_Link" element visibility in "Runs_Statistic_Section_Container" on "Project" wizard
+        Then "All_Jobs_Link" element in "Runs_Statistic_Section_Container" on "Project" should contains "All jobs" value
+        Then verify "Realtime_Functions_Nuclio_Table" element visibility on "Project" wizard
+        Then verify visibility of header column "title" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then check "Real-time functions (Nuclio)" header value in "title" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then verify visibility of header column "running_counter_number" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then check "Running" header value in "running_counter_subtitle" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then verify visibility of header column "running_counter_icon" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then verify visibility of header column "failed_counter_number" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then check "Failed" header value in "failed_counter_subtitle" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then verify visibility of header column "failed_counter_icon" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then verify visibility of header column "api_gateways_counter_number" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then check "API gateways" header value in "api_gateways_counter_subtitle" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then verify visibility of header column "consumer_groups_counter_number" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then check "Consumer groups" header value in "consumer_groups_counter_subtitle" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then "Recent_Text" element in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" should contains "Recent real-time functions" value
+        Then check "cat-vs-dog-classification-tf2-serving" value in "name" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then verify "All_Realtime_Functions_Link" element visibility in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" wizard
+        Then "All_Realtime_Functions_Link" element in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" should contains "All real-time functions" value
         When hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
     
@@ -69,7 +191,6 @@ Feature: Project Monitoring Page
         Then verify "Pin_Quick_Link_Button" element visibility on "commonPagesHeader" wizard
         Then verify "General_Info_Quick_Panel" element visibility on "commonPagesHeader" wizard
         Then verify "Project_Monitoring_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Quick_actions_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Feature_Store_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Datasets_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Documents_Button" element visibility on "commonPagesHeader" wizard
@@ -88,8 +209,6 @@ Feature: Project Monitoring Page
         Then verify "General_Info_Quick_Panel" element visibility on "commonPagesHeader" wizard
         Then verify "Project_Monitoring_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Project_Monitoring_Icon" element visibility on "commonPagesHeader" wizard
-        Then verify "Quick_actions_Button" element invisibility on "commonPagesHeader" wizard
-        Then verify "Quick_actions_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Feature_Store_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Feature_Store_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Datasets_Button" element invisibility on "commonPagesHeader" wizard
@@ -144,16 +263,6 @@ Feature: Project Monitoring Page
         And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         And wait load page
         Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
-        #check navigation between pages Project monitoring and Quick-actions due to instance links
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        Then click on "Project_Quick_Actions_Instance" element on "commonPagesHeader" wizard
-        Then verify "Quick_actions_Active" not input element on "commonPagesHeader" wizard is active
-        Then click on "Project_Monitoring_First_Instance" element on "commonPagesHeader" wizard
-        Then verify "Project_Monitoring_Active" not input element on "commonPagesHeader" wizard is active
-        Then click on "Project_Quick_Actions_Instance" element on "commonPagesHeader" wizard
-        Then verify "Quick_actions_Active" not input element on "commonPagesHeader" wizard is active
-        Then click on "Project_Monitoring_Second_Instance" element on "commonPagesHeader" wizard
-        Then verify "Project_Monitoring_Active" not input element on "commonPagesHeader" wizard is active
         #check visibility of menu buttons in demo mode
         When turn on demo mode with query params "false"
         And wait load page
@@ -184,9 +293,9 @@ Feature: Project Monitoring Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
-        Then select "Register artifact" option in "Create_New" dropdown on "Project" wizard
+        Then verify "Quick_Actions" element visibility on "Project" wizard
+        Then verify "Quick_Actions" dropdown element on "Project" wizard should contains "Project"."Quick_Actions_Options"
+        Then select "Register artifact" option in "Quick_Actions" dropdown on "Project" wizard
         Then "Title" element on "Register_File_Popup" should contains "Register Artifact" value
         Then "Form_Text" component on "Register_File_Popup" should contains "Register_Artifact"."Form_Text"
         Then "Form_Subtext" component on "Register_File_Popup" should contains "Register_Artifact"."Form_Subtext"
@@ -237,9 +346,9 @@ Feature: Project Monitoring Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options_Demo"
-        Then select "Register model" option in "Create_New" dropdown on "Project" wizard
+        Then verify "Quick_Actions" element visibility on "Project" wizard
+        Then verify "Quick_Actions" dropdown element on "Project" wizard should contains "Project"."Quick_Actions_Options_Demo"
+        Then select "Register model" option in "Quick_Actions" dropdown on "Project" wizard
         Then "Title" element on "Register_Model_Popup" should contains "Register Model" value
         Then verify "Cross_Cancel_Button" element visibility on "Register_Model_Popup" wizard
         Then verify "New_File_Name_Input" element visibility on "Register_Model_Popup" wizard
@@ -281,9 +390,9 @@ Feature: Project Monitoring Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
-        Then select "Register dataset" option in "Create_New" dropdown on "Project" wizard
+        Then verify "Quick_Actions" element visibility on "Project" wizard
+        Then verify "Quick_Actions" dropdown element on "Project" wizard should contains "Project"."Quick_Actions_Options"
+        Then select "Register dataset" option in "Quick_Actions" dropdown on "Project" wizard
         Then "Title" element on "Register_Dataset" should contains "Register Dataset" value
         Then "Form_Text" component on "Register_Dataset" should contains "Register_Dataset"."Form_Text"
         Then "Form_Subtext" component on "Register_Dataset" should contains "Register_Dataset"."Form_Subtext"
@@ -326,9 +435,9 @@ Feature: Project Monitoring Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
-        Then select "Batch run" option in "Create_New" dropdown on "Project" wizard
+        Then verify "Quick_Actions" element visibility on "Project" wizard
+        Then verify "Quick_Actions" dropdown element on "Project" wizard should contains "Project"."Quick_Actions_Options"
+        Then select "Batch run" option in "Quick_Actions" dropdown on "Project" wizard
         And wait load page
         Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
         Then "Title" element on "Modal_Wizard_Form" should contains "Batch Run" value
@@ -419,13 +528,15 @@ Feature: Project Monitoring Page
     Scenario: MLPM008 - Check all mandatory components on Create ML Function - Job runtime
         Given open url
         And wait load page
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
         When turn on demo mode with query params "false"
         And wait load page
-        Then select "ML function" option in "Create_New" dropdown on "Project" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then verify "Quick_Actions" element visibility on "Project" wizard
+        Then verify "Quick_Actions" dropdown element on "Project" wizard should contains "Project"."Quick_Actions_Options_Demo"
+        When turn on demo mode with query params "false"
+        And wait load page
+        Then select "ML function" option in "Quick_Actions" dropdown on "Project" wizard
         Then "Title" element on "Create_ML_Function_Popup" should contains "Create New Function" value
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
@@ -480,13 +591,15 @@ Feature: Project Monitoring Page
     Scenario: MLPM009 - Check all mandatory components on Create ML Function - Serving runtime
         Given open url
         And wait load page
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
         When turn on demo mode with query params "false"
         And wait load page
-        Then select "ML function" option in "Create_New" dropdown on "Project" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then verify "Quick_Actions" element visibility on "Project" wizard
+        Then verify "Quick_Actions" dropdown element on "Project" wizard should contains "Project"."Quick_Actions_Options_Demo"
+        When turn on demo mode with query params "false"
+        And wait load page
+        Then select "ML function" option in "Quick_Actions" dropdown on "Project" wizard
         Then "Title" element on "Create_ML_Function_Popup" should contains "Create New Function" value
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
@@ -550,11 +663,13 @@ Feature: Project Monitoring Page
     Scenario: MLPM010 - Check all mandatory components on Create New Feature Set
         Given open url
         And wait load page
+        When turn on demo mode with query params "false"
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then verify "Create_New" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
-        Then select "Feature set" option in "Create_New" dropdown on "Project" wizard
+        Then verify "Quick_Actions" element visibility on "Project" wizard
+        Then verify "Quick_Actions" dropdown element on "Project" wizard should contains "Project"."Quick_Actions_Options_Demo"
+        Then select "Feature set" option in "Quick_Actions" dropdown on "Project" wizard
         Then verify "Cross_Close_Button" element visibility on "New_Feature_Set" wizard
         Then verify "Feature_Set_Name_Input" element visibility on "New_Feature_Set" wizard
         Then verify "Version_Input" element visibility on "New_Feature_Set" wizard
@@ -593,12 +708,12 @@ Feature: Project Monitoring Page
     @MLPM
     @passive
     @smoke
-    Scenario: MLPM011 - Check Project Counter redirection to Models page
+    Scenario: MLPM011 - Check the redirection from Models counter to Models page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on "Model_Stats_Counter" element on "Project" wizard
+        When click on "Model_Stats_Counter" element in "Models_Stats_Container" on "Project" wizard
         And wait load page
         Then verify "Table_Name_Filter_Input" element visibility on "Models" wizard
         Then click on "Table_FilterBy_Button" element on "Models" wizard
@@ -615,13 +730,17 @@ Feature: Project Monitoring Page
     @MLPM
     @passive
     @smoke
-    Scenario: MLPM012 - Check Project Counter redirection to Feature Sets page
+    #TODO: Create Feature set from the Quick Actions dropdown menu
+    Scenario: MLPM012 - Check the redirection to Feature sets page during creating the Feature set
         Given open url
+        And wait load page
+        When turn on demo mode with query params "false"
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on "FeatureSets_Stats_Counter" element on "Project" wizard
+        Then select "Feature set" option in "Quick_Actions" dropdown on "Project" wizard
         And wait load page
+        Then verify "Cross_Close_Button" element visibility on "New_Feature_Set" wizard
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
@@ -649,12 +768,12 @@ Feature: Project Monitoring Page
     @MLPM
     @passive
     @smoke
-    Scenario: MLPM013 - Check Project Counter redirection to Artifacts page
+    Scenario: MLPM013 - Check the redirection from Other artifacts counter to Artifacts page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on "Artifacts_Stats_Counter" element on "Project" wizard
+        When click on "Other_Artifacts_Counter_Number" element in "Artifacts_Stats_Container" on "Project" wizard
         And wait load page
         Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
         Then click on "Table_FilterBy_Button" element on "Files" wizard
@@ -665,6 +784,74 @@ Feature: Project Monitoring Page
         Then verify "Files_Table" element visibility on "Files" wizard
         Then verify "Register_File_Button" element visibility on "Files" wizard
         Then "Register_File_Button" element on "Files" should contains "Register artifact" value
+    
+    @MLPM
+    @passive
+    @smoke
+    Scenario: MLPM024 - Check the redirection from Datasets counter to Datasets page
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        When click on "Datasets_Counter_Number" element in "Artifacts_Stats_Container" on "Project" wizard
+        And wait load page
+        Then verify "Table_Name_Filter_Input" element visibility on "Datasets" wizard
+        Then verify "Table_FilterBy_Button" element visibility on "Datasets" wizard
+        Then click on "Table_FilterBy_Button" element on "Datasets" wizard
+        Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options_Main_Table"
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
+        Then "Checkbox_Label" element on "FilterBy_Popup" should contains "Show best iteration only" value
+        Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Refresh_Button" element visibility on "Datasets" wizard
+        Then verify "Datasets_Table" element visibility on "Datasets" wizard
+    
+    @MLPM
+    @passive
+    @smoke
+    Scenario: MLPM025 - Check the redirection from Documents counter to Documents page
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        When click on "Documents_Counter_Number" element in "Artifacts_Stats_Container" on "Project" wizard
+        And wait load page
+        Then verify "Table_Name_Filter_Input" element visibility on "Documents" wizard
+        Then verify "Table_FilterBy_Button" element visibility on "Documents" wizard
+        Then verify "Table_FilterBy_Button" element on "Documents" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
+        Then click on "Table_FilterBy_Button" element on "Documents" wizard
+        Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options_Main_Table"
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
+        Then "Checkbox_Label" element on "FilterBy_Popup" should contains "Show best iteration only" value
+        Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
+        Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+        Then verify "Table_Refresh_Button" element visibility on "Documents" wizard
+        Then verify "Table_Refresh_Button" element on "Documents" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
+        Then verify "Documents_Table" element visibility on "Documents" wizard
+    
+    @MLPM
+    @passive
+    @smoke
+    #TODO: Add components check on LLM prompts page
+    Scenario: MLPM026 - Check the redirection from LLM prompts counter to LLM prompts page
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        When click on "LLM_Prompts_Counter_Number" element in "Artifacts_Stats_Container" on "Project" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
+        Then verify redirection to "projects/default/llm-prompts?bePage=1&fePage=1"
 
     @MLPM
     @passive
@@ -674,7 +861,7 @@ Feature: Project Monitoring Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on cell with value "Running" in "name" column in "Jobs_Info_Card_Statistics" table on "Project" wizard
+        When click on "In_Process_Counter_Subtitle" element in "Runs_Statistic_Section_Container" on "Project" wizard
         And wait load page
         Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
@@ -704,27 +891,184 @@ Feature: Project Monitoring Page
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
         Then navigate back
         And wait load page
-        Then click on cell with value "Failed" in "name" column in "Jobs_Info_Card_Statistics" table on "Project" wizard
+        When click on "Failed_Counter_Subtitle" element in "Runs_Statistic_Section_Container" on "Project" wizard
         And wait load page
+        Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
+        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify "Table_Name_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Past 24 hours"
+        Then verify "Table_FilterBy_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
+        Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Aborted, Error"
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then verify "Batch_Run_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then "Batch_Run_Button" element on "Jobs_Monitor_Tab" should contains "Batch run" value
+        Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Auto_Refresh_Checkbox" element visibility on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then navigate back
+        And wait load page
+        When click on "Succeeded_Counter_Subtitle" element in "Runs_Statistic_Section_Container" on "Project" wizard
+        And wait load page
+        Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
+        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify "Table_Name_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Past 24 hours"
+        Then verify "Table_FilterBy_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
+        Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Completed"
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then verify "Batch_Run_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then "Batch_Run_Button" element on "Jobs_Monitor_Tab" should contains "Batch run" value
+        Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Auto_Refresh_Checkbox" element visibility on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
         
     @MLPM
     @passive
     @smoke
-    Scenario: MLPM015 - Check Project Counter redirection to Schedules tab
+    Scenario: MLPM015 - Check the redirection from Scheduled counter to Schedule tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on cell with value "Scheduled" in "name" column in "Jobs_Info_Card_Statistics" table on "Project" wizard
+        When click on "Scheduled_Stats_Counter" element in "Scheduled_Stats_Container" on "Project" wizard
         And wait load page
         Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Name_Filter_Input" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Schedule_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Any time"
         Then verify "Table_FilterBy_Button" element visibility on "Schedule_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then verify "Batch_Run_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then "Batch_Run_Button" element on "Schedule_Monitor_Tab" should contains "Batch run" value
         Then verify "Table_Refresh_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Schedule_Monitor_Table" element visibility on "Schedule_Monitor_Tab" wizard
+        Then navigate back
+        And wait load page
+        When click on "Jobs_Counter_Number" element in "Scheduled_Stats_Container" on "Project" wizard
+        And wait load page
+        Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify "Table_Name_Filter_Input" element visibility on "Schedule_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Schedule_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Any time"
+        Then verify "Table_FilterBy_Button" element visibility on "Schedule_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Job"
+        Then verify "Batch_Run_Button" element visibility on "Schedule_Monitor_Tab" wizard
+        Then "Batch_Run_Button" element on "Schedule_Monitor_Tab" should contains "Batch run" value
+        Then verify "Table_Refresh_Button" element visibility on "Schedule_Monitor_Tab" wizard
+        Then verify "Schedule_Monitor_Table" element visibility on "Schedule_Monitor_Tab" wizard
+        Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
+        And wait load page
+        When click on "Workflows_Counter_Number" element in "Scheduled_Stats_Container" on "Project" wizard
+        And wait load page
+        Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify "Table_Name_Filter_Input" element visibility on "Schedule_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Schedule_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Any time"
+        Then verify "Table_FilterBy_Button" element visibility on "Schedule_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Workflow"
+        Then verify "Batch_Run_Button" element visibility on "Schedule_Monitor_Tab" wizard
+        Then "Batch_Run_Button" element on "Schedule_Monitor_Tab" should contains "Batch run" value
+        Then verify "Table_Refresh_Button" element visibility on "Schedule_Monitor_Tab" wizard
+        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Scheduled_Type"
+
+    @MLPM
+    @passive
+    @smoke
+    Scenario: MLPM027 - Check the redirection from Workflows counter to Monitor Workflows tab
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        When click on "Workflows_Stats_Counter" element in "Workflows_Stats_Container" on "Project" wizard
+        And wait load page
+        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify "Table_Name_Filter_Input" element visibility on "Workflows_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Workflows_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Past week"
+        Then verify "Table_FilterBy_Button" element visibility on "Workflows_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Workflows_Monitor_Tab" wizard
+        Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then verify "Table_Refresh_Button" element visibility on "Workflows_Monitor_Tab" wizard
+        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Monitoring_Workflow"
+        Then navigate back
+        And wait load page
+        When click on "In_Process_Counter_Number" element in "Workflows_Stats_Container" on "Project" wizard
+        And wait load page
+        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify "Table_Name_Filter_Input" element visibility on "Workflows_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Workflows_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Any time"
+        Then verify "Table_FilterBy_Button" element visibility on "Workflows_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Workflows_Monitor_Tab" wizard
+        Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Running, Terminating"
+        Then verify "Table_Refresh_Button" element visibility on "Workflows_Monitor_Tab" wizard
+        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Monitoring_Workflow_Status"
+        Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
+        And wait load page
+        When click on "Failed_Counter_Number" element in "Workflows_Stats_Container" on "Project" wizard
+        And wait load page
+        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify "Table_Name_Filter_Input" element visibility on "Workflows_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Workflows_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Past week"
+        Then verify "Table_FilterBy_Button" element visibility on "Workflows_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Workflows_Monitor_Tab" wizard
+        Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Error, Failed"
+        Then verify "Table_Refresh_Button" element visibility on "Workflows_Monitor_Tab" wizard
+        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Status"
+        Then navigate back
+        And wait load page
+        When click on "Succeeded_Counter_Number" element in "Workflows_Stats_Container" on "Project" wizard
+        And wait load page
+        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify "Table_Name_Filter_Input" element visibility on "Workflows_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Workflows_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Past week"
+        Then verify "Table_FilterBy_Button" element visibility on "Workflows_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Workflows_Monitor_Tab" wizard
+        Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Completed"
+        Then verify "Table_Refresh_Button" element visibility on "Workflows_Monitor_Tab" wizard
+        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Status"
+
+    @MLPM
+    @passive
+    @smoke
+    #TODO: Add components check on LLM prompts page
+    Scenario: MLPM028 - Check the redirection from Monitoring App counter to Monitoring app page
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        When click on "Monitoring_App_Succeeded_Stats_Counter" element in "Monitoring_App_Stats_Container" on "Project" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
+        Then verify redirection to "projects/default/monitoring-app"
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Monitoring_App" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Monitoring_App" wizard selected option value "Past 24 hours"
+        Then verify "Refresh_Button" element visibility on "Monitoring_App" wizard
+        Then navigate back
+        And wait load page
+        When click on "Monitoring_App_Failed_Stats_Counter" element in "Monitoring_App_Stats_Container" on "Project" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
+        Then verify redirection to "projects/default/monitoring-app"
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Monitoring_App" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Monitoring_App" wizard selected option value "Past 24 hours"
+        Then verify "Refresh_Button" element visibility on "Monitoring_App" wizard
 
     @MLPM
     @passive
@@ -753,13 +1097,13 @@ Feature: Project Monitoring Page
     @MLPM
     @passive
     @smoke
-    Scenario: MLPM016 - Check redirect to Jobs and workflows page using See All link
+    Scenario: MLPM016 - Check redirect to Jobs and workflows page using All jobs link
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
-        Then select "Batch run" option in "Create_New" dropdown on "Project" wizard
+        Then select "Batch run" option in "Quick_Actions" dropdown on "Project" wizard
         And wait load page
         And click on row root with value "test" in "name" column in "Functions_Table" table on "Modal_Wizard_Form" wizard
         And wait load page
@@ -777,9 +1121,10 @@ Feature: Project Monitoring Page
         Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify "Recent_text" element visibility on "Project" wizard
-        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
-        Then click on "See_All_Jobs_Link" element on "Project" wizard
+        Then verify "Recent_Text" element visibility in "Runs_Statistic_Section_Container" on "Project" wizard
+        Then verify "Quick_Actions" dropdown element on "Project" wizard should contains "Project"."Quick_Actions_Options"
+        Then verify "All_Jobs_Link" element visibility in "Runs_Statistic_Section_Container" on "Project" wizard
+        When click on "All_Jobs_Link" element in "Runs_Statistic_Section_Container" on "Project" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs and workflows" value
         Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
@@ -801,8 +1146,8 @@ Feature: Project Monitoring Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And save to context "name" column and "href" attribute on 1 row from "Jobs_And_Workflows" table on "Project" wizard
-        When click on cell with row index 1 in "name" column in "Jobs_And_Workflows" table on "Project" wizard
+        And save to context "name" column and "href" attribute on 1 row from "Runs_Statistic_Table" table on "Project" wizard
+        When click on cell with row index 1 in "name" column in "Runs_Statistic_Table" table on "Project" wizard
         And wait load page
         Then verify "Arrow_Back" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Header" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
@@ -823,8 +1168,7 @@ Feature: Project Monitoring Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on "ConsumerGroups_Stats_Counter" element on "Project" wizard
-        And wait load page
+        When click on "ConsumerGroups_Stats_Counter" element in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" wizard
         And wait load page
         Then "Title" element on "Consumer_Groups" should contains "Consumer groups (v3io stream)" value
         Then "Description" element on "Consumer_Groups" should contains "This report displays the project's consumer groups for Iguazio v3io streams" value
@@ -833,15 +1177,12 @@ Feature: Project Monitoring Page
         Then verify "Consumer_Groups_Table" element visibility on "Consumer_Groups" wizard
         Then click on "Arrow_Back" element on "Consumer_Groups" wizard
         And wait load page
-        And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
-        Then verify "Create_New" element visibility on "Project" wizard
+        Then verify "Quick_Actions" element visibility on "Project" wizard
         Then verify "Refresh_Button" element visibility on "Project" wizard
-        Then verify "Dashboard_Realtime_Functions_Table" element visibility on "Project" wizard
-        Then verify "Jobs_And_Workflows" element visibility on "Project" wizard
+        Then verify "Realtime_Functions_Nuclio_Table" element visibility on "Project" wizard
+        Then verify "Runs_Statistic_Table" element visibility on "Project" wizard
         Then verify "Mono_Values_Cards" element visibility on "Project" wizard
-        Then verify "Jobs_Info_Card_Statistics" element visibility on "Project" wizard
-        Then verify "Real_Time_Functions_Card_Statistics" element visibility on "Project" wizard
 
     @MLPM
     @passive
@@ -851,8 +1192,7 @@ Feature: Project Monitoring Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on "ConsumerGroups_Stats_Counter" element on "Project" wizard
-        And wait load page
+        When click on "ConsumerGroups_Stats_Counter" element in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" wizard
         And wait load page
         Then verify "Search_Input" element visibility on "Consumer_Groups" wizard
         Then verify "Consumer_Groups_Table" element visibility on "Consumer_Groups" wizard
@@ -871,13 +1211,13 @@ Feature: Project Monitoring Page
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on "ConsumerGroups_Stats_Counter" element on "Project" wizard
+        When click on "ConsumerGroups_Stats_Counter" element in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" wizard
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Consumer_Group_Yet"
         Then select "project" with "default" value in breadcrumbs menu
         And wait load page
-        Then click on "ConsumerGroups_Stats_Counter" element on "Project" wizard
+        When click on "ConsumerGroups_Stats_Counter" element in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" wizard
         And wait load page
         And wait load page
         And save to context "consumer_group_name" column and "href" attribute on 1 row from "Consumer_Groups_Table" table on "Consumer_Groups" wizard
@@ -902,7 +1242,7 @@ Feature: Project Monitoring Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on "ConsumerGroups_Stats_Counter" element on "Project" wizard
+        When click on "ConsumerGroups_Stats_Counter" element in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" wizard
         And wait load page
         And click on cell with row index 1 in "consumer_group_name" column in "Consumer_Groups_Table" table on "Consumer_Groups" wizard
         And wait load page
@@ -923,7 +1263,7 @@ Feature: Project Monitoring Page
         And wait load page
         And click on row root with value "auto-generated-data" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then click on "Alerts_Stats_Total_Number" element on "Project" wizard
+        When click on "Alerts_Stats_Counter" element in "Alerts_Stats_Container" on "Project" wizard
         And wait load page
         Then verify "Search_By_Name_Filter_Input" element visibility on "Alerts" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Alerts" wizard
@@ -946,7 +1286,7 @@ Feature: Project Monitoring Page
         Then verify "Event_Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
         And wait load page
-        Then click on "Alerts_Stats_Endpoint_Number" element on "Project" wizard
+        When click on "Alerts_Stats_Endpoint_Counter" element in "Alerts_Stats_Container" on "Project" wizard
         And wait load page
         Then verify "Search_By_Name_Filter_Input" element visibility on "Alerts" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Alerts" wizard
@@ -968,7 +1308,7 @@ Feature: Project Monitoring Page
         Then verify "Event_Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
         And wait load page
-        Then click on "Alerts_Stats_Jobs_Number" element on "Project" wizard
+        When click on "Alerts_Stats_Jobs_Counter" element in "Alerts_Stats_Container" on "Project" wizard
         And wait load page
         Then verify "Search_By_Name_Filter_Input" element visibility on "Alerts" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Alerts" wizard
@@ -989,7 +1329,7 @@ Feature: Project Monitoring Page
         Then verify "Event_Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
         And wait load page
-        Then click on "Alerts_Stats_Application_Number" element on "Project" wizard
+        When click on "Alerts_Stats_Application_Counter" element in "Alerts_Stats_Container" on "Project" wizard
         And wait load page
         Then verify "Search_By_Name_Filter_Input" element visibility on "Alerts" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Alerts" wizard

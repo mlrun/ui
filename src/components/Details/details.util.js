@@ -42,7 +42,6 @@ import {
   TAG_LATEST
 } from '../../constants'
 import { generateLinkPath, parseUri } from '../../utils'
-import { isArtifactTagUnique } from '../../utils/artifacts.util'
 import { getFunctionImage } from '../FunctionsPage/functions.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
@@ -122,6 +121,14 @@ export const generateArtifactsContent = (
       },
       db_key: {
         value: selectedItem.db_key
+      },
+      model_artifact: {
+        value: !isEmpty(selectedItem?.parent_uri) ? parseUri(selectedItem.parent_uri).key : '',
+        shouldPopUp: !isEmpty(selectedItem?.parent_uri),
+        handleClick: () =>
+          openPopUp(ArtifactPopUp, {
+            artifactData: parseUri(selectedItem?.parent_uri)
+          })
       },
       tag: {
         value: selectedItem.tag ?? '',
