@@ -114,7 +114,7 @@ const AlertsCounters = () => {
               data-testid="alerts_total_counter"
               onClick={alertsStats?.total?.link}
             >
-              <div>
+              <div className="stats__counter">
                 {projectStore?.projectsSummary?.loading ? (
                   <Loader section small secondary />
                 ) : (
@@ -132,7 +132,7 @@ const AlertsCounters = () => {
                 data-testid="alerts_endpoints_counter"
               >
                 <h6 className="stats__subtitle">Endpoint</h6>
-                <div>
+                <div className="stats__counter">
                   {projectStore?.projectsSummary?.loading ? (
                     <Loader section small secondary />
                   ) : (
@@ -148,7 +148,7 @@ const AlertsCounters = () => {
                 onClick={alertsStats?.job?.link}
               >
                 <h6 className="stats__subtitle">Jobs</h6>
-                <div>
+                <div className="stats__counter">
                   {projectStore?.projectsSummary?.loading ? (
                     <Loader section small secondary />
                   ) : (
@@ -164,7 +164,7 @@ const AlertsCounters = () => {
                 data-testid="alerts_application_counter"
               >
                 <div className="stats__subtitle">Application</div>
-                <div>
+                <div className="stats__counter">
                   {projectStore.projectsSummary.loading ? (
                     <Loader section small secondary />
                   ) : (
