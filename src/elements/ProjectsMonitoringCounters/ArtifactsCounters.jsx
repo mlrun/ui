@@ -106,7 +106,11 @@ const ArtifactsCounters = () => {
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
-              <div className={data?.documents?.className} onClick={data?.documents?.link}>
+              <div
+                data-testid="artifacts_documents_counter"
+                className={data?.documents?.className}
+                onClick={data?.documents?.link}
+              >
                 <h6 className="stats__subtitle">Documents</h6>
                 <div className="stats__counter">
                   {projectStore.projectsSummary.loading ? (
@@ -120,7 +124,11 @@ const ArtifactsCounters = () => {
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
-              <div className={data.llm_prompt.className} onClick={data.llm_prompt.link}>
+              <div
+                data-testid="artifacts_llm_counter"
+                className={data.llm_prompt.className}
+                onClick={data.llm_prompt.link}
+              >
                 <h6 className="stats__subtitle">LLM Prompts</h6>
                 {projectStore.projectsSummary.loading ? (
                   <Loader section small secondary />
@@ -132,7 +140,11 @@ const ArtifactsCounters = () => {
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
-              <div className={data?.files?.className} onClick={data?.files?.link}>
+              <div
+                data-testid="artifacts_other_counter"
+                className={data?.files?.className}
+                onClick={data?.files?.link}
+              >
                 <h6 className="stats__subtitle">Other Artifacts</h6>
                 {projectStore.projectsSummary.loading ? (
                   <Loader section small secondary />
