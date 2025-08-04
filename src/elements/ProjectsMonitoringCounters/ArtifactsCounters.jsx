@@ -100,11 +100,13 @@ const ArtifactsCounters = () => {
                 onClick={data?.datasets?.link}
               >
                 <h6 className="stats__subtitle">Datasets</h6>
-                {projectStore.projectsSummary.loading ? (
-                  <Loader section small secondary />
-                ) : (
-                  data?.datasets.counter?.toLocaleString()
-                )}
+                <div className="stats__counter">
+                  {projectStore.projectsSummary.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    <div className="stats__counter">{data?.datasets.counter?.toLocaleString()}</div>
+                  )}
+                </div>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
@@ -114,11 +116,15 @@ const ArtifactsCounters = () => {
                 onClick={data?.documents?.link}
               >
                 <h6 className="stats__subtitle">Documents</h6>
-                {projectStore.projectsSummary.loading ? (
-                  <Loader section small secondary />
-                ) : (
-                  data?.documents?.counter?.toLocaleString()
-                )}
+                <div className="stats__counter">
+                  {projectStore.projectsSummary.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    <div className="stats__counter">
+                      {data?.documents?.counter?.toLocaleString()}
+                    </div>
+                  )}
+                </div>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
@@ -131,7 +137,9 @@ const ArtifactsCounters = () => {
                 {projectStore.projectsSummary.loading ? (
                   <Loader section small secondary />
                 ) : (
-                  data?.llm_prompt?.counter?.toLocaleString()
+                  <div className="stats__counter">
+                    {data?.llm_prompt?.counter?.toLocaleString()}
+                  </div>
                 )}
               </div>
             </StatsCard.Row>
@@ -145,7 +153,7 @@ const ArtifactsCounters = () => {
                 {projectStore.projectsSummary.loading ? (
                   <Loader section small secondary />
                 ) : (
-                  data?.files?.counter?.toLocaleString()
+                  <div className="stats__counter">{data?.files?.counter?.toLocaleString()}</div>
                 )}
               </div>
             </StatsCard.Row>
