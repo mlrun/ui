@@ -154,10 +154,10 @@
     display: flex;
     flex: 1 0 auto;
     flex-flow: column nowrap;
-    width: 100%;
     max-width: 228px;
     margin: 0.5rem 0;
-    padding: 0;
+    padding: 0 10px 0 0;
+    width: 100%;
     list-style-type: none;
 
     &.navbar-links_nested {
