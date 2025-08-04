@@ -464,7 +464,7 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
         const savedAndTransformedSearchParams = saveAndTransformSearchParams(
           window.location.search,
           true,
-          [BE_PAGE, FE_PAGE, NAME_FILTER]
+          [BE_PAGE, FE_PAGE, NAME_FILTER, PROJECT_FILTER]
         )
 
         return `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}/${job.name}${savedAndTransformedSearchParams}${savedAndTransformedSearchParams ? '&' : '?'}${`${PROJECT_FILTER}=${job.project}`}`
