@@ -486,8 +486,6 @@ function createProjectsFeatureSet(req, res) {
 function updateProjectsFeatureSet(req, res) {
   let featureSet = req.body
 
-  featureSet.metadata.updated = new Date().toISOString()
-
   const featureSetIndex = featureSets.feature_sets.findIndex(
     featureSetItem =>
       req.params.project === featureSetItem.metadata.project &&
@@ -496,6 +494,11 @@ function updateProjectsFeatureSet(req, res) {
       featureSet.metadata.uid === featureSetItem.metadata.uid
   )
 
+  if (featureSetIndex === -1) {
+    return createProjectsFeatureSet(req, res)
+  }
+
+  featureSet.metadata.updated = new Date().toISOString()
   featureSets.feature_sets[featureSetIndex] = featureSet
 
   res.send(featureSet)
