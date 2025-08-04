@@ -47,7 +47,7 @@ const ArtifactsCounters = () => {
 
   const dataStats = useMemo(() => {
     if (projectName) {
-      const llm_prompts = projectStore?.projectSummary?.data?.llm_prompts || 0
+      const llm_prompts = projectStore?.projectSummary?.data?.llm_prompts_count || 0
       const files = projectStore?.projectSummary?.data?.files_count || 0
       const documents = projectStore?.projectSummary?.data?.documents_count || 0
       const datasets = projectStore?.projectSummary?.data?.datasets_count || 0
