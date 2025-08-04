@@ -94,7 +94,11 @@ const ArtifactsCounters = () => {
           </StatsCard.Row>
           <div ref={detailsRef} className="stats__details">
             <StatsCard.Row>
-              <div className={data?.datasets?.className} onClick={data?.datasets?.link}>
+              <div
+                className={data?.datasets?.className}
+                data-testid="artifacts_datasets_counter"
+                onClick={data?.datasets?.link}
+              >
                 <h6 className="stats__subtitle">Datasets</h6>
                 <div className="stats__counter">
                   {projectStore.projectsSummary.loading ? (
