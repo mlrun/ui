@@ -341,8 +341,7 @@ export const getMEPsWithDetectionChartConfig = () => {
         x: {
           ...barConfig.options.scales.x,
           title: {
-            ...barConfig.options.scales.x.title,
-            text: 'Time range'
+            display: false
           }
         },
         y: {

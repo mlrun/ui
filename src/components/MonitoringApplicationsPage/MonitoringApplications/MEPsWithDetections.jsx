@@ -25,23 +25,17 @@ import NoData from '../../../common/NoData/NoData'
 import { Loader, Tip } from 'igz-controls/components'
 
 import {
-  getFiltersConfig,
   MONITORING_APPLICATIONS_NO_DATA_MESSAGE
 } from '../MonitoringApplicationsPage.util'
 import { getMEPsWithDetectionChartConfig } from '../../../utils/getChartConfig'
 import { groupDataToBins } from './monitoringApplications.util'
-import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
-import { DATES_FILTER } from '../../../constants'
 import { useSelector } from 'react-redux'
 
 const MEPsWithDetections = () => {
   const [isLoading, setIsLoading] = useState(true)
+  const chartRef = useRef()
   const chartYAxisRef = useRef()
   const chartWrapperRef = useRef()
-  const filtersConfig = useMemo(() => getFiltersConfig(), [])
-  const filters = useFiltersFromSearchParams(filtersConfig)
-  const startTime = useMemo(() => filters[DATES_FILTER].value[0].getTime(), [filters])
-  const endTime = useMemo(() => (filters[DATES_FILTER].value[1] || new Date()).getTime(), [filters])
   const barConfig = useMemo(() => getMEPsWithDetectionChartConfig(), [])
   const {
     endpointsWithDetections: { data: endpointsWithDetectionsData, loading }
@@ -94,9 +88,9 @@ const MEPsWithDetections = () => {
 
   const barChartConfig = useMemo(() => {
     const { labels, values, dates } = groupDataToBins(
-      endpointsWithDetectionsData,
-      startTime,
-      endTime
+      endpointsWithDetectionsData.values,
+      endpointsWithDetectionsData.start,
+      endpointsWithDetectionsData.end
     )
 
     return {
@@ -130,7 +124,7 @@ const MEPsWithDetections = () => {
       },
       plugins: [renderPlugin]
     }
-  }, [barConfig, endTime, endpointsWithDetectionsData, renderPlugin, startTime])
+  }, [barConfig, endpointsWithDetectionsData, renderPlugin])
 
   return (
     <div className="monitoring-app__section-item">
@@ -149,8 +143,12 @@ const MEPsWithDetections = () => {
             >
               <canvas id="chart-y-axis" ref={chartYAxisRef} width={0} height={0} />
               <div className="section-item_ml-chart-wrapper" ref={chartWrapperRef}>
-                <MlChart config={barChartConfig} />
+                <MlChart
+                  config={barChartConfig}
+                  chartRef={chartRef}
+                />
               </div>
+              <div className="section-item_chart-area_x-axis-label">Time range</div>
             </div>
           </div>
         </div>
