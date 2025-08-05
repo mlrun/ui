@@ -348,7 +348,7 @@ export const getMEPsWithDetectionChartConfig = () => {
           ...barConfig.options.scales.y,
           title: {
             ...barConfig.options.scales.y.title,
-            text: 'Model endpoint with detections'
+            text: 'Model endpoints'
           }
         }
       },

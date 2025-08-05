@@ -95,6 +95,7 @@ $applicationRowHeightExtended: variables.$rowHeightExtended;
             left: 50%;
             font-weight: 500;
             font-size: 13px;
+            transform: translate(-50%, 0);
           }
 
           &.loading {
