@@ -44,7 +44,7 @@ const PromptTab = ({
   const [forceExpandAll, setForceExpandAll] = useState(false)
 
   useEffect(() => {
-    if (Array.isArray(selectedItem.prompt_template) && !isEmpty(selectedItem.prompt_legend)) {
+    if (Array.isArray(selectedItem.prompt_template)) {
       const legendMap = { ...selectedItem.prompt_legend }
       const regex = new RegExp(`\\b(${Object.keys(legendMap).join('|')})\\b`, 'g')
 
