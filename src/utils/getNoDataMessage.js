@@ -64,7 +64,9 @@ import {
   TAG_FILTER_ALL_ITEMS,
   TYPE_FILTER,
   PROJECTS_FILTER_ALL_ITEMS,
-  LLM_PROMPTS_PAGE
+  LLM_PROMPTS_PAGE,
+  MODEL_NAME_FILTER,
+  MODEL_TAG_FILTER
 } from '../constants'
 
 const messageNamesList = {
@@ -203,6 +205,8 @@ const getVisibleFilterTypes = (filtersConfig, filters, filtersStore) => {
         type === ENDPOINT_RESULT ||
         type === JOB_NAME ||
         type === LABELS_FILTER ||
+        type === MODEL_NAME_FILTER ||
+        type === MODEL_TAG_FILTER ||
         type === NAME_FILTER) &&
       filters[type]?.length > 0
     const isStatusVisible =
