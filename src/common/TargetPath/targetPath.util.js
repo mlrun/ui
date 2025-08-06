@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { get, isNil, uniqBy } from 'lodash'
+import { debounce, get, isNil, uniqBy } from 'lodash'
 
 import {
   ARTIFACT_OTHER_TYPE,
@@ -332,7 +332,7 @@ export const generateArtifactsReferencesList = artifacts => {
   return uniqBy(generatedArtifacts, 'id')
 }
 
-export const getProjectsNames = (dispatch, setDataInputState, projectName) => {
+export const getProjectsNames = debounce((dispatch, setDataInputState, projectName) => {
   dispatch(fetchProjectsNames())
     .unwrap()
     .then(result => {
@@ -342,9 +342,9 @@ export const getProjectsNames = (dispatch, setDataInputState, projectName) => {
       }))
     })
     .catch(() => {})
-}
+}, 300)
 
-export const getArtifacts = (dispatch, project, storePathType, setDataInputState) => {
+export const getArtifacts = debounce((dispatch, project, storePathType, setDataInputState) => {
   dispatch(
     fetchArtifacts({
       project,
@@ -373,9 +373,9 @@ export const getArtifacts = (dispatch, project, storePathType, setDataInputState
     .catch(error => {
       showErrorNotification(dispatch, error, '', 'Failed to fetch artifacts')
     })
-}
+}, 300)
 
-export const getFeatureVectors = (dispatch, project, setDataInputState) => {
+export const getFeatureVectors = debounce((dispatch, project, setDataInputState) => {
   dispatch(fetchFeatureVectors({ project, filters: {}, config: {} }))
     .unwrap()
     .then(featureVectors => {
@@ -393,9 +393,9 @@ export const getFeatureVectors = (dispatch, project, setDataInputState) => {
         featureVectors: featureVectorsList
       }))
     })
-}
+}, 300)
 
-export const getArtifact = (dispatch, project, projectItem, setDataInputState) => {
+export const getArtifact = debounce((dispatch, project, projectItem, setDataInputState) => {
   dispatch(fetchArtifact({ project, artifact: projectItem }))
     .unwrap()
     .then(artifacts => {
@@ -409,9 +409,9 @@ export const getArtifact = (dispatch, project, projectItem, setDataInputState) =
     .catch(error => {
       showErrorNotification(dispatch, error, '', 'Failed to fetch artifact data')
     })
-}
+}, 300)
 
-export const getFeatureVector = (dispatch, project, projectItem, setDataInputState) => {
+export const getFeatureVector = debounce((dispatch, project, projectItem, setDataInputState) => {
   dispatch(fetchFeatureVector({ project, featureVector: projectItem }))
     .unwrap()
     .then(featureVectors => {
@@ -436,4 +436,4 @@ export const getFeatureVector = (dispatch, project, projectItem, setDataInputSta
     .catch(error => {
       showErrorNotification(dispatch, error, '', 'Failed to fetch feature vector data')
     })
-}
+}, 300)
