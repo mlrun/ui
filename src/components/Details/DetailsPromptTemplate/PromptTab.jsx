@@ -94,6 +94,14 @@ const PromptTab = ({
     selectedItem.prompt_template
   ])
 
+  useEffect(() => {
+    return () => {
+      setPromptTemplate([])
+      setSearchResult('')
+      setForceExpandAll(false)
+    }
+  }, [])
+
   return (
     <div className="prompt-tab">
       <div className="prompt-tab__header">
