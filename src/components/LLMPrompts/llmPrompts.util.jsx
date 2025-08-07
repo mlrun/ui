@@ -284,13 +284,11 @@ export const getFiltersConfig = isAllVersions => ({
   [MODEL_NAME_FILTER]: {
     label: 'Model name:',
     initialValue: '',
-    isModal: true,
-    hidden: isAllVersions
+    isModal: true
   },
   [MODEL_TAG_FILTER]: {
     label: 'Model version tag:',
     initialValue: '',
-    isModal: true,
-    hidden: isAllVersions
+    isModal: true
   }
 })
