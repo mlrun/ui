@@ -169,7 +169,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           id: `attempts.${identifierUnique}`,
           value: `${job.retryCountWithInitialAttempt} out of ${job.maxRetriesWithInitialAttempt}`,
           className: 'table-cell-1',
-          tip: 'Number of attempts to run kubejobs'
+          tip: 'Number of attempts to run Kubernetes jobs'
         }
       ]
     }
@@ -571,7 +571,7 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
           id: `attempts.${identifierUnique}`,
           value: `${job.retryCountWithInitialAttempt} out of ${job.maxRetriesWithInitialAttempt}`,
           className: 'table-cell-1',
-          tip: 'Number of attempts to run kubejobs'
+          tip: 'Number of attempts to run Kubernetes jobs'
         }
       ]
     }
