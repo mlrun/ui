@@ -32,7 +32,9 @@
     border: 1px solid colors.$frenchLilac;
 
     &.alerts-card {
-      transition: background-color 0s, border-color 0s;
+      transition:
+        background-color 0s,
+        border-color 0s;
     }
 
     &.alerts-card_not-empty {
@@ -50,14 +52,19 @@
         margin: 0;
         color: colors.$topaz;
         font-weight: normal;
-        font-size: 14px;
+        font-size: 12px;
+      }
+
+      &__counter {
+        font-size: 1.15em;
+        font-weight: 500;
       }
 
       &-card__row {
         flex: unset;
         margin-bottom: 0;
         font-weight: 400;
-        font-size: 14px;
+        font-size: 12px;
 
         & > * {
           position: relative;
@@ -217,7 +224,7 @@
       gap: 6px;
       align-items: center;
       color: colors.$topaz;
-      font-size: 14px;
+      font-size: 12px;
     }
   }
 }

@@ -46,7 +46,7 @@ const ProjectDataCard = ({
     <div className="project-data-card">
       <div className="project-data-card__header table-header">
         <div className="project-data-card__header-text data-ellipsis">
-          <span>
+          <div className='d-flex'>
             {href ? (
               <a href={href} target="_top">
                 {title}
@@ -55,7 +55,7 @@ const ProjectDataCard = ({
               <Link to={link}>{title}</Link>
             )}
             {tip && <Tip className="project-data-card__header-tip" text={tip} />}
-          </span>
+          </div>
           {hasUpdateDate && (
             <span className="project-data-card__header-info">
               <ClockIcon className="project-data-card__header-info-icon" />
