@@ -77,10 +77,10 @@
       max-width: 100px;
       color: colors.$topaz;
       font-weight: 400;
-      font-size: 14px;
+      font-size: 12px;
       text-align: center;
 
-      i[class^="state-"] {
+      i[class^='state-'] {
         display: inline-block;
         width: 8px;
         height: 8px;
@@ -90,7 +90,7 @@
 
     &-value {
       width: 100%;
-      font-weight: 400;
+      font-weight: 600;
       font-size: 26px;
       line-height: 35px;
       text-align: center;
