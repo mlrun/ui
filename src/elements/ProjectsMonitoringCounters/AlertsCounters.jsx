@@ -21,6 +21,7 @@ import React, { useMemo, useRef, useState } from 'react'
 import classNames from 'classnames'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { defaults } from 'lodash'
 
 import { Loader, PopUpDialog } from 'igz-controls/components'
 import StatsCard from '../../common/StatsCard/StatsCard'
@@ -77,7 +78,7 @@ const AlertsCounters = () => {
 
     return {
       projectName,
-      data: projectStore.jobsMonitoringData.alerts || defaultAlertData
+      data: defaults({}, projectStore.jobsMonitoringData.alerts, defaultAlertData)
     }
   }, [
     paramProjectName,
