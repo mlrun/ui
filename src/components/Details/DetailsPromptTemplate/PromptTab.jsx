@@ -44,31 +44,41 @@ const PromptTab = ({
   const [forceExpandAll, setForceExpandAll] = useState(false)
 
   useEffect(() => {
-    if (Array.isArray(selectedItem.prompt_template)) {
+    if (!isEmpty(selectedItem.prompt_template)) {
       const legendMap = { ...selectedItem.prompt_legend }
-      const regex = new RegExp(`\\b(${Object.keys(legendMap).join('|')})\\b`, 'g')
 
       const jsxContent = selectedItem.prompt_template.map((item, idx) => {
-        const parts = item.content.split(regex).map((part, i) => {
-          if (legendMap[part]) {
-            const currentArgument = legendMap[part]
+        const parts = item.content.split(/(\{[^}]+})/g).map((part, i) => {
+          const match = part.match(/^\{([^}]+)}$/)
+
+          if (match) {
+            const argName = match[1]
+            const currentArgument = legendMap[argName]
+
+            if (currentArgument) {
+              return (
+                <Tooltip
+                  key={i}
+                  template={<TextTooltipTemplate text={currentArgument.description} />}
+                  textShow
+                >
+                  <span
+                    style={{ color: 'blue', cursor: 'pointer' }}
+                    onClick={() => {
+                      setSelectedArgument(currentArgument)
+                      setSelectedTab(ARGUMENTS_TAB)
+                    }}
+                  >
+                    {`{${argName}}`}
+                  </span>
+                </Tooltip>
+              )
+            }
 
             return (
-              <Tooltip
-                key={i}
-                template={<TextTooltipTemplate text={legendMap[part].description} />}
-                textShow
-              >
-                <span
-                  style={{ color: 'blue', cursor: 'pointer' }}
-                  onClick={() => {
-                    setSelectedArgument(currentArgument)
-                    setSelectedTab(ARGUMENTS_TAB)
-                  }}
-                >
-                  {`{${part}}`}
-                </span>
-              </Tooltip>
+              <span key={i} style={{ color: 'blue' }}>
+                {`{${argName}}`}
+              </span>
             )
           }
 
@@ -88,10 +98,10 @@ const PromptTab = ({
       setPromptTemplate(jsxContent)
     }
   }, [
+    selectedItem.prompt_template,
     selectedItem.prompt_legend,
     setSelectedArgument,
-    setSelectedTab,
-    selectedItem.prompt_template
+    setSelectedTab
   ])
 
   useEffect(() => {
