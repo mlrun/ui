@@ -55,7 +55,8 @@ import {
   areFormValuesChanged,
   generateObjectFromKeyValue,
   parseObjectToKeyValue,
-  setFieldState
+  setFieldState,
+  clearArrayFromEmptyObjectElements
 } from 'igz-controls/utils/form.util'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { getChipOptions } from 'igz-controls/utils/chips.util'
@@ -214,7 +215,9 @@ const ProjectSettingsGeneral = ({
             [DEFAULT_IMAGE]: formStateLocal.values[DEFAULT_IMAGE] ?? '',
             [DESCRIPTION]: formStateLocal.values[DESCRIPTION] ?? '',
             [GOALS]: formStateLocal.values[GOALS] ?? '',
-            [PARAMS]: generateObjectFromKeyValue(formStateLocal.values[PARAMS])
+            [PARAMS]: generateObjectFromKeyValue(
+              clearArrayFromEmptyObjectElements(formStateLocal.values[PARAMS])
+            )
           },
           metadata: {
             ...newProjectData.metadata,
@@ -224,7 +227,7 @@ const ProjectSettingsGeneral = ({
 
         if (areNodeSelectorsSupported) {
           newProjectData.spec[NODE_SELECTORS] = generateObjectFromKeyValue(
-            formStateLocal.values[NODE_SELECTORS]
+            clearArrayFromEmptyObjectElements(formStateLocal.values[NODE_SELECTORS])
           )
         }
 
