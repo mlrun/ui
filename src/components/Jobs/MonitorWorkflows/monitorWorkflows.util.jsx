@@ -85,6 +85,7 @@ export const generateActionsMenu = (
   jobs_dashboard_url,
   handleMonitoring,
   abortable_function_kinds,
+  ce,
   handleConfirmAbortJob,
   handleConfirmDeleteJob,
   handleConfirmTerminateWorkflow,
@@ -168,7 +169,7 @@ export const generateActionsMenu = (
           icon: <Cancel />,
           className: 'danger',
           onClick: handleConfirmTerminateWorkflow,
-          hidden: !accessibleProjectsMap[job?.project],
+          hidden: ce || !accessibleProjectsMap[job?.project],
           disabled: job?.state?.value !== FUNCTION_RUNNING_STATE
         }
       ]
