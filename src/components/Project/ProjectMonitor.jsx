@@ -52,6 +52,7 @@ import { removeNewFeatureSet } from '../../reducers/featureStoreReducer'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 
 const ProjectMonitor = () => {
   const [createFeatureSetPanelIsOpen, setCreateFeatureSetPanelIsOpen] = useState(false)
@@ -62,6 +63,7 @@ const ProjectMonitor = () => {
   const params = useParams()
   const dispatch = useDispatch()
   const { isNuclioModeDisabled } = useNuclioMode()
+  const { isDemoMode } = useMode()
   const projectAbortControllerRef = useRef(new AbortController())
   const projectSummariesAbortControllerRef = useRef(new AbortController())
   const v3ioStreamsAbortControllerRef = useRef(new AbortController())
@@ -86,6 +88,13 @@ const ProjectMonitor = () => {
     [frontendSpec]
   )
 
+  const openRegisterModelModal = useCallback(() => {
+    openPopUp(RegisterModelModal, {
+      params: params,
+      refresh: () => navigate(registerArtifactLink(MODEL_TYPE))
+    })
+  }, [params, navigate, registerArtifactLink])
+
   const openRegisterArtifactModal = useCallback(
     artifactKind => {
       openPopUp(RegisterArtifactModal, {
@@ -103,13 +112,17 @@ const ProjectMonitor = () => {
       params,
       openRegisterArtifactModal,
       generateNuclioLink,
-      openPopUp
+      openPopUp,
+      openRegisterModelModal,
+      setCreateFeatureSetPanelIsOpen,
+      setIsNewFunctionPopUpOpen,
+      isDemoMode
     )
 
     return {
       createNewOptions
     }
-  }, [navigate, params, openRegisterArtifactModal])
+  }, [navigate, params, openRegisterArtifactModal, openRegisterModelModal, isDemoMode])
 
   const fetchProjectDataAndSummary = useCallback(() => {
     projectAbortControllerRef.current = new AbortController()

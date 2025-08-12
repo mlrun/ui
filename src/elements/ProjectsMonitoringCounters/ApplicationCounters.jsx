@@ -76,7 +76,7 @@ const ApplicationCounter = () => {
   return (
     <StatsCard className="monitoring-stats application-card">
       <div ref={anchorRef}>
-        <StatsCard.Header title="Monitoring App"></StatsCard.Header>
+        <StatsCard.Header title="Monitoring apps"></StatsCard.Header>
         <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
           <StatsCard.Row>
             <div

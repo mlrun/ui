@@ -38,7 +38,6 @@ const ScheduledJobsCounters = () => {
   const [showPopup, setShowPopup] = useState(false)
   const anchorRef = useRef(null)
   const detailsRef = useRef(null)
-  const timeLabel = projectName ? '24 hrs' : 'Next 24 hrs'
 
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent
@@ -92,7 +91,7 @@ const ScheduledJobsCounters = () => {
         <StatsCard.Header title="Scheduled">
           <div className="project-card__info">
             <ClockIcon className="project-card__info-icon" />
-            <span>{timeLabel}</span>
+            <span>Next 24 hrs</span>
           </div>
         </StatsCard.Header>
         <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>

@@ -52,7 +52,11 @@ export const generateCreateNewOptions = (
   params,
   openRegisterArtifactModal,
   generateNuclioLink,
-  openPopUp
+  openPopUp,
+  openRegisterModelModal,
+  setCreateFeatureSetsPanelIsOpen,
+  setIsNewFunctionPopUpOpen,
+  isDemoMode
 ) => [
   {
     label: 'Register dataset',
@@ -111,6 +115,38 @@ export const generateCreateNewOptions = (
     icon: <Realtime />,
     handler: () =>
       window.open(generateNuclioLink(`/projects/${params.projectName}/create-function`), '_blank')
+  },
+  {
+    label: 'Register model',
+    id: 'registerModel',
+    handler: () => {
+      openRegisterModelModal()
+    },
+    hidden: !isDemoMode
+  },
+  {
+    label: 'ML function',
+    id: 'mlFunction',
+    handler: () => {
+      setIsNewFunctionPopUpOpen(true)
+    },
+    hidden: !isDemoMode
+  },
+  {
+    label: 'Feature set',
+    id: 'featureSet',
+    handler: () => setCreateFeatureSetsPanelIsOpen(true),
+    hidden: !isDemoMode
+  },
+  {
+    label: 'Create feature vector',
+    id: 'createFeatureVector',
+    handler: () =>
+      navigate(
+        `/projects/${params.projectName}/feature-store/feature-vectors?openPanel=true`,
+        '_blank'
+      ),
+    hidden: !isDemoMode
   }
 ]
 

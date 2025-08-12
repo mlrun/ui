@@ -40,7 +40,6 @@ const AlertsCounters = () => {
   const { projectName: paramProjectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
-  const timeLabel = paramProjectName ? '24 hrs' : 'Last 24 hrs'
 
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent
@@ -105,7 +104,7 @@ const AlertsCounters = () => {
         <StatsCard.Header title="Alerts" icon={<Alerts />} iconClass="stats-card__title-icon">
           <div className="project-card__info">
             <ClockIcon className="project-card__info-icon" />
-            <span>{timeLabel}</span>
+            <span>Last 24 hrs</span>
           </div>
         </StatsCard.Header>
         <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
