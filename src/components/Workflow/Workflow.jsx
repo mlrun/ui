@@ -91,7 +91,7 @@ const Workflow = ({
   const { isStagingMode } = useMode()
   const projectName = params.workflowProjectName || params.projectName
   const dispatch = useDispatch()
-  const ce = useSelector(store => store.appStore.frontendSpec?.ce?.vesion)
+  const ce = useSelector(store => store.appStore.frontendSpec?.ce?.version)
   const accessibleProjectsMap = useSelector(state => state.projectStore.accessibleProjectsMap)
 
   useEffect(() => {
@@ -258,18 +258,17 @@ const Workflow = ({
               </button>
             </Tooltip>
           </div>
-          {ce ||
-            (accessibleProjectsMap[projectName] && (
-              <Button
-                className="workflow_btn"
-                id="terminate_btn"
-                disabled={lowerCase(workflow?.run?.status) !== FUNCTION_RUNNING_STATE}
-                variant="danger"
-                icon={<Cancel />}
-                label="Terminate"
-                onClick={() => handleConfirmTerminateWorkflow(workflow?.run, dispatch)}
-              />
-            ))}
+          {(ce || accessibleProjectsMap[projectName]) && (
+            <Button
+              className="workflow_btn"
+              id="terminate_btn"
+              disabled={lowerCase(workflow?.run?.status) !== FUNCTION_RUNNING_STATE}
+              variant="danger"
+              icon={<Cancel />}
+              label="Terminate"
+              onClick={() => handleConfirmTerminateWorkflow(workflow?.run, dispatch)}
+            />
+          )}
         </div>
       </TableTop>
 
