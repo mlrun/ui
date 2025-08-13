@@ -45,6 +45,12 @@ export const getColumnValues = async (driver, table, columnName) => {
     })
 }
 
+export const getHeaderColumnValue = async (driver, table, columnName) => {
+  const element = await driver.findElement(table.headerSorters[columnName])
+  
+  return await element.getText()
+}
+
 export const getTableRows = async (driver, table) => {
   const arr = await driver
     .findElements(table.tableColumns[table.tableCulumnNames[0]])
@@ -59,6 +65,15 @@ export const isContainsValueInColumn = async (driver, table, columnName, value) 
     const arr = await getColumnValues(driver, table, columnName)
     expect(arr.includes(value)).equal(true, `Column values [${arr}] is not equal with "${value}" `)
   }
+
+export const isContainsValueInHeaderColumn = async (driver, table, columnName, value) => {
+  const actualValue = await getHeaderColumnValue(driver, table, columnName)
+
+  expect(actualValue.includes(value)).equal(
+    true,
+    `Header column "${columnName}" value "${actualValue}" does not include "${value}"`
+  )
+}
 
 export const isNotContainsValueInColumn = async (driver, table, columnName, value) => {
     const arr = await getColumnValues(driver, table, columnName)

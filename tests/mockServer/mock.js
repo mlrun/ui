@@ -390,7 +390,14 @@ function filterByLabels(elementLabels, requestLabels) {
 
 function getPartitionedData(listOfItems, pathToPartition, pathToUpdated, defaultPathToPartition) {
   return chain(listOfItems)
-    .groupBy(arrayItem => get(arrayItem, pathToPartition, defaultPathToPartition))
+    .groupBy(item => {
+      if (Array.isArray(pathToPartition)) {
+        return pathToPartition
+          .map(path => get(item, path, get(item, defaultPathToPartition)))
+          .join('||')
+      }
+      return get(item, pathToPartition, defaultPathToPartition)
+    })
     .map(group => maxBy(group, groupItem => new Date(get(groupItem, pathToUpdated))))
     .value()
 }
@@ -479,8 +486,6 @@ function createProjectsFeatureSet(req, res) {
 function updateProjectsFeatureSet(req, res) {
   let featureSet = req.body
 
-  featureSet.metadata.updated = new Date().toISOString()
-
   const featureSetIndex = featureSets.feature_sets.findIndex(
     featureSetItem =>
       req.params.project === featureSetItem.metadata.project &&
@@ -489,6 +494,11 @@ function updateProjectsFeatureSet(req, res) {
       featureSet.metadata.uid === featureSetItem.metadata.uid
   )
 
+  if (featureSetIndex === -1) {
+    return createProjectsFeatureSet(req, res)
+  }
+
+  featureSet.metadata.updated = new Date().toISOString()
   featureSets.feature_sets[featureSetIndex] = featureSet
 
   res.send(featureSet)
@@ -952,7 +962,17 @@ function getRuns(req, res) {
   }
 
   if (req.query['partition-by'] && req.query['partition-sort-by']) {
-    collectedRuns = getPartitionedData(collectedRuns, 'metadata.name', 'status.last_update')
+    const pathToPartition = ['metadata.name']
+
+    if (req.query['partition-by'] === 'project_and_name') {
+      pathToPartition.push('metadata.project')
+    }
+
+    collectedRuns = getPartitionedData(
+      collectedRuns,
+      pathToPartition,
+      'status.last_update'
+    )
   }
 
   if (req.query['name']) {
@@ -1515,9 +1535,15 @@ function getArtifacts(req, res) {
   }
 
   if (req.query['partition-by']) {
+    const pathToPartition = ['spec.db_key']
+
+    if (req.query['partition-by'] === 'project_and_name') {
+      pathToPartition.push('metadata.project')
+    }
+
     collectedArtifacts = getPartitionedData(
       collectedArtifacts,
-      'spec.db_key',
+      pathToPartition,
       'metadata.updated',
       'db_key'
     )

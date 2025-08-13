@@ -37,7 +37,6 @@ const WorkflowsCounters = () => {
   const { projectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
-  const timeLabel = projectName ? '24 hrs' : 'Last 24 hrs'
 
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent
@@ -95,7 +94,7 @@ const WorkflowsCounters = () => {
         <StatsCard.Header title="Workflows">
           <div className="project-card__info">
             <ClockIcon className="project-card__info-icon" />
-            <span>{timeLabel}</span>
+            <span>Next 24 hrs</span>
           </div>
         </StatsCard.Header>
         <div onMouseLeave={handleClosePopUp} onMouseEnter={handleOpenPopUp}>

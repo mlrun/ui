@@ -86,7 +86,17 @@ $applicationRowHeightExtended: variables.$rowHeightExtended;
 
         .section-item_chart-area {
           height: 100%;
+          padding-bottom: 25px;
           overflow-x: auto;
+
+          &_x-axis-label {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            font-weight: 500;
+            font-size: 13px;
+            transform: translate(-50%, 0);
+          }
 
           &.loading {
             visibility: hidden;

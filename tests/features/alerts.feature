@@ -285,17 +285,17 @@ Feature: Alerts Page
         When select "Job" option in "Entity_Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
-        Then type value "alertd0beb8b0b8" to "Search_By_Name_Filter_Input" field on "Alerts" wizard
+        Then type value "alertd478b0739b" to "Search_By_Name_Filter_Input" field on "Alerts" wizard
         Then click on "Refresh_Button" element on "Alerts" wizard
         And wait load page
-        Then value in "alertName" column with "text" in "Alerts_Table" on "Alerts" wizard should contains "alertd0beb8b0b8"
+        Then value in "alertName" column with "text" in "Alerts_Table" on "Alerts" wizard should contains "alertd478b0739b"
         And wait load page
         Then verify "Alerts_Table" element visibility on "Alerts" wizard
         Then value in "entityType" column with "tooltip" in "Alerts_Table" on "Alerts" wizard should contains "Job"
         When click on cell with row index 1 in "alertName" column in "Alerts_Table" table on "Alerts" wizard
         And wait load page
         Then verify "Header" element visibility on "Alerts_Jobs_Info_Pane" wizard
-        Then "Header" element on "Alerts_Jobs_Info_Pane" should contains "alertd0beb8b0b8" value
+        Then "Header" element on "Alerts_Jobs_Info_Pane" should contains "alertd478b0739b" value
         Then verify "Overview_General_Headers" element visibility on "Alerts_Jobs_Info_Pane" wizard
         Then verify "Overview_General_Headers" on "Alerts_Jobs_Info_Pane" wizard should contains "Alerts_Jobs_Info_Pane"."Overview_General_Headers_PerProject"
         Then verify "Job_Detail_PopUp_Link" element visibility on "Alerts_Jobs_Info_Pane" wizard

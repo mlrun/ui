@@ -40,22 +40,24 @@ const TableModelCell = ({ id, modelUri, bodyCellClassName = '' }) => {
   }, [parsedUri])
 
   return (
-    modelUri && (
-      <td data-testid={id} className={cellClassNames}>
-        {parsedUri?.key && (parsedUri?.uid || parsedUri.tree) && (
-          <div className="data-ellipsis">
-            <div className="link" onClick={() => handleOpenArtifactPopUp()}>
-              <Tooltip template={<TextTooltipTemplate text={modelUri} />} textShow>
-                {parsedUri.key}
-              </Tooltip>
-            </div>
+    <td data-testid={id} className={cellClassNames}>
+      {parsedUri?.key && (parsedUri?.uid || parsedUri.tree) && (
+        <div className="data-ellipsis">
+          <div className="link" onClick={() => handleOpenArtifactPopUp()}>
+            <Tooltip template={<TextTooltipTemplate text={modelUri} />} textShow>
+              {parsedUri.key}
+            </Tooltip>
+            <span className="link-subtext">{parsedUri.tag}</span>
           </div>
-        )}
-        {parsedUri?.key && !parsedUri?.uid && !parsedUri.tree && (
+        </div>
+      )}
+      {parsedUri?.key && !parsedUri?.uid && !parsedUri.tree && (
+        <>
           <Tooltip template={<TextTooltipTemplate text={modelUri} />}>{parsedUri.key}</Tooltip>
-        )}
-      </td>
-    )
+          <span className="link-subtext">{parsedUri.tag}</span>
+        </>
+      )}
+    </td>
   )
 }
 

@@ -32,6 +32,7 @@ import ClockIcon from 'igz-controls/images/clock.svg?react'
 const ProjectDataCard = ({
   content,
   footerLinkText = 'See all',
+  headerLink = '',
   hasUpdateDate = false,
   href = '',
   link = '',
@@ -46,16 +47,16 @@ const ProjectDataCard = ({
     <div className="project-data-card">
       <div className="project-data-card__header table-header">
         <div className="project-data-card__header-text data-ellipsis">
-          <span>
+          <div className='d-flex'>
             {href ? (
               <a href={href} target="_top">
                 {title}
               </a>
             ) : (
-              <Link to={link}>{title}</Link>
+              <Link to={headerLink || link}>{title}</Link>
             )}
             {tip && <Tip className="project-data-card__header-tip" text={tip} />}
-          </span>
+          </div>
           {hasUpdateDate && (
             <span className="project-data-card__header-info">
               <ClockIcon className="project-data-card__header-info-icon" />
@@ -100,6 +101,7 @@ const ProjectDataCard = ({
 ProjectDataCard.propTypes = {
   content: PropTypes.object.isRequired,
   footerLinkText: PropTypes.string,
+  headerLink: PropTypes.string,
   hasUpdateDate: PropTypes.bool,
   href: PropTypes.string,
   link: PropTypes.string,

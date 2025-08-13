@@ -24,7 +24,9 @@ import moment from 'moment'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
-import { MONITOR_JOBS_TAB, REQUEST_CANCELED } from '../../constants'
+import { DATES_FILTER, MONITOR_JOBS_TAB, REQUEST_CANCELED } from '../../constants'
+import { PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
+
 import { getJobsStatistics, getJobsTableData, groupByName, sortByDate } from './projectJobs.utils'
 import { fetchProjectJobs } from '../../reducers/projectReducer'
 
@@ -71,7 +73,9 @@ const ProjectJobs = () => {
     <ProjectDataCard
       content={projectStore.project.jobs}
       footerLinkText={'All jobs'}
-      headerLink={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
+      headerLink={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}?${new URLSearchParams({
+        [DATES_FILTER]: PAST_24_HOUR_DATE_OPTION
+      })}`}
       hasUpdateDate={true}
       link={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
       params={params}

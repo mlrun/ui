@@ -828,7 +828,7 @@ When(
       fromDatetime,
       toDatetime
     )
-    await this.driver.sleep(1000)
+    await this.driver.sleep(2500)
     await applyDatetimePickerRange(
       this.driver,
       pageObjects[wizardName][datetimePicker]
@@ -888,6 +888,14 @@ Then(
       this.driver,
       pageObjects[wizardName][dropdownName]['open_button']
     )
+  }
+)
+
+Then(
+  'verify visibility of header column {string} in {string} table on {string} wizard',
+  async function (columnName, tableName, wizardName) {
+    const locator = pageObjects[wizardName][tableName].headerSorters[columnName]
+    await componentIsVisible(this.driver, locator)
   }
 )
 

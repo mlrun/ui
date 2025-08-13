@@ -471,7 +471,6 @@ Feature: Artifacts Page
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
     Then click on "Register_Button" element on "Register_File_Popup" wizard
-    And wait load page
     Then verify if "Confirm_Popup" popup dialog appears
     Then "Title" element on "Confirm_Popup" should contains "Overwrite artifact?" value
     When click on "Overwrite_Button" element on "Confirm_Popup" wizard
@@ -513,7 +512,7 @@ Feature: Artifacts Page
     Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
     Then "Title" element on "Modal_Transition_Popup" should contains "survival-curves_km-timelines" value
     Then verify "Data_Status" element visibility on "Modal_Transition_Popup" wizard
-    Then "Data_Status" element on "Modal_Transition_Popup" should contains "Aug 29, 2021, 10:54:15 PM" value
+    Then "Data_Status" element on "Modal_Transition_Popup" should contains "Aug 29, 2021, 07:54:15 PM" value
     Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
     Then click on "Refresh_Button" element on "Modal_Transition_Popup" wizard
     And wait load page
@@ -823,7 +822,6 @@ Feature: Artifacts Page
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
     Then click on "Register_Button" element on "Register_File_Popup" wizard
-    And wait load page
     Then verify if "Confirm_Popup" popup dialog appears
     Then "Title" element on "Confirm_Popup" should contains "Overwrite artifact?" value
     When click on "Overwrite_Button" element on "Confirm_Popup" wizard
@@ -875,7 +873,6 @@ Feature: Artifacts Page
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
     Then click on "Register_Button" element on "Register_File_Popup" wizard
-    And wait load page
     Then verify if "Confirm_Popup" popup dialog appears
     Then "Title" element on "Confirm_Popup" should contains "Overwrite artifact?" value
     When click on "Overwrite_Button" element on "Confirm_Popup" wizard

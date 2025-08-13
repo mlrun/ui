@@ -22,6 +22,7 @@
     flex: 1;
     padding: 24px 40px;
     background-color: colors.$white;
+    font-size: 12px;
 
     .general-info {
       display: flex;
@@ -168,12 +169,9 @@
             justify-content: space-between;
             margin-bottom: 16px;
             color: colors.$primary;
-            font-size: 1.25rem;
+            font-size: 1.25em;
+            font-weight: 500;
             line-height: 23px;
-
-            @media screen and (min-width: 1600px) {
-              font-size: 1.25rem;
-            }
           }
 
           &-info {
@@ -200,7 +198,7 @@
           }
 
           &.table-header {
-            min-height: 150px;
+            min-height: 110px;
           }
         }
 
@@ -227,7 +225,8 @@
           align-items: center;
           min-height: 40px;
           margin: 0 0 5px 0;
-          font-size: 18px;
+          font-size: 14px;
+          font-weight: 500;
 
           .text-sm {
             margin-left: 5px;

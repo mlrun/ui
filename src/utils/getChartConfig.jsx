@@ -341,15 +341,14 @@ export const getMEPsWithDetectionChartConfig = () => {
         x: {
           ...barConfig.options.scales.x,
           title: {
-            ...barConfig.options.scales.x.title,
-            text: 'Time range'
+            display: false
           }
         },
         y: {
           ...barConfig.options.scales.y,
           title: {
             ...barConfig.options.scales.y.title,
-            text: 'Model endpoint with detections'
+            text: 'Model endpoints'
           }
         }
       },

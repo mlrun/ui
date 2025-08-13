@@ -46,13 +46,9 @@
       align-items: center;
       margin: 0;
       color: colors.$primary;
-      font-weight: normal;
-      font-size: 1rem;
+      font-weight: 500;
+      font-size: 1.25em;
       transition: font-size 0.3s ease-in-out;
-
-      @media screen and (min-width: 1600px) {
-        font-size: 1.25rem;
-      }
 
       &_with-icon {
         padding-left: 18px;

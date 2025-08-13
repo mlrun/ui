@@ -74,8 +74,8 @@ export const getInfoHeaders = (isSpark, selectedJob) => {
     { label: 'Log level', id: LOG_LEVEL_ID },
     { label: 'Output path', id: 'outputPath' },
     { label: 'Total iterations', id: 'iterations' },
-    { label: 'Retry count', id: 'retryCountWithInitialAttempt' },
-    { label: 'Maximum retries', id: 'maxRetriesWithInitialAttempt' }
+    { label: 'Attempt count', id: 'retryCountWithInitialAttempt', tip: 'Number of attempts to run Kubernetes jobs' },
+    { label: 'Maximum attempts', id: 'maxRetriesWithInitialAttempt', tip: 'Maximum number of attempts to run Kubernetes jobs' }
   ]
 
   if (isSpark) {

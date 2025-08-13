@@ -17,14 +17,16 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { getAlertIdentifier } from './getUniqueIdentifier'
+
 export const parseAlerts = alerts => {
   return alerts.map(alert => {
     return {
       ...alert,
       ui: {
         ...alert,
-        identifier: alert.id,
-        identifierUnique: `${alert.name}.${alert.id}`
+        identifier: getAlertIdentifier(alert),
+        identifierUnique: getAlertIdentifier(alert, true)
       }
     }
   })

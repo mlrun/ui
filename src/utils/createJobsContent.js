@@ -164,11 +164,12 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           type: 'hidden'
         },
         {
-          headerId: 'retries',
-          headerLabel: 'Retries',
-          id: `retries.${identifierUnique}`,
+          headerId: 'attempts',
+          headerLabel: 'Attempts',
+          id: `attempts.${identifierUnique}`,
           value: `${job.retryCountWithInitialAttempt} out of ${job.maxRetriesWithInitialAttempt}`,
           className: 'table-cell-1',
+          tip: 'Number of attempts to run Kubernetes jobs'
         }
       ]
     }
@@ -463,7 +464,7 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
         const savedAndTransformedSearchParams = saveAndTransformSearchParams(
           window.location.search,
           true,
-          [BE_PAGE, FE_PAGE, NAME_FILTER]
+          [BE_PAGE, FE_PAGE, NAME_FILTER, PROJECT_FILTER]
         )
 
         return `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}/${job.name}${savedAndTransformedSearchParams}${savedAndTransformedSearchParams ? '&' : '?'}${`${PROJECT_FILTER}=${job.project}`}`
@@ -565,11 +566,12 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
           type: 'hidden'
         },
         {
-          headerId: 'retries',
-          headerLabel: 'Retries',
-          id: `retries.${identifierUnique}`,
+          headerId: 'attempts',
+          headerLabel: 'Attempts',
+          id: `attempts.${identifierUnique}`,
           value: `${job.retryCountWithInitialAttempt} out of ${job.maxRetriesWithInitialAttempt}`,
           className: 'table-cell-1',
+          tip: 'Number of attempts to run Kubernetes jobs'
         }
       ]
     }

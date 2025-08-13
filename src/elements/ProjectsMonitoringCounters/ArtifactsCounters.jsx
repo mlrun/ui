@@ -47,7 +47,7 @@ const ArtifactsCounters = () => {
 
   const dataStats = useMemo(() => {
     if (projectName) {
-      const llm_prompts = projectStore?.projectSummary?.data?.llm_prompts || 0
+      const llm_prompts = projectStore?.projectSummary?.data?.llm_prompts_count || 0
       const files = projectStore?.projectSummary?.data?.files_count || 0
       const documents = projectStore?.projectSummary?.data?.documents_count || 0
       const datasets = projectStore?.projectSummary?.data?.datasets_count || 0
@@ -100,11 +100,13 @@ const ArtifactsCounters = () => {
                 onClick={data?.datasets?.link}
               >
                 <h6 className="stats__subtitle">Datasets</h6>
-                {projectStore.projectsSummary.loading ? (
-                  <Loader section small secondary />
-                ) : (
-                  data?.datasets.counter?.toLocaleString()
-                )}
+                <div className="stats__counter">
+                  {projectStore.projectsSummary.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    <div className="stats__counter">{data?.datasets.counter?.toLocaleString()}</div>
+                  )}
+                </div>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
@@ -114,11 +116,15 @@ const ArtifactsCounters = () => {
                 onClick={data?.documents?.link}
               >
                 <h6 className="stats__subtitle">Documents</h6>
-                {projectStore.projectsSummary.loading ? (
-                  <Loader section small secondary />
-                ) : (
-                  data?.documents?.counter?.toLocaleString()
-                )}
+                <div className="stats__counter">
+                  {projectStore.projectsSummary.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    <div className="stats__counter">
+                      {data?.documents?.counter?.toLocaleString()}
+                    </div>
+                  )}
+                </div>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
@@ -127,11 +133,13 @@ const ArtifactsCounters = () => {
                 className={data.llm_prompt.className}
                 onClick={data.llm_prompt.link}
               >
-                <h6 className="stats__subtitle">LLM Prompts</h6>
+                <h6 className="stats__subtitle">LLM prompt artifacts</h6>
                 {projectStore.projectsSummary.loading ? (
                   <Loader section small secondary />
                 ) : (
-                  data?.llm_prompt?.counter?.toLocaleString()
+                  <div className="stats__counter">
+                    {data?.llm_prompt?.counter?.toLocaleString()}
+                  </div>
                 )}
               </div>
             </StatsCard.Row>
@@ -141,11 +149,11 @@ const ArtifactsCounters = () => {
                 className={data?.files?.className}
                 onClick={data?.files?.link}
               >
-                <h6 className="stats__subtitle">Other Artifacts</h6>
+                <h6 className="stats__subtitle">Other artifacts</h6>
                 {projectStore.projectsSummary.loading ? (
                   <Loader section small secondary />
                 ) : (
-                  data?.files?.counter?.toLocaleString()
+                  <div className="stats__counter">{data?.files?.counter?.toLocaleString()}</div>
                 )}
               </div>
             </StatsCard.Row>
