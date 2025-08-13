@@ -36,9 +36,10 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
       title: 'Applications',
       counterData: [
         {
-          title:
-            monitoringApplications.operatingFunctions.length +
-            monitoringApplications.applications.length
+          title: monitoringApplicationError
+            ? null
+            : monitoringApplications.operatingFunctions.length +
+              monitoringApplications.applications.length
         }
       ]
     },
@@ -81,13 +82,17 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
       title: 'Running interval',
       counterData: [
         {
-          title: `Every ${formatMinutesToString(monitoringApplications.applications?.[0]?.base_period)}`
+          title: monitoringApplicationError
+            ? null
+            : `Every ${formatMinutesToString(monitoringApplications.applications?.[0]?.base_period)}`
         }
       ]
     }
   ]
 
-  const aggregatedStreamStats = Object.values(monitoringApplication?.stats?.stream_stats || {}).reduce(
+  const aggregatedStreamStats = Object.values(
+    monitoringApplication?.stats?.stream_stats || {}
+  ).reduce(
     (acc, { committed, lag }) => {
       acc.committed += committed
       acc.lag += lag
