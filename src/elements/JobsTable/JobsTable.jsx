@@ -30,7 +30,13 @@ import Pagination from '../../common/Pagination/Pagination'
 import Table from '../../components/Table/Table'
 import { Loader } from 'igz-controls/components'
 
-import { JOB_KIND_JOB, JOBS_MONITORING_JOBS_TAB, JOBS_PAGE, MONITOR_JOBS_TAB, PANEL_RERUN_MODE } from '../../constants'
+import {
+  JOB_KIND_JOB,
+  JOBS_MONITORING_JOBS_TAB,
+  JOBS_PAGE,
+  MONITOR_JOBS_TAB,
+  PANEL_RERUN_MODE
+} from '../../constants'
 import {
   enrichRunWithFunctionFields,
   handleAbortJob,
@@ -111,7 +117,15 @@ const JobsTable = React.forwardRef(
 
     const handleFetchJobLogs = useCallback(
       (item, projectName, setDetailsLogs, streamLogsRef, runAttempt, signal) => {
-        return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, dispatch, runAttempt, signal)
+        return getJobLogs(
+          item.uid,
+          projectName,
+          streamLogsRef,
+          setDetailsLogs,
+          dispatch,
+          runAttempt,
+          signal
+        )
       },
       [dispatch]
     )
@@ -313,7 +327,8 @@ const JobsTable = React.forwardRef(
           defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
           mode: jobWizardMode,
           wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Batch re-run' : undefined,
-          onSuccessRequest: refreshJobsWithFilters
+          onSuccessRequest: refreshJobsWithFilters,
+          isCrossProjects: !params.projectName
         })
 
         setJobWizardIsOpened(true)
@@ -388,7 +403,12 @@ const JobsTable = React.forwardRef(
             <>
               <Table
                 actionsMenu={actionsMenu}
-                getCloseDetailsLink={() => getCloseDetailsLink(params.jobName || (params.projectName ? MONITOR_JOBS_TAB : JOBS_MONITORING_JOBS_TAB))}
+                getCloseDetailsLink={() =>
+                  getCloseDetailsLink(
+                    params.jobName ||
+                      (params.projectName ? MONITOR_JOBS_TAB : JOBS_MONITORING_JOBS_TAB)
+                  )
+                }
                 handleCancel={() => setSelectedJob({})}
                 pageData={pageData}
                 selectedItem={selectedJob}

@@ -43,6 +43,9 @@ import {
   FUNCTION_SELECTION_STEP,
   HYPERPARAMETER_STRATEGY_STEP,
   JOB_WIZARD_FILTERS,
+  JOBS_MONITORING_JOBS_TAB,
+  JOBS_MONITORING_PAGE,
+  JOBS_MONITORING_SCHEDULED_TAB,
   MONITOR_JOBS_TAB,
   PANEL_CREATE_MODE,
   PANEL_EDIT_MODE,
@@ -81,6 +84,7 @@ import './jobWizard.scss'
 const JobWizard = ({
   defaultData = {},
   isBatchInference = false,
+  isCrossProjects = false,
   isOpen,
   isTrain = false,
   mode = PANEL_CREATE_MODE,
@@ -338,14 +342,16 @@ const JobWizard = ({
         })
         .then(() => {
           navigate(
-            `/projects/${params.projectName}/jobs/${isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB}`
+            isCrossProjects
+              ? `/projects/*/${JOBS_MONITORING_PAGE}/${isSchedule ? JOBS_MONITORING_SCHEDULED_TAB : JOBS_MONITORING_JOBS_TAB}`
+              : `/projects/${params.projectName}/jobs/${isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB}`
           )
         })
         .catch(error => {
           showErrorNotification(dispatch, error, '', getNewJobErrorMsg(error))
         })
     },
-    [dispatch, mode, navigate, onSuccessRequest, resolveModal]
+    [dispatch, mode, navigate, onSuccessRequest, resolveModal, isCrossProjects]
   )
 
   const editJobHandler = useCallback(
@@ -376,25 +382,25 @@ const JobWizard = ({
           if (isSchedule) {
             setShowSchedule(state => !state)
           }
+
           resolveModal()
 
-          return onSuccessRequest && onSuccessRequest()
+          return onSuccessRequest && onSuccessRequest(isSchedule, true)
         })
         .then(() => {
           dispatch(
-              setNotification({
-                status: 200,
-                id: Math.random(),
-                message: 'Job saved successfully'
-              })
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: 'Job saved successfully'
+            })
           )
-          navigate(`/projects/${params.projectName}/jobs/${SCHEDULE_TAB}${window.location.search}`)
         })
         .catch(error => {
           showErrorNotification(dispatch, error, '', getSaveJobErrorMsg(error))
         })
     },
-    [dispatch, mode, navigate, onSuccessRequest, resolveModal]
+    [dispatch, mode, onSuccessRequest, resolveModal]
   )
 
   const submitRequest = useCallback(
@@ -552,6 +558,7 @@ const JobWizard = ({
 JobWizard.propTypes = {
   defaultData: PropTypes.object,
   isBatchInference: PropTypes.bool,
+  isCrossProjects: PropTypes.bool,
   isOpen: PropTypes.bool.isRequired,
   isTrain: PropTypes.bool,
   mode: JOB_WIZARD_MODE,
