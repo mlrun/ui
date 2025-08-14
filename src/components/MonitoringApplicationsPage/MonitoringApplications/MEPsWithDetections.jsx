@@ -132,7 +132,7 @@ const MEPsWithDetections = () => {
         <span>Model Endpoints with suspected/detected issue</span>
         <Tip text="This chart displays the number of model endpoints that had at least one detected issue, in any monitoring application, in the relevant time period" />
       </div>
-      {endpointsWithDetectionsData?.length === 0 && !(isLoading || loading) ? (
+      {endpointsWithDetectionsData.values?.length === 0 && !(isLoading || loading) ? (
         <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
       ) : (
         <div className="section-item_chart-wrapper">
