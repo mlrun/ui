@@ -53,7 +53,7 @@ const projectsIguazioApi = {
     return iguazioHttpClient.get(`/projects/__name__/${project}/authorization`, {
       params: {
         action: 'update',
-        sub_resource: 'authorization/workflow'
+        sub_resource: 'workflow'
       }
     })
   },
