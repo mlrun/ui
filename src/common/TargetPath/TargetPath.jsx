@@ -36,6 +36,7 @@ import {
   handleStoreInputPathChange,
   isPathInputInvalid,
   pathPlaceholders,
+  prepareTargetPathInitialState,
   targetPathInitialState
 } from './targetPath.util'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
@@ -56,7 +57,7 @@ const TargetPath = ({
   selectPlaceholder = '',
   setFieldState
 }) => {
-  const [dataInputState, setDataInputState] = useState(inputDefaultState || targetPathInitialState)
+  const [dataInputState, setDataInputState] = useState(prepareTargetPathInitialState(inputDefaultState, inputDefaultValue, selectDefaultValue))
   const dispatch = useDispatch()
 
   const handleOnChange = (selectValue, inputValue) => {

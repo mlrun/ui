@@ -39,6 +39,7 @@ import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
 import { fetchFeatureVector, fetchFeatureVectors } from '../../reducers/featureStoreReducer'
 import { fetchProjectsNames } from '../../reducers/projectReducer'
 import { isCommunityEdition } from '../../utils/helper'
+import { parseUri } from '../../utils/parseUri'
 
 const targetPathRegex =
   /^(store|v3io|s3|az|gs):(\/\/\/|\/\/)(?!.*:\/\/)([\w\-._~:?#[\]@!$&'()*+,;=]+)\/([\w\-._~:/?#[\]%@!$&'()*+,;=]+)$/i
@@ -437,3 +438,31 @@ export const getFeatureVector = debounce((dispatch, project, projectItem, setDat
       showErrorNotification(dispatch, error, '', 'Failed to fetch feature vector data')
     })
 }, 300)
+
+export const prepareTargetPathInitialState = (inputDefaultState, inputDefaultValue = '', selectDefaultValue = '') => {
+  if (inputDefaultState) {
+    return inputDefaultState
+  } 
+  
+  if (inputDefaultValue && selectDefaultValue.startsWith('store')) {
+    const state = {...targetPathInitialState}
+    const { key, project, kind } = parseUri(selectDefaultValue + inputDefaultValue)
+    const projectItemReference = inputDefaultValue.split(`${kind}/${project}/${key}`)?.[1] || ''
+    state.storePathType = kind
+    state.project = project
+    state.projectItem = key
+    state.inputProjectItemPathEntered = true
+    state.inputProjectPathEntered = true
+    state.inputStorePathTypeEntered = true
+
+    
+    if (projectItemReference) {
+      state.projectItemReference = projectItemReference
+          state.inputProjectItemReferencePathEntered = true
+    }
+
+    return state
+  }
+  
+  return targetPathInitialState
+}
