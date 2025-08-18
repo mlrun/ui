@@ -94,7 +94,7 @@ const WorkflowsCounters = () => {
         <StatsCard.Header title="Workflows">
           <div className="project-card__info">
             <ClockIcon className="project-card__info-icon" />
-            <span>Next 24 hrs</span>
+            <span>Last 24 hrs</span>
           </div>
         </StatsCard.Header>
         <div onMouseLeave={handleClosePopUp} onMouseEnter={handleOpenPopUp}>
