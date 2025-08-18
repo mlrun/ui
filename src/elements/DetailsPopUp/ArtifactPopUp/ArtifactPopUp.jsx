@@ -43,11 +43,17 @@ import {
   generatePageData as generateDocumentPageData
 } from '../../../components/Documents/documents.util'
 import {
+  generateActionsMenu as generateLlmPromptActionsMenu,
+  generatePageData as generateLlmPromptPageData
+} from '../../../components/LLMPrompts/llmPrompts.util'
+import {
   DATASET_TYPE,
   DATASETS_PAGE,
   DOCUMENT_TYPE,
   DOCUMENTS_PAGE,
   FILES_PAGE,
+  LLM_PROMPT_TYPE,
+  LLM_PROMPTS_PAGE,
   MODEL_TYPE,
   MODELS_TAB
 } from '../../../constants'
@@ -65,33 +71,51 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
   const viewMode = getViewMode(window.location.search)
 
   const artifactContext = useMemo(() => {
-    return [DATASETS_PAGE, DATASET_TYPE].includes(artifactData.kind)
-      ? {
+    switch (artifactData.kind) {
+      case DATASETS_PAGE:
+      case DATASET_TYPE:
+        return {
           type: DATASETS_PAGE,
           generateActionsMenu: generateDatasetActionsMenu,
           pageData: generateDatasetPageData(viewMode, selectedArtifact, {}, true),
           fetchArtifact: artifactsApi.getDataSets
         }
-      : [MODELS_TAB, MODEL_TYPE].includes(artifactData.kind)
-        ? {
-            type: MODELS_TAB,
-            generateActionsMenu: generateModelActionsMenu,
-            pageData: generateModelPageData(viewMode, selectedArtifact),
-            fetchArtifact: artifactsApi.getModels
-          }
-        : [DOCUMENTS_PAGE, DOCUMENT_TYPE].includes(artifactData.kind)
-          ? {
-              type: DOCUMENTS_PAGE,
-              generateActionsMenu: generateDocumentActionsMenu,
-              pageData: generateDocumentPageData(viewMode),
-              fetchArtifact: artifactsApi.getDocuments
-            }
-          : {
-              type: FILES_PAGE,
-              generateActionsMenu: generateFileActionsMenu,
-              pageData: generateFilePageData(viewMode),
-              fetchArtifact: artifactsApi.getFiles
-            }
+
+      case MODELS_TAB:
+      case MODEL_TYPE:
+        return {
+          type: MODELS_TAB,
+          generateActionsMenu: generateModelActionsMenu,
+          pageData: generateModelPageData(viewMode, selectedArtifact),
+          fetchArtifact: artifactsApi.getModels
+        }
+
+      case DOCUMENTS_PAGE:
+      case DOCUMENT_TYPE:
+        return {
+          type: DOCUMENTS_PAGE,
+          generateActionsMenu: generateDocumentActionsMenu,
+          pageData: generateDocumentPageData(viewMode),
+          fetchArtifact: artifactsApi.getDocuments
+        }
+
+      case LLM_PROMPTS_PAGE:
+      case LLM_PROMPT_TYPE:
+        return {
+          type: LLM_PROMPTS_PAGE,
+          generateActionsMenu: generateLlmPromptActionsMenu,
+          pageData: generateLlmPromptPageData(viewMode),
+          fetchArtifact: artifactsApi.getLLMPrompts
+        }
+
+      default:
+        return {
+          type: FILES_PAGE,
+          generateActionsMenu: generateFileActionsMenu,
+          pageData: generateFilePageData(viewMode),
+          fetchArtifact: artifactsApi.getFiles
+        }
+    }
   }, [selectedArtifact, artifactData.kind, viewMode])
 
   const toggleConvertedYaml = useCallback(
@@ -141,7 +165,16 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
 
         onResolve()
       })
-  }, [artifactData, artifactContext, dispatch, onResolve])
+  }, [
+    artifactData,
+    artifactContext,
+    dispatch,
+    onResolve,
+    artifactData.iteration,
+    artifactData.tree,
+    artifactData.uid,
+    artifactData.tag
+  ])
 
   const actionsMenu = useMemo(
     () => fileMin =>

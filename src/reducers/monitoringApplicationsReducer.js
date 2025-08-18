@@ -30,7 +30,11 @@ const initialState = {
     error: null
   },
   endpointsWithDetections: {
-    data: [],
+    data: {
+      values: [],
+      start: null,
+      end: null
+    },
     loading: false,
     error: null
   },
@@ -54,8 +58,15 @@ export const fetchMEPWithDetections = createAsyncThunk(
       params.end = filters[DATES_FILTER].value[1].getTime()
     }
 
+    const savedStartDate = filters[DATES_FILTER].value[0].getTime()
+    const savedEndDate = (filters[DATES_FILTER].value[1] || new Date()).getTime()
+    
     return monitoringApplicationsApi.getMEPWithDetections(project, params).then(response => {
-      return response.data.values.map(([date, suspected, detected]) => [date, suspected + detected])
+      return {
+         values: response.data.values.map(([date, suspected, detected]) => [date, suspected + detected]),
+         start: savedStartDate,
+         end: savedEndDate
+      }
     })
   }
 )
@@ -63,12 +74,12 @@ export const fetchMEPWithDetections = createAsyncThunk(
 export const fetchMonitoringApplication = createAsyncThunk(
   'fetchMonitoringApplication',
   ({ project, functionName, filters }) => {
-    let params = {}
+    const params = {
+      start: filters[DATES_FILTER].value[0].getTime()
+    }
 
-    if (filters[DATES_FILTER]) {
-      params = {
-        start: filters[DATES_FILTER].value[0].getTime()
-      }
+    if (filters[DATES_FILTER].value[1]) {
+      params.end = filters[DATES_FILTER].value[1].getTime()
     }
 
     return monitoringApplicationsApi

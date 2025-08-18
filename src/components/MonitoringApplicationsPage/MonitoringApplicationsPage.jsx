@@ -52,67 +52,71 @@ const MonitoringApplicationsPage = () => {
   const [, setSearchParams] = useSearchParams()
 
   const refreshMonitoringApplications = useCallback(
-    filters => {
-      dispatch(fetchMonitoringApplicationsSummary({ project: params.projectName }))
-        .unwrap()
-        .catch(error => {
-          showErrorNotification(dispatch, error, '', 'Failed to fetch applications summary')
-        })
-      dispatch(fetchMonitoringApplications({ project: params.projectName, filters }))
-        .unwrap()
-        .catch(error => {
-          showErrorNotification(dispatch, error, '', 'Failed to fetch monitoring applications')
-        })
-      dispatch(
-        fetchMEPWithDetections({
-          project: params.projectName,
-          filters: filters
-        })
-      )
-        .unwrap()
-        .catch(error => {
-          showErrorNotification(
-            dispatch,
-            error,
-            '',
-            'Failed to fetch Model Endpoints with suspected/detected issue'
-          )
-        })
+    (filters, isFilterApplyAction) => {
+      if (!isFilterApplyAction) {
+        dispatch(fetchMonitoringApplicationsSummary({ project: params.projectName }))
+          .unwrap()
+          .catch(error => {
+            showErrorNotification(dispatch, error, '', 'Failed to fetch applications summary')
+          })
+        dispatch(fetchMonitoringApplications({ project: params.projectName, filters }))
+          .unwrap()
+          .catch(error => {
+            showErrorNotification(dispatch, error, '', 'Failed to fetch monitoring applications')
+          })
+        dispatch(
+          fetchMEPWithDetections({
+            project: params.projectName,
+            filters: filters
+          })
+        )
+          .unwrap()
+          .catch(error => {
+            showErrorNotification(
+              dispatch,
+              error,
+              '',
+              'Failed to fetch Model Endpoints with suspected/detected issue'
+            )
+          })
+      }
     },
     [dispatch, params.projectName]
   )
 
   const refreshMonitoringApplication = useCallback(
-    filters => {
-      dispatch(
-        fetchArtifacts({
-          project: params.projectName,
-          filters: {
-            ...filters,
-            labels: `mlrun/app-name=${params.name}`
-          }
-        })
-      )
-        .unwrap()
-        .catch(error => {
-          showErrorNotification(dispatch, error, '', 'Failed to fetch artifacts')
-        })
+    (filters, isFilterApplyAction) => {
+      if (!isFilterApplyAction) {
+        dispatch(
+          fetchArtifacts({
+            project: params.projectName,
+            filters: {
+              ...filters,
+              labels: `mlrun/app-name=${params.name}`
+            }
+          })
+        )
+          .unwrap()
+          .catch(error => {
+            showErrorNotification(dispatch, error, '', 'Failed to fetch artifacts')
+          })
 
-      dispatch(
-        fetchMonitoringApplication({
-          project: params.projectName,
-          functionName: params.name,
-          filters
-        })
-      )
-        .unwrap()
-        .catch(error => {
-          showErrorNotification(dispatch, error, '', 'Failed to fetch monitoring application')
-          navigate(
-            `/projects/${params.projectName}/${MONITORING_APP_PAGE}${window.location.search}`,
-            { replace: true }
-          )
-        })
+        dispatch(
+          fetchMonitoringApplication({
+            project: params.projectName,
+            functionName: params.name,
+            filters
+          })
+        )
+          .unwrap()
+          .catch(error => {
+            showErrorNotification(dispatch, error, '', 'Failed to fetch monitoring application')
+            navigate(
+              `/projects/${params.projectName}/${MONITORING_APP_PAGE}${window.location.search}`,
+              { replace: true }
+            )
+          })
+      }
     },
     [dispatch, navigate, params.name, params.projectName]
   )

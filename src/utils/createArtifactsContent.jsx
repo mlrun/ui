@@ -41,7 +41,7 @@ import { validateArguments } from './validateArguments'
 // import { roundFloats } from 'igz-controls/utils/common.util'
 
 import SeverityOk from 'igz-controls/images/severity-ok.svg?react'
-import SeverityWarning from 'igz-controls/images/severity-warning.svg?react'
+import SeverityWarning from 'igz-controls/images/severity-low.svg?react'
 import SeverityError from 'igz-controls/images/severity-error.svg?react'
 import TableModelCell from '../elements/TableModelCell/TableModelCell'
 
@@ -415,7 +415,7 @@ export const getDriftStatusData = driftStatus => {
     case 'POSSIBLE_DRIFT':
       return {
         value: (
-          <span data-testid="possible-drift">
+          <span className='table-severity-warning-icon' data-testid="possible-drift">
             <SeverityWarning />
           </span>
         ),

@@ -91,6 +91,7 @@ const Workflow = ({
   const { isStagingMode } = useMode()
   const projectName = params.workflowProjectName || params.projectName
   const dispatch = useDispatch()
+  const ce = useSelector(store => store.appStore.frontendSpec?.ce?.version)
   const accessibleProjectsMap = useSelector(state => state.projectStore.accessibleProjectsMap)
 
   useEffect(() => {
@@ -257,7 +258,7 @@ const Workflow = ({
               </button>
             </Tooltip>
           </div>
-          {accessibleProjectsMap[projectName] && (
+          {(ce || accessibleProjectsMap[projectName]) && (
             <Button
               className="workflow_btn"
               id="terminate_btn"

@@ -64,7 +64,9 @@ import {
   TAG_FILTER_ALL_ITEMS,
   TYPE_FILTER,
   PROJECTS_FILTER_ALL_ITEMS,
-  LLM_PROMPTS_PAGE
+  LLM_PROMPTS_PAGE,
+  MODEL_NAME_FILTER,
+  MODEL_TAG_FILTER
 } from '../constants'
 
 const messageNamesList = {
@@ -181,7 +183,9 @@ const generateNoEntriesFoundMessage = (visibleFilterTypes, filtersConfig, filter
         : filters[filterType]
     const isLastElement = index === visibleFilterTypes.length - 1
 
-    return message + `${label} ${value}${isLastElement ? '"' : ', '}`
+    return (
+      message + `${label.endsWith(':') ? label : `${label}:`} ${value}${isLastElement ? '"' : ', '}`
+    )
   }, 'No data matches the filter: "')
 }
 
@@ -201,6 +205,8 @@ const getVisibleFilterTypes = (filtersConfig, filters, filtersStore) => {
         type === ENDPOINT_RESULT ||
         type === JOB_NAME ||
         type === LABELS_FILTER ||
+        type === MODEL_NAME_FILTER ||
+        type === MODEL_TAG_FILTER ||
         type === NAME_FILTER) &&
       filters[type]?.length > 0
     const isStatusVisible =

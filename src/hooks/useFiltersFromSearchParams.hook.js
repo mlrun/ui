@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useMemo } from 'react'
-import { mapValues, isNil } from 'lodash'
+import { mapValues, isNil, pickBy } from 'lodash'
 import {
   DATES_FILTER,
   ITERATIONS_FILTER,
@@ -37,12 +37,15 @@ const defaultParamsParsingCallback = (_, value) => value
 const getFiltersFromSearchParams = (filtersConfig, searchParams, paramsParsingCallback) => {
   if (!filtersConfig) return {}
 
-  // todo add in 1.10.0 pickBy(filtersConfig, (configValue) => !configValue.) and fix all error where we use hidden configs
-  return mapValues(filtersConfig, (filterConfig, filterName) => {
+  const filtersConfigToApply = pickBy(
+    filtersConfig,
+    config => !config.hidden || config.applyHidden
+  )
+
+  return mapValues(filtersConfigToApply, (filterConfig, filterName) => {
     const searchParamValue = searchParams.get(filterName)?.trim?.()
 
-    // todo remove '|| filterConfig.hidden' after fix above
-    if (isNil(searchParamValue) || filterConfig.hidden) return filterConfig.initialValue
+    if (isNil(searchParamValue)) return filterConfig.initialValue
 
     let parsedValue = paramsParsingCallback(filterName, searchParamValue)
 
