@@ -96,19 +96,13 @@ const ScheduledJobsCounters = () => {
         </StatsCard.Header>
         <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
           <StatsCard.Row>
-            <div
-              className="stats__counter_header stats__link"
-              data-testid="scheduled_total_counter"
-              onClick={scheduledStats?.total?.link}
-            >
-              <div className="stats__counter">
-                {projectStore?.projectsSummary?.loading ? (
-                  <Loader section small secondary />
-                ) : (
-                  scheduledStats.total.counter
-                )}
-              </div>
-            </div>
+            <StatsCard.MainCounter className='stats__link' id="scheduled_total_counter" onClick={scheduledStats?.total?.link}>
+              {projectStore?.projectsSummary?.loading ? (
+                <Loader section small secondary />
+              ) : (
+                scheduledStats.total.counter
+              )}
+            </StatsCard.MainCounter>
           </StatsCard.Row>
           <div ref={detailsRef} className="stats__details">
             <StatsCard.Row>
@@ -118,29 +112,29 @@ const ScheduledJobsCounters = () => {
                 data-testid="scheduled_jobs_counter"
               >
                 <h6 className="stats__subtitle">Jobs</h6>
-                <div className="stats__counter">
+                <StatsCard.SeconderyCounter>
                   {projectStore.projectsSummary.loading ? (
                     <Loader section small secondary />
                   ) : (
                     scheduledStats.jobs.counter.toLocaleString()
                   )}
-                </div>
+                </StatsCard.SeconderyCounter>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
               <div
-                className="stats__link"
+                className="stats__link stats__line"
                 onClick={scheduledStats.workflows.link}
                 data-testid="scheduled_workflows_counter"
               >
                 <h6 className="stats__subtitle">Workflows</h6>
-                <div className="stats__counter">
+                <StatsCard.SeconderyCounter>
                   {projectStore.projectsSummary.loading ? (
                     <Loader section small secondary />
                   ) : (
                     scheduledStats.workflows.counter.toLocaleString()
                   )}
-                </div>
+                </StatsCard.SeconderyCounter>
               </div>
             </StatsCard.Row>
           </div>
@@ -165,7 +159,7 @@ const ScheduledJobsCounters = () => {
           )}
         </div>
       </div>
-    </StatsCard>
+    </StatsCard >
   )
 }
 

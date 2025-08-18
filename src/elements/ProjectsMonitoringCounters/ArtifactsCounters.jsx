@@ -82,15 +82,13 @@ const ArtifactsCounters = () => {
         <StatsCard.Header title="Artifacts"></StatsCard.Header>
         <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
           <StatsCard.Row>
-            <div className="stats__counter_header" data-testid="artifacts_total_counter">
-              <div className="stats__counter">
-                {projectStore.projectsSummary.loading ? (
-                  <Loader section small secondary />
-                ) : (
-                  data?.total?.counter?.toLocaleString()
-                )}
-              </div>
-            </div>
+            <StatsCard.MainCounter id="artifacts_total_counter">
+              {projectStore.projectsSummary.loading ? (
+                <Loader section small secondary />
+              ) : (
+                data?.total?.counter?.toLocaleString()
+              )}
+            </StatsCard.MainCounter>
           </StatsCard.Row>
           <div ref={detailsRef} className="stats__details">
             <StatsCard.Row>
@@ -100,13 +98,13 @@ const ArtifactsCounters = () => {
                 onClick={data?.datasets?.link}
               >
                 <h6 className="stats__subtitle">Datasets</h6>
-                <div className="stats__counter">
+                <StatsCard.SeconderyCounter>
                   {projectStore.projectsSummary.loading ? (
                     <Loader section small secondary />
                   ) : (
-                    <div className="stats__counter">{data?.datasets.counter?.toLocaleString()}</div>
+                    data?.datasets.counter?.toLocaleString()
                   )}
-                </div>
+                </StatsCard.SeconderyCounter>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
@@ -116,15 +114,13 @@ const ArtifactsCounters = () => {
                 onClick={data?.documents?.link}
               >
                 <h6 className="stats__subtitle">Documents</h6>
-                <div className="stats__counter">
+                <StatsCard.SeconderyCounter>
                   {projectStore.projectsSummary.loading ? (
                     <Loader section small secondary />
                   ) : (
-                    <div className="stats__counter">
-                      {data?.documents?.counter?.toLocaleString()}
-                    </div>
+                    data?.documents?.counter?.toLocaleString()
                   )}
-                </div>
+                </StatsCard.SeconderyCounter>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
@@ -134,13 +130,13 @@ const ArtifactsCounters = () => {
                 onClick={data.llm_prompt.link}
               >
                 <h6 className="stats__subtitle">LLM prompt artifacts</h6>
-                {projectStore.projectsSummary.loading ? (
-                  <Loader section small secondary />
-                ) : (
-                  <div className="stats__counter">
-                    {data?.llm_prompt?.counter?.toLocaleString()}
-                  </div>
-                )}
+                <StatsCard.SeconderyCounter>
+                  {projectStore.projectsSummary.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    data?.llm_prompt?.counter?.toLocaleString()
+                  )}
+                </StatsCard.SeconderyCounter>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
@@ -150,11 +146,14 @@ const ArtifactsCounters = () => {
                 onClick={data?.files?.link}
               >
                 <h6 className="stats__subtitle">Other artifacts</h6>
-                {projectStore.projectsSummary.loading ? (
-                  <Loader section small secondary />
-                ) : (
-                  <div className="stats__counter">{data?.files?.counter?.toLocaleString()}</div>
-                )}
+                <StatsCard.SeconderyCounter>
+                  {projectStore.projectsSummary.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    data?.files?.counter?.toLocaleString()
+                  )}
+                </StatsCard.SeconderyCounter>
+
               </div>
             </StatsCard.Row>
           </div>

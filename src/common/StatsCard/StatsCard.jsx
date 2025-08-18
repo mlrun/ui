@@ -25,7 +25,7 @@ import { TextTooltipTemplate, Tip, Tooltip } from 'igz-controls/components'
 
 import './statsCard.scss'
 
-const StatsCard = ({ children, className = '', onClick = () => {} }) => {
+const StatsCard = ({ children, className = '', onClick = () => { } }) => {
   return (
     <div className={`stats-card ${className}`} onClick={onClick}>
       {children}
@@ -64,6 +64,29 @@ StatsCard.Col = ({ children }) => {
 }
 StatsCard.Col.displayName = 'StatsCard.Col'
 
+StatsCard.MainCounter = ({ children, className = '', id = '', onClick = () => { } }) => {
+  return (
+    <div className={`stats__counter_main ${className}`} data-testid={id} onClick={onClick}>
+      <div className="stats__counter">
+        {children}
+      </div>
+    </div>
+  )
+}
+StatsCard.MainCounter.displayName = 'StatsCard.MainCounter'
+
+StatsCard.SeconderyCounter = ({ children }) => {
+  return (
+    <div className="stats__counter_secondary">
+      <div className="stats__counter">
+        {children}
+      </div>
+    </div>
+  )
+}
+StatsCard.SeconderyCounter.displayName = 'StatsCard.SeconderyCounter'
+
+
 StatsCard.propTypes = {
   children: PropTypes.node.isRequired,
   className: PropTypes.string,
@@ -84,6 +107,17 @@ StatsCard.Row.propTypes = {
 
 StatsCard.Col.propTypes = {
   children: PropTypes.node
+}
+
+StatsCard.MainCounter.propTypes = {
+  children: PropTypes.node.isRequired,
+  className: PropTypes.string,
+  id: PropTypes.string.isRequired,
+  onClick: PropTypes.func
+}
+
+StatsCard.SeconderyCounter.propTypes = {
+  children: PropTypes.node.isRequired
 }
 
 export default StatsCard
