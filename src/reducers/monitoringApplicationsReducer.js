@@ -83,7 +83,7 @@ export const fetchMonitoringApplication = createAsyncThunk(
     }
 
     return monitoringApplicationsApi
-      .getMonitoringApplication(project, functionName.toLowerCase(), params)
+      .getMonitoringApplication(project, functionName, params)
       .then(response => response.data)
   }
 )
