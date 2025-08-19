@@ -86,7 +86,7 @@ export function groupDataToBins(data, startTime, endTime) {
   const HOUR = 'hour'
   const MINUTES = 'minutes' // "minutes" represents 10 minutes
   const timeDiffInHours = (new Date(endTime) - new Date(startTime) - allowedDeviation) / (1000 * 60 * 60)
-  const basePeriod = timeDiffInHours > 72 ? DAY : timeDiffInHours > 6 ? HOUR : MINUTES 
+  const basePeriod = timeDiffInHours > 72 ? DAY : timeDiffInHours > 6 ? HOUR : MINUTES
 
   const roundDate = date => {
     const dateToRound = new Date(date)
@@ -112,7 +112,7 @@ export function groupDataToBins(data, startTime, endTime) {
     } else {
       period.setDate(period.getDate() + 1)
     }
-    
+
     return period
   }
   // generate bins
@@ -121,16 +121,22 @@ export function groupDataToBins(data, startTime, endTime) {
   }
 
   data.forEach(([timestamp, value]) => {
-    const date = roundDate(timestamp)
-    const dateKey = date.toISOString()
+    const timestampDate = new Date(timestamp)
 
-    grouped.set(dateKey, grouped.get(dateKey) + value)
+    // ignore potential data beyond selected time range
+    if (timestampDate >= startTime && timestampDate <= endTime) {
+      const date = roundDate(timestamp)
+      const dateKey = date.toISOString()
+
+      grouped.set(dateKey, grouped.get(dateKey) + value)
+    }
   })
 
   const getLabel = (from, to) => {
     const fromDate = moment(from)
     const toDate = moment(to || from)
-    const shortFormatString = basePeriod === MINUTES ? 'hh:mm A' : basePeriod === HOUR ? 'MM/DD, hh:mm A' : 'MM/DD/YY'
+    const shortFormatString =
+      basePeriod === MINUTES ? 'hh:mm A' : basePeriod === HOUR ? 'MM/DD, hh:mm A' : 'MM/DD/YY'
     const fullFormatString = 'MM/DD/YY, hh:mm A'
 
     if (!to) {
@@ -144,20 +150,23 @@ export function groupDataToBins(data, startTime, endTime) {
   }
 
   const groupedData = Array.from(grouped.entries())
-  const dataset = groupedData.reduce((dataset, [date, value], index) => {
-    if (index === 0) {
-      // cut the first bin if it is not full
-      if (startTime > new Date(date)) return dataset
-    }
+  const dataset = groupedData.reduce(
+    (dataset, [date, value], index) => {
+      if (index === 0) {
+        // cut the first bin if it is not full
+        if (startTime > new Date(date)) return dataset
+      }
 
-    const labelData = getLabel(date)
+      const labelData = getLabel(date)
 
-    dataset.values.push(value)
-    dataset.labels.push(labelData.label)
-    dataset.dates.push(labelData.fullDate)
+      dataset.values.push(value)
+      dataset.labels.push(labelData.label)
+      dataset.dates.push(labelData.fullDate)
 
-    return dataset
-  }, {values: [], labels: [], dates: []})
+      return dataset
+    },
+    { values: [], labels: [], dates: [] }
+  )
 
   // cut the last bin if it is not full
   if (dataset.values.length && endTime > new Date(groupedData[groupedData.length - 1][0])) {
