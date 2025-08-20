@@ -250,7 +250,8 @@ const ScheduledJobsTable = ({
         defaultData: jobWizardMode === PANEL_EDIT_MODE ? editableItem?.scheduled_object : {},
         mode: jobWizardMode,
         wizardTitle: jobWizardMode === PANEL_EDIT_MODE ? 'Edit job' : undefined,
-        onSuccessRequest: refreshJobsWithFilters
+        onSuccessRequest: refreshJobsWithFilters,
+        isCrossProjects: !params.projectName
       })
 
       setJobWizardIsOpened(true)

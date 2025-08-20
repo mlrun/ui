@@ -162,13 +162,13 @@ const getSelectedDateValue = (filterType, filters) => {
     true,
     true,
     '/',
-    filters[DATES_FILTER].value[0] ?? new Date(),
-    filters[DATES_FILTER].value[1] ?? new Date()
+    filters[DATES_FILTER]?.value?.[0] ?? new Date(),
+    filters[DATES_FILTER]?.value?.[1] ?? new Date()
   )
 
   return (filterType === DATE_RANGE_TIME_FILTER &&
-    !isEqual(filters[DATES_FILTER].value, DATE_FILTER_ANY_TIME)) ||
-    (filterType === DATES_FILTER && !isEqual(filters[DATES_FILTER].value, DATE_FILTER_ANY_TIME))
+    !isEqual(filters[DATES_FILTER]?.value, DATE_FILTER_ANY_TIME)) ||
+    (filterType === DATES_FILTER && !isEqual(filters[DATES_FILTER]?.value, DATE_FILTER_ANY_TIME))
     ? date
     : ANY_TIME
 }

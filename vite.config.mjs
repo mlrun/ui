@@ -84,8 +84,10 @@ export default defineConfig(({ mode }) => {
       chunkSizeWarningLimit: 3000
     },
     css: {
+      devSourcemap: true,
       preprocessorOptions: {
         scss: {
+          sourceMap: true,
           api: 'modern'
         }
       }
