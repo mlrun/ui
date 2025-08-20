@@ -62,8 +62,8 @@ const ProjectMonitorView = ({
   showFunctionsPanel
 }) => {
   return (
-    <div className="project-wrapper">
-      <div className="project__header">
+    <div className="content-wrapper">
+      <div className="content__header">
         <Breadcrumbs />
       </div>
       {project.loading ? (
@@ -89,7 +89,7 @@ const ProjectMonitorView = ({
       ) : isEmpty(project.data) ? (
         <NoData />
       ) : (
-        <div className="project__content">
+        <div className="content project-content">
           <div className="main-info">
             <ProjectDetailsHeader projectData={project.data} projectName={params.projectName} />
             <div className="main-info__toolbar">

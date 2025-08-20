@@ -57,9 +57,7 @@ main {
   &.unpinned {
     .create-container__header,
     .create-container__data,
-    .content__header,
-    .project__header,
-    .settings__header {
+    .content__header {
       padding-left: 40px;
       transition: padding 0.3s ease-in-out;
     }
