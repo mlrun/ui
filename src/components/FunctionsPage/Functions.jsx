@@ -75,6 +75,7 @@ import { toggleYaml } from '../../reducers/appReducer'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { useMode } from '../../hooks/mode.hook'
 import { usePagination } from '../../hooks/usePagination.hook'
+import { useTableScroll } from 'igz-controls/hooks/useTable.hook'
 
 const Functions = ({ isAllVersions = false }) => {
   const [confirmData, setConfirmData] = useState(null)
@@ -647,6 +648,12 @@ const Functions = ({ isAllVersions = false }) => {
     filters: functionsFilters,
     paginationConfigRef: paginationConfigFunctionVersionsRef,
     resetPaginationTrigger: `${params.projectName}_${isAllVersions}`
+  })
+
+  useTableScroll({
+    content: isAllVersions ? paginatedFunctionVersions : paginatedFunctions,
+    selectedItem: selectedFunction,
+    isAllVersions
   })
 
   const tableContent = useMemo(
