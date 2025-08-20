@@ -221,7 +221,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                 },
                 counters: [
                   {
-                    counter: data.succeeded || 0,
+                    counter: data.running || 0,
                     className: classNames('stats__counter', projectName && 'stats__link'),
                     link: () => navigateToTab(projectName, MONITORING_APP_PAGE),
                     statusClass: 'completed',
