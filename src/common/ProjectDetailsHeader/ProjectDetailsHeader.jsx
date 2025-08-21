@@ -35,7 +35,7 @@ const ProjectDetailsHeader = ({ projectData, projectName }) => {
         <div>
           <span className="project-details__details-label">
             Created:
-            {getDateAndTimeByFormat(projectData.metadata.created, ' MM/DD/YYYY, HH:mm:ss A')}
+            {getDateAndTimeByFormat(projectData.metadata.created + 'Z', ' MM/DD/YYYY, HH:mm:ss A')}
           </span>
           {projectData.spec.owner && !frontendSpec.ce?.version && (
             <span className="project-details__details-label">Owner: {projectData.spec.owner}</span>
