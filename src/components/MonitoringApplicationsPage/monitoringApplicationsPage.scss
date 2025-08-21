@@ -7,113 +7,111 @@ $applicationRowHeight: variables.$rowHeight;
 $applicationHeaderRowHeight: variables.$headerRowHeight;
 $applicationRowHeightExtended: variables.$rowHeightExtended;
 
-.monitoring-apps-title {
-  color: colors.$primary;
-  font-weight: 400;
-  font-size: 2.1em;
-}
-
-.content__action-bar-wrapper {
-  margin-bottom: 15px;
-}
-
-.monitoring-apps {
-  flex: 1;
-}
-
-.monitoring-app__section {
-  display: grid;
-  gap: 15px;
-  margin-bottom: 25px;
-
-  &.section_small {
-    grid-template-columns: repeat(2, 1fr);
-    min-height: 200px;
+.monitoring-app-content {
+  .monitoring-apps-title {
+    color: colors.$primary;
+    font-weight: 400;
+    font-size: 2.1em;
   }
 
-  &.section_big {
-    min-height: 300px;
+  .monitoring-apps {
+    flex: 1;
   }
 
-  .monitoring-app__section-item {
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    color: colors.$topaz;
-    background-color: colors.$white;
-    border: 1px solid colors.$frenchLilac;
-    border-radius: 8px;
-    box-shadow: shadows.$previewBoxShadowInit;
-    transition: all 0.3s ease-in-out;
+  .monitoring-app__section {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 25px;
 
-    .section-item_title {
+    &.section_small {
+      grid-template-columns: repeat(2, 1fr);
+      min-height: 200px;
+    }
+
+    &.section_big {
+      min-height: 300px;
+    }
+
+    .monitoring-app__section-item {
       display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-      color: colors.$primary;
-      font-size: 1rem;
-      line-height: 23px;
-    }
+      flex-direction: column;
+      padding: 20px;
+      color: colors.$topaz;
+      background-color: colors.$white;
+      border: 1px solid colors.$frenchLilac;
+      border-radius: 8px;
+      box-shadow: shadows.$previewBoxShadowInit;
+      transition: all 0.3s ease-in-out;
 
-    .section-table {
-      width: 100%;
-      height: auto;
-    }
+      .section-item_title {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        color: colors.$primary;
+        font-size: 1rem;
+        line-height: 23px;
+      }
 
-    .applications-table {
-      @include mixins.rowsHeight(
-        $applicationHeaderRowHeight,
-        $applicationRowHeight,
-        $applicationRowHeightExtended
-      );
-    }
-
-    .section-item_chart-wrapper {
-      position: relative;
-      width: 100%;
-      height: 268px;
-
-      .section-item_chart {
-        position: absolute;
-        top: 0;
-        left: 0;
+      .section-table {
         width: 100%;
-        height: 100%;
+        height: auto;
+      }
 
-        .loader-wrapper {
+      .applications-table {
+        @include mixins.rowsHeight(
+                        $applicationHeaderRowHeight,
+                        $applicationRowHeight,
+                        $applicationRowHeightExtended
+        );
+      }
+
+      .section-item_chart-wrapper {
+        position: relative;
+        width: 100%;
+        height: 268px;
+
+        .section-item_chart {
           position: absolute;
-        }
-
-        .section-item_chart-area {
+          top: 0;
+          left: 0;
+          width: 100%;
           height: 100%;
-          padding-bottom: 25px;
-          overflow-x: auto;
 
-          &_x-axis-label {
+          .loader-wrapper {
             position: absolute;
-            bottom: 10px;
-            left: 50%;
-            font-weight: 500;
-            font-size: 13px;
+          }
+
+          .section-item_chart-area {
+            height: 100%;
+            padding-bottom: 25px;
+            overflow-x: auto;
+
+            &_x-axis-label {
+              position: absolute;
+              bottom: 10px;
+              left: 50%;
+              font-weight: 500;
+              font-size: 13px;
             transform: translate(-50%, 0);
           }
 
-          &.loading {
-            visibility: hidden;
-          }
+            &.loading {
+              visibility: hidden;
+            }
 
-          .section-item_ml-chart-wrapper {
-            width: 100%;
-            min-width: 100%;
-            height: 100%;
-          }
+            .section-item_ml-chart-wrapper {
+              width: 100%;
+              min-width: 100%;
+              height: 100%;
+            }
 
-          & > canvas#chart-y-axis {
-            position: absolute;
-            top: 0;
-            left: 0;
-            background-color: colors.$white;
-            pointer-events: none;
+            & > canvas#chart-y-axis {
+              position: absolute;
+              top: 0;
+              left: 0;
+              background-color: colors.$white;
+              pointer-events: none;
+            }
           }
         }
       }
