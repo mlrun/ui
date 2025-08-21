@@ -45,18 +45,18 @@ const ApplicationCounter = () => {
 
   const applicationData = useMemo(() => {
     if (projectName) {
-      const succeeded = projectStore.projectSummary.data?.running_model_monitoring_functions || 0
+      const running = projectStore.projectSummary.data?.running_model_monitoring_functions || 0
       const failed = projectStore.projectSummary.data?.failed_model_monitoring_functions || 0
 
       return {
-        succeeded,
+        running,
         failed,
-        total: succeeded + failed
+        total: running + failed
       }
     }
     return (
       projectStore.jobsMonitoringData?.monitoring_app || {
-        succeeded: 0,
+        running: 0,
         failed: 0,
         total: 0
       }

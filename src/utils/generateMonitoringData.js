@@ -45,6 +45,7 @@ import classNames from 'classnames'
 const IN_PROCESS = 'In process'
 const FAILED = 'Failed'
 const SUCCEEDED = 'Succeeded'
+const RUNNING = 'Running'
 
 export const generateMonitoringStats = (data, navigate, tab, projectName) => {
   const linkClassNameDetails = (projectName, noLine) =>
@@ -220,11 +221,11 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                 },
                 counters: [
                   {
-                    counter: data.succeeded || 0,
+                    counter: data.running || 0,
                     className: classNames('stats__counter', projectName && 'stats__link'),
                     link: () => navigateToTab(projectName, MONITORING_APP_PAGE),
                     statusClass: 'completed',
-                    label: SUCCEEDED,
+                    label: RUNNING,
                     popUpClassName: classNames({ 'card-popup_text_link': projectName })
                   },
                   {
