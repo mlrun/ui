@@ -29,6 +29,9 @@ import RunCounter from '../../../elements/ProjectsMonitoringCounters/RunsCounter
 import ScheduledJobsCounters from '../../../elements/ProjectsMonitoringCounters/ScheduledJobsCounters'
 import WorkflowsCounters from '../../../elements/ProjectsMonitoringCounters/WorkflowsCounters'
 
+import { COUNTERS_GENERAL_MESSAGE } from '../../../constants'
+
+
 import './projectsMonitoring.scss'
 
 const ProjectsMonitoring = () => {
@@ -40,7 +43,7 @@ const ProjectsMonitoring = () => {
 
   return (
     <div className="projects-monitoring-container">
-      <PageHeader title={projectName ? '' : 'Monitoring'} />
+      {!projectName && <PageHeader title='Monitoring' tip={COUNTERS_GENERAL_MESSAGE} />}
       <div className={monitoringStatsClassName}>
         <DataAndArtifactsCounter />
         {!projectName && <RunCounter />}
