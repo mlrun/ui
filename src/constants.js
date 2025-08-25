@@ -494,3 +494,7 @@ export const HTTPS = 'https://'
 /*========= METRICS TYPES =============*/
 export const METRIC_TYPE = 'metric'
 export const RESULT_TYPE = 'result'
+
+/*========= GENERAL TEXT =============*/
+
+export const COUNTERS_GENERAL_MESSAGE = 'Counters use a caching mechanism, and are not auto-refreshed.'
