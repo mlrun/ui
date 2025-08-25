@@ -47,18 +47,16 @@ const MonitoringApplicationCard = ({
                 hidden={!counter.tooltipText}
                 template={<TextTooltipTemplate text={counter.tooltipText} />}
               >
-                <div data-testid={`monitoring-app-${counter.id}`}>
-                  <div className="stats__counter">
-                    {loading ? (
-                      <Loader section small secondary />
-                    ) : error || isNil(counter.title) ? (
-                      'N/A'
-                    ) : (
-                      counter.title
-                    )}
-                    {counter.status && <i className={`state-${counter.status}`} />}
-                  </div>
-                </div>
+                <StatsCard.MainCounter id={`monitoring-app-${counter.id}`}>
+                  {loading ? (
+                    <Loader section small secondary />
+                  ) : error || isNil(counter.title) ? (
+                    'N/A'
+                  ) : (
+                    counter.title
+                  )}
+                  {counter.status && <i className={`state-${counter.status}`} />}
+                </StatsCard.MainCounter>
                 {counter.subtitle && (
                   <div data-testid={`${counter.id}_status`} className="stats__status">
                     <Tooltip

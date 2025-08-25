@@ -79,26 +79,24 @@ const ApplicationCounter = () => {
         <StatsCard.Header title="Monitoring apps"></StatsCard.Header>
         <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
           <StatsCard.Row>
-            <div
+            <StatsCard.MainCounter
               className={applicationStats.total.className}
-              data-testid="application_total_counter"
+              id="application_total_counter"
               onClick={applicationStats?.total?.link}
             >
-              <div className="stats__counter">
-                {projectStore.projectsSummary.loading ? (
-                  <Loader section small secondary />
-                ) : (
-                  applicationStats?.total?.counter?.toLocaleString()
-                )}
-              </div>
-            </div>
+              {projectStore.projectsSummary.loading ? (
+                <Loader section small secondary />
+              ) : (
+                applicationStats?.total?.counter?.toLocaleString()
+              )}
+            </StatsCard.MainCounter>
           </StatsCard.Row>
           <div ref={detailsRef} className="stats__details">
             <StatsCard.Row>
               {applicationStats.counters.map(({ counter, className, label, statusClass, link }) => (
-                <div key={`${statusClass}-app`} className="stats__container">
-                  <div
-                    data-testid={`app_${statusClass}_counter`}
+                <div key={`${statusClass}-app`} className="stats-card__col">
+                  <StatsCard.MainCounter
+                    id={`app_${statusClass}_counter`}
                     className={className}
                     onClick={link}
                   >
@@ -107,9 +105,9 @@ const ApplicationCounter = () => {
                     ) : (
                       counter.toLocaleString()
                     )}
-                  </div>
-                  <div className="stats__label">
-                    {label}
+                  </StatsCard.MainCounter>
+                  <div className="stats__status">
+                    <h6 className="stats__subtitle">{label}</h6>
                     <i className={`state-${statusClass}`} />
                   </div>
                 </div>

@@ -52,7 +52,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
     classNames(!noLine && 'stats__line', projectName && 'stats__link')
 
   const linkClassNameHeader = projectName =>
-    classNames('stats__counter_header', projectName && 'stats__link')
+    classNames(projectName && 'stats__link')
 
   const navigateToTab = (projectName, tab) => {
     projectName && navigate(`/projects/${projectName}/${tab}`)
@@ -105,7 +105,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
           },
           {
             counter: data.completed || 0,
-            className: classNames('stats__link'),
+            className: classNames('stats__link', 'stats__line'),
             link: () =>
               navigateToJobsMonitoringPage({
                 [STATUS_FILTER]: ['completed'],
@@ -159,7 +159,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
             },
             {
               counter: data.completed || 0,
-              className: classNames('stats__link'),
+              className: classNames('stats__link', 'stats__line'),
               link: () =>
                 navigateToJobsMonitoringPage({
                   [STATUS_FILTER]: ['completed'],
@@ -195,7 +195,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
             files: {
               counter: data.files || 0,
               link: () => navigateToTab(projectName, 'files'),
-              className: linkClassNameDetails(projectName, true)
+              className: linkClassNameDetails(projectName)
             },
             list: [
               { key: 'datasets', label: 'Datasets' },
@@ -217,12 +217,12 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                 total: {
                   counter: data.total || 0,
                   link: () => navigateToTab(projectName, MONITORING_APP_PAGE),
-                  className: linkClassNameHeader(projectName)
+                  className: `stats__counter_total ${linkClassNameHeader(projectName)}`
                 },
                 counters: [
                   {
                     counter: data.running || 0,
-                    className: classNames('stats__counter', projectName && 'stats__link'),
+                    className: classNames(projectName && 'stats__link'),
                     link: () => navigateToTab(projectName, MONITORING_APP_PAGE),
                     statusClass: 'completed',
                     label: RUNNING,
@@ -230,7 +230,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                   },
                   {
                     counter: data.failed || 0,
-                    className: classNames('stats__counter', projectName && 'stats__link', {
+                    className: classNames(projectName && 'stats__link', {
                       stats__failed: data.failed > 0
                     }),
                     link: () => navigateToTab(projectName, MONITORING_APP_PAGE),

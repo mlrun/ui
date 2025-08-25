@@ -109,19 +109,17 @@ const AlertsCounters = () => {
         </StatsCard.Header>
         <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
           <StatsCard.Row>
-            <div
-              className="stats__counter_header stats__link"
-              data-testid="alerts_total_counter"
+            <StatsCard.MainCounter
+              className="stats__link"
+              id="alerts_total_counter"
               onClick={alertsStats?.total?.link}
             >
-              <div className="stats__counter">
-                {projectStore?.projectsSummary?.loading ? (
-                  <Loader section small secondary />
-                ) : (
-                  alertsData?.data?.total?.toLocaleString()
-                )}
-              </div>
-            </div>
+              {projectStore?.projectsSummary?.loading ? (
+                <Loader section small secondary />
+              ) : (
+                alertsData?.data?.total?.toLocaleString()
+              )}
+            </StatsCard.MainCounter>
           </StatsCard.Row>
           <StatsCard.Col></StatsCard.Col>
           <div ref={detailsRef} className="stats__details">
@@ -132,13 +130,13 @@ const AlertsCounters = () => {
                 data-testid="alerts_endpoints_counter"
               >
                 <h6 className="stats__subtitle">Endpoint</h6>
-                <div className="stats__counter">
+                <StatsCard.SecondaryCounter>
                   {projectStore?.projectsSummary?.loading ? (
                     <Loader section small secondary />
                   ) : (
                     alertsData?.data?.endpoint?.toLocaleString()
                   )}
-                </div>
+                </StatsCard.SecondaryCounter>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
@@ -148,29 +146,29 @@ const AlertsCounters = () => {
                 onClick={alertsStats?.job?.link}
               >
                 <h6 className="stats__subtitle">Jobs</h6>
-                <div className="stats__counter">
+                <StatsCard.SecondaryCounter>
                   {projectStore?.projectsSummary?.loading ? (
                     <Loader section small secondary />
                   ) : (
                     alertsData?.data?.jobs?.toLocaleString()
                   )}
-                </div>
+                </StatsCard.SecondaryCounter>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
               <div
                 onClick={alertsStats.application.link}
-                className="stats__link"
+                className="stats__line stats__link"
                 data-testid="alerts_application_counter"
               >
                 <div className="stats__subtitle">Application</div>
-                <div className="stats__counter">
+                <StatsCard.SecondaryCounter>
                   {projectStore.projectsSummary.loading ? (
                     <Loader section small secondary />
                   ) : (
                     alertsData?.data?.application?.toLocaleString()
                   )}
-                </div>
+                </StatsCard.SecondaryCounter>
               </div>
             </StatsCard.Row>
           </div>

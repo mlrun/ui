@@ -44,19 +44,17 @@ const ModelsAndApplication = () => {
     <StatsCard className="monitoring-stats">
       <StatsCard.Header title="Models"></StatsCard.Header>
       <StatsCard.Row>
-        <div
+        <StatsCard.MainCounter
           className={data?.models?.className}
-          data-testid="models_total_counter"
+          id="models_total_counter"
           onClick={data.models.link}
         >
-          <div className="stats__counter">
-            {projectStore?.projectsSummary?.loading ? (
-              <Loader section small secondary />
-            ) : (
-              data?.models?.counter?.toLocaleString()
-            )}
-          </div>
-        </div>
+          {projectStore?.projectsSummary?.loading ? (
+            <Loader section small secondary />
+          ) : (
+            data?.models?.counter?.toLocaleString()
+          )}
+        </StatsCard.MainCounter >
       </StatsCard.Row>
     </StatsCard>
   )

@@ -32,14 +32,15 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
 
   const applicationsCountersContent = [
     {
-      id: 'applications',
+      id: 'applicationsStatus',
       title: 'Applications',
       counterData: [
         {
+          id: 'applications',
           title: monitoringApplicationError
             ? null
             : monitoringApplications.operatingFunctions.length +
-              monitoringApplications.applications.length
+            monitoringApplications.applications.length
         }
       ]
     },
@@ -62,7 +63,7 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
       ]
     },
     {
-      id: 'endpoints',
+      id: 'endpointsStatus',
       title: 'Endpoints',
       counterData: [
         {
@@ -78,10 +79,11 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
       ]
     },
     {
-      id: 'runningFrequency',
+      id: 'runningFrequencyStatus',
       title: 'Running interval',
       counterData: [
         {
+          id: 'interval',
           title: monitoringApplicationError
             ? null
             : `Every ${formatMinutesToString(monitoringApplications.applications?.[0]?.base_period)}`
@@ -149,13 +151,13 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
 
   return params.name
     ? {
-        content: applicationCountersContent,
-        loading: monitoringApplicationIsLoading,
-        error: monitoringApplicationError
-      }
+      content: applicationCountersContent,
+      loading: monitoringApplicationIsLoading,
+      error: monitoringApplicationError
+    }
     : {
-        content: applicationsCountersContent,
-        loading: applicationsSummary.loading,
-        error: applicationsSummary.error
-      }
+      content: applicationsCountersContent,
+      loading: applicationsSummary.loading,
+      error: applicationsSummary.error
+    }
 }

@@ -99,19 +99,17 @@ const WorkflowsCounters = () => {
         </StatsCard.Header>
         <div onMouseLeave={handleClosePopUp} onMouseEnter={handleOpenPopUp}>
           <StatsCard.Row>
-            <div
-              className="stats__link stats__counter_header"
-              data-testid="wf_total_counter"
+            <StatsCard.MainCounter
+              className="stats__link"
+              id="wf_total_counter"
               onClick={workflowsStats?.total?.link}
             >
-              <div className="stats__counter">
-                {projectStore?.projectsSummary?.loading ? (
-                  <Loader section small secondary />
-                ) : (
-                  workflowsStats?.total?.counter?.toLocaleString()
-                )}
-              </div>
-            </div>
+              {projectStore?.projectsSummary?.loading ? (
+                <Loader section small secondary />
+              ) : (
+                workflowsStats?.total?.counter?.toLocaleString()
+              )}
+            </StatsCard.MainCounter>
           </StatsCard.Row>
 
           <div ref={detailsRef} className="stats__details">
@@ -130,13 +128,13 @@ const WorkflowsCounters = () => {
                           <i className={`state-${statusClass}`} />
                         </Tooltip>
                       </div>
-                      <div className={counterClassName}>
+                      <StatsCard.SecondaryCounter className={counterClassName}>
                         {projectStore?.projectsSummary?.loading ? (
                           <Loader section small secondary />
                         ) : (
                           counter?.toLocaleString()
                         )}
-                      </div>
+                      </StatsCard.SecondaryCounter>
                     </div>
                   </StatsCard.Row>
                 )
