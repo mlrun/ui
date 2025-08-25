@@ -112,13 +112,13 @@ const ScheduledJobsCounters = () => {
                 data-testid="scheduled_jobs_counter"
               >
                 <h6 className="stats__subtitle">Jobs</h6>
-                <StatsCard.SeconderyCounter>
+                <StatsCard.SecondaryCounter>
                   {projectStore.projectsSummary.loading ? (
                     <Loader section small secondary />
                   ) : (
                     scheduledStats.jobs.counter.toLocaleString()
                   )}
-                </StatsCard.SeconderyCounter>
+                </StatsCard.SecondaryCounter>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
@@ -128,13 +128,13 @@ const ScheduledJobsCounters = () => {
                 data-testid="scheduled_workflows_counter"
               >
                 <h6 className="stats__subtitle">Workflows</h6>
-                <StatsCard.SeconderyCounter>
+                <StatsCard.SecondaryCounter>
                   {projectStore.projectsSummary.loading ? (
                     <Loader section small secondary />
                   ) : (
                     scheduledStats.workflows.counter.toLocaleString()
                   )}
-                </StatsCard.SeconderyCounter>
+                </StatsCard.SecondaryCounter>
               </div>
             </StatsCard.Row>
           </div>

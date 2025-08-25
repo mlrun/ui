@@ -98,13 +98,13 @@ const ArtifactsCounters = () => {
                 onClick={data?.datasets?.link}
               >
                 <h6 className="stats__subtitle">Datasets</h6>
-                <StatsCard.SeconderyCounter>
+                <StatsCard.SecondaryCounter>
                   {projectStore.projectsSummary.loading ? (
                     <Loader section small secondary />
                   ) : (
                     data?.datasets.counter?.toLocaleString()
                   )}
-                </StatsCard.SeconderyCounter>
+                </StatsCard.SecondaryCounter>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
@@ -114,13 +114,13 @@ const ArtifactsCounters = () => {
                 onClick={data?.documents?.link}
               >
                 <h6 className="stats__subtitle">Documents</h6>
-                <StatsCard.SeconderyCounter>
+                <StatsCard.SecondaryCounter>
                   {projectStore.projectsSummary.loading ? (
                     <Loader section small secondary />
                   ) : (
                     data?.documents?.counter?.toLocaleString()
                   )}
-                </StatsCard.SeconderyCounter>
+                </StatsCard.SecondaryCounter>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
@@ -130,13 +130,13 @@ const ArtifactsCounters = () => {
                 onClick={data.llm_prompt.link}
               >
                 <h6 className="stats__subtitle">LLM prompt artifacts</h6>
-                <StatsCard.SeconderyCounter>
+                <StatsCard.SecondaryCounter>
                   {projectStore.projectsSummary.loading ? (
                     <Loader section small secondary />
                   ) : (
                     data?.llm_prompt?.counter?.toLocaleString()
                   )}
-                </StatsCard.SeconderyCounter>
+                </StatsCard.SecondaryCounter>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
@@ -146,13 +146,13 @@ const ArtifactsCounters = () => {
                 onClick={data?.files?.link}
               >
                 <h6 className="stats__subtitle">Other artifacts</h6>
-                <StatsCard.SeconderyCounter>
+                <StatsCard.SecondaryCounter>
                   {projectStore.projectsSummary.loading ? (
                     <Loader section small secondary />
                   ) : (
                     data?.files?.counter?.toLocaleString()
                   )}
-                </StatsCard.SeconderyCounter>
+                </StatsCard.SecondaryCounter>
 
               </div>
             </StatsCard.Row>

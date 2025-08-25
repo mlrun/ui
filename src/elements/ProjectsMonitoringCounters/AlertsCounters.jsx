@@ -130,13 +130,13 @@ const AlertsCounters = () => {
                 data-testid="alerts_endpoints_counter"
               >
                 <h6 className="stats__subtitle">Endpoint</h6>
-                <StatsCard.SeconderyCounter>
+                <StatsCard.SecondaryCounter>
                   {projectStore?.projectsSummary?.loading ? (
                     <Loader section small secondary />
                   ) : (
                     alertsData?.data?.endpoint?.toLocaleString()
                   )}
-                </StatsCard.SeconderyCounter>
+                </StatsCard.SecondaryCounter>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
@@ -146,13 +146,13 @@ const AlertsCounters = () => {
                 onClick={alertsStats?.job?.link}
               >
                 <h6 className="stats__subtitle">Jobs</h6>
-                <StatsCard.SeconderyCounter>
+                <StatsCard.SecondaryCounter>
                   {projectStore?.projectsSummary?.loading ? (
                     <Loader section small secondary />
                   ) : (
                     alertsData?.data?.jobs?.toLocaleString()
                   )}
-                </StatsCard.SeconderyCounter>
+                </StatsCard.SecondaryCounter>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
@@ -162,13 +162,13 @@ const AlertsCounters = () => {
                 data-testid="alerts_application_counter"
               >
                 <div className="stats__subtitle">Application</div>
-                <StatsCard.SeconderyCounter>
+                <StatsCard.SecondaryCounter>
                   {projectStore.projectsSummary.loading ? (
                     <Loader section small secondary />
                   ) : (
                     alertsData?.data?.application?.toLocaleString()
                   )}
-                </StatsCard.SeconderyCounter>
+                </StatsCard.SecondaryCounter>
               </div>
             </StatsCard.Row>
           </div>

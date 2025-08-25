@@ -94,13 +94,13 @@ const RunCounter = () => {
                           <i className={`state-${statusClass}`} />
                         </Tooltip>
                       </div>
-                      <StatsCard.SeconderyCounter>
+                      <StatsCard.SecondaryCounter>
                         {projectStore?.projectsSummary?.loading ? (
                           <Loader section small secondary />
                         ) : (
                           counter.toLocaleString()
                         )}
-                      </StatsCard.SeconderyCounter>
+                      </StatsCard.SecondaryCounter>
                     </div>
                   </StatsCard.Row>
                 )

@@ -26,8 +26,10 @@ import { TextTooltipTemplate, Tip, Tooltip } from 'igz-controls/components'
 import './statsCard.scss'
 
 const StatsCard = ({ children, className = '', onClick = () => { } }) => {
+  const cardClass = classNames('stats-card', className)
+
   return (
-    <div className={`stats-card ${className}`} onClick={onClick}>
+    <div className={cardClass} onClick={onClick}>
       {children}
     </div>
   )
@@ -65,8 +67,10 @@ StatsCard.Col = ({ children }) => {
 StatsCard.Col.displayName = 'StatsCard.Col'
 
 StatsCard.MainCounter = ({ children, className = '', id = '', onClick = () => { } }) => {
+  const mainCounterClass = classNames('stats__counter_main', className)
+
   return (
-    <div className={`stats__counter_main ${className}`} data-testid={id} onClick={onClick}>
+    <div className={mainCounterClass} data-testid={id} onClick={onClick}>
       <div className="stats__counter">
         {children}
       </div>
@@ -75,7 +79,7 @@ StatsCard.MainCounter = ({ children, className = '', id = '', onClick = () => { 
 }
 StatsCard.MainCounter.displayName = 'StatsCard.MainCounter'
 
-StatsCard.SeconderyCounter = ({ children }) => {
+StatsCard.SecondaryCounter = ({ children }) => {
   return (
     <div className="stats__counter_secondary">
       <div className="stats__counter">
@@ -84,7 +88,7 @@ StatsCard.SeconderyCounter = ({ children }) => {
     </div>
   )
 }
-StatsCard.SeconderyCounter.displayName = 'StatsCard.SeconderyCounter'
+StatsCard.SecondaryCounter.displayName = 'StatsCard.SecondaryCounter'
 
 
 StatsCard.propTypes = {
@@ -116,7 +120,7 @@ StatsCard.MainCounter.propTypes = {
   onClick: PropTypes.func
 }
 
-StatsCard.SeconderyCounter.propTypes = {
+StatsCard.SecondaryCounter.propTypes = {
   children: PropTypes.node.isRequired
 }
 

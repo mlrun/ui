@@ -128,13 +128,13 @@ const WorkflowsCounters = () => {
                           <i className={`state-${statusClass}`} />
                         </Tooltip>
                       </div>
-                      <StatsCard.SeconderyCounter className={counterClassName}>
+                      <StatsCard.SecondaryCounter className={counterClassName}>
                         {projectStore?.projectsSummary?.loading ? (
                           <Loader section small secondary />
                         ) : (
                           counter?.toLocaleString()
                         )}
-                      </StatsCard.SeconderyCounter>
+                      </StatsCard.SecondaryCounter>
                     </div>
                   </StatsCard.Row>
                 )
