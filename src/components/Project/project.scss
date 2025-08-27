@@ -150,8 +150,8 @@
           justify-content: space-between;
           margin-bottom: 16px;
           color: colors.$primary;
-          font-size: 1.25em;
-            font-weight: 500;
+          font-size: 1em;
+          font-weight: 500;
           line-height: 23px;
         }
 
@@ -160,6 +160,7 @@
           align-items: center;
           color: colors.$topaz;
           font-size: 12px;
+          font-weight: 400;
 
           &-icon {
             flex: 0 1 12px;
@@ -207,7 +208,7 @@
         min-height: 40px;
         margin: 0 0 5px 0;
         font-size: 14px;
-          font-weight: 500;
+        font-weight: 500;
 
         .text-sm {
           margin-left: 5px;
