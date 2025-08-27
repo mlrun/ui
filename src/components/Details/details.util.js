@@ -224,6 +224,9 @@ export const generateArtifactsContent = (
           ),
           value: getValidationRules('artifact.labels.value')
         }
+      },
+      description: {
+        value: selectedItem.description
       }
     }
   }
