@@ -79,14 +79,14 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' }
 ]
 
-export const generatePageData = viewMode => {
+export const generatePageData = (viewMode, isDetailsPopUp = false) => {
   return {
     page: FILES_PAGE,
     details: {
       type: FILES_PAGE,
       menu: detailsMenu,
       infoHeaders,
-      hideBackBtn: viewMode === FULL_VIEW_MODE,
+      hideBackBtn: viewMode === FULL_VIEW_MODE && !isDetailsPopUp,
       withToggleViewBtn: true
     }
   }

@@ -22,11 +22,7 @@ import React from 'react'
 import JobWizard from '../JobWizard/JobWizard'
 import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
 
-import {
-  ARTIFACT_MAX_DOWNLOAD_SIZE,
-  DATASET_TYPE,
-  DATASETS_PAGE
-} from '../../constants'
+import { ARTIFACT_MAX_DOWNLOAD_SIZE, DATASET_TYPE, DATASETS_PAGE } from '../../constants'
 import { PRIMARY_BUTTON, FULL_VIEW_MODE } from 'igz-controls/constants'
 import {
   applyTagChanges,
@@ -71,7 +67,7 @@ export const infoHeaders = [
 
 export const registerDatasetTitle = 'Register dataset'
 
-export const generateDataSetsDetailsMenu = (selectedItem) => [
+export const generateDataSetsDetailsMenu = selectedItem => [
   {
     label: 'overview',
     id: 'overview'
@@ -92,12 +88,7 @@ export const generateDataSetsDetailsMenu = (selectedItem) => [
   }
 ]
 
-export const generatePageData = (
-  viewMode,
-  selectedItem,
-  params,
-  isDetailsPopUp = false
-) => {
+export const generatePageData = (viewMode, isDetailsPopUp = false, selectedItem, params) => {
   return {
     page: DATASETS_PAGE,
     details: {

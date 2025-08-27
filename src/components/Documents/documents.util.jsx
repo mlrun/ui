@@ -20,11 +20,7 @@ such restriction.
 import React from 'react'
 import { cloneDeep, isEmpty, omit } from 'lodash'
 
-import {
-  ARTIFACT_MAX_DOWNLOAD_SIZE,
-  DOCUMENT_TYPE,
-  DOCUMENTS_PAGE
-} from '../../constants'
+import { ARTIFACT_MAX_DOWNLOAD_SIZE, DOCUMENT_TYPE, DOCUMENTS_PAGE } from '../../constants'
 import {
   openDeleteConfirmPopUp,
   openPopUp,
@@ -77,14 +73,14 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' }
 ]
 
-export const generatePageData = viewMode => {
+export const generatePageData = (viewMode, isDetailsPopUp = false) => {
   return {
     page: DOCUMENTS_PAGE,
     details: {
       type: DOCUMENTS_PAGE,
       menu: detailsMenu,
       infoHeaders,
-      hideBackBtn: viewMode === FULL_VIEW_MODE,
+      hideBackBtn: viewMode === FULL_VIEW_MODE && !isDetailsPopUp,
       withToggleViewBtn: true
     }
   }
