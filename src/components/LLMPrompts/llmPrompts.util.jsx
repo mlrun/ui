@@ -80,14 +80,14 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' }
 ]
 
-export const generatePageData = viewMode => {
+export const generatePageData = (viewMode, isDetailsPopUp = false) => {
   return {
     page: LLM_PROMPTS_PAGE,
     details: {
       type: LLM_PROMPTS_PAGE,
       menu: detailsMenu,
       infoHeaders,
-      hideBackBtn: viewMode === FULL_VIEW_MODE,
+      hideBackBtn: viewMode === FULL_VIEW_MODE && !isDetailsPopUp,
       withToggleViewBtn: true
     }
   }

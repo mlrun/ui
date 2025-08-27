@@ -110,11 +110,16 @@ const Artifacts = ({
     paginationConfigArtifactVersionsRef,
     historyBackLink,
     'artifacts',
-    params.id && getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : tab || page, true, params.artifactName),
+    params.id &&
+      getCloseDetailsLink(
+        isAllVersions ? ALL_VERSIONS_PATH : tab || page,
+        true,
+        params.artifactName
+      ),
     isAllVersions
   )
   const pageData = useMemo(
-    () => generatePageData(viewMode, selectedArtifact, params, false, isDemoMode),
+    () => generatePageData(viewMode, false, selectedArtifact, params, isDemoMode),
     [generatePageData, isDemoMode, params, selectedArtifact, viewMode]
   )
   const detailsFormInitialValues = useMemo(() => {
