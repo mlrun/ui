@@ -27,8 +27,10 @@ import ArtifactPopUp from '../DetailsPopUp/ArtifactPopUp/ArtifactPopUp'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseUri } from '../../utils'
 
+import './tableModelCell.scss'
+
 const TableModelCell = ({ id, modelUri, bodyCellClassName = '' }) => {
-  const cellClassNames = classnames('table-body__cell', bodyCellClassName)
+  const cellClassNames = classnames('table-body__cell', 'model-name-wrapper', bodyCellClassName)
   const parsedUri = useMemo(() => {
     return parseUri(modelUri)
   }, [modelUri])
@@ -42,19 +44,29 @@ const TableModelCell = ({ id, modelUri, bodyCellClassName = '' }) => {
   return (
     <td data-testid={id} className={cellClassNames}>
       {parsedUri?.key && (parsedUri?.uid || parsedUri.tree) && (
-        <div className="data-ellipsis">
-          <div className="link" onClick={() => handleOpenArtifactPopUp()}>
-            <Tooltip template={<TextTooltipTemplate text={modelUri} />} textShow>
-              {parsedUri.key}
-            </Tooltip>
-            <span className="link-subtext">{parsedUri.tag}</span>
+        <>
+          <div className="data-ellipsis model-name">
+            <div className="link" onClick={() => handleOpenArtifactPopUp()}>
+              <Tooltip template={<TextTooltipTemplate text={modelUri} />} textShow>
+                {parsedUri.key}
+              </Tooltip>
+            </div>
           </div>
-        </div>
+          {parsedUri.tag && (
+            <Tooltip className="item-tag" template={<TextTooltipTemplate text={parsedUri.tag} />}>
+              <span className="link-subtext">{parsedUri.tag}</span>
+            </Tooltip>
+          )}
+        </>
       )}
       {parsedUri?.key && !parsedUri?.uid && !parsedUri.tree && (
         <>
           <Tooltip template={<TextTooltipTemplate text={modelUri} />}>{parsedUri.key}</Tooltip>
-          <span className="link-subtext">{parsedUri.tag}</span>
+          {parsedUri.tag && (
+            <Tooltip className="item-tag" template={<TextTooltipTemplate text={parsedUri.tag} />}>
+              <span className="link-subtext">{parsedUri.tag}</span>
+            </Tooltip>
+          )}
         </>
       )}
     </td>

@@ -1,0 +1,9 @@
+.model-name-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  .item-tag,
+  .model-name{
+    align-self: baseline;
+  }
+}
