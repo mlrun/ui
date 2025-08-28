@@ -173,7 +173,8 @@ export const generateActionsMenu = (
         icon: <YamlIcon />,
         onClick: llmPromptMin => getFullLLMPrompt(llmPromptMin).then(toggleConvertedYaml)
       }
-      //TODO: uncomment when MEP delete will be implemented
+      //TODO: uncomment when MEP delete will be implemented,
+      // correct delete confirmation message ( currently it's shown as Llm-prompt deleted, should be LLM prompt deleted  )
       // {
       //   label: 'Delete',
       //   icon: <Delete />,
