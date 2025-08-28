@@ -17,19 +17,23 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
 
 import PromptTab from './PromptTab'
 import ArgumentsTab from './ArgumentsTab'
 
 import { ARGUMENTS_TAB, PROMPT_TAB } from '../../../constants'
+import { removeLLMPromptTemplate } from '../../../reducers/artifactsReducer'
 
 import './detailsPromptTemplate.scss'
 
 const DetailsPromptTemplate = ({ selectedItem }) => {
   const [selectedTab, setSelectedTab] = useState(PROMPT_TAB)
   const [selectedArgument, setSelectedArgument] = useState({})
+  const dispatch = useDispatch()
+
   const tabs = [
     { id: PROMPT_TAB, label: 'Prompt' },
     { id: ARGUMENTS_TAB, label: 'Arguments' }
@@ -39,6 +43,12 @@ const DetailsPromptTemplate = ({ selectedItem }) => {
     setSelectedTab(tabName)
     setSelectedArgument({})
   }, [])
+
+  useEffect(() => {
+    return () => {
+      dispatch(removeLLMPromptTemplate())
+    }
+  }, [dispatch, selectedItem])
 
   return (
     <div className="prompt-template">

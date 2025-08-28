@@ -70,7 +70,8 @@ const initialState = {
       content: {},
       error: null,
       loading: false
-    }
+    },
+    promptTemplate: []
   },
   error: null,
   files: {
@@ -452,6 +453,12 @@ export const replaceTag = createAsyncThunk('replaceTag', ({ project, tag, data }
 export const updateArtifact = createAsyncThunk('updateArtifact', ({ project, data }) => {
   return artifactsApi.updateArtifact(project, data)
 })
+export const fetchLLMPromptTemplate = createAsyncThunk(
+  'fetchLLMPromptTemplate',
+  ({ project, config }) => {
+    return artifactsApi.getArtifactPreview(project, config)
+  }
+)
 
 const artifactsSlice = createSlice({
   name: 'artifactsStore',
@@ -512,6 +519,9 @@ const artifactsSlice = createSlice({
     removePipelines(state) {
       state.pipelines.allData = initialState.pipelines.allData
     },
+    removeLLMPromptTemplate(state) {
+      state.LLMPrompts.promptTemplate = initialState.LLMPrompts.promptTemplate
+    },
     showArtifactsPreview(state, action) {
       state.preview = action.payload
     }
@@ -537,6 +547,9 @@ const artifactsSlice = createSlice({
     builder.addCase(updateArtifact.pending, showLoading)
     builder.addCase(updateArtifact.fulfilled, hideLoading)
     builder.addCase(updateArtifact.rejected, hideLoading)
+    builder.addCase(fetchLLMPromptTemplate.fulfilled, (state, action) => {
+      state.LLMPrompts.promptTemplate = action.payload.data
+    })
     builder.addCase(deleteTag.pending, showLoading)
     builder.addCase(deleteTag.fulfilled, hideLoading)
     builder.addCase(deleteTag.rejected, hideLoading)
@@ -723,7 +736,8 @@ export const {
   removeModel,
   removeModels,
   removeModelEndpoints,
-  removePipelines
+  removePipelines,
+  removeLLMPromptTemplate
 } = artifactsSlice.actions
 
 export default artifactsSlice.reducer

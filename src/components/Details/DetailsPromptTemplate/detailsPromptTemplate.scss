@@ -3,15 +3,27 @@
 
 .prompt-template {
   .prompt-tab {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
     &__header {
       display: flex;
       align-items: center;
+      width: 100%;
       margin-top: 20px;
       padding-bottom: 10px;
       background-color: white;
     }
 
     &__table {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin-top: 8px;
+      min-height: 300px;
+
       &-header {
         font-weight: bold;
       }
@@ -19,6 +31,27 @@
       .tooltip-wrapper {
         display: inline;
       }
+
+      .loader-wrapper {
+        min-height: 300px;
+      }
+    }
+
+    &__row {
+      display: flex;
+      padding: 8px 0;
+      border-bottom: borders.$dividerBorder;
+    }
+
+    &__role {
+      flex: 0 0 100px;
+      padding-right: 16px;
+      font-weight: 500;
+    }
+
+    &__content {
+      display: flex;
+      flex: 1;
     }
 
     &__copy-btn {
@@ -72,29 +105,5 @@
         color: colors.$topaz;
       }
     }
-  }
-
-  .prompt-tab__table {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-top: 8px;
-  }
-
-  .prompt-tab__row {
-    display: flex;
-    padding: 8px 0;
-    border-bottom: borders.$dividerBorder;
-  }
-
-  .prompt-tab__role {
-    flex: 0 0 100px;
-    padding-right: 16px;
-    font-weight: 500;
-  }
-
-  .prompt-tab__content {
-    display: flex;
-    flex: 1;
   }
 }
