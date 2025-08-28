@@ -19,13 +19,14 @@ such restriction.
 */
 import { useEffect, useState, createContext, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { capitalize, isEmpty } from 'lodash'
+import { capitalize, has, isEmpty } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { Loader, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import ContentMenu from '../../../elements/ContentMenu/ContentMenu'
 import SearchNavigator from '../../../common/SearchNavigator/SearchNavigator'
 import ExpandableText from '../../../common/ExpandableText/ExpandableText'
+import NoData from '../../../common/NoData/NoData'
 
 import { ARGUMENTS_TAB } from '../../../constants'
 import { fetchLLMPromptTemplate } from '../../../reducers/artifactsReducer'
@@ -44,8 +45,15 @@ const PromptTab = ({
   const [searchResult, setSearchResult] = useState('')
   const [forceExpandAll, setForceExpandAll] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [showError, setShowError] = useState(false)
   const dispatch = useDispatch()
   const artifactsStore = useSelector(store => store.artifactsStore)
+
+  const isPromptTemplateValid = useCallback(prompt_template => {
+    return prompt_template.every(
+      templateRow => has(templateRow, 'role') && has(templateRow, 'content')
+    )
+  }, [])
 
   const generateJsxContent = useCallback(
     (prompt_template, prompt_legend = {}) => {
@@ -104,32 +112,49 @@ const PromptTab = ({
 
   useEffect(() => {
     if (!isEmpty(selectedItem.prompt_template)) {
-      setPromptTemplate(
-        generateJsxContent(selectedItem.prompt_template, selectedItem.prompt_legend)
-      )
+      if (!isPromptTemplateValid(selectedItem.prompt_template)) {
+        setShowError(true)
+      } else {
+        setPromptTemplate(
+          generateJsxContent(selectedItem.prompt_template, selectedItem.prompt_legend)
+        )
+      }
     } else if (isEmpty(artifactsStore.LLMPrompts.promptTemplate)) {
-      setLoading(true)
-      dispatch(
-        fetchLLMPromptTemplate({
-          project: selectedItem.project,
-          config: {
-            params: {
-              path: selectedItem.target_path
+      if (!selectedItem.target_path.endsWith('.txt')) {
+        setShowError(true)
+      } else {
+        setLoading(true)
+        dispatch(
+          fetchLLMPromptTemplate({
+            project: selectedItem.project,
+            config: {
+              params: {
+                path: selectedItem.target_path
+              }
             }
-          }
-        })
-      )
-        .unwrap()
-        .then(response => {
-          setPromptTemplate(generateJsxContent(response.data, selectedItem.prompt_legend))
-        })
-        .finally(() => {
-          setLoading(false)
-        })
+          })
+        )
+          .unwrap()
+          .then(response => {
+            if (!isPromptTemplateValid(response.data)) {
+              setShowError(true)
+            } else {
+              setPromptTemplate(generateJsxContent(response.data, selectedItem.prompt_legend))
+            }
+          })
+          .catch(() => setShowError(true))
+          .finally(() => {
+            setLoading(false)
+          })
+      }
     } else if (!isEmpty(artifactsStore.LLMPrompts.promptTemplate)) {
-      setPromptTemplate(
-        generateJsxContent(artifactsStore.LLMPrompts.promptTemplate, selectedItem.prompt_legend)
-      )
+      if (!isPromptTemplateValid(artifactsStore.LLMPrompts.promptTemplate)) {
+        return setShowError(true)
+      } else {
+        setPromptTemplate(
+          generateJsxContent(artifactsStore.LLMPrompts.promptTemplate, selectedItem.prompt_legend)
+        )
+      }
     }
   }, [
     selectedItem.prompt_template,
@@ -140,7 +165,8 @@ const PromptTab = ({
     selectedItem.target_path,
     generateJsxContent,
     dispatch,
-    artifactsStore.LLMPrompts.promptTemplate
+    artifactsStore.LLMPrompts.promptTemplate,
+    isPromptTemplateValid
   ])
 
   useEffect(() => {
@@ -148,6 +174,8 @@ const PromptTab = ({
       setPromptTemplate([])
       setSearchResult('')
       setForceExpandAll(false)
+      setShowError(false)
+      setLoading(false)
     }
   }, [])
 
@@ -162,7 +190,9 @@ const PromptTab = ({
         />
       </div>
       <div className="prompt-tab__table">
-        {loading ? (
+        {showError ? (
+          <NoData message="Prompt cannot be displayed." />
+        ) : loading ? (
           <Loader section />
         ) : (
           <>
