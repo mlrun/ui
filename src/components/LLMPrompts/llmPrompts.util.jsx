@@ -64,6 +64,7 @@ export const detailsMenu = [
 
 export const infoHeaders = [
   { label: 'Key', id: 'db_key' },
+  { label: 'Description', id: 'description' },
   { label: 'Model name', id: 'model_artifact' },
   {
     label: 'Hash',
