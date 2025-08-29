@@ -101,11 +101,11 @@ const Pipeline = ({ content }) => {
         },
         {
           label: 'Input path:',
-          value: ''
+          value: selectedStepData.input_path
         },
         {
           label: 'Result path:',
-          value: ''
+          value: selectedStepData.result_path
         }
       ])
     }
