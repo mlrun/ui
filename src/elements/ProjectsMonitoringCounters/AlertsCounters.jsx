@@ -60,9 +60,9 @@ const AlertsCounters = () => {
     }
 
     if (projectName !== '*') {
-      const endpoint = projectStore.projectSummary.data.endpoint_alerts_count || 0
-      const jobs = projectStore.projectSummary.data.job_alerts_count || 0
-      const application = projectStore.projectSummary.data.other_alerts_count || 0
+      const endpoint = projectStore.projectSummary.data?.endpoint_alerts_count || 0
+      const jobs = projectStore.projectSummary.data?.job_alerts_count || 0
+      const application = projectStore.projectSummary?.data.other_alerts_count || 0
 
       return {
         projectName,
