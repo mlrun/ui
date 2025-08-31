@@ -81,10 +81,10 @@ const AlertsCounters = () => {
     }
   }, [
     paramProjectName,
-    projectStore.jobsMonitoringData.alerts,
-    projectStore.projectSummary.data.endpoint_alerts_count,
-    projectStore.projectSummary.data.job_alerts_count,
-    projectStore.projectSummary.data.other_alerts_count
+    projectStore.jobsMonitoringData?.alerts,
+    projectStore.projectSummary.data?.endpoint_alerts_count,
+    projectStore.projectSummary.data?.job_alerts_count,
+    projectStore.projectSummary.data?.other_alerts_count
   ])
 
   const alertsStats = useMemo(
