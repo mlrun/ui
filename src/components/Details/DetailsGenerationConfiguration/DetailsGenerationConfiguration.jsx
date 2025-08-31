@@ -36,7 +36,7 @@ const DetailsGenerationConfiguration = ({ selectedItem }) => {
           </div>
         )
       })}
-      {isEmpty(selectedItem.model_configuration) && <NoData />}
+      {isEmpty(selectedItem.model_configuration) && <span>Default configuration is used.</span>}
     </div>
   )
 }
