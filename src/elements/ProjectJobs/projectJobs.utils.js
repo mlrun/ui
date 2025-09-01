@@ -27,10 +27,10 @@ import { typesOfJob } from '../../utils/jobs.util'
 export const getJobsStatistics = (projectCounter, projectName) => {
   return {
     running: {
-      value: projectCounter.error ? 'N/A' : projectCounter.data.runs_running_count,
+      value: projectCounter.error ? 'N/A' : projectCounter.data?.runs_running_count,
       label: 'In Process',
       className:
-        projectCounter.error || projectCounter.data.runs_running_count === 0
+        projectCounter.error || projectCounter.data?.runs_running_count === 0
           ? 'default'
           : 'running',
       status: 'running',

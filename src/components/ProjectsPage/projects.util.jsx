@@ -310,47 +310,47 @@ export const generateMonitoringCounters = (data, dispatch) => {
   }
 
   data.forEach(project => {
-    monitoringCounters.jobs.completed += project.runs_completed_recent_count || 0
-    monitoringCounters.jobs.failed += project.runs_failed_recent_count || 0
-    monitoringCounters.jobs.running += project.runs_running_count || 0
+    monitoringCounters.jobs.completed += project?.runs_completed_recent_count || 0
+    monitoringCounters.jobs.failed += project?.runs_failed_recent_count || 0
+    monitoringCounters.jobs.running += project?.runs_running_count || 0
     monitoringCounters.jobs.total =
       monitoringCounters.jobs.completed +
       monitoringCounters.jobs.failed +
       monitoringCounters.jobs.running
 
-    monitoringCounters.workflows.completed += project.pipelines_completed_recent_count || 0
-    monitoringCounters.workflows.failed += project.pipelines_failed_recent_count || 0
-    monitoringCounters.workflows.running += project.pipelines_running_count || 0
+    monitoringCounters.workflows.completed += project?.pipelines_completed_recent_count || 0
+    monitoringCounters.workflows.failed += project?.pipelines_failed_recent_count || 0
+    monitoringCounters.workflows.running += project?.pipelines_running_count || 0
     monitoringCounters.workflows.total =
       monitoringCounters.workflows.completed +
       monitoringCounters.workflows.failed +
       monitoringCounters.workflows.running
 
-    monitoringCounters.scheduled.jobs += project.distinct_scheduled_jobs_pending_count || 0
+    monitoringCounters.scheduled.jobs += project?.distinct_scheduled_jobs_pending_count || 0
     monitoringCounters.scheduled.workflows +=
-      project.distinct_scheduled_pipelines_pending_count || 0
+      project?.distinct_scheduled_pipelines_pending_count || 0
     monitoringCounters.scheduled.total =
       monitoringCounters.scheduled.jobs + monitoringCounters.scheduled.workflows
 
-    monitoringCounters.alerts.endpoint += project.endpoint_alerts_count || 0
-    monitoringCounters.alerts.jobs += project.job_alerts_count || 0
-    monitoringCounters.alerts.application += project.other_alerts_count || 0
+    monitoringCounters.alerts.endpoint += project?.endpoint_alerts_count || 0
+    monitoringCounters.alerts.jobs += project?.job_alerts_count || 0
+    monitoringCounters.alerts.application += project?.other_alerts_count || 0
     monitoringCounters.alerts.total =
       monitoringCounters.alerts.endpoint +
       monitoringCounters.alerts.jobs +
       monitoringCounters.alerts.application
 
-    monitoringCounters.models.total += project.models_count || 0
+    monitoringCounters.models.total += project?.models_count || 0
 
-    monitoringCounters.monitoring_app.running += project.running_model_monitoring_functions || 0
-    monitoringCounters.monitoring_app.failed += project.failed_model_monitoring_functions || 0
+    monitoringCounters.monitoring_app.running += project?.running_model_monitoring_functions || 0
+    monitoringCounters.monitoring_app.failed += project?.failed_model_monitoring_functions || 0
     monitoringCounters.monitoring_app.total =
       monitoringCounters.monitoring_app.failed + monitoringCounters.monitoring_app.running
 
-    monitoringCounters.artifacts.llm_prompts += project.llm_prompts_count || 0
-    monitoringCounters.artifacts.datasets += project.datasets_count || 0
-    monitoringCounters.artifacts.files += project.files_count || 0
-    monitoringCounters.artifacts.documents += project.documents_count || 0
+    monitoringCounters.artifacts.llm_prompts += project?.llm_prompts_count || 0
+    monitoringCounters.artifacts.datasets += project?.datasets_count || 0
+    monitoringCounters.artifacts.files += project?.files_count || 0
+    monitoringCounters.artifacts.documents += project?.documents_count || 0
     monitoringCounters.artifacts.total =
       monitoringCounters.artifacts.llm_prompts +
       monitoringCounters.artifacts.datasets +
