@@ -96,7 +96,11 @@ const ScheduledJobsCounters = () => {
         </StatsCard.Header>
         <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
           <StatsCard.Row>
-            <StatsCard.MainCounter className='stats__link' id="scheduled_total_counter" onClick={scheduledStats?.total?.link}>
+            <StatsCard.MainCounter
+              className="stats__link"
+              id="scheduled_total_counter"
+              onClick={scheduledStats?.total?.link}
+            >
               {projectStore?.projectsSummary?.loading ? (
                 <Loader section small secondary />
               ) : (
@@ -149,7 +153,7 @@ const ScheduledJobsCounters = () => {
             >
               <div className={'card-popup_text'}>
                 <div className="card-popup_text_link" onClick={scheduledStats.jobs.link}>
-                  Runs: {scheduledStats.workflows.counter}
+                  Jobs: {scheduledStats.jobs.counter}
                 </div>
                 <div className="card-popup_text_link" onClick={scheduledStats.workflows.link}>
                   Workflows: {scheduledStats.workflows.counter}
@@ -159,7 +163,7 @@ const ScheduledJobsCounters = () => {
           )}
         </div>
       </div>
-    </StatsCard >
+    </StatsCard>
   )
 }
 
