@@ -57,6 +57,7 @@ import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { toggleYaml } from '../../reducers/appReducer'
 import { usePods } from '../../hooks/usePods.hook'
 import { getInitialFiltersByConfig } from '../../hooks/useFiltersFromSearchParams.hook'
+import { useTableScroll } from 'igz-controls/hooks/useTable.hook'
 
 import './jobsTable.scss'
 
@@ -383,6 +384,12 @@ const JobsTable = React.forwardRef(
         lastCheckedJobIdRef.current = null
       }
     }, [lastCheckedJobIdRef, selectedJob])
+
+    useTableScroll({
+      content: paginatedJobs,
+      selectedItem: selectedJob,
+      isAllVersions: true
+    })
 
     return (
       <>

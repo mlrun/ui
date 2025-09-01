@@ -41,6 +41,7 @@ import { getJobLogs } from '../../utils/getJobLogs.util'
 import { useAlertsPageData } from '../../hooks/useAlertsPageData'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { removeProjects } from '../../reducers/projectReducer'
+import { useTableScroll } from 'igz-controls/hooks/useTable.hook'
 
 const Alerts = () => {
   const [selectedAlert, setSelectedAlert] = useState({})
@@ -69,6 +70,12 @@ const Alerts = () => {
     searchParams,
     setSearchParams
   } = useAlertsPageData(alertsFilters, true)
+
+  useTableScroll({
+    content: paginatedAlerts,
+    selectedItem: selectedAlert,
+    isAllVersions: true
+  })
 
   const tableContent = useMemo(() => {
     return paginatedAlerts.map(alert => createAlertRowData(alert, isCrossProjects))
