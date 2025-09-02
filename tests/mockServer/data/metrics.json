@@ -12,23 +12,224 @@
           "project": "default"
         },
         {
-          "full_name": "default.histogram-data-drift-1.metric.tvdar_mean_1",
+          "full_name": "default.monitorAppV1.metric.tvdar_mean_1",
           "type": "metric",
-          "app": "histogram-data-drift-1",
+          "app": "monitorAppV1",
           "name": "tvdar_mean_1",
           "project": "default"
         },
         {
-          "full_name": "default.histogram-data-drift-1.metric.tvdop_mean_1",
+          "full_name": "default.monitorAppV1.metric.tvdop_mean_1",
           "type": "metric",
-          "app": "histogram-data-drift-1",
+          "app": "monitorAppV1",
           "name": "tvdop_mean_1",
           "project": "default"
         },
         {
-          "full_name": "default.histogram-data-drift-1.metric.tvds_mean_1",
+          "full_name": "default.monitorAppV1.metric.tvds_mean_1",
           "type": "metric",
-          "app": "histogram-data-drift-1",
+          "app": "monitorAppV1",
+          "name": "tvds_mean_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.monitorAppV1.result.hellinger_mean_1",
+          "type": "result",
+          "app": "monitorAppV1",
+          "name": "hellinger_mean_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.monitorAppV1.metric.data_drift_test_1",
+          "type": "metric",
+          "app": "monitorAppV1",
+          "name": "data_drift_test_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.monitorAppV1.metric.general_drift_1",
+          "type": "metric",
+          "app": "monitorAppV1",
+          "name": "general_drift_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.monitorAppV1.result.model_perf_1",
+          "type": "result",
+          "app": "monitorAppV1",
+          "name": "model_perf_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.monitorAppV2.metric.kld_mean_1",
+          "type": "metric",
+          "app": "monitorAppV2",
+          "name": "kld_mean_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.monitorAppV2.metric.kld_mean_1",
+          "type": "metric",
+          "app": "monitorAppV2",
+          "name": "kld_mean_1",
+          "project": "default"
+        }
+      ],
+      "metricsValues": [
+        {
+          "full_name": "default.rujmfi.result.data_drift_test",
+          "type": "result",
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.hskoyl.result.data_drift_test",
+          "type": "result",
+          "data": "true",
+          "values": [
+            5
+          ]
+        },
+        {
+          "full_name": "default.mlrun-infra.metric.invocations-rate",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            10, true
+          ]
+        },
+        {
+          "full_name": "default.monitorAppV1.metric.tvdar_mean_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.monitorAppV1.metric.tvdop_mean_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.monitorAppV1.metric.tvds_mean_1",
+          "type": "metric",
+          "data": false
+        },
+        {
+          "full_name": "default.monitorAppV1.result.hellinger_mean_1",
+          "type": "result",
+          "result_kind": 0,
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.monitorAppV1.metric.data_drift_test_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.monitorAppV1.metric.general_drift_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.monitorAppV1.result.model_perf_1",
+          "type": "result",
+          "result_kind": 1,
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.monitorAppV2.metric.kld_mean_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.monitorAppV2.metric.kld_mean_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            10
+          ]
+        }
+      ]
+    },
+    {
+      "modelEndpointUID": "a7c95783e6a726a1a233e581ea898ba44fa7e342",
+      "project": "default",
+      "metricsOptions": [
+        {
+          "full_name": "default.mlrun-infra.metric.invocations-rate",
+          "type": "metric",
+          "app": "mlrun-infra",
+          "name": "invocations-rate",
+          "project": "default"
+        },
+        {
+          "full_name": "default.monitorAppV1.metric.tvdar_mean_1",
+          "type": "metric",
+          "app": "monitorAppV1",
+          "name": "tvdar_mean_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.monitorAppV2.metric.tvdar_mean_1",
+          "type": "metric",
+          "app": "monitorAppV2",
+          "name": "tvdar_mean_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.monitorAppV3.metric.tvdar_mean_1",
+          "type": "metric",
+          "app": "monitorAppV3",
+          "name": "tvdar_mean_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.monitorAppV1.metric.tvdop_mean_1",
+          "type": "metric",
+          "app": "monitorAppV1",
+          "name": "tvdop_mean_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.monitorAppV2.metric.tvdop_mean_1",
+          "type": "metric",
+          "app": "monitorAppV2",
+          "name": "tvdop_mean_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.monitorAppV1.metric.tvds_mean_1",
+          "type": "metric",
+          "app": "monitorAppV1",
+          "name": "tvds_mean_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.monitorAppV3.metric.tvds_mean_1",
+          "type": "metric",
+          "app": "monitorAppV3",
           "name": "tvds_mean_1",
           "project": "default"
         },
@@ -101,7 +302,7 @@
           ]
         },
         {
-          "full_name": "default.histogram-data-drift-1.metric.tvdar_mean_1",
+          "full_name": "default.monitorAppV1.metric.tvdar_mean_1",
           "type": "metric",
           "data": "true",
           "values": [
@@ -109,7 +310,7 @@
           ]
         },
         {
-          "full_name": "default.histogram-data-drift-1.metric.tvdop_mean_1",
+          "full_name": "default.monitorAppV2.metric.tvdar_mean_1",
           "type": "metric",
           "data": "true",
           "values": [
@@ -117,7 +318,36 @@
           ]
         },
         {
-          "full_name": "default.histogram-data-drift-1.metric.tvds_mean_1",
+          "full_name": "default.monitorAppV3.metric.tvdar_mean_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.monitorAppV2.metric.tvdop_mean_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.monitorAppV1.metric.tvdop_mean_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.monitorAppV1.metric.tvds_mean_1",
+          "type": "metric",
+          "data": false
+        },
+         {
+          "full_name": "default.monitorAppV3.metric.tvds_mean_1",
           "type": "metric",
           "data": false
         },

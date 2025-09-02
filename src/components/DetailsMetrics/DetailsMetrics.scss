@@ -10,6 +10,7 @@ $stickyHeaderHeight: 55px;
     z-index: 2;
     display: flex;
     justify-content: space-between;
+    background-color: colors.$white;
 
     &__custom-filters {
       display: flex;

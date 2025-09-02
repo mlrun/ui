@@ -56,13 +56,14 @@ import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import RefreshIcon from 'igz-controls/images/refresh.svg?react'
 import SearchIcon from 'igz-controls/images/search.svg?react'
 import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
-
-import './ApplicationMetrics.scss'
 import {
   datePickerPastOptions,
   getDatePickerFilterValue,
   PAST_24_HOUR_DATE_OPTION
 } from '../../utils/datePicker.util'
+import { clearMetricsOptions } from '../../reducers/detailsReducer'
+
+import './ApplicationMetrics.scss'
 
 export const LIST_ID = 'LIST_ID'
 export const LIST_ITEMS_ID = 'LIST_ITEMS_ID'
@@ -229,6 +230,12 @@ const ApplicationMetrics = () => {
       setSelectedModelEndpoint({})
     }
   }, [dispatch, modelEndpoints, navigate, params.id, params.appName, params.projectName])
+
+  useEffect(()=> {
+    return () => {
+      dispatch(clearMetricsOptions())
+    }
+  }, [dispatch])
 
   return (
     <div className="content-wrapper applications-metrics">
