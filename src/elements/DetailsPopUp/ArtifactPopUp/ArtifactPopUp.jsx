@@ -166,14 +166,15 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
         onResolve()
       })
   }, [
-    artifactData,
     artifactContext,
     dispatch,
     onResolve,
+    artifactData.key,
     artifactData.iteration,
     artifactData.tree,
     artifactData.uid,
-    artifactData.tag
+    artifactData.tag,
+    artifactData.project
   ])
 
   const actionsMenu = useMemo(
