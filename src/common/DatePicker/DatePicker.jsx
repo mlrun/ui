@@ -116,8 +116,7 @@ const DatePicker = ({
     ).filter(
       option =>
         option.timeFrameMilliseconds <= timeFrameLimit &&
-        (!excludeCustomRange ||
-        option.id !== CUSTOM_RANGE_DATE_OPTION)
+        (!excludeCustomRange || option.id !== CUSTOM_RANGE_DATE_OPTION)
     )
   }, [customOptions, excludeCustomRange, hasFutureOptions, timeFrameLimit])
 
@@ -205,6 +204,8 @@ const DatePicker = ({
 
   const validateTimeRange = useCallback(
     ([dateFrom, dateTo]) => {
+      const timeFrameLimitRoundedUp =
+        timeFrameLimit === Infinity ? Infinity : roundSeconds(timeFrameLimit, true).getTime()
       let timeRangeInvalidMessage = ''
       let isTimeRangeInvalid = false
       let timeRangeIsNegative = false
@@ -214,12 +215,12 @@ const DatePicker = ({
           timeRangeInvalidMessage = '“To” must be later than “From”'
           timeRangeIsNegative = true
           isTimeRangeInvalid = true
-        } else if (dateTo.getTime() - dateFrom.getTime() > timeFrameLimit) {
+        } else if (dateTo.getTime() - dateFrom.getTime() > timeFrameLimitRoundedUp) {
           timeRangeInvalidMessage = getTimeFrameWarningMsg(timeFrameLimit)
           isTimeRangeInvalid = true
         }
       } else if (!isRange && dateFrom) {
-        if (Date.now() - dateFrom.getTime() > timeFrameLimit) {
+        if (Date.now() - dateFrom.getTime() > timeFrameLimitRoundedUp) {
           timeRangeInvalidMessage = getTimeFrameWarningMsg(timeFrameLimit)
           isTimeRangeInvalid = true
         }
@@ -300,28 +301,24 @@ const DatePicker = ({
   }
 
   const onChangeNextMonth = configId => {
+    const dateToUpdate = new Date(new Date(datePickerState[configId].visibleDate).setDate(1))
+
     datePickerDispatch({
       type: datePickerActions[
         configId === 'configFrom' ? 'UPDATE_VISIBLE_DATE_FROM' : 'UPDATE_VISIBLE_DATE_TO'
       ],
-      payload: new Date(
-        datePickerState[configId].visibleDate.getFullYear(),
-        datePickerState[configId].visibleDate.getMonth() + 1,
-        datePickerState[configId].visibleDate.getDate()
-      )
+      payload: new Date(dateToUpdate.setMonth(dateToUpdate.getMonth() + 1))
     })
   }
 
   const onChangePreviousMonth = configId => {
+    const dateToUpdate = new Date(new Date(datePickerState[configId].visibleDate).setDate(1))
+
     datePickerDispatch({
       type: datePickerActions[
         configId === 'configFrom' ? 'UPDATE_VISIBLE_DATE_FROM' : 'UPDATE_VISIBLE_DATE_TO'
       ],
-      payload: new Date(
-        datePickerState[configId].visibleDate.getFullYear(),
-        datePickerState[configId].visibleDate.getMonth() - 1,
-        datePickerState[configId].visibleDate.getDate()
-      )
+      payload: new Date(dateToUpdate.setMonth(dateToUpdate.getMonth() - 1))
     })
   }
 
