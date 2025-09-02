@@ -439,13 +439,17 @@ export const getFeatureVector = debounce((dispatch, project, projectItem, setDat
     })
 }, 300)
 
-export const prepareTargetPathInitialState = (inputDefaultState, inputDefaultValue = '', selectDefaultValue = '') => {
+export const prepareTargetPathInitialState = (
+  inputDefaultState,
+  inputDefaultValue = '',
+  selectDefaultValue = ''
+) => {
   if (inputDefaultState) {
     return inputDefaultState
-  } 
-  
+  }
+
   if (inputDefaultValue && selectDefaultValue.startsWith('store')) {
-    const state = {...targetPathInitialState}
+    const state = { ...targetPathInitialState }
     const { key, project, kind } = parseUri(selectDefaultValue + inputDefaultValue)
     const projectItemReference = inputDefaultValue.split(`${kind}/${project}/${key}`)?.[1] || ''
     state.storePathType = kind
@@ -455,14 +459,13 @@ export const prepareTargetPathInitialState = (inputDefaultState, inputDefaultVal
     state.inputProjectPathEntered = true
     state.inputStorePathTypeEntered = true
 
-    
     if (projectItemReference) {
       state.projectItemReference = projectItemReference
-          state.inputProjectItemReferencePathEntered = true
+      state.inputProjectItemReferencePathEntered = true
     }
 
     return state
   }
-  
+
   return targetPathInitialState
 }

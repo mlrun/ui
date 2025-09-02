@@ -57,7 +57,9 @@ const TargetPath = ({
   selectPlaceholder = '',
   setFieldState
 }) => {
-  const [dataInputState, setDataInputState] = useState(prepareTargetPathInitialState(inputDefaultState, inputDefaultValue, selectDefaultValue))
+  const [dataInputState, setDataInputState] = useState(
+    prepareTargetPathInitialState(inputDefaultState, inputDefaultValue, selectDefaultValue)
+  )
   const dispatch = useDispatch()
 
   const handleOnChange = (selectValue, inputValue) => {
@@ -218,6 +220,7 @@ const TargetPath = ({
       if (value.length !== 0) {
         formState.form.change(`${formStateFieldInfo}.value`, value.replace(/[^:/]*:[/]{2,3}/, ''))
         formState.form.change(`${formStateFieldInfo}.pathType`, value.match(/^\w*:[/]{2,3}/)[0])
+
         if (formStateDataInputState) {
           formState.form.change(`${formStateDataInputState}`, dataInputState)
         }
