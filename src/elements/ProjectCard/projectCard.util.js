@@ -45,7 +45,7 @@ export const generateProjectStatistic = (
       className:
         !fetchProjectsSummaryFailure &&
         !fetchNuclioFunctionsFailure &&
-        projectSummary.runs_running_count + runningNuclioFunctions > 0
+        projectSummary?.runs_running_count + runningNuclioFunctions > 0
           ? 'running'
           : 'default',
       counterTooltip: 'ML jobs and Nuclio functions',
@@ -56,7 +56,7 @@ export const generateProjectStatistic = (
           ? 'N/A'
           : isEmpty(projectSummary)
             ? '-'
-            : projectSummary.runs_running_count + runningNuclioFunctions
+            : projectSummary?.runs_running_count + runningNuclioFunctions
     },
     failedJobs: {
       className:
