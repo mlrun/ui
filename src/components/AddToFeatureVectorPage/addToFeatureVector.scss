@@ -1,5 +1,15 @@
 .add-to-feature-vector {
-  .content__action-bar-wrapper {
-    padding: 0;
+  .content {
+    .content__header {
+      padding-left: 0;
+    }
+
+    .content__action-bar-wrapper {
+      padding: 0;
+
+      .action-bar {
+        margin-bottom: 0;
+      }
+    }
   }
 }

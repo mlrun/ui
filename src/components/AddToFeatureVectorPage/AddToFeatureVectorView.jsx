@@ -62,23 +62,23 @@ const AddToFeatureVectorView = React.forwardRef(
     const params = useParams()
     return (
       <div ref={ref} className="add-to-feature-vector content-wrapper">
-        <div className="content__header">
-          <AddToFeatureVectorPageHeader params={params} />
-          <div className="content__action-bar-wrapper">
-            <ActionBar
-              filters={filters}
-              filtersConfig={filtersConfig}
-              handleRefresh={handleRefresh}
-              setSearchParams={setSearchParams}
-              tab={ADD_TO_FEATURE_VECTOR_TAB}
-              withoutExpandButton
-            >
-              <AddToFeatureVectorFilters content={content} fetchTags={fetchTags} />
-            </ActionBar>
-          </div>
-        </div>
-        {(featureStore.loading || featureStore.features.loading) && <Loader />}
         <div className="content">
+          <div className="content__header">
+            <AddToFeatureVectorPageHeader params={params} />
+            <div className="content__action-bar-wrapper">
+              <ActionBar
+                filters={filters}
+                filtersConfig={filtersConfig}
+                handleRefresh={handleRefresh}
+                setSearchParams={setSearchParams}
+                tab={ADD_TO_FEATURE_VECTOR_TAB}
+                withoutExpandButton
+              >
+                <AddToFeatureVectorFilters content={content} fetchTags={fetchTags} />
+              </ActionBar>
+            </div>
+          </div>
+          {(featureStore.loading || featureStore.features.loading) && <Loader />}
           <div className="table-container">
             {featureStore.loading || featureStore.features.loading ? null : content.length === 0 ? (
               <NoData

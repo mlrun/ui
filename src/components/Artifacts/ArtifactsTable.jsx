@@ -68,10 +68,22 @@ let ArtifactsTable = ({
   tableHeaders,
   viewMode
 }) => {
+  const renderHistoryBackLink = () => {
+    if (!isAllVersions) return null
+
+    return isOnlyTabScreen ? (
+      <div className="content__history-back-link-wrapper">
+        <HistoryBackLink itemName={artifactName} link={historyBackLink} />
+      </div>
+    ) : (
+      <HistoryBackLink itemName={artifactName} link={historyBackLink} />
+    )
+  }
+
   return (
     <div className="table-container">
       <div className="content__action-bar-wrapper">
-        {renderPageTabs && renderPageTabs()}
+        {renderPageTabs ? renderPageTabs() : renderHistoryBackLink()}
         <ActionBar
           actionButtons={actionButtons}
           closeParamName={isAllVersions ? ALL_VERSIONS_PATH : tab || page}
@@ -91,14 +103,7 @@ let ArtifactsTable = ({
           />
         </ActionBar>
       </div>
-      {isAllVersions &&
-        (isOnlyTabScreen ? (
-          <div className="content__history-back-link-wrapper">
-            <HistoryBackLink itemName={artifactName} link={historyBackLink} />
-          </div>
-        ) : (
-          <HistoryBackLink itemName={artifactName} link={historyBackLink} />
-        ))}
+      {renderPageTabs && renderHistoryBackLink()}
       {artifactsStore.loading ? null : tableContent.length === 0 && isEmpty(selectedArtifact) ? (
         <NoData
           message={getNoDataMessage(
