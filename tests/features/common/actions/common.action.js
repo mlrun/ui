@@ -21,16 +21,10 @@ import { timeout } from '../../../config'
 import { until } from 'selenium-webdriver'
 import { expect } from 'chai'
 import { access, constants } from 'fs'
-const path = require('path')
-const os = require('os')
+import path from 'path'
+import os from 'os'
 
-async function scrollToWebElement(driver, element) {
-  await driver.executeScript('arguments[0].scrollIntoView()', element)
-  await driver.sleep(250)
-}
-
-const action = {
-  generatePath: async function(file, downloadsFolder){
+export const generatePath = async (file, downloadsFolder) => {
     const homeDirectory = os.homedir()
 
     // Define the path to the Downloads folder
@@ -38,41 +32,50 @@ const action = {
 
     // Specify the full path to the file
     return path.join(downloadsFolderPath, file) 
-  },
-  determineFileAccess: async function(finalPath, file){
+  }
+
+export const determineFileAccess = async (finalPath, file) => {
     access(finalPath, constants.F_OK, (err) => {
       const result = err ? `${file} doesn't exist` : true
       expect(result).equal(true)
     })
-  },
-  navigateToPage: async function(driver, baseURL) {
+  }
+
+export const navigateToPage = async (driver, baseURL) => {
     await driver.get(baseURL)
     await driver.sleep(1000)
-  },
-  navigateForward: async function(driver) {
+  }
+
+export const navigateForward = async (driver) => {
     await driver.navigate().forward()
-  },
-  navigateBack: async function(driver) {
+  }
+
+export const navigateBack = async (driver) => {
     await driver.navigate().back()
-  },
-  refreshPage: async function(driver) {
+  }
+
+export const refreshPage = async (driver) => {
     await driver.navigate().refresh()
-  },
-  waitPageLoad: async function(driver, loader) {
+  }
+
+export const waitPageLoad = async (driver, loader) => {
     await driver.wait(async function(driver) {
       const found = await driver.findElements(loader)
       return found.length === 0
     })
-  },
-  waiteUntilComponent: async function(driver, component) {
+  }
+
+export const waiteUntilComponent = async (driver, component) => {
     await driver.wait(until.elementLocated(component), timeout)
-  },
-  clickOnComponent: async function(driver, component) {
+  }
+
+export const clickOnComponent = async (driver, component) => {
     const element = await driver.findElement(component)
     await driver.sleep(250)
     await element.click()
-  },
-  clickNearComponent: async function(driver, component) {
+  }
+
+export const clickNearComponent = async (driver, component) => {
     const element = await driver.findElement(component)
     const coordinates = await element.getRect()
     const actions = driver.actions({ async: true })
@@ -80,8 +83,9 @@ const action = {
       .move({ x: parseInt(coordinates.x) + 1, y: parseInt(coordinates.y) + 1 })
       .click()
       .perform()
-  },
-  hoverComponent: async function(driver, component, scroll = true) {
+  }
+
+export const hoverComponent = async (driver, component, scroll = true) => {
     const baseComponent = component.root ? component.root : component
     const element = await driver.findElement(baseComponent)
     if (scroll) {
@@ -93,66 +97,78 @@ const action = {
       .move({ x: parseInt(coordinates.x), y: parseInt(coordinates.y) })
       .perform()
     await driver.sleep(250)
-  },
-  verifyClassDisabled: async function (driver, component) {
+  }
+
+export const verifyClassDisabled = async (driver, component) => {
     const inputField = await driver.findElement(component)
     const attributes = await inputField.getAttribute('class')
     const flag = attributes.includes('form-field__wrapper-disabled')
     expect(flag).equal(true)
-  },
-  verifyElementDisabled: async function(driver, component) {
+  }
+
+export const verifyElementDisabled = async (driver, component) => {
     const element = await driver.findElement(component)
     const flag = await element.getAttribute('disabled')
     expect(flag).equal('true')
-  },
-  verifyElementEnabled: async function(driver, component) {
+  }
+
+export const verifyElementEnabled = async (driver, component) => {
     const element = await driver.findElement(component)
     const flag = await element.getAttribute('disabled')
     expect(flag).equal(null)
-  },
-  verifyElementActive: async function(driver, component) {
+  }
+
+export const verifyElementActive = async (driver, component) => {
     const element = await driver.findElement(component)
     const flag = await element.getAttribute('class')
     expect(flag.includes('active')).equal(true)
-  },
-  verifyElementNotActive: async function(driver, component) {
+  }
+
+export const verifyElementNotActive = async (driver, component) => {
     const element = await driver.findElement(component)
     const flag = await element.getAttribute('class')
     expect(flag.includes('false')).equal(true)
-  },
-  componentIsPresent: async function(driver, component) {
+  }
+
+export const componentIsPresent = async (driver, component) => {
     const _component = component.root ?? component
     const elements = await driver.findElements(_component)
     expect(elements.length).above(0)
-  },
-  componentIsNotPresent: async function(driver, component) {
+  }
+
+export const componentIsNotPresent = async (driver, component) => {
     const _component = component.root ?? component
     const elements = await driver.findElements(_component)
     expect(elements.length).equal(0)
-  },
-  componentIsVisible: async function(driver, component) {
+  }
+
+export const componentIsVisible = async (driver, component) => {
     const _component = component.root ?? component
     const element = await driver.findElement(_component)
     const displayed = await element.isDisplayed()
     expect(displayed).equal(true)
-  },
-  componentIsNotVisible: async function(driver, component) {
+  }
+
+export const componentIsNotVisible = async (driver, component) => {
     const _component = component.root ?? component
     const element = await driver.findElement(_component)
     await driver.sleep(250)
     const displayed = await element.isDisplayed()
     expect(displayed).equal(false)
-  },
-  typeIntoInputField: async function(driver, component, value) {
+  }
+
+export const typeIntoInputField = async (driver, component, value) => {
     const element = await driver.findElement(component)
     return element.sendKeys(value) 
-  },
-  verifyTypedText: async function(driver, component, value) {
+  }
+
+export const verifyTypedText = async (driver, component, value) => {
     const element = await driver.findElement(component)
     const txt = await element.getAttribute('value')
     expect(txt).equal(value)
-  },
-  verifyText: async function(driver, component, value) {
+  }
+
+export const verifyText = async (driver, component, value) => {
     const element = await driver.findElement(component)
     const txt = await element.getText('value')
     const arr = txt.split()
@@ -168,94 +184,106 @@ const action = {
         `should be expected "${value}" but actual value "${txt}"`
       )
     }  
-  },
-  verifyTextRegExp: async function(driver, component, regexp) {
+  }
+
+export const verifyTextRegExp = async (driver, component, regexp) => {
     const element = await driver.findElement(component)
     const txt = await element.getText('value')
     expect(true).equal(regexp.test(txt))
-  },
-  isComponentContainsAttributeValue: async function(
+  }
+
+export const isComponentContainsAttributeValue = async (
     driver,
     component,
     attribute,
     value
-  ) {
+  ) => {
     const element = await driver.findElement(component)
     return (await element.getAttribute(attribute)) === value
-  },
-  isComponentContainsClass: async function(
+  }
+
+export const isComponentContainsClass = async (
     driver,
     component,
     className
-  ) {
+  ) => {
     const element = await driver.findElement(component)
     const classes = await element.getAttribute('class')
     expect(classes.includes(className)).equal(true)
-  },
-  verifyComponentContainsAttributeValue: async function(
+  }
+
+export const verifyComponentContainsAttributeValue = async (
     driver,
     component,
     attribute,
     value
-  ) {
+  ) => {
     const element = await driver.findElement(component)
     const attributes = await element.getAttribute(attribute)
     expect(attributes.includes(value)).equal(
       true,
       `Attribute "${value}" does not present in "${attribute}" values list "${attributes}"`
     )
-  },
-  verifyComponentNotContainsAttributeValue: async function(
+  }
+
+export const verifyComponentNotContainsAttributeValue = async (
     driver,
     component,
     attribute,
     value
-  ) {
+  ) => {
     const element = await driver.findElement(component)
     const attributes = await element.getAttribute(attribute)
     expect(attributes.includes(value)).equal(
       false,
       `Attribute "${value}" does present in "${attribute}" values list "${attributes}"`
     )
-  },
-  collapseAccordionSection: async function(driver, collapseComponent) {
+  }
+
+export const collapseAccordionSection = async (driver, collapseComponent) => {
     const element = await driver.findElement(collapseComponent)
     const attributes = await element.getAttribute('class')
     const flag = attributes.includes('open')
     if (flag) {
       await element.click()
     }
-  },
-  expandAccordionSection: async function(driver, collapseComponent) {
+  }
+
+export const expandAccordionSection = async (driver, collapseComponent) => {
     const element = await driver.findElement(collapseComponent)
     const attributes = await element.getAttribute('class')
     const flag = attributes.includes('open')
     if (!flag) {
       await element.click()
     }
-  },
-  isAccordionSectionExpanded: async function(driver, collapseComponent) {
+  }
+
+export const isAccordionSectionExpanded = async (driver, collapseComponent) => {
     const element = await driver.findElement(collapseComponent)
     const attributes = await element.getAttribute('class')
     const flag = attributes.includes('open')
     expect(flag).equal(true)
-  },
-  isAccordionSectionCollapsed: async function(driver, collapseComponent) {
+  }
+
+export const isAccordionSectionCollapsed = async (driver, collapseComponent) => {
     const element = await driver.findElement(collapseComponent)
     const attributes = await element.getAttribute('class')
     const flag = attributes.includes('open')
     expect(flag).equal(false)
-  },
-  getElementText: async function(driver, component) {
+  }
+
+export const getElementText = async (driver, component) => {
     const element = await driver.findElement(component)
     return await element.getText('value')
-  },
-  scrollToElement: async function(driver, component) {
+  }
+
+export const scrollToElement = async (driver, component) => {
     const element = await driver.findElement(component)
     await driver.executeScript('arguments[0].scrollIntoView()', element)
     await driver.sleep(250)
-  },
-  checkComponentHintTextWithHover:async function (driver, component, hintComponent, text) {
+  }
+
+export const checkComponentHintTextWithHover = async (driver, component, hintComponent, text) => {
     const hintButton = await driver.findElement(component)
     const coordinates = await hintButton.getRect()
     const actions = driver.actions({ async: true })
@@ -267,13 +295,14 @@ const action = {
     const hintText = await hint.getText()
 
     expect(hintText).equal(text)
-  },
-  putToTestContextElementValue: async function(driver, testContext, element, pageValue) {
+  }
+
+export const putToTestContextElementValue = async (driver, testContext, element, pageValue) => {
     const pageElement = await driver.findElement(element)
-
     testContext[pageValue] = await pageElement.getText()  
-  },
-  scrollToWebElement
-}
-
-module.exports = action
+  }
+  
+export const scrollToWebElement = async (driver, element) => {
+    await driver.executeScript('arguments[0].scrollIntoView()', element)
+    await driver.sleep(250)
+  }

@@ -22,12 +22,12 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
+import { Loader } from 'igz-controls/components'
 import ActionBar from '../ActionBar/ActionBar'
 import AlertsFilters from './AlertsFilters'
 import AlertsTable from '../../elements/AlertsTable/AlertsTable'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Pagination from '../../common/Pagination/Pagination'
-import Loader from '../../common/Loader/Loader'
 
 import { ALERTS_FILTERS, ALERTS_PAGE_PATH, MONITOR_ALERTS_PAGE } from '../../constants'
 import { createAlertRowData } from '../../utils/createAlertsContent'
@@ -41,6 +41,7 @@ import { getJobLogs } from '../../utils/getJobLogs.util'
 import { useAlertsPageData } from '../../hooks/useAlertsPageData'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { removeProjects } from '../../reducers/projectReducer'
+import { useTableScroll } from 'igz-controls/hooks/useTable.hook'
 
 const Alerts = () => {
   const [selectedAlert, setSelectedAlert] = useState({})
@@ -69,6 +70,12 @@ const Alerts = () => {
     searchParams,
     setSearchParams
   } = useAlertsPageData(alertsFilters, true)
+
+  useTableScroll({
+    content: paginatedAlerts,
+    selectedItem: selectedAlert,
+    isAllVersions: true
+  })
 
   const tableContent = useMemo(() => {
     return paginatedAlerts.map(alert => createAlertRowData(alert, isCrossProjects))
@@ -149,7 +156,7 @@ const Alerts = () => {
               withRefreshButton
               withoutExpandButton
             >
-              <AlertsFilters isAlertsPage={alertsFilters} isCrossProjects={isCrossProjects} />
+              <AlertsFilters isAlertsPage isCrossProjects={isCrossProjects} />
             </ActionBar>
           </div>
           {alertsStore.loading && <Loader />}

@@ -24,9 +24,8 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import ArtifactsPreviewController from '../ArtifactsPreview/ArtifactsPreviewController'
-import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
-import { TextTooltipTemplate, Tooltip, Tip } from 'igz-controls/components'
+import { TextTooltipTemplate, Tooltip, Tip, Loader } from 'igz-controls/components'
 
 import {
   generateArtifactsPreviewContent,
@@ -37,7 +36,7 @@ import { ALLOW_SORT_BY, DEFAULT_SORT_BY, EXCLUDE_SORT_BY } from 'igz-controls/ty
 import { fetchArtifacts } from '../../reducers/artifactsReducer'
 import { fetchJob } from '../../reducers/jobReducer'
 import { generateArtifactIdentifiers } from '../Details/details.util'
-import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
+import { getChipLabelAndValue } from 'igz-controls/utils/chips.util'
 import { setIteration, setIterationOption } from '../../reducers/detailsReducer'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 
@@ -280,7 +279,7 @@ DetailsArtifacts.propTypes = {
   excludeSortBy: EXCLUDE_SORT_BY,
   isDetailsPopUp: PropTypes.bool,
   iteration: PropTypes.string.isRequired,
-  selectedItem: PropTypes.object.isRequired,
+  selectedItem: PropTypes.object.isRequired
 }
 
 export default DetailsArtifacts

@@ -106,7 +106,23 @@ const setMetricChartText = (context, tooltipModel, tooltipEl, chartType) => {
   }
 }
 
-const generateCustomTooltip = (context, applicationChartType) => {
+const setMEPWithDetectionChartText = (context, tooltipModel, tooltipEl) => {
+  if (tooltipModel.body) {
+    let innerHtml = '<div class="tooltip-container">'
+    const fullDate =
+      context.tooltip.dataPoints[0].dataset?.dates?.[context.tooltip.dataPoints[0].dataIndex]
+   
+    innerHtml += `<div class="tooltip-container-date">Date: ${fullDate}</div>`
+    innerHtml += `<div class="tooltip-container-value">Value: ${context.tooltip.dataPoints[0].raw}</div>`
+
+    innerHtml += '</div>'
+
+    const divRoot = tooltipEl.querySelector('div')
+    divRoot.innerHTML = innerHtml
+  }
+}
+
+const generateCustomTooltip = (context, applicationChartType, setText = setMetricChartText) => {
   // ChartJs type
   const chartType = context.tooltip.dataPoints[0].dataset.chartType
 
@@ -134,12 +150,7 @@ const generateCustomTooltip = (context, applicationChartType) => {
     return
   }
 
-  // Set Text
-  if (applicationChartType === CHART_TYPE_HISTOGRAM) {
-    setHistogramChartText(context, tooltipModel, tooltipEl)
-  } else {
-    setMetricChartText(context, tooltipModel, tooltipEl, chartType)
-  }
+  setText(context, tooltipModel, tooltipEl, chartType)
 
   // Display, position, and set styles for font
   const position = context.chart.canvas.getBoundingClientRect()
@@ -238,6 +249,10 @@ export const getMetricChartConfig = type => {
   const barOptions = {
     ...defaultOptions,
     barThickness: 20,
+    borderRadius: {
+      topLeft: 4,
+      topRight: 4
+    },
     scales: {
       ...defaultOptions.scales,
       x: {
@@ -297,7 +312,8 @@ export const getHistogramChartConfig = () => {
         },
         tooltip: {
           enabled: false,
-          external: context => generateCustomTooltip(context, CHART_TYPE_HISTOGRAM),
+          external: context =>
+            generateCustomTooltip(context, CHART_TYPE_HISTOGRAM, setHistogramChartText),
           mode: 'index',
           intersect: false,
           callbacks: {
@@ -308,6 +324,43 @@ export const getHistogramChartConfig = () => {
       scales: {
         x: { display: false },
         y: { display: false }
+      }
+    }
+  }
+}
+
+export const getMEPsWithDetectionChartConfig = () => {
+  const barConfig = getMetricChartConfig(CHART_TYPE_BAR)
+  
+  return {
+    ...barConfig,
+    options: {
+      ...barConfig.options,
+      scales: {
+        ...barConfig.options.scales,
+        x: {
+          ...barConfig.options.scales.x,
+          title: {
+            display: false
+          }
+        },
+        y: {
+          ...barConfig.options.scales.y,
+          title: {
+            ...barConfig.options.scales.y.title,
+            text: 'Model endpoints'
+          }
+        }
+      },
+      plugins: {
+        ...barConfig.options.plugins,
+        tooltip: {
+          enabled: false,
+          intersect: false,
+          mode: 'index',
+          external: context =>
+            generateCustomTooltip(context, null, setMEPWithDetectionChartText),
+        }
       }
     }
   }

@@ -26,8 +26,7 @@ import { differenceWith, isEmpty, isEqual } from 'lodash'
 import { useParams } from 'react-router-dom'
 import arrayMutators from 'final-form-arrays'
 
-import Loader from '../../common/Loader/Loader'
-import { FormKeyValueTable } from 'igz-controls/components'
+import { FormKeyValueTable, Loader } from 'igz-controls/components'
 
 import {
   ADD_PROJECT_SECRET,
@@ -40,7 +39,7 @@ import { areFormValuesChanged, setFieldState } from 'igz-controls/utils/form.uti
 import { fetchProjectSecrets, removeProjectData } from '../../reducers/projectReducer'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 const ProjectSettingsSecrets = ({ setNotification }) => {
   const [modifyingIsInProgress, setModifyingIsInProgress] = useState(false)

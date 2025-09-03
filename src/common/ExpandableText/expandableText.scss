@@ -1,0 +1,54 @@
+@use 'igz-controls/scss/colors';
+
+.expandable-wrapper {
+  position: relative;
+}
+
+.expandable-text {
+  display: block;
+  transition: max-height 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.fade-overlay {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #fff);
+  pointer-events: none;
+}
+
+.see-more-button-overlay {
+  position: absolute;
+  bottom: 4px;
+  right: 0;
+  background: white;
+  padding-left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dots {
+  font-weight: bold;
+  color: colors.$doveGrayTwo;
+}
+
+.see-more-button,
+.see-less-button {
+  background: none;
+  border: none;
+  color: colors.$cornflowerBlue;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.see-less-container {
+  margin-top: 4px;
+  text-align: right;
+}

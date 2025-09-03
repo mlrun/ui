@@ -35,7 +35,7 @@ const generalInfoQuickLinks = {
   }
 }
 
-module.exports = {
+export default {
   loader: By.css('.loader-wrapper .loader'),
   See_On_Github: By.css('header.header a[alt="MLRUN on Gihub"]'),
   See_On_Slack: By.css('header.header a[alt="MLRUN on Slack"]'),
@@ -58,7 +58,7 @@ module.exports = {
     '[data-testid="nav-link-project-settings"] .nav-link__button svg'
   ),
   Pin_Quick_Link_Button: By.css(
-    '.navbar .navbar__body .tooltip-wrapper button.round-icon-cp__circle'
+    '.navbar .navbar__pin-icon [data-testid="navabr-pin-tooltip-wrapper"]'
   ),
   Navigation_Bar: By.css('.ml-app .navbar'),
   Project_Monitoring_Button: By.css('#monitor > span'),
@@ -83,18 +83,13 @@ module.exports = {
   Jobs_And_Workflows_Icon: By.css('#jobs > svg'),
   ML_Functions_Button: By.css('#ml-functions > span'),
   ML_Functions_Icon: By.css('#ml-functions > svg'),
-  Real_Time_Functions_Button: By.css('.ml-app .navbar .navbar__content .navbar-links .nav-link:nth-of-type(9) span'),
-  Real_Time_Functions_Icon: By.css('.ml-app .navbar .navbar__content .navbar-links .nav-link:nth-of-type(9) svg'),
-  API_Gateways_Button: By.css('.ml-app .navbar .navbar__content .navbar-links .nav-link:nth-of-type(10) span'),
-  API_Gateways_Icon: By.css('.ml-app .navbar .navbar__content .navbar-links .nav-link:nth-of-type(10) svg'),
+  Real_Time_Functions_Button: By.css('.ml-app .navbar .navbar-links [data-testid="nav-link-real-time-functions"] span'),
+  Real_Time_Functions_Icon: By.css('.ml-app .navbar .navbar-links [data-testid="nav-link-real-time-functions"] svg'),
+  API_Gateways_Button: By.css('.ml-app .navbar .navbar-links [data-testid="nav-link-api-gateways"] span'),
+  API_Gateways_Icon: By.css('.ml-app .navbar .navbar-links [data-testid="nav-link-api-gateways"] svg'),
   Alerts_Button: By.css('[data-testid="nav-link-alerts"] .nav-link__label'),
   Alerts_Icon: By.css('[data-testid="nav-link-alerts"] svg'),
   General_Info_Quick_Panel: By.css('.ml-app .navbar .navbar__body'),
-  Project_Quick_Actions_Instance: By.css('.project-details__details .link'),
-  Quick_actions_Active: By.css('#quick-actions'),
-  Project_Monitoring_First_Instance: By.css('.project-details__details .link'),
-  Project_Monitoring_Second_Instance: By.css('.project-overview-card:nth-of-type(3) .link:nth-of-type(4)'),
-  Project_Monitoring_Active: By.css('#monitor'),
   Step_1_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(1)'),
   Step_1_Button_text: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(1) .data-ellipsis span'),
   Step_2_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(2)'),

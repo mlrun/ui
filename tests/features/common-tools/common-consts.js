@@ -17,21 +17,26 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-module.exports = {
+export default {
   Project: {
-    Create_New_Options: [
-      'Batch run',
-      'Feature set',
+    Quick_Actions_Options: [
+      'Register dataset',
       'Register artifact',
-      'Register dataset'
-    ],
-    Create_New_Options_Demo: [
       'Batch run',
+      'Train model',
+      'Batch inference',
+      'Create real-time function'
+    ],
+    Quick_Actions_Options_Demo: [
+      'Register dataset',
+      'Register artifact',
+      'Batch run',
+      'Train model',
+      'Batch inference',
+      'Create real-time function',
       'ML function',
       'Feature set',
-      'Register artifact',
-      'Register model',
-      'Register dataset'
+      'Register model'
     ],
     Online_Status: 'online',
     Data_Collection_Description:
@@ -74,8 +79,7 @@ module.exports = {
   },
   Feature_Sets_Info_Pane: {
     Created_State: 'Created',
-    Tab_List: ['Overview', 'Features', 'Transformations', 'Preview', 'Statistics'],
-    Tab_List_Demo: ['Overview', 'Features', 'Transformations', 'Preview', 'Statistics', 'Analysis'],
+    Tab_List: ['Overview', 'Features', 'Transformations', 'Preview', 'Statistics', 'Analysis'],
     Overview_General_Headers: [
       'Description:',
       'Labels:',
@@ -90,7 +94,7 @@ module.exports = {
     ]
   },
   Feature_Vectors_Info_Pane: {
-    Tab_List: ['Overview', 'Requested Features'],
+    Tab_List: ['Overview', 'Requested Features', 'Analysis'],
     Overview_General_Headers: [
       'Description:',
       'Labels:',
@@ -116,8 +120,8 @@ module.exports = {
     Ranking_Criteria_List: ['Min', 'Max']
   },
   Datasets_Info_Pane: {
-    Tab_List: ['Overview', 'Preview', 'Metadata'],
-    Info_Banner_Message: /The (.+?) is not in the filtered list\. Closing the details panel will return you to the current list\./,
+    Tab_List: ['Overview', 'Preview', 'Metadata', 'Analysis'],
+    Info_Banner_Message: /The dataset is not in the filtered list\. Closing the details panel will return you to the current list\./,
     Overview_General_Headers: [
       'Hash:',
       'Key:',
@@ -191,7 +195,9 @@ module.exports = {
   },
   ML_Functions_Tab: {
     Common_Action_Menu_Options: ['Edit', 'View YAML', 'Delete'],
-    Serving_Action_Menu_Options: ['Edit', 'View YAML', 'Delete']
+    Common_Action_Menu_Options_Demo: ['Edit', 'View YAML', 'Delete all versions'],
+    Serving_Action_Menu_Options: ['Edit', 'View YAML', 'Delete'],
+    Serving_Action_Menu_Options_Demo: ['Edit', 'View YAML', 'Delete all versions']
   },
   ML_Function_Info_Pane: {
     Initialized_State: 'Initialized',
@@ -379,14 +385,18 @@ module.exports = {
     FilterBy_Button: 'Filter',
     FilterBy_Button_1: 'Filter (1)',
     Show_All_Versions: 'Show all versions',
+    Open_Metrics: 'Open metrics',
     Refresh_Button: 'Refresh',
+    Back_Button: 'Back',
     Expand_All_Button: 'Expand all',
-    In_Process_Jobs: 'Aborting, Pending, Running',
-    In_Process_Workflows: 'Running',
+    In_Process_Jobs: 'Aborting, Pending, Pending retry, Running',
+    Running_Tip: 'Running, Terminating',
+    Failed_Tip: 'Failed',
     Failed_Jobs: 'Aborted, Error',
     Failed_Worflows: 'Error, Failed',
     Succeeded: 'Completed',
     Statistics_Tab_Tip: 'Statistics reflect the data for the latest ingestion. \n Note that some values may be empty due to the use of different engines for calculating statistics',
+    Monitoring_Jobs_Box_Title_Tip: 'Number of Job runs, clicking on the counters navigates to jobs screen.',
     Error_Content: 'Error. Columns must be same length as key',
     Error_Content_Workflow:
       "Error. 2021-08-29 20:01:36.582972: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library 'libcudart.so.11.0'; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/lib:/usr/local/lib: 2021-08-29 20:01:36.583019: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine. 2021-08-29 20:01:46.470042: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set 2021-08-29 20:01:46.470263: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/lib:/usr/local/lib: 2021-08-29 20:01:46.470283: W tensorflow/stream_executor/cuda/cuda_driver.cc:326] failed call to cuInit: UNKNOWN ERROR (303) 2021-08-29 20:01:46.470306: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (train-1193bacd-worker-0): /proc/driver/nvidia/version does not exist 2021-08-29 20:01:46.518782: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations: AVX2 FMA To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags. 2021-08-29 20:01:46.518927: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set Some callbacks may not have access to the averaged metrics, see https://github.com/horovod/horovod/issues/2440 Traceback (most recent call last): File \"/User/demos/image-classification-with-distributed-training/src-tfv2/horovod-training.py\", line 116, in <module> hvd.callbacks.LearningRateWarmupCallback(warmup_epochs=5, verbose=1), TypeError: __init__() missing 1 required positional argument: 'initial_lr'"
@@ -522,7 +532,16 @@ module.exports = {
       ' You can browse them in the Feature store page.',
     Artifacts_Stats_Tip:  
       'Each artifact can have multiple versions, produced by multiple runs and given multiple tags.\n' +
-      ' You can browse them in the Artifacts page.'
+      ' You can browse them in the Artifacts page.',
+    Model_Endpoint_With_Detections:
+      'This chart displays the number of model endpoints that had at least one detected issue, in any monitoring application, in the relevant time period',
+    Operating_Functions: 'System functions that are used for the monitoring application operation',
+    Lag: 'Number of messages currently waiting in the app\'s queue',
+    Commited_Offset: 'Total number of messages handled by the app',
+    Endpoints_Tip: 'Model endpoints processed by the monitoring app during the selected time frame',
+    Metrics_Tip: 'This table displays the values of the last metrics captured by the monitoring application. If there are metrics for more than one model endpoint at the same time, the table displays only one of those.',
+    Shards_Partitions_Status_Tip: 'This table displays the current status of each shard',
+    Runs_Statistic_Section_Title_Tip: 'Number of Job runs, clicking on the counters navigates to jobs screen.'
   },
   Descriptions: {
     Archive_Project:
@@ -554,11 +573,14 @@ module.exports = {
     Running_Job_Action_Menu_Options: ['Run\'s resource monitoring', 'Abort', 'View YAML'],
     Delete_Run_Message: /Are you sure you want to delete the run with the UID "(.+?)" of the job "(.+?)"\? Deleted runs can not be restored./,
     Delete_All_Runs_Message: /Are you sure you want to delete all runs of the job "(.+?)"\? Deleted runs can not be restored./,
-    Workflows_Action_Menu_Options: ['View YAML', 'Retry'],
-    Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
+    Terminate_Workflow_Message: /Are you sure you want to terminate the workflow "(.+?)" \(stop its execution\)\? Workflows termination cannot be undone\./,
+    Workflows_Action_Menu_Options: ['View YAML', 'Retry', 'Terminate'],
+    Workflows_Running_Action_Menu_Options: ['View YAML', 'Terminate'],
+    Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete', 'Terminate'],
     Pending_Job_Action_Menu_Options: ['Batch re-run', 'Run\'s resource monitoring', 'Abort', 'View YAML'],
     Schedule_Action_Menu_Options: ['Run now', 'Edit', 'Delete', 'View YAML'],
-    Workflows_Unsuccessful_Run_Message: 'Workflow did not run successfully\nRETRY'
+    Workflows_Unsuccessful_Run_Message: 'Workflow did not run successfully\nRETRY',
+    Workflows_Unsuccessful_Terminate_Message: 'Workflow "stocks-admin-main 2021-08-30 05-36-35 failed to terminate'
   },
   Jobs_Monitor_Tab_Info_Pane: {
     Pending_State: 'Pending',
@@ -579,7 +601,9 @@ module.exports = {
       'Labels:',
       'Log level:',
       'Output path:',
-      'Total iterations:'
+      'Total iterations:',
+      'Retry count:',
+      'Maximum retries:'
     ]
   },
   Jobs_Monitor_Tab: {
@@ -607,6 +631,7 @@ module.exports = {
   },
   Dropdown_Options: {
     Tag_Filer_Options: ['All tags', 'latest'],
+    Tag_Filer_Options_Main_Table: ['latest'],
     Status_Filter_Options: ['All', 'Completed', 'Running', 'Pending', 'Error', 'Aborted'],
     Entity_Type_Filter_Options: ['All', 'Job', 'Endpoint', 'Application'],
     Severity_Filter_Options: ['All', 'High', 'Medium', 'Low'],
@@ -621,18 +646,19 @@ module.exports = {
       'Completed',
       'Error',
       'Running',
-      'Pending'
+      'Pending',
+      'Pending retry'
     ],
-    Workflows_Status_Filter_Options: ['All', 'Error', 'Failed', 'Running', 'Completed'],
+    Workflows_Status_Filter_Options: ['All', 'Error', 'Failed', 'Running', 'Completed', 'Terminating'],
     Jobs_Type_Filter_Options: [
       'All',
-      'Local',
+      'Job',
+      'Spark',
+      'Horovod',
       'Dask',
       'Databricks',
-      'Handler',
-      'Job',
-      'Horovod',
-      'Spark'
+      'Local',
+      'Handler'
     ],
     Scheduled_Type_Filter_Options: [
       'All',
@@ -668,6 +694,12 @@ module.exports = {
       'Past week',
       'Past month',
       'Custom range'
+    ],
+    Date_Picker_Filter_Options_Monitoring_App: [
+      'Past hour',
+      'Past 24 hours',
+      'Past week',
+      'Past month'
     ],
     Scheduled_Date_Picker_Filter_Options: [
       'Any time',
@@ -711,18 +743,24 @@ module.exports = {
   },
   No_Data_Message: {
     Common_Message_Jobs_Monitoring:
-      /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
+      /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
     Common_Message_Monitor_Jobs_Name: /No data matches the filter: "Name: (.+?)"/,
     Common_Message_Jobs_Monitoring_Workflow_Project:
-      /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
+      /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
     Common_Message_Jobs_Monitoring_Status:
       /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Status: (.+?)"/,
+    Common_Message_Monitoring_Workflow:
+      /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}"/,
+    Common_Message_Monitoring_Workflow_Status:
+      /No data matches the filter: "Status: (.+?)"/,
     Common_Message_Jobs_Monitoring_Type:
       /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Type: (.+?)"/,
     Common_Message_Monitor_Jobs:
       /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}"/,
     Common_Message_Jobs_Monitoring_Scheduled:
-      /No data matches the filter: "Scheduled at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
+      /No data matches the filter: "Scheduled at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
+    Common_Message_Scheduled_Type:
+      /No data matches the filter: "Type: (.+?)"/,
     Common_Message: 'No data matches the filter: "Version Tag: latest, Name: ccccc"',
     Common_Message_Feature: 'No data matches the filter: "Version Tag: latest"',
     Common_Message_Feature_Vector_Tab:

@@ -24,9 +24,8 @@ import { defaultsDeep, isEmpty } from 'lodash'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
-import Loader from '../../common/Loader/Loader'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
-import { ConfirmDialog } from 'igz-controls/components'
+import { ConfirmDialog, Loader } from 'igz-controls/components'
 
 import {
   INACTIVE_JOBS_TAB,

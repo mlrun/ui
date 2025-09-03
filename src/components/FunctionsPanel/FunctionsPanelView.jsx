@@ -22,16 +22,14 @@ import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 
 import Accordion from '../../common/Accordion/Accordion'
-import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import FunctionsPanelCode from '../../elements/FunctionsPanelCode/FunctionsPanelCode'
 import FunctionsPanelEnvironmentVariables from '../../elements/FunctionsPanelEnvironmentVariables/FunctionsPanelEnvironmentVariables'
 import FunctionsPanelGeneral from '../../elements/FunctionsPanelGeneral/FunctionsPanelGeneral'
 import FunctionsPanelResources from '../../elements/FunctionsPanelResources/FunctionsPanelResources'
 import FunctionsPanelRuntime from '../../elements/FunctionsPanelRuntime/FunctionsPanelRuntime'
 import FunctionsPanelTitle from '../../elements/FunctionsPanelTitle/FunctionsPanelTitle'
-import Loader from '../../common/Loader/Loader'
 import PanelCredentialsAccessKey from '../../elements/PanelCredentialsAccessKey/PanelCredentialsAccessKey'
-import { Button, ConfirmDialog } from 'igz-controls/components'
+import { Button, ConfirmDialog, ErrorMessage, Loader } from 'igz-controls/components'
 
 import {
   removeFunctionsError,

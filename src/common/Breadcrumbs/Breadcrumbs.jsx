@@ -24,9 +24,8 @@ import { useSelector } from 'react-redux'
 
 import BreadcrumbsStep from './BreadcrumbsStep/BreadcrumbsStep'
 
-import { useMode } from '../../hooks/mode.hook'
 import { generateMlrunScreens, generateTabsList } from './breadcrumbs.util'
-import { PROJECTS_PAGE_PATH } from '../../constants'
+import { MONITORING_APP_PAGE, PROJECTS_PAGE_PATH } from '../../constants'
 import { generateProjectsList } from '../../utils/projects'
 
 import './breadcrumbs.scss'
@@ -35,7 +34,6 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
   const [searchValue, setSearchValue] = useState('')
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
-  const { isDemoMode } = useMode()
   const breadcrumbsRef = useRef()
   const params = useParams()
   const location = useLocation()
@@ -47,8 +45,8 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
   }, [projectStore.projectsNames.data])
 
   const mlrunScreens = useMemo(() => {
-    return generateMlrunScreens(params, isDemoMode)
-  }, [isDemoMode, params])
+    return generateMlrunScreens(params)
+  }, [params])
   const projectTabs = useMemo(() => {
     return generateTabsList()
   }, [])
@@ -57,12 +55,16 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
     if (params.projectName) {
       const [projects, projectName, screenName] = location.pathname.split('/').slice(1, 4)
       const screen = mlrunScreens.find(screen => screen.id === screenName)
-      const tab = projectTabs.find(tab =>
+      let tab = projectTabs.find(tab =>
         location.pathname
           .split('/')
           .slice(3)
           .find(pathItem => pathItem === tab.id)
       )
+
+      if (screen.id === MONITORING_APP_PAGE) {
+        tab = {}
+      }
 
       return {
         pathItems: [projects, projectName, screen?.label || screenName],

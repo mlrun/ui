@@ -21,18 +21,18 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
+import { Loader } from 'igz-controls/components'
 import FeatureSetsPanel from '../../FeatureSetsPanel/FeatureSetsPanel'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import ActionBar from '../../ActionBar/ActionBar'
 import FeatureStoreFilters from '../FeatureStoreFilters'
-import Loader from '../../../common/Loader/Loader'
 import FeatureStorePageTabs from '../FeatureStorePageTabs/FeatureStorePageTabs'
 
 import { FEATURE_SETS_TAB, FEATURE_STORE_PAGE } from '../../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
-import { VIRTUALIZATION_CONFIG } from '../../../types'
+import { VIRTUALIZATION_CONFIG } from 'igz-controls/types'
 import { filtersConfig } from './featureSets.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered } from '../../../hooks/useVirtualization.hook'
@@ -132,6 +132,7 @@ const FeatureSetsView = React.forwardRef(
                       selectedItem={selectedFeatureSet}
                       selectedRowData={selectedRowData}
                       toggleRow={toggleRow}
+                      withQuickActions={true}
                     />
                   )
               )}

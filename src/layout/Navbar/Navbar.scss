@@ -47,6 +47,7 @@
   &__additional {
     display: flex;
     flex: 2 0 auto;
+    overflow: hidden;
 
     .navbar-links {
       margin-bottom: 20px;

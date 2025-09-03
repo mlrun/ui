@@ -22,18 +22,23 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
-import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
-import ProjectTable from '../ProjectTable/ProjectTable'
-import { Tip } from 'igz-controls/components'
+import SectionTable from '../SectionTable/SectionTable'
+import { Tip, Loader } from 'igz-controls/components'
+
+import ClockIcon from 'igz-controls/images/clock.svg?react'
 
 const ProjectDataCard = ({
   content,
+  footerLinkText = 'See all',
+  headerLink = '',
+  hasUpdateDate = false,
   href = '',
   link = '',
   params,
   statistics = {},
+  subTitle,
   table = {},
   tip = null,
   title
@@ -42,27 +47,30 @@ const ProjectDataCard = ({
     <div className="project-data-card">
       <div className="project-data-card__header table-header">
         <div className="project-data-card__header-text data-ellipsis">
-          {href ? (
-            <a href={href} target="_top">
-              {title}
-            </a>
-          ) : (
-            <Link to={link}>{title}</Link>
-          )}
-          {tip && <Tip className="project-data-card__header-tip" text={tip} />}
-        </div>
-        {!content.loading && (
-          <div className="project-data-card__statistics">
-            <ProjectStatistics statistics={statistics} />
+          <div className='d-flex'>
+            {href ? (
+              <a href={href} target="_top">
+                {title}
+              </a>
+            ) : (
+              <Link to={headerLink || link}>{title}</Link>
+            )}
+            {tip && <Tip className="project-data-card__header-tip" text={tip} />}
           </div>
-        )}
+          {hasUpdateDate && (
+            <span className="project-data-card__header-info">
+              <ClockIcon className="project-data-card__header-info-icon" />
+              <span>Last 24 hrs</span>
+            </span>
+          )}
+        </div>
+        <div className="project-data-card__statistics">
+          <ProjectStatistics statistics={statistics} />
+        </div>
       </div>
       <div className="project-data-card__recent-text">
-        {!href && (
-          <>
-            Recent <span className="text-sm">(last 7 days)</span>
-          </>
-        )}
+        {subTitle && <span>{subTitle}</span>}
+        {hasUpdateDate && <span className="text-sm">(last 7 days)</span>}
       </div>
       {content.loading ? (
         <Loader section />
@@ -74,14 +82,14 @@ const ProjectDataCard = ({
         <NoData />
       ) : (
         <>
-          <ProjectTable params={params} table={table} />
+          <SectionTable params={params} table={table} />
           {href ? (
             <a href={href} target="_top" className="link project-data-card__see-all-link">
-              See all
+              {footerLinkText}
             </a>
           ) : (
             <Link className="link project-data-card__see-all-link" to={link}>
-              See all
+              {footerLinkText}
             </Link>
           )}
         </>
@@ -92,10 +100,14 @@ const ProjectDataCard = ({
 
 ProjectDataCard.propTypes = {
   content: PropTypes.object.isRequired,
+  footerLinkText: PropTypes.string,
+  headerLink: PropTypes.string,
+  hasUpdateDate: PropTypes.bool,
   href: PropTypes.string,
   link: PropTypes.string,
   params: PropTypes.object.isRequired,
   statistics: PropTypes.object,
+  subTitle: PropTypes.string,
   table: PropTypes.object,
   tip: PropTypes.string,
   title: PropTypes.string

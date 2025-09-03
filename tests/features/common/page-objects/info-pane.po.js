@@ -589,7 +589,7 @@ const commonVersionTagInput = inputGroup(
 const commonVersionTagInputFullView = By.css('.table__item_big .details-item__input-wrapper input')
 const commonLabelsApplyButton = By.css('.item-info__details-wrapper .details-item .details-item__data-chips .details-item__apply-btn-wrapper')
 
-module.exports = {
+export default {
   featureSetsInfoPane: {
     Header: header,
     Updated: updated,
@@ -1030,8 +1030,11 @@ module.exports = {
         false
       )
     ),
-    Metrics_App_Name: By.css('.item-info__details-metrics .alerts-table__metrics .metrics__app-name'),
-    Metrics_Stats_Card: By.css('.item-info__details-metrics .alerts-table__metrics .metrics__card'),
+    Metrics_App_Name: By.css('[data-testid="detailsPanel"] .metrics .alerts-table__metrics-header'),
+    Metrics_Stats_Card: By.css('[data-testid="detailsPanel"] .metrics .metrics__card'),
+    Metrics_Stats_Card_Metric_Name: By.css('[data-testid="detailsPanel"] .metrics .metrics__card .stats-card__title .stats-card__title-wrapper'),
+    Metrics_Stats_Card_Metric_BodyBar: By.css('[data-testid="detailsPanel"] .metrics .metrics__card .metrics__card-body .metrics__card-body-bar'),
+    Metrics_Stats_Card_Metric_BodyLine: By.css('[data-testid="detailsPanel"] .metrics .metrics__card .metrics__card-body .metrics__card-body-line'),
     Metrics_Stats_Card_Empty: By.css('[data-testid="detailsPanel"] .metrics__empty-select')
   },
   alertsApplicationInfoPane: {

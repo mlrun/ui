@@ -39,7 +39,7 @@ import { parseJob } from '../utils/parseJob'
 import { fetchAllJobRuns, fetchJobs, fetchScheduledJobs } from '../reducers/jobReducer'
 import { fetchWorkflows } from '../reducers/workflowReducer'
 import { useFiltersFromSearchParams } from './useFiltersFromSearchParams.hook'
-import { getSavedSearchParams } from '../utils/filter.util'
+import { getSavedSearchParams } from 'igz-controls/utils/filter.util'
 import { useRefreshAfterDelete } from './useRefreshAfterDelete.hook'
 
 export const useJobsPageData = (initialTabData, selectedTab) => {
@@ -47,7 +47,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
   const [editableItem, setEditableItem] = useState(null)
   const [jobWizardMode, setJobWizardMode] = useState(null)
   const [jobWizardIsOpened, setJobWizardIsOpened] = useState(false)
-  const [jobs, setJobs] = useState([])
+  const [jobs, setJobs] = useState(null)
   const [abortingJobs, setAbortingJobs] = useState({})
   const paginationConfigJobsRef = useRef({})
   const paginationConfigRunsRef = useRef({})
@@ -95,7 +95,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
       if (isJobRunsRequest) {
         setJobRuns(null)
       } else {
-        setJobs([])
+        setJobs(null)
       }
 
       abortControllerRef.current = new AbortController()
@@ -173,6 +173,8 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
           } else {
             if (isJobRunsRequest) {
               setJobRuns([])
+            } else {
+              setJobs([])
             }
           }
 
@@ -181,6 +183,8 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
         .catch(() => {
           if (isJobRunsRequest) {
             setJobRuns([])
+          } else {
+            setJobs([])
           }
         })
     },
@@ -192,7 +196,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
       setScheduledJobs([])
       abortControllerRef.current = new AbortController()
 
-      dispatch(
+      return dispatch(
         fetchScheduledJobs({
           project: filters.project ? filters.project.toLowerCase() : params.projectName || '*',
           filters,
@@ -260,7 +264,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
     hidden:
       ![MONITOR_JOBS_TAB, JOBS_MONITORING_JOBS_TAB].includes(selectedTab) ||
       Boolean(params.jobName),
-    content: jobs,
+    content: jobs ?? [],
     refreshContent: refreshJobs,
     filters,
     paginationConfigRef: paginationConfigJobsRef,

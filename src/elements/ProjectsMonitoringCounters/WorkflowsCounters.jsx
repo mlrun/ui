@@ -17,109 +17,154 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useMemo, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
-import Loader from '../../common/Loader/Loader'
-import StatsCard from '../../common/StatsCard/StatsCard'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
-
-import { generateMonitoringStats } from '../../utils/generateMonitoringData'
-import { JOBS_MONITORING_WORKFLOWS_TAB } from '../../constants'
-
+import { Loader, PopUpDialog, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 import ClockIcon from 'igz-controls/images/clock.svg?react'
+
+import StatsCard from '../../common/StatsCard/StatsCard'
+import { generateMonitoringStats } from '../../utils/generateMonitoringData'
+import { JOBS_MONITORING_WORKFLOWS_TAB, MONITOR_WORKFLOWS_TAB } from '../../constants'
 
 import './projectsMonitoringCounters.scss'
 
 const WorkflowsCounters = () => {
+  const anchorRef = useRef(null)
+  const detailsRef = useRef(null)
+  const [showPopup, setShowPopup] = useState(false)
+  const { projectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
+
+  const handleOpenPopUp = () => {
+    const isHidden = !detailsRef.current?.offsetParent
+    setShowPopup(isHidden)
+  }
+
+  const handleClosePopUp = () => {
+    setShowPopup(false)
+  }
+
+  const workflowsData = useMemo(() => {
+    if (projectName) {
+      const completed = projectStore?.projectSummary.data?.pipelines_completed_recent_count || 0
+      const failed = projectStore?.projectSummary.data?.pipelines_failed_recent_count || 0
+      const running = projectStore?.projectSummary.data?.pipelines_running_count || 0
+
+      return {
+        completed,
+        failed,
+        running,
+        total: completed + failed + running
+      }
+    }
+
+    return (
+      projectStore.jobsMonitoringData.workflows || {
+        completed: 0,
+        failed: 0,
+        running: 0,
+        total: 0
+      }
+    )
+  }, [
+    projectName,
+    projectStore.projectSummary.data?.pipelines_completed_recent_count,
+    projectStore.projectSummary.data?.pipelines_failed_recent_count,
+    projectStore.projectSummary.data?.pipelines_running_count,
+    projectStore.jobsMonitoringData.workflows
+  ])
 
   const workflowsStats = useMemo(
     () =>
       generateMonitoringStats(
-        projectStore.jobsMonitoringData.workflows,
+        workflowsData,
         navigate,
-        JOBS_MONITORING_WORKFLOWS_TAB
+        projectName ? MONITOR_WORKFLOWS_TAB : JOBS_MONITORING_WORKFLOWS_TAB,
+        projectName
       ),
-    [navigate, projectStore.jobsMonitoringData.workflows]
+    [navigate, projectName, workflowsData]
   )
 
   return (
     <StatsCard className="monitoring-stats">
-      <StatsCard.Header title="Workflows">
-        <StatsCard.Col>
+      <div ref={anchorRef}>
+        <StatsCard.Header title="Workflows">
           <div className="project-card__info">
-            <div
-              className="stats__link"
-              data-testid="scheduled_total_counter"
-              onClick={workflowsStats.total.link}
-            >
-              <span className="stats__subtitle">Total</span>
-              <div className="stats__counter">
-                {projectStore.projectsSummary.loading ? (
-                  <Loader section small secondary />
-                ) : (
-                  workflowsStats.total.counter
-                )}
-              </div>
-            </div>
-            <div className="project-card__info-icon">
-                <ClockIcon />
-            </div>
-            <span>Past 24 hours</span>
+            <ClockIcon className="project-card__info-icon" />
+            <span>Last 24 hrs</span>
           </div>
-        </StatsCard.Col>
+        </StatsCard.Header>
+        <div onMouseLeave={handleClosePopUp} onMouseEnter={handleOpenPopUp}>
+          <StatsCard.Row>
+            <StatsCard.MainCounter
+              className="stats__link"
+              id="wf_total_counter"
+              onClick={workflowsStats?.total?.link}
+            >
+              {projectStore?.projectsSummary?.loading ? (
+                <Loader section small secondary />
+              ) : (
+                workflowsStats?.total?.counter?.toLocaleString()
+              )}
+            </StatsCard.MainCounter>
+          </StatsCard.Row>
 
-        {/* Todo: Use in the future
-        <DatePicker
-          date={filter.dates.value[0]}
-          dateTo={filter.dates.value[1]}
-          selectedOptionId={PAST_24_HOUR_DATE_OPTION}
-          label=""
-          onChange={handleDateSelection}
-          type="date-range-time"
-          withLabels
-        /> */}
-      </StatsCard.Header>
-      <StatsCard.Row>
-        {/* <StatsCard.Col>
-          <div className="stats__counter">
-            {projectStore.projectsSummary.loading ? (
-              <Loader section small secondary />
-            ) : (
-              <span
-                className="stats__link"
-                onClick={scheduledStats.jobs.link}
-                data-testid="scheduled_jobs_counter"
-              >
-                {scheduledStats.jobs.counter}
-              </span>
+          <div ref={detailsRef} className="stats__details">
+            {workflowsStats.counters.map(
+              ({ counter, className, counterClassName, label, link, statusClass, tooltip }) => {
+                return (
+                  <StatsCard.Row key={`${statusClass}-jobs`}>
+                    <div
+                      className={className}
+                      onClick={link}
+                      data-testid={`wf_${statusClass}_counter`}
+                    >
+                      <div data-testid={`wf_${statusClass}_status`} className="stats__status">
+                        <Tooltip textShow template={<TextTooltipTemplate text={tooltip} />}>
+                          <h6 className="stats__subtitle">{label}</h6>
+                          <i className={`state-${statusClass}`} />
+                        </Tooltip>
+                      </div>
+                      <StatsCard.SecondaryCounter className={counterClassName}>
+                        {projectStore?.projectsSummary?.loading ? (
+                          <Loader section small secondary />
+                        ) : (
+                          counter?.toLocaleString()
+                        )}
+                      </StatsCard.SecondaryCounter>
+                    </div>
+                  </StatsCard.Row>
+                )
+              }
             )}
           </div>
-        </StatsCard.Col> */}
 
-        {workflowsStats.counters.map(({ counter, label, link, statusClass, tooltip }) => (
-          <StatsCard.Col key={`${statusClass}-jobs`}>
-            <div className="stats__link" onClick={link} data-testid={`wf_${statusClass}_counter`}>
-              <div className="stats__counter stats__counter-large">
-                {projectStore.projectsSummary.loading ? (
-                  <Loader section small secondary />
-                ) : (
-                  counter
-                )}
+          {showPopup && (
+            <PopUpDialog
+              className="card-popup"
+              customPosition={{
+                element: anchorRef,
+                position: 'bottom-right'
+              }}
+              headerIsHidden
+            >
+              <div className="card-popup_text">
+                {workflowsStats?.counters?.map(({ link, counter, label, statusClass }) => (
+                  <div onClick={link} key={label}>
+                    <i className={`state-${statusClass}`} />{' '}
+                    <span className="card-popup_text_link">
+                      {label}: {counter}
+                    </span>
+                  </div>
+                ))}
               </div>
-              <div data-testid={`wf_${statusClass}_status`} className="stats__status">
-                <Tooltip textShow template={<TextTooltipTemplate text={tooltip} />}>
-                  <h6 className="stats__subtitle">{label}</h6>
-                  <i className={`state-${statusClass}`} />
-                </Tooltip>
-              </div>
-            </div>
-          </StatsCard.Col>
-        ))}
-      </StatsCard.Row>
+            </PopUpDialog>
+          )}
+        </div>
+      </div>
     </StatsCard>
   )
 }

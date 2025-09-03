@@ -21,10 +21,6 @@ import PropTypes from 'prop-types'
 import {
   BE_PAGE,
   BE_PAGE_SIZE,
-  DENSITY_CHUNKY,
-  DENSITY_DENSE,
-  DENSITY_MEDIUM,
-  DENSITY_NORMAL,
   FE_PAGE,
   FE_PAGE_SIZE,
   PANEL_CREATE_MODE,
@@ -43,50 +39,6 @@ export const COMBOBOX_MATCHES = PropTypes.arrayOf(
     label: PropTypes.string.isRequired
   })
 )
-
-export const DENSITY_OPTIONS = PropTypes.oneOf([
-  DENSITY_DENSE,
-  DENSITY_NORMAL,
-  DENSITY_MEDIUM,
-  DENSITY_CHUNKY
-])
-
-export const CHIP = PropTypes.shape({
-  delimiter: PropTypes.element,
-  id: PropTypes.string,
-  value: PropTypes.string.isRequired
-})
-
-export const CHIP_INPUT_LIST = PropTypes.arrayOf(
-  PropTypes.shape({
-    disabled: PropTypes.bool,
-    icon: PropTypes.element,
-    id: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
-    subLabel: PropTypes.string,
-    ui: PropTypes.object
-  })
-)
-
-export const CHIP_OPTIONS = PropTypes.shape({
-  background: PropTypes.oneOf([
-    'none',
-    'orange',
-    'green',
-    'purple',
-    'grey',
-    'sorbus',
-    'java',
-    'amethyst'
-  ]),
-  boldValue: PropTypes.bool,
-  borderColor: PropTypes.oneOf(['transparent', 'orange', 'green', 'purple', 'grey']),
-  density: DENSITY_OPTIONS,
-  font: PropTypes.oneOf(['primary', 'white', 'green', 'purple', 'orange']),
-  borderRadius: PropTypes.oneOf(['primary', 'secondary'])
-})
-
-export const CHIPS = PropTypes.arrayOf(CHIP)
 
 export const FUNCTION_PANEL_MODE = PropTypes.oneOf([PANEL_EDIT_MODE, PANEL_CREATE_MODE])
 
@@ -118,19 +70,6 @@ export const CONFIRM_DIALOG_BUTTON = PropTypes.shape({
   variant: PropTypes.string.isRequired
 })
 
-const ACTIONS_MENU_ITEM = PropTypes.shape({
-  label: PropTypes.string.isRequired,
-  icon: PropTypes.object,
-  onClick: PropTypes.func.isRequired,
-  disabled: PropTypes.bool,
-  className: PropTypes.string
-})
-
-export const ACTIONS_MENU = PropTypes.oneOfType([
-  PropTypes.arrayOf(PropTypes.arrayOf(ACTIONS_MENU_ITEM.isRequired)),
-  PropTypes.func
-])
-
 export const MAIN_SPLIT_BUTTON = PropTypes.shape({
   className: PropTypes.string,
   icon: PropTypes.element,
@@ -155,15 +94,6 @@ export const CONTENT_MENU_TABS = PropTypes.arrayOf(
     hidden: PropTypes.bool,
     preview: PropTypes.bool,
     icon: PropTypes.element
-  })
-)
-
-export const SLIDER_TABS = PropTypes.arrayOf(
-  PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
-    tip: PropTypes.string,
-    hidden: PropTypes.bool
   })
 )
 
@@ -215,12 +145,6 @@ export const JOB_WIZARD_MODE = PropTypes.oneOf([
   PANEL_EDIT_MODE,
   PANEL_RERUN_MODE
 ])
-
-export const VIRTUALIZATION_CONFIG = PropTypes.shape({
-  startIndex: PropTypes.number.isRequired,
-  endIndex: PropTypes.number.isRequired,
-  tableBodyPaddingTop: PropTypes.number.isRequired
-})
 
 export const SLIDER_STYLE_1 = 'style1'
 export const SLIDER_STYLE_2 = 'style2'

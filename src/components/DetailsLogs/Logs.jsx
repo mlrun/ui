@@ -20,8 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { Button } from 'igz-controls/components'
-import Loader from '../../common/Loader/Loader'
+import { Button, Loader } from 'igz-controls/components'
 import NoData from '../../common/NoData/NoData'
 
 import RefreshIcon from 'igz-controls/images/refresh.svg?react'

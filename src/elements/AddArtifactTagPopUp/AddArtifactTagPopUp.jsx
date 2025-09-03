@@ -17,32 +17,34 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 
-import { Button, FormInput, Modal } from 'igz-controls/components'
-import Loader from '../../common/Loader/Loader'
+import { Button, FormInput, Modal, Loader } from 'igz-controls/components'
 
 import { DATASET_TYPE, MODEL_TYPE, TAG_LATEST } from '../../constants'
-import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { addTag, fetchAllArtifactKindsTags } from '../../reducers/artifactsReducer'
+import {
+  PRIMARY_BUTTON,
+  TERTIARY_BUTTON
+} from 'igz-controls/constants'
+import { addTag } from '../../reducers/artifactsReducer'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { isSubmitDisabled } from 'igz-controls/utils/form.util'
+import { processActionAfterTagUniquesValidation } from '../../utils/artifacts.util'
 
 const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag = () => {}, onResolve, projectName }) => {
   const dispatch = useDispatch()
   const [initialValues] = useState({
     artifactTag: ''
   })
-  const [artifactTags, setArtifactTags] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   const formRef = React.useRef(
     createForm({
@@ -73,7 +75,9 @@ const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag = () => {}, onResolve,
       }
     }
 
-    dispatch(addTag(addTagArgs))
+    resolveModal()
+
+    return dispatch(addTag(addTagArgs))
       .unwrap()
       .then(response => {
         dispatch(
@@ -90,8 +94,21 @@ const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag = () => {}, onResolve,
           addArtifactTag(values)
         )
       })
+  }
 
-    resolveModal()
+  const addArtifactTagHandler = values => {
+    return processActionAfterTagUniquesValidation({
+      tag: values.artifactTag,
+      artifact,
+      projectName,
+      dispatch,
+      actionCallback: () => addArtifactTag(values),
+      getCustomErrorMsg: () => 'Failed to add a tag',
+      onErrorCallback: resolveModal,
+      showLoader: () => setIsLoading(true),
+      hideLoader: () => setIsLoading(false),
+    }
+    )
   }
 
   const getModalActions = formState => {
@@ -112,33 +129,8 @@ const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag = () => {}, onResolve,
     return actions.map((action, index) => <Button {...action} key={index} />)
   }
 
-  useEffect(() => {
-    setIsLoading(true)
-    dispatch(
-      fetchAllArtifactKindsTags({
-        project: projectName,
-        filters: { name: artifact.db_key },
-        config: {
-          params: {
-            format: 'minimal'
-          }
-        },
-        withExactName: true
-      })
-    )
-      .unwrap()
-      .then(tags => {
-        if (tags.length) {
-          setArtifactTags(tags)
-        }
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
-  }, [artifact.db_key, dispatch, projectName])
-
   return (
-    <Form form={formRef.current} initialValues={initialValues} onSubmit={addArtifactTag}>
+    <Form form={formRef.current} initialValues={initialValues} onSubmit={addArtifactTagHandler}>
       {formState => {
         return (
           <>
@@ -166,11 +158,6 @@ const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag = () => {}, onResolve,
                       focused
                       required
                       validationRules={getValidationRules('common.name', [
-                        {
-                          name: 'uniqueness',
-                          label: 'Tag name must be unique',
-                          pattern: value => !artifactTags.includes(value)
-                        },
                         {
                           name: 'latest',
                           label: 'Tag name "latest" is reserved',

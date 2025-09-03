@@ -18,16 +18,18 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import PropTypes from 'prop-types'
 import classNames from 'classnames'
+import PropTypes from 'prop-types'
 
-import { Tip } from 'igz-controls/components'
+import { TextTooltipTemplate, Tip, Tooltip } from 'igz-controls/components'
 
 import './statsCard.scss'
 
-const StatsCard = ({ children, className = '', onClick = () => {} }) => {
+const StatsCard = ({ children, className = '', onClick = () => { } }) => {
+  const cardClass = classNames('stats-card', className)
+
   return (
-    <div className={`stats-card ${className}`} onClick={onClick}>
+    <div className={cardClass} onClick={onClick}>
       {children}
     </div>
   )
@@ -43,8 +45,10 @@ StatsCard.Header = ({ children = null, icon = null, iconClass = '', title = '', 
     <div className="stats-card__row">
       <div className={titleClass}>
         {icon && <i className={iconClass}>{icon}</i>}
-        {title && <span>{title}</span>}
-        {tip && <Tip className="stats-card__title-tip" text={tip} />}
+        <div className="stats-card__title-wrapper data-ellipsis">
+          <Tooltip template={<TextTooltipTemplate text={title} />}>{title}</Tooltip>
+          {tip && <Tip className="stats-card__title-tip" text={tip} />}
+        </div>
       </div>
       {children}
     </div>
@@ -61,6 +65,31 @@ StatsCard.Col = ({ children }) => {
   return <div className="stats-card__col">{children}</div>
 }
 StatsCard.Col.displayName = 'StatsCard.Col'
+
+StatsCard.MainCounter = ({ children, className = '', id = '', onClick = () => { } }) => {
+  const mainCounterClass = classNames('stats__counter_main', className)
+
+  return (
+    <div className={mainCounterClass} data-testid={id} onClick={onClick}>
+      <div className="stats__counter">
+        {children}
+      </div>
+    </div>
+  )
+}
+StatsCard.MainCounter.displayName = 'StatsCard.MainCounter'
+
+StatsCard.SecondaryCounter = ({ children }) => {
+  return (
+    <div className="stats__counter_secondary">
+      <div className="stats__counter">
+        {children}
+      </div>
+    </div>
+  )
+}
+StatsCard.SecondaryCounter.displayName = 'StatsCard.SecondaryCounter'
+
 
 StatsCard.propTypes = {
   children: PropTypes.node.isRequired,
@@ -82,6 +111,17 @@ StatsCard.Row.propTypes = {
 
 StatsCard.Col.propTypes = {
   children: PropTypes.node
+}
+
+StatsCard.MainCounter.propTypes = {
+  children: PropTypes.node.isRequired,
+  className: PropTypes.string,
+  id: PropTypes.string.isRequired,
+  onClick: PropTypes.func
+}
+
+StatsCard.SecondaryCounter.propTypes = {
+  children: PropTypes.node.isRequired
 }
 
 export default StatsCard

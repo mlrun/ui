@@ -20,12 +20,14 @@ such restriction.
 import React, { useCallback, useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { isArray, isEmpty, isObject } from 'lodash'
 
 import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 
 import { REQUEST_CANCELED } from '../../constants'
 import { fetchArtifactPreviewFromPath } from '../../utils/getArtifactPreview'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 const DetailsAnalysis = ({ artifact }) => {
   const [preview, setPreview] = useState([])
@@ -34,6 +36,7 @@ const DetailsAnalysis = ({ artifact }) => {
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const previewIsFetchedRef = useRef(false)
   const abortControllersListRef = useRef([])
+  const dispatch = useDispatch()
 
   const fetchPreviewFromAnalysis = useCallback(() => {
     Object.entries(artifact.analysis).forEach(([name, path]) => {
@@ -56,13 +59,18 @@ const DetailsAnalysis = ({ artifact }) => {
 
   useEffect(() => {
     if (artifact.analysis && preview.length === 0 && !previewIsFetchedRef.current && frontendSpec) {
-      fetchPreviewFromAnalysis()
+      if (isObject(artifact.analysis) && !isArray(artifact.analysis)) {
+        fetchPreviewFromAnalysis()
+      } else {
+        showErrorNotification(dispatch, '', '', 'The analysis type is malformed. Expected dict')
+        setNoData(true)
+      }
 
       previewIsFetchedRef.current = true
-    } else if (!artifact.analysis) {
+    } else if (!artifact.analysis || isEmpty(artifact.analysis)) {
       setNoData(true)
     }
-  }, [artifact.analysis, fetchPreviewFromAnalysis, preview.length, frontendSpec])
+  }, [artifact.analysis, fetchPreviewFromAnalysis, preview.length, frontendSpec, dispatch])
 
   useEffect(() => {
     const abortControllersList = abortControllersListRef.current

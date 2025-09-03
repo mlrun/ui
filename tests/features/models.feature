@@ -31,7 +31,7 @@ Feature: Models Page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
     Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
     Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
-    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options_Main_Table"
     Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
     Then verify "Table_Refresh_Button" element visibility on "Models" wizard
     Then verify "Models_Table" element visibility on "Models" wizard
@@ -1130,6 +1130,7 @@ Feature: Models Page
     Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
+    And wait load page
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     And wait load page
     When select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
@@ -1154,7 +1155,14 @@ Feature: Models Page
     And wait load page
     Then verify redirection from "projects/default/models/real-time-pipelines/pipeline/INVALID" to "projects/default/models/real-time-pipelines"
     Then verify redirection from "projects/INVALID/models/real-time-pipelines" to "projects"
-  
+    And wait load page
+    And wait load page
+    Then verify if "Notification_Popup" popup dialog appears
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "This project does not exist" value
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+
   @MLM
   @smoke
   Scenario: MLM033 - Check active/highlited items with details panel on Model Endpoints tab
@@ -1378,8 +1386,27 @@ Feature: Models Page
     Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column with scroll "false"
     And wait load page
     Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
+    Then verify "History_Back_Button" element visibility on "Models" wizard
+    Then verify "Version_History_Title" element visibility on "Models" wizard
+    Then "Version_History_Title" element on "Models" should contains "Version history:" value
+    Then verify "Version_History_Model_Name" element visibility on "Models" wizard
+    Then "Version_History_Model_Name" element on "Models" should contains "transaction_fraud_xgboost" value
+    Then verify "Table_Refresh_Button" element visibility on "Models" wizard
+    Then verify "Table_FilterBy_Button" element visibility on "Models" wizard
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then "Version_Tag_Value" element on "FilterBy_Popup" should contains "All" attribute value
+    And wait load page
+    Then verify "Title" element visibility on "FilterBy_Popup" wizard
+    Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+    Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+    Then verify "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected attribute option value "All tags"
+    Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
+    Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+    Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+    Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
+    Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+    Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then verify "Models_Table" element visibility on "Models" wizard
     When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     When save to context "versionHistoryName" page value from "Version_History_Model_Name" element on "Models" wizard

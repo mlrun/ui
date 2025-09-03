@@ -18,6 +18,8 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useMemo } from 'react'
+import PropTypes from 'prop-types'
+
 import classnames from 'classnames'
 import { lowerCase, upperFirst } from 'lodash'
 import { useParams } from 'react-router-dom'
@@ -29,19 +31,22 @@ import { ERROR_STATE, REQUEST_CANCELED } from '../../constants'
 import { fetchApiGateways, fetchNuclioFunctions } from '../../reducers/nuclioReducer'
 import { generateNuclioLink } from '../../utils'
 import { groupByUniqName } from '../../utils/groupByUniqName'
+import { typesOfJob } from '../../utils/jobs.util'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
-const ProjectFunctions = () => {
+const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
   const params = useParams()
   const { isNuclioModeDisabled } = useNuclioMode()
-  const nuclioStore = useSelector((store) => store.nuclioStore)
+  const nuclioStore = useSelector(store => store.nuclioStore)
   const dispatch = useDispatch()
 
   useEffect(() => {
     if (!isNuclioModeDisabled) {
       const abortController = new AbortController()
 
-      dispatch(fetchNuclioFunctions({ project: params.projectName, signal: abortController.signal }))
+      dispatch(
+        fetchNuclioFunctions({ project: params.projectName, signal: abortController.signal })
+      )
 
       return () => {
         abortController.abort(REQUEST_CANCELED)
@@ -80,23 +85,49 @@ const ProjectFunctions = () => {
       running: {
         value: functionsRunning,
         label: 'Running',
-        className: functionsRunning > 0 ? 'running' : 'default',
-        href: generateNuclioLink(`/projects/${params.projectName}/functions`)
+        className: 'running',
+        status: 'running',
+        href: generateNuclioLink(`/projects/${params.projectName}/functions`),
+        loading: nuclioStore.loading
       },
       failed: {
         value: functionsFailed,
         label: 'Failed',
-        className: functionsFailed > 0 ? 'failed' : 'default',
-        href: generateNuclioLink(`/projects/${params.projectName}/functions`)
+        status: 'failed',
+        className: functionsFailed > 0 ? 'failed' : 'running',
+        href: generateNuclioLink(`/projects/${params.projectName}/functions`),
+        loading: nuclioStore.loading
       },
       apiGateways: {
         value: nuclioStore.apiGateways,
         label: 'API gateways',
-        className: nuclioStore.apiGateways > 0 ? 'running' : 'default',
-        href: generateNuclioLink(`/projects/${params.projectName}/api-gateways`)
-      }
+        className: 'running',
+        href: generateNuclioLink(`/projects/${params.projectName}/api-gateways`),
+        loading: nuclioStore.loading
+      },
+      ...(nuclioStreamsAreEnabled && {
+        consumerGroups: {
+          value: isNuclioModeDisabled
+            ? 'N/A'
+            : (Object.keys(nuclioStore.v3ioStreams.data).length ?? 0),
+          label: 'Consumer groups',
+          className: 'running',
+          link: `/projects/${params.projectName}/monitor${
+            !isNuclioModeDisabled ? '/consumer-groups' : ''
+          }`,
+          loading: nuclioStore.loading
+        }
+      })
     }
-  }, [params.projectName, nuclioStore.apiGateways, nuclioStore.currentProjectFunctions])
+  }, [
+    nuclioStore.currentProjectFunctions,
+    nuclioStore.loading,
+    nuclioStore.apiGateways,
+    nuclioStore.v3ioStreams.data,
+    params.projectName,
+    nuclioStreamsAreEnabled,
+    isNuclioModeDisabled
+  ])
 
   const functionsTable = useMemo(() => {
     if (nuclioStore.currentProjectFunctions.length > 0) {
@@ -135,6 +166,7 @@ const ProjectFunctions = () => {
                       )
                     ? upperFirst(lowerCase(func.status.state))
                     : 'Building',
+            types: typesOfJob,
             className: funcClassName
           }
         }
@@ -154,13 +186,18 @@ const ProjectFunctions = () => {
         error: isNuclioModeDisabled ? 'Nuclio is not deployed' : nuclioStore.error,
         loading: nuclioStore.loading
       }}
+      footerLinkText="All real-time functions"
       href={generateNuclioLink(`/projects/${params.projectName}/functions`)}
       params={params}
       statistics={functions}
+      subTitle="Recent real-time functions"
       table={functionsTable}
       title="Real-time functions (Nuclio)"
     />
   )
 }
 
+ProjectFunctions.propTypes = {
+  nuclioStreamsAreEnabled: PropTypes.bool.isRequired
+}
 export default React.memo(ProjectFunctions)

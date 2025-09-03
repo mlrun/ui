@@ -17,15 +17,15 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 
+import { Loader, PopUpDialog } from 'igz-controls/components'
 import StatsCard from '../../common/StatsCard/StatsCard'
-import Loader from '../../common/Loader/Loader'
 
 import { generateMonitoringStats } from '../../utils/generateMonitoringData'
-import { JOBS_MONITORING_SCHEDULED_TAB } from '../../constants'
+import { JOBS_MONITORING_SCHEDULED_TAB, SCHEDULE_TAB } from '../../constants'
 
 import ClockIcon from 'igz-controls/images/clock.svg?react'
 
@@ -33,90 +33,136 @@ import './projectsMonitoringCounters.scss'
 
 const ScheduledJobsCounters = () => {
   const navigate = useNavigate()
+  const { projectName } = useParams()
   const projectStore = useSelector(store => store.projectStore)
+  const [showPopup, setShowPopup] = useState(false)
+  const anchorRef = useRef(null)
+  const detailsRef = useRef(null)
+
+  const handleOpenPopUp = () => {
+    const isHidden = !detailsRef.current?.offsetParent
+    setShowPopup(isHidden)
+  }
+
+  const handleClosePopUp = () => {
+    setShowPopup(false)
+  }
+
+  const scheduledData = useMemo(() => {
+    if (projectName) {
+      const jobs = projectStore.projectSummary?.data?.distinct_scheduled_jobs_pending_count || 0
+      const workflows =
+        projectStore.projectSummary?.data?.distinct_scheduled_pipelines_pending_count || 0
+
+      return {
+        jobs,
+        workflows,
+        total: jobs + workflows
+      }
+    }
+    return (
+      projectStore?.jobsMonitoringData.scheduled || {
+        jobs: 0,
+        workflows: 0,
+        total: 0
+      }
+    )
+  }, [
+    projectName,
+    projectStore.projectSummary?.data?.distinct_scheduled_jobs_pending_count,
+    projectStore.projectSummary?.data?.distinct_scheduled_pipelines_pending_count,
+    projectStore.jobsMonitoringData?.scheduled
+  ])
 
   const scheduledStats = useMemo(
     () =>
       generateMonitoringStats(
-        projectStore.jobsMonitoringData.scheduled,
+        scheduledData,
         navigate,
-        JOBS_MONITORING_SCHEDULED_TAB
+        projectName ? SCHEDULE_TAB : JOBS_MONITORING_SCHEDULED_TAB,
+        projectName
       ),
-    [navigate, projectStore.jobsMonitoringData.scheduled]
+    [navigate, projectName, scheduledData]
   )
 
   return (
     <StatsCard className="monitoring-stats">
-      <StatsCard.Header title="Scheduled">
-        <StatsCard.Col>
+      <div ref={anchorRef}>
+        <StatsCard.Header title="Scheduled">
           <div className="project-card__info">
-            <div
+            <ClockIcon className="project-card__info-icon" />
+            <span>Next 24 hrs</span>
+          </div>
+        </StatsCard.Header>
+        <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
+          <StatsCard.Row>
+            <StatsCard.MainCounter
               className="stats__link"
-              data-testid="scheduled_total_counter"
-              onClick={scheduledStats.total.link}
+              id="scheduled_total_counter"
+              onClick={scheduledStats?.total?.link}
             >
-              <span className="stats__subtitle">Total</span>
-              <div className="stats__counter">
-                {projectStore.projectsSummary.loading ? (
-                  <Loader section small secondary />
-                ) : (
-                  scheduledStats.total.counter
-                )}
+              {projectStore?.projectsSummary?.loading ? (
+                <Loader section small secondary />
+              ) : (
+                scheduledStats.total.counter
+              )}
+            </StatsCard.MainCounter>
+          </StatsCard.Row>
+          <div ref={detailsRef} className="stats__details">
+            <StatsCard.Row>
+              <div
+                className="stats__link stats__line"
+                onClick={scheduledStats?.jobs?.link}
+                data-testid="scheduled_jobs_counter"
+              >
+                <h6 className="stats__subtitle">Jobs</h6>
+                <StatsCard.SecondaryCounter>
+                  {projectStore.projectsSummary.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    scheduledStats.jobs.counter.toLocaleString()
+                  )}
+                </StatsCard.SecondaryCounter>
               </div>
-            </div>
-            <div className="project-card__info-icon">
-              <ClockIcon />
-            </div>
-            <span>Next 24 hours</span>
+            </StatsCard.Row>
+            <StatsCard.Row>
+              <div
+                className="stats__link stats__line"
+                onClick={scheduledStats.workflows.link}
+                data-testid="scheduled_workflows_counter"
+              >
+                <h6 className="stats__subtitle">Workflows</h6>
+                <StatsCard.SecondaryCounter>
+                  {projectStore.projectsSummary.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    scheduledStats.workflows.counter.toLocaleString()
+                  )}
+                </StatsCard.SecondaryCounter>
+              </div>
+            </StatsCard.Row>
           </div>
-        </StatsCard.Col>
-
-        {/* Todo: Use in the future
-        <DatePicker
-          date={filter.dates.value[0]}
-          dateTo={filter.dates.value[1]}
-          hasFutureOptions
-          selectedOptionId={NEXT_24_HOUR_DATE_OPTION}
-          label=""
-          onChange={handleDateSelection}
-          type="date-range-time"
-          withLabels
-        /> */}
-      </StatsCard.Header>
-      <StatsCard.Row>
-        <StatsCard.Col>
-          <div
-            className="stats__link"
-            onClick={scheduledStats.jobs.link}
-            data-testid="scheduled_jobs_counter"
-          >
-            <div className="stats__counter stats__counter-large">
-              {projectStore.projectsSummary.loading ? (
-                <Loader section small secondary />
-              ) : (
-                scheduledStats.jobs.counter
-              )}
-            </div>
-            <h6 className="stats__subtitle">Jobs</h6>
-          </div>
-        </StatsCard.Col>
-        <StatsCard.Col>
-          <div
-            className="stats__link"
-            onClick={scheduledStats.workflows.link}
-            data-testid="scheduled_wf_counter"
-          >
-            <div className="stats__counter stats__counter-large">
-              {projectStore.projectsSummary.loading ? (
-                <Loader section small secondary />
-              ) : (
-                scheduledStats.workflows.counter
-              )}
-            </div>
-            <h6 className="stats__subtitle">Workflows</h6>
-          </div>
-        </StatsCard.Col>
-      </StatsCard.Row>
+          {showPopup && (
+            <PopUpDialog
+              className="card-popup"
+              customPosition={{
+                element: anchorRef,
+                position: 'bottom-right'
+              }}
+              headerIsHidden
+            >
+              <div className={'card-popup_text'}>
+                <div className="card-popup_text_link" onClick={scheduledStats.jobs.link}>
+                  Jobs: {scheduledStats.jobs.counter}
+                </div>
+                <div className="card-popup_text_link" onClick={scheduledStats.workflows.link}>
+                  Workflows: {scheduledStats.workflows.counter}
+                </div>
+              </div>
+            </PopUpDialog>
+          )}
+        </div>
+      </div>
     </StatsCard>
   )
 }

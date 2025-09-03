@@ -19,46 +19,45 @@ such restriction.
 */
 import { orderBy } from 'lodash'
 
-import { MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB } from '../../constants'
-import { formatDatetime } from '../../utils'
-import measureTime from '../../utils/measureTime'
+import { measureTime } from '../../utils/measureTime'
+import { MONITOR_JOBS_TAB } from '../../constants'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
+import { typesOfJob } from '../../utils/jobs.util'
 
 export const getJobsStatistics = (projectCounter, projectName) => {
   return {
     running: {
       value: projectCounter.error ? 'N/A' : projectCounter.data.runs_running_count,
-      label: 'Running jobs',
+      label: 'In Process',
       className:
         projectCounter.error || projectCounter.data.runs_running_count === 0
           ? 'default'
           : 'running',
-      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`
-    },
-    workflows: {
-      value: projectCounter.error ? 'N/A' : projectCounter.data.pipelines_running_count,
-      label: 'Running workflows',
-      className:
-        projectCounter.error || projectCounter.data.pipelines_running_count === 0
-          ? 'default'
-          : 'running',
-      link: `/projects/${projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`
+      status: 'running',
+      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`,
+      counterTooltip: 'Aborting, Pending, Pending retry, Running',
+      loading: projectCounter.loading
     },
     failed: {
       value: projectCounter.error ? 'N/A' : projectCounter.data.runs_failed_recent_count,
       label: 'Failed',
       className:
-        projectCounter.data.runs_failed_recent_count > 0 && !projectCounter.error
-          ? 'failed'
-          : 'default',
-      counterTooltip: 'Past 24 hours',
-      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`
+        projectCounter.error || projectCounter.data.runs_failed_recent_count === 0
+          ? 'running'
+          : 'failed',
+      status: 'failed',
+      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`,
+      counterTooltip: 'Aborted, Error',
+      loading: projectCounter.loading
     },
-    scheduled: {
-      value: projectCounter.error ? 'N/A' : projectCounter.data.distinct_schedules_count,
-      label: 'Scheduled',
-      className:
-        projectCounter.error || projectCounter.data.schedules_count === 0 ? 'default' : 'scheduled',
-      link: `/projects/${projectName}/jobs/${SCHEDULE_TAB}`
+    succeeded: {
+      value: projectCounter.error ? 'N/A' : projectCounter.data.runs_completed_recent_count,
+      label: 'Succeeded',
+      status: 'succeeded',
+      className: 'running',
+      link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`,
+      counterTooltip: 'Completed',
+      loading: projectCounter.loading
     }
   }
 }
@@ -76,7 +75,8 @@ export const getJobsTableData = (jobs, projectName) => {
         },
         type: {
           value: job[0].metadata.kind ?? job[0].metadata.labels?.kind ?? '',
-          className: 'project-data-card__table-cell table-cell_small'
+          className: 'section-table__table-cell table-cell_small',
+          types: typesOfJob
         },
         status: {
           value: job.map(item => item.status.state),
@@ -115,7 +115,7 @@ export const getJobsTableData = (jobs, projectName) => {
 }
 
 export const groupByName = content => {
-  const groupedItems = {}
+  const groupedItems = Object.create(null)
 
   content.forEach(contentItem => {
     groupedItems[contentItem.metadata.name]

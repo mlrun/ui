@@ -86,7 +86,7 @@ import { generateObjectFromKeyValue, parseObjectToKeyValue } from 'igz-controls/
 import { getDefaultSchedule, scheduleDataInitialState } from '../SheduleWizard/scheduleWizard.util'
 import { getErrorDetail } from 'igz-controls/utils/common.util'
 import { getPreemptionMode } from '../../utils/getPreemptionMode'
-import { trimSplit } from '../../utils'
+import { trimSplit } from 'igz-controls/utils/string.util'
 
 const volumeTypesMap = {
   [CONFIG_MAP_VOLUME_TYPE]: 'configMap',
@@ -1153,7 +1153,7 @@ export const getNewJobErrorMsg = error => {
 }
 
 export const getSaveJobErrorMsg = error => {
-  return error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+  return error?.response?.status === FORBIDDEN_ERROR_STATUS_CODE
     ? 'You do not have permission to run a new job.'
     : getErrorDetail(error) || 'Unable to save the job.'
 }

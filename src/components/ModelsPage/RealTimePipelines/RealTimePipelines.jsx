@@ -24,12 +24,12 @@ import classnames from 'classnames'
 import { isNil } from 'lodash'
 
 import ActionBar from '../../ActionBar/ActionBar'
-import Loader from '../../../common/Loader/Loader'
 import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Pipeline from '../../Pipeline/Pipeline'
 import RealTimePipelinesTableRow from '../../../elements/RealTimePipelinesTableRow/RealTimePipelinesTableRow'
 import Table from '../../Table/Table'
+import { Loader } from 'igz-controls/components'
 
 import {
   GROUP_BY_NAME,

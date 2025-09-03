@@ -106,6 +106,7 @@ const FormDataInputsRow = ({
               density="normal"
               formState={formState}
               formStateFieldInfo={`${rowPath}.data.fieldInfo`}
+              formStateDataInputState={`${rowPath}.data.dataInputState`}
               hiddenSelectOptionsIds={
                 fieldData.data.name === MODEL_PATH_DATA_INPUT && fieldData.isPredefined
                   ? [
@@ -120,6 +121,7 @@ const FormDataInputsRow = ({
                   : []
               }
               inputDefaultValue={editingItem.data.fieldInfo?.value}
+              inputDefaultState={editingItem.data.dataInputState}
               name={`${rowPath}.data.path`}
               params={params}
               required

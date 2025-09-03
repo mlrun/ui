@@ -37,16 +37,18 @@ const ProjectStatistics = ({ statistics }) => {
     if (['running', 'workflows'].includes(key)) {
       filters = {
         [DATES_FILTER]: ANY_TIME_DATE_OPTION,
-        [STATUS_FILTER]: key === 'workflows' ? ['running'] : ['running', 'pending', 'aborting']
+        [STATUS_FILTER]:
+          key === 'workflows' ? ['running'] : ['running', 'pending', 'pendingRetry', 'aborting']
       }
     } else if (key === FAILED_STATE) {
       filters = {
         [DATES_FILTER]: PAST_24_HOUR_DATE_OPTION,
         [STATUS_FILTER]: ['error', 'aborted']
       }
-    } else if (key === 'scheduled') {
+    } else if (key === 'succeeded') {
       filters = {
-        [DATES_FILTER]: ANY_TIME_DATE_OPTION
+        [DATES_FILTER]: PAST_24_HOUR_DATE_OPTION,
+        [STATUS_FILTER]: ['completed']
       }
     }
 

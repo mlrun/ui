@@ -19,7 +19,7 @@ such restriction.
 */
 import { By } from 'selenium-webdriver'
 
-module.exports = function(menuStructure) {
+export default function(menuStructure) {
   return {
     root: By.css(menuStructure.root),
     open_button: By.css(

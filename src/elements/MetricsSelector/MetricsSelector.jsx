@@ -50,6 +50,7 @@ import SearchIcon from 'igz-controls/images/search.svg?react'
 import './metricsSelector.scss'
 
 const MetricsSelector = ({
+  applicationName = '',
   disabled = false,
   maxSelectionNumber = 20,
   metrics,
@@ -257,43 +258,53 @@ const MetricsSelector = ({
                   <ul className="metrics-selector-options options-list">
                     <FieldArray name={name}>
                       {({ fields }) => {
+                        const renderMetrics = metricsList => {
+                          return (
+                            <ul className="metrics-selector-options">
+                              {metricsList?.metrics?.map(metricItem => {
+                                return (
+                                  <SelectOption
+                                    key={metricItem.id}
+                                    item={{
+                                      ...metricItem,
+                                      label: getMetricsLabel(metricItem),
+                                      disabled:
+                                        fields.value?.length >= maxSelectionNumber &&
+                                        !fields.value.includes(metricItem.id)
+                                    }}
+                                    name={name}
+                                    multiple
+                                  />
+                                )
+                              })}{' '}
+                            </ul>
+                          )
+                        }
+
                         return (
                           <>
-                            {filteredMetrics.map(metricsGroup => {
-                              return !isEmpty(metricsGroup.metrics) ? (
-                                <Accordion
-                                  key={metricsGroup.app}
-                                  accordionClassName="metrics-selector-accordion"
-                                  icon={<Arrow />}
-                                  iconClassName="metrics-selector-accordion-icon"
-                                  openByDefault
-                                >
-                                  <div className="metrics-selector-accordion-content">
-                                    <div className="metrics-selector-accordion-title">
-                                      {metricsGroup.app}
-                                    </div>
-                                    <ul className="metrics-selector-options">
-                                      {metricsGroup.metrics.map(metricItem => {
-                                        return (
-                                          <SelectOption
-                                            key={metricItem.id}
-                                            item={{
-                                              ...metricItem,
-                                              label: getMetricsLabel(metricItem),
-                                              disabled:
-                                                fields.value?.length >= maxSelectionNumber &&
-                                                !fields.value.includes(metricItem.id)
-                                            }}
-                                            name={name}
-                                            multiple
-                                          />
-                                        )
-                                      })}
-                                    </ul>
-                                  </div>
-                                </Accordion>
-                              ) : null
-                            })}
+                            {applicationName
+                              ? renderMetrics(filteredMetrics[0] || {})
+                              : filteredMetrics.map(metricsGroup => {
+                                  return !isEmpty(metricsGroup.metrics) ? (
+                                    <Accordion
+                                      key={metricsGroup.app}
+                                      accordionClassName="metrics-selector-accordion"
+                                      icon={<Arrow />}
+                                      iconClassName="metrics-selector-accordion-icon"
+                                      openByDefault
+                                    >
+                                      <div className="metrics-selector-accordion-content">
+                                        <div className="metrics-selector-accordion-title">
+                                          {metricsGroup.app}
+                                        </div>
+                                        <ul className="metrics-selector-options">
+                                          {renderMetrics(metricsGroup)}
+                                        </ul>
+                                      </div>
+                                    </Accordion>
+                                  ) : null
+                                })}
                           </>
                         )
                       }}
@@ -325,6 +336,7 @@ const MetricsSelector = ({
 }
 
 MetricsSelector.propTypes = {
+  applicationName: PropTypes.string,
   disabled: PropTypes.bool,
   maxSelectionNumber: PropTypes.number,
   metrics: METRICS_SELECTOR_OPTIONS.isRequired,

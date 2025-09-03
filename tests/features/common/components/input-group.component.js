@@ -19,7 +19,7 @@ such restriction.
 */
 import { By } from 'selenium-webdriver'
 
-module.exports = function(inputStructure) {
+export default function(inputStructure) {
   const element = {}
   element.root = By.css(inputStructure.root)
   element.inputField = By.css(

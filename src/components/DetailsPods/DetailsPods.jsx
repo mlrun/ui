@@ -17,34 +17,37 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import Prism from 'prismjs'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
-import Loader from '../../common/Loader/Loader'
 
 import NoData from '../../common/NoData/NoData'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, Loader } from 'igz-controls/components'
 
 import { generatePods } from './detailsPods.util'
 
 import './detailsPods.scss'
 
-const DetailsPods = ({ noDataMessage = '' }) => {
+const DetailsPods = ({ isDetailsPopUp = false, noDataMessage = ''}) => {
   const [selectedPod, setSelectedPod] = useState(null)
   const [table, setTable] = useState([])
   const params = useParams()
   const detailsStore = useSelector(store => store.detailsStore)
 
+  const podsData = useMemo(() => {
+    return isDetailsPopUp ? detailsStore.detailsJobPods : detailsStore.pods
+  }, [detailsStore.detailsJobPods, detailsStore.pods, isDetailsPopUp])
+
   useEffect(() => {
-    setTable(generatePods(detailsStore.pods))
+    setTable(generatePods(podsData))
 
     return () => {
       setSelectedPod(null)
     }
-  }, [detailsStore.pods, params.jobId])
+  }, [podsData, params.jobId])
 
   useEffect(() => {
     if (!selectedPod) {
@@ -54,9 +57,9 @@ const DetailsPods = ({ noDataMessage = '' }) => {
 
   return (
     <>
-      {detailsStore.pods.loading ? (
+      {podsData.loading ? (
         <Loader />
-      ) : detailsStore.pods.error ? (
+      ) : podsData.error ? (
         <div className="pods__error">Failed to fetch data. Please try again later.</div>
       ) : table.length > 0 ? (
         <div className="pods">
@@ -114,13 +117,14 @@ const DetailsPods = ({ noDataMessage = '' }) => {
           </div>
         </div>
       ) : (
-        detailsStore.pods.podsList.length === 0 && <NoData message={noDataMessage} />
+        podsData.podsList.length === 0 && <NoData message={noDataMessage} />
       )}
     </>
   )
 }
 
 DetailsPods.propTypes = {
+  isDetailsPopUp: PropTypes.bool,
   noDataMessage: PropTypes.string
 }
 

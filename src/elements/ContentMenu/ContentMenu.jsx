@@ -52,6 +52,16 @@ const ContentMenu = ({
     }
   }
 
+  const getContentMenuItem = tab => (
+    <span className={tab.icon && 'content-menu__tab-icon'}>
+      {tab.icon && <i>{tab.icon}</i>}
+      {tab.label ?? tab.id}
+      {window.mlrunConfig.betaMode === 'enabled' && tab.preview && (
+        <span className="content-menu__tab__preview"> (Beta)</span>
+      )}
+    </span>
+  )
+
   return (
     <div className="content-menu">
       <ul className="content-menu__tabs">
@@ -64,25 +74,26 @@ const ContentMenu = ({
           )
 
           return (
-            !tab.hidden && (
+            !tab.hidden &&
+            (onClick ? (
+              <span
+                data-testid={tab.id}
+                className={tabClassNames}
+                key={tab.id}
+                onClick={e => handleClick(e, tab.id)}
+              >
+                {getContentMenuItem(tab)}
+              </span>
+            ) : (
               <Link
                 to={generateRedirectLink(tab.id)}
                 data-testid={tab.id}
                 className={tabClassNames}
                 key={tab.id}
               >
-                <span
-                  className={tab.icon && 'content-menu__tab-icon'}
-                  onClick={onClick && (e => handleClick(e, tab.id))}
-                >
-                  {tab.icon && <i>{tab.icon}</i>}
-                  {tab.label ?? tab.id}
-                  {window?.mlrunConfig?.betaMode === 'enabled' && tab.preview && (
-                    <span className="content-menu__tab__preview"> (Beta)</span>
-                  )}
-                </span>
+                {getContentMenuItem(tab)}
               </Link>
-            )
+            ))
           )
         })}
       </ul>
@@ -93,7 +104,7 @@ const ContentMenu = ({
 ContentMenu.propTypes = {
   activeTab: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
-  fontSize: PropTypes.oneOf(['sm', 'md', 'lg']),
+  fontSize: PropTypes.oneOf(['xs', 'sm', 'md', 'lg']),
   onClick: PropTypes.func,
   screen: PropTypes.string,
   tabs: CONTENT_MENU_TABS.isRequired

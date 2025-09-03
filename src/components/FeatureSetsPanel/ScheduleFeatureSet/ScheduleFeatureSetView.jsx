@@ -21,10 +21,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
 import ScheduleFeatureSetSimple from '../ScheduleFeatureSetSimple/ScheduleFeatureSetSimple'
 import ScheduleCron from '../../ScheduleCron/ScheduleCron'
-import { Button, RoundedIcon } from 'igz-controls/components'
+import { Button, RoundedIcon, ErrorMessage } from 'igz-controls/components'
 
 import { tabs } from './scheduleFeatureSet.util'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'

@@ -24,7 +24,7 @@ import TargetPath from '../../common/TargetPath/TargetPath'
 import { FormChipCell, FormInput, FormSelect, FormTextarea } from 'igz-controls/components'
 
 import { ARTIFACT_TYPE, MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
-import { getChipOptions } from '../../utils/getChipOptions'
+import { getChipOptions } from 'igz-controls/utils/chips.util'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 const RegisterArtifactModalForm = ({

@@ -31,8 +31,8 @@ import {
 } from '../../constants'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { convertChipsData } from '../../utils/convertChipsData'
-import { showErrorNotification } from '../../utils/notifications.util'
-import { truncateUid } from '../../utils'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
+import { truncateUid } from 'igz-controls/utils/string.util'
 import { updateFeatureStoreData } from '../../reducers/featureStoreReducer'
 
 export const createFeatureSetTitle = 'Create set'

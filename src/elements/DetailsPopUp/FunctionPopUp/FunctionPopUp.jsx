@@ -32,7 +32,7 @@ import {
 } from '../../../components/FunctionsPage/functions.util'
 import { parseFunction } from '../../../utils/parseFunction'
 import { parseFunctionUri } from '../../../utils/link-helper.util'
-import { showErrorNotification } from '../../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 import functionsApi from '../../../api/functions-api'
 import { toggleYaml } from '../../../reducers/appReducer'

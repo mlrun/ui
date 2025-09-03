@@ -1,0 +1,27 @@
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+
+.generation-configuration-tab {
+  margin-top: 15px;
+
+  &__counter {
+    margin-bottom: 20px;
+  }
+
+  &__table-header {
+    font-weight: 500;
+  }
+
+  &__row {
+    display: flex;
+    padding: 10px 0;
+    font-size: 15px;
+    line-height: 20px;
+    border-bottom: borders.$secondaryBorder;
+
+    &-key,
+    &-value {
+      width: 50%;
+    }
+  }
+}

@@ -29,7 +29,7 @@ import arrayMutators from 'final-form-arrays'
 import FeatureSetsPanelView from './FeatureSetsPanelView'
 
 import { FEATURE_SETS_TAB, TAG_FILTER_LATEST } from '../../constants'
-import { setNotification } from '../../reducers/notificationReducer'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { checkValidation } from './featureSetPanel.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import {

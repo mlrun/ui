@@ -20,7 +20,7 @@ such restriction.
 import React, { useEffect, useState, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { forEach, isEmpty } from 'lodash'
+import { forEach, isEmpty, lowerCase } from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import Details from '../Details/Details'
@@ -28,13 +28,14 @@ import JobsFunctionsTableRow from './JobsFunctionsTableRow/JobsFunctionsTableRow
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import Table from '../Table/Table'
 import TableTop from '../../elements/TableTop/TableTop'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Button, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import {
   getLayoutedElements,
   getWorkflowSourceHandle
 } from '../../common/ReactFlow/mlReactFlow.util'
 import {
+  fetchMissingProjectPermission,
   getWorkflowDetailsLink,
   getWorkflowMonitoringDetailsLink,
   isWorkflowStepCondition,
@@ -43,6 +44,7 @@ import {
 } from './workflow.util'
 import {
   DEFAULT_EDGE,
+  FUNCTION_RUNNING_STATE,
   GREY_NODE,
   JOB_KIND_JOB,
   JOBS_PAGE,
@@ -55,12 +57,14 @@ import {
   WORKFLOW_LIST_VIEW
 } from '../../constants'
 import getState from '../../utils/getState'
-import { ACTIONS_MENU } from '../../types'
+import { ACTIONS_MENU } from 'igz-controls/types'
 import { createJobsWorkflowContent } from '../../utils/createJobsContent'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { useMode } from '../../hooks/mode.hook'
 import { useSortTable } from '../../hooks/useSortTable.hook'
+import { useDispatch, useSelector } from 'react-redux'
 
+import Cancel from 'igz-controls/images/cancel.svg?react'
 import ListView from 'igz-controls/images/listview.svg?react'
 import Pipelines from 'igz-controls/images/pipelines.svg?react'
 
@@ -70,6 +74,7 @@ const Workflow = ({
   actionsMenu,
   backLink,
   handleCancel,
+  handleConfirmTerminateWorkflow,
   itemIsSelected,
   pageData,
   selectedFunction = {},
@@ -84,6 +89,14 @@ const Workflow = ({
   const params = useParams()
   const navigate = useNavigate()
   const { isStagingMode } = useMode()
+  const projectName = params.workflowProjectName || params.projectName
+  const dispatch = useDispatch()
+  const ce = useSelector(store => store.appStore.frontendSpec?.ce?.version)
+  const accessibleProjectsMap = useSelector(state => state.projectStore.accessibleProjectsMap)
+
+  useEffect(() => {
+    fetchMissingProjectPermission(projectName, accessibleProjectsMap, dispatch)
+  }, [dispatch, projectName, accessibleProjectsMap])
 
   const graphViewClassNames = classnames(
     'graph-view',
@@ -218,31 +231,44 @@ const Workflow = ({
   return (
     <div className="workflow-container">
       <TableTop link={backLink} text={workflow?.run?.name.replace(`${params.projectName}-`, '')}>
-        <div className="actions">
-          <Tooltip
-            template={
-              <TextTooltipTemplate
-                text={
-                  workflowsViewMode === WORKFLOW_GRAPH_VIEW
-                    ? 'Switch to list view'
-                    : 'Switch to graph view'
-                }
-              />
-            }
-          >
-            <button
-              className="toggle-view-btn"
-              onClick={() =>
-                setWorkflowsViewMode(
-                  workflowsViewMode === WORKFLOW_GRAPH_VIEW
-                    ? WORKFLOW_LIST_VIEW
-                    : WORKFLOW_GRAPH_VIEW
-                )
+        <div className="workflow__actions-container">
+          <div className="actions">
+            <Tooltip
+              template={
+                <TextTooltipTemplate
+                  text={
+                    workflowsViewMode === WORKFLOW_GRAPH_VIEW
+                      ? 'Switch to list view'
+                      : 'Switch to graph view'
+                  }
+                />
               }
             >
-              {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? <ListView /> : <Pipelines />}
-            </button>
-          </Tooltip>
+              <button
+                className="toggle-view-btn"
+                onClick={() =>
+                  setWorkflowsViewMode(
+                    workflowsViewMode === WORKFLOW_GRAPH_VIEW
+                      ? WORKFLOW_LIST_VIEW
+                      : WORKFLOW_GRAPH_VIEW
+                  )
+                }
+              >
+                {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? <ListView /> : <Pipelines />}
+              </button>
+            </Tooltip>
+          </div>
+          {(ce || accessibleProjectsMap[projectName]) && (
+            <Button
+              className="workflow_btn"
+              id="terminate_btn"
+              disabled={lowerCase(workflow?.run?.status) !== FUNCTION_RUNNING_STATE}
+              variant="danger"
+              icon={<Cancel />}
+              label="Terminate"
+              onClick={() => handleConfirmTerminateWorkflow(workflow?.run, dispatch)}
+            />
+          )}
         </div>
       </TableTop>
 
@@ -296,6 +322,7 @@ Workflow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   backLink: PropTypes.string.isRequired,
   handleCancel: PropTypes.func.isRequired,
+  handleConfirmTerminateWorkflow: PropTypes.func,
   itemIsSelected: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   selectedFunction: PropTypes.object,

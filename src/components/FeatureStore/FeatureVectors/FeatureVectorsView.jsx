@@ -30,7 +30,7 @@ import Table from '../../Table/Table'
 
 import { FEATURE_STORE_PAGE, FEATURE_VECTORS_TAB } from '../../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
-import { VIRTUALIZATION_CONFIG } from '../../../types'
+import { VIRTUALIZATION_CONFIG } from 'igz-controls/types'
 import { createFeatureVectorTitle } from '../featureStore.util'
 import { filtersConfig } from './featureVectors.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
@@ -124,6 +124,7 @@ const FeatureVectorsView = React.forwardRef(
                       selectedItem={selectedFeatureVector}
                       selectedRowData={selectedRowData}
                       toggleRow={toggleRow}
+                      withQuickActions={true}
                     />
                   )
               )}

@@ -28,7 +28,7 @@ import HistoryIcon from 'igz-controls/images/history.svg?react'
 
 import './historyBackLink.scss'
 
-const HistoryBackLink = ({ itemName, link }) => {
+const HistoryBackLink = ({ itemName, link, customText = '', customIcon = null }) => {
   return (
     <div className="history-back-link">
       <Link to={link} className="history-back-link__icon">
@@ -37,9 +37,9 @@ const HistoryBackLink = ({ itemName, link }) => {
         </RoundedIcon>
       </Link>
       <div className="history-back-link__title">
-        <HistoryIcon />
+        {customIcon ? customIcon : <HistoryIcon />}
         <div className="history-back-link__title-version" data-testid="version-history">
-          Version history:{' '}
+          {`${customText || 'Version history'}: `}
         </div>
         <Tooltip template={<TextTooltipTemplate text={itemName} />}>{itemName}</Tooltip>
       </div>
@@ -48,6 +48,8 @@ const HistoryBackLink = ({ itemName, link }) => {
 }
 
 HistoryBackLink.propTypes = {
+  customIcon: PropTypes.element,
+  customText: PropTypes.string,
   itemName: PropTypes.string.isRequired,
   link: PropTypes.string.isRequired
 }

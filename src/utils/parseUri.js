@@ -18,12 +18,13 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
-  DATASETS_TAB,
   FEATURE_SETS_TAB,
-  FILES_TAB,
   FEATURE_VECTORS_TAB,
   MODELS_TAB,
-  MONITOR_JOBS_TAB
+  MONITOR_JOBS_TAB,
+  FILES_PAGE,
+  DATASETS_PAGE,
+  DOCUMENTS_PAGE
 } from '../constants'
 
 /**
@@ -98,8 +99,9 @@ const parseIdentifier = identifier =>
   (identifier ?? '').match(/(#(?<iteration>.+?))?(:(?<tag>.+?))?(@(?<uid>.+))?$/)?.groups ?? {}
 
 const kindToScreen = {
-  artifacts: FILES_TAB,
-  datasets: `feature-store/${DATASETS_TAB}`,
+  artifacts: FILES_PAGE,
+  datasets: DATASETS_PAGE,
+  documents: DOCUMENTS_PAGE,
   'feature-sets': `feature-store/${FEATURE_SETS_TAB}`,
   'feature-vectors': `feature-store/${FEATURE_VECTORS_TAB}`,
   functions: 'functions',
@@ -109,7 +111,7 @@ const kindToScreen = {
 
 const generateLinkPath = (uri = '') => {
   const { kind, project, key, tag, uid, iteration } = parseUri(uri)
-  const screen = kindToScreen[kind] ?? FILES_TAB
+  const screen = kindToScreen[kind] ?? FILES_PAGE
   const reference = tag ?? uid
   return `/projects/${project}/${screen}/${key}${reference ? `/${reference}` : ''}${iteration ? `/${iteration}` : ''}`
 }

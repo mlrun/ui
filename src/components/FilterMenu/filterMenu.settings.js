@@ -52,7 +52,8 @@ export const jobsStatuses = [
   { label: 'Completed', id: 'completed', status: 'completed' },
   { label: 'Error', id: ERROR_STATE, status: ERROR_STATE },
   { label: 'Running', id: 'running', status: 'running' },
-  { label: 'Pending', id: 'pending', status: 'pending' }
+  { label: 'Pending', id: 'pending', status: 'pending' },
+  { label: 'Pending retry', id: 'pendingRetry', status: 'pendingRetry' }
 ]
 
 export const workflowsStatuses = [
@@ -60,7 +61,8 @@ export const workflowsStatuses = [
   { label: 'Error', id: ERROR_STATE, status: ERROR_STATE },
   { label: 'Failed', id: FAILED_STATE, status: FAILED_STATE },
   { label: 'Running', id: 'running', status: 'running' },
-  { label: 'Completed', id: 'completed', status: 'completed' }
+  { label: 'Completed', id: 'completed', status: 'completed' },
+  { label: 'Terminating', id: 'terminating', status: 'terminating' }
 ]
 
 export const generateStatusFilter = useFailedStatus => {
@@ -124,6 +126,6 @@ export const tagFilterOptions = [
 export const getTagFilterOptions = (isLatestOnly = false) => {
   return [
     { label: 'latest', id: TAG_FILTER_LATEST },
-    ...(isLatestOnly ? [] : [{ label: 'All tags', id: TAG_FILTER_ALL_ITEMS }]) 
+    ...(isLatestOnly ? [] : [{ label: 'All tags', id: TAG_FILTER_ALL_ITEMS }])
   ]
 }

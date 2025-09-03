@@ -26,7 +26,7 @@ import classnames from 'classnames'
 
 import { useTimeout } from '../../hooks/useTimeout'
 
-import { removeNotification } from '../../reducers/notificationReducer'
+import { removeNotification } from 'igz-controls/reducers/notificationReducer'
 
 import { NOTIFICATION_DURATION } from '../../constants'
 

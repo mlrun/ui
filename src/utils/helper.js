@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
-import { VIEW_SEARCH_PARAMETER } from '../constants'
 import localStorageService from './localStorageService'
 
 export const isDemoMode = search => {
@@ -27,10 +26,6 @@ export const isDemoMode = search => {
 
 export const getUrlMode = search => {
   return new URLSearchParams(search).get('mode')?.toLowerCase()
-}
-
-export const getViewMode = search => {
-  return new URLSearchParams(search).get(VIEW_SEARCH_PARAMETER)?.toLowerCase()
 }
 
 export const isPanelOpened = search => {

@@ -18,23 +18,25 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
-  ARTIFACTS_TAB,
-  DATASETS_TAB,
-  DOCUMENTS_TAB,
+  DATASETS_PAGE,
+  DOCUMENTS_PAGE,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
-  MODELS_TAB
+  FILES_PAGE,
+  LLM_PROMPTS_PAGE,
+  MODELS_PAGE
 } from '../constants'
 import { isNil } from 'lodash'
 
-export const generateUri = (item, tab) => {
-  let uri = `store://${tab}/${item.project}/`
+export const generateUri = (item, page, tab) => {
+  let uri = `store://${page ?? tab}/${item.project}/`
 
   if (
-    tab === MODELS_TAB ||
-    tab === DATASETS_TAB ||
-    tab === ARTIFACTS_TAB ||
-    tab === DOCUMENTS_TAB
+    page === MODELS_PAGE ||
+    page === DATASETS_PAGE ||
+    page === FILES_PAGE ||
+    page === DOCUMENTS_PAGE ||
+    page === LLM_PROMPTS_PAGE
   ) {
     uri += item.db_key
     uri += getArtifactReference(item)

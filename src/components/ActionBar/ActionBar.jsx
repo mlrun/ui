@@ -75,6 +75,7 @@ const ActionBar = ({
   hidden = false,
   internalAutoRefreshIsEnabled = false,
   removeSelectedItem = null,
+  selectedItemName = '',
   setSearchParams,
   setSelectedRowData = null,
   tab = '',
@@ -88,7 +89,7 @@ const ActionBar = ({
     internalAutoRefreshIsEnabled
   )
   const filtersStore = useSelector(store => store.filtersStore)
-  const changes = useSelector(store => store.detailsStore.changes)
+  const changes = useSelector(store => store.commonDetailsStore.changes)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const params = useParams()
@@ -185,13 +186,13 @@ const ActionBar = ({
   )
 
   const applyFilters = useCallback(
-    async (formValues, filters) => {
-      const actionCanBePerformed = await performDetailsActionHelper(changes, dispatch, true)
+    async (formValues, filters, actionCanBePerformedChecked) => {
+      const actionCanBePerformed = actionCanBePerformedChecked || await performDetailsActionHelper(changes, dispatch, true)
       const newFilters = { ...filters, ...formValues }
 
       if (actionCanBePerformed) {
         if (closeParamName) {
-          navigate(getCloseDetailsLink(closeParamName, true), { replace: true })
+          navigate(getCloseDetailsLink(closeParamName, true, selectedItemName), { replace: true })
         }
 
         if (
@@ -224,7 +225,8 @@ const ActionBar = ({
       setSelectedRowData,
       toggleAllRows,
       handleRefresh,
-      navigate
+      navigate,
+      selectedItemName
     ]
   )
 
@@ -270,7 +272,7 @@ const ActionBar = ({
     const actionCanBePerformed = await performDetailsActionHelper(changes, dispatch)
 
     if (actionCanBePerformed) {
-      handler()
+      handler(params, handleRefresh, filters)
     }
   }
 
@@ -376,6 +378,7 @@ const ActionBar = ({
                     return (
                       <DatePicker
                         customOptions={filtersConfig[DATES_FILTER].customOptions}
+                        excludeCustomRange={filtersConfig[DATES_FILTER].excludeCustomRange}
                         key={tab}
                         className="details-date-picker"
                         date={input.value.value[0]}
@@ -401,9 +404,10 @@ const ActionBar = ({
           </div>
           {!isEmpty(filterMenuModalInitialState) && (
             <FilterMenuModal
-              applyChanges={filterMenuModal => applyFilters(formState.values, filterMenuModal)}
+              applyChanges={(filterMenuModal, actionCanBePerformedChecked) => applyFilters(formState.values, filterMenuModal, actionCanBePerformedChecked)}
               initialValues={filterMenuModalInitialState}
               values={filterMenuModal}
+              detailsChanges={changes}
             >
               {children}
             </FilterMenuModal>
@@ -421,6 +425,7 @@ const ActionBar = ({
                       variant={actionButton.variant}
                       label={actionButton.label}
                       className={actionButton.className}
+                      icon={actionButton.icon}
                       onClick={() => {
                         handleActionClick(actionButton.onClick)
                       }}
@@ -510,6 +515,7 @@ ActionBar.propTypes = {
   hidden: PropTypes.bool,
   internalAutoRefreshIsEnabled: PropTypes.bool,
   removeSelectedItem: PropTypes.func,
+  selectedItemName: PropTypes.string,
   setSearchParams: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func,
   tab: PropTypes.string,

@@ -36,7 +36,7 @@ import {
   generateCheckboxGroup,
   generateTextAreaGroup
 } from '../../common-tools/common-tools'
-const { By } = require('selenium-webdriver')
+import { By } from 'selenium-webdriver'
 
 const actionMenuStructure = {
   root: '.table__cell-actions',
@@ -734,7 +734,7 @@ const commonAccessKeyInput = inputGroup(
   )
 )
 
-module.exports = {
+export default {
   newFeatureSet: {
     Cross_Close_Button: commonCrossCloseButton,
     Feature_Set_Name_Input: inputGroup(

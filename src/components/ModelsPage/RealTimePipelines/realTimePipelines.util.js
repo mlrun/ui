@@ -19,7 +19,7 @@ such restriction.
 */
 import { MODELS_PAGE, NAME_FILTER } from '../../../constants'
 import { parseFunction } from '../../../utils/parseFunction'
-import { showErrorNotification } from '../../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { fetchFunction } from '../../../reducers/functionReducer'
 
 export const filtersConfig = {

@@ -22,14 +22,14 @@ import { useNavigate, useParams, Outlet } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
+import { Loader } from 'igz-controls/components'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import Loader from '../../common/Loader/Loader'
 
 import { GROUP_BY_NONE } from '../../constants'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
 import { fetchNuclioV3ioStreams, resetV3ioStreamsError } from '../../reducers/nuclioReducer'
 import { setFilters } from '../../reducers/filtersReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 const ConsumerGroupsWrapper = () => {
   const [requestErrorMessage, setRequestErrorMessage] = useState('')

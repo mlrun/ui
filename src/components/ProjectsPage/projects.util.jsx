@@ -40,8 +40,8 @@ import {
 import tasksApi from '../../api/tasks-api'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { PROJECT_ONLINE_STATUS } from '../../constants'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 import ArchiveIcon from 'igz-controls/images/archive-icon.svg?react'
 import Delete from 'igz-controls/images/delete.svg?react'
@@ -292,6 +292,21 @@ export const generateMonitoringCounters = (data, dispatch) => {
       jobs: 0,
       application: 0,
       total: 0
+    },
+    models: {
+      total: 0
+    },
+    monitoring_app: {
+      total: 0,
+      running: 0,
+      failed: 0
+    },
+    artifacts: {
+      documents: 0,
+      datasets: 0,
+      files: 0,
+      llm_prompts: 0,
+      total: 0
     }
   }
 
@@ -325,6 +340,23 @@ export const generateMonitoringCounters = (data, dispatch) => {
       monitoringCounters.alerts.endpoint +
       monitoringCounters.alerts.jobs +
       monitoringCounters.alerts.application
+
+    monitoringCounters.models.total += project.models_count || 0
+
+    monitoringCounters.monitoring_app.running += project.running_model_monitoring_functions || 0
+    monitoringCounters.monitoring_app.failed += project.failed_model_monitoring_functions || 0
+    monitoringCounters.monitoring_app.total =
+      monitoringCounters.monitoring_app.failed + monitoringCounters.monitoring_app.running
+
+    monitoringCounters.artifacts.llm_prompts += project.llm_prompts_count || 0
+    monitoringCounters.artifacts.datasets += project.datasets_count || 0
+    monitoringCounters.artifacts.files += project.files_count || 0
+    monitoringCounters.artifacts.documents += project.documents_count || 0
+    monitoringCounters.artifacts.total =
+      monitoringCounters.artifacts.llm_prompts +
+      monitoringCounters.artifacts.datasets +
+      monitoringCounters.artifacts.files +
+      monitoringCounters.artifacts.documents
   })
 
   dispatch(setJobsMonitoringData(monitoringCounters))

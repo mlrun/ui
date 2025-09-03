@@ -36,7 +36,7 @@ import { getErrorMsg } from 'igz-controls/utils/common.util'
 import { getRoleOptions, initialNewMembersRole, DELETE_MODIFICATION } from './membersPopUp.util'
 import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
 import { membersActions } from './membersReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 import { USER_GROUP_ROLE, USER_ROLE } from '../../constants'
 

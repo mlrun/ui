@@ -81,16 +81,14 @@ const MonitorJobs = () => {
       setJobs([])
       setJobRuns([])
       abortControllerRefCurrent?.abort(REQUEST_CANCELED)
-      terminateAbortTasksPolling()
     }
-  }, [abortControllerRef, params.projectName, setJobRuns, setJobs, terminateAbortTasksPolling])
+  }, [abortControllerRef, params.projectName, setJobRuns, setJobs])
 
   useEffect(() => {
     return () => {
       jobsAreInitializedRef.current = false
-      terminateAbortTasksPolling()
     }
-  }, [params.projectName, params.jobName, terminateAbortTasksPolling])
+  }, [params.projectName, params.jobName])
 
   useEffect(() => {
     return () => {

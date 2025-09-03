@@ -27,8 +27,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import CodeBlock from '../../common/CodeBlock/CodeBlock'
 import NoData from '../../common/NoData/NoData'
-import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
-import Loader from '../../common/Loader/Loader'
+import { Tooltip, TextTooltipTemplate, RoundedIcon, Loader } from 'igz-controls/components'
 
 import {
   DEFAULT_EDGE,
@@ -102,11 +101,11 @@ const Pipeline = ({ content }) => {
         },
         {
           label: 'Input path:',
-          value: ''
+          value: selectedStepData.input_path
         },
         {
           label: 'Result path:',
-          value: ''
+          value: selectedStepData.result_path
         }
       ])
     }

@@ -37,10 +37,9 @@ export const createArtifactMessages = {
     subTitle: artifactSubTitle,
     overwriteConfirmTitle: 'Overwrite dataset?',
     getOverwriteConfirmMessage
+  },
+  model: {
+    overwriteConfirmTitle: 'Overwrite model?',
+    getOverwriteConfirmMessage
   }
-}
-
-export const createModelMessages = {
-  overwriteConfirmTitle: 'Overwrite model?',
-  getOverwriteConfirmMessage
 }

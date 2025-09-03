@@ -23,10 +23,9 @@ import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
-import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import TableCell from '../TableCell/TableCell'
+import { ActionsMenu, TableCell } from 'igz-controls/components'
 
-import { ACTIONS_MENU } from '../../types'
+import { ACTIONS_MENU } from 'igz-controls/types'
 import { DETAILS_OVERVIEW_TAB, MODEL_ENDPOINTS_TAB } from '../../constants'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 
@@ -63,7 +62,7 @@ const ArtifactsTableRow = ({
             !value.hidden && (
               <TableCell
                 className={cellClassNames}
-                data={value}
+                cellData={value}
                 firstCell={index === 0 && params.pageTab !== MODEL_ENDPOINTS_TAB}
                 item={rowItem.data}
                 key={value.id}

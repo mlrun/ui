@@ -63,7 +63,10 @@ import {
   TAG_FILTER,
   TAG_FILTER_ALL_ITEMS,
   TYPE_FILTER,
-  PROJECTS_FILTER_ALL_ITEMS
+  PROJECTS_FILTER_ALL_ITEMS,
+  LLM_PROMPTS_PAGE,
+  MODEL_NAME_FILTER,
+  MODEL_TAG_FILTER
 } from '../constants'
 
 const messageNamesList = {
@@ -87,6 +90,9 @@ const messageNamesList = {
   },
   [FILES_PAGE]: {
     plural: 'Files'
+  },
+  [LLM_PROMPTS_PAGE]: {
+    plural: 'LLM prompt artifacts'
   },
   [FUNCTIONS_PAGE]: {
     plural: 'Functions'
@@ -156,13 +162,13 @@ const getSelectedDateValue = (filterType, filters) => {
     true,
     true,
     '/',
-    filters[DATES_FILTER].value[0] ?? new Date(),
-    filters[DATES_FILTER].value[1] ?? new Date()
+    filters[DATES_FILTER]?.value?.[0] ?? new Date(),
+    filters[DATES_FILTER]?.value?.[1] ?? new Date()
   )
 
   return (filterType === DATE_RANGE_TIME_FILTER &&
-    !isEqual(filters[DATES_FILTER].value, DATE_FILTER_ANY_TIME)) ||
-    (filterType === DATES_FILTER && !isEqual(filters[DATES_FILTER].value, DATE_FILTER_ANY_TIME))
+    !isEqual(filters[DATES_FILTER]?.value, DATE_FILTER_ANY_TIME)) ||
+    (filterType === DATES_FILTER && !isEqual(filters[DATES_FILTER]?.value, DATE_FILTER_ANY_TIME))
     ? date
     : ANY_TIME
 }
@@ -177,7 +183,9 @@ const generateNoEntriesFoundMessage = (visibleFilterTypes, filtersConfig, filter
         : filters[filterType]
     const isLastElement = index === visibleFilterTypes.length - 1
 
-    return message + `${label} ${value}${isLastElement ? '"' : ', '}`
+    return (
+      message + `${label.endsWith(':') ? label : `${label}:`} ${value}${isLastElement ? '"' : ', '}`
+    )
   }, 'No data matches the filter: "')
 }
 
@@ -197,6 +205,8 @@ const getVisibleFilterTypes = (filtersConfig, filters, filtersStore) => {
         type === ENDPOINT_RESULT ||
         type === JOB_NAME ||
         type === LABELS_FILTER ||
+        type === MODEL_NAME_FILTER ||
+        type === MODEL_TAG_FILTER ||
         type === NAME_FILTER) &&
       filters[type]?.length > 0
     const isStatusVisible =

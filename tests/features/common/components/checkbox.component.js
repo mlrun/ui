@@ -19,7 +19,7 @@ such restriction.
 */
 import { By } from 'selenium-webdriver'
 
-module.exports = function(checkboxStructure) {
+export default function(checkboxStructure) {
   const element = {}
   element.root = By.css(checkboxStructure.root)
   element.checkbox = By.css(

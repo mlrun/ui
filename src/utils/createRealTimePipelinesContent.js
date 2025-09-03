@@ -19,9 +19,10 @@ such restriction.
 */
 import FunctionPopUp from '../elements/DetailsPopUp/FunctionPopUp/FunctionPopUp'
 
-import { formatDatetime } from './datetime'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
+import { typesOfJob } from './jobs.util'
 
 const createRealTimePipelinesContent = (pipelines, projectName) =>
   pipelines.map(pipeline => {
@@ -55,7 +56,8 @@ const createRealTimePipelinesContent = (pipelines, projectName) =>
           headerLabel: 'Type',
           value: pipeline.graph?.kind === 'router' ? 'Router' : 'Flow',
           className: 'table-cell-small',
-          type: 'type'
+          type: 'type',
+          types: typesOfJob
         },
         {
           id: `function.${pipeline.ui.identifierUnique}`,

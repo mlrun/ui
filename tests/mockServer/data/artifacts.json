@@ -66,6 +66,7 @@
         "tag": "latest",
         "labels": {
           "my-key": "my-value",
+          "mlrun/app-name": "monitorAppV1",
           "owner": "admin",
           "v3io_user": "admin"
         },
@@ -12208,7 +12209,8 @@
           "123": "456",
           "my-key": "my-value",
           "owner": "admin",
-          "type": "model"
+          "type": "model",
+          "mlrun/app-name": "monitorAppV1"
         },
         "updated": "2022-06-09T13:18:04.487272+00:00",
         "tag": "latest",
@@ -12336,7 +12338,8 @@
           "my-key": "my-value",
           "v3io_user": "admin",
           "owner": "admin",
-          "type": "dataset"
+          "type": "dataset",
+          "mlrun/app-name": "monitorAppV1"
         },
         "updated": "2022-07-18T14:20:04.121Z",
         "tag": "latest",
@@ -36447,7 +36450,6 @@
     },
     {
       "kind": "table",
-      "tag": "latest",
       "metadata": {
         "uid": "5a44b12b-9ef3-4239-87e8-e0cbdae-98",
         "key": "iteration_results",

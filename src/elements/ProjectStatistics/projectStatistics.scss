@@ -69,20 +69,35 @@
     }
 
     &-label {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      justify-content: center;
       min-width: 100%;
       max-width: 100px;
-      color: colors.$primary;
+      color: colors.$topaz;
+      font-weight: 400;
+      font-size: 12px;
       text-align: center;
+
+      i[class^='state-'] {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
     }
 
     &-value {
       width: 100%;
-      font-weight: 300;
-      font-size: 48px;
-      line-height: 56px;
+      font-weight: 500;
+      font-size: 26px;
+      line-height: 35px;
       text-align: center;
 
       &.statistics {
+        font-size: 50px;
+
         &_running {
           color: colors.$primary;
         }
@@ -91,17 +106,13 @@
           color: colors.$topaz;
         }
 
-        &_scheduled {
-          color: colors.$supernova;
+        &_succeeded {
+          color: colors.$brightTurquoise;
         }
 
         &_failed {
           color: colors.$amaranth;
         }
-      }
-
-      &_not-available {
-        font-size: 32px;
       }
 
       .tooltip {

@@ -23,6 +23,9 @@ import {
   ARTIFACT_OTHER_TYPE,
   DATASET_TYPE,
   DOCUMENT_TYPE,
+  LLM_PROMPT_TYPE,
+  MODEL_NAME_FILTER,
+  MODEL_TAG_FILTER,
   MODEL_TYPE,
   SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS,
@@ -55,6 +58,10 @@ const fetchArtifacts = (project, filters, config = {}, withLatestTag, withExactN
     params.tree = filters.tree
   }
 
+  if (filters?.[MODEL_NAME_FILTER]) {
+    params.parent = `${filters[MODEL_NAME_FILTER]}${filters[MODEL_TAG_FILTER] ? `:${filters[MODEL_TAG_FILTER]}` : ''}`
+  }
+
   return mainHttpClientV2.get(`/projects/${project}/artifacts`, {
     ...config,
     params: { ...config.params, ...params }
@@ -70,7 +77,7 @@ const artifactsApi = {
     if (mlrunVersion) {
       headers['x-mlrun-client-version'] = mlrunVersion
     }
-    
+
     return mainHttpClient.post(
       `/projects/${data.function.metadata.project}/nuclio/${data.function.metadata.name}/deploy`,
       data,
@@ -145,7 +152,7 @@ const artifactsApi = {
   },
   getArtifact: (projectName, artifactName, uid, tree, tag, iter) => {
     const newConfig = {
-      params: { tree, uid }
+      params: { tree, 'object-uid': uid }
     }
 
     if (tag) {
@@ -181,6 +188,14 @@ const artifactsApi = {
     const newConfig = {
       ...config,
       params: { ...config.params, category: ARTIFACT_OTHER_TYPE }
+    }
+
+    return fetchArtifacts(project, filters, newConfig, true)
+  },
+  getLLMPrompts: (project, filters, config = {}) => {
+    const newConfig = {
+      ...config,
+      params: { ...config.params, category: LLM_PROMPT_TYPE }
     }
 
     return fetchArtifacts(project, filters, newConfig, true)

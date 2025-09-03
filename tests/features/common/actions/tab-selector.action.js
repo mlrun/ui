@@ -19,8 +19,7 @@ such restriction.
 */
 import { expect } from 'chai'
 
-const action = {
-  isTabActive: async function(driver, component, indx) {
+export const isTabActive = async (driver, component, indx) => {
     const element1 = await driver.findElement(component.rowRoot(indx))
     const element2 = await driver.findElement(
       component.tableFields['key'](indx)
@@ -34,8 +33,9 @@ const action = {
       attributes2.includes('tabs-slider__tab_active')||
       attributes2.includes('content-menu__tab_active')
     expect(flag).equal(true)
-  },
-  isRowActive: async function(driver, component, indx) {
+  }
+
+export const isRowActive = async (driver, component, indx) => {
     const element = await driver.findElement(component.rowRoot(indx))
     const attributes = await element.getAttribute('class')
     const flag = attributes.includes('row_active')
@@ -46,6 +46,3 @@ const action = {
       expect(flag).equal(false)
     }
   }
-}
-
-module.exports = action

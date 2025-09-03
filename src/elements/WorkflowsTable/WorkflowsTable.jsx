@@ -25,10 +25,10 @@ import { find, isEmpty } from 'lodash'
 
 import JobWizard from '../../components/JobWizard/JobWizard'
 import JobsTableRow from '../JobsTableRow/JobsTableRow'
-import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Table from '../../components/Table/Table'
 import Workflow from '../../components/Workflow/Workflow'
+import { Loader } from 'igz-controls/components'
 
 import {
   ERROR_STATE,
@@ -62,12 +62,16 @@ import { getJobLogs } from '../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
-import { isWorkflowStepExecutable } from '../../components/Workflow/workflow.util'
+import {
+  isWorkflowStepExecutable,
+  handleTerminateWorkflow,
+  fetchMissingProjectsPermissions
+} from '../../components/Workflow/workflow.util'
 import { openPopUp, getScssVariableValue } from 'igz-controls/utils/common.util'
 import { parseFunction } from '../../utils/parseFunction'
 import { parseJob } from '../../utils/parseJob'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { toggleYaml } from '../../reducers/appReducer'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 
@@ -106,6 +110,19 @@ const WorkflowsTable = React.forwardRef(
     const location = useLocation()
     const fetchJobFunctionsPromiseRef = useRef()
     let fetchFunctionLogsTimeout = useRef(null)
+    const accessibleProjectsMap = useSelector(state => state.projectStore.accessibleProjectsMap)
+    const [permissionsLoading, setPermissionsLoading] = useState(false)
+
+    useEffect(() => {
+      const projectNames = workflowsStore.workflows.data.map(workflow => workflow.project)
+      setPermissionsLoading(true)
+      projectNames &&
+        fetchMissingProjectsPermissions(projectNames, accessibleProjectsMap, dispatch).finally(
+          () => {
+            setPermissionsLoading(false)
+          }
+        )
+    }, [dispatch, workflowsStore.workflows.data, accessibleProjectsMap])
 
     const monitorWorkflowsRowHeight = useMemo(
       () => getScssVariableValue('--monitorWorkflowsRowHeight'),
@@ -372,6 +389,13 @@ const WorkflowsTable = React.forwardRef(
       [onAbortJob, setConfirmData]
     )
 
+    const onTerminateWorkflow = useCallback(
+      job => {
+        handleTerminateWorkflow(job, dispatch)
+      },
+      [dispatch]
+    )
+
     const onDeleteJob = useCallback(
       job => {
         handleDeleteJob(false, job, refreshWorkflow, null, filters, dispatch).then(() => {
@@ -406,6 +430,26 @@ const WorkflowsTable = React.forwardRef(
       [onDeleteJob, setConfirmData]
     )
 
+    const handleConfirmTerminateWorkflow = useCallback(
+      job => {
+        setConfirmData({
+          item: job,
+          header: 'Terminate workflow',
+          message: `Are you sure you want to terminate the workflow "${job.name}" (stop its execution)? Workflows termination cannot be undone.`,
+          btnConfirmLabel: 'Terminate',
+          btnConfirmType: DANGER_BUTTON,
+          rejectHandler: () => {
+            setConfirmData(null)
+          },
+          confirmHandler: () => {
+            onTerminateWorkflow(job)
+            setConfirmData(null)
+          }
+        })
+      },
+      [onTerminateWorkflow, setConfirmData]
+    )
+
     const handleRerun = useCallback(
       workflow => {
         dispatch(rerunWorkflow({ project: workflow.project, workflowId: workflow.id }))
@@ -416,7 +460,7 @@ const WorkflowsTable = React.forwardRef(
               setNotification({
                 status: 200,
                 id: Math.random(),
-                message: 'Workflow ran successfully.'
+                message: 'Workflow run successfully.'
               })
             )
           })
@@ -437,8 +481,11 @@ const WorkflowsTable = React.forwardRef(
           appStore.frontendSpec.jobs_dashboard_url,
           handleMonitoring,
           appStore.frontendSpec.abortable_function_kinds,
+          appStore?.frontendSpec?.ce?.version,
           handleConfirmAbortJob,
           handleConfirmDeleteJob,
+          handleConfirmTerminateWorkflow,
+          accessibleProjectsMap,
           toggleConvertedYaml,
           handleRerun,
           rerunIsDisabled
@@ -447,9 +494,12 @@ const WorkflowsTable = React.forwardRef(
       handleRerunJob,
       appStore.frontendSpec.jobs_dashboard_url,
       appStore.frontendSpec.abortable_function_kinds,
+      appStore.frontendSpec?.ce?.version,
       handleMonitoring,
       handleConfirmAbortJob,
       handleConfirmDeleteJob,
+      handleConfirmTerminateWorkflow,
+      accessibleProjectsMap,
       toggleConvertedYaml,
       handleRerun,
       rerunIsDisabled
@@ -710,7 +760,7 @@ const WorkflowsTable = React.forwardRef(
 
     return (
       <>
-        {workflowsStore.workflows.loading && <Loader />}
+        {(workflowsStore.workflows.loading || permissionsLoading) && <Loader />}
         {workflowsStore.workflows.loading ? null : (!workflowsStore.workflows.loading &&
             !params.workflowId &&
             workflowsStore.workflows.data.length === 0) ||
@@ -732,6 +782,7 @@ const WorkflowsTable = React.forwardRef(
                 actionsMenu={actionsMenu}
                 backLink={backLink}
                 handleCancel={handleCancel}
+                handleConfirmTerminateWorkflow={handleConfirmTerminateWorkflow}
                 itemIsSelected={itemIsSelected}
                 pageData={pageData}
                 selectedFunction={selectedFunction}

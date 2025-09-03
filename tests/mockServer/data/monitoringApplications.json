@@ -1,0 +1,199 @@
+{
+  "default": [
+    {
+      "name": "model-monitoring-controller",
+      "application_class": "modelMonitoringController",
+      "started_at": "2025-05-01T12:00:00Z",
+      "updated_time": "2025-05-07T10:00:00Z",
+      "base_period": 10,
+      "nuclio_function_uri": "default/functions/default-modelMonitoringController/",
+      "stats": {
+        "detected": 1245,
+        "potential_detection": 98,
+        "stream_stats": {
+          "0": {
+            "lag": 12,
+            "committed": 398742
+          }
+        }
+      },
+      "status": "ready"
+    },
+    {
+      "name": "model-monitoring-stream",
+      "application_class": "modelMonitoringStream",
+      "started_at": "2025-05-01T08:00:00Z",
+      "updated_time": "2025-05-06T20:00:00Z",
+      "base_period": 10,
+      "nuclio_function_uri": "default/functions/default-modelMonitoringStream/",
+      "stats": {
+        "detected": 567,
+        "potential_detection": 34,
+        "stream_stats": {
+          "0": {
+            "lag": 12,
+            "committed": 39874222
+          }
+        }
+      },
+      "status": "ready"
+    },
+    {
+      "name": "model-monitoring-writer",
+      "application_class": "modelMonitoringWriter",
+      "started_at": "2025-05-01T08:00:00Z",
+      "updated_time": "2025-05-06T20:00:00Z",
+      "base_period": 10,
+      "nuclio_function_uri": "default/functions/default-modelMonitoringWriter/",
+      "stats": {
+        "detected": 2567,
+        "potential_detection": 134,
+        "stream_stats": {
+          "0": {
+            "lag": 11,
+            "committed": 328742
+          }
+        }
+      },
+      "status": "ready"
+    },
+    {
+      "name": "monitorAppV1",
+      "application_class": "MyAppV1",
+      "started_at": "2025-05-01T12:00:00Z",
+      "updated_time": "2025-05-07T10:00:00Z",
+      "base_period": 10,
+      "nuclio_function_uri": "my-project/functions/my-project-monitorAppV1/",
+      "stats": {
+        "detected": 1245,
+        "potential_detection": 98,
+        "stream_stats": {
+          "0": {
+            "lag": 1222,
+            "committed": 22742
+          }
+        },
+        "shards": {
+          "1": {
+            "committed": 50,
+            "lag": 2
+          },
+          "2": {
+            "committed": 60,
+            "lag": 0
+          }
+        },
+        "processed_model_endpoints": 8,
+        "metrics": [
+          {
+            "type": "result",
+            "time": "2025-05-07T09:07:14+00:00",
+            "result_name": "some_result",
+            "kind": "data-drift",
+            "status": "Detection",
+            "value": 0.95
+          },
+          {
+            "type": "metric",
+            "time": "2025-05-07T09:07:14+00:00",
+            "metric_name": "some_metric",
+            "value": 0.4
+          }
+        ]
+      },
+      "status": "ready"
+    },
+    {
+      "name": "monitorAppV2",
+      "application_class": "MyAppV2",
+      "started_at": "2025-05-01T08:00:00Z",
+      "updated_time": "2025-05-06T20:00:00Z",
+      "base_period": 10,
+      "nuclio_function_uri": "default/functions/default-monitorAppV2/",
+      "stats": {
+        "detected": 567,
+        "potential_detection": 34,
+        "stream_stats": {
+          "0": {
+            "lag": 2,
+            "committed": 742
+          }
+        },
+        "shards": {
+          "1": {
+            "committed": 50,
+            "lag": 2
+          },
+          "2": {
+            "committed": 60,
+            "lag": 0
+          }
+        },
+        "processed_model_endpoints": 8,
+        "metrics": [
+          {
+            "type": "result",
+            "time": "2025-05-07T09:07:14+00:00",
+            "result_name": "some_result",
+            "kind": 0,
+            "status": 2,
+            "value": 0.95
+          },
+          {
+            "type": "metric",
+            "time": "2025-05-07T09:07:14+00:00",
+            "metric_name": "some_metric",
+            "value": 0.4
+          }
+        ]
+      },
+      "status": "ready"
+    },
+    {
+      "name": "monitorAppV3",
+      "application_class": "MyAppV3",
+      "started_at": "2025-05-02T09:00:00Z",
+      "updated_time": "2025-05-08T11:00:00Z",
+      "base_period": 15,
+      "nuclio_function_uri": "default/functions/default-monitorAppV3/",
+      "stats": {
+        "detected": 850,
+        "potential_detection": 60,
+        "stream_stats": {
+          "0": {
+            "lag": 5,
+            "committed": 42
+          }
+        },
+        "shards": {
+          "1": {
+            "committed": 50,
+            "lag": 2
+          },
+          "2": {
+            "committed": 60,
+            "lag": 0
+          }
+        },
+        "processed_model_endpoints": 8,
+        "metrics": [
+          {
+            "type": "result",
+            "time": "2025-05-07T09:07:14+00:00",
+            "result_name": "some_result",
+            "kind": 0,
+            "status": 2,
+            "value": 0.95
+          },
+          {
+            "type": "metric",
+            "time": "2025-05-07T09:07:14+00:00",
+            "metric_name": "some_metric",
+            "value": 0.4
+          }
+        ]
+      },
+      "status": "ready"
+    }
+  ]
+}

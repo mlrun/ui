@@ -460,7 +460,9 @@ const commonCustomRangeFilter = dropdownComponent(
   )
 )
 
-module.exports = {
+const commonActionMenu = actionMenu(actionMenuStructure)
+
+export default {
   JobsMonitorTab: {
     Jobs_Tab_Selector: jobsTabSelector,
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,
@@ -504,10 +506,12 @@ module.exports = {
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Workflows_Monitor_Table: commonTable(workflowsMonitorTable),
     Toggle_View_Button: By.css('.workflow-container .actions .toggle-view-btn'),
+    Terminate_Button: By.css('.workflow-container .btn-danger'),
     Workflow_List_View_Table: commonTable(jobsMonitorTable),
     Workflow_Graph: graph(monitorWorkflowGraph),
     Table_Refresh_Button: tableRefreshButton,
-    Monitor_Workflows_Subtitle: By.css('.table-container .monitor-workflows__subtitle')
+    Monitor_Workflows_Subtitle: By.css('.table-container .monitor-workflows__subtitle'),
+    Action_Menu: commonActionMenu,
   },
   ScheduleMonitorTab: {
     Table_Name_Filter_Input: commonTableNameFilter,

@@ -18,11 +18,11 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { upperFirst } from 'lodash'
-import { formatDatetime } from './datetime'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
 
 import Application from 'igz-controls/images/entity-type-application.svg?react'
 import Endpoint from 'igz-controls/images/entity-type-endpoint.svg?react'
-import Error from 'igz-controls/images/severity-warning.svg?react'
+import Error from 'igz-controls/images/notification-badge.svg?react'
 import Critical from 'igz-controls/images/severity-critical.svg?react'
 import Email from 'igz-controls/images/email-icon.svg?react'
 import Git from 'igz-controls/images/git-icon.svg?react'

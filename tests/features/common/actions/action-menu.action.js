@@ -26,14 +26,14 @@ async function getOptionValues(driver, options) {
   })
 }
 
-const action = {
-  openActionMenu: async function(driver, actionMenu) {
+export const openActionMenu =  async (driver, actionMenu) => {
     const element = await driver.findElement(actionMenu.open_button)
     if (element) {
       element.click()
     }
-  },
-  selectOptionInActionMenu: async function(driver, actionMenu, option) {
+  }
+
+export const selectOptionInActionMenu = async (driver, actionMenu, option) => {
     const elements = await driver.findElements(actionMenu.options)
     for (const element of elements) {
       element.getText().then(txt => {
@@ -42,8 +42,9 @@ const action = {
         }
       })
     }
-  },
-  checkActionMenuOptions: async function(driver, actionMenu, values) {
+  }
+
+export const checkActionMenuOptions = async (driver, actionMenu, values) => {
     const options = await getOptionValues(driver, actionMenu.options)
 
     if (options.length === values.length){
@@ -54,8 +55,9 @@ const action = {
       expect(options.length).equal(values.length,
         `Actual options in action menu [${options}] don't match with expected values [${values}]`)
     }
-  },
-  verifyOptionInActionMenuEnabled: async function(driver, actionMenu, option){
+  }
+
+export const verifyOptionInActionMenuEnabled = async (driver, actionMenu, option) => {
     const elements = await driver.findElements(actionMenu.options)
     for (const element of elements) {
       const attributes = await element.getAttribute('class')
@@ -66,8 +68,9 @@ const action = {
         expect(flag).to.equal(false)
       }
     }
-  },
-  verifyOptionInActionMenuDisabled: async function(driver, actionMenu, option){
+  }
+
+export const verifyOptionInActionMenuDisabled = async (driver, actionMenu, option) => {
     const elements = await driver.findElements(actionMenu.options)
     for (const element of elements) {
       const attributes = await element.getAttribute('class')
@@ -79,6 +82,3 @@ const action = {
       }
     }
   }
-}
-
-module.exports = action

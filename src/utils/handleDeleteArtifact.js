@@ -20,8 +20,8 @@ such restriction.
 import { capitalize } from 'lodash'
 import { deleteArtifact } from '../reducers/artifactsReducer'
 import { deleteArtifacts } from '../reducers/artifactsReducer'
-import { setNotification } from '../reducers/notificationReducer'
-import { showErrorNotification } from './notifications.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 export const handleDeleteArtifact = (
   dispatch,

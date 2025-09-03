@@ -20,32 +20,23 @@ such restriction.
 import React from 'react'
 import { cloneDeep, isEmpty, omit } from 'lodash'
 
+import { ARTIFACT_MAX_DOWNLOAD_SIZE, DOCUMENT_TYPE, DOCUMENTS_PAGE } from '../../constants'
 import {
-  ARTIFACT_MAX_DOWNLOAD_SIZE,
-  DOCUMENT_TYPE,
-  DOCUMENTS_PAGE,
-  DOCUMENTS_TAB,
-  FULL_VIEW_MODE,
-  ITERATIONS_FILTER,
-  LABELS_FILTER,
-  NAME_FILTER,
-  SHOW_ITERATIONS,
-  TAG_FILTER,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST
-} from '../../constants'
+  openDeleteConfirmPopUp,
+  openPopUp,
+  getErrorMsg,
+  copyToClipboard
+} from 'igz-controls/utils/common.util'
 import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
-import { copyToClipboard } from '../../utils/copyToClipboard'
 import { generateUri } from '../../utils/resources'
 import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
-import { openDeleteConfirmPopUp, openPopUp, getErrorMsg } from 'igz-controls/utils/common.util'
-import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { FORBIDDEN_ERROR_STATUS_CODE, FULL_VIEW_MODE } from 'igz-controls/constants'
 import { convertChipsData } from '../../utils/convertChipsData'
 import { updateArtifact } from '../../reducers/artifactsReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 import TagIcon from 'igz-controls/images/tag-icon.svg?react'
 import YamlIcon from 'igz-controls/images/yaml.svg?react'
@@ -53,21 +44,6 @@ import Copy from 'igz-controls/images/copy-to-clipboard-icon.svg?react'
 import Delete from 'igz-controls/images/delete.svg?react'
 import DownloadIcon from 'igz-controls/images/download.svg?react'
 import HistoryIcon from 'igz-controls/images/history.svg?react'
-
-export const getFiltersConfig = isAllVersions => ({
-  [NAME_FILTER]: { label: 'Name:', initialValue: '', hidden: isAllVersions },
-  [TAG_FILTER]: {
-    label: 'Version tag:',
-    initialValue: isAllVersions ? TAG_FILTER_ALL_ITEMS : TAG_FILTER_LATEST,
-    isModal: true
-  },
-  [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
-  [ITERATIONS_FILTER]: {
-    label: 'Show best iteration only:',
-    initialValue: isAllVersions ? '' : SHOW_ITERATIONS,
-    isModal: true
-  }
-})
 
 export const detailsMenu = [
   {
@@ -97,14 +73,14 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' }
 ]
 
-export const generatePageData = viewMode => {
+export const generatePageData = (viewMode, isDetailsPopUp = false) => {
   return {
     page: DOCUMENTS_PAGE,
     details: {
-      type: DOCUMENTS_TAB,
+      type: DOCUMENTS_PAGE,
       menu: detailsMenu,
       infoHeaders,
-      hideBackBtn: viewMode === FULL_VIEW_MODE,
+      hideBackBtn: viewMode === FULL_VIEW_MODE && !isDetailsPopUp,
       withToggleViewBtn: true
     }
   }
@@ -128,7 +104,7 @@ export const generateActionsMenu = (
   const isTargetPathValid = getIsTargetPathValid(documentMin ?? {}, frontendSpec)
 
   const getFullDocument = documentMin => {
-    return chooseOrFetchArtifact(dispatch, DOCUMENTS_TAB, selectedDocument, documentMin)
+    return chooseOrFetchArtifact(dispatch, DOCUMENTS_PAGE, null, selectedDocument, documentMin)
   }
 
   return [
@@ -169,7 +145,7 @@ export const generateActionsMenu = (
       {
         label: 'Copy URI',
         icon: <Copy />,
-        onClick: document => copyToClipboard(generateUri(document, DOCUMENTS_TAB), dispatch)
+        onClick: document => copyToClipboard(generateUri(document, DOCUMENTS_PAGE), dispatch)
       },
       {
         label: 'View YAML',

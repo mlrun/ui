@@ -28,7 +28,7 @@ import {
 } from 'igz-controls/constants'
 import { DEFAULT_ABORT_MSG, PROJECT_ONLINE_STATUS, REQUEST_CANCELED } from '../constants'
 import { parseProjects } from '../utils/parseProjects'
-import { showErrorNotification } from '../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { parseSummaryData } from '../utils/parseSummaryData'
 import { mlrunUnhealthyErrors } from '../components/ProjectsPage/projects.util'
 
@@ -50,6 +50,7 @@ const initialState = {
     isUnhealthy: false,
     retrying: false
   },
+  accessibleProjectsMap: {},
   project: {
     data: null,
     error: null,
@@ -149,7 +150,7 @@ export const createNewProject = createAsyncThunk('createNewProject', ({ postData
         error.response?.status === CONFLICT_ERROR_STATUS_CODE
           ? `A project named "${postData.metadata.name}" already exists.`
           : error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'You don’t have permission to create a project.'
+            ? 'Permission denied: Unable to create a project. Contact your system administrator to review user policy and data access permissions.'
             : error.response?.status === INTERNAL_SERVER_ERROR_STATUS_CODE
               ? error.response.data?.detail ||
                 'The system already has the maximum number of projects. An existing project must be deleted before you can create another.'
@@ -261,7 +262,7 @@ export const fetchProjectSummary = createAsyncThunk(
 )
 export const fetchProjects = createAsyncThunk(
   'fetchProjects',
-  ({ params, setRequestErrorMessage = () => {} }, thunkAPI) => {
+  ({ params, setRequestErrorMessage = () => {}, showNotification = true }, thunkAPI) => {
     setRequestErrorMessage('')
 
     return projectsApi
@@ -270,14 +271,17 @@ export const fetchProjects = createAsyncThunk(
         return parseProjects(response.data.projects)
       })
       .catch(error => {
-        showErrorNotification(
-          thunkAPI.dispatch,
-          error,
-          'Failed to fetch projects',
-          null,
-          null,
-          setRequestErrorMessage
-        )
+        if (showNotification) {
+          showErrorNotification(
+            thunkAPI.dispatch,
+            error,
+            'Failed to fetch projects',
+            null,
+            null,
+            setRequestErrorMessage
+          )
+        }
+
         return thunkAPI.rejectWithValue(error)
       })
   }
@@ -374,6 +378,12 @@ const projectStoreSlice = createSlice({
     },
     setProjectTotalAlerts(state, action) {
       state.projectTotalAlerts = { ...action.payload }
+    },
+    setAccessibleProjectsMap(state, action) {
+      state.accessibleProjectsMap = {
+        ...state.accessibleProjectsMap,
+        ...action.payload
+      }
     }
   },
   extraReducers: builder => {
@@ -487,7 +497,7 @@ const projectStoreSlice = createSlice({
     })
     builder.addCase(fetchProjectSecrets.fulfilled, (state, action) => {
       state.project.secrets = {
-        data: action.payload,
+        data: action.payload.data,
         error: null,
         loading: false
       }
@@ -576,7 +586,8 @@ export const {
   setMlrunIsUnhealthy,
   setMlrunUnhealthyRetrying,
   setJobsMonitoringData,
-  setProjectTotalAlerts
+  setProjectTotalAlerts,
+  setAccessibleProjectsMap
 } = projectStoreSlice.actions
 
 export default projectStoreSlice.reducer

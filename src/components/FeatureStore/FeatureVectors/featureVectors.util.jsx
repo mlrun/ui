@@ -29,11 +29,14 @@ import {
 } from '../../../constants'
 import { parseFeatureTemplate } from '../../../utils/parseFeatureTemplate'
 import { parseChipsData } from '../../../utils/convertChipsData'
+import { copyToClipboard } from '../../../utils/copyToClipboard'
+import { generateUri } from '../../../utils/resources'
 
 import Delete from 'igz-controls/images/delete.svg?react'
 import Yaml from 'igz-controls/images/yaml.svg?react'
+import Copy from 'igz-controls/images/copy-to-clipboard-icon.svg?react'
 
-export const generateFeatureVectorsDetailsMenu = (selectedItem, isDemoMode) => [
+export const generateFeatureVectorsDetailsMenu = (selectedItem) => [
   {
     label: 'overview',
     id: 'overview'
@@ -59,8 +62,7 @@ export const generateFeatureVectorsDetailsMenu = (selectedItem, isDemoMode) => [
   },
   {
     label: 'analysis',
-    id: 'analysis',
-    hidden: !isDemoMode
+    id: 'analysis'
   }
 ]
 
@@ -83,18 +85,19 @@ export const filtersConfig = {
   [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
 }
 
-export const generatePageData = (selectedFeatureSet, isDemoMode) => {
+export const generatePageData = (selectedFeatureSet) => {
   return {
     page: FEATURE_STORE_PAGE,
     details: {
       type: FEATURE_VECTORS_TAB,
-      menu: generateFeatureVectorsDetailsMenu(selectedFeatureSet, isDemoMode),
+      menu: generateFeatureVectorsDetailsMenu(selectedFeatureSet),
       infoHeaders: featureSetsInfoHeaders
     }
   }
 }
 
 export const generateActionsMenu = (
+  dispatch,
   onDeleteFeatureVector,
   toggleConvertedYaml,
   isDetailsPopUp = false
@@ -112,6 +115,14 @@ export const generateActionsMenu = (
       className: 'danger',
       onClick: onDeleteFeatureVector,
       allowLeaveWarning: true
+    }
+  ],
+  [
+    {
+      label: 'Copy URI',
+      icon: <Copy />,
+      onClick: featureSet =>
+        copyToClipboard(generateUri(featureSet, null, FEATURE_VECTORS_TAB), dispatch)
     }
   ]
 ]

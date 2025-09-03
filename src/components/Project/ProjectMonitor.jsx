@@ -28,12 +28,12 @@ import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelM
 
 import {
   DATASET_TYPE,
-  DATASETS_TAB,
   DETAILS_BUILD_LOG_TAB,
-  FILES_TAB,
   MODELS_TAB,
   MODEL_TYPE,
-  REQUEST_CANCELED
+  REQUEST_CANCELED,
+  DATASETS_PAGE,
+  FILES_PAGE
 } from '../../constants'
 import {
   fetchProject,
@@ -46,12 +46,13 @@ import { areNuclioStreamsEnabled } from '../../utils/helper'
 import { fetchNuclioV3ioStreams } from '../../reducers/nuclioReducer'
 import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { generateNuclioLink } from '../../utils'
 import { removeFunctionsError, removeNewFunction } from '../../reducers/functionReducer'
 import { removeNewFeatureSet } from '../../reducers/featureStoreReducer'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
-import { useMode } from '../../hooks/mode.hook'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
+import { useMode } from '../../hooks/mode.hook'
 
 const ProjectMonitor = () => {
   const [createFeatureSetPanelIsOpen, setCreateFeatureSetPanelIsOpen] = useState(false)
@@ -60,16 +61,15 @@ const ProjectMonitor = () => {
   const [confirmData, setConfirmData] = useState(null)
   const navigate = useNavigate()
   const params = useParams()
-  const { isDemoMode } = useMode()
   const dispatch = useDispatch()
   const { isNuclioModeDisabled } = useNuclioMode()
+  const { isDemoMode } = useMode()
   const projectAbortControllerRef = useRef(new AbortController())
   const projectSummariesAbortControllerRef = useRef(new AbortController())
   const v3ioStreamsAbortControllerRef = useRef(new AbortController())
   const frontendSpec = useSelector(state => state.appStore.frontendSpec)
   const functionsStore = useSelector(store => store.functionsStore)
   const projectStore = useSelector(store => store.projectStore)
-  const nuclioStore = useSelector((store) => store.nuclioStore)
 
   const registerArtifactLink = useCallback(
     artifactKind =>
@@ -77,8 +77,8 @@ const ProjectMonitor = () => {
         artifactKind === MODEL_TYPE
           ? MODELS_TAB
           : artifactKind === DATASET_TYPE
-            ? DATASETS_TAB
-            : FILES_TAB
+            ? DATASETS_PAGE
+            : FILES_PAGE
       }`,
     [params.projectName]
   )
@@ -87,6 +87,13 @@ const ProjectMonitor = () => {
     () => areNuclioStreamsEnabled(frontendSpec),
     [frontendSpec]
   )
+
+  const openRegisterModelModal = useCallback(() => {
+    openPopUp(RegisterModelModal, {
+      params: params,
+      refresh: () => navigate(registerArtifactLink(MODEL_TYPE))
+    })
+  }, [params, navigate, registerArtifactLink])
 
   const openRegisterArtifactModal = useCallback(
     artifactKind => {
@@ -99,19 +106,13 @@ const ProjectMonitor = () => {
     },
     [navigate, params, registerArtifactLink]
   )
-
-  const openRegisterModelModal = useCallback(() => {
-    openPopUp(RegisterModelModal, {
-      params: params,
-      refresh: () => navigate(registerArtifactLink(MODEL_TYPE))
-    })
-  }, [params, navigate, registerArtifactLink])
-
   const { createNewOptions } = useMemo(() => {
     const createNewOptions = generateCreateNewOptions(
       navigate,
       params,
       openRegisterArtifactModal,
+      generateNuclioLink,
+      openPopUp,
       openRegisterModelModal,
       setCreateFeatureSetPanelIsOpen,
       setIsNewFunctionPopUpOpen,
@@ -121,7 +122,7 @@ const ProjectMonitor = () => {
     return {
       createNewOptions
     }
-  }, [isDemoMode, navigate, params, openRegisterArtifactModal, openRegisterModelModal])
+  }, [navigate, params, openRegisterArtifactModal, openRegisterModelModal, isDemoMode])
 
   const fetchProjectDataAndSummary = useCallback(() => {
     projectAbortControllerRef.current = new AbortController()
@@ -171,7 +172,12 @@ const ProjectMonitor = () => {
     if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {
       v3ioStreamsAbortControllerRef.current = new AbortController()
 
-      dispatch(fetchNuclioV3ioStreams({ project: params.projectName, signal: v3ioStreamsAbortControllerRef.current.signal }))
+      dispatch(
+        fetchNuclioV3ioStreams({
+          project: params.projectName,
+          signal: v3ioStreamsAbortControllerRef.current.signal
+        })
+      )
     }
   }, [isNuclioModeDisabled, params.projectName, nuclioStreamsAreEnabled, dispatch])
 
@@ -285,7 +291,12 @@ const ProjectMonitor = () => {
     if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {
       v3ioStreamsAbortControllerRef.current = new AbortController()
 
-      dispatch(fetchNuclioV3ioStreams({ project: params.projectName, signal: v3ioStreamsAbortControllerRef.current.signal }))
+      dispatch(
+        fetchNuclioV3ioStreams({
+          project: params.projectName,
+          signal: v3ioStreamsAbortControllerRef.current.signal
+        })
+      )
     }
   }
 
@@ -303,7 +314,6 @@ const ProjectMonitor = () => {
         handleDeployFunctionSuccess={handleDeployFunctionSuccess}
         handleLaunchIDE={handleLaunchIDE}
         isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
-        isNuclioModeDisabled={isNuclioModeDisabled}
         navigate={navigate}
         nuclioStreamsAreEnabled={nuclioStreamsAreEnabled}
         params={params}
@@ -313,7 +323,6 @@ const ProjectMonitor = () => {
         setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}
         setShowFunctionsPanel={setShowFunctionsPanel}
         showFunctionsPanel={showFunctionsPanel}
-        v3ioStreams={nuclioStore.v3ioStreams}
       />
     </>
   )

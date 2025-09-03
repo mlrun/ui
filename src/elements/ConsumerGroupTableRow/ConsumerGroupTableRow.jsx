@@ -21,7 +21,7 @@ import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import TableCell from '../TableCell/TableCell'
+import { TableCell } from 'igz-controls/components'
 
 import { getV3ioStreamIdentifier } from '../../utils/getUniqueIdentifier'
 
@@ -29,7 +29,8 @@ const ConsumerGroupTableRow = ({ content, rowItem }) => {
   const parent = useRef()
   const rowClassNames = classnames('table-row', 'parent-row')
   const currentItem = content.find(
-    contentItem => getV3ioStreamIdentifier(contentItem) === rowItem.consumerGroup?.identifierUnique
+    contentItem =>
+      getV3ioStreamIdentifier(contentItem, true) === rowItem.consumerGroup?.identifierUnique
   )
 
   return (
@@ -38,7 +39,7 @@ const ConsumerGroupTableRow = ({ content, rowItem }) => {
         return (
           !rowItemProp.hidden && (
             <TableCell
-              data={rowItemProp}
+              cellData={rowItemProp}
               item={currentItem}
               key={rowItemProp.id}
               link={rowItemProp.getLink ? rowItemProp.getLink?.() : ''}

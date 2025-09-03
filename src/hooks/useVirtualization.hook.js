@@ -19,7 +19,7 @@ such restriction.
 */
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { isEmpty, isEqual, sum, throttle } from 'lodash'
-import { MAIN_TABLE_ID, MAIN_TABLE_BODY_ID } from '../constants'
+import { MAIN_TABLE_ID, MAIN_TABLE_BODY_ID } from 'igz-controls/constants'
 
 const HIDDEN_RENDER_ITEMS_LENGTH = 5
 const virtualizationConfigInitialState = {

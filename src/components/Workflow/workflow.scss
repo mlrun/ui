@@ -6,6 +6,19 @@
   flex-direction: column;
   width: 100%;
 
+  .workflow__actions {
+    &-container {
+      align-items: center;
+      flex-direction: row;
+      gap: 2px;
+      display: flex;
+    }
+    svg {
+      padding: 0;
+      height: 14px;
+      width: 14px;
+    }
+  }
   .workflow-content {
     flex-direction: column;
 

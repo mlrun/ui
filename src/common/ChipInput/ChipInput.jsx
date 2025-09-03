@@ -21,10 +21,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import Chip from '../Chip/Chip'
-
-import { deleteUnsafeHtml } from '../../utils'
-import { CHIP_INPUT_LIST, CHIP_OPTIONS } from '../../types'
+import { Chip } from 'igz-controls/components'
+import { deleteUnsafeHtml } from 'igz-controls/utils/string.util'
+import { CHIP_INPUT_LIST, CHIP_OPTIONS } from 'igz-controls/types'
 
 import './chipInput.scss'
 

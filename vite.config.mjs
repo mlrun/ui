@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
       : null
 
   return {
-    plugins: [commonjs(), react(), federationPlugin, svgr(), eslint()],
+    plugins: [commonjs(), react(),federationPlugin, svgr(), eslint({ failOnError: false })],
     base: env.NODE_ENV === 'production' ? env.VITE_BASE_URL : '/',
     server: {
       proxy: {
@@ -95,7 +95,7 @@ export default defineConfig(({ mode }) => {
       ]
     },
     optimizeDeps: {
-      force: true
+      force: true,
     },
     build: {
       target: 'esnext',
@@ -104,8 +104,10 @@ export default defineConfig(({ mode }) => {
       chunkSizeWarningLimit: 3000
     },
     css: {
+      devSourcemap: true,
       preprocessorOptions: {
         scss: {
+          sourceMap: true,
           api: 'modern'
         }
       }

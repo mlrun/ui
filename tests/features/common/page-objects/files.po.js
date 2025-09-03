@@ -94,7 +94,7 @@ const filesTable = {
   }
 }
 
-module.exports = {
+export default {
   filesTab: {
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(

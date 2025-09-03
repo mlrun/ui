@@ -25,12 +25,18 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import JobWizard from '../../components/JobWizard/JobWizard'
 import JobsTableRow from '../JobsTableRow/JobsTableRow'
-import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Pagination from '../../common/Pagination/Pagination'
 import Table from '../../components/Table/Table'
+import { Loader } from 'igz-controls/components'
 
-import { JOB_KIND_JOB, JOBS_PAGE, MONITOR_JOBS_TAB, PANEL_RERUN_MODE } from '../../constants'
+import {
+  JOB_KIND_JOB,
+  JOBS_MONITORING_JOBS_TAB,
+  JOBS_PAGE,
+  MONITOR_JOBS_TAB,
+  PANEL_RERUN_MODE
+} from '../../constants'
 import {
   enrichRunWithFunctionFields,
   handleAbortJob,
@@ -47,10 +53,11 @@ import { getCloseDetailsLink, isDetailsTabExists } from '../../utils/link-helper
 import { getJobLogs } from '../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { setNotification } from '../../reducers/notificationReducer'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { toggleYaml } from '../../reducers/appReducer'
 import { usePods } from '../../hooks/usePods.hook'
 import { getInitialFiltersByConfig } from '../../hooks/useFiltersFromSearchParams.hook'
+import { useTableScroll } from 'igz-controls/hooks/useTable.hook'
 
 import './jobsTable.scss'
 
@@ -62,6 +69,7 @@ const JobsTable = React.forwardRef(
       context,
       filters,
       filtersConfig,
+      jobs = null,
       jobRuns = null,
       paginatedJobs,
       refreshJobs,
@@ -109,8 +117,16 @@ const JobsTable = React.forwardRef(
     )
 
     const handleFetchJobLogs = useCallback(
-      (item, projectName, setDetailsLogs, streamLogsRef) => {
-        return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, dispatch)
+      (item, projectName, setDetailsLogs, streamLogsRef, runAttempt, signal) => {
+        return getJobLogs(
+          item.uid,
+          projectName,
+          streamLogsRef,
+          setDetailsLogs,
+          dispatch,
+          runAttempt,
+          signal
+        )
       },
       [dispatch]
     )
@@ -283,9 +299,11 @@ const JobsTable = React.forwardRef(
     ])
 
     const refreshJobsWithFilters = useCallback(
-      useInitialFilter => {
-        const initialJobFilters = getInitialFiltersByConfig(filtersConfig)
-        refreshJobs(useInitialFilter ? initialJobFilters : filters, { forceFetchJobs: true })
+      (useInitialFilter, isSchedule) => {
+        if (!isSchedule) {
+          const initialJobFilters = getInitialFiltersByConfig(filtersConfig)
+          refreshJobs(useInitialFilter ? initialJobFilters : filters, { forceFetchJobs: true })
+        }
       },
       [filters, refreshJobs, filtersConfig]
     )
@@ -310,7 +328,8 @@ const JobsTable = React.forwardRef(
           defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
           mode: jobWizardMode,
           wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Batch re-run' : undefined,
-          onSuccessRequest: refreshJobsWithFilters
+          onSuccessRequest: refreshJobsWithFilters,
+          isCrossProjects: !params.projectName
         })
 
         setJobWizardIsOpened(true)
@@ -319,7 +338,6 @@ const JobsTable = React.forwardRef(
       editableItem?.rerun_object,
       jobWizardIsOpened,
       jobWizardMode,
-      filters,
       params,
       refreshJobsWithFilters,
       setEditableItem,
@@ -331,6 +349,7 @@ const JobsTable = React.forwardRef(
       checkForSelectedJob(
         paginatedJobs,
         jobRuns,
+        jobs,
         params.jobName,
         params.jobId,
         params.projectName,
@@ -356,7 +375,8 @@ const JobsTable = React.forwardRef(
       modifyAndSelectRun,
       dispatch,
       setSearchParams,
-      lastCheckedJobIdRef
+      lastCheckedJobIdRef,
+      jobs
     ])
 
     useEffect(() => {
@@ -364,6 +384,12 @@ const JobsTable = React.forwardRef(
         lastCheckedJobIdRef.current = null
       }
     }, [lastCheckedJobIdRef, selectedJob])
+
+    useTableScroll({
+      content: paginatedJobs,
+      selectedItem: selectedJob,
+      isAllVersions: true
+    })
 
     return (
       <>
@@ -384,7 +410,12 @@ const JobsTable = React.forwardRef(
             <>
               <Table
                 actionsMenu={actionsMenu}
-                getCloseDetailsLink={() => getCloseDetailsLink(params.jobName)}
+                getCloseDetailsLink={() =>
+                  getCloseDetailsLink(
+                    params.jobName ||
+                      (params.projectName ? MONITOR_JOBS_TAB : JOBS_MONITORING_JOBS_TAB)
+                  )
+                }
                 handleCancel={() => setSelectedJob({})}
                 pageData={pageData}
                 selectedItem={selectedJob}
@@ -445,7 +476,7 @@ JobsTable.propTypes = {
   filters: PropTypes.object.isRequired,
   filtersConfig: FILTERS_CONFIG.isRequired,
   jobRuns: PropTypes.array,
-  jobs: PropTypes.array.isRequired,
+  jobs: PropTypes.array,
   paginatedJobs: PropTypes.array.isRequired,
   refreshJobs: PropTypes.func.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,

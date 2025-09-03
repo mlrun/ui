@@ -33,7 +33,8 @@ Feature: Jobs Monitoring Page
         Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitoring_Jobs_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
         Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
-        Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then verify "Status_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
         Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then verify "Status_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Jobs_Status_Filter_Options"
@@ -57,7 +58,7 @@ Feature: Jobs Monitoring Page
         Then verify "Jobs" tab is active in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Jobs_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Workflows_Tab" wizard selected option value "Any time"
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
-        Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "3 items selected"
+        Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "4 items selected"
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         And wait load page
         Then click on "Status_Filter_Element" element on "FilterBy_Popup" wizard
@@ -65,6 +66,7 @@ Feature: Jobs Monitoring Page
         Then "Status_Aborting_Checkbox" element should be checked on "FilterBy_Popup" wizard
         Then "Status_Jobs_Running_Checkbox" element should be checked on "FilterBy_Popup" wizard
         Then "Status_Pending_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Status_Pending_retry_Checkbox" element should be checked on "FilterBy_Popup" wizard
         Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
         Then click on breadcrumbs "projectsPage" label on "commonPagesHeader" wizard
         And wait load page
@@ -112,8 +114,8 @@ Feature: Jobs Monitoring Page
         When click on "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
-        Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
-        Then type value "test" to "Table_Project_Filter_Input" field on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        When select "churn-project-admin" option in "Project_Name_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
         And wait load page
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
@@ -139,8 +141,9 @@ Feature: Jobs Monitoring Page
         And select "Scheduled" tab in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Scheduled_Tab" wizard
         And select "Jobs" tab in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Jobs_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
-        Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
-        Then type value "cat-vs-dog-classification" to "Table_Project_Filter_Input" field on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        When select "cat-vs-dog-classification" option in "Project_Name_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "project_name" column with "text" in "Jobs_Table" on "Jobs_Monitoring_Jobs_Tab" wizard should contains "cat-vs-dog-classification"
@@ -539,7 +542,8 @@ Feature: Jobs Monitoring Page
         Then verify "Workflows_Table" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
         Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
-        Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then verify "Status_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
         Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then verify "Status_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Workflows_Status_Filter_Options"
@@ -603,8 +607,8 @@ Feature: Jobs Monitoring Page
         When click on "Total_Counter_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
         And wait load page
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
-        Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
-        Then type value "test" to "Table_Project_Filter_Input" field on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        When select "auto-generated-data" option in "Project_Name_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
         And wait load page
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
@@ -641,8 +645,9 @@ Feature: Jobs Monitoring Page
         And select "Scheduled" tab in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Scheduled_Tab" wizard
         And select "Workflows" tab in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Workflows_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
-        Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
-        Then type value "cat-vs-dog-classification" to "Table_Project_Filter_Input" field on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        When select "cat-vs-dog-classification" option in "Project_Name_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "project_name" column with "text" in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard should contains "cat-vs-dog-classification"
@@ -677,8 +682,178 @@ Feature: Jobs Monitoring Page
         Then verify "Workflows_Table" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
         Then verify that 3 row elements are displayed in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard
         When pick up "Custom range" from "09/03/2024 00:00" to "09/04/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
         Then verify from "09/03/2024 00:00" to "09/04/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Workflows_Tab" wizard
         And wait load page
+
+    @MLJM
+    @smoke
+    Scenario: MLJM015 - Check the Terminate functionality on Workflows tab of Jobs monitoring page with running status
+        Given open url
+        And wait load page
+        When click on "Total_Counter_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
+        And wait load page
+        Then verify redirection to "projects/*/jobs-monitoring/workflows?state=all"
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Workflows_Tab" wizard selected option value "Any time"
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        When select "stocks-admin" option in "Project_Name_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then verify options in action menu on "Jobs_Monitoring_Workflows_Tab" wizard in "Workflows_Table" table with "Running" value in "status" column should contains "Jobs_And_Workflows"."Workflows_Running_Action_Menu_Options"
+        Then check that "Terminate" option in action menu on "Jobs_Monitoring_Workflows_Tab" wizard is enabled
+        And wait load page
+        Then select "Terminate" option in action menu on "Jobs_Monitoring_Workflows_Tab" wizard in "Workflows_Table" table at row with "main 2021-08-30 05-36-35" value in "name" column
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then "Title" element on "Confirm_Popup" should contains "Terminate workflow" value
+        Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
+        Then verify "Confirm_Dialog_Message" element visibility on "Confirm_Popup" wizard
+        Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Jobs_And_Workflows"."Terminate_Workflow_Message"
+        Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
+        Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
+        Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
+        Then "Delete_Button" element on "Confirm_Popup" should contains "Terminate" value
+        When click on "Cancel_Button" element on "Confirm_Popup" wizard
+        Then select "Terminate" option in action menu on "Jobs_Monitoring_Workflows_Tab" wizard in "Workflows_Table" table at row with "main 2021-08-30 05-36-35" value in "name" column
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
+        When click on "Cross_Cancel_Button" element on "Confirm_Popup" wizard
+        Then select "Terminate" option in action menu on "Jobs_Monitoring_Workflows_Tab" wizard in "Workflows_Table" table at row with "main 2021-08-30 05-36-35" value in "name" column
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
+        When click on "Delete_Button" element on "Confirm_Popup" wizard
+        And wait load page
+        Then verify if "Notification_Popup" popup dialog appears
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Unsuccessful_Terminate_Message"
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Table" table on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
+        Then verify "Terminate_Button" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" should contains "Terminate" value
+        Then verify "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard is enabled
+        Then click on "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
+        When click on "Cancel_Button" element on "Confirm_Popup" wizard
+        Then click on "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
+        When click on "Cross_Cancel_Button" element on "Confirm_Popup" wizard
+        Then click on "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
+        When click on "Delete_Button" element on "Confirm_Popup" wizard
+        And wait load page
+        Then verify if "Notification_Popup" popup dialog appears
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Unsuccessful_Terminate_Message"
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then verify "Toggle_View_Button" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then click on "Toggle_View_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
+        Then verify "Workflow_List_View_Table" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify "Terminate_Button" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" should contains "Terminate" value
+        Then verify "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard is enabled
+        Then click on "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
+        When click on "Cancel_Button" element on "Confirm_Popup" wizard
+        Then click on "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
+        When click on "Cross_Cancel_Button" element on "Confirm_Popup" wizard
+        Then click on "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
+        When click on "Delete_Button" element on "Confirm_Popup" wizard
+        And wait load page
+        Then verify if "Notification_Popup" popup dialog appears
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Unsuccessful_Terminate_Message"
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        When click on cell with row index 1 in "name" column in "Workflow_List_View_Table" table on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
+        Then verify "Header" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Updated" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Cross_Close_Button" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Info_Pane_Tab_Selector" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Tab_List"
+        Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Terminate_Button" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" should contains "Terminate" value
+        Then verify "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard is enabled
+        Then click on "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
+        When click on "Cancel_Button" element on "Confirm_Popup" wizard
+        Then click on "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
+        When click on "Cross_Cancel_Button" element on "Confirm_Popup" wizard
+        Then click on "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify if "Confirm_Popup" popup dialog appears
+        Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
+        When click on "Delete_Button" element on "Confirm_Popup" wizard
+        And wait load page
+        Then verify if "Notification_Popup" popup dialog appears
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Unsuccessful_Terminate_Message"
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+
+    @MLJM
+    @smoke
+    Scenario: MLJM016 - Check the Terminate functionality on Workflows tab of Jobs monitoring page with compleated status
+        Given open url
+        And wait load page
+        When click on "Total_Counter_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
+        And wait load page
+        Then verify redirection to "projects/*/jobs-monitoring/workflows?state=all"
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Workflows_Tab" wizard selected option value "Any time"
+        Then verify "Workflows" tab is active in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify options in action menu on "Jobs_Monitoring_Workflows_Tab" wizard in "Workflows_Table" table with "Completed" value in "status" column should contains "Jobs_And_Workflows"."Workflows_Action_Menu_Options"
+        Then check that "Terminate" option in action menu on "Jobs_Monitoring_Workflows_Tab" wizard is disabled
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        When select "cat-vs-dog-classification" option in "Project_Name_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Workflows_Table" table on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
+        Then verify "Terminate_Button" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" should contains "Terminate" value
+        Then verify "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard is disabled
+        Then verify "Toggle_View_Button" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then click on "Toggle_View_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
+        Then verify "Workflow_List_View_Table" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify "Terminate_Button" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" should contains "Terminate" value
+        Then verify "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard is disabled
+        When click on cell with row index 1 in "name" column in "Workflows_Table" table on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
+        Then verify "Header" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Updated" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Cross_Close_Button" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Info_Pane_Tab_Selector" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Tab_List"
+        Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Terminate_Button" element visibility on "Workflows_Monitor_Tab" wizard
+        Then "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" should contains "Terminate" value
+        Then verify "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard is disabled
     
     @MLJM
     @smoke
@@ -776,7 +951,8 @@ Feature: Jobs Monitoring Page
         Then verify "Scheduled_Table" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
-        Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then verify "Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then verify "Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Scheduled_Type_Filter_Options"
@@ -809,7 +985,8 @@ Feature: Jobs Monitoring Page
         Then verify "Scheduled_Table" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
-        Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then verify "Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Job"
         Then verify "Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Scheduled_Type_Filter_Options"
@@ -837,7 +1014,8 @@ Feature: Jobs Monitoring Page
         Then verify "Table_FilterBy_Button" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
-        Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then verify "Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Workflow"
         Then verify "Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Scheduled_Type_Filter_Options"
@@ -858,8 +1036,9 @@ Feature: Jobs Monitoring Page
         And wait load page
         Then verify redirection to "projects/*/jobs-monitoring/scheduled?type=all"
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
-        Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
-        Then type value "test" to "Table_Project_Filter_Input" field on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        When select "auto-generated-data" option in "Project_Name_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
         And wait load page
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
@@ -886,10 +1065,13 @@ Feature: Jobs Monitoring Page
         Then verify that 2 row elements are displayed in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then value in "name" column with "text" in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard should contains "clean"
         And select "Workflows" tab in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
         And select "Scheduled" tab in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
-        Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
-        Then type value "default" to "Table_Project_Filter_Input" field on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        When select "default" option in "Project_Name_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        And wait load page
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "project_name" column with "text" in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard should contains "default"
@@ -925,6 +1107,8 @@ Feature: Jobs Monitoring Page
         Then verify "Scheduled_Table" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then verify that 8 row elements are displayed in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard
         When pick up "Custom range" from "09/03/2024 00:00" to "09/04/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitoring_Scheduled_Tab" wizard
+        And wait load page
+        And wait load page
         Then verify from "09/03/2024 00:00" to "09/04/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard
         And wait load page
     

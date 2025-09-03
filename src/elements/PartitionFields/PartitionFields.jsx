@@ -20,11 +20,11 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { ErrorMessage } from 'igz-controls/components'
 import RangeInput from '../../common/RangeInput/RangeInput'
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
 import CheckBox from '../../common/CheckBox/CheckBox'
-import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import RadioButtons from '../../common/RadioButtons/RadioButtons'
 
 import {

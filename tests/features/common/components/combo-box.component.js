@@ -21,7 +21,7 @@ import { By } from 'selenium-webdriver'
 import dropdownComponent from './dropdown.component'
 import { generateDropdownGroup } from '../../common-tools/common-tools'
 
-module.exports = function(comboBoxRoot, newClassLocator = false) {
+export default function(comboBoxRoot, newClassLocator = false) {
   const element = {}
   element.root = By.css(comboBoxRoot)
 

@@ -257,7 +257,7 @@ const tableNameFilterInput = inputGroup(
   )
 )
 
-module.exports = {
+export default {
   modelsTab: {
     Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
     Models_Tab_Selector: commonTable(tabSelector),

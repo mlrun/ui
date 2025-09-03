@@ -19,9 +19,12 @@ such restriction.
 */
 import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Chart } from 'chart.js/auto'
-import Loader from '../Loader/Loader'
+import { Chart } from 'chart.js'
 import classnames from 'classnames'
+
+import { Loader } from 'igz-controls/components'
+
+import './mlChart.scss'
 
 const defaultOnChartCreated = () => {}
 
@@ -55,11 +58,11 @@ const MlChart = ({
           ...config.options,
           animation: {
             ...config.options.animation,
-            onComplete: () => {
+            onComplete: (...args) => {
               showLoader && setIsLoading(false)
 
               if (config?.options?.animation?.onComplete) {
-                config.options.animation.onComplete()
+                config.options.animation.onComplete(...args)
               }
             }
           }

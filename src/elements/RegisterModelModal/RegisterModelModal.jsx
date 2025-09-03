@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your` compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
@@ -25,28 +25,30 @@ import { createForm } from 'final-form'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { v4 as uuidv4 } from 'uuid'
-import { isEmpty } from 'lodash'
 
-import { ConfirmDialog } from 'igz-controls/components'
 import TargetPath from '../../common/TargetPath/TargetPath'
-import { Button, Modal, FormChipCell, FormInput, FormTextarea } from 'igz-controls/components'
+import { Button, Modal, FormChipCell, FormInput, FormTextarea, Loader } from 'igz-controls/components'
 
 import artifactApi from '../../api/artifacts-api'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
-import { MODAL_SM, TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
+import {
+  MODAL_SM,
+  TERTIARY_BUTTON,
+  PRIMARY_BUTTON,
+  FORBIDDEN_ERROR_STATUS_CODE
+} from 'igz-controls/constants'
 import { convertChipsData } from '../../utils/convertChipsData'
-import { getChipOptions } from '../../utils/getChipOptions'
+import { getChipOptions } from 'igz-controls/utils/chips.util'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
-import { createModelMessages } from '../../utils/createArtifact.util'
 import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
-import { openPopUp } from 'igz-controls/utils/common.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
+import { processActionAfterTagUniquesValidation } from '../../utils/artifacts.util'
 
 import './RegisterModelModal.scss'
 
 function RegisterModelModal({ actions = null, isOpen, onResolve, params, refresh }) {
+  const [isLoading, setIsLoading] = useState(false)
   const initialValues = {
     metadata: {
       description: undefined,
@@ -115,47 +117,21 @@ function RegisterModelModal({ actions = null, isOpen, onResolve, params, refresh
       })
     }
 
-    return artifactApi
-      .getExpandedArtifact(params.projectName, values.metadata.key, values.metadata.tag ?? 'latest')
-      .then(response => {
-        if (response?.data) {
-          if (!isEmpty(response.data.artifacts)) {
-            return new Promise((resolve, reject) => {
-              openPopUp(ConfirmDialog, {
-                confirmButton: {
-                  label: 'Overwrite',
-                  variant: PRIMARY_BUTTON,
-                  handler: (...args) => {
-                    handleRegisterModel(...args)
-                      .then(resolve)
-                      .catch(reject)
-                  }
-                },
-                cancelButton: {
-                  label: 'Cancel',
-                  variant: TERTIARY_BUTTON,
-                  handler: () => reject()
-                },
-                closePopUp: () => reject(),
-                header: createModelMessages.overwriteConfirmTitle,
-                message: createModelMessages.getOverwriteConfirmMessage(
-                  response.data.artifacts[0].kind
-                )
-              })
-            })
-          } else {
-            return handleRegisterModel()
-          }
-        }
-      })
-      .catch(error => {
-        if (error) {
-          showErrorNotification(dispatch, error, '', 'Model failed to initiate', () =>
-            registerModel(values)
-          )
-          resolveModal()
-        }
-      })
+    return processActionAfterTagUniquesValidation({
+      tag: values.metadata.tag ?? 'latest',
+      artifact: data,
+      projectName: params.projectName,
+      dispatch,
+      actionCallback: handleRegisterModel,
+      getCustomErrorMsg: error => {
+        return error?.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+          ? 'You do not have permission to create a new resource'
+          : 'Model failed to initiate'
+      },
+      onErrorCallback: resolveModal,
+      showLoader: () => setIsLoading(true),
+      hideLoader: () => setIsLoading(false)
+    })
   }
 
   const getModalActions = formState => {
@@ -181,67 +157,70 @@ function RegisterModelModal({ actions = null, isOpen, onResolve, params, refresh
     <Form form={formRef.current} onSubmit={registerModel}>
       {formState => {
         return (
-          <Modal
-            actions={getModalActions(formState)}
-            className="register-model form"
-            location={location}
-            onClose={handleCloseModal}
-            show={isOpen}
-            size={MODAL_SM}
-            title="Register model"
-          >
-            <div className="form-row">
-              <div className="form-col-2">
-                <FormInput
-                  async
-                  label="Name"
-                  name="metadata.key"
+          <>
+            {isLoading && <Loader />}
+            <Modal
+              actions={getModalActions(formState)}
+              className="register-model form"
+              location={location}
+              onClose={handleCloseModal}
+              show={isOpen}
+              size={MODAL_SM}
+              title="Register model"
+            >
+              <div className="form-row">
+                <div className="form-col-2">
+                  <FormInput
+                    async
+                    label="Name"
+                    name="metadata.key"
+                    required
+                    validationRules={getValidationRules('artifact.name')}
+                  />
+                </div>
+                <div className="form-col-1">
+                  <FormInput
+                    label="Tag"
+                    name="metadata.tag"
+                    validationRules={getValidationRules('common.tag')}
+                    placeholder="latest"
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <FormTextarea name="metadata.description" label="Description" maxLength={500} />
+              </div>
+              <div className="form-row">
+                <TargetPath
+                  formState={formState}
+                  formStateFieldInfo="spec.target_path.fieldInfo"
+                  hiddenSelectOptionsIds={[MLRUN_STORAGE_INPUT_PATH_SCHEME]}
+                  label="Target Path"
+                  name="spec.target_path.path"
+                  params={params}
                   required
-                  validationRules={getValidationRules('artifact.name')}
+                  selectPlaceholder="Path Scheme"
+                  setFieldState={formState.form.mutators.setFieldState}
                 />
               </div>
-              <div className="form-col-1">
-                <FormInput
-                  label="Tag"
-                  name="metadata.tag"
-                  validationRules={getValidationRules('common.tag')}
-                  placeholder="latest"
+              <div className="form-row">
+                <FormChipCell
+                  chipOptions={getChipOptions('metrics')}
+                  formState={formState}
+                  initialValues={initialValues}
+                  isEditable
+                  label="labels"
+                  name="metadata.labels"
+                  shortChips
+                  visibleChipsMaxLength="all"
+                  validationRules={{
+                    key: getValidationRules('common.tag'),
+                    value: getValidationRules('common.tag')
+                  }}
                 />
               </div>
-            </div>
-            <div className="form-row">
-              <FormTextarea name="metadata.description" label="Description" maxLength={500} />
-            </div>
-            <div className="form-row">
-              <TargetPath
-                formState={formState}
-                formStateFieldInfo="spec.target_path.fieldInfo"
-                hiddenSelectOptionsIds={[MLRUN_STORAGE_INPUT_PATH_SCHEME]}
-                label="Target Path"
-                name="spec.target_path.path"
-                params={params}
-                required
-                selectPlaceholder="Path Scheme"
-                setFieldState={formState.form.mutators.setFieldState}
-              />
-            </div>
-            <div className="form-row">
-              <FormChipCell
-                chipOptions={getChipOptions('metrics')}
-                formState={formState}
-                initialValues={initialValues}
-                isEditable
-                label="labels"
-                name="metadata.labels"
-                shortChips
-                visibleChipsMaxLength="all"
-                validationRules={{
-                  key: getValidationRules('common.tag'),
-                  value: getValidationRules('common.tag')
-                }}
-              />
-            </div>
-          </Modal>
+            </Modal>
+          </>
         )
       }}
     </Form>

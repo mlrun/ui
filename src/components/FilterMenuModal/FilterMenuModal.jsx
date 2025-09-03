@@ -30,6 +30,7 @@ import { PopUpDialog, RoundedIcon, Button } from 'igz-controls/components'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { isTargetElementInContainerElement } from '../../utils/checkElementsPosition.utils'
 import { setModalFiltersValues } from '../../reducers/filtersReducer'
+import { performDetailsActionHelper } from '../Details/details.util'
 
 import FilterIcon from 'igz-controls/images/filter.svg?react'
 
@@ -42,6 +43,7 @@ const FilterMenuModal = ({
   applyButton = { label: 'Apply', variant: PRIMARY_BUTTON },
   cancelButton = { label: 'Clear', variant: TERTIARY_BUTTON },
   children,
+  detailsChanges = null,
   filterMenuName = '',
   header = 'Filter by',
   initialValues,
@@ -133,22 +135,30 @@ const FilterMenuModal = ({
     setFiltersWizardIsShown(false)
   }
 
-  const handleClearFilters = (formState, counter) => {
+  const handleClearFilters = async (formState, counter) => {
     if (!isEqual(initialValues, formState.values)) {
-      formRef.current.restart(initialValues)
-      setFiltersWizardIsShown(false)
+      let actionCanBePerformed = true
 
-      if (counter > 0) {
-        if (filterMenuName) {
-          dispatch(
-            setModalFiltersValues({
-              name: filterMenuName,
-              value: initialValues
-            })
-          )
+      if (detailsChanges) {
+        actionCanBePerformed = await performDetailsActionHelper(detailsChanges, dispatch, true)
+      }
+
+      if (actionCanBePerformed) {
+        formRef.current.restart(initialValues)
+        setFiltersWizardIsShown(false)
+
+        if (counter > 0) {
+          if (filterMenuName) {
+            dispatch(
+              setModalFiltersValues({
+                name: filterMenuName,
+                value: initialValues
+              })
+            )
+          }
+
+          applyChanges && applyChanges(initialValues, true)
         }
-
-        applyChanges && applyChanges(initialValues)
       }
     }
   }
@@ -226,6 +236,7 @@ FilterMenuModal.propTypes = {
     variant: PropTypes.string.isRequired
   }),
   children: PropTypes.node.isRequired,
+  detailsChanges: PropTypes.object,
   filterMenuName: PropTypes.string,
   header: PropTypes.string,
   initialValues: PropTypes.object.isRequired,

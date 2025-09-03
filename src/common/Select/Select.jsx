@@ -24,7 +24,8 @@ import classNames from 'classnames'
 import { ConfirmDialog, Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
 import { SelectOption } from 'igz-controls/elements'
 
-import { DENSITY_OPTIONS, SELECT_OPTIONS } from '../../types'
+import { SELECT_OPTIONS } from '../../types'
+import { DENSITY_OPTIONS } from 'igz-controls/types'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import Caret from 'igz-controls/images/dropdown.svg?react'
@@ -41,10 +42,13 @@ const Select = ({
   labelAtTop = false,
   onClick = null,
   options,
+  popUpClassName = 'select__body',
+  position = 'bottom-right',
   search = false,
   selectType = '',
   selectedId = '',
   selectedItemAction = null,
+  width = '',
   withoutBorder = false,
   withSelectedIcon = false
 }) => {
@@ -198,11 +202,11 @@ const Select = ({
           headerIsHidden
           customPosition={{
             element: selectRef,
-            position: 'bottom-right'
+            position: position
           }}
-          style={{ width: `${dropdownWidth}px` }}
+          style={{ width: `${width || dropdownWidth}px` }}
         >
-          <div data-testid="select-body" className="select__body" onClick={handleCloseSelectBody}>
+          <div data-testid="select-body" className={popUpClassName} onClick={handleCloseSelectBody}>
             {search && (
               <div className="select__search">
                 <input
@@ -249,10 +253,13 @@ Select.propTypes = {
   labelAtTop: PropTypes.bool,
   onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   options: SELECT_OPTIONS.isRequired,
+  popUpClassName: PropTypes.string,
+  position: PropTypes.string,
   search: PropTypes.bool,
   selectType: PropTypes.string,
   selectedId: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   selectedItemAction: PropTypes.object,
+  width: PropTypes.string,
   withSelectedIcon: PropTypes.bool,
   withoutBorder: PropTypes.bool
 }

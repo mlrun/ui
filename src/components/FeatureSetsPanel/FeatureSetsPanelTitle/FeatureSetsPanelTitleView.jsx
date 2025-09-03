@@ -30,7 +30,7 @@ import {
   getValidationRules,
   getInternalLabelsValidationRule
 } from 'igz-controls/utils/validation.util'
-import { getChipOptions } from '../../../utils/getChipOptions'
+import { getChipOptions } from 'igz-controls/utils/chips.util'
 
 import CloseIcon from 'igz-controls/images/close.svg?react'
 

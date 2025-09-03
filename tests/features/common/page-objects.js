@@ -34,8 +34,9 @@ import models from './page-objects/models.po'
 import documents from './page-objects/documents.po'
 import alerts from './page-objects/alerts.po'
 import monitoringApp from './page-objects/monitoring-app.po'
+import llmPrompts from './page-objects/llm-prompts.po'
 
-module.exports = {
+export default {
   Add_To_Feature_Vector_Popup: interactivePopup['addToFeatureVectorPopup'],
   Add_To_Feature_Vector_Tab: featureStore['addToFeatureVector'],
   Add_Tag_Popup: interactivePopup['addTagPopup'],
@@ -45,6 +46,8 @@ module.exports = {
   Alerts_Endpoint_Info_Pane: infoPane['alertsEndpointInfoPane'],
   Alerts_Application_Info_Pane: infoPane['alertsApplicationInfoPane'],
   Analysis_Info_Pane: infoPane['analysisInfoPane'],
+  Application_Metrics: monitoringApp['applicationMetrics'],
+  Application_Monitoring: monitoringApp['applicationMonitoring'],
   Artifact_Preview_Popup: interactivePopup['artifactPreviewPopup'],
   Artifacts_Info_Pane: infoPane['artifactsInfoPane'],
   Change_Project_Owner_Popup: interactivePopup['changeProjectOwnerPopup'],
@@ -81,6 +84,7 @@ module.exports = {
   Jobs_Monitoring_Workflows_Tab: jobsMonitoring['crossWorkflowsMonitorTab'],
   Jobs_Monitoring_Scheduled_Tab: jobsMonitoring['crossScheduledMonitorTab'],
   Jobs_Monitor_Tab_Info_Pane: infoPane['jobsMonitorTabInfoPane'],
+  LLM_Prompts: llmPrompts['llmPrompts'],
   Metrics_Selector_Popup: interactivePopup['metricsSelectorPopup'],
   ML_Function_Info_Pane: infoPane['mlFunctionInfoPane'],
   ML_Functions: Functions['mlFunctions'],

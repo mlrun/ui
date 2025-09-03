@@ -52,6 +52,7 @@ import {
   isContainsSubstringInColumnDropdownCellsOverlay,
   isContainsSubstringInColumnTooltipCells,
   isContainsValueInColumn,
+  isContainsValueInHeaderColumn,
   isDatetimeCelsValueInRange,
   isNotContainsValueInColumn,
   putToTestContextCellParameters
@@ -83,10 +84,27 @@ Then(
 )
 
 Then(
+  'check {string} header value in {string} column in {string} table on {string} wizard',
+  async function (value, column, table, wizard) {
+    await waitPageLoad(this.driver, pageObjects['commonPagesHeader']['loader'])
+
+    await isContainsValueInHeaderColumn(this.driver, pageObjects[wizard][table], column, value)
+  }
+)
+
+Then(
   'check {string} value not in {string} column in {string} table on {string} wizard',
   async function (value, column, table, wizard) {
     await waitPageLoad(this.driver, pageObjects['commonPagesHeader']['loader'])
     await isNotContainsValueInColumn(this.driver, pageObjects[wizard][table], column, value)
+  }
+)
+
+When(
+  'scroll to the {string} element on {string} wizard',
+  async function (component, wizard) {
+    await waiteUntilComponent(this.driver, pageObjects[wizard][component])
+    await scrollToElement(this.driver, pageObjects[wizard][component])
   }
 )
 

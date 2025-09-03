@@ -2,264 +2,276 @@
 @use 'igz-controls/scss/borders';
 @use 'igz-controls/scss/shadows';
 
-.project {
-  &-wrapper {
-    display: flex;
-    flex: 1 1;
-    flex-direction: column;
-    min-width: 100%;
-  }
+.project-content {
+  padding: 24px 40px;
 
-  &__header {
-    min-height: 70px;
-    padding: 20px 24px;
-    background-color: colors.$white;
-    box-shadow: shadows.$headerShadow;
-  }
-
-  &__content {
+  .general-info {
     display: flex;
     flex: 1;
-    padding: 24px 40px;
-    background-color: colors.$white;
+    flex-direction: column;
+    width: 250px;
+    padding-right: 64px;
 
-    .general-info {
+    &__row {
       display: flex;
-      flex: 1;
+      justify-content: space-between;
+      margin-top: 5px;
+      color: colors.$primary;
+
+      .row-label {
+        display: inline-block;
+        width: 80px;
+      }
+
+      .row-action {
+        cursor: pointer;
+      }
+
+      &.status-row {
+        .row-name {
+          text-transform: capitalize;
+        }
+      }
+    }
+
+    &__links {
+      display: flex;
       flex-direction: column;
-      width: 250px;
-      padding-right: 64px;
+      align-items: flex-start;
 
-      &__row {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 5px;
+      &-label {
+        margin-bottom: 16px;
         color: colors.$primary;
+      }
 
-        .row-label {
-          display: inline-block;
-          width: 80px;
-        }
+      &-link {
+        margin-bottom: 15px;
+      }
+    }
+  }
 
-        .row-action {
-          cursor: pointer;
-        }
+  .project-details {
+    margin-bottom: 15px;
+  }
 
-        &.status-row {
-          .row-name {
-            text-transform: capitalize;
+  .main-info {
+    display: flex;
+    flex: 4;
+    flex-direction: column;
+
+    &__toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+
+      &-menu {
+        width: 155px;
+
+        .select {
+          &__header {
+            cursor: pointer;
           }
         }
-      }
 
-      &__links {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-
-        &-label {
-          margin-bottom: 16px;
-          color: colors.$primary;
-        }
-
-        &-link {
-          margin-bottom: 15px;
-        }
-      }
-    }
-
-    .project-details {
-      margin-bottom: 15px;
-    }
-
-    .main-info {
-      display: flex;
-      flex: 4;
-      flex-direction: column;
-
-      &__toolbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 15px;
-
-        &-banner {
-          align-self: flex-end;
-        }
-
-        &-menu {
-          width: 155px;
+        &.launch-menu {
+          display: none;
+          background-color: colors.$white;
 
           .select {
-            &__header {
-              cursor: pointer;
-            }
-          }
-
-          &.launch-menu {
-            display: none;
-            background-color: colors.$white;
-
-            .select {
-              &__label {
-                color: colors.$primary;
-              }
-            }
-          }
-
-          &.create-new-menu {
-            background-color: colors.$malibu;
-            border: none;
-
-            .select {
-              &__label {
-                color: colors.$white;
-                text-transform: none;
-              }
-            }
-
-            svg {
-              path {
-                fill: colors.$white;
-              }
+            &__label {
+              color: colors.$primary;
             }
           }
         }
 
-        &-actions {
-          display: flex;
-          flex: 1;
-          align-items: center;
-          justify-content: flex-end;
-        }
+        &.create-new-menu {
+          background-color: colors.$malibu;
+          border: none;
 
-        .refresh {
-          display: flex;
-          margin-left: 10px;
+          .select {
+            &__label {
+              color: colors.$white;
+              text-transform: none;
+            }
+          }
+
+          svg {
+            path {
+              fill: colors.$white;
+            }
+          }
         }
       }
 
-      .project-data-card {
-        position: relative;
+      &-actions {
         display: flex;
-        flex: 1 0 0;
-        flex-direction: column;
-        min-width: 0;
-        min-height: 460px;
-        margin-right: 20px;
-        padding: 15px;
-        overflow-x: auto;
+        flex: 1;
+        align-items: center;
+        justify-content: flex-end;
+      }
+
+      .refresh {
+        display: flex;
+        margin-left: 10px;
+      }
+    }
+
+    .project-data-card {
+      position: relative;
+      display: flex;
+      flex: 1 0 0;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 460px;
+      margin-right: 20px;
+      padding: 15px;
+      overflow-x: auto;
+      background-color: colors.$white;
+      border: borders.$dividerBorder;
+      border-radius: 8px;
+      box-shadow: shadows.$projectStatisticsShadow;
+
+      @media screen and (min-width: 1300px) {
+        padding: 20px;
+      }
+
+      &__header {
+        z-index: 1;
+        min-width: fit-content;
+
+        &-text {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 16px;
+          color: colors.$primary;
+          font-size: 1em;
+          font-weight: 500;
+          line-height: 23px;
+        }
+
+        &-info {
+          display: flex;
+          align-items: center;
+          color: colors.$topaz;
+          font-size: 12px;
+          font-weight: 400;
+
+          &-icon {
+            flex: 0 1 12px;
+
+            & * {
+              fill: colors.$spunPearl;
+            }
+          }
+
+          & *:not(:last-child) {
+            margin-right: 5px;
+          }
+        }
+
+        &-tip {
+          margin-left: 5px;
+        }
+
+        &.table-header {
+          min-height: 110px;
+        }
+      }
+
+      .no-data-block {
         background-color: colors.$white;
-        border: borders.$dividerBorder;
-        border-radius: 8px;
-        box-shadow: shadows.$projectStatisticsShadow;
+      }
+
+      &_small {
+        .project-data-card__header {
+          height: 100%;
+
+          &-text {
+            margin-bottom: 25px;
+          }
+        }
+      }
+
+      &__see-all-link {
+        margin: 25px 20px 0 auto;
+      }
+
+      &__recent-text {
+        display: flex;
+        align-items: center;
+        min-height: 40px;
+        margin: 0 0 5px 0;
+        font-size: 14px;
+        font-weight: 500;
+
+        .text-sm {
+          margin-left: 5px;
+          font-size: 0.75em;
+        }
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      background-color: colors.$white;
+    }
+
+    &__statistics-section {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+
+      &_left {
+        display: flex;
+        gap: 15px;
+      }
+
+      &_right {
+        display: flex;
+        gap: 15px;
+      }
+
+      .monitoring-stats {
+        flex: 1;
+        padding: 15px;
 
         @media screen and (min-width: 1300px) {
           padding: 20px;
         }
 
-        &__header {
-          z-index: 1;
-          min-width: fit-content;
-
-          &-text {
-            display: flex;
-            align-items: center;
-            margin-bottom: 16px;
-            color: colors.$primary;
-            font-size: 1.25rem;
-            line-height: 23px;
-
-            @media screen and (min-width: 1600px) {
-              font-size: 1.25rem;
-            }
-          }
-
-          &-tip {
-            margin-left: 5px;
-          }
-
-          &.table-header {
-            min-height: 150px;
-          }
-        }
-
-        .no-data-block {
-          background-color: colors.$white;
-        }
-
-        &_small {
-          .project-data-card__header {
-            height: 100%;
-
-            &-text {
-              margin-bottom: 25px;
-            }
-          }
-        }
-
-        &__see-all-link {
-          margin: 25px 20px 0 auto;
-        }
-
-        &__recent-text {
-          display: flex;
-          align-items: center;
-          min-height: 40px;
-          margin: 0 0 5px 0;
-          font-size: 18px;
-
-          .text-sm {
-            margin-left: 5px;
-            font-size: 0.75em;
-          }
-        }
-
-        &:last-child {
-          margin-right: 0;
+        &.alerts-card {
+          flex: 2;
         }
       }
 
-      .wrapper {
-        position: relative;
-        z-index: 1;
-        background-color: colors.$white;
-      }
-
-      &__statistics-section {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
-        margin-bottom: 25px;
-
-        &_left {
-          display: flex;
-          gap: 15px;
-        }
-
-        &_right {
-          display: flex;
-          gap: 15px;
-        }
-
-        .monitoring-stats {
-          flex: 1;
-          padding: 15px;
-
-          @media screen and (min-width: 1300px) {
-            padding: 20px;
-          }
-
-          &.alerts-card {
-            flex: 2;
-          }
-        }
+      @media (max-width: 1250px) {
+        grid-template-columns: repeat(1, 2fr);
       }
     }
   }
+}
 
-  &__error-container {
-    margin: auto;
-    color: colors.$primary;
+.project__error-container {
+  margin: auto;
+  color: colors.$primary;
+}
+
+main.unpinned {
+  .main-info__statistics-section {
+    @media (max-width: 1250px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 1100px) {
+      grid-template-columns: repeat(1, 2fr);
+    }
   }
 }

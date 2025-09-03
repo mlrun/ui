@@ -2,6 +2,132 @@
   "data": [
     {
       "type": "project",
+      "id": "090b1327-ceff-45c7-867b-4769680238386",
+      "attributes": {
+        "name": "auto-generated-data",
+        "created_at": "2022-03-10T10:24:36.235000+00:00",
+        "updated_at": "2022-03-14T14:01:13.399000+00:00",
+        "admin_status": "online",
+        "operational_status": "online",
+        "labels": [],
+        "annotations": [],
+        "mlrun_project": "{\"kind\": \"project\", \"metadata\": {}, \"spec\": {\"functions\": [{\"name\": \"step3\", \"spec\": {\"kind\": \"job\", \"metadata\": {\"name\": \"step3\", \"tag\": \"\", \"project\": \"proj1\"}, \"spec\": {\"command\": \"\", \"args\": [], \"image\": \"mlrun/mlrun\", \"build\": {\"functionSourceCode\": \"aW1wb3J0IHRpbWUKZGVmIGhhbmRsZXIgKGNvbnRleHQpOgogICAgY29udGV4dC5sb2dnZXIuaW5mbygnc3RhcnQnKQogICAgdGltZS5zbGVlcCgxMCkKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oJ2VuZCcp\", \"commands\": [], \"code_origin\": \"/User/demos/getting-started-tutorial/scale/step1.py\", \"origin_filename\": \"/User/demos/getting-started-tutorial/scale/step1.py\"}, \"entry_points\": {\"handler\": {\"name\": \"handler\", \"doc\": \"\", \"parameters\": [{\"name\": \"context\", \"default\": \"\"}], \"outputs\": [{\"default\": \"\"}], \"lineno\": 2}}, \"description\": \"\", \"default_handler\": \"handler\", \"disable_auto_mount\": false, \"env\": [], \"priority_class_name\": \"igz-workload-medium\", \"affinity\": null}, \"verbose\": false}}], \"workflows\": [{\"name\": \"dummy_workflow\", \"path\": \"/User/demos/getting-started-tutorial/scale/pipelines.py\", \"handler\": \"dummy_workflow\", \"engine\": null}], \"artifacts\": [], \"source\": \"\", \"subpath\": \"\", \"origin_url\": \"\", \"disable_auto_mount\": false}, \"status\": {}}"
+      }
+    },
+    {
+      "type": "project",
+      "id": "090b1327-ceff-45c7-867b-476968023838622",
+      "attributes": {
+        "name": "model-deployment-pipeline-admin",
+        "created_at": "2022-03-10T10:24:36.235000+00:00",
+        "updated_at": "2022-03-14T14:01:13.399000+00:00",
+        "admin_status": "online",
+        "operational_status": "online",
+        "labels": [],
+        "annotations": [],
+        "mlrun_project": "{\"kind\": \"project\", \"metadata\": {}, \"spec\": {\"functions\": [{\"name\": \"step3\", \"spec\": {\"kind\": \"job\", \"metadata\": {\"name\": \"step3\", \"tag\": \"\", \"project\": \"proj1\"}, \"spec\": {\"command\": \"\", \"args\": [], \"image\": \"mlrun/mlrun\", \"build\": {\"functionSourceCode\": \"aW1wb3J0IHRpbWUKZGVmIGhhbmRsZXIgKGNvbnRleHQpOgogICAgY29udGV4dC5sb2dnZXIuaW5mbygnc3RhcnQnKQogICAgdGltZS5zbGVlcCgxMCkKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oJ2VuZCcp\", \"commands\": [], \"code_origin\": \"/User/demos/getting-started-tutorial/scale/step1.py\", \"origin_filename\": \"/User/demos/getting-started-tutorial/scale/step1.py\"}, \"entry_points\": {\"handler\": {\"name\": \"handler\", \"doc\": \"\", \"parameters\": [{\"name\": \"context\", \"default\": \"\"}], \"outputs\": [{\"default\": \"\"}], \"lineno\": 2}}, \"description\": \"\", \"default_handler\": \"handler\", \"disable_auto_mount\": false, \"env\": [], \"priority_class_name\": \"igz-workload-medium\", \"affinity\": null}, \"verbose\": false}}], \"workflows\": [{\"name\": \"dummy_workflow\", \"path\": \"/User/demos/getting-started-tutorial/scale/pipelines.py\", \"handler\": \"dummy_workflow\", \"engine\": null}], \"artifacts\": [], \"source\": \"\", \"subpath\": \"\", \"origin_url\": \"\", \"disable_auto_mount\": false}, \"status\": {}}"
+      }
+    },
+    {
+      "type": "project",
+      "id": "090b1327-ceff-45c7-867b-4769680238386111",
+      "attributes": {
+        "name": "moreofthesame",
+        "created_at": "2022-03-10T10:24:36.235000+00:00",
+        "updated_at": "2022-03-14T14:01:13.399000+00:00",
+        "admin_status": "online",
+        "operational_status": "online",
+        "labels": [],
+        "annotations": [],
+        "mlrun_project": "{\"kind\": \"project\", \"metadata\": {}, \"spec\": {\"functions\": [{\"name\": \"step3\", \"spec\": {\"kind\": \"job\", \"metadata\": {\"name\": \"step3\", \"tag\": \"\", \"project\": \"proj1\"}, \"spec\": {\"command\": \"\", \"args\": [], \"image\": \"mlrun/mlrun\", \"build\": {\"functionSourceCode\": \"aW1wb3J0IHRpbWUKZGVmIGhhbmRsZXIgKGNvbnRleHQpOgogICAgY29udGV4dC5sb2dnZXIuaW5mbygnc3RhcnQnKQogICAgdGltZS5zbGVlcCgxMCkKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oJ2VuZCcp\", \"commands\": [], \"code_origin\": \"/User/demos/getting-started-tutorial/scale/step1.py\", \"origin_filename\": \"/User/demos/getting-started-tutorial/scale/step1.py\"}, \"entry_points\": {\"handler\": {\"name\": \"handler\", \"doc\": \"\", \"parameters\": [{\"name\": \"context\", \"default\": \"\"}], \"outputs\": [{\"default\": \"\"}], \"lineno\": 2}}, \"description\": \"\", \"default_handler\": \"handler\", \"disable_auto_mount\": false, \"env\": [], \"priority_class_name\": \"igz-workload-medium\", \"affinity\": null}, \"verbose\": false}}], \"workflows\": [{\"name\": \"dummy_workflow\", \"path\": \"/User/demos/getting-started-tutorial/scale/pipelines.py\", \"handler\": \"dummy_workflow\", \"engine\": null}], \"artifacts\": [], \"source\": \"\", \"subpath\": \"\", \"origin_url\": \"\", \"disable_auto_mount\": false}, \"status\": {}}"
+      }
+    },
+    {
+      "type": "project",
+      "id": "090b1327-ceff-45c7-867b-867b867b867b867b2",
+      "attributes": {
+        "name": "network-operations",
+        "created_at": "2022-03-10T10:24:36.235000+00:00",
+        "updated_at": "2022-03-14T14:01:13.399000+00:00",
+        "admin_status": "online",
+        "operational_status": "online",
+        "labels": [],
+        "annotations": [],
+        "mlrun_project": "{\"kind\": \"project\", \"metadata\": {}, \"spec\": {\"functions\": [{\"name\": \"step3\", \"spec\": {\"kind\": \"job\", \"metadata\": {\"name\": \"step3\", \"tag\": \"\", \"project\": \"proj1\"}, \"spec\": {\"command\": \"\", \"args\": [], \"image\": \"mlrun/mlrun\", \"build\": {\"functionSourceCode\": \"aW1wb3J0IHRpbWUKZGVmIGhhbmRsZXIgKGNvbnRleHQpOgogICAgY29udGV4dC5sb2dnZXIuaW5mbygnc3RhcnQnKQogICAgdGltZS5zbGVlcCgxMCkKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oJ2VuZCcp\", \"commands\": [], \"code_origin\": \"/User/demos/getting-started-tutorial/scale/step1.py\", \"origin_filename\": \"/User/demos/getting-started-tutorial/scale/step1.py\"}, \"entry_points\": {\"handler\": {\"name\": \"handler\", \"doc\": \"\", \"parameters\": [{\"name\": \"context\", \"default\": \"\"}], \"outputs\": [{\"default\": \"\"}], \"lineno\": 2}}, \"description\": \"\", \"default_handler\": \"handler\", \"disable_auto_mount\": false, \"env\": [], \"priority_class_name\": \"igz-workload-medium\", \"affinity\": null}, \"verbose\": false}}], \"workflows\": [{\"name\": \"dummy_workflow\", \"path\": \"/User/demos/getting-started-tutorial/scale/pipelines.py\", \"handler\": \"dummy_workflow\", \"engine\": null}], \"artifacts\": [], \"source\": \"\", \"subpath\": \"\", \"origin_url\": \"\", \"disable_auto_mount\": false}, \"status\": {}}"
+      }
+    },
+    {
+      "type": "project",
+      "id": "090b1327-ceff-45c7-867b-867b867b867b867b2221",
+      "attributes": {
+        "name": "network-operations-admin",
+        "created_at": "2022-03-10T10:24:36.235000+00:00",
+        "updated_at": "2022-03-14T14:01:13.399000+00:00",
+        "admin_status": "online",
+        "operational_status": "online",
+        "labels": [],
+        "annotations": [],
+        "mlrun_project": "{\"kind\": \"project\", \"metadata\": {}, \"spec\": {\"functions\": [{\"name\": \"step3\", \"spec\": {\"kind\": \"job\", \"metadata\": {\"name\": \"step3\", \"tag\": \"\", \"project\": \"proj1\"}, \"spec\": {\"command\": \"\", \"args\": [], \"image\": \"mlrun/mlrun\", \"build\": {\"functionSourceCode\": \"aW1wb3J0IHRpbWUKZGVmIGhhbmRsZXIgKGNvbnRleHQpOgogICAgY29udGV4dC5sb2dnZXIuaW5mbygnc3RhcnQnKQogICAgdGltZS5zbGVlcCgxMCkKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oJ2VuZCcp\", \"commands\": [], \"code_origin\": \"/User/demos/getting-started-tutorial/scale/step1.py\", \"origin_filename\": \"/User/demos/getting-started-tutorial/scale/step1.py\"}, \"entry_points\": {\"handler\": {\"name\": \"handler\", \"doc\": \"\", \"parameters\": [{\"name\": \"context\", \"default\": \"\"}], \"outputs\": [{\"default\": \"\"}], \"lineno\": 2}}, \"description\": \"\", \"default_handler\": \"handler\", \"disable_auto_mount\": false, \"env\": [], \"priority_class_name\": \"igz-workload-medium\", \"affinity\": null}, \"verbose\": false}}], \"workflows\": [{\"name\": \"dummy_workflow\", \"path\": \"/User/demos/getting-started-tutorial/scale/pipelines.py\", \"handler\": \"dummy_workflow\", \"engine\": null}], \"artifacts\": [], \"source\": \"\", \"subpath\": \"\", \"origin_url\": \"\", \"disable_auto_mount\": false}, \"status\": {}}"
+      }
+    },
+    {
+      "type": "project",
+      "id": "090b1327-ceff-45c7-867b-867ba99a82jdk",
+      "attributes": {
+        "name": "sk-project-admin",
+        "created_at": "2022-03-10T10:24:36.235000+00:00",
+        "updated_at": "2022-03-14T14:01:13.399000+00:00",
+        "admin_status": "online",
+        "operational_status": "online",
+        "labels": [],
+        "annotations": [],
+        "mlrun_project": "{\"kind\": \"project\", \"metadata\": {}, \"spec\": {\"functions\": [{\"name\": \"step3\", \"spec\": {\"kind\": \"job\", \"metadata\": {\"name\": \"step3\", \"tag\": \"\", \"project\": \"proj1\"}, \"spec\": {\"command\": \"\", \"args\": [], \"image\": \"mlrun/mlrun\", \"build\": {\"functionSourceCode\": \"aW1wb3J0IHRpbWUKZGVmIGhhbmRsZXIgKGNvbnRleHQpOgogICAgY29udGV4dC5sb2dnZXIuaW5mbygnc3RhcnQnKQogICAgdGltZS5zbGVlcCgxMCkKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oJ2VuZCcp\", \"commands\": [], \"code_origin\": \"/User/demos/getting-started-tutorial/scale/step1.py\", \"origin_filename\": \"/User/demos/getting-started-tutorial/scale/step1.py\"}, \"entry_points\": {\"handler\": {\"name\": \"handler\", \"doc\": \"\", \"parameters\": [{\"name\": \"context\", \"default\": \"\"}], \"outputs\": [{\"default\": \"\"}], \"lineno\": 2}}, \"description\": \"\", \"default_handler\": \"handler\", \"disable_auto_mount\": false, \"env\": [], \"priority_class_name\": \"igz-workload-medium\", \"affinity\": null}, \"verbose\": false}}], \"workflows\": [{\"name\": \"dummy_workflow\", \"path\": \"/User/demos/getting-started-tutorial/scale/pipelines.py\", \"handler\": \"dummy_workflow\", \"engine\": null}], \"artifacts\": [], \"source\": \"\", \"subpath\": \"\", \"origin_url\": \"\", \"disable_auto_mount\": false}, \"status\": {}}"
+      }
+    },
+    {
+      "type": "project",
+      "id": "090b1327-ceff-45c7-867b-ooos992ksl",
+      "attributes": {
+        "name": "stocks",
+        "created_at": "2022-03-10T10:24:36.235000+00:00",
+        "updated_at": "2022-03-14T14:01:13.399000+00:00",
+        "admin_status": "online",
+        "operational_status": "online",
+        "labels": [],
+        "annotations": [],
+        "mlrun_project": "{\"kind\": \"project\", \"metadata\": {}, \"spec\": {\"functions\": [{\"name\": \"step3\", \"spec\": {\"kind\": \"job\", \"metadata\": {\"name\": \"step3\", \"tag\": \"\", \"project\": \"proj1\"}, \"spec\": {\"command\": \"\", \"args\": [], \"image\": \"mlrun/mlrun\", \"build\": {\"functionSourceCode\": \"aW1wb3J0IHRpbWUKZGVmIGhhbmRsZXIgKGNvbnRleHQpOgogICAgY29udGV4dC5sb2dnZXIuaW5mbygnc3RhcnQnKQogICAgdGltZS5zbGVlcCgxMCkKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oJ2VuZCcp\", \"commands\": [], \"code_origin\": \"/User/demos/getting-started-tutorial/scale/step1.py\", \"origin_filename\": \"/User/demos/getting-started-tutorial/scale/step1.py\"}, \"entry_points\": {\"handler\": {\"name\": \"handler\", \"doc\": \"\", \"parameters\": [{\"name\": \"context\", \"default\": \"\"}], \"outputs\": [{\"default\": \"\"}], \"lineno\": 2}}, \"description\": \"\", \"default_handler\": \"handler\", \"disable_auto_mount\": false, \"env\": [], \"priority_class_name\": \"igz-workload-medium\", \"affinity\": null}, \"verbose\": false}}], \"workflows\": [{\"name\": \"dummy_workflow\", \"path\": \"/User/demos/getting-started-tutorial/scale/pipelines.py\", \"handler\": \"dummy_workflow\", \"engine\": null}], \"artifacts\": [], \"source\": \"\", \"subpath\": \"\", \"origin_url\": \"\", \"disable_auto_mount\": false}, \"status\": {}}"
+      }
+    },
+    {
+      "type": "project",
+      "id": "090b1327-ceff-45c7-867b-2ososolzmn221l",
+      "attributes": {
+        "name": "stocks-admin",
+        "created_at": "2022-03-10T10:24:36.235000+00:00",
+        "updated_at": "2022-03-14T14:01:13.399000+00:00",
+        "admin_status": "online",
+        "operational_status": "online",
+        "labels": [],
+        "annotations": [],
+        "mlrun_project": "{\"kind\": \"project\", \"metadata\": {}, \"spec\": {\"functions\": [{\"name\": \"step3\", \"spec\": {\"kind\": \"job\", \"metadata\": {\"name\": \"step3\", \"tag\": \"\", \"project\": \"proj1\"}, \"spec\": {\"command\": \"\", \"args\": [], \"image\": \"mlrun/mlrun\", \"build\": {\"functionSourceCode\": \"aW1wb3J0IHRpbWUKZGVmIGhhbmRsZXIgKGNvbnRleHQpOgogICAgY29udGV4dC5sb2dnZXIuaW5mbygnc3RhcnQnKQogICAgdGltZS5zbGVlcCgxMCkKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oJ2VuZCcp\", \"commands\": [], \"code_origin\": \"/User/demos/getting-started-tutorial/scale/step1.py\", \"origin_filename\": \"/User/demos/getting-started-tutorial/scale/step1.py\"}, \"entry_points\": {\"handler\": {\"name\": \"handler\", \"doc\": \"\", \"parameters\": [{\"name\": \"context\", \"default\": \"\"}], \"outputs\": [{\"default\": \"\"}], \"lineno\": 2}}, \"description\": \"\", \"default_handler\": \"handler\", \"disable_auto_mount\": false, \"env\": [], \"priority_class_name\": \"igz-workload-medium\", \"affinity\": null}, \"verbose\": false}}], \"workflows\": [{\"name\": \"dummy_workflow\", \"path\": \"/User/demos/getting-started-tutorial/scale/pipelines.py\", \"handler\": \"dummy_workflow\", \"engine\": null}], \"artifacts\": [], \"source\": \"\", \"subpath\": \"\", \"origin_url\": \"\", \"disable_auto_mount\": false}, \"status\": {}}"
+      }
+    },
+    {
+      "type": "project",
+      "id": "090b1327-ceff-45c7-867b-ooos992kslas2",
+      "attributes": {
+        "name": "test-test",
+        "created_at": "2022-03-10T10:24:36.235000+00:00",
+        "updated_at": "2022-03-14T14:01:13.399000+00:00",
+        "admin_status": "online",
+        "operational_status": "online",
+        "labels": [],
+        "annotations": [],
+        "mlrun_project": "{\"kind\": \"project\", \"metadata\": {}, \"spec\": {\"functions\": [{\"name\": \"step3\", \"spec\": {\"kind\": \"job\", \"metadata\": {\"name\": \"step3\", \"tag\": \"\", \"project\": \"proj1\"}, \"spec\": {\"command\": \"\", \"args\": [], \"image\": \"mlrun/mlrun\", \"build\": {\"functionSourceCode\": \"aW1wb3J0IHRpbWUKZGVmIGhhbmRsZXIgKGNvbnRleHQpOgogICAgY29udGV4dC5sb2dnZXIuaW5mbygnc3RhcnQnKQogICAgdGltZS5zbGVlcCgxMCkKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oJ2VuZCcp\", \"commands\": [], \"code_origin\": \"/User/demos/getting-started-tutorial/scale/step1.py\", \"origin_filename\": \"/User/demos/getting-started-tutorial/scale/step1.py\"}, \"entry_points\": {\"handler\": {\"name\": \"handler\", \"doc\": \"\", \"parameters\": [{\"name\": \"context\", \"default\": \"\"}], \"outputs\": [{\"default\": \"\"}], \"lineno\": 2}}, \"description\": \"\", \"default_handler\": \"handler\", \"disable_auto_mount\": false, \"env\": [], \"priority_class_name\": \"igz-workload-medium\", \"affinity\": null}, \"verbose\": false}}], \"workflows\": [{\"name\": \"dummy_workflow\", \"path\": \"/User/demos/getting-started-tutorial/scale/pipelines.py\", \"handler\": \"dummy_workflow\", \"engine\": null}], \"artifacts\": [], \"source\": \"\", \"subpath\": \"\", \"origin_url\": \"\", \"disable_auto_mount\": false}, \"status\": {}}"
+      }
+    },
+    {
+      "type": "project",
       "id": "090b1327-ceff-45c7-867b-476968022be6",
       "attributes": {
         "name": "cat-vs-dog-classification",

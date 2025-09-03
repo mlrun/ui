@@ -21,9 +21,8 @@ import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import Loader from '../../common/Loader/Loader'
 import StatsCard from '../../common/StatsCard/StatsCard'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, Loader } from 'igz-controls/components'
 
 import { generateMonitoringStats } from '../../utils/generateMonitoringData'
 import { JOBS_MONITORING_JOBS_TAB } from '../../constants'
@@ -53,7 +52,7 @@ const JobsCounters = () => {
           <div className="project-card__info">
             <div
               className="stats__link"
-              data-testid="scheduled_total_counter"
+              data-testid="jobs_total_counter"
               onClick={jobStats.total.link}
             >
               <span className="stats__subtitle">Total</span>

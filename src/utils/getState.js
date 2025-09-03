@@ -75,6 +75,7 @@ const commonStateLabels = withFailedState => {
     [FAILED_STATE]: withFailedState ? 'Failed' : 'Error',
     omitted: 'Omitted',
     pending: 'Pending',
+    pendingRetry: 'Pending retry',
     ready: 'Ready',
     running: 'Running',
     skipped: 'Skipped',

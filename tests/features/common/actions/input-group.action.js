@@ -21,27 +21,12 @@ import { expect } from 'chai'
 import { Key } from 'selenium-webdriver'
 import { parseString } from '../../common-tools/common-tools'
 
-async function verifyInputInvalid(driver, inputGroup) {
-  const inputField = await driver.findElement(inputGroup.inputField)
-  const flag = await inputField.getAttribute('class')
-
-  await driver.sleep(500)
-  expect(flag.includes('invalid')).equal(true)
-}
-
 async function verifyFormInputInvalid(driver, inputGroup) {
   const inputField = await driver.findElement(inputGroup.root)
   await driver.sleep(500)
   const flag = await inputField.getAttribute('class')
 
   expect(flag.includes('form-field__wrapper-invalid')).equal(true)
-}
-
-async function verifyInputValid(driver, inputGroup) {
-  const inputField = await driver.findElement(inputGroup.inputField)
-  const flag = await inputField.getAttribute('class')
-
-  expect(flag.includes('invalid')).equal(false)
 }
 
 async function verifyFormInputValid(driver, inputGroup) {
@@ -51,7 +36,29 @@ async function verifyFormInputValid(driver, inputGroup) {
   expect(flag.includes('form-field__wrapper-invalid')).equal(false)
 }
 
-async function clearManually(inputField) {
+async function getInputPlaceholder(driver, inputGroup) {
+  const inputField = await driver.findElement(inputGroup.inputField)
+
+  return inputField.getAttribute('placeholder')
+}
+
+
+export const verifyInputInvalid = async (driver, inputGroup) => {
+  const inputField = await driver.findElement(inputGroup.inputField)
+  const flag = await inputField.getAttribute('class')
+
+  await driver.sleep(500)
+  expect(flag.includes('invalid')).equal(true)
+}
+
+export const verifyInputValid = async (driver, inputGroup) => {
+  const inputField = await driver.findElement(inputGroup.inputField)
+  const flag = await inputField.getAttribute('class')
+
+  expect(flag.includes('invalid')).equal(false)
+}
+
+export const clearManually = async (inputField) => {
   const existValue = await inputField.getAttribute('value')
 
   for (let i = 0; i <= existValue.length; i++) {
@@ -59,47 +66,33 @@ async function clearManually(inputField) {
   }
 }
 
-async function getInputValue(driver, inputGroup) {
+export const getInputValue = async (driver, inputGroup) => {
   const inputField = await driver.findElement(inputGroup.inputField)
 
   return inputField.getAttribute('value')
 }
 
-async function getInputPlaceholder(driver, inputGroup) {
-  const inputField = await driver.findElement(inputGroup.inputField)
-
-  return inputField.getAttribute('placeholder')
-}
-
-async function getInputValueWithoutInputgroup(driver, input) {
+export const getInputValueWithoutInputgroup = async (driver, input) => {
   const inputField = await driver.findElement(input)
 
   return inputField.getAttribute('value')
 }
 
-async function typeValue(driver, inputGroup, value) {
+export const typeValue = async (driver, inputGroup, value) => {
   const inputField = await driver.findElement(inputGroup.inputField)
   await clearManually(inputField)
 
   return inputField.sendKeys(value)
 }
 
-async function typeValueWithoutInputgroup(driver, input, value) {
+export const typeValueWithoutInputgroup = async (driver, input, value) => {
   const inputField = await driver.findElement(input)
   await clearManually(inputField)
   
   return inputField.sendKeys(value)
 }
 
-const action = {
-  clearManually,
-  getInputValue,
-  getInputValueWithoutInputgroup,
-  typeValue,
-  typeValueWithoutInputgroup,
-  verifyInputValid,
-  verifyInputInvalid,
-  checkHintText: async function (driver, inputGroup, hintComponent, text) {
+export const checkHintText = async (driver, inputGroup, hintComponent, text) => {
     const hintButton = await driver.findElement(inputGroup.hintButton)
     await hintButton.click()
     await driver.sleep(250)
@@ -107,8 +100,9 @@ const action = {
     const hintText = await hint.getText()
 
     expect(hintText).equal(text)
-  },
-  checkHintTextWithHover:async function (driver, inputGroup, hintComponent, text) {
+  }
+
+export const checkHintTextWithHover = async (driver, inputGroup, hintComponent, text) => {
     const hintButton = await driver.findElement(inputGroup.hintButton)
     const coordinates = await hintButton.getRect()
     const actions = driver.actions({ async: true })
@@ -120,15 +114,16 @@ const action = {
     const hintText = await hint.getText()
 
     expect(hintText).equal(text)
-  },
-  checkInputAccordingHintText: async function (
+  }
+
+export const checkInputAccordingHintText = async (
     driver,
     attach,
     inputGroup,
     hintComponent,
     isForm = false,
     isLabel = false
-  ) {
+  ) => {
 
     if (!isLabel){
       const hintButton = await driver.findElement(inputGroup.hintButton)
@@ -168,8 +163,9 @@ const action = {
 
       await clearManually(input)
     }
-  },
-  checkWarningHintText: async function (driver, inputGroup, hintComponent, text) {
+  }
+
+export const checkWarningHintText = async (driver, inputGroup, hintComponent, text) => {
     const hintButton = await driver.findElement(inputGroup.warningHint)
     await driver.sleep(250)
     await hintButton.click()
@@ -179,8 +175,9 @@ const action = {
     const hintText = await hint.getText()
 
     expect(hintText).equal(text)
-  },
-  checkWarningHintTextWithHover: async function (driver, inputGroup, hintComponent, text) {
+  }
+
+export const checkWarningHintTextWithHover = async (driver, inputGroup, hintComponent, text) => {
     const hintButton = await driver.findElement(inputGroup.warningHint)
     await driver.sleep(250)
     const coordinates = await hintButton.getRect()
@@ -194,56 +191,65 @@ const action = {
     const hintText = await hint.getText()
 
     expect(hintText).equal(text)
-  },
-  checkWarningText: async function (driver, hintComponent, text) {
+  }
+
+export const checkWarningText = async (driver, hintComponent, text) => {
     const hint = await driver.findElement(hintComponent)
     await driver.sleep(250)
     const hintText = await hint.getText()
 
     expect(hintText).equal(text)
-  },
-  verifyTypedValue: async function (driver, inputGroup, value) {
+  }
+
+export const verifyTypedValue = async (driver, inputGroup, value) => {
     const txt = await getInputValue(driver, inputGroup)
 
     expect(txt).equal(value)
-  },
-  verifyPlaceholder: async function (driver, inputGroup, value) {
+  }
+
+export const verifyPlaceholder = async (driver, inputGroup, value) => {
     const txt = await getInputPlaceholder(driver, inputGroup)
 
     expect(txt).equal(value)
-  },
-  verifyTypedValueWithoutInputgroup: async function (driver, input, value) {
+  }
+
+export const verifyTypedValueWithoutInputgroup = async (driver, input, value) => {
     const txt = await getInputValueWithoutInputgroup(driver, input)
 
     expect(txt).equal(value)
-  },
-  verifyInputDisabled: async function (driver, inputGroup) {
+  }
+
+export const verifyInputDisabled = async (driver, inputGroup) => {
     const inputField = await driver.findElement(inputGroup.inputField)
     const flag = await inputField.getAttribute('disabled')
 
     expect(flag).equal('true')
-  },
-  verifyInputClassDisabled: async function (driver, inputGroup) {
+  }
+
+export const verifyInputClassDisabled = async (driver, inputGroup) => {
     const inputField = await driver.findElement(inputGroup.root)
     const attributes = await inputField.getAttribute('class')
     const flag = attributes.includes('form-field__wrapper-disabled')
 
     expect(flag).equal(true)
-  },
-  verifyInputClassEnabled: async function (driver, inputGroup) {
+  }
+
+export const verifyInputClassEnabled = async (driver, inputGroup) => {
     const inputField = await driver.findElement(inputGroup.inputField)
     const attributes = await inputField.getAttribute('class')
     const flag = attributes.includes('form-field__wrapper-disabled')
 
     expect(flag).equal(false)
-  },
-  verifyInputEnabled: async function (driver, inputGroup) {
+  }
+
+export const verifyInputEnabled = async (driver, inputGroup) => {
     const inputField = await driver.findElement(inputGroup.inputField)
     const flag = await inputField.getAttribute('disabled')
     
     expect(flag).equal(null)
-  },
-  verifyTextAreaCounter: async function (driver, textAreaGroup) {
+  }
+
+export const verifyTextAreaCounter = async (driver, textAreaGroup) => {
     const textAreaField = await driver.findElement(textAreaGroup.inputField)
     const textAreaText = await textAreaField.getText()
     const textAreaCounter = await driver.findElement(textAreaGroup.counter)
@@ -252,6 +258,3 @@ const action = {
 
     expect(+counterValue.split(' ')[0]).equal(maxLength - textAreaText.length)
   }
-}
-
-module.exports = action

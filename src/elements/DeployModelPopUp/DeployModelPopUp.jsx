@@ -35,14 +35,14 @@ import {
   FormOnChange
 } from 'igz-controls/components'
 
-import { MODELS_TAB } from '../../constants'
+import { MODELS_PAGE } from '../../constants'
 import { MODAL_SM, PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { buildFunction, fetchArtifactsFunction } from '../../reducers/artifactsReducer'
 import { generateUri } from '../../utils/resources'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 
 import QuestionMarkIcon from 'igz-controls/images/question-mark.svg?react'
@@ -140,7 +140,7 @@ const DeployModelPopUp = ({
           routes: {
             [values.modelName]: {
               class_args: {
-                model_path: generateUri(model, MODELS_TAB),
+                model_path: generateUri(model, MODELS_PAGE),
                 ...classArguments
               },
               class_name: values.className,

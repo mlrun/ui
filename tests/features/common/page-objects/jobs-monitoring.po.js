@@ -35,9 +35,9 @@ const tabSelector = {
   root: '.content .content-menu',
   header: {},
   body: {
-    root: '.content-menu__list',
+    root: '.content-menu__tabs',
     row: {
-      root: '.content-menu__item',
+      root: '.content-menu__tab',
       fields: {
         key: ''
       }
@@ -277,8 +277,9 @@ const dateTimePickerCalendars = {
 
 const commonRefreshButton = By.css('[data-testid="refresh"]')
 const commonErrorMessage = By.css('[data-testid="no-data"] h3')
+const commonActionMenu = actionMenu(actionMenuStructure)
 
-module.exports = {
+export default {
   crossJobsMonitorTab: {
     Cross_Jobs_Tab_Selector: commonTable(tabSelector),
     Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
@@ -309,7 +310,11 @@ module.exports = {
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Refresh_Button: commonRefreshButton,
     Error_Message: commonErrorMessage,
-    Workflows_Table: commonTable(overallTable)
+    Workflows_Table: commonTable(overallTable),
+    Action_Menu: commonActionMenu,
+    Toggle_View_Button: By.css('.workflow-container .actions .toggle-view-btn'),
+    Terminate_Button: By.css('.workflow-container .btn-danger'),
+    Workflow_List_View_Table: commonTable(overallTable)
   },
   crossScheduledMonitorTab: {
     Cross_Jobs_Tab_Selector: commonTable(tabSelector),

@@ -56,7 +56,7 @@ import {
 import { fetchAlertById } from '../../reducers/alertsReducer'
 import { generateObjectNotInTheListMessage } from '../../utils/generateMessage.util'
 import { createAlertRowData } from '../../utils/createAlertsContent'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 export const getAlertsFiltersConfig = (timeFrameLimit = false, isAlertsPage = false) => {
   return {

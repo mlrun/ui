@@ -24,11 +24,11 @@ import { isEmpty } from 'lodash'
 
 import ActionBar from '../../ActionBar/ActionBar'
 import ArtifactsTableRow from '../../../elements/ArtifactsTableRow/ArtifactsTableRow'
-import Loader from '../../../common/Loader/Loader'
 import ModelEndpointsFilters from './ModelEndpointsFilters'
 import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
+import { Loader } from 'igz-controls/components'
 
 import {
   GROUP_BY_NONE,
@@ -44,6 +44,7 @@ import { getScssVariableValue } from 'igz-controls/utils/common.util'
 import { isDetailsTabExists } from '../../../utils/link-helper.util'
 import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { setFilters } from '../../../reducers/filtersReducer'
+import { clearMetricsOptions } from '../../../reducers/detailsReducer'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 import { useModelsPage } from '../ModelsPage.context'
@@ -190,6 +191,12 @@ const ModelEndpoints = () => {
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [dispatch, params.projectName])
+
+  useEffect(()=> {
+    return () => {
+      dispatch(clearMetricsOptions())
+    }
+  }, [dispatch])
 
   useEffect(() => {
     if (params.name && modelEndpoints.length > 0) {

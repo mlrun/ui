@@ -8,9 +8,9 @@ Feature: Feature Store Page
     Scenario: MLFS001 - Check all mandatory components on Feature Store tab
         Given open url
         And wait load page
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "fraud-demo2-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then verify breadcrumbs "project" label should be equal "default" value
+        Then verify breadcrumbs "project" label should be equal "fraud-demo2-admin" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
@@ -53,9 +53,9 @@ Feature: Feature Store Page
     Scenario: MLFS002 - Check all mandatory components on Features tab
         Given open url
         And wait load page
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "fraud-demo2-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then verify breadcrumbs "project" label should be equal "default" value
+        Then verify breadcrumbs "project" label should be equal "fraud-demo2-admin" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
@@ -101,9 +101,9 @@ Feature: Feature Store Page
     Scenario: MLFS003 - Check all mandatory components on Feature Vectors tab
         Given open url
         And wait load page
-        And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "fraud-demo2-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then verify breadcrumbs "project" label should be equal "fsdemo-admin" value
+        Then verify breadcrumbs "project" label should be equal "fraud-demo2-admin" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
@@ -127,6 +127,8 @@ Feature: Feature Store Page
         Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
         Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
+        Then select "project" with "fsdemo-admin" value in breadcrumbs menu
+        And wait load page
         Then verify "Feature_Vectors_Table" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
 
     @MLFS
@@ -209,7 +211,6 @@ Feature: Feature Store Page
     @passive
     @inProgress
     @smoke
-    # Moved analyses tabs to Demo mode in `1.8.0` ML-9059
     Scenario: MLFS005 - Check all mandatory components in Item infopane on Overview tab table on Feature Vectors tab
         Given open url
         And wait load page
@@ -218,6 +219,7 @@ Feature: Feature Store Page
         And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Header" element visibility on "Feature_Vectors_Info_Pane" wizard
@@ -255,6 +257,7 @@ Feature: Feature Store Page
         And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         When select "test-tag" option in "Table_Tree_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
@@ -380,7 +383,6 @@ Feature: Feature Store Page
     @passive
     @inProgress
     @smoke
-    # Moved analyses tabs to Demo mode in `1.8.0` ML-9059
     Scenario: MLFS011 - Check all mandatory components in Item infopane on Analysis tab table
         Given open url
         And wait load page
@@ -396,7 +398,7 @@ Feature: Feature Store Page
         Then select "Analysis" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         Then verify "Analysis" tab is active in "Info_Pane_Tab_Selector" on "Analysis_Info_Pane" wizard
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        Then verify "Info_Pane_Tab_Selector" on "Analysis_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Tab_List_Demo"
+        Then verify "Info_Pane_Tab_Selector" on "Analysis_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Tab_List"
         Then verify "Info_Pane_Tab_Selector" element visibility on "Analysis_Info_Pane" wizard
         Then verify "Header" element visibility on "Analysis_Info_Pane" wizard
         Then verify "Updated" element visibility on "Analysis_Info_Pane" wizard
@@ -772,6 +774,7 @@ Feature: Feature Store Page
         Then verify "Feature_Set_Name_Input" on "New_Feature_Set" wizard should display options "Input_Hint"."Feature_Set_Name_Hint"
         When click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Feature_Set_Name_Input" options rules on "New_Feature_Set" wizard
+        And wait load page
         Then type value "   " to "Version_Input" field on "New_Feature_Set" wizard
         Then verify "Version_Input" on "New_Feature_Set" wizard should display options "Input_Hint"."Feature_Set_Version_Hint"
         When click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -2297,6 +2300,7 @@ Feature: Feature Store Page
 
     @MLFS
     @smoke
+    #TODO: check the loader after select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table
     Scenario: MLFS061 - Check Feature vector deletion 
         Given open url
         And wait load page
@@ -2310,7 +2314,6 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "patient-deterioration" value in "name" column
-        And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         Then "Title" element on "Confirm_Popup" should contains "Delete feature vector?" value
         Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
@@ -2325,7 +2328,6 @@ Feature: Feature Store Page
         When click on "Cancel_Button" element on "Confirm_Popup" wizard
         And wait load page
         Then select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "patient-deterioration" value in "name" column
-        And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
         When click on "Cross_Cancel_Button" element on "Confirm_Popup" wizard
@@ -2338,13 +2340,11 @@ Feature: Feature Store Page
         And wait load page
         Then check "expand_btn" visibility in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard with 0 offset
         Then select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "patient-deterioration" value in "name" column
-        And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         When click on "Cancel_Button" element on "Confirm_Popup" wizard
         And wait load page
         Then click on cell with row index 2 in "expand_btn" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "latest" value in "name_expand_btn" column
-        And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         Then "Title" element on "Confirm_Popup" should contains "Delete feature vector?" value
         Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
@@ -2359,13 +2359,11 @@ Feature: Feature Store Page
         When click on "Cancel_Button" element on "Confirm_Popup" wizard
         And wait load page
         Then select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "latest" value in "name_expand_btn" column
-        And wait load page
         When click on "Cancel_Button" element on "Confirm_Popup" wizard
         And wait load page
         When click on cell with row index 2 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Header" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then select "Delete" option in action menu on "Feature_Vectors_Info_Pane" wizard
-        And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         Then "Title" element on "Confirm_Popup" should contains "Delete feature vector?" value
         Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
@@ -2382,13 +2380,11 @@ Feature: Feature Store Page
         When click on cell with row index 2 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Header" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then select "Delete" option in action menu on "Feature_Vectors_Info_Pane" wizard
-        And wait load page
         When click on "Cancel_Button" element on "Confirm_Popup" wizard
         And wait load page
         When click on cell with row index 2 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Header" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then select "Delete" option in action menu on "Feature_Vectors_Info_Pane" wizard
-        And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         When click on "Delete_Button" element on "Confirm_Popup" wizard
         And wait load page
@@ -2401,7 +2397,6 @@ Feature: Feature Store Page
         Then verify that 3 row elements are displayed in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard
         Then click on cell with row index 1 in "expand_btn" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "7" value in "name_expand_btn" column
-        And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         When click on "Delete_Button" element on "Confirm_Popup" wizard
         And wait load page
@@ -2412,7 +2407,6 @@ Feature: Feature Store Page
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         Then verify that 2 row elements are displayed in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard
         Then select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "erann-fv" value in "name" column
-        And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         When click on "Delete_Button" element on "Confirm_Popup" wizard
         And wait load page
@@ -2426,7 +2420,6 @@ Feature: Feature Store Page
         Then click on "Clear_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "patient-deterioration" value in "name" column
-        And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
         When click on "Delete_Button" element on "Confirm_Popup" wizard
         And wait load page

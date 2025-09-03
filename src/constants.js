@@ -34,13 +34,6 @@ export const V3IO_INPUT_PATH_SCHEME = 'v3io:///'
 export const TAG_LATEST = 'latest'
 export const TAG_NA = 'na'
 
-export const DENSITY_DENSE = 'dense'
-export const DENSITY_NORMAL = 'normal'
-export const DENSITY_MEDIUM = 'medium'
-export const DENSITY_CHUNKY = 'chunky'
-
-export const FULL_VIEW_MODE = 'full'
-
 export const LARGE_REQUEST_CANCELED = 'Large request canceled'
 export const REQUEST_CANCELED = 'Request canceled'
 export const DEFAULT_ABORT_MSG = 'canceled'
@@ -58,8 +51,6 @@ export const FAIL_STATE = 'fail'
 export const FAILED_STATE = 'failed'
 export const PENDING_STATE = 'pending'
 export const UNKNOWN_STATE = 'unknown'
-
-export const VIEW_SEARCH_PARAMETER = 'view'
 
 /*=========== PAGINATION =============*/
 
@@ -109,7 +100,7 @@ export const SEVERITY_HIGH = 'high'
 export const SEVERITY_CRITICAL = 'critical'
 export const ALERTS_DISPLAY_LIMIT = 100
 
-export const MODELS_PAGE = 'MODELS'
+export const MODELS_PAGE = 'models'
 export const MODELS_TAB = 'models'
 export const MODEL_ENDPOINTS_TAB = 'model-endpoints'
 export const REAL_TIME_PIPELINES_TAB = 'real-time-pipelines'
@@ -122,23 +113,21 @@ export const FEATURE_SETS_TAB = 'feature-sets'
 export const FEATURE_VECTORS_TAB = 'feature-vectors'
 export const ADD_TO_FEATURE_VECTOR_TAB = 'add-to-feature-vector'
 
-export const DATASETS_PAGE = 'DATASETS'
-export const DATASETS_TAB = 'datasets'
+export const DATASETS_PAGE = 'datasets'
 
 export const FUNCTIONS_PAGE = 'FUNCTIONS'
 export const FUNCTIONS_PAGE_PATH = 'functions'
-export const ARTIFACTS_PAGE = 'ARTIFACTS'
+export const ARTIFACTS_PAGE = 'artifacts'
 
-export const FILES_PAGE = 'FILES'
-export const FILES_TAB = 'files'
+export const FILES_PAGE = 'files'
 
 export const MONITORING_APP_PAGE = 'monitoring-app'
 
-export const DOCUMENTS_PAGE = 'DOCUMENTS'
-export const DOCUMENTS_TAB = 'documents'
+export const DOCUMENTS_PAGE = 'documents'
 
-export const LLM_PROMPTS_PAGE = 'LLM-PROMPTS'
-export const LLM_PROMPTS_TAB = 'llm-prompts'
+export const LLM_PROMPTS_PAGE = 'llm-prompts'
+export const PROMPT_TAB = 'prompt'
+export const ARGUMENTS_TAB = 'arguments'
 
 export const PROJECT_MONITOR = 'monitor'
 
@@ -321,6 +310,8 @@ export const DETAILS_RESULTS_TAB = 'results'
 export const DETAILS_RETURNED_FEATURES_TAB = 'returned-features'
 export const DETAILS_STATISTICS_TAB = 'statistics'
 export const DETAILS_TRANSFORMATIONS_TAB = 'transformations'
+export const DETAILS_PROMPT_TEMPLATE_TAB = 'prompt-template'
+export const DETAILS_GENERATION_CONFIGURATION_TAB = 'generation-configuration'
 export const FETCH_MODEL_FEATURE_VECTOR_BEGIN = 'FETCH_MODEL_FEATURE_VECTOR_BEGIN'
 export const FETCH_MODEL_FEATURE_VECTOR_FAILURE = 'FETCH_MODEL_FEATURE_VECTOR_FAILURE'
 export const FETCH_MODEL_FEATURE_VECTOR_SUCCESS = 'FETCH_MODEL_FEATURE_VECTOR_SUCCESS'
@@ -358,10 +349,6 @@ export const KEY_CODES = {
 /*=========== TABLE =============*/
 
 export const TABLE_CONTAINER = 'table-container'
-export const MAIN_TABLE_ID = 'main-table'
-export const MAIN_TABLE_BODY_ID = 'main-table-body'
-
-export const BUTTON_COPY_URI_CELL_TYPE = 'buttonCopyURI'
 
 /*=========== FILTERS =============*/
 
@@ -388,6 +375,8 @@ export const SHOW_UNTAGGED_FILTER = 'showUntagged'
 export const SORT_BY = 'sortBy'
 export const STATUS_FILTER = 'state'
 export const TAG_FILTER = 'tag'
+export const MODEL_NAME_FILTER = 'model-name'
+export const MODEL_TAG_FILTER = 'model-tag'
 export const AUTO_REFRESH_ID = 'auto-refresh'
 export const INTERNAL_AUTO_REFRESH_ID = 'internal-auto-refresh'
 export const AUTO_REFRESH = 'Auto Refresh'
@@ -464,6 +453,7 @@ export const DATASET_TYPE = 'dataset'
 export const DOCUMENT_TYPE = 'document'
 export const MODEL_TYPE = 'model'
 export const ARTIFACT_OTHER_TYPE = 'other'
+export const LLM_PROMPT_TYPE = 'llm-prompt'
 
 /*=========== ROLES =============*/
 
@@ -500,3 +490,11 @@ export const EMPTY_OBJECT = {}
 /*========= PROTOCOLS =============*/
 export const HTTP = 'http://'
 export const HTTPS = 'https://'
+
+/*========= METRICS TYPES =============*/
+export const METRIC_TYPE = 'metric'
+export const RESULT_TYPE = 'result'
+
+/*========= GENERAL TEXT =============*/
+
+export const COUNTERS_GENERAL_MESSAGE = 'Counters use a caching mechanism, and are not auto-refreshed.'

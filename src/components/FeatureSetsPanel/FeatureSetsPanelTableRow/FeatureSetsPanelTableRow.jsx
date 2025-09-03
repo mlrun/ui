@@ -22,10 +22,9 @@ import PropTypes from 'prop-types'
 import { map } from 'lodash'
 import classnames from 'classnames'
 
-import ActionsMenu from '../../../common/ActionsMenu/ActionsMenu'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, ActionsMenu } from 'igz-controls/components'
 
-import { ACTIONS_MENU } from '../../../types'
+import { ACTIONS_MENU } from 'igz-controls/types'
 
 const FeatureSetsPanelTableRow = ({
   actionButton = null,

@@ -51,7 +51,7 @@ import { locatorBuilder } from '../../common-tools/common-tools'
  * }
  * @returns - js object which allow access to table describle page components
  */
-module.exports = function(tableStructure) {
+export default function(tableStructure) {
   const table = tableStructure
   const sortersBuilder = locatorBuilder`${0} ${1} ${2}`
   const columnBuilder = locatorBuilder`${0} ${1} ${2} ${3}`

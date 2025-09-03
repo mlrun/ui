@@ -37,10 +37,6 @@ import {
   ERROR_STATE,
   FAILED_STATE
 } from '../../constants'
-import { generateKeyValues, parseKeyValues, truncateUid } from '../../utils'
-import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
 import {
   abortJob,
   deleteAllJobRuns,
@@ -48,7 +44,12 @@ import {
   fetchJobFunction,
   fetchJobFunctions
 } from '../../reducers/jobReducer'
+import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
+import { generateKeyValues, parseKeyValues } from '../../utils'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
+import { truncateUid } from 'igz-controls/utils/string.util'
 
 export const page = JOBS_PAGE
 const LOG_LEVEL_ID = 'logLevel'
@@ -72,7 +73,9 @@ export const getInfoHeaders = (isSpark, selectedJob) => {
     { label: 'Labels', id: 'labels' },
     { label: 'Log level', id: LOG_LEVEL_ID },
     { label: 'Output path', id: 'outputPath' },
-    { label: 'Total iterations', id: 'iterations' }
+    { label: 'Total iterations', id: 'iterations' },
+    { label: 'Attempt count', id: 'retryCountWithInitialAttempt', tip: 'Number of attempts to run Kubernetes jobs' },
+    { label: 'Maximum attempts', id: 'maxRetriesWithInitialAttempt', tip: 'Maximum number of attempts to run Kubernetes jobs' }
   ]
 
   if (isSpark) {
@@ -88,7 +91,7 @@ export const getInfoHeaders = (isSpark, selectedJob) => {
 export const actionButtonHeader = 'Batch run'
 
 export const JOB_STEADY_STATES = ['completed', ERROR_STATE, 'aborted', FAILED_STATE]
-export const JOB_RUNNING_STATES = ['running', 'pending']
+export const JOB_RUNNING_STATES = ['running', 'pending', 'pendingRetry']
 
 export const getJobsDetailsMenu = (job = {}) => {
   return [

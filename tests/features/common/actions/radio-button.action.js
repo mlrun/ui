@@ -19,18 +19,19 @@ such restriction.
 */
 import { expect } from 'chai'
 
-const action = {
-  isRadioButtonSelected: async function(driver, radiobutton) {
+export const isRadioButtonSelected = async (driver, radiobutton) => {
     const element = await driver.findElement(radiobutton['radiobutton'])
     const selected = await element.isSelected()
     expect(selected).equal(true)
-  },
-  isRadioButtonUnselected: async function(driver, radiobutton) {
+  }
+
+export const isRadioButtonUnselected = async (driver, radiobutton) => {
     const element = await driver.findElement(radiobutton['radiobutton'])
     const selected = await element.isSelected()
     expect(selected).equal(false)
-  },
-  selectRadiobutton: async function(driver, radiobutton) {
+  }
+
+export const selectRadiobutton = async (driver, radiobutton) => {
     const element = await driver.findElement(radiobutton['radiobutton'])
     const elementName = await driver.findElement(radiobutton['name'])
     const selected = await element.isSelected()
@@ -38,6 +39,3 @@ const action = {
       await elementName.click()
     }
   }
-}
-
-module.exports = action

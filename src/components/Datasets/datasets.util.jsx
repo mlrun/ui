@@ -22,29 +22,23 @@ import React from 'react'
 import JobWizard from '../JobWizard/JobWizard'
 import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
 
+import { ARTIFACT_MAX_DOWNLOAD_SIZE, DATASET_TYPE, DATASETS_PAGE } from '../../constants'
+import { PRIMARY_BUTTON, FULL_VIEW_MODE } from 'igz-controls/constants'
 import {
-  ARTIFACT_MAX_DOWNLOAD_SIZE,
-  DATASET_TYPE,
-  DATASETS_PAGE,
-  DATASETS_TAB,
-  FULL_VIEW_MODE,
-  ITERATIONS_FILTER,
-  LABELS_FILTER,
-  NAME_FILTER,
-  TAG_FILTER,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST,
-  SHOW_ITERATIONS
-} from '../../constants'
-import { PRIMARY_BUTTON } from 'igz-controls/constants'
-import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
-import { copyToClipboard } from '../../utils/copyToClipboard'
+  applyTagChanges,
+  chooseOrFetchArtifact,
+  processActionAfterTagUniquesValidation
+} from '../../utils/artifacts.util'
 import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { generateUri } from '../../utils/resources'
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
-import { openPopUp, openDeleteConfirmPopUp } from 'igz-controls/utils/common.util'
+import { openPopUp, openDeleteConfirmPopUp, copyToClipboard } from 'igz-controls/utils/common.util'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
+import {
+  decreaseDetailsLoadingCounter,
+  increaseDetailsLoadingCounter
+} from '../../reducers/detailsReducer'
 
 import TagIcon from 'igz-controls/images/tag-icon.svg?react'
 import YamlIcon from 'igz-controls/images/yaml.svg?react'
@@ -71,24 +65,9 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' }
 ]
 
-export const getFiltersConfig = isAllVersions => ({
-  [NAME_FILTER]: { label: 'Name:', initialValue: '', hidden: isAllVersions },
-  [TAG_FILTER]: {
-    label: 'Version tag:',
-    initialValue: isAllVersions ? TAG_FILTER_ALL_ITEMS : TAG_FILTER_LATEST,
-    isModal: true
-  },
-  [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
-  [ITERATIONS_FILTER]: {
-    label: 'Show best iteration only:',
-    initialValue: isAllVersions ? '' : SHOW_ITERATIONS,
-    isModal: true
-  }
-})
-
 export const registerDatasetTitle = 'Register dataset'
 
-export const generateDataSetsDetailsMenu = (selectedItem, isDemoMode) => [
+export const generateDataSetsDetailsMenu = selectedItem => [
   {
     label: 'overview',
     id: 'overview'
@@ -100,37 +79,33 @@ export const generateDataSetsDetailsMenu = (selectedItem, isDemoMode) => [
   {
     label: 'metadata',
     id: 'metadata',
-    hidden: !selectedItem.schema
+    hidden: !selectedItem?.schema
   },
   {
     label: 'analysis',
     id: 'analysis',
-    hidden: !isDemoMode || !selectedItem.extra_data
+    hidden: !selectedItem?.extra_data
   }
 ]
 
-export const generatePageData = (
-  selectedItem,
-  viewMode,
-  params,
-  isDetailsPopUp = false,
-  isDemoMode
-) => ({
-  page: DATASETS_PAGE,
-  details: {
-    menu: generateDataSetsDetailsMenu(selectedItem, isDemoMode),
-    infoHeaders,
-    type: DATASETS_TAB,
-    hideBackBtn: viewMode === FULL_VIEW_MODE,
-    withToggleViewBtn: true,
-    actionButton: {
-      label: 'Train',
-      hidden: isDetailsPopUp,
-      variant: PRIMARY_BUTTON,
-      onClick: () => handleTrainDataset(selectedItem, params)
+export const generatePageData = (viewMode, isDetailsPopUp = false, selectedItem, params) => {
+  return {
+    page: DATASETS_PAGE,
+    details: {
+      menu: generateDataSetsDetailsMenu(selectedItem),
+      infoHeaders,
+      type: DATASETS_PAGE,
+      hideBackBtn: viewMode === FULL_VIEW_MODE && !isDetailsPopUp,
+      withToggleViewBtn: true,
+      actionButton: {
+        label: 'Train',
+        hidden: isDetailsPopUp,
+        variant: PRIMARY_BUTTON,
+        onClick: () => handleTrainDataset(selectedItem, params)
+      }
     }
   }
-})
+}
 
 const handleTrainDataset = (selectedItem, params) => {
   openPopUp(JobWizard, {
@@ -150,7 +125,17 @@ export const handleApplyDetailsChanges = (
   setNotification,
   dispatch
 ) => {
-  return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
+  return processActionAfterTagUniquesValidation({
+    tag: changes?.data?.tag?.currentFieldValue,
+    artifact: selectedItem,
+    projectName,
+    dispatch,
+    actionCallback: () =>
+      applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification),
+    throwError: true,
+    showLoader: () => dispatch(increaseDetailsLoadingCounter()),
+    hideLoader: () => dispatch(decreaseDetailsLoadingCounter())
+  })
 }
 
 export const generateActionsMenu = (
@@ -173,7 +158,7 @@ export const generateActionsMenu = (
     datasetMin?.target_path?.endsWith('.pq') || datasetMin?.target_path?.endsWith('.parquet')
 
   const getFullDataset = datasetMin => {
-    return chooseOrFetchArtifact(dispatch, DATASETS_TAB, selectedDataset, datasetMin)
+    return chooseOrFetchArtifact(dispatch, DATASETS_PAGE, null, selectedDataset, datasetMin)
   }
 
   return [
@@ -214,7 +199,7 @@ export const generateActionsMenu = (
       {
         label: 'Copy URI',
         icon: <Copy />,
-        onClick: datasetMin => copyToClipboard(generateUri(datasetMin, DATASETS_TAB), dispatch)
+        onClick: datasetMin => copyToClipboard(generateUri(datasetMin, DATASETS_PAGE), dispatch)
       },
       {
         label: 'View YAML',

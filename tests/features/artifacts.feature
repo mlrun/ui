@@ -33,7 +33,7 @@ Feature: Artifacts Page
     Then verify "Files_Table" element visibility on "Files" wizard
     Then verify "Register_File_Button" element visibility on "Files" wizard
     Then "Register_File_Button" element on "Files" should contains "Register artifact" value
-    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options_Main_Table"
 
   @MLA
   @passive
@@ -317,7 +317,7 @@ Feature: Artifacts Page
     And wait load page
     Then verify "Table_FilterBy_Button" element on "Files" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
     Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then select "All tags" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then select "test" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     When click on cell with value "test-file" in "name" column in "Files_Table" table on "Files" wizard
@@ -471,7 +471,6 @@ Feature: Artifacts Page
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
     Then click on "Register_Button" element on "Register_File_Popup" wizard
-    And wait load page
     Then verify if "Confirm_Popup" popup dialog appears
     Then "Title" element on "Confirm_Popup" should contains "Overwrite artifact?" value
     When click on "Overwrite_Button" element on "Confirm_Popup" wizard
@@ -480,11 +479,11 @@ Feature: Artifacts Page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
-    Then "Header" element on "Files_Info_Pane" should contains "test-file" value
-    #TODO: Verify text message 'The <artifact> you are viewing was updated. Close the detail panel and refresh the list to see the current version.' on Files_Info_Pane
+    Then "Header" element on "Files_Info_Pane" should contains "survival-curves_km-survival" value
+    Then verify "Not_In_Filtered_List_Message" element visibility on "Files_Info_Pane" wizard
+    Then "Not_In_Filtered_List_Message" component on "Files_Info_Pane" should be equal "Files_Info_Pane"."Info_Banner_Message"
     #TODO: Verify that editing the tag to an empty string '' will delete the artifact instance
     
-
   @MLA
   @passive
   @inProgress
@@ -513,7 +512,7 @@ Feature: Artifacts Page
     Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
     Then "Title" element on "Modal_Transition_Popup" should contains "survival-curves_km-timelines" value
     Then verify "Data_Status" element visibility on "Modal_Transition_Popup" wizard
-    Then "Data_Status" element on "Modal_Transition_Popup" should contains "Aug 29, 2021, 10:54:15 PM" value
+    Then "Data_Status" element on "Modal_Transition_Popup" should contains "Aug 29, 2021, 07:54:15 PM" value
     Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
     Then click on "Refresh_Button" element on "Modal_Transition_Popup" wizard
     And wait load page
@@ -526,6 +525,7 @@ Feature: Artifacts Page
     Then click on "Source_Path" element on "Files_Info_Pane" wizard
     And wait load page
     Then select "Download" option in action menu on "Modal_Transition_Popup" wizard
+    And wait load page
     And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
@@ -576,6 +576,7 @@ Feature: Artifacts Page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     And click on "MLRun_Logo" element on "commonPagesHeader" wizard
+    And wait load page
     And wait load page
     Then verify "Projects_Table" element visibility on "Projects" wizard
 
@@ -821,7 +822,6 @@ Feature: Artifacts Page
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
     Then click on "Register_Button" element on "Register_File_Popup" wizard
-    And wait load page
     Then verify if "Confirm_Popup" popup dialog appears
     Then "Title" element on "Confirm_Popup" should contains "Overwrite artifact?" value
     When click on "Overwrite_Button" element on "Confirm_Popup" wizard
@@ -845,13 +845,34 @@ Feature: Artifacts Page
     And wait load page
     Then click on "show_all_versions" option on "Files" wizard in "Files_Table" table with "images" value in "name" column with scroll "false"
     And wait load page
+    Then verify "History_Back_Button" element visibility on "Files" wizard
+    Then verify "Version_History_Title" element visibility on "Files" wizard
+    Then "Version_History_Title" element on "Files" should contains "Version history:" value
+    Then verify "Version_History_Model_Name" element visibility on "Files" wizard
+    Then "Version_History_Model_Name" element on "Files" should contains "images" value
+    Then verify "Table_Refresh_Button" element visibility on "Files" wizard
+    Then verify "Register_File_Button" element visibility on "Files" wizard
+    Then verify "Table_FilterBy_Button" element visibility on "Files" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    And wait load page
+    Then verify "Title" element visibility on "FilterBy_Popup" wizard
+    Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+    Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+    Then verify "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected attribute option value "All tags"
+    Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
+    Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+    Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+    Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
+    Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+    Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then verify "Files_Table" element visibility on "Files" wizard
     Then click on "Register_File_Button" element on "Files" wizard
     Then verify if "Register_File_Popup" popup dialog appears
     Then type value "images" to "New_File_Name_Input" field on "Register_File_Popup" wizard
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
     Then click on "Register_Button" element on "Register_File_Popup" wizard
-    And wait load page
     Then verify if "Confirm_Popup" popup dialog appears
     Then "Title" element on "Confirm_Popup" should contains "Overwrite artifact?" value
     When click on "Overwrite_Button" element on "Confirm_Popup" wizard
@@ -868,6 +889,9 @@ Feature: Artifacts Page
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"
     Then check "latest123456" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    And wait load page
+    Then verify "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected attribute option value "All tags"
 
   @MLA
   @smoke

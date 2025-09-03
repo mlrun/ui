@@ -49,6 +49,15 @@ const projectsIguazioApi = {
       }
     })
   },
+  getProjectWorkflowsUpdateAuthorization: project => {
+    return iguazioHttpClient.get(`/projects/__name__/${project}/authorization`, {
+      params: {
+        action: 'update',
+        sub_resource: 'workflow'
+      }
+    })
+  },
+
   updateProjectMembers: data => {
     return iguazioHttpClient.post('/async_transactions', data)
   },

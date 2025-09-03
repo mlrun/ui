@@ -23,10 +23,15 @@ import JobWizard from '../JobWizard/JobWizard'
 
 import { ARTIFACT_TYPE, DATASET_TYPE } from '../../constants'
 import { PRIMARY_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import { openPopUp } from 'igz-controls/utils/common.util'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
+import Api from 'igz-controls/images/mlrun-api-gateways.svg?react'
+import Artifacts from 'igz-controls/images/navbar/mlrun-artifacts.svg?react'
+import BatchRun from 'igz-controls/images/navbar/mlrun-jobs-and-workflows.svg?react'
+import Datasets from 'igz-controls/images/navbar/mlrun-datasets.svg?react'
 import Jupyter from 'igz-controls/images/jupyter.svg?react'
+import Models from 'igz-controls/images/navbar/mlrun-models.svg?react'
+import Realtime from 'igz-controls/images/navbar/mlrun-realtime-functions.svg?react'
 import VSCode from 'igz-controls/images/vs-code.svg?react'
 
 export const launchIDEOptions = [
@@ -46,19 +51,78 @@ export const generateCreateNewOptions = (
   navigate,
   params,
   openRegisterArtifactModal,
+  generateNuclioLink,
+  openPopUp,
   openRegisterModelModal,
   setCreateFeatureSetsPanelIsOpen,
   setIsNewFunctionPopUpOpen,
   isDemoMode
 ) => [
   {
+    label: 'Register dataset',
+    id: 'registerDataset',
+    icon: <Datasets />,
+    handler: () => {
+      openRegisterArtifactModal(DATASET_TYPE)
+    }
+  },
+  {
+    label: 'Register artifact',
+    id: 'registerFile',
+    icon: <Artifacts />,
+    handler: () => {
+      openRegisterArtifactModal(ARTIFACT_TYPE)
+    }
+  },
+  {
     label: 'Batch run',
     id: 'batchRun',
+    icon: <BatchRun />,
     handler: () => {
       openPopUp(JobWizard, {
         params
       })
     }
+  },
+  {
+    label: 'Train model',
+    id: 'trainModel',
+    icon: <Models />,
+    handler: () => {
+      openPopUp(JobWizard, {
+        params,
+        isTrain: true,
+        wizardTitle: 'Train model',
+        isOverview: true
+      })
+    }
+  },
+  {
+    label: 'Batch inference',
+    id: 'batchInference',
+    icon: <Api />,
+    handler: () => {
+      openPopUp(JobWizard, {
+        params,
+        isBatchInference: true,
+        wizardTitle: 'Batch inference'
+      })
+    }
+  },
+  {
+    label: 'Create real-time function',
+    id: 'createRealTimeFunction',
+    icon: <Realtime />,
+    handler: () =>
+      window.open(generateNuclioLink(`/projects/${params.projectName}/create-function`), '_blank')
+  },
+  {
+    label: 'Register model',
+    id: 'registerModel',
+    handler: () => {
+      openRegisterModelModal()
+    },
+    hidden: !isDemoMode
   },
   {
     label: 'ML function',
@@ -71,29 +135,18 @@ export const generateCreateNewOptions = (
   {
     label: 'Feature set',
     id: 'featureSet',
-    handler: () => setCreateFeatureSetsPanelIsOpen(true)
-  },
-  {
-    label: 'Register artifact',
-    id: 'registerFile',
-    handler: () => {
-      openRegisterArtifactModal(ARTIFACT_TYPE)
-    }
-  },
-  {
-    label: 'Register model',
-    id: 'registerModel',
-    handler: () => {
-      openRegisterModelModal()
-    },
+    handler: () => setCreateFeatureSetsPanelIsOpen(true),
     hidden: !isDemoMode
   },
   {
-    label: 'Register dataset',
-    id: 'registerDataset',
-    handler: () => {
-      openRegisterArtifactModal(DATASET_TYPE)
-    }
+    label: 'Create feature vector',
+    id: 'createFeatureVector',
+    handler: () =>
+      navigate(
+        `/projects/${params.projectName}/feature-store/feature-vectors?openPanel=true`,
+        '_blank'
+      ),
+    hidden: !isDemoMode
   }
 ]
 

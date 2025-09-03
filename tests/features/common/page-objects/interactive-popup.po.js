@@ -37,8 +37,7 @@ import {
   generateCheckboxGroup
 } from '../../common-tools/common-tools'
 import inputWithAutocomplete from '../components/input-with-autocomplete.component'
-
-const { By } = require('selenium-webdriver')
+import { By } from 'selenium-webdriver'
 
 const memberOverviewLabelsTable = {
   root: '.settings__members',
@@ -645,8 +644,8 @@ const commonProjectFilterInput = inputGroup(
 
 const commonTableTreeFilterDropdown = dropdownComponent(
   generateDropdownGroup(
-    '#overlay_container .form-tag-filter .form-tag-filter__input-wrapper',
-    '.form-tag-filter__dropdown-button',
+    '.filters-wizard .form-tag-filter',
+    '.form-tag-filter__input-wrapper input',
     '.form-tag-filter__dropdown .form-tag-filter__dropdown-item'
   )
 )
@@ -717,7 +716,7 @@ const infoPaneOverviewSourcesHeaders = {
   }
 }
 
-module.exports = {
+export default {
   createNewProject: {
     Title: commonTitle,
     Name_Input: inputGroup(
@@ -1489,7 +1488,7 @@ module.exports = {
       }
     }),
     Discard_Button: By.css('.apply-discard-buttons .pop-up-dialog__btn_cancel'),
-    Apply_Button: By.css('.apply-discard-buttons button.btn-secondary')
+    Apply_Button: By.css('.apply-discard-buttons .btn-primary')
   },
   projectMembersPopup: {
     Cross_Cancel_Button: commonCrossCancelButton,
@@ -1552,7 +1551,7 @@ module.exports = {
       }
     }),
     Discard_Button: By.css('.apply-discard-buttons .pop-up-dialog__btn_cancel'),
-    Apply_Button: By.css('.apply-discard-buttons button.btn-secondary'),
+    Apply_Button: By.css('.apply-discard-buttons .btn-primary'),
     Footer_Annotation_Label: By.css('.footer-annotation')
   },
   createNewSecretPopup: {
@@ -1738,7 +1737,7 @@ module.exports = {
       generateDropdownGroup(
         '[data-testid="type-form-field-select"]',
         '[data-testid="select-header"]',
-        '[data-testid="select-option"] [data-testid="tooltip-wrapper"]'
+        '.options-list .select__item:not(.hidden) .tooltip-wrapper'
       )
     ),
     Show_Iterations_Checkbox: checkboxComponent({
@@ -1791,6 +1790,14 @@ module.exports = {
     }),
     Status_Pending_Checkbox: checkboxComponent({
       root: '[data-testid="select-checkbox"]:nth-of-type(7)',
+      elements: {
+        checkbox: 'input',
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Status_Pending_retry_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(8)',
       elements: {
         checkbox: 'input',
         name: 'label',

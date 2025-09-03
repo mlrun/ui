@@ -17,21 +17,45 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import Loader from '../../common/Loader/Loader'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, Loader } from 'igz-controls/components'
 
 import Arrow from 'igz-controls/images/arrow.svg?react'
+import { isNil } from 'lodash'
 
 const ProjectStatisticsCounter = ({ counterObject }) => {
+  const MAX_VISIBLE_COUNTER = 999999
   const dataCardStatisticsValueClassNames = classnames(
     'project-data-card__statistics-value',
     `statistics_${counterObject.className}`,
     typeof counterObject.value !== 'number' && 'project-data-card__statistics-value_not-available'
   )
+
+  const generatedCountersContent = useMemo(() => {
+    if (!isNil(counterObject.value) && isFinite(Number(counterObject.value))) {
+      const displayValue = counterObject.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+
+      if (Number(counterObject.value) < MAX_VISIBLE_COUNTER) {
+        return {
+          value: displayValue
+        }
+      }
+
+      const truncatedValue = Math.floor(counterObject.value / 100000) / 10
+
+      return {
+        value: (truncatedValue % 1 === 0 ? Math.floor(truncatedValue) : truncatedValue) + 'M',
+        tooltip: ` (${displayValue})`
+      }
+    }
+
+    return {
+      value: counterObject.value
+    }
+  }, [counterObject.value])
 
   return counterObject.counterTooltip ? (
     <Tooltip template={<TextTooltipTemplate text={counterObject.counterTooltip} />} textShow>
@@ -40,18 +64,16 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
           <Loader section small secondary />
         ) : (
           <>
-            {counterObject.value}
+            {generatedCountersContent.value}
             <Arrow className="project-data-card__statistics-arrow" />
           </>
         )}
       </div>
       <div className="project-data-card__statistics-label">
-        <Tooltip
-          className={counterObject.labelClassName || ''}
-          template={<TextTooltipTemplate text={counterObject.label} />}
-        >
-          {counterObject.label}
-        </Tooltip>
+        <div className="project-data-card__statistics-label">
+          <span>{counterObject.label}</span>
+          {counterObject.status && <i className={`state-${counterObject.status}`} />}
+        </div>
       </div>
     </Tooltip>
   ) : (
@@ -61,7 +83,12 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
           <Loader section small secondary />
         ) : (
           <>
-            {counterObject.value}
+            <Tooltip
+              textShow={Boolean(generatedCountersContent.tooltip)}
+              template={<TextTooltipTemplate text={generatedCountersContent.tooltip} />}
+            >
+              {generatedCountersContent.value}
+            </Tooltip>
             <Arrow className="project-data-card__statistics-arrow" />
           </>
         )}
@@ -70,7 +97,8 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
         className="project-data-card__statistics-label"
         key={counterObject.label + Math.random()}
       >
-        {counterObject.label}
+        <span>{counterObject.label}</span>
+        {counterObject.status && <i className={`state-${counterObject.status}`} />}
       </div>
     ]
   )

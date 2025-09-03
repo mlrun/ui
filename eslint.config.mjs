@@ -3,6 +3,7 @@ import globals from 'globals'
 import js from '@eslint/js'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
+import eslintPluginImport from 'eslint-plugin-import'
 
 export default [
   { ignores: ['dist', '.__mf__temp'] },
@@ -20,28 +21,28 @@ export default [
         ecmaFeatures: {
           jsx: true
         }
-      },
-      sourceType: 'module' // ✅ Optional, helps with ESM imports
+      }
     },
     plugins: {
       react: react,
-      'react-hooks': reactHooks
+      'react-hooks': reactHooks,
+      import: eslintPluginImport
     },
     settings: {
       react: {
         version: 'detect'
       }
     },
-
     rules: {
       ...reactHooks.configs.recommended.rules,
       ...react.configs.recommended.rules,
       'react/react-in-jsx-scope': 'off',
       'react/no-unescaped-entities': 'off',
       'import/no-anonymous-default-export': 'off',
-      'no-unused-vars': process.env.NODE_ENV === 'production' ? 1 : 1,
-      'no-debugger': process.env.NODE_ENV === 'production' ? 1 : 1,
-      'no-console': process.env.NODE_ENV === 'production' ? 1 : 1,
+      'import/named': process.env.NODE_ENV === 'production' ? 2 : 1,
+      'no-unused-vars': process.env.NODE_ENV === 'production' ? 2 : 1,
+      'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 1,
+      'no-console': process.env.NODE_ENV === 'production' ? 2 : 1,
       quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: false }],
       semi: ['error', 'never']
     }

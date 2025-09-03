@@ -47,7 +47,7 @@ const tabSelector = {
 const actionMenuStructure = {
   root: '.actions-menu__container',
   menuElements: {
-    open_button: 'button',
+    open_button: '[data-testid="actions-menu"]',
     options: '.actions-menu__body .actions-menu__option'
   }
 }
@@ -378,7 +378,7 @@ const commonTableTreeFilterDropdown = dropdownComponent(
   )
 )
 
-module.exports = {
+export default {
   featureSetsTab: {
     Table_FilterBy_Button: tableFilterByButton,
     Table_Refresh_Button: tableRefreshButton,

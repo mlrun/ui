@@ -21,9 +21,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import Loader from '../../common/Loader/Loader'
 import Details from '../../components/Details/Details'
-import { Modal } from 'igz-controls/components'
+import { Modal, Loader } from 'igz-controls/components'
 
 import { MODAL_MAX } from 'igz-controls/constants'
 import { DETAILS_OVERVIEW_TAB } from '../../constants'

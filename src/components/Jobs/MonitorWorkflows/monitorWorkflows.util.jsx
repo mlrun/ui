@@ -22,6 +22,7 @@ import { debounce } from 'lodash'
 
 import {
   FUNCTIONS_PAGE,
+  FUNCTION_RUNNING_STATE,
   GROUP_BY_NONE,
   GROUP_BY_WORKFLOW,
   JOBS_PAGE,
@@ -46,7 +47,8 @@ import { isEveryObjectValueEmpty } from '../../../utils/isEveryObjectValueEmpty'
 
 import MonitorIcon from 'igz-controls/images/monitor-icon.svg?react'
 import Run from 'igz-controls/images/run.svg?react'
-import Cancel from 'igz-controls/images/close.svg?react'
+import Cancel from 'igz-controls/images/cancel.svg?react'
+import Close from 'igz-controls/images/close.svg?react'
 import Yaml from 'igz-controls/images/yaml.svg?react'
 import Delete from 'igz-controls/images/delete.svg?react'
 import Rerun from 'igz-controls/images/rerun.svg?react'
@@ -83,8 +85,11 @@ export const generateActionsMenu = (
   jobs_dashboard_url,
   handleMonitoring,
   abortable_function_kinds,
+  ce,
   handleConfirmAbortJob,
   handleConfirmDeleteJob,
+  handleConfirmTerminateWorkflow,
+  accessibleProjectsMap,
   toggleConvertedYaml,
   handleRerun,
   rerunIsDisabled
@@ -115,7 +120,7 @@ export const generateActionsMenu = (
         },
         {
           label: 'Abort',
-          icon: <Cancel />,
+          icon: <Close />,
           onClick: handleConfirmAbortJob,
           tooltip: jobKindIsAbortable
             ? jobIsAborting
@@ -140,7 +145,7 @@ export const generateActionsMenu = (
       ]
     ]
   } else {
-    const runningStates = ['running', 'pending']
+    const runningStates = ['running', 'pending', 'terminating']
 
     return [
       [
@@ -155,9 +160,17 @@ export const generateActionsMenu = (
           icon: <Rerun />,
           label: 'Retry',
           onClick: () => handleRerun(job),
-          tooltip:
-            [PENDING_STATE, UNKNOWN_STATE].includes(job?.state?.value) &&
-            'Retry is unavailable while workflow status is pending, refresh the display to check for updates.'
+          tooltip: [PENDING_STATE, UNKNOWN_STATE].includes(job?.state?.value)
+            ? 'Retry is unavailable while workflow status is pending, refresh the display to check for updates.'
+            : ''
+        },
+        {
+          label: 'Terminate',
+          icon: <Cancel />,
+          className: 'danger',
+          onClick: handleConfirmTerminateWorkflow,
+          hidden: !ce && !accessibleProjectsMap[job?.project],
+          disabled: job?.state?.value !== FUNCTION_RUNNING_STATE
         }
       ]
     ]

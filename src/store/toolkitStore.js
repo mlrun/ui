@@ -28,24 +28,29 @@ import featureStore from '../reducers/featureStoreReducer'
 import filtersStore from '../reducers/filtersReducer'
 import functionsStore from '../reducers/functionReducer'
 import jobsStore from '../reducers/jobReducer'
-import notificationStore from '../reducers/notificationReducer'
+import monitoringApplicationsStore from '../reducers/monitoringApplicationsReducer'
 import nuclioStore from '../reducers/nuclioReducer'
 import projectStore from '../reducers/projectReducer'
 import tableStore from '../reducers/tableReducer'
 import tasksStore from '../reducers/tasksReducer'
 import workflowsStore from '../reducers/workflowReducer'
+import commonDetailsStore from 'igz-controls/reducers/commonDetailsReducer'
+import notificationStore from 'igz-controls/reducers/notificationReducer'
+
 
 const toolkitStore = configureStore({
   reducer: {
     alertsStore,
     appStore,
     artifactsStore,
+    commonDetailsStore,
     detailsStore,
     downloadStore,
     featureStore,
     filtersStore,
     functionsStore,
     jobsStore,
+    monitoringApplicationsStore,
     notificationStore,
     nuclioStore,
     projectStore,

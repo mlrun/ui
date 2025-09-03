@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-const RandExp = require('randexp')
+import RandExp from 'randexp'
 
 // const rules = `• Valid characters: A-Z, a-z, 0-9, -, _, .\n
 //                • Must begin and end with: A-Z, a-z, 0-9\n

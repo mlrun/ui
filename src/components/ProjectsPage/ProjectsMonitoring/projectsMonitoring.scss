@@ -11,15 +11,71 @@
 
   &-stats {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
 
-    @media screen and (min-width: 1400px) {
-      grid-template-columns: 4fr 4fr 3.5fr 4fr;
+    &_narrow {
+      grid-template-columns: repeat(5, minmax(110px, 1fr));
+
+      @media (max-width: 1250px) {
+        grid-template-columns: repeat(6, minmax(110px, 1fr));
+        gap: 10px;
+      }
+    }
+
+    &_wide {
+      grid-template-columns: repeat(6, minmax(110px, 1fr));
+
+      @media (max-width: 1150px) {
+        .monitoring-stats .project-card__info {
+          display: none;
+        }
+      }
+
+      @media (max-width: 1250px) {
+        grid-template-columns: repeat(6, minmax(110px, 1fr));
+        gap: 10px;
+      }
+
+      @media (max-width: 1100px) {
+        grid-template-columns: repeat(7, minmax(110px, 1fr));
+        gap: 10px;
+      }
     }
   }
 
   [class^='state-'] {
     margin-left: 5px;
+  }
+}
+
+main.unpinned {
+  .projects-monitoring-stats_narrow {
+    @media (max-width: 1250px) {
+      grid-template-columns: repeat(5, minmax(110px, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 1100px) {
+      grid-template-columns: repeat(6, minmax(110px, 1fr));
+      gap: 10px;
+    }
+  }
+
+  .projects-monitoring-stats_wide {
+    @media (max-width: 1150px) {
+      .monitoring-stats .project-card__info {
+        display: none;
+      }
+    }
+
+    @media (max-width: 1250px) {
+      grid-template-columns: repeat(6, minmax(110px, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 1100px) {
+      grid-template-columns: repeat(7, minmax(110px, 1fr));
+      gap: 10px;
+    }
   }
 }

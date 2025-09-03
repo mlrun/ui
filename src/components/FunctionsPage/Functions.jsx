@@ -62,19 +62,20 @@ import {
 } from '../../reducers/functionReducer'
 import createFunctionsRowData from '../../utils/createFunctionsRowData'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { transformSearchParams } from '../../utils/filter.util'
+import { transformSearchParams } from 'igz-controls/utils/filter.util'
 import { isBackgroundTaskRunning } from '../../utils/poll.util'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseFunctions } from '../../utils/parseFunctions'
 import { runNewJob } from '../../reducers/jobReducer'
 import { setFilters } from '../../reducers/filtersReducer'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { toggleYaml } from '../../reducers/appReducer'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { useMode } from '../../hooks/mode.hook'
 import { usePagination } from '../../hooks/usePagination.hook'
+import { useTableScroll } from 'igz-controls/hooks/useTable.hook'
 
 const Functions = ({ isAllVersions = false }) => {
   const [confirmData, setConfirmData] = useState(null)
@@ -647,6 +648,12 @@ const Functions = ({ isAllVersions = false }) => {
     filters: functionsFilters,
     paginationConfigRef: paginationConfigFunctionVersionsRef,
     resetPaginationTrigger: `${params.projectName}_${isAllVersions}`
+  })
+
+  useTableScroll({
+    content: isAllVersions ? paginatedFunctionVersions : paginatedFunctions,
+    selectedItem: selectedFunction,
+    isAllVersions
   })
 
   const tableContent = useMemo(

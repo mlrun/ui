@@ -21,13 +21,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
-import { RoundedIcon } from 'igz-controls/components'
+import { RoundedIcon, Tip } from 'igz-controls/components'
 
 import Back from 'igz-controls/images/back-arrow.svg?react'
 
 import './pageHeader.scss'
 
-const PageHeader = ({ title, description = '', backLink = '' }) => {
+const PageHeader = ({ title, description = '', backLink = '', tip = '' }) => {
   return (
     <div className="page-header">
       {backLink && (
@@ -40,7 +40,10 @@ const PageHeader = ({ title, description = '', backLink = '' }) => {
         </div>
       )}
       <div className="page-header__title-wrapper">
-        <div className="page-header__title">{title}</div>
+        <div className="page-header__title">
+          {title}
+          {tip && <Tip className="tooltip-wrapper" text={tip} withExclamationMark />}
+        </div>
         <div className="page-header__description">{description}</div>
       </div>
     </div>
@@ -50,7 +53,8 @@ const PageHeader = ({ title, description = '', backLink = '' }) => {
 PageHeader.propTypes = {
   backLink: PropTypes.string,
   description: PropTypes.string,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  tip: PropTypes.string
 }
 
 export default PageHeader

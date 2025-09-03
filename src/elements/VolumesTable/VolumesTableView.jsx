@@ -22,11 +22,10 @@ import { find, has, map } from 'lodash'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
-import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import EditableVolumesRow from '../EditableVolumesRow/EditableVolumesRow'
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
-import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tip, Tooltip, TextTooltipTemplate, ActionsMenu } from 'igz-controls/components'
 
 import {
   getVolumeTypeInput,
@@ -36,7 +35,7 @@ import {
   tableHeaders,
   V3IO
 } from './volumesTable.util'
-import { joinDataOfArrayOrObject } from '../../utils'
+import { joinDataOfArrayOrObject } from 'igz-controls/utils/string.util'
 
 import Plus from 'igz-controls/images/plus.svg?react'
 import Delete from 'igz-controls/images/delete.svg?react'

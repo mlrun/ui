@@ -4,22 +4,38 @@
 $stickyHeaderHeight: 55px;
 
 .metrics-wrapper {
-  &__custom-filters {
+  &__header {
     position: sticky;
     top: 0;
     z-index: 2;
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     background-color: colors.$white;
 
-    > * {
-      margin: 0 0 15px 0;
+    &__custom-filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      width: 100%;
+      background-color: colors.$white;
+
+      > * {
+        margin: 0 0 15px 0;
+      }
+
+      .details-date-picker {
+        margin-left: 15px;
+      }
     }
 
-    .details-date-picker {
-      margin-left: 15px;
+    &__title {
+      max-width: 350px;
+      font-size: 24px;
+
+      a:hover {
+        text-decoration: underline;
+      }
     }
   }
 

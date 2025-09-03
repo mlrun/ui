@@ -38,14 +38,14 @@ import {
   getWorkflowDetailsLink,
   getWorkflowMonitoringDetailsLink
 } from '../components/Workflow/workflow.util'
-import measureTime from './measureTime'
-import { formatDatetime } from './datetime'
+import { measureTime } from './measureTime'
 import { generateLinkToDetailsPanel } from './link-helper.util'
 import { getJobIdentifier, getWorkflowJobIdentifier } from './getUniqueIdentifier'
 import { parseKeyValues } from './object'
 import { validateArguments } from './validateArguments'
-import { getJobKindFromLabels } from './jobs.util'
-import { saveAndTransformSearchParams } from './filter.util'
+import { getJobKindFromLabels, typesOfJob } from './jobs.util'
+import { saveAndTransformSearchParams } from 'igz-controls/utils/filter.util'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
 
 export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
   return jobs.map(job => {
@@ -94,7 +94,8 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           type: type === JOB_KIND_WORKFLOW && !isStagingMode ? 'hidden' : 'link',
           getLink,
           showStatus: true,
-          showUidRow: true
+          showUid: true,
+          showDate: true
         },
         {
           headerId: 'type',
@@ -102,7 +103,8 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           id: `type.${identifierUnique}`,
           value: type,
           className: 'table-cell-1',
-          type: 'type'
+          type: 'type',
+          types: typesOfJob
         },
         {
           headerId: 'job.uid',
@@ -160,6 +162,14 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           value: job.updated || new Date(job.finished_at),
           className: 'table-cell-1',
           type: 'hidden'
+        },
+        {
+          headerId: 'attempts',
+          headerLabel: 'Attempts',
+          id: `attempts.${identifierUnique}`,
+          value: `${job.retryCountWithInitialAttempt} out of ${job.maxRetriesWithInitialAttempt}`,
+          className: 'table-cell-1',
+          tip: 'Number of attempts to run Kubernetes jobs'
         }
       ]
     }
@@ -201,7 +211,8 @@ export const createJobsScheduleTabContent = jobs => {
           id: `type.${identifierUnique}`,
           value: job.type,
           className: 'table-cell-small',
-          type: 'type'
+          type: 'type',
+          types: typesOfJob
         },
         {
           headerId: 'nextrun',
@@ -386,7 +397,8 @@ export const createJobsWorkflowContent = (
                 )
           },
           showStatus: true,
-          showUidRow: true
+          showUid: true,
+          showDate: true
         },
         {
           headerId: 'kind',
@@ -395,6 +407,7 @@ export const createJobsWorkflowContent = (
           value: job.run_type,
           className: 'table-cell-1',
           type: 'type',
+          types: typesOfJob,
           hidden: isSelectedItem
         },
         {
@@ -451,7 +464,7 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
         const savedAndTransformedSearchParams = saveAndTransformSearchParams(
           window.location.search,
           true,
-          [BE_PAGE, FE_PAGE, NAME_FILTER]
+          [BE_PAGE, FE_PAGE, NAME_FILTER, PROJECT_FILTER]
         )
 
         return `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}/${job.name}${savedAndTransformedSearchParams}${savedAndTransformedSearchParams ? '&' : '?'}${`${PROJECT_FILTER}=${job.project}`}`
@@ -477,7 +490,8 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
           type: type === JOB_KIND_WORKFLOW && !isStagingMode ? 'hidden' : 'link',
           getLink,
           showStatus: true,
-          showUidRow: true
+          showUid: true,
+          showDate: true
         },
         {
           headerId: 'projectName',
@@ -492,7 +506,8 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
           id: `type.${identifierUnique}`,
           value: type,
           className: 'table-cell-1',
-          type: 'type'
+          type: 'type',
+          types: typesOfJob
         },
         {
           headerId: 'job.uid',
@@ -549,6 +564,14 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
           value: job.updated || new Date(job.finished_at),
           className: 'table-cell-1',
           type: 'hidden'
+        },
+        {
+          headerId: 'attempts',
+          headerLabel: 'Attempts',
+          id: `attempts.${identifierUnique}`,
+          value: `${job.retryCountWithInitialAttempt} out of ${job.maxRetriesWithInitialAttempt}`,
+          className: 'table-cell-1',
+          tip: 'Number of attempts to run Kubernetes jobs'
         }
       ]
     }
@@ -597,7 +620,8 @@ export const createScheduleJobsMonitoringContent = jobs => {
           id: `type.${identifierUnique}`,
           value: job.type,
           className: 'table-cell-small',
-          type: 'type'
+          type: 'type',
+          types: typesOfJob
         },
         {
           headerId: 'nextrun',

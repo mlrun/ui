@@ -31,21 +31,22 @@ import { TIME_FRAME_LIMITS } from '../utils/datePicker.util'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 
 const initialState = {
-  changes: {
-    counter: 0,
-    data: {}
-  },
   dates: {
     value: DATE_FILTER_ANY_TIME,
     selectedOptionId: '',
     isPredefined: false
   },
-  detailsPopUpInfoContent: {},
-  editMode: false,
+  detailsJobPods: {
+    loading: true,
+    podsList: [],
+    podsPending: [],
+    podsTooltip: []
+  },
   error: null,
-  infoContent: {},
   iteration: '',
   iterationOptions: [],
+  runAttempt: '0',
+  runAttemptOptions: [],
   loadingCounter: 0,
   modelFeatureVectorData: {},
   pods: {
@@ -54,8 +55,6 @@ const initialState = {
     podsPending: [],
     podsTooltip: []
   },
-  filtersWasHandled: false,
-  showWarning: false,
   metricsOptions: {
     all: [],
     lastSelected: [],
@@ -76,14 +75,17 @@ export const fetchModelFeatureVector = createAsyncThunk(
   }
 )
 
-export const fetchDetailsJobPods = createAsyncThunk('fetchDetailsJobPods', ({ project, uid, kind }, thunkAPI) => {
-  return detailsApi
+export const fetchDetailsJobPods = createAsyncThunk(
+  'fetchDetailsJobPods',
+  ({ project, uid, kind }, thunkAPI) => {
+    return detailsApi
       .getJobPods(project, uid, kind)
       .then(({ data }) => {
         return generatePods(project, uid, data)
       })
       .catch(error => thunkAPI.rejectWithValue(error))
-})
+  }
+)
 
 export const fetchJobPods = createAsyncThunk('fetchJobPods', ({ project, uid, kind }, thunkAPI) => {
   return detailsApi
@@ -96,13 +98,13 @@ export const fetchJobPods = createAsyncThunk('fetchJobPods', ({ project, uid, ki
 
 export const fetchModelEndpointMetrics = createAsyncThunk(
   'fetchEndpointMetrics',
-  ({ project, uid }, thunkAPI) => {
+  ({ project, uid, applicationName = '' }, thunkAPI) => {
     return modelEndpointsApi
       .getModelEndpointMetrics(project, uid)
       .then(({ data = [] }) => {
-        const metrics = generateMetricsItems(data)
+        const metrics = generateMetricsItems(data, applicationName)
 
-        return { endpointUid: uid, metrics }
+        return { endpointUid: uid, metrics, applicationName }
       })
       .catch(error => thunkAPI.rejectWithValue(error))
   }
@@ -147,11 +149,8 @@ const detailsStoreSlice = createSlice({
   name: 'detailsStore',
   initialState,
   reducers: {
-    removeDetailsPopUpInfoContent(state) {
-      state.detailsPopUpInfoContent = {}
-    },
-    removeInfoContent(state) {
-      state.infoContent = {}
+    removeDetailsPods(state) {
+      state.detailsJobPods = initialState.detailsJobPods
     },
     removeModelFeatureVector(state) {
       state.modelFeatureVectorData = initialState.modelFeatureVectorData
@@ -159,38 +158,20 @@ const detailsStoreSlice = createSlice({
     removePods(state) {
       state.pods = initialState.pods
     },
-    resetChanges(state) {
-      state.changes = initialState.changes
-    },
-    setChanges(state, action) {
-      state.changes = action.payload
-    },
-    setChangesCounter(state, action) {
-      state.changes.counter = action.payload
-    },
-    setChangesData(state, action) {
-      state.changes.data = action.payload
-    },
     setDetailsDates(state, action) {
       state.dates = action.payload
-    },
-    setDetailsPopUpInfoContent(state, action) {
-      state.detailsPopUpInfoContent = action.payload
-    },
-    setEditMode(state, action) {
-      state.editMode = action.payload
-    },
-    setFiltersWasHandled(state, action) {
-      state.filtersWasHandled = action.payload
-    },
-    setInfoContent(state, action) {
-      state.infoContent = action.payload
     },
     setIteration(state, action) {
       state.iteration = action.payload
     },
     setIterationOption(state, action) {
       state.iterationOptions = action.payload
+    },
+    setRunAttempt(state, action) {
+      state.runAttempt = action.payload
+    },
+    setRunAttemptOptions(state, action) {
+      state.runAttemptOptions = action.payload
     },
     setSelectedMetricsOptions(state, action) {
       state.metricsOptions = {
@@ -202,8 +183,19 @@ const detailsStoreSlice = createSlice({
         }
       }
     },
-    showWarning(state, action) {
-      state.showWarning = action.payload
+    increaseDetailsLoadingCounter(state) {
+      state.loadingCounter = state.loadingCounter + 1
+    },
+    decreaseDetailsLoadingCounter(state) {
+      state.loadingCounter = state.loadingCounter - 1
+    },
+    clearMetricsOptions(state) {
+      state.metricsOptions = {
+        all: [],
+        lastSelected: [],
+        preselected: [],
+        selectedByEndpoint: {}
+      }
     }
   },
   extraReducers: builder => {
@@ -218,6 +210,17 @@ const detailsStoreSlice = createSlice({
     builder.addCase(fetchModelFeatureVector.rejected, (state, action) => {
       state.loadingCounter = state.loadingCounter - 1
       state.modelFeatureVectorData = { ...initialState.modelFeatureVectorData }
+      state.error = action.payload
+    })
+    builder.addCase(fetchDetailsJobPods.pending, state => {
+      state.detailsJobPods.loading = true
+    })
+    builder.addCase(fetchDetailsJobPods.fulfilled, (state, action) => {
+      state.detailsJobPods = { ...action.payload, loading: false }
+      state.error = null
+    })
+    builder.addCase(fetchDetailsJobPods.rejected, (state, action) => {
+      state.detailsJobPods.loading = false
       state.error = action.payload
     })
     builder.addCase(fetchJobPods.pending, state => {
@@ -283,23 +286,18 @@ const detailsStoreSlice = createSlice({
 })
 
 export const {
-  removeDetailsPopUpInfoContent,
-  removeInfoContent,
+  removeDetailsPods,
   removeModelFeatureVector,
   removePods,
-  resetChanges,
-  setChanges,
-  setChangesCounter,
-  setChangesData,
   setDetailsDates,
-  setDetailsPopUpInfoContent,
-  setEditMode,
-  setFiltersWasHandled,
-  setInfoContent,
   setIteration,
   setIterationOption,
+  setRunAttempt,
+  setRunAttemptOptions,
   setSelectedMetricsOptions,
-  showWarning
+  increaseDetailsLoadingCounter,
+  decreaseDetailsLoadingCounter,
+  clearMetricsOptions
 } = detailsStoreSlice.actions
 
 export default detailsStoreSlice.reducer

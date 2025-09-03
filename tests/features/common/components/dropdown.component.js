@@ -20,7 +20,7 @@ such restriction.
 import { By } from 'selenium-webdriver'
 import { locatorBuilder } from '../../common-tools/common-tools'
 
-module.exports = function(dropdownStructure) {
+export default function(dropdownStructure) {
   const root = dropdownStructure.optionsInRoot
     ? dropdownStructure.root
     : '#overlay_container'

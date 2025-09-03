@@ -23,8 +23,7 @@ import { map } from 'lodash'
 import cronstrue from 'cronstrue'
 
 import Accordion from '../../../common/Accordion/Accordion'
-import ChipCell from '../../../common/ChipCell/ChipCell'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, ChipCell } from 'igz-controls/components'
 
 import Arrow from 'igz-controls/images/arrow.svg?react'
 

@@ -37,10 +37,11 @@ import {
   FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
+  LLM_PROMPTS_PAGE,
   MODELS_PAGE
 } from '../../constants'
 import { parseKeyValues } from '../../utils'
-import { getChipOptions } from '../../utils/getChipOptions'
+import { getChipOptions } from 'igz-controls/utils/chips.util'
 
 import RightArrow from 'igz-controls/images/ic_arrow-right.svg?react'
 
@@ -57,7 +58,7 @@ const DetailsInfoView = React.forwardRef(
       },
       detailsInfoDispatch,
       detailsInfoState,
-      detailsStore,
+      commonDetailsStore,
       formState,
       handleDiscardChanges,
       handleFinishEdit,
@@ -70,8 +71,8 @@ const DetailsInfoView = React.forwardRef(
     ref
   ) => {
     const infoContent = useMemo(
-      () => (isDetailsPopUp ? detailsStore.detailsPopUpInfoContent : detailsStore.infoContent),
-      [detailsStore.infoContent, detailsStore.detailsPopUpInfoContent, isDetailsPopUp]
+      () => (isDetailsPopUp ? commonDetailsStore.detailsPopUpInfoContent : commonDetailsStore.infoContent),
+      [commonDetailsStore.infoContent, commonDetailsStore.detailsPopUpInfoContent, isDetailsPopUp]
     )
     const wrapperClassNames = classnames(
       !isEveryObjectValueEmpty(additionalInfo)
@@ -90,7 +91,8 @@ const DetailsInfoView = React.forwardRef(
               pageData.page === FUNCTIONS_PAGE ||
               pageData.page === MODELS_PAGE ||
               pageData.page === FEATURE_STORE_PAGE ||
-              pageData.page === DOCUMENTS_PAGE) &&
+              pageData.page === DOCUMENTS_PAGE ||
+              pageData.page === LLM_PROMPTS_PAGE) &&
               params.pageTab !== FEATURE_SETS_TAB && <h3 className="item-info__header">General</h3>}
             <ul className="item-info__details">
               {pageData.details.infoHeaders?.map(header => {
@@ -139,7 +141,8 @@ const DetailsInfoView = React.forwardRef(
                   pageData.page === FILES_PAGE ||
                   pageData.page === MODELS_PAGE ||
                   pageData.page === FEATURE_STORE_PAGE ||
-                  pageData.page === DOCUMENTS_PAGE
+                  pageData.page === DOCUMENTS_PAGE ||
+                  pageData.page === LLM_PROMPTS_PAGE
                 ) {
                   if (header.id === 'labels') {
                     chipsData.validationRules = infoContent[header.id]?.validationRules
@@ -157,8 +160,8 @@ const DetailsInfoView = React.forwardRef(
                     chipsData.delimiter = <RightArrow />
                   }
 
-                  info = !isNil(detailsStore.changes.data[header.id])
-                    ? detailsStore.changes.data[header.id].currentFieldValue
+                  info = !isNil(commonDetailsStore.changes.data[header.id])
+                    ? commonDetailsStore.changes.data[header.id].currentFieldValue
                     : selectedItem && infoContent[header.id]?.value
                 } else if (pageData.page === FUNCTIONS_PAGE) {
                   info =
@@ -266,7 +269,7 @@ DetailsInfoView.propTypes = {
   }),
   detailsInfoDispatch: PropTypes.func.isRequired,
   detailsInfoState: PropTypes.object.isRequired,
-  detailsStore: PropTypes.object.isRequired,
+  commonDetailsStore: PropTypes.object.isRequired,
   formState: PropTypes.object,
   handleDiscardChanges: PropTypes.func.isRequired,
   handleFinishEdit: PropTypes.func.isRequired,

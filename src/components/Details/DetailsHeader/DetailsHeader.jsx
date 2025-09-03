@@ -17,40 +17,24 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useRef, useMemo } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
-import { Button, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
-import LoadButton from '../../../common/LoadButton/LoadButton'
 import Select from '../../../common/Select/Select'
-import ActionsMenu from '../../../common/ActionsMenu/ActionsMenu'
+import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
-import {
-  DETAILS_ARTIFACTS_TAB,
-  FULL_VIEW_MODE,
-  JOBS_PAGE,
-  VIEW_SEARCH_PARAMETER
-} from '../../../constants'
-import { formatDatetime } from '../../../utils'
-import { TERTIARY_BUTTON } from 'igz-controls/constants'
-import { ACTIONS_MENU } from '../../../types'
-import { getViewMode } from '../../../utils/helper'
-import {
-  generateUrlFromRouterPath,
-  getDefaultCloseDetailsLink
-} from '../../../utils/link-helper.util'
-import { getFilteredSearchParams } from '../../../utils/filter.util'
-import { setIteration } from '../../../reducers/detailsReducer'
+import { ACTIONS_MENU } from 'igz-controls/types'
+import { DETAILS_ARTIFACTS_TAB, DETAILS_LOGS_TAB, JOBS_PAGE } from '../../../constants'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
+import { generateUrlFromRouterPath } from 'igz-controls/utils/common.util'
+import { getDefaultCloseDetailsLink } from '../../../utils/link-helper.util'
+import { setIteration, setRunAttempt } from '../../../reducers/detailsReducer'
+import { useDetailsHeader } from 'igz-controls/hooks/useDetailsHeader.hook'
 
-import Close from 'igz-controls/images/close.svg?react'
 import Back from 'igz-controls/images/back-arrow.svg?react'
-import Refresh from 'igz-controls/images/refresh.svg?react'
-import EnlargeIcon from 'igz-controls/images/ml-enlarge.svg?react'
-import MinimizeIcon from 'igz-controls/images/ml-minimize.svg?react'
-import HistoryIcon from 'igz-controls/images/history.svg?react'
 import InfoIcon from 'igz-controls/images/info-fill.svg?react'
 
 const DetailsHeader = ({
@@ -60,22 +44,37 @@ const DetailsHeader = ({
   cancelChanges,
   getCloseDetailsLink = null,
   handleCancel = null,
-  handleRefresh,
+  handleRefresh = null,
   handleShowWarning,
-  isDetailsScreen,
   isDetailsPopUp = false,
+  isDetailsScreen,
   pageData,
   selectedItem,
-  tab,
+  tab = '',
   withActionMenu = true
 }) => {
+  const {
+    DetailsHeaderContainer,
+    actionButton,
+    commonDetailsStore,
+    handleActionClick,
+    handleBackClick,
+    handleCancelClick,
+    headerRef,
+    location,
+    navigate,
+    params,
+    showAllVersions,
+    viewMode,
+    withToggleViewBtn
+  } = useDetailsHeader({
+    handleCancel,
+    handleShowWarning,
+    isDetailsPopUp,
+    pageData
+  })
+
   const detailsStore = useSelector(store => store.detailsStore)
-  const params = useParams()
-  const navigate = useNavigate()
-  const viewMode = getViewMode(window.location.search)
-  const { actionButton, withToggleViewBtn, showAllVersions } = pageData.details
-  const headerRef = useRef()
-  const location = useLocation()
   const dispatch = useDispatch()
 
   const errorMessage = useMemo(
@@ -89,256 +88,210 @@ const DetailsHeader = ({
   )
 
   const podsData = useMemo(() => {
-    return isDetailsPopUp ? selectedItem?.ui?.podsData : detailsStore.pods
-  }, [detailsStore.pods, isDetailsPopUp, selectedItem])
+    return isDetailsPopUp ? detailsStore.detailsJobPods : detailsStore.pods
+  }, [detailsStore.detailsJobPods, detailsStore.pods, isDetailsPopUp])
 
-  const {
-    value: stateValue,
-    label: stateLabel,
-    className: stateClassName
-  } = selectedItem.state || {}
+  const state = useMemo(() => {
+    const selectedItemState = selectedItem.state || {}
 
-  const handleBackClick = useCallback(() => {
-    if (detailsStore.changes.counter > 0) {
-      handleShowWarning(true)
-    } else {
-      handleCancel()
+    return {
+      value: selectedItemState.value,
+      label: selectedItemState.label,
+      className: selectedItemState.className
     }
-  }, [detailsStore.changes.counter, handleCancel, handleShowWarning])
+  }, [selectedItem.state])
 
-  const handleCancelClick = useCallback(() => {
-    if (detailsStore.changes.counter === 0 || isDetailsPopUp) {
-      handleCancel()
-    }
-  }, [detailsStore.changes.counter, handleCancel, isDetailsPopUp])
-
-  return (
-    <div className="item-header" ref={headerRef}>
-      <div className="item-header__data">
-        <h3 className="item-header__title">
-          {isDetailsScreen && !pageData.details.hideBackBtn && !isDetailsPopUp && (
-            <Link
-              className="item-header__back-btn"
-              to={
-                getCloseDetailsLink
-                  ? getCloseDetailsLink(selectedItem.name)
-                  : generateUrlFromRouterPath(
-                      window.location.pathname.split('/').slice(0, -2).join('/') +
-                        window.location.search
-                    )
-              }
-              onClick={handleBackClick}
-            >
-              <RoundedIcon id="go-back" tooltipText="Go to list">
-                <Back />
-              </RoundedIcon>
-            </Link>
-          )}
-          <Tooltip
-            template={<TextTooltipTemplate text={selectedItem.name || selectedItem.db_key} />}
-          >
-            {selectedItem.name || selectedItem.db_key}
-          </Tooltip>
-        </h3>
-        <div className="item-header__status">
-          {/*In the Workflow page we display both Jobs and Functions items. The function contains `updated` property.
-            The job contains startTime property.*/}
-          <div className="item-header__status-row">
-            <span className="updated data-ellipsis">
-              {Object.keys(selectedItem).length > 0 &&
-              pageData.page === JOBS_PAGE &&
-              !selectedItem?.updated
-                ? formatDatetime(
-                    selectedItem?.startTime,
-                    stateValue === 'aborted' ? 'N/A' : 'Not yet started'
+  const renderTitle = useCallback(() => {
+    return (
+      <>
+        {isDetailsScreen && !pageData.details.hideBackBtn && !isDetailsPopUp && (
+          <Link
+            className="item-header__back-btn"
+            to={
+              getCloseDetailsLink
+                ? getCloseDetailsLink(selectedItem.name)
+                : generateUrlFromRouterPath(
+                    window.location.pathname.split('/').slice(0, -2).join('/') +
+                      window.location.search
                   )
-                : selectedItem?.updated
-                  ? formatDatetime(selectedItem?.updated, 'N/A')
-                  : pageData.details.additionalHeaderInfo || ''}
-            </span>
-            {stateValue && stateLabel && (
-              <Tooltip className="state" template={<TextTooltipTemplate text={stateLabel} />}>
-                <i className={stateClassName} />
-              </Tooltip>
-            )}
-          </div>
-          <div className="item-header__status-row">
-            {selectedItem.ui?.customError?.title && selectedItem.ui?.customError?.message && (
-              <Tooltip
-                className="error-container"
-                template={
-                  <TextTooltipTemplate
-                    text={`${selectedItem.ui.customError.title} ${selectedItem.ui.customError.message}`}
-                  />
-                }
-              >
-                {selectedItem.ui.customError.title} {selectedItem.ui.customError.message}
-              </Tooltip>
-            )}
-            {errorMessage && (
-              <Tooltip
-                className="error-container"
-                template={<TextTooltipTemplate text={errorMessage} />}
-              >
-                {errorMessage}
-              </Tooltip>
-            )}
-            {!isEmpty(podsData?.podsPending) && (
-              <span className="left-margin">
-                {`${podsData.podsPending.length} of ${podsData.podsList.length} pods are pending`}
-              </span>
-            )}
-            {detailsStore.pods.error && (
-              <span className="item-header__pods-error left-margin">Failed to load pods</span>
-            )}
-          </div>
-          {selectedItem.ui?.infoMessage && (
-            <div className="item-header__status-row">
-              <div className="info-banner">
-                <InfoIcon />
-                <Tooltip
-                  className="error-container"
-                  template={<TextTooltipTemplate text={selectedItem.ui.infoMessage} />}
-                >
-                  {selectedItem.ui.infoMessage}
-                </Tooltip>
-              </div>
-            </div>
+            }
+            onClick={handleBackClick}
+          >
+            <RoundedIcon id="go-back" tooltipText="Go to list">
+              <Back />
+            </RoundedIcon>
+          </Link>
+        )}
+        <Tooltip template={<TextTooltipTemplate text={selectedItem.name || selectedItem.db_key} />}>
+          {selectedItem.name || selectedItem.db_key}
+        </Tooltip>
+      </>
+    )
+  }, [
+    isDetailsScreen,
+    pageData.details.hideBackBtn,
+    isDetailsPopUp,
+    getCloseDetailsLink,
+    selectedItem.name,
+    handleBackClick,
+    selectedItem.db_key
+  ])
+
+  const renderStatus = useCallback(() => {
+    return (
+      <>
+        {/*In the Workflow page we display both Jobs and Functions items. The function contains `updated` property.
+            The job contains startTime property.*/}
+        <div className="item-header__status-row">
+          <span className="updated data-ellipsis">
+            {Object.keys(selectedItem).length > 0 &&
+            pageData.page === JOBS_PAGE &&
+            !selectedItem?.updated
+              ? formatDatetime(
+                  selectedItem?.startTime,
+                  state.value === 'aborted' ? 'N/A' : 'Not yet started'
+                )
+              : selectedItem?.updated
+                ? formatDatetime(selectedItem?.updated, 'N/A')
+                : pageData.details.additionalHeaderInfo || ''}
+          </span>
+          {state.value && state.label && (
+            <Tooltip className="state" template={<TextTooltipTemplate text={state.label} />}>
+              <i className={state.className} />
+            </Tooltip>
           )}
         </div>
-      </div>
-      <div className="item-header__custom-elements">
-        {params.tab === DETAILS_ARTIFACTS_TAB && detailsStore.iteration && !isDetailsPopUp && (
-          <Select
-            density="dense"
-            key="Iteration"
-            label="Iteration:"
-            onClick={option => {
-              dispatch(setIteration(option))
-            }}
-            options={detailsStore.iterationOptions}
-            selectedId={detailsStore.iteration}
-          />
-        )}
-      </div>
-      <div className="item-header__buttons">
-        {detailsStore.changes.counter > 0 && !isDetailsPopUp && (
-          <>
-            <Button
-              variant={TERTIARY_BUTTON}
-              label="Cancel"
-              onClick={cancelChanges}
-              disabled={detailsStore.changes.counter === 0 || detailsStore.editMode}
-            />
+        <div className="item-header__status-row">
+          {selectedItem.ui?.customError?.title && selectedItem.ui?.customError?.message && (
             <Tooltip
+              className="error-container"
               template={
                 <TextTooltipTemplate
-                  text={`${detailsStore.changes.counter} ${
-                    detailsStore.changes.counter === 1 ? 'change pending' : 'changes pending'
-                  }`}
+                  text={`${selectedItem.ui.customError.title} ${selectedItem.ui.customError.message}`}
                 />
               }
             >
-              <LoadButton
-                ref={applyChangesRef}
-                variant="primary"
-                label="Apply Changes"
-                className="btn_apply-changes"
-                onClick={applyChanges}
-                disabled={detailsStore.changes.counter === 0 || detailsStore.editMode}
-              />
+              {selectedItem.ui.customError.title} {selectedItem.ui.customError.message}
             </Tooltip>
-          </>
-        )}
-        {actionButton && !actionButton.hidden && (
-          <Button
-            disabled={actionButton.disabled}
-            label={actionButton.label}
-            onClick={actionButton.onClick}
-            tooltip={actionButton.tooltip}
-            variant={actionButton.variant}
-          />
-        )}
-        {showAllVersions && (
-          <RoundedIcon
-            id="showAllVersions"
-            onClick={() => showAllVersions()}
-            tooltipText="Show all versions"
-          >
-            <HistoryIcon />
-          </RoundedIcon>
-        )}
-        {isDetailsScreen && (
-          <RoundedIcon
-            id="refresh"
-            onClick={() => handleRefresh(selectedItem)}
-            tooltipText="Refresh"
-          >
-            <Refresh />
-          </RoundedIcon>
-        )}
-        {withActionMenu && <ActionsMenu dataItem={selectedItem} menu={actionsMenu} time={500} />}
-        <div className="item-header__navigation-buttons">
-          {withToggleViewBtn && !isDetailsPopUp && (
-            <>
-              {viewMode !== FULL_VIEW_MODE && (
-                <RoundedIcon
-                  onClick={() => {
-                    navigate(
-                      `${location.pathname}${window.location.search}${window.location.search ? '&' : '?'}${VIEW_SEARCH_PARAMETER}=full`
-                    )
-                  }}
-                  id="full-view"
-                  tooltipText="Full view"
-                >
-                  <EnlargeIcon />
-                </RoundedIcon>
-              )}
-              {viewMode === FULL_VIEW_MODE && (
-                <RoundedIcon
-                  onClick={() => {
-                    navigate(
-                      `${location.pathname}${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`
-                    )
-                  }}
-                  id="table-view"
-                  tooltipText="Table view"
-                >
-                  <MinimizeIcon />
-                </RoundedIcon>
-              )}
-            </>
           )}
-          {!pageData.details.hideBackBtn &&
-            (isDetailsPopUp ? (
-              <div
-                className="details-close-btn"
-                data-testid="details-close-btn"
-                onClick={handleCancelClick}
-              >
-                <RoundedIcon tooltipText="Close" id="details-close">
-                  <Close />
-                </RoundedIcon>
-              </div>
-            ) : (
-              <Link
-                className="details-close-btn"
-                data-testid="details-close-btn"
-                to={
-                  getCloseDetailsLink
-                    ? getCloseDetailsLink(selectedItem.name)
-                    : getDefaultCloseDetailsLink(params, pageData.page, tab)
-                }
-                onClick={handleCancelClick}
-              >
-                <RoundedIcon tooltipText="Close" id="details-close">
-                  <Close />
-                </RoundedIcon>
-              </Link>
-            ))}
+          {errorMessage && (
+            <Tooltip
+              className="error-container"
+              template={<TextTooltipTemplate text={errorMessage} />}
+            >
+              {errorMessage}
+            </Tooltip>
+          )}
+          {!isEmpty(podsData?.podsPending) && (
+            <span className="left-margin">
+              {`${podsData.podsPending.length} of ${podsData.podsList.length} pods are pending`}
+            </span>
+          )}
+          {detailsStore.pods.error && (
+            <span className="item-header__pods-error left-margin">Failed to load pods</span>
+          )}
         </div>
-      </div>
-    </div>
+        {selectedItem.ui?.infoMessage && (
+          <div className="item-header__status-row">
+            <div className="info-banner">
+              <InfoIcon />
+              <Tooltip
+                className="error-container"
+                template={<TextTooltipTemplate text={selectedItem.ui.infoMessage} />}
+              >
+                {selectedItem.ui.infoMessage}
+              </Tooltip>
+            </div>
+          </div>
+        )}
+      </>
+    )
+  }, [
+    selectedItem,
+    pageData.page,
+    pageData.details.additionalHeaderInfo,
+    errorMessage,
+    podsData.podsPending,
+    podsData.podsList.length,
+    detailsStore.pods.error,
+    state.value,
+    state.label,
+    state.className
+  ])
+
+  const renderCustomElements = useCallback(() => {
+    switch (params.tab) {
+      case DETAILS_ARTIFACTS_TAB: {
+        return (
+          detailsStore.iteration &&
+          detailsStore.iterationOptions &&
+          !isDetailsPopUp && (
+            <Select
+              density="dense"
+              key="Iteration"
+              label="Iteration:"
+              onClick={option => {
+                dispatch(setIteration(option))
+              }}
+              options={detailsStore.iterationOptions}
+              selectedId={detailsStore.iteration}
+            />
+          )
+        )
+      }
+      case DETAILS_LOGS_TAB: {
+        return (
+          detailsStore.runAttempt &&
+          !isEmpty(detailsStore.runAttemptOptions) &&
+          !isDetailsPopUp && (
+            <Select
+              density="dense"
+              key="Attempts"
+              label="Attempt:"
+              onClick={option => {
+                dispatch(setRunAttempt(option))
+              }}
+              options={detailsStore.runAttemptOptions}
+              selectedId={detailsStore.runAttempt}
+            />
+          )
+        )
+      }
+      default:
+        return null
+    }
+  }, [params.tab, detailsStore.iteration, detailsStore.iterationOptions, detailsStore.runAttempt, detailsStore.runAttemptOptions, isDetailsPopUp, dispatch])
+
+  return (
+    <DetailsHeaderContainer
+      actionButton={actionButton}
+      actionsMenu={actionsMenu}
+      applyChanges={applyChanges}
+      applyChangesRef={applyChangesRef}
+      cancelChanges={cancelChanges}
+      commonDetailsStore={commonDetailsStore}
+      getCloseDetailsLink={getCloseDetailsLink}
+      getDefaultCloseDetailsLink={getDefaultCloseDetailsLink}
+      handleActionClick={handleActionClick}
+      handleCancelClick={handleCancelClick}
+      handleRefresh={handleRefresh}
+      headerRef={headerRef}
+      isDetailsPopUp={isDetailsPopUp}
+      isDetailsScreen={isDetailsScreen}
+      location={location}
+      navigate={navigate}
+      pageData={pageData}
+      params={params}
+      renderCustomElements={renderCustomElements}
+      renderStatus={renderStatus}
+      renderTitle={renderTitle}
+      selectedItem={selectedItem}
+      showAllVersions={showAllVersions}
+      tab={tab}
+      viewMode={viewMode}
+      withActionMenu={withActionMenu}
+      withToggleViewBtn={withToggleViewBtn}
+    />
   )
 }
 

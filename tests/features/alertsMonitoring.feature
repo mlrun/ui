@@ -76,6 +76,10 @@ Feature: Alerts Monitoring Page
         Then verify "Table_FilterBy_Button" element on "Alerts_Monitoring" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
         Then click on "Table_FilterBy_Button" element on "Alerts_Monitoring" wizard
         Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+        Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Clear_Button" element on "FilterBy_Popup" wizard is enabled
+        Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
         Then verify "Project_Name_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then verify "Entity_Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
@@ -93,10 +97,6 @@ Feature: Alerts Monitoring Page
         Then verify "Event_Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
         Then verify "Event_Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then verify "Event_Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Event_Type_Endpoint_Filter_Options"
-        Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
-        Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
-        Then verify "Clear_Button" element on "FilterBy_Popup" wizard is enabled
-        Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then click on breadcrumbs "projectsPage" label on "commonPagesHeader" wizard
         And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
@@ -342,7 +342,6 @@ Feature: Alerts Monitoring Page
 
     @MLAM
     @smoke
-    # TODO: Add data to the mock to check the following elements
     Scenario: MLAM007 - Check components on Endpoints alert detail pane
         Given open url
         And wait load page
@@ -379,20 +378,34 @@ Feature: Alerts Monitoring Page
         Then verify "Overview_Trigger_Criteria" on "Alerts_Endpoint_Info_Pane" wizard should contains "Alerts_Jobs_Info_Pane"."Overview_Trigger_Criteria_Headers"
         Then verify "Notifications_Header" element visibility on "Alerts_Endpoint_Info_Pane" wizard
         Then verify "Notifications_Item" element visibility on "Alerts_Endpoint_Info_Pane" wizard
-        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Alerts_Endpoint_Info_Pane" wizard
-        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Alerts_Endpoint_Info_Pane" wizard selected option value "Past 24 hours"
-        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Alerts_Endpoint_Info_Pane" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options_Endpoint"
-        Then click on "Header" element on "Alerts_Endpoint_Info_Pane" wizard
-        And wait load page
-        # Add data to the mock to check the following elements
-        # Then verify "Metrics_App_Name" element visibility on "Alerts_Endpoint_Info_Pane" wizard
-        # Then verify "Metrics_Stats_Card" element visibility on "Alerts_Endpoint_Info_Pane" wizard
         Then verify "Metrics_Stats_Card_Empty" element visibility on "Alerts_Endpoint_Info_Pane" wizard
+        Then "Metrics_Stats_Card_Empty" element on "Alerts_Endpoint_Info_Pane" should contains "Metrics data not found" value
         Then click on "Cross_Close_Button" element on "Alerts_Endpoint_Info_Pane" wizard
         Then verify "Header" element not exists on "Alerts_Endpoint_Info_Pane" wizard
         When click on cell with row index 1 in "alertName" column in "Alerts_Table" table on "Alerts_Monitoring" wizard
         And wait load page
         Then verify "Header" element visibility on "Alerts_Endpoint_Info_Pane" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Alerts_Monitoring" wizard
+        And wait load page
+        When click on cell with value "alert-name-uqbxb-proj-default" in "alertName" column in "Alerts_Table" table on "Alerts_Monitoring" wizard
+        And wait load page
+        Then verify "Header" element visibility on "Alerts_Endpoint_Info_Pane" wizard
+        Then verify "Overview_General_Headers" element visibility on "Alerts_Endpoint_Info_Pane" wizard
+        Then verify "Overview_General_Headers" on "Alerts_Endpoint_Info_Pane" wizard should contains "Alerts_Endpoint_Info_Pane"."Overview_General_Headers"
+        Then verify "Overview_Trigger_Criteria" element visibility on "Alerts_Endpoint_Info_Pane" wizard
+        Then verify "Overview_Trigger_Criteria" on "Alerts_Endpoint_Info_Pane" wizard should contains "Alerts_Jobs_Info_Pane"."Overview_Trigger_Criteria_Headers"
+        Then verify "Notifications_Header" element visibility on "Alerts_Endpoint_Info_Pane" wizard
+        Then verify "Notifications_Item" element visibility on "Alerts_Endpoint_Info_Pane" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Alerts_Endpoint_Info_Pane" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Alerts_Endpoint_Info_Pane" wizard selected option value "Past 24 hours"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Alerts_Endpoint_Info_Pane" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options_Endpoint"
+        Then click on "Header" element on "Alerts_Endpoint_Info_Pane" wizard
+        And wait load page
+        Then verify "Metrics_App_Name" element visibility on "Alerts_Endpoint_Info_Pane" wizard
+        Then verify "Metrics_Stats_Card" element visibility on "Alerts_Endpoint_Info_Pane" wizard
+        Then verify "Metrics_Stats_Card_Metric_Name" element visibility on "Alerts_Endpoint_Info_Pane" wizard
+        Then verify "Metrics_Stats_Card_Metric_BodyBar" element visibility on "Alerts_Endpoint_Info_Pane" wizard
+        Then verify "Metrics_Stats_Card_Metric_BodyLine" element visibility on "Alerts_Endpoint_Info_Pane" wizard
 
     @MLAM
     @smoke

@@ -33,8 +33,8 @@ import 'prismjs/components/prism-yaml.min.js'
 import 'prismjs/components/prism-json.min.js'
 import 'prismjs/components/prism-python.min.js'
 
+import { LoaderForSuspenseFallback } from 'igz-controls/components'
 import Header from './layout/Header/Header'
-import LoaderForSuspenseFallback from './common/Loader/LoaderForSuspenseFallback'
 import Notifications from './common/Notifications/Notifications'
 
 import localStorageService from './utils/localStorageService'
@@ -62,7 +62,8 @@ import {
   JOBS_MONITORING_PAGE,
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_WORKFLOWS_TAB,
-  JOBS_MONITORING_SCHEDULED_TAB
+  JOBS_MONITORING_SCHEDULED_TAB,
+  INACTIVE_JOBS_TAB
 } from './constants'
 
 import 'reactflow/dist/style.css'
@@ -123,9 +124,22 @@ const WorkflowsMonitoring = lazyRetry(
 )
 const Documents = lazyRetry(() => import('./components/Documents/Documents'))
 const LLMPrompts = lazyRetry(() => import('./components/LLMPrompts/LLMPrompts'))
+const ApplicationMetrics = lazyRetry(
+  () => import('./components/ApplicationMetrics/ApplicationMetrics')
+)
 
+const MonitoringApplicationsPage = lazyRetry(
+  () => import('./components/MonitoringApplicationsPage/MonitoringApplicationsPage')
+)
+const MonitoringApplications = lazyRetry(
+  () =>
+    import('./components/MonitoringApplicationsPage/MonitoringApplications/MonitoringApplications')
+)
 const MonitoringApplication = lazyRetry(
-  () => import('./components/MonitoringApplication/MonitoringApplication')
+  () =>
+    import(
+      './components/MonitoringApplicationsPage/MonitoringApplications/MonitoringApplication/MonitoringApplication'
+    )
 )
 
 const App = () => {
@@ -206,6 +220,9 @@ const App = () => {
             {[
               `${MONITOR_JOBS_TAB}/:jobName/:jobId/:tab`,
               `${MONITOR_JOBS_TAB}/:jobId/:tab`,
+              /*/!* Adding for backwards compatibility, it redirects from INACTIVE_JOBS_TAB in Jobs.jxs to MONITOR_JOBS_TAB *!/*/
+              `${INACTIVE_JOBS_TAB}/:jobId/:tab`,
+              /*/!***********************************************************************************************************!/*/
               `${MONITOR_JOBS_TAB}/:jobName`,
               `${MONITOR_JOBS_TAB}`
             ].map((path, index) => {
@@ -253,9 +270,9 @@ const App = () => {
               ))}
           {[
             'projects/:projectName/datasets',
-            'projects/:projectName/datasets/:datasetName/:id/:tab',
-            `projects/:projectName/datasets/:datasetName/${ALL_VERSIONS_PATH}`,
-            `projects/:projectName/datasets/:datasetName/${ALL_VERSIONS_PATH}/:id/:tab`
+            'projects/:projectName/datasets/:artifactName/:id/:tab',
+            `projects/:projectName/datasets/:artifactName/${ALL_VERSIONS_PATH}`,
+            `projects/:projectName/datasets/:artifactName/${ALL_VERSIONS_PATH}/:id/:tab`
           ].map((path, index) => (
             <Fragment key={index}>
               <Route path={path} element={<Datasets isAllVersions={[2, 3].includes(index)} />} />
@@ -288,9 +305,9 @@ const App = () => {
           <Route path="projects/:projectName/models/*" element={<ModelsPage />}>
             {[
               `${MODELS_TAB}`,
-              `${MODELS_TAB}/:modelName/:id/:tab`,
-              `${MODELS_TAB}/:modelName/${ALL_VERSIONS_PATH}`,
-              `${MODELS_TAB}/:modelName/${ALL_VERSIONS_PATH}/:id/:tab`
+              `${MODELS_TAB}/:artifactName/:id/:tab`,
+              `${MODELS_TAB}/:artifactName/${ALL_VERSIONS_PATH}`,
+              `${MODELS_TAB}/:artifactName/${ALL_VERSIONS_PATH}/:id/:tab`
             ].map((path, index) => (
               <Fragment key={index}>
                 <Route path={path} element={<Models isAllVersions={[2, 3].includes(index)} />} />
@@ -315,24 +332,38 @@ const App = () => {
           </Route>
           {[
             'projects/:projectName/files',
-            'projects/:projectName/files/:fileName/:id/:tab',
-            `projects/:projectName/files/:fileName/${ALL_VERSIONS_PATH}`,
-            `projects/:projectName/files/:fileName/${ALL_VERSIONS_PATH}/:id/:tab`
+            'projects/:projectName/files/:artifactName/:id/:tab',
+            `projects/:projectName/files/:artifactName/${ALL_VERSIONS_PATH}`,
+            `projects/:projectName/files/:artifactName/${ALL_VERSIONS_PATH}/:id/:tab`
           ].map((path, index) => (
             <Fragment key={index}>
               <Route path={path} element={<Files isAllVersions={[2, 3].includes(index)} />} />
             </Fragment>
           ))}
-          {['projects/:projectName/monitoring-app'].map((path, index) => (
+          {[
+            `projects/:projectName/monitoring-app/:appName/${MODEL_ENDPOINTS_TAB}`,
+            `projects/:projectName/monitoring-app/:appName/${MODEL_ENDPOINTS_TAB}/:id`
+          ].map((path, index) => (
             <Fragment key={index}>
-              <Route path={path} element={<MonitoringApplication />} />
+              <Route path={path} element={<ApplicationMetrics />} />
             </Fragment>
           ))}
+          <Route
+            path="projects/:projectName/monitoring-app/*"
+            element={<MonitoringApplicationsPage />}
+          >
+            <Route path="" element={<MonitoringApplications />} />
+            {[':name'].map((path, index) => (
+              <Fragment key={index}>
+                <Route path={path} element={<MonitoringApplication />} />
+              </Fragment>
+            ))}
+          </Route>
           {[
             'projects/:projectName/documents',
-            'projects/:projectName/documents/:documentName/:id/:tab',
-            `projects/:projectName/documents/:documentName/${ALL_VERSIONS_PATH}`,
-            `projects/:projectName/documents/:documentName/${ALL_VERSIONS_PATH}/:id/:tab`
+            'projects/:projectName/documents/:artifactName/:id/:tab',
+            `projects/:projectName/documents/:artifactName/${ALL_VERSIONS_PATH}`,
+            `projects/:projectName/documents/:artifactName/${ALL_VERSIONS_PATH}/:id/:tab`
           ].map((path, index) => (
             <Fragment key={index}>
               <Route path={path} element={<Documents isAllVersions={[2, 3].includes(index)} />} />
@@ -340,9 +371,9 @@ const App = () => {
           ))}
           {[
             'projects/:projectName/llm-prompts',
-            'projects/:projectName/llm-prompts/:promptName/:id/:tab',
-            `projects/:projectName/llm-prompts/:promptName/${ALL_VERSIONS_PATH}`,
-            `projects/:projectName/llm-prompts/:promptName/${ALL_VERSIONS_PATH}/:id/:tab`
+            'projects/:projectName/llm-prompts/:artifactName/:id/:tab',
+            `projects/:projectName/llm-prompts/:artifactName/${ALL_VERSIONS_PATH}`,
+            `projects/:projectName/llm-prompts/:artifactName/${ALL_VERSIONS_PATH}/:id/:tab`
           ].map((path, index) => (
             <Fragment key={index}>
               <Route path={path} element={<LLMPrompts isAllVersions={[2, 3].includes(index)} />} />

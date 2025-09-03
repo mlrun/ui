@@ -26,19 +26,20 @@ import JobWizard from '../../components/JobWizard/JobWizard'
 import JobsTableRow from '../JobsTableRow/JobsTableRow'
 import Table from '../../components/Table/Table'
 import NoData from '../../common/NoData/NoData'
-import Loader from '../../common/Loader/Loader'
+import { Loader } from 'igz-controls/components'
 
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { FILTERS_CONFIG } from '../../types'
 import { JOB_KIND_WORKFLOW, JOBS_PAGE, PANEL_EDIT_MODE, SCHEDULE_TAB } from '../../constants'
 import { fetchFunctionTemplate } from '../../reducers/functionReducer'
 import { getErrorMsg, openPopUp, getScssVariableValue } from 'igz-controls/utils/common.util'
+import { getInitialFiltersByConfig } from '../../hooks/useFiltersFromSearchParams.hook'
 import { getJobFunctionData } from '../../components/Jobs/jobs.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { handleRunScheduledJob, removeScheduledJob } from '../../reducers/jobReducer'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { toggleYaml } from '../../reducers/appReducer'
 
 import Delete from 'igz-controls/images/delete.svg?react'
@@ -88,6 +89,17 @@ const ScheduledJobsTable = ({
   const tableContent = useMemo(() => {
     return createTableContent()
   }, [createTableContent])
+
+
+  const refreshJobsWithFilters = useCallback(
+    (useInitialFilter, isSchedule) => {
+      if (isSchedule) {
+        const initialJobFilters = getInitialFiltersByConfig(filtersConfig)
+        refreshJobs(useInitialFilter ? initialJobFilters : filters)
+      }
+    },
+    [refreshJobs, filtersConfig, filters]
+  )
 
   const toggleConvertedYaml = useCallback(
     data => {
@@ -238,7 +250,8 @@ const ScheduledJobsTable = ({
         defaultData: jobWizardMode === PANEL_EDIT_MODE ? editableItem?.scheduled_object : {},
         mode: jobWizardMode,
         wizardTitle: jobWizardMode === PANEL_EDIT_MODE ? 'Edit job' : undefined,
-        onSuccessRequest: () => refreshJobs(filters)
+        onSuccessRequest: refreshJobsWithFilters,
+        isCrossProjects: !params.projectName
       })
 
       setJobWizardIsOpened(true)
@@ -246,9 +259,9 @@ const ScheduledJobsTable = ({
   }, [
     editableItem?.project,
     editableItem?.scheduled_object,
-    filters,
     jobWizardIsOpened,
     jobWizardMode,
+    refreshJobsWithFilters,
     params,
     refreshJobs,
     setEditableItem,

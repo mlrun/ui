@@ -27,7 +27,7 @@ import ModalContainer from 'react-modal-promise'
 
 import Navbar from '../Navbar/Navbar'
 import YamlModal from '../../common/YamlModal/YamlModal'
-import Loader from '../../common/Loader/Loader'
+import { Loader } from 'igz-controls/components'
 
 import { getTransitionEndEventName } from 'igz-controls/utils/common.util'
 import { fetchFrontendSpec, toggleYaml } from '../../reducers/appReducer'
@@ -66,11 +66,15 @@ const Page = () => {
 
   useEffect(() => {
     if (projectsList.length === 0 && location.pathname !== '/projects') {
-      dispatch(fetchProjects({ params: { format: 'minimal' } }))
+      dispatch(fetchProjects({ params: { format: 'minimal' }, showNotification: false }))
         .unwrap()
         .then(projects => {
           isProjectValid(navigate, projects, projectName, dispatch)
           setProjectFetched(true)
+        })
+        .catch(() => {
+          setProjectFetched(true)
+          navigate('/projects')
         })
     } else {
       setProjectFetched(true)

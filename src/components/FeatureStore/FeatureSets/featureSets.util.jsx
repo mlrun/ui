@@ -28,12 +28,15 @@ import {
   TAG_FILTER,
   TAG_FILTER_LATEST
 } from '../../../constants'
-import { showErrorNotification } from '../../../utils/notifications.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
+import { copyToClipboard } from '../../../utils/copyToClipboard'
+import { generateUri } from '../../../utils/resources'
 import { fetchFeatureSet } from '../../../reducers/featureStoreReducer'
 
+import Copy from 'igz-controls/images/copy-to-clipboard-icon.svg?react'
 import Yaml from 'igz-controls/images/yaml.svg?react'
 
-export const generateFeatureSetsDetailsMenu = (selectedItem, isDemoMode) => [
+export const generateFeatureSetsDetailsMenu = (selectedItem) => [
   {
     label: 'overview',
     id: 'overview'
@@ -59,8 +62,7 @@ export const generateFeatureSetsDetailsMenu = (selectedItem, isDemoMode) => [
   },
   {
     label: 'analysis',
-    id: 'analysis',
-    hidden: !isDemoMode
+    id: 'analysis'
   }
 ]
 
@@ -84,12 +86,12 @@ export const filtersConfig = {
   [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
 }
 
-export const generatePageData = (selectedFeatureSet, isDemoMode) => {
+export const generatePageData = (selectedFeatureSet) => {
   return {
     page: FEATURE_STORE_PAGE,
     details: {
       type: FEATURE_SETS_TAB,
-      menu: generateFeatureSetsDetailsMenu(selectedFeatureSet, isDemoMode),
+      menu: generateFeatureSetsDetailsMenu(selectedFeatureSet),
       infoHeaders: featureSetsInfoHeaders
     }
   }
@@ -104,6 +106,14 @@ export const generateActionsMenu = (dispatch, selectedFeatureSet, toggleConverte
         chooseOrFetchFeatureSet(dispatch, selectedFeatureSet, featureSetMin).then(
           toggleConvertedYaml
         )
+    }
+  ],
+  [
+    {
+      label: 'Copy URI',
+      icon: <Copy />,
+      onClick: featureSet =>
+        copyToClipboard(generateUri(featureSet, null, FEATURE_SETS_TAB), dispatch)
     }
   ]
 ]

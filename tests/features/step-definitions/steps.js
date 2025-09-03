@@ -62,6 +62,7 @@ import {
   checkDropdownContainsOptions,
   checkDropdownOptions,
   checkDropdownSelectedOption,
+  checkDropdownSelectedOptionWithAttribute,
   openDropdown,
   selectOptionInDropdown,
   selectOptionInDropdownWithoutCheck
@@ -143,10 +144,10 @@ When('turn on demo mode with query params {string}', async function(state) {
   await navigateToPage(this.driver, `${url}${state === 'true' ? '&' : '?'}mode=demo`)
 })
 
-When('turn on staging mode', async function() {
+When('turn on staging mode with query params {string}', async function(state) {
   const url = await this.driver.getCurrentUrl()
 
-  await navigateToPage(this.driver, `${url}?mode=staging`)
+  await navigateToPage(this.driver, `${url}${state === 'true' ? '&' : '?'}mode=staging`)
 })
 
 Then('turn Off MLRun CE mode', async function() {
@@ -179,7 +180,7 @@ Then(
     const expectedUrl = `http://${test_url}:${test_port}/${expectedPath}`
 
     await navigateToPage(this.driver, invalidUrl)
-    await this.driver.sleep(250)
+    await this.driver.sleep(1000)
     const afterURL = await this.driver.getCurrentUrl()
 
     expect(expectedUrl).equal(
@@ -749,6 +750,17 @@ When(
 )
 
 Then(
+  'verify {string} dropdown on {string} wizard selected attribute option value {string}',
+  async function(dropdownName, wizardName, optionValue) {
+    await checkDropdownSelectedOptionWithAttribute(
+      this.driver,
+      pageObjects[wizardName][dropdownName],
+      optionValue
+    )
+  }
+)
+
+Then(
   'verify {string} dropdown on {string} wizard selected option value {string}',
   async function(dropdownName, wizardName, optionValue) {
     await checkDropdownSelectedOption(
@@ -809,14 +821,14 @@ When(
       pageObjects[wizardName][dropdownName],
       optionValue
     )
-    await this.driver.sleep(200)
+    await this.driver.sleep(1000)
     await pickUpCustomDatetimeRange(
       this.driver,
       pageObjects[wizardName][datetimePicker],
       fromDatetime,
       toDatetime
     )
-    await this.driver.sleep(200)
+    await this.driver.sleep(2500)
     await applyDatetimePickerRange(
       this.driver,
       pageObjects[wizardName][datetimePicker]
@@ -876,6 +888,14 @@ Then(
       this.driver,
       pageObjects[wizardName][dropdownName]['open_button']
     )
+  }
+)
+
+Then(
+  'verify visibility of header column {string} in {string} table on {string} wizard',
+  async function (columnName, tableName, wizardName) {
+    const locator = pageObjects[wizardName][tableName].headerSorters[columnName]
+    await componentIsVisible(this.driver, locator)
   }
 )
 
@@ -1094,6 +1114,18 @@ Then(
       this.driver,
       pageObjects[wizard][accordion][inputField],
       pageObjects['commonPagesHeader']['Common_Tolltip'],
+      pageObjectsConsts[constStorage][constValue]
+    )
+  }
+)
+
+Then(
+  'verify {string} element in {string} on {string} wizard should display hover hint {string}.{string}',
+  async function(inputField, accordion, wizard, constStorage, constValue) {
+    await checkComponentHintTextWithHover(
+      this.driver,
+      pageObjects[wizard][accordion][inputField],
+      pageObjects['commonPagesHeader']['Common_Hint'],
       pageObjectsConsts[constStorage][constValue]
     )
   }

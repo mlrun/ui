@@ -17,12 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { REQUEST_CANCELED } from '..//constants'
 import { fetchJobLogs } from '../reducers/jobReducer'
 
-export const getJobLogs = (id, project, streamLogsRef, setDetailsLogs, dispatch) => {
+export const getJobLogs = (id, project, streamLogsRef, setDetailsLogs, dispatch, attempt, signal) => {
   setDetailsLogs('')
 
-  dispatch(fetchJobLogs({ id, project }))
+  dispatch(fetchJobLogs({ id, project, attempt, signal }))
     .unwrap()
     .then(res => {
       const reader = res.body?.getReader()
@@ -41,6 +42,10 @@ export const getJobLogs = (id, project, streamLogsRef, setDetailsLogs, dispatch)
 
         streamLogsRef.current = read
         read()
+      }
+    }).catch((error) => {
+      if (error.message === REQUEST_CANCELED) {
+        setDetailsLogs('')
       }
     })
 }

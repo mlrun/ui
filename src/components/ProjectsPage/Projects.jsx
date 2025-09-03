@@ -41,8 +41,8 @@ import { ConfirmDialog } from 'igz-controls/components'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { FORBIDDEN_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { fetchBackgroundTasks } from '../../reducers/tasksReducer'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { useMode } from '../../hooks/mode.hook'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 import {
@@ -364,11 +364,8 @@ const Projects = () => {
   }, [refreshProjects])
 
   useEffect(() => {
-    const terminateRef = terminatePollRef
-
     return () => {
       abortControllerRef.current.abort()
-      terminateRef?.current?.()
     }
   }, [])
 

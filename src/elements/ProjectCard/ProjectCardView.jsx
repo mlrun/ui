@@ -22,13 +22,11 @@ import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 
-import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import Loader from '../../common/Loader/Loader'
 import ReadOnlyChips from '../ReadOnlyChips/ReadOnlyChips'
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, Loader, ActionsMenu } from 'igz-controls/components'
 
-import { getTimeElapsedByDate } from '../../utils'
+import { getTimeElapsedByDate } from 'igz-controls/utils/datetime.util'
 
 import Alerts from 'igz-controls/images/alerts.svg?react'
 import ClockIcon from 'igz-controls/images/clock.svg?react'

@@ -21,22 +21,21 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
-import AlertsCounters from '../../elements/ProjectsMonitoringCounters/AlertsCounters'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
-import Loader from '../../common/Loader/Loader'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 import NoData from '../../common/NoData/NoData'
-import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
 import ProjectDetailsHeader from '../../common/ProjectDetailsHeader/ProjectDetailsHeader'
+import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
 import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
-import ProjectSummaryCard from '../../elements/ProjectSummaryCard/ProjectSummaryCard'
+import ProjectsMonitoring from '../ProjectsPage/ProjectsMonitoring/ProjectsMonitoring'
 import Select from '../../common/Select/Select'
-import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
+
+import { ConfirmDialog, RoundedIcon, Loader } from 'igz-controls/components'
 
 import { PANEL_CREATE_MODE } from '../../constants'
-import { launchIDEOptions, generateTipMessageForCounter } from './project.utils'
+import { launchIDEOptions } from './project.utils'
 
 import RefreshIcon from 'igz-controls/images/refresh.svg?react'
 
@@ -54,20 +53,17 @@ const ProjectMonitorView = ({
   handleDeployFunctionSuccess,
   handleLaunchIDE,
   isNewFunctionPopUpOpen,
-  isNuclioModeDisabled,
   nuclioStreamsAreEnabled,
   params,
   project,
-  projectSummary,
   refresh,
   setIsNewFunctionPopUpOpen,
   setShowFunctionsPanel,
-  showFunctionsPanel,
-  v3ioStreams
+  showFunctionsPanel
 }) => {
   return (
-    <div className="project-wrapper">
-      <div className="project__header">
+    <div className="content-wrapper">
+      <div className="content__header">
         <Breadcrumbs />
       </div>
       {project.loading ? (
@@ -93,13 +89,10 @@ const ProjectMonitorView = ({
       ) : isEmpty(project.data) ? (
         <NoData />
       ) : (
-        <div className="project__content">
+        <div className="content project-content">
           <div className="main-info">
             <ProjectDetailsHeader projectData={project.data} projectName={params.projectName} />
             <div className="main-info__toolbar">
-              <div className="main-info__toolbar-banner">
-                <span>Counters use a caching mechanism, and are not auto-refreshed.</span>
-              </div>
               <div className="main-info__toolbar-actions">
                 <Select
                   className="main-info__toolbar-menu launch-menu"
@@ -113,7 +106,10 @@ const ProjectMonitorView = ({
                   className="main-info__toolbar-menu create-new-menu"
                   density="dense"
                   hideSelectedOption
-                  label="Create new"
+                  position="bottom-left"
+                  width="auto"
+                  popUpClassName=""
+                  label="Quick actions"
                   options={createNewOptions}
                 />
                 <RoundedIcon
@@ -126,60 +122,13 @@ const ProjectMonitorView = ({
                 </RoundedIcon>
               </div>
             </div>
-            <div className="main-info__statistics-section">
-              <div className="main-info__statistics-section_left">
-                <ProjectSummaryCard
-                  counterValue={projectSummary.data.models_count ?? 0}
-                  link={`/projects/${params.projectName}/models`}
-                  projectSummary={projectSummary}
-                  tip={generateTipMessageForCounter('model', 'Models')}
-                  title="Models"
-                />
-
-                <ProjectSummaryCard
-                  counterValue={projectSummary.data.feature_sets_count ?? 0}
-                  link={`/projects/${params.projectName}/feature-store`}
-                  projectSummary={projectSummary}
-                  tip={generateTipMessageForCounter('feature set', 'Feature store')}
-                  title="Feature sets"
-                />
-
-                <ProjectSummaryCard
-                  counterValue={projectSummary.data.files_count ?? 0}
-                  link={`/projects/${params.projectName}/files`}
-                  projectSummary={projectSummary}
-                  tip={generateTipMessageForCounter('artifact', 'Artifacts')}
-                  title="Artifacts"
-                />
-              </div>
-              <div className="main-info__statistics-section_right">
-                {nuclioStreamsAreEnabled && (
-                  <ProjectSummaryCard
-                    counterValue={
-                      isNuclioModeDisabled ? 'N/A' : (Object.keys(v3ioStreams.data).length ?? 0)
-                    }
-                    link={`/projects/${params.projectName}/monitor${
-                      !isNuclioModeDisabled ? '/consumer-groups' : ''
-                    }`}
-                    projectSummary={v3ioStreams}
-                    title="Consumer groups"
-                    tooltipText={
-                      isNuclioModeDisabled
-                        ? 'Consumer group feature works when Nuclio is deployed'
-                        : ''
-                    }
-                  />
-                )}
-
-                <AlertsCounters />
-              </div>
-            </div>
+            <ProjectsMonitoring />
             <div className="main-info__statistics-section">
               <div className="d-flex">
                 <ProjectJobs />
               </div>
               <div className="d-flex">
-                <ProjectFunctions />
+                <ProjectFunctions nuclioStreamsAreEnabled={nuclioStreamsAreEnabled} />
               </div>
             </div>
           </div>
@@ -226,16 +175,13 @@ ProjectMonitorView.propTypes = {
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
   isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
-  isNuclioModeDisabled: PropTypes.bool.isRequired,
   nuclioStreamsAreEnabled: PropTypes.bool.isRequired,
   params: PropTypes.object.isRequired,
   project: PropTypes.object.isRequired,
-  projectSummary: PropTypes.object.isRequired,
   refresh: PropTypes.func.isRequired,
   setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
   setShowFunctionsPanel: PropTypes.func.isRequired,
-  showFunctionsPanel: PropTypes.bool.isRequired,
-  v3ioStreams: PropTypes.object.isRequired
+  showFunctionsPanel: PropTypes.bool.isRequired
 }
 
 export default ProjectMonitorView

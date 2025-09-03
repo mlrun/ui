@@ -20,74 +20,39 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
-import { Link, useLocation } from 'react-router-dom'
 
-import { getDateAndTimeByFormat } from '../../utils/'
-import { PROJECT_MONITOR, PROJECT_QUICK_ACTIONS_PAGE } from '../../constants'
+import PageHeader from '../../elements/PageHeader/PageHeader'
+
+import { getDateAndTimeByFormat } from 'igz-controls/utils/datetime.util'
+
+import { COUNTERS_GENERAL_MESSAGE } from '../../constants'
 
 import './ProjectDetailsHeader.scss'
 
 const ProjectDetailsHeader = ({ projectData, projectName }) => {
-  const location = useLocation()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   return (
-    <div className="project-details">
-      <div className="project-details__row">
-        <div className="project-details__col">
-          <div className="project-details__header">
-            <span className="project-details__title">{projectName}</span>
-          </div>
-
-          <p className="project-details__description">
-            {projectData && projectData.spec.description}
-          </p>
+    <div>
+      <PageHeader title={projectName} tip={COUNTERS_GENERAL_MESSAGE} />
+      {projectData && (
+        <div>
+          <span className="project-details__details-label">
+            Created:
+            {getDateAndTimeByFormat(projectData.metadata.created + 'Z', ' MM/DD/YYYY, HH:mm:ss A')}
+          </span>
+          {projectData.spec.owner && !frontendSpec.ce?.version && (
+            <span className="project-details__details-label">Owner: {projectData.spec.owner}</span>
+          )}
         </div>
-        {projectData && (
-          <ul className="project-details__details">
-            <li>
-              <span className="project-details__details-label">Created:</span>
-              <span>
-                {getDateAndTimeByFormat(projectData.metadata.created, 'MM/DD/YYYY, HH:mm:ss A')}
-              </span>
-            </li>
-            {!frontendSpec.ce?.version && (
-              <li>
-                <span className="project-details__details-label">Owner:</span>
-                <span>{projectData.spec.owner}</span>
-              </li>
-            )}
-            <li>
-              <span className="project-details__details-label">Status:</span>
-              <div>
-                <span>{projectData.status.state}</span>
-                <i className={`state-${projectData.status.state}`} />
-              </div>
-            </li>
-            <li>
-              {location.pathname.includes(PROJECT_MONITOR) ? (
-                <Link
-                  to={`/projects/${projectName}/${PROJECT_QUICK_ACTIONS_PAGE}`}
-                  className="link"
-                >
-                  Project quick actions
-                </Link>
-              ) : (
-                <Link to={`/projects/${projectName}/${PROJECT_MONITOR}`} className="link">
-                  Project monitoring
-                </Link>
-              )}
-            </li>
-          </ul>
-        )}
-      </div>
+      )}
     </div>
   )
 }
 
 ProjectDetailsHeader.propTypes = {
   projectData: PropTypes.object,
-  projectName: PropTypes.string.isRequired,
+  projectName: PropTypes.string.isRequired
 }
 
 export default ProjectDetailsHeader

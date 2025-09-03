@@ -34,9 +34,8 @@ import JobWizardHyperparameterStrategy from './JobWizardSteps/JobWizardHyperpara
 import JobWizardParameters from './JobWizardSteps/JobWizardParameters/JobWizardParameters'
 import JobWizardResources from './JobWizardSteps/JobWizardResources/JobWizardResources'
 import JobWizardRunDetails from './JobWizardSteps/JobWizardRunDetails/JobWizardRunDetails'
-import Loader from '../../common/Loader/Loader'
 import ScheduleWizard from '../SheduleWizard/ScheduleWizard'
-import { Wizard } from 'igz-controls/components'
+import { Wizard, Loader } from 'igz-controls/components'
 
 import {
   ADVANCED_STEP,
@@ -44,6 +43,9 @@ import {
   FUNCTION_SELECTION_STEP,
   HYPERPARAMETER_STRATEGY_STEP,
   JOB_WIZARD_FILTERS,
+  JOBS_MONITORING_JOBS_TAB,
+  JOBS_MONITORING_PAGE,
+  JOBS_MONITORING_SCHEDULED_TAB,
   MONITOR_JOBS_TAB,
   PANEL_CREATE_MODE,
   PANEL_EDIT_MODE,
@@ -73,8 +75,8 @@ import { editJob, removeJobFunction, runNewJob } from '../../reducers/jobReducer
 import { fetchProject } from '../../reducers/projectReducer'
 import { resetModalFilter } from '../../reducers/filtersReducer'
 import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 
 import './jobWizard.scss'
@@ -82,6 +84,7 @@ import './jobWizard.scss'
 const JobWizard = ({
   defaultData = {},
   isBatchInference = false,
+  isCrossProjects = false,
   isOpen,
   isTrain = false,
   mode = PANEL_CREATE_MODE,
@@ -328,7 +331,7 @@ const JobWizard = ({
             setShowSchedule(state => !state)
           }
           resolveModal()
-          onSuccessRequest && onSuccessRequest(true)
+          onSuccessRequest && onSuccessRequest(true, isSchedule)
           dispatch(
             setNotification({
               status: 200,
@@ -338,15 +341,17 @@ const JobWizard = ({
           )
         })
         .then(() => {
-          return navigate(
-            `/projects/${params.projectName}/jobs/${isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB}`
+          navigate(
+            isCrossProjects
+              ? `/projects/*/${JOBS_MONITORING_PAGE}/${isSchedule ? JOBS_MONITORING_SCHEDULED_TAB : JOBS_MONITORING_JOBS_TAB}`
+              : `/projects/${params.projectName}/jobs/${isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB}`
           )
         })
         .catch(error => {
           showErrorNotification(dispatch, error, '', getNewJobErrorMsg(error))
         })
     },
-    [dispatch, mode, navigate, onSuccessRequest, resolveModal]
+    [dispatch, mode, navigate, onSuccessRequest, resolveModal, isCrossProjects]
   )
 
   const editJobHandler = useCallback(
@@ -377,8 +382,12 @@ const JobWizard = ({
           if (isSchedule) {
             setShowSchedule(state => !state)
           }
+
           resolveModal()
-          onSuccessRequest && onSuccessRequest()
+
+          return onSuccessRequest && onSuccessRequest(isSchedule, true)
+        })
+        .then(() => {
           dispatch(
             setNotification({
               status: 200,
@@ -387,14 +396,11 @@ const JobWizard = ({
             })
           )
         })
-        .then(() => {
-          navigate(`/projects/${params.projectName}/jobs/${SCHEDULE_TAB}${window.location.search}`)
-        })
         .catch(error => {
           showErrorNotification(dispatch, error, '', getSaveJobErrorMsg(error))
         })
     },
-    [dispatch, mode, navigate, onSuccessRequest, resolveModal]
+    [dispatch, mode, onSuccessRequest, resolveModal]
   )
 
   const submitRequest = useCallback(
@@ -472,9 +478,7 @@ const JobWizard = ({
               formState={formState}
               id="jobWizard"
               isWizardOpen={isOpen}
-              onWizardResolve={() => {
-                handleCloseModal()
-              }}
+              onWizardResolve={handleCloseModal}
               previewText={isBatchInference ? 'Tech Preview' : ''}
               size={MODAL_MAX}
               stepsConfig={getStepsConfig(formState)}
@@ -554,6 +558,7 @@ const JobWizard = ({
 JobWizard.propTypes = {
   defaultData: PropTypes.object,
   isBatchInference: PropTypes.bool,
+  isCrossProjects: PropTypes.bool,
   isOpen: PropTypes.bool.isRequired,
   isTrain: PropTypes.bool,
   mode: JOB_WIZARD_MODE,

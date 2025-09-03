@@ -24,7 +24,9 @@ import moment from 'moment'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
-import { MONITOR_JOBS_TAB, REQUEST_CANCELED } from '../../constants'
+import { DATES_FILTER, MONITOR_JOBS_TAB, REQUEST_CANCELED } from '../../constants'
+import { PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
+
 import { getJobsStatistics, getJobsTableData, groupByName, sortByDate } from './projectJobs.utils'
 import { fetchProjectJobs } from '../../reducers/projectReducer'
 
@@ -70,14 +72,18 @@ const ProjectJobs = () => {
   return (
     <ProjectDataCard
       content={projectStore.project.jobs}
-      headerLink={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
+      footerLinkText={'All jobs'}
+      headerLink={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}?${new URLSearchParams({
+        [DATES_FILTER]: PAST_24_HOUR_DATE_OPTION
+      })}`}
+      hasUpdateDate={true}
       link={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
       params={params}
       statistics={jobsData.statistics}
+      subTitle="Recent jobs"
       table={jobsData.table}
-      tip="Each job and workflow can have multiple versions, produced by multiple runs and given multiple tags.
-           You can browse them in the Jobs and workflows page."
-      title="Jobs and workflows"
+      tip="Number of Job runs, clicking on the counters navigates to jobs screen."
+      title="Runs"
     />
   )
 }

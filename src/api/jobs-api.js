@@ -68,10 +68,19 @@ const jobsApi = {
 
     return mainHttpClient.get(`/projects/${project}/runs/${jobId}`, { params })
   },
-  getJobLogs: (id, project) =>
-    fetch(`${mainBaseUrl}/projects/${project}/logs/${id}`, {
-      method: 'get'
-    }),
+  getJobLogs: (id, project, attempt, signal) => {
+    let params = ''
+
+    // if attempt === 0 or empty BE return logs for the last attempt
+    if (attempt > 0) {
+      params = `?attempt=${attempt}`
+    }
+
+    return fetch(`${mainBaseUrl}/projects/${project}/logs/${id}${params}`, {
+      method: 'get',
+      signal
+    })
+  },
   getScheduledJobs: (project, newConfig) => {
     return mainHttpClient.get(`/projects/${project}/schedules`, newConfig)
   },

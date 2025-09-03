@@ -19,13 +19,24 @@ such restriction.
 */
 import { cloneDeep, forEach, isEmpty, set } from 'lodash'
 
-import { page } from '../Jobs/jobs.util'
+import {
+  BG_TASK_FAILED,
+  BG_TASK_SUCCEEDED,
+  isBackgroundTaskRunning,
+  pollTask
+} from '../../utils/poll.util'
 import {
   DETAILS_OVERVIEW_TAB,
   JOBS_MONITORING_PAGE,
   JOBS_MONITORING_WORKFLOWS_TAB,
   WORKFLOW_TYPE_SKIPPED
 } from '../../constants'
+import projectsIguazioApi from '../../api/projects-iguazio-api'
+import tasksApi from '../../api/tasks-api'
+import workflowsApi from '../../api/workflow-api'
+import { page } from '../Jobs/jobs.util'
+import { setAccessibleProjectsMap } from '../../reducers/projectReducer'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
 
 const DAG_WORFLOW_STEP = 'DAG'
 const SKIPPED_PHASE = 'Skipped'
@@ -240,4 +251,97 @@ export const parseWorkflow = workflow => {
   })
 
   return newWorkflow
+}
+
+export const handleTerminateWorkflow = async (job, dispatch) => {
+  try {
+    const response = await workflowsApi.terminateWorkflow(job.project, job.id)
+    const { data } = response
+
+    if (!isBackgroundTaskRunning(response)) {
+      dispatch(
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: `Workflow "${job.name} was not terminated since it already reached its end state`
+        })
+      )
+      return
+    }
+
+    const taskId = data.metadata.name
+
+    const pollMethod = () => tasksApi.getProjectBackgroundTask(job.project, taskId)
+
+    const isDone = task => {
+      const state = task?.data?.status?.state
+      return [BG_TASK_SUCCEEDED, BG_TASK_FAILED].includes(state)
+    }
+
+    const finalResult = await pollTask(pollMethod, isDone)
+    const finalState = finalResult?.data?.status?.state
+
+    const success = finalState === BG_TASK_SUCCEEDED
+
+    dispatch(
+      setNotification({
+        status: success ? 200 : 400,
+        id: Math.random(),
+        message: success
+          ? `A request to terminate workflow "${job.name}" was issued`
+          : `Workflow "${job.name}" was not terminated because it already reached its end state`
+      })
+    )
+  } catch {
+    dispatch(
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        message: `Workflow "${job.name} was not terminated since it already reached its end state`
+      })
+    )
+  }
+}
+
+export const fetchMissingProjectsPermissions = async (projectNames, currentMap, dispatch) => {
+  const uniqueProjects = [...new Set(projectNames)]
+  const missingProjects = uniqueProjects.filter(projectName => !(projectName in currentMap))
+  if (missingProjects.length === 0) return
+
+  const newMap = Object.fromEntries(
+    await Promise.all(
+      missingProjects.map(async projectName => {
+        try {
+          await projectsIguazioApi.getProjectOwnerVisibility(projectName)
+          return [projectName, true]
+        } catch {
+          try {
+            await projectsIguazioApi.getProjectWorkflowsUpdateAuthorization(projectName)
+            return [projectName, true]
+          } catch {
+            return [projectName, false]
+          }
+        }
+      })
+    )
+  )
+
+  const mergedMap = { ...currentMap, ...newMap }
+  dispatch(setAccessibleProjectsMap(mergedMap))
+}
+
+export const fetchMissingProjectPermission = async (projectName, currentMap, dispatch) => {
+  if (projectName in currentMap) return
+
+  const hasPermission = await projectsIguazioApi
+    .getProjectOwnerVisibility(projectName)
+    .then(() => true)
+    .catch(() =>
+      projectsIguazioApi
+        .getProjectWorkflowsUpdateAuthorization(projectName)
+        .then(() => true)
+        .catch(() => false)
+    )
+
+  dispatch(setAccessibleProjectsMap({ [projectName]: hasPermission }))
 }

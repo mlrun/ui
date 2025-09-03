@@ -22,7 +22,13 @@ import { defaultPendingHandler, hideLoading, showLoading } from './redux.util'
 import artifactsApi from '../api/artifacts-api'
 import functionsApi from '../api/functions-api'
 import modelEndpointsApi from '../api/modelEndpoints-api'
-import { ARTIFACTS_TAB, DATASETS_TAB, MODELS_TAB, DOCUMENTS_TAB } from '../constants'
+import {
+  DATASETS_PAGE,
+  DOCUMENTS_PAGE,
+  FILES_PAGE,
+  LLM_PROMPTS_PAGE,
+  MODELS_PAGE
+} from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { generateArtifacts } from '../utils/generateArtifacts'
 import { parseModelEndpoints } from '../utils/parseModelEndpoints'
@@ -44,7 +50,7 @@ const initialState = {
       loading: false
     }
   },
-  dataSets: {
+  datasets: {
     allData: [],
     filteredData: [],
     loading: false,
@@ -54,6 +60,18 @@ const initialState = {
       error: null,
       loading: false
     }
+  },
+  LLMPrompts: {
+    allData: [],
+    filteredData: [],
+    loading: false,
+    LLMPromptLoading: false,
+    selectedRowData: {
+      content: {},
+      error: null,
+      loading: false
+    },
+    promptTemplate: []
   },
   error: null,
   files: {
@@ -189,7 +207,7 @@ export const fetchDataSet = createAsyncThunk(
       .then(response => {
         const result = parseArtifacts([response.data])
 
-        return generateArtifacts(filterArtifacts(result), DATASETS_TAB, [response.data])?.[0]
+        return generateArtifacts(filterArtifacts(result), DATASETS_PAGE, [response.data])?.[0]
       })
   }
 )
@@ -205,7 +223,7 @@ export const fetchDataSets = createAsyncThunk(
 
         return {
           ...data,
-          artifacts: generateArtifacts(filterArtifacts(result), DATASETS_TAB, data.artifacts)
+          artifacts: generateArtifacts(filterArtifacts(result), DATASETS_PAGE, data.artifacts)
         }
       })
       .catch(error => {
@@ -228,7 +246,7 @@ export const fetchDocument = createAsyncThunk(
       .then(response => {
         const result = parseArtifacts([response.data])
 
-        return generateArtifacts(filterArtifacts(result), DOCUMENTS_TAB, [response.data])?.[0]
+        return generateArtifacts(filterArtifacts(result), DOCUMENTS_PAGE, [response.data])?.[0]
       })
   }
 )
@@ -244,7 +262,7 @@ export const fetchDocuments = createAsyncThunk(
 
         return {
           ...data,
-          artifacts: generateArtifacts(filterArtifacts(result), DOCUMENTS_TAB, data.artifacts)
+          artifacts: generateArtifacts(filterArtifacts(result), DOCUMENTS_PAGE, data.artifacts)
         }
       })
       .catch(error => {
@@ -267,7 +285,7 @@ export const fetchFile = createAsyncThunk(
       .then(response => {
         const result = parseArtifacts([response.data])
 
-        return generateArtifacts(filterArtifacts(result), ARTIFACTS_TAB, [response.data])?.[0]
+        return generateArtifacts(filterArtifacts(result), FILES_PAGE, [response.data])?.[0]
       })
   }
 )
@@ -283,7 +301,7 @@ export const fetchFiles = createAsyncThunk(
 
         return {
           ...data,
-          artifacts: generateArtifacts(filterArtifacts(result), ARTIFACTS_TAB, data.artifacts)
+          artifacts: generateArtifacts(filterArtifacts(result), FILES_PAGE, data.artifacts)
         }
       })
       .catch(error => {
@@ -326,6 +344,45 @@ export const fetchArtifactsFunction = createAsyncThunk(
     })
   }
 )
+export const fetchLLMPrompt = createAsyncThunk(
+  'fetchLLMPrompt',
+  ({ projectName, artifactName, uid, tree, tag, iter }) => {
+    return artifactsApi
+      .getArtifact(projectName, artifactName, uid, tree, tag, iter)
+      .then(response => {
+        const result = parseArtifacts([response.data])
+
+        return generateArtifacts(filterArtifacts(result), LLM_PROMPTS_PAGE, [response.data])?.[0]
+      })
+  }
+)
+export const fetchLLMPrompts = createAsyncThunk(
+  'fetchLLMPrompts',
+  ({ project, filters, config }, thunkAPI) => {
+    config?.ui?.setRequestErrorMessage?.('')
+
+    return artifactsApi
+      .getLLMPrompts(project, filters, config)
+      .then(({ data }) => {
+        const result = parseArtifacts(data.artifacts)
+
+        return {
+          ...data,
+          artifacts: generateArtifacts(filterArtifacts(result), LLM_PROMPTS_PAGE, data.artifacts)
+        }
+      })
+      .catch(error => {
+        largeResponseCatchHandler(
+          error,
+          'Failed to fetch LLM prompts',
+          thunkAPI.dispatch,
+          config?.ui?.setRequestErrorMessage
+        )
+
+        throw error
+      })
+  }
+)
 export const fetchModelEndpoint = createAsyncThunk(
   'fetchModelEndpoint',
   ({ project, name, uid }) => {
@@ -362,7 +419,7 @@ export const fetchModel = createAsyncThunk(
       .then(response => {
         const result = parseArtifacts([response.data])
 
-        return generateArtifacts(filterArtifacts(result), MODELS_TAB, [response.data])?.[0]
+        return generateArtifacts(filterArtifacts(result), MODELS_PAGE, [response.data])?.[0]
       })
   }
 )
@@ -376,7 +433,7 @@ export const fetchModels = createAsyncThunk(
       .then(({ data }) => {
         const result = filterArtifacts(parseArtifacts(data.artifacts))
 
-        return { ...data, artifacts: generateArtifacts(result, MODELS_TAB, data.artifacts) }
+        return { ...data, artifacts: generateArtifacts(result, MODELS_PAGE, data.artifacts) }
       })
       .catch(error => {
         largeResponseCatchHandler(
@@ -396,6 +453,12 @@ export const replaceTag = createAsyncThunk('replaceTag', ({ project, tag, data }
 export const updateArtifact = createAsyncThunk('updateArtifact', ({ project, data }) => {
   return artifactsApi.updateArtifact(project, data)
 })
+export const fetchLLMPromptTemplate = createAsyncThunk(
+  'fetchLLMPromptTemplate',
+  ({ project, config }) => {
+    return artifactsApi.getArtifactPreview(project, config)
+  }
+)
 
 const artifactsSlice = createSlice({
   name: 'artifactsStore',
@@ -407,8 +470,11 @@ const artifactsSlice = createSlice({
         selectedItem: {}
       }
     },
+    removeArtifacts(state) {
+      state.artifacts = initialState.artifacts
+    },
     removeDataSet(state, action) {
-      state.dataSets.selectedRowData = {
+      state.datasets.selectedRowData = {
         content: action.payload,
         error: null,
         loading: false
@@ -425,7 +491,7 @@ const artifactsSlice = createSlice({
       }
     },
     removeDataSets(state) {
-      state.dataSets = initialState.dataSets
+      state.datasets = initialState.datasets
     },
     removeFile(state, action) {
       state.files.selectedRowData = {
@@ -453,6 +519,9 @@ const artifactsSlice = createSlice({
     removePipelines(state) {
       state.pipelines.allData = initialState.pipelines.allData
     },
+    removeLLMPromptTemplate(state) {
+      state.LLMPrompts.promptTemplate = initialState.LLMPrompts.promptTemplate
+    },
     showArtifactsPreview(state, action) {
       state.preview = action.payload
     }
@@ -478,6 +547,9 @@ const artifactsSlice = createSlice({
     builder.addCase(updateArtifact.pending, showLoading)
     builder.addCase(updateArtifact.fulfilled, hideLoading)
     builder.addCase(updateArtifact.rejected, hideLoading)
+    builder.addCase(fetchLLMPromptTemplate.fulfilled, (state, action) => {
+      state.LLMPrompts.promptTemplate = action.payload.data
+    })
     builder.addCase(deleteTag.pending, showLoading)
     builder.addCase(deleteTag.fulfilled, hideLoading)
     builder.addCase(deleteTag.rejected, hideLoading)
@@ -515,17 +587,40 @@ const artifactsSlice = createSlice({
       state.pipelines.loading = false
     })
     builder.addCase(fetchDataSet.pending, state => {
-      state.dataSets.datasetLoading = true
+      state.datasets.datasetLoading = true
     })
     builder.addCase(fetchDataSet.fulfilled, state => {
-      state.dataSets.datasetLoading = false
+      state.datasets.datasetLoading = false
     })
     builder.addCase(fetchDataSet.rejected, state => {
-      state.dataSets.datasetLoading = false
+      state.datasets.datasetLoading = false
     })
     builder.addCase(fetchDataSets.pending, state => {
-      state.dataSets.loading = true
+      state.datasets.loading = true
       state.loading = true
+    })
+    builder.addCase(fetchLLMPrompt.pending, state => {
+      state.LLMPrompts.LLMPromptLoading = true
+    })
+    builder.addCase(fetchLLMPrompt.fulfilled, state => {
+      state.LLMPrompts.LLMPromptLoading = false
+    })
+    builder.addCase(fetchLLMPrompt.rejected, state => {
+      state.LLMPrompts.LLMPromptLoading = false
+    })
+    builder.addCase(fetchLLMPrompts.pending, state => {
+      state.LLMPrompts.loading = true
+      state.loading = true
+    })
+    builder.addCase(fetchLLMPrompts.fulfilled, (state, action) => {
+      state.error = null
+      state.LLMPrompts.allData = action.payload?.artifacts ?? []
+      state.LLMPrompts.loading = false
+      state.loading = state.models.loading || state.files.loading
+    })
+    builder.addCase(fetchLLMPrompts.rejected, state => {
+      state.LLMPrompts.loading = false
+      state.loading = state.models.loading || state.files.loading
     })
     builder.addCase(fetchDocument.pending, state => {
       state.documents.documentLoading = true
@@ -552,12 +647,12 @@ const artifactsSlice = createSlice({
     })
     builder.addCase(fetchDataSets.fulfilled, (state, action) => {
       state.error = null
-      state.dataSets.allData = action.payload?.artifacts ?? []
-      state.dataSets.loading = false
+      state.datasets.allData = action.payload?.artifacts ?? []
+      state.datasets.loading = false
       state.loading = state.models.loading || state.files.loading
     })
     builder.addCase(fetchDataSets.rejected, state => {
-      state.dataSets.loading = false
+      state.datasets.loading = false
       state.loading = state.models.loading || state.files.loading
     })
     builder.addCase(fetchFile.pending, state => {
@@ -577,11 +672,11 @@ const artifactsSlice = createSlice({
       state.error = null
       state.files.allData = action.payload?.artifacts ?? []
       state.files.loading = false
-      state.loading = state.models.loading || state.dataSets.loading
+      state.loading = state.models.loading || state.datasets.loading
     })
     builder.addCase(fetchFiles.rejected, state => {
       state.files.loading = false
-      state.loading = state.models.loading || state.dataSets.loading
+      state.loading = state.models.loading || state.datasets.loading
     })
     builder.addCase(fetchModel.pending, state => {
       state.models.modelLoading = true
@@ -620,11 +715,11 @@ const artifactsSlice = createSlice({
       state.error = null
       state.models.allData = action.payload?.artifacts ?? []
       state.models.loading = false
-      state.loading = state.files.loading || state.dataSets.loading
+      state.loading = state.files.loading || state.datasets.loading
     })
     builder.addCase(fetchModels.rejected, state => {
       state.models.loading = false
-      state.loading = state.files.loading || state.dataSets.loading
+      state.loading = state.files.loading || state.datasets.loading
     })
   }
 })
@@ -632,6 +727,7 @@ const artifactsSlice = createSlice({
 export const {
   showArtifactsPreview,
   closeArtifactsPreview,
+  removeArtifacts,
   removeDataSet,
   removeDataSets,
   removeDocuments,
@@ -640,7 +736,8 @@ export const {
   removeModel,
   removeModels,
   removeModelEndpoints,
-  removePipelines
+  removePipelines,
+  removeLLMPromptTemplate
 } = artifactsSlice.actions
 
 export default artifactsSlice.reducer

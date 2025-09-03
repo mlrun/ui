@@ -25,17 +25,7 @@ import {
   selectOptionInDropdownWithoutCheck
 } from './dropdown.action'
 import { getElementText, hoverComponent } from './common.action'
-
 import { DataFrame } from 'pandas-js'
-
-async function getColumnValues(driver, table, columnName) {
-  return await driver
-    .findElements(table.tableColumns[columnName])
-    .then(function(elements) {
-
-      return Promise.all(elements.map(element => element.getText()))
-    })
-}
 
 async function getColumnValuesAttribute(driver, table, columnName) {
   return await driver
@@ -46,7 +36,22 @@ async function getColumnValuesAttribute(driver, table, columnName) {
     })
 }
 
-async function getTableRows(driver, table) {
+export const getColumnValues = async (driver, table, columnName) => {
+  return await driver
+    .findElements(table.tableColumns[columnName])
+    .then(function(elements) {
+
+      return Promise.all(elements.map(element => element.getText()))
+    })
+}
+
+export const getHeaderColumnValue = async (driver, table, columnName) => {
+  const element = await driver.findElement(table.headerSorters[columnName])
+  
+  return await element.getText()
+}
+
+export const getTableRows = async (driver, table) => {
   const arr = await driver
     .findElements(table.tableColumns[table.tableCulumnNames[0]])
     .then(function(elements) {
@@ -56,23 +61,31 @@ async function getTableRows(driver, table) {
   return await arr.length
 }
 
-const action = {
-  getColumnValues: getColumnValues,
-  getTableRows: getTableRows,
-  isContainsValueInColumn: async function(driver, table, columnName, value) {
+export const isContainsValueInColumn = async (driver, table, columnName, value) => {
     const arr = await getColumnValues(driver, table, columnName)
     expect(arr.includes(value)).equal(true, `Column values [${arr}] is not equal with "${value}" `)
-  },
-  isNotContainsValueInColumn: async function(driver, table, columnName, value) {
+  }
+
+export const isContainsValueInHeaderColumn = async (driver, table, columnName, value) => {
+  const actualValue = await getHeaderColumnValue(driver, table, columnName)
+
+  expect(actualValue.includes(value)).equal(
+    true,
+    `Header column "${columnName}" value "${actualValue}" does not include "${value}"`
+  )
+}
+
+export const isNotContainsValueInColumn = async (driver, table, columnName, value) => {
     const arr = await getColumnValues(driver, table, columnName)
     expect(arr.includes(value)).equal(false)
-  },
-  isContainsSubstringInColumnCells: async function(
+  }
+
+export const isContainsSubstringInColumnCells = async (
     driver,
     table,
     columnName,
     value
-  ) {
+  ) => {
     const arr = await getColumnValues(driver, table, columnName)
     const subString = value.replace('=', '\n:\n')
     expect(arr.length > 0).equal(true)
@@ -80,39 +93,42 @@ const action = {
       true,
       `Value "${subString}" does not includes in all values: [${arr}]`
     )
-  },
-  isContainsSubstringInColumnAttributeCells: async function(
+  }
+
+export const isContainsSubstringInColumnAttributeCells = async (
     driver,
     table,
     columnName,
     value
-  ) {
+  ) => {
     const arr = await getColumnValuesAttribute(driver, table, columnName)
     expect(arr.length > 0).equal(true)
     expect(arr.every(item => item.includes(value))).equal(
       true,
       `Value "${value}" does not includes in all values: [${arr}]`
     )
-  },
-  isContainsSubstringInColumnAttributeListCells: async function(
+  }
+
+export const isContainsSubstringInColumnAttributeListCells = async (
     driver,
     table,
     columnName,
     value
-  ) {
+  ) => {
     const arr = await getColumnValuesAttribute(driver, table, columnName)
     expect(arr.length > 0).to.equal(true)
     expect(arr.every(item => value.includes(item))).to.equal(
       true,
       `Value "${value}" does not includes in all values: [${arr}]`
     )
-  },
-  isContainsSubstringInColumnDropdownCells: async function(
+  }
+
+export const isContainsSubstringInColumnDropdownCells = async (
     driver,
     table,
     column,
     value
-  ) {
+  ) => {
     const subString = value.replace('=', '\n:\n')
     const rows = await getTableRows(driver, table)
     let flag = true
@@ -135,14 +151,15 @@ const action = {
     }
 
     expect(flag).equal(true)
-  },
-  isContainsSubstringInColumnDropdownCellsOverlay: async function(
+  }
+
+export const isContainsSubstringInColumnDropdownCellsOverlay = async (
     driver,
     table,
     overlay,
     column,
     value
-  ) {
+  ) => {
     const subString = value.replace('=', '\n:\n')
     const rows = await getTableRows(driver, table)
     let flag = true
@@ -165,13 +182,14 @@ const action = {
     }
 
     expect(flag).equal(true)
-  },
-  isContainsSubstringInColumnTooltipCells: async function(
+  }
+
+export const isContainsSubstringInColumnTooltipCells = async (
     driver,
     table,
     column,
     value
-  ) {
+  ) => {
     const rows = await getTableRows(driver, table)
 
     expect(rows).not.equal(0)
@@ -189,14 +207,15 @@ const action = {
     }
 
     expect(arr.some(item => item.includes(value))).equal(true)
-  },
-  isDatetimeCelsValueInRange: async function(
+  }
+
+export const isDatetimeCelsValueInRange = async (
     driver,
     table,
     columnName,
     fromDateTime,
     toDateTime
-  ) {
+  ) => {
     const arr = await getColumnValues(driver, table, columnName)
 
     const minDate = new Date(fromDateTime)
@@ -216,13 +235,14 @@ const action = {
       true,
       `values "${arr}" is not in range: (${fromDateTime}..${toDateTime})`
     )
-  },
-  findRowIndexesByColumnValue: async function(
+  }
+
+export const findRowIndexesByColumnValue = async (
     driver,
     table,
     columnName,
     value
-  ) {
+  ) => {
     const arr = await getColumnValues(driver, table, columnName)
     const indexes = []
 
@@ -232,13 +252,14 @@ const action = {
       }
     }
     return indexes
-  },
-  findRowIndexesByColumnValueExpand: async function(
+  }
+
+export const findRowIndexesByColumnValueExpand = async (
     driver,
     table,
     columnName,
     value
-  ) {
+  ) => {
     const columnValues = await getColumnValues(driver, table, columnName)
 
     return columnValues.reduce((acc, currentValue, index) => {
@@ -248,13 +269,14 @@ const action = {
       
       return acc
     }, [])
-  },
-  findRowIndexesByColumnValueAttribute: async function(
+  }
+
+export const findRowIndexesByColumnValueAttribute = async (
     driver,
     table,
     columnName,
     value
-  ) {
+  ) => {
     const arr = await getColumnValuesAttribute(driver, table, columnName)
     const indexes = []
 
@@ -264,13 +286,14 @@ const action = {
       }
     }
     return indexes
-  },
-  findRowIndexesByColumnTooltipsValue: async function(
+  }
+
+export const findRowIndexesByColumnTooltipsValue = async (
     driver,
     table,
     columnName,
     value
-  ) {
+  ) => {
     const indexes = []
     const rowsNumber = await getTableRows(driver, table)
     for (let row = rowsNumber; row >= 1; row--) {
@@ -298,8 +321,9 @@ const action = {
     }
 
     return indexes.reverse()
-  },
-  openActionMenuByIndex: async function(driver, table, index) {
+  }
+
+export const openActionMenuByIndex = async (driver, table, index) => {
     const elements = await driver.findElements(
       table.tableFields['action_menu'](index)
     )
@@ -314,16 +338,18 @@ const action = {
         return table.tableFields['action_menu'](index)
       }
     }
-  },
-  getCellByIndexColumn: async function(driver, table, index, column) {
+  }
+
+export const getCellByIndexColumn = async (driver, table, index, column) => {
     return await table.tableFields[column](index)
-  },
-  isTableColumnSorted: async function(
+  }
+
+export const isTableColumnSorted = async (
     driver,
     table,
     columnName,
     order = 'asc'
-  ) {
+  ) => {
     const columnArray = await getColumnValues(driver, table, columnName)
     let sortedArr = []
     if (order === 'asc') {
@@ -334,8 +360,9 @@ const action = {
     }
 
     expect(sortedArr).equal(columnArray)
-  },
-  checkTableColumnValues: async function(driver, table, columnName, values) {
+  }
+
+export const checkTableColumnValues = async (driver, table, columnName, values) => {
     const arr = await getColumnValues(driver, table, columnName)
     if (arr.length === 0) {
       throw new Error('Array is empty, nothing to compare')
@@ -352,8 +379,9 @@ const action = {
     }
 
     return true
-  },
-  getAllCellsWithAttribute: async function(driver, table, attribute) {
+  }
+
+export const getAllCellsWithAttribute = async (driver, table, attribute) => {
     const result = []
 
     for (const column of table.tableCulumnNames) {
@@ -376,8 +404,9 @@ const action = {
     }
 
     return result
-  },
-  getRowsGeometry: async function(driver, table) {
+  }
+
+export const getRowsGeometry = async (driver, table) => {
     const rowsNumber = await getTableRows(driver, table)
     const result = []
 
@@ -389,8 +418,9 @@ const action = {
     }
 
     return result
-  },
-  getFieldsGeometry: async function(driver, table, column, attribute) {
+  }
+
+export const getFieldsGeometry = async (driver, table, column, attribute) => {
     const rowsNumber = await getTableRows(driver, table)
     const result = []
 
@@ -401,8 +431,9 @@ const action = {
     }
 
     return result
-  },
-  getNamedRowsGeometry: async function(driver, table, name = 'name') {
+  }
+
+export const getNamedRowsGeometry = async (driver, table, name = 'name') => {
     const rowsNumber = await getTableRows(driver, table)
     const result = []
 
@@ -418,8 +449,9 @@ const action = {
     }
 
     return new DataFrame(result)
-  },
-  getNamedFieldsGeometry: async function(driver, table, column) {
+  }
+
+export const getNamedFieldsGeometry = async (driver, table, column) => {
     const rowsNumber = await getTableRows(driver, table)
     const result = []
 
@@ -430,15 +462,16 @@ const action = {
     }
 
     return new DataFrame(result)
-  },
-  putToTestContextCellParameters: async function(
+  }
+
+export const putToTestContextCellParameters = async (
     driver,
     testContext,
     table,
     index,
     column,
     attribute
-  ) {
+  ) => {
     const cellElement = await driver.findElement(
       table.tableFields[column](index)
     )
@@ -447,8 +480,9 @@ const action = {
     if (attribute) {
       testContext[attribute] = await cellElement.getAttribute(attribute)
     }
-  },
-  checkCellHintText: async function (driver, table, hintComponent, hintValue, index) {
+  }
+
+export const checkCellHintText = async (driver, table, hintComponent, hintValue, index) => {
     await hoverComponent(driver, table.tableFields['hintButton'](index))
     await driver.sleep(250)
     const hint = await driver.findElement(hintComponent)
@@ -456,6 +490,3 @@ const action = {
 
     expect(text).equal(hintValue)
   }
-}
-
-module.exports = action

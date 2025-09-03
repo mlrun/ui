@@ -22,7 +22,7 @@ import { locatorBuilder } from '../../common-tools/common-tools'
 
 import { cloneDeep } from 'lodash'
 
-module.exports = function(datepickerStructure) {
+export default function(datepickerStructure) {
   const datepickerRoot = locatorBuilder`${0} ${1}`
   const options = locatorBuilder`${0} ${1}`
 

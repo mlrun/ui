@@ -29,11 +29,11 @@ const tabSelector = {
   root: '.content-menu',
   header: {},
   body: {
-    root: '.content-menu__list',
+    root: '.content-menu__tabs',
     row: {
-      root: '.content-menu__item',
+      root: '.content-menu__tab',
       fields: {
-        key: 'a'
+        key: ''
       }
     }
   }
@@ -123,7 +123,7 @@ const secretsTable = {
   }
 }
 
-module.exports = {
+export default {
   generalTab: {
     Project_Settings_Tab_Selector: commonTable(tabSelector),
     Source_URL_Input: inputGroup(

@@ -24,15 +24,19 @@ import {
   ARTIFACT_TYPE,
   BE_PAGE,
   DATASET_TYPE,
-  DATASETS_TAB,
-  DOCUMENTS_TAB,
+  DATASETS_PAGE,
+  DOCUMENT_TYPE,
+  DOCUMENTS_PAGE,
   FE_PAGE,
-  FILES_TAB,
+  FILES_PAGE,
+  LLM_PROMPTS_PAGE,
   MODEL_TYPE,
-  MODELS_TAB,
-  VIEW_SEARCH_PARAMETER
+  MODELS_PAGE,
+  TAG_FILTER_ALL_ITEMS,
+  TAG_FILTER_LATEST,
+  ALL_VERSIONS_PATH
 } from '../constants'
-import { TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST, ALL_VERSIONS_PATH } from '../constants'
+import { VIEW_SEARCH_PARAMETER } from 'igz-controls/constants'
 import {
   deleteTag,
   editTag,
@@ -40,15 +44,20 @@ import {
   fetchDataSet,
   fetchFile,
   fetchModel,
-  fetchDocument
+  fetchDocument,
+  fetchLLMPrompt
 } from '../reducers/artifactsReducer'
 import { getArtifactIdentifier } from './getUniqueIdentifier'
 import { parseArtifacts } from './parseArtifacts'
 import { parseIdentifier } from './parseUri'
 import { setFilters, setModalFiltersValues } from '../reducers/filtersReducer'
-import { showErrorNotification } from './notifications.util'
-import { getFilteredSearchParams } from './filter.util'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
+import { getFilteredSearchParams } from 'igz-controls/utils/filter.util'
 import { generateObjectNotInTheListMessage } from './generateMessage.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { ConfirmDialog } from 'igz-controls/components'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { createArtifactMessages } from './createArtifact.util'
 
 export const applyTagChanges = (changes, artifactItem, projectName, dispatch, setNotification) => {
   let updateTagMsg = 'Tag was updated'
@@ -112,11 +121,93 @@ export const applyTagChanges = (changes, artifactItem, projectName, dispatch, se
   }
 }
 
+export const processActionAfterTagUniquesValidation = ({
+  tag = '',
+  artifact,
+  projectName,
+  dispatch,
+  actionCallback,
+  showLoader = () => {},
+  hideLoader = () => {},
+  getCustomErrorMsg = () => 'Failed to update a tag',
+  onErrorCallback,
+  throwError = false
+}) => {
+  showLoader()
+
+  if (tag === '') {
+    return actionCallback().finally(hideLoader)
+  }
+
+  const messagesByKind = createArtifactMessages[artifact.kind.toLowerCase()]
+
+  return artifactApi
+    .getExpandedArtifact(projectName, artifact.key || artifact.metadata.key, tag)
+    .then(response => {
+      if (response?.data) {
+        if (!isEmpty(response.data.artifacts)) {
+          return new Promise((resolve, _reject) => {
+            const reject = (...args) => {
+              hideLoader()
+
+              return _reject(...args)
+            }
+
+            openPopUp(ConfirmDialog, {
+              confirmButton: {
+                label: 'Overwrite',
+                variant: PRIMARY_BUTTON,
+                handler: () => {
+                  actionCallback().then(resolve).catch(reject).finally(hideLoader)
+                }
+              },
+              cancelButton: {
+                label: 'Cancel',
+                variant: TERTIARY_BUTTON,
+                handler: () => reject()
+              },
+              closePopUp: () => reject(),
+              header: messagesByKind.overwriteConfirmTitle,
+              message: messagesByKind.getOverwriteConfirmMessage(
+                response.data.artifacts[0].kind || ARTIFACT_TYPE
+              ),
+              className: 'override-artifact-dialog'
+            })
+          })
+        } else {
+          return actionCallback().finally(hideLoader)
+        }
+      }
+    })
+    .catch(error => {
+      if (error) {
+        showErrorNotification(dispatch, error, '', getCustomErrorMsg(error), () =>
+          processActionAfterTagUniquesValidation({
+            tag,
+            artifact,
+            projectName,
+            dispatch,
+            actionCallback,
+            getCustomErrorMsg,
+            onErrorCallback,
+            throwError
+          })
+        )
+      }
+
+      onErrorCallback?.()
+      hideLoader()
+      
+      if (throwError) throw error
+    })
+}
+
 export const isArtifactTagUnique = (projectName, category, artifact) => async value => {
   const artifactCategory = {
     MODELS_TAB: MODEL_TYPE,
     ARTIFACTS_PAGE: ARTIFACT_TYPE,
-    DATASETS_PAGE: DATASET_TYPE
+    DATASETS_PAGE: DATASET_TYPE,
+    DOCUMENTS_PAGE: DOCUMENT_TYPE
   }
 
   if (!value) return
@@ -204,15 +295,16 @@ const generateArtifactTags = artifacts => {
   return Array.from(uniqueTags).filter(Boolean)
 }
 
-const getArtifactLabelByTabName = (tab = FILES_TAB) => {
+const getArtifactLabelByTabName = (page = FILES_PAGE) => {
   const typeMap = {
-    [FILES_TAB]: 'artifact',
-    [DATASETS_TAB]: 'dataset',
-    [DOCUMENTS_TAB]: 'document',
-    [MODELS_TAB]: 'model'
+    [FILES_PAGE]: 'artifact',
+    [DATASETS_PAGE]: 'dataset',
+    [DOCUMENTS_PAGE]: 'document',
+    [MODELS_PAGE]: 'model',
+    [LLM_PROMPTS_PAGE]: 'LLM prompt'
   }
 
-  return typeMap[tab]
+  return typeMap[page]
 }
 
 export const checkForSelectedArtifact = debounce(
@@ -230,6 +322,7 @@ export const checkForSelectedArtifact = debounce(
     setSearchParams,
     setSelectedArtifact,
     lastCheckedArtifactIdRef,
+    page,
     tab
   }) => {
     if (paramsId) {
@@ -244,6 +337,7 @@ export const checkForSelectedArtifact = debounce(
         lastCheckedArtifactIdRef.current = paramsId
 
         setFullSelectedArtifact(
+          page,
           tab,
           dispatch,
           navigate,
@@ -279,10 +373,10 @@ export const checkForSelectedArtifact = debounce(
                   return prevSearchParams
                 })
               } else if (tag && !artifact.tag && uid === artifact.uid) {
-                artifact.ui.infoMessage = `The ${getArtifactLabelByTabName(tab)} you are viewing was updated. Close the detail panel and refresh the list to see the current version.`
+                artifact.ui.infoMessage = `The ${getArtifactLabelByTabName(page)} you are viewing was updated. Close the detail panel and refresh the list to see the current version.`
               } else {
                 artifact.ui.infoMessage = generateObjectNotInTheListMessage(
-                  getArtifactLabelByTabName(tab)
+                  getArtifactLabelByTabName(page)
                 )
               }
             }
@@ -297,6 +391,7 @@ export const checkForSelectedArtifact = debounce(
 )
 
 export const setFullSelectedArtifact = (
+  page,
   tab,
   dispatch,
   navigate,
@@ -307,7 +402,7 @@ export const setFullSelectedArtifact = (
   isAllVersions
 ) => {
   const { tag, uid, iter } = parseIdentifier(artifactId)
-  const fetchArtifactData = getArtifactFetchMethod(tab)
+  const fetchArtifactData = getArtifactFetchMethod(page)
 
   return dispatch(fetchArtifactData({ projectName, artifactName, uid, tag, iter }))
     .unwrap()
@@ -325,30 +420,20 @@ export const setFullSelectedArtifact = (
     })
     .catch(error => {
       setSelectedArtifact({})
-      if (tab === MODELS_TAB) {
-        navigate(
-          `/projects/${projectName}/${tab}/${tab}${isAllVersions ? `/${artifactName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(
-            window.location.search,
-            [VIEW_SEARCH_PARAMETER]
-          )}`,
-          { replace: true }
-        )
-      } else {
-        navigate(
-          `/projects/${projectName}/${tab}${isAllVersions ? `/${artifactName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(
-            window.location.search,
-            [VIEW_SEARCH_PARAMETER]
-          )}`,
-          { replace: true }
-        )
-      }
-      showArtifactErrorNotification(dispatch, error, tab)
+      navigate(
+        `/projects/${projectName}/${page}${tab ? `/${tab}` : ''}${isAllVersions ? `/${artifactName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(
+          window.location.search,
+          [VIEW_SEARCH_PARAMETER]
+        )}`,
+        { replace: true }
+      )
+      showArtifactErrorNotification(dispatch, error, page)
     })
 }
 
-export const chooseOrFetchArtifact = (dispatch, tab, selectedArtifact, artifactMin) => {
+export const chooseOrFetchArtifact = (dispatch, page, tab, selectedArtifact, artifactMin) => {
   if (!isEmpty(selectedArtifact)) return Promise.resolve(selectedArtifact)
-  const fetchArtifactData = getArtifactFetchMethod(tab)
+  const fetchArtifactData = getArtifactFetchMethod(page)
 
   return dispatch(
     fetchArtifactData({
@@ -362,27 +447,29 @@ export const chooseOrFetchArtifact = (dispatch, tab, selectedArtifact, artifactM
   )
     .unwrap()
     .catch(error => {
-      showArtifactErrorNotification(dispatch, error, tab)
+      showArtifactErrorNotification(dispatch, error, page)
     })
 }
 
-const getArtifactFetchMethod = tab => {
-  switch (tab) {
-    case DATASETS_TAB:
+const getArtifactFetchMethod = page => {
+  switch (page) {
+    case DATASETS_PAGE:
       return fetchDataSet
-    case FILES_TAB:
+    case FILES_PAGE:
       return fetchFile
-    case MODELS_TAB:
+    case MODELS_PAGE:
       return fetchModel
-    case DOCUMENTS_TAB:
+    case DOCUMENTS_PAGE:
       return fetchDocument
+    case LLM_PROMPTS_PAGE:
+      return fetchLLMPrompt
     default:
       return null
   }
 }
 
-export const showArtifactErrorNotification = (dispatch, error, tab) => {
-  let customArtifactErrorMsg = `An error occurred while retrieving the ${getArtifactLabelByTabName(tab)}.`
+export const showArtifactErrorNotification = (dispatch, error, page) => {
+  let customArtifactErrorMsg = `An error occurred while retrieving the ${getArtifactLabelByTabName(page)}.`
 
   showErrorNotification(dispatch, error, '', customArtifactErrorMsg)
 }

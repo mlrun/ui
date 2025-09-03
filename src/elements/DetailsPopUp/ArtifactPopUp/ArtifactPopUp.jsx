@@ -25,7 +25,7 @@ import PropTypes from 'prop-types'
 import DetailsPopUp from '../DetailsPopUp'
 
 import { showArtifactErrorNotification } from '../../../utils/artifacts.util'
-import { getViewMode } from '../../../utils/helper'
+import { getViewMode } from 'igz-controls/utils/common.util'
 import {
   generateActionsMenu as generateFileActionsMenu,
   generatePageData as generateFilePageData
@@ -43,11 +43,17 @@ import {
   generatePageData as generateDocumentPageData
 } from '../../../components/Documents/documents.util'
 import {
+  generateActionsMenu as generateLlmPromptActionsMenu,
+  generatePageData as generateLlmPromptPageData
+} from '../../../components/LLMPrompts/llmPrompts.util'
+import {
   DATASET_TYPE,
-  DATASETS_TAB,
+  DATASETS_PAGE,
   DOCUMENT_TYPE,
-  DOCUMENTS_TAB,
-  FILES_TAB,
+  DOCUMENTS_PAGE,
+  FILES_PAGE,
+  LLM_PROMPT_TYPE,
+  LLM_PROMPTS_PAGE,
   MODEL_TYPE,
   MODELS_TAB
 } from '../../../constants'
@@ -65,33 +71,51 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
   const viewMode = getViewMode(window.location.search)
 
   const artifactContext = useMemo(() => {
-    return [DATASETS_TAB, DATASET_TYPE].includes(artifactData.kind)
-      ? {
-          type: DATASETS_TAB,
+    switch (artifactData.kind) {
+      case DATASETS_PAGE:
+      case DATASET_TYPE:
+        return {
+          type: DATASETS_PAGE,
           generateActionsMenu: generateDatasetActionsMenu,
-          pageData: generateDatasetPageData(selectedArtifact, viewMode, {}, true),
+          pageData: generateDatasetPageData(viewMode, true, selectedArtifact),
           fetchArtifact: artifactsApi.getDataSets
         }
-      : [MODELS_TAB, MODEL_TYPE].includes(artifactData.kind)
-        ? {
-            type: MODELS_TAB,
-            generateActionsMenu: generateModelActionsMenu,
-            pageData: generateModelPageData(selectedArtifact, viewMode),
-            fetchArtifact: artifactsApi.getModels
-          }
-        : [DOCUMENTS_TAB, DOCUMENT_TYPE].includes(artifactData.kind)
-          ? {
-              type: DOCUMENTS_TAB,
-              generateActionsMenu: generateDocumentActionsMenu,
-              pageData: generateDocumentPageData(viewMode),
-              fetchArtifact: artifactsApi.getDocuments
-            }
-          : {
-              type: FILES_TAB,
-              generateActionsMenu: generateFileActionsMenu,
-              pageData: generateFilePageData(viewMode),
-              fetchArtifact: artifactsApi.getFiles
-            }
+
+      case MODELS_TAB:
+      case MODEL_TYPE:
+        return {
+          type: MODELS_TAB,
+          generateActionsMenu: generateModelActionsMenu,
+          pageData: generateModelPageData(viewMode, true, selectedArtifact),
+          fetchArtifact: artifactsApi.getModels
+        }
+
+      case DOCUMENTS_PAGE:
+      case DOCUMENT_TYPE:
+        return {
+          type: DOCUMENTS_PAGE,
+          generateActionsMenu: generateDocumentActionsMenu,
+          pageData: generateDocumentPageData(viewMode, true),
+          fetchArtifact: artifactsApi.getDocuments
+        }
+
+      case LLM_PROMPTS_PAGE:
+      case LLM_PROMPT_TYPE:
+        return {
+          type: LLM_PROMPTS_PAGE,
+          generateActionsMenu: generateLlmPromptActionsMenu,
+          pageData: generateLlmPromptPageData(viewMode, true),
+          fetchArtifact: artifactsApi.getLLMPrompts
+        }
+
+      default:
+        return {
+          type: FILES_PAGE,
+          generateActionsMenu: generateFileActionsMenu,
+          pageData: generateFilePageData(viewMode, true),
+          fetchArtifact: artifactsApi.getFiles
+        }
+    }
   }, [selectedArtifact, artifactData.kind, viewMode])
 
   const toggleConvertedYaml = useCallback(
@@ -115,7 +139,11 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
       .fetchArtifact(artifactData.project, artifactMin)
       .then(({ data }) => {
         const result = parseArtifacts(data.artifacts)
-        const artifacts = generateArtifacts(filterArtifacts(result), DATASETS_TAB, data.artifacts)
+        const artifacts = generateArtifacts(
+          filterArtifacts(result),
+          artifactContext.type,
+          data.artifacts
+        )
 
         if (artifacts?.length > 0) {
           const selectedArtifact =
@@ -137,7 +165,17 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
 
         onResolve()
       })
-  }, [artifactData, artifactContext, dispatch, onResolve])
+  }, [
+    artifactContext,
+    dispatch,
+    onResolve,
+    artifactData.key,
+    artifactData.iteration,
+    artifactData.tree,
+    artifactData.uid,
+    artifactData.tag,
+    artifactData.project
+  ])
 
   const actionsMenu = useMemo(
     () => fileMin =>

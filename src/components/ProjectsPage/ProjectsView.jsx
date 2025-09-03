@@ -23,7 +23,6 @@ import classnames from 'classnames'
 
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
-import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PageHeader from '../../elements/PageHeader/PageHeader'
@@ -32,7 +31,7 @@ import ProjectsMonitoring from './ProjectsMonitoring/ProjectsMonitoring'
 import Search from '../../common/Search/Search'
 import Sort from '../../common/Sort/Sort'
 import YamlModal from '../../common/YamlModal/YamlModal'
-import { ConfirmDialog, RoundedIcon, PopUpDialog } from 'igz-controls/components'
+import { ConfirmDialog, RoundedIcon, PopUpDialog, Loader } from 'igz-controls/components'
 
 import { projectsSortOptions, projectsStates } from './projects.util'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
@@ -77,7 +76,7 @@ const ProjectsView = ({
       {(projectStore.loading || projectStore.project.loading || tasksStore.loading) && <Loader />}
       {projectStore.mlrunUnhealthy.isUnhealthy && (
         <PopUpDialog headerIsHidden>
-          MMLRun seems to be down. Try again in a few minutes.
+          MLRun seems to be down. Try again in a few minutes.
         </PopUpDialog>
       )}
       {createProject && (

@@ -20,38 +20,37 @@ such restriction.
 import { expect } from 'chai'
 import { Key } from 'selenium-webdriver'
 
-async function clearManually(inputField) {
+export const clearManually = async (inputField) => {
   const existValue = await inputField.getAttribute('value')
   for (let i = 0; i <= existValue.length; i++) {
     await inputField.sendKeys(Key.BACK_SPACE, Key.DELETE)
   }
 }
 
-async function getOptionValues(driver, options) {
+export const getOptionValues = async (driver, options) => {
   return await driver.findElements(options).then(function(elements) {
     return Promise.all(elements.map(element => element.getText()))
   })
 }
 
-const action = {
-  clearManually,
-  getOptionValues: getOptionValues,
-  typeSearchableValue: async function(driver, inputGroup, value) {
+export const typeSearchableValue = async (driver, inputGroup, value) => {
     const inputField = await driver.findElement(inputGroup.inputField)
     await clearManually(inputField)
     return await inputField.sendKeys(value)
-  },
-  verifyTypedValue: async function(driver, inputGroup, value) {
+  }
+
+export const verifyTypedValue = async (driver, inputGroup, value) => {
     const inputField = await driver.findElement(inputGroup.inputField)
     const txt = await inputField.getAttribute('value')
     expect(txt).equal(value)
-  },
-  isContainsSubstringInSuggestedOptions: async function(
+  }
+
+export const isContainsSubstringInSuggestedOptions = async (
     driver,
     inputGroup,
     value,
     caseSensitive = false
-  ) {
+  ) => {
     let arr = await getOptionValues(driver, inputGroup.options)
     let tmpValue = value
 
@@ -66,6 +65,3 @@ const action = {
       `Searcheble string "${tmpValue}" do not find in all values of: [${arr}]`
     )
   }
-}
-
-module.exports = action
