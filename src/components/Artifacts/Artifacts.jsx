@@ -55,6 +55,7 @@ import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchPara
 import { useMode } from '../../hooks/mode.hook'
 import { usePagination } from '../../hooks/usePagination.hook'
 import { useRefreshAfterDelete } from '../../hooks/useRefreshAfterDelete.hook'
+import { useTableScroll } from 'igz-controls/hooks/useTable.hook'
 
 const Artifacts = ({
   actionButtons = [],
@@ -110,11 +111,16 @@ const Artifacts = ({
     paginationConfigArtifactVersionsRef,
     historyBackLink,
     'artifacts',
-    params.id && getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : tab || page, true, params.artifactName),
+    params.id &&
+      getCloseDetailsLink(
+        isAllVersions ? ALL_VERSIONS_PATH : tab || page,
+        true,
+        params.artifactName
+      ),
     isAllVersions
   )
   const pageData = useMemo(
-    () => generatePageData(viewMode, selectedArtifact, params, false, isDemoMode),
+    () => generatePageData(viewMode, false, selectedArtifact, params, isDemoMode),
     [generatePageData, isDemoMode, params, selectedArtifact, viewMode]
   )
   const detailsFormInitialValues = useMemo(() => {
@@ -384,6 +390,12 @@ const Artifacts = ({
     filters: artifactsFilters,
     paginationConfigRef: paginationConfigArtifactVersionsRef,
     resetPaginationTrigger: `${params.projectName}_${isAllVersions}`
+  })
+
+  useTableScroll({
+    content: isAllVersions ? paginatedArtifactVersions : paginatedArtifacts,
+    selectedItem: selectedArtifact,
+    isAllVersions
   })
 
   const tableContent = useMemo(() => {

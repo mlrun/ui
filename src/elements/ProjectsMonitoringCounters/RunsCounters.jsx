@@ -58,7 +58,7 @@ const RunCounter = () => {
       <div ref={anchorRef}>
         <StatsCard.Header
           title="Runs"
-          tip="Number of Job runs, clicking on the counters navigates to jobs screen."
+          tip="Number of Job runs, clicking on the counters navigates to jobs screen."
         >
           <div className="project-card__info">
             <ClockIcon className="project-card__info-icon" />
@@ -67,24 +67,20 @@ const RunCounter = () => {
         </StatsCard.Header>
         <div onMouseLeave={handleClosePopUp} onMouseEnter={handleOpenPopUp}>
           <StatsCard.Row>
-            <div
-              className="stats__link stats__counter_header"
-              data-testid="scheduled_total_counter"
-              onClick={jobStats.total.link}
-            >
-              <div className="stats__counter">
-                {projectStore.projectsSummary.loading ? (
-                  <Loader section small secondary />
-                ) : (
-                  jobStats.total.counter.toLocaleString()
-                )}
-              </div>
-            </div>
+            <StatsCard.MainCounter className="stats__link"
+              id="scheduled_total_counter"
+              onClick={jobStats.total.link}>
+              {projectStore.projectsSummary.loading ? (
+                <Loader section small secondary />
+              ) : (
+                jobStats.total.counter.toLocaleString()
+              )}
+            </StatsCard.MainCounter>
           </StatsCard.Row>
 
           <div ref={detailsRef} className="stats__details">
             {jobStats?.counters?.map(
-              ({ counter, className, counterClassName, label, link, statusClass, tooltip }) => {
+              ({ counter, className, label, link, statusClass, tooltip }) => {
                 return (
                   <StatsCard.Row key={`${statusClass}-runs`}>
                     <div
@@ -98,13 +94,13 @@ const RunCounter = () => {
                           <i className={`state-${statusClass}`} />
                         </Tooltip>
                       </div>
-                      <div className={counterClassName}>
+                      <StatsCard.SecondaryCounter>
                         {projectStore?.projectsSummary?.loading ? (
                           <Loader section small secondary />
                         ) : (
                           counter.toLocaleString()
                         )}
-                      </div>
+                      </StatsCard.SecondaryCounter>
                     </div>
                   </StatsCard.Row>
                 )

@@ -134,7 +134,7 @@ const MonitoringApplicationsPage = () => {
       <div className="content__header">
         <Breadcrumbs />
       </div>
-      <div className="content">
+      <div className="content monitoring-app-content">
         <div className="content__action-bar-wrapper">
           <span className="monitoring-apps-title">
             {params.name && (

@@ -21,7 +21,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 
+import PageHeader from '../../elements/PageHeader/PageHeader'
+
 import { getDateAndTimeByFormat } from 'igz-controls/utils/datetime.util'
+
+import { COUNTERS_GENERAL_MESSAGE } from '../../constants'
 
 import './ProjectDetailsHeader.scss'
 
@@ -30,12 +34,12 @@ const ProjectDetailsHeader = ({ projectData, projectName }) => {
 
   return (
     <div>
-      <div className="project-details__header">{projectName}</div>
+      <PageHeader title={projectName} tip={COUNTERS_GENERAL_MESSAGE} />
       {projectData && (
         <div>
           <span className="project-details__details-label">
             Created:
-            {getDateAndTimeByFormat(projectData.metadata.created, ' MM/DD/YYYY, HH:mm:ss A')}
+            {getDateAndTimeByFormat(projectData.metadata.created + 'Z', ' MM/DD/YYYY, HH:mm:ss A')}
           </span>
           {projectData.spec.owner && !frontendSpec.ce?.version && (
             <span className="project-details__details-label">Owner: {projectData.spec.owner}</span>

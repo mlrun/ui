@@ -104,7 +104,7 @@ export const fetchModelEndpointMetrics = createAsyncThunk(
       .then(({ data = [] }) => {
         const metrics = generateMetricsItems(data, applicationName)
 
-        return { endpointUid: uid, metrics }
+        return { endpointUid: uid, metrics, applicationName }
       })
       .catch(error => thunkAPI.rejectWithValue(error))
   }
@@ -189,6 +189,14 @@ const detailsStoreSlice = createSlice({
     decreaseDetailsLoadingCounter(state) {
       state.loadingCounter = state.loadingCounter - 1
     },
+    clearMetricsOptions(state) {
+      state.metricsOptions = {
+        all: [],
+        lastSelected: [],
+        preselected: [],
+        selectedByEndpoint: {}
+      }
+    }
   },
   extraReducers: builder => {
     builder.addCase(fetchModelFeatureVector.pending, state => {
@@ -289,6 +297,7 @@ export const {
   setSelectedMetricsOptions,
   increaseDetailsLoadingCounter,
   decreaseDetailsLoadingCounter,
+  clearMetricsOptions
 } = detailsStoreSlice.actions
 
 export default detailsStoreSlice.reducer

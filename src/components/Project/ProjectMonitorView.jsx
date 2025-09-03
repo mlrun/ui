@@ -62,8 +62,8 @@ const ProjectMonitorView = ({
   showFunctionsPanel
 }) => {
   return (
-    <div className="project-wrapper">
-      <div className="project__header">
+    <div className="content-wrapper">
+      <div className="content__header">
         <Breadcrumbs />
       </div>
       {project.loading ? (
@@ -89,13 +89,10 @@ const ProjectMonitorView = ({
       ) : isEmpty(project.data) ? (
         <NoData />
       ) : (
-        <div className="project__content">
+        <div className="content project-content">
           <div className="main-info">
             <ProjectDetailsHeader projectData={project.data} projectName={params.projectName} />
             <div className="main-info__toolbar">
-              <div className="main-info__toolbar-banner">
-                <span>Counters use a caching mechanism, and are not auto-refreshed.</span>
-              </div>
               <div className="main-info__toolbar-actions">
                 <Select
                   className="main-info__toolbar-menu launch-menu"

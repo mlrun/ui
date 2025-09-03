@@ -41,8 +41,6 @@ import { convertChipsData } from '../../utils/convertChipsData'
 import { createArtifactMessages } from '../../utils/createArtifact.util'
 import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
-import { showErrorNotification } from 'igz-controls/utils/notification.util'
-import { openPopUp } from 'igz-controls/utils/common.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { processActionAfterTagUniquesValidation } from '../../utils/artifacts.util'
 

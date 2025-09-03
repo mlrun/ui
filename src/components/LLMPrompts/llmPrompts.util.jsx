@@ -64,6 +64,7 @@ export const detailsMenu = [
 
 export const infoHeaders = [
   { label: 'Key', id: 'db_key' },
+  { label: 'Description', id: 'description' },
   { label: 'Model name', id: 'model_artifact' },
   {
     label: 'Hash',
@@ -80,14 +81,14 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' }
 ]
 
-export const generatePageData = viewMode => {
+export const generatePageData = (viewMode, isDetailsPopUp = false) => {
   return {
     page: LLM_PROMPTS_PAGE,
     details: {
       type: LLM_PROMPTS_PAGE,
       menu: detailsMenu,
       infoHeaders,
-      hideBackBtn: viewMode === FULL_VIEW_MODE,
+      hideBackBtn: viewMode === FULL_VIEW_MODE && !isDetailsPopUp,
       withToggleViewBtn: true
     }
   }
@@ -173,7 +174,8 @@ export const generateActionsMenu = (
         icon: <YamlIcon />,
         onClick: llmPromptMin => getFullLLMPrompt(llmPromptMin).then(toggleConvertedYaml)
       }
-      //TODO: uncomment when MEP delete will be implemented
+      //TODO: uncomment when MEP delete will be implemented,
+      // correct delete confirmation message ( currently it's shown as Llm-prompt deleted, should be LLM prompt deleted  )
       // {
       //   label: 'Delete',
       //   icon: <Delete />,

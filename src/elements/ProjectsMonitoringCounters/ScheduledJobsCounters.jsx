@@ -96,19 +96,17 @@ const ScheduledJobsCounters = () => {
         </StatsCard.Header>
         <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
           <StatsCard.Row>
-            <div
-              className="stats__counter_header stats__link"
-              data-testid="scheduled_total_counter"
+            <StatsCard.MainCounter
+              className="stats__link"
+              id="scheduled_total_counter"
               onClick={scheduledStats?.total?.link}
             >
-              <div className="stats__counter">
-                {projectStore?.projectsSummary?.loading ? (
-                  <Loader section small secondary />
-                ) : (
-                  scheduledStats.total.counter
-                )}
-              </div>
-            </div>
+              {projectStore?.projectsSummary?.loading ? (
+                <Loader section small secondary />
+              ) : (
+                scheduledStats.total.counter
+              )}
+            </StatsCard.MainCounter>
           </StatsCard.Row>
           <div ref={detailsRef} className="stats__details">
             <StatsCard.Row>
@@ -118,29 +116,29 @@ const ScheduledJobsCounters = () => {
                 data-testid="scheduled_jobs_counter"
               >
                 <h6 className="stats__subtitle">Jobs</h6>
-                <div className="stats__counter">
+                <StatsCard.SecondaryCounter>
                   {projectStore.projectsSummary.loading ? (
                     <Loader section small secondary />
                   ) : (
                     scheduledStats.jobs.counter.toLocaleString()
                   )}
-                </div>
+                </StatsCard.SecondaryCounter>
               </div>
             </StatsCard.Row>
             <StatsCard.Row>
               <div
-                className="stats__link"
+                className="stats__link stats__line"
                 onClick={scheduledStats.workflows.link}
                 data-testid="scheduled_workflows_counter"
               >
                 <h6 className="stats__subtitle">Workflows</h6>
-                <div className="stats__counter">
+                <StatsCard.SecondaryCounter>
                   {projectStore.projectsSummary.loading ? (
                     <Loader section small secondary />
                   ) : (
                     scheduledStats.workflows.counter.toLocaleString()
                   )}
-                </div>
+                </StatsCard.SecondaryCounter>
               </div>
             </StatsCard.Row>
           </div>
@@ -155,7 +153,7 @@ const ScheduledJobsCounters = () => {
             >
               <div className={'card-popup_text'}>
                 <div className="card-popup_text_link" onClick={scheduledStats.jobs.link}>
-                  Runs: {scheduledStats.workflows.counter}
+                  Jobs: {scheduledStats.jobs.counter}
                 </div>
                 <div className="card-popup_text_link" onClick={scheduledStats.workflows.link}>
                   Workflows: {scheduledStats.workflows.counter}

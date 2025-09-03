@@ -21,22 +21,32 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
-import NoData from '../../../common/NoData/NoData'
-
 import './detailsGenerationConfiguration.scss'
 
 const DetailsGenerationConfiguration = ({ selectedItem }) => {
   return (
     <div className="generation-configuration-tab">
-      {Object.entries(selectedItem.model_configuration || {}).map(([key, value]) => {
-        return (
-          <div className="generation-configuration-tab__row" key={key + value}>
-            <div className="generation-configuration-tab__row-key">{key}</div>
-            <div className="generation-configuration-tab__row-value">{value}</div>
+      {!isEmpty(selectedItem.model_configuration) && (
+        <>
+          <div className="generation-configuration-tab__counter">
+            {Object.entries(selectedItem.model_configuration || {}).length} modifications made to
+            the default configuration:
           </div>
-        )
-      })}
-      {isEmpty(selectedItem.model_configuration) && <NoData />}
+          <div className="generation-configuration-tab__table-header generation-configuration-tab__row">
+            <div className="generation-configuration-tab__row-key">Key</div>
+            <div className="generation-configuration-tab__row-value">Value</div>
+          </div>
+          {Object.entries(selectedItem.model_configuration || {}).map(([key, value]) => {
+            return (
+              <div className="generation-configuration-tab__row" key={key + value}>
+                <div className="generation-configuration-tab__row-key">{key}</div>
+                <div className="generation-configuration-tab__row-value">{value}</div>
+              </div>
+            )
+          })}
+        </>
+      )}
+      {isEmpty(selectedItem.model_configuration) && <span>Default configuration is used.</span>}
     </div>
   )
 }

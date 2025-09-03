@@ -3,25 +3,10 @@
 @use 'igz-controls/scss/shadows';
 @use 'igz-controls/scss/variables';
 
-.settings {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  min-width: 100%;
-  background-color: colors.$white;
+.settings-content {
+  padding: 15px 24px 10px;
 
-  &__content {
-    position: relative;
-    margin: 25px 40px;
-  }
-
-  &__header {
-    padding: 20px 24px;
-    background-color: colors.$white;
-    box-shadow: shadows.$headerShadow;
-  }
-
-  &__card {
+  .settings__card {
     width: 100%;
     padding: 24px 0;
     background-color: colors.$white;
@@ -59,33 +44,34 @@
         margin-left: 5px;
       }
     }
+
     &-subtitle {
       margin: 0 0 15px;
       font-weight: 400;
     }
   }
-}
 
-.new-secret__button {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-width: 44px;
-  padding: 10px;
-  color: #6279e7;
-  font-size: 15px;
-  line-height: 18px;
+  .new-secret__button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 44px;
+    padding: 10px;
+    color: #6279e7;
+    font-size: 15px;
+    line-height: 18px;
 
-  svg {
-    width: 20px;
-    height: 20px;
+    svg {
+      width: 20px;
+      height: 20px;
 
-    rect {
-      fill: colors.$cornflowerBlue;
+      rect {
+        fill: colors.$cornflowerBlue;
+      }
     }
   }
-}
 
-.action__button {
-  cursor: pointer;
+  .action__button {
+    cursor: pointer;
+  }
 }

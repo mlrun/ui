@@ -112,10 +112,10 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, isAlertsPage = true }) =>
 
     if (!isAlertsPage) {
       if (filters?.dates?.initialSelectedOptionId === CUSTOM_RANGE_DATE_OPTION) {
-        params.start = filters?.dates.value[0].getTime()
-        params.end = filters?.dates.value[1].getTime()
+        params.start = filters?.dates?.value[0]?.getTime?.()
+        params.end = filters?.dates?.value[1]?.getTime?.()
       } else {
-        params.start = filters?.dates.value[0].getTime()
+        params.start = filters?.dates?.value[0]?.getTime?.()
         params.end = Date.now()
       }
     }

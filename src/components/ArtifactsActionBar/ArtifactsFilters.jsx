@@ -49,6 +49,15 @@ const ArtifactsFilters = ({ artifacts, filtersConfig, isAllVersions }) => {
     form.change(filterName, value || '')
   }
 
+  const handleModelNameChange = value => {
+    form.change(MODEL_NAME_FILTER, value || '')
+    setModelName(value)
+
+    if (value.length === 0) {
+      form.change(MODEL_TAG_FILTER, '')
+    }
+  }
+
   return (
     <div className="artifacts-filters">
       <div className="form-row">
@@ -80,13 +89,7 @@ const ArtifactsFilters = ({ artifacts, filtersConfig, isAllVersions }) => {
               name={MODEL_NAME_FILTER}
               placeholder="Search model name.."
             />
-            <FormOnChange
-              name={MODEL_NAME_FILTER}
-              handler={value => {
-                handleInputChange(value, MODEL_NAME_FILTER)
-                setModelName(value)
-              }}
-            />
+            <FormOnChange name={MODEL_NAME_FILTER} handler={handleModelNameChange} />
           </div>
           <div className="form-row">
             <FormInput

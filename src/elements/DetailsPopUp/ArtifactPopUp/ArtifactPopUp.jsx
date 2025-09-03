@@ -77,7 +77,7 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
         return {
           type: DATASETS_PAGE,
           generateActionsMenu: generateDatasetActionsMenu,
-          pageData: generateDatasetPageData(viewMode, selectedArtifact, {}, true),
+          pageData: generateDatasetPageData(viewMode, true, selectedArtifact),
           fetchArtifact: artifactsApi.getDataSets
         }
 
@@ -86,7 +86,7 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
         return {
           type: MODELS_TAB,
           generateActionsMenu: generateModelActionsMenu,
-          pageData: generateModelPageData(viewMode, selectedArtifact),
+          pageData: generateModelPageData(viewMode, true, selectedArtifact),
           fetchArtifact: artifactsApi.getModels
         }
 
@@ -95,7 +95,7 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
         return {
           type: DOCUMENTS_PAGE,
           generateActionsMenu: generateDocumentActionsMenu,
-          pageData: generateDocumentPageData(viewMode),
+          pageData: generateDocumentPageData(viewMode, true),
           fetchArtifact: artifactsApi.getDocuments
         }
 
@@ -104,7 +104,7 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
         return {
           type: LLM_PROMPTS_PAGE,
           generateActionsMenu: generateLlmPromptActionsMenu,
-          pageData: generateLlmPromptPageData(viewMode),
+          pageData: generateLlmPromptPageData(viewMode, true),
           fetchArtifact: artifactsApi.getLLMPrompts
         }
 
@@ -112,7 +112,7 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
         return {
           type: FILES_PAGE,
           generateActionsMenu: generateFileActionsMenu,
-          pageData: generateFilePageData(viewMode),
+          pageData: generateFilePageData(viewMode, true),
           fetchArtifact: artifactsApi.getFiles
         }
     }
@@ -166,14 +166,15 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
         onResolve()
       })
   }, [
-    artifactData,
     artifactContext,
     dispatch,
     onResolve,
+    artifactData.key,
     artifactData.iteration,
     artifactData.tree,
     artifactData.uid,
-    artifactData.tag
+    artifactData.tag,
+    artifactData.project
   ])
 
   const actionsMenu = useMemo(

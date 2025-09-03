@@ -36,6 +36,7 @@ import {
   handleStoreInputPathChange,
   isPathInputInvalid,
   pathPlaceholders,
+  prepareTargetPathInitialState,
   targetPathInitialState
 } from './targetPath.util'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
@@ -44,7 +45,9 @@ const TargetPath = ({
   density = 'normal',
   formState,
   formStateFieldInfo,
+  formStateDataInputState = '',
   hiddenSelectOptionsIds = [],
+  inputDefaultState = null,
   inputDefaultValue = '',
   label = '',
   name,
@@ -54,7 +57,9 @@ const TargetPath = ({
   selectPlaceholder = '',
   setFieldState
 }) => {
-  const [dataInputState, setDataInputState] = useState(targetPathInitialState)
+  const [dataInputState, setDataInputState] = useState(
+    prepareTargetPathInitialState(inputDefaultState, inputDefaultValue, selectDefaultValue)
+  )
   const dispatch = useDispatch()
 
   const handleOnChange = (selectValue, inputValue) => {
@@ -215,9 +220,13 @@ const TargetPath = ({
       if (value.length !== 0) {
         formState.form.change(`${formStateFieldInfo}.value`, value.replace(/[^:/]*:[/]{2,3}/, ''))
         formState.form.change(`${formStateFieldInfo}.pathType`, value.match(/^\w*:[/]{2,3}/)[0])
+
+        if (formStateDataInputState) {
+          formState.form.change(`${formStateDataInputState}`, dataInputState)
+        }
       }
     },
-    [formState.form, formStateFieldInfo]
+    [dataInputState, formState.form, formStateDataInputState, formStateFieldInfo]
   )
 
   return (
@@ -270,7 +279,9 @@ TargetPath.propTypes = {
   density: PropTypes.oneOf(['dense', 'normal', 'medium', 'chunky']),
   formState: PropTypes.object.isRequired,
   formStateFieldInfo: PropTypes.string.isRequired,
+  formStateDataInputState: PropTypes.string,
   hiddenSelectOptionsIds: PropTypes.arrayOf(PropTypes.string),
+  inputDefaultState: PropTypes.object,
   inputDefaultValue: PropTypes.string,
   label: PropTypes.string,
   name: PropTypes.string.isRequired,

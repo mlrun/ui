@@ -4,6 +4,14 @@
 .generation-configuration-tab {
   margin-top: 15px;
 
+  &__counter {
+    margin-bottom: 20px;
+  }
+
+  &__table-header {
+    font-weight: 500;
+  }
+
   &__row {
     display: flex;
     padding: 10px 0;
@@ -11,13 +19,9 @@
     line-height: 20px;
     border-bottom: borders.$secondaryBorder;
 
-    &-key {
-      min-width: 150px;
-      font-weight: 500;
-    }
-
+    &-key,
     &-value {
-      color: colors.$topaz;
+      width: 50%;
     }
   }
 }

@@ -169,7 +169,7 @@ export const generateActionsMenu = (
           icon: <Cancel />,
           className: 'danger',
           onClick: handleConfirmTerminateWorkflow,
-          hidden: ce || !accessibleProjectsMap[job?.project],
+          hidden: !ce && !accessibleProjectsMap[job?.project],
           disabled: job?.state?.value !== FUNCTION_RUNNING_STATE
         }
       ]

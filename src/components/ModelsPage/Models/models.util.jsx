@@ -116,13 +116,13 @@ export const generateModelsDetailsMenu = selectedModel => [
   }
 ]
 
-export const generatePageData = (viewMode, selectedItem) => ({
+export const generatePageData = (viewMode, isDetailsPopUp = false, selectedItem) => ({
   page: MODELS_PAGE,
   details: {
     menu: generateModelsDetailsMenu(selectedItem),
     infoHeaders,
     type: MODELS_TAB,
-    hideBackBtn: viewMode === FULL_VIEW_MODE,
+    hideBackBtn: viewMode === FULL_VIEW_MODE && !isDetailsPopUp,
     withToggleViewBtn: true
   }
 })

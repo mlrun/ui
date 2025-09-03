@@ -3,15 +3,31 @@
 
 .prompt-template {
   .prompt-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
     &__header {
+      position: sticky;
+      top: 0;
+      left: 0;
+      z-index: 6;
       display: flex;
       align-items: center;
-      margin-top: 20px;
+      width: 100%;
+      padding-top: 20px;
       padding-bottom: 10px;
       background-color: white;
     }
 
     &__table {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      min-height: 300px;
+      margin-top: 8px;
+
       &-header {
         font-weight: bold;
       }
@@ -19,6 +35,26 @@
       .tooltip-wrapper {
         display: inline;
       }
+
+      .loader-wrapper {
+        min-height: 300px;
+      }
+    }
+
+    &__row {
+      display: flex;
+      padding: 8px 0;
+      border-bottom: borders.$dividerBorder;
+    }
+
+    &__role {
+      flex: 0 0 100px;
+      padding-right: 16px;
+    }
+
+    &__content {
+      display: flex;
+      flex: 1;
     }
 
     &__copy-btn {
@@ -27,9 +63,9 @@
       justify-content: space-between;
       width: 135px;
       padding: 11px 18px;
+      font-size: 14px;
       border: borders.$primaryBorder;
       border-radius: 4px;
-      font-size: 14px;
       cursor: pointer;
 
       &-wrapper {
@@ -64,37 +100,13 @@
 
       &-key {
         width: 150px;
-        font-weight: bold;
         padding-right: 10px;
+        font-weight: bold;
       }
 
       &-value {
         color: colors.$topaz;
       }
     }
-  }
-
-  .prompt-tab__table {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-top: 8px;
-  }
-
-  .prompt-tab__row {
-    display: flex;
-    padding: 8px 0;
-    border-bottom: borders.$dividerBorder;
-  }
-
-  .prompt-tab__role {
-    flex: 0 0 100px;
-    padding-right: 16px;
-    font-weight: 500;
-  }
-
-  .prompt-tab__content {
-    display: flex;
-    flex: 1;
   }
 }

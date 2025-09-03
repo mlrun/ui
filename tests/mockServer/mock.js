@@ -865,7 +865,7 @@ function getMonitoringApplicationsSummary(req, res) {
 function getMonitoringApplicationData(req, res) {
   const monitoringApplication = (monitoringApplications[req.params['project']] || []).find(
     application => {
-      return application.name.toLowerCase() === req.params['func']
+      return application.name.toLowerCase() === req.params['func'].toLowerCase()
     }
   )
 

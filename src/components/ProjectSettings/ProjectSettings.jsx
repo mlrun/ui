@@ -285,11 +285,11 @@ const ProjectSettings = () => {
 
       {projectStore.projectsToDelete.includes(params.projectName) && <Loader />}
 
-      <div className="settings">
-        <div className="settings__header">
+      <div className="content-wrapper">
+        <div className="content__header">
           <Breadcrumbs />
         </div>
-        <div className="settings__content">
+        <div className="content settings-content">
           <div className="content__action-bar-wrapper">
             <ContentMenu
               activeTab={params.pageTab}
