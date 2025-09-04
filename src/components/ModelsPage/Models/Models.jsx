@@ -24,7 +24,6 @@ import { useSelector } from 'react-redux'
 import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
 import JobWizard from '../../JobWizard/JobWizard'
 import Artifacts from '../../Artifacts/Artifacts'
-import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 
 import { fetchModels, removeModels } from '../../../reducers/artifactsReducer'
 import { MODELS_PAGE, MODELS_TAB, MODEL_TYPE } from '../../../constants'
@@ -69,10 +68,6 @@ const Models = ({ isAllVersions }) => {
     })
   }
 
-  const renderPageTabs = () => {
-    return <ModelsPageTabs />
-  }
-
   return (
     <Artifacts
       actionButtons={[
@@ -100,7 +95,6 @@ const Models = ({ isAllVersions }) => {
       handleDeployArtifactFailure={handleDeployModelFailure}
       isAllVersions={isAllVersions}
       page={MODELS_PAGE}
-      renderPageTabs={renderPageTabs}
       removeArtifacts={removeModels}
       storeArtifactTypeLoading={artifactsStore.models.modelLoading}
       tab={MODELS_TAB}
