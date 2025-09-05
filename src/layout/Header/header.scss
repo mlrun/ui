@@ -5,10 +5,6 @@
 @use 'igz-controls/scss/borders';
 
 .header {
-  line-height: 1.5;
-
-  @include mixins.fixed;
-
   z-index: 12;
   display: flex;
   align-items: center;
@@ -16,8 +12,11 @@
   min-height: 64px;
   padding: 0 24px;
   color: colors.$white;
+  line-height: 1.5;
   background-color: colors.$ebonyClay;
   box-shadow: shadows.$mainHeaderShadow;
+
+  @include mixins.fixed;
 
   &__brand {
     display: flex;
@@ -60,10 +59,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 8px;
+    color: colors.$white;
     background-color: colors.$cerulean;
     border-radius: 50%;
-    color: colors.$white;
-    padding: 8px;
     transition: background-color 0.2s ease-in-out;
 
     & > * {

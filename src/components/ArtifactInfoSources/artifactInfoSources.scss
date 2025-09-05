@@ -39,8 +39,8 @@
       display: inline-block;
       flex: 1 1;
       min-width: 110px;
-      word-break: break-word;
       color: colors.$topaz;
+      word-break: break-word;
 
       &__copy-to-clipboard {
         display: flex;

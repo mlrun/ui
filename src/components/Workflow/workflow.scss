@@ -8,17 +8,19 @@
 
   .workflow__actions {
     &-container {
-      align-items: center;
+      display: flex;
       flex-direction: row;
       gap: 2px;
-      display: flex;
+      align-items: center;
     }
+
     svg {
-      padding: 0;
-      height: 14px;
       width: 14px;
+      height: 14px;
+      padding: 0;
     }
   }
+
   .workflow-content {
     flex-direction: column;
 

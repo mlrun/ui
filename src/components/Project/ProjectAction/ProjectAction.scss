@@ -5,27 +5,27 @@
   flex-flow: row wrap;
   align-items: flex-start;
   justify-content: flex-start;
+  width: 100%;
   margin: 0;
   padding: 0;
   list-style-type: none;
-  width: 100%;
   transition: height 0.5s ease-in-out;
 
   &__item {
     display: flex;
-    justify-content: center;
     flex: 1 0 auto;
+    justify-content: center;
     max-width: 33%;
     margin: 0 0 1.5em;
     text-align: center;
 
     &-wrapper {
+      position: relative;
       display: flex;
       flex-flow: column nowrap;
       align-items: center;
-      position: relative;
-      margin: 0 1.2em;
       min-width: 105px;
+      margin: 0 1.2em;
       cursor: pointer;
 
       &:hover,
@@ -53,8 +53,8 @@
       justify-content: center;
       width: 68px;
       height: 68px;
-      margin-bottom: 0.5rem;
       margin-right: 0;
+      margin-bottom: 0.5rem;
       background-color: colors.$selago;
       border-radius: 50%;
       transition: background-color 0.3s ease-in-out;

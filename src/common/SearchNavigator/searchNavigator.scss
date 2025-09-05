@@ -10,20 +10,20 @@
 
   &__counter {
     display: flex;
-    font-size: 13px;
     color: colors.$topaz;
+    font-size: 13px;
 
-    &:after {
+    &::after {
       display: none;
-      content: '';
       width: 5px;
       height: 15px;
       margin: 0 5px 0 8px;
       border-right: borders.$primaryBorder;
+      content: '';
     }
 
     &_with-divider {
-      &:after {
+      &::after {
         display: block;
       }
     }

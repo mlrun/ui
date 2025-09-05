@@ -1,7 +1,6 @@
 @use 'igz-controls/scss/colors';
 @use 'igz-controls/scss/borders';
 @use 'igz-controls/scss/mixins';
-
 @include mixins.newItemSidePanel;
 
 .functions-panel {
