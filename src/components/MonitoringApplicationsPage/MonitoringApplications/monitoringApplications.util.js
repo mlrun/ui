@@ -48,10 +48,12 @@ export const generateOperatingFunctionsTable = (functions, projectName) => {
   ]
 
   const tableBody = functions.map(func => {
+    const nuclioFunctionName = `${projectName}-${func.name.toLowerCase()}`.slice(0, 63)
+
     return {
       name: {
         value: capitalize(func.name),
-        link: generateNuclioLink(`/projects/${projectName}/functions/${func.name}`),
+        href: generateNuclioLink(`/projects/${projectName}/functions/${nuclioFunctionName}`),
         className: 'table-cell_big'
       },
       status: {
