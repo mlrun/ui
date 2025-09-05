@@ -5,47 +5,47 @@
 }
 
 .expandable-text {
-  display: block;
-  transition: max-height 0.3s ease;
   position: relative;
+  display: block;
   overflow: hidden;
+  transition: max-height 0.3s ease;
 }
 
 .fade-overlay {
-  content: '';
   position: absolute;
+  right: 0;
   bottom: 0;
   left: 0;
-  right: 0;
   height: 40px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #fff);
+  background: linear-gradient(to bottom, rgb(255 255 255 / 0%), #fff);
+  content: '';
   pointer-events: none;
 }
 
 .see-more-button-overlay {
   position: absolute;
-  bottom: 4px;
   right: 0;
-  background: white;
-  padding-left: 8px;
+  bottom: 4px;
   display: flex;
-  align-items: center;
   gap: 4px;
+  align-items: center;
+  padding-left: 8px;
+  background: white;
 }
 
 .dots {
-  font-weight: bold;
   color: colors.$doveGrayTwo;
+  font-weight: bold;
 }
 
 .see-more-button,
 .see-less-button {
-  background: none;
-  border: none;
+  padding: 0;
   color: colors.$cornflowerBlue;
   font-size: 14px;
+  background: none;
+  border: none;
   cursor: pointer;
-  padding: 0;
 }
 
 .see-less-container {
