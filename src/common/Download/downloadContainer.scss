@@ -3,7 +3,7 @@
 
 .download-container {
   position: relative;
-  z-index: 10;
+  z-index: 9;
   align-self: flex-end;
   opacity: 0;
   width: 220px;
@@ -48,8 +48,12 @@
         }
       }
 
+      &__status {
+        margin-left: auto;
+      }
+
       &__buttons {
-        min-width: 20px;
+        min-width: 10px;
 
         .round-icon-cp__circle {
           width: 20px;
