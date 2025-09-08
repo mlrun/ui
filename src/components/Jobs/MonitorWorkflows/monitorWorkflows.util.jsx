@@ -144,6 +144,17 @@ export const generateActionsMenu = (
         }
       ]
     ]
+  }
+  if (job?.access_key !== undefined) {
+    return [
+      [
+        {
+          label: 'View YAML',
+          icon: <Yaml />,
+          onClick: toggleConvertedYaml
+        }
+      ]
+    ]
   } else {
     const runningStates = ['running', 'pending', 'terminating']
 
