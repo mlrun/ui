@@ -63,20 +63,18 @@ const AddToFeatureVectorView = React.forwardRef(
     return (
       <div ref={ref} className="add-to-feature-vector content-wrapper">
         <div className="content">
-          <div className="content__header">
+          <div className="content__action-bar-wrapper">
             <AddToFeatureVectorPageHeader params={params} />
-            <div className="content__action-bar-wrapper">
-              <ActionBar
-                filters={filters}
-                filtersConfig={filtersConfig}
-                handleRefresh={handleRefresh}
-                setSearchParams={setSearchParams}
-                tab={ADD_TO_FEATURE_VECTOR_TAB}
-                withoutExpandButton
-              >
-                <AddToFeatureVectorFilters content={content} fetchTags={fetchTags} />
-              </ActionBar>
-            </div>
+            <ActionBar
+              filters={filters}
+              filtersConfig={filtersConfig}
+              handleRefresh={handleRefresh}
+              setSearchParams={setSearchParams}
+              tab={ADD_TO_FEATURE_VECTOR_TAB}
+              withoutExpandButton
+            >
+              <AddToFeatureVectorFilters content={content} fetchTags={fetchTags} />
+            </ActionBar>
           </div>
           {(featureStore.loading || featureStore.features.loading) && <Loader />}
           <div className="table-container">
