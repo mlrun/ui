@@ -21,6 +21,13 @@
       cursor: pointer;
     }
 
+    &__link:hover {
+      color: colors.$topaz;
+      text-decoration: underline;
+      text-underline-offset: 1px;
+      text-decoration-thickness: 1px;
+    }
+
     .stats-card__row:last-child {
       padding-bottom: 10px;
     }
