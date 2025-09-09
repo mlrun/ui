@@ -23,6 +23,7 @@ import { isNil } from 'lodash'
 
 import StatsCard from '../../../../../common/StatsCard/StatsCard'
 import { Tooltip, TextTooltipTemplate, Loader } from 'igz-controls/components'
+import { Link } from 'react-router-dom'
 
 const MonitoringApplicationCard = ({
   counterData,
@@ -52,6 +53,8 @@ const MonitoringApplicationCard = ({
                     <Loader section small secondary />
                   ) : error || isNil(counter.title) ? (
                     'N/A'
+                  ) : counter.link ? (
+                    <Link className="monitoring-stats__link" to={counter.link}>{counter.title}</Link>
                   ) : (
                     counter.title
                   )}

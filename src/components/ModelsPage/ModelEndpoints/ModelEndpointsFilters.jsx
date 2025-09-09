@@ -17,9 +17,10 @@ such restriction.
 import React from 'react'
 import { useForm } from 'react-final-form'
 
-import { FormInput, FormOnChange } from 'igz-controls/components'
+import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
 
-import { LABELS_FILTER } from '../../../constants'
+import { modelEndpointsModesList } from '../../FilterMenu/filterMenu.settings'
+import { LABELS_FILTER, ME_MODE_FILTER } from '../../../constants'
 
 const ModelEndpointsFilters = () => {
   const form = useForm()
@@ -30,6 +31,9 @@ const ModelEndpointsFilters = () => {
 
   return (
     <div>
+      <div className="form-row">
+        <FormSelect label="Mode" name={ME_MODE_FILTER} options={modelEndpointsModesList} />
+      </div>
       <div className="form-row">
         <FormInput
           label="Labels"

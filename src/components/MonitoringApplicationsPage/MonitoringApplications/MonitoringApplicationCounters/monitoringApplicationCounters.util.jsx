@@ -20,6 +20,12 @@ such restriction.
 import { capitalize } from 'lodash'
 
 import { formatMinutesToString } from '../../../../utils/measureTime'
+import {
+  BATCH_FILTER, ME_MODE_FILTER,
+  MODEL_ENDPOINTS_TAB,
+  MODELS_PAGE,
+  REAL_TIME_FILTER
+} from '../../../../constants'
 
 export const generateCountersContent = (params, monitoringApplicationsStore) => {
   const {
@@ -67,13 +73,15 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
       title: 'Endpoints',
       counterData: [
         {
-          id: 'batch',
+          id: BATCH_FILTER,
           title: applicationsSummary.batch_model_endpoint_count,
+          link: `/projects/${params.projectName}/${MODELS_PAGE}/${MODEL_ENDPOINTS_TAB}?${ME_MODE_FILTER}=${BATCH_FILTER}`,
           subtitle: 'Batch'
         },
         {
-          id: 'realTime',
+          id: REAL_TIME_FILTER,
           title: applicationsSummary.real_time_model_endpoint_count,
+          link: `/projects/${params.projectName}/${MODELS_PAGE}/${MODEL_ENDPOINTS_TAB}?${ME_MODE_FILTER}=${REAL_TIME_FILTER}`,
           subtitle: 'Real-time'
         }
       ]
