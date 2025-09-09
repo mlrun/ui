@@ -1,10 +1,13 @@
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/shadows';
+
 .add-to-feature-vector {
   .content {
     .content__action-bar-wrapper {
       min-height: 70px;
       padding: 14px 0;
-      background-color: #fff;
-      box-shadow: inset 0 -1px 0 #edecef;
+      background-color: colors.$white;
+      box-shadow: shadows.$headerShadow;
 
       .action-bar {
         margin-bottom: 0;
