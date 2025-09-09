@@ -301,24 +301,28 @@ const DatePicker = ({
   }
 
   const onChangeNextMonth = configId => {
-    const dateToUpdate = new Date(new Date(datePickerState[configId].visibleDate).setDate(1))
-
     datePickerDispatch({
       type: datePickerActions[
         configId === 'configFrom' ? 'UPDATE_VISIBLE_DATE_FROM' : 'UPDATE_VISIBLE_DATE_TO'
       ],
-      payload: new Date(dateToUpdate.setMonth(dateToUpdate.getMonth() + 1))
+      payload: new Date(
+        datePickerState[configId].visibleDate.getFullYear(),
+        datePickerState[configId].visibleDate.getMonth() + 1,
+        1
+      )
     })
   }
 
   const onChangePreviousMonth = configId => {
-    const dateToUpdate = new Date(new Date(datePickerState[configId].visibleDate).setDate(1))
-
     datePickerDispatch({
       type: datePickerActions[
         configId === 'configFrom' ? 'UPDATE_VISIBLE_DATE_FROM' : 'UPDATE_VISIBLE_DATE_TO'
       ],
-      payload: new Date(dateToUpdate.setMonth(dateToUpdate.getMonth() - 1))
+      payload: new Date(
+        datePickerState[configId].visibleDate.getFullYear(),
+        datePickerState[configId].visibleDate.getMonth() - 1,
+        1
+      )
     })
   }
 
