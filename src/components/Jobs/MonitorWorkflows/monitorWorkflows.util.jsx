@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { debounce } from 'lodash'
+import { debounce, isNil } from 'lodash'
 
 import {
   FUNCTIONS_PAGE,
@@ -144,7 +144,7 @@ export const generateActionsMenu = (
       ]
     ]
   } else {
-    const accessKeyExists = job?.access_key != null
+    const accessKeyExists = !isNil(job?.access_key)
     const runningStates = ['running', 'pending', 'terminating']
 
     return [
