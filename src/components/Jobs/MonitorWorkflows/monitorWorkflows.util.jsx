@@ -98,6 +98,7 @@ export const generateActionsMenu = (
     const jobKindIsAbortable = isJobKindAbortable(job, abortable_function_kinds)
     const jobIsAborting = isJobAborting(job)
     const jobKindIsDask = isJobKindDask(job?.labels)
+
     return [
       [
         {
