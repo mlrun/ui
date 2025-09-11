@@ -21,10 +21,14 @@ import { capitalize } from 'lodash'
 
 import { formatMinutesToString } from '../../../../utils/measureTime'
 import {
-  BATCH_FILTER, ME_MODE_FILTER,
+  BATCH_FILTER,
+  ERROR_STATE,
+  FUNCTION_READY_STATE,
+  ME_MODE_FILTER,
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE,
-  REAL_TIME_FILTER
+  REAL_TIME_FILTER,
+  UNHEALTHY_STATE
 } from '../../../../constants'
 
 export const generateCountersContent = (params, monitoringApplicationsStore) => {
@@ -35,6 +39,14 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
     loading: monitoringApplicationIsLoading,
     error: monitoringApplicationError
   } = monitoringApplicationsStore
+
+  const { ready: appReady, error: appError } = monitoringApplications.applications.reduce(
+    (acc, { status }) => ({
+      ready: acc.ready + (status === FUNCTION_READY_STATE ? 1 : 0),
+      error: acc.error + ([ERROR_STATE, UNHEALTHY_STATE].includes(status) ? 1 : 0)
+    }),
+    { ready: 0, error: 0 }
+  )
 
   const applicationsCountersContent = [
     {
@@ -53,13 +65,13 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
       counterData: [
         {
           id: 'running',
-          title: applicationsSummary.running_model_monitoring_functions,
+          title: appReady,
           subtitle: 'Running',
           subtitleStatus: 'running'
         },
         {
           id: 'failed',
-          title: applicationsSummary.failed_model_monitoring_functions,
+          title: appError,
           subtitle: 'Failed',
           subtitleStatus: 'failed'
         }
@@ -162,7 +174,7 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
       }
     : {
         content: applicationsCountersContent,
-        loading: applicationsSummary.loading,
+        loading: applicationsSummary.loading || monitoringApplicationIsLoading,
         error: applicationsSummary.error
       }
 }
