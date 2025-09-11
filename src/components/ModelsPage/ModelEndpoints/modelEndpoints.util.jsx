@@ -72,8 +72,7 @@ const detailsMenu = [
   {
     label: 'alerts',
     id: 'alerts',
-    icon: <Alert />,
-    query: '?entity-type=model-endpoint-result' //TODO: temp solution for query params
+    icon: <Alert />
   }
 ]
 
