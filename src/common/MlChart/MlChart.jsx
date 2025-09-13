@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Chart } from 'chart.js'
+import Chart from 'chart.js/auto'
 import classnames from 'classnames'
 
 import { Loader } from 'igz-controls/components'

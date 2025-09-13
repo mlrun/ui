@@ -61,9 +61,9 @@
           "project": "default"
         },
         {
-          "full_name": "default.monitorAppV2.metric.kld_mean_1",
+          "full_name": "default.monitorAppV1.metric.kld_mean_1",
           "type": "metric",
-          "app": "monitorAppV2",
+          "app": "monitorAppV1",
           "name": "kld_mean_1",
           "project": "default"
         },
@@ -156,7 +156,7 @@
           ]
         },
         {
-          "full_name": "default.monitorAppV2.metric.kld_mean_1",
+          "full_name": "default.monitorAppV1.metric.kld_mean_1",
           "type": "metric",
           "data": "true",
           "values": [

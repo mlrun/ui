@@ -19,7 +19,13 @@ such restriction.
 */
 import { isEmpty } from 'lodash'
 
-import { LABELS_FILTER, MODEL_ENDPOINTS_TAB, MODELS_PAGE } from '../../../constants'
+import {
+  FILTER_ALL_ITEMS,
+  LABELS_FILTER,
+  MODEL_ENDPOINTS_TAB,
+  MODELS_PAGE,
+  ME_MODE_FILTER
+} from '../../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { fetchModelEndpoint } from '../../../reducers/artifactsReducer'
@@ -28,6 +34,7 @@ import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import Alert from 'igz-controls/images/alerts.svg?react'
 
 export const filtersConfig = {
+  [ME_MODE_FILTER]: { label: 'Mode:', initialValue: FILTER_ALL_ITEMS, isModal: true },
   [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
 }
 

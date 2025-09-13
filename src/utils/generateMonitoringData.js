@@ -51,8 +51,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
   const linkClassNameDetails = (projectName, noLine) =>
     classNames(!noLine && 'stats__line', projectName && 'stats__link')
 
-  const linkClassNameHeader = projectName =>
-    classNames(projectName && 'stats__link')
+  const linkClassNameHeader = projectName => classNames(projectName && 'stats__link')
 
   const navigateToTab = (projectName, tab) => {
     projectName && navigate(`/projects/${projectName}/${tab}`)
@@ -224,7 +223,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                     counter: data.running || 0,
                     className: classNames(projectName && 'stats__link'),
                     link: () => navigateToTab(projectName, MONITORING_APP_PAGE),
-                    statusClass: 'completed',
+                    statusClass: 'running',
                     label: RUNNING,
                     popUpClassName: classNames({ 'card-popup_text_link': projectName })
                   },

@@ -42,7 +42,9 @@ import {
   SORT_BY,
   STATUS_FILTER,
   TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST
+  TAG_FILTER_LATEST,
+  REAL_TIME_FILTER,
+  BATCH_FILTER
 } from '../../constants'
 
 export const jobsStatuses = [
@@ -106,6 +108,21 @@ export const generateTypeFilter = tab => {
     { label: 'Handler', id: JOB_KIND_HANDLER, hidden: tab === JOBS_MONITORING_SCHEDULED_TAB }
   ]
 }
+
+export const modelEndpointsModesList = [
+  {
+    id: FILTER_ALL_ITEMS,
+    label: 'All'
+  },
+  {
+    id: REAL_TIME_FILTER,
+    label: 'Real-time'
+  },
+  {
+    id: BATCH_FILTER,
+    label: 'Batch'
+  }
+]
 
 export const filterSelectOptions = {
   [STATUS_FILTER]: generateStatusFilter(false),

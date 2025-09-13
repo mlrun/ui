@@ -60,9 +60,9 @@ const AlertsCounters = () => {
     }
 
     if (projectName !== '*') {
-      const endpoint = projectStore.projectSummary.data.endpoint_alerts_count || 0
-      const jobs = projectStore.projectSummary.data.job_alerts_count || 0
-      const application = projectStore.projectSummary.data.other_alerts_count || 0
+      const endpoint = projectStore?.projectSummary?.data?.endpoint_alerts_count || 0
+      const jobs = projectStore?.projectSummary?.data?.job_alerts_count || 0
+      const application = projectStore?.projectSummary?.data?.other_alerts_count || 0
 
       return {
         projectName,
@@ -77,14 +77,14 @@ const AlertsCounters = () => {
 
     return {
       projectName,
-      data: defaults({}, projectStore.jobsMonitoringData.alerts, defaultAlertData)
+      data: defaults({}, projectStore?.jobsMonitoringData?.alerts, defaultAlertData)
     }
   }, [
     paramProjectName,
-    projectStore.jobsMonitoringData.alerts,
-    projectStore.projectSummary.data.endpoint_alerts_count,
-    projectStore.projectSummary.data.job_alerts_count,
-    projectStore.projectSummary.data.other_alerts_count
+    projectStore?.jobsMonitoringData?.alerts,
+    projectStore?.projectSummary?.data?.endpoint_alerts_count,
+    projectStore?.projectSummary?.data?.job_alerts_count,
+    projectStore?.projectSummary?.data?.other_alerts_count
   ])
 
   const alertsStats = useMemo(

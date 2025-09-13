@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { debounce } from 'lodash'
+import { debounce, isNil } from 'lodash'
 
 import {
   FUNCTIONS_PAGE,
@@ -145,6 +145,7 @@ export const generateActionsMenu = (
       ]
     ]
   } else {
+    const accessKeyExists = !isNil(job?.access_key)
     const runningStates = ['running', 'pending', 'terminating']
 
     return [
@@ -156,7 +157,7 @@ export const generateActionsMenu = (
         },
         {
           disabled: rerunIsDisabled || [PENDING_STATE, UNKNOWN_STATE].includes(job?.state?.value),
-          hidden: runningStates.includes(job?.state?.value),
+          hidden: runningStates.includes(job?.state?.value) || accessKeyExists,
           icon: <Rerun />,
           label: 'Retry',
           onClick: () => handleRerun(job),
@@ -169,7 +170,7 @@ export const generateActionsMenu = (
           icon: <Cancel />,
           className: 'danger',
           onClick: handleConfirmTerminateWorkflow,
-          hidden: !ce && !accessibleProjectsMap[job?.project],
+          hidden: (!ce && !accessibleProjectsMap[job?.project]) || accessKeyExists,
           disabled: job?.state?.value !== FUNCTION_RUNNING_STATE
         }
       ]

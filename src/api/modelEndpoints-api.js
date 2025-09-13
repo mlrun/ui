@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { mainHttpClient } from '../httpClient'
+import { BATCH_FILTER, FILTER_ALL_ITEMS, ME_MODE_FILTER, REAL_TIME_FILTER } from '../constants'
 
 const modelEndpointsApi = {
   getModelEndpoint: (project, name, uid) =>
@@ -25,6 +26,10 @@ const modelEndpointsApi = {
       `/projects/${project}/model-endpoints/${name}?endpoint_id=${uid}&feature_analysis=true`
     ),
   getModelEndpoints: (project, filters, config = {}, params = {}) => {
+    const modesMap = {
+      [REAL_TIME_FILTER]: 0,
+      [BATCH_FILTER]: 1
+    }
     const newConfig = {
       ...config,
       params
@@ -32,6 +37,10 @@ const modelEndpointsApi = {
 
     if (filters?.labels) {
       newConfig.params.label = filters.labels?.split(',')
+    }
+
+    if (filters[ME_MODE_FILTER] && filters[ME_MODE_FILTER] !== FILTER_ALL_ITEMS) {
+      newConfig.params.mode = modesMap[filters[ME_MODE_FILTER]]
     }
 
     return mainHttpClient.get(`/projects/${project}/model-endpoints`, newConfig)
