@@ -50,6 +50,7 @@ export const ERROR_STATE = 'error'
 export const FAIL_STATE = 'fail'
 export const FAILED_STATE = 'failed'
 export const PENDING_STATE = 'pending'
+export const UNHEALTHY_STATE = 'unhealthy'
 export const UNKNOWN_STATE = 'unknown'
 
 /*=========== PAGINATION =============*/
