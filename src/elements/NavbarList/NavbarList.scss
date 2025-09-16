@@ -1,0 +1,83 @@
+@use 'igz-controls/scss/variables';
+@use 'igz-controls/scss/colors';
+@use 'igz-controls/scss/borders';
+
+.navbar {
+  &:hover,
+  &.navbar_pinned {
+    .navbar__projects {
+      .btn {
+        opacity: 1;
+      }
+
+      .nav-link__icon {
+        opacity: 0;
+      }
+    }
+  }
+
+  &__projects {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin: 10px 16px 10px 18px;
+    min-height: 48px;
+
+    .nav-link__icon {
+      position: absolute;
+    }
+
+    .btn {
+      justify-content: space-between;
+      background-color: transparent;
+      border: none;
+      border-radius: 8px;
+      min-height: 48px;
+      width: 100%;
+      font-weight: bold;
+      padding: 0 8px 0 12px;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+
+      svg {
+        transform: rotate(-90deg);
+        transition: transform 0.3s ease-in-out;
+
+        & > * {
+          fill: colors.$topaz;
+        }
+      }
+
+      &:hover {
+        background-color: #efefef;
+      }
+
+      &.navbar__projects-button_active {
+        background-color: #efefef;
+
+        svg {
+          transform: rotate(0);
+        }
+      }
+    }
+  }
+
+  &__additional {
+    position: relative;
+    display: flex;
+    flex: 0 1 auto;
+  }
+
+  .breadcrumbs__dropdown-wrapper {
+    top: 100%;
+    left: 2px;
+    color: colors.$topaz;
+    overflow: hidden;
+
+    .breadcrumbs__dropdown {
+      max-height: 300px;
+      max-width: 220px;
+      min-width: 180px;
+    }
+  }
+}
