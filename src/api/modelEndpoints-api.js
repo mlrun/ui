@@ -23,7 +23,7 @@ import { BATCH_FILTER, FILTER_ALL_ITEMS, ME_MODE_FILTER, REAL_TIME_FILTER } from
 const modelEndpointsApi = {
   getModelEndpoint: (project, name, uid) =>
     mainHttpClient.get(
-      `/projects/${project}/model-endpoints/${name}?endpoint_id=${uid}&feature_analysis=true`
+      `/projects/${project}/model-endpoints/${name}?endpoint-id=${uid}&feature-analysis=true`
     ),
   getModelEndpoints: (project, filters, config = {}, params = {}) => {
     const modesMap = {
