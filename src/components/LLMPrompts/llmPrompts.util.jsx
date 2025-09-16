@@ -246,7 +246,7 @@ export const generateActionsMenu = (
       },
       {
         label: 'Preview',
-        id: 'llm-prompt-preview',
+        id: 'artifact-preview',
         disabled: !isTargetPathValid,
         icon: <ArtifactView />,
         onClick: llmPromptMin => {
