@@ -41,5 +41,9 @@ export const createArtifactMessages = {
   model: {
     overwriteConfirmTitle: 'Overwrite model?',
     getOverwriteConfirmMessage
+  },
+  'llm-prompt': {
+    overwriteConfirmTitle: 'Overwrite LLM prompt?',
+    getOverwriteConfirmMessage
   }
 }

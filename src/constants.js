@@ -286,6 +286,7 @@ export const FUNCTION_FILTERS = 'FUNCTION_FILTERS'
 
 export const ARTIFACTS_TAB = 'artifacts'
 export const ARTIFACT_PREVIEW_TABLE_ROW_LIMIT = 100
+export const LLM_PROMPT_TITLE = 'LLM prompt'
 
 /*=========== DETAILS =============*/
 
@@ -501,4 +502,5 @@ export const RESULT_TYPE = 'result'
 
 /*========= GENERAL TEXT =============*/
 
-export const COUNTERS_GENERAL_MESSAGE = 'Counters use a caching mechanism, and are not auto-refreshed.'
+export const COUNTERS_GENERAL_MESSAGE =
+  'Counters use a caching mechanism, and are not auto-refreshed.'

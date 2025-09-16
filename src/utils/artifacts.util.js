@@ -34,7 +34,9 @@ import {
   MODELS_PAGE,
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST,
-  ALL_VERSIONS_PATH
+  ALL_VERSIONS_PATH,
+  LLM_PROMPT_TYPE,
+  LLM_PROMPT_TITLE
 } from '../constants'
 import { VIEW_SEARCH_PARAMETER } from 'igz-controls/constants'
 import {
@@ -169,7 +171,9 @@ export const processActionAfterTagUniquesValidation = ({
               closePopUp: () => reject(),
               header: messagesByKind.overwriteConfirmTitle,
               message: messagesByKind.getOverwriteConfirmMessage(
-                response.data.artifacts[0].kind || ARTIFACT_TYPE
+                response.data.artifacts[0].kind === LLM_PROMPT_TYPE
+                  ? LLM_PROMPT_TITLE
+                  : response.data.artifacts[0].kind || ARTIFACT_TYPE
               ),
               className: 'override-artifact-dialog'
             })
@@ -197,7 +201,7 @@ export const processActionAfterTagUniquesValidation = ({
 
       onErrorCallback?.()
       hideLoader()
-      
+
       if (throwError) throw error
     })
 }
