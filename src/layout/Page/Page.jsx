@@ -25,7 +25,8 @@ import { isEmpty } from 'lodash'
 import { createPortal } from 'react-dom'
 import ModalContainer from 'react-modal-promise'
 
-import Navbar from '../Navbar2/Navbar'
+import { Navbar } from 'igz-controls/components'
+import NavbarList from '../../elements/NavbarList/NavbarList'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import { Loader } from 'igz-controls/components'
 
@@ -109,7 +110,11 @@ const Page = () => {
 
   return (
     <>
-      {projectName && <Navbar projectName={projectName} setIsNavbarPinned={setIsNavbarPinned} />}
+      {projectName && (
+        <Navbar setIsNavbarPinned={setIsNavbarPinned}>
+          <NavbarList projectName={projectName} />
+        </Navbar>
+      )}
       <main id="main" className={pinnedClasses} ref={mainRef} style={mainStyles}>
         <div id="main-wrapper">{isProjectsFetched ? <Outlet /> : <Loader />}</div>
       </main>

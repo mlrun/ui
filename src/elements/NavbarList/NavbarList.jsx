@@ -21,40 +21,32 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useLocation, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import classNames from 'classnames'
 
-import BreadcrumbsDropdown from '../../elements/BreadcrumbsDropdown/BreadcrumbsDropdown'
-import NavbarLink from '../../elements/NavbarLink2/NavbarLink'
-import { Button, RoundedIcon } from 'igz-controls/components'
+import BreadcrumbsDropdown from '../BreadcrumbsDropdown/BreadcrumbsDropdown'
+import { NavbarLink } from 'igz-controls/elements'
+import { Button, Navbar } from 'igz-controls/components'
 
 import { useMode } from '../../hooks/mode.hook'
-import { getLinks } from './navbar.utils'
+import { getLinks } from './navbarlist.utils'
 import { scrollToElement } from '../../utils/scroll.util'
 import { generateProjectsList } from '../../utils/projects'
-import localStorageService from '../../utils/localStorageService'
-import { ALERTS_PAGE_PATH, NAVBAR_WIDTH_OPENED } from '../../constants'
+import { ALERTS_PAGE_PATH } from '../../constants'
 import { useDetectOutsideClick } from 'igz-controls/hooks'
 
 import Alerts from 'igz-controls/images/navbar/alerts-icon.svg?react'
 import Caret from 'igz-controls/images/dropdown.svg?react'
 import HomepageIcon from 'igz-controls/images/navbar/mlrun-project-home.svg?react'
-import PinIcon from 'igz-controls/images/pin-icon.svg?react'
 import SettingsIcon from 'igz-controls/images/navbar/mlrun-project-settings.svg?react'
-import UnPinIcon from 'igz-controls/images/unpin-icon.svg?react'
 
-import './Navbar.scss'
+import './NavbarList.scss'
 
-const Navbar = ({ projectName, setIsNavbarPinned }) => {
-  const [isPinned, setIsPinned] = useState(
-    localStorageService.getStorageValue('mlrunUi.navbarStatic', false) === 'true'
-  )
+const NavbarList = ({ projectName, IsNavbarPinned }) => {
   const [isShowProjectsList, setShowProjectsList] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const [selectedIndex, setSelectedIndex] = useState(null)
 
   const { pathname } = useLocation()
   const params = useParams()
-  const navbarRef = useRef()
   const projectListRef = useRef()
   const projectListWrapperRef = useRef()
   const projectStore = useSelector(state => state.projectStore)
@@ -64,11 +56,6 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
     setShowProjectsList(false)
     setSearchValue('')
   })
-
-  const navbarClasses = classNames('navbar', isPinned && 'navbar_pinned')
-  const navbarStyles = {
-    maxWidth: isPinned && NAVBAR_WIDTH_OPENED
-  }
 
   const links = useMemo(() => {
     return projectName ? getLinks(projectName, isDemoMode) : []
@@ -82,20 +69,10 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
     }))
   }, [projectStore.projectsNames.data, pathname, params.projectName])
 
-  const handlePinClick = () => {
-    setIsPinned(prevIsPinned => {
-      localStorageService.setStorageValue('mlrunUi.navbarStatic', !prevIsPinned)
-      return !prevIsPinned
-    })
-  }
 
   const handleOnMouseLeave = useCallback(() => {
-    !isPinned && setShowProjectsList(false)
-  }, [isPinned])
-
-  useEffect(() => {
-    setIsNavbarPinned(isPinned)
-  }, [isPinned, setIsNavbarPinned])
+    !IsNavbarPinned && setShowProjectsList(false)
+  }, [IsNavbarPinned])
 
   const scrollProjectOptionToView = useCallback(() => {
     scrollToElement(projectListRef, `#${params.projectName}`, searchValue)
@@ -108,50 +85,37 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
   }, [isShowProjectsList, scrollProjectOptionToView, projectListRef])
 
   return (
-    <nav
-      className={navbarClasses}
-      data-testid="navbar"
-      onMouseLeave={handleOnMouseLeave}
-      style={navbarStyles}
-      ref={navbarRef}
-    >
-      <div className="navbar__pin-icon">
-        <RoundedIcon
-          id="navabr-pin"
-          onClick={handlePinClick}
-          tooltipText={`${isPinned ? 'Unpin' : 'Pin'} Menu`}
-        >
-          {isPinned ? <UnPinIcon /> : <PinIcon />}
-        </RoundedIcon>
-      </div>
-      <div className="navbar__projects" ref={projectListWrapperRef}>
-        <span className="nav-link__icon"><HomepageIcon /></span>
-        <Button
-          label={projectName}
-          icon={<Caret />}
-          id="navbar-projects-button"
-          iconPosition="right"
-          className={
-            isShowProjectsList ? 'navbar__projects-button_active' : 'navbar__projects-button'
-          }
-          onClick={() => setShowProjectsList(!isShowProjectsList)}
-        />
-        {isShowProjectsList && (
-          <BreadcrumbsDropdown
-            id="navbar-projects-dropdown"
-            list={projectsList}
+    <>
+      <div onMouseLeave={handleOnMouseLeave}>
+        <div className="navbar__projects" ref={projectListWrapperRef}>
+          <span className="nav-link__icon"><HomepageIcon /></span>
+          <Button
+            label={projectName}
+            icon={<Caret />}
+            id="navbar-projects-button"
+            iconPosition="right"
+            className={
+              isShowProjectsList ? 'navbar__projects-button_active' : 'navbar__projects-button'
+            }
             onClick={() => setShowProjectsList(!isShowProjectsList)}
-            ref={projectListRef}
-            selectedItem={params.projectName}
-            searchValue={searchValue}
-            setSearchValue={setSearchValue}
-            withSearch
-            withAllProjects
           />
-        )}
+          {isShowProjectsList && (
+            <BreadcrumbsDropdown
+              id="navbar-projects-dropdown"
+              list={projectsList}
+              onClick={() => setShowProjectsList(!isShowProjectsList)}
+              ref={projectListRef}
+              selectedItem={params.projectName}
+              searchValue={searchValue}
+              setSearchValue={setSearchValue}
+              withSearch
+              withAllProjects
+            />
+          )}
+        </div>
       </div>
-      <div className="navbar__separator" />
-      <div className="navbar__body">
+      <Navbar.Divider />
+      <Navbar.Body>
         <ul className="navbar-links">
           {links.map(
             (link, index) =>
@@ -177,8 +141,8 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
               )
           )}
         </ul>
-      </div>
-      <div className="navbar__separator" />
+      </Navbar.Body>
+      <Navbar.Divider />
       <div className="navbar__additional">
         <ul className="navbar-links">
           <li className="nav-link" data-testid="nav-link-alerts">
@@ -201,13 +165,13 @@ const Navbar = ({ projectName, setIsNavbarPinned }) => {
           </li>
         </ul>
       </div>
-    </nav>
+    </>
   )
 }
 
-Navbar.propTypes = {
-  projectName: PropTypes.string.isRequired,
-  setIsNavbarPinned: PropTypes.func.isRequired
+NavbarList.propTypes = {
+  projectName: PropTypes.string,
+  IsNavbarPinned: PropTypes.bool,
 }
 
-export default React.memo(Navbar)
+export default React.memo(NavbarList)
