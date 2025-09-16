@@ -32,7 +32,7 @@ import { Loader } from 'igz-controls/components'
 
 import { getTransitionEndEventName } from 'igz-controls/utils/common.util'
 import { fetchFrontendSpec, toggleYaml } from '../../reducers/appReducer'
-import { NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
+import { NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from 'igz-controls/constants'
 import { isProjectValid } from '../../utils/link-helper.util'
 import { generateProjectsList } from '../../utils/projects'
 import { fetchProjects } from '../../reducers/projectReducer'
