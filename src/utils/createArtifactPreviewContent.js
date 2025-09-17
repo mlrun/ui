@@ -19,6 +19,8 @@ such restriction.
 */
 import { has, isString } from 'lodash'
 
+import { UNKNOWN_STATE } from '../constants'
+
 const splitStringToArray = str => {
   return str.split(/,(?! )/g)
 }
@@ -85,7 +87,7 @@ export const createArtifactPreviewContent = (
       content: URL.createObjectURL(res.data)
     }
   } else {
-    artifact.type = 'unknown'
+    artifact.type = UNKNOWN_STATE
 
     if (path && artifactName) {
       artifact.data = {

@@ -25,7 +25,7 @@ import {
   FUNCTION_CREATING_STATE,
   ERROR_STATE,
   FUNCTION_INITIALIZED_STATE,
-  FUNCTION_PENDINDG_STATE,
+  FUNCTION_PENDING_STATE,
   FUNCTION_READY_STATE,
   FUNCTION_RUN_KINDS,
   FUNCTION_RUNNING_STATE,
@@ -89,7 +89,7 @@ export const infoHeaders = [
   { label: 'Image', id: 'image' },
   { label: 'Description', id: 'description' }
 ]
-export const TRANSIENT_FUNCTION_STATUSES = [FUNCTION_PENDINDG_STATE, FUNCTION_RUNNING_STATE]
+export const TRANSIENT_FUNCTION_STATUSES = [FUNCTION_PENDING_STATE, FUNCTION_RUNNING_STATE]
 
 const handleFetchFunctionLogs = (
   dispatch,

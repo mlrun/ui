@@ -21,7 +21,7 @@ such restriction.
 import { ERROR_STATE, FAIL_STATE } from '../../constants'
 
 export const validatorStates = {
-  [ERROR_STATE]: 'error',
+  [ERROR_STATE]: ERROR_STATE,
   info: 'info',
   warn: 'warning',
   warning: 'warning',

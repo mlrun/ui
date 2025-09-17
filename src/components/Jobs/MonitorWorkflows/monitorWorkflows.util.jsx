@@ -27,7 +27,9 @@ import {
   GROUP_BY_WORKFLOW,
   JOBS_PAGE,
   PENDING_STATE,
-  UNKNOWN_STATE
+  UNKNOWN_STATE,
+  RUNNING_STATE,
+  TERMINATING_STATE
 } from '../../../constants'
 import {
   getJobsDetailsMenu,
@@ -146,7 +148,7 @@ export const generateActionsMenu = (
     ]
   } else {
     const accessKeyExists = !isNil(job?.access_key)
-    const runningStates = ['running', 'pending', 'terminating']
+    const runningStates = [RUNNING_STATE, PENDING_STATE, TERMINATING_STATE]
 
     return [
       [
