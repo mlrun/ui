@@ -27,7 +27,7 @@ import { NavbarLink } from 'igz-controls/elements'
 import { Button, Navbar } from 'igz-controls/components'
 
 import { useMode } from '../../hooks/mode.hook'
-import { getLinks } from './navbarlist.utils'
+import { getLinks } from './navbarlist.util'
 import { scrollToElement } from '../../utils/scroll.util'
 import { generateProjectsList } from '../../utils/projects'
 import { ALERTS_PAGE_PATH } from '../../constants'

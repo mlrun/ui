@@ -118,10 +118,6 @@ export const generateTabsList = () => [
     id: FEATURE_VECTORS_TAB
   },
   {
-    label: FEATURES_TAB,
-    id: FEATURES_TAB
-  },
-  {
     label: MODEL_ENDPOINTS_TAB,
     id: MODEL_ENDPOINTS_TAB
   },
@@ -132,6 +128,10 @@ export const generateTabsList = () => [
   {
     label: MODELS_TAB,
     id: MODELS_TAB
+  },
+  {
+    label: FEATURES_TAB,
+    id: FEATURES_TAB
   },
   {
     label: PROJECTS_SETTINGS_GENERAL_TAB,
