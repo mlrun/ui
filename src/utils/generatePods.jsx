@@ -19,17 +19,19 @@ such restriction.
 */
 import React from 'react'
 
+import { PENDING_STATE } from '../constants'
+
 export const generatePods = (project, uid, pods) => {
   const podsList = pods?.[project]?.[uid]?.pod_resources ?? []
   const podsTooltip = podsList.map((value, index) => (
     <p key={index}>
       {value?.name}
-      {value?.status?.phase?.toLowerCase?.() === 'pending'
+      {value?.status?.phase?.toLowerCase?.() === PENDING_STATE
         ? ' (pending...)'
         : (value?.status?.phase?.toLowerCase ?? '')}
     </p>
   ))
-  const podsPending = podsList.filter(pod => pod?.status?.phase?.toLowerCase?.() === 'pending')
+  const podsPending = podsList.filter(pod => pod?.status?.phase?.toLowerCase?.() === PENDING_STATE)
 
   return {
     podsList,

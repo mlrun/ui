@@ -19,9 +19,11 @@ such restriction.
 */
 import { constant, chain, isNil, overSome, isNaN, isFinite } from 'lodash'
 
-export const BG_TASK_RUNNING = 'running'
-export const BG_TASK_FAILED = 'failed'
-export const BG_TASK_SUCCEEDED = 'succeeded'
+import { FAILED_STATE, RUNNING_STATE, SUCCEEDED_STATE } from '../constants'
+
+export const BG_TASK_RUNNING = RUNNING_STATE
+export const BG_TASK_FAILED = FAILED_STATE
+export const BG_TASK_SUCCEEDED = SUCCEEDED_STATE
 
 /**
  * Polls by calling `pollMethod` and then invoking `isDone` method with `pollMethod`'s result. Stops polling
