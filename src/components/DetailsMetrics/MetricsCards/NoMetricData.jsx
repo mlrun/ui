@@ -21,7 +21,7 @@ import PropTypes from 'prop-types'
 
 import StatsCard from '../../../common/StatsCard/StatsCard'
 
-import NoDataIcon from 'igz-controls/images/no-data-metric-icon.svg?react'
+import NoDataIcon from 'igz-controls/images/no-data-metric-image.png'
 
 const NoMetricData = ({ title = '', message = 'No data to show', className = '', tip = '' }) => {
   return (
@@ -29,7 +29,7 @@ const NoMetricData = ({ title = '', message = 'No data to show', className = '',
       <StatsCard.Header title={title} tip={tip}></StatsCard.Header>
       <div className="metrics__empty-card">
         <div>
-          <NoDataIcon />
+          <img src={NoDataIcon} alt="No data icon" />
         </div>
         <div>{message}</div>
       </div>
