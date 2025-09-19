@@ -228,6 +228,7 @@ Feature: Jobs and workflows
         And wait load page
         When pick up "Custom range" from "03/31/2014 10:30" to "03/21/2015 19:15" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
         And wait load page
+        And wait load page
         Then verify from "03/31/2014 10:30" to "03/21/2015 19:15" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         When pick up "Custom range" from "03/31/2044 10:30" to "03/21/2015 19:15" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -236,8 +237,8 @@ Feature: Jobs and workflows
         When pick up "Custom range" from "03/31/2030 10:30" to "03/31/2030 10:31" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify from "03/31/2030 10:30" to "03/31/2030 10:31" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        When pick up "Custom range" from "03/31/2025 10:31" to "03/21/2025 10:30" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
         And wait load page
+        When pick up "Custom range" from "03/31/2025 10:31" to "03/21/2025 10:30" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify error message in "Date_Time_Picker" on "Jobs_Monitor_Tab" wizard with value "Date_Time_Picker"."Error_Message"
 
@@ -447,6 +448,7 @@ Feature: Jobs and workflows
         When pick up "Custom range" from "11/07/2021 17:00" to "11/08/2021 17:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify from "11/07/2021 17:00" to "11/08/2021 17:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        And wait load page
         And wait load page
         Then value in "datetime" column in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should be from "11/07/2021 18:00" to "11/08/2021 18:00"
 
@@ -1016,10 +1018,10 @@ Feature: Jobs and workflows
         And wait load page
         Then verify if "Notification_Popup" popup dialog appears
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Unsuccessful_Terminate_Message"
+        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Trigger_Termination_Message"
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
-        Then verify "Terminate_Button" element on "Workflows_Monitor_Tab" wizard is enabled
+        Then verify "Terminate_Button" element on "Workflows_Monitor_Tab" wizard is disabled
         Then verify "Workflow_List_View_Table" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Terminate_Button" element visibility on "Workflows_Monitor_Tab" wizard
         Then "Terminate_Button" element on "Workflows_Monitor_Tab" should contains "Terminate" value
@@ -1052,7 +1054,7 @@ Feature: Jobs and workflows
         And wait load page
         Then verify if "Notification_Popup" popup dialog appears
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Unsuccessful_Terminate_Message"
+        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Trigger_Termination_Message"
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
 
@@ -1369,9 +1371,10 @@ Feature: Jobs and workflows
         Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
         When click on "Delete_Button" element on "Confirm_Popup" wizard
         And wait load page
+        And wait load page
         Then verify if "Notification_Popup" popup dialog appears
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Unsuccessful_Terminate_Message"
+        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Trigger_Termination_Message"
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
 
@@ -1477,6 +1480,7 @@ Feature: Jobs and workflows
         # Then verify arrow lines position on "Workflow_Graph" on "Workflows_Monitor_Tab" wizard
         When click on node with index 2 in "Workflow_Graph" graph on "Workflows_Monitor_Tab" wizard
         And wait load page
+        And wait load page
         Then verify "Header" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Updated" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
@@ -1515,7 +1519,7 @@ Feature: Jobs and workflows
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "The batch run was started" value
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
-        When click on cell with value "test-m_ingest" in "name" column in "Jobs_And_Workflows" table on "Project" wizard
+        When click on cell with value "test-m_ingest" in "name" column in "Runs_Statistic_Table" table on "Project" wizard
         And wait load page
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
         When click on "link" value where option is "Function:" in "Overview_Headers" on "Jobs_Monitor_Tab_Info_Pane" wizard
@@ -1587,7 +1591,7 @@ Feature: Jobs and workflows
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        When click on cell with value "test-m_ingest" in "name" column in "Jobs_And_Workflows" table on "Project" wizard
+        When click on cell with value "test-m_ingest" in "name" column in "Runs_Statistic_Table" table on "Project" wizard
         And wait load page
         When click on "link" value where option is "Function:" in "Overview_Headers" on "Jobs_Monitor_Tab_Info_Pane" wizard
         And wait load page
@@ -2926,10 +2930,10 @@ Feature: Jobs and workflows
         And wait load page
         Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Aborting"
         Then wait for 10 seconds
+        Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         And wait load page
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Job erann-test (...e19ea57) was aborted" value
-        And wait load page
         And wait load page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
@@ -2941,8 +2945,7 @@ Feature: Jobs and workflows
     @MLJW
     @passive
     @smoke
-    # retry action is using KFP API and so this can’t be implemented in the mock - https://iguazio.atlassian.net/browse/ML-9124
-    #TODO: need to add check Retry option for error and running status
+    #TODO: need to add check Retry option for error and running status, add check for retryed job visibility
     Scenario: MLJW087 - Check Retry option in action menu on Workflows Monitor tab
         Given open url
         And wait load page
@@ -2960,9 +2963,7 @@ Feature: Jobs and workflows
         And wait load page
         Then verify if "Notification_Popup" popup dialog appears
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Unsuccessful_Run_Message"
-        Then verify "Retry_Button" element visibility on "Notification_Popup" wizard
-        Then "Retry_Button" element on "Notification_Popup" should contains "RETRY" value
+        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Successful_Run_Message"
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
 

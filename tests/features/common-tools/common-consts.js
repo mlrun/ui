@@ -34,9 +34,10 @@ export default {
       'Train model',
       'Batch inference',
       'Create real-time function',
+      'Register model',
       'ML function',
       'Feature set',
-      'Register model'
+      'Create feature vector'
     ],
     Online_Status: 'online',
     Data_Collection_Description:
@@ -535,6 +536,7 @@ export default {
       ' You can browse them in the Artifacts page.',
     Model_Endpoint_With_Detections:
       'This chart displays the number of model endpoints that had at least one detected issue, in any monitoring application, in the relevant time period',
+    Project_Monitoring_Counters: 'Counters use a caching mechanism, and are not auto-refreshed.',
     Operating_Functions: 'System functions that are used for the monitoring application operation',
     Lag: 'Number of messages currently waiting in the app\'s queue',
     Commited_Offset: 'Total number of messages handled by the app',
@@ -576,11 +578,13 @@ export default {
     Terminate_Workflow_Message: /Are you sure you want to terminate the workflow "(.+?)" \(stop its execution\)\? Workflows termination cannot be undone\./,
     Workflows_Action_Menu_Options: ['View YAML', 'Retry', 'Terminate'],
     Workflows_Running_Action_Menu_Options: ['View YAML', 'Terminate'],
-    Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete', 'Terminate'],
+    Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
     Pending_Job_Action_Menu_Options: ['Batch re-run', 'Run\'s resource monitoring', 'Abort', 'View YAML'],
     Schedule_Action_Menu_Options: ['Run now', 'Edit', 'Delete', 'View YAML'],
     Workflows_Unsuccessful_Run_Message: 'Workflow did not run successfully\nRETRY',
-    Workflows_Unsuccessful_Terminate_Message: 'Workflow "stocks-admin-main 2021-08-30 05-36-35 failed to terminate'
+    Workflows_Successful_Run_Message: 'Workflow run successfully.',
+    Workflows_Unsuccessful_Terminate_Message: 'Workflow "stocks-admin-main 2021-08-30 05-36-35 failed to terminate',
+    Workflows_Trigger_Termination_Message: 'A request to terminate workflow "stocks-admin-main 2021-08-30 05-36-35" was issued'
   },
   Jobs_Monitor_Tab_Info_Pane: {
     Pending_State: 'Pending',
@@ -602,8 +606,8 @@ export default {
       'Log level:',
       'Output path:',
       'Total iterations:',
-      'Retry count:',
-      'Maximum retries:'
+      'Attempt count:',
+      'Maximum attempts:'
     ]
   },
   Jobs_Monitor_Tab: {
@@ -699,7 +703,8 @@ export default {
       'Past hour',
       'Past 24 hours',
       'Past week',
-      'Past month'
+      'Past month',
+      'Custom range'
     ],
     Scheduled_Date_Picker_Filter_Options: [
       'Any time',
@@ -760,7 +765,7 @@ export default {
     Common_Message_Jobs_Monitoring_Scheduled:
       /No data matches the filter: "Scheduled at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
     Common_Message_Scheduled_Type:
-      /No data matches the filter: "Type: (.+?)"/,
+      /No data matches the filter: "Scheduled at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Type: (.+?)"/,
     Common_Message: 'No data matches the filter: "Version Tag: latest, Name: ccccc"',
     Common_Message_Feature: 'No data matches the filter: "Version Tag: latest"',
     Common_Message_Feature_Vector_Tab:

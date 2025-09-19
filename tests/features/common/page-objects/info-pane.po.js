@@ -982,7 +982,7 @@ export default {
     Alerts_FilterBy_Button: By.css('[data-testid="detailsPanel"] [data-testid="filter-menu-btn-tooltip-wrapper"]'),
     Alerts_Refresh_Button: By.css('[data-testid="detailsPanel"] [data-testid="refresh-tooltip-wrapper"]'),
     Alerts_Table: commonTable(alertsTable),
-    Metrics_Stats_Card: By.css('.alert-row__expanded-row .alerts-table__metrics .stats-card')
+    Metrics_Stats_Card: By.css('.alert-row__expanded-row .alerts-table .stats-card')
   },
   modelsRealTimePipelineInfoPane: {
     Arrow_Back: commonArrowBack,
