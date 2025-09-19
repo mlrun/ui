@@ -28,6 +28,7 @@ import BreadcrumbsStep from './BreadcrumbsStep/BreadcrumbsStep'
 import { generateMlrunScreens, generateTabsList } from './breadcrumbs.util'
 import { MONITORING_APP_PAGE, PROJECTS_PAGE_PATH } from '../../constants'
 import { generateProjectsList } from '../../utils/projects'
+import { useMode } from '../../hooks/mode.hook'
 
 import './breadcrumbs.scss'
 
@@ -38,6 +39,7 @@ const Breadcrumbs = ({ onClick = () => { } }) => {
   const breadcrumbsRef = useRef()
   const params = useParams()
   const location = useLocation()
+  const { isDemoMode } = useMode()
 
   const projectStore = useSelector(state => state.projectStore)
 
@@ -46,16 +48,15 @@ const Breadcrumbs = ({ onClick = () => { } }) => {
   }, [projectStore.projectsNames.data])
 
   const mlrunScreens = useMemo(() => {
-    return generateMlrunScreens(params)
-  }, [params])
+    return generateMlrunScreens(params?.projectName ?? '', isDemoMode).filter(screen => !screen.hidden)
+  }, [isDemoMode, params?.projectName])
   const projectTabs = useMemo(() => {
     return generateTabsList()
   }, [])
-
   const urlParts = useMemo(() => {
     if (params.projectName) {
-      const [projects, projectName, screenName] = location.pathname.split('/').slice(1, 4)
-      const screen = mlrunScreens.find(screen => screen.id === screenName)
+      const [projects, projectName, screenName, innerScreenName] = location.pathname.split('/').slice(1, 5)
+      const screen = mlrunScreens.find(screen => screen.id === (innerScreenName)) ?? mlrunScreens.find(screen => screen.id === (screenName))
       let tab = projectTabs.find(tab =>
         location.pathname
           .split('/')
@@ -63,14 +64,17 @@ const Breadcrumbs = ({ onClick = () => { } }) => {
           .find(pathItem => pathItem === tab.id)
       )
 
-      if (screen.id === MONITORING_APP_PAGE) {
+
+      if (screen?.id === MONITORING_APP_PAGE) {
         tab = {}
       }
 
+
       return {
-        pathItems: [projects, projectName, screen?.label || screenName],
+        pathItems: [projects, projectName, screen?.label],
         screen,
-        tab: { ...tab, label: startCase(tab?.label?.replace('-', ' ')) || '' }
+        tab: { ...tab, label: startCase(tab?.label?.replace('-', ' ')) || '' },
+        itemName: params.artifactName || params.name || params.jobName || params.workflowProjectName || null,
       }
     } else {
       const [page] = location.pathname.split('/').slice(3, 4)
@@ -78,10 +82,11 @@ const Breadcrumbs = ({ onClick = () => { } }) => {
 
       return {
         pathItems: [PROJECTS_PAGE_PATH, screen?.label || page],
-        screen
+        screen,
+        itemName: params.artifactName || params.name || params.jobName || params.workflowProjectName || null,
       }
     }
-  }, [location.pathname, params.projectName, mlrunScreens, projectTabs])
+  }, [location.pathname, params.artifactName, params.name, params.jobName, params.projectName, params.workflowProjectName, mlrunScreens, projectTabs])
 
   return (
     <nav data-testid="breadcrumbs" className="breadcrumbs" ref={breadcrumbsRef}>
