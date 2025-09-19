@@ -36,12 +36,11 @@ const BreadcrumbsDropdown = forwardRef(
       id = '',
       link = '',
       list = [],
-      onClick = () => {},
-      screen = '',
+      onClick = () => { },
       searchValue = '',
       setSearchValue,
       selectedItem,
-      tab = '',
+      urlParts,
       withSearch = false,
       withAllProjects = false
     },
@@ -65,7 +64,7 @@ const BreadcrumbsDropdown = forwardRef(
         <div className="breadcrumbs__dropdown" ref={ref}>
           {list
             .filter(listItem =>
-              listItem.id.toLocaleLowerCase().startsWith(searchValue.toLocaleLowerCase())
+              listItem.id.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())
             )
             .map(listItem => {
               const isItemSelected = selectedItem === listItem.id
@@ -76,8 +75,7 @@ const BreadcrumbsDropdown = forwardRef(
               )
 
               return (
-                !listItem.hidden &&
-                (listItem.link ? (
+                listItem.link ? (
                   <a
                     href={listItem.link}
                     id={listItem.id}
@@ -91,8 +89,7 @@ const BreadcrumbsDropdown = forwardRef(
                 ) : (
                   <Link
                     to={
-                      listItem.linkTo ||
-                      `${link}/${listItem.id}${screen ? `/${screen}` : ''}${tab ? `/${tab}` : ''}`
+                      listItem.linkTo || urlParts?.screen?.link?.replace(urlParts?.pathItems[1], listItem.id) || link
                     }
                     onClick={event => {
                       isItemSelected ? event.preventDefault() : onClick(event)
@@ -107,7 +104,7 @@ const BreadcrumbsDropdown = forwardRef(
                     </Tooltip>
                     {isItemSelected && <CheckmarkIcon className="checkmark" />}
                   </Link>
-                ))
+                )
               )
             })}
         </div>
@@ -140,11 +137,10 @@ BreadcrumbsDropdown.propTypes = {
   link: PropTypes.string,
   list: PropTypes.arrayOf(PropTypes.object).isRequired,
   onClick: PropTypes.func,
-  screen: PropTypes.string,
   searchValue: PropTypes.string.isRequired,
   selectedItem: PropTypes.string.isRequired,
   setSearchValue: PropTypes.func.isRequired,
-  tab: PropTypes.string,
+  urlParts: PropTypes.object,
   withSearch: PropTypes.bool,
   withAllProjects: PropTypes.bool
 }

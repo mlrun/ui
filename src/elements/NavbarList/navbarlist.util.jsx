@@ -20,7 +20,7 @@ such restriction.
 import React from 'react'
 
 import {
-  DOCUMENTS_PAGE, FEATURE_STORE_PAGE_PATH, FILES_PAGE, JOBS_PAGE_PATH,
+  DATASETS_PAGE, DOCUMENTS_PAGE, FEATURE_STORE_PAGE_PATH, FILES_PAGE, JOBS_PAGE_PATH,
   LLM_PROMPTS_PAGE, MODELS_PAGE, PROJECT_MONITOR, PROJECT_QUICK_ACTIONS_PAGE
 } from '../../constants'
 import { generateNuclioLink } from '../../utils'
@@ -28,16 +28,12 @@ import { generateNuclioLink } from '../../utils'
 import HomepageIcon from 'igz-controls/images/navbar/mlrun-project-home.svg?react'
 import DatasetsIcon from 'igz-controls/images/navbar/mlrun-datasets.svg?react'
 import MonitoringIcon from 'igz-controls/images/navbar/mlrun-project-monitoring.svg?react'
-import ArtifactsIcon from 'igz-controls/images/navbar/mlrun-artifacts.svg?react'
 import FunctionIcon from 'igz-controls/images/navbar/mlrun-ml-functions.svg?react'
 import JobsWorkflowIcon from 'igz-controls/images/navbar/mlrun-jobs-and-workflows.svg?react'
 import ModelsIcon from 'igz-controls/images/navbar/mlrun-models.svg?react'
 import NuclioIcon from 'igz-controls/images/navbar/mlrun-realtime-functions.svg?react'
-import FeatureStoreIcon from 'igz-controls/images/navbar/mlrun-feature-store.svg?react'
-import Documents from 'igz-controls/images/navbar/documents-icon.svg?react'
-import LLMPrompts from 'igz-controls/images/navbar/llm-prompt-icon.svg?react'
 
-export const getLinks = (projectName, isDemoMode) => {
+export const getNavbarLinks = (projectName, isDemoMode) => {
   const pathname = `/projects/${projectName}`
 
   return [
@@ -56,65 +52,51 @@ export const getLinks = (projectName, isDemoMode) => {
       hidden: !isDemoMode
     },
     {
-      icon: <FeatureStoreIcon />,
-      id: FEATURE_STORE_PAGE_PATH,
-      label: 'Feature store',
-      link: `${pathname}/${FEATURE_STORE_PAGE_PATH}/`,
+      icon: <DatasetsIcon />,
+      id: 'data-artifacts',
+      label: 'Data and artifacts',
+      screens: [DATASETS_PAGE, DOCUMENTS_PAGE, LLM_PROMPTS_PAGE, FILES_PAGE, FEATURE_STORE_PAGE_PATH],
       nestedLinks: [
         {
-          id: 'feature-sets',
-          label: 'Feature sets',
-          link: `${pathname}/${FEATURE_STORE_PAGE_PATH}/feature-sets`
+          id: DATASETS_PAGE,
+          label: 'Datasets',
+          link: `${pathname}/${DATASETS_PAGE}`
         },
         {
-          id: 'features',
-          label: 'Features',
-          link: `${pathname}/${FEATURE_STORE_PAGE_PATH}/features`
+          id: DOCUMENTS_PAGE,
+          label: 'Documents',
+          link: `${pathname}/${DOCUMENTS_PAGE}`
         },
         {
-          id: 'feature-vectors',
-          label: 'Feature vectors',
-          link: `${pathname}/${FEATURE_STORE_PAGE_PATH}/feature-vectors`
+          id: LLM_PROMPTS_PAGE,
+          label: 'LLM prompts',
+          link: `${pathname}/${LLM_PROMPTS_PAGE}`
+        },
+        {
+          id: FILES_PAGE,
+          label: 'Other artifacts',
+          link: `${pathname}/${FILES_PAGE}`
+        },
+        {
+          id: FEATURE_STORE_PAGE_PATH,
+          label: 'Feature store',
+          link: `${pathname}/${FEATURE_STORE_PAGE_PATH}`,
         }
       ]
-    },
-    {
-      icon: <DatasetsIcon />,
-      id: 'datasets',
-      label: 'Datasets',
-      link: `${pathname}/datasets`
-    },
-    {
-      icon: <Documents />,
-      id: DOCUMENTS_PAGE,
-      label: 'Documents',
-      link: `${pathname}/${DOCUMENTS_PAGE}`
-    },
-    {
-      icon: <LLMPrompts />,
-      id: LLM_PROMPTS_PAGE,
-      label: 'LLM prompts',
-      link: `${pathname}/${LLM_PROMPTS_PAGE}`
-    },
-    {
-      icon: <ArtifactsIcon />,
-      id: FILES_PAGE,
-      label: 'Artifacts',
-      link: `${pathname}/${FILES_PAGE}`
     },
     {
       icon: <ModelsIcon />,
       id: MODELS_PAGE,
       label: 'Models',
-      link: `${pathname}/${MODELS_PAGE}/`,
+      screens: [MODELS_PAGE, 'monitoring-app'],
       nestedLinks: [
         {
-          id: 'models-artifacts',
+          id: MODELS_PAGE,
           label: 'Model artifacts',
           link: `${pathname}/${MODELS_PAGE}/models`
         },
         {
-          id: 'models-endpoints',
+          id: 'model-endpoints',
           label: 'Model endpoints',
           link: `${pathname}/${MODELS_PAGE}/model-endpoints`
         },
@@ -133,17 +115,16 @@ export const getLinks = (projectName, isDemoMode) => {
     {
       icon: <JobsWorkflowIcon />,
       id: JOBS_PAGE_PATH,
-      label: 'Batch',
-      link: `${pathname}/${JOBS_PAGE_PATH}/`,
+      label: 'Jobs and workflows',
       nestedLinks: [
         {
           id: 'monitor-jobs',
-          label: 'Monitor Jobs',
+          label: 'Jobs',
           link: `${pathname}/${JOBS_PAGE_PATH}/monitor-jobs`
         },
         {
           id: 'monitor-workflows',
-          label: 'Monitor Workflows',
+          label: 'Workflows',
           link: `${pathname}/${JOBS_PAGE_PATH}/monitor-workflows`
         },
         {
@@ -155,7 +136,7 @@ export const getLinks = (projectName, isDemoMode) => {
     },
     {
       icon: <FunctionIcon />,
-      id: 'ml-functions',
+      id: 'functions',
       label: 'ML functions',
       link: `${pathname}/functions`
     },
@@ -163,7 +144,6 @@ export const getLinks = (projectName, isDemoMode) => {
       icon: <NuclioIcon />,
       id: 'nuclio',
       label: 'Nuclio',
-      link: `${pathname}/functions/`,
       nestedLinks: [
         {
           id: 'real-time-functions',

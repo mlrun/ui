@@ -27,7 +27,7 @@ import { NavbarLink } from 'igz-controls/elements'
 import { Button, Navbar } from 'igz-controls/components'
 
 import { useMode } from '../../hooks/mode.hook'
-import { getLinks } from './navbarlist.util'
+import { getNavbarLinks } from './navbarlist.util'
 import { scrollToElement } from '../../utils/scroll.util'
 import { generateProjectsList } from '../../utils/projects'
 import { ALERTS_PAGE_PATH } from '../../constants'
@@ -58,7 +58,7 @@ const NavbarList = ({ projectName, IsNavbarPinned }) => {
   })
 
   const links = useMemo(() => {
-    return projectName ? getLinks(projectName, isDemoMode) : []
+    return projectName ? getNavbarLinks(projectName, isDemoMode).filter(link => !link.hidden) : []
   }, [projectName, isDemoMode])
 
   const projectsList = useMemo(() => {
@@ -119,26 +119,24 @@ const NavbarList = ({ projectName, IsNavbarPinned }) => {
         <ul className="navbar-links">
           {links.map(
             (link, index) =>
-              !link.hidden && (
-                <li className="nav-link" data-testid={`nav-link-${link.id}`} key={link.id}>
-                  {!link.hidden && <NavbarLink {...link} index={index} setSelectedIndex={setSelectedIndex} selectedIndex={selectedIndex} />}
-                  {link.nestedLinks && (
-                    <ul className="navbar-links navbar-links_nested">
-                      {link.nestedLinks.map(nestedLink => (
-                        nestedLink.hidden ? null : (
-                          <li
-                            className="nav-link"
-                            data-testid={`nav-link-${nestedLink.id}`}
-                            key={nestedLink.id}
-                          >
-                            <NavbarLink {...nestedLink} />
-                          </li>
-                        )
-                      ))}
-                    </ul>
-                  )}
-                </li>
-              )
+              <li className="nav-link" data-testid={`nav-link-${link.id}`} key={link.id}>
+                <NavbarLink {...link} index={index} setSelectedIndex={setSelectedIndex} selectedIndex={selectedIndex} />
+                {link.nestedLinks && (
+                  <ul className="navbar-links navbar-links_nested">
+                    {link.nestedLinks.map(nestedLink => (
+                      nestedLink.hidden ? null : (
+                        <li
+                          className="nav-link"
+                          data-testid={`nav-link-${nestedLink.id}`}
+                          key={nestedLink.id}
+                        >
+                          <NavbarLink {...nestedLink} />
+                        </li>
+                      )
+                    ))}
+                  </ul>
+                )}
+              </li>
           )}
         </ul>
       </Navbar.Body>

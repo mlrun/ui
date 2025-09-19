@@ -27,74 +27,67 @@ import {
   MODELS_TAB,
   MONITOR_ALERTS_PAGE,
   MONITOR_WORKFLOWS_TAB,
-  PROJECT_MONITOR,
-  PROJECT_QUICK_ACTIONS_PAGE,
   SCHEDULE_TAB,
   REAL_TIME_PIPELINES_TAB,
   JOBS_MONITORING_PAGE,
   PROJECTS_PAGE_PATH,
-  MONITORING_APP_PAGE,
-  DOCUMENTS_PAGE,
-  LLM_PROMPTS_PAGE,
   PROJECTS_SETTINGS_GENERAL_TAB,
   PROJECTS_SETTINGS_MEMBERS_TAB,
-  PROJECTS_SETTINGS_SECRETS_TAB
+  PROJECTS_SETTINGS_SECRETS_TAB,
+  PROJECTS_SETTINGS_PAGE_PATH
 } from '../../constants'
-import { generateNuclioLink } from '../../utils'
 
-export const generateMlrunScreens = (params) =>
-  params.projectName
-    ? [
-        {
-          label: 'Project monitoring',
-          id: PROJECT_MONITOR
-        },
-        {
-          label: 'Quick actions',
-          id: PROJECT_QUICK_ACTIONS_PAGE,
-          hidden: true
-        },
-        { label: 'Feature store', id: 'feature-store' },
-        { label: 'Datasets', id: 'datasets' },
-        { label: 'Documents', id: DOCUMENTS_PAGE },
-        { label: 'LLM prompts', id: LLM_PROMPTS_PAGE},
-        { label: 'Artifacts', id: 'files' },
-        { label: 'Models', id: 'models' },
-        { label: 'Monitoring app', id: MONITORING_APP_PAGE},
-        { label: 'Batch', id: 'jobs' },
-        { label: 'ML functions', id: 'functions' },
-        {
-          label: 'Real-time functions',
-          id: 'Real-time functions',
-          link: generateNuclioLink(`/projects/${params.projectName}/functions`)
-        },
-        {
-          label: 'API gateways',
-          id: 'API gateways',
-          link: generateNuclioLink(`/projects/${params.projectName}/api-gateways`)
-        },
-        {
-          label: 'Alerts',
-          id: ALERTS_PAGE_PATH,
-          linkTo: `/${PROJECTS_PAGE_PATH}/${params.projectName}/${ALERTS_PAGE_PATH}`
-        },
-        {
-          label: 'Settings',
-          id: 'settings'
-        }
-      ]
-    : [
+import { getNavbarLinks } from '../../elements/NavbarList/navbarlist.util'
+
+export const generateMlrunScreens = (projectName, isDemoMode) => {
+  const screens = getNavbarLinks(projectName, isDemoMode)
+
+  const innerScreens = screens.reduce((acc, { link, linkTo, ...screen }) => {
+    if (screen.nestedLinks) {
+      screen.nestedLinks.forEach(({ link, linkTo, ...nestedScreen }) => acc.push({
+        label: nestedScreen.label,
+        id: nestedScreen.id,
+        link,
+        linkTo,
+        hidden: nestedScreen.hidden
+      }))
+    } else {
+      acc.push({
+        label: screen.label,
+        id: screen.id,
+        link,
+        linkTo,
+        hidden: screen.hidden
+      })
+    }
+
+    return acc
+  }, [])
+
+  innerScreens.push({
+    label: 'Alerts',
+    id: ALERTS_PAGE_PATH,
+    link: `/${PROJECTS_PAGE_PATH}/${projectName}/${ALERTS_PAGE_PATH}`
+  },
+  {
+    label: 'Settings',
+    id: 'settings',
+    link: `/${PROJECTS_PAGE_PATH}/${projectName}/${PROJECTS_SETTINGS_PAGE_PATH}`
+  })
+
+  return projectName ? innerScreens : [
         {
           label: 'Alerts monitoring',
           id: MONITOR_ALERTS_PAGE,
-          linkTo: `/${PROJECTS_PAGE_PATH}/*/${MONITOR_ALERTS_PAGE}`
+          link: `/${PROJECTS_PAGE_PATH}/*/${MONITOR_ALERTS_PAGE}`
         },
         {
           label: 'Jobs monitoring',
           id: JOBS_MONITORING_PAGE,
-          linkTo: `/${PROJECTS_PAGE_PATH}/*/${JOBS_MONITORING_PAGE}`
+          link: `/${PROJECTS_PAGE_PATH}/*/${JOBS_MONITORING_PAGE}`
         }
       ]
+}
 
 export const generateTabsList = () => [
   {
@@ -110,14 +103,6 @@ export const generateTabsList = () => [
     id: SCHEDULE_TAB
   },
   {
-    label: FEATURE_SETS_TAB,
-    id: FEATURE_SETS_TAB
-  },
-  {
-    label: FEATURE_VECTORS_TAB,
-    id: FEATURE_VECTORS_TAB
-  },
-  {
     label: MODEL_ENDPOINTS_TAB,
     id: MODEL_ENDPOINTS_TAB
   },
@@ -130,8 +115,12 @@ export const generateTabsList = () => [
     id: MODELS_TAB
   },
   {
-    label: FEATURES_TAB,
-    id: FEATURES_TAB
+    label: FEATURE_SETS_TAB,
+    id: FEATURE_SETS_TAB
+  },
+  {
+    label: FEATURE_VECTORS_TAB,
+    id: FEATURE_VECTORS_TAB
   },
   {
     label: PROJECTS_SETTINGS_GENERAL_TAB,
@@ -144,5 +133,9 @@ export const generateTabsList = () => [
   {
     label: PROJECTS_SETTINGS_SECRETS_TAB,
     id: PROJECTS_SETTINGS_SECRETS_TAB
-  }
+  },
+  {
+    label: FEATURES_TAB,
+    id: FEATURES_TAB
+  },
 ]
