@@ -375,6 +375,47 @@
       "kind": "run",
       "metadata": {
         "name": "fesf",
+        "uid": "c1a32f275eb743f781fd13d7a316a657",
+        "iteration": 0,
+        "project": "fsdemo-admin",
+        "labels": {
+          "v3io_user": "admin",
+          "owner": "admin",
+          "kind": "job"
+        },
+        "annotations": {}
+      },
+      "spec": {
+        "function": "fsdemo-admin/fesf@cfa663e14f1c7b71c7072afbc91827a23a86e964",
+        "log_level": "info",
+        "parameters": {},
+        "outputs": [],
+        "output_path": "v3io:///projects/fsdemo-admin/artifacts/c1a32f275eb743f781fd13d7a316a657",
+        "inputs": {},
+        "hyperparams": {},
+        "hyper_param_options": {},
+        "data_stores": [],
+        "retry": {
+          "count": 6,
+          "backoff": {
+            "base_delay": "30s"
+          }
+        }
+      },
+      "status": {
+        "state": "error",
+        "results": {},
+        "start_time": "2021-09-10T11:46:36.715480+00:00",
+        "last_update": "2021-09-10T11:46:36.768280+00:00",
+        "artifacts": [],
+        "error": "(422)\nReason: Unprocessable Entity\nHTTP response headers: HTTPHeaderDict({'Cache-Control': 'no-cache, private', 'Content-Type': 'application/json', 'Date': 'Fri, 10 Sep 2021 11:46:36 GMT', 'Content-Length': '970'})\nHTTP response body: {\"kind\":\"Status\",\"apiVersion\":\"v1\",\"metadata\":{},\"status\":\"Failure\",\"message\":\"Pod \\\"fesf-frtb9\\\" is invalid: [spec.volumes[0].name: Invalid value: \\\"NAME\\\": a DNS-1123 label must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character (e.g. 'my-name',  or '123-abc', regex used for validation is '[a-z0-9]([-a-z0-9]*[a-z0-9])?'), spec.containers[0].volumeMounts[0].name: Not found: \\\"NAME\\\"]\",\"reason\":\"Invalid\",\"details\":{\"name\":\"fesf-frtb9\",\"kind\":\"Pod\",\"causes\":[{\"reason\":\"FieldValueInvalid\",\"message\":\"Invalid value: \\\"NAME\\\": a DNS-1123 label must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character (e.g. 'my-name',  or '123-abc', regex used for validation is '[a-z0-9]([-a-z0-9]*[a-z0-9])?')\",\"field\":\"spec.volumes[0].name\"},{\"reason\":\"FieldValueNotFound\",\"message\":\"Not found: \\\"NAME\\\"\",\"field\":\"spec.containers[0].volumeMounts[0].name\"}]},\"code\":422}\n\n",
+        "retry_count": 0
+      }
+    },
+    {
+      "kind": "run",
+      "metadata": {
+        "name": "fesf",
         "uid": "49ed6d3b3ea6405186837aaeb52b77f8",
         "iteration": 0,
         "project": "cat-vs-dog-classification",

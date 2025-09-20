@@ -1090,6 +1090,7 @@ Feature: Models Page
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
     Then "No_Data_Message" element on "commonPagesHeader" should contains "The ingestion function has no steps and therefore no graph." value
+    And wait load page
 
   @MLM
   @smoke
@@ -1459,7 +1460,7 @@ Feature: Models Page
     And wait load page
     And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
-    When click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    When click on cell with row index 3 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Model_Endpoints_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Tab_List"
@@ -1516,7 +1517,7 @@ Feature: Models Page
     And wait load page
     And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
-    When click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    When click on cell with row index 3 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     Then select "Metrics" tab in "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard
     Then click on "Choose_Metrics_Dropdown" element on "Model_Endpoints_Info_Pane" wizard
     And wait load page
@@ -1541,6 +1542,7 @@ Feature: Models Page
 
   @MLM
   @smoke
+  # !!! restart mock is required
   Scenario: MLM037 - Verify the Delete option in Models table, details panel, full view action menu 
     Given open url
     And wait load page

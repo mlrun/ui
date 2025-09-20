@@ -575,6 +575,7 @@ Feature: Feature Store Page
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        And wait load page
         When select "test-tag" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page

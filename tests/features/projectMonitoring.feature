@@ -15,11 +15,11 @@ Feature: Project Monitoring Page
         Then verify "Project_Name" element visibility on "Project" wizard
         Then "Project_Name" element on "Project" should contains "default" value
         Then verify "Created_Details" element visibility on "Project" wizard
-        Then "Created_Details" element on "Project" should contains "Created: 08/29/2021, 15:21:14 PM" value
+        Then "Created_Details" element on "Project" should contains "Created: 08/29/2021, 17:21:14 PM" value
         Then verify "Owner_Details" element visibility on "Project" wizard
         Then "Owner_Details" element on "Project" should contains "Owner: igz_nobody" value
-        Then verify "Info_Baner" element visibility on "Project" wizard
-        Then "Info_Baner" element on "Project" should contains "Counters use a caching mechanism, and are not auto-refreshed." value
+        Then verify "Info_Baner_Icon" element visibility on "Project" wizard
+        Then verify "Info_Baner_Icon" element on "Project" wizard should display hover hint "Label_Hint"."Project_Monitoring_Counters"
         Then verify "Quick_Actions" element visibility on "Project" wizard
         Then verify "Quick_Actions" dropdown element on "Project" wizard should contains "Project"."Quick_Actions_Options"
         Then verify "Refresh_Button" element visibility on "Project" wizard
@@ -35,18 +35,18 @@ Feature: Project Monitoring Page
         Then "Documents_Counter_Subtitle" element in "Artifacts_Stats_Container" on "Project" should contains "Documents" value
         Then verify "Documents_Counter_Number" element visibility in "Artifacts_Stats_Container" on "Project" wizard
         Then verify "LLM_Prompts_Counter_Subtitle" element visibility in "Artifacts_Stats_Container" on "Project" wizard
-        Then "LLM_Prompts_Counter_Subtitle" element in "Artifacts_Stats_Container" on "Project" should contains "LLM Prompts" value
+        Then "LLM_Prompts_Counter_Subtitle" element in "Artifacts_Stats_Container" on "Project" should contains "LLM prompt artifacts" value
         Then verify "LLM_Prompts_Counter_Number" element visibility in "Artifacts_Stats_Container" on "Project" wizard
         Then verify "Other_Artifacts_Counter_Subtitle" element visibility in "Artifacts_Stats_Container" on "Project" wizard
-        Then "Other_Artifacts_Counter_Subtitle" element in "Artifacts_Stats_Container" on "Project" should contains "Other Artifacts" value
+        Then "Other_Artifacts_Counter_Subtitle" element in "Artifacts_Stats_Container" on "Project" should contains "Other artifacts" value
         Then verify "Other_Artifacts_Counter_Number" element visibility in "Artifacts_Stats_Container" on "Project" wizard
         Then verify "Workflows_Stats_Title" element visibility in "Workflows_Stats_Container" on "Project" wizard
         Then "Workflows_Stats_Title" element in "Workflows_Stats_Container" on "Project" should contains "Workflows" value
         Then verify "Filtering_Time_Period" element visibility in "Workflows_Stats_Container" on "Project" wizard
-        Then "Filtering_Time_Period" element in "Workflows_Stats_Container" on "Project" should contains "24 hrs" value
+        Then "Filtering_Time_Period" element in "Workflows_Stats_Container" on "Project" should contains "Last 24 hrs" value
         Then verify "Workflows_Stats_Counter" element visibility in "Workflows_Stats_Container" on "Project" wizard
         Then verify "In_Process_Counter_Subtitle" element visibility in "Workflows_Stats_Container" on "Project" wizard
-        Then "In_Process_Counter_Subtitle" element in "Workflows_Stats_Container" on "Project" should contains "In Process" value
+        Then "In_Process_Counter_Subtitle" element in "Workflows_Stats_Container" on "Project" should contains "In process" value
         Then verify "In_Process_Counter_Status_Icon" element visibility in "Workflows_Stats_Container" on "Project" wizard
         Then verify "In_Process_Counter_Status_Icon" element in "Workflows_Stats_Container" on "Project" wizard should display hover tooltip "Common_Tooltips"."Running_Tip"
         Then verify "In_Process_Counter_Number" element visibility in "Workflows_Stats_Container" on "Project" wizard
@@ -64,7 +64,7 @@ Feature: Project Monitoring Page
         Then verify "Scheduled_Stats_Title" element visibility in "Scheduled_Stats_Container" on "Project" wizard
         Then "Scheduled_Stats_Title" element in "Scheduled_Stats_Container" on "Project" should contains "Scheduled" value
         Then verify "Filtering_Time_Period" element visibility in "Scheduled_Stats_Container" on "Project" wizard
-        Then "Filtering_Time_Period" element in "Scheduled_Stats_Container" on "Project" should contains "24 hrs" value
+        Then "Filtering_Time_Period" element in "Scheduled_Stats_Container" on "Project" should contains "Next 24 hrs" value
         Then verify "Scheduled_Stats_Counter" element visibility in "Scheduled_Stats_Container" on "Project" wizard
         Then verify "Jobs_Counter_Subtitle" element visibility in "Scheduled_Stats_Container" on "Project" wizard
         Then "Jobs_Counter_Subtitle" element in "Scheduled_Stats_Container" on "Project" should contains "Jobs" value
@@ -76,11 +76,11 @@ Feature: Project Monitoring Page
         Then "Models_Stats_Title" element in "Models_Stats_Container" on "Project" should contains "Models" value
         Then verify "Model_Stats_Counter" element visibility in "Models_Stats_Container" on "Project" wizard
         Then verify "Monitoring_App_Stats_Title" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
-        Then "Monitoring_App_Stats_Title" element in "Monitoring_App_Stats_Container" on "Project" should contains "Monitoring App" value
-        Then verify "Monitoring_App_Succeeded_Stats_Counter" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
-        Then verify "Monitoring_App_Succeeded_Counter_Subtitle" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
-        Then "Monitoring_App_Succeeded_Counter_Subtitle" element in "Monitoring_App_Stats_Container" on "Project" should contains "Succeeded" value
-        Then verify "Monitoring_App_Succeeded_Counter_Status_Icon" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
+        Then "Monitoring_App_Stats_Title" element in "Monitoring_App_Stats_Container" on "Project" should contains "Monitoring apps" value
+        Then verify "Monitoring_App_Running_Stats_Counter" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
+        Then verify "Monitoring_App_Running_Counter_Subtitle" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
+        Then "Monitoring_App_Running_Counter_Subtitle" element in "Monitoring_App_Stats_Container" on "Project" should contains "Running" value
+        Then verify "Monitoring_App_Running_Counter_Status_Icon" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
         Then verify "Monitoring_App_Failed_Stats_Counter" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
         Then verify "Monitoring_App_Failed_Counter_Subtitle" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
         Then "Monitoring_App_Failed_Counter_Subtitle" element in "Monitoring_App_Stats_Container" on "Project" should contains "Failed" value
@@ -89,7 +89,7 @@ Feature: Project Monitoring Page
         Then "Alerts_Stats_Title" element in "Alerts_Stats_Container" on "Project" should contains "Alerts" value
         Then verify "Alerts_Stats_Title_Icon" element visibility in "Alerts_Stats_Container" on "Project" wizard
         Then verify "Filtering_Time_Period" element visibility in "Alerts_Stats_Container" on "Project" wizard
-        Then "Filtering_Time_Period" element in "Alerts_Stats_Container" on "Project" should contains "24 hrs" value
+        Then "Filtering_Time_Period" element in "Alerts_Stats_Container" on "Project" should contains "Last 24 hrs" value
         Then verify "Alerts_Stats_Counter" element visibility in "Alerts_Stats_Container" on "Project" wizard
         Then verify "Alerts_Stats_Endpoint_Subtitle" element visibility in "Alerts_Stats_Container" on "Project" wizard
         Then "Alerts_Stats_Endpoint_Subtitle" element in "Alerts_Stats_Container" on "Project" should contains "Endpoint" value
@@ -114,11 +114,11 @@ Feature: Project Monitoring Page
         Then verify "Project_Name" element visibility on "Project" wizard
         Then "Project_Name" element on "Project" should contains "default" value
         Then verify "Created_Details" element visibility on "Project" wizard
-        Then "Created_Details" element on "Project" should contains "Created: 08/29/2021, 15:21:14 PM" value
+        Then "Created_Details" element on "Project" should contains "Created: 08/29/2021, 17:21:14 PM" value
         Then verify "Owner_Details" element visibility on "Project" wizard
         Then "Owner_Details" element on "Project" should contains "Owner: igz_nobody" value
-        Then verify "Info_Baner" element visibility on "Project" wizard
-        Then "Info_Baner" element on "Project" should contains "Counters use a caching mechanism, and are not auto-refreshed." value
+        Then verify "Info_Baner_Icon" element visibility on "Project" wizard
+        Then verify "Info_Baner_Icon" element on "Project" wizard should display hover hint "Label_Hint"."Project_Monitoring_Counters"
         Then verify "Quick_Actions" element visibility on "Project" wizard
         Then verify "Quick_Actions" dropdown element on "Project" wizard should contains "Project"."Quick_Actions_Options"
         Then verify "Refresh_Button" element visibility on "Project" wizard
@@ -132,7 +132,7 @@ Feature: Project Monitoring Page
         Then check "Last 24 hrs" header value in "time_period" column in "Runs_Statistic_Table" table on "Project" wizard
         Then verify visibility of header column "in_process_counter_number" in "Runs_Statistic_Table" table on "Project" wizard
         Then verify visibility of header column "in_process_counter_subtitle" in "Runs_Statistic_Table" table on "Project" wizard
-        Then check "In Progress" header value in "in_process_counter_subtitle" column in "Runs_Statistic_Table" table on "Project" wizard
+        Then check "In Process" header value in "in_process_counter_subtitle" column in "Runs_Statistic_Table" table on "Project" wizard
         Then verify visibility of header column "in_process_counter_icon" in "Runs_Statistic_Table" table on "Project" wizard
         Then verify "In_Process_Counter_Subtitle" element in "Runs_Statistic_Section_Container" on "Project" wizard should display hover tooltip "Common_Tooltips"."In_Process_Jobs"
         Then verify visibility of header column "failed_counter_number" in "Runs_Statistic_Table" table on "Project" wizard
@@ -941,7 +941,7 @@ Feature: Project Monitoring Page
         Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Name_Filter_Input" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Schedule_Monitor_Tab" wizard
-        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Any time"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Next 24 hours"
         Then verify "Table_FilterBy_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
@@ -956,7 +956,7 @@ Feature: Project Monitoring Page
         Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Name_Filter_Input" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Schedule_Monitor_Tab" wizard
-        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Any time"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Next 24 hours"
         Then verify "Table_FilterBy_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Job"
@@ -971,7 +971,7 @@ Feature: Project Monitoring Page
         Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Name_Filter_Input" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Schedule_Monitor_Tab" wizard
-        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Any time"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Next 24 hours"
         Then verify "Table_FilterBy_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Workflow"
@@ -994,7 +994,7 @@ Feature: Project Monitoring Page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Name_Filter_Input" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Workflows_Monitor_Tab" wizard
-        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Past week"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Past 24 hours"
         Then verify "Table_FilterBy_Button" element visibility on "Workflows_Monitor_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Workflows_Monitor_Tab" wizard
         Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
@@ -1022,7 +1022,7 @@ Feature: Project Monitoring Page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Name_Filter_Input" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Workflows_Monitor_Tab" wizard
-        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Past week"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Past 24 hours"
         Then verify "Table_FilterBy_Button" element visibility on "Workflows_Monitor_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Workflows_Monitor_Tab" wizard
         Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Error, Failed"
@@ -1036,7 +1036,7 @@ Feature: Project Monitoring Page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Name_Filter_Input" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Workflows_Monitor_Tab" wizard
-        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Past week"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Past 24 hours"
         Then verify "Table_FilterBy_Button" element visibility on "Workflows_Monitor_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Workflows_Monitor_Tab" wizard
         Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Completed"
@@ -1053,7 +1053,7 @@ Feature: Project Monitoring Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        When click on "Monitoring_App_Succeeded_Stats_Counter" element in "Monitoring_App_Stats_Container" on "Project" wizard
+        When click on "Monitoring_App_Running_Stats_Counter" element in "Monitoring_App_Stats_Container" on "Project" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
         Then verify redirection to "projects/default/monitoring-app"
@@ -1196,11 +1196,11 @@ Feature: Project Monitoring Page
         And wait load page
         Then verify "Search_Input" element visibility on "Consumer_Groups" wizard
         Then verify "Consumer_Groups_Table" element visibility on "Consumer_Groups" wizard
-        Then type value "C" to "Search_Input" field on "Consumer_Groups" wizard
+        Then type value "c" to "Search_Input" field on "Consumer_Groups" wizard
         Then value in "consumer_group_name" column with "text" in "Consumer_Groups_Table" on "Consumer_Groups" wizard should contains "C"
-        Then type value "CONSUMER" to "Search_Input" field on "Consumer_Groups" wizard
+        Then type value "consumer" to "Search_Input" field on "Consumer_Groups" wizard
         Then value in "consumer_group_name" column with "text" in "Consumer_Groups_Table" on "Consumer_Groups" wizard should contains "Consumer"
-        Then type value "randomText" to "Search_Input" field on "Consumer_Groups" wizard
+        Then type value "randomtext" to "Search_Input" field on "Consumer_Groups" wizard
         Then check "ConsumerGroup1" value not in "consumer_group_name" column in "Consumer_Groups_Table" table on "Consumer_Groups" wizard
 
     @MLPM
@@ -1248,12 +1248,12 @@ Feature: Project Monitoring Page
         And wait load page
         Then verify "Search_Input" element visibility on "Consumer_Groups" wizard
         Then verify "Shard_Lags_Table" element visibility on "Consumer_Groups" wizard
-        Then type value "SHARD" to "Search_Input" field on "Consumer_Groups" wizard
+        Then type value "shard" to "Search_Input" field on "Consumer_Groups" wizard
         Then click on "Refresh_Button" element on "Consumer_Groups" wizard
         Then value in "shard_name" column with "text" in "Shard_Lags_Table" on "Consumer_Groups" wizard should contains "shard"
         Then type value "shard-id-0" to "Search_Input" field on "Consumer_Groups" wizard
         Then value in "shard_name" column with "text" in "Shard_Lags_Table" on "Consumer_Groups" wizard should contains "shard-id-0"
-        Then type value "randomText" to "Search_Input" field on "Consumer_Groups" wizard
+        Then type value "randomtext" to "Search_Input" field on "Consumer_Groups" wizard
         Then check "shard-id-0" value not in "shard_name" column in "Shard_Lags_Table" table on "Consumer_Groups" wizard
 
     @MLPM
