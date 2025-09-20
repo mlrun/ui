@@ -64,17 +64,15 @@ const Breadcrumbs = ({ onClick = () => { } }) => {
           .find(pathItem => pathItem === tab.id)
       )
 
-
       if (screen?.id === MONITORING_APP_PAGE) {
         tab = {}
       }
-
 
       return {
         pathItems: [projects, projectName, screen?.label],
         screen,
         tab: { ...tab, label: startCase(tab?.label?.replace('-', ' ')) || '' },
-        itemName: params.artifactName || params.name || params.jobName || params.workflowProjectName || null,
+        itemName: params.artifactName || params.funcName || params.jobName || params.workflowProjectName || params.appName || params.name || null,
       }
     } else {
       const [page] = location.pathname.split('/').slice(3, 4)
@@ -86,7 +84,7 @@ const Breadcrumbs = ({ onClick = () => { } }) => {
         itemName: params.artifactName || params.name || params.jobName || params.workflowProjectName || null,
       }
     }
-  }, [location.pathname, params.artifactName, params.name, params.jobName, params.projectName, params.workflowProjectName, mlrunScreens, projectTabs])
+  }, [location.pathname, params, mlrunScreens, projectTabs])
 
   return (
     <nav data-testid="breadcrumbs" className="breadcrumbs" ref={breadcrumbsRef}>
