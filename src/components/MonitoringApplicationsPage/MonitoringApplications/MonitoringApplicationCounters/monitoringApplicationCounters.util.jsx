@@ -66,12 +66,14 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
         {
           id: 'running',
           title: appReady,
+          tooltipText: 'Running',
           subtitle: 'Running',
           subtitleStatus: 'running'
         },
         {
           id: 'failed',
           title: appError,
+          tooltipText: 'Failed, Error, Unhealthy',
           subtitle: 'Failed',
           subtitleStatus: 'failed'
         }
