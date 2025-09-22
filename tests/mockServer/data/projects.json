@@ -1641,6 +1641,68 @@
       "status": {
         "state": "online"
       }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "llmdeploy335",
+        "created": "2025-08-11T12:32:38.084000",
+        "labels": {},
+        "annotations": {}
+      },
+      "spec": {
+        "description": null,
+        "owner": "normal-user",
+        "goals": null,
+        "params": {},
+        "functions": null,
+        "workflows": null,
+        "artifacts": null,
+        "artifact_path": null,
+        "conda": "",
+        "source": "",
+        "subpath": null,
+        "origin_url": null,
+        "desired_state": "online",
+        "custom_packagers": null,
+        "default_image": null,
+        "build": null,
+        "default_function_node_selector": {}
+      },
+      "status": {
+        "state": "online"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "llmdeploy332",
+        "created": "2025-08-11T11:54:20.014000",
+        "labels": {},
+        "annotations": {}
+      },
+      "spec": {
+        "description": null,
+        "owner": "normal-user",
+        "goals": null,
+        "params": {},
+        "functions": null,
+        "workflows": null,
+        "artifacts": null,
+        "artifact_path": null,
+        "conda": "",
+        "source": "",
+        "subpath": null,
+        "origin_url": null,
+        "desired_state": "online",
+        "custom_packagers": null,
+        "default_image": null,
+        "build": null,
+        "default_function_node_selector": {}
+      },
+      "status": {
+        "state": "online"
+      }
     }
   ]
 }
