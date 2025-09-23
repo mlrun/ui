@@ -25,7 +25,7 @@ import { isEmpty } from 'lodash'
 import ApplicationMetricCard from '../DetailsMetrics/MetricsCards/ApplicationMetricCard'
 import DatePicker from '../../common/DatePicker/DatePicker'
 import NoData from '../../common/NoData/NoData'
-import NoMetricData from '../DetailsMetrics/MetricsCards/NoMetricData'
+import NoMetricData from '../DetailsMetrics/MetricsCards/NoMetricData/NoMetricData'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
 import { REQUEST_CANCELED } from '../../constants'

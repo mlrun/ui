@@ -27,7 +27,7 @@ import DatePicker from '../../common/DatePicker/DatePicker'
 import InvocationsMetricCard from './MetricsCards/InvocationsMetricCard'
 import MetricsSelector from '../../elements/MetricsSelector/MetricsSelector'
 import NoData from '../../common/NoData/NoData'
-import NoMetricData from './MetricsCards/NoMetricData'
+import NoMetricData from './MetricsCards/NoMetricData/NoMetricData'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
 import {

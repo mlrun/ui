@@ -19,9 +19,11 @@ such restriction.
 */
 import PropTypes from 'prop-types'
 
-import StatsCard from '../../../common/StatsCard/StatsCard'
+import StatsCard from '../../../../common/StatsCard/StatsCard'
 
 import NoDataIcon from 'igz-controls/images/no-data-metric-image.png'
+
+import './NoMetricData.scss'
 
 const NoMetricData = ({ title = '', message = 'No data to show', className = '', tip = '' }) => {
   return (

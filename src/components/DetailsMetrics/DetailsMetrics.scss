@@ -402,18 +402,6 @@ $stickyHeaderHeight: 55px;
       height: 100%;
     }
 
-    &__empty-card {
-      display: flex;
-      gap: 25px;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-
-      img {
-        width: 41px;
-      }
-    }
-
     &__empty-select {
       display: flex;
       flex-direction: column;
