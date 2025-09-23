@@ -123,16 +123,14 @@ const NavbarList = ({ projectName, IsNavbarPinned }) => {
                 <NavbarLink {...link} index={index} setSelectedIndex={setSelectedIndex} selectedIndex={selectedIndex} />
                 {link.nestedLinks && (
                   <ul className="navbar-links navbar-links_nested">
-                    {link.nestedLinks.map(nestedLink => (
-                      nestedLink.hidden ? null : (
-                        <li
-                          className="nav-link"
-                          data-testid={`nav-link-${nestedLink.id}`}
-                          key={nestedLink.id}
-                        >
-                          <NavbarLink {...nestedLink} />
-                        </li>
-                      )
+                    {link.nestedLinks.filter(nestedLink => !nestedLink.hidden).map(nestedLink => (
+                      <li
+                        className="nav-link"
+                        data-testid={`nav-link-${nestedLink.id}`}
+                        key={nestedLink.id}
+                      >
+                        <NavbarLink {...nestedLink} />
+                      </li>
                     ))}
                   </ul>
                 )}
