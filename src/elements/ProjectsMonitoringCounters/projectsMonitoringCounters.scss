@@ -43,7 +43,7 @@
     }
 
     .stats {
-      &__failed {
+      &__failed > .stats__counter {
         color: colors.$amaranth;
       }
 
@@ -119,11 +119,11 @@
         cursor: pointer;
 
         &:hover {
-          *:not(.stats__failed) {
+          *:not(.stats__failed > .stats__counter) {
             @include counterLinkHover;
           }
 
-          .stats__failed {
+          .stats__failed > .stats__counter {
             color: colors.$amaranth;
             text-decoration: underline;
             text-underline-offset: 1px;
@@ -191,8 +191,8 @@
     }
 
     &__details {
-      margin: 0;
       display: none;
+      margin: 0;
 
       @media (min-width: 1250px) {
         display: block;
