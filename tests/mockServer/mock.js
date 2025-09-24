@@ -214,6 +214,7 @@ const artifactsCategories = {
   dataset: ['dataset'],
   document: ['document'],
   model: ['model'],
+  'llm-prompt': ['llm-prompt'],
   other: ['', 'table', 'link', 'plot', 'chart', 'plotly', 'artifact']
 }
 
@@ -968,11 +969,7 @@ function getRuns(req, res) {
       pathToPartition.push('metadata.project')
     }
 
-    collectedRuns = getPartitionedData(
-      collectedRuns,
-      pathToPartition,
-      'status.last_update'
-    )
+    collectedRuns = getPartitionedData(collectedRuns, pathToPartition, 'status.last_update')
   }
 
   if (req.query['name']) {
