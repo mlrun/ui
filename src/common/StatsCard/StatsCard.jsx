@@ -67,7 +67,7 @@ StatsCard.Col = ({ children }) => {
 StatsCard.Col.displayName = 'StatsCard.Col'
 
 StatsCard.MainCounter = ({ children, className = '', id = '', onClick = () => { } }) => {
-  const mainCounterClass = classNames('stats__counter_main', className)
+  const mainCounterClass = classNames('stats__counter-main', className)
 
   return (
     <div className={mainCounterClass} data-testid={id} onClick={onClick}>
@@ -80,7 +80,7 @@ StatsCard.MainCounter = ({ children, className = '', id = '', onClick = () => { 
 StatsCard.MainCounter.displayName = 'StatsCard.MainCounter'
 
 StatsCard.SecondaryCounter = ({ children, className }) => {
-  const secondaryCounterClass = classNames('stats__counter_secondary', className)
+  const secondaryCounterClass = classNames('stats__counter-secondary', className)
 
   return (
     <div className={secondaryCounterClass}>
