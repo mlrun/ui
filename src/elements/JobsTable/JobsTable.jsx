@@ -31,6 +31,7 @@ import Table from '../../components/Table/Table'
 import { Loader } from 'igz-controls/components'
 
 import {
+  ABORTING_STATE,
   JOB_KIND_JOB,
   JOBS_MONITORING_JOBS_TAB,
   JOBS_PAGE,
@@ -144,7 +145,7 @@ const JobsTable = React.forwardRef(
           setSelectedJob(state => ({
             ...state,
             abortTaskId: task,
-            state: getState('aborting', JOBS_PAGE, JOB_KIND_JOB)
+            state: getState(ABORTING_STATE, JOBS_PAGE, JOB_KIND_JOB)
           }))
         }
 
@@ -152,7 +153,7 @@ const JobsTable = React.forwardRef(
           state.map(aJob => {
             if (aJob.uid === job.uid) {
               aJob.abortTaskId = task
-              aJob.state = getState('aborting', JOBS_PAGE, JOB_KIND_JOB)
+              aJob.state = getState(ABORTING_STATE, JOBS_PAGE, JOB_KIND_JOB)
             }
 
             return aJob

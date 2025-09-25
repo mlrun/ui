@@ -44,27 +44,34 @@ import {
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST,
   REAL_TIME_FILTER,
-  BATCH_FILTER
+  BATCH_FILTER,
+  PENDING_STATE,
+  RUNNING_STATE,
+  COMPLETED_STATE,
+  ABORTED_STATE,
+  ABORTING_STATE,
+  PENDING_RETRY_STATE,
+  TERMINATING_STATE
 } from '../../constants'
 
 export const jobsStatuses = [
   { label: 'All', id: FILTER_ALL_ITEMS, status: FILTER_ALL_ITEMS },
-  { label: 'Aborted', id: 'aborted', status: 'aborted' },
-  { label: 'Aborting', id: 'aborting', status: 'aborting' },
-  { label: 'Completed', id: 'completed', status: 'completed' },
+  { label: 'Aborted', id: ABORTED_STATE, status: ABORTED_STATE },
+  { label: 'Aborting', id: ABORTING_STATE, status: ABORTING_STATE },
+  { label: 'Completed', id: COMPLETED_STATE, status: COMPLETED_STATE },
   { label: 'Error', id: ERROR_STATE, status: ERROR_STATE },
-  { label: 'Running', id: 'running', status: 'running' },
-  { label: 'Pending', id: 'pending', status: 'pending' },
-  { label: 'Pending retry', id: 'pendingRetry', status: 'pendingRetry' }
+  { label: 'Running', id: RUNNING_STATE, status: RUNNING_STATE },
+  { label: 'Pending', id: PENDING_STATE, status: PENDING_STATE },
+  { label: 'Pending retry', id: PENDING_RETRY_STATE, status: PENDING_RETRY_STATE }
 ]
 
 export const workflowsStatuses = [
   { label: 'All', id: FILTER_ALL_ITEMS, status: FILTER_ALL_ITEMS },
   { label: 'Error', id: ERROR_STATE, status: ERROR_STATE },
   { label: 'Failed', id: FAILED_STATE, status: FAILED_STATE },
-  { label: 'Running', id: 'running', status: 'running' },
-  { label: 'Completed', id: 'completed', status: 'completed' },
-  { label: 'Terminating', id: 'terminating', status: 'terminating' }
+  { label: 'Running', id: RUNNING_STATE, status: RUNNING_STATE },
+  { label: 'Completed', id: COMPLETED_STATE, status: COMPLETED_STATE },
+  { label: 'Terminating', id: TERMINATING_STATE, status: TERMINATING_STATE }
 ]
 
 export const generateStatusFilter = useFailedStatus => {
@@ -72,11 +79,11 @@ export const generateStatusFilter = useFailedStatus => {
 
   return [
     { label: 'All', id: FILTER_ALL_ITEMS, status: FILTER_ALL_ITEMS },
-    { label: 'Completed', id: 'completed', status: 'completed' },
-    { label: 'Running', id: 'running', status: 'running' },
-    { label: 'Pending', id: 'pending', status: 'pending' },
+    { label: 'Completed', id: COMPLETED_STATE, status: COMPLETED_STATE },
+    { label: 'Running', id: RUNNING_STATE, status: RUNNING_STATE },
+    { label: 'Pending', id: PENDING_STATE, status: PENDING_STATE },
     { label: 'Error', id: status, status: status },
-    { label: 'Aborted', id: 'aborted', status: 'aborted' }
+    { label: 'Aborted', id: ABORTED_STATE, status: ABORTED_STATE }
   ]
 }
 

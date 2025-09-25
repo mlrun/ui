@@ -23,11 +23,13 @@ import { formatMinutesToString } from '../../../../utils/measureTime'
 import {
   BATCH_FILTER,
   ERROR_STATE,
+  FAILED_STATE,
   FUNCTION_READY_STATE,
   ME_MODE_FILTER,
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE,
   REAL_TIME_FILTER,
+  RUNNING_STATE,
   UNHEALTHY_STATE
 } from '../../../../constants'
 
@@ -64,18 +66,18 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
       title: 'Apps Status',
       counterData: [
         {
-          id: 'running',
+          id: RUNNING_STATE,
           title: appReady,
           tooltipText: 'Running',
           subtitle: 'Running',
-          subtitleStatus: 'running'
+          subtitleStatus: RUNNING_STATE
         },
         {
-          id: 'failed',
+          id: FAILED_STATE,
           title: appError,
           tooltipText: 'Failed, Error, Unhealthy',
           subtitle: 'Failed',
-          subtitleStatus: 'failed'
+          subtitleStatus: FAILED_STATE
         }
       ]
     },

@@ -27,7 +27,12 @@ import Select from '../../../common/Select/Select'
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import { ACTIONS_MENU } from 'igz-controls/types'
-import { DETAILS_ARTIFACTS_TAB, DETAILS_LOGS_TAB, JOBS_PAGE } from '../../../constants'
+import {
+  ABORTED_STATE,
+  DETAILS_ARTIFACTS_TAB,
+  DETAILS_LOGS_TAB,
+  JOBS_PAGE
+} from '../../../constants'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { generateUrlFromRouterPath } from 'igz-controls/utils/common.util'
 import { getDefaultCloseDetailsLink } from '../../../utils/link-helper.util'
@@ -149,7 +154,7 @@ const DetailsHeader = ({
             !selectedItem?.updated
               ? formatDatetime(
                   selectedItem?.startTime,
-                  state.value === 'aborted' ? 'N/A' : 'Not yet started'
+                  state.value === ABORTED_STATE ? 'N/A' : 'Not yet started'
                 )
               : selectedItem?.updated
                 ? formatDatetime(selectedItem?.updated, 'N/A')
@@ -260,7 +265,15 @@ const DetailsHeader = ({
       default:
         return null
     }
-  }, [params.tab, detailsStore.iteration, detailsStore.iterationOptions, detailsStore.runAttempt, detailsStore.runAttemptOptions, isDetailsPopUp, dispatch])
+  }, [
+    params.tab,
+    detailsStore.iteration,
+    detailsStore.iterationOptions,
+    detailsStore.runAttempt,
+    detailsStore.runAttemptOptions,
+    isDetailsPopUp,
+    dispatch
+  ])
 
   return (
     <DetailsHeaderContainer

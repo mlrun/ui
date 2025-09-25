@@ -47,7 +47,9 @@ import {
   SEVERITY_CRITICAL,
   SEVERITY_HIGH,
   SEVERITY_LOW,
-  SEVERITY_MEDIUM
+  SEVERITY_MEDIUM,
+  FAIL_STATE,
+  FAILED_STATE
 } from '../constants'
 
 const getEntityTypeData = entityType => {
@@ -177,7 +179,7 @@ const getNotificationData = notifications =>
     return {
       icon: (
         <div
-          data-testid={`${notification.kind}-${notification.err.length === 0 ? 'success' : 'fail'}`}
+          data-testid={`${notification.kind}-${notification.err.length === 0 ? 'success' : FAIL_STATE}`}
           className="alert-row-notification"
         >
           {alertsNotifications[notification.kind]}
@@ -189,7 +191,7 @@ const getNotificationData = notifications =>
         </div>
       ),
       tooltip: upperFirst(
-        `${notification.kind}: ${notification.summary.succeeded} success, ${notification.summary.failed} failed`
+        `${notification.kind}: ${notification.summary.succeeded} success, ${notification.summary.failed} ${FAILED_STATE}`
       ),
       kind: notification.kind,
       succeeded: notification.summary.succeeded,

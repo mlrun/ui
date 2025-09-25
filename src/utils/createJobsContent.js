@@ -31,7 +31,8 @@ import {
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
   NAME_FILTER,
-  PROJECT_FILTER
+  PROJECT_FILTER,
+  RUNNING_STATE
 } from '../constants'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import {
@@ -119,7 +120,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           id: `duration.${identifierUnique}`,
           value: measureTime(
             job.startTime || new Date(job.created_at),
-            (job.state?.value !== 'running' && job.updated) ||
+            (job.state?.value !== RUNNING_STATE && job.updated) ||
               (job.state?.value !== ERROR_STATE && new Date(job.finished_at))
           ),
           className: 'table-cell-1',
@@ -331,7 +332,7 @@ export const createJobsWorkflowsTabContent = (jobs, projectName, isStagingMode, 
           id: `duration.${identifierUnique}`,
           value: measureTime(
             job.startTime || new Date(job.created_at),
-            (job.state?.value !== 'running' && job.updated) ||
+            (job.state?.value !== RUNNING_STATE && job.updated) ||
               (job.state?.value !== ERROR_STATE && new Date(job.finished_at))
           ),
           className: 'table-cell-1',
@@ -529,7 +530,7 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
           id: `duration.${identifierUnique}`,
           value: measureTime(
             job.startTime || new Date(job.created_at),
-            (job.state?.value !== 'running' && job.updated) ||
+            (job.state?.value !== RUNNING_STATE && job.updated) ||
               (job.state?.value !== ERROR_STATE && new Date(job.finished_at))
           ),
           className: 'table-cell-1',
@@ -747,7 +748,7 @@ export const createWorkflowsMonitoringContent = (jobs, isStagingMode, isSelected
           id: `duration.${identifierUnique}`,
           value: measureTime(
             job.startTime || new Date(job.created_at),
-            (job.state?.value !== 'running' && job.updated) ||
+            (job.state?.value !== RUNNING_STATE && job.updated) ||
               (job.state?.value !== ERROR_STATE && new Date(job.finished_at))
           ),
           className: 'table-cell-1',

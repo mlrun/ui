@@ -35,7 +35,13 @@ import {
   JOB_KIND_SPARK,
   JOB_KIND_LOCAL,
   ERROR_STATE,
-  FAILED_STATE
+  FAILED_STATE,
+  PENDING_STATE,
+  RUNNING_STATE,
+  COMPLETED_STATE,
+  ABORTED_STATE,
+  ABORTING_STATE,
+  PENDING_RETRY_STATE
 } from '../../constants'
 import {
   abortJob,
@@ -74,8 +80,16 @@ export const getInfoHeaders = (isSpark, selectedJob) => {
     { label: 'Log level', id: LOG_LEVEL_ID },
     { label: 'Output path', id: 'outputPath' },
     { label: 'Total iterations', id: 'iterations' },
-    { label: 'Attempt count', id: 'retryCountWithInitialAttempt', tip: 'Number of attempts to run Kubernetes jobs' },
-    { label: 'Maximum attempts', id: 'maxRetriesWithInitialAttempt', tip: 'Maximum number of attempts to run Kubernetes jobs' }
+    {
+      label: 'Attempt count',
+      id: 'retryCountWithInitialAttempt',
+      tip: 'Number of attempts to run Kubernetes jobs'
+    },
+    {
+      label: 'Maximum attempts',
+      id: 'maxRetriesWithInitialAttempt',
+      tip: 'Maximum number of attempts to run Kubernetes jobs'
+    }
   ]
 
   if (isSpark) {
@@ -90,8 +104,8 @@ export const getInfoHeaders = (isSpark, selectedJob) => {
 }
 export const actionButtonHeader = 'Batch run'
 
-export const JOB_STEADY_STATES = ['completed', ERROR_STATE, 'aborted', FAILED_STATE]
-export const JOB_RUNNING_STATES = ['running', 'pending', 'pendingRetry']
+export const JOB_STEADY_STATES = [COMPLETED_STATE, ERROR_STATE, ABORTED_STATE, FAILED_STATE]
+export const JOB_RUNNING_STATES = [RUNNING_STATE, PENDING_STATE, PENDING_RETRY_STATE]
 
 export const getJobsDetailsMenu = (job = {}) => {
   return [
@@ -136,7 +150,7 @@ export const isJobKindAbortable = (job, abortableFunctionKinds) =>
     .some(kindLabel => job?.labels?.includes(kindLabel))
 
 export const isJobAborting = (currentJob = {}) => {
-  return currentJob?.state?.value === 'aborting'
+  return currentJob?.state?.value === ABORTING_STATE
 }
 
 export const isJobKindDask = (jobLabels = []) => {
