@@ -75,8 +75,9 @@
             position: relative;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             width: 100%;
-            padding: 0.2rem 0 0.3rem;
+            padding-bottom: 0.5rem;
           }
 
           &:not(:last-child) {
