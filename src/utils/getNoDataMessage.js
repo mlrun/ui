@@ -180,7 +180,7 @@ const generateNoEntriesFoundMessage = (visibleFilterTypes, filtersConfig, filter
       ? 'true'
       : filterType === DATE_RANGE_TIME_FILTER || filterType === DATES_FILTER
         ? getSelectedDateValue(filterType, filters)
-        : filters[filterType].join(', ')
+        : filters[filterType]
     const isLastElement = index === visibleFilterTypes.length - 1
 
     return (
