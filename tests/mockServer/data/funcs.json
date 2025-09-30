@@ -30309,6 +30309,98 @@
         "updated": "2024-10-08T14:06:44.563424+00:00"
       },
       "status": {}
-    }    
+    },
+    {
+      "metadata": {
+        "hash": "93124a9c66fcefbe27b24109a729691f8dbea5c0",
+        "credentials": {
+          "access_key": "$ref:mlrun-auth-secrets.b262111796186bb2718523bd3377fc4871b1e6c702992140099210de"
+        },
+        "updated": "2025-09-04T12:45:44.659000+00:00",
+        "project": "default",
+        "tag": "latest",
+          "name": "test-func-oyn",
+          "uid": "93124a9c66fcefbe27b24109a729691f8dbea5c0"
+      },
+      "verbose": false,
+      "spec": {
+        "build": {
+          "code_origin": "https://github.com/mlrun/test-notebooks-ui#77469ce3b66b43562f6dfff0be3f620fd1f231bd:fnxot.py",
+          "origin_filename": "fnxot.py",
+          "functionSourceCode": "ZGVmIGhhbmRsZXIoKToKICAgIHJhaXNlIEV4Y2VwdGlvbigiVGhpcyBmdW5jdGlvbiBpbnRlbnRpb25hbGx5IGZhaWxzIikKICAgICAgICAgICAgCg=="
+        },
+        "state_thresholds": {
+          "pending_scheduled": "1h",
+          "pending_not_scheduled": "-1",
+          "image_pull_backoff": "1h",
+          "executing": "24h"
+        },
+        "default_handler": "handler",
+        "entry_points": {
+          "handler": {
+            "has_kwargs": false,
+            "has_varargs": false,
+            "doc": "",
+            "lineno": 1,
+            "name": "handler"
+          }
+        },
+        "image": "mlrun/mlrun",
+        "preemption_mode": "prevent",
+        "description": "",
+        "command": "",
+        "disable_auto_mount": true,
+        "priority_class_name": "igz-workload-medium",
+        "tolerations": null,
+        "env": [
+          {
+            "name": "V3IO_API",
+            "value": "v3io-webapi.default-tenant.svc:8081"
+          },
+          {
+            "name": "V3IO_USERNAME",
+            "value": "normal-user"
+          },
+          {
+            "name": "V3IO_ACCESS_KEY",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "accessKey",
+                "name": "mlrun-auth-secrets.9a60a83c83d08d712a722becb0d2c7bc308be38d59c4a904c6d89696"
+              }
+            }
+          },
+          {
+            "name": "V3IO_FRAMESD",
+            "value": "framesd:8081"
+          },
+          {
+            "name": "MLRUN_AUTH_SESSION",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "accessKey",
+                "name": "mlrun-auth-secrets.b262111796186bb2718523bd3377fc4871b1e6c702992140099210de"
+              }
+            }
+          }
+        ],
+        "affinity": null,
+        "node_selector": {},
+        "resources": {
+          "requests": {
+            "memory": "1Mi",
+            "cpu": "25m"
+          },
+          "limits": {
+            "memory": "20Gi",
+            "cpu": "2"
+          }
+        }
+      },
+      "status": {
+        "state": null
+      },
+      "kind": "job"
+    }
   ]
 }

@@ -55,10 +55,10 @@
     {
       "id": 10,
       "name": "mm-app-failure",
-      "project": "kate-project-mm",
+      "project": "default",
       "severity": "medium",
       "activation_time": "2024-12-17T09:52:19.580000+00:00",
-      "entity_id": "kate-project-mm_myApp",
+      "entity_id": "default-mm_myApp",
       "entity_kind": "model-monitoring-application",
       "criteria": {
         "count": 1,
@@ -317,7 +317,7 @@
       "name": "alert-name-uqbxb-proj-default",
       "project": "default",
       "severity": "high",
-      "activation_time": "2025-05-31T15:50:55.190000+00:00",
+      "activation_time": "2025-09-22T15:50:55.190000+00:00",
       "entity_id": "a7c95783e6a726a1a233e581ea898ba33fa7e342.rujmfi.result.data_drift_test",
       "entity_kind": "model-endpoint-result",
       "criteria": {
@@ -343,7 +343,7 @@
       "name": "alert-name-jukmn-proj-default",
       "project": "default",
       "severity": "high",
-      "activation_time": "2025-05-31T15:50:54.207000+00:00",
+      "activation_time": "2025-09-22T15:50:54.207000+00:00",
       "entity_id": "a7c95783e6a726a1a233e581ea898ba33fa7e342.hskoyl.result.data_drift_test",
       "entity_kind": "model-endpoint-result",
       "criteria": {
@@ -369,7 +369,7 @@
       "name": "alert-name-uqbxb-proj-default",
       "project": "default",
       "severity": "high",
-      "activation_time": "2025-05-31T15:48:57.907000+00:00",
+      "activation_time": "2025-09-22T15:48:57.907000+00:00",
       "entity_id": "a7c95783e6a726a1a233e581ea898ba33fa7e342.rujmfi.result.data_drift_test",
       "entity_kind": "model-endpoint-result",
       "criteria": {
@@ -395,7 +395,7 @@
       "name": "alert-name-jukmn-proj-default",
       "project": "default",
       "severity": "high",
-      "activation_time": "2025-05-31T15:48:56.440000+00:00",
+      "activation_time": "2025-09-22T15:48:56.440000+00:00",
       "entity_id": "a7c95783e6a726a1a233e581ea898ba33fa7e342.hskoyl.result.data_drift_test",
       "entity_kind": "model-endpoint-result",
       "criteria": {
@@ -415,6 +415,40 @@
           }
       ],
       "reset_time": "2025-03-05T15:48:56.440000+00:00"
+    },
+    {
+      "id": 3395,
+      "name": "alert-name-obryv-default",
+      "project": "default",
+      "severity": "low",
+      "activation_time": "2025-09-04T12:46:17.816000+00:00",
+      "entity_id": "test-func-oyn-handler.98418b756c4b4307be9a3e7c39e66f21",
+      "entity_kind": "job",
+      "criteria": {
+          "count": 1,
+          "period": null
+      },
+      "event_kind": "failed",
+      "number_of_events": 1,
+      "notifications": [
+          {
+              "kind": "git",
+              "err": "All git notifications failed. Errors: Failed commenting on PR: {\r\n  \"message\": \"Not Found\",\r\n  \"documentation_url\": \"https://docs.github.com/rest\",\r\n  \"status\": \"404\"\r\n}",
+              "summary": {
+                  "failed": 1,
+                  "succeeded": 0
+              }
+          },
+          {
+              "kind": "webhook",
+              "err": "All webhook notifications failed. Errors: 404, message='Not Found', url='https://webhook.site/57696af5-3edc-447f-a714-628275f2ed89'",
+              "summary": {
+                  "failed": 1,
+                  "succeeded": 0
+              }
+          }
+      ],
+      "reset_time": "2025-09-04T12:46:17.816000+00:00"
     }
   ],
   "pagination": {

@@ -182,11 +182,25 @@ export default {
       'Timestamp:',
       'Severity:'
     ],
+    Overview_General_Headers_Per_Project: [
+      'Endpoint ID:',
+      'Application Name:',
+      'Result Name:',
+      'Type:',
+      'Timestamp:',
+      'Severity:'
+    ],
     Overview_Trigger_Criteria_Headers: ['Trigger criteria count:', 'Trigger criteria time period:']
   },
   Alerts_Application_Info_Pane: {
     Overview_General_Headers: [
       'Project Name:',
+      'Application Name:',
+      'Type:',
+      'Timestamp:',
+      'Severity:'
+    ],
+    Overview_General_Headers_Per_Project: [
       'Application Name:',
       'Type:',
       'Timestamp:',
@@ -222,14 +236,14 @@ export default {
       'Kind:',
       'Code entry point:',
       'Internal URL:',
-      'Image:',
+      //'Image:', hidden due to ML-7988, ML-8014
       'Application image:',
       'Version tag:',
       'Hash:',
       'Internal port:',
-      'Code origin:',
+      // 'Code origin:', hidden due to ML-7988, ML-8014
       'Updated:',
-      'Default handler:',
+      // 'Default handler:', hidden due to ML-7988, ML-8014
       'Description:'
     ]
   },
@@ -589,6 +603,7 @@ export default {
   Jobs_Monitor_Tab_Info_Pane: {
     Pending_State: 'Pending',
     Error_State: 'Error',
+    Error_State_With_Message: 'Error. This function intentionally fails',
     Tab_List: ['Overview', 'Inputs', 'Artifacts', 'Results', 'Logs', 'Pods'],
     Overview_Headers: [
       'UID:',
@@ -643,6 +658,7 @@ export default {
     Event_Type_Endpoint_Filter_Options: ['All', 'Data drift detected', 'Data drift suspected', 'Conc drift detected', 'Conc drift suspected', 'MM performance detected', 'MM performance suspected', 'System performance detected', 'System performance suspected', 'MM app anomaly detected', 'MM app anomaly suspected'],
     Event_Type_Job_Filter_Options: ['All', 'Job failed'],
     Event_Type_Application_Filter_Options: ['All', 'MM app failed'],
+    Endpoint_Mode_Filter_Options: ['All', 'Real-time', 'Batch'],
     Jobs_Status_Filter_Options: [
       'All',
       'Aborted',
@@ -779,7 +795,8 @@ export default {
     No_Documents_data: 'No data matches the filter: "Version tag: latest, Show best iteration only: true"',
     No_Files_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
     No_Models_data: 'No data matches the filter: "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"',
-    No_Pods_data: 'Pods not found, it is likely because Kubernetes removed these pods listing'
+    No_Pods_data: 'Pods not found, it is likely because Kubernetes removed these pods listing',
+    No_Pods_data_Completion: 'Pods not found, it is likely because Kubernetes removed these pods listing after their completion'
   },
   Preview_Pop_Up: {
     Table_Header: ['Name', 'Path', 'Size', 'Updated']

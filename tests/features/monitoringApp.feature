@@ -457,3 +457,100 @@ Feature: Monitoring app Page
     Then type value "qwe" to "Search_By_Endpoint_Filter_Input" field on "Application_Metrics" wizard
     And wait load page
     Then "Search_Endpoints_Counter" element on "Application_Metrics" should contains "0 endpoints found" value
+
+  @MLMA
+  @smoke
+  Scenario: MLMA013 - Check redirection to Model Endpoints filtering by mode list 
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    When turn on demo mode with query params "false"
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Monitoring app" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
+    And wait load page
+    Then verify "All_Applications_Title" element visibility on "Monitoring_App" wizard
+    Then "All_Applications_Title" element on "Monitoring_App" should contains "All Applications" value
+    Then verify "Endpoints_Stats_Title" element visibility on "Monitoring_App" wizard
+    Then "Endpoints_Stats_Title" element on "Monitoring_App" should contains "Endpoints" value
+    Then verify "Endpoints_Batch_SubTitle" element visibility on "Monitoring_App" wizard
+    Then "Endpoints_Batch_SubTitle" element on "Monitoring_App" should contains "Batch" value
+    Then verify "Endpoints_Batch_Counter" element visibility on "Monitoring_App" wizard
+    Then verify "Endpoints_RealTime_SubTitle" element visibility on "Monitoring_App" wizard
+    Then "Endpoints_RealTime_SubTitle" element on "Monitoring_App" should contains "Real-time" value
+    Then verify "Endpoints_RealTime_Counter" element visibility on "Monitoring_App" wizard
+    And wait load page
+    Then click on "Endpoints_Batch_Counter" element on "Monitoring_App" wizard
+    And wait load page
+    Then verify redirection to "projects/default/models/model-endpoints?me-mode=batch"
+    Then verify breadcrumbs "tab" label should be equal "Models" value
+    Then verify "Models_Tab_Selector" on "Models" wizard should contains "Models"."Tab_List"
+    Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify "Table_FilterBy_Button" element visibility on "Model_Endpoints" wizard
+    Then verify "Table_FilterBy_Button" element on "Model_Endpoints" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
+    Then click on "Table_FilterBy_Button" element on "Model_Endpoints" wizard
+    Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+    Then verify "Mode_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+    Then verify "Mode_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Batch"
+    Then verify "Mode_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Endpoint_Mode_Filter_Options"
+    And wait load page
+    Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+    Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+    Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+    Then verify "Clear_Button" element on "FilterBy_Popup" wizard is enabled
+    Then navigate back
+    And wait load page
+    Then verify redirection to "projects/default/monitoring-app"
+    Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
+    Then verify "Endpoints_Stats_Title" element visibility on "Monitoring_App" wizard
+    Then verify "Endpoints_RealTime_SubTitle" element visibility on "Monitoring_App" wizard
+    Then "Endpoints_RealTime_SubTitle" element on "Monitoring_App" should contains "Real-time" value
+    Then verify "Endpoints_RealTime_Counter" element visibility on "Monitoring_App" wizard
+    And wait load page
+    Then click on "Endpoints_RealTime_Counter" element on "Monitoring_App" wizard
+    And wait load page
+    Then verify redirection to "projects/default/models/model-endpoints?me-mode=realTime"
+    Then verify breadcrumbs "tab" label should be equal "Models" value
+    Then verify "Models_Tab_Selector" on "Models" wizard should contains "Models"."Tab_List"
+    Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify "Table_FilterBy_Button" element visibility on "Model_Endpoints" wizard
+    Then verify "Table_FilterBy_Button" element on "Model_Endpoints" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
+    Then click on "Table_FilterBy_Button" element on "Model_Endpoints" wizard
+    Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+    Then verify "Mode_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+    Then verify "Mode_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Real-time"
+    Then verify "Mode_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Endpoint_Mode_Filter_Options"
+    And wait load page
+    Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+    Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+    Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+    Then verify "Clear_Button" element on "FilterBy_Popup" wizard is enabled
+    Then navigate back
+    And wait load page
+    Then verify redirection to "projects/default/monitoring-app"
+    Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Models" value
+    And wait load page
+    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    And wait load page
+    Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify "Table_FilterBy_Button" element visibility on "Model_Endpoints" wizard
+    Then verify "Table_FilterBy_Button" element on "Model_Endpoints" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
+    Then click on "Table_FilterBy_Button" element on "Model_Endpoints" wizard
+    Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+    Then verify "Mode_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+    Then verify "Mode_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+    Then verify "Mode_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Endpoint_Mode_Filter_Options"
+    And wait load page
+    Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+    Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+    Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+    Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
