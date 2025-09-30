@@ -1,3 +1,5 @@
+@use 'igz-controls/scss/colors';
+
 .metrics__empty-card {
   display: flex;
   gap: 25px;
@@ -8,4 +10,10 @@
   img {
     width: 41px;
   }
+}
+
+.empty-invocation-card {
+  z-index: 1;
+  padding-bottom: 1em;
+  box-shadow: 0 -10px 0 0 colors.$white;
 }

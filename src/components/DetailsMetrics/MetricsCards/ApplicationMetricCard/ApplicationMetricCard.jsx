@@ -19,17 +19,17 @@ such restriction.
 */
 import React, { useMemo, memo } from 'react'
 
-import MetricChart from '../../../common/MlChart/MetricChart/MetricChart'
-import StatsCard from '../../../common/StatsCard/StatsCard'
+import MetricChart from '../../../../common/MlChart/MetricChart/MetricChart'
+import StatsCard from '../../../../common/StatsCard/StatsCard'
 import { TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 
-import { CHART_TYPE_LINE, CHART_TYPE_BAR } from '../../../constants'
-import { METRIC_DATA } from '../../../types'
-import { calculateHistogram, METRIC_COMPUTED_AVG_POINTS } from '../detailsMetrics.util'
-import { getMetricChartConfig } from '../../../utils/getChartConfig'
+import { CHART_TYPE_LINE, CHART_TYPE_BAR } from '../../../../constants'
+import { METRIC_DATA } from '../../../../types'
+import { calculateHistogram, METRIC_COMPUTED_AVG_POINTS } from '../../detailsMetrics.util'
+import { getMetricChartConfig } from '../../../../utils/getChartConfig'
 import { getScssVariableValue } from 'igz-controls/utils/common.util'
 
-import '../DetailsMetrics.scss'
+import '../MetricsCards.scss'
 
 const ApplicationMetricCard = ({ metric }) => {
   const javaColor = useMemo(() => getScssVariableValue('--javaColor'), [])

@@ -23,6 +23,7 @@ import StatsCard from '../../../../common/StatsCard/StatsCard'
 
 import NoDataIcon from 'igz-controls/images/no-data-metric-image.png'
 
+import '../MetricsCards.scss'
 import './NoMetricData.scss'
 
 const NoMetricData = ({ title = '', message = 'No data to show', className = '', tip = '' }) => {
