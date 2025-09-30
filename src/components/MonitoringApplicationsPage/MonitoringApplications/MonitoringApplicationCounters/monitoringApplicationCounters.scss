@@ -33,6 +33,9 @@
     }
 
     .stats__counter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: colors.$primary;
       font-weight: 500;
       font-size: 28px;
@@ -42,7 +45,7 @@
       margin-bottom: 10px;
     }
 
-    [class^="state"] {
+    [class^='state'] {
       margin-left: 5px;
     }
   }
