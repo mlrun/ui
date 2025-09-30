@@ -40051,7 +40051,7 @@
         "target_path": "v3io:///projects/llmdeploy332/artifacts/my_llm",
         "size": 262,
         "license": "",
-        "model_configuration": {
+        "invocation_config": {
           "temperature": 0.5
         },
         "producer": {
@@ -40168,7 +40168,7 @@
           "tag": "9dea0dcc-8251-4f4e-94a8-c76b9a64db45",
           "owner": "normal-user"
         },
-        "model_configuration": {
+        "invocation_config": {
           "temperature": 0.5
         },
         "db_key": "my_llm",
