@@ -84,8 +84,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
               }),
             statusClass: 'running',
             tooltip: 'Aborting, Pending, Pending retry, Running',
-            label: IN_PROCESS,
-            counterClassName: 'stats__counter'
+            label: IN_PROCESS
           },
           {
             counter: data.failed || 0,
@@ -98,7 +97,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
             statusClass: 'failed',
             tooltip: 'Aborted, Error',
             label: FAILED,
-            counterClassName: classNames('stats__counter', {
+            counterClassName: classNames({
               stats__failed: data.failed > 0
             })
           },
@@ -112,8 +111,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
               }),
             statusClass: 'completed',
             tooltip: 'Completed',
-            label: SUCCEEDED,
-            counterClassName: 'stats__counter'
+            label: SUCCEEDED
           }
         ]
       }
@@ -138,8 +136,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
               className: classNames('stats__link', 'stats__line'),
               statusClass: 'running',
               tooltip: 'Running, Terminating',
-              label: IN_PROCESS,
-              counterClassName: 'stats__counter'
+              label: IN_PROCESS
             },
             {
               counter: data.failed || 0,
@@ -152,7 +149,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
               statusClass: 'failed',
               tooltip: 'Error, Failed',
               label: FAILED,
-              counterClassName: classNames('stats__counter', {
+              counterClassName: classNames({
                 stats__failed: data.failed > 0
               })
             },
@@ -166,8 +163,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                 }),
               statusClass: 'completed',
               tooltip: 'Completed',
-              label: SUCCEEDED,
-              counterClassName: 'stats__counter'
+              label: SUCCEEDED
             }
           ]
         }

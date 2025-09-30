@@ -80,7 +80,7 @@ const RunCounter = () => {
 
           <div ref={detailsRef} className="stats__details">
             {jobStats?.counters?.map(
-              ({ counter, className, label, link, statusClass, tooltip }) => {
+              ({ counter, className, counterClassName, label, link, statusClass, tooltip }) => {
                 return (
                   <StatsCard.Row key={`${statusClass}-runs`}>
                     <div
@@ -94,7 +94,7 @@ const RunCounter = () => {
                           <i className={`state-${statusClass}`} />
                         </Tooltip>
                       </div>
-                      <StatsCard.SecondaryCounter>
+                      <StatsCard.SecondaryCounter className={counterClassName}>
                         {projectStore?.projectsSummary?.loading ? (
                           <Loader section small secondary />
                         ) : (
