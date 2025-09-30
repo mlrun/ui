@@ -2589,6 +2589,12 @@ function getModelEndpoints(req, res) {
     )
   }
 
+  if (req.query['mode']) {
+    collectedEndpoints = collectedEndpoints.filter(endpoint =>
+        Number(endpoint.metadata.mode) === Number(req.query['mode'])
+    )
+  }
+
   if (req.query['endpoint_id']) {
     const modelEndpoint = collectedEndpoints.find(
       endpoint => endpoint.metadata.uid === req.query.endpoint_id

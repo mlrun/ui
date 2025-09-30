@@ -10,6 +10,7 @@
           "v3io_user": "admin"
         },
         "endpoint_type": 3,
+        "mode": 0,
         "name": "RandomForestClassifier",
         "created": "2024-11-03T09:18:59.079000",
         "updated": "2024-11-03T09:40:58.317000",
@@ -272,6 +273,7 @@
           "v3io_user": "admin"
         },
         "endpoint_type": 3,
+        "mode": 1,
         "name": "RandomForestClassifier2",
         "created": "2024-11-03T09:18:59.079000",
         "updated": "2024-11-03T09:40:58.317000",
@@ -530,6 +532,7 @@
         "project": "default",
         "labels": {},
         "endpoint_type": 3,
+        "mode": 0,
         "name": "GradientBoostingClassifier",
         "created": "2024-12-03T09:18:59.079000",
         "updated": "2024-12-03T09:40:58.317000",
@@ -788,6 +791,7 @@
         "project": "default",
         "labels": {},
         "endpoint_type": 3,
+        "mode": 1,
         "name": "GradientBoostingClassifier2",
         "created": "2024-12-03T09:18:59.079000",
         "updated": "2024-12-03T09:40:58.317000",
