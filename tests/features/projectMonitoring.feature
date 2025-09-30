@@ -15,7 +15,7 @@ Feature: Project Monitoring Page
         Then verify "Project_Name" element visibility on "Project" wizard
         Then "Project_Name" element on "Project" should contains "default" value
         Then verify "Created_Details" element visibility on "Project" wizard
-        Then "Created_Details" element on "Project" should contains "Created: 08/29/2021, 17:21:14 PM" value
+        Then "Created_Details" element on "Project" should contains "Created: 08/29/2021, 15:21:14 PM" value
         Then verify "Owner_Details" element visibility on "Project" wizard
         Then "Owner_Details" element on "Project" should contains "Owner: igz_nobody" value
         Then verify "Info_Baner_Icon" element visibility on "Project" wizard
@@ -114,7 +114,7 @@ Feature: Project Monitoring Page
         Then verify "Project_Name" element visibility on "Project" wizard
         Then "Project_Name" element on "Project" should contains "default" value
         Then verify "Created_Details" element visibility on "Project" wizard
-        Then "Created_Details" element on "Project" should contains "Created: 08/29/2021, 17:21:14 PM" value
+        Then "Created_Details" element on "Project" should contains "Created: 08/29/2021, 15:21:14 PM" value
         Then verify "Owner_Details" element visibility on "Project" wizard
         Then "Owner_Details" element on "Project" should contains "Owner: igz_nobody" value
         Then verify "Info_Baner_Icon" element visibility on "Project" wizard

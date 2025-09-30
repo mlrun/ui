@@ -71462,6 +71462,58 @@
         "status_text": "aborted",
         "retry_count": 2
       }
+    },
+    {
+      "kind": "run",
+      "metadata": {
+          "name": "test-func-oyn-handler",
+          "uid": "98418b756c4b4307be9a3e7c39e66f21",
+          "iteration": 0,
+          "project": "default",
+          "labels": {
+              "v3io_user": "normal-user",
+              "kind": "job",
+              "owner": "normal-user",
+              "mlrun/client_version": "1.10.0-rc23",
+              "mlrun/client_python_version": "3.9.18",
+              "host": "test-func-oyn-handler-h9xjm"
+          },
+          "annotations": {}
+      },
+      "spec": {
+          "function": "default/test-func-oyn@93124a9c66fcefbe27b24109a729691f8dbea5c0",
+          "log_level": "info",
+          "parameters": {},
+          "handler": "handler",
+          "outputs": [],
+          "output_path": "v3io:///projects/mm-alerts-proj/artifacts",
+          "inputs": {},
+          "notifications": [],
+          "state_thresholds": {
+              "pending_scheduled": "1h",
+              "pending_not_scheduled": "-1",
+              "image_pull_backoff": "1h",
+              "executing": "24h"
+          },
+          "node_selector": {},
+          "tolerations": {},
+          "affinity": {},
+          "retry": {},
+          "hyperparams": {},
+          "hyper_param_options": {},
+          "data_stores": []
+      },
+      "status": {
+          "results": {},
+          "start_time": "2025-09-04T12:45:48.586000+00:00",
+          "last_update": "2025-09-04T12:45:48.925000+00:00",
+          "retry_count": null,
+          "retries": [],
+          "state": "error",
+          "artifact_uris": {},
+          "error": "This function intentionally fails",
+          "end_time": "2025-09-04T12:45:48.870872+00:00"
+      }
     }
   ]
 }

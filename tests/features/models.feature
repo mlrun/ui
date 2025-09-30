@@ -74,6 +74,10 @@ Feature: Models Page
     Then verify "Table_FilterBy_Button" element on "Model_Endpoints" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
     Then click on "Table_FilterBy_Button" element on "Model_Endpoints" wizard
     Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+    Then verify "Mode_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+    Then verify "Mode_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+    Then verify "Mode_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Endpoint_Mode_Filter_Options"
+    And wait load page
     Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
     Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
     Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard

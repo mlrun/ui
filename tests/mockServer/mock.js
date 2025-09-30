@@ -2956,7 +2956,7 @@ app.get(
   getMonitoringApplicationData
 )
 app.get(
-  `${mlrunAPIIngress}/projects/:project/model-endpoints/drift-over-time`,
+  `${mlrunAPIIngress}/projects/:project/model-monitoring/drift-over-time`,
   getMonitoringApplicationDrift
 )
 

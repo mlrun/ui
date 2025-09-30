@@ -109,7 +109,7 @@ Feature: ML Functions
         Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
-        When click on cell with row index 2 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        When click on cell with row index 3 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
         Then verify "Header" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Updated" element visibility on "ML_Function_Info_Pane" wizard
@@ -119,7 +119,7 @@ Feature: ML Functions
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
         Then verify "Overview_Headers" on "ML_Function_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Overview_Headers"
         Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard
-        When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        When click on cell with row index 2 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
         Then verify "Header" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Updated" element visibility on "ML_Function_Info_Pane" wizard

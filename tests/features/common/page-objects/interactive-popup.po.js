@@ -818,8 +818,8 @@ export default {
     Content_Application_Log_Info: By.css('.item-info .table__item-logs:nth-of-type(1)'),
     Title_Function_Log_Info: By.css('.item-info > div > h3:nth-of-type(2)'),
     Content_Function_Log_Info: By.css('.item-info .table__item-logs:nth-of-type(2)'),
-    Logs_Text_container: By.css('.table__item .table__item-logs-content'),
-    Logs_Refresh_Button: By.css('.table__item .logs-refresh')
+    Logs_Text_container: By.css('#overlay_container .table__item .table__item-logs-content'),
+    Logs_Refresh_Button: By.css('#overlay_container .table__item .logs-refresh')
   },
   modalWizardForm: {
     Title: By.css('.modal .modal__header-title'),
@@ -1659,6 +1659,13 @@ export default {
     Project_Name_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
         '#overlay_container [data-testid="pop-up-dialog"] [data-testid="project-form-field-select"]',
+        '.form-field__control',
+        '.options-list [data-testid="select-option"]'
+      )
+    ),
+    Mode_Filter_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '#overlay_container [data-testid="me-mode-form-field-select"] [data-testid="select-header"]',
         '.form-field__control',
         '.options-list [data-testid="select-option"]'
       )
