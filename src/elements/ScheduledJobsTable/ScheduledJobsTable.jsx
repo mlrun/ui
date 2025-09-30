@@ -90,7 +90,6 @@ const ScheduledJobsTable = ({
     return createTableContent()
   }, [createTableContent])
 
-
   const refreshJobsWithFilters = useCallback(
     (useInitialFilter, isSchedule) => {
       if (isSchedule) {
