@@ -59,7 +59,8 @@ export default defineConfig(({ mode }) => {
         'igz-controls': path.resolve(
           __dirname,
           'node_modules/iguazio.dashboard-react-controls/dist'
-        )
+        ),
+        '@': path.resolve(__dirname, 'src')
       },
       dedupe: [
         'react',

@@ -2964,7 +2964,6 @@ app.get(
 )
 
 app.get(`${mlrunAPIIngress}/projects/:project/runs`, getRuns)
-app.get(`${mlrunAPIIngress}/projects/*/runs`, getRuns)
 app.get(`${mlrunAPIIngress}/projects/:project/alert-activations`, getAlerts)
 app.get(`${mlrunAPIIngress}/projects/:project/alert-activations/:id`, getAlert)
 app.get(`${mlrunAPIIngress}/projects/:project/runs/:uid`, getRun)
@@ -2980,14 +2979,12 @@ app.get(`${mlrunAPIIngress}/hub/sources/:project/item-object`, getFunctionObject
 app.get(`${mlrunIngress}/:function/function.yaml`, getFunctionTemplate)
 
 app.get(`${mlrunAPIIngress}/projects/:project/schedules`, getProjectsSchedules)
-app.get(`${mlrunAPIIngress}/projects/*/schedules`, getProjectsSchedules)
 app.get(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, getProjectsSchedule)
 app.delete(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, deleteSchedule)
 app.post(`${mlrunAPIIngress}/projects/:project/schedules/:schedule/invoke`, invokeSchedule)
 app.put(`${mlrunAPIIngress}/projects/:project/schedules/:schedule/`, updateSchedule)
 
 app.get(`${mlrunAPIIngress}/projects/:project/pipelines`, getPipelines)
-app.get(`${mlrunAPIIngress}/projects/*/pipelines`, getPipelines)
 app.get(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID`, getPipeline)
 app.post(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID/retry`, pipelineRetry)
 app.post(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID/terminate`, pipelineTerminate)
@@ -3035,7 +3032,7 @@ app.get(`${mlrunAPIIngress}/projects/:project/functions/:func`, getFunc)
 app.post(`${mlrunAPIIngress}/projects/:project/functions/:func`, postFunc)
 
 app.get(
-  `${mlrunAPIIngress}/projects/:project/:featureArtifact/*/tags`,
+  `${mlrunAPIIngress}/projects/:project/:featureArtifact/:name/tags`,
   getProjectsFeatureArtifactTags
 )
 
