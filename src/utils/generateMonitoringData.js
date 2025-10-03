@@ -27,7 +27,6 @@ import {
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_PAGE,
   JOBS_MONITORING_WORKFLOWS_TAB,
-  JOB_KIND_JOB,
   JOB_KIND_WORKFLOW,
   MODELS_PAGE,
   MONITORING_APP_PAGE,
@@ -250,7 +249,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                   counter: data.jobs || 0,
                   link: () =>
                     navigateToJobsMonitoringPage({
-                      [TYPE_FILTER]: JOB_KIND_JOB,
+                      [TYPE_FILTER]: FILTER_ALL_ITEMS,
                       [DATES_FILTER]: NEXT_24_HOUR_DATE_OPTION
                     })
                 },
