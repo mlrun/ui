@@ -20,9 +20,10 @@ such restriction.
 import React from 'react'
 import { useForm } from 'react-final-form'
 
-import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
+import MultiSelectFilter from '../../../common/MultiSelectFilter/MultiSelectFilter'
+import { FormInput, FormOnChange } from 'igz-controls/components'
 
-import { JOBS_MONITORING_SCHEDULED_TAB, LABELS_FILTER } from '../../../constants'
+import { JOBS_MONITORING_SCHEDULED_TAB, LABELS_FILTER, TYPE_FILTER } from '../../../constants'
 import { generateTypeFilter } from '../../FilterMenu/filterMenu.settings'
 
 const ScheduledJobsFilters = () => {
@@ -35,11 +36,7 @@ const ScheduledJobsFilters = () => {
   return (
     <div>
       <div className="form-row">
-        <FormSelect
-          label="Type"
-          name="type"
-          options={generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB)}
-        />
+        <MultiSelectFilter optionsList={generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB)} name={TYPE_FILTER} />
       </div>
       <div className="form-row">
         <FormInput

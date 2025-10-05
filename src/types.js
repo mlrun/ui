@@ -205,11 +205,11 @@ export const FILTERS_CONFIG = PropTypes.objectOf(
   })
 )
 
-export const STATUS_LIST = PropTypes.arrayOf(
+export const OPTIONS_LIST = PropTypes.arrayOf(
   PropTypes.shape({
     id: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
+    status: PropTypes.string,
     disabled: PropTypes.bool
   })
 )

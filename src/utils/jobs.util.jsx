@@ -261,7 +261,7 @@ export const getScheduledFiltersConfig = crossProjects => {
       )
     },
     [PROJECT_FILTER]: { label: 'Project:', initialValue: PROJECTS_FILTER_ALL_ITEMS, isModal: true },
-    [TYPE_FILTER]: { label: 'Type:', initialValue: FILTER_ALL_ITEMS, isModal: true },
+    [TYPE_FILTER]: { label: 'Type:', initialValue: [FILTER_ALL_ITEMS], isModal: true },
     [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
   }
 
@@ -302,8 +302,11 @@ export const parseWorkflowsQueryParamsCallback = (paramName, paramValue) => {
 
 export const parseScheduledQueryParamsCallback = (paramName, paramValue) => {
   if (paramName === TYPE_FILTER) {
-    return generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB).find(type => type.id === paramValue)
-      ?.id
+    const filteredStatuses = paramValue
+      ?.split(',')
+      .filter(paramStatus => generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB).find(type => type.id === paramStatus))
+
+    return filteredStatuses?.length ? filteredStatuses : null
   }
 
   return paramValue

@@ -21,7 +21,7 @@ import React from 'react'
 import { useForm } from 'react-final-form'
 
 import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
-import StatusFilter from '../../../common/StatusFilter/StatusFilter'
+import MultiSelectFilter from '../../../common/MultiSelectFilter/MultiSelectFilter'
 
 import { JOBS_MONITORING_JOBS_TAB, LABELS_FILTER, STATUS_FILTER_NAME, TYPE_FILTER } from '../../../constants'
 import { generateTypeFilter, jobsStatuses } from '../../FilterMenu/filterMenu.settings'
@@ -36,7 +36,7 @@ const JobsFilters = () => {
   return (
     <div>
       <div className="form-row">
-        <StatusFilter statusList={jobsStatuses} name={STATUS_FILTER_NAME} />
+        <MultiSelectFilter optionsList={jobsStatuses} name={STATUS_FILTER_NAME} />
       </div>
       <div className="form-row">
         <FormSelect
