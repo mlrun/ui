@@ -28,7 +28,7 @@ const MultiSelectFilter = ({ optionsList, name }) => {
   const { input } = useField(name)
   const { change } = useForm()
 
-  const mappedoptionsList = useMemo(() => {
+  const mappedOptionsList = useMemo(() => {
     const isAllOptionsSelected = input.value?.includes?.(FILTER_ALL_ITEMS)
     return isAllOptionsSelected
       ? optionsList.map(option =>
@@ -52,7 +52,7 @@ const MultiSelectFilter = ({ optionsList, name }) => {
       (!currentValue.includes(FILTER_ALL_ITEMS) &&
         selectedValue.includes(FILTER_ALL_ITEMS) &&
         selectedValue.indexOf(FILTER_ALL_ITEMS) > 0) ||
-      mappedoptionsList.filter(option => option.id !== FILTER_ALL_ITEMS).length ===
+      mappedOptionsList.filter(option => option.id !== FILTER_ALL_ITEMS).length ===
       selectedValue.length
     ) {
       change(name, [FILTER_ALL_ITEMS])
@@ -61,7 +61,7 @@ const MultiSelectFilter = ({ optionsList, name }) => {
 
   return (
     <>
-      <FormSelect label={capitalize(name)} name={name} options={mappedoptionsList} multiple />
+      <FormSelect label={capitalize(name)} name={name} options={mappedOptionsList} multiple />
       <FormOnChange handler={(value, some) => handleFilterOptionChange(value, some)} name={name} />
     </>
   )
