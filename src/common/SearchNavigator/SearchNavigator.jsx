@@ -56,7 +56,7 @@ const SearchNavigator = ({ promptTemplate, setSearchResult, searchOnChange = nul
         return clearResults()
       }
 
-      const regex = new RegExp(`(${value})`, 'gi')
+      const regex = new RegExp(`(${value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
       const highlighted = highlightMatches(promptTemplate, regex, 0)
       const jsxMatchCount = countMatchesInTemplate(highlighted, regex)
 
