@@ -17,17 +17,17 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-const path = require('path')
 
-module.exports = {
-  babel: async options => {
-    options.plugins.push('babel-plugin-inline-react-svg')
-    return options
+const config = {
+  framework: {
+    name: '@storybook/react-vite',
+    options: {}
   },
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
-  addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-essentials',
-    '@storybook/preset-scss'
-  ]
+  addons: ['@storybook/addon-links', '@storybook/preset-scss', '@storybook/addon-docs'],
+  core: {
+    builder: '@storybook/builder-vite'
+  }
 }
+
+export default config
