@@ -1486,6 +1486,7 @@ function getArtifacts(req, res) {
     collectedArtifacts = collectedArtifacts.filter(artifact => {
       if (req.query['name'].includes('~')) {
         const value = artifact.spec?.db_key ?? artifact.db_key
+
         if (req.query['name'].includes('~')) {
           return value.includes(req.query['name'].slice(1))
         } else {
@@ -1515,9 +1516,44 @@ function getArtifacts(req, res) {
     }
   }
 
+  if (req.query['tree']) {
+    collectedArtifacts = collectedArtifacts.filter(
+      artifact => artifact.metadata?.tree === req.query['tree']
+    )
+  }
+
+  if (req.query['parent']) {
+    if (req.query['parent'].includes(':')) {
+      const [key, tag] = req.query['parent'].split(':')
+
+      collectedArtifacts = collectedArtifacts.filter(artifact => {
+        const match = artifact.spec.parent_uri.match(
+          /^store:\/\/(?<kind>.+?)\/(?<project>.+?)\/(?<key>.+?)(#(?<iteration>.+?))?(:(?<tag>.+?))?(@(?<tree>[^^]+))?(\^(?<uid>.+))?$/
+        )
+
+        return match && match.groups.key.startsWith(key) && match.groups.tag === tag
+      })
+    } else {
+      collectedArtifacts = collectedArtifacts.filter(artifact =>
+        artifact.spec?.parent_uri
+          ?.match(/^store:\/\/[^/]+\/[^/]+\/([^#/]+)/)?.[1]
+          ?.startsWith(req.query['parent'])
+      )
+    }
+  }
+
   if (req.query['format'] === 'minimal') {
     collectedArtifacts = collectedArtifacts.map(func => {
-      const fieldsToPick = ['db_key', 'producer', 'size', 'target_path', 'framework', 'metrics']
+      const fieldsToPick = [
+        'db_key',
+        'producer',
+        'size',
+        'target_path',
+        'framework',
+        'metrics',
+        'has_children',
+        'parent_uri'
+      ]
       const specFieldsToPick = fieldsToPick.map(fieldName => `spec.${fieldName}`)
 
       return pick(func, [
@@ -1944,7 +1980,9 @@ function getFunc(req, res) {
   let collectedFuncs = funcs.funcs
     .filter(func => func.metadata.project === req.params['project'])
     .filter(func => func.metadata.name === req.params['func'])
-    .filter(func => func.metadata.hash === req.query.hash_key)
+    .filter(
+      func => func.metadata.hash === req.query.hash_key || func.metadata.uid === req.query.hash_key
+    )
 
   if (req.query.tag) {
     collectedFuncs = collectedFuncs.filter(func => func.metadata.tag === req.query.tag)
@@ -2590,8 +2628,8 @@ function getModelEndpoints(req, res) {
   }
 
   if (req.query['mode']) {
-    collectedEndpoints = collectedEndpoints.filter(endpoint =>
-        Number(endpoint.metadata.mode) === Number(req.query['mode'])
+    collectedEndpoints = collectedEndpoints.filter(
+      endpoint => Number(endpoint.metadata.mode) === Number(req.query['mode'])
     )
   }
 
