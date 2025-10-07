@@ -32,7 +32,10 @@ import { MODEL_ENDPOINTS_TAB, MONITORING_APP_PAGE } from '../../../constants'
 import { MONITORING_APPLICATIONS_NO_DATA_MESSAGE } from '../MonitoringApplicationsPage.util'
 import { createApplicationContent } from '../../../utils/createApplicationContent'
 import { generateOperatingFunctionsTable } from './monitoringApplications.util'
-import { removeMonitoringApplications, removeMEPWithDetections } from '../../../reducers/monitoringApplicationsReducer'
+import {
+  removeMonitoringApplications,
+  removeMEPWithDetections
+} from '../../../reducers/monitoringApplicationsReducer'
 
 import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
 
@@ -42,7 +45,8 @@ const MonitoringApplications = () => {
   const navigate = useNavigate()
   const {
     monitoringApplications: { applications = [], operatingFunctions = [] },
-    loading
+    loading,
+    error
   } = useSelector(store => store.monitoringApplicationsStore)
 
   const applicationsTableActionsMenu = useMemo(
@@ -94,7 +98,13 @@ const MonitoringApplications = () => {
             <Tip text="System functions that are used for the monitoring application operation" />
           </div>
           {operatingFunctions.length === 0 && !loading ? (
-            <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
+            <NoData
+              message={
+                error
+                  ? 'Failed to fetch monitoring applications'
+                  : MONITORING_APPLICATIONS_NO_DATA_MESSAGE
+              }
+            />
           ) : (
             <SectionTable loading={loading} params={params} table={operatingFunctionsTable} />
           )}
@@ -106,7 +116,13 @@ const MonitoringApplications = () => {
             <span>All Applications</span>
           </div>
           {applications.length === 0 && !loading ? (
-            <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
+            <NoData
+              message={
+                error
+                  ? 'Failed to fetch monitoring applications'
+                  : MONITORING_APPLICATIONS_NO_DATA_MESSAGE
+              }
+            />
           ) : loading ? (
             <Loader section secondary />
           ) : (

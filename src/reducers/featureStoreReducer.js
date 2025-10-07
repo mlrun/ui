@@ -124,7 +124,8 @@ export const createNewFeatureSet = createAsyncThunk(
             : error.message
 
         showErrorNotification(thunkAPI.dispatch, error, '', message)
-        thunkAPI.rejectWithValue(error)
+
+        return thunkAPI.rejectWithValue(error)
       })
   }
 )
@@ -181,7 +182,8 @@ export const fetchFeatureSets = createAsyncThunk(
           thunkAPI.dispatch,
           config?.ui?.setRequestErrorMessage
         )
-        thunkAPI.rejectWithValue(error.message)
+
+        return thunkAPI.rejectWithValue(error.message)
       })
   }
 )
@@ -236,7 +238,8 @@ export const fetchFeatureVectors = createAsyncThunk(
             thunkAPI.dispatch,
             config?.ui?.setRequestErrorMessage
           )
-          thunkAPI.rejectWithValue(error)
+
+          return thunkAPI.rejectWithValue(error)
         }
       })
   }
@@ -268,7 +271,8 @@ export const fetchFeatureSetsTags = createAsyncThunk(
   ({ project, config }, thunkAPI) => {
     return featureStoreApi.fetchFeatureSetsTags(project, config).catch(error => {
       largeResponseCatchHandler(error, 'Failed to fetch tags', thunkAPI.dispatch)
-      thunkAPI.rejectWithValue(error)
+
+      return thunkAPI.rejectWithValue(error)
     })
   }
 )
@@ -277,7 +281,8 @@ export const fetchFeatureVectorsTags = createAsyncThunk(
   ({ project, config }, thunkAPI) => {
     return featureStoreApi.fetchFeatureVectorsTags(project, config).catch(error => {
       largeResponseCatchHandler(error, 'Failed to fetch tags', thunkAPI.dispatch)
-      thunkAPI.rejectWithValue(error)
+
+      return thunkAPI.rejectWithValue(error)
     })
   }
 )
@@ -296,7 +301,8 @@ export const startFeatureSetIngest = createAsyncThunk(
             : error.message
 
         showErrorNotification(thunkAPI.dispatch, error, '', message)
-        thunkAPI.rejectWithValue(message)
+
+        return thunkAPI.rejectWithValue(message)
       })
   }
 )
@@ -499,7 +505,7 @@ const featureStoreSlice = createSlice({
       state.features.loading = true
     })
     builder.addCase(fetchFeatures.rejected, (state, action) => {
-      state.features.loading = true
+      state.features.loading = false
       state.error = action.payload
     })
     builder.addCase(fetchFeatures.fulfilled, (state, action) => {
