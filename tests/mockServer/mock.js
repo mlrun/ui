@@ -1517,7 +1517,7 @@ function getArtifacts(req, res) {
 
   if (req.query['format'] === 'minimal') {
     collectedArtifacts = collectedArtifacts.map(func => {
-      const fieldsToPick = ['db_key', 'producer', 'size', 'target_path', 'framework', 'metrics']
+      const fieldsToPick = ['db_key', 'producer', 'size', 'target_path', 'framework', 'metrics', 'parent_uri']
       const specFieldsToPick = fieldsToPick.map(fieldName => `spec.${fieldName}`)
 
       return pick(func, [

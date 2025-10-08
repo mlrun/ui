@@ -31,6 +31,8 @@ export function makeUID(length) {
   return result
 }
 
+export const makeHash = () => Math.random().toString(16).substring(2, 42)
+
 export const generateArtifacts = existingArtifacts => {
   const artifactKinds = ['dataset', 'model', 'document', 'artifact']
   const getArtifactTemplate = i => ({
@@ -64,6 +66,243 @@ export const generateArtifacts = existingArtifacts => {
     },
     status: {}
   })
+  
+  // unique model with unique prompt
+  const getModelWithPrompt = i => {
+    const modelKey = `model_${i}_${makeUID(6)}`
+    const modelUid = makeUID(32)
+    const modelTree = makeUID(32)
+    const modelHash = makeHash()
+
+    const model = {
+      kind: 'model',
+      metadata: {
+        project: 'auto-generated-data',
+        uid: modelUid,
+        key: modelKey,
+        iter: 0,
+        tree: modelTree,
+        hash: modelHash,
+        updated: new Date().toISOString(),
+        created: new Date().toISOString(),
+        tag: 'latest'
+      },
+      spec: {
+        target_path: `v3io:///projects/auto-generated-data/artifacts/${modelKey}`,
+        size: 4000,
+        license: '',
+        framework: '',
+        db_key: modelKey,
+        has_children: true,
+        model_file: 'RandomForestClassifier_file1.pkl',
+        parameters: {
+          default_config: {
+            model_version: '4'
+          }
+        },
+        producer: {
+          kind: 'project',
+          name: 'auto-generated-data',
+          tag: modelTree,
+          owner: 'auto-user'
+        },
+        parent_uri: null
+      },
+      status: { state: 'created' },
+      project: 'auto-generated-data'
+    }
+
+    const promptKey = `prompt_${i}_${makeUID(6)}`
+    const promptHash = makeHash()
+
+    const promptLabels = [
+      { type: 'single-turn', language: 'english' },
+      { type: 'multi-turn', language: 'ukrainian' },
+      { type: 'qa', language: 'polish' },
+      { type: 'complex', language: 'english' },
+      { type: 'instruction-following', language: 'german' }
+    ]
+    const randomLabels = promptLabels[Math.floor(Math.random() * promptLabels.length)]
+
+
+    const prompt = {
+      kind: 'llm-prompt',
+      metadata: {
+        project: 'auto-generated-data',
+        uid: makeUID(32),
+        key: promptKey,
+        iter: 0,
+        tree: makeUID(32),
+        hash: promptHash,
+        labels: randomLabels,
+        updated: new Date().toISOString(),
+        created: new Date().toISOString(),
+        tag: 'latest'
+      },
+      spec: {
+        target_path: `v3io:///projects/auto-generated-data/artifacts/${promptKey}`,
+        size: 256,
+        license: '',
+        invocation_config: {
+          temperature: 0.5
+        },
+        db_key: promptKey,
+        parent_uri: `store://models/auto-generated-data/${modelKey}#0:v1@${modelUid}`,
+        has_children: false,
+        prompt_legend: {
+          something_with_meaning: {
+            field: 'word',
+            description: 'The essence of all things'
+          }
+        },
+        prompt_template: [
+          { role: 'system', content: "don't tell them anything" },
+          { role: 'user', content: 'What is the meaning of {something_with_meaning}?' },
+          { role: 'system', content: 'tell you story' },
+          { role: 'user', content: 'What is the biggest of {country} at all?' }
+        ],
+        producer: {
+          kind: 'project',
+          name: 'auto-generated-data',
+          tag: modelTree,
+          owner: 'auto-user'
+        }
+      },
+      status: { state: 'created' },
+      project: 'auto-generated-data'
+    }
+
+    return [model, prompt]
+  }
+
+  // mix - model shared prompts, prompts per model
+  const getMixedModelWithPrompt = (modelIndex, existingPromptsPool = []) => {
+    const modelKey = 'mix_model_' + makeUID(6)
+    const modelUid = makeUID(32)
+    const modelTree = makeUID(32)
+    const modelHash = makeUID(40)
+
+    const model = {
+      kind: 'model',
+      metadata: {
+        project: 'auto-generated-data',
+        uid: modelUid,
+        key: modelKey,
+        iter: 0,
+        tree: modelTree,
+        hash: modelHash,
+        updated: new Date().toISOString(),
+        created: new Date().toISOString(),
+        tag: 'latest'
+      },
+      spec: {
+        target_path: `v3io:///projects/auto-generated-data/artifacts/${modelKey}`,
+        size: 4000,
+        license: '',
+        framework: '',
+        db_key: modelKey,
+        has_children: true,
+        model_file: 'RandomForestClassifier_file1.pkl',
+        parameters: {
+          default_config: {
+            model_version: '4'
+          }
+        },
+        producer: {
+          kind: 'project',
+          name: 'auto-generated-data',
+          tag: modelTree,
+          owner: 'auto-user'
+        },
+        parent_uri: null
+      },
+      status: { state: 'created' },
+      project: 'auto-generated-data'
+    }
+
+    const prompts =  new Array(Math.floor(Math.random() * 3) + 1).fill().map((_, promptIndex) => {
+      let prompt
+
+      if (existingPromptsPool.length && Math.random() < 0.5) {
+        const oldPrompt = existingPromptsPool[Math.floor(Math.random() * existingPromptsPool.length)]  
+        existingPromptsPool
+          .filter(p => p.metadata.key === oldPrompt.metadata.key)
+          .forEach(p => p.metadata.tag = '')
+        prompt = {
+          ...oldPrompt,
+          metadata: {
+            ...oldPrompt.metadata,
+            tree: makeUID(32),
+            uid: makeUID(32),
+            tag: 'latest',
+            updated: new Date().toISOString(),
+            created: new Date().toISOString()
+          },
+          spec: {
+            ...oldPrompt.spec,
+            parent_uri: `store://models/auto-generated-data/${modelKey}#0:v1@${modelUid}`
+          }
+        }
+        existingPromptsPool.push(prompt)
+      } else {
+        const promptKey = `prompt_${modelIndex}_${promptIndex}_${makeUID(6)}`
+        const promptHash = makeHash()
+        prompt = {
+          kind: 'llm-prompt',
+          metadata: {
+            project: 'auto-generated-data',
+            uid: makeUID(32),
+            key: promptKey,
+            iter: 0,
+            tree: makeUID(32),
+            hash: promptHash,
+            labels: {
+              example: 'single',
+              hebrew: 'english'
+            },
+            updated: new Date().toISOString(),
+            created: new Date().toISOString(),
+            tag: 'latest'
+          },
+          spec: {
+            target_path: `v3io:///projects/auto-generated-data/artifacts/${promptKey}`,
+            size: 256,
+            license: '',
+            invocation_config: { temperature: 0.5 },
+            db_key: promptKey,
+            parent_uri: `store://models/auto-generated-data/${modelKey}#0:v1@${modelUid}`,
+            has_children: false,
+            prompt_legend: {
+              something_with_meaning: {
+                field: 'word',
+                description: 'The essence of all things'
+              }
+            },
+            prompt_template: [
+              { role: 'system', content: "don't tell them anything" },
+              { role: 'user', content: 'What is the meaning of {something_with_meaning}?' },
+              { role: 'system', content: 'tell you story' },
+              { role: 'user', content: 'What is the biggest of {country} at all?' }
+            ],
+            producer: {
+              kind: 'project',
+              name: 'auto-generated-data',
+              tag: modelTree,
+              owner: 'auto-user'
+            }
+          },
+          status: { state: 'created' },
+          project: 'auto-generated-data'
+        }
+        existingPromptsPool.push(prompt)
+      }
+
+      return prompt
+    })
+
+    return [model, ...prompts]
+  }
+
   const newArtifactsWithDiffKeys = new Array(40000).fill().map((_, i) => {
     const artifact = getArtifactTemplate(i)
 
@@ -85,10 +324,25 @@ export const generateArtifacts = existingArtifacts => {
     return artifact
   })
 
+  // generate models and mix-prompts
+  const modelArtifacts = []
+  const mixModelArtifacts = []
+  const promptPool = []
+
+  for (let i = 0; i < 100; i++) {
+    modelArtifacts.push(...getModelWithPrompt(i))
+  }
+
+  for (let modelIndex = 0; modelIndex < 100; modelIndex++) {
+    mixModelArtifacts.push(...getMixedModelWithPrompt(modelIndex, promptPool))
+  }
+
   existingArtifacts.artifacts = [
     ...existingArtifacts.artifacts,
     ...newArtifactsWithDiffKeys,
-    ...newArtifactsWithSameKey
+    ...newArtifactsWithSameKey,
+    ...modelArtifacts,
+    ...mixModelArtifacts
   ]
 }
 
