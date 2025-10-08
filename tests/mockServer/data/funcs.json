@@ -30401,6 +30401,182 @@
         "state": null
       },
       "kind": "job"
+    },
+    {
+      "status": {
+        "nuclio_name": "llmdeploy332-function-with-llm",
+        "internal_invocation_urls": [
+          "nuclio-llmdeploy332-function-with-llm.default-tenant.svc.cluster.local:8080"
+        ],
+        "address": "llmdeploy332-function-with-llm.default-tenant.app.vmdev36.lab.iguazeng.com/",
+        "container_image": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/nuclio/llmdeploy332-llmdeploy332-function-with-llm-processor:latest",
+        "external_invocation_urls": [
+          "llmdeploy332-function-with-llm.default-tenant.app.vmdev36.lab.iguazeng.com/"
+        ],
+        "state": "ready"
+      },
+      "metadata": {
+        "credentials": {
+          "access_key": "$ref:mlrun-auth-secrets.5d8a1734cc89d6337fde8ee93c9a2649613519b15ed817fb3e8ecc47"
+        },
+        "project": "llmdeploy332",
+        "name": "function-with-llm",
+        "tag": "latest",
+        "hash": "fc40337727c37256a3d81cb6114515bf3239fb17",
+        "updated": "2025-08-11T11:58:14.322000+00:00",
+        "uid": "unversioned-latest"
+      },
+      "spec": {
+        "function_kind": "serving_v2",
+        "min_replicas": 1,
+        "image": "mlrun/mlrun",
+        "base_image_pull": false,
+        "command": "http://llmdeploy332-function-with-llm.default-tenant.app.vmdev36.lab.iguazeng.com/",
+        "disable_auto_mount": true,
+        "function_handler": "function-with-llm-nuclio:handler",
+        "default_handler": "",
+        "description": "",
+        "max_replicas": 4,
+        "preemption_mode": "prevent",
+        "priority_class_name": "igz-workload-medium",
+        "build": {
+          "code_origin": "./function_with_llm.py",
+          "secret": "",
+          "functionSourceCode": "IyBDb3B5cmlnaHQgMjAyNSBJZ3VhemlvCiMKIyBMaWNlbnNlZCB1bmRlciB0aGUgQXBhY2hlIExpY2Vuc2UsIFZlcnNpb24gMi4wICh0aGUgIkxpY2Vuc2UiKTsKIyB5b3UgbWF5IG5vdCB1c2UgdGhpcyBmaWxlIGV4Y2VwdCBpbiBjb21wbGlhbmNlIHdpdGggdGhlIExpY2Vuc2UuCiMgWW91IG1heSBvYnRhaW4gYSBjb3B5IG9mIHRoZSBMaWNlbnNlIGF0CiMKIyAgIGh0dHA6Ly93d3cuYXBhY2hlLm9yZy9saWNlbnNlcy9MSUNFTlNFLTIuMAojCiMgVW5sZXNzIHJlcXVpcmVkIGJ5IGFwcGxpY2FibGUgbGF3IG9yIGFncmVlZCB0byBpbiB3cml0aW5nLCBzb2Z0d2FyZQojIGRpc3RyaWJ1dGVkIHVuZGVyIHRoZSBMaWNlbnNlIGlzIGRpc3RyaWJ1dGVkIG9uIGFuICJBUyBJUyIgQkFTSVMsCiMgV0lUSE9VVCBXQVJSQU5USUVTIE9SIENPTkRJVElPTlMgT0YgQU5ZIEtJTkQsIGVpdGhlciBleHByZXNzIG9yIGltcGxpZWQuCiMgU2VlIHRoZSBMaWNlbnNlIGZvciB0aGUgc3BlY2lmaWMgbGFuZ3VhZ2UgZ292ZXJuaW5nIHBlcm1pc3Npb25zIGFuZAojIGxpbWl0YXRpb25zIHVuZGVyIHRoZSBMaWNlbnNlLgoKZnJvbSBtbHJ1bi5zZXJ2aW5nIGltcG9ydCBMTE1vZGVsCmltcG9ydCBtbHJ1biAKZnJvbSBtbHJ1bi51dGlscyBpbXBvcnQgbG9nZ2VyCmZyb20gbWxydW4uc2VydmluZy5zdGF0ZXMgaW1wb3J0IE1vZGVsLCBNb2RlbFJ1bm5lclN0ZXAsIE1vZGVsU2VsZWN0b3IKZnJvbSB0eXBpbmcgaW1wb3J0IE9wdGlvbmFsCgpjbGFzcyBNeU1vZGVsU2VsZWN0b3IoTW9kZWxTZWxlY3Rvcik6CiAgICBkZWYgc2VsZWN0KHNlbGYsIGV2ZW50LCBhdmFpbGFibGVfbW9kZWxzOiBsaXN0W01vZGVsXSkgLT4gT3B0aW9uYWxbbGlzdFtzdHJdXToKICAgICAgICByZXR1cm4gZXZlbnQuYm9keS5nZXQoIm1vZGVscyIpCgpjbGFzcyBNeUxMTShMTE1vZGVsKToKICAgIGRlZiBwcmVkaWN0KHNlbGYsIGJvZHksIG1lc3NhZ2VzLCBtb2RlbF9jb25maWd1cmF0aW9uKToKICAgICAgICBib2R5WyJ1cmwiXSA9IHNlbGYubW9kZWxfYXJ0aWZhY3QubW9kZWxfdXJsCiAgICAgICAgYm9keVsiZGVmYXVsdF9jb25maWciXSA9IHNlbGYubW9kZWxfYXJ0aWZhY3QuZGVmYXVsdF9jb25maWcKICAgICAgICBib2R5WyJwcm9tcHQiXSA9IG1lc3NhZ2VzCiAgICAgICAgcmV0dXJuIGJvZHkKICAgIAojZnJvbSBtbHJ1bi5zZXJ2aW5nIGltcG9ydCBMTE1vZGVsCgpjbGFzcyBNeUxMTUNvbmZpZyhMTE1vZGVsKTogICAgICAgIAogICAgZGVmIHByZWRpY3Qoc2VsZiwgYm9keSwgbWVzc2FnZXMsIG1vZGVsX2NvbmZpZ3VyYXRpb24pOgogICAgICAgIHByb21wdF9hcnRpZmFjdCA9IGdldGF0dHIoc2VsZiwgImludm9jYXRpb25fYXJ0aWZhY3QiLCBOb25lKQogICAgICAgIG1vZGVsX2FydGlmYWN0ID0gZ2V0YXR0cihzZWxmLCAibW9kZWxfYXJ0aWZhY3QiLCBOb25lKQoKICAgICAgICByZXR1cm4gewogICAgICAgICAgICAiaW5wdXRzIjogYm9keSwKICAgICAgICAgICAgInByb21wdCI6IG1lc3NhZ2VzLAogICAgICAgICAgICAibW9kZWxfY29uZmlnIjogbW9kZWxfY29uZmlndXJhdGlvbiwKICAgICAgICAgICAgImRlZmF1bHRfY29uZmlnIjogZ2V0YXR0cihtb2RlbF9hcnRpZmFjdCwgImRlZmF1bHRfY29uZmlnIiwge30pLAogICAgICAgICAgICAibGFiZWxzIjogZ2V0YXR0cihwcm9tcHRfYXJ0aWZhY3QsICJsYWJlbHMiLCB7fSksCiAgICAgICAgICAgICJ0ZW1wbGF0ZV9wYXJhbXMiOiBnZXRhdHRyKHByb21wdF9hcnRpZmFjdCwgInRlbXBsYXRlX3BhcmFtcyIsIHt9KSwKICAgICAgICB9CiAgICAKY2xhc3MgTXlMTE1Db25maWcxKExMTW9kZWwpOgogICAgZGVmIGxvYWQoc2VsZik6CiAgICAgICAgcGFzcwogICAgICAgIAogICAgZGVmIHByZWRpY3Qoc2VsZiwgYm9keSwgbWVzc2FnZXMsIG1vZGVsX2NvbmZpZ3VyYXRpb24pOgogICAgICAgIHByb21wdF9hcnRpZmFjdCA9IGdldGF0dHIoc2VsZiwgImludm9jYXRpb25fYXJ0aWZhY3QiLCBOb25lKQogICAgICAgIG1vZGVsX2FydGlmYWN0ID0gZ2V0YXR0cihzZWxmLCAibW9kZWxfYXJ0aWZhY3QiLCBOb25lKQoKICAgICAgICByZXR1cm4gewogICAgICAgICAgICAiaW5wdXRzIjogYm9keSwKICAgICAgICAgICAgInByb21wdCI6IG1lc3NhZ2VzLAogICAgICAgICAgICAibW9kZWxfY29uZmlnIjogbW9kZWxfY29uZmlndXJhdGlvbiwKICAgICAgICAgICAgImRlZmF1bHRfY29uZmlnIjogZ2V0YXR0cihtb2RlbF9hcnRpZmFjdCwgImRlZmF1bHRfY29uZmlnIiwge30pLAogICAgICAgICAgICAibGFiZWxzIjogZ2V0YXR0cihwcm9tcHRfYXJ0aWZhY3QsICJsYWJlbHMiLCB7fSksCiAgICAgICAgICAgICJ0ZW1wbGF0ZV9wYXJhbXMiOiBnZXRhdHRyKHByb21wdF9hcnRpZmFjdCwgInRlbXBsYXRlX3BhcmFtcyIsIHt9KSwKICAgICAgICB9CmZyb20gbWxydW4ucnVudGltZXMgaW1wb3J0IG51Y2xpb19pbml0X2hvb2sKZGVmIGluaXRfY29udGV4dChjb250ZXh0KToKICAgIG51Y2xpb19pbml0X2hvb2soY29udGV4dCwgZ2xvYmFscygpLCAnc2VydmluZ192MicpCgpkZWYgaGFuZGxlcihjb250ZXh0LCBldmVudCk6CiAgICByZXR1cm4gY29udGV4dC5tbHJ1bl9oYW5kbGVyKGNvbnRleHQsIGV2ZW50KQo=",
+          "origin_filename": "./function_with_llm.py"
+        },
+        "source": "",
+        "graph": {
+          "engine": "async",
+          "shared_models_mechanism": {
+            "model-deployment": "naive"
+          },
+          "shared_models": {
+            "model-deployment": [
+              "MyLLM",
+              {
+                "name": "model-deployment",
+                "artifact_uri": "store://models/llmdeploy332/model_art1#0@418c1ad0-ab41-45df-afb9-722d48d5d65a^bff98dcfd64bd3db006488b7808e9d2dcf37b56f"
+              }
+            ]
+          },
+          "track_models": false,
+          "model_endpoints_names": [
+            "my-endpoint"
+          ],
+          "steps": {
+            "model-runner": {
+              "class_args": {
+                "model_selector": null,
+                "execution_mechanism_by_model_name": {
+                  "my-endpoint": "shared_executor"
+                },
+                "models": {
+                  "my-endpoint": [
+                    "mlrun.serving.Model",
+                    {
+                      "name": "my-endpoint",
+                      "shared_runnable_name": "model-deployment",
+                      "artifact_uri": "store://llm-prompts/llmdeploy332/my_llm#0@c00325f6-c2cb-4c62-ad93-8d5de6d0d10d^1d459c52a1102adcbbe242e6bb36e99129f2a8b9"
+                    }
+                  ]
+                },
+                "monitoring_data": {
+                  "my-endpoint": {
+                    "inputs": null,
+                    "outputs": [],
+                    "input_path": null,
+                    "result_path": null,
+                    "creation_strategy": "inplace",
+                    "labels": null,
+                    "model_path": "store://llm-prompts/llmdeploy332/my_llm#0@c00325f6-c2cb-4c62-ad93-8d5de6d0d10d^1d459c52a1102adcbbe242e6bb36e99129f2a8b9",
+                    "model_class": "mlrun.serving.Model",
+                    "model_endpoint_uid": "b2a773fdd4a94719850102cfffb25601"
+                  }
+                }
+              },
+              "class_name": "mlrun.serving.ModelRunner",
+              "responder": true,
+              "endpoint_type": 1,
+              "shape": "folder",
+              "model_endpoint_creation_strategy": "skip",
+              "raise_exception": true,
+              "kind": "model_runner",
+              "_shared_proxy_mapping": {
+                "model-deployment": {
+                  "my-endpoint": "store://llm-prompts/llmdeploy332/my_llm#0@c00325f6-c2cb-4c62-ad93-8d5de6d0d10d^1d459c52a1102adcbbe242e6bb36e99129f2a8b9"
+                }
+              }
+            }
+          }
+        },
+        "affinity": null,
+        "volumes": [
+          {
+            "name": "serving-conf",
+            "configMap": {
+              "name": "serving-conf-llmdeploy332-function-with-llm"
+            }
+          }
+        ],
+        "resources": {
+          "requests": {
+            "memory": "1Mi",
+            "cpu": "25m"
+          },
+          "limits": {
+            "memory": "20Gi",
+            "cpu": "2"
+          }
+        },
+        "tolerations": null,
+        "env": [
+          {
+            "name": "MLRUN_HTTPDB__NUCLIO__EXPLICIT_ACK",
+            "value": "enabled"
+          },
+          {
+            "name": "V3IO_API",
+            "value": "v3io-webapi.default-tenant.svc:8081"
+          },
+          {
+            "name": "V3IO_USERNAME",
+            "value": "normal-user"
+          },
+          {
+            "name": "V3IO_FRAMESD",
+            "value": "framesd:8081"
+          },
+          {
+            "name": "V3IO_ACCESS_KEY",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "accessKey",
+                "name": "mlrun-auth-secrets.bd42717290ba28bb58f058523ca25adff9762c83ad2a60157d7478db"
+              }
+            }
+          },
+          {
+            "name": "MLRUN_AUTH_SESSION",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "accessKey",
+                "name": "mlrun-auth-secrets.5d8a1734cc89d6337fde8ee93c9a2649613519b15ed817fb3e8ecc47"
+              }
+            }
+          }
+        ],
+        "volume_mounts": [
+          {
+            "name": "serving-conf",
+            "mountPath": "/tmp/mlrun/serving-conf",
+            "readOnly": true
+          }
+        ],
+        "node_selector": {}
+      },
+      "verbose": false,
+      "kind": "serving"
     }
   ]
 }

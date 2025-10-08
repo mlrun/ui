@@ -40133,6 +40133,45 @@
       "project": "llmdeploy332"
     },
     {
+      "kind": "model",
+      "metadata": {
+        "key": "model_art1",
+        "project": "llmdeploy332",
+        "iter": 0,
+        "tree": "418c1ad0-ab41-45df-afb9-722d48d5d65a",
+        "hash": "dae3b5936acdb82b153b8a17d7d71ba7a66b6b60",
+        "uid": "bff98dcfd64bd3db006488b7808e9d2dcf37b56f",
+        "updated": "2025-08-11 11:56:12.178000+00:00",
+        "created": "2025-08-11 11:56:12.178000+00:00",
+        "tag": "v1"
+      },
+      "spec": {
+        "target_path": "llmdeploy332/model_art1/",
+        "size": 4370,
+        "license": "",
+        "framework": "",
+        "producer": {
+          "kind": "project",
+          "name": "llmdeploy332",
+          "tag": "418c1ad0-ab41-45df-afb9-722d48d5d65a",
+          "owner": "normal-user"
+        },
+        "model_file": "RandomForestClassifier_file1.pkl",
+        "has_children": true,
+        "db_key": "model_art1",
+        "parameters": {
+          "default_config": {
+            "model_version": "4"
+          }
+        },
+        "parent_uri": null
+      },
+      "status": {
+        "state": "created"
+      },
+      "project": "llmdeploy332"
+    },
+    {
       "kind": "llm-prompt",
       "metadata": {
         "key": "my_llm",
