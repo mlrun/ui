@@ -301,12 +301,14 @@ export const parseWorkflowsQueryParamsCallback = (paramName, paramValue) => {
 }
 
 export const parseScheduledQueryParamsCallback = (paramName, paramValue) => {
-  if (paramName === TYPE_FILTER) {
-    const filteredStatuses = paramValue
-      ?.split(',')
-      .filter(paramStatus => generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB).find(type => type.id === paramStatus))
+  if (paramName === TYPE_FILTER && paramValue) {
+    const validTypes = new Set(
+      generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB).map(type => type.id)
+    )
 
-    return filteredStatuses?.length ? filteredStatuses : null
+    const filteredStatuses = paramValue.split(',').filter(paramType => validTypes.has(paramType))
+
+    return filteredStatuses.length ? filteredStatuses : null
   }
 
   return paramValue

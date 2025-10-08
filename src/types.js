@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import PropTypes from 'prop-types'
+import {isEmpty} from 'lodash'
 import {
   BE_PAGE,
   BE_PAGE_SIZE,
@@ -26,7 +27,8 @@ import {
   PANEL_CREATE_MODE,
   PANEL_EDIT_MODE,
   PANEL_FUNCTION_CREATE_MODE,
-  PANEL_RERUN_MODE
+  PANEL_RERUN_MODE,
+  STATUS_FILTER_NAME
 } from './constants'
 
 import { BUTTON_VARIANTS } from 'igz-controls/types'
@@ -209,10 +211,10 @@ export const OPTIONS_LIST = PropTypes.arrayOf(
   PropTypes.shape({
     id: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
+    disabled: PropTypes.bool,
     status: PropTypes.string,
-    disabled: PropTypes.bool
   })
-)
+).isRequired
 
 export const PAGINATION_CONFIG = PropTypes.shape({
   [BE_PAGE_SIZE]: PropTypes.number,
