@@ -25,6 +25,7 @@ import {
   generateDropdownGroup
 } from '../../common-tools/common-tools'
 import inputGroup from '../components/input-group.component'
+import actionMenu from '../components/action-menu.component'
 
 const commonSearchByNameFilterInput = inputGroup(
   generateInputGroup(
@@ -33,6 +34,14 @@ const commonSearchByNameFilterInput = inputGroup(
     false
   )
 )
+
+const actionMenuStructure = {
+  root: '.actions-menu__container',
+  menuElements: {
+    open_button: '[data-testid="actions-menu"] button',
+    options: '.actions-menu__body .actions-menu__option'
+  }
+}
 
 const overallTable = {
   root: '.table__content',
@@ -53,10 +62,11 @@ const overallTable = {
       root: '.table-row',
       fields: {
         name: '[data-testid="name"] a .link',
+        uid:  '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
         labels: {
                   componentType: dropdownComponent,
                   structure: generateDropdownGroup(
-                    '.table-body__cell:nth-of-type(7)',
+                    '.table-body__cell:nth-of-type(3)',
                     '.chip-block span.chips_button',
                     '.chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
                     false,
@@ -66,7 +76,12 @@ const overallTable = {
         producer: '[data-testid="producer"] .data-ellipsis',
         owner: '[data-testid="owner"] .data-ellipsis',
         updated: '[data-testid="updated"] .data-ellipsis',
-        size: '[data-testid="size"] .data-ellipsis'
+        size: '[data-testid="size"] .data-ellipsis',
+        show_all_versions: '[data-testid="quick-link-show-all-versions"]',
+        action_menu: {
+          componentType: actionMenu,
+          structure: actionMenuStructure
+        },
       }
     }
   }
@@ -77,6 +92,14 @@ export default {
     Search_By_Name_Filter_Input: commonSearchByNameFilterInput,
     Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
     Refresh_Button: By.css('[data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]'),
-    LLMPrompts_Table: commonTable(overallTable)
+    LLMPrompts_Table: commonTable(overallTable),
+    Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
+    History_Back_Button: By.css('.history-back-link .history-back-link__icon'),
+    Version_History_Title: By.css(
+      '.history-back-link .history-back-link__title [data-testid="version-history"]'
+    ),
+    Version_History_Prompt_Name: By.css(
+      '.history-back-link .history-back-link__title .data-ellipsis.tooltip-wrapper'
+    )
   }
 }

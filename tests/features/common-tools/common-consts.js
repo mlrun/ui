@@ -110,6 +110,7 @@ export default {
   },
   Common_Lists: {
     Action_Menu_List: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete', 'Delete all versions'],
+    Action_Menu_List_LLM_Prompt: ['Add a tag', 'Download', 'Copy URI', 'View YAML'],
     Action_Menu_List_Version_History: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete'],
     Action_Menu_List_Expanded: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete all'],
     Action_Menu_List_Dataset_Transition_Popup: ['Download', 'Copy URI', 'View YAML'],
@@ -142,6 +143,26 @@ export default {
     Tab_List: ['Overview', 'Collections'],
     Overview_General_Headers: [
       'Key:',
+      'Hash:',
+      'Version tag:',
+      'Original source:',
+      'Iter:',
+      'URI:',
+      'Path:',
+      'UID:',
+      'Updated:',
+      'Labels:'
+    ],
+    Overview_Producer_Headers: ['Name:', 'Kind:', 'Tag:', 'Owner:', 'UID:']
+  },
+  LLM_Prompts_Info_Pane: {
+    Tab_List: ['Overview', 'Prompt Template', 'Generation Configuration'],
+    Tab_List_Prompt_Template: ['Prompt', 'Arguments'],
+    Info_Banner_Message: /The LLM prompt is not in the filtered list\. Closing the details panel will return you to the current list\./,
+    Overview_General_Headers: [
+      'Key:',
+      'Description:',
+      'Model name:',
       'Hash:',
       'Version tag:',
       'Original source:',
@@ -399,6 +420,7 @@ export default {
     Auto_Refresh: 'Uncheck Auto Refresh to view more results',
     FilterBy_Button: 'Filter',
     FilterBy_Button_1: 'Filter (1)',
+    Argument: 'The essence of all things',
     Show_All_Versions: 'Show all versions',
     Open_Metrics: 'Open metrics',
     Refresh_Button: 'Refresh',
@@ -545,6 +567,7 @@ export default {
     FeatureSets_Stats_Tip:  
       'Each feature set can have multiple versions, produced by multiple runs and given multiple tags.\n' +
       ' You can browse them in the Feature store page.',
+    Model_Version_Tag: 'Enter a model name to enable field.',
     Artifacts_Stats_Tip:  
       'Each artifact can have multiple versions, produced by multiple runs and given multiple tags.\n' +
       ' You can browse them in the Artifacts page.',
@@ -766,6 +789,10 @@ export default {
     Common_Message_Jobs_Monitoring:
       /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
     Common_Message_Monitor_Jobs_Name: /No data matches the filter: "Name: (.+?)"/,
+    Common_Message_LLM_Prompt_Name: /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Show best iteration only: (.+?)"/,
+    Common_Message_LLM_Prompt_Label: /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Labels: (.+?), Show best iteration only: (.+?)"/,
+    Common_Message_LLM_Prompt_Tag: /No data matches the filter: "LLM prompt version tag: (.+?), Show best iteration only: (.+?)"/,
+    Common_Message_Artifact_Tag: /No data matches the filter: "Version tag: (.+?), Show best iteration only: (.+?)"/,
     Common_Message_Jobs_Monitoring_Workflow_Project:
       /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
     Common_Message_Jobs_Monitoring_Status:
