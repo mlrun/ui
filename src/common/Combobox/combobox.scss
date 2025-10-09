@@ -12,8 +12,8 @@
   border-radius: 4px;
 
   &_disabled {
-    cursor: not-allowed;
     border-color: colors.$spunPearl;
+    cursor: not-allowed;
   }
 
   &_invalid {
@@ -22,10 +22,10 @@
 
   &-list {
     min-width: 140px;
-    margin: 0;
-    list-style-type: none;
     max-height: 300px;
+    margin: 0;
     overflow: auto;
+    list-style-type: none;
 
     &__option {
       padding: 8px 15px;
@@ -90,8 +90,8 @@
       top: 100%;
       z-index: 5;
       display: none;
-      margin-top: 5px;
       max-width: 220px;
+      margin-top: 5px;
       background-color: colors.$white;
       box-shadow: shadows.$previewBoxShadow;
 
@@ -167,8 +167,8 @@
     }
 
     &:disabled {
-      background-color: transparent;
       color: colors.$spunPearl;
+      background-color: transparent;
     }
   }
 

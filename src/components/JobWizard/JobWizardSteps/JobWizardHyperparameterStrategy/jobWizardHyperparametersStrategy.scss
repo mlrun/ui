@@ -1,9 +1,6 @@
 .job-wizard__hyperparameter-strategy {
   .grid-container {
     display: grid;
-    gap: 15px;
-    align-items: center;
-    grid-template-columns: 20% 20% 20% 20%;
     grid-template-areas:
       'strategy-grid-item strategy-grid-item . .'
       'max-iterations-grid-item max-errors-grid-item . .'
@@ -13,19 +10,22 @@
       'stop-condition-grid-item stop-condition-grid-item . .'
       'parallelism-title-grid-item parallelism-title-grid-item . .'
       'parallel-runs-grid-item dask-cluster-uri-grid-item dask-cluster-uri-grid-item teardown-dask-grid-item';
+    grid-template-columns: 20% 20% 20% 20%;
+    gap: 15px;
+    align-items: center;
 
     .strategy-grid-item {
       grid-area: strategy-grid-item;
     }
 
     .max-iterations-grid-item {
-      min-width: 100px;
       grid-area: max-iterations-grid-item;
+      min-width: 100px;
     }
 
     .max-errors-grid-item {
-      min-width: 100px;
       grid-area: max-errors-grid-item;
+      min-width: 100px;
     }
 
     .ranking-title-grid-item {

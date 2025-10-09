@@ -4,19 +4,19 @@
 @mixin inputNode {
   color: colors.$white;
   background-color: colors.$hotPink;
-  fill: colors.$hotPink;
   border-color: colors.$hotPink;
-  stroke: colors.$hotPink;
   box-shadow: 0 3px 14px rgba(colors.$hotPink, 0.34);
+  fill: colors.$hotPink;
+  stroke: colors.$hotPink;
 }
 
 @mixin outputNode {
   color: colors.$white;
   background-color: colors.$malibu;
-  fill: colors.$malibu;
   border-color: colors.$malibu;
-  stroke: colors.$malibu;
   box-shadow: 0 3px 14px rgba(colors.$malibu, 0.5);
+  fill: colors.$malibu;
+  stroke: colors.$malibu;
 }
 
 @mixin primaryNode {
@@ -80,20 +80,20 @@
 @mixin selectedNode {
   &.selected {
     border-color: colors.$brightTurquoise;
-    stroke: colors.$brightTurquoise;
     box-shadow: 0 4px 20px rgba(colors.$brightTurquoise, 0.5);
+    stroke: colors.$brightTurquoise;
 
     &.status-error,
     &.status-failed {
       border-color: colors.$burntSienna;
-      stroke: colors.$burntSienna;
       box-shadow: 0 4px 20px rgba(colors.$burntSienna, 0.5);
+      stroke: colors.$burntSienna;
     }
 
     &.status-running {
       border-color: colors.$pictonBlue;
-      stroke: colors.$pictonBlue;
       box-shadow: 0 4px 20px rgba(colors.$pictonBlue, 0.5);
+      stroke: colors.$pictonBlue;
     }
   }
 }
@@ -123,9 +123,9 @@
     .react-flow__node-label {
       position: relative;
       width: 100%;
+      overflow: hidden;
       font-size: 1.5rem;
       text-align: center;
-      overflow: hidden;
     }
 
     .react-flow__node-sub-label {
