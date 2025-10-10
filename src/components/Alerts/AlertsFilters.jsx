@@ -24,7 +24,7 @@ import PropTypes from 'prop-types'
 import { useForm, useFormState } from 'react-final-form'
 import { upperFirst } from 'lodash'
 
-import StatusFilter from '../../common/StatusFilter/StatusFilter'
+import MultiSelectFilter from '../../common/MultiSelectFilter/MultiSelectFilter'
 import { FormSelect, FormInput, FormOnChange } from 'igz-controls/components'
 
 import { generateProjectsList } from '../../utils/projects'
@@ -127,16 +127,16 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
       {(entityType === FILTER_ALL_ITEMS ||
         entityType === MODEL_MONITORING_APPLICATION ||
         entityType === MODEL_ENDPOINT_RESULT) && (
-        <div className="form-row">
-          <FormInput
-            label={entityType === MODEL_ENDPOINT_RESULT ? 'Endpoint ID' : 'Entity ID'}
-            name={ENTITY_ID}
-            placeholder="Search by ID"
-            tip="Search for case insensitive, full or partial strings"
-          />
-          <FormOnChange handler={value => handleInputChange(value, ENTITY_ID)} name={ENTITY_ID} />
-        </div>
-      )}
+          <div className="form-row">
+            <FormInput
+              label={entityType === MODEL_ENDPOINT_RESULT ? 'Endpoint ID' : 'Entity ID'}
+              name={ENTITY_ID}
+              placeholder="Search by ID"
+              tip="Search for case insensitive, full or partial strings"
+            />
+            <FormOnChange handler={value => handleInputChange(value, ENTITY_ID)} name={ENTITY_ID} />
+          </div>
+        )}
       {entityType === JOB && (
         <div className="form-row">
           <FormInput
@@ -177,7 +177,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
         </>
       )}
       <div className="form-row">
-        <StatusFilter statusList={filterAlertsSeverityOptions} name={SEVERITY} />
+        <MultiSelectFilter optionsList={filterAlertsSeverityOptions} name={SEVERITY} />
       </div>
       <div className="form-row">
         <FormSelect

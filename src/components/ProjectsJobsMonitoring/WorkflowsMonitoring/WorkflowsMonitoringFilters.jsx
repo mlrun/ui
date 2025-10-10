@@ -23,7 +23,7 @@ import { upperFirst } from 'lodash'
 import { useSelector } from 'react-redux'
 
 import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
-import StatusFilter from '../../../common/StatusFilter/StatusFilter'
+import MultiSelectFilter from '../../../common/MultiSelectFilter/MultiSelectFilter'
 
 import {
   FILTER_ALL_ITEMS,
@@ -68,7 +68,7 @@ const WorkflowsMonitoringFilters = () => {
         />
       </div>
       <div className="form-row">
-        <StatusFilter statusList={workflowsStatuses} name={STATUS_FILTER_NAME} />
+        <MultiSelectFilter optionsList={workflowsStatuses} name={STATUS_FILTER_NAME} />
       </div>
       {isDemoMode && (
         <div className="form-row">

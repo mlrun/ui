@@ -38,8 +38,8 @@ const ScheduledMonitoring = () => {
   } = React.useContext(ProjectJobsMonitoringContext)
 
   const filters = useFiltersFromSearchParams(
-    initialTabData[JOBS_MONITORING_SCHEDULED_TAB]?.filtersConfig,
-    initialTabData[JOBS_MONITORING_SCHEDULED_TAB]?.parseQueryParamsCallback
+    initialTabData?.[JOBS_MONITORING_SCHEDULED_TAB]?.filtersConfig,
+    initialTabData?.[JOBS_MONITORING_SCHEDULED_TAB]?.parseQueryParamsCallback
   )
 
   useEffect(() => {
