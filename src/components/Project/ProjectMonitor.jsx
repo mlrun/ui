@@ -233,7 +233,7 @@ const ProjectMonitor = () => {
           })
         )
 
-        showErrorNotification(dispatch, error, '', 'Failed to fetch functions')
+        showErrorNotification(dispatch, error)
       })
 
     if (!isEmpty(funcs)) {
@@ -264,8 +264,8 @@ const ProjectMonitor = () => {
     const funcs = await dispatch(fetchProjectFunctions({ project: params.projectName }))
       .unwrap()
       .catch(error => {
-        showErrorNotification(dispatch, deployError, '', 'Failed to deploy the function')
-        showErrorNotification(dispatch, error, '', 'Failed to fetch functions')
+        showErrorNotification(dispatch, deployError)
+        showErrorNotification(dispatch, error)
       })
 
     if (!isEmpty(funcs)) {
@@ -277,7 +277,7 @@ const ProjectMonitor = () => {
         navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/overview`)
       }
 
-      showErrorNotification(dispatch, deployError, '', 'Failed to deploy the function')
+      showErrorNotification(dispatch, deployError)
     }
   }
 

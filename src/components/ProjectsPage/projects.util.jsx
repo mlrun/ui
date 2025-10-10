@@ -38,7 +38,7 @@ import {
   setProjectTotalAlerts
 } from '../../reducers/projectReducer'
 import tasksApi from '../../api/tasks-api'
-import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { DANGER_BUTTON } from 'igz-controls/constants'
 import { PROJECT_ONLINE_STATUS } from '../../constants'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
@@ -182,12 +182,7 @@ export const handleDeleteProjectError = (
       }
     })
   } else {
-    const customErrorMsg =
-      error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-        ? `You do not have permission to delete the project ${projectName} `
-        : `Failed to delete the project ${projectName}`
-
-    showErrorNotification(dispatch, error, '', customErrorMsg, () =>
+    showErrorNotification(dispatch, error, '', '', () =>
       handleDeleteProject(
         projectName,
         false,
@@ -222,8 +217,9 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
             setNotification({
               status: 200,
               id: Math.random(),
-              message: `Project "${deletingProjects?.[task.metadata.name]
-                }" was deleted successfully`
+              message: `Project "${
+                deletingProjects?.[task.metadata.name]
+              }" was deleted successfully`
             })
           )
         } else {

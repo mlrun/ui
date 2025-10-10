@@ -87,9 +87,7 @@ const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag = () => {}, onResolve,
         onAddTag?.()
       })
       .catch(error => {
-        showErrorNotification(dispatch, error, 'Failed to add a tag', '', () =>
-          addArtifactTag(values)
-        )
+        showErrorNotification(dispatch, error, '', '', () => addArtifactTag(values))
       })
   }
 
@@ -100,7 +98,6 @@ const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag = () => {}, onResolve,
       projectName,
       dispatch,
       actionCallback: () => addArtifactTag(values),
-      getCustomErrorMsg: () => 'Failed to add a tag',
       onErrorCallback: resolveModal,
       showLoader: () => setIsLoading(true),
       hideLoader: () => setIsLoading(false)

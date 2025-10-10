@@ -209,7 +209,7 @@ const FeatureVectors = () => {
             })
         })
         .catch(error => {
-          showErrorNotification(dispatch, error, '', 'Failed to delete the feature vector', () =>
+          showErrorNotification(dispatch, error, '', null, () =>
             handleDeleteFeatureVector(featureVector)
           )
         })

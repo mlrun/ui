@@ -58,12 +58,12 @@ const MonitoringApplicationsPage = () => {
         dispatch(fetchMonitoringApplicationsSummary({ project: params.projectName }))
           .unwrap()
           .catch(error => {
-            showErrorNotification(dispatch, error, '', 'Failed to fetch applications summary')
+            showErrorNotification(dispatch, error)
           })
         dispatch(fetchMonitoringApplications({ project: params.projectName, filters }))
           .unwrap()
           .catch(error => {
-            showErrorNotification(dispatch, error, '', 'Failed to fetch monitoring applications')
+            showErrorNotification(dispatch, error)
           })
         dispatch(
           fetchMEPWithDetections({
@@ -73,12 +73,7 @@ const MonitoringApplicationsPage = () => {
         )
           .unwrap()
           .catch(error => {
-            showErrorNotification(
-              dispatch,
-              error,
-              '',
-              'Failed to fetch Model Endpoints with suspected/detected issue'
-            )
+            showErrorNotification(dispatch, error)
           })
       }
     },
@@ -99,7 +94,7 @@ const MonitoringApplicationsPage = () => {
         )
           .unwrap()
           .catch(error => {
-            showErrorNotification(dispatch, error, '', 'Failed to fetch artifacts')
+            showErrorNotification(dispatch, error)
           })
 
         dispatch(
@@ -111,7 +106,7 @@ const MonitoringApplicationsPage = () => {
         )
           .unwrap()
           .catch(error => {
-            showErrorNotification(dispatch, error, '', 'Failed to fetch monitoring application')
+            showErrorNotification(dispatch, error)
             navigate(
               `/projects/${params.projectName}/${MONITORING_APP_PAGE}${window.location.search}`,
               { replace: true }
@@ -141,7 +136,7 @@ const MonitoringApplicationsPage = () => {
       <div className="content__header">
         <Breadcrumbs />
       </div>
-      <div className="content monitoring-app-content" ref={contentRef} >
+      <div className="content monitoring-app-content" ref={contentRef}>
         <div className="content__action-bar-wrapper">
           <span className="monitoring-apps-title">
             {params.name && (

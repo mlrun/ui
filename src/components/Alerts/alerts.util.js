@@ -289,7 +289,7 @@ export const checkForSelectedAlert = ({
             { replace: true }
           )
 
-          showErrorNotification(dispatch, error, '', 'Failed to retrieve alert data')
+          showErrorNotification(dispatch, error)
         })
     }
   } else {

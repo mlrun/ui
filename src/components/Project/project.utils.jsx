@@ -167,7 +167,7 @@ export const handleFetchProjectError = (error, navigate, setConfirmData, dispatc
       }
     })
   } else {
-    showErrorNotification(dispatch, error, 'Failed to fetch project data')
+    showErrorNotification(dispatch, error)
     navigate('/projects/')
   }
 }

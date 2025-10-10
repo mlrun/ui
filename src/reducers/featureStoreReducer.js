@@ -23,7 +23,6 @@ import {
   getFeatureVectorIdentifier
 } from '../utils/getUniqueIdentifier'
 import featureStoreApi from '../api/featureStore-api'
-import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { PANEL_DEFAULT_ACCESS_KEY } from '../constants'
 import { REDISNOSQL } from '../components/FeatureSetsPanel/FeatureSetsPanelTargetStore/featureSetsPanelTargetStore.util'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
@@ -118,12 +117,7 @@ export const createNewFeatureSet = createAsyncThunk(
         return result
       })
       .catch(error => {
-        const message =
-          error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'You are not permitted to create a feature set.'
-            : error.message
-
-        showErrorNotification(thunkAPI.dispatch, error, '', message)
+        showErrorNotification(thunkAPI.dispatch, error)
 
         return thunkAPI.rejectWithValue(error)
       })
@@ -178,7 +172,7 @@ export const fetchFeatureSets = createAsyncThunk(
       .catch(error => {
         largeResponseCatchHandler(
           error,
-          'Failed to fetch feature sets',
+          null,
           thunkAPI.dispatch,
           config?.ui?.setRequestErrorMessage
         )
@@ -234,7 +228,7 @@ export const fetchFeatureVectors = createAsyncThunk(
         if (!skipErrorNotification) {
           largeResponseCatchHandler(
             error,
-            'Failed to fetch feature vectors',
+            null,
             thunkAPI.dispatch,
             config?.ui?.setRequestErrorMessage
           )
@@ -270,7 +264,7 @@ export const fetchFeatureSetsTags = createAsyncThunk(
   'fetchFeatureSetsTags',
   ({ project, config }, thunkAPI) => {
     return featureStoreApi.fetchFeatureSetsTags(project, config).catch(error => {
-      largeResponseCatchHandler(error, 'Failed to fetch tags', thunkAPI.dispatch)
+      largeResponseCatchHandler(error, null, thunkAPI.dispatch)
 
       return thunkAPI.rejectWithValue(error)
     })
@@ -280,7 +274,7 @@ export const fetchFeatureVectorsTags = createAsyncThunk(
   'fetchFeatureVectorsTags',
   ({ project, config }, thunkAPI) => {
     return featureStoreApi.fetchFeatureVectorsTags(project, config).catch(error => {
-      largeResponseCatchHandler(error, 'Failed to fetch tags', thunkAPI.dispatch)
+      largeResponseCatchHandler(error, null, thunkAPI.dispatch)
 
       return thunkAPI.rejectWithValue(error)
     })
@@ -295,14 +289,9 @@ export const startFeatureSetIngest = createAsyncThunk(
         return result
       })
       .catch(error => {
-        const message =
-          error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'You are not permitted to create a feature set.'
-            : error.message
+        showErrorNotification(thunkAPI.dispatch, error)
 
-        showErrorNotification(thunkAPI.dispatch, error, '', message)
-
-        return thunkAPI.rejectWithValue(message)
+        return thunkAPI.rejectWithValue(error)
       })
   }
 )

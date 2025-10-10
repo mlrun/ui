@@ -28,11 +28,11 @@ import Table from '../../components/Table/Table'
 import NoData from '../../common/NoData/NoData'
 import { Loader } from 'igz-controls/components'
 
-import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { DANGER_BUTTON } from 'igz-controls/constants'
 import { FILTERS_CONFIG } from '../../types'
 import { JOB_KIND_WORKFLOW, JOBS_PAGE, PANEL_EDIT_MODE, SCHEDULE_TAB } from '../../constants'
 import { fetchFunctionTemplate } from '../../reducers/functionReducer'
-import { getErrorMsg, openPopUp, getScssVariableValue } from 'igz-controls/utils/common.util'
+import { openPopUp, getScssVariableValue } from 'igz-controls/utils/common.util'
 import { getInitialFiltersByConfig } from '../../hooks/useFiltersFromSearchParams.hook'
 import { getJobFunctionData } from '../../components/Jobs/jobs.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
@@ -129,12 +129,7 @@ const ScheduledJobsTable = ({
           )
         })
         .catch(error => {
-          const customErrorMsg =
-            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'You do not have permission to run a new job.'
-              : getErrorMsg(error, 'Failed to start job')
-
-          showErrorNotification(dispatch, error, '', customErrorMsg, () => handleRunJob(job))
+          showErrorNotification(dispatch, error, '', '', () => handleRunJob(job))
         })
     },
     [dispatch, params.projectName]

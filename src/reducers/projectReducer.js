@@ -21,11 +21,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 import projectsApi from '../api/projects-api'
 import { hideLoading, showLoading } from './redux.util'
-import {
-  CONFLICT_ERROR_STATUS_CODE,
-  FORBIDDEN_ERROR_STATUS_CODE,
-  INTERNAL_SERVER_ERROR_STATUS_CODE
-} from 'igz-controls/constants'
+
 import { DEFAULT_ABORT_MSG, PROJECT_ONLINE_STATUS, REQUEST_CANCELED } from '../constants'
 import { parseProjects } from '../utils/parseProjects'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
@@ -146,17 +142,7 @@ export const createNewProject = createAsyncThunk('createNewProject', ({ postData
       return result.data
     })
     .catch(error => {
-      const message =
-        error.response?.status === CONFLICT_ERROR_STATUS_CODE
-          ? `A project named "${postData.metadata.name}" already exists.`
-          : error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'Permission denied: Unable to create a project. Contact your system administrator to review user policy and data access permissions.'
-            : error.response?.status === INTERNAL_SERVER_ERROR_STATUS_CODE
-              ? error.response.data?.detail ||
-                'The system already has the maximum number of projects. An existing project must be deleted before you can create another.'
-              : error.message
-
-      return thunkAPI.rejectWithValue(message)
+      return thunkAPI.rejectWithValue(error)
     })
 })
 export const deleteProject = createAsyncThunk(
@@ -272,14 +258,7 @@ export const fetchProjects = createAsyncThunk(
       })
       .catch(error => {
         if (showNotification) {
-          showErrorNotification(
-            thunkAPI.dispatch,
-            error,
-            'Failed to fetch projects',
-            null,
-            null,
-            setRequestErrorMessage
-          )
+          showErrorNotification(thunkAPI.dispatch, error, null, null, null, setRequestErrorMessage)
         }
 
         return thunkAPI.rejectWithValue(error)
@@ -293,7 +272,8 @@ export const fetchProjectsNames = createAsyncThunk('fetchProjectsNames', (_, thu
       return projects
     })
     .catch(error => {
-      showErrorNotification(thunkAPI.dispatch, error, '', 'Failed to fetch projects')
+      showErrorNotification(thunkAPI.dispatch, error)
+
       return thunkAPI.rejectWithValue(error)
     })
 })

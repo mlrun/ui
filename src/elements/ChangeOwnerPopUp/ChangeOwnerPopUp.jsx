@@ -27,13 +27,8 @@ import Input from '../../common/Input/Input'
 import { Button, PopUpDialog } from 'igz-controls/components'
 
 import projectsIguazioApi from '../../api/projects-iguazio-api'
-import {
-  FORBIDDEN_ERROR_STATUS_CODE,
-  PRIMARY_BUTTON,
-  TERTIARY_BUTTON
-} from 'igz-controls/constants'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { deleteUnsafeHtml } from 'igz-controls/utils/string.util'
-import { getErrorMsg } from 'igz-controls/utils/common.util'
 import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
@@ -104,12 +99,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
           )
         })
         .catch(error => {
-          const customErrorMsg =
-            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'Missing edit permission for the project'
-              : getErrorMsg(error, 'Failed to edit project data')
-
-          showErrorNotification(dispatch, error, '', customErrorMsg, () => applyChanges(newOwnerId))
+          showErrorNotification(dispatch, error, '', '', () => applyChanges(newOwnerId))
         })
         .finally(handleOnClose)
     }
@@ -147,7 +137,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
       })
       setUsersList(formattedUsers)
     } catch (error) {
-      showErrorNotification(dispatch, error, 'Failed to fetch users')
+      showErrorNotification(dispatch, error)
     }
 
     resolve(formattedUsers)

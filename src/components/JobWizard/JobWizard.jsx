@@ -59,9 +59,7 @@ import {
 import {
   generateJobRequestData,
   generateJobWizardData,
-  generateJobWizardDefaultData,
-  getNewJobErrorMsg,
-  getSaveJobErrorMsg
+  generateJobWizardDefaultData
 } from './JobWizard.util'
 import {
   fetchFunctionTemplate,
@@ -149,7 +147,7 @@ const JobWizard = ({
         .unwrap()
         .then(response => setCurrentProject(response?.data))
         .catch(error => {
-          showErrorNotification(dispatch, error, 'The project failed to load')
+          showErrorNotification(dispatch, error)
         })
     }
   }, [dispatch, isEditMode, params.projectName])
@@ -348,7 +346,7 @@ const JobWizard = ({
           )
         })
         .catch(error => {
-          showErrorNotification(dispatch, error, '', getNewJobErrorMsg(error))
+          showErrorNotification(dispatch, error)
         })
     },
     [dispatch, mode, navigate, onSuccessRequest, resolveModal, isCrossProjects]
@@ -397,7 +395,7 @@ const JobWizard = ({
           )
         })
         .catch(error => {
-          showErrorNotification(dispatch, error, '', getSaveJobErrorMsg(error))
+          showErrorNotification(dispatch, error)
         })
     },
     [dispatch, mode, onSuccessRequest, resolveModal]

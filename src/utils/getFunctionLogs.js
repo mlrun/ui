@@ -88,7 +88,7 @@ export const getFunctionLogs = (
       setDetailsLogs(response.data || '')
     })
     .catch(error => {
-      showErrorNotification(dispatch, error, "Function's logs failed to load")
+      showErrorNotification(dispatch, error)
     })
 }
 
@@ -121,6 +121,6 @@ export const getFunctionNuclioLogs = (
       setDetailsLogs(response.data || '')
     })
     .catch(error => {
-      showErrorNotification(dispatch, error, "Function's logs failed to load")
+      showErrorNotification(dispatch, error)
     })
 }

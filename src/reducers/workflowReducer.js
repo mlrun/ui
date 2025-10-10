@@ -40,9 +40,15 @@ const initialState = {
   }
 }
 
-export const fetchWorkflow = createAsyncThunk('fetchWorkflow', ({ project, workflowId }) => {
-  return workflowApi.getWorkflow(project, workflowId).then(response => parseWorkflow(response.data))
-})
+export const fetchWorkflow = createAsyncThunk(
+  'fetchWorkflow',
+  ({ project, workflowId }, thunkAPI) => {
+    return workflowApi
+      .getWorkflow(project, workflowId)
+      .then(response => parseWorkflow(response.data))
+      .catch(thunkAPI.rejectWithValue)
+  }
+)
 export const fetchWorkflows = createAsyncThunk(
   'fetchWorkflows',
   async ({ project, filter, config, withPagination }, { dispatch, rejectWithValue }) => {
@@ -53,12 +59,7 @@ export const fetchWorkflows = createAsyncThunk(
     config?.ui?.setRequestErrorMessage?.('')
 
     const errorHandler = error => {
-      largeResponseCatchHandler(
-        error,
-        'Failed to fetch workflows',
-        dispatch,
-        config?.ui?.setRequestErrorMessage
-      )
+      largeResponseCatchHandler(error, null, dispatch, config?.ui?.setRequestErrorMessage)
 
       return rejectWithValue(error)
     }
@@ -93,9 +94,12 @@ export const fetchWorkflows = createAsyncThunk(
   }
 )
 
-export const rerunWorkflow = createAsyncThunk('rerunWorkflow', ({ project, workflowId }) => {
-  return workflowApi.rerunWorkflow(project, workflowId)
-})
+export const rerunWorkflow = createAsyncThunk(
+  'rerunWorkflow',
+  ({ project, workflowId }, thunkAPI) => {
+    return workflowApi.rerunWorkflow(project, workflowId).catch(thunkAPI.rejectWithValue)
+  }
+)
 
 const workflowsSlice = createSlice({
   name: 'workflowsStore',
