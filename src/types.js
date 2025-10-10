@@ -214,7 +214,7 @@ export const OPTIONS_LIST = PropTypes.arrayOf(
     disabled: PropTypes.bool,
     status: PropTypes.string,
   })
-).isRequired
+)
 
 export const PAGINATION_CONFIG = PropTypes.shape({
   [BE_PAGE_SIZE]: PropTypes.number,

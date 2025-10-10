@@ -69,7 +69,7 @@ const MultiSelectFilter = ({ optionsList, name }) => {
 
 MultiSelectFilter.propTypes = {
   name: PropTypes.string.isRequired,
-  optionsList: OPTIONS_LIST,
+  optionsList: OPTIONS_LIST.isRequired
 }
 
 export default memo(MultiSelectFilter)
