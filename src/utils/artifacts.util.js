@@ -197,9 +197,10 @@ export const processActionAfterTagUniquesValidation = ({
             throwError
           })
         )
+
+        onErrorCallback?.()
       }
 
-      onErrorCallback?.()
       hideLoader()
 
       if (throwError) throw error
