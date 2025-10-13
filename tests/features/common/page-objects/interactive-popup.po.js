@@ -1732,6 +1732,14 @@ export default {
         true
       )
     ),
+    Model_Name_Filter_Input: inputGroup(
+      generateInputGroup('[data-testid="model-name-form-field-input"]', true, false, 'svg')
+    ),
+    Model_Version_Tag_Filter_Input: inputGroup(
+      generateInputGroup('[data-testid="model-tag-form-field-input"]', true, false, 'svg')
+    ),
+    Model_Version_Tag_Filter_Field: By.css('[data-testid="model-tag-form-field-input"] > div:nth-child(2)'),
+    Model_Version_Tag_Filter_Tip: By.css('[data-testid="model-tag-form-field-input"] > div:nth-child(2) .form-field__icons svg'),
     Status_Filter_Element: By.css('[data-testid="state-form-field-select"]'),
     Status_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(

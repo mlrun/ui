@@ -85,6 +85,7 @@ export default {
   Jobs_Monitoring_Scheduled_Tab: jobsMonitoring['crossScheduledMonitorTab'],
   Jobs_Monitor_Tab_Info_Pane: infoPane['jobsMonitorTabInfoPane'],
   LLM_Prompts: llmPrompts['llmPrompts'],
+  LLM_Prompts_Info_Pane: infoPane['llmPromptsInfoPane'],
   Metrics_Selector_Popup: interactivePopup['metricsSelectorPopup'],
   ML_Function_Info_Pane: infoPane['mlFunctionInfoPane'],
   ML_Functions: Functions['mlFunctions'],
