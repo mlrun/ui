@@ -17,6 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { generateTypeFilter } from '../components/FilterMenu/filterMenu.settings'
+
 import {
   APPLICATION,
   ARTIFACTS_PAGE,
@@ -26,8 +28,8 @@ import {
   FILTER_ALL_ITEMS,
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_PAGE,
+  JOBS_MONITORING_SCHEDULED_TAB,
   JOBS_MONITORING_WORKFLOWS_TAB,
-  JOB_KIND_JOB,
   JOB_KIND_WORKFLOW,
   MODELS_PAGE,
   MONITORING_APP_PAGE,
@@ -250,7 +252,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                   counter: data.jobs || 0,
                   link: () =>
                     navigateToJobsMonitoringPage({
-                      [TYPE_FILTER]: JOB_KIND_JOB,
+                      [TYPE_FILTER]: generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB).filter(type => type.id !== JOB_KIND_WORKFLOW && type.id !== FILTER_ALL_ITEMS && !type.hidden).map(item => item.id).join(','),
                       [DATES_FILTER]: NEXT_24_HOUR_DATE_OPTION
                     })
                 },

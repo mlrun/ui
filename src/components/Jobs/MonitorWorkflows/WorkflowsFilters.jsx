@@ -21,7 +21,7 @@ import React from 'react'
 import { useForm } from 'react-final-form'
 
 import { FormInput, FormOnChange } from 'igz-controls/components'
-import StatusFilter from '../../../common/StatusFilter/StatusFilter'
+import MultiSelectFilter from '../../../common/MultiSelectFilter/MultiSelectFilter'
 
 import { LABELS_FILTER, STATUS_FILTER_NAME } from '../../../constants'
 import { workflowsStatuses } from '../../FilterMenu/filterMenu.settings'
@@ -38,7 +38,7 @@ const WorkflowsFilters = () => {
   return (
     <div>
       <div className="form-row">
-        <StatusFilter statusList={workflowsStatuses} name={STATUS_FILTER_NAME} />
+        <MultiSelectFilter optionsList={workflowsStatuses} name={STATUS_FILTER_NAME} />
       </div>
       {isDemoMode && (
         <div className="form-row">
