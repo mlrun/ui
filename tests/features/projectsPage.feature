@@ -540,7 +540,7 @@ Feature: Projects Page
         Then navigate back
         And wait load page
         When click on "Total_Job_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" wizard
-        Then verify redirection to "projects/*/jobs-monitoring/scheduled?type=job&dates=next24hours"
+        Then verify redirection to "projects/*/jobs-monitoring/scheduled?type=job%2Cspark%2Cmpijob%2Cdask%2Cdatabricks&dates=next24hours"
         Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         And wait load page

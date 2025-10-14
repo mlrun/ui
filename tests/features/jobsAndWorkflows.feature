@@ -174,6 +174,61 @@ Feature: Jobs and workflows
     @MLJW
     @passive
     @smoke
+    Scenario: MLJW092 - Check filter by Types options on Scheduled tab
+        Given open url
+        And wait load page
+        And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        When click on "Scheduled_Stats_Counter" element in "Scheduled_Stats_Container" on "Project" wizard
+        And wait load page
+        Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify "Table_Name_Filter_Input" element visibility on "Schedule_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Schedule_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Next 24 hours"
+        Then verify "Table_FilterBy_Button" element visibility on "Schedule_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        When select "Databricks" option in "Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Databricks"
+        When select "Dask" option in "Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Dask, Databricks"
+        When select "Horovod" option in "Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "3 items selected"
+        When select "Spark" option in "Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "4 items selected"
+        When select "Workflow" option in "Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "5 items selected"
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then verify "Schedule_Monitor_Table" element visibility on "Schedule_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "5 items selected"
+        When select "Job" option in "Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then verify "Schedule_Monitor_Table" element visibility on "Schedule_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        When select "Spark" option in "Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        When select "Horovod" option in "Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Spark, Horovod"
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Scheduled_Type"
+
+    @MLJW
+    @passive
+    @smoke
     Scenario: MLJW004 - Check date picker dropdown options on Jobs Monitor tab
         Given open url
         And wait load page
@@ -621,6 +676,7 @@ Feature: Jobs and workflows
     @MLJW
     @passive
     @smoke
+    #TODO: add data for verifying iteration filtering of artifacts on the Artifacts tab of the detail run
     Scenario: MLJW065 - Check all mandatory components in Item infopane on Artifacts tab on Jobs Monitor Page
         Given open url
         And wait load page
@@ -637,7 +693,7 @@ Feature: Jobs and workflows
         Then click on "Title" element on "FilterBy_Popup" wizard
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
-        When click on cell with value "trainer-train" in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        When click on cell with value "data_clean" in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -649,21 +705,46 @@ Feature: Jobs and workflows
         Then click on cell with row index 1 in "name" column in "Artifacts_Table" table on "Artifacts_Info_Pane" wizard
         Then click on "Artifact_Preview_Button" element on "Artifacts_Info_Pane" wizard
         And wait load page
-        Then verify "Preview_Row" element visibility on "Artifact_Preview_Popup" wizard
-        Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
-        Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
+        Then verify "Preview_Table" element visibility on "Preview_Popup" wizard
+        Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
+        Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+        Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
+        Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+        Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
+        Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+        Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
+        Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+        Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contains "data_clean"
+        Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
+        Then verify "Download_Button" element visibility on "Preview_Popup" wizard
+        Then click on "Download_Button" element on "Preview_Popup" wizard
         And wait load page
+        And wait load page
+        Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+        And wait load page
+        Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+        And wait load page
+        Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+        Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
+        Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+        Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
+        Then click on "Arrow_Back" element on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        When click on cell with value "trainer-train" in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        And select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Data"
         Then verify "Iterations_Dropdown" element visibility on "Artifacts_Info_Pane" wizard
         Then select "1" option in "Iterations_Dropdown" dropdown on "Artifacts_Info_Pane" wizard
         And wait load page
-        Then verify "Artifacts_Table" element visibility on "Artifacts_Info_Pane" wizard
-        Then click on cell with row index 1 in "name" column in "Artifacts_Table" table on "Artifacts_Info_Pane" wizard
-        Then click on "Artifact_Preview_Button" element on "Artifacts_Info_Pane" wizard
-        Then verify "Preview_Row" element visibility on "Artifact_Preview_Popup" wizard
-        Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
-        Then select "2" option in "Iterations_Dropdown" dropdown on "Artifacts_Info_Pane" wizard
+        Then select "5" option in "Iterations_Dropdown" dropdown on "Artifacts_Info_Pane" wizard
         And wait load page
-        Then verify "Artifacts_Table" element visibility on "Artifacts_Info_Pane" wizard
+        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Data"
     
     @MLJM
     @smoke
@@ -1271,8 +1352,29 @@ Feature: Jobs and workflows
         Then click on cell with row index 1 in "name" column in "Artifacts_Table" table on "Artifacts_Info_Pane" wizard
         Then click on "Artifact_Preview_Button" element on "Artifacts_Info_Pane" wizard
         And wait load page
-        Then verify "Preview_Row" element visibility on "Artifact_Preview_Popup" wizard
-        Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
+        Then verify "Preview_Table" element visibility on "Preview_Popup" wizard
+        Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
+        Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+        Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
+        Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+        Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
+        Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+        Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
+        Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+        Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contains "data_clean"
+        Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
+        Then verify "Download_Button" element visibility on "Preview_Popup" wizard
+        Then click on "Download_Button" element on "Preview_Popup" wizard
+        And wait load page
+        And wait load page
+        Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+        And wait load page
+        Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+        And wait load page
+        Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+        Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
+        Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+        Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
 
     @MLJW
     @passive

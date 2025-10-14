@@ -945,6 +945,17 @@ Feature: Project Monitoring Page
         Then verify "Table_FilterBy_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then "Type_All_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Job_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Workflow_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Spark_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Horovod_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Dask_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Databricks_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
         Then verify "Batch_Run_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then "Batch_Run_Button" element on "Schedule_Monitor_Tab" should contains "Batch run" value
         Then verify "Table_Refresh_Button" element visibility on "Schedule_Monitor_Tab" wizard
@@ -958,8 +969,20 @@ Feature: Project Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Next 24 hours"
         Then verify "Table_FilterBy_Button" element visibility on "Schedule_Monitor_Tab" wizard
+        Then verify "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
         Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
-        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Job"
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "5 items selected"
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then "Type_All_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Job_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Workflow_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Spark_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Horovod_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Dask_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Databricks_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
         Then verify "Batch_Run_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then "Batch_Run_Button" element on "Schedule_Monitor_Tab" should contains "Batch run" value
         Then verify "Table_Refresh_Button" element visibility on "Schedule_Monitor_Tab" wizard
@@ -973,8 +996,20 @@ Feature: Project Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Next 24 hours"
         Then verify "Table_FilterBy_Button" element visibility on "Schedule_Monitor_Tab" wizard
+        Then verify "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
         Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Workflow"
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then "Type_All_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Job_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Workflow_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Spark_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Horovod_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Dask_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Databricks_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
         Then verify "Batch_Run_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then "Batch_Run_Button" element on "Schedule_Monitor_Tab" should contains "Batch run" value
         Then verify "Table_Refresh_Button" element visibility on "Schedule_Monitor_Tab" wizard

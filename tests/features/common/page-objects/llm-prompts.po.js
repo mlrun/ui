@@ -82,6 +82,7 @@ const overallTable = {
           componentType: actionMenu,
           structure: actionMenuStructure
         },
+        preview: '.table-body__cell:nth-of-type(8) [data-testid="quick-link-artifact-preview"]'
       }
     }
   }
