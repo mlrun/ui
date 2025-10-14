@@ -52,7 +52,7 @@ const MultiSelectFilter = ({ optionsList, name }) => {
       (!currentValue.includes(FILTER_ALL_ITEMS) &&
         selectedValue.includes(FILTER_ALL_ITEMS) &&
         selectedValue.indexOf(FILTER_ALL_ITEMS) > 0) ||
-      mappedOptionsList.filter(option => option.id !== FILTER_ALL_ITEMS).length ===
+      mappedOptionsList.filter(option => option.id !== FILTER_ALL_ITEMS && !option.hidden).length ===
       selectedValue.length
     ) {
       change(name, [FILTER_ALL_ITEMS])
