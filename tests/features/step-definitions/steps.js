@@ -894,7 +894,7 @@ Then(
 Then(
   'verify visibility of header column {string} in {string} table on {string} wizard',
   async function (columnName, tableName, wizardName) {
-    const locator = pageObjects[wizardName][tableName].headerSorters[columnName]
+    const locator = pageObjects[wizardName][tableName]['headerSorters'][columnName]
     await componentIsVisible(this.driver, locator)
   }
 )

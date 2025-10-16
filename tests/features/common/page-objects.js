@@ -48,7 +48,6 @@ export default {
   Analysis_Info_Pane: infoPane['analysisInfoPane'],
   Application_Metrics: monitoringApp['applicationMetrics'],
   Application_Monitoring: monitoringApp['applicationMonitoring'],
-  Artifact_Preview_Popup: interactivePopup['artifactPreviewPopup'],
   Artifacts_Info_Pane: infoPane['artifactsInfoPane'],
   Change_Project_Owner_Popup: interactivePopup['changeProjectOwnerPopup'],
   Common_Popup: interactivePopup['commonPopup'],

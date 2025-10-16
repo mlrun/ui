@@ -203,12 +203,12 @@ Feature: LLM prompts Page
     Then verify "show_all_versions" option on "LLM_Prompts" wizard in "LLMPrompts_Table" table with "my_llm" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions" with scroll "false"
     Then click on cell with row index 1 in "name" column in "LLMPrompts_Table" table on "LLM_Prompts" wizard
     And wait load page
-    Then verify "Header" element visibility on "LM_Prompts_Info_Pane" wizard
+    Then verify "Header" element visibility on "LLM_Prompts_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "LLM_Prompts" wizard
     Then check "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then verify "Header" element not exists on "LM_Prompts_Info_Pane" wizard
+    Then verify "Header" element not exists on "LLM_Prompts_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "LLM_Prompts" wizard
     Then "Show_Iterations_Checkbox" element should be checked on "FilterBy_Popup" wizard
 
@@ -440,7 +440,6 @@ Feature: LLM prompts Page
 
   @MLLP
   @smoke
-  @uniqueTag
   Scenario: MLLP009 - Check components on prompt version history page
     Given open url
     And wait load page
@@ -478,4 +477,383 @@ Feature: LLM prompts Page
     Then verify "Header" element visibility on "LLM_Prompts_Info_Pane" wizard
     Then "Header" element on "LLM_Prompts_Info_Pane" should contains "my_llm" value
     Then click on "History_Back_Button" element on "LLM_Prompts" wizard
+    Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
+
+  @MLLP
+  @smoke
+  Scenario: MLLP010 - Verify action menu list options on main llm prompts list
+    Given open url
+    And wait load page
+    And click on row root with value "llmdeploy332" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+    Then verify breadcrumbs "project" label should be equal "llmdeploy332" value
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
+    Then verify redirection to "projects/llmdeploy332/llm-prompts?bePage=1&fePage=1"
+    Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
+    Then verify action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table with "my_llm" value in "name" column should contains "Common_Lists"."Action_Menu_List_LLM_Prompt"
+    Then select "Download" option in action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table at row with "my_llm" value in "name" column
+    And wait load page
+    And wait load page
+    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
+    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then select "View YAML" option in action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table at row with "my_llm" value in "name" column
+    Then verify if "View_YAML" popup dialog appears
+    Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+    Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+    Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+    Then select "Copy URI" option in action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table at row with "my_llm" value in "name" column
+    And wait load page
+    Then verify if "Notification_Popup" popup dialog appears
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Copied to clipboard successfully" value
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
+    Then click on cell with row index 1 in "name" column in "LLMPrompts_Table" table on "LLM_Prompts" wizard
+    And wait load page
+    Then verify "Header" element visibility on "LLM_Prompts_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "LLM_Prompts_Info_Pane" wizard
+    Then verify "Action_Menu" dropdown element on "LLM_Prompts_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List_LLM_Prompt"
+    Then select "Download" option in action menu on "LLM_Prompts_Info_Pane" wizard
+    And wait load page
+    And wait load page
+    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
+    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then select "View YAML" option in action menu on "LLM_Prompts_Info_Pane" wizard
+    Then verify if "View_YAML" popup dialog appears
+    Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+    Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+    Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+    Then select "Copy URI" option in action menu on "LLM_Prompts_Info_Pane" wizard
+    And wait load page
+    Then verify if "Notification_Popup" popup dialog appears
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Copied to clipboard successfully" value
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then click on "Cross_Close_Button" element on "LLM_Prompts_Info_Pane" wizard
+    Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
+    Then select "Add a tag" option in action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table at row with "my_llm" value in "name" column
+    And wait load page
+    Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
+    Then type value "instructions" to "Tag_Input" field on "Add_Tag_Popup" wizard
+    Then click on "Add_Button" element on "Add_Tag_Popup" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was added successfully" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Table_FilterBy_Button" element on "LLM_Prompts" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
+    Then click on "Table_FilterBy_Button" element on "LLM_Prompts" wizard
+    Then select "instructions" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    And wait load page
+    When click on cell with value "my_llm" in "name" column in "LLMPrompts_Table" table on "LLM_Prompts" wizard
+    And wait load page
+    Then check "instructions" value in "tag" column in "Overview_Table" table on "LLM_Prompts_Info_Pane" wizard
+    Then select "Add a tag" option in action menu on "LLM_Prompts_Info_Pane" wizard
+    And wait load page
+    Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
+    Then type value "criteria" to "Tag_Input" field on "Add_Tag_Popup" wizard
+    Then click on "Add_Button" element on "Add_Tag_Popup" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was added successfully" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Table_FilterBy_Button" element on "LLM_Prompts" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
+    Then click on "Table_FilterBy_Button" element on "LLM_Prompts" wizard
+    Then select "criteria" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    And wait load page
+    When click on cell with value "my_llm" in "name" column in "LLMPrompts_Table" table on "LLM_Prompts" wizard
+    And wait load page
+    Then check "criteria" value in "tag" column in "Overview_Table" table on "LLM_Prompts_Info_Pane" wizard
+
+  @MLLP
+  @smoke
+  Scenario: MLLP011 - Verify action menu list options on version history llm prompts list
+    Given open url
+    And wait load page
+    And click on row root with value "llmdeploy332" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+    Then verify breadcrumbs "project" label should be equal "llmdeploy332" value
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
+    Then verify redirection to "projects/llmdeploy332/llm-prompts?bePage=1&fePage=1"
+    Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
+    Then verify "show_all_versions" option is present on "LLM_Prompts" wizard in "LLMPrompts_Table" table with "my_llm" value in "name" column
+    Then verify "show_all_versions" option on "LLM_Prompts" wizard in "LLMPrompts_Table" table with "my_llm" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions" with scroll "false"
+    Then click on "show_all_versions" option on "LLM_Prompts" wizard in "LLMPrompts_Table" table with "my_llm" value in "name" column with scroll "false"
+    And wait load page
+    Then verify "History_Back_Button" element visibility on "LLM_Prompts" wizard
+    Then "Version_History_Prompt_Name" element on "LLM_Prompts" should contains "my_llm" value
+    Then verify "Refresh_Button" element visibility on "LLM_Prompts" wizard
+    Then verify "Table_FilterBy_Button" element visibility on "LLM_Prompts" wizard
+    Then click on "Table_FilterBy_Button" element on "LLM_Prompts" wizard
+    Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+    Then verify action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table with "1d459c52a1102adcbbe242e6bb36e99129f2a8b9" value in "uid" column should contains "Common_Lists"."Action_Menu_List_LLM_Prompt"
+    Then verify action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table with "1d459c52a1102adcbbe242e6bb36e99129f2a8b9" value in "uid" column should contains "Common_Lists"."Action_Menu_List_LLM_Prompt"
+    Then select "Download" option in action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table at row with "1d459c52a1102adcbbe242e6bb36e99129f2a8b9" value in "uid" column
+    And wait load page
+    And wait load page
+    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
+    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then select "View YAML" option in action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table at row with "1d459c52a1102adcbbe242e6bb36e99129f2a8b9" value in "uid" column
+    Then verify if "View_YAML" popup dialog appears
+    Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+    Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+    Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+    Then select "Copy URI" option in action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table at row with "1d459c52a1102adcbbe242e6bb36e99129f2a8b9" value in "uid" column
+    And wait load page
+    Then verify if "Notification_Popup" popup dialog appears
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Copied to clipboard successfully" value
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "History_Back_Button" element visibility on "LLM_Prompts" wizard
+    Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
+    When click on cell with row index 1 in "uid" column in "LLMPrompts_Table" table on "LLM_Prompts" wizard
+    And wait load page
+    Then verify "Header" element visibility on "LLM_Prompts_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "LLM_Prompts_Info_Pane" wizard
+    Then verify "Action_Menu" dropdown element on "LLM_Prompts_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List_LLM_Prompt"
+    Then select "Download" option in action menu on "LLM_Prompts_Info_Pane" wizard
+    And wait load page
+    And wait load page
+    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
+    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then select "View YAML" option in action menu on "LLM_Prompts_Info_Pane" wizard
+    Then verify if "View_YAML" popup dialog appears
+    Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+    Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+    Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+    Then select "Copy URI" option in action menu on "LLM_Prompts_Info_Pane" wizard
+    And wait load page
+    Then verify if "Notification_Popup" popup dialog appears
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Copied to clipboard successfully" value
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then click on "Cross_Close_Button" element on "LLM_Prompts_Info_Pane" wizard
+    Then verify "History_Back_Button" element visibility on "LLM_Prompts" wizard
+    Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
+    Then select "Add a tag" option in action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table at row with "1d459c52a1102adcbbe242e6bb36e99129f2a8b9" value in "uid" column
+    And wait load page
+    Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
+    Then type value "context" to "Tag_Input" field on "Add_Tag_Popup" wizard
+    Then click on "Add_Button" element on "Add_Tag_Popup" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was added successfully" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Table_FilterBy_Button" element on "LLM_Prompts" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
+    Then click on "Table_FilterBy_Button" element on "LLM_Prompts" wizard
+    Then select "context" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    And wait load page
+    When click on cell with value "1d459c52a1102adcbbe242e6bb36e99129f2a8b9" in "uid" column in "LLMPrompts_Table" table on "LLM_Prompts" wizard
+    And wait load page
+    Then check "context" value in "tag" column in "Overview_Table" table on "LLM_Prompts_Info_Pane" wizard
+    Then select "Add a tag" option in action menu on "LLM_Prompts_Info_Pane" wizard
+    And wait load page
+    Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
+    Then type value "Final_Answer" to "Tag_Input" field on "Add_Tag_Popup" wizard
+    Then click on "Add_Button" element on "Add_Tag_Popup" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was added successfully" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Table_FilterBy_Button" element on "LLM_Prompts" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
+    Then click on "Table_FilterBy_Button" element on "LLM_Prompts" wizard
+    Then select "Final_Answer" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    And wait load page
+    When click on cell with value "1d459c52a1102adcbbe242e6bb36e99129f2a8b9" in "uid" column in "LLMPrompts_Table" table on "LLM_Prompts" wizard
+    And wait load page
+    Then check "Final_Answer" value in "tag" column in "Overview_Table" table on "LLM_Prompts_Info_Pane" wizard
+
+  @MLLP
+  @smoke
+  #TODO: verify 'Add a Tag' behavior in Version History page when overwriting an existing prompt instance
+  Scenario: MLLP012 - Verify overwrite Add a tag option in action menu on llm prompts list
+  Given open url
+    And wait load page
+    And click on row root with value "llmdeploy332" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+    Then verify breadcrumbs "project" label should be equal "llmdeploy332" value
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
+    Then verify redirection to "projects/llmdeploy332/llm-prompts?bePage=1&fePage=1"
+    Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
+    Then select "Add a tag" option in action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table at row with "my_llm" value in "name" column
+    And wait load page
+    Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
+    Then type value "latest" to "Tag_Input" field on "Add_Tag_Popup" wizard
+    Then click on "Add_Button" element on "Add_Tag_Popup" wizard
+    And wait load page
+    Then verify "Add_Button" element on "Add_Tag_Popup" wizard is disabled
+    Then type value "system" to "Tag_Input" field on "Add_Tag_Popup" wizard
+    Then click on "Add_Button" element on "Add_Tag_Popup" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was added successfully" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then select "Add a tag" option in action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table at row with "my_llm" value in "name" column
+    And wait load page
+    Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
+    Then type value "system" to "Tag_Input" field on "Add_Tag_Popup" wizard
+    Then click on "Add_Button" element on "Add_Tag_Popup" wizard
+    Then verify if "Confirm_Popup" popup dialog appears
+    Then "Title" element on "Confirm_Popup" should contains "Overwrite LLM prompt?" value
+    Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
+    Then verify "Confirm_Dialog_Message" element visibility on "Confirm_Popup" wizard
+    Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Descriptions"."Add_A_Tag_Overwrite_Message"
+    Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
+    Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
+    Then verify "Overwrite_Button" element visibility on "Confirm_Popup" wizard
+    Then "Overwrite_Button" element on "Confirm_Popup" should contains "Overwrite" value
+    When click on "Cancel_Button" element on "Confirm_Popup" wizard
+    Then select "Add a tag" option in action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table at row with "my_llm" value in "name" column
+    And wait load page
+    Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
+    Then type value "system" to "Tag_Input" field on "Add_Tag_Popup" wizard
+    Then click on "Add_Button" element on "Add_Tag_Popup" wizard
+    Then verify if "Confirm_Popup" popup dialog appears
+    Then "Title" element on "Confirm_Popup" should contains "Overwrite LLM prompt?" value
+    Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
+    Then verify "Confirm_Dialog_Message" element visibility on "Confirm_Popup" wizard
+    Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Descriptions"."Add_A_Tag_Overwrite_Message"
+    Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
+    Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
+    Then verify "Overwrite_Button" element visibility on "Confirm_Popup" wizard
+    Then "Overwrite_Button" element on "Confirm_Popup" should contains "Overwrite" value
+    When click on "Overwrite_Button" element on "Confirm_Popup" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was added successfully" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+
+  @MLLP
+  @smoke
+  Scenario: MLLP013 - Verify prompt preview option on the main an version history llm prompts lists
+    Given open url
+    And wait load page
+    And click on row root with value "llmdeploy332" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+    Then verify breadcrumbs "project" label should be equal "llmdeploy332" value
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
+    Then verify redirection to "projects/llmdeploy332/llm-prompts?bePage=1&fePage=1"
+    Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
+    Then verify "preview" option is present on "LLM_Prompts" wizard in "LLMPrompts_Table" table with "my_llm" value in "name" column
+    Then click on "preview" option on "LLM_Prompts" wizard in "LLMPrompts_Table" table with "my_llm" value in "name" column with scroll "false"
+    And wait load page
+    Then verify if "Preview_Popup" popup dialog appears
+    Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
+    Then verify "Preview_Modal_Container" element visibility on "Preview_Popup" wizard
+    Then verify "Download_Button" element visibility on "Preview_Popup" wizard
+    Then click on "Download_Button" element on "Preview_Popup" wizard
+    And wait load page
+    And wait load page
+    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
+    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
+    Then verify "show_all_versions" option is present on "LLM_Prompts" wizard in "LLMPrompts_Table" table with "my_llm" value in "name" column
+    Then click on "show_all_versions" option on "LLM_Prompts" wizard in "LLMPrompts_Table" table with "my_llm" value in "name" column with scroll "false"
+    And wait load page
+    Then verify "History_Back_Button" element visibility on "LLM_Prompts" wizard
+    Then "Version_History_Prompt_Name" element on "LLM_Prompts" should contains "my_llm" value
+    Then verify "preview" option is present on "LLM_Prompts" wizard in "LLMPrompts_Table" table with "1d459c52a1102adcbbe242e6bb36e99129f2a8b9" value in "uid" column
+    Then click on "preview" option on "LLM_Prompts" wizard in "LLMPrompts_Table" table with "1d459c52a1102adcbbe242e6bb36e99129f2a8b9" value in "uid" column with scroll "false"
+    And wait load page
+    Then verify if "Preview_Popup" popup dialog appears
+    Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
+    Then verify "Preview_Modal_Container" element visibility on "Preview_Popup" wizard
+    Then verify "Download_Button" element visibility on "Preview_Popup" wizard
+    Then click on "Download_Button" element on "Preview_Popup" wizard
+    And wait load page
+    And wait load page
+    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
+    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
     Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard

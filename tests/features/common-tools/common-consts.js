@@ -594,7 +594,9 @@ export default {
     Delete_Scheduled_Job:
       /Are you sure you want to delete the scheduled job "[^"]+[$"]\? Deleted scheduled jobs can not be restored\./,
     Delete_Feature:
-      /You try to delete feature "[^"]+[$"] from vector "[^"]+[$"]\. The feature could be added back later./
+      /You try to delete feature "[^"]+[$"] from vector "[^"]+[$"]\. The feature could be added back later./,
+    Add_A_Tag_Overwrite_Message:
+      /That combination of name and tag is already in use in an existing (artifact|dataset|plotly|LLM prompt)\. If you proceed, the existing (artifact|dataset|plotly|LLM prompt) will be overwritten/
   },
   Messages: {
     How_To_Create:
@@ -824,8 +826,5 @@ export default {
     No_Models_data: 'No data matches the filter: "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"',
     No_Pods_data: 'Pods not found, it is likely because Kubernetes removed these pods listing',
     No_Pods_data_Completion: 'Pods not found, it is likely because Kubernetes removed these pods listing after their completion'
-  },
-  Preview_Pop_Up: {
-    Table_Header: ['Name', 'Path', 'Size', 'Updated']
   }
 }

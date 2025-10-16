@@ -40048,7 +40048,7 @@
         "tag": "latest"
       },
       "spec": {
-        "target_path": "v3io:///projects/llmdeploy332/artifacts/my_llm",
+        "target_path": "v3io:///projects/llmdeploy332/artifacts/my_llm.json",
         "size": 262,
         "license": "",
         "invocation_config": {

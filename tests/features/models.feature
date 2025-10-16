@@ -680,10 +680,19 @@ Feature: Models Page
       Then verify "Pop_Out_Button" element visibility on "Models_Info_Pane" wizard 
       Then click on "Pop_Out_Button" element on "Models_Info_Pane" wizard
       And wait load page
-      Then verify "Preview_Row" element visibility on "Artifact_Preview_Popup" wizard
-      Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
-      Then check "download_btn" visibility in "Preview_Row" on "Artifact_Preview_Popup" wizard with 1 offset
-      Then click on "Download_Button" element on "Artifact_Preview_Popup" wizard
+      Then verify "Preview_Table" element visibility on "Preview_Popup" wizard
+      Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
+      Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+      Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
+      Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+      Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
+      Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+      Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
+      Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+      Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contains "transaction_fraud_xgboost"
+      Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
+      Then verify "Download_Button" element visibility on "Preview_Popup" wizard
+      Then click on "Download_Button" element on "Preview_Popup" wizard
       And wait load page
       And wait load page
       Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
@@ -693,7 +702,7 @@ Feature: Models Page
       Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
       Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
       Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
-      Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
+      Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
 
   @MLM
   @passive

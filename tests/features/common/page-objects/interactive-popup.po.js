@@ -115,35 +115,26 @@ const deployModelTable = {
   }
 }
 
-const artifactsPreviewRow = {
-  root: '.pop-up-dialog .preview-body',
+const artifactsPreviewTable = {
+  root: '.pop-up-dialog .item-artifacts__modal-preview',
   header: {
-    root: '',
-    sorters: {}
+    root: '.preview-item:nth-of-type(1)',
+    sorters: {
+      name: '.item-data__header:nth-of-type(1)',
+      path: '.item-data__path',
+      size: '.item-data__header:nth-of-type(3)',
+      updated: '.item-data__header:nth-of-type(4)'
+    }
   },
   body: {
     row: {
-      root: '.preview-item',
+      root: '.preview-item:nth-of-type(2)',
       fields: {
         name: '.item-data__name',
         path: '.item-data__path',
         size: '.item-data:nth-of-type(3)',
         data: '.item-data:nth-of-type(4)',
         download_btn: '.preview-body__download'
-      }
-    }
-  }
-}
-
-const artifactsPreviewHeader = {
-  root: '.pop-up-dialog',
-  header: {},
-  body: {
-    root: '.preview-body',
-    row: {
-      root: '.preview-item:nth-of-type(1)',
-      fields: {
-        key: '.item-data'
       }
     }
   }
@@ -1464,6 +1455,7 @@ export default {
   previewPopup: {
     Title: By.css('.pop-up-dialog .pop-up-dialog__header'),
     Cross_Cancel_Button: commonCrossCancelButton,
+    Preview_Table: commonTable(artifactsPreviewTable),
     Preview_Modal_Container: By.css('.pop-up-dialog .item-artifacts__modal-preview'),
     Download_Button: By.css('.pop-up-dialog .preview-item:nth-of-type(2) .preview-body__download')
   },
@@ -1633,14 +1625,6 @@ export default {
     ),
     Schedule_Button: By.css('.feature-set-panel__schedule .btn__schedule')
   },
-  artifactPreviewPopup: {
-    Cross_Cancel_Button: commonCrossCancelButton,
-    Preview_Row: commonTable(artifactsPreviewRow),
-    Preview_Header: commonTable(artifactsPreviewHeader),
-    Download_Button: By.css(
-      '.pop-up-dialog .preview-body .preview-item:nth-of-type(2) .preview-body__download'
-    )
-  },
   removeMemberPopup: {
     Title: By.css('.delete-member__pop-up .pop-up-dialog__header-text'),
     Remove_Member_Button: By.css('.delete-member__pop-up .btn-danger')
@@ -1748,11 +1732,12 @@ export default {
         '[data-testid="select-body"] label'
       )
     ),
+    Type_Filter_Element: By.css('[data-testid="type-form-field-select"]'),
     Type_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
         '[data-testid="type-form-field-select"]',
         '[data-testid="select-header"]',
-        '.options-list .select__item:not(.hidden) .tooltip-wrapper'
+        '.select__item.multiple:not(.hidden) label'
       )
     ),
     Show_Iterations_Checkbox: checkboxComponent({
@@ -1768,6 +1753,62 @@ export default {
       elements: {
         checkbox: '',
         name: '',
+        icon: ''
+      }
+    }),
+    Type_All_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(1)',
+      elements: {
+        checkbox: 'input',
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Type_Job_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(2)',
+      elements: {
+        checkbox: 'input',
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Type_Workflow_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(3)',
+      elements: {
+        checkbox: 'input',
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Type_Spark_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(7)',
+      elements: {
+        checkbox: 'input',
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Type_Horovod_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(8)',
+      elements: {
+        checkbox: 'input',
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Type_Dask_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(9)',
+      elements: {
+        checkbox: 'input',
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Type_Databricks_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(10)',
+      elements: {
+        checkbox: 'input',
+        name: 'label',
         icon: ''
       }
     }),
