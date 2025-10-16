@@ -17,8 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useLayoutEffect, useMemo, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { defaultsDeep, isEmpty } from 'lodash'
 
@@ -49,7 +49,6 @@ import {
   parseWorkflowsQueryParamsCallback
 } from '../../utils/jobs.util'
 import { useJobsPageData } from '../../hooks/useJobsPageData'
-import { fetchProjects } from '../../reducers/projectReducer'
 
 import './projectsJobsMonitoring.scss'
 
@@ -72,9 +71,6 @@ const ProjectsJobsMonitoring = () => {
   const workflowsStore = useSelector(store => store.workflowsStore)
   const functionsStore = useSelector(store => store.functionsStore)
   const filtersStore = useSelector(store => store.filtersStore)
-  const [, setProjectsRequestErrorMessage] = useState('')
-  const projectStore = useSelector(state => state.projectStore)
-  const dispatch = useDispatch()
 
   const jobsFiltersConfig = useMemo(
     () => getJobsFiltersConfig(params.jobName, true),
