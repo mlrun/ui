@@ -142,21 +142,6 @@ const ProjectsJobsMonitoring = () => {
     navigate(`/projects/*/${JOBS_MONITORING_PAGE}/${tabName}`)
   }
 
-  const fetchMinimalProjects = useCallback(() => {
-    dispatch(
-      fetchProjects({
-        params: { format: 'minimal' },
-        setRequestErrorMessage: setProjectsRequestErrorMessage
-      })
-    )
-  }, [dispatch])
-
-  useEffect(() => {
-    if (isEmpty(projectStore.projectsNames.data)) {
-      fetchMinimalProjects()
-    }
-  }, [fetchMinimalProjects, projectStore.projectsNames.data])
-
   useLayoutEffect(() => {
     setSelectedTab(
       location.pathname.includes(JOBS_MONITORING_WORKFLOWS_TAB)
