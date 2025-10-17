@@ -136,7 +136,7 @@ export const fetchModelEndpointMetricsValues = createAsyncThunk(
       .catch(error => {
         largeResponseCatchHandler(
           error,
-          'Failed to fetch metrics',
+          null,
           thunkAPI.dispatch,
           setRequestErrorMessage
         )

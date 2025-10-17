@@ -46,6 +46,6 @@ export const fetchAndParseFunction = (selectedFunction, dispatch) => {
       return parseFunction(func, selectedFunction.project.project)
     })
     .catch(error => {
-      showErrorNotification(dispatch, error, '', 'Failed to retrieve function data')
+      showErrorNotification(dispatch, error)
     })
 }

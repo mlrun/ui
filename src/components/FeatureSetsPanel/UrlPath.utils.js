@@ -190,7 +190,7 @@ export const getArtifacts = (dispatch, project, projectItemType, setArtifacts) =
       }
     })
     .catch(error => {
-      showErrorNotification(dispatch, error, '', 'Failed to fetch artifacts')
+      showErrorNotification(dispatch, error)
     })
 }
 
@@ -203,6 +203,6 @@ export const getArtifact = (dispatch, project, artifact, setArtifactsReferences)
       }
     })
     .catch(error => {
-      showErrorNotification(dispatch, error, '', 'Failed to fetch artifact data')
+      showErrorNotification(dispatch, error)
     })
 }

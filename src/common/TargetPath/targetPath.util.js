@@ -371,9 +371,6 @@ export const getArtifacts = debounce((dispatch, project, storePathType, setDataI
         artifacts: generateArtifactsList(artifacts ?? [])
       }))
     })
-    .catch(error => {
-      showErrorNotification(dispatch, error, '', 'Failed to fetch artifacts')
-    })
 }, 300)
 
 export const getFeatureVectors = debounce((dispatch, project, setDataInputState) => {
@@ -408,7 +405,7 @@ export const getArtifact = debounce((dispatch, project, projectItem, setDataInpu
       }
     })
     .catch(error => {
-      showErrorNotification(dispatch, error, '', 'Failed to fetch artifact data')
+      showErrorNotification(dispatch, error)
     })
 }, 300)
 
@@ -435,7 +432,7 @@ export const getFeatureVector = debounce((dispatch, project, projectItem, setDat
       }))
     })
     .catch(error => {
-      showErrorNotification(dispatch, error, '', 'Failed to fetch feature vector data')
+      showErrorNotification(dispatch, error)
     })
 }, 300)
 

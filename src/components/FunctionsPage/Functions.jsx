@@ -412,7 +412,7 @@ const Functions = ({ isAllVersions = false }) => {
           refreshFunctions(functionsFilters)
         })
         .catch(error => {
-          showErrorNotification(dispatch, error, 'Failed to build and run function.', '', () => {
+          showErrorNotification(dispatch, error, null, '', () => {
             buildAndRunFunc(func)
           })
         })
@@ -577,7 +577,7 @@ const Functions = ({ isAllVersions = false }) => {
       if (functions) {
         const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
-        showErrorNotification(dispatch, error, '', 'Failed to deploy the function')
+        showErrorNotification(dispatch, error)
 
         if (currentItem) {
           // todo need better logic for searching currentItem for cases when the function has no tag

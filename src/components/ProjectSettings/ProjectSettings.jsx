@@ -113,7 +113,7 @@ const ProjectSettings = () => {
       return projectsIguazioApi
         .getProjectMembers(projectId)
         .then(membersResponse => generateMembers(membersResponse, membersDispatch, owner))
-        .catch(error => showErrorNotification(dispatch, error, 'Failed to fetch project members'))
+        .catch(error => showErrorNotification(dispatch, error))
     },
     [dispatch]
   )

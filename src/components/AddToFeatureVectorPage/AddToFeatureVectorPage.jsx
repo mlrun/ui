@@ -132,12 +132,7 @@ const AddToFeatureVectorPage = () => {
           navigateToFeatureVectorsScreen(response?.data)
         })
         .catch(error => {
-          const customErrorMsg =
-            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'You do not have permission to create a feature vector'
-              : 'Feature vector creation failed'
-
-          showErrorNotification(dispatch, error, '', customErrorMsg, () =>
+          showErrorNotification(dispatch, error, null, null, () =>
             handleCreateFeatureVector(featureVector)
           )
 

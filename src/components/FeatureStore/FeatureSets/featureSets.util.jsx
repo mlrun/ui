@@ -132,7 +132,7 @@ export const setFullSelectedFeatureSet = debounce(
         })
         .catch(error => {
           navigate(`/projects/${project}/${tab}`, { replace: true })
-          showErrorNotification(dispatch, error, '', 'Failed to retrieve feature set data.')
+          showErrorNotification(dispatch, error)
         })
     }
   },
@@ -151,6 +151,6 @@ export const chooseOrFetchFeatureSet = (dispatch, selectedFeatureSet, featureSet
   )
     .unwrap()
     .catch(error => {
-      showErrorNotification(dispatch, error, 'Failed to retrieve feature set data.')
+      showErrorNotification(dispatch, error)
     })
 }

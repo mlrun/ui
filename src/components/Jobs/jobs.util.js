@@ -303,7 +303,7 @@ export const handleAbortJob = (
       }
     })
     .catch(error => {
-      showErrorNotification(dispatch, error, 'Failed to abort job', '', () =>
+      showErrorNotification(dispatch, error, '', '', () =>
         handleAbortJob(
           job,
           setNotification,
@@ -429,7 +429,7 @@ export const enrichRunWithFunctionFields = (dispatch, jobRun, fetchJobFunctionsP
       return jobRun
     })
     .catch(error => {
-      showErrorNotification(dispatch, error, 'Failed to fetch function tag', '')
+      showErrorNotification(dispatch, error)
     })
 }
 
@@ -456,7 +456,7 @@ export const handleDeleteJob = (
       )
     })
     .catch(error => {
-      showErrorNotification(dispatch, error, 'Deleting job failed', '', () =>
+      showErrorNotification(dispatch, error, '', '', () =>
         handleDeleteJob(
           isDeleteAll,
           job,

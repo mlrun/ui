@@ -31,8 +31,6 @@ import { Button, ConfirmDialog, RoundedIcon, Tip } from 'igz-controls/components
 
 import { TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
-import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import { getErrorMsg } from 'igz-controls/utils/common.util'
 import { getRoleOptions, initialNewMembersRole, DELETE_MODIFICATION } from './membersPopUp.util'
 import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
 import { membersActions } from './membersReducer'
@@ -196,12 +194,7 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
         changeMembersCallback(response.data.data.id, validMember || userIsProjectSecurityAdmin)
       })
       .catch(error => {
-        const customErrorMsg =
-          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'Missing edit permission for the project'
-            : getErrorMsg(error, 'Failed to edit project data')
-
-        showErrorNotification(dispatch, error, '', customErrorMsg, () => applyMembersChanges())
+        showErrorNotification(dispatch, error, '', '', () => applyMembersChanges())
       })
 
     handleOnClose()
@@ -282,7 +275,7 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
         setNewMembersSuggestionList(suggestionList)
       })
       .catch(error => {
-        showErrorNotification(dispatch, error, 'Failed to fetch users')
+        showErrorNotification(dispatch, error)
       })
   }, 400)
 

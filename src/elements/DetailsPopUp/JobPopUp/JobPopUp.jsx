@@ -118,7 +118,7 @@ const JobPopUp = ({ isOpen, jobData, onResolve }) => {
         }
       })
       .catch(error => {
-        showErrorNotification(dispatch, error, '', 'Failed to retrieve job data')
+        showErrorNotification(dispatch, error)
         onResolve()
       })
   }, [dispatch, jobData.iter, jobData.project, jobData.uid, onResolve])

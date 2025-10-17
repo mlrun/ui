@@ -455,7 +455,7 @@ const Functions = () => {
           refreshFunctions(functionsFilters)
         })
         .catch(error => {
-          showErrorNotification(dispatch, error, 'Failed to build and run function.', '', () => {
+          showErrorNotification(dispatch, error, null, '', () => {
             buildAndRunFunc(func)
           })
         })
@@ -645,7 +645,7 @@ const Functions = () => {
       if (functions) {
         const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
-        showErrorNotification(dispatch, error, '', 'Failed to deploy the function')
+        showErrorNotification(dispatch, error)
 
         if (currentItem) {
           navigate(

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { get } from 'lodash'
 
 import { defaultPendingHandler, defaultRejectedHandler } from './redux.util'
@@ -51,7 +51,7 @@ const initialState = {
 
 export const fetchMEPWithDetections = createAsyncThunk(
   'fetchMEPWithDetections',
-  ({ project, filters }) => {
+  ({ project, filters }, thunkAPI) => {
     const params = {
       start: filters[DATES_FILTER].value[0].getTime()
     }
@@ -63,22 +63,25 @@ export const fetchMEPWithDetections = createAsyncThunk(
     const savedStartDate = filters[DATES_FILTER].value[0].getTime()
     const savedEndDate = (filters[DATES_FILTER].value[1] || new Date()).getTime()
 
-    return monitoringApplicationsApi.getMEPWithDetections(project, params).then(response => {
-      return {
-        values: response.data.values.map(([date, suspected, detected]) => [
-          date,
-          suspected + detected
-        ]),
-        start: savedStartDate,
-        end: savedEndDate
-      }
-    })
+    return monitoringApplicationsApi
+      .getMEPWithDetections(project, params)
+      .then(response => {
+        return {
+          values: response.data.values.map(([date, suspected, detected]) => [
+            date,
+            suspected + detected
+          ]),
+          start: savedStartDate,
+          end: savedEndDate
+        }
+      })
+      .catch(thunkAPI.rejectWithValue)
   }
 )
 
 export const fetchMonitoringApplication = createAsyncThunk(
   'fetchMonitoringApplication',
-  ({ project, functionName, filters }) => {
+  ({ project, functionName, filters }, thunkAPI) => {
     const params = {
       start: filters[DATES_FILTER].value[0].getTime()
     }
@@ -90,53 +93,59 @@ export const fetchMonitoringApplication = createAsyncThunk(
     return monitoringApplicationsApi
       .getMonitoringApplication(project, functionName, params)
       .then(response => response.data)
+      .catch(thunkAPI.rejectWithValue)
   }
 )
 
 export const fetchMonitoringApplications = createAsyncThunk(
   'fetchMonitoringApplications',
-  async ({ project, filters }) => {
-    const params = {
-      start: filters[DATES_FILTER].value[0].getTime()
-    }
-
-    if (filters[DATES_FILTER].value[1]) {
-      params.end = filters[DATES_FILTER].value[1].getTime()
-    }
-
-    const [mlrunResult, nuclioResult] = await Promise.allSettled([
-      monitoringApplicationsApi.getMonitoringApplications(project, params),
-      nuclioApi.getFunctions(project)
-    ])
-
-    if (mlrunResult.status !== 'fulfilled') {
-      throw new Error(mlrunResult.reason)
-    }
-
-    const mlrunApiApps = get(mlrunResult, 'value.data')
-    const nuclioApiApps = get(nuclioResult, 'value.data')
-
-    const splitApps = splitApplicationsContent(mlrunApiApps)
-
-    const applications = splitApps.applications.map(mlrunApp => {
-      const match = nuclioApiApps[`${mlrunApp.project_name}-${mlrunApp.name}`]
-
-      return {
-        ...mlrunApp,
-        status: match?.status?.state ?? mlrunApp.status
+  async ({ project, filters }, thunkAPI) => {
+    try {
+      const params = {
+        start: filters[DATES_FILTER].value[0].getTime()
       }
-    })
 
-    return { ...splitApps, applications }
+      if (filters[DATES_FILTER].value[1]) {
+        params.end = filters[DATES_FILTER].value[1].getTime()
+      }
+
+      const [mlrunResult, nuclioResult] = await Promise.allSettled([
+        monitoringApplicationsApi.getMonitoringApplications(project, params),
+        nuclioApi.getFunctions(project)
+      ])
+
+      if (mlrunResult.status !== 'fulfilled') {
+        throw mlrunResult.reason
+      }
+
+      const mlrunApiApps = get(mlrunResult, 'value.data', {})
+      const nuclioApiApps = get(nuclioResult, 'value.data', {})
+
+      const splitApps = splitApplicationsContent(mlrunApiApps)
+
+      const applications = splitApps.applications.map(mlrunApp => {
+        const match = nuclioApiApps[`${mlrunApp.project_name}-${mlrunApp.name}`]
+
+        return {
+          ...mlrunApp,
+          status: match?.status?.state ?? mlrunApp.status
+        }
+      })
+
+      return { ...splitApps, applications }
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error)
+    }
   }
 )
 
 export const fetchMonitoringApplicationsSummary = createAsyncThunk(
   'fetchMonitoringApplicationsSummary',
-  ({ project }) => {
+  ({ project }, thunkAPI) => {
     return monitoringApplicationsApi
       .getMonitoringApplicationsSummary(project)
       .then(response => response.data)
+      .catch(thunkAPI.rejectWithValue)
   }
 )
 

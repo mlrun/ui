@@ -34,10 +34,8 @@ import {
   EDIT_PROJECT_SECRET
 } from './ProjectSettingsSecrets.utils'
 import projectApi from '../../api/projects-api'
-import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { areFormValuesChanged, setFieldState } from 'igz-controls/utils/form.util'
 import { fetchProjectSecrets, removeProjectData } from '../../reducers/projectReducer'
-import { getErrorMsg } from 'igz-controls/utils/common.util'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
@@ -62,12 +60,7 @@ const ProjectSettingsSecrets = ({ setNotification }) => {
     dispatch(fetchProjectSecrets({ project: params.projectName }))
       .unwrap()
       .catch(error => {
-        const customErrorMsg =
-          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'Permission denied'
-            : getErrorMsg(error, 'Failed to fetch project data')
-
-        showErrorNotification(dispatch, error, '', customErrorMsg, () => {
+        showErrorNotification(dispatch, error, '', '', () => {
           fetchSecrets()
         })
       })
@@ -123,7 +116,7 @@ const ProjectSettingsSecrets = ({ setNotification }) => {
           )
         })
         .catch(error => {
-          showErrorNotification(dispatch, error, 'Failed to update secrets')
+          showErrorNotification(dispatch, error)
           fetchSecrets()
         })
         .finally(() => setModifyingIsInProgress(false))

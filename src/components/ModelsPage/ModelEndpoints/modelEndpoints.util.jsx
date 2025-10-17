@@ -118,6 +118,6 @@ export const chooseOrFetchModelEndpoint = (dispatch, selectedModelEndpoint, mode
   )
     .unwrap()
     .catch(error => {
-      showErrorNotification(dispatch, error, '', 'Failed to retrieve model endpoint data')
+      showErrorNotification(dispatch, error)
     })
 }

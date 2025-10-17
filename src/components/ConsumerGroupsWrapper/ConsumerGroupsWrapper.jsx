@@ -58,7 +58,7 @@ const ConsumerGroupsWrapper = () => {
       showErrorNotification(
         dispatch,
         v3ioStreams.error,
-        'Failed to fetch v3io streams',
+        null,
         '',
         refreshConsumerGroups,
         setRequestErrorMessage

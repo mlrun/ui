@@ -19,7 +19,6 @@ such restriction.
 */
 import { FUNCTION_TYPE_JOB, PANEL_DEFAULT_ACCESS_KEY } from '../constants'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import functionsApi from '../api/functions-api'
 import { hideLoading, showLoading } from './redux.util'
 import mlrunNuclioApi from '../api/mlrun-nuclio-api'
@@ -87,12 +86,7 @@ export const createNewFunction = createAsyncThunk(
   'createNewFunction',
   ({ project, data }, thunkAPI) => {
     return functionsApi.createNewFunction(project, data).catch(error => {
-      const message =
-        error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-          ? 'You do not have permission to create a new function'
-          : error.message
-
-      thunkAPI.rejectWithValue(message)
+      return thunkAPI.rejectWithValue(error)
     })
   }
 )
@@ -145,8 +139,9 @@ export const fetchFunctionTemplate = createAsyncThunk(
         }
       })
       .catch(error => {
-        showErrorNotification(thunkAPI.dispatch, error, "Function's template failed to load")
-        thunkAPI.rejectWithValue(error)
+        showErrorNotification(thunkAPI.dispatch, error)
+
+        return thunkAPI.rejectWithValue(error)
       })
   }
 )
@@ -165,10 +160,11 @@ export const fetchFunctions = createAsyncThunk(
       .catch(error => {
         largeResponseCatchHandler(
           error,
-          'Failed to fetch functions',
+          null,
           thunkAPI.dispatch,
           setRequestErrorMessageLocal
         )
+
         return thunkAPI.rejectWithValue(error)
       })
   }
@@ -193,8 +189,9 @@ export const fetchHubFunction = createAsyncThunk(
         return response.data
       })
       .catch(error => {
-        showErrorNotification(thunkAPI.dispatch, error, 'The function failed to load')
-        thunkAPI.rejectWithValue(error)
+        showErrorNotification(thunkAPI.dispatch, error)
+
+        return thunkAPI.rejectWithValue(error)
       })
   }
 )
@@ -211,11 +208,12 @@ export const fetchHubFunctions = createAsyncThunk(
       .catch(error => {
         largeResponseCatchHandler(
           error,
-          'Failed to fetch functions',
+          null,
           thunkAPI.dispatch,
           setRequestErrorMessage
         )
-        thunkAPI.rejectWithValue(error)
+
+        return thunkAPI.rejectWithValue(error)
       })
   }
 )

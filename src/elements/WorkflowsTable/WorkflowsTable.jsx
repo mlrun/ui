@@ -218,7 +218,7 @@ const WorkflowsTable = React.forwardRef(
       )
         .unwrap()
         .catch(error => {
-          showErrorNotification(dispatch, error, 'Failed to fetch workflow')
+          showErrorNotification(dispatch, error)
           navigate(backLink, {
             replace: true
           })
@@ -465,7 +465,7 @@ const WorkflowsTable = React.forwardRef(
             )
           })
           .catch(error => {
-            showErrorNotification(dispatch, error, 'Workflow did not run successfully', '', () =>
+            showErrorNotification(dispatch, error, '', '', () =>
               handleRerun(workflow)
             )
           })
@@ -546,8 +546,8 @@ const WorkflowsTable = React.forwardRef(
     }, [workflowsStore.activeWorkflow.data.graph, findSelectedWorkflowFunction])
 
     const handleCatchRequest = useCallback(
-      (error, message) => {
-        showErrorNotification(dispatch, error, message, '')
+      error => {
+        showErrorNotification(dispatch, error)
         navigate(
           location.pathname
             .split('/')
@@ -607,7 +607,7 @@ const WorkflowsTable = React.forwardRef(
                 setItemIsSelected(true)
                 setSelectedJob({})
               })
-              .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
+              .catch(error => handleCatchRequest(error))
           }
         } else if (
           workflow.graph &&
@@ -634,7 +634,7 @@ const WorkflowsTable = React.forwardRef(
               setItemIsSelected(true)
               setSelectedJob({})
             })
-            .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
+            .catch(error => handleCatchRequest(error))
         }
       }
     }, [

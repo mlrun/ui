@@ -76,15 +76,9 @@ import {
   parameterTypeStr,
   parameterTypeValueMap
 } from '../../elements/FormParametersTable/formParametersTable.util'
-import {
-  CONFLICT_ERROR_STATUS_CODE,
-  FORBIDDEN_ERROR_STATUS_CODE,
-  NOTFOUND_ERROR_STATUS_CODE
-} from 'igz-controls/constants'
 import { convertChipsData, parseChipsData } from '../../utils/convertChipsData'
 import { generateObjectFromKeyValue, parseObjectToKeyValue } from 'igz-controls/utils/form.util'
 import { getDefaultSchedule, scheduleDataInitialState } from '../SheduleWizard/scheduleWizard.util'
-import { getErrorDetail } from 'igz-controls/utils/common.util'
 import { getPreemptionMode } from '../../utils/getPreemptionMode'
 import { trimSplit } from 'igz-controls/utils/string.util'
 
@@ -1140,22 +1134,6 @@ export const generateJobRequestData = (
   }
 
   return postData
-}
-
-export const getNewJobErrorMsg = error => {
-  return error.response.status === NOTFOUND_ERROR_STATUS_CODE
-    ? 'To run a job, the selected function needs to be built. Make sure to build the function before running the job.'
-    : error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-      ? 'You do not have permission to run a new job.'
-      : error.response.status === CONFLICT_ERROR_STATUS_CODE
-        ? 'This job is already scheduled'
-        : getErrorDetail(error) || 'Unable to create a new job.'
-}
-
-export const getSaveJobErrorMsg = error => {
-  return error?.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-    ? 'You do not have permission to run a new job.'
-    : getErrorDetail(error) || 'Unable to save the job.'
 }
 
 /**

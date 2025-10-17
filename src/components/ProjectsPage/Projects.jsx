@@ -39,7 +39,7 @@ import { BG_TASK_RUNNING } from '../../utils/poll.util'
 import { PROJECT_ONLINE_STATUS } from '../../constants'
 import { ConfirmDialog } from 'igz-controls/components'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { FORBIDDEN_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { fetchBackgroundTasks } from '../../reducers/tasksReducer'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
@@ -209,12 +209,7 @@ const Projects = () => {
           fetchMinimalProjects()
         })
         .catch(error => {
-          const customErrorMsg =
-            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? `You don't have rights to archive project ${project.metadata.name}`
-              : `Failed to archive project ${project.metadata.name}`
-
-          showErrorNotification(dispatch, error, '', customErrorMsg, () =>
+          showErrorNotification(dispatch, error, '', null, () =>
             handleArchiveProject(project)
           )
         })
@@ -277,7 +272,7 @@ const Projects = () => {
             FileSaver.saveAs(blob, `${projectMinimal.metadata.name}.yaml`)
           })
           .catch(error => {
-            showErrorNotification(dispatch, error, '', "Failed to fetch project's YAML", () =>
+            showErrorNotification(dispatch, error, '', null, () =>
               exportYaml(projectMinimal)
             )
           })
@@ -309,7 +304,7 @@ const Projects = () => {
           .catch(error => {
             setConvertedYaml('')
 
-            showErrorNotification(dispatch, error, '', "Failed to fetch project's YAML", () =>
+            showErrorNotification(dispatch, error, '', null, () =>
               viewYaml(projectMinimal)
             )
           })

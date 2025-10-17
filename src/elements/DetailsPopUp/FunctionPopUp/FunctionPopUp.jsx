@@ -70,9 +70,7 @@ const FunctionPopUp = ({ funcTag = '', funcUri = null, isOpen, onResolve }) => {
       .catch(error => {
         showErrorNotification(
           dispatch,
-          error,
-          '',
-          'This function either does not exist or was deleted'
+          error
         )
 
         onResolve()

@@ -58,9 +58,7 @@ import {
   setFieldState,
   clearArrayFromEmptyObjectElements
 } from 'igz-controls/utils/form.util'
-import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { getChipOptions } from 'igz-controls/utils/chips.util'
-import { getErrorMsg } from 'igz-controls/utils/common.util'
 import {
   getValidationRules,
   getInternalLabelsValidationRule
@@ -129,12 +127,7 @@ const ProjectSettingsGeneral = ({
           formStateRef.current.form.restart(newInitial)
         })
         .catch(error => {
-          const customErrorMsg =
-            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'Permission denied'
-              : getErrorMsg(error, 'Failed to fetch project data')
-
-          showErrorNotification(dispatch, error, '', customErrorMsg)
+          showErrorNotification(dispatch, error)
         })
     }
   }, [params.pageTab, params.projectName, dispatch, frontendSpec, projectIsInitialized])
@@ -180,12 +173,7 @@ const ProjectSettingsGeneral = ({
           )
         })
         .catch(error => {
-          const customErrorMsg =
-            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'Missing edit permission for the project'
-              : getErrorMsg(error, 'Failed to edit project data')
-
-          showErrorNotification(dispatch, error, '', customErrorMsg, () =>
+          showErrorNotification(dispatch, error, '', '', () =>
             sendProjectSettingsData(projectData)
           )
         })

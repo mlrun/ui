@@ -24,6 +24,7 @@ import PropTypes from 'prop-types'
 
 import DetailsPopUp from '../DetailsPopUp'
 
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { showArtifactErrorNotification } from '../../../utils/artifacts.util'
 import { getViewMode } from 'igz-controls/utils/common.util'
 import {
@@ -161,8 +162,7 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
         }
       })
       .catch(error => {
-        showArtifactErrorNotification(dispatch, error, artifactContext.type)
-
+        showErrorNotification(dispatch, error)
         onResolve()
       })
   }, [

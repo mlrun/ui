@@ -51,7 +51,7 @@ export const handleFeaturesResponse = (
     setFeatures(features)
     setRequestErrorMessage('')
   } else if (error && dispatch) {
-    largeResponseCatchHandler(error, 'Failed to fetch features', dispatch, setRequestErrorMessage)
+    largeResponseCatchHandler(error, null, dispatch, setRequestErrorMessage)
   }
 
   return features || []
