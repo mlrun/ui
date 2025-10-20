@@ -28,10 +28,7 @@ ARG IS_MF=false
 RUN echo ">>> IS_MF ARG = $IS_MF" && \
     sed -i "/^VITE_FEDERATION=/d" .env.production && \
     echo "VITE_FEDERATION=$IS_MF" >> .env.production && \
-    if [ "$IS_MF" = "true" ]; then \
-      sed -i 's|^VITE_PUBLIC_URL=.*|VITE_PUBLIC_URL=|' .env.production && \
-      sed -i 's|^VITE_BASE_URL=.*|VITE_BASE_URL=|' .env.production ; \
-    fi && \
+    sed -i "s|^VITE_PUBLIC_URL=/mlrun|VITE_PUBLIC_URL=|" .env.production && \
     echo ">>> Final .env.production:" && grep '^VITE_' .env.production
 
 RUN npm run build
@@ -69,11 +66,14 @@ USER root
 RUN if [ "$IS_MF" \
     = "true" ]; then \
       INDEX=/usr/share/nginx/html/index.html; \
-      [ -f "$INDEX" ] && sed -i 's|<base href="/mlrun"|<base href="/"|g' "$INDEX"; \
+      [ -f "$INDEX" ] && sed -i 's|<base href="/mlrun"|<base href="/projects"|g' "$INDEX"; \
     fi && \
     chown -R $UID:0 /usr/share/nginx/html && \
     chmod -R g+w /usr/share/nginx/html && \
     chmod 777 /etc/nginx/run_nginx
+
+RUN chown -R $UID:0 /usr/share/nginx/html && chmod -R g+w /usr/share/nginx/html && chmod 777 /etc/nginx/run_nginx
+
 USER $UID
 
 EXPOSE 8090

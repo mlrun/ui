@@ -17,26 +17,32 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { HTTP, HTTPS } from './constants'
 
-export const loadRemoteConfig = async url => {
-  const response = await fetch(`${url ?? import.meta.env.VITE_PUBLIC_URL}/config.json`, {
-    cache: 'no-store'
-  })
-
-  const config = await response.json()
-
-  if (config.nuclioUiUrl) {
-    const mlrunProtocol =
-      config.nuclioUiUrl.startsWith(HTTP) || config.nuclioUiUrl.startsWith(HTTPS)
-        ? ''
-        : `${window.location.protocol}//`
-
-    window.mlrunConfig = {
-      ...config,
-      nuclioUiUrl: `${mlrunProtocol}${config.nuclioUiUrl}`
+export const createProxyConfig = env => ({
+  '/api': env.VITE_MLRUN_API_URL && {
+    target: env.VITE_MLRUN_API_URL,
+    changeOrigin: true,
+    headers: {
+      Connection: 'keep-alive',
+      'x-v3io-session-key': env.VITE_MLRUN_V3IO_ACCESS_KEY,
+      'x-remote-user': 'admin'
     }
-  } else {
-    window.mlrunConfig = config
+  },
+  '/nuclio': env.VITE_NUCLIO_API_URL && {
+    target: env.VITE_NUCLIO_API_URL,
+    changeOrigin: true,
+    rewrite: path => path.replace(/^\/nuclio/, '')
+  },
+  '/iguazio': env.VITE_IGUAZIO_API_URL && {
+    target: env.VITE_IGUAZIO_API_URL,
+    changeOrigin: true,
+    rewrite: path => path.replace(/^\/iguazio/, '')
+  },
+  '/function-catalog': env.VITE_FUNCTION_CATALOG_URL && {
+    target: env.VITE_FUNCTION_CATALOG_URL,
+    changeOrigin: true,
+    rewrite: path => path.replace(/^\/function-catalog/, '')
   }
-}
+})
+
+void ['rewrite']
