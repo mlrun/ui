@@ -20,29 +20,29 @@ server {
     rewrite ^/mlrun(/|$)(.*) /$2 last;
   }
 
-  # -------------------------------
-  # Serve Static Frontend + CORS preflight handling
-  # -------------------------------
-  location / {
-    if ($request_method = 'OPTIONS') {
+    # -------------------------------
+    # Serve Static Frontend + CORS preflight handling
+    # -------------------------------
+    location / {
+      if ($request_method = 'OPTIONS') {
+        # CORS: Allowed origin from env
+        add_header 'Access-Control-Allow-Origin' '${MLRUN_IGZ_UI_ALLOWED_ORIGIN}';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'Origin, Content-Type, Accept';
+        add_header 'Content-Length' 0;
+        add_header 'Content-Type' 'text/plain';
+        return 204;
+      }
+
+      root   /usr/share/nginx/html;
+      index  index.html index.htm;
+      try_files $uri $uri/ /index.html;
+
       # CORS: Allowed origin from env
-      add_header 'Access-Control-Allow-Origin' '${MLRUN_IGZ_UI_ALLOWED_ORIGIN}';
-      add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
-      add_header 'Access-Control-Allow-Headers' 'Origin, Content-Type, Accept, Authorization';
-      add_header 'Content-Length' 0;
-      add_header 'Content-Type' 'text/plain';
-      return 204;
+      add_header 'Access-Control-Allow-Origin' '${MLRUN_IGZ_UI_ALLOWED_ORIGIN}' always;
+      add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;
+      add_header 'Access-Control-Allow-Headers' 'Origin, Content-Type, Accept' always;
     }
-
-    root   /usr/share/nginx/html;
-    index  index.html index.htm;
-    try_files $uri $uri/ /index.html;
-
-    # CORS: Allowed origin from env
-    add_header 'Access-Control-Allow-Origin' '${MLRUN_IGZ_UI_ALLOWED_ORIGIN}' always;
-    add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS' always;
-    add_header 'Access-Control-Allow-Headers' 'Origin, Content-Type, Accept, Authorization' always;
-  }
 
   set $backend ${MLRUN_API_PROXY_URL};
   location /api {
