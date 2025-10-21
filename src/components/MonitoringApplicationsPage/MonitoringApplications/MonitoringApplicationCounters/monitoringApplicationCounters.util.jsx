@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { capitalize } from 'lodash'
+import classNames from 'classnames'
 
 import { aggregateApplicationStatuses } from '../../../../utils/applications.utils'
 import { formatMinutesToString } from '../../../../utils/measureTime'
@@ -64,9 +65,12 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
           subtitleStatus: 'running'
         },
         {
+          counterClassName: classNames({
+            stats__failed: appError > 0
+          }),
           id: 'failed',
           title: appError,
-          tooltipText: 'Failed, Error, Unhealthy',
+          tooltipText: 'Error, Unhealthy',
           subtitle: 'Failed',
           subtitleStatus: 'failed'
         }

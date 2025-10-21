@@ -235,7 +235,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                     statusClass: 'failed',
                     label: FAILED,
                     popUpClassName: classNames({ 'card-popup_text_link': projectName }),
-                    tooltip: 'Failed, Error, Unhealthy'
+                    tooltip: 'Error, Unhealthy'
                   }
                 ]
               }
