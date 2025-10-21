@@ -2367,9 +2367,35 @@ function putTags(req, res) {
   })
 
   if (collectedArtifacts?.length > 0) {
-    let editedTag = cloneDeep(collectedArtifacts[0])
-    editedTag.metadata ? (editedTag.metadata.tag = tagName) : (editedTag.tag = tagName)
-    artifacts.artifacts.push(editedTag)
+    let artifactWithEditedTag = cloneDeep(collectedArtifacts[0])
+    artifactWithEditedTag.metadata
+      ? (artifactWithEditedTag.metadata.tag = tagName)
+      : (artifactWithEditedTag.tag = tagName)
+
+    const collectedArtifactsWithSameName = artifacts.artifacts.filter(artifact => {
+      return (
+        artifact.metadata?.project === req.params.project &&
+        ((artifact.spec && artifact.spec.db_key === req.body.identifiers[0].key) ||
+          artifact.metadata.key === req.body.identifiers[0].key)
+      )
+    })
+
+   // handle existing artifacts with same name and tag 
+    collectedArtifactsWithSameName.forEach(artifact => {
+      if (artifact.metadata?.tag === tagName) {
+        if (
+          collectedArtifactsWithSameName.filter(
+            searchedArtifact => searchedArtifact.metadata.uid === artifact.metadata.uid
+          ).length > 1
+        ) {
+          remove(artifacts.artifacts, artifact)
+        } else {
+          artifact.metadata.tag = null
+        }
+      }
+    })
+
+    artifacts.artifacts.push(artifactWithEditedTag)
   }
 
   res.send({

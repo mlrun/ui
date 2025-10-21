@@ -144,7 +144,7 @@ export const processActionAfterTagUniquesValidation = ({
   const messagesByKind = createArtifactMessages[artifact.kind.toLowerCase()]
 
   return artifactApi
-    .getExpandedArtifact(projectName, artifact.key || artifact.metadata.key, tag)
+    .getExpandedArtifact(projectName, artifact.db_key ?? artifact.spec.db_key ?? artifact.key , tag)
     .then(response => {
       if (response?.data) {
         if (!isEmpty(response.data.artifacts)) {
@@ -155,11 +155,14 @@ export const processActionAfterTagUniquesValidation = ({
               return _reject(...args)
             }
 
+            // hide and show loader again to avoid UI loader above confirmation dialog
+            hideLoader()
             openPopUp(ConfirmDialog, {
               confirmButton: {
                 label: 'Overwrite',
                 variant: PRIMARY_BUTTON,
                 handler: () => {
+                  showLoader()
                   actionCallback().then(resolve).catch(reject).finally(hideLoader)
                 }
               },
