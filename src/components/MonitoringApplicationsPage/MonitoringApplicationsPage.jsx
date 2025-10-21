@@ -94,7 +94,8 @@ const MonitoringApplicationsPage = () => {
             filters: {
               ...filters,
               labels: `mlrun/app-name=${params.name}`
-            }
+            },
+            config: { params: { page: 1, 'page-size': 50, format: 'minimal'} } // limit to 50 artifacts the same as we have on Artifacts page per 1 FE page to avoid overload
           })
         )
           .unwrap()
