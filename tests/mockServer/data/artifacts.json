@@ -37534,7 +37534,7 @@
         "sources": [
           {
             "name": "dataset",
-            "path": "store://feature-vectors/default/short"
+            "path": "store://feature-vectors/default/default-fv"
           }
         ],
         "license": ""
