@@ -72,7 +72,7 @@ const Breadcrumbs = ({ onClick = () => { } }) => {
         pathItems: [projects, projectName, screen?.label],
         screen,
         tab: { ...tab, label: startCase(tab?.label?.replace('-', ' ')) || '' },
-        itemName: params.artifactName || params.funcName || params.jobName || params.workflowProjectName || params.appName || params.name || null,
+        itemName: params.artifactName || params.funcName || params.jobName || params.workflowProjectName || params.appName || params.name || params.alertName || null,
       }
     } else {
       const [page] = location.pathname.split('/').slice(3, 4)
@@ -81,7 +81,7 @@ const Breadcrumbs = ({ onClick = () => { } }) => {
       return {
         pathItems: [PROJECTS_PAGE_PATH, screen?.label || page],
         screen,
-        itemName: params.artifactName || params.name || params.jobName || params.workflowProjectName || null,
+        itemName: params.artifactName || params.name || params.jobName || params.workflowProjectName || params.alertName || null,
       }
     }
   }, [location.pathname, params, mlrunScreens, projectTabs])
