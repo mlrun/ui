@@ -316,6 +316,7 @@ export const checkForSelectedArtifact = debounce(
     artifactName,
     artifacts,
     dispatch,
+    ignoreLastCheckedArtifact = false,
     isAllVersions,
     navigate,
     paginatedArtifacts,
@@ -336,7 +337,7 @@ export const checkForSelectedArtifact = debounce(
       if (
         artifacts &&
         searchBePage === configBePage &&
-        lastCheckedArtifactIdRef.current !== paramsId
+        (lastCheckedArtifactIdRef.current !== paramsId || ignoreLastCheckedArtifact)
       ) {
         lastCheckedArtifactIdRef.current = paramsId
 
