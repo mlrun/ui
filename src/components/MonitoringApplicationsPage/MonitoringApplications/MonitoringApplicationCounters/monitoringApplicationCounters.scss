@@ -33,16 +33,23 @@
     }
 
     .stats__counter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: colors.$primary;
       font-weight: 500;
       font-size: 28px;
+    }
+
+    .stats__failed > .stats__counter {
+      color: colors.$amaranth;
     }
 
     .stats__status {
       margin-bottom: 10px;
     }
 
-    [class^="state"] {
+    [class^='state'] {
       margin-left: 5px;
     }
   }

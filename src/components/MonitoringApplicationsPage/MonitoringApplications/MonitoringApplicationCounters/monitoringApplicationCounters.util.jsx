@@ -18,10 +18,13 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { capitalize } from 'lodash'
+import classNames from 'classnames'
 
+import { aggregateApplicationStatuses } from '../../../../utils/applications.utils'
 import { formatMinutesToString } from '../../../../utils/measureTime'
 import {
-  BATCH_FILTER, ME_MODE_FILTER,
+  BATCH_FILTER,
+  ME_MODE_FILTER,
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE,
   REAL_TIME_FILTER
@@ -35,6 +38,9 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
     loading: monitoringApplicationIsLoading,
     error: monitoringApplicationError
   } = monitoringApplicationsStore
+  const { ready: appReady, error: appError } = aggregateApplicationStatuses(
+    monitoringApplications.applications
+  )
 
   const applicationsCountersContent = [
     {
@@ -53,13 +59,18 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
       counterData: [
         {
           id: 'running',
-          title: applicationsSummary.running_model_monitoring_functions,
+          title: appReady,
+          tooltipText: 'Running',
           subtitle: 'Running',
           subtitleStatus: 'running'
         },
         {
+          counterClassName: classNames({
+            stats__failed: appError > 0
+          }),
           id: 'failed',
-          title: applicationsSummary.failed_model_monitoring_functions,
+          title: appError,
+          tooltipText: 'Error, Unhealthy',
           subtitle: 'Failed',
           subtitleStatus: 'failed'
         }
@@ -162,7 +173,7 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
       }
     : {
         content: applicationsCountersContent,
-        loading: applicationsSummary.loading,
+        loading: applicationsSummary.loading || monitoringApplicationIsLoading,
         error: applicationsSummary.error
       }
 }

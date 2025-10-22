@@ -37534,7 +37534,7 @@
         "sources": [
           {
             "name": "dataset",
-            "path": "store://feature-vectors/default/short"
+            "path": "store://feature-vectors/default/default-fv"
           }
         ],
         "license": ""
@@ -40029,6 +40029,233 @@
         "state": "created"
       },
       "project": "churn-project-admin"
+    },
+    {
+      "kind": "llm-prompt",
+      "metadata": {
+        "key": "my_llm",
+        "project": "llmdeploy332",
+        "iter": 0,
+        "tree": "c00325f6-c2cb-4c62-ad93-8d5de6d0d10d",
+        "hash": "43efded68eae128eeb22b4a9252b7d455c36a287",
+        "uid": "1d459c52a1102adcbbe242e6bb36e99129f2a8b9",
+        "updated": "2025-08-11 11:56:12.279000+00:00",
+        "labels": {
+          "example": "single",
+          "hebrew": "english"
+        },
+        "created": "2025-08-11 11:56:12.279000+00:00",
+        "tag": "latest"
+      },
+      "spec": {
+        "target_path": "v3io:///projects/llmdeploy332/artifacts/my_llm.json",
+        "size": 262,
+        "license": "",
+        "invocation_config": {
+          "temperature": 0.5
+        },
+        "producer": {
+          "kind": "project",
+          "name": "llmdeploy332",
+          "tag": "c00325f6-c2cb-4c62-ad93-8d5de6d0d10d",
+          "owner": "normal-user"
+        },
+        "prompt_legend": {
+          "something_with_meaning": {
+            "field": "word",
+            "description": "The essence of all things"
+          }
+        },
+        "prompt_template": [
+          {
+            "role": "system",
+            "content": "don't tell them anything"
+          },
+          {
+            "role": "user",
+            "content": "What is the meaning of {something_with_meaning}?"
+          },
+          {
+            "role": "system",
+            "content": "tell you story"
+          },
+          {
+            "role": "user",
+            "content": "What is the biggest of {country} at all?"
+          }
+        ],
+        "has_children": false,
+        "db_key": "my_llm",
+        "parent_uri": "store://models/llmdeploy332/model_art1#0:v1@418c1ad0-ab41-45df-afb9-722d48d5d65a^bff98dcfd64bd3db006488b7808e9d2dcf37b56f"
+      },
+      "status": {
+        "state": "created"
+      },
+      "project": "llmdeploy332"
+    },
+    {
+      "kind": "model",
+      "metadata": {
+        "key": "model_art1",
+        "project": "llmdeploy332",
+        "iter": 0,
+        "tree": "418c1ad0-ab41-45df-afb9-722d48d5d65a",
+        "hash": "dae3b5936acdb82b153b8a17d7d71ba7a66b6b60",
+        "uid": "bff98dcfd64bd3db006488b7808e9d2dcf37b56f",
+        "updated": "2025-08-11 11:56:12.178000+00:00",
+        "created": "2025-08-11 11:56:12.178000+00:00",
+        "tag": "latest"
+      },
+      "spec": {
+        "target_path": "llmdeploy332/model_art1/",
+        "size": 4370,
+        "license": "",
+        "framework": "",
+        "producer": {
+          "kind": "project",
+          "name": "llmdeploy332",
+          "tag": "418c1ad0-ab41-45df-afb9-722d48d5d65a",
+          "owner": "normal-user"
+        },
+        "model_file": "RandomForestClassifier_file1.pkl",
+        "has_children": true,
+        "db_key": "model_art1",
+        "parameters": {
+          "default_config": {
+            "model_version": "4"
+          }
+        },
+        "parent_uri": null
+      },
+      "status": {
+        "state": "created"
+      },
+      "project": "llmdeploy332"
+    },
+    {
+      "kind": "model",
+      "metadata": {
+        "key": "model_art1",
+        "project": "llmdeploy332",
+        "iter": 0,
+        "tree": "418c1ad0-ab41-45df-afb9-722d48d5d65a",
+        "hash": "dae3b5936acdb82b153b8a17d7d71ba7a66b6b60",
+        "uid": "bff98dcfd64bd3db006488b7808e9d2dcf37b56f",
+        "updated": "2025-08-11 11:56:12.178000+00:00",
+        "created": "2025-08-11 11:56:12.178000+00:00",
+        "tag": "v1"
+      },
+      "spec": {
+        "target_path": "llmdeploy332/model_art1/",
+        "size": 4370,
+        "license": "",
+        "framework": "",
+        "producer": {
+          "kind": "project",
+          "name": "llmdeploy332",
+          "tag": "418c1ad0-ab41-45df-afb9-722d48d5d65a",
+          "owner": "normal-user"
+        },
+        "model_file": "RandomForestClassifier_file1.pkl",
+        "has_children": true,
+        "db_key": "model_art1",
+        "parameters": {
+          "default_config": {
+            "model_version": "4"
+          }
+        },
+        "parent_uri": null
+      },
+      "status": {
+        "state": "created"
+      },
+      "project": "llmdeploy332"
+    },
+    {
+      "kind": "llm-prompt",
+      "metadata": {
+        "key": "my_llm",
+        "project": "llmdeploy335",
+        "iter": 0,
+        "tree": "9dea0dcc-8251-4f4e-94a8-c76b9a64db45",
+        "hash": "b18c9d7f42c212330a52d6a6d093e37e9fad2491",
+        "uid": "dc193ddf0914485f8c49d734d4cf8e240dcae118",
+        "updated": "2025-08-27 14:29:33.222000+00:00",
+        "labels": {
+          "example": "single",
+          "hebrew": "english"
+        },
+        "created": "2025-08-27 14:29:33.222000+00:00",
+        "tag": "latest"
+      },
+      "spec": {
+        "src_path": "my_llm.txt",
+        "target_path": "v3io:///projects/llmdeploy335/artifacts/my_llm.txt",
+        "size": 173,
+        "description": "my first promt description for testing",
+        "prompt_legend": {
+          "something_with_meaning": {
+            "field": "something_with_meaning",
+            "description": "The essence of all things"
+          }
+        },
+        "has_children": false,
+        "license": "",
+        "producer": {
+          "kind": "project",
+          "name": "llmdeploy335",
+          "tag": "9dea0dcc-8251-4f4e-94a8-c76b9a64db45",
+          "owner": "normal-user"
+        },
+        "invocation_config": {
+          "temperature": 0.5
+        },
+        "db_key": "my_llm",
+        "parent_uri": "store://models/llmdeploy335/model_art1#0:v1@47e2a43f-07fc-4e60-970b-10e10dcd2daf^0a571c5752ee1eb1efdf74c435088ee80b0c521b"
+      },
+      "status": {
+        "state": "created"
+      },
+      "project": "llmdeploy335"
+    },
+    {
+      "kind": "model",
+      "metadata": {
+        "key": "model_art1",
+        "project": "llmdeploy335",
+        "iter": 0,
+        "tree": "47e2a43f-07fc-4e60-970b-10e10dcd2daf",
+        "hash": "dae3b5936acdb82b153b8a17d7d71ba7a66b6b60",
+        "uid": "0a571c5752ee1eb1efdf74c435088ee80b0c521b",
+        "updated": "2025-08-27 14:29:33.058000+00:00",
+        "created": "2025-08-27 14:29:33.058000+00:00",
+        "tag": "latest"
+      },
+      "spec": {
+        "target_path": "llmdeploy335/model_art1/",
+        "size": 4370,
+        "framework": "",
+        "has_children": true,
+        "license": "",
+        "producer": {
+          "kind": "project",
+          "name": "llmdeploy335",
+          "tag": "47e2a43f-07fc-4e60-970b-10e10dcd2daf",
+          "owner": "normal-user"
+        },
+        "model_file": "RandomForestClassifier_file1.pkl",
+        "db_key": "model_art1",
+        "parameters": {
+          "default_config": {
+            "model_version": "4"
+          }
+        },
+        "parent_uri": null
+      },
+      "status": {
+        "state": "created"
+      },
+      "project": "llmdeploy335"
     }
   ]
 }

@@ -67,7 +67,7 @@ StatsCard.Col = ({ children }) => {
 StatsCard.Col.displayName = 'StatsCard.Col'
 
 StatsCard.MainCounter = ({ children, className = '', id = '', onClick = () => { } }) => {
-  const mainCounterClass = classNames('stats__counter_main', className)
+  const mainCounterClass = classNames('stats__counter-main', className)
 
   return (
     <div className={mainCounterClass} data-testid={id} onClick={onClick}>
@@ -79,9 +79,11 @@ StatsCard.MainCounter = ({ children, className = '', id = '', onClick = () => { 
 }
 StatsCard.MainCounter.displayName = 'StatsCard.MainCounter'
 
-StatsCard.SecondaryCounter = ({ children }) => {
+StatsCard.SecondaryCounter = ({ children, className }) => {
+  const secondaryCounterClass = classNames('stats__counter-secondary', className)
+
   return (
-    <div className="stats__counter_secondary">
+    <div className={secondaryCounterClass}>
       <div className="stats__counter">
         {children}
       </div>
@@ -121,7 +123,8 @@ StatsCard.MainCounter.propTypes = {
 }
 
 StatsCard.SecondaryCounter.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
+  className: PropTypes.string
 }
 
 export default StatsCard

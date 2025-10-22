@@ -34,7 +34,9 @@ import {
   MODELS_PAGE,
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST,
-  ALL_VERSIONS_PATH
+  ALL_VERSIONS_PATH,
+  LLM_PROMPT_TYPE,
+  LLM_PROMPT_TITLE
 } from '../constants'
 import { VIEW_SEARCH_PARAMETER } from 'igz-controls/constants'
 import {
@@ -142,7 +144,7 @@ export const processActionAfterTagUniquesValidation = ({
   const messagesByKind = createArtifactMessages[artifact.kind.toLowerCase()]
 
   return artifactApi
-    .getExpandedArtifact(projectName, artifact.key || artifact.metadata.key, tag)
+    .getExpandedArtifact(projectName, artifact.db_key ?? artifact.spec.db_key ?? artifact.key , tag)
     .then(response => {
       if (response?.data) {
         if (!isEmpty(response.data.artifacts)) {
@@ -153,11 +155,14 @@ export const processActionAfterTagUniquesValidation = ({
               return _reject(...args)
             }
 
+            // hide and show loader again to avoid UI loader above confirmation dialog
+            hideLoader()
             openPopUp(ConfirmDialog, {
               confirmButton: {
                 label: 'Overwrite',
                 variant: PRIMARY_BUTTON,
                 handler: () => {
+                  showLoader()
                   actionCallback().then(resolve).catch(reject).finally(hideLoader)
                 }
               },
@@ -169,7 +174,9 @@ export const processActionAfterTagUniquesValidation = ({
               closePopUp: () => reject(),
               header: messagesByKind.overwriteConfirmTitle,
               message: messagesByKind.getOverwriteConfirmMessage(
-                response.data.artifacts[0].kind || ARTIFACT_TYPE
+                response.data.artifacts[0].kind === LLM_PROMPT_TYPE
+                  ? LLM_PROMPT_TITLE
+                  : response.data.artifacts[0].kind || ARTIFACT_TYPE
               ),
               className: 'override-artifact-dialog'
             })
@@ -193,11 +200,12 @@ export const processActionAfterTagUniquesValidation = ({
             throwError
           })
         )
+
+        onErrorCallback?.()
       }
 
-      onErrorCallback?.()
       hideLoader()
-      
+
       if (throwError) throw error
     })
 }

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Outlet, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
@@ -50,6 +50,7 @@ const MonitoringApplicationsPage = () => {
   const filtersConfig = useMemo(() => getFiltersConfig(), [])
   const filters = useFiltersFromSearchParams(filtersConfig)
   const [, setSearchParams] = useSearchParams()
+  const contentRef = useRef(null)
 
   const refreshMonitoringApplications = useCallback(
     (filters, isFilterApplyAction) => {
@@ -93,7 +94,8 @@ const MonitoringApplicationsPage = () => {
             filters: {
               ...filters,
               labels: `mlrun/app-name=${params.name}`
-            }
+            },
+            config: { params: { page: 1, 'page-size': 50, format: 'minimal'} } // limit to 50 artifacts the same as we have on Artifacts page per 1 FE page to avoid overload
           })
         )
           .unwrap()
@@ -129,12 +131,18 @@ const MonitoringApplicationsPage = () => {
     }
   }, [params.name, refreshMonitoringApplications, refreshMonitoringApplication, filters])
 
+  useEffect(() => {
+    if (contentRef.current) {
+      contentRef.current.scrollTo(0, 0)
+    }
+  }, [params.name])
+
   return (
     <div className="content-wrapper">
       <div className="content__header">
         <Breadcrumbs />
       </div>
-      <div className="content monitoring-app-content">
+      <div className="content monitoring-app-content" ref={contentRef} >
         <div className="content__action-bar-wrapper">
           <span className="monitoring-apps-title">
             {params.name && (

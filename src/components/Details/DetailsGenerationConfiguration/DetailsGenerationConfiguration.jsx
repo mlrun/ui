@@ -26,17 +26,17 @@ import './detailsGenerationConfiguration.scss'
 const DetailsGenerationConfiguration = ({ selectedItem }) => {
   return (
     <div className="generation-configuration-tab">
-      {!isEmpty(selectedItem.model_configuration) && (
+      {!isEmpty(selectedItem.invocation_config) && (
         <>
           <div className="generation-configuration-tab__counter">
-            {Object.entries(selectedItem.model_configuration || {}).length} modifications made to
+            {Object.entries(selectedItem.invocation_config || {}).length} modifications made to
             the default configuration:
           </div>
           <div className="generation-configuration-tab__table-header generation-configuration-tab__row">
             <div className="generation-configuration-tab__row-key">Key</div>
             <div className="generation-configuration-tab__row-value">Value</div>
           </div>
-          {Object.entries(selectedItem.model_configuration || {}).map(([key, value]) => {
+          {Object.entries(selectedItem.invocation_config || {}).map(([key, value]) => {
             return (
               <div className="generation-configuration-tab__row" key={key + value}>
                 <div className="generation-configuration-tab__row-key">{key}</div>
@@ -46,7 +46,7 @@ const DetailsGenerationConfiguration = ({ selectedItem }) => {
           })}
         </>
       )}
-      {isEmpty(selectedItem.model_configuration) && <span>Default configuration is used.</span>}
+      {isEmpty(selectedItem.invocation_config) && <span>Default configuration is used.</span>}
     </div>
   )
 }

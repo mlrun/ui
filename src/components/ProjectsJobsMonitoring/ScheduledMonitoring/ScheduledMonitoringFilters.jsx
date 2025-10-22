@@ -22,6 +22,7 @@ import { useForm } from 'react-final-form'
 import { upperFirst } from 'lodash'
 import { useSelector } from 'react-redux'
 
+import MultiSelectFilter from '../../../common/MultiSelectFilter/MultiSelectFilter'
 import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
 
 import {
@@ -29,7 +30,8 @@ import {
   JOBS_MONITORING_SCHEDULED_TAB,
   LABELS_FILTER,
   PROJECT_FILTER,
-  PROJECTS_FILTER_ALL_ITEMS
+  PROJECTS_FILTER_ALL_ITEMS,
+  TYPE_FILTER
 } from '../../../constants'
 import { generateTypeFilter } from '../../FilterMenu/filterMenu.settings'
 import { generateProjectsList } from '../../../utils/projects'
@@ -65,11 +67,7 @@ const ScheduledMonitoringFilters = () => {
         />
       </div>
       <div className="form-row">
-        <FormSelect
-          label="Type"
-          name="type"
-          options={generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB)}
-        />
+        <MultiSelectFilter optionsList={generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB)} name={TYPE_FILTER} />
       </div>
       <div className="form-row">
         <FormInput

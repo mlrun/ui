@@ -21,7 +21,7 @@ import { mainHttpClient } from '../httpClient'
 
 const monitoringApplications = {
   getMEPWithDetections: (project, params) =>
-    mainHttpClient.get(`projects/${project}/model-endpoints/drift-over-time`, {
+    mainHttpClient.get(`projects/${project}/model-monitoring/drift-over-time`, {
       params
     }),
   getMonitoringApplication: (project, functionName, params) =>

@@ -315,7 +315,7 @@ main {
     flex-direction: column;
     width: 25%;
     min-width: 350px;
-    overflow: hidden;
+    overflow-y: auto;
     background: colors.$white;
     border: borders.$secondaryBorder;
     box-shadow: 0 0 30px rgba(colors.$black, 0.15);
@@ -548,12 +548,6 @@ div[id^='chartjs-tooltip'] {
   &:hover {
     opacity: 1;
   }
-}
-
-/* =========== OVERRIDE ARTIFACT DIALOG ============= */
-
-.override-artifact-dialog {
-  z-index: 10;
 }
 
 /* =========== ICONS ============= */

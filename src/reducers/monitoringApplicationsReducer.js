@@ -18,10 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { get } from 'lodash'
 
 import { defaultPendingHandler, defaultRejectedHandler } from './redux.util'
 import { splitApplicationsContent } from '../utils/applications.utils'
 import monitoringApplicationsApi from '../api/monitoringApplications-api'
+import nuclioApi from '../api/nuclio'
 import { DATES_FILTER } from '../constants'
 
 const initialState = {
@@ -60,12 +62,15 @@ export const fetchMEPWithDetections = createAsyncThunk(
 
     const savedStartDate = filters[DATES_FILTER].value[0].getTime()
     const savedEndDate = (filters[DATES_FILTER].value[1] || new Date()).getTime()
-    
+
     return monitoringApplicationsApi.getMEPWithDetections(project, params).then(response => {
       return {
-         values: response.data.values.map(([date, suspected, detected]) => [date, suspected + detected]),
-         start: savedStartDate,
-         end: savedEndDate
+        values: response.data.values.map(([date, suspected, detected]) => [
+          date,
+          suspected + detected
+        ]),
+        start: savedStartDate,
+        end: savedEndDate
       }
     })
   }
@@ -90,7 +95,7 @@ export const fetchMonitoringApplication = createAsyncThunk(
 
 export const fetchMonitoringApplications = createAsyncThunk(
   'fetchMonitoringApplications',
-  ({ project, filters }) => {
+  async ({ project, filters }) => {
     const params = {
       start: filters[DATES_FILTER].value[0].getTime()
     }
@@ -99,9 +104,30 @@ export const fetchMonitoringApplications = createAsyncThunk(
       params.end = filters[DATES_FILTER].value[1].getTime()
     }
 
-    return monitoringApplicationsApi.getMonitoringApplications(project, params).then(response => {
-      return splitApplicationsContent(response.data)
+    const [mlrunResult, nuclioResult] = await Promise.allSettled([
+      monitoringApplicationsApi.getMonitoringApplications(project, params),
+      nuclioApi.getFunctions(project)
+    ])
+
+    if (mlrunResult.status !== 'fulfilled') {
+      throw new Error(mlrunResult.reason)
+    }
+
+    const mlrunApiApps = get(mlrunResult, 'value.data')
+    const nuclioApiApps = get(nuclioResult, 'value.data')
+
+    const splitApps = splitApplicationsContent(mlrunApiApps)
+
+    const applications = splitApps.applications.map(mlrunApp => {
+      const match = nuclioApiApps[`${mlrunApp.project_name}-${mlrunApp.name}`]
+
+      return {
+        ...mlrunApp,
+        status: match?.status?.state ?? mlrunApp.status
+      }
     })
+
+    return { ...splitApps, applications }
   }
 )
 

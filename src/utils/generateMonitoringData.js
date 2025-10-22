@@ -17,6 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { generateTypeFilter } from '../components/FilterMenu/filterMenu.settings'
+
 import {
   APPLICATION,
   ARTIFACTS_PAGE,
@@ -26,8 +28,8 @@ import {
   FILTER_ALL_ITEMS,
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_PAGE,
+  JOBS_MONITORING_SCHEDULED_TAB,
   JOBS_MONITORING_WORKFLOWS_TAB,
-  JOB_KIND_JOB,
   JOB_KIND_WORKFLOW,
   MODELS_PAGE,
   MONITORING_APP_PAGE,
@@ -84,8 +86,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
               }),
             statusClass: 'running',
             tooltip: 'Aborting, Pending, Pending retry, Running',
-            label: IN_PROCESS,
-            counterClassName: 'stats__counter'
+            label: IN_PROCESS
           },
           {
             counter: data.failed || 0,
@@ -98,7 +99,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
             statusClass: 'failed',
             tooltip: 'Aborted, Error',
             label: FAILED,
-            counterClassName: classNames('stats__counter', {
+            counterClassName: classNames({
               stats__failed: data.failed > 0
             })
           },
@@ -112,8 +113,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
               }),
             statusClass: 'completed',
             tooltip: 'Completed',
-            label: SUCCEEDED,
-            counterClassName: 'stats__counter'
+            label: SUCCEEDED
           }
         ]
       }
@@ -138,8 +138,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
               className: classNames('stats__link', 'stats__line'),
               statusClass: 'running',
               tooltip: 'Running, Terminating',
-              label: IN_PROCESS,
-              counterClassName: 'stats__counter'
+              label: IN_PROCESS
             },
             {
               counter: data.failed || 0,
@@ -152,7 +151,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
               statusClass: 'failed',
               tooltip: 'Error, Failed',
               label: FAILED,
-              counterClassName: classNames('stats__counter', {
+              counterClassName: classNames({
                 stats__failed: data.failed > 0
               })
             },
@@ -166,8 +165,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                 }),
               statusClass: 'completed',
               tooltip: 'Completed',
-              label: SUCCEEDED,
-              counterClassName: 'stats__counter'
+              label: SUCCEEDED
             }
           ]
         }
@@ -225,7 +223,8 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                     link: () => navigateToTab(projectName, MONITORING_APP_PAGE),
                     statusClass: 'running',
                     label: RUNNING,
-                    popUpClassName: classNames({ 'card-popup_text_link': projectName })
+                    popUpClassName: classNames({ 'card-popup_text_link': projectName }),
+                    tooltip: RUNNING
                   },
                   {
                     counter: data.failed || 0,
@@ -235,7 +234,8 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                     link: () => navigateToTab(projectName, MONITORING_APP_PAGE),
                     statusClass: 'failed',
                     label: FAILED,
-                    popUpClassName: classNames({ 'card-popup_text_link': projectName })
+                    popUpClassName: classNames({ 'card-popup_text_link': projectName }),
+                    tooltip: 'Error, Unhealthy'
                   }
                 ]
               }
@@ -252,7 +252,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                   counter: data.jobs || 0,
                   link: () =>
                     navigateToJobsMonitoringPage({
-                      [TYPE_FILTER]: JOB_KIND_JOB,
+                      [TYPE_FILTER]: generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB).filter(type => type.id !== JOB_KIND_WORKFLOW && type.id !== FILTER_ALL_ITEMS && !type.hidden).map(item => item.id).join(','),
                       [DATES_FILTER]: NEXT_24_HOUR_DATE_OPTION
                     })
                 },

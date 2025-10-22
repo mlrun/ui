@@ -74,6 +74,10 @@ Feature: Models Page
     Then verify "Table_FilterBy_Button" element on "Model_Endpoints" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
     Then click on "Table_FilterBy_Button" element on "Model_Endpoints" wizard
     Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+    Then verify "Mode_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+    Then verify "Mode_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+    Then verify "Mode_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Endpoint_Mode_Filter_Options"
+    And wait load page
     Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
     Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
     Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
@@ -676,10 +680,19 @@ Feature: Models Page
       Then verify "Pop_Out_Button" element visibility on "Models_Info_Pane" wizard 
       Then click on "Pop_Out_Button" element on "Models_Info_Pane" wizard
       And wait load page
-      Then verify "Preview_Row" element visibility on "Artifact_Preview_Popup" wizard
-      Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
-      Then check "download_btn" visibility in "Preview_Row" on "Artifact_Preview_Popup" wizard with 1 offset
-      Then click on "Download_Button" element on "Artifact_Preview_Popup" wizard
+      Then verify "Preview_Table" element visibility on "Preview_Popup" wizard
+      Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
+      Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+      Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
+      Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+      Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
+      Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+      Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
+      Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+      Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contains "transaction_fraud_xgboost"
+      Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
+      Then verify "Download_Button" element visibility on "Preview_Popup" wizard
+      Then click on "Download_Button" element on "Preview_Popup" wizard
       And wait load page
       And wait load page
       Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
@@ -689,7 +702,7 @@ Feature: Models Page
       Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
       Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
       Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
-      Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
+      Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
 
   @MLM
   @passive
@@ -1090,6 +1103,7 @@ Feature: Models Page
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
     Then "No_Data_Message" element on "commonPagesHeader" should contains "The ingestion function has no steps and therefore no graph." value
+    And wait load page
 
   @MLM
   @smoke
@@ -1459,7 +1473,7 @@ Feature: Models Page
     And wait load page
     And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
-    When click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    When click on cell with row index 3 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Model_Endpoints_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Tab_List"
@@ -1516,7 +1530,7 @@ Feature: Models Page
     And wait load page
     And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
-    When click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    When click on cell with row index 3 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     Then select "Metrics" tab in "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard
     Then click on "Choose_Metrics_Dropdown" element on "Model_Endpoints_Info_Pane" wizard
     And wait load page
@@ -1541,6 +1555,7 @@ Feature: Models Page
 
   @MLM
   @smoke
+  # !!! restart mock is required
   Scenario: MLM037 - Verify the Delete option in Models table, details panel, full view action menu 
     Given open url
     And wait load page

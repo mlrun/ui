@@ -18,7 +18,7 @@ import React, { useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { Loader, PopUpDialog } from 'igz-controls/components'
+import { Loader, PopUpDialog, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 
 import { APPLICATION } from '../../constants'
 import StatsCard from '../../common/StatsCard/StatsCard'
@@ -93,25 +93,29 @@ const ApplicationCounter = () => {
           </StatsCard.Row>
           <div ref={detailsRef} className="stats__details">
             <StatsCard.Row>
-              {applicationStats.counters.map(({ counter, className, label, statusClass, link }) => (
-                <div key={`${statusClass}-app`} className="stats-card__col">
-                  <StatsCard.MainCounter
-                    id={`app_${statusClass}_counter`}
-                    className={className}
-                    onClick={link}
-                  >
-                    {projectStore?.projectsSummary?.loading ? (
-                      <Loader section small secondary />
-                    ) : (
-                      counter.toLocaleString()
-                    )}
-                  </StatsCard.MainCounter>
-                  <div className="stats__status">
-                    <h6 className="stats__subtitle">{label}</h6>
-                    <i className={`state-${statusClass}`} />
+              {applicationStats.counters.map(
+                ({ counter, className, label, statusClass, link, tooltip }) => (
+                  <div key={`${statusClass}-app`} className="stats-card__col">
+                    <StatsCard.MainCounter
+                      id={`app_${statusClass}_counter`}
+                      className={className}
+                      onClick={link}
+                    >
+                      {projectStore?.projectsSummary?.loading ? (
+                        <Loader section small secondary />
+                      ) : (
+                        counter.toLocaleString()
+                      )}
+                    </StatsCard.MainCounter>
+                    <Tooltip textShow template={<TextTooltipTemplate text={tooltip} />}>
+                      <div className="stats">
+                        <h6 className="stats__subtitle">{label}</h6>
+                        <i className={`state-${statusClass}`} />
+                      </div>
+                    </Tooltip>
                   </div>
-                </div>
-              ))}
+                )
+              )}
             </StatsCard.Row>
           </div>
           {showPopup && (

@@ -423,7 +423,11 @@ const JobWizardFunctionSelection = ({
           </div>
           <div className="form-row">
             <div className="form-row__project-name">
-              <FormSelect name={`${FUNCTION_SELECTION_STEP}.projectName`} options={projects} />
+              <FormSelect
+                name={`${FUNCTION_SELECTION_STEP}.projectName`}
+                options={projects}
+                placeholder="Select a project"
+              />
             </div>
           </div>
           {!loading &&
