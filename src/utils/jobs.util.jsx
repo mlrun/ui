@@ -189,10 +189,6 @@ export const checkForSelectedJob = debounce(
   30
 )
 
-export const getJobKindFromLabels = (labels = []) => {
-  return labels.find(label => label.includes('kind:'))?.replace('kind: ', '') ?? ''
-}
-
 export const getJobsFiltersConfig = (jobName, crossProjects) => {
   const filters = {
     [NAME_FILTER]: {

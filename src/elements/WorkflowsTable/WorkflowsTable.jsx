@@ -113,6 +113,15 @@ const WorkflowsTable = React.forwardRef(
     const accessibleProjectsMap = useSelector(state => state.projectStore.accessibleProjectsMap)
     const [permissionsLoading, setPermissionsLoading] = useState(false)
 
+    const detailsFormInitialValues = useMemo(() => {
+      return {
+        labels: selectedJob.labels ?? [],
+        results: selectedJob.resultsChips ?? [],
+        parameters: selectedJob.parametersChips ?? [],
+        nodeSelector: selectedJob.nodeSelectorChips ?? [],
+      }
+    }, [selectedJob.labels, selectedJob.nodeSelectorChips, selectedJob.parametersChips, selectedJob.resultsChips])
+
     useEffect(() => {
       const projectNames = workflowsStore.workflows.data.map(workflow => workflow.project)
       setPermissionsLoading(true)
@@ -781,6 +790,7 @@ const WorkflowsTable = React.forwardRef(
               <Workflow
                 actionsMenu={actionsMenu}
                 backLink={backLink}
+                detailsFormInitialValues={detailsFormInitialValues}
                 handleCancel={handleCancel}
                 handleConfirmTerminateWorkflow={handleConfirmTerminateWorkflow}
                 itemIsSelected={itemIsSelected}
@@ -794,6 +804,7 @@ const WorkflowsTable = React.forwardRef(
             ) : (
               <Table
                 actionsMenu={actionsMenu}
+                detailsFormInitialValues={detailsFormInitialValues}
                 handleCancel={handleCancel}
                 pageData={pageData}
                 selectedItem={selectedJob}

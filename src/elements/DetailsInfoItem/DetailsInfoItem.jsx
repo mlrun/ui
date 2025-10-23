@@ -31,8 +31,7 @@ import {
   FormTextarea,
   RoundedIcon,
   TextTooltipTemplate,
-  Tooltip,
-  ChipCell
+  Tooltip
 } from 'igz-controls/components'
 import DetailsInfoItemChip from '../DetailsInfoItemChip/DetailsInfoItemChip'
 import Input from '../../common/Input/Input'
@@ -57,7 +56,7 @@ const DetailsInfoItem = React.forwardRef(
       },
       currentField = '',
       detailsInfoDispatch = () => {},
-      editableFieldType = null,
+      editableFieldType = '',
       formState = {},
       handleDiscardChanges = null,
       handleFinishEdit = () => {},
@@ -78,7 +77,7 @@ const DetailsInfoItem = React.forwardRef(
       item.handleDiscardChanges && item.handleDiscardChanges(formState, commonDetailsStore)
     }
 
-    if (item?.editModeEnabled && item?.editModeType === 'chips') {
+    if (item?.editModeType === 'chips') {
       return (
         <DetailsInfoItemChip
           chipsClassName={chipsClassName}
@@ -89,9 +88,9 @@ const DetailsInfoItem = React.forwardRef(
           editableFieldType={editableFieldType}
           formState={formState}
           handleFinishEdit={handleFinishEdit}
+          isEditable={!isDetailsPopUp && item?.editModeEnabled}
           isFieldInEditMode={isFieldInEditMode}
           item={item}
-          isEditable={!isDetailsPopUp}
         />
       )
     } else if (item?.editModeEnabled && isFieldInEditMode && !isDetailsPopUp) {
@@ -140,19 +139,6 @@ const DetailsInfoItem = React.forwardRef(
           <RoundedIcon onClick={discardChanges} tooltipText="Discard changes">
             <Close />
           </RoundedIcon>
-        </div>
-      )
-    } else if (chipsData?.chips?.length) {
-      return (
-        <div className="details-item__data">
-          <ChipCell
-            chipOptions={chipsData.chipOptions}
-            className={`details-item__${chipsClassName}`}
-            delimiter={chipsData.delimiter}
-            elements={chipsData.chips}
-            isEditMode={!isDetailsPopUp && chipsData.isEditEnabled}
-            visibleChipsMaxLength="all"
-          />
         </div>
       )
     } else if (item?.copyToClipboard && info) {
@@ -325,7 +311,7 @@ const DetailsInfoItem = React.forwardRef(
 DetailsInfoItem.propTypes = {
   chipsClassName: PropTypes.string,
   chipsData: PropTypes.shape({
-    chips: PropTypes.arrayOf(PropTypes.string),
+    chips: PropTypes.arrayOf(PropTypes.object),
     chipOptions: CHIP_OPTIONS,
     delimiter: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
   }),

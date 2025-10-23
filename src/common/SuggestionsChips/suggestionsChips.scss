@@ -13,6 +13,10 @@
   border: borders.$primaryBorder;
   border-radius: variables.$mainBorderRadius;
 
+  .chips-wrapper {
+    width: 100%;
+  }
+
   .suggestion-list {
     position: absolute;
     top: calc(100% + 5px);

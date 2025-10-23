@@ -2304,6 +2304,12 @@
         "annotations": {}
       },
       "spec": {
+        "node_selector": {
+          "aaa": "bbbbb",
+          "aa2a": "bb2bbb",
+          "aaa2": "bbb3bb",
+          "2aaa": "bbb2bb"
+        },
         "function": "churn-project-admin/test-m_ingest@74349c7bdd2a8cef6e4a600847bceb009d5c8ef8",
         "log_level": "info",
         "parameters": {
@@ -2350,7 +2356,15 @@
       },
       "status": {
         "state": "error",
-        "results": {},
+        "results": {
+          "accuracy": 0.7808823529411765,
+          "test-error": 0.21911764705882353,
+          "rocauc": 0.81545411264518,
+          "brier_score": 0.1479039326088595,
+          "f1-score": 0.5209003215434084,
+          "precision_score": 0.6230769230769231,
+          "recall_score": 0.44751381215469616
+        },
         "start_time": "2021-09-15T13:44:33.718770+00:00",
         "last_update": "2021-09-15T13:44:34.287133+00:00",
         "error": "file type unhandled v3io://test/test",

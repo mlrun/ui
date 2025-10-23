@@ -31,13 +31,13 @@ import {
   MODEL_ENDPOINTS_TAB,
   ALL_VERSIONS_PATH
 } from '../constants'
-import { parseKeyValues } from './object'
 import prettyBytes from 'pretty-bytes'
 import { parseUri } from './parseUri'
 import { generateLinkToDetailsPanel } from './link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { validateArguments } from './validateArguments'
+import { parseChipsData } from './convertChipsData'
 // import { roundFloats } from 'igz-controls/utils/common.util'
 
 import SeverityOk from 'igz-controls/images/severity-ok.svg?react'
@@ -88,7 +88,7 @@ const createArtifactsRowData = artifact => {
       class: 'table-cell-small'
     },
     labels: {
-      value: parseKeyValues(artifact.labels),
+      value: parseChipsData(artifact.labels),
       class: 'table-cell-1',
       type: 'labels'
     },
@@ -147,7 +147,7 @@ export const createModelsRowData = (artifact, project, isAllVersions, metricsCou
       id: `labels.${artifact.ui.identifierUnique}`,
       headerId: 'labels',
       headerLabel: 'Labels',
-      value: parseKeyValues(artifact.labels),
+      value: parseChipsData(artifact.labels),
       className: 'table-cell-1',
       type: 'labels'
     },
@@ -185,7 +185,7 @@ export const createModelsRowData = (artifact, project, isAllVersions, metricsCou
       id: `metrics.${artifact.ui.identifierUnique}`,
       headerId: 'metrics',
       headerLabel: 'Metrics',
-      value: parseKeyValues(artifact.metrics),
+      value: parseChipsData(artifact.metrics),
       className: 'table-cell-1',
       type: 'metrics'
     },
@@ -294,7 +294,7 @@ export const createFilesRowData = (artifact, project, isAllVersions) => {
         id: `labels.${artifact.ui.identifierUnique}`,
         headerId: 'labels',
         headerLabel: 'Labels',
-        value: parseKeyValues(artifact.labels),
+        value: parseChipsData(artifact.labels),
         className: 'table-cell-1',
         type: 'labels'
       },
@@ -367,7 +367,7 @@ export const createDocumentsRowData = (artifact, project, isAllVersions) => {
         id: `labels.${artifact.ui.identifierUnique}`,
         headerId: 'labels',
         headerLabel: 'Labels',
-        value: parseKeyValues(artifact.labels),
+        value: parseChipsData(artifact.labels),
         className: 'table-cell-1',
         type: 'labels'
       },
@@ -514,7 +514,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         id: `labels.${artifact.ui.identifierUnique}`,
         headerId: 'labels',
         headerLabel: 'Labels',
-        value: parseKeyValues(artifact.metadata?.labels),
+        value: parseChipsData(artifact.metadata?.labels),
         className: 'table-cell-1',
         type: 'labels'
       },
@@ -572,7 +572,7 @@ export const createDatasetsRowData = (artifact, project, isAllVersions) => {
         id: `labels.${artifact.ui.identifierUnique}`,
         headerId: 'labels',
         headerLabel: 'Labels',
-        value: parseKeyValues(artifact.labels),
+        value: parseChipsData(artifact.labels),
         className: 'table-cell-1',
         type: 'labels'
       },
@@ -661,7 +661,7 @@ export const createLLMPromptsRowData = (artifact, project, isAllVersions) => {
         id: `labels.${artifact.ui.identifierUnique}`,
         headerId: 'labels',
         headerLabel: 'Labels',
-        value: parseKeyValues(artifact.labels),
+        value: parseChipsData(artifact.labels),
         className: 'table-cell-1',
         type: 'labels'
       },

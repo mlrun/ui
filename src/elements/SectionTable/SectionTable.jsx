@@ -23,8 +23,7 @@ import classnames from 'classnames'
 import { Link } from 'react-router-dom'
 
 import { TableTypeCell } from 'igz-controls/elements'
-import { TextTooltipTemplate, Tooltip, Tip, Loader } from 'igz-controls/components'
-import ReadOnlyChips from '../ReadOnlyChips/ReadOnlyChips'
+import { TextTooltipTemplate, Tooltip, Tip, Loader, ReadOnlyChips } from 'igz-controls/components'
 
 import './SectionTable.scss'
 

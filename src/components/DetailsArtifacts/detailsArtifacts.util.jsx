@@ -25,8 +25,8 @@ import ArtifactPopUp from '../../elements/DetailsPopUp/ArtifactPopUp/ArtifactPop
 
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
-import { parseKeyValues } from '../../utils'
 import { parseArtifacts } from '../../utils/parseArtifacts'
+import { parseChipsData } from '../../utils/convertChipsData'
 
 import DetailsIcon from 'igz-controls/images/view-details.svg?react'
 
@@ -34,7 +34,7 @@ export const getJobAccordingIteration = selectedJob => {
   return {
     artifacts: parseArtifacts(selectedJob?.status?.artifacts || []),
     startTime: new Date(selectedJob?.status?.start_time),
-    labels: parseKeyValues(selectedJob?.metadata?.labels || {})
+    labels: parseChipsData(selectedJob?.metadata?.labels || {})
   }
 }
 

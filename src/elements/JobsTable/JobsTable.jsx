@@ -60,6 +60,7 @@ import { getInitialFiltersByConfig } from '../../hooks/useFiltersFromSearchParam
 import { useTableScroll } from 'igz-controls/hooks/useTable.hook'
 
 import './jobsTable.scss'
+import { parseChipsData } from '../../utils/convertChipsData'
 
 const JobsTable = React.forwardRef(
   (
@@ -135,6 +136,15 @@ const JobsTable = React.forwardRef(
       () => generatePageData(handleFetchJobLogs, selectedJob),
       [handleFetchJobLogs, selectedJob]
     )
+
+    const detailsFormInitialValues = useMemo(() => {
+      return {
+        labels: selectedJob.labels ?? [],
+        results: selectedJob.resultsChips ?? [],
+        parameters: selectedJob.parametersChips ?? [],
+        nodeSelector: selectedJob.nodeSelectorChips ?? [],
+      }
+    }, [selectedJob.labels, selectedJob.nodeSelectorChips, selectedJob.parametersChips, selectedJob.resultsChips])
 
     const setJobStatusAborting = useCallback(
       (job, task) => {
@@ -410,6 +420,7 @@ const JobsTable = React.forwardRef(
             <>
               <Table
                 actionsMenu={actionsMenu}
+                detailsFormInitialValues={detailsFormInitialValues}
                 getCloseDetailsLink={() =>
                   getCloseDetailsLink(
                     params.jobName ||

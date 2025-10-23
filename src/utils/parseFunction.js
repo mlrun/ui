@@ -20,7 +20,7 @@ such restriction.
 import getState from './getState'
 import { page } from '../components/FunctionsPage/functions.util'
 import { getFunctionIdentifier } from './getUniqueIdentifier'
-import { parseKeyValues } from './object'
+import { parseChipsData } from './convertChipsData'
 
 import {
   FUNCTION_TYPE_APPLICATION,
@@ -69,7 +69,7 @@ export const parseFunction = (func, projectName, customState, customError) => {
     max_replicas: func.spec?.max_replicas ?? '',
     min_replicas: func.spec?.min_replicas ?? '',
     name: func.metadata?.name ?? '',
-    node_selector: parseKeyValues(func.spec?.node_selector || {}),
+    node_selector: parseChipsData(func.spec?.node_selector || {}),
     nuclio_name: func.status?.nuclio_name ?? '',
     parameters: func.spec?.parameters ?? {},
     preemption_mode: func.spec?.preemption_mode ?? '',
