@@ -12,7 +12,7 @@ export default [
   js.configs.recommended,
   eslintConfigPrettier,
   {
-    files: ['**/*.{js,mjs, jsx,ts,tsx}'],
+    files: ['**/*.{js,mjs,jsx,ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2021,
       globals: {

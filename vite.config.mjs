@@ -2,16 +2,16 @@ import commonjs from 'vite-plugin-commonjs'
 import eslint from 'vite-plugin-eslint'
 import { federation } from '@module-federation/vite'
 import path from 'path'
-
 import react from '@vitejs/plugin-react-swc'
 import svgr from 'vite-plugin-svgr'
 import { defineConfig, loadEnv } from 'vite'
 
-import { createProxyConfig } from './src/serverConfig.js'
+import { loadMlrunProxyConfig } from './config/loadDevProxyConfig.js'
 import { dependencies } from './package.json'
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(async ({ mode }) => {
   const env = loadEnv(mode, path.resolve(process.cwd()), '')
+  const mlrunProxyConfig = await loadMlrunProxyConfig()
 
   const federationPlugin =
     env.VITE_FEDERATION === 'true'
@@ -34,7 +34,7 @@ export default defineConfig(({ mode }) => {
     base: env.NODE_ENV === 'production' ? env.VITE_PUBLIC_URL : '/',
     server: {
       proxy: {
-        ...createProxyConfig(env)
+        ...mlrunProxyConfig(env)
       },
       fs: {
         strict: false
