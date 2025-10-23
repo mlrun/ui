@@ -123,6 +123,14 @@ const Functions = ({ isAllVersions = false }) => {
     }
   }, [isAllVersions])
 
+  const detailsFormInitialValues = useMemo(() => {
+    return {
+      additionalInfo: {
+        nodeSelectors: selectedFunction.node_selector ?? []
+      }
+    }
+  }, [selectedFunction.node_selector])
+
   const functionsFilters = useFiltersFromSearchParams(functionsFiltersConfig)
 
   const terminateDeleteTasksPolling = useCallback(() => {
@@ -710,6 +718,7 @@ const Functions = ({ isAllVersions = false }) => {
       closePanel={closePanel}
       confirmData={confirmData}
       createFunctionSuccess={createFunctionSuccess}
+      detailsFormInitialValues={detailsFormInitialValues}
       editableItem={editableItem}
       filters={functionsFilters}
       filtersStore={filtersStore}

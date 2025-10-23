@@ -35,13 +35,15 @@ import { createFilesRowData } from '../../utils/createArtifactsContent'
 import { fetchFiles, removeFiles } from '../../reducers/artifactsReducer'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
+import { parseChipsData } from '../../utils/convertChipsData'
 
 const Files = ({ isAllVersions = false }) => {
   const artifactsStore = useSelector(store => store.artifactsStore)
 
   const generateDetailsFormInitialValues = useCallback(
-    selectedFile => ({
-      tag: selectedFile.tag ?? ''
+    (selectedFile, internal_labels) => ({
+      tag: selectedFile.tag ?? '',
+      labels: parseChipsData(selectedFile.labels ?? {}, internal_labels),
     }),
     []
   )

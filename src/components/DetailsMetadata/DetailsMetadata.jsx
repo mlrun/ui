@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import NoData from '../../common/NoData/NoData'
-import { Tooltip, TextTooltipTemplate, ChipCell } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, ReadOnlyChips } from 'igz-controls/components'
 
 import { generateMetadata } from './detailsMetadata.util'
 
@@ -82,10 +82,7 @@ const DetailsMetadata = ({ selectedItem }) => {
                         !metadataValue.hidden &&
                         metadataValue.value}
                       {metadataValue.type === 'chip' && (
-                        <ChipCell
-                          elements={metadataValue.value}
-                          className={metadataValue.className}
-                        />
+                        <ReadOnlyChips labels={metadataValue.value} shortChips />
                       )}
                       {!metadataValue.type.match(/icon|chip|html/) && (
                         <Tooltip

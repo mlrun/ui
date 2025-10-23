@@ -140,7 +140,7 @@ const DetailsArtifacts = ({
 
   const getJobArtifacts = useCallback(
     (job, iteration) => {
-      const workflowLabel = job.labels.find(label => label.includes('workflow:'))
+      const workflowLabel = (job.labels ?? []).find(label => label.key === 'owner')?.value ?? ''
       const { chipValue: workflowId } = getChipLabelAndValue({ value: workflowLabel ?? '' })
       const config = {
         params: { tree: job.uid }
