@@ -58,7 +58,7 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "build:federation:dev": "dotenv -e .env.development.local-build -- vite build && node scripts/previewLocalBuildMF.mjs",
+    "build:federation": "dotenv -e .env.development.mf -- vite build && node scripts/previewLocalBuildMF.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "preinstall": "npx force-resolutions",
