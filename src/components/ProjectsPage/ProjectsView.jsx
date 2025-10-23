@@ -163,9 +163,7 @@ const ProjectsView = ({
           filterByName.length > 0 && filterMatches.length === 0 ? (
             <NoData />
           ) : filteredProjects.length === 0 ? (
-            <NoData message={'No active projects.'} />
-          ) : selectedProjectsState === 'archived' && filteredProjects.length === 0 ? (
-            <NoData message={'No archived projects.'} />
+            <NoData message={`No ${selectedProjectsState} projects.`} />
           ) : (
             <div className="projects-content">
               {filteredProjects.map(project => {
