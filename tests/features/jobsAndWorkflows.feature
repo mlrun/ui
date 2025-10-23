@@ -430,6 +430,7 @@ Feature: Jobs and workflows
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When pick up "Custom range" from "09/03/2021 00:00" to "09/04/2021 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        And wait load page
         Then verify from "09/03/2021 00:00" to "09/04/2021 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard

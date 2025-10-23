@@ -810,7 +810,10 @@ export default {
     Title_Function_Log_Info: By.css('.item-info > div > h3:nth-of-type(2)'),
     Content_Function_Log_Info: By.css('.item-info .table__item-logs:nth-of-type(2)'),
     Logs_Text_container: By.css('#overlay_container .table__item .table__item-logs-content'),
-    Logs_Refresh_Button: By.css('#overlay_container .table__item .logs-refresh')
+    Logs_Refresh_Button: By.css('#overlay_container .table__item .logs-refresh'),
+    Requested_Features_Table: By.css('.item-info .item-requested-features__table'),
+    Returned_Features_Table: By.css('.item-info .details-metadata__table'),
+    Statistics_Table: By.css('.item-info #DETAILS_STATISTICS_TABLE_ID')
   },
   modalWizardForm: {
     Title: By.css('.modal .modal__header-title'),
@@ -1734,6 +1737,13 @@ export default {
     ),
     Type_Filter_Element: By.css('[data-testid="type-form-field-select"]'),
     Type_Filter_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '[data-testid="type-form-field-select"]',
+        '[data-testid="select-header"]',
+        '.options-list .select__item:not(.hidden) .tooltip-wrapper'
+      )
+    ),
+    Type_Filter_Dropdown_Schedule: dropdownComponent(
       generateDropdownGroup(
         '[data-testid="type-form-field-select"]',
         '[data-testid="select-header"]',

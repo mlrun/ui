@@ -193,6 +193,7 @@ const realTimePipelinesTable = {
           )
         },
         name: '.table-body__cell:nth-of-type(1) a.data-ellipsis',
+        name_link: '.table-body__cell:nth-of-type(1) a .link',
         type: '.table-body__cell:nth-of-type(2) .data-ellipsis',
         function: '.table-body__cell:nth-of-type(3) .data-ellipsis',
         action_menu: {

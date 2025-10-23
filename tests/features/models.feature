@@ -851,26 +851,103 @@ Feature: Models Page
     And wait load page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then "Header" element on "Models_Info_Pane" should contains "test-model" value
+    Then click on "Table_FilterBy_Button" element on "Models" wizard
+    Then click on "Clear_Button" element on "FilterBy_Popup" wizard
+    And wait load page
+    When click on cell with value "train_model" in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Overview_Producer_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_Producer_Headers"
+    When click on cell with value "sk-project-admin/3d03c190ad57442099024be6bb8f5895-3" in "producer_link" column in "Overview_Producer_Headers" table on "Models_Info_Pane" wizard
+    And wait load page
+    Then verify if "Modal_Transition_Popup" popup dialog appears
+    Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
+    Then "Title" element on "Modal_Transition_Popup" should contains "train" value
+    Then verify "Data_Status" element visibility on "Modal_Transition_Popup" wizard
 
   @MLM
   @passive
   @inProgress
   @smoke
-  Scenario: MLM028 - Check tab list compontnts on Model Item infopane
+  Scenario: MLM028 - Check Overview tab Sources components on Model Item infopane
     Given open url
     And wait load page
-    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with value "transaction_fraud_adaboost" in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Overview_Sources_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_Sources_Headers"
+    Then check "dataset" value in "name_value" column in "Info_Sources_Table" table on "Models_Info_Pane" wizard
+    Then check "store://feature-vectors/churn-project-admin/transactions-fraud" value in "path_value" column in "Info_Sources_Table" table on "Models_Info_Pane" wizard
+    When click on cell with value "store://feature-vectors/churn-project-admin/transactions-fraud" in "path_value" column in "Info_Sources_Table" table on "Models_Info_Pane" wizard
+    And wait load page
+    Then verify if "Modal_Transition_Popup" popup dialog appears
+    Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
+    Then "Title" element on "Modal_Transition_Popup" should contains "transactions-fraud" value
+    Then verify "Data_Status" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Refresh_Button" element on "Modal_Transition_Popup" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
+    Then click on "Refresh_Button" element on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Action_Menu" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Action_Menu" dropdown element on "Modal_Transition_Popup" wizard should contains "Common_Lists"."Action_Menu_List_Function_Transition_Popup"
+    Then select "View YAML" option in action menu on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then verify if "View_YAML" popup dialog appears
+    Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+    Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+    Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+    And wait load page
+    Then verify "Tab_Selector" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Tab_Selector" on "Modal_Transition_Popup" wizard should contains "Feature_Vectors_Info_Pane"."Tab_List_Extended"
+    Then verify "Overview" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then verify "Overview_General_Headers" on "Modal_Transition_Popup" wizard should contains "Feature_Vectors_Info_Pane"."Overview_General_Headers"
+    And select "Requested Features" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then verify "Requested Features" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then verify "Requested_Features_Table" element visibility on "Modal_Transition_Popup" wizard
+    And select "Returned Features" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then verify "Returned Features" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then verify "Returned_Features_Table" element visibility on "Modal_Transition_Popup" wizard
+    Then select "Statistics" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then verify "Statistics" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then verify cell with "Statistics" value in "key" column in "Tab_Selector" table on "Modal_Transition_Popup" wizard should display "Label_Hint"."Models_Statistics"
+    Then verify "Statistics_Table" element visibility on "Modal_Transition_Popup" wizard
+    Then select "Analysis" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then verify "Analysis" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+    Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Data"
+    Then verify "Cross_Close_Button" element visibility on "Modal_Transition_Popup" wizard
+    Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    When click on cell with value "current-state_model" in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
+    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then "Header" element on "Models_Info_Pane" should contains "current-state_model" value
+    Then check "dataset" value in "name_value" column in "Info_Sources_Table" table on "Models_Info_Pane" wizard
+    Then check "/User/demos/customer-churn-prediction/data/pipeline/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/encoded-data.csv" value in "path_value" column in "Info_Sources_Table" table on "Models_Info_Pane" wizard
+    When click on cell with value "/User/demos/customer-churn-prediction/data/pipeline/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/encoded-data.csv" in "path_value" column in "Info_Sources_Table" table on "Models_Info_Pane" wizard
+    And wait load page
+    And wait load page
+    Then verify if "Notification_Popup" popup dialog appears
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Copied to clipboard successfully" value
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
 
   @MLM
   @passive
@@ -1039,8 +1116,9 @@ Feature: Models Page
     And select "Real-Time Pipelines" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
     Then verify "Real-Time Pipelines" tab is active in "Models_Tab_Selector" on "Models" wizard
-    Then save to context "name" column and "href" attribute on 2 row from "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
-    When click on cell with row index 2 in "name" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    Then save to context "name" column and "href" attribute on 3 row from "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    When click on cell with value "model-monitoring-stream" in "name_link" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    And wait load page
     And wait load page
     Then compare current browser URL with test "href" context value
     Then verify "Real_Time_Pipelines_Graph" element visibility on "Real_Time_Pipelines" wizard
@@ -1051,7 +1129,7 @@ Feature: Models Page
     Then verify "Overview_Headers" on "Real_Time_Pipeline_Pane" wizard should contains "Real_Time_Pipeline_Pane"."Overview_Headers"
     Then click on "Arrow_Back" element on "Real_Time_Pipeline_Pane" wizard
     And wait load page
-    Then click on cell with row index 2 in "function" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    Then click on cell with row index 3 in "function" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     And wait load page
     Then verify if "Modal_Transition_Popup" popup dialog appears
     Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
@@ -1076,7 +1154,7 @@ Feature: Models Page
     Then verify "Cross_Close_Button" element visibility on "Modal_Transition_Popup" wizard
     Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
     And wait load page
-    Then click on cell with row index 2 in "function" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    Then click on cell with row index 3 in "function" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     And wait load page
     Then verify if "Modal_Transition_Popup" popup dialog appears
     Then verify "Tab_Selector" element visibility on "Modal_Transition_Popup" wizard
@@ -1099,7 +1177,7 @@ Feature: Models Page
     Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
     And wait load page
     Then verify "Real_Time_Pipelines_Table" element visibility on "Real_Time_Pipelines" wizard
-    Then click on cell with row index 1 in "name" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    When click on cell with value "vizro" in "name_link" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
     Then "No_Data_Message" element on "commonPagesHeader" should contains "The ingestion function has no steps and therefore no graph." value
