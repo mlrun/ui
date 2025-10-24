@@ -52,7 +52,7 @@ const ProjectsMonitoring = () => {
         <ScheduledJobsCounters />
         <div className="card__small-container">
           <ModelsAndApplication />
-          <ApplicationCounter />
+          {projectName && <ApplicationCounter />}
         </div>
         <AlertsCounters />
         {/* Todo: implement as part of ML-5460
