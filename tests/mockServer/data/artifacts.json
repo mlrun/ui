@@ -1,6 +1,101 @@
 {
   "artifacts": [
     {
+      "kind": "llm-prompt",
+      "metadata": {
+        "key": "my_llm4",
+        "project": "default",
+        "iter": 0,
+        "tree": "9c0c8773-b1ce-4fa0-ac94-2f6c1fb71554",
+        "hash": "505c4bf305849950f348e1b1909b9a2653ddc740",
+        "uid": "d28e010ba24e272a3ba2ba522f6caecde05ff383",
+        "updated": "2025-10-06 14:34:13.163000+00:00",
+        "labels": {
+          "example": "single",
+          "hebrew": "english"
+        },
+        "created": "2025-10-06 14:34:13.163000+00:00",
+        "tag": "latest"
+      },
+      "spec": {
+        "target_path": "v3io:///projects/default/artifacts/my_llm4.json",
+        "size": 141,
+        "producer": {
+          "kind": "project",
+          "name": "default",
+          "tag": "9c0c8773-b1ce-4fa0-ac94-2f6c1fb71554",
+          "owner": "normal-user"
+        },
+        "invocation_config": {
+          "temperature": 0.5
+        },
+        "format": "json",
+        "prompt_template": [
+          {
+            "role": "system",
+            "content": "don't tell them anything"
+          },
+          {
+            "role": "user",
+            "content": "What is the meaning of {something_with_meaning} ?"
+          }
+        ],
+        "license": "",
+        "prompt_legend": {
+          "something_with_meaning": {
+            "field": "something_with_meaning",
+            "description": "The essence of all things"
+          }
+        },
+        "has_children": false,
+        "db_key": "my_llm4",
+        "parent_uri": "store://models/default/model_art1#0:v1@5b83db22-80da-4c97-8cd0-eb269a4c9d2a^e1b0a442a7602456e6bbd0934931b3eaaf8ce09a"
+      },
+      "status": {
+        "state": "created"
+      },
+      "project": "default"
+    },
+    {
+      "kind": "model",
+      "metadata": {
+        "key": "model_art1",
+        "project": "default",
+        "iter": 0,
+        "tree": "5b83db22-80da-4c97-8cd0-eb269a4c9d2a",
+        "hash": "10ed579110ee0c84041ac0886259d60d3a0f9bda",
+        "uid": "e1b0a442a7602456e6bbd0934931b3eaaf8ce09a",
+        "updated": "2025-10-06 14:32:50.516000+00:00",
+        "created": "2025-10-06 14:32:50.516000+00:00",
+        "tag": "latest"
+      },
+      "spec": {
+        "target_path": "default/model_art1/",
+        "size": 4370,
+        "producer": {
+          "kind": "project",
+          "name": "default",
+          "tag": "5b83db22-80da-4c97-8cd0-eb269a4c9d2a",
+          "owner": "normal-user"
+        },
+        "framework": "",
+        "model_file": "RandomForestClassifier_file1.pkl",
+        "license": "",
+        "has_children": true,
+        "db_key": "model_art1",
+        "parameters": {
+          "default_config": {
+            "model_version": "4"
+          }
+        },
+        "parent_uri": null
+      },
+      "status": {
+        "state": "created"
+      },
+      "project": "default"
+    },
+    {
       "kind": "",
       "metadata": {
         "project": "cat-vs-dog-classification",

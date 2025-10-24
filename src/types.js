@@ -18,17 +18,22 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import PropTypes from 'prop-types'
-import {isEmpty} from 'lodash'
 import {
   BE_PAGE,
   BE_PAGE_SIZE,
   FE_PAGE,
   FE_PAGE_SIZE,
+  GREY_NODE,
+  INPUT_NODE,
+  OUTPUT_NODE,
+  OVAL_NODE_SHAPE,
   PANEL_CREATE_MODE,
   PANEL_EDIT_MODE,
   PANEL_FUNCTION_CREATE_MODE,
   PANEL_RERUN_MODE,
-  STATUS_FILTER_NAME
+  PRIMARY_NODE,
+  ROUNDED_RECTANGLE_NODE_SHAPE,
+  SECONDARY_NODE
 } from './constants'
 
 import { BUTTON_VARIANTS } from 'igz-controls/types'
@@ -237,4 +242,24 @@ export const MEMBER = PropTypes.shape({
   role: PropTypes.string.isRequired,
   initialRole: PropTypes.string,
   modification: PropTypes.string
+})
+
+export const REACT_FLOW_NODE_DATA = PropTypes.shape({
+  subType: PropTypes.oneOf([INPUT_NODE, OUTPUT_NODE, PRIMARY_NODE, SECONDARY_NODE, GREY_NODE])
+    .isRequired,
+  label: PropTypes.string.isRequired,
+  tip: PropTypes.string,
+  subLabel: PropTypes.string,
+  isSelectable: PropTypes.bool,
+  withOpacity: PropTypes.bool,
+  shape: PropTypes.oneOf([OVAL_NODE_SHAPE, ROUNDED_RECTANGLE_NODE_SHAPE, null]),
+  sourceHandle: PropTypes.shape({
+    tooltip: PropTypes.string,
+    className: PropTypes.string
+  }),
+  targetHandle: PropTypes.shape({
+    tooltip: PropTypes.string,
+    className: PropTypes.string
+  }),
+  customData: PropTypes.object
 })
