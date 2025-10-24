@@ -59,7 +59,7 @@ import { generateObjectNotInTheListMessage } from './generateMessage.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { ConfirmDialog } from 'igz-controls/components'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { createArtifactMessages } from './createArtifact.util'
+import {  getArtifactMessagesByKind } from './createArtifact.util'
 
 export const applyTagChanges = (changes, artifactItem, projectName, dispatch, setNotification) => {
   let updateTagMsg = 'Tag was updated'
@@ -141,7 +141,7 @@ export const processActionAfterTagUniquesValidation = ({
     return actionCallback().finally(hideLoader)
   }
 
-  const messagesByKind = createArtifactMessages[artifact.kind.toLowerCase()]
+  const messagesByKind = getArtifactMessagesByKind(artifact.kind)
 
   return artifactApi
     .getExpandedArtifact(projectName, artifact.db_key ?? artifact.spec.db_key ?? artifact.key , tag)
