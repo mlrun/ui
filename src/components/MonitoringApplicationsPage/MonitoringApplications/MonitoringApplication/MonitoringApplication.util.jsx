@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import prettyBytes from 'pretty-bytes'
-import { capitalize, isNumber } from 'lodash'
+import { isNumber } from 'lodash'
 
 import { METRIC_TYPE, RESULT_TYPE } from '../../../../constants'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
@@ -42,7 +42,7 @@ export const generateArtifactsTableContent = (artifacts = []) => {
   const tableBody = artifacts.map(artifact => {
     return {
       name: {
-        value: capitalize(artifact.db_key),
+        value: artifact.db_key,
         tag: artifact.tag,
         className: 'table-cell_big table-cell_with-tag'
       },
@@ -89,7 +89,7 @@ export const generateResultsTableContent = (metrics = []) => {
 
       return {
         name: {
-          value: capitalize(result.result_name),
+          value: result.result_name,
           className: 'table-cell_medium'
         },
         kind: {
@@ -138,7 +138,7 @@ export const generateMetricsTableContent = (metrics = []) => {
 
       return {
         name: {
-          value: capitalize(metric.metric_name),
+          value: metric.metric_name,
           className: 'table-cell_medium'
         },
         value: {

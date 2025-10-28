@@ -92,7 +92,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
         loading: nuclioStore.loading
       },
       failed: {
-        counterTooltip: 'Failed, Error, Unhealthy',
+        counterTooltip: 'Error, Unhealthy',
         value: functionsFailed,
         label: 'Failed',
         status: 'failed',
