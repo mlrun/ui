@@ -43,7 +43,8 @@ export const generateArtifactsTableContent = (artifacts = []) => {
     return {
       name: {
         value: capitalize(artifact.db_key),
-        className: 'table-cell_big'
+        tag: artifact.tag,
+        className: 'table-cell_big table-cell_with-tag'
       },
       artifactType: {
         value: artifact.kind || 'artifact',
