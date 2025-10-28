@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize } from 'lodash'
 import classnames from 'classnames'
 import moment from 'moment'
 
@@ -52,7 +51,7 @@ export const generateOperatingFunctionsTable = (functions, projectName) => {
 
     return {
       name: {
-        value: capitalize(func.name),
+        value: func.name,
         href: generateNuclioLink(`/projects/${projectName}/functions/${nuclioFunctionName}`),
         className: 'table-cell_big'
       },
