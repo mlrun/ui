@@ -151,6 +151,9 @@ Feature: LLM prompts Page
     Then click on "Refresh_Button" element on "LLM_Prompts" wizard
     And wait load page
     Then value in "labels" column with "dropdowns" in "LLMPrompts_Table" on "LLM_Prompts" wizard should contains "language" in "Overlay"
+    Then type value "5" to "Search_By_Name_Filter_Input" field on "LLM_Prompts" wizard
+    Then click on "Refresh_Button" element on "LLM_Prompts" wizard
+    And wait load page
     Then click on "Table_FilterBy_Button" element on "LLM_Prompts" wizard
     Then type value "type=qa" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
@@ -750,6 +753,7 @@ Feature: LLM prompts Page
     Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
     Then type value "system" to "Tag_Input" field on "Add_Tag_Popup" wizard
     Then click on "Add_Button" element on "Add_Tag_Popup" wizard
+    And wait load page
     Then verify if "Confirm_Popup" popup dialog appears
     Then "Title" element on "Confirm_Popup" should contains "Overwrite LLM prompt?" value
     Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
@@ -760,6 +764,11 @@ Feature: LLM prompts Page
     Then verify "Overwrite_Button" element visibility on "Confirm_Popup" wizard
     Then "Overwrite_Button" element on "Confirm_Popup" should contains "Overwrite" value
     When click on "Cancel_Button" element on "Confirm_Popup" wizard
+    When click on "Cancel_Button" element on "Add_Tag_Popup" wizard
+    Then verify if "Common_Popup" popup dialog appears
+    Then "Title" element on "Common_Popup" should contains "Are you sure?" value
+    Then "Description" element on "Common_Popup" should contains "All changes will be lost" value
+    Then click on "Confirm_Button" element on "Common_Popup" wizard
     Then select "Add a tag" option in action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table at row with "my_llm" value in "name" column
     And wait load page
     Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard

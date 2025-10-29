@@ -96,6 +96,7 @@ export default {
   },
   Feature_Vectors_Info_Pane: {
     Tab_List: ['Overview', 'Requested Features', 'Analysis'],
+    Tab_List_Extended: ['Overview', 'Requested Features', 'Returned Features', 'Statistics', 'Analysis'],
     Overview_General_Headers: [
       'Description:',
       'Labels:',
@@ -428,7 +429,8 @@ export default {
     Expand_All_Button: 'Expand all',
     In_Process_Jobs: 'Aborting, Pending, Pending retry, Running',
     Running_Tip: 'Running, Terminating',
-    Failed_Tip: 'Failed',
+    Running: 'Running',
+    Failed_Tip: 'Error, Unhealthy',
     Failed_Jobs: 'Aborted, Error',
     Failed_Worflows: 'Error, Failed',
     Succeeded: 'Completed',

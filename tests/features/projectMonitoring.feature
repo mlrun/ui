@@ -944,7 +944,7 @@ Feature: Project Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Next 24 hours"
         Then verify "Table_FilterBy_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
-        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "All"
         Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
         And wait load page
         Then "Type_All_Checkbox" element should be checked on "FilterBy_Popup" wizard
@@ -971,7 +971,7 @@ Feature: Project Monitoring Page
         Then verify "Table_FilterBy_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
         Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
-        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "5 items selected"
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "5 items selected"
         Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
         And wait load page
         Then "Type_All_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
@@ -998,7 +998,7 @@ Feature: Project Monitoring Page
         Then verify "Table_FilterBy_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
         Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
-        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Workflow"
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "Workflow"
         Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
         And wait load page
         Then "Type_All_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
