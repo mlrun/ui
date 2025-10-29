@@ -21,6 +21,15 @@ Examples:
 | `npm run docker`                                                                                 | `mlrun/mlrun-ui:latest`          |
 | `MLRUN_DOCKER_REGISTRY=quay.io/ MLRUN_DOCKER_REPO=iguazio MLRUN_DOCKER_TAG=0.4.9 npm run docker` | `quay.io/iguazio/mlrun-ui:0.4.9` |
 
+### Docker build argument
+
+The Docker build supports an optional argument:
+
+`--build-arg IS_MF=${npm_config_IS_MF:-false}`
+
+By default, `IS_MF` is `false`, and the image is built as a standard **mlrun-ui** build.<br />
+When set to `true`, the image is built in **Module Federation** mode.
+
 ### `docker run` environment variables
 
 The Docker container runs a Nginx server, which listens on exposed port number 8090, serves the web-app, and proxies to the backend API.
@@ -36,6 +45,7 @@ You can pass the following environment variables to the `docker run` command to 
 | `MLRUN_V3IO_ACCESS_KEY`       | Sets the V3IO access key to use for accessing V3IO containers<br />Example: `a7097c94-6e8f-436d-9717-a84abe2861d1`     |
 | `MLRUN_FUNCTION_CATALOG_URL`  | Sets the base URL of the function-template catalog <br />Default: `https://raw.githubusercontent.com`                  |
 | `MLRUN_FUNCTION_CATALOG_PATH` | Sets the base URI of the function-template catalog <br />Default: `/mlrun/functions/master`                            |
+| `MLRUN_IGZ_UI_ALLOWED_ORIGIN` | Allowed origin for Module Federation and CORS<br />Example: `https://igz-ui.pini.vmdev90ig4.lab.iguazeng.com`          |
 
 Example:
 
@@ -70,6 +80,11 @@ Your app is ready to be deployed.
 This command is run by the Dockerfile that is used by the command [`npm run docker`](#npm-run-docker).
 
 Note: `npm install` should be run first.
+
+### `npm run preview:federation`
+
+Builds and serves the **mlrun-ui** application in **Module Federation** mode at `http://localhost:5179/`.<br />
+Use this command when developing locally with **igz-ui**, allowing **mlrun-ui** to be consumed as a remote module.
 
 ## Development
 
