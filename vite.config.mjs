@@ -11,7 +11,7 @@ import { dependencies } from './package.json'
 
 export default defineConfig(async ({ mode }) => {
   const env = loadEnv(mode, path.resolve(process.cwd()), '')
-  const mlrunProxyConfig = await loadMlrunProxyConfig()
+  const mlrunProxyConfig = await loadMlrunProxyConfig(mode)
 
   const federationPlugin =
     env.VITE_FEDERATION === 'true'
