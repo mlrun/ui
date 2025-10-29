@@ -56,7 +56,7 @@ export const handleDeleteArtifact = (
       )
     })
     .catch(error => {
-      showErrorNotification(dispatch, error, `Deleting ${artifactType} failed`, '', () =>
+      showErrorNotification(dispatch, error, '', '', () =>
         handleDeleteArtifact(
           dispatch,
           project,

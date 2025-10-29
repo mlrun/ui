@@ -24,9 +24,7 @@ import MlChart from '../../../common/MlChart/MlChart'
 import NoData from '../../../common/NoData/NoData'
 import { Loader, Tip } from 'igz-controls/components'
 
-import {
-  MONITORING_APPLICATIONS_NO_DATA_MESSAGE
-} from '../MonitoringApplicationsPage.util'
+import { MONITORING_APPLICATIONS_NO_DATA_MESSAGE } from '../MonitoringApplicationsPage.util'
 import { getMEPsWithDetectionChartConfig } from '../../../utils/getChartConfig'
 import { groupDataToBins } from './monitoringApplications.util'
 import { useSelector } from 'react-redux'
@@ -38,7 +36,7 @@ const MEPsWithDetections = () => {
   const chartWrapperRef = useRef()
   const barConfig = useMemo(() => getMEPsWithDetectionChartConfig(), [])
   const {
-    endpointsWithDetections: { data: endpointsWithDetectionsData, loading }
+    endpointsWithDetections: { data: endpointsWithDetectionsData, loading, error }
   } = useSelector(store => store.monitoringApplicationsStore)
 
   const renderPlugin = useMemo(() => {
@@ -133,7 +131,13 @@ const MEPsWithDetections = () => {
         <Tip text="This chart displays the number of model endpoints that had at least one detected issue, in any monitoring application, in the relevant time period" />
       </div>
       {endpointsWithDetectionsData.values?.length === 0 && !(isLoading || loading) ? (
-        <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
+        <NoData
+          message={
+            error
+              ? 'Failed to fetch Model Endpoints with suspected/detected issue'
+              : MONITORING_APPLICATIONS_NO_DATA_MESSAGE
+          }
+        />
       ) : (
         <div className="section-item_chart-wrapper">
           <div className="section-item_chart">
@@ -143,10 +147,7 @@ const MEPsWithDetections = () => {
             >
               <canvas id="chart-y-axis" ref={chartYAxisRef} width={0} height={0} />
               <div className="section-item_ml-chart-wrapper" ref={chartWrapperRef}>
-                <MlChart
-                  config={barChartConfig}
-                  chartRef={chartRef}
-                />
+                <MlChart config={barChartConfig} chartRef={chartRef} />
               </div>
               <div className="section-item_chart-area_x-axis-label">Time range</div>
             </div>

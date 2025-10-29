@@ -74,7 +74,7 @@ const FeatureSetPopUp = ({ featureSetData, isOpen, onResolve }) => {
         }
       })
       .catch(error => {
-        showErrorNotification(dispatch, error, '', 'Failed to retrieve feature set data')
+        showErrorNotification(dispatch, error)
 
         onResolve()
       })

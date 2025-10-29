@@ -84,7 +84,7 @@ const FeatureVectorPopUp = ({ featureVectorData, isOpen, onResolve }) => {
         }
       })
       .catch(error => {
-        showErrorNotification(dispatch, error, '', 'Failed to retrieve feature vector data')
+        showErrorNotification(dispatch, error)
 
         onResolve()
       })

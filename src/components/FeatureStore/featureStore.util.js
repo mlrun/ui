@@ -29,7 +29,6 @@ import {
   FEATURE_VECTORS_TAB,
   TAG_LATEST
 } from '../../constants'
-import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { convertChipsData } from '../../utils/convertChipsData'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { truncateUid } from 'igz-controls/utils/string.util'
@@ -131,12 +130,7 @@ export const handleApplyDetailsChanges = (
       return response
     })
     .catch(error => {
-      const customErrorMsg =
-        error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-          ? 'Permission denied'
-          : 'Failed to update'
-
-      showErrorNotification(dispatch, error, '', customErrorMsg, () =>
+      showErrorNotification(dispatch, error, '', null, () =>
         handleApplyDetailsChanges(
           changes,
           fetchData,

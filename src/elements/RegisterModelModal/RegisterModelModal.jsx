@@ -27,16 +27,18 @@ import arrayMutators from 'final-form-arrays'
 import { v4 as uuidv4 } from 'uuid'
 
 import TargetPath from '../../common/TargetPath/TargetPath'
-import { Button, Modal, FormChipCell, FormInput, FormTextarea, Loader } from 'igz-controls/components'
+import {
+  Button,
+  Modal,
+  FormChipCell,
+  FormInput,
+  FormTextarea,
+  Loader
+} from 'igz-controls/components'
 
 import artifactApi from '../../api/artifacts-api'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
-import {
-  MODAL_SM,
-  TERTIARY_BUTTON,
-  PRIMARY_BUTTON,
-  FORBIDDEN_ERROR_STATUS_CODE
-} from 'igz-controls/constants'
+import { MODAL_SM, TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { convertChipsData } from '../../utils/convertChipsData'
 import { getChipOptions } from 'igz-controls/utils/chips.util'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
@@ -123,11 +125,6 @@ function RegisterModelModal({ actions = null, isOpen, onResolve, params, refresh
       projectName: params.projectName,
       dispatch,
       actionCallback: handleRegisterModel,
-      getCustomErrorMsg: error => {
-        return error?.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-          ? 'You do not have permission to create a new resource'
-          : 'Model failed to initiate'
-      },
       onErrorCallback: resolveModal,
       showLoader: () => setIsLoading(true),
       hideLoader: () => setIsLoading(false)

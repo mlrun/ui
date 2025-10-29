@@ -27,11 +27,17 @@ const initialState = {
   error: null
 }
 
-export const fetchBackgroundTasks = createAsyncThunk('fetchBackgroundTasks', ({ kind = null }) => {
-  return tasksApi.getBackgroundTasks(kind).then(response => {
-    return response?.data?.background_tasks
-  })
-})
+export const fetchBackgroundTasks = createAsyncThunk(
+  'fetchBackgroundTasks',
+  ({ kind = null }, thunkAPI) => {
+    return tasksApi
+      .getBackgroundTasks(kind)
+      .then(response => {
+        return response?.data?.background_tasks
+      })
+      .catch(thunkAPI.rejectWithValue)
+  }
+)
 
 const tasksSlice = createSlice({
   name: 'tasksStore',

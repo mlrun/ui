@@ -32,7 +32,7 @@ import {
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 import functionsApi from '../api/functions-api'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
-import { getNewJobErrorMsg } from '../components/JobWizard/JobWizard.util'
+import { getErrorMsg } from 'igz-controls/utils/common.util'
 
 const initialState = {
   jobsData: [],
@@ -129,16 +129,22 @@ const generateRequestParams = (filters, jobName) => {
   return params
 }
 
-export const abortJob = createAsyncThunk('abortJob', ({ projectName, job }) => {
-  return jobsApi.abortJob(projectName, job.uid, job.iteration).then(response => {
-    return get(response, 'data', {})
-  })
+export const abortJob = createAsyncThunk('abortJob', ({ projectName, job }, thunkAPI) => {
+  return jobsApi
+    .abortJob(projectName, job.uid, job.iteration)
+    .then(response => {
+      return get(response, 'data', {})
+    })
+    .catch(thunkAPI.rejectWithValue)
 })
-export const deleteAllJobRuns = createAsyncThunk('deleteAllJobRuns', ({ project, job }) => {
-  return jobsApi.deleteAllJobRuns(project, job.name)
-})
-export const deleteJob = createAsyncThunk('deleteJob', ({ project, job }) => {
-  return jobsApi.deleteJob(project, job.uid)
+export const deleteAllJobRuns = createAsyncThunk(
+  'deleteAllJobRuns',
+  ({ project, job }, thunkAPI) => {
+    return jobsApi.deleteAllJobRuns(project, job.name).catch(thunkAPI.rejectWithValue)
+  }
+)
+export const deleteJob = createAsyncThunk('deleteJob', ({ project, job }, thunkAPI) => {
+  return jobsApi.deleteJob(project, job.uid).catch(thunkAPI.rejectWithValue)
 })
 export const editJob = createAsyncThunk('editJob', ({ postData, project }, thunkAPI) => {
   return jobsApi.editJob(postData, project).catch(thunkAPI.rejectWithValue)
@@ -164,17 +170,22 @@ export const fetchAllJobRuns = createAsyncThunk(
       .catch(error => {
         largeResponseCatchHandler(
           error,
-          'Failed to fetch jobs',
+          null,
           thunkAPI.dispatch,
           config?.ui?.setRequestErrorMessage
         )
+
+        return thunkAPI.rejectWithValue(error)
       })
   }
 )
-export const fetchJob = createAsyncThunk('fetchJob', ({ project, jobId, iter }) => {
-  return jobsApi.getJob(project, jobId, iter).then(res => {
-    return res.data.data
-  })
+export const fetchJob = createAsyncThunk('fetchJob', ({ project, jobId, iter }, thunkAPI) => {
+  return jobsApi
+    .getJob(project, jobId, iter)
+    .then(res => {
+      return res.data.data
+    })
+    .catch(thunkAPI.rejectWithValue)
 })
 export const fetchJobFunction = createAsyncThunk(
   'fetchJobFunction',
@@ -185,20 +196,31 @@ export const fetchJobFunction = createAsyncThunk(
         return res.data.func
       })
       .catch(error => {
-        showErrorNotification(thunkAPI.dispatch, error, 'Job’s function failed to load')
+        showErrorNotification(thunkAPI.dispatch, error)
+
+        return thunkAPI.rejectWithValue(error)
       })
   }
 )
-export const fetchJobFunctions = createAsyncThunk('fetchJobFunctions', ({ project, hash }) => {
-  return functionsApi.getFunctions(project, null, {}, hash).then(res => {
-    return res.data?.funcs
-  })
-})
-export const fetchJobLogs = createAsyncThunk('fetchJobLogs', ({ id, project, attempt, signal }) => {
-  return jobsApi.getJobLogs(id, project, attempt, signal).then(result => {
-    return result
-  })
-})
+export const fetchJobFunctions = createAsyncThunk(
+  'fetchJobFunctions',
+  ({ project, hash }, thunkAPI) => {
+    return functionsApi
+      .getFunctions(project, null, {}, hash)
+      .then(res => {
+        return res.data?.funcs
+      })
+      .catch(thunkAPI.rejectWithValue)
+  }
+)
+export const fetchJobLogs = createAsyncThunk(
+  'fetchJobLogs',
+  ({ id, project, attempt, signal }, thunkAPI) => {
+    return jobsApi
+      .getJobLogs(id, project, attempt, signal)
+      .catch(thunkAPI.rejectWithValue)
+  }
+)
 export const fetchJobs = createAsyncThunk('fetchJobs', ({ project, filters, config }, thunkAPI) => {
   config?.ui?.setRequestErrorMessage?.('')
 
@@ -218,12 +240,9 @@ export const fetchJobs = createAsyncThunk('fetchJobs', ({ project, filters, conf
       return data
     })
     .catch(error => {
-      largeResponseCatchHandler(
-        error,
-        'Failed to fetch jobs',
-        thunkAPI.dispatch,
-        config?.ui?.setRequestErrorMessage
-      )
+      largeResponseCatchHandler(error, null, thunkAPI.dispatch, config?.ui?.setRequestErrorMessage)
+
+      return thunkAPI.rejectWithValue(error)
     })
 })
 export const fetchScheduledJobs = createAsyncThunk(
@@ -269,23 +288,25 @@ export const fetchScheduledJobs = createAsyncThunk(
       .catch(error => {
         largeResponseCatchHandler(
           error,
-          'Failed to fetch scheduled jobs',
+          null,
           thunkAPI.dispatch,
           config?.ui?.setRequestErrorMessage
         )
+
+        return thunkAPI.rejectWithValue(error)
       })
   }
 )
 export const fetchSpecificJobs = createAsyncThunk(
   'fetchSpecificJobs',
-  ({ project, filters, jobList }) => {
+  ({ project, filters, jobList }, thunkAPI) => {
     const params = {
       ...generateRequestParams(filters)
     }
 
     return jobsApi.getSpecificJobs(project, params, jobList).then(({ data }) => {
       return data.runs
-    })
+    }).catch(thunkAPI.rejectWithValue)
   }
 )
 export const handleRunScheduledJob = createAsyncThunk(
@@ -424,7 +445,7 @@ const jobsSlice = createSlice({
       state.loading = false
     })
     builder.addCase(runNewJob.rejected, (state, action) => {
-      state.error = getNewJobErrorMsg(action.payload)
+      state.error = getErrorMsg(action.payload)
       state.loading = false
     })
   }

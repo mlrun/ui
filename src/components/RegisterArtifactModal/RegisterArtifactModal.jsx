@@ -30,7 +30,6 @@ import RegisterArtifactModalForm from '../../elements/RegisterArtifactModalForm/
 import { Button, Modal, Loader } from 'igz-controls/components'
 
 import {
-  FORBIDDEN_ERROR_STATUS_CODE,
   MODAL_SM,
   TERTIARY_BUTTON,
   PRIMARY_BUTTON
@@ -129,11 +128,6 @@ const RegisterArtifactModal = ({
       projectName: params.projectName,
       dispatch,
       actionCallback: handleRegisterArtifact,
-      getCustomErrorMsg: error => {
-        return error?.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-          ? 'You do not have permission to create a new resource'
-          : `${title} failed to initiate`
-      },
       onErrorCallback: resolveModal,
       showLoader: () => setIsLoading(true),
       hideLoader: () => setIsLoading(false)

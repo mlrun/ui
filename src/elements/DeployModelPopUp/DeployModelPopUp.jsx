@@ -161,15 +161,11 @@ const DeployModelPopUp = ({
             )
           })
           .catch(error => {
-            showErrorNotification(dispatch, error, '', 'Model deployment failed to initiate', () =>
-              deployModel(values)
-            )
+            showErrorNotification(dispatch, error, '', '', () => deployModel(values))
           })
       })
       .catch(error => {
-        showErrorNotification(dispatch, error, '', 'Failed to retrieve function data', () =>
-          deployModel(values)
-        )
+        showErrorNotification(dispatch, error, '', '', () => deployModel(values))
       })
   }
 

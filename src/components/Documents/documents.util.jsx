@@ -21,19 +21,14 @@ import React from 'react'
 import { cloneDeep, isEmpty, omit } from 'lodash'
 
 import { ARTIFACT_MAX_DOWNLOAD_SIZE, DOCUMENT_TYPE, DOCUMENTS_PAGE } from '../../constants'
-import {
-  openDeleteConfirmPopUp,
-  openPopUp,
-  getErrorMsg,
-  copyToClipboard
-} from 'igz-controls/utils/common.util'
+import { openDeleteConfirmPopUp, openPopUp, copyToClipboard } from 'igz-controls/utils/common.util'
 import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
 import { generateUri } from '../../utils/resources'
 import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
-import { FORBIDDEN_ERROR_STATUS_CODE, FULL_VIEW_MODE } from 'igz-controls/constants'
+import { FULL_VIEW_MODE } from 'igz-controls/constants'
 import { convertChipsData } from '../../utils/convertChipsData'
 import { updateArtifact } from '../../reducers/artifactsReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
@@ -249,12 +244,7 @@ export const handleApplyDetailsChanges = (
         )
       })
       .catch(error => {
-        const customErrorMsg =
-          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'Permission denied'
-            : getErrorMsg(error, 'Failed to update the document')
-
-        showErrorNotification(dispatch, error, '', customErrorMsg, () =>
+        showErrorNotification(dispatch, error, '', null, () =>
           handleApplyDetailsChanges(changes, projectName, selectedItem, setNotification, dispatch)
         )
       })

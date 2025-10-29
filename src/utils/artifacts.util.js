@@ -114,7 +114,7 @@ export const applyTagChanges = (changes, artifactItem, projectName, dispatch, se
         )
       })
       .catch(error => {
-        showErrorNotification(dispatch, error, '', 'Failed to update the tag', () =>
+        showErrorNotification(dispatch, error, null, null, () =>
           applyTagChanges(changes, artifactItem, projectName, dispatch, setNotification)
         )
       })
@@ -131,7 +131,6 @@ export const processActionAfterTagUniquesValidation = ({
   actionCallback,
   showLoader = () => {},
   hideLoader = () => {},
-  getCustomErrorMsg = () => 'Failed to update a tag',
   onErrorCallback,
   throwError = false
 }) => {
@@ -188,14 +187,13 @@ export const processActionAfterTagUniquesValidation = ({
     })
     .catch(error => {
       if (error) {
-        showErrorNotification(dispatch, error, '', getCustomErrorMsg(error), () =>
+        showErrorNotification(dispatch, error, null, null, () =>
           processActionAfterTagUniquesValidation({
             tag,
             artifact,
             projectName,
             dispatch,
             actionCallback,
-            getCustomErrorMsg,
             onErrorCallback,
             throwError
           })
@@ -436,7 +434,7 @@ export const setFullSelectedArtifact = (
         )}`,
         { replace: true }
       )
-      showArtifactErrorNotification(dispatch, error, page)
+      showErrorNotification(dispatch, error)
     })
 }
 
@@ -456,7 +454,7 @@ export const chooseOrFetchArtifact = (dispatch, page, tab, selectedArtifact, art
   )
     .unwrap()
     .catch(error => {
-      showArtifactErrorNotification(dispatch, error, page)
+      showErrorNotification(dispatch, error)
     })
 }
 

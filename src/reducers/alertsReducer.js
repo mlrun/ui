@@ -130,10 +130,12 @@ export const fetchAlert = createAsyncThunk(
       .catch(error => {
         largeResponseCatchHandler(
           error,
-          'Failed to fetch alerts',
+          null,
           thunkAPI.dispatch,
           config?.ui?.setRequestErrorMessage
         )
+
+        return thunkAPI.rejectWithValue(error)
       })
   }
 )
@@ -156,21 +158,24 @@ export const fetchAlerts = createAsyncThunk(
         return { ...data, activations: parseAlerts(data.activations || []) }
       })
       .catch(error => {
-        largeResponseCatchHandler(
-          error,
-          'Failed to fetch alerts',
-          thunkAPI.dispatch,
-          config?.ui?.setRequestErrorMessage
-        )
+        largeResponseCatchHandler(error, '', thunkAPI.dispatch, config?.ui?.setRequestErrorMessage)
+
+        return thunkAPI.rejectWithValue(error)
       })
   }
 )
 
-export const fetchAlertById = createAsyncThunk('fetchAlertById', ({ project, alertId }) => {
-  return alertsApi.getAlertById(project, alertId).then(({ data }) => {
-    return data ? parseAlerts([data])[0] : null
-  })
-})
+export const fetchAlertById = createAsyncThunk(
+  'fetchAlertById',
+  ({ project, alertId }, thunkAPI) => {
+    return alertsApi
+      .getAlertById(project, alertId)
+      .then(({ data }) => {
+        return data ? parseAlerts([data])[0] : null
+      })
+      .catch(error => thunkAPI.rejectWithValue(error))
+  }
+)
 
 const alertsSlice = createSlice({
   name: 'alertsStore',

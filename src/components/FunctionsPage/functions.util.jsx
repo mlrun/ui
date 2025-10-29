@@ -153,7 +153,7 @@ export const generateFunctionsPageData = (
   fetchFunctionNuclioLogsTimeout,
   navigate,
   fetchData,
-  filtersStore,
+  filtersStore
   // showAllVersion
 ) => {
   const showAdditionalLogs = selectedFunction.type === FUNCTION_TYPE_APPLICATION
@@ -510,12 +510,7 @@ const fetchAndParseFunction = (
       return parseFunction(func, projectName)
     })
     .catch(error => {
-      showErrorNotification(
-        dispatch,
-        error,
-        '',
-        'This function either does not exist or was deleted'
-      )
+      showErrorNotification(dispatch, error)
 
       if (returnError) {
         return Promise.reject(error)

@@ -30,14 +30,9 @@ import {
   MODEL_TYPE,
   ARTIFACT_MAX_DOWNLOAD_SIZE
 } from '../../../constants'
-import {
-  getErrorMsg,
-  openPopUp,
-  openDeleteConfirmPopUp,
-  copyToClipboard
-} from 'igz-controls/utils/common.util'
+import { openPopUp, openDeleteConfirmPopUp, copyToClipboard } from 'igz-controls/utils/common.util'
 import { showArtifactsPreview, updateArtifact } from '../../../reducers/artifactsReducer'
-import { FORBIDDEN_ERROR_STATUS_CODE, FULL_VIEW_MODE } from 'igz-controls/constants'
+import { FULL_VIEW_MODE } from 'igz-controls/constants'
 import {
   applyTagChanges,
   chooseOrFetchArtifact,
@@ -176,12 +171,7 @@ export const handleApplyDetailsChanges = (
           )
         })
         .catch(error => {
-          const customErrorMsg =
-            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'Permission denied'
-              : getErrorMsg(error, 'Failed to update the model')
-
-          showErrorNotification(dispatch, error, '', customErrorMsg, () =>
+          showErrorNotification(dispatch, error, '', '', () =>
             handleApplyDetailsChanges(changes, projectName, selectedItem, setNotification, dispatch)
           )
         })

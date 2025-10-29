@@ -11,10 +11,8 @@
         "detected": 1245,
         "potential_detection": 98,
         "stream_stats": {
-          "0": {
-            "lag": 12,
-            "committed": 398742
-          }
+          "lag": 12,
+          "committed": 398742
         }
       },
       "status": "ready"
@@ -30,10 +28,8 @@
         "detected": 567,
         "potential_detection": 34,
         "stream_stats": {
-          "0": {
-            "lag": 12,
-            "committed": 39874222
-          }
+          "lag": 12,
+          "committed": 39874222
         }
       },
       "status": "ready"
@@ -49,10 +45,8 @@
         "detected": 2567,
         "potential_detection": 134,
         "stream_stats": {
-          "0": {
-            "lag": 11,
-            "committed": 328742
-          }
+          "lag": 11,
+          "committed": 328742
         }
       },
       "status": "ready"
@@ -68,10 +62,8 @@
         "detected": 1245,
         "potential_detection": 98,
         "stream_stats": {
-          "0": {
-            "lag": 1222,
-            "committed": 22742
-          }
+          "lag": 1222,
+          "committed": 22742
         },
         "shards": {
           "1": {
@@ -114,10 +106,8 @@
         "detected": 567,
         "potential_detection": 34,
         "stream_stats": {
-          "0": {
-            "lag": 2,
-            "committed": 742
-          }
+          "lag": 2,
+          "committed": 742
         },
         "shards": {
           "1": {
@@ -160,10 +150,8 @@
         "detected": 850,
         "potential_detection": 60,
         "stream_stats": {
-          "0": {
-            "lag": 5,
-            "committed": 42
-          }
+          "lag": 5,
+          "committed": 42
         },
         "shards": {
           "1": {
