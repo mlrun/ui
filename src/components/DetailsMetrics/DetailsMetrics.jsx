@@ -22,12 +22,12 @@ import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
-import ApplicationMetricCard from './MetricsCards/ApplicationMetricCard'
+import ApplicationMetricCard from './MetricsCards/ApplicationMetricCard/ApplicationMetricCard'
 import DatePicker from '../../common/DatePicker/DatePicker'
-import InvocationsMetricCard from './MetricsCards/InvocationsMetricCard'
+import InvocationsMetricCard from './MetricsCards/InvocationsMetricCard/InvocationsMetricCard'
 import MetricsSelector from '../../elements/MetricsSelector/MetricsSelector'
 import NoData from '../../common/NoData/NoData'
-import NoMetricData from './MetricsCards/NoMetricData'
+import NoMetricData from './MetricsCards/NoMetricData/NoMetricData'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
 import {

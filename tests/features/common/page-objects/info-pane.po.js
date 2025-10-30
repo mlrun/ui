@@ -157,6 +157,7 @@ const infoPaneOverviewProducerHeaders = {
       fields: {
         key: '.details-item__header',
         link: '.details-item__data .link',
+        producer_link: '.details-item__link',
         value: '.details-item__data'
       }
     }
@@ -313,7 +314,7 @@ const infoPaneDriftHeaders = {
 }
 
 const filesInfoSourcesTable = {
-  root: '.info-sources .info-sources-table',
+  root: '.info-sources',
   header: {
     root: '.info-sources-table__header',
     sorters: {
@@ -323,10 +324,12 @@ const filesInfoSourcesTable = {
   },
   body: {
     row: {
-      root: '.info-sources-table__content',
+      root: '.info-sources__table',
       fields: {
-        name: '.info-sources-table__content-key .data-ellipsis',
-        path: '.info-sources-table__content-value'
+        name_key: '.info-sources__table-row:nth-of-type(1) .info-sources__table-key',
+        name_value: '.info-sources__table-row:nth-of-type(1) .info-sources__table-value',
+        path_key: '.info-sources__table-row:nth-of-type(2) .info-sources__table-key',
+        path_value: '.info-sources__table-row:nth-of-type(2) .info-sources__table-value'
       }
     }
   }

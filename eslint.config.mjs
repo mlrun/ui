@@ -17,6 +17,7 @@ export default [
       ecmaVersion: 2021,
       globals: {
         ...globals.browser,
+        ...globals.jest,
         ...globals.node,
         ...viteGlobals
       },

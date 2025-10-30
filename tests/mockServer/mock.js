@@ -836,7 +836,7 @@ function getMonitoringApplications(req, res) {
   const collectedMonitoringApplications = (monitoringApplications[req.params['project']] || []).map(
     application => ({
       ...application,
-      stats: omit(application.stats, ['shards', 'processed_model_endpoints', 'metrics'])
+      stats: { ...omit(application.stats, ['shards', 'processed_model_endpoints', 'metrics']), stream_stats: application.stats.stream_stats['0']}
     })
   )
 

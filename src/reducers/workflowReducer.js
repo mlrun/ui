@@ -45,7 +45,7 @@ export const fetchWorkflow = createAsyncThunk('fetchWorkflow', ({ project, workf
 })
 export const fetchWorkflows = createAsyncThunk(
   'fetchWorkflows',
-  async ({ project, filter, config, withPagination }, { rejectWithValue }) => {
+  async ({ project, filter, config, withPagination }, { dispatch, rejectWithValue }) => {
     const page = project === '*' ? JOBS_MONITORING_WORKFLOWS_TAB : MONITOR_WORKFLOWS_TAB
     let result = []
     let nextPageToken = ''
@@ -56,7 +56,7 @@ export const fetchWorkflows = createAsyncThunk(
       largeResponseCatchHandler(
         error,
         'Failed to fetch workflows',
-        null,
+        dispatch,
         config?.ui?.setRequestErrorMessage
       )
 
