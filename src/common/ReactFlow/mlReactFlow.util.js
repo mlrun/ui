@@ -18,15 +18,21 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import classnames from 'classnames'
-import dagre from 'dagre'
+import dagre from '@dagrejs/dagre'
 import { Position } from 'reactflow'
 
-import { ERROR_STATE, FAILED_STATE } from '../../constants'
+import { ERROR_STATE, FAILED_STATE, ML_MODEL_RUNNER_NODE } from '../../constants'
+
+const nodeWidthByType = {
+  default: 300
+}
+const nodeHeightByType = {
+  [ML_MODEL_RUNNER_NODE]: 120,
+  default: 80
+}
+const dagreGraph = new dagre.graphlib.Graph()
 
 export const getLayoutedElements = (nodes, edges, direction = 'TB') => {
-  const elWidth = 300
-  const elHeight = 80
-  const dagreGraph = new dagre.graphlib.Graph()
   const isHorizontal = direction === 'LR'
   let layoutedNodes = []
   let layoutedEdges = []
@@ -35,7 +41,9 @@ export const getLayoutedElements = (nodes, edges, direction = 'TB') => {
   dagreGraph.setGraph({ rankdir: direction })
 
   nodes.forEach(node => {
-    dagreGraph.setNode(node.id, { width: elWidth, height: elHeight })
+    const nodeHeight = nodeHeightByType[node.type] ?? nodeHeightByType.default
+    const nodeWidth = nodeWidthByType[node.type] ?? nodeWidthByType.default
+    dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight })
   })
 
   edges.forEach(edge => {
@@ -47,6 +55,8 @@ export const getLayoutedElements = (nodes, edges, direction = 'TB') => {
   const selectedNode = nodes.find(node => node.className?.includes('selected'))
 
   layoutedNodes = nodes.map(node => {
+    const nodeHeight = nodeHeightByType[node.type] ?? nodeHeightByType.default
+    const nodeWidth = nodeWidthByType[node.type] ?? nodeWidthByType.default
     const nodeWithPosition = dagreGraph.node(node.id)
     node.targetPosition = isHorizontal ? 'left' : 'top'
     node.sourcePosition = isHorizontal ? 'right' : 'bottom'
@@ -54,16 +64,16 @@ export const getLayoutedElements = (nodes, edges, direction = 'TB') => {
     node.className = getNodeClassName(node)
 
     node.style = {
-      width: elWidth,
-      height: elHeight,
+      width: nodeWidth,
+      height: nodeHeight,
       pointerEvents: 'all'
     }
 
-    // unfortunately we need this little hack to pass a slighltiy different position
-    // in order to notify react flow about the change
+    // We are shifting the dagre node position (anchor=center) to the top left
+    // so it matches the React Flow node anchor point (top left).
     node.position = {
-      x: nodeWithPosition.x + Math.random() / 1000,
-      y: nodeWithPosition.y
+      x: nodeWithPosition.x - nodeWidth / 2,
+      y: nodeWithPosition.y - nodeHeight / 2,
     }
 
     return node

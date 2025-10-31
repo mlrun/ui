@@ -50,7 +50,8 @@ export const ModelsPageProvider = ({ children }) => {
     <ModelsPageContext.Provider
       value={{
         handleMonitoring,
-        toggleConvertedYaml
+        toggleConvertedYaml,
+        frontendSpec
       }}
     >
       {children}

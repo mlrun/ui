@@ -20,31 +20,41 @@ such restriction.
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { groupBy, forEach, isEmpty, map, concat } from 'lodash'
+import { groupBy, forEach, isEmpty, map, concat, mapValues } from 'lodash'
 import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
-import CodeBlock from '../../common/CodeBlock/CodeBlock'
-import NoData from '../../common/NoData/NoData'
 import { Tooltip, TextTooltipTemplate, RoundedIcon, Loader } from 'igz-controls/components'
+import Accordion from '../../common/Accordion/Accordion'
+import ArtifactPopUp from '../../elements/DetailsPopUp/ArtifactPopUp/ArtifactPopUp'
+import CodeBlock from '../../common/CodeBlock/CodeBlock'
+import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
+import ModelEndpointPopUp from '../../elements/DetailsPopUp/ModelEndpointPopUp/ModelEndpointPopUp'
+import NoData from '../../common/NoData/NoData'
 
 import {
   DEFAULT_EDGE,
   FLOATING_EDGE,
   GREY_NODE,
   ML_EDGE,
+  ML_MODEL_RUNNER_NODE,
   ML_NODE,
+  MODEL_RUNNER_STEP_KIND,
   PRIMARY_NODE,
   REAL_TIME_PIPELINES_TAB,
   ROUNDED_RECTANGLE_NODE_SHAPE,
   SECONDARY_NODE
 } from '../../constants'
-import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
 import { fetchAndParseFunction } from '../ModelsPage/RealTimePipelines/realTimePipelines.util'
+import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { parseUri } from '../../utils'
+import { useModelsPage } from '../ModelsPage/ModelsPage.context'
 
+import Arrow from 'igz-controls/images/arrow.svg?react'
 import Back from 'igz-controls/images/back-arrow.svg?react'
 import CloseIcon from 'igz-controls/images/close.svg?react'
+import ConnectionIcon from 'igz-controls/images/connections-icon.svg?react'
 
 import './pipeline.scss'
 
@@ -53,11 +63,12 @@ const Pipeline = ({ content }) => {
   const [edges, setEdges] = useState([])
   const [pipeline, setPipeline] = useState({})
   const [selectedStep, setSelectedStep] = useState({})
-  const [selectedStepData, setSelectedStepData] = useState([])
+  const [selectedStepData, setSelectedStepData] = useState({})
   const [stepIsSelected, setStepIsSelected] = useState(false)
   const params = useParams()
   const dispatch = useDispatch()
   const functionsStore = useSelector(store => store.functionsStore)
+  const { handleMonitoring, toggleConvertedYaml, frontendSpec } = useModelsPage()
 
   useEffect(() => {
     const selectedFunction = content.find(contentItem => contentItem.hash === params.pipelineId)
@@ -71,44 +82,87 @@ const Pipeline = ({ content }) => {
 
   useEffect(() => {
     if (selectedStep.data) {
-      const selectedStepData = selectedStep.data.customData
+      const selectedStepCustomData = selectedStep.data.customData
 
-      setSelectedStepData([
-        {
-          label: 'Type:',
-          value: selectedStepData.kind
-        },
-        {
-          label: 'After:',
-          value: selectedStepData.after?.[0]
-        },
-        {
-          label: 'Class name:',
-          value: selectedStepData.class_name
-        },
-        {
-          label: 'Function name:',
-          value: selectedStepData.function
-        },
-        {
-          label: 'Handler:',
-          value: selectedStepData.handler
-        },
-        {
-          label: 'Arguments:',
-          value: selectedStepData.class_args,
-          type: 'codeblock'
-        },
-        {
-          label: 'Input path:',
-          value: selectedStepData.input_path
-        },
-        {
-          label: 'Result path:',
-          value: selectedStepData.result_path
-        }
-      ])
+      setSelectedStepData({
+        general: [
+          {
+            label: 'Type:',
+            value: selectedStepCustomData.kind
+          },
+          {
+            label: 'Class name:',
+            value: selectedStepCustomData.class_name
+          },
+          {
+            label: 'Function name:',
+            value: selectedStepCustomData.function
+          },
+          {
+            label: 'Handler:',
+            value: selectedStepCustomData.handler,
+            hidden: selectedStepCustomData.kind === MODEL_RUNNER_STEP_KIND
+          },
+          {
+            label: 'Arguments:',
+            value: selectedStepCustomData.class_args,
+            type: 'codeblock'
+          },
+          {
+            label: 'Input path:',
+            value: selectedStepCustomData.input_path
+          },
+          {
+            label: 'Result path:',
+            value: selectedStepCustomData.result_path
+          }
+        ],
+        runningModels: mapValues(
+          selectedStepCustomData?.class_args?.monitoring_data ?? {},
+          (runningModelData, runningModelName) => {
+            return [
+              {
+                label: 'Model endpoint:',
+                value: runningModelData.model_endpoint_uid,
+                additionalData: {
+                  modelEndpointName: runningModelName
+                },
+                type: 'pop-up'
+              },
+              {
+                label: 'Model artifact:',
+                value: runningModelData.model_path,
+                type: 'pop-up'
+              },
+              {
+                label: 'Class name:',
+                value: runningModelData.model_class
+              },
+              {
+                label: 'Input path:',
+                value: runningModelData.input_path
+              },
+              {
+                label: 'Result path:',
+                value: runningModelData.result_path
+              },
+              {
+                label: 'Outputs:',
+                value: runningModelData.outputs.join(', ')
+              },
+              {
+                label: 'Execution mechanism:',
+                value:
+                  selectedStepCustomData?.class_args?.execution_mechanism_by_model_name?.[
+                    runningModelName
+                  ] ?? ''
+              }
+            ]
+          }
+        )
+      })
     }
+
     setStepIsSelected(Boolean(selectedStep.id))
   }, [selectedStep])
 
@@ -142,12 +196,15 @@ const Pipeline = ({ content }) => {
       }
 
       forEach(steps, (step, stepName) => {
+        if (!step.kind) return
+
+        let nodeType = step.kind === MODEL_RUNNER_STEP_KIND ? ML_MODEL_RUNNER_NODE : ML_NODE
         const subLabel =
           step.kind === 'queue' ? '« queue »' : step.kind === 'router' ? '« router »' : ''
 
         newNodes.push({
           id: stepName,
-          type: ML_NODE,
+          type: nodeType,
           data: {
             subType: PRIMARY_NODE,
             label: stepName,
@@ -268,6 +325,22 @@ const Pipeline = ({ content }) => {
     }
   }, [pipeline, selectedStep])
 
+  const openModelRunnerPopUp = modelRunnerRowData => {
+    if (modelRunnerRowData.value.startsWith('store://')) {
+      openPopUp(ArtifactPopUp, {
+        artifactData: parseUri(modelRunnerRowData.value)
+      })
+    } else {
+      openPopUp(ModelEndpointPopUp, {
+        modelEndpointUid: modelRunnerRowData.value,
+        modelEndpointName: modelRunnerRowData.additionalData.modelEndpointName,
+        frontendSpec,
+        handleMonitoring,
+        toggleConvertedYaml
+      })
+    }
+  }
+
   return (
     <div className="pipeline-container">
       <div className="pipeline-header">
@@ -305,28 +378,92 @@ const Pipeline = ({ content }) => {
           </div>
           {stepIsSelected && (
             <div className="graph-pane">
-              <div className="graph-pane__title">
-                <span>{selectedStep.id}</span>
-                <RoundedIcon onClick={() => setSelectedStep({})} tooltipText="Close">
-                  <CloseIcon />
-                </RoundedIcon>
-              </div>
-              {selectedStepData.map(rowData => (
-                <div className="graph-pane__row" key={rowData.label}>
-                  {rowData.type === 'codeblock' ? (
-                    <CodeBlock label="Arguments" codeData={rowData.value} />
-                  ) : (
-                    <>
-                      <div className="graph-pane__row-label">{rowData.label}</div>
-                      <div className="graph-pane__row-value">
-                        <Tooltip template={<TextTooltipTemplate text={rowData.value} />}>
-                          {rowData.value}
-                        </Tooltip>
-                      </div>
-                    </>
+              <div className="graph-pane-scroll-container">
+                <div className="graph-pane__title">
+                  <div className="graph-pane__title-icon">
+                    <ConnectionIcon />
+                  </div>
+                  <Tooltip
+                    className="graph-pane__title-label"
+                    hidden={!selectedStep.id}
+                    template={<TextTooltipTemplate text={selectedStep.id} />}
+                  >
+                    {selectedStep.id}
+                  </Tooltip>
+                  <RoundedIcon onClick={() => setSelectedStep({})} tooltipText="Close">
+                    <CloseIcon />
+                  </RoundedIcon>
+                </div>
+                <div className="graph-pane__section">
+                  <div className="graph-pane__section-title">General</div>
+                  {selectedStepData.general.map(
+                    rowData =>
+                      !rowData.hidden && (
+                        <div
+                          className={classnames(
+                            'graph-pane__row',
+                            rowData.type === 'codeblock' && 'graph-pane__row_wrap'
+                          )}
+                          key={rowData.label}
+                        >
+                          <div className="graph-pane__row-label">{rowData.label}</div>
+                          {rowData.type === 'codeblock' ? (
+                            <CodeBlock codeData={rowData.value} />
+                          ) : (
+                            <div className="graph-pane__row-value">
+                              <Tooltip template={<TextTooltipTemplate text={rowData.value} />}>
+                                {rowData.value}
+                              </Tooltip>
+                            </div>
+                          )}
+                        </div>
+                      )
                   )}
                 </div>
-              ))}
+                {Object.keys(selectedStepData.runningModels).length > 0 && (
+                  <div className="graph-pane__section">
+                    <div className="graph-pane__section-title">
+                      Running models ({Object.keys(selectedStepData.runningModels).length})
+                    </div>
+                    {Object.entries(selectedStepData.runningModels).map(
+                      ([modelRunnerName, modelRunnerData]) => (
+                        <Accordion
+                          key={modelRunnerName}
+                          accordionClassName="graph-pane__expand-item"
+                          icon={<Arrow />}
+                          iconClassName="graph-pane__expand-icon"
+                        >
+                          <div className="graph-pane__expand-title">{modelRunnerName}</div>
+                          <div className="graph-pane__expand-content">
+                            {modelRunnerData.map(rowData => {
+                              return (
+                                <div className="graph-pane__row" key={rowData.label}>
+                                  <div className="graph-pane__row-label">{rowData.label}</div>
+                                  <div
+                                    className="graph-pane__row-value"
+                                    onClick={
+                                      rowData.type === 'pop-up'
+                                        ? () => openModelRunnerPopUp(rowData)
+                                        : null
+                                    }
+                                  >
+                                    <Tooltip
+                                      template={<TextTooltipTemplate text={rowData.value} />}
+                                      className={classnames({ link: rowData.type === 'pop-up' })}
+                                    >
+                                      {rowData.value}
+                                    </Tooltip>
+                                  </div>
+                                </div>
+                              )
+                            })}
+                          </div>
+                        </Accordion>
+                      )
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
