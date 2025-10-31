@@ -51,6 +51,7 @@ const BreadcrumbsStep = React.forwardRef(
     ref
   ) => {
     const projectListRef = useRef()
+    const screenListRef = useRef()
     const separatorRef = useRef()
 
     const isParam = useMemo(() => Object.values(params ?? {}).includes(urlPart), [urlPart, params])
@@ -58,6 +59,7 @@ const BreadcrumbsStep = React.forwardRef(
       () => (isParam ? urlPart : urlPart.charAt(0).toUpperCase() + urlPart.slice(1)),
       [urlPart, isParam]
     )
+
     const to = useMemo(
       () => `/${urlParts.pathItems.slice(0, index + 1).join('/')}`,
       [index, urlParts.pathItems]
@@ -71,7 +73,7 @@ const BreadcrumbsStep = React.forwardRef(
       'breadcrumbs__separator',
       ((urlParts.pathItems[index + 1] === urlParts.screen?.id && !isParam) ||
         urlParts.pathItems[index + 1] === params.projectName) &&
-        'breadcrumbs__separator_tumbler'
+      'breadcrumbs__separator_tumbler'
     )
 
     const handleSelectDropdownItem = separatorRef => {
@@ -110,13 +112,20 @@ const BreadcrumbsStep = React.forwardRef(
 
     const scrollProjectOptionToView = useCallback(() => {
       scrollToElement(projectListRef, `#${params.projectName}`, searchValue)
-    }, [params.projectName, projectListRef, searchValue])
+    }, [params.projectName, searchValue])
+
+    const scrollScreenOptionToView = useCallback(() => {
+      scrollToElement(screenListRef, `#${urlParts.screen.id}`, searchValue)
+    }, [searchValue, urlParts.screen.id])
 
     useEffect(() => {
       if (showProjectsList && projectListRef.current) {
         scrollProjectOptionToView()
       }
-    }, [showProjectsList, scrollProjectOptionToView, projectListRef])
+      if (showScreensList && screenListRef.current) {
+        scrollScreenOptionToView()
+      }
+    }, [showProjectsList, projectListRef, screenListRef, showScreensList, scrollProjectOptionToView, scrollScreenOptionToView])
 
     useEffect(() => {
       window.addEventListener('click', handleCloseDropdown)
@@ -159,61 +168,83 @@ const BreadcrumbsStep = React.forwardRef(
       }
     }
 
-    return (
+    return isLastStep ? (
       <>
-        {isLastStep ? (
+        {urlParts.itemName ? (
+          <>
+            <li
+              data-testid="breadcrumbs-last-item"
+              className="breadcrumbs__item"
+              key={`${index}${urlPart}`}
+            >
+              <Link to={urlParts.screen?.link} onClick={onClick}>
+                {urlParts.screen?.label || label}
+              </Link>
+
+            </li>
+            <li className="breadcrumbs__separator">
+              <ArrowIcon />
+            </li>
+            <li data-testid="breadcrumbs-tab" className="breadcrumbs__item">
+              {urlParts.itemName}
+            </li>
+          </>
+        ) : (
           <li
             data-testid="breadcrumbs-last-item"
             className="breadcrumbs__item"
             key={`${index}${urlPart}`}
           >
-            {label}
+            {urlParts.screen?.label || label}
           </li>
-        ) : (
-          [
-            <li key={`${index}${urlPart}`} className="breadcrumbs__item">
-              <Link to={to} onClick={onClick}>
-                {label}
-              </Link>
-            </li>,
-            <li key={index} className="breadcrumbs__item">
-              <RoundedIcon
-                className={separatorClassNames}
-                id="separator"
-                ref={separatorRef}
-                onClick={() => handleSeparatorClick(urlParts.pathItems[index + 1], separatorRef)}
-              >
-                <ArrowIcon />
-              </RoundedIcon>
-              {showScreensList && urlParts.pathItems[index + 1] === urlParts.screen?.label && (
-                <BreadcrumbsDropdown
-                  link={to}
-                  list={mlrunScreens}
-                  onClick={() => handleSelectDropdownItem(separatorRef)}
-                  selectedItem={urlParts.screen?.id}
-                  searchValue={searchValue}
-                  setSearchValue={setSearchValue}
-                />
-              )}
-              {showProjectsList && urlParts.pathItems[index + 1] === params.projectName && (
-                <>
-                  <BreadcrumbsDropdown
-                    link={to}
-                    list={projectsList}
-                    onClick={() => handleSelectDropdownItem(separatorRef)}
-                    ref={projectListRef}
-                    screen={urlParts.screen?.id}
-                    selectedItem={params.projectName}
-                    searchValue={searchValue}
-                    setSearchValue={setSearchValue}
-                    tab={urlParts.tab?.id}
-                    withSearch
-                  />
-                </>
-              )}
-            </li>
-          ]
         )}
+      </>
+    ) : (
+      <>
+        <li key={`${index}${urlPart}`} className="breadcrumbs__item">
+          <Link to={to} onClick={onClick}>
+            {label}
+          </Link>
+        </li>
+        <li key={index} className="breadcrumbs__item">
+          <RoundedIcon
+            className={separatorClassNames}
+            id={`separator-${index}`}
+            ref={separatorRef}
+            onClick={() => handleSeparatorClick(urlParts.pathItems[index + 1], separatorRef)}
+          >
+            <ArrowIcon />
+          </RoundedIcon>
+          {showScreensList && urlParts.pathItems[index + 1] === urlParts.screen?.label && (
+            <BreadcrumbsDropdown
+              id="breadcrumbs-screens-dropdown"
+              link={to}
+              list={mlrunScreens}
+              onClick={() => handleSelectDropdownItem(separatorRef)}
+              ref={screenListRef}
+              selectedItem={urlParts.screen?.id}
+              searchValue={searchValue}
+              setSearchValue={setSearchValue}
+            />
+          )}
+          {showProjectsList && urlParts.pathItems[index + 1] === params.projectName && (
+            <>
+              <BreadcrumbsDropdown
+                id="breadcrumbs-projects-dropdown"
+                link={to}
+                list={projectsList}
+                onClick={() => handleSelectDropdownItem(separatorRef)}
+                ref={projectListRef}
+                selectedItem={params.projectName}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                urlParts={urlParts}
+                withSearch
+                withAllProjects
+              />
+            </>
+          )}
+        </li>
       </>
     )
   }
@@ -238,11 +269,15 @@ BreadcrumbsStep.propTypes = {
     pathItems: PropTypes.arrayOf(PropTypes.string).isRequired,
     screen: PropTypes.shape({
       id: PropTypes.string,
-      label: PropTypes.string
+      label: PropTypes.string,
+      link: PropTypes.string
     }),
     tab: PropTypes.shape({
-      id: PropTypes.string
-    })
+      id: PropTypes.string,
+      label: PropTypes.string
+
+    }),
+    itemName: PropTypes.string
   }).isRequired
 }
 

@@ -40,8 +40,6 @@ export const DEFAULT_ABORT_MSG = 'canceled'
 
 export const MODEL_PATH_DATA_INPUT = 'model_path'
 
-export const NAVBAR_WIDTH_CLOSED = 57
-export const NAVBAR_WIDTH_OPENED = 245
 export const CANCEL_REQUEST_TIMEOUT = 120000
 
 export const PROJECT_ONLINE_STATUS = 'online'
@@ -69,6 +67,7 @@ export const ITEMS_COUNT_END = 'itemsCountEnd'
 export const PROJECTS_PAGE = 'PROJECTS'
 export const PROJECTS_PAGE_PATH = 'projects'
 export const PROJECTS_SETTINGS_PAGE = 'SETTINGS'
+export const PROJECTS_SETTINGS_PAGE_PATH = 'settings'
 export const PROJECTS_SETTINGS_GENERAL_TAB = 'general'
 export const PROJECTS_SETTINGS_MEMBERS_TAB = 'members'
 export const PROJECTS_SETTINGS_SECRETS_TAB = 'secrets'
