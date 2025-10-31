@@ -34,34 +34,20 @@ import {
   REQUEST_CANCELED,
   RUNNING_STATE
 } from '../../constants'
-import { fetchApiGateways, fetchNuclioFunctions } from '../../reducers/nuclioReducer'
+import { fetchApiGateways } from '../../reducers/nuclioReducer'
 import { generateNuclioLink } from '../../utils'
 import { groupByUniqName } from '../../utils/groupByUniqName'
 import { typesOfJob } from '../../utils/jobs.util'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
-const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
+const ProjectFunctions = ({ nuclioStreamsAreEnabled, project }) => {
   const params = useParams()
   const { isNuclioModeDisabled } = useNuclioMode()
   const nuclioStore = useSelector(store => store.nuclioStore)
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (!isNuclioModeDisabled) {
-      const abortController = new AbortController()
-
-      dispatch(
-        fetchNuclioFunctions({ project: params.projectName, signal: abortController.signal })
-      )
-
-      return () => {
-        abortController.abort(REQUEST_CANCELED)
-      }
-    }
-  }, [dispatch, isNuclioModeDisabled, params.projectName])
-
-  useEffect(() => {
-    if (!isNuclioModeDisabled) {
+    if (!isNuclioModeDisabled && project?.data?.metadata?.name === params.projectName) {
       const abortController = new AbortController()
 
       dispatch(fetchApiGateways({ project: params.projectName, signal: abortController.signal }))
@@ -70,7 +56,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
         abortController.abort(REQUEST_CANCELED)
       }
     }
-  }, [dispatch, isNuclioModeDisabled, params.projectName])
+  }, [dispatch, isNuclioModeDisabled, params.projectName, project?.data?.metadata?.name])
 
   const functions = useMemo(() => {
     const groupeFunctionsRunning = groupByUniqName(
@@ -207,6 +193,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
 }
 
 ProjectFunctions.propTypes = {
-  nuclioStreamsAreEnabled: PropTypes.bool.isRequired
+  nuclioStreamsAreEnabled: PropTypes.bool.isRequired,
+  project: PropTypes.object.isRequired
 }
 export default React.memo(ProjectFunctions)
