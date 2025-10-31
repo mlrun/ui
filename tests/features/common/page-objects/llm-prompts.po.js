@@ -82,7 +82,9 @@ const overallTable = {
           componentType: actionMenu,
           structure: actionMenuStructure
         },
-        preview: '.table-body__cell:nth-of-type(8) [data-testid="quick-link-artifact-preview"]'
+        preview: '.table-body__cell:nth-of-type(8) [data-testid="quick-link-artifact-preview"]',
+        model_name: '[data-testid="modelName"] .model-name .link',
+        model_tag: '[data-testid="modelName"] .item-tag .link-subtext'
       }
     }
   }

@@ -866,3 +866,163 @@ Feature: LLM prompts Page
     Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
     Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
     Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
+
+  @MLLP
+  @smoke
+  Scenario: MLLP014 - Verify prompt filtering by model name and tag
+    Given open url
+    And wait load page
+    And click on row root with value "auto-generated-data" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+    Then verify breadcrumbs "project" label should be equal "auto-generated-data" value
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
+    Then verify redirection to "projects/auto-generated-data/llm-prompts?bePage=1&fePage=1"
+    Then click on "Table_FilterBy_Button" element on "LLM_Prompts" wizard
+    Then verify "Model_Name_Filter_Input" element visibility on "FilterBy_Popup" wizard
+    Then verify "Model_Version_Tag_Filter_Input" element visibility on "FilterBy_Popup" wizard
+    Then verify "Model_Version_Tag_Filter_Field" element on "FilterBy_Popup" wizard is disabled by class name
+    Then type value "model_8" to "Model_Name_Filter_Input" field on "FilterBy_Popup" wizard
+    Then verify "Model_Version_Tag_Filter_Field" element on "FilterBy_Popup" wizard is enabled by class name
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    And wait load page
+    Then verify "Table_FilterBy_Button" element on "LLM_Prompts" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
+    Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
+    Then value in "model_name" column with "text" in "LLMPrompts_Table" on "LLM_Prompts" wizard should contains "model_8"
+    And wait load page
+    Then click on "Table_FilterBy_Button" element on "LLM_Prompts" wizard
+    Then type value "v1" to "Model_Version_Tag_Filter_Input" field on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    And wait load page
+    Then verify "Table_FilterBy_Button" element on "LLM_Prompts" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_2"
+    Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
+    Then value in "model_tag" column with "text" in "LLMPrompts_Table" on "LLM_Prompts" wizard should contains "v1"
+    And wait load page
+    Then click on "Table_FilterBy_Button" element on "LLM_Prompts" wizard
+    Then type value "" to "Model_Name_Filter_Input" field on "FilterBy_Popup" wizard
+    Then verify "Model_Version_Tag_Filter_Field" element on "FilterBy_Popup" wizard is disabled by class name
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    And wait load page
+    Then verify "Table_FilterBy_Button" element on "LLM_Prompts" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
+    And wait load page
+    And select "project" with "llmdeploy332" value in breadcrumbs menu
+    And wait load page
+    Then click on "Table_FilterBy_Button" element on "LLM_Prompts" wizard
+    Then type value "model_art1" to "Model_Name_Filter_Input" field on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    And wait load page
+    Then verify "Table_FilterBy_Button" element on "LLM_Prompts" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
+    Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
+    Then value in "model_name" column with "text" in "LLMPrompts_Table" on "LLM_Prompts" wizard should contains "model_art1"
+    And wait load page
+    Then click on "Table_FilterBy_Button" element on "LLM_Prompts" wizard
+    Then type value "model_art1" to "Model_Name_Filter_Input" field on "FilterBy_Popup" wizard
+    Then type value "v2" to "Model_Version_Tag_Filter_Input" field on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    And wait load page
+    And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+    Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_LLM_Prompt_Model_Name_Tag"
+
+  @MLLP
+  @smoke
+  Scenario: MLLP015 - Verify model detail popup from the LLM promts table list
+    Given open url
+    And wait load page
+    And click on row root with value "llmdeploy332" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+    Then verify breadcrumbs "project" label should be equal "llmdeploy332" value
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
+    Then verify redirection to "projects/llmdeploy332/llm-prompts?bePage=1&fePage=1"
+    Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
+    When click on cell with value "model_art1" in "model_name" column in "LLMPrompts_Table" table on "LLM_Prompts" wizard
+    And wait load page
+    Then verify if "Modal_Transition_Popup" popup dialog appears
+    Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
+    Then "Title" element on "Modal_Transition_Popup" should contains "model_art1" value
+    Then verify "Data_Status" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Refresh_Button" element on "Modal_Transition_Popup" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
+    Then click on "Refresh_Button" element on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Action_Menu" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Action_Menu" dropdown element on "Modal_Transition_Popup" wizard should contains "Common_Lists"."Action_Menu_List_Dataset_Transition_Popup"
+    Then select "View YAML" option in action menu on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then verify if "View_YAML" popup dialog appears
+    Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+    Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+    Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+    And wait load page
+    Then select "Copy URI" option in action menu on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then verify if "Notification_Popup" popup dialog appears
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Copied to clipboard successfully" value
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then select "Download" option in action menu on "Modal_Transition_Popup" wizard
+    And wait load page
+    And wait load page
+    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
+    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then verify "Tab_Selector" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Tab_Selector" on "Modal_Transition_Popup" wizard should contains "Models_Info_Pane"."Tab_List_Two_Tabs"
+    Then verify "Overview" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then verify "Overview_General_Headers" on "Modal_Transition_Popup" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
+    Then verify "Overview_Producer_Headers" on "Modal_Transition_Popup" wizard should contains "Models_Info_Pane"."Overview_Producer_Headers_Kind_Project"
+    And select "Preview" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then verify "Preview" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then verify "Pop_Out_Button" element visibility on "Modal_Transition_Popup" wizard 
+    Then click on "Pop_Out_Button" element on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then verify "Preview_Table" element visibility on "Preview_Popup" wizard
+    Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contains "model_art1"
+    Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
+    Then verify "Download_Button" element visibility on "Preview_Popup" wizard
+    Then click on "Download_Button" element on "Preview_Popup" wizard
+    And wait load page
+    And wait load page
+    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
+    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
+    Then verify "Cross_Close_Button" element visibility on "Modal_Transition_Popup" wizard
+    Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
+    And wait load page
+    When click on cell with value "model_art1" in "model_name" column in "LLMPrompts_Table" table on "LLM_Prompts" wizard
+    And wait load page
+    Then verify if "Modal_Transition_Popup" popup dialog appears
+    Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
+    Then "Title" element on "Modal_Transition_Popup" should contains "model_art1" value
+    Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard

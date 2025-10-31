@@ -106,6 +106,13 @@ export const verifyClassDisabled = async (driver, component) => {
     expect(flag).equal(true)
   }
 
+export const verifyClassEnabled = async (driver, component) => {
+  const inputField = await driver.findElement(component)
+  const attributes = await inputField.getAttribute('class')
+  const flag = attributes.includes('form-field__wrapper-disabled')
+  expect(flag).equal(false)
+}
+
 export const verifyElementDisabled = async (driver, component) => {
     const element = await driver.findElement(component)
     const flag = await element.getAttribute('disabled')
