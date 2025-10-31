@@ -813,7 +813,8 @@ export default {
     Logs_Refresh_Button: By.css('#overlay_container .table__item .logs-refresh'),
     Requested_Features_Table: By.css('.item-info .item-requested-features__table'),
     Returned_Features_Table: By.css('.item-info .details-metadata__table'),
-    Statistics_Table: By.css('.item-info #DETAILS_STATISTICS_TABLE_ID')
+    Statistics_Table: By.css('.item-info #DETAILS_STATISTICS_TABLE_ID'),
+    Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]')
   },
   modalWizardForm: {
     Title: By.css('.modal .modal__header-title'),

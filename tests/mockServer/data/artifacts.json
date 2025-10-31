@@ -40107,10 +40107,11 @@
         "tag": "latest"
       },
       "spec": {
-        "target_path": "llmdeploy332/model_art1/",
+        "target_path": "v3io:///projects/llmdeploy332/artifacts/model_art1/0/model/",
         "size": 4370,
         "license": "",
-        "framework": "",
+        "framework": "sklearn",
+        "algorithm": "RandomForestClassifier",
         "producer": {
           "kind": "project",
           "name": "llmdeploy332",
@@ -40146,7 +40147,7 @@
         "tag": "v1"
       },
       "spec": {
-        "target_path": "llmdeploy332/model_art1/",
+        "target_path": "v3io:///projects/llmdeploy332/artifacts/model_art1/0/model/",
         "size": 4370,
         "license": "",
         "framework": "",
@@ -40232,7 +40233,7 @@
         "tag": "latest"
       },
       "spec": {
-        "target_path": "llmdeploy335/model_art1/",
+        "target_path": "v3io:///projects/llmdeploy332/artifacts/model_art1/0/model/",
         "size": 4370,
         "framework": "",
         "has_children": true,
