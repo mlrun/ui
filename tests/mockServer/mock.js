@@ -1531,13 +1531,13 @@ function getArtifacts(req, res) {
           /^store:\/\/(?<kind>.+?)\/(?<project>.+?)\/(?<key>.+?)(#(?<iteration>.+?))?(:(?<tag>.+?))?(@(?<tree>[^^]+))?(\^(?<uid>.+))?$/
         )
 
-        return match && match.groups.key.startsWith(key) && match.groups.tag === tag
+        return match && match.groups.key.includes(key) && match.groups.tag.includes(tag)
       })
     } else {
       collectedArtifacts = collectedArtifacts.filter(artifact =>
         artifact.spec?.parent_uri
           ?.match(/^store:\/\/[^/]+\/[^/]+\/([^#/]+)/)?.[1]
-          ?.startsWith(req.query['parent'])
+          ?.includes(req.query['parent'])
       )
     }
   }
