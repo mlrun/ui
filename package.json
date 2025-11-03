@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "/mlrun",
   "dependencies": {
+    "@dagrejs/dagre": "^1.1.5",
     "@monaco-editor/react": "^4.7.0",
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "1.12.0",
@@ -13,7 +14,6 @@
     "classnames": "^2.5.1",
     "concurrently": "^6.4.2",
     "cronstrue": "^2.49.0",
-    "dagre": "^0.8.5",
     "dotenv": "^10.0.0",
     "dotenv-expand": "^5.1.0",
     "file-saver": "^2.0.5",

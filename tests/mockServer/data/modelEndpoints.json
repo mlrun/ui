@@ -3,6 +3,55 @@
     {
       "kind": "model-endpoint",
       "metadata": {
+        "name": "my-endpoint",
+        "project": "default",
+        "tag": null,
+        "labels": {
+          "example": "single",
+          "hebrew": "english"
+        },
+        "updated": "2025-10-06T14:34:14.015000",
+        "created": "2025-09-30T19:45:05.516000",
+        "uid": "c3e9308aaab54e53b1013ecda9234e43",
+        "endpoint_type": 1,
+        "mode": 0
+      },
+      "spec": {
+        "model_class": "MyLLM",
+        "function_name": "function-with-llm",
+        "function_tag": "latest",
+        "model_path": "store://llm-prompts/default/my_llm4#0@be464b11-8bff-4d57-9ad5-89d7d641f35e^5523a661476a8ab1ba573c704308f036e62b8d17",
+        "model_name": "my_llm4",
+        "model_tags": [
+          "latest"
+        ],
+        "feature_names": [],
+        "label_names": [],
+        "feature_stats": {},
+        "function_uri": "default/function-with-llm@unversioned-latest",
+        "model_uri": "store://llm-prompts/default/my_llm4#0@9c0c8773-b1ce-4fa0-ac94-2f6c1fb71554^d28e010ba24e272a3ba2ba522f6caecde05ff383",
+        "children": null,
+        "children_uids": null,
+        "monitoring_feature_set_uri": ""
+      },
+      "status": {
+        "state": "ready",
+        "first_request": null,
+        "monitoring_mode": "disabled",
+        "sampling_percentage": 100,
+        "last_request": null,
+        "result_status": -1,
+        "avg_latency": null,
+        "error_count": 0,
+        "current_stats": {},
+        "current_stats_timestamp": null,
+        "drift_measures": {},
+        "drift_measures_timestamp": null
+      }
+    },
+    {
+      "kind": "model-endpoint",
+      "metadata": {
         "project": "default",
         "labels": {
           "my-key": "my-value",
