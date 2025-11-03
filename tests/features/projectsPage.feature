@@ -358,8 +358,10 @@ Feature: Projects Page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Container_Title" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then "Monitoring_Container_Title" element in "Projects_Monitoring_Container" on "Projects" should contains "Monitoring" value
+        Then verify "Monitoring_Artifacts_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Jobs_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Workflows_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then verify "Monitoring_Models_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Scheduled_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Alerts_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -369,8 +371,10 @@ Feature: Projects Page
         Then navigate back
         And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then verify "Monitoring_Artifacts_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Jobs_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Workflows_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then verify "Monitoring_Models_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Scheduled_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Alerts_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -379,11 +383,42 @@ Feature: Projects Page
         Then click on breadcrumbs "projectsPage" label on "commonPagesHeader" wizard
         And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then verify "Monitoring_Artifacts_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Jobs_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Workflows_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then verify "Monitoring_Models_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Scheduled_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Alerts_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
 
+    @MLPr
+    @smoke
+    Scenario: MLPr022 - Check the components in the Artifacts and Models counter boxes
+        Given open url
+        And wait load page
+        Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then verify "Monitoring_Container_Title" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then "Monitoring_Container_Title" element in "Projects_Monitoring_Container" on "Projects" should contains "Monitoring" value
+        Then verify "Monitoring_Artifacts_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then verify "Monitoring_Artifacts_Box_Title" element visibility in "Monitoring_Artifacts_Box" on "Projects" wizard
+        Then "Monitoring_Artifacts_Box_Title" element in "Monitoring_Artifacts_Box" on "Projects" should contains "Artifacts" value
+        Then verify "Total_Counter_Number" element visibility in "Monitoring_Artifacts_Box" on "Projects" wizard
+        Then verify "Counter_Datasets_Number" element visibility in "Monitoring_Artifacts_Box" on "Projects" wizard
+        Then verify "Counter_Datasets_Subtitle" element visibility in "Monitoring_Artifacts_Box" on "Projects" wizard
+        Then "Counter_Datasets_Subtitle" element in "Monitoring_Artifacts_Box" on "Projects" should contains "Datasets" value
+        Then verify "Counter_Documents_Number" element visibility in "Monitoring_Artifacts_Box" on "Projects" wizard
+        Then verify "Counter_Documents_Subtitle" element visibility in "Monitoring_Artifacts_Box" on "Projects" wizard
+        Then "Counter_Documents_Subtitle" element in "Monitoring_Artifacts_Box" on "Projects" should contains "Documents" value
+        Then verify "Counter_LLM_Prompt_Number" element visibility in "Monitoring_Artifacts_Box" on "Projects" wizard
+        Then verify "Counter_LLM_Prompt_Subtitle" element visibility in "Monitoring_Artifacts_Box" on "Projects" wizard
+        Then "Counter_LLM_Prompt_Subtitle" element in "Monitoring_Artifacts_Box" on "Projects" should contains "LLM prompt artifacts" value
+        Then verify "Counter_Other_Artifacts_Number" element visibility in "Monitoring_Artifacts_Box" on "Projects" wizard
+        Then verify "Counter_Other_Artifacts_Subtitle" element visibility in "Monitoring_Artifacts_Box" on "Projects" wizard
+        Then "Counter_Other_Artifacts_Subtitle" element in "Monitoring_Artifacts_Box" on "Projects" should contains "Other artifacts" value
+        Then verify "Monitoring_Models_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then verify "Monitoring_Models_Title" element visibility in "Monitoring_Models_Box" on "Projects" wizard
+        Then "Monitoring_Models_Title" element in "Monitoring_Models_Box" on "Projects" should contains "Models" value
+        Then verify "Total_Counter_Number" element visibility in "Monitoring_Models_Box" on "Projects" wizard
+    
     @MLPr
     @smoke
     Scenario: MLPr016 - Check components on Jobs counter box
@@ -612,6 +647,16 @@ Feature: Projects Page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Container_Title" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then "Monitoring_Container_Title" element in "Projects_Monitoring_Container" on "Projects" should contains "Monitoring" value
+        Then verify "Monitoring_Artifacts_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then "Total_Counter_Number" element in "Monitoring_Artifacts_Box" on "Projects" should contains "13,145" value
+        Then verify "Counter_Datasets_Number" element visibility in "Monitoring_Artifacts_Box" on "Projects" wizard
+        Then "Counter_Datasets_Number" element in "Monitoring_Artifacts_Box" on "Projects" should contains "34" value
+        Then verify "Counter_Documents_Number" element visibility in "Monitoring_Artifacts_Box" on "Projects" wizard
+        Then "Counter_Documents_Number" element in "Monitoring_Artifacts_Box" on "Projects" should contains "23" value
+        Then verify "Counter_LLM_Prompt_Number" element visibility in "Monitoring_Artifacts_Box" on "Projects" wizard
+        Then "Counter_LLM_Prompt_Number" element in "Monitoring_Artifacts_Box" on "Projects" should contains "58" value
+        Then verify "Counter_Other_Artifacts_Number" element visibility in "Monitoring_Artifacts_Box" on "Projects" wizard
+        Then "Counter_Other_Artifacts_Number" element in "Monitoring_Artifacts_Box" on "Projects" should contains "13,030" value
         Then verify "Monitoring_Jobs_Box_Title" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then "Monitoring_Jobs_Box_Title" element in "Monitoring_Jobs_Box" on "Projects" should contains "Runs" value
         Then verify "Total_Counter_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
@@ -639,6 +684,9 @@ Feature: Projects Page
         Then "Total_Workflows_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "1" value
         Then verify "Total_Scheduled_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then "Total_Scheduled_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "8" value
+        Then verify "Monitoring_Models_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then verify "Monitoring_Models_Title" element visibility in "Monitoring_Models_Box" on "Projects" wizard
+        Then "Total_Counter_Number" element in "Monitoring_Models_Box" on "Projects" should contains "13,019" value
         Then verify "Monitoring_Alerts_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Alerts_Box_Title" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
         Then "Monitoring_Alerts_Box_Title" element in "Monitoring_Alerts_Box" on "Projects" should contains "Alerts" value
