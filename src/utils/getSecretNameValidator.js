@@ -1,7 +1,7 @@
 export const getSecretNameValidator = (projectName, initialSecretName) => {
   return {
     name: 'secretProhibitedNames',
-    label: "Secret name is not deprecated and it doesn't include the name of another project",
+    label: "Secret does not reference an MLRun secret defined in another project",
     pattern: secretName => {
       // if prohibited secret was set before (we get it from BE) we accept it as valid
       if (secretName && secretName === initialSecretName) return true
