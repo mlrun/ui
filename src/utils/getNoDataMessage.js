@@ -66,7 +66,8 @@ import {
   PROJECTS_FILTER_ALL_ITEMS,
   LLM_PROMPTS_PAGE,
   MODEL_NAME_FILTER,
-  MODEL_TAG_FILTER
+  MODEL_TAG_FILTER,
+  ME_MODE_FILTER
 } from '../constants'
 
 const messageNamesList = {
@@ -227,6 +228,7 @@ const getVisibleFilterTypes = (filtersConfig, filters, filtersStore) => {
       (type === DATES_FILTER && !isEqual(filters[DATES_FILTER]?.value, DATE_FILTER_ANY_TIME))
     const isShowUntaggedVisible = type === SHOW_UNTAGGED_FILTER && !filters[SHOW_UNTAGGED_FILTER]
     const isGroupByVisible = type === GROUP_BY_FILTER && filtersStore.groupBy !== GROUP_BY_NONE
+    const isMEModeVisible = type === ME_MODE_FILTER && filters[ME_MODE_FILTER] !== FILTER_ALL_ITEMS
 
     return (
       isDateVisible ||
@@ -240,7 +242,8 @@ const getVisibleFilterTypes = (filtersConfig, filters, filtersStore) => {
       isShowUntaggedVisible ||
       isStatusVisible ||
       isTagVisible ||
-      isTypeVisible
+      isTypeVisible ||
+      isMEModeVisible
     )
   })
 }

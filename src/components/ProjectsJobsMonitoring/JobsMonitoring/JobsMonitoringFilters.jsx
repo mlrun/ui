@@ -23,7 +23,7 @@ import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
-import StatusFilter from '../../../common/StatusFilter/StatusFilter'
+import MultiSelectFilter from '../../../common/MultiSelectFilter/MultiSelectFilter'
 
 import {
   FILTER_ALL_ITEMS,
@@ -71,7 +71,7 @@ const JobsMonitoringFilters = () => {
         </div>
       )}
       <div className="form-row">
-        <StatusFilter statusList={jobsStatuses} name={STATUS_FILTER_NAME} />
+        <MultiSelectFilter optionsList={jobsStatuses} name={STATUS_FILTER_NAME} />
       </div>
       <div className="form-row">
         <FormSelect

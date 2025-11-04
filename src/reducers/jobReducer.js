@@ -19,7 +19,7 @@ such restriction.
 */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import jobsApi from '../api/jobs-api'
-import { hideLoading, showLoading } from './redux.util'
+import { defaultRejectedHandler, hideLoading, showLoading } from './redux.util'
 import { get } from 'lodash'
 import {
   DATES_FILTER,
@@ -415,9 +415,9 @@ const jobsSlice = createSlice({
       state.scheduled = []
       state.loading = false
     })
-    builder.addCase(removeScheduledJob.rejected, (state, action) => {
-      state.error = action.payload
-    })
+    builder.addCase(removeScheduledJob.pending, showLoading)
+    builder.addCase(removeScheduledJob.fulfilled, hideLoading)
+    builder.addCase(removeScheduledJob.rejected, defaultRejectedHandler)
     builder.addCase(runNewJob.pending, showLoading)
     builder.addCase(runNewJob.fulfilled, state => {
       state.error = null

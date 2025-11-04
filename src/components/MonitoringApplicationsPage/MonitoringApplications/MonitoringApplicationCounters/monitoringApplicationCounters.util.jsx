@@ -18,19 +18,18 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { capitalize } from 'lodash'
+import classNames from 'classnames'
 
+import { aggregateApplicationStatuses } from '../../../../utils/applications.utils'
 import { formatMinutesToString } from '../../../../utils/measureTime'
 import {
   BATCH_FILTER,
-  ERROR_STATE,
   FAILED_STATE,
-  FUNCTION_READY_STATE,
   ME_MODE_FILTER,
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE,
   REAL_TIME_FILTER,
-  RUNNING_STATE,
-  UNHEALTHY_STATE
+  RUNNING_STATE
 } from '../../../../constants'
 
 export const generateCountersContent = (params, monitoringApplicationsStore) => {
@@ -41,13 +40,8 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
     loading: monitoringApplicationIsLoading,
     error: monitoringApplicationError
   } = monitoringApplicationsStore
-
-  const { ready: appReady, error: appError } = monitoringApplications.applications.reduce(
-    (acc, { status }) => ({
-      ready: acc.ready + (status === FUNCTION_READY_STATE ? 1 : 0),
-      error: acc.error + ([ERROR_STATE, UNHEALTHY_STATE].includes(status) ? 1 : 0)
-    }),
-    { ready: 0, error: 0 }
+  const { ready: appReady, error: appError } = aggregateApplicationStatuses(
+    monitoringApplications.applications
   )
 
   const applicationsCountersContent = [
@@ -68,12 +62,17 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
         {
           id: RUNNING_STATE,
           title: appReady,
+          tooltipText: 'Running',
           subtitle: 'Running',
           subtitleStatus: RUNNING_STATE
         },
         {
           id: FAILED_STATE,
+          counterClassName: classNames({
+            stats__failed: appError > 0
+          }),
           title: appError,
+          tooltipText: 'Error, Unhealthy',
           subtitle: 'Failed',
           subtitleStatus: FAILED_STATE
         }

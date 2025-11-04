@@ -289,6 +289,10 @@ export const FUNCTION_DEFAULT_HANDLER = 'handler'
 export const FUNCTION_RUN_KINDS = [FUNCTION_TYPE_JOB]
 export const FUNCTION_FILTERS = 'FUNCTION_FILTERS'
 
+/*=========== PIPELINES =============*/
+
+export const MODEL_RUNNER_STEP_KIND = 'model_runner'
+
 /*=========== ARTIFACTS =============*/
 
 export const ARTIFACTS_TAB = 'artifacts'
@@ -428,6 +432,7 @@ export const PANEL_DEFAULT_ACCESS_KEY = '$generate'
 /*=========== ML REACT FLOW =============*/
 
 export const ML_NODE = 'ml-node'
+export const ML_MODEL_RUNNER_NODE = 'ml-model-runner-node'
 
 export const INPUT_NODE = 'input-node'
 export const OUTPUT_NODE = 'output-node'

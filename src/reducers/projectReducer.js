@@ -19,6 +19,7 @@ such restriction.
 */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
+import nuclioApi from '../api/nuclio'
 import projectsApi from '../api/projects-api'
 import { hideLoading, showLoading } from './redux.util'
 import {
@@ -31,6 +32,7 @@ import { parseProjects } from '../utils/parseProjects'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { parseSummaryData } from '../utils/parseSummaryData'
 import { mlrunUnhealthyErrors } from '../components/ProjectsPage/projects.util'
+import { aggregateApplicationStatuses, splitApplicationsContent } from '../utils/applications.utils'
 
 const initialState = {
   deletingProjects: {},
@@ -248,10 +250,23 @@ export const fetchProjectSecrets = createAsyncThunk(
 export const fetchProjectSummary = createAsyncThunk(
   'fetchProjectSummary',
   ({ project, signal }, thunkAPI) => {
-    return projectsApi
-      .getProjectSummary(project, signal)
-      .then(({ data }) => {
-        return parseSummaryData(data)
+    return Promise.all([
+      projectsApi.getProjectSummary(project, signal),
+      nuclioApi.getFunctions(project)
+    ])
+      .then(([projectSummary, nuclioFunctions]) => {
+        const parsedProjectSummary = parseSummaryData(projectSummary.data)
+        const { ready: runningAppsNumber, error: failedAppsNumber } = aggregateApplicationStatuses(
+          splitApplicationsContent(nuclioFunctions.data).applications
+        )
+
+        return {
+          ...parsedProjectSummary,
+          running_model_monitoring_functions:
+            runningAppsNumber ?? parsedProjectSummary.running_model_monitoring_functions,
+          failed_model_monitoring_functions:
+            failedAppsNumber ?? parsedProjectSummary.failed_model_monitoring_functions
+        }
       })
       .catch(error => {
         if (![REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(error.message)) {

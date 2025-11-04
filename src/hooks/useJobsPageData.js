@@ -216,7 +216,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
               .map(job => parseJob(job, SCHEDULE_TAB))
               .filter(job => {
                 return (
-                  !filters.type || filters.type === FILTER_ALL_ITEMS || job.type === filters.type
+                  !filters.type || filters.type === FILTER_ALL_ITEMS || job.type === filters.type || (Array.isArray(filters.type) && filters.type.includes(job.type) || filters.type.includes(FILTER_ALL_ITEMS))
                 )
               })
 

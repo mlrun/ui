@@ -90,6 +90,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
 
     return {
       running: {
+        counterTooltip: 'Running',
         value: functionsRunning,
         label: 'Running',
         className: RUNNING_STATE,
@@ -98,6 +99,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
         loading: nuclioStore.loading
       },
       failed: {
+        counterTooltip: 'Error, Unhealthy',
         value: functionsFailed,
         label: 'Failed',
         status: FAILED_STATE,

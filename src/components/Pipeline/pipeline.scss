@@ -33,21 +33,79 @@
 
   .pipeline-content {
     .graph-pane {
+      &__section {
+        padding: 15px 0;
+
+        & + .graph-pane__section {
+          border-top: borders.$secondaryBorder;
+        }
+
+        &-title {
+          font-size: 16px;
+          font-weight: bold;
+          padding: 5px 25px;
+        }
+      }
+
       &__row {
         display: flex;
         align-items: center;
-        margin: 5px 25px;
+        margin: 8px 25px;
+
+        &_wrap {
+          flex-wrap: wrap;
+        }
 
         &-label {
           margin-right: 10px;
-          color: colors.$spunPearl;
-          font-weight: bold;
           white-space: nowrap;
         }
 
         &-value {
           overflow: hidden;
+          color: colors.$topaz;
         }
+      }
+
+      .graph-pane__expand-item {
+        height: unset;
+        margin-left: 20px;
+        margin-right: 20px;
+        border-bottom: borders.$secondaryBorder;
+
+        .graph-pane__row {
+          margin-left: 0;
+          margin-right: 0;
+        }
+
+        .graph-pane__expand-title {
+          margin-left: 45px;
+          padding: 8px 0;
+          font-weight: bold;
+          font-size: 15px;
+        }
+
+        .graph-pane__expand-content {
+          display: none;
+          margin: 5px 0 20px 45px;
+        }
+
+        &.open {
+          height: auto;
+
+          .graph-pane__expand-content {
+            display: block;
+          }
+        }
+
+        .graph-pane__expand-icon {
+          position: absolute;
+          left: 0;
+        }
+      }
+
+      .code-block {
+        margin-top: 5px;
       }
     }
   }

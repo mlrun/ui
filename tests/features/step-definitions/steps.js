@@ -50,6 +50,7 @@ import {
   generatePath,
   determineFileAccess,
   verifyClassDisabled,
+  verifyClassEnabled,
   checkComponentHintTextWithHover,
   putToTestContextElementValue
 } from '../common/actions/common.action'
@@ -416,6 +417,16 @@ Then(
   'verify {string} element on {string} wizard is disabled by class name',
   async function(inputField, wizardName) {
     await verifyClassDisabled(
+      this.driver,
+      pageObjects[wizardName][inputField]
+    )
+  }
+)
+
+Then(
+  'verify {string} element on {string} wizard is enabled by class name',
+  async function(inputField, wizardName) {
+    await verifyClassEnabled(
       this.driver,
       pageObjects[wizardName][inputField]
     )
@@ -894,7 +905,7 @@ Then(
 Then(
   'verify visibility of header column {string} in {string} table on {string} wizard',
   async function (columnName, tableName, wizardName) {
-    const locator = pageObjects[wizardName][tableName].headerSorters[columnName]
+    const locator = pageObjects[wizardName][tableName]['headerSorters'][columnName]
     await componentIsVisible(this.driver, locator)
   }
 )

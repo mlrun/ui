@@ -582,7 +582,8 @@
       "namespace": "default-tenant",
       "labels": {
         "mlrun/class": "serving",
-        "nuclio.io/project-name": "default"
+        "nuclio.io/project-name": "default",
+        "mlrun__type": "mlrun__model-monitoring-application"
       },
       "resourceVersion": "30099716"
     },
@@ -3950,7 +3951,8 @@
       "name": "test",
       "namespace": "default-tenant",
       "labels": {
-        "nuclio.io/project-name": "cat-vs-dog-classification"
+        "nuclio.io/project-name": "cat-vs-dog-classification",
+        "mlrun__type": "mlrun__model-monitoring-infra"
       },
       "resourceVersion": "37855264"
     },
@@ -4009,7 +4011,8 @@
       "name": "test1",
       "namespace": "default-tenant",
       "labels": {
-        "nuclio.io/project-name": "default"
+        "nuclio.io/project-name": "default",
+        "mlrun__type": "mlrun__model-monitoring-infra"
       },
       "resourceVersion": "28276699"
     },
@@ -4070,7 +4073,8 @@
       "name": "test2",
       "namespace": "default-tenant",
       "labels": {
-        "nuclio.io/project-name": "default"
+        "nuclio.io/project-name": "default",
+        "mlrun__type": "mlrun__model-monitoring-infra"
       },
       "resourceVersion": "37855235"
     },

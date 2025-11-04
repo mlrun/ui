@@ -35,10 +35,7 @@ export const getJobsStatistics = (projectCounter, projectName) => {
     running: {
       value: projectCounter.error ? 'N/A' : projectCounter?.data?.runs_running_count,
       label: 'In Process',
-      className:
-        projectCounter.error || projectCounter?.data?.runs_running_count === 0
-          ? 'default'
-          : RUNNING_STATE,
+      className: RUNNING_STATE,
       status: RUNNING_STATE,
       link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`,
       counterTooltip: 'Aborting, Pending, Pending retry, Running',

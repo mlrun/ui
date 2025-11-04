@@ -180,7 +180,11 @@ const DownloadItem = ({ downloadItem }) => {
 
   return (
     <div className="download-item" data-testid="download-item">
-      <Tooltip className="download-item__filename" template={<TextTooltipTemplate text={file} />}>
+      <Tooltip
+        className="download-item__filename"
+        tooltipBodyClassName="download-item__filename-tooltip"
+        template={<TextTooltipTemplate text={file} />}
+      >
         {file}
       </Tooltip>
       <div className="download-item__status">

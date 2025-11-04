@@ -302,76 +302,6 @@ Feature: Artifacts Page
 
   @MLA
   @passive
-  @smoke
-  Scenario: MLA013 - Check Details panel still active on page refresh
-    # * set tear-down property "project" created with "automation-test" value
-    # * set tear-down property "file" created in "automation-test" project with "test-file" value
-    * create "automation-test" MLRun Project with code 201
-    * create "test-file" File with "test" tag in "automation-test" project with code 200
-    Given open url
-    And wait load page
-    And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
-    And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
-    And wait load page
-    Then verify "Table_FilterBy_Button" element on "Files" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
-    Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then select "test" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
-    And wait load page
-    When click on cell with value "test-file" in "name" column in "Files_Table" table on "Files" wizard
-    And wait load page
-    Then check "test" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
-    Then click on "Edit_btn_table_view" element on "Files_Info_Pane" wizard
-    And wait load page
-    When type value "v1" to "Version_tag_Input" field on "Files_Info_Pane" wizard
-    Then click on "Apply_Button" element on "Files_Info_Pane" wizard
-    Then click on "Apply_Changes_Button" element on "Files_Info_Pane" wizard
-    And wait load page
-    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
-    Then verify "Not_In_Filtered_List_Message" element visibility on "Files_Info_Pane" wizard
-    Then "Not_In_Filtered_List_Message" component on "Files_Info_Pane" should be equal "Files_Info_Pane"."Info_Banner_Message"
-    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
-    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
-    Then verify "Header" element visibility on "Files_Info_Pane" wizard
-    Then "Header" element on "Files_Info_Pane" should contains "test-file" value
-    Then refresh a page
-    And wait load page
-    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
-    Then verify "Not_In_Filtered_List_Message" element visibility on "Files_Info_Pane" wizard
-    Then "Not_In_Filtered_List_Message" component on "Files_Info_Pane" should be equal "Files_Info_Pane"."Info_Banner_Message"
-    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
-    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
-    Then verify "Header" element visibility on "Files_Info_Pane" wizard
-    Then "Header" element on "Files_Info_Pane" should contains "test-file" value
-    Then verify "Table_Refresh_Button" element visibility on "Files" wizard
-    Then verify "Table_Refresh_Button" element on "Files" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
-    Then click on "Table_Refresh_Button" element on "Files" wizard
-    And wait load page
-    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
-    Then verify "Not_In_Filtered_List_Message" element visibility on "Files_Info_Pane" wizard
-    Then "Not_In_Filtered_List_Message" component on "Files_Info_Pane" should be equal "Files_Info_Pane"."Info_Banner_Message"
-    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
-    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
-    Then verify "Header" element visibility on "Files_Info_Pane" wizard
-    Then click on "Cross_Close_Button" element on "Files_Info_Pane" wizard
-    And wait load page
-    Then verify "Header" element not exists on "Files_Info_Pane" wizard
-    When click on cell with value "test-file" in "name" column in "Files_Table" table on "Files" wizard
-    And wait load page
-    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
-    Then verify "Not_In_Filtered_List_Message" element not exists on "Files_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
-    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
-    Then verify "Header" element visibility on "Files_Info_Pane" wizard
-
-  @MLA
-  @passive
   @inProgress
   @smoke
   Scenario: MLA016 - Check all mandatory components in Item infopane on Preview tab table
@@ -403,11 +333,19 @@ Feature: Artifacts Page
     Then verify "Pop_Out_Button" element visibility on "Files_Info_Pane" wizard 
     Then click on "Pop_Out_Button" element on "Files_Info_Pane" wizard
     And wait load page
-    Then verify "Preview_Row" element visibility on "Artifact_Preview_Popup" wizard
-    Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
-    Then verify "Preview_Header" on "Artifact_Preview_Popup" wizard should contains "Preview_Pop_Up"."Table_Header"
-    Then check "download_btn" visibility in "Preview_Row" on "Artifact_Preview_Popup" wizard with 1 offset
-    Then click on "Download_Button" element on "Artifact_Preview_Popup" wizard
+    Then verify "Preview_Table" element visibility on "Preview_Popup" wizard
+    Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contains "download_content"
+    Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
+    Then verify "Download_Button" element visibility on "Preview_Popup" wizard
+    Then click on "Download_Button" element on "Preview_Popup" wizard
     And wait load page
     And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
@@ -417,7 +355,7 @@ Feature: Artifacts Page
     Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
     Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
-    Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
+    Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
     Then verify "Preview_Tab_Info_Pane_Table" element visibility on "Files_Info_Pane" wizard
 
   @MLA
@@ -892,6 +830,101 @@ Feature: Artifacts Page
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     And wait load page
     Then verify "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected attribute option value "All tags"
+
+  @MLA
+  @passive
+  @smoke
+  Scenario: MLA013 - Check Details panel still active on page refresh
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    Then select "Add a tag" option in action menu on "Files" wizard in "Files_Table" table at row with "training_iteration_results" value in "name" column
+    And wait load page
+    Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
+    Then type value "test" to "Tag_Input" field on "Add_Tag_Popup" wizard
+    Then click on "Add_Button" element on "Add_Tag_Popup" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was added successfully" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Table_FilterBy_Button" element on "Files" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then select "test" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    And wait load page
+    When click on cell with value "training_iteration_results" in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
+    Then check "test" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
+    Then click on "Edit_btn_table_view" element on "Files_Info_Pane" wizard
+    And wait load page
+    When type value "v1" to "Version_tag_Input" field on "Files_Info_Pane" wizard
+    Then click on "Apply_Button" element on "Files_Info_Pane" wizard
+    Then click on "Apply_Changes_Button" element on "Files_Info_Pane" wizard
+    And wait load page
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Not_In_Filtered_List_Message" element visibility on "Files_Info_Pane" wizard
+    Then "Not_In_Filtered_List_Message" component on "Files_Info_Pane" should be equal "Files_Info_Pane"."Info_Banner_Message"
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
+    Then verify "Header" element visibility on "Files_Info_Pane" wizard
+    Then "Header" element on "Files_Info_Pane" should contains "training_iteration_results" value
+    Then refresh a page
+    And wait load page
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Not_In_Filtered_List_Message" element visibility on "Files_Info_Pane" wizard
+    Then "Not_In_Filtered_List_Message" component on "Files_Info_Pane" should be equal "Files_Info_Pane"."Info_Banner_Message"
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
+    Then verify "Header" element visibility on "Files_Info_Pane" wizard
+    Then "Header" element on "Files_Info_Pane" should contains "training_iteration_results" value
+    Then verify "Table_Refresh_Button" element visibility on "Files" wizard
+    Then verify "Table_Refresh_Button" element on "Files" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
+    Then click on "Table_Refresh_Button" element on "Files" wizard
+    And wait load page
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Not_In_Filtered_List_Message" element visibility on "Files_Info_Pane" wizard
+    Then "Not_In_Filtered_List_Message" component on "Files_Info_Pane" should be equal "Files_Info_Pane"."Info_Banner_Message"
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
+    Then verify "Header" element visibility on "Files_Info_Pane" wizard
+    Then click on "Cross_Close_Button" element on "Files_Info_Pane" wizard
+    And wait load page
+    Then verify "Header" element not exists on "Files_Info_Pane" wizard
+    And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+    Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Artifact_Tag"
+    Then click on "Table_FilterBy_Button" element on "LLM_Prompts" wizard
+    Then click on "Clear_Button" element on "FilterBy_Popup" wizard
+    And wait load page
+    When click on cell with value "training_iteration_results" in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Not_In_Filtered_List_Message" element not exists on "Files_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
+    Then verify "Header" element visibility on "Files_Info_Pane" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then select "v1" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    And wait load page
+    When click on cell with value "training_iteration_results" in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Not_In_Filtered_List_Message" element not exists on "Files_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
+    Then verify "Header" element visibility on "Files_Info_Pane" wizard
 
   @MLA
   @smoke

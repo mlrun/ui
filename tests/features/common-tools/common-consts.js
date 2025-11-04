@@ -34,9 +34,10 @@ export default {
       'Train model',
       'Batch inference',
       'Create real-time function',
+      'Register model',
       'ML function',
       'Feature set',
-      'Register model'
+      'Create feature vector'
     ],
     Online_Status: 'online',
     Data_Collection_Description:
@@ -95,6 +96,7 @@ export default {
   },
   Feature_Vectors_Info_Pane: {
     Tab_List: ['Overview', 'Requested Features', 'Analysis'],
+    Tab_List_Extended: ['Overview', 'Requested Features', 'Returned Features', 'Statistics', 'Analysis'],
     Overview_General_Headers: [
       'Description:',
       'Labels:',
@@ -109,6 +111,7 @@ export default {
   },
   Common_Lists: {
     Action_Menu_List: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete', 'Delete all versions'],
+    Action_Menu_List_LLM_Prompt: ['Add a tag', 'Download', 'Copy URI', 'View YAML'],
     Action_Menu_List_Version_History: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete'],
     Action_Menu_List_Expanded: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete all'],
     Action_Menu_List_Dataset_Transition_Popup: ['Download', 'Copy URI', 'View YAML'],
@@ -153,6 +156,26 @@ export default {
     ],
     Overview_Producer_Headers: ['Name:', 'Kind:', 'Tag:', 'Owner:', 'UID:']
   },
+  LLM_Prompts_Info_Pane: {
+    Tab_List: ['Overview', 'Prompt Template', 'Generation Configuration'],
+    Tab_List_Prompt_Template: ['Prompt', 'Arguments'],
+    Info_Banner_Message: /The LLM prompt is not in the filtered list\. Closing the details panel will return you to the current list\./,
+    Overview_General_Headers: [
+      'Key:',
+      'Description:',
+      'Model name:',
+      'Hash:',
+      'Version tag:',
+      'Original source:',
+      'Iter:',
+      'URI:',
+      'Path:',
+      'UID:',
+      'Updated:',
+      'Labels:'
+    ],
+    Overview_Producer_Headers: ['Name:', 'Kind:', 'Tag:', 'Owner:', 'UID:']
+  },
   Alerts_Jobs_Info_Pane: {
     Overview_General_Headers: [
       'Project Name:',
@@ -181,11 +204,25 @@ export default {
       'Timestamp:',
       'Severity:'
     ],
+    Overview_General_Headers_Per_Project: [
+      'Endpoint ID:',
+      'Application Name:',
+      'Result Name:',
+      'Type:',
+      'Timestamp:',
+      'Severity:'
+    ],
     Overview_Trigger_Criteria_Headers: ['Trigger criteria count:', 'Trigger criteria time period:']
   },
   Alerts_Application_Info_Pane: {
     Overview_General_Headers: [
       'Project Name:',
+      'Application Name:',
+      'Type:',
+      'Timestamp:',
+      'Severity:'
+    ],
+    Overview_General_Headers_Per_Project: [
       'Application Name:',
       'Type:',
       'Timestamp:',
@@ -221,14 +258,14 @@ export default {
       'Kind:',
       'Code entry point:',
       'Internal URL:',
-      'Image:',
+      //'Image:', hidden due to ML-7988, ML-8014
       'Application image:',
       'Version tag:',
       'Hash:',
       'Internal port:',
-      'Code origin:',
+      // 'Code origin:', hidden due to ML-7988, ML-8014
       'Updated:',
-      'Default handler:',
+      // 'Default handler:', hidden due to ML-7988, ML-8014
       'Description:'
     ]
   },
@@ -272,6 +309,7 @@ export default {
       'Metrics:'
     ],
     Overview_Producer_Headers: ['Name:', 'Kind:', 'URI:', 'Owner:', 'Workflow:', 'UID:'],
+    Overview_Producer_Headers_Kind_Project: ['Name:', 'Kind:', 'Tag:', 'Owner:', 'UID:'],
     Overview_Sources_Headers: ['Name:', 'Path:']
   },
   Models_Endpoints_Info_Pane: {
@@ -384,6 +422,8 @@ export default {
     Auto_Refresh: 'Uncheck Auto Refresh to view more results',
     FilterBy_Button: 'Filter',
     FilterBy_Button_1: 'Filter (1)',
+    FilterBy_Button_2: 'Filter (2)',
+    Argument: 'The essence of all things',
     Show_All_Versions: 'Show all versions',
     Open_Metrics: 'Open metrics',
     Refresh_Button: 'Refresh',
@@ -391,7 +431,8 @@ export default {
     Expand_All_Button: 'Expand all',
     In_Process_Jobs: 'Aborting, Pending, Pending retry, Running',
     Running_Tip: 'Running, Terminating',
-    Failed_Tip: 'Failed',
+    Running: 'Running',
+    Failed_Tip: 'Error, Unhealthy',
     Failed_Jobs: 'Aborted, Error',
     Failed_Worflows: 'Error, Failed',
     Succeeded: 'Completed',
@@ -530,11 +571,13 @@ export default {
     FeatureSets_Stats_Tip:  
       'Each feature set can have multiple versions, produced by multiple runs and given multiple tags.\n' +
       ' You can browse them in the Feature store page.',
+    Model_Version_Tag: 'Enter a model name to enable field.',
     Artifacts_Stats_Tip:  
       'Each artifact can have multiple versions, produced by multiple runs and given multiple tags.\n' +
       ' You can browse them in the Artifacts page.',
     Model_Endpoint_With_Detections:
       'This chart displays the number of model endpoints that had at least one detected issue, in any monitoring application, in the relevant time period',
+    Project_Monitoring_Counters: 'Counters use a caching mechanism, and are not auto-refreshed.',
     Operating_Functions: 'System functions that are used for the monitoring application operation',
     Lag: 'Number of messages currently waiting in the app\'s queue',
     Commited_Offset: 'Total number of messages handled by the app',
@@ -555,7 +598,9 @@ export default {
     Delete_Scheduled_Job:
       /Are you sure you want to delete the scheduled job "[^"]+[$"]\? Deleted scheduled jobs can not be restored\./,
     Delete_Feature:
-      /You try to delete feature "[^"]+[$"] from vector "[^"]+[$"]\. The feature could be added back later./
+      /You try to delete feature "[^"]+[$"] from vector "[^"]+[$"]\. The feature could be added back later./,
+    Add_A_Tag_Overwrite_Message:
+      /That combination of name and tag is already in use in an existing (artifact|dataset|plotly|LLM prompt)\. If you proceed, the existing (artifact|dataset|plotly|LLM prompt) will be overwritten/
   },
   Messages: {
     How_To_Create:
@@ -576,15 +621,18 @@ export default {
     Terminate_Workflow_Message: /Are you sure you want to terminate the workflow "(.+?)" \(stop its execution\)\? Workflows termination cannot be undone\./,
     Workflows_Action_Menu_Options: ['View YAML', 'Retry', 'Terminate'],
     Workflows_Running_Action_Menu_Options: ['View YAML', 'Terminate'],
-    Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete', 'Terminate'],
+    Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
     Pending_Job_Action_Menu_Options: ['Batch re-run', 'Run\'s resource monitoring', 'Abort', 'View YAML'],
     Schedule_Action_Menu_Options: ['Run now', 'Edit', 'Delete', 'View YAML'],
     Workflows_Unsuccessful_Run_Message: 'Workflow did not run successfully\nRETRY',
-    Workflows_Unsuccessful_Terminate_Message: 'Workflow "stocks-admin-main 2021-08-30 05-36-35 failed to terminate'
+    Workflows_Successful_Run_Message: 'Workflow run successfully.',
+    Workflows_Unsuccessful_Terminate_Message: 'Workflow "stocks-admin-main 2021-08-30 05-36-35 failed to terminate',
+    Workflows_Trigger_Termination_Message: 'A request to terminate workflow "stocks-admin-main 2021-08-30 05-36-35" was issued'
   },
   Jobs_Monitor_Tab_Info_Pane: {
     Pending_State: 'Pending',
     Error_State: 'Error',
+    Error_State_With_Message: 'Error. This function intentionally fails',
     Tab_List: ['Overview', 'Inputs', 'Artifacts', 'Results', 'Logs', 'Pods'],
     Overview_Headers: [
       'UID:',
@@ -602,8 +650,8 @@ export default {
       'Log level:',
       'Output path:',
       'Total iterations:',
-      'Retry count:',
-      'Maximum retries:'
+      'Attempt count:',
+      'Maximum attempts:'
     ]
   },
   Jobs_Monitor_Tab: {
@@ -639,6 +687,7 @@ export default {
     Event_Type_Endpoint_Filter_Options: ['All', 'Data drift detected', 'Data drift suspected', 'Conc drift detected', 'Conc drift suspected', 'MM performance detected', 'MM performance suspected', 'System performance detected', 'System performance suspected', 'MM app anomaly detected', 'MM app anomaly suspected'],
     Event_Type_Job_Filter_Options: ['All', 'Job failed'],
     Event_Type_Application_Filter_Options: ['All', 'MM app failed'],
+    Endpoint_Mode_Filter_Options: ['All', 'Real-time', 'Batch'],
     Jobs_Status_Filter_Options: [
       'All',
       'Aborted',
@@ -699,7 +748,8 @@ export default {
       'Past hour',
       'Past 24 hours',
       'Past week',
-      'Past month'
+      'Past month',
+      'Custom range'
     ],
     Scheduled_Date_Picker_Filter_Options: [
       'Any time',
@@ -745,6 +795,11 @@ export default {
     Common_Message_Jobs_Monitoring:
       /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
     Common_Message_Monitor_Jobs_Name: /No data matches the filter: "Name: (.+?)"/,
+    Common_Message_LLM_Prompt_Name: /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Show best iteration only: (.+?)"/,
+    Common_Message_LLM_Prompt_Label: /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Labels: (.+?), Show best iteration only: (.+?), Model name: (.+?), Model version tag: (.+?)"/,
+    Common_Message_LLM_Prompt_Tag: /No data matches the filter: "LLM prompt version tag: (.+?), Show best iteration only: (.+?)"/,
+    Common_Message_LLM_Prompt_Model_Name_Tag: /No data matches the filter: "LLM prompt version tag: (.+?), Show best iteration only: (.+?)"/,
+    Common_Message_Artifact_Tag: /No data matches the filter: "Version tag: (.+?), Show best iteration only: (.+?)"/,
     Common_Message_Jobs_Monitoring_Workflow_Project:
       /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
     Common_Message_Jobs_Monitoring_Status:
@@ -760,7 +815,7 @@ export default {
     Common_Message_Jobs_Monitoring_Scheduled:
       /No data matches the filter: "Scheduled at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
     Common_Message_Scheduled_Type:
-      /No data matches the filter: "Type: (.+?)"/,
+      /No data matches the filter: "Scheduled at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Type: (.+?)"/,
     Common_Message: 'No data matches the filter: "Version Tag: latest, Name: ccccc"',
     Common_Message_Feature: 'No data matches the filter: "Version Tag: latest"',
     Common_Message_Feature_Vector_Tab:
@@ -774,9 +829,7 @@ export default {
     No_Documents_data: 'No data matches the filter: "Version tag: latest, Show best iteration only: true"',
     No_Files_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
     No_Models_data: 'No data matches the filter: "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"',
-    No_Pods_data: 'Pods not found, it is likely because Kubernetes removed these pods listing'
-  },
-  Preview_Pop_Up: {
-    Table_Header: ['Name', 'Path', 'Size', 'Updated']
+    No_Pods_data: 'Pods not found, it is likely because Kubernetes removed these pods listing',
+    No_Pods_data_Completion: 'Pods not found, it is likely because Kubernetes removed these pods listing after their completion'
   }
 }

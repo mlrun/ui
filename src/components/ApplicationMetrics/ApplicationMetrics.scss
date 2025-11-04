@@ -76,14 +76,13 @@ $searchHeight: 75px;
 
             li {
               padding: 0 8px;
-              border-radius: 8px;
               cursor: pointer;
               user-select: none;
 
               div {
                 height: $listItemHeight;
                 line-height: $listItemHeight;
-                border-bottom: borders.$primaryBorder;
+                border-bottom: borders.$tableRowBorder;
               }
 
               &:hover,
