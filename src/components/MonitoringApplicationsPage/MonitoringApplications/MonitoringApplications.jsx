@@ -33,6 +33,7 @@ import { MONITORING_APPLICATIONS_NO_DATA_MESSAGE } from '../MonitoringApplicatio
 import { createApplicationContent } from '../../../utils/createApplicationContent'
 import { generateOperatingFunctionsTable } from './monitoringApplications.util'
 import { removeMonitoringApplications, removeMEPWithDetections } from '../../../reducers/monitoringApplicationsReducer'
+import { saveAndTransformSearchParams } from 'igz-controls/utils/filter.util'
 
 import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
 
@@ -55,7 +56,10 @@ const MonitoringApplications = () => {
           icon: <PresentMetricsIcon />,
           onClick: data =>
             navigate(
-              `/projects/${params.projectName}/${MONITORING_APP_PAGE}/${data.name}/${MODEL_ENDPOINTS_TAB}${window.location.search}`
+              `/projects/${params.projectName}/${MONITORING_APP_PAGE}/${data.name}/${MODEL_ENDPOINTS_TAB}${saveAndTransformSearchParams(
+                window.location.search,
+                true
+              )}`
             )
         }
       ]
