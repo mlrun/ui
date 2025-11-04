@@ -40,6 +40,7 @@ import { fetchFeatureVector, fetchFeatureVectors } from '../../reducers/featureS
 import { fetchProjectsNames } from '../../reducers/projectReducer'
 import { isCommunityEdition } from '../../utils/helper'
 import { parseUri } from '../../utils/parseUri'
+import { generateProjectsList } from '../../utils/projects'
 
 const targetPathRegex =
   /^(store|v3io|s3|az|gs):(\/\/\/|\/\/)(?!.*:\/\/)([\w\-._~:?#[\]@!$&'()*+,;=]+)\/([\w\-._~:/?#[\]%@!$&'()*+,;=]+)$/i
@@ -240,20 +241,6 @@ export const isPathInputInvalid = (pathInputType, pathInputValue) => {
       return valueIsNotEmpty ? false : 'This field is invalid'
   }
 }
-
-export const generateProjectsList = (projectsList, currentProject) =>
-  projectsList
-    .map(projectItem => ({
-      label: projectItem === currentProject ? `${projectItem} (Current project)` : projectItem,
-      id: projectItem
-    }))
-    .sort((prevProject, nextProject) => {
-      return prevProject.id === currentProject
-        ? -1
-        : nextProject.id === currentProject
-          ? 1
-          : prevProject.id.localeCompare(nextProject.id)
-    })
 
 export const generateComboboxMatchesList = (
   artifacts,

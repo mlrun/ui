@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
@@ -31,12 +31,13 @@ import './modelsPage.scss'
 
 const ModelsPage = () => {
   const artifactsStore = useSelector(store => store.artifactsStore)
+  const params = useParams()
 
   return (
     <>
       <div className="content-wrapper">
         <div className="content__header">
-          <Breadcrumbs />
+          <Breadcrumbs itemName={params.modelName || params.artifactName || params.pipelineId || params.name} />
         </div>
         <div className="content">
           {artifactsStore.loading && <Loader />}

@@ -33,12 +33,12 @@ import {
 import {
   generateArtifactsList,
   generateArtifactsReferencesList,
-  generateProjectsList
 } from '../../utils/panelPathScheme'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
 import { fetchProjectsNames } from '../../reducers/projectReducer'
 import { isCommunityEdition } from '../../utils/helper'
+import { generateProjectsList } from '../../utils/projects'
 
 export const CSV = 'csv'
 export const URL = 'URL'

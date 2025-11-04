@@ -21,13 +21,14 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useLocation, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import BreadcrumbsDropdown from '../BreadcrumbsDropdown/BreadcrumbsDropdown'
 import { NavbarLink } from 'igz-controls/elements'
 import { Button, Navbar } from 'igz-controls/components'
 
 import { useMode } from '../../hooks/mode.hook'
-import { getNavbarLinks } from './navbarlist.util'
+import { getNavbarLinks } from './navbarList.util'
 import { scrollToElement } from '../../utils/scroll.util'
 import { generateProjectsList } from '../../utils/projects'
 import { ALERTS_PAGE_PATH } from '../../constants'
@@ -40,7 +41,7 @@ import SettingsIcon from 'igz-controls/images/navbar/mlrun-project-settings.svg?
 
 import './NavbarList.scss'
 
-const NavbarList = ({ projectName, IsNavbarPinned }) => {
+const NavbarList = ({ navbarIsPinned, projectName }) => {
   const [isShowProjectsList, setShowProjectsList] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const [selectedIndex, setSelectedIndex] = useState(null)
@@ -62,17 +63,17 @@ const NavbarList = ({ projectName, IsNavbarPinned }) => {
   }, [projectName, isDemoMode])
 
   const projectsList = useMemo(() => {
-    const projectsList = generateProjectsList(projectStore.projectsNames.data)
+    const projectsList = generateProjectsList(projectStore.projectsNames.data, params.projectName, true)
     return projectsList.map(project => ({
       ...project,
-      linkTo: pathname.replace(params.projectName, project.id)
+      link: pathname.replace(params.projectName, project.id)
     }))
   }, [projectStore.projectsNames.data, pathname, params.projectName])
 
 
   const handleOnMouseLeave = useCallback(() => {
-    !IsNavbarPinned && setShowProjectsList(false)
-  }, [IsNavbarPinned])
+    !navbarIsPinned && setShowProjectsList(false)
+  }, [navbarIsPinned])
 
   const scrollProjectOptionToView = useCallback(() => {
     scrollToElement(projectListRef, `#${params.projectName}`, searchValue)
@@ -94,9 +95,7 @@ const NavbarList = ({ projectName, IsNavbarPinned }) => {
             icon={<Caret />}
             id="navbar-projects-button"
             iconPosition="right"
-            className={
-              isShowProjectsList ? 'navbar__projects-button_active' : 'navbar__projects-button'
-            }
+            className={classnames(isShowProjectsList && 'btn_active')}
             onClick={() => setShowProjectsList(!isShowProjectsList)}
           />
           {isShowProjectsList && (
@@ -166,8 +165,8 @@ const NavbarList = ({ projectName, IsNavbarPinned }) => {
 }
 
 NavbarList.propTypes = {
-  projectName: PropTypes.string,
-  IsNavbarPinned: PropTypes.bool,
+  navbarIsPinned: PropTypes.bool,
+  projectName: PropTypes.string
 }
 
 export default React.memo(NavbarList)
