@@ -2380,7 +2380,7 @@ function putTags(req, res) {
       )
     })
 
-   // handle existing artifacts with same name and tag 
+   // handle existing artifacts with same name and tag
     collectedArtifactsWithSameName.forEach(artifact => {
       if (artifact.metadata?.tag === tagName) {
         if (
@@ -2659,9 +2659,9 @@ function getModelEndpoints(req, res) {
     )
   }
 
-  if (req.query['endpoint_id']) {
+  if (req.query['endpoint-id']) {
     const modelEndpoint = collectedEndpoints.find(
-      endpoint => endpoint.metadata.uid === req.query.endpoint_id
+      endpoint => endpoint.metadata.uid === req.query.endpoint-id
     )
 
     return res.send(modelEndpoint)
