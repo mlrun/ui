@@ -79,6 +79,7 @@ const EnvironmentVariablesView = ({
               <EditableEnvironmentVariablesRow
                 editEnvVariable={editEnvVariable}
                 envVariables={envVariables}
+                envVariable={envVariable}
                 key={index}
                 selectedEnvVariable={selectedEnvVariable}
                 setSelectedEnvVariable={setSelectedEnvVariable}

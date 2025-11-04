@@ -21,6 +21,7 @@ import React, { useCallback, useLayoutEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { isEmpty, pick } from 'lodash'
+import { useParams } from 'react-router-dom'
 
 import {
   FormSelect,
@@ -57,6 +58,7 @@ const FormVolumesRow = ({
     'form-table__volume-row',
     isCurrentRowEditing(rowPath) && 'form-table__row_active'
   )
+  const { projectName } = useParams()
 
   const accessKeyFocusHandler = useCallback(
     (accessKey, secretRef) => {
@@ -69,10 +71,10 @@ const FormVolumesRow = ({
 
   useLayoutEffect(() => {
     setFieldRowData(
-      generateVolumeInputsData(fields.value[index], fields, editingItem, accessKeyFocusHandler)
+      generateVolumeInputsData(fields.value[index], fields, editingItem, accessKeyFocusHandler, projectName)
     )
     setFieldData(fields.value[index])
-  }, [accessKeyFocusHandler, editingItem, fields, index])
+  }, [accessKeyFocusHandler, editingItem, fields, index, projectName])
 
   const handleTypeChange = useCallback(() => {
     if (isCurrentRowEditing(rowPath)) {
