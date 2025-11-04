@@ -34,13 +34,11 @@ const BreadcrumbsDropdown = forwardRef(
   (
     {
       id = '',
-      link = '',
       list = [],
       onClick = () => { },
       searchValue = '',
       setSearchValue,
       selectedItem,
-      urlParts,
       withSearch = false,
       withAllProjects = false
     },
@@ -75,7 +73,7 @@ const BreadcrumbsDropdown = forwardRef(
               )
 
               return (
-                listItem.link ? (
+                listItem.externalLink ? (
                   <a
                     href={listItem.link}
                     id={listItem.id}
@@ -88,9 +86,7 @@ const BreadcrumbsDropdown = forwardRef(
                   </a>
                 ) : (
                   <Link
-                    to={
-                      listItem.linkTo || urlParts?.screen?.link?.replace(urlParts?.pathItems[1], listItem.id) || link
-                    }
+                    to={listItem.link}
                     onClick={event => {
                       isItemSelected ? event.preventDefault() : onClick(event)
                     }}
@@ -134,13 +130,11 @@ BreadcrumbsDropdown.displayName = 'BreadcrumbsDropdown'
 
 BreadcrumbsDropdown.propTypes = {
   id: PropTypes.string,
-  link: PropTypes.string,
   list: PropTypes.arrayOf(PropTypes.object).isRequired,
   onClick: PropTypes.func,
   searchValue: PropTypes.string.isRequired,
   selectedItem: PropTypes.string.isRequired,
   setSearchValue: PropTypes.func.isRequired,
-  urlParts: PropTypes.object,
   withSearch: PropTypes.bool,
   withAllProjects: PropTypes.bool
 }
