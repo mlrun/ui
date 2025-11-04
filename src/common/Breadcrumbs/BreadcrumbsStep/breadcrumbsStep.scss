@@ -20,10 +20,6 @@
   transition: transform 0.2s linear;
   user-select: none;
 
-  &_tumbler {
-    cursor: pointer;
-  }
-
   &_active {
     transform: rotate(90deg);
   }

@@ -140,7 +140,7 @@ const Alerts = () => {
   return (
     <div className="content-wrapper">
       <div className="content__header">
-        <Breadcrumbs />
+        <Breadcrumbs itemName={params.alertName} />
       </div>
       <div className="content">
         <div className="table-container alerts-container">

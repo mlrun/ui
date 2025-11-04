@@ -40,7 +40,7 @@ import { fetchProjects } from '../../reducers/projectReducer'
 import './Page.scss'
 
 const Page = () => {
-  const [isNavbarPinned, setIsNavbarPinned] = useState(false)
+  const [navbarIsPinned, setNavbarIsPinned] = useState(false)
   const [isProjectsFetched, setProjectFetched] = useState(false)
   const { projectName } = useParams()
   const mainRef = useRef()
@@ -48,11 +48,11 @@ const Page = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const transitionEndEventName = useMemo(() => getTransitionEndEventName(), [])
-  const pinnedClasses = classNames(!(isNavbarPinned && projectName) && 'unpinned')
+  const pinnedClasses = classNames(!(navbarIsPinned && projectName) && 'unpinned')
   const mainStyles = {
     marginLeft: !projectName
       ? 0
-      : isNavbarPinned
+      : navbarIsPinned
         ? `${NAVBAR_WIDTH_OPENED}px`
         : `${NAVBAR_WIDTH_CLOSED}px`
   }
@@ -89,7 +89,7 @@ const Page = () => {
         window.dispatchEvent(new CustomEvent('mainResize'))
       })
     }
-  }, [isNavbarPinned, transitionEndEventName])
+  }, [navbarIsPinned, transitionEndEventName])
 
   useEffect(() => {
     if (isEmpty(frontendSpec)) {
@@ -111,7 +111,7 @@ const Page = () => {
   return (
     <>
       {projectName && (
-        <Navbar setIsNavbarPinned={setIsNavbarPinned}>
+        <Navbar setNavbarIsPinned={setNavbarIsPinned}>
           <NavbarList projectName={projectName} />
         </Navbar>
       )}

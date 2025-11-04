@@ -20,8 +20,8 @@ such restriction.
 import React from 'react'
 
 import {
-  DATASETS_PAGE, DOCUMENTS_PAGE, FEATURE_STORE_PAGE_PATH, FILES_PAGE, JOBS_PAGE_PATH,
-  LLM_PROMPTS_PAGE, MODELS_PAGE, PROJECT_MONITOR, PROJECT_QUICK_ACTIONS_PAGE
+  ARTIFACTS_PAGE, API_GATEWAYS_PAGE, DATASETS_PAGE, DOCUMENTS_PAGE, FEATURE_STORE_PAGE_PATH, FILES_PAGE, FUNCTIONS_PAGE_PATH, JOBS_PAGE_PATH,
+  LLM_PROMPTS_PAGE, MODELS_PAGE, MODEL_ENDPOINTS_TAB, MONITORING_APP_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, NUCLIO_PAGE, PROJECT_MONITOR, PROJECT_QUICK_ACTIONS_PAGE, REAL_TIME_PIPELINES_TAB, REAL_TIME_FUNCTIONS_PAGE, SCHEDULE_TAB
 } from '../../constants'
 import { generateNuclioLink } from '../../utils'
 
@@ -53,7 +53,7 @@ export const getNavbarLinks = (projectName, isDemoMode) => {
     },
     {
       icon: <DatasetsIcon />,
-      id: 'data-artifacts',
+      id: ARTIFACTS_PAGE,
       label: 'Data and artifacts',
       screens: [DATASETS_PAGE, DOCUMENTS_PAGE, LLM_PROMPTS_PAGE, FILES_PAGE, FEATURE_STORE_PAGE_PATH],
       nestedLinks: [
@@ -88,7 +88,7 @@ export const getNavbarLinks = (projectName, isDemoMode) => {
       icon: <ModelsIcon />,
       id: MODELS_PAGE,
       label: 'Models',
-      screens: [MODELS_PAGE, 'monitoring-app'],
+      screens: [MODELS_PAGE, MONITORING_APP_PAGE, MODEL_ENDPOINTS_TAB, REAL_TIME_PIPELINES_TAB],
       nestedLinks: [
         {
           id: MODELS_PAGE,
@@ -96,17 +96,17 @@ export const getNavbarLinks = (projectName, isDemoMode) => {
           link: `${pathname}/${MODELS_PAGE}/models`
         },
         {
-          id: 'model-endpoints',
+          id: MODEL_ENDPOINTS_TAB,
           label: 'Model endpoints',
           link: `${pathname}/${MODELS_PAGE}/model-endpoints`
         },
         {
-          id: 'real-time-pipelines',
+          id: REAL_TIME_PIPELINES_TAB,
           label: 'Real-time pipelines',
           link: `${pathname}/${MODELS_PAGE}/real-time-pipelines`
         },
         {
-          id: 'monitoring-app',
+          id: MONITORING_APP_PAGE,
           label: 'Monitoring app',
           link: `${pathname}/monitoring-app`
         }
@@ -116,19 +116,20 @@ export const getNavbarLinks = (projectName, isDemoMode) => {
       icon: <JobsWorkflowIcon />,
       id: JOBS_PAGE_PATH,
       label: 'Jobs and workflows',
+      screens: [JOBS_PAGE_PATH, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB],
       nestedLinks: [
         {
-          id: 'monitor-jobs',
+          id: MONITOR_JOBS_TAB,
           label: 'Jobs',
           link: `${pathname}/${JOBS_PAGE_PATH}/monitor-jobs`
         },
         {
-          id: 'monitor-workflows',
+          id: MONITOR_WORKFLOWS_TAB,
           label: 'Workflows',
           link: `${pathname}/${JOBS_PAGE_PATH}/monitor-workflows`
         },
         {
-          id: 'schedule',
+          id: SCHEDULE_TAB,
           label: 'Schedule',
           link: `${pathname}/${JOBS_PAGE_PATH}/schedule`
         }
@@ -136,23 +137,23 @@ export const getNavbarLinks = (projectName, isDemoMode) => {
     },
     {
       icon: <FunctionIcon />,
-      id: 'functions',
+      id: FUNCTIONS_PAGE_PATH,
       label: 'ML functions',
       link: `${pathname}/functions`
     },
     {
       icon: <NuclioIcon />,
-      id: 'nuclio',
+      id: NUCLIO_PAGE,
       label: 'Nuclio',
       nestedLinks: [
         {
-          id: 'real-time-functions',
+          id: REAL_TIME_FUNCTIONS_PAGE,
           label: 'Real-time functions',
           link: generateNuclioLink(`${pathname}/functions`),
           externalLink: true
         },
         {
-          id: 'api-gateways',
+          id: API_GATEWAYS_PAGE,
           label: 'API gateways',
           link: generateNuclioLink(`${pathname}/api-gateways`),
           externalLink: true

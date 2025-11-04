@@ -49,11 +49,11 @@
       }
 
       &:hover {
-        background-color: #efefef;
+        background-color: colors.$crystalBell;
       }
 
-      &.navbar__projects-button_active {
-        background-color: #efefef;
+      &.btn_active {
+        background-color: colors.$crystalBell;
 
         svg {
           transform: rotate(0);

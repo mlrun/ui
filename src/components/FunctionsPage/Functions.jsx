@@ -739,6 +739,7 @@ const Functions = ({ isAllVersions = false }) => {
       paginationConfigFunctionsRef={
         isAllVersions ? paginationConfigFunctionVersionsRef : paginationConfigFunctionsRef
       }
+      params={params}
       requestErrorMessage={requestErrorMessage}
       selectedFunction={selectedFunction}
       setSearchFunctionsParams={

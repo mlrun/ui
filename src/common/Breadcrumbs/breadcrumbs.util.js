@@ -19,52 +19,28 @@ such restriction.
 */
 import {
   ALERTS_PAGE_PATH,
-  FEATURE_SETS_TAB,
-  FEATURE_VECTORS_TAB,
-  FEATURES_TAB,
-  MODEL_ENDPOINTS_TAB,
-  MONITOR_JOBS_TAB,
-  MODELS_TAB,
   MONITOR_ALERTS_PAGE,
-  MONITOR_WORKFLOWS_TAB,
-  SCHEDULE_TAB,
-  REAL_TIME_PIPELINES_TAB,
   JOBS_MONITORING_PAGE,
   PROJECTS_PAGE_PATH,
-  PROJECTS_SETTINGS_GENERAL_TAB,
-  PROJECTS_SETTINGS_MEMBERS_TAB,
-  PROJECTS_SETTINGS_SECRETS_TAB,
   PROJECTS_SETTINGS_PAGE_PATH
 } from '../../constants'
 
-import { getNavbarLinks } from '../../elements/NavbarList/navbarlist.util'
+import { getNavbarLinks } from '../../elements/NavbarList/navbarList.util'
 
 export const generateMlrunScreens = (projectName, isDemoMode) => {
-  const screens = getNavbarLinks(projectName, isDemoMode)
+  const navbarLinks = getNavbarLinks(projectName, isDemoMode)
 
-  const innerScreens = screens.reduce((acc, { link, linkTo, ...screen }) => {
-    if (screen.nestedLinks) {
-      screen.nestedLinks.forEach(({ link, linkTo, ...nestedScreen }) => acc.push({
-        label: nestedScreen.label,
-        id: nestedScreen.id,
-        link,
-        linkTo,
-        hidden: nestedScreen.hidden
-      }))
+  const mlrunScreens = navbarLinks.reduce((list, navbarLink) => {
+    if (navbarLink.nestedLinks) {
+      navbarLink.nestedLinks.forEach(nestedScreen => list.push(nestedScreen))
     } else {
-      acc.push({
-        label: screen.label,
-        id: screen.id,
-        link,
-        linkTo,
-        hidden: screen.hidden
-      })
+      list.push(navbarLink)
     }
 
-    return acc
+    return list
   }, [])
 
-  innerScreens.push({
+  mlrunScreens.push({
     label: 'Alerts',
     id: ALERTS_PAGE_PATH,
     link: `/${PROJECTS_PAGE_PATH}/${projectName}/${ALERTS_PAGE_PATH}`
@@ -75,7 +51,7 @@ export const generateMlrunScreens = (projectName, isDemoMode) => {
     link: `/${PROJECTS_PAGE_PATH}/${projectName}/${PROJECTS_SETTINGS_PAGE_PATH}`
   })
 
-  return projectName ? innerScreens : [
+  return projectName ? mlrunScreens : [
         {
           label: 'Alerts monitoring',
           id: MONITOR_ALERTS_PAGE,
@@ -88,54 +64,3 @@ export const generateMlrunScreens = (projectName, isDemoMode) => {
         }
       ]
 }
-
-export const generateTabsList = () => [
-  {
-    label: MONITOR_JOBS_TAB,
-    id: MONITOR_JOBS_TAB
-  },
-  {
-    label: MONITOR_WORKFLOWS_TAB,
-    id: MONITOR_WORKFLOWS_TAB
-  },
-  {
-    label: SCHEDULE_TAB,
-    id: SCHEDULE_TAB
-  },
-  {
-    label: MODEL_ENDPOINTS_TAB,
-    id: MODEL_ENDPOINTS_TAB
-  },
-  {
-    label: REAL_TIME_PIPELINES_TAB,
-    id: REAL_TIME_PIPELINES_TAB
-  },
-  {
-    label: MODELS_TAB,
-    id: MODELS_TAB
-  },
-  {
-    label: FEATURE_SETS_TAB,
-    id: FEATURE_SETS_TAB
-  },
-  {
-    label: FEATURE_VECTORS_TAB,
-    id: FEATURE_VECTORS_TAB
-  },
-  {
-    label: PROJECTS_SETTINGS_GENERAL_TAB,
-    id: PROJECTS_SETTINGS_GENERAL_TAB
-  },
-  {
-    label: PROJECTS_SETTINGS_MEMBERS_TAB,
-    id: PROJECTS_SETTINGS_MEMBERS_TAB
-  },
-  {
-    label: PROJECTS_SETTINGS_SECRETS_TAB,
-    id: PROJECTS_SETTINGS_SECRETS_TAB
-  },
-  {
-    label: FEATURES_TAB,
-    id: FEATURES_TAB
-  },
-]

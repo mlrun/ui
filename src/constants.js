@@ -142,6 +142,10 @@ export const PROJECT_QUICK_ACTIONS_PAGE = 'quick-actions'
 
 export const ALL_VERSIONS_PATH = 'all-versions'
 
+export const NUCLIO_PAGE = 'nuclio'
+export const REAL_TIME_FUNCTIONS_PAGE = 'real-time-functions'
+export const API_GATEWAYS_PAGE = 'api-gateways'
+
 /*=========== CONSUMER_GROUPS =============*/
 
 export const CONSUMER_GROUP_PAGE = 'CONSUMER_GROUP'
@@ -516,3 +520,8 @@ export const RESULT_TYPE = 'result'
 
 export const COUNTERS_GENERAL_MESSAGE =
   'Counters use a caching mechanism, and are not auto-refreshed.'
+
+/*=========== BREADCRUMBS TYPES =============*/
+export const BREADCRUMBS_STEP_PROJECT_TYPE = 'project'
+export const BREADCRUMBS_STEP_SCREEN_TYPE = 'screen'
+export const BREADCRUMBS_STEP_ITEM_TYPE = 'item'

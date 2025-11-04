@@ -21,18 +21,20 @@ import React, { useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useLocation, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { startCase } from 'lodash'
+import { capitalize } from 'lodash'
 
 import BreadcrumbsStep from './BreadcrumbsStep/BreadcrumbsStep'
 
-import { generateMlrunScreens, generateTabsList } from './breadcrumbs.util'
-import { MONITORING_APP_PAGE, PROJECTS_PAGE_PATH } from '../../constants'
+import { generateMlrunScreens } from './breadcrumbs.util'
+import { PROJECTS_PAGE_PATH } from '../../constants'
 import { generateProjectsList } from '../../utils/projects'
 import { useMode } from '../../hooks/mode.hook'
 
+import { BREADCRUMBS_STEP_ITEM_TYPE, BREADCRUMBS_STEP_PROJECT_TYPE, BREADCRUMBS_STEP_SCREEN_TYPE } from '../../constants'
+
 import './breadcrumbs.scss'
 
-const Breadcrumbs = ({ onClick = () => { } }) => {
+const Breadcrumbs = ({ itemName = '', onClick = () => { } }) => {
   const [searchValue, setSearchValue] = useState('')
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
@@ -44,47 +46,45 @@ const Breadcrumbs = ({ onClick = () => { } }) => {
   const projectStore = useSelector(state => state.projectStore)
 
   const projectsList = useMemo(() => {
-    return generateProjectsList(projectStore.projectsNames.data)
-  }, [projectStore.projectsNames.data])
+    const projectsList = generateProjectsList(projectStore.projectsNames.data, params.projectName,)
+    return projectsList.map(project => ({
+      ...project,
+      link: location.pathname.replace(params.projectName, project.id)
+    }))
+  }, [projectStore.projectsNames.data, location.pathname, params.projectName])
 
   const mlrunScreens = useMemo(() => {
     return generateMlrunScreens(params?.projectName ?? '', isDemoMode).filter(screen => !screen.hidden)
   }, [isDemoMode, params?.projectName])
-  const projectTabs = useMemo(() => {
-    return generateTabsList()
-  }, [])
+
+
   const urlParts = useMemo(() => {
+    const [projects, projectName, page, innerScreenName] = location.pathname.split('/').slice(1, 5)
+    const screen = mlrunScreens.find(screen => screen.id === (page)) || mlrunScreens.find(screen => screen.id === (innerScreenName))
+
+    const pathItems = [
+      { id: projects, label: capitalize(projects), link: `/${PROJECTS_PAGE_PATH}` },
+      { id: projectName, label: projectName, link: `/projects/${projectName}`, type: BREADCRUMBS_STEP_PROJECT_TYPE },
+      { id: screen?.id, label: screen?.label, link: screen?.link, type: BREADCRUMBS_STEP_SCREEN_TYPE }
+    ]
+
+    itemName && pathItems.push({ id: itemName, label: itemName, type: BREADCRUMBS_STEP_ITEM_TYPE })
+
+
     if (params.projectName) {
-      const [projects, projectName, screenName, innerScreenName] = location.pathname.split('/').slice(1, 5)
-      const screen = mlrunScreens.find(screen => screen.id === (innerScreenName)) ?? mlrunScreens.find(screen => screen.id === (screenName))
-      let tab = projectTabs.find(tab =>
-        location.pathname
-          .split('/')
-          .slice(3)
-          .find(pathItem => pathItem === tab.id)
-      )
-
-      if (screen?.id === MONITORING_APP_PAGE) {
-        tab = {}
-      }
-
       return {
-        pathItems: [projects, projectName, screen?.label],
+        pathItems,
         screen,
-        tab: { ...tab, label: startCase(tab?.label?.replace('-', ' ')) || '' },
-        itemName: params.artifactName || params.funcName || params.jobName || params.workflowProjectName || params.appName || params.name || params.alertName || null,
       }
     } else {
-      const [page] = location.pathname.split('/').slice(3, 4)
-      const screen = mlrunScreens.find(screen => screen.id === page)
-
       return {
-        pathItems: [PROJECTS_PAGE_PATH, screen?.label || page],
+        pathItems: pathItems.filter(item => item.type !== BREADCRUMBS_STEP_PROJECT_TYPE),
         screen,
-        itemName: params.artifactName || params.name || params.jobName || params.workflowProjectName || params.alertName || null,
       }
     }
-  }, [location.pathname, params, mlrunScreens, projectTabs])
+
+
+  }, [itemName, location.pathname, params, mlrunScreens])
 
   return (
     <nav data-testid="breadcrumbs" className="breadcrumbs" ref={breadcrumbsRef}>
@@ -94,6 +94,7 @@ const Breadcrumbs = ({ onClick = () => { } }) => {
             <BreadcrumbsStep
               key={index}
               index={index}
+              itemName={itemName}
               mlrunScreens={mlrunScreens}
               onClick={onClick}
               params={params}
@@ -105,7 +106,7 @@ const Breadcrumbs = ({ onClick = () => { } }) => {
               setShowScreensList={setShowScreensList}
               showProjectsList={showProjectsList}
               showScreensList={showScreensList}
-              urlPart={urlPart}
+              pathItem={urlPart}
               urlParts={urlParts}
             />
           )
@@ -116,6 +117,7 @@ const Breadcrumbs = ({ onClick = () => { } }) => {
 }
 
 Breadcrumbs.propTypes = {
+  itemName: PropTypes.string,
   onClick: PropTypes.func
 }
 
