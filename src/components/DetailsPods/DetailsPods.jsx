@@ -30,8 +30,9 @@ import { Tooltip, TextTooltipTemplate, Loader } from 'igz-controls/components'
 import { generatePods } from './detailsPods.util'
 
 import './detailsPods.scss'
+import { PENDING_STATE } from '../../constants'
 
-const DetailsPods = ({ isDetailsPopUp = false, noDataMessage = ''}) => {
+const DetailsPods = ({ isDetailsPopUp = false, noDataMessage = '' }) => {
   const [selectedPod, setSelectedPod] = useState(null)
   const [table, setTable] = useState([])
   const params = useParams()
@@ -71,7 +72,7 @@ const DetailsPods = ({ isDetailsPopUp = false, noDataMessage = ''}) => {
                   selectedPod?.value === row.value && 'row_active'
                 )
                 const podStatus =
-                  row.status?.phase?.toLowerCase() === 'pending'
+                  row.status?.phase?.toLowerCase() === PENDING_STATE
                     ? 'pending...'
                     : (row.status?.phase?.toLowerCase() ?? '')
 

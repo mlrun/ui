@@ -24,7 +24,19 @@ import PropTypes from 'prop-types'
 import ProjectStatisticsCounter from '../ProjectStatisticsCounter/ProjectStatisticsCounter'
 
 import { ANY_TIME_DATE_OPTION, PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
-import { DATES_FILTER, FAILED_STATE, STATUS_FILTER } from '../../constants'
+import {
+  ABORTED_STATE,
+  ABORTING_STATE,
+  COMPLETED_STATE,
+  DATES_FILTER,
+  ERROR_STATE,
+  FAILED_STATE,
+  PENDING_RETRY_STATE,
+  PENDING_STATE,
+  RUNNING_STATE,
+  STATUS_FILTER,
+  SUCCEEDED_STATE
+} from '../../constants'
 
 import './projectStatistics.scss'
 
@@ -34,21 +46,23 @@ const ProjectStatistics = ({ statistics }) => {
   const onNavigate = (statistic, key) => {
     let filters = {}
 
-    if (['running', 'workflows'].includes(key)) {
+    if ([RUNNING_STATE, 'workflows'].includes(key)) {
       filters = {
         [DATES_FILTER]: ANY_TIME_DATE_OPTION,
         [STATUS_FILTER]:
-          key === 'workflows' ? ['running'] : ['running', 'pending', 'pendingRetry', 'aborting']
+          key === 'workflows'
+            ? [RUNNING_STATE]
+            : [RUNNING_STATE, PENDING_STATE, PENDING_RETRY_STATE, ABORTING_STATE]
       }
     } else if (key === FAILED_STATE) {
       filters = {
         [DATES_FILTER]: PAST_24_HOUR_DATE_OPTION,
-        [STATUS_FILTER]: ['error', 'aborted']
+        [STATUS_FILTER]: [ERROR_STATE, ABORTED_STATE]
       }
-    } else if (key === 'succeeded') {
+    } else if (key === SUCCEEDED_STATE) {
       filters = {
         [DATES_FILTER]: PAST_24_HOUR_DATE_OPTION,
-        [STATUS_FILTER]: ['completed']
+        [STATUS_FILTER]: [COMPLETED_STATE]
       }
     }
 

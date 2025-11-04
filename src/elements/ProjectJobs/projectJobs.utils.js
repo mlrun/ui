@@ -20,7 +20,13 @@ such restriction.
 import { orderBy } from 'lodash'
 
 import { measureTime } from '../../utils/measureTime'
-import { MONITOR_JOBS_TAB } from '../../constants'
+import {
+  ABORTED_STATE,
+  FAILED_STATE,
+  MONITOR_JOBS_TAB,
+  RUNNING_STATE,
+  SUCCEEDED_STATE
+} from '../../constants'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { typesOfJob } from '../../utils/jobs.util'
 
@@ -29,8 +35,8 @@ export const getJobsStatistics = (projectCounter, projectName) => {
     running: {
       value: projectCounter.error ? 'N/A' : projectCounter?.data?.runs_running_count,
       label: 'In Process',
-      className: 'running',
-      status: 'running',
+      className: RUNNING_STATE,
+      status: RUNNING_STATE,
       link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`,
       counterTooltip: 'Aborting, Pending, Pending retry, Running',
       loading: projectCounter.loading
@@ -40,9 +46,9 @@ export const getJobsStatistics = (projectCounter, projectName) => {
       label: 'Failed',
       className:
         projectCounter.error || projectCounter?.data?.runs_failed_recent_count === 0
-          ? 'running'
-          : 'failed',
-      status: 'failed',
+          ? RUNNING_STATE
+          : FAILED_STATE,
+      status: FAILED_STATE,
       link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`,
       counterTooltip: 'Aborted, Error',
       loading: projectCounter.loading
@@ -50,8 +56,8 @@ export const getJobsStatistics = (projectCounter, projectName) => {
     succeeded: {
       value: projectCounter.error ? 'N/A' : projectCounter?.data?.runs_completed_recent_count,
       label: 'Succeeded',
-      status: 'succeeded',
-      className: 'running',
+      status: SUCCEEDED_STATE,
+      className: RUNNING_STATE,
       link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`,
       counterTooltip: 'Completed',
       loading: projectCounter.loading
@@ -82,7 +88,7 @@ export const getJobsTableData = (jobs, projectName) => {
         startTime: {
           value: formatDatetime(
             job[0].status.start_time,
-            job[0].status.state === 'aborted' ? 'N/A' : 'Not yet started'
+            job[0].status.state === ABORTED_STATE ? 'N/A' : 'Not yet started'
           ),
           className: 'table-cell_big'
         },
