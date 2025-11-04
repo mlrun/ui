@@ -38,7 +38,7 @@ import {
 import artifactApi from '../../api/artifacts-api'
 import { ARTIFACT_TYPE } from '../../constants'
 import { convertChipsData } from '../../utils/convertChipsData'
-import { createArtifactMessages } from '../../utils/createArtifact.util'
+import { getArtifactMessagesByKind } from '../../utils/createArtifact.util'
 import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
@@ -81,7 +81,7 @@ const RegisterArtifactModal = ({
   const dispatch = useDispatch()
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
   const messagesByKind = useMemo(() => {
-    return createArtifactMessages[artifactKind.toLowerCase()]
+    return getArtifactMessagesByKind(artifactKind)
   }, [artifactKind])
 
   const registerArtifact = values => {
@@ -136,7 +136,7 @@ const RegisterArtifactModal = ({
       },
       onErrorCallback: resolveModal,
       showLoader: () => setIsLoading(true),
-      hideLoader: () => setIsLoading(false),
+      hideLoader: () => setIsLoading(false)
     })
   }
 
@@ -164,26 +164,26 @@ const RegisterArtifactModal = ({
       {formState => {
         return (
           <>
-          {isLoading && <Loader />}
-          <Modal
-            data-testid="register-artifact"
-            actions={getModalActions(formState)}
-            className="artifact-register-form"
-            location={location}
-            onClose={handleCloseModal}
-            show={isOpen}
-            size={MODAL_SM}
-            title={title}
-          >
-            <RegisterArtifactModalForm
-              formState={formState}
-              initialValues={initialValues}
-              messagesByKind={messagesByKind}
-              params={params}
-              setFieldState={formState.form.mutators.setFieldState}
-              showType={artifactKind === ARTIFACT_TYPE}
-            />
-          </Modal>
+            {isLoading && <Loader />}
+            <Modal
+              data-testid="register-artifact"
+              actions={getModalActions(formState)}
+              className="artifact-register-form"
+              location={location}
+              onClose={handleCloseModal}
+              show={isOpen}
+              size={MODAL_SM}
+              title={title}
+            >
+              <RegisterArtifactModalForm
+                formState={formState}
+                initialValues={initialValues}
+                messagesByKind={messagesByKind}
+                params={params}
+                setFieldState={formState.form.mutators.setFieldState}
+                showType={artifactKind === ARTIFACT_TYPE}
+              />
+            </Modal>
           </>
         )
       }}

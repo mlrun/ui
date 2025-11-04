@@ -33,7 +33,7 @@ const quickActionsObject = dropdownComponent(
   generateDropdownGroup(
     '.main-info__toolbar .create-new-menu',
     '.select__header',
-    '[data-testid="select-body"] [data-testid="select-option"] .tooltip-wrapper',
+    '[data-testid="select-body"] [data-testid="select-option"]:not(.hidden) .tooltip-wrapper',
     false
   )
 )
@@ -52,10 +52,10 @@ const realtimeFunctionsNuclioTable = {
     root: '.project-data-card__header',
     sorters: {
       title: '.project-data-card__header-text a',
-      running_counter_number: '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-value .tooltip-wrapper',
+      running_counter_number: '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-value.statistics_running',
       running_counter_subtitle: '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-label span',
       running_counter_icon: '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-label i',
-      failed_counter_number: '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-value .tooltip-wrapper',
+      failed_counter_number: '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-value.statistics_failed',
       failed_counter_subtitle: '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-label span',
       failed_counter_icon: '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-label i',
       api_gateways_counter_number: '.project-data-card__statistics-item:nth-of-type(3) .project-data-card__statistics-value .tooltip-wrapper',
@@ -83,7 +83,7 @@ const runsTable = {
   header: {
     root: '.project-data-card__header',
     sorters: {
-      title: '.project-data-card__header-text span a',
+      title: '.project-data-card__header-text a',
       time_period: '.project-data-card__header-info span',
       in_process_counter_number: '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-value',
       in_process_counter_subtitle: '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-label span',
@@ -276,18 +276,18 @@ const shardLagsTable = {
 
 export default {
   project: {
-    Project_Name: By.css('.main-info .project-details__header'),
+    Project_Name: By.css('.main-info .page-header__title'),
     Created_Details: By.css('.project-details__details-label:nth-of-type(1)'),
     Owner_Details: By.css('.project-details__details-label:nth-of-type(2)'),
-    Info_Baner: By.css('.main-info__toolbar .main-info__toolbar-banner'),
+    Info_Baner_Icon: By.css('.main-info .page-header__title [data-testid="tip"] svg'),
     Quick_Actions: quickActionsObject,
     Refresh_Button: By.css('[data-testid="refresh"]'),
     Mono_Values_Cards: By.css('.projects-monitoring-container .projects-monitoring-stats'),
     Artifacts_Stats_Container: {
       Artifacts_Stats_Title: By.css('.projects-monitoring-stats > div:nth-child(1) .stats-card__title .tooltip-wrapper'),
-      Artifacts_Stats_Counter: By.css('.projects-monitoring-stats > div:nth-child(1) [data-testid="data_total_counter"] .stats__counter'),
+      Artifacts_Stats_Counter: By.css('.projects-monitoring-stats > div:nth-child(1) [data-testid="artifacts_total_counter"] .stats__counter'),
       Datasets_Counter_Subtitle: By.css('.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(1) h6'),
-      Datasets_Counter_Number: By.css('.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(1) .stats__counter'),
+      Datasets_Counter_Number: By.css('.projects-monitoring-container > div > div:nth-child(1) .stats__details .stats-card__row:nth-of-type(1) .stats__counter'),
       Documents_Counter_Subtitle: By.css('.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(2) h6'),
       Documents_Counter_Number: By.css('.projects-monitoring-stats > div:nth-child(1) .stats__details .stats-card__row:nth-of-type(2) .stats__counter'),
       LLM_Prompts_Counter_Subtitle: By.css('.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(3) h6'),
@@ -298,7 +298,7 @@ export default {
     Workflows_Stats_Container: {
       Workflows_Stats_Title: By.css('.projects-monitoring-stats > div:nth-child(2) .stats-card__title .tooltip-wrapper'),
       Filtering_Time_Period: By.css('.projects-monitoring-stats > div:nth-child(2) .project-card__info span'),
-      Workflows_Stats_Counter: By.css('.projects-monitoring-stats > div:nth-child(2) [data-testid="scheduled_total_counter"] .stats__counter'),
+      Workflows_Stats_Counter: By.css('.projects-monitoring-stats > div:nth-child(2) [data-testid="wf_total_counter"] .stats__counter'),
       In_Process_Counter_Subtitle: By.css('.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(1) h6'),
       In_Process_Counter_Status_Icon: By.css('.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(1) i.state-running'),
       In_Process_Counter_Number: By.css('.projects-monitoring-stats > div:nth-child(2) .stats__details .stats-card__row:nth-of-type(1) div:nth-child(2)'),
@@ -324,12 +324,12 @@ export default {
     },
     Monitoring_App_Stats_Container: {
       Monitoring_App_Stats_Title: By.css('.projects-monitoring-stats .application-card .stats-card__title .tooltip-wrapper'),
-      Monitoring_App_Succeeded_Stats_Counter: By.css('.projects-monitoring-stats .application-card .stats__container:nth-of-type(1) .stats__counter'),
-      Monitoring_App_Succeeded_Counter_Subtitle: By.css('.projects-monitoring-stats .application-card .stats__container:nth-of-type(1) .stats__label'),
-      Monitoring_App_Succeeded_Counter_Status_Icon: By.css('.projects-monitoring-stats .application-card .stats__container:nth-of-type(1) .stats__label .state-completed'),
-      Monitoring_App_Failed_Stats_Counter: By.css('.projects-monitoring-stats .application-card .stats__container:nth-of-type(2) .stats__counter'),
-      Monitoring_App_Failed_Counter_Subtitle: By.css('.projects-monitoring-stats .application-card .stats__container:nth-of-type(2) .stats__label'),
-      Monitoring_App_Failed_Counter_Status_Icon: By.css('.projects-monitoring-stats .application-card .stats__container:nth-of-type(2) .stats__label .state-failed')
+      Monitoring_App_Running_Stats_Counter: By.css('.projects-monitoring-stats .application-card [data-testid="app_running_counter"] .stats__counter'),
+      Monitoring_App_Running_Counter_Subtitle: By.css('.application-card > div > div:nth-child(2) .stats__details .stats-card__col:nth-of-type(1) .stats__subtitle'),
+      Monitoring_App_Running_Counter_Status_Icon: By.css('.application-card > div > div:nth-child(2) .stats__details .stats-card__col:nth-of-type(1) .state-running'),
+      Monitoring_App_Failed_Stats_Counter: By.css('.projects-monitoring-stats .application-card [data-testid="app_failed_counter"] .stats__counter'),
+      Monitoring_App_Failed_Counter_Subtitle: By.css('.application-card > div > div:nth-child(2) .stats__details .stats-card__col:nth-of-type(2) .stats__subtitle'),
+      Monitoring_App_Failed_Counter_Status_Icon: By.css('.application-card > div > div:nth-child(2) .stats__details .stats-card__col:nth-of-type(2) .state-failed')
     },
     Alerts_Stats_Container: {
       Alerts_Stats_Title: By.css('.projects-monitoring-stats > div:nth-child(5) .stats-card__title .tooltip-wrapper'),
@@ -345,7 +345,7 @@ export default {
     },
     Runs_Statistic_Table: commonTable(runsTable),
     Runs_Statistic_Section_Container: {
-      Runs_Statistic_Section_Title_Tip: By.css('.d-flex:nth-of-type(1) [data-testid="tip"]'),
+      Runs_Statistic_Section_Title_Tip: By.css('.d-flex:nth-of-type(1) [data-testid="tip"] svg'),
       In_Process_Counter_Subtitle: By.css('.d-flex:nth-of-type(1) .project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-label span'),
       Failed_Counter_Subtitle: By.css('.d-flex:nth-of-type(1) .project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-label span'),
       Succeeded_Counter_Subtitle: By.css('.d-flex:nth-of-type(1) .project-data-card__statistics-item:nth-of-type(3) .project-data-card__statistics-label span'),

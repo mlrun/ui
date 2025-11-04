@@ -58,7 +58,8 @@ export const generateFeatureVectorsDetailsMenu = (selectedItem) => [
   {
     label: 'statistics',
     id: 'statistics',
-    hidden: !selectedItem.stats && !selectedItem.features
+    hidden: !selectedItem.stats && !selectedItem.features,
+    tip: 'Note that some values may be empty due to the use of different engines for calculating statistics'
   },
   {
     label: 'analysis',

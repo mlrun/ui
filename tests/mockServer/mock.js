@@ -214,6 +214,7 @@ const artifactsCategories = {
   dataset: ['dataset'],
   document: ['document'],
   model: ['model'],
+  'llm-prompt': ['llm-prompt'],
   other: ['', 'table', 'link', 'plot', 'chart', 'plotly', 'artifact']
 }
 
@@ -835,7 +836,7 @@ function getMonitoringApplications(req, res) {
   const collectedMonitoringApplications = (monitoringApplications[req.params['project']] || []).map(
     application => ({
       ...application,
-      stats: omit(application.stats, ['shards', 'processed_model_endpoints', 'metrics'])
+      stats: { ...omit(application.stats, ['shards', 'processed_model_endpoints', 'metrics']), stream_stats: application.stats.stream_stats['0']}
     })
   )
 
@@ -968,11 +969,7 @@ function getRuns(req, res) {
       pathToPartition.push('metadata.project')
     }
 
-    collectedRuns = getPartitionedData(
-      collectedRuns,
-      pathToPartition,
-      'status.last_update'
-    )
+    collectedRuns = getPartitionedData(collectedRuns, pathToPartition, 'status.last_update')
   }
 
   if (req.query['name']) {
@@ -1489,6 +1486,7 @@ function getArtifacts(req, res) {
     collectedArtifacts = collectedArtifacts.filter(artifact => {
       if (req.query['name'].includes('~')) {
         const value = artifact.spec?.db_key ?? artifact.db_key
+
         if (req.query['name'].includes('~')) {
           return value.includes(req.query['name'].slice(1))
         } else {
@@ -1518,9 +1516,44 @@ function getArtifacts(req, res) {
     }
   }
 
+  if (req.query['tree']) {
+    collectedArtifacts = collectedArtifacts.filter(
+      artifact => artifact.metadata?.tree === req.query['tree']
+    )
+  }
+
+  if (req.query['parent']) {
+    if (req.query['parent'].includes(':')) {
+      const [key, tag] = req.query['parent'].split(':')
+
+      collectedArtifacts = collectedArtifacts.filter(artifact => {
+        const match = artifact.spec.parent_uri.match(
+          /^store:\/\/(?<kind>.+?)\/(?<project>.+?)\/(?<key>.+?)(#(?<iteration>.+?))?(:(?<tag>.+?))?(@(?<tree>[^^]+))?(\^(?<uid>.+))?$/
+        )
+
+        return match && match.groups.key.includes(key) && match.groups.tag.includes(tag)
+      })
+    } else {
+      collectedArtifacts = collectedArtifacts.filter(artifact =>
+        artifact.spec?.parent_uri
+          ?.match(/^store:\/\/[^/]+\/[^/]+\/([^#/]+)/)?.[1]
+          ?.includes(req.query['parent'])
+      )
+    }
+  }
+
   if (req.query['format'] === 'minimal') {
     collectedArtifacts = collectedArtifacts.map(func => {
-      const fieldsToPick = ['db_key', 'producer', 'size', 'target_path', 'framework', 'metrics']
+      const fieldsToPick = [
+        'db_key',
+        'producer',
+        'size',
+        'target_path',
+        'framework',
+        'metrics',
+        'has_children',
+        'parent_uri'
+      ]
       const specFieldsToPick = fieldsToPick.map(fieldName => `spec.${fieldName}`)
 
       return pick(func, [
@@ -1947,7 +1980,9 @@ function getFunc(req, res) {
   let collectedFuncs = funcs.funcs
     .filter(func => func.metadata.project === req.params['project'])
     .filter(func => func.metadata.name === req.params['func'])
-    .filter(func => func.metadata.hash === req.query.hash_key)
+    .filter(
+      func => func.metadata.hash === req.query.hash_key || func.metadata.uid === req.query.hash_key
+    )
 
   if (req.query.tag) {
     collectedFuncs = collectedFuncs.filter(func => func.metadata.tag === req.query.tag)
@@ -2332,9 +2367,35 @@ function putTags(req, res) {
   })
 
   if (collectedArtifacts?.length > 0) {
-    let editedTag = cloneDeep(collectedArtifacts[0])
-    editedTag.metadata ? (editedTag.metadata.tag = tagName) : (editedTag.tag = tagName)
-    artifacts.artifacts.push(editedTag)
+    let artifactWithEditedTag = cloneDeep(collectedArtifacts[0])
+    artifactWithEditedTag.metadata
+      ? (artifactWithEditedTag.metadata.tag = tagName)
+      : (artifactWithEditedTag.tag = tagName)
+
+    const collectedArtifactsWithSameName = artifacts.artifacts.filter(artifact => {
+      return (
+        artifact.metadata?.project === req.params.project &&
+        ((artifact.spec && artifact.spec.db_key === req.body.identifiers[0].key) ||
+          artifact.metadata.key === req.body.identifiers[0].key)
+      )
+    })
+
+   // handle existing artifacts with same name and tag
+    collectedArtifactsWithSameName.forEach(artifact => {
+      if (artifact.metadata?.tag === tagName) {
+        if (
+          collectedArtifactsWithSameName.filter(
+            searchedArtifact => searchedArtifact.metadata.uid === artifact.metadata.uid
+          ).length > 1
+        ) {
+          remove(artifacts.artifacts, artifact)
+        } else {
+          artifact.metadata.tag = null
+        }
+      }
+    })
+
+    artifacts.artifacts.push(artifactWithEditedTag)
   }
 
   res.send({
@@ -2589,6 +2650,12 @@ function getModelEndpoints(req, res) {
   if (req.query['label']) {
     collectedEndpoints = collectedEndpoints.filter(endpoint =>
       filterByLabels(endpoint.metadata.labels, req.query['label'])
+    )
+  }
+
+  if (req.query['mode']) {
+    collectedEndpoints = collectedEndpoints.filter(
+      endpoint => Number(endpoint.metadata.mode) === Number(req.query['mode'])
     )
   }
 
@@ -2956,7 +3023,7 @@ app.get(
   getMonitoringApplicationData
 )
 app.get(
-  `${mlrunAPIIngress}/projects/:project/model-endpoints/drift-over-time`,
+  `${mlrunAPIIngress}/projects/:project/model-monitoring/drift-over-time`,
   getMonitoringApplicationDrift
 )
 

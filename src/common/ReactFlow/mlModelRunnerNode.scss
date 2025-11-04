@@ -1,0 +1,49 @@
+@use 'igz-controls/scss/colors';
+
+.react-flow__renderer {
+  .react-flow__node.react-flow__node-ml-model-runner-node {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .react-flow__node-header {
+      display: flex;
+      width: 100%;
+      margin-bottom: 10px;
+      stroke: initial;
+
+      &-title {
+        overflow: hidden;
+        margin-left: 10px;
+        margin-right: auto;
+      }
+
+      &-label {
+        font-size: 16px;
+      }
+
+      &-sub-label {
+        color: colors.$topaz;
+        font-size: 14px;
+      }
+
+      &-icon {
+        display: flex;
+        align-items: center;
+      }
+
+      &-monitoring-icon {
+        margin-left: 10px;
+      }
+    }
+
+    .react-flow__node-chips-title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .react-flow__node-chips {
+      margin-top: 5px;
+      width: 100%;
+    }
+  }
+}

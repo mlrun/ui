@@ -83,6 +83,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
 
     return {
       running: {
+        counterTooltip: 'Running',
         value: functionsRunning,
         label: 'Running',
         className: 'running',
@@ -91,6 +92,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
         loading: nuclioStore.loading
       },
       failed: {
+        counterTooltip: 'Error, Unhealthy',
         value: functionsFailed,
         label: 'Failed',
         status: 'failed',

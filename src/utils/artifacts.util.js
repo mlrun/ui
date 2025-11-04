@@ -34,7 +34,9 @@ import {
   MODELS_PAGE,
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST,
-  ALL_VERSIONS_PATH
+  ALL_VERSIONS_PATH,
+  LLM_PROMPT_TYPE,
+  LLM_PROMPT_TITLE
 } from '../constants'
 import { VIEW_SEARCH_PARAMETER } from 'igz-controls/constants'
 import {
@@ -57,7 +59,7 @@ import { generateObjectNotInTheListMessage } from './generateMessage.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { ConfirmDialog } from 'igz-controls/components'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { createArtifactMessages } from './createArtifact.util'
+import {  getArtifactMessagesByKind } from './createArtifact.util'
 
 export const applyTagChanges = (changes, artifactItem, projectName, dispatch, setNotification) => {
   let updateTagMsg = 'Tag was updated'
@@ -139,10 +141,10 @@ export const processActionAfterTagUniquesValidation = ({
     return actionCallback().finally(hideLoader)
   }
 
-  const messagesByKind = createArtifactMessages[artifact.kind.toLowerCase()]
+  const messagesByKind = getArtifactMessagesByKind(artifact.kind)
 
   return artifactApi
-    .getExpandedArtifact(projectName, artifact.key || artifact.metadata.key, tag)
+    .getExpandedArtifact(projectName, artifact.db_key ?? artifact.spec.db_key ?? artifact.key , tag)
     .then(response => {
       if (response?.data) {
         if (!isEmpty(response.data.artifacts)) {
@@ -153,11 +155,14 @@ export const processActionAfterTagUniquesValidation = ({
               return _reject(...args)
             }
 
+            // hide and show loader again to avoid UI loader above confirmation dialog
+            hideLoader()
             openPopUp(ConfirmDialog, {
               confirmButton: {
                 label: 'Overwrite',
                 variant: PRIMARY_BUTTON,
                 handler: () => {
+                  showLoader()
                   actionCallback().then(resolve).catch(reject).finally(hideLoader)
                 }
               },
@@ -169,7 +174,9 @@ export const processActionAfterTagUniquesValidation = ({
               closePopUp: () => reject(),
               header: messagesByKind.overwriteConfirmTitle,
               message: messagesByKind.getOverwriteConfirmMessage(
-                response.data.artifacts[0].kind || ARTIFACT_TYPE
+                response.data.artifacts[0].kind === LLM_PROMPT_TYPE
+                  ? LLM_PROMPT_TITLE
+                  : response.data.artifacts[0].kind || ARTIFACT_TYPE
               ),
               className: 'override-artifact-dialog'
             })
@@ -193,11 +200,12 @@ export const processActionAfterTagUniquesValidation = ({
             throwError
           })
         )
+
+        onErrorCallback?.()
       }
 
-      onErrorCallback?.()
       hideLoader()
-      
+
       if (throwError) throw error
     })
 }
@@ -312,6 +320,7 @@ export const checkForSelectedArtifact = debounce(
     artifactName,
     artifacts,
     dispatch,
+    ignoreLastCheckedArtifact = false,
     isAllVersions,
     navigate,
     paginatedArtifacts,
@@ -332,7 +341,7 @@ export const checkForSelectedArtifact = debounce(
       if (
         artifacts &&
         searchBePage === configBePage &&
-        lastCheckedArtifactIdRef.current !== paramsId
+        (lastCheckedArtifactIdRef.current !== paramsId || ignoreLastCheckedArtifact)
       ) {
         lastCheckedArtifactIdRef.current = paramsId
 

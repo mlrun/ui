@@ -3,6 +3,55 @@
     {
       "kind": "model-endpoint",
       "metadata": {
+        "name": "my-endpoint",
+        "project": "default",
+        "tag": null,
+        "labels": {
+          "example": "single",
+          "hebrew": "english"
+        },
+        "updated": "2025-10-06T14:34:14.015000",
+        "created": "2025-09-30T19:45:05.516000",
+        "uid": "c3e9308aaab54e53b1013ecda9234e43",
+        "endpoint_type": 1,
+        "mode": 0
+      },
+      "spec": {
+        "model_class": "MyLLM",
+        "function_name": "function-with-llm",
+        "function_tag": "latest",
+        "model_path": "store://llm-prompts/default/my_llm4#0@be464b11-8bff-4d57-9ad5-89d7d641f35e^5523a661476a8ab1ba573c704308f036e62b8d17",
+        "model_name": "my_llm4",
+        "model_tags": [
+          "latest"
+        ],
+        "feature_names": [],
+        "label_names": [],
+        "feature_stats": {},
+        "function_uri": "default/function-with-llm@unversioned-latest",
+        "model_uri": "store://llm-prompts/default/my_llm4#0@9c0c8773-b1ce-4fa0-ac94-2f6c1fb71554^d28e010ba24e272a3ba2ba522f6caecde05ff383",
+        "children": null,
+        "children_uids": null,
+        "monitoring_feature_set_uri": ""
+      },
+      "status": {
+        "state": "ready",
+        "first_request": null,
+        "monitoring_mode": "disabled",
+        "sampling_percentage": 100,
+        "last_request": null,
+        "result_status": -1,
+        "avg_latency": null,
+        "error_count": 0,
+        "current_stats": {},
+        "current_stats_timestamp": null,
+        "drift_measures": {},
+        "drift_measures_timestamp": null
+      }
+    },
+    {
+      "kind": "model-endpoint",
+      "metadata": {
         "project": "default",
         "labels": {
           "my-key": "my-value",
@@ -10,6 +59,7 @@
           "v3io_user": "admin"
         },
         "endpoint_type": 3,
+        "mode": 0,
         "name": "RandomForestClassifier",
         "created": "2024-11-03T09:18:59.079000",
         "updated": "2024-11-03T09:40:58.317000",
@@ -272,6 +322,7 @@
           "v3io_user": "admin"
         },
         "endpoint_type": 3,
+        "mode": 1,
         "name": "RandomForestClassifier2",
         "created": "2024-11-03T09:18:59.079000",
         "updated": "2024-11-03T09:40:58.317000",
@@ -530,6 +581,7 @@
         "project": "default",
         "labels": {},
         "endpoint_type": 3,
+        "mode": 0,
         "name": "GradientBoostingClassifier",
         "created": "2024-12-03T09:18:59.079000",
         "updated": "2024-12-03T09:40:58.317000",
@@ -788,6 +840,7 @@
         "project": "default",
         "labels": {},
         "endpoint_type": 3,
+        "mode": 1,
         "name": "GradientBoostingClassifier2",
         "created": "2024-12-03T09:18:59.079000",
         "updated": "2024-12-03T09:40:58.317000",
@@ -1038,6 +1091,105 @@
           }
         },
         "sampling_percentage": null
+      }
+    },
+    {
+      "kind": "model-endpoint",
+      "metadata": {
+        "name": "my-endpoint",
+        "project": "llmdeploy335",
+        "tag": null,
+        "labels": {
+          "example": "single",
+          "hebrew": "english"
+        },
+        "updated": "2025-08-27T14:29:33.747000",
+        "created": "2025-08-12T09:05:30.007000",
+        "uid": "f7172d26e7f94233994e0998aa404efb",
+        "endpoint_type": 1,
+        "mode": 0
+      },
+      "spec": {
+        "model_class": "mlrun.serving.Model",
+        "function_name": "function-with-llm",
+        "function_tag": "latest",
+        "model_path": "store://llm-prompts/llmdeploy335/my_llm#0@5780e34d-c0ed-46ed-ab49-39addf35a7ec^5ddece12a48b7199688a122911344f3a217addd7",
+        "model_name": "my_llm",
+        "model_tags": [
+          "latest",
+          "111"
+        ],
+        "feature_names": [],
+        "label_names": [],
+        "feature_stats": {},
+        "function_uri": "llmdeploy335/function-with-llm@unversioned-latest",
+        "model_uri": "store://llm-prompts/llmdeploy335/my_llm#0@9dea0dcc-8251-4f4e-94a8-c76b9a64db45^dc193ddf0914485f8c49d734d4cf8e240dcae118",
+        "children": null,
+        "children_uids": null,
+        "monitoring_feature_set_uri": ""
+      },
+      "status": {
+        "state": "ready",
+        "first_request": null,
+        "monitoring_mode": "disabled",
+        "sampling_percentage": 100.0,
+        "last_request": null,
+        "result_status": -1,
+        "avg_latency": null,
+        "error_count": 0,
+        "current_stats": {},
+        "current_stats_timestamp": null,
+        "drift_measures": {},
+        "drift_measures_timestamp": null
+      }
+    },
+    {
+      "kind": "model-endpoint",
+      "metadata": {
+        "name": "my-endpoint",
+        "project": "llmdeploy332",
+        "tag": null,
+        "labels": {
+          "example": "single",
+          "hebrew": "english"
+        },
+        "updated": "2025-08-11T11:56:13.020000",
+        "created": "2025-08-11T11:56:13.020000",
+        "uid": "b2a773fdd4a94719850102cfffb25601",
+        "endpoint_type": 1,
+        "mode": 0
+      },
+      "spec": {
+        "model_class": "mlrun.serving.Model",
+        "function_name": "function-with-llm",
+        "function_tag": "latest",
+        "model_path": "store://llm-prompts/llmdeploy332/my_llm#0@c00325f6-c2cb-4c62-ad93-8d5de6d0d10d^1d459c52a1102adcbbe242e6bb36e99129f2a8b9",
+        "model_name": "my_llm",
+        "model_tags": [
+          "latest"
+        ],
+        "feature_names": [],
+        "label_names": [],
+        "feature_stats": {},
+        "function_uri": "llmdeploy332/function-with-llm@unversioned-latest",
+        "model_uri": "store://llm-prompts/llmdeploy332/my_llm#0@c00325f6-c2cb-4c62-ad93-8d5de6d0d10d^1d459c52a1102adcbbe242e6bb36e99129f2a8b9",
+        "children": null,
+        "children_uids": null,
+        "monitoring_feature_set_uri": ""
+      },
+      "status": {
+        "state": "ready",
+        "first_request": null,
+        "monitoring_mode": "disabled",
+        "sampling_percentage": 100.0,
+        "last_request": null,
+        "result_status": -1,
+        "avg_latency": null,
+        "error_count": 0,
+        "current_stats": {},
+        "current_stats_timestamp": null,
+        "drift_measures": {},
+        "drift_measures_timestamp": null
       }
     }
   ]

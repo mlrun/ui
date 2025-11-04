@@ -120,7 +120,10 @@ const PromptTab = ({
         )
       }
     } else if (isEmpty(artifactsStore.LLMPrompts.promptTemplate)) {
-      if (!selectedItem.target_path.endsWith('.txt')) {
+      if (
+        !selectedItem.target_path.endsWith('.txt') &&
+        !selectedItem.target_path.endsWith('.json')
+      ) {
         setShowError(true)
       } else {
         setLoading(true)

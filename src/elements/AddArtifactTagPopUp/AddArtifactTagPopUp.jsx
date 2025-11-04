@@ -27,10 +27,7 @@ import { createForm } from 'final-form'
 import { Button, FormInput, Modal, Loader } from 'igz-controls/components'
 
 import { DATASET_TYPE, MODEL_TYPE, TAG_LATEST } from '../../constants'
-import {
-  PRIMARY_BUTTON,
-  TERTIARY_BUTTON
-} from 'igz-controls/constants'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { addTag } from '../../reducers/artifactsReducer'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
@@ -106,9 +103,8 @@ const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag = () => {}, onResolve,
       getCustomErrorMsg: () => 'Failed to add a tag',
       onErrorCallback: resolveModal,
       showLoader: () => setIsLoading(true),
-      hideLoader: () => setIsLoading(false),
-    }
-    )
+      hideLoader: () => setIsLoading(false)
+    })
   }
 
   const getModalActions = formState => {

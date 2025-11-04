@@ -21,6 +21,8 @@ import { capitalize } from 'lodash'
 
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { generateNuclioLink } from './parseUri'
+import { saveAndTransformSearchParams } from 'igz-controls/utils/filter.util'
+import { MONITORING_APP_PAGE } from '../constants'
 
 export const createApplicationContent = (application, projectName) => {
   const identifierUnique = 'identifierUnique.' + application.name + application.application_class
@@ -45,7 +47,10 @@ export const createApplicationContent = (application, projectName) => {
         headerLabel: 'Name',
         value: application.name,
         className: 'table-cell-name',
-        getLink: () => application.name
+        getLink: () => `/projects/${projectName}/${MONITORING_APP_PAGE}/${application.name}${saveAndTransformSearchParams(
+          window.location.search,
+          true
+        )}`
       },
       {
         id: `lag.${identifierUnique}`,
@@ -60,7 +65,7 @@ export const createApplicationContent = (application, projectName) => {
         headerId: 'commitedOffset',
         tip: 'Total number of messages handled by the app',
         headerLabel: 'Commited offset',
-        value: application.stats.stream_stats.committed ?? 0,
+        value: application.stats.stream_stats?.committed ?? 0,
         className: 'table-cell-2'
       },
       {

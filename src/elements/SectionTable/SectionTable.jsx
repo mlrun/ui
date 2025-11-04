@@ -67,6 +67,7 @@ const SectionTable = ({ loading = false, params, table }) => {
                     const tableValueClassName = classnames(
                       'section-table__table-cell',
                       body[key].className,
+                      key === 'name' && 'name-wrapper',
                       key === 'status' && 'status-cell',
                       key === 'status' &&
                         !Array.isArray(body[key].value) &&
@@ -80,30 +81,39 @@ const SectionTable = ({ loading = false, params, table }) => {
                       ) : (
                         <td key={body[key].value + index + key} className={tableValueClassName}>
                           {key === 'name' ? (
-                            body[key].href ? (
-                              <a
-                                href={body[key].href}
-                                target="_top"
-                                className="link section-table__table-link"
-                              >
-                                <Tooltip
-                                  template={<TextTooltipTemplate text={extractedItemName} />}
-                                  textShow={true}
+                            <>
+                              {body[key].href ? (
+                                <a
+                                  href={body[key].href}
+                                  target="_top"
+                                  className="link section-table__table-link"
                                 >
-                                  {extractedItemName}
-                                </Tooltip>
-                              </a>
-                            ) : body[key].link ? (
-                              <Link className="link section-table__table-link" to={body[key].link}>
-                                <Tooltip template={<TextTooltipTemplate text={body[key].value} />}>
+                                  <Tooltip
+                                    className="item-name"
+                                    template={<TextTooltipTemplate text={extractedItemName} />}
+                                    textShow={true}
+                                  >
+                                    {extractedItemName}
+                                  </Tooltip>
+                                </a>
+                              ) : body[key].link ? (
+                                <Link className="link section-table__table-link" to={body[key].link}>
+                                  <Tooltip className="item-name" template={<TextTooltipTemplate text={body[key].value} />}>
+                                    {body[key].value}
+                                  </Tooltip>
+                                </Link>
+                              ) : (
+                                <Tooltip className="item-name" template={<TextTooltipTemplate text={body[key].value} />}>
                                   {body[key].value}
                                 </Tooltip>
-                              </Link>
-                            ) : (
-                              <Tooltip template={<TextTooltipTemplate text={body[key].value} />}>
-                                {body[key].value}
-                              </Tooltip>
-                            )
+                              )}
+                              
+                              {body[key].tag ? (
+                                <Tooltip className="item-tag" template={<TextTooltipTemplate text={body[key].tag} />}>
+                                  {body[key].tag}
+                                </Tooltip>
+                              ) : null}
+                            </>
                           ) : key === 'labels' ? (
                             <ReadOnlyChips labels={body.labels.value} shortChips />
                           ) : key === 'status' ? (

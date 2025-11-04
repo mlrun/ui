@@ -21,23 +21,23 @@ import { isEmpty, capitalize } from 'lodash'
 
 import { FormOnChange, FormSelect } from 'igz-controls/components'
 import { FILTER_ALL_ITEMS } from '../../constants'
-import { STATUS_LIST } from '../../types'
+import { OPTIONS_LIST } from '../../types'
 
-// TODO: Rename component from StatusFilter to a more generic name
-const StatusFilter = ({ statusList, name }) => {
+// TODO: Rename component from MultiSelectFilter to a more generic name
+const MultiSelectFilter = ({ optionsList, name }) => {
   const { input } = useField(name)
   const { change } = useForm()
 
-  const mappedStatusList = useMemo(() => {
-    const isAllStatusSelected = input.value?.includes?.(FILTER_ALL_ITEMS)
-    return isAllStatusSelected
-      ? statusList.map(status =>
-          status.id === FILTER_ALL_ITEMS ? { ...status, disabled: true } : status
-        )
-      : statusList
-  }, [input.value, statusList])
+  const mappedOptionsList = useMemo(() => {
+    const isAllOptionsSelected = input.value?.includes?.(FILTER_ALL_ITEMS)
+    return isAllOptionsSelected
+      ? optionsList.map(option =>
+        option.id === FILTER_ALL_ITEMS ? { ...option, disabled: true } : option
+      )
+      : optionsList
+  }, [input.value, optionsList])
 
-  const handleFilterStateChange = (selectedValue, currentValue) => {
+  const handleFilterOptionChange = (selectedValue, currentValue) => {
     if (
       selectedValue.length > 1 &&
       selectedValue.includes(FILTER_ALL_ITEMS) &&
@@ -52,8 +52,8 @@ const StatusFilter = ({ statusList, name }) => {
       (!currentValue.includes(FILTER_ALL_ITEMS) &&
         selectedValue.includes(FILTER_ALL_ITEMS) &&
         selectedValue.indexOf(FILTER_ALL_ITEMS) > 0) ||
-      mappedStatusList.filter(option => option.id !== FILTER_ALL_ITEMS).length ===
-        selectedValue.length
+      mappedOptionsList.filter(option => option.id !== FILTER_ALL_ITEMS && !option.hidden).length ===
+      selectedValue.length
     ) {
       change(name, [FILTER_ALL_ITEMS])
     }
@@ -61,15 +61,15 @@ const StatusFilter = ({ statusList, name }) => {
 
   return (
     <>
-      <FormSelect label={capitalize(name)} name={name} options={mappedStatusList} multiple />
-      <FormOnChange handler={(value, some) => handleFilterStateChange(value, some)} name={name} />
+      <FormSelect label={capitalize(name)} name={name} options={mappedOptionsList} multiple />
+      <FormOnChange handler={(value, some) => handleFilterOptionChange(value, some)} name={name} />
     </>
   )
 }
 
-StatusFilter.propTypes = {
+MultiSelectFilter.propTypes = {
   name: PropTypes.string.isRequired,
-  statusList: STATUS_LIST.isRequired
+  optionsList: OPTIONS_LIST.isRequired
 }
 
-export default memo(StatusFilter)
+export default memo(MultiSelectFilter)

@@ -66,7 +66,6 @@ export const getAlertsFiltersConfig = (timeFrameLimit = false, isAlertsPage = fa
         datePickerPastOptions,
         isAlertsPage ? PAST_MONTH_DATE_OPTION : PAST_24_HOUR_DATE_OPTION
       ),
-      hidden: isAlertsPage,
       label: 'Start time:',
       timeFrameLimit: timeFrameLimit ? TIME_FRAME_LIMITS.MONTH : Infinity
     },

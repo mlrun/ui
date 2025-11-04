@@ -21,21 +21,24 @@ import { forwardRef, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
-import MetricChart from '../../../common/MlChart/MetricChart/MetricChart'
-import StatsCard from '../../../common/StatsCard/StatsCard'
+import MetricChart from '../../../../common/MlChart/MetricChart/MetricChart'
+import StatsCard from '../../../../common/StatsCard/StatsCard'
 import { RoundedIcon, Tip } from 'igz-controls/components'
 
 import {
   calculatePercentageDrift,
   METRIC_COMPUTED_TOTAL_POINTS,
   METRIC_RAW_TOTAL_POINTS
-} from '../detailsMetrics.util'
-import { CHART_TYPE_LINE, CHART_TYPE_GRADIENT_LINE } from '../../../constants'
-import { getMetricChartConfig } from '../../../utils/getChartConfig'
+} from '../../detailsMetrics.util'
+import { CHART_TYPE_LINE, CHART_TYPE_GRADIENT_LINE } from '../../../../constants'
+import { getMetricChartConfig } from '../../../../utils/getChartConfig'
 import { getScssVariableValue } from 'igz-controls/utils/common.util'
 
 import EnlargeIcon from 'igz-controls/images/expand.svg?react'
 import MinimizeIcon from 'igz-controls/images/collapse.svg?react'
+
+import '../MetricsCards.scss'
+import './InvocationsMetricCard.scss'
 
 const InvocationsMetricCard = forwardRef(
   (

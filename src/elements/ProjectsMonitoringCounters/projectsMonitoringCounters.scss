@@ -43,7 +43,7 @@
     }
 
     .stats {
-      &__failed {
+      &__failed > .stats__counter {
         color: colors.$amaranth;
       }
 
@@ -74,6 +74,7 @@
           .stats__line {
             position: relative;
             display: flex;
+            align-items: center;
             justify-content: space-between;
             width: 100%;
             padding-bottom: 0.5rem;
@@ -94,7 +95,7 @@
           }
         }
 
-        .stats__counter_main {
+        .stats__counter-main {
           padding-bottom: 0;
         }
 
@@ -119,11 +120,12 @@
         cursor: pointer;
 
         &:hover {
-          *:not(.stats__failed) {
+          *:not(.stats__failed > .stats__counter) {
             @include counterLinkHover;
           }
 
-          .stats__failed {
+          .stats__failed > .stats__counter,
+          &.stats__failed > .stats__counter {
             color: colors.$amaranth;
             text-decoration: underline;
             text-underline-offset: 1px;
@@ -191,8 +193,8 @@
     }
 
     &__details {
-      margin: 0;
       display: none;
+      margin: 0;
 
       @media (min-width: 1250px) {
         display: block;
