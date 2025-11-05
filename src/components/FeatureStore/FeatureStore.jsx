@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
@@ -32,11 +32,13 @@ import './featureStore.scss'
 export const FeatureStoreContext = React.createContext({})
 
 const FeatureStore = () => {
-  const dispatch = useDispatch()
   const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
   const [createVectorPopUpIsOpen, setCreateVectorPopUpIsOpen] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
   const featureStore = useSelector(store => store.featureStore)
+
+  const dispatch = useDispatch()
+  const params = useParams()
 
   const toggleConvertedYaml = useCallback(
     data => {
@@ -49,7 +51,7 @@ const FeatureStore = () => {
     <>
       <div className="content-wrapper">
         <div className="content__header">
-          <Breadcrumbs />
+          <Breadcrumbs itemName={params.name} />
         </div>
         <div className="content">
           <div className={TABLE_CONTAINER}>
