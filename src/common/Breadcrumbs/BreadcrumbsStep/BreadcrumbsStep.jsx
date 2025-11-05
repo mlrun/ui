@@ -20,7 +20,6 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import classnames from 'classnames'
 
 import BreadcrumbsDropdown from '../../../elements/BreadcrumbsDropdown/BreadcrumbsDropdown'
 import { RoundedIcon } from 'igz-controls/components'
