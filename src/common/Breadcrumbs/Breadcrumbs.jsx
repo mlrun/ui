@@ -21,7 +21,6 @@ import React, { useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useLocation, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { capitalize } from 'lodash'
 
 import BreadcrumbsStep from './BreadcrumbsStep/BreadcrumbsStep'
 
@@ -59,11 +58,12 @@ const Breadcrumbs = ({ itemName = '', onClick = () => { } }) => {
 
 
   const urlParts = useMemo(() => {
-    const [projects, projectName, page, innerScreenName] = location.pathname.split('/').slice(1, 5)
-    const screen = mlrunScreens.find(screen => screen.id === (page)) || mlrunScreens.find(screen => screen.id === (innerScreenName))
+    const innerScreenName = params?.['*']?.split('/')[0]
+    const [projects, projectName, page] = location.pathname.split('/').slice(1, 5)
+    const screen = mlrunScreens.find(screen => screen.id === (innerScreenName)) || mlrunScreens.find(screen => screen.id === (page))
 
     const pathItems = [
-      { id: projects, label: capitalize(projects), link: `/${PROJECTS_PAGE_PATH}` },
+      { id: projects, label: 'Projects', link: `/${PROJECTS_PAGE_PATH}` },
       { id: projectName, label: projectName, link: `/projects/${projectName}`, type: BREADCRUMBS_STEP_PROJECT_TYPE },
       { id: screen?.id, label: screen?.label, link: screen?.link, type: BREADCRUMBS_STEP_SCREEN_TYPE }
     ]
@@ -89,7 +89,7 @@ const Breadcrumbs = ({ itemName = '', onClick = () => { } }) => {
   return (
     <nav data-testid="breadcrumbs" className="breadcrumbs" ref={breadcrumbsRef}>
       <ul className="breadcrumbs__list">
-        {urlParts.pathItems.map((urlPart, index) => {
+        {urlParts.pathItems.map((pathItem, index) => {
           return (
             <BreadcrumbsStep
               key={index}
@@ -106,7 +106,7 @@ const Breadcrumbs = ({ itemName = '', onClick = () => { } }) => {
               setShowScreensList={setShowScreensList}
               showProjectsList={showProjectsList}
               showScreensList={showScreensList}
-              pathItem={urlPart}
+              pathItem={pathItem}
               urlParts={urlParts}
             />
           )

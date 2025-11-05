@@ -99,7 +99,7 @@ const BreadcrumbsStep = React.forwardRef(
 
     const scrollScreenOptionToView = useCallback(() => {
       scrollToElement(screenListRef, `#${urlParts.screen.id}`, searchValue)
-    }, [searchValue, urlParts.screen.id])
+    }, [searchValue, urlParts.screen?.id])
 
     useEffect(() => {
       if (showProjectsList && projectListRef.current) {
@@ -119,7 +119,7 @@ const BreadcrumbsStep = React.forwardRef(
     }, [handleCloseDropdown])
 
     const handleSeparatorClick = (nextItem, separatorRef) => {
-      if (nextItem.type === 'screen' || nextItem.type === 'project') {
+      if (nextItem.type === BREADCRUMBS_STEP_SCREEN_TYPE || nextItem.type === BREADCRUMBS_STEP_PROJECT_TYPE) {
 
         const [activeSeparator] = document.getElementsByClassName('breadcrumbs__separator_active')
 
@@ -150,11 +150,13 @@ const BreadcrumbsStep = React.forwardRef(
       }
     }
 
+    const nextBreadcrumbItem = urlParts.pathItems[index + 1]
+
     return isLastStep ? (
       <li
         data-testid="breadcrumbs-last-item"
         className="breadcrumbs__item"
-        key={pathItem.id}
+        key={pathItem.id + index}
       >
         {pathItem.label}
       </li>
@@ -167,15 +169,15 @@ const BreadcrumbsStep = React.forwardRef(
             </Link>
           </li>
           <li key={index} className="breadcrumbs__item">
-            {urlParts.pathItems[index + 1]?.type === BREADCRUMBS_STEP_ITEM_TYPE ? (<div className='breadcrumbs__separator'><ArrowIcon /></div >) : <RoundedIcon
+            {nextBreadcrumbItem?.type === BREADCRUMBS_STEP_ITEM_TYPE ? (<div className='breadcrumbs__separator'><ArrowIcon /></div >) : <RoundedIcon
               className='breadcrumbs__separator'
               id={`separator-${index}`}
               ref={separatorRef}
-              onClick={() => handleSeparatorClick(urlParts.pathItems[index + 1], separatorRef)}
+              onClick={() => handleSeparatorClick(nextBreadcrumbItem, separatorRef)}
             >
               <ArrowIcon />
             </RoundedIcon>}
-            {showScreensList && urlParts.pathItems[index + 1].type === BREADCRUMBS_STEP_SCREEN_TYPE && (
+            {showScreensList && nextBreadcrumbItem.type === BREADCRUMBS_STEP_SCREEN_TYPE && (
               <BreadcrumbsDropdown
                 id="breadcrumbs-screens-dropdown"
                 link={pathItem.link}
@@ -187,7 +189,7 @@ const BreadcrumbsStep = React.forwardRef(
                 setSearchValue={setSearchValue}
               />
             )}
-            {showProjectsList && urlParts.pathItems[index + 1].type === BREADCRUMBS_STEP_PROJECT_TYPE && (
+            {showProjectsList && nextBreadcrumbItem.type === BREADCRUMBS_STEP_PROJECT_TYPE && (
               <>
                 <BreadcrumbsDropdown
                   id="breadcrumbs-projects-dropdown"
@@ -226,7 +228,12 @@ BreadcrumbsStep.propTypes = {
   showProjectsList: PropTypes.bool.isRequired,
   showScreensList: PropTypes.bool.isRequired,
   urlParts: PropTypes.shape({
-    pathItems: PropTypes.arrayOf(PropTypes.object).isRequired,
+    pathItems: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      link: PropTypes.string,
+      type: PropTypes.string
+    })).isRequired,
     screen: PropTypes.shape({
       id: PropTypes.string,
       label: PropTypes.string,
