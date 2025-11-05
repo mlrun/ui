@@ -78,7 +78,7 @@ const FunctionsView = ({
     <>
       <div className="content-wrapper">
         <div className="content__header">
-          <Breadcrumbs params={params.funcName} />
+          <Breadcrumbs itemName={params.funcName} />
         </div>
         <div className="content">
           <div className="table-container">
