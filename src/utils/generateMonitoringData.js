@@ -75,7 +75,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
   return tab === JOBS_MONITORING_JOBS_TAB
     ? {
         total: {
-          counter: data.total || 0,
+          counter: data.total ?? 'N/A',
           link: () =>
             navigateToJobsMonitoringPage({
               [STATUS_FILTER]: [FILTER_ALL_ITEMS],
@@ -84,7 +84,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
         },
         counters: [
           {
-            counter: data.running || 0,
+            counter: data.running ?? 'N/A',
             className: classNames('stats__link', 'stats__line'),
             link: () =>
               navigateToJobsMonitoringPage({
@@ -101,7 +101,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
             label: IN_PROCESS
           },
           {
-            counter: data.failed || 0,
+            counter: data.failed ?? 'N/A',
             className: classNames('stats__link', 'stats__line'),
             link: () =>
               navigateToJobsMonitoringPage({
@@ -116,7 +116,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
             })
           },
           {
-            counter: data.completed || 0,
+            counter: data.completed ?? 'N/A',
             className: classNames('stats__link', 'stats__line'),
             link: () =>
               navigateToJobsMonitoringPage({
@@ -132,7 +132,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
     : [JOBS_MONITORING_WORKFLOWS_TAB, MONITOR_WORKFLOWS_TAB].includes(tab)
       ? {
           total: {
-            counter: data.total || 0,
+            counter: data.total ?? 'N/A',
             link: () =>
               navigateToJobsMonitoringPage({
                 [STATUS_FILTER]: [FILTER_ALL_ITEMS],
@@ -141,7 +141,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
           },
           counters: [
             {
-              counter: data.running || 0,
+              counter: data.running ?? 'N/A',
               link: () =>
                 navigateToJobsMonitoringPage({
                   [STATUS_FILTER]: [RUNNING_STATE, TERMINATING_STATE],
@@ -153,7 +153,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
               label: IN_PROCESS
             },
             {
-              counter: data.failed || 0,
+              counter: data.failed ?? 'N/A',
               className: classNames('stats__link', 'stats__line'),
               link: () =>
                 navigateToJobsMonitoringPage({
@@ -168,7 +168,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
               })
             },
             {
-              counter: data.completed || 0,
+              counter: data.completed ?? 'N/A',
               className: classNames('stats__link', 'stats__line'),
               link: () =>
                 navigateToJobsMonitoringPage({
@@ -184,25 +184,25 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
       : tab === ARTIFACTS_PAGE
         ? {
             total: {
-              counter: data.total || 0
+              counter: data.total ?? 'N/A'
             },
             datasets: {
-              counter: data.datasets || 0,
+              counter: data.datasets ?? 'N/A',
               link: () => navigateToTab(projectName, 'datasets'),
               className: linkClassNameDetails(projectName)
             },
             documents: {
-              counter: data.documents || 0,
+              counter: data.documents ?? 'N/A',
               link: () => navigateToTab(projectName, 'documents'),
               className: linkClassNameDetails(projectName)
             },
             llm_prompt: {
-              counter: data.llm_prompts || 0,
+              counter: data.llm_prompts ?? 'N/A',
               link: () => navigateToTab(projectName, 'llm-prompts'),
               className: linkClassNameDetails(projectName)
             },
             files: {
-              counter: data.files || 0,
+              counter: data.files ?? 'N/A',
               link: () => navigateToTab(projectName, 'files'),
               className: linkClassNameDetails(projectName)
             },
@@ -216,7 +216,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
         : tab === MODELS_PAGE
           ? {
               models: {
-                counter: data || 0,
+                counter: data ?? 'N/A',
                 link: () => navigateToTab(projectName, 'models'),
                 className: linkClassNameHeader(projectName)
               }
@@ -224,13 +224,13 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
           : tab === APPLICATION
             ? {
                 total: {
-                  counter: data.total || 0,
+                  counter: data.total ?? 'N/A',
                   link: () => navigateToTab(projectName, MONITORING_APP_PAGE),
                   className: `stats__counter_total ${linkClassNameHeader(projectName)}`
                 },
                 counters: [
                   {
-                    counter: data.running || 0,
+                    counter: data.running ?? 'N/A',
                     className: classNames(projectName && 'stats__link'),
                     link: () => navigateToTab(projectName, MONITORING_APP_PAGE),
                     statusClass: RUNNING_STATE,
@@ -239,7 +239,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                     tooltip: RUNNING
                   },
                   {
-                    counter: data.failed || 0,
+                    counter: data.failed ?? 'N/A',
                     className: classNames(projectName && 'stats__link', {
                       stats__failed: data.failed > 0
                     }),
@@ -253,7 +253,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
               }
             : {
                 total: {
-                  counter: data.total || 0,
+                  counter: data.total ?? 'N/A',
                   link: () =>
                     navigateToJobsMonitoringPage({
                       [TYPE_FILTER]: FILTER_ALL_ITEMS,
@@ -261,15 +261,23 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                     })
                 },
                 jobs: {
-                  counter: data.jobs || 0,
+                  counter: data.jobs ?? 'N/A',
                   link: () =>
                     navigateToJobsMonitoringPage({
-                      [TYPE_FILTER]: generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB).filter(type => type.id !== JOB_KIND_WORKFLOW && type.id !== FILTER_ALL_ITEMS && !type.hidden).map(item => item.id).join(','),
+                      [TYPE_FILTER]: generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB)
+                        .filter(
+                          type =>
+                            type.id !== JOB_KIND_WORKFLOW &&
+                            type.id !== FILTER_ALL_ITEMS &&
+                            !type.hidden
+                        )
+                        .map(item => item.id)
+                        .join(','),
                       [DATES_FILTER]: NEXT_24_HOUR_DATE_OPTION
                     })
                 },
                 workflows: {
-                  counter: data.workflows || 0,
+                  counter: data.workflows ?? 'N/A',
                   link: () =>
                     navigateToJobsMonitoringPage({
                       [TYPE_FILTER]: JOB_KIND_WORKFLOW,
@@ -277,4 +285,10 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                     })
                 }
               }
+}
+
+export const countTotalValue = (values = []) => {
+  if (values.every(element => typeof element !== 'number')) return 'N/A'
+
+  return values.reduce((acc, element) => acc + (typeof element === 'number' ? element : 0), 0)
 }

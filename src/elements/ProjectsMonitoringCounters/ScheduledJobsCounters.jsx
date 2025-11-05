@@ -24,7 +24,7 @@ import { useSelector } from 'react-redux'
 import { Loader, PopUpDialog } from 'igz-controls/components'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
-import { generateMonitoringStats } from '../../utils/generateMonitoringData'
+import { countTotalValue, generateMonitoringStats } from '../../utils/generateMonitoringData'
 import { JOBS_MONITORING_SCHEDULED_TAB, SCHEDULE_TAB } from '../../constants'
 
 import ClockIcon from 'igz-controls/images/clock.svg?react'
@@ -50,23 +50,17 @@ const ScheduledJobsCounters = () => {
 
   const scheduledData = useMemo(() => {
     if (projectName) {
-      const jobs = projectStore.projectSummary?.data?.distinct_scheduled_jobs_pending_count || 0
+      const jobs = projectStore.projectSummary?.data?.distinct_scheduled_jobs_pending_count
       const workflows =
-        projectStore.projectSummary?.data?.distinct_scheduled_pipelines_pending_count || 0
+        projectStore.projectSummary?.data?.distinct_scheduled_pipelines_pending_count
 
       return {
         jobs,
         workflows,
-        total: jobs + workflows
+        total: countTotalValue([jobs, workflows])
       }
     }
-    return (
-      projectStore?.jobsMonitoringData.scheduled || {
-        jobs: 0,
-        workflows: 0,
-        total: 0
-      }
-    )
+    return projectStore?.jobsMonitoringData.scheduled || {}
   }, [
     projectName,
     projectStore.projectSummary?.data?.distinct_scheduled_jobs_pending_count,

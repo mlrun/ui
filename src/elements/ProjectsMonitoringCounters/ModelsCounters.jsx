@@ -32,8 +32,8 @@ const ModelsAndApplication = () => {
   const navigate = useNavigate()
 
   const modelsData = projectName
-    ? projectStore.projectSummary.data?.models_count || 0
-    : projectStore.jobsMonitoringData?.models?.total || 0
+    ? projectStore.projectSummary.data?.models_count
+    : projectStore.jobsMonitoringData?.models?.total
 
   const data = useMemo(
     () => generateMonitoringStats(modelsData, navigate, MODELS_PAGE, projectName),
@@ -54,7 +54,7 @@ const ModelsAndApplication = () => {
           ) : (
             data?.models?.counter?.toLocaleString()
           )}
-        </StatsCard.MainCounter >
+        </StatsCard.MainCounter>
       </StatsCard.Row>
     </StatsCard>
   )

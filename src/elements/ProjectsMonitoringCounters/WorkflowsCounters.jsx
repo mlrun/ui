@@ -25,7 +25,7 @@ import { Loader, PopUpDialog, TextTooltipTemplate, Tooltip } from 'igz-controls/
 import ClockIcon from 'igz-controls/images/clock.svg?react'
 
 import StatsCard from '../../common/StatsCard/StatsCard'
-import { generateMonitoringStats } from '../../utils/generateMonitoringData'
+import { countTotalValue, generateMonitoringStats } from '../../utils/generateMonitoringData'
 import { JOBS_MONITORING_WORKFLOWS_TAB, MONITOR_WORKFLOWS_TAB } from '../../constants'
 
 import './projectsMonitoringCounters.scss'
@@ -49,26 +49,19 @@ const WorkflowsCounters = () => {
 
   const workflowsData = useMemo(() => {
     if (projectName) {
-      const completed = projectStore?.projectSummary.data?.pipelines_completed_recent_count || 0
-      const failed = projectStore?.projectSummary.data?.pipelines_failed_recent_count || 0
-      const running = projectStore?.projectSummary.data?.pipelines_running_count || 0
+      const completed = projectStore?.projectSummary.data?.pipelines_completed_recent_count
+      const failed = projectStore?.projectSummary.data?.pipelines_failed_recent_count
+      const running = projectStore?.projectSummary.data?.pipelines_running_count
 
       return {
         completed,
         failed,
         running,
-        total: completed + failed + running
+        total: countTotalValue([completed, failed, running])
       }
     }
 
-    return (
-      projectStore.jobsMonitoringData.workflows || {
-        completed: 0,
-        failed: 0,
-        running: 0,
-        total: 0
-      }
-    )
+    return projectStore.jobsMonitoringData.workflows || {}
   }, [
     projectName,
     projectStore.projectSummary.data?.pipelines_completed_recent_count,
