@@ -21,7 +21,7 @@ import React from 'react'
 
 import {
   ARTIFACTS_PAGE, API_GATEWAYS_PAGE, DATASETS_PAGE, DOCUMENTS_PAGE, FEATURE_STORE_PAGE_PATH, FILES_PAGE, FUNCTIONS_PAGE_PATH, JOBS_PAGE_PATH,
-  LLM_PROMPTS_PAGE, MODELS_PAGE, MODEL_ENDPOINTS_TAB, MONITORING_APP_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, NUCLIO_PAGE, PROJECT_MONITOR, PROJECT_QUICK_ACTIONS_PAGE, REAL_TIME_PIPELINES_TAB, REAL_TIME_FUNCTIONS_PAGE, SCHEDULE_TAB
+  LLM_PROMPTS_PAGE, MODELS_PAGE, MODEL_ENDPOINTS_TAB, MONITORING_APP_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, NUCLIO_PAGE, PROJECTS_PAGE_PATH, PROJECT_MONITOR, PROJECT_QUICK_ACTIONS_PAGE, REAL_TIME_PIPELINES_TAB, REAL_TIME_FUNCTIONS_PAGE, SCHEDULE_TAB
 } from '../../constants'
 import { generateNuclioLink } from '../../utils'
 
@@ -34,7 +34,7 @@ import ModelsIcon from 'igz-controls/images/navbar/mlrun-models.svg?react'
 import NuclioIcon from 'igz-controls/images/navbar/mlrun-realtime-functions.svg?react'
 
 export const getNavbarLinks = (projectName, isDemoMode) => {
-  const pathname = `/projects/${projectName}`
+  const pathname = `/${PROJECTS_PAGE_PATH}/${projectName}`
 
   return [
     {
@@ -93,22 +93,22 @@ export const getNavbarLinks = (projectName, isDemoMode) => {
         {
           id: MODELS_PAGE,
           label: 'Model artifacts',
-          link: `${pathname}/${MODELS_PAGE}/models`
+          link: `${pathname}/${MODELS_PAGE}/${MODELS_PAGE}`
         },
         {
           id: MODEL_ENDPOINTS_TAB,
           label: 'Model endpoints',
-          link: `${pathname}/${MODELS_PAGE}/model-endpoints`
+          link: `${pathname}/${MODELS_PAGE}/${MODEL_ENDPOINTS_TAB}`
         },
         {
           id: REAL_TIME_PIPELINES_TAB,
           label: 'Real-time pipelines',
-          link: `${pathname}/${MODELS_PAGE}/real-time-pipelines`
+          link: `${pathname}/${MODELS_PAGE}/${REAL_TIME_PIPELINES_TAB}`
         },
         {
           id: MONITORING_APP_PAGE,
           label: 'Monitoring app',
-          link: `${pathname}/monitoring-app`
+          link: `${pathname}/${MONITORING_APP_PAGE}`
         }
       ]
     },
@@ -121,17 +121,17 @@ export const getNavbarLinks = (projectName, isDemoMode) => {
         {
           id: MONITOR_JOBS_TAB,
           label: 'Jobs',
-          link: `${pathname}/${JOBS_PAGE_PATH}/monitor-jobs`
+          link: `${pathname}/${JOBS_PAGE_PATH}/${MONITOR_JOBS_TAB}`
         },
         {
           id: MONITOR_WORKFLOWS_TAB,
           label: 'Workflows',
-          link: `${pathname}/${JOBS_PAGE_PATH}/monitor-workflows`
+          link: `${pathname}/${JOBS_PAGE_PATH}/${MONITOR_WORKFLOWS_TAB}`
         },
         {
           id: SCHEDULE_TAB,
           label: 'Schedule',
-          link: `${pathname}/${JOBS_PAGE_PATH}/schedule`
+          link: `${pathname}/${JOBS_PAGE_PATH}/${SCHEDULE_TAB}`
         }
       ]
     },
@@ -139,7 +139,7 @@ export const getNavbarLinks = (projectName, isDemoMode) => {
       icon: <FunctionIcon />,
       id: FUNCTIONS_PAGE_PATH,
       label: 'ML functions',
-      link: `${pathname}/functions`
+      link: `${pathname}/${FUNCTIONS_PAGE_PATH}`
     },
     {
       icon: <NuclioIcon />,
@@ -149,13 +149,13 @@ export const getNavbarLinks = (projectName, isDemoMode) => {
         {
           id: REAL_TIME_FUNCTIONS_PAGE,
           label: 'Real-time functions',
-          link: generateNuclioLink(`${pathname}/functions`),
+          link: generateNuclioLink(`${pathname}/${FUNCTIONS_PAGE_PATH}`),
           externalLink: true
         },
         {
           id: API_GATEWAYS_PAGE,
           label: 'API gateways',
-          link: generateNuclioLink(`${pathname}/api-gateways`),
+          link: generateNuclioLink(`${pathname}/${API_GATEWAYS_PAGE}`),
           externalLink: true
         }
       ]
