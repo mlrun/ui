@@ -56,7 +56,7 @@ const FormEnvironmentVariablesRow = ({
   uniquenessValidator
 }) => {
   const [fieldData, setFieldData] = useState(fields.value[index])
-  const { projectName }  = useParams()
+  const { projectName } = useParams()
 
   const tableRowClassNames = classnames(
     'form-table__row',
@@ -133,10 +133,9 @@ const FormEnvironmentVariablesRow = ({
                   name={`${rowPath}.data.secretName`}
                   placeholder="Secret Name"
                   required
-                  validationRules={
-                    (getValidationRules('environmentVariables.secretName'),
-                    [getSecretNameValidator(projectName, editingItem?.data?.typeName) ])
-                  }
+                  validationRules={getValidationRules('environmentVariables.secretName', [
+                    getSecretNameValidator(projectName, editingItem?.data?.typeName)
+                  ])}
                 />
                 <FormInput
                   density="normal"

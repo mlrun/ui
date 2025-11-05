@@ -32,7 +32,7 @@ const TableTop = ({ children = null, link, text = '' }) => {
     <div className="table-top">
       <div className="link-back">
         <Link to={link} className="link-back__icon">
-          <RoundedIcon id="refresh" tooltipText="Back">
+          <RoundedIcon id="back" tooltipText="Back">
             <Back />
           </RoundedIcon>
         </Link>
