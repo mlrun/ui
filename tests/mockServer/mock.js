@@ -2661,7 +2661,7 @@ function getModelEndpoints(req, res) {
 
   if (req.query['endpoint-id']) {
     const modelEndpoint = collectedEndpoints.find(
-      endpoint => endpoint.metadata.uid === req.query.endpoint-id
+      endpoint => endpoint.metadata.uid === req.query['endpoint-id']
     )
 
     return res.send(modelEndpoint)
