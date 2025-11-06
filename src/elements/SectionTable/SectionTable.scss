@@ -18,72 +18,91 @@
   }
 }
 
-.section-table {
-  min-width: fit-content;
+.section-table__wrapper {
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  border: borders.$dividerBorder;
-  border-radius: 8px;
+  overflow-y: auto;
 
-  &__table {
-    &-body {
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-    }
+  .section-table {
+    position: relative;
+    display: flex;
+    flex: 1;
+    flex-flow: column nowrap;
+    min-width: fit-content;
+    height: 100%;
+    overflow-y: auto;
+    border: borders.$dividerBorder;
+    border-radius: 8px;
+    will-change: scroll-position;
 
-    &-row {
-      display: flex;
-      flex: 1;
-      flex-direction: row;
-      border-bottom: borders.$tertiaryBorder;
-    }
-
-    &-link {
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 3;
       min-width: 100%;
-      max-width: 50px;
+      background: colors.$white;
     }
 
-    &-cell {
-      display: flex;
-      align-items: center;
-      padding: 8px 5px 8px 0;
-      color: colors.$primary;
-      line-height: 24px;
+    &__table {
+      &-body {
+        display: flex;
+        flex-direction: column;
+      }
 
-      &.status {
-        color: colors.$supernova;
-        text-transform: none;
+      &-row {
+        display: flex;
+        flex-direction: row;
+        min-width: 100%;
+        border-bottom: borders.$tertiaryBorder;
+      }
 
-        &_completed,
-        &_ready,
-        &_running {
-          color: colors.$java;
-        }
+      &-link {
+        min-width: 100%;
+        max-width: 50px;
+      }
 
-        &-nuclio {
-          &_ready {
-            color: colors.$brightTurquoise;
+      &-cell {
+        display: flex;
+        align-items: center;
+        padding: 8px 5px 8px 0;
+        color: colors.$primary;
+        line-height: 24px;
 
-            &.disabled {
+        &.status {
+          color: colors.$supernova;
+          text-transform: none;
+
+          &_completed,
+          &_ready,
+          &_running {
+            color: colors.$java;
+          }
+
+          &-nuclio {
+            &_ready {
+              color: colors.$brightTurquoise;
+
+              &.disabled {
+                color: colors.$topaz;
+              }
+            }
+
+            &_scaledToZero {
               color: colors.$topaz;
             }
           }
 
-          &_scaledToZero {
+          &_failed,
+          &_error,
+          &_unhealthy {
+            color: colors.$amaranth;
+          }
+
+          &_imported {
             color: colors.$topaz;
           }
         }
-
-        &_failed,
-        &_error,
-        &_unhealthy {
-          color: colors.$amaranth;
-        }
-
-        &_imported {
-          color: colors.$topaz;
-        }
-      }
 
       .tooltip-wrapper {
         min-width: 8px;
@@ -93,60 +112,60 @@
         margin-left: 5px;
       }
 
-      &.name-wrapper {
+        &.name-wrapper {
+          display: flex;
+          flex-wrap: wrap;
+
+          &.table-cell_with-tag {
+            gap: 4px;
+            height: 57px;
+          }
+
+          .item-name {
+            width: 100%;
+          }
+
+          .item-tag {
+            display: inline;
+            max-width: 150px;
+            color: colors.$topaz;
+            line-height: 16px;
+          }
+        }
+
+        .table-body__cell {
+          &_type {
+            display: flex;
+            align-items: center;
+            padding: 0;
+          }
+        }
+
+        &:first-child {
+          padding-left: 15px;
+        }
+      }
+
+      &-header {
         display: flex;
-        flex-wrap: wrap;
+        font-size: 14px;
+        line-height: 24px;
+        border-bottom: borders.$tertiaryBorder;
 
-        &.table-cell_with-tag {
-          gap: 4px;
-          height: 57px;
-        }
-
-        .item-name {
-          width: 100%;
-        }
-
-        .item-tag {
-          display: inline;
-          max-width: 150px;
+        .table-header-item {
           color: colors.$topaz;
-          line-height: 16px;
+          font-weight: bold;
         }
       }
 
       .table-body__cell {
-        &_type {
-          display: flex;
-          align-items: center;
-          padding: 0;
-        }
+        align-items: center;
+        border: none;
       }
 
-      &:first-child {
-        padding-left: 15px;
+      .tooltip__text {
+        display: initial;
       }
-    }
-
-    &-header {
-      display: flex;
-      flex: 1;
-      font-size: 14px;
-      line-height: 24px;
-      border-bottom: borders.$tertiaryBorder;
-
-      .table-header-item {
-        color: colors.$topaz;
-        font-weight: bold;
-      }
-    }
-
-    .table-body__cell {
-      align-items: center;
-      border: none;
-    }
-
-    .tooltip__text {
-      display: initial;
     }
   }
 }

@@ -96,7 +96,7 @@ const MonitoringApplications = () => {
     <div className="monitoring-apps">
       <div className="monitoring-app__section section_small">
         <MEPsWithDetections />
-        <div className="monitoring-app__section-item">
+        <div className="monitoring-app__section-item monitoring-app__section-item-small">
           <div className="section-item_title">
             <span>System functions</span>
             <Tip text="System functions that are used for the monitoring application operation" />

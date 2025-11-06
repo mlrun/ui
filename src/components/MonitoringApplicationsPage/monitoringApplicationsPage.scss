@@ -35,6 +35,7 @@ $applicationRowHeightExtended: variables.$rowHeightExtended;
     .monitoring-app__section-item {
       display: flex;
       flex-direction: column;
+      max-height: 410px;
       padding: 20px;
       color: colors.$topaz;
       background-color: colors.$white;
@@ -42,6 +43,10 @@ $applicationRowHeightExtended: variables.$rowHeightExtended;
       border-radius: 8px;
       box-shadow: shadows.$previewBoxShadowInit;
       transition: all 0.3s ease-in-out;
+
+      &-small {
+        max-height: 355px;
+      }
 
       .section-item_title {
         display: flex;
@@ -59,9 +64,9 @@ $applicationRowHeightExtended: variables.$rowHeightExtended;
 
       .applications-table {
         @include mixins.rowsHeight(
-                        $applicationHeaderRowHeight,
-                        $applicationRowHeight,
-                        $applicationRowHeightExtended
+          $applicationHeaderRowHeight,
+          $applicationRowHeight,
+          $applicationRowHeightExtended
         );
       }
 
@@ -92,8 +97,8 @@ $applicationRowHeightExtended: variables.$rowHeightExtended;
               left: 50%;
               font-weight: 500;
               font-size: 13px;
-            transform: translate(-50%, 0);
-          }
+              transform: translate(-50%, 0);
+            }
 
             &.loading {
               visibility: hidden;

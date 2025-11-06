@@ -75,7 +75,7 @@ const MonitoringApplication = () => {
             <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
           ) : (
             <>
-              <SectionTable loading={loading} params={params} table={artifactsTable} />
+              <SectionTable loading={loading} params={params} table={artifactsTable} rowHeight={58} />
               <Link
                 className="link monitoring-app__see-all-link"
                 to={`/projects/${params.projectName}/${FILES_PAGE}?${LABELS_FILTER}=mlrun/app-name=${params.name}`}
