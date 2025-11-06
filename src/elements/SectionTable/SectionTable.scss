@@ -18,9 +18,18 @@
   }
 }
 
+.section-table__content {
+  position: relative;
+  width: 100%;
+}
+
 .section-table__wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
   display: flex;
   flex-direction: column;
+  width: 100%;
   height: 100%;
   overflow-y: auto;
 
@@ -29,7 +38,7 @@
     display: flex;
     flex: 1;
     flex-flow: column nowrap;
-    min-width: fit-content;
+    width: 100%;
     height: 100%;
     overflow-y: auto;
     border: borders.$dividerBorder;
