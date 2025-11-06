@@ -29,7 +29,9 @@ import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.
 
 import './SectionTable.scss'
 
-const SectionTable = ({ headerHeight = 41, loading = false, params, rowHeight = 41, table }) => {
+const SPACE_FOR_BORDER = 2
+
+const SectionTable = ({ headerHeight = 41, loading = false, params, rowHeight = 41, table, maxTableHeight = 369 }) => {
   const [tableId] = useState(`section-table-${uuidv4()}`)
   const [tableBodyId] = useState(`section-table-body-${uuidv4()}`)
 
@@ -47,6 +49,10 @@ const SectionTable = ({ headerHeight = 41, loading = false, params, rowHeight = 
     [headerHeight, rowHeight]
   )
 
+  const tableContainerHeight = useMemo(() => {
+    return Math.min(headerHeight + rowHeight * table.body.length + SPACE_FOR_BORDER, maxTableHeight)
+  }, [headerHeight, maxTableHeight, rowHeight, table])
+
   const virtualizationConfig = useVirtualization({
     renderTriggerItem: table,
     heightData,
@@ -58,121 +64,139 @@ const SectionTable = ({ headerHeight = 41, loading = false, params, rowHeight = 
   return loading ? (
     <Loader section secondary />
   ) : (
-    <div className='section-table__wrapper'>
-      <table id={tableId} className="section-table" cellPadding="0" cellSpacing="0">
-        <thead>
-          <tr className="section-table__table-header" style={{ height: headerHeight }}>
-            <>
-              {table.header.map(
-                header =>
-                  !header.hidden && (
-                    <th
-                      key={header.value}
-                      className={`section-table__table-cell ${header.className} table-header-item`}
-                    >
-                      <Tooltip template={<TextTooltipTemplate text={header.value} />}>
-                        {header.value}
-                      </Tooltip>
-                      {header.tip && <Tip text={header.tip} />}
-                    </th>
-                  )
-              )}
-            </>
-          </tr>
-        </thead>
-        <tbody
-          id={tableBodyId}
-          className="section-table__table-body"
-          style={{ paddingTop: virtualizationConfig.tableBodyPaddingTop || 0 }}
-        >
-          {table.body.map((body, index) => {
-            const extractedItemName = body['name'].value.startsWith(params.projectName)
-              ? body['name'].value.slice(params.projectName.length + 1)
-              : body['name'].value
+    <div className="section-table__content" style={{ height: `${tableContainerHeight}px` }}>
+      <div className="section-table__wrapper">
+        <table id={tableId} className="section-table table" cellPadding="0" cellSpacing="0">
+          <thead>
+            <tr className="section-table__table-header" style={{ height: headerHeight }}>
+              <>
+                {table.header.map(
+                  header =>
+                    !header.hidden && (
+                      <th
+                        key={header.value}
+                        className={`section-table__table-cell ${header.className} table-header-item`}
+                      >
+                        <Tooltip template={<TextTooltipTemplate text={header.value} />}>
+                          {header.value}
+                        </Tooltip>
+                        {header.tip && <Tip text={header.tip} />}
+                      </th>
+                    )
+                )}
+              </>
+            </tr>
+          </thead>
+          <tbody
+            id={tableBodyId}
+            className="section-table__table-body"
+            style={{ paddingTop: virtualizationConfig.tableBodyPaddingTop || 0 }}
+          >
+            {table.body.map((body, index) => {
+              const extractedItemName = body['name'].value.startsWith(params.projectName)
+                ? body['name'].value.slice(params.projectName.length + 1)
+                : body['name'].value
 
-            return (
-              isRowRendered(virtualizationConfig, index) && (
-                <tr key={index} className="section-table__table-row" style={{ height: rowHeight }}>
-                  <>
-                    {Object.keys(body).map((key, index) => {
-                      const tableValueClassName = classnames(
-                        'section-table__table-cell',
-                        body[key].className,
-                        key === 'name' && 'name-wrapper',
-                        key === 'status' && 'status-cell',
-                        key === 'status' &&
-                          !Array.isArray(body[key].value) &&
-                          `status_${body?.[key]?.value?.toLowerCase?.()} capitalize`
-                      )
+              return (
+                isRowRendered(virtualizationConfig, index) && (
+                  <tr
+                    key={index}
+                    className="section-table__table-row"
+                    style={{ height: rowHeight }}
+                  >
+                    <>
+                      {Object.keys(body).map((key, index) => {
+                        const tableValueClassName = classnames(
+                          'section-table__table-cell',
+                          body[key].className,
+                          key === 'name' && 'name-wrapper',
+                          key === 'status' && 'status-cell',
+                          key === 'status' &&
+                            !Array.isArray(body[key].value) &&
+                            `status_${body?.[key]?.value?.toLowerCase?.()} capitalize`
+                        )
 
-                      return (
-                        !body[key].hidden &&
-                        (key === 'type' ? (
-                          <TableTypeCell key={body[key].value + index} cellData={body[key]} />
-                        ) : (
-                          <td key={body[key].value + index + key} className={tableValueClassName}>
-                            {key === 'name' ? (
-                              <>
-                                {body[key].href ? (
-                                  <a
-                                    href={body[key].href}
-                                    target="_top"
-                                    className="link section-table__table-link"
-                                  >
-                                    <Tooltip
-                                      className="item-name"
-                                      template={<TextTooltipTemplate text={extractedItemName} />}
-                                      textShow={true}
+                        return (
+                          !body[key].hidden &&
+                          (key === 'type' ? (
+                            <TableTypeCell key={body[key].value + index} cellData={body[key]} />
+                          ) : (
+                            <td key={body[key].value + index + key} className={tableValueClassName}>
+                              {key === 'name' ? (
+                                <>
+                                  {body[key].href ? (
+                                    <a
+                                      href={body[key].href}
+                                      target="_top"
+                                      className="link section-table__table-link"
                                     >
-                                      {extractedItemName}
-                                    </Tooltip>
-                                  </a>
-                                ) : body[key].link ? (
-                                  <Link
-                                    className="link section-table__table-link"
-                                    to={body[key].link}
-                                  >
+                                      <Tooltip
+                                        className="item-name"
+                                        template={<TextTooltipTemplate text={extractedItemName} />}
+                                        textShow={true}
+                                      >
+                                        {extractedItemName}
+                                      </Tooltip>
+                                    </a>
+                                  ) : body[key].link ? (
+                                    <Link
+                                      className="link section-table__table-link"
+                                      to={body[key].link}
+                                    >
+                                      <Tooltip
+                                        className="item-name"
+                                        template={<TextTooltipTemplate text={body[key].value} />}
+                                      >
+                                        {body[key].value}
+                                      </Tooltip>
+                                    </Link>
+                                  ) : (
                                     <Tooltip
                                       className="item-name"
                                       template={<TextTooltipTemplate text={body[key].value} />}
                                     >
                                       {body[key].value}
                                     </Tooltip>
-                                  </Link>
-                                ) : (
-                                  <Tooltip
-                                    className="item-name"
-                                    template={<TextTooltipTemplate text={body[key].value} />}
-                                  >
-                                    {body[key].value}
-                                  </Tooltip>
-                                )}
+                                  )}
 
-                                {body[key].tag ? (
-                                  <Tooltip
-                                    className="item-tag"
-                                    template={<TextTooltipTemplate text={body[key].tag} />}
-                                  >
-                                    {body[key].tag}
-                                  </Tooltip>
-                                ) : null}
-                              </>
-                            ) : key === 'labels' ? (
-                              <ReadOnlyChips labels={body.labels.value} shortChips />
-                            ) : key === 'status' ? (
-                              <>
-                                {Array.isArray(body.status.value) ? (
-                                  body.status.value.map((status, index) => {
-                                    return (
-                                      <Tooltip
-                                        key={body.status.value + index}
-                                        template={<TextTooltipTemplate text={status} />}
-                                      >
-                                        <i className={`state-${status}-job status-icon`} />
-                                      </Tooltip>
-                                    )
-                                  })
-                                ) : (
+                                  {body[key].tag ? (
+                                    <Tooltip
+                                      className="item-tag"
+                                      template={<TextTooltipTemplate text={body[key].tag} />}
+                                    >
+                                      {body[key].tag}
+                                    </Tooltip>
+                                  ) : null}
+                                </>
+                              ) : key === 'labels' ? (
+                                <ReadOnlyChips labels={body.labels.value} shortChips />
+                              ) : key === 'status' ? (
+                                <>
+                                  {Array.isArray(body.status.value) ? (
+                                    body.status.value.map((status, index) => {
+                                      return (
+                                        <Tooltip
+                                          key={body.status.value + index}
+                                          template={<TextTooltipTemplate text={status} />}
+                                        >
+                                          <i className={`state-${status}-job status-icon`} />
+                                        </Tooltip>
+                                      )
+                                    })
+                                  ) : (
+                                    <Tooltip
+                                      template={
+                                        <TextTooltipTemplate
+                                          text={body[key].tooltip || body[key].value}
+                                        />
+                                      }
+                                    >
+                                      {body[key].value}
+                                    </Tooltip>
+                                  )}
+                                </>
+                              ) : (
+                                <>
                                   <Tooltip
                                     template={
                                       <TextTooltipTemplate
@@ -182,40 +206,28 @@ const SectionTable = ({ headerHeight = 41, loading = false, params, rowHeight = 
                                   >
                                     {body[key].value}
                                   </Tooltip>
-                                )}
-                              </>
-                            ) : (
-                              <>
-                                <Tooltip
-                                  template={
-                                    <TextTooltipTemplate
-                                      text={body[key].tooltip || body[key].value}
-                                    />
-                                  }
-                                >
-                                  {body[key].value}
-                                </Tooltip>
-                                {body[key].status && (
-                                  <Tooltip
-                                    key={body[key].status + index}
-                                    template={<TextTooltipTemplate text={body[key].status} />}
-                                  >
-                                    <i className={`state-${body[key].status}-job status-icon`} />
-                                  </Tooltip>
-                                )}
-                              </>
-                            )}
-                          </td>
-                        ))
-                      )
-                    })}
-                  </>
-                </tr>
+                                  {body[key].status && (
+                                    <Tooltip
+                                      key={body[key].status + index}
+                                      template={<TextTooltipTemplate text={body[key].status} />}
+                                    >
+                                      <i className={`state-${body[key].status}-job status-icon`} />
+                                    </Tooltip>
+                                  )}
+                                </>
+                              )}
+                            </td>
+                          ))
+                        )
+                      })}
+                    </>
+                  </tr>
+                )
               )
-            )
-          })}
-        </tbody>
-      </table>
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }
@@ -225,7 +237,8 @@ SectionTable.propTypes = {
   loading: PropTypes.bool,
   params: PropTypes.object.isRequired,
   rowHeight: PropTypes.number,
-  table: PropTypes.object.isRequired
+  table: PropTypes.object.isRequired,
+  maxTableHeight: PropTypes.number
 }
 
 export default React.memo(SectionTable)

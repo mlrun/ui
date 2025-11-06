@@ -40,7 +40,7 @@ import './monitoringApplication.scss'
 
 const MonitoringApplication = () => {
   const dispatch = useDispatch()
-  const { artifacts } = useSelector(store => store.artifactsStore)
+  const { artifacts, loading: loadingArtifacts } = useSelector(store => store.artifactsStore)
   const { monitoringApplication, loading } = useSelector(store => store.monitoringApplicationsStore)
   const params = useParams()
 
@@ -71,11 +71,11 @@ const MonitoringApplication = () => {
           <div className="section-item_title">
             <span>Artifacts</span>
           </div>
-          {artifacts.length === 0 && !loading ? (
+          {artifacts.length === 0 && !loadingArtifacts ? (
             <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
           ) : (
             <>
-              <SectionTable loading={loading} params={params} table={artifactsTable} rowHeight={58} />
+              <SectionTable loading={loadingArtifacts} params={params} table={artifactsTable} rowHeight={57} maxTableHeight={385} />
               <Link
                 className="link monitoring-app__see-all-link"
                 to={`/projects/${params.projectName}/${FILES_PAGE}?${LABELS_FILTER}=mlrun/app-name=${params.name}`}
