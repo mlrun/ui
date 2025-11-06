@@ -125,7 +125,7 @@ const MEPsWithDetections = () => {
   }, [barConfig, endpointsWithDetectionsData, renderPlugin])
 
   return (
-    <div className="monitoring-app__section-item">
+    <div className="monitoring-app__section-item monitoring-app__section-item-small">
       <div className="section-item_title">
         <span>Model endpoints with suspected/detected issue</span>
         <Tip text="This chart displays the number of model endpoints that had at least one detected issue, in any monitoring application, in the relevant time period" />
