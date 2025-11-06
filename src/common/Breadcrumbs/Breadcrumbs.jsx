@@ -59,7 +59,7 @@ const Breadcrumbs = ({ itemName = '', onClick = () => { } }) => {
 
   const urlParts = useMemo(() => {
     const innerScreenName = params?.['*']?.split('/')[0]
-    const [projects, projectName, page] = location.pathname.split('/').slice(1, 5)
+    const [projects, projectName, page] = location.pathname.split('/').slice(1, 4)
     const screen = mlrunScreens.find(screen => screen.id === (innerScreenName)) || mlrunScreens.find(screen => screen.id === (page))
 
     const pathItems = [
