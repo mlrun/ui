@@ -538,6 +538,14 @@ export default {
     Distinct_Keys: 'The partition is based on key.',
     Source_URL_Input:
       'Source URL is the Git Repo that is associated with the project. When the user pulls the project it will use the source URL to pull from',
+    Secret_Name_Rule_Options:
+      'Valid characters: a–z, A–Z, 0–9, –, _, .\n' +
+      'Must begin and end with: a–z, A–Z, 0–9\n' +
+      'No consecutive characters: ..,, .–,, –.\n' +
+      'Max length between two periods: 63\n' +
+      'Length – max: 253\n'+
+      'This field is required\n'+
+      'Secret does not reference an MLRun secret defined in another project',
     SECRET_INPUT_HINT:
       '• Valid characters: A-Z, a-z, 0-9, -, _, .\n' +
       '• Must begin and end with: A-Z, a-z, 0-9\n' +
