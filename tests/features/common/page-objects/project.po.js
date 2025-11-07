@@ -357,7 +357,9 @@ export default {
     Realtime_Functions_Nuclio_Statistic_Section: {
       ConsumerGroups_Stats_Counter: By.css('.d-flex:nth-of-type(2) .project-data-card__header .project-data-card__statistics-item:nth-of-type(4) .project-data-card__statistics-value'),
       Recent_Text: By.css('.d-flex:nth-of-type(2) .project-data-card__recent-text span'),
-      All_Realtime_Functions_Link: By.css('.d-flex:nth-of-type(2) .project-data-card__see-all-link')
+      All_Realtime_Functions_Link: By.css('.d-flex:nth-of-type(2) .project-data-card__see-all-link'),
+      Running_Counter_Subtitle: By.css('.d-flex:nth-of-type(2) .project-data-card__statistics .project-data-card__statistics-item:nth-of-type(1) span'),
+      Failed_Counter_Subtitle: By.css('.d-flex:nth-of-type(2) .project-data-card__statistics .project-data-card__statistics-item:nth-of-type(2) span')
     }
   },
   demoProject: {
