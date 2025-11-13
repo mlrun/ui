@@ -7,6 +7,32 @@ $applicationRowHeight: variables.$rowHeight;
 $applicationHeaderRowHeight: variables.$headerRowHeight;
 $applicationRowHeightExtended: variables.$rowHeightExtended;
 
+:root {
+  --applicationRowHeight: #{$applicationRowHeight};
+  --applicationHeaderRowHeight: #{$applicationHeaderRowHeight};
+  --applicationRowHeightExtended: #{$applicationRowHeightExtended};
+}
+
+.all-applications-table {
+  max-height: 450px;
+
+  .table__flex {
+    max-height: calc(100% - 25px);
+
+    .table__content {
+      height: 100%;
+
+      & > div {
+        height: 100%;
+
+        table.applications-table {
+          height: 100%;
+        }
+      }
+    }
+  }
+}
+
 .monitoring-app-content {
   .monitoring-apps-title {
     color: colors.$primary;
