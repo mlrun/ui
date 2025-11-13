@@ -836,7 +836,10 @@ function getMonitoringApplications(req, res) {
   const collectedMonitoringApplications = (monitoringApplications[req.params['project']] || []).map(
     application => ({
       ...application,
-      stats: { ...omit(application.stats, ['shards', 'processed_model_endpoints', 'metrics']), stream_stats: application.stats.stream_stats['0']}
+      stats: {
+        ...omit(application.stats, ['shards', 'processed_model_endpoints', 'metrics']),
+        stream_stats: application.stats.stream_stats['0']
+      }
     })
   )
 
@@ -2380,7 +2383,7 @@ function putTags(req, res) {
       )
     })
 
-   // handle existing artifacts with same name and tag
+    // handle existing artifacts with same name and tag
     collectedArtifactsWithSameName.forEach(artifact => {
       if (artifact.metadata?.tag === tagName) {
         if (
@@ -2661,7 +2664,7 @@ function getModelEndpoints(req, res) {
 
   if (req.query['endpoint-id']) {
     const modelEndpoint = collectedEndpoints.find(
-      endpoint => endpoint.metadata.uid === req.query.endpoint-id
+      endpoint => endpoint.metadata.uid === req.query['endpoint-id']
     )
 
     return res.send(modelEndpoint)
