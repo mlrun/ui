@@ -42,6 +42,7 @@ import {
   TIME_FRAME_LIMITS
 } from '../../utils/datePicker.util'
 import {
+  clearMetricsOptions,
   fetchModelEndpointMetrics,
   fetchModelEndpointMetricsValues,
   setDetailsDates,
@@ -54,7 +55,12 @@ import MetricsIcon from 'igz-controls/images/metrics-icon.svg?react'
 
 import './DetailsMetrics.scss'
 
-const DetailsMetrics = ({ applicationNameProp = '', selectedItem, renderTitle = null }) => {
+const DetailsMetrics = ({
+  applicationNameProp = '',
+  selectedItem,
+  renderTitle = null,
+  isDetailsPopUp = false
+}) => {
   const [metrics, setMetrics] = useState([])
   const [selectedDate, setSelectedDate] = useState('')
   const [previousTotalInvocation, setPreviousTotalInvocation] = useState(0)
@@ -233,6 +239,14 @@ const DetailsMetrics = ({ applicationNameProp = '', selectedItem, renderTitle = 
     metricsValuesAbortController
   ])
 
+  useEffect(() => {
+    if (isDetailsPopUp) {
+      return () => {
+        dispatch(clearMetricsOptions())
+      }
+    }
+  }, [dispatch, isDetailsPopUp])
+
   return (
     <div className="metrics-wrapper">
       <div className="metrics-wrapper__header">
@@ -333,7 +347,8 @@ const DetailsMetrics = ({ applicationNameProp = '', selectedItem, renderTitle = 
 DetailsMetrics.propTypes = {
   applicationNameProp: PropTypes.string,
   selectedItem: PropTypes.object.isRequired,
-  renderTitle: PropTypes.func
+  renderTitle: PropTypes.func,
+  isDetailsPopUp: PropTypes.bool
 }
 
 export default React.memo(DetailsMetrics)

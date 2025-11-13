@@ -53,6 +53,17 @@
                     "model_path": "store://llm-prompts/default/my_llm4#0@9c0c8773-b1ce-4fa0-ac94-2f6c1fb71554^d28e010ba24e272a3ba2ba522f6caecde05ff383",
                     "model_class": "MyLLM",
                     "model_endpoint_uid": "c3e9308aaab54e53b1013ecda9234e43"
+                  },
+                  "my-endpoin2t": {
+                    "inputs": [ ],
+                    "outputs": [ ],
+                    "input_path": null,
+                    "result_path": null,
+                    "creation_strategy": "inplace",
+                    "labels": null,
+                    "model_path": "store://llm-prompts/default/my_llm4#0@9c0c8773-b1ce-4fa0-ac94-2f6c1fb71554^d28e010ba24e272a3ba2ba522f6caecde05ff383",
+                    "model_class": "MyLLM",
+                    "model_endpoint_uid": "a7c95783e6a726a1a233e581ea898ba33fa7e342"
                   }
                 }
               },
