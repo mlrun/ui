@@ -210,7 +210,7 @@ const Pipeline = ({ content }) => {
             label: stepName,
             subLabel: subLabel,
             isSelectable: true,
-            customData: step
+            customData: { ...step, track_models: graph.track_models }
           },
           className: classnames(selectedStep.id === stepName && 'selected'),
           position: { x: 0, y: 0 }
