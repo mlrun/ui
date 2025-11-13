@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize } from 'lodash'
+import { capitalize, isEmpty } from 'lodash'
 import classNames from 'classnames'
 
 import { aggregateApplicationStatuses } from '../../../../utils/applications.utils'
@@ -110,17 +110,17 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
     }
   ]
 
-  const aggregatedStreamStats = Object.values(
-    monitoringApplication?.stats?.stream_stats || {}
-  ).reduce(
-    (acc, { committed, lag }) => {
-      acc.committed += committed
-      acc.lag += lag
+  const aggregatedStreamStats = !isEmpty(monitoringApplication?.stats?.stream_stats)
+    ? Object.values(monitoringApplication.stats.stream_stats).reduce(
+        (acc, { committed, lag }) => {
+          acc.committed += committed
+          acc.lag += lag
 
-      return acc
-    },
-    { committed: 0, lag: 0 }
-  )
+          return acc
+        },
+        { committed: 0, lag: 0 }
+      )
+    : { committed: 'N/A', lag: 'N/A' }
   const applicationCountersContent = [
     {
       id: 'appStatus',

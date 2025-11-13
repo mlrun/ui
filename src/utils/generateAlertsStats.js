@@ -35,19 +35,19 @@ export const generateAlertsStats = (data, navigate, projectName) => {
 
   return {
     total: {
-      counter: data.total,
+      counter: data.total ?? 'N/A',
       link: () => navigateToAlertsPage({})
     },
     job: {
-      counter: data.job,
+      counter: data.jobs ?? 'N/A',
       link: () => navigateToAlertsPage({ [ENTITY_TYPE]: JOB })
     },
     endpoints: {
-      counter: data.endpoint,
+      counter: data.endpoint ?? 'N/A',
       link: () => navigateToAlertsPage({ [ENTITY_TYPE]: MODEL_ENDPOINT_RESULT })
     },
     application: {
-      counter: data.application,
+      counter: data.application ?? 'N/A',
       link: () => navigateToAlertsPage({ [ENTITY_TYPE]: MODEL_MONITORING_APPLICATION })
     }
   }
