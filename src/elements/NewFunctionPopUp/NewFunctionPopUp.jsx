@@ -142,7 +142,7 @@ const NewFunctionPopUp = ({
                 }
               : {}
           }
-          headerText="Create New Function"
+          headerText="Create new function"
         >
           <div className="new-function__pop-up-inputs">
             <Input

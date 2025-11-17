@@ -57,7 +57,7 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
     },
     {
       id: 'appsStatus',
-      title: 'Apps Status',
+      title: 'Apps status',
       counterData: [
         {
           id: RUNNING_STATE,
@@ -124,7 +124,7 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
   const applicationCountersContent = [
     {
       id: 'appStatus',
-      title: 'App Status',
+      title: 'App status',
       counterData: [
         {
           id: 'appStatus',
@@ -148,7 +148,7 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
     },
     {
       id: 'possibleDetections',
-      title: 'Possible Detections',
+      title: 'Possible detections',
       counterData: [
         { id: 'possibleDetections', title: monitoringApplication?.stats?.potential_detection }
       ]
@@ -161,7 +161,7 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
     },
     {
       id: 'commitedOffset',
-      title: 'Commited Offset',
+      title: 'Commited offset',
       tip: 'Total number of messages handled by the app',
       counterData: [{ id: 'commitedOffset', title: aggregatedStreamStats.committed }]
     }

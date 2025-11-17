@@ -117,7 +117,7 @@ const MonitoringApplications = () => {
       <div className="monitoring-app__section section_big">
         <div className="monitoring-app__section-item">
           <div className="section-item_title">
-            <span>All Applications</span>
+            <span>All applications</span>
           </div>
           {applications.length === 0 && !loading ? (
             <NoData

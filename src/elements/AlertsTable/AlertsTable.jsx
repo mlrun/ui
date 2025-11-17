@@ -79,7 +79,7 @@ const AlertsTable = ({
               tableContent[0]?.content ?? [
                 {
                   headerId: 'alertName',
-                  headerLabel: 'Alert Name',
+                  headerLabel: 'Alert name',
                   className: 'table-cell-name'
                 }
               ]
