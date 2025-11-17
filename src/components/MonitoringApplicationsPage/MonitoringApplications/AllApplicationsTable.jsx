@@ -6,14 +6,15 @@ import ApplicationTableRow from '../../../elements/ApplicationTableRow/Applicati
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import { Loader } from 'igz-controls/components'
+
 import { MODEL_ENDPOINTS_TAB, MONITORING_APP_PAGE } from '../../../constants'
 import { createApplicationContent } from '../../../utils/createApplicationContent'
 import { saveAndTransformSearchParams } from 'igz-controls/utils/filter.util'
 import { MONITORING_APPLICATIONS_NO_DATA_MESSAGE } from '../MonitoringApplicationsPage.util'
-
-import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
 import { getScssVariableValue } from 'igz-controls/utils/common.util'
 import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
+
+import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
 
 import '../MonitoringApplicationsPage.scss'
 
