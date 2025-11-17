@@ -44,7 +44,7 @@ export const tableHeaders = [
 export const selectTypeOptions = {
   volumeType: [
     ...(isCommunityEdition() ? [] : [{ label: 'V3IO', id: V3IO }]),
-    { label: 'Config Map', id: CONFIG_MAP },
+    { label: 'Config map', id: CONFIG_MAP },
     { label: 'Secret', id: SECRET },
     { label: 'PVC', id: PVC }
   ]

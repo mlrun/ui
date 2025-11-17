@@ -38,7 +38,7 @@ const volumeTypeInputLabels = {
 
 const selectVolumeTypeOptions = [
   ...(isCommunityEdition() ? [] : [{ label: 'V3IO', id: V3IO_VOLUME_TYPE }]),
-  { label: 'Config Map', id: CONFIG_MAP_VOLUME_TYPE },
+  { label: 'Config map', id: CONFIG_MAP_VOLUME_TYPE },
   { label: 'Secret', id: SECRET_VOLUME_TYPE },
   { label: 'PVC', id: PVC_VOLUME_TYPE }
 ]
@@ -92,7 +92,7 @@ export const generateVolumeInputsData = (
         return {
           ...fieldBase,
           inputDisabled: selectedItem.isDefault,
-          label: 'Volume Name',
+          label: 'Volume name',
           required: true,
           type: 'input',
           validationRules: [
@@ -139,7 +139,7 @@ export const generateVolumeInputsData = (
         return {
           ...fieldBase,
           inputHidden: selectedType !== V3IO_VOLUME_TYPE,
-          label: 'Access Key',
+          label: 'Access key',
           tip: 'A platform data-access key',
           required: true,
           customRequiredLabel:
@@ -158,7 +158,7 @@ export const generateVolumeInputsData = (
         return {
           ...fieldBase,
           inputHidden: selectedType !== V3IO_VOLUME_TYPE,
-          label: 'Resource Path',
+          label: 'Resource path',
           tip: 'A relative directory path within the data container',
           textHidden: true,
           type: 'input'

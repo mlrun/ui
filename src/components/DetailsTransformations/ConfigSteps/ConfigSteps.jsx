@@ -188,7 +188,7 @@ const ConfigSteps = ({
           />
         </div>
         <div className="row">
-          <div className="row-label">Class Name</div>
+          <div className="row-label">Class name</div>
           <Tooltip
             className="row-value"
             template={<TextTooltipTemplate text={states[selectedStep]?.class_name} />}

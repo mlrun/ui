@@ -56,7 +56,7 @@ import {
   DETAILS_DRIFT_ANALYSIS_TAB,
   DETAILS_FEATURES_ANALYSIS_TAB,
   DETAILS_FEATURES_TAB,
-  DETAILS_GENERATION_CONFIGURATION_TAB,
+  DETAILS_INVOCATION_CONFIGURATION_TAB,
   DETAILS_INPUTS_TAB,
   DETAILS_LOGS_TAB,
   DETAILS_METADATA_TAB,
@@ -242,7 +242,7 @@ const DetailsTabsContent = ({
       return <DetailsCollections selectedItem={selectedItem} />
     case DETAILS_PROMPT_TEMPLATE_TAB:
       return <DetailsPromptTemplate selectedItem={selectedItem} />
-    case DETAILS_GENERATION_CONFIGURATION_TAB:
+    case DETAILS_INVOCATION_CONFIGURATION_TAB:
       return <DetailsGenerationConfiguration selectedItem={selectedItem} />
     default:
       return null

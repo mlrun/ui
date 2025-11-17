@@ -452,14 +452,14 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           handleClick: () => ({
             path: `${base_url}/models/model-endpoints`
           }),
-          label: 'Model Endpoints'
+          label: 'Model endpoints'
         },
         {
           id: 'realTimePipelines',
           handleClick: () => ({
             path: `${base_url}/models/real-time-pipelines`
           }),
-          label: 'RT Pipelines'
+          label: 'RT pipelines'
         },
         {
           id: 'nuclioFunctions',
@@ -467,7 +467,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
             path: generateNuclioLink(`${base_url}/functions`),
             externalLink: true
           }),
-          label: 'Nuclio Functions'
+          label: 'Nuclio functions'
         },
         {
           id: 'monitor',
