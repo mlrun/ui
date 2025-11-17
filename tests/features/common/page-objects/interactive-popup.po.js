@@ -293,7 +293,7 @@ const actionMenuStructure = {
 }
 
 const volumePathsTable = {
-  root: '.modal__content .form-row:nth-of-type(7)',
+  root: '[data-testid="resources.volumesTable"]',
   header: {
     root: '.form-table__header-row',
     sorters: {
@@ -306,15 +306,16 @@ const volumePathsTable = {
     offset: 1,
     add_row_btn: '.form-table__action-row button',
     row: {
-      root: 'div[class=table__row]',
+      root: 'div.form-table__row.form-table__volume-row',
       fields: {
-        type: '.table__cell:nth-of-type(1) .data-ellipsis',
-        volume_name: '.table__cell:nth-of-type(2) .data-ellipsis',
-        path: '.table__cell:nth-of-type(3) .data-ellipsis',
+        type: '.form-table__cell:nth-of-type(1) .data-ellipsis',
+        volume_name: '.form-table__cell:nth-of-type(2) .data-ellipsis',
+        path: '.form-table__cell:nth-of-type(3) .data-ellipsis',
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
-        }
+        },
+        remove_btn: '[data-testid="delete-btn"]'
       }
     }
   }
@@ -474,10 +475,9 @@ const advancedEnvironmentVariablesTable = {
           )
         },
         type_dropdown_verify: '.form-table__cell_1 .data-ellipsis',
-        value_input: '.form-table__cell_3 .form-field__control input',
+        value_input: '.form-table__cell_3 .form-field__control:nth-of-type(1) input',
         value_verify: '.form-table__cell_3 .data-ellipsis',
-        value_input_key:
-          '.form-table__cell_3 .form-field-input:nth-of-type(2) .form-field__control input'
+        value_input_key: '.form-table__cell_3 .form-field-input:nth-of-type(2) input'
       }
     }
   }
@@ -994,7 +994,7 @@ export default {
       ),
       Volumes_Subheader: labelComponent(
         generateLabelGroup(
-          '.modal__content .wizard-form__content-container .form-row:nth-child(6)',
+          '.modal__content .wizard-form__content-container .job-wizard__resources .form-row:nth-child(6)',
           false,
           true
         )
@@ -1196,6 +1196,17 @@ export default {
           false,
           true
         )
+      ),
+      Env_Variables_Table_Secret_Name_Input: inputGroup(
+        generateInputGroup(
+          '[data-testid="advanced.environmentVariablesTable"] .form-table__cell:nth-of-type(3) .secret-name',
+          true,
+          true,
+          '.form-field__warning svg'
+        )
+      ),
+      Delete_New_Row_Button: By.css(
+        '[data-testid="advanced.environmentVariablesTable"] .form-table__actions-cell .round-icon-cp:nth-of-type(2)'
       )
     },
     Hyperparameter_Strategy_Accordion: {
