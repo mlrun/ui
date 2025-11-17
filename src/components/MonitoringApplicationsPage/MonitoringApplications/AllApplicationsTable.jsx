@@ -78,7 +78,7 @@ const AllApplicationsTable = ({ applications, loading, error = null }) => {
   return (
     <div className="monitoring-app__section-item all-applications-table">
       <div className="section-item_title">
-        <span>All Applications</span>
+        <span>All applications</span>
       </div>
       {applications.length === 0 && !loading ? (
         <NoData
