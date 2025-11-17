@@ -98,7 +98,7 @@ const AddEnvironmentVariablesRow = ({
                 className="secret-item"
                 floatingLabel
                 invalid={!validation.isSecretNameValid}
-                label="Secret Name"
+                label="Secret name"
                 onChange={secretName => setNewEnvVariable(state => ({ ...state, secretName }))}
                 pattern="^(?=[\S\s]{1,253}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?)*$"
                 validationRules={getValidationRules('environmentVariables.secretName', [
@@ -117,7 +117,7 @@ const AddEnvironmentVariablesRow = ({
                 className="secret-item"
                 floatingLabel
                 invalid={!validation.isSecretKeyValid}
-                label="Secret Key"
+                label="Secret key"
                 onChange={secretKey => setNewEnvVariable(state => ({ ...state, secretKey }))}
                 pattern="^(?=[\S\s]{0,253}$)(?!\.$)(?!\.\.[\S\s]*$)[-._a-zA-Z0-9]*$"
                 setInvalid={value =>

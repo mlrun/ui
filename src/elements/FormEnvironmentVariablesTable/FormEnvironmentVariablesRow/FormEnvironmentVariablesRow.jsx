@@ -131,7 +131,7 @@ const FormEnvironmentVariablesRow = ({
                   className="secret-name"
                   density="normal"
                   name={`${rowPath}.data.secretName`}
-                  placeholder="Secret Name"
+                  placeholder="Secret name"
                   required
                   validationRules={getValidationRules('environmentVariables.secretName', [
                     getSecretNameValidator(projectName, editingItem?.data?.typeName)
@@ -140,7 +140,7 @@ const FormEnvironmentVariablesRow = ({
                 <FormInput
                   density="normal"
                   name={`${rowPath}.data.secretKey`}
-                  placeholder="Secret Key"
+                  placeholder="Secret key"
                   required
                   validationRules={getValidationRules('environmentVariables.secretKey')}
                 />

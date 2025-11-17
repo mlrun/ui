@@ -196,7 +196,7 @@ export const createModelsRowData = (artifact, project, isAllVersions, metricsCou
         <span>
           <span>Framework &</span>
           <br />
-          <span>Algorithm</span>
+          <span>algorithm</span>
         </span>
       ),
       value:
@@ -499,7 +499,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
       {
         id: `functionTag.${artifact.ui.identifierUnique}`,
         headerId: 'functionTag',
-        headerLabel: 'Function Tag',
+        headerLabel: 'Function tag',
         value: artifact.spec?.function_tag,
         className: 'table-cell-small'
       },

@@ -129,7 +129,7 @@ const MEPsWithDetections = () => {
   return (
     <div className="monitoring-app__section-item">
       <div className="section-item_title">
-        <span>Model Endpoints with suspected/detected issue</span>
+        <span>Model endpoints with suspected/detected issue</span>
         <Tip text="This chart displays the number of model endpoints that had at least one detected issue, in any monitoring application, in the relevant time period" />
       </div>
       {endpointsWithDetectionsData.values?.length === 0 && !(isLoading || loading) ? (
