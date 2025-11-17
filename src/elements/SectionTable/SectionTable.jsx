@@ -30,8 +30,17 @@ import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.
 import './SectionTable.scss'
 
 const SPACE_FOR_BORDER = 2
+const DEFAULT_ROW_HEIGHT = 41
+const DEFAULT_MAX_TABLE_HEIGHT = 369
 
-const SectionTable = ({ headerHeight = 41, loading = false, params, rowHeight = 41, table, maxTableHeight = 369 }) => {
+const SectionTable = ({
+  headerHeight = DEFAULT_ROW_HEIGHT,
+  loading = false,
+  params,
+  rowHeight = DEFAULT_ROW_HEIGHT,
+  table,
+  maxTableHeight = DEFAULT_MAX_TABLE_HEIGHT
+}) => {
   const [tableId] = useState(`section-table-${uuidv4()}`)
   const [tableBodyId] = useState(`section-table-body-${uuidv4()}`)
 
