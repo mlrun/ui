@@ -380,9 +380,11 @@ const Pipeline = ({ content }) => {
             <div className="graph-pane">
               <div className="graph-pane-scroll-container">
                 <div className="graph-pane__title">
-                  <div className="graph-pane__title-icon">
-                    <ConnectionIcon />
-                  </div>
+                  {selectedStep.type === ML_MODEL_RUNNER_NODE && (
+                    <div className="graph-pane__title-icon">
+                      <ConnectionIcon />
+                    </div>
+                  )}
                   <Tooltip
                     className="graph-pane__title-label"
                     hidden={!selectedStep.id}
