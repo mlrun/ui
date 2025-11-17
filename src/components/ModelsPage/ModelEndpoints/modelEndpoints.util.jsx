@@ -46,11 +46,11 @@ const generateInfoHeaders = model_path => {
     { label: 'UID', id: 'uid' },
     { label: 'Model class', id: 'model_class' },
     {
-      label: model_path.includes('llm-prompts') ? 'LLM Prompt artifact' : 'Model artifact',
+      label: model_path.includes('llm-prompts') ? 'LLM prompt artifact' : 'Model artifact',
       id: 'model_artifact'
     },
     { label: 'Function URI', id: 'function_uri' },
-    { label: 'Function Tag', id: 'function_tag' },
+    { label: 'Function tag', id: 'function_tag' },
     { label: 'Feature set', id: 'monitoring_feature_set_uri' },
     { label: 'Sampling percentage', id: 'sampling_percentage' },
     { label: 'Last prediction', id: 'last_prediction' },

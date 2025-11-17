@@ -268,19 +268,19 @@ const JobWizard = ({
       const stepsConfig = [
         {
           id: FUNCTION_SELECTION_STEP,
-          label: 'Function Selection',
+          label: 'Function selection',
           hidden: isEditMode || isRunMode || isBatchInference || isTrain,
           nextIsDisabled: isEmpty(selectedFunctionData)
         },
         {
           id: RUN_DETAILS_STEP,
-          label: 'Run Details',
+          label: 'Run details',
           disabled:
             isEmpty(selectedFunctionData) || isEmpty(get(formState.initialValues, RUN_DETAILS_STEP))
         },
         {
           id: DATA_INPUTS_STEP,
-          label: 'Data Inputs'
+          label: 'Data inputs'
         },
         {
           id: PARAMETERS_STEP,
@@ -428,7 +428,7 @@ const JobWizard = ({
         {
           id: 'schedule-btn',
           label: isBatchInference
-            ? 'Schedule Infer'
+            ? 'Schedule infer'
             : isTrain
               ? 'Schedule training job'
               : 'Schedule for later',

@@ -202,7 +202,7 @@ const JobWizardRunDetails = ({
           }
         },
         header: 'Are you sure?',
-        message: 'Changes made to the Data Inputs and Parameters sections will be lost'
+        message: 'Changes made to the data inputs and parameters sections will be lost'
       })
     } else {
       handleHandlerChange(currentHandler)
@@ -213,7 +213,7 @@ const JobWizardRunDetails = ({
     !isEmpty(jobAdditionalData) && (
       <div className="job-wizard__run-details">
         <div className="form-row">
-          <h5 className="form-step-title">Run Details</h5>
+          <h5 className="form-step-title">Run details</h5>
         </div>
         {!isBatchInference && (
           <div className="form-row">

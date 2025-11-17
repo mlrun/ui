@@ -85,7 +85,7 @@ const EditableVolumesRow = ({ content, handleEdit, selectedVolume, setSelectedVo
                   ? 'Name already exists'
                   : 'This field is invalid'
               }
-              label="Volume Name"
+              label="Volume name"
               onChange={name =>
                 setSelectedVolume({
                   ...selectedVolume,

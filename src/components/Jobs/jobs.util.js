@@ -63,7 +63,7 @@ export const getInfoHeaders = (isSpark, selectedJob) => {
   const infoHeaders = [
     { label: 'UID', id: 'uid' },
     { label: 'Start time', id: 'startTime' },
-    { label: 'Last Updated', id: 'updated' },
+    { label: 'Last updated', id: 'updated' },
     { label: 'Run on spot', id: 'runOnSpot' },
     {
       label: 'Node selector',
