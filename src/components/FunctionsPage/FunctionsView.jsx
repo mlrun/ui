@@ -51,6 +51,7 @@ const FunctionsView = ({
   closePanel,
   confirmData = null,
   createFunctionSuccess,
+  detailsFormInitialValues,
   editableItem = null,
   filters,
   filtersStore,
@@ -129,8 +130,13 @@ const FunctionsView = ({
                 {functionsStore.funcLoading && <Loader />}
                 <Table
                   actionsMenu={actionsMenu}
+                  detailsFormInitialValues={detailsFormInitialValues}
                   getCloseDetailsLink={() =>
-                    getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : FUNCTIONS_PAGE_PATH, false, params.funcName)
+                    getCloseDetailsLink(
+                      isAllVersions ? ALL_VERSIONS_PATH : FUNCTIONS_PAGE_PATH,
+                      false,
+                      params.funcName
+                    )
                   }
                   handleCancel={handleCancel}
                   pageData={pageData}
@@ -205,6 +211,7 @@ FunctionsView.propTypes = {
   closePanel: PropTypes.func.isRequired,
   confirmData: PropTypes.object,
   createFunctionSuccess: PropTypes.func.isRequired,
+  detailsFormInitialValues: PropTypes.object,
   editableItem: PropTypes.object,
   filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,

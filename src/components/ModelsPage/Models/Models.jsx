@@ -47,7 +47,8 @@ const Models = ({ isAllVersions }) => {
   const generateDetailsFormInitialValues = useCallback(
     (selectedModel, internal_labels) => ({
       tag: selectedModel.tag ?? '',
-      labels: parseChipsData(selectedModel.labels ?? {}, internal_labels)
+      labels: parseChipsData(selectedModel.labels ?? {}, internal_labels),
+      metrics: parseChipsData(selectedModel.metrics ?? {}, internal_labels)
     }),
     []
   )

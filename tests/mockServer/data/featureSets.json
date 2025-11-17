@@ -81,7 +81,9 @@
         "description": "",
         "timestamp_key": "",
         "source": {
-          "attributes": {},
+          "attributes": {
+            "aa": "bb"
+          },
           "end_time": "",
           "key_field": "",
           "kind": "csv",

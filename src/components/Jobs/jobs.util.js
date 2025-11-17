@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize, chain, defaultsDeep, get, isEmpty, isObject } from 'lodash'
+import { capitalize, chain, defaultsDeep, get, isEmpty } from 'lodash'
 
 import tasksApi from '../../api/tasks-api'
 
@@ -52,7 +52,7 @@ import {
 } from '../../reducers/jobReducer'
 import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
-import { generateKeyValues, parseKeyValues } from '../../utils'
+import { generateKeyValues } from '../../utils'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { truncateUid } from 'igz-controls/utils/string.util'
@@ -67,7 +67,7 @@ export const getInfoHeaders = (isSpark, selectedJob) => {
     { label: 'Run on spot', id: 'runOnSpot' },
     {
       label: 'Node selector',
-      id: 'nodeSelectorChips',
+      id: 'nodeSelector',
       hidden: isJobKindDask(selectedJob?.labels)
     },
     { label: 'Priority', id: 'priority' },
@@ -75,7 +75,7 @@ export const getInfoHeaders = (isSpark, selectedJob) => {
     { label: 'Parameters', id: 'parameters' },
     { label: 'Function', id: 'function' },
     { label: 'Function tag', id: 'functionTag' },
-    { label: 'Results', id: 'resultsChips' },
+    { label: 'Results', id: 'results' },
     { label: 'Labels', id: 'labels' },
     { label: 'Log level', id: LOG_LEVEL_ID },
     { label: 'Output path', id: 'outputPath' },
@@ -145,25 +145,21 @@ export const tabs = [
 ]
 
 export const isJobKindAbortable = (job, abortableFunctionKinds) =>
-  (abortableFunctionKinds ?? [])
-    .map(kind => `kind: ${kind}`)
-    .some(kindLabel => job?.labels?.includes(kindLabel))
+  (abortableFunctionKinds ?? []).some(kindLabel => job?.labels.kind !== kindLabel)
 
 export const isJobAborting = (currentJob = {}) => {
   return currentJob?.state?.value === ABORTING_STATE
 }
 
 export const isJobKindDask = (jobLabels = []) => {
-  return (isObject(jobLabels) ? parseKeyValues(jobLabels) : jobLabels)?.includes(
-    `kind: ${JOB_KIND_DASK}`
-  )
+  return jobLabels.some(label => label.key === 'kind' && label.value === JOB_KIND_DASK)
 }
 
 export const isJobKindLocal = job =>
   [JOB_KIND_LOCAL, ''].includes(get(job, 'ui.originalContent.metadata.labels.kind'))
 
-export const arePodsHidden = (jobLabels = []) => {
-  const jobKind = (jobLabels.find(label => label.startsWith('kind:')) ?? '').split(':')[1]?.trim()
+export const arePodsHidden = (jobLabels = {}) => {
+  const jobKind = jobLabels.kind ?? ''
 
   return ![
     JOB_KIND_DASK,

@@ -42,16 +42,16 @@ import {
 import { measureTime } from './measureTime'
 import { generateLinkToDetailsPanel } from './link-helper.util'
 import { getJobIdentifier, getWorkflowJobIdentifier } from './getUniqueIdentifier'
-import { parseKeyValues } from './object'
 import { validateArguments } from './validateArguments'
-import { getJobKindFromLabels, typesOfJob } from './jobs.util'
+import { parseChipsData } from './convertChipsData'
+import { typesOfJob } from './jobs.util'
 import { saveAndTransformSearchParams } from 'igz-controls/utils/filter.util'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 
 export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
-    const type = getJobKindFromLabels(job.labels)
+    const type = job.labels.kind ?? ''
     const getLink = tab => {
       if (jobName) {
         return validateArguments(job.uid, tab, job.name)
@@ -235,7 +235,7 @@ export const createJobsScheduleTabContent = jobs => {
           headerId: 'labels',
           headerLabel: 'Labels',
           id: `labels.${identifierUnique}`,
-          value: parseKeyValues(job.scheduled_object?.task.metadata.labels || {}),
+          value: parseChipsData(job.scheduled_object?.task.metadata.labels || {}),
           className: 'table-cell-1',
           type: 'labels'
         },
@@ -455,7 +455,7 @@ export const createJobsWorkflowContent = (
 export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
-    const type = getJobKindFromLabels(job.labels)
+    const type = job.labels.kind ?? ''
     const getLink = tab => {
       if (jobName) {
         return validateArguments(job.uid, tab, job.name)
@@ -644,7 +644,7 @@ export const createScheduleJobsMonitoringContent = jobs => {
           headerId: 'labels',
           headerLabel: 'Labels',
           id: `labels.${identifierUnique}`,
-          value: parseKeyValues(job.scheduled_object?.task.metadata.labels || {}),
+          value: parseChipsData(job.scheduled_object?.task.metadata.labels || {}),
           className: 'table-cell-1',
           type: 'labels'
         },

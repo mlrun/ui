@@ -26,10 +26,9 @@ import {
   SCHEDULE_TAB
 } from '../constants'
 import getState from './getState'
-import { getJobKindFromLabels } from './jobs.util'
 import { getJobIdentifier } from './getUniqueIdentifier'
-import { parseKeyValues } from './object'
 import { convertTriggerToCrontab } from '../components/Jobs/jobs.util'
+import { parseChipsData } from './convertChipsData'
 
 export const jobHasWorkflowLabel = job => {
   return job.labels && 'job-type' in job.labels && job.labels['job-type'] === 'workflow-runner'
@@ -63,7 +62,7 @@ export const parseJob = (job, tab, customState, customError) => {
       type:
         job.kind === JOB_KIND_PIPELINE || jobHasWorkflowLabel(job)
           ? JOB_KIND_WORKFLOW
-          : getJobKindFromLabels(parseKeyValues(job.labels || {})),
+          : (job.labels.kind ?? ''),
       ui: {
         originalContent: job
       }
@@ -84,17 +83,17 @@ export const parseJob = (job, tab, customState, customError) => {
       iteration: job.metadata.iteration,
       iterationStats: job.status.iterations || [],
       iterations: [],
-      labels: parseKeyValues(job.metadata.labels || {}),
+      labels: parseChipsData(job.metadata.labels || {}),
       logLevel: job.spec?.log_level,
       name: job.metadata.name,
       outputPath: job.spec?.output_path,
       owner: job.metadata.labels?.owner,
       parameters: jobParameters,
       parametersChips: [
-        ...parseKeyValues(jobParameters),
-        ...parseKeyValues(job.spec?.hyperparams || {})
+        ...parseChipsData(jobParameters),
+        ...parseChipsData(job.spec?.hyperparams || {})
       ],
-      nodeSelectorChips: parseKeyValues(job.spec?.node_selector || {}),
+      nodeSelectorChips: parseChipsData(job.spec?.node_selector || {}),
       project: job.metadata.project,
       reason: job.status?.reason ?? '',
       retryCount: job.status?.retry_count,
@@ -102,7 +101,7 @@ export const parseJob = (job, tab, customState, customError) => {
       retryCountWithInitialAttempt: (job.status.retry_count ?? 0) + 1,
       maxRetriesWithInitialAttempt: (job.spec?.retry?.count ?? 0) + 1,
       results: job.status?.results || {},
-      resultsChips: parseKeyValues(job.status?.results || {}),
+      resultsChips: parseChipsData(job.status?.results || {}),
       startTime: new Date(job.status?.start_time),
       state: getState(
         customState || job.status?.state,
