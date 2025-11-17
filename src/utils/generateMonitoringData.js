@@ -35,7 +35,14 @@ import {
   MONITORING_APP_PAGE,
   MONITOR_WORKFLOWS_TAB,
   STATUS_FILTER,
-  TYPE_FILTER
+  TYPE_FILTER,
+  PENDING_STATE,
+  RUNNING_STATE,
+  COMPLETED_STATE,
+  ABORTED_STATE,
+  ABORTING_STATE,
+  PENDING_RETRY_STATE,
+  TERMINATING_STATE
 } from '../constants'
 import {
   ANY_TIME_DATE_OPTION,
@@ -81,10 +88,15 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
             className: classNames('stats__link', 'stats__line'),
             link: () =>
               navigateToJobsMonitoringPage({
-                [STATUS_FILTER]: ['running', 'pending', 'pendingRetry', 'aborting'],
+                [STATUS_FILTER]: [
+                  RUNNING_STATE,
+                  PENDING_STATE,
+                  PENDING_RETRY_STATE,
+                  ABORTING_STATE
+                ],
                 [DATES_FILTER]: ANY_TIME_DATE_OPTION
               }),
-            statusClass: 'running',
+            statusClass: RUNNING_STATE,
             tooltip: 'Aborting, Pending, Pending retry, Running',
             label: IN_PROCESS
           },
@@ -93,10 +105,10 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
             className: classNames('stats__link', 'stats__line'),
             link: () =>
               navigateToJobsMonitoringPage({
-                [STATUS_FILTER]: [ERROR_STATE, 'aborted'],
+                [STATUS_FILTER]: [ERROR_STATE, ABORTED_STATE],
                 [DATES_FILTER]: PAST_24_HOUR_DATE_OPTION
               }),
-            statusClass: 'failed',
+            statusClass: FAILED_STATE,
             tooltip: 'Aborted, Error',
             label: FAILED,
             counterClassName: classNames({
@@ -108,10 +120,10 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
             className: classNames('stats__link', 'stats__line'),
             link: () =>
               navigateToJobsMonitoringPage({
-                [STATUS_FILTER]: ['completed'],
+                [STATUS_FILTER]: [COMPLETED_STATE],
                 [DATES_FILTER]: PAST_24_HOUR_DATE_OPTION
               }),
-            statusClass: 'completed',
+            statusClass: COMPLETED_STATE,
             tooltip: 'Completed',
             label: SUCCEEDED
           }
@@ -132,11 +144,11 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
               counter: data.running || 0,
               link: () =>
                 navigateToJobsMonitoringPage({
-                  [STATUS_FILTER]: ['running', 'terminating'],
+                  [STATUS_FILTER]: [RUNNING_STATE, TERMINATING_STATE],
                   [DATES_FILTER]: ANY_TIME_DATE_OPTION
                 }),
               className: classNames('stats__link', 'stats__line'),
-              statusClass: 'running',
+              statusClass: RUNNING_STATE,
               tooltip: 'Running, Terminating',
               label: IN_PROCESS
             },
@@ -148,7 +160,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                   [STATUS_FILTER]: [ERROR_STATE, FAILED_STATE],
                   [DATES_FILTER]: PAST_24_HOUR_DATE_OPTION
                 }),
-              statusClass: 'failed',
+              statusClass: FAILED_STATE,
               tooltip: 'Error, Failed',
               label: FAILED,
               counterClassName: classNames({
@@ -160,10 +172,10 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
               className: classNames('stats__link', 'stats__line'),
               link: () =>
                 navigateToJobsMonitoringPage({
-                  [STATUS_FILTER]: ['completed'],
+                  [STATUS_FILTER]: [COMPLETED_STATE],
                   [DATES_FILTER]: PAST_24_HOUR_DATE_OPTION
                 }),
-              statusClass: 'completed',
+              statusClass: COMPLETED_STATE,
               tooltip: 'Completed',
               label: SUCCEEDED
             }
@@ -221,7 +233,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                     counter: data.running || 0,
                     className: classNames(projectName && 'stats__link'),
                     link: () => navigateToTab(projectName, MONITORING_APP_PAGE),
-                    statusClass: 'running',
+                    statusClass: RUNNING_STATE,
                     label: RUNNING,
                     popUpClassName: classNames({ 'card-popup_text_link': projectName }),
                     tooltip: RUNNING
@@ -232,7 +244,7 @@ export const generateMonitoringStats = (data, navigate, tab, projectName) => {
                       stats__failed: data.failed > 0
                     }),
                     link: () => navigateToTab(projectName, MONITORING_APP_PAGE),
-                    statusClass: 'failed',
+                    statusClass: FAILED_STATE,
                     label: FAILED,
                     popUpClassName: classNames({ 'card-popup_text_link': projectName }),
                     tooltip: 'Error, Unhealthy'

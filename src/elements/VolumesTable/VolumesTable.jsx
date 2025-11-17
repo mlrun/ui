@@ -262,6 +262,7 @@ export const VolumesTable = ({
       setValidation={setValidation}
       showAddNewVolumeRow={showAddNewVolumeRow}
       validation={validation}
+      volumes={volumes}
     />
   )
 }

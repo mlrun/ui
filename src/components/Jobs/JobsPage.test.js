@@ -33,7 +33,7 @@ jest.mock('igz-controls/images/arrow.svg', () => ({
   ReactComponent: 'arrow-icon'
 }))
 
-jest.spyOn(mainHttpClient, 'delete').mockImplementation(path => {
+jest.spyOn(mainHttpClient, 'delete').mockImplementation(() => {
   return Promise.resolve([])
 })
 

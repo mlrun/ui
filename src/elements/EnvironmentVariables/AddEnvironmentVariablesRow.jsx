@@ -19,6 +19,7 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useParams } from 'react-router-dom'
 
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
@@ -31,6 +32,8 @@ import {
   selectTypeOptions
 } from './environmentVariables.util'
 import { ENV_VARIABLE_TYPE_SECRET } from '../../constants'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { getSecretNameValidator } from '../../utils/getSecretNameValidator'
 
 import Delete from 'igz-controls/images/delete.svg?react'
 import Plus from 'igz-controls/images/plus.svg?react'
@@ -44,6 +47,8 @@ const AddEnvironmentVariablesRow = ({
   setValidation,
   validation
 }) => {
+  const { projectName } = useParams()
+
   return (
     <div className="table__body">
       <div className="table__body-column">
@@ -96,6 +101,9 @@ const AddEnvironmentVariablesRow = ({
                 label="Secret Name"
                 onChange={secretName => setNewEnvVariable(state => ({ ...state, secretName }))}
                 pattern="^(?=[\S\s]{1,253}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?)*$"
+                validationRules={getValidationRules('environmentVariables.secretName', [
+                  getSecretNameValidator(projectName)
+                ])}
                 required
                 setInvalid={value =>
                   setValidation(state => ({

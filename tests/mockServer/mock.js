@@ -836,7 +836,7 @@ function getMonitoringApplications(req, res) {
   const collectedMonitoringApplications = (monitoringApplications[req.params['project']] || []).map(
     application => ({
       ...application,
-      stats: omit(application.stats, ['shards', 'processed_model_endpoints', 'metrics'])
+      stats: { ...omit(application.stats, ['shards', 'processed_model_endpoints', 'metrics']), stream_stats: application.stats.stream_stats['0']}
     })
   )
 
@@ -1531,13 +1531,13 @@ function getArtifacts(req, res) {
           /^store:\/\/(?<kind>.+?)\/(?<project>.+?)\/(?<key>.+?)(#(?<iteration>.+?))?(:(?<tag>.+?))?(@(?<tree>[^^]+))?(\^(?<uid>.+))?$/
         )
 
-        return match && match.groups.key.startsWith(key) && match.groups.tag === tag
+        return match && match.groups.key.includes(key) && match.groups.tag.includes(tag)
       })
     } else {
       collectedArtifacts = collectedArtifacts.filter(artifact =>
         artifact.spec?.parent_uri
           ?.match(/^store:\/\/[^/]+\/[^/]+\/([^#/]+)/)?.[1]
-          ?.startsWith(req.query['parent'])
+          ?.includes(req.query['parent'])
       )
     }
   }
@@ -2380,7 +2380,7 @@ function putTags(req, res) {
       )
     })
 
-   // handle existing artifacts with same name and tag 
+   // handle existing artifacts with same name and tag
     collectedArtifactsWithSameName.forEach(artifact => {
       if (artifact.metadata?.tag === tagName) {
         if (
@@ -2659,9 +2659,9 @@ function getModelEndpoints(req, res) {
     )
   }
 
-  if (req.query['endpoint_id']) {
+  if (req.query['endpoint-id']) {
     const modelEndpoint = collectedEndpoints.find(
-      endpoint => endpoint.metadata.uid === req.query.endpoint_id
+      endpoint => endpoint.metadata.uid === req.query.endpoint-id
     )
 
     return res.send(modelEndpoint)

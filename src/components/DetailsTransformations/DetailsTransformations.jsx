@@ -203,23 +203,25 @@ const DetailsTransformations = ({ selectedItem }) => {
         <MlReactFlow nodes={nodes} edges={edges} alignTriggerItem={selectedItemUid} />
       </div>
       <div className="graph-pane">
-        <div className="graph-pane__title">Configuration</div>
-        <ConfigFunctionTemplate selectedItem={selectedItem} />
-        <ConfigSource selectedItem={selectedItem} />
-        <ConfigSteps
-          states={states ?? {}}
-          setStates={setStates}
-          steps={steps}
-          afterSteps={afterSteps}
-          errorSteps={errorSteps}
-          selectedStep={selectedStep}
-          setSelectedStep={setSelectedStep}
-          selectedAfterStep={selectedAfterStep}
-          setSelectedAfterStep={setSelectedAfterStep}
-          selectedErrorStep={selectedErrorStep}
-          setSelectedErrorStep={setSelectedErrorStep}
-        />
-        <ConfigTargets targets={targets} steps={steps} />
+        <div className="graph-pane-scroll-container">
+          <div className="graph-pane__title">Configuration</div>
+          <ConfigFunctionTemplate selectedItem={selectedItem} />
+          <ConfigSource selectedItem={selectedItem} />
+          <ConfigSteps
+            states={states ?? {}}
+            setStates={setStates}
+            steps={steps}
+            afterSteps={afterSteps}
+            errorSteps={errorSteps}
+            selectedStep={selectedStep}
+            setSelectedStep={setSelectedStep}
+            selectedAfterStep={selectedAfterStep}
+            setSelectedAfterStep={setSelectedAfterStep}
+            selectedErrorStep={selectedErrorStep}
+            setSelectedErrorStep={setSelectedErrorStep}
+          />
+          <ConfigTargets targets={targets} steps={steps} />
+        </div>
       </div>
     </div>
   )

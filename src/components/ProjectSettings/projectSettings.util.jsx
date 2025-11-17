@@ -38,8 +38,6 @@ import Secrets from 'igz-controls/images/lock-icon.svg?react'
 import User from 'igz-controls/images/user.svg?react'
 import Users from 'igz-controls/images/users.svg?react'
 
-export const COMPLETED_STATE = 'completed'
-
 export const tabs = projectMembershipIsEnabled => [
   {
     id: PROJECTS_SETTINGS_GENERAL_TAB,

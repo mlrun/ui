@@ -194,6 +194,52 @@
         ]
       },
       "status": "ready"
+    },
+    {
+      "name": "monitorAppV4",
+      "application_class": "MyAppV4",
+      "started_at": "2025-05-02T09:00:00Z",
+      "updated_time": "2025-05-08T11:00:00Z",
+      "base_period": 15,
+      "nuclio_function_uri": "default/functions/default-monitorAppV4/",
+      "stats": {
+        "detected": 850,
+        "potential_detection": 60,
+        "stream_stats": {
+          "0": {
+            "lag": 5,
+            "committed": 42
+          }
+        },
+        "shards": {
+          "1": {
+            "committed": 50,
+            "lag": 2
+          },
+          "2": {
+            "committed": 60,
+            "lag": 0
+          }
+        },
+        "processed_model_endpoints": 8,
+        "metrics": [
+          {
+            "type": "result",
+            "time": "2025-05-07T09:07:14+00:00",
+            "result_name": "some_result",
+            "kind": 0,
+            "status": 2,
+            "value": 0.95
+          },
+          {
+            "type": "metric",
+            "time": "2025-05-07T09:07:14+00:00",
+            "metric_name": "some_metric",
+            "value": 0.4
+          }
+        ]
+      },
+      "status": "error"
     }
   ]
 }

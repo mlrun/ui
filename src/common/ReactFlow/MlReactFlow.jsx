@@ -22,9 +22,10 @@ import PropTypes from 'prop-types'
 import ReactFlow, { ReactFlowProvider, MiniMap, Controls } from 'reactflow'
 
 import MlReactFlowNode from './MlReactFlowNode'
+import MlModelRunnerNode from './MlModelRunnerNode'
 import MlReactFlowEdge from './MlReactFlowEdge'
 
-import { ML_EDGE, ML_NODE } from '../../constants'
+import { ML_EDGE, ML_MODEL_RUNNER_NODE, ML_NODE } from '../../constants'
 import { getNodeClassName } from './mlReactFlow.util'
 
 import './mlReactFlow.scss'
@@ -34,7 +35,8 @@ const edgeTypes = {
 }
 
 const nodeTypes = {
-  [ML_NODE]: MlReactFlowNode
+  [ML_NODE]: MlReactFlowNode,
+  [ML_MODEL_RUNNER_NODE]: MlModelRunnerNode
 }
 
 const MlReactFlow = ({ alignTriggerItem = '', edges, nodes, onNodeClick = () => {} }) => {

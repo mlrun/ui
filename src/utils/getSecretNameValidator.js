@@ -17,31 +17,26 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import PropTypes from 'prop-types'
+export const getSecretNameValidator = (projectName, initialSecretName) => {
+  return {
+    name: 'secretProhibitedNames',
+    label: 'Secret does not reference an MLRun secret defined in another project',
+    pattern: secretName => {
+      // if prohibited secret was set before (we get it from BE) we accept it as valid
+      if (secretName && secretName === initialSecretName) return true
 
-import StatsCard from '../../../common/StatsCard/StatsCard'
+      if (secretName.startsWith('mlrun-auth-secrets.')) return false
 
-import NoDataIcon from 'igz-controls/images/no-data-metric-icon.svg?react'
+      const correctPatternBeginning = 'mlrun-project-secrets-' // mlrun-project-secrets-{project-name}
 
-const NoMetricData = ({ title = '', message = 'No data to show', className = '', tip = '' }) => {
-  return (
-    <StatsCard className={`metrics__card ${className}`}>
-      <StatsCard.Header title={title} tip={tip}></StatsCard.Header>
-      <div className="metrics__empty-card">
-        <div>
-          <NoDataIcon />
-        </div>
-        <div>{message}</div>
-      </div>
-    </StatsCard>
-  )
+      if (secretName.startsWith(correctPatternBeginning)) {
+        const secretProjectName = secretName.slice(correctPatternBeginning.length)
+
+        return secretProjectName === projectName
+      }
+
+      return true
+    }
+  }
 }
 
-NoMetricData.propTypes = {
-  className: PropTypes.string,
-  message: PropTypes.string,
-  tip: PropTypes.string,
-  title: PropTypes.string
-}
-
-export default NoMetricData

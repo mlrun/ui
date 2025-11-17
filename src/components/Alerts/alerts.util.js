@@ -31,6 +31,7 @@ import {
   ENTITY_ID,
   ENTITY_TYPE,
   EVENT_TYPE,
+  FAILED_STATE,
   FE_PAGE,
   FILTER_ALL_ITEMS,
   JOB,
@@ -141,7 +142,7 @@ export const filterAlertsSeverityOptions = [
 
 const alertsEventTypeOptions = [
   { label: upperFirst(FILTER_ALL_ITEMS), id: FILTER_ALL_ITEMS },
-  { label: 'Job failed', id: 'failed', ENTITY_TYPE: JOB_KIND_JOB },
+  { label: 'Job failed', id: FAILED_STATE, ENTITY_TYPE: JOB_KIND_JOB },
   { label: 'Data drift detected', id: 'data-drift-detected', ENTITY_TYPE: MODEL_ENDPOINT_RESULT },
   { label: 'Data drift suspected', id: 'data-drift-suspected', ENTITY_TYPE: MODEL_ENDPOINT_RESULT },
   {

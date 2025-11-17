@@ -38,6 +38,7 @@ import { fetchArtifacts } from '../../reducers/artifactsReducer'
 import { getFiltersConfig } from './MonitoringApplicationsPage.util'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import { getSavedSearchParams } from 'igz-controls/utils/filter.util'
 
 import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
 
@@ -147,7 +148,7 @@ const MonitoringApplicationsPage = () => {
           <span className="monitoring-apps-title">
             {params.name && (
               <TableTop
-                link={`/projects/${params.projectName}/${MONITORING_APP_PAGE}/${window.location.search}`}
+                link={`/projects/${params.projectName}/${MONITORING_APP_PAGE}/${getSavedSearchParams(window.location.search)}`}
                 text={params.name}
               />
             )}

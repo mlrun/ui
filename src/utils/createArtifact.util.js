@@ -23,27 +23,35 @@ const artifactSubTitle =
 const getOverwriteConfirmMessage = (existingKind = '') =>
   `That combination of name and tag is already in use in an existing ${existingKind}. If you proceed, the existing ${existingKind} will be overwritten`
 
-export const createArtifactMessages = {
-  artifact: {
-    title:
-      'Register an artifact in MLRun so it can be used, for example, by functions, jobs, and pipelines.',
-    subTitle: artifactSubTitle,
-    overwriteConfirmTitle: 'Overwrite artifact?',
-    getOverwriteConfirmMessage
-  },
-  dataset: {
-    title:
-      'Register a dataset as an artifact in MLRun so it can be used, for example, by functions, jobs, and pipelines.',
-    subTitle: artifactSubTitle,
-    overwriteConfirmTitle: 'Overwrite dataset?',
-    getOverwriteConfirmMessage
-  },
-  model: {
-    overwriteConfirmTitle: 'Overwrite model?',
-    getOverwriteConfirmMessage
-  },
-  'llm-prompt': {
-    overwriteConfirmTitle: 'Overwrite LLM prompt?',
-    getOverwriteConfirmMessage
+export const getArtifactMessagesByKind = (kind = '') => {
+  const messagesByKind = {
+    artifact: {
+      title:
+        'Register an artifact in MLRun so it can be used, for example, by functions, jobs, and pipelines.',
+      subTitle: artifactSubTitle,
+      overwriteConfirmTitle: 'Overwrite artifact?',
+      getOverwriteConfirmMessage
+    },
+    dataset: {
+      title:
+        'Register a dataset as an artifact in MLRun so it can be used, for example, by functions, jobs, and pipelines.',
+      subTitle: artifactSubTitle,
+      overwriteConfirmTitle: 'Overwrite dataset?',
+      getOverwriteConfirmMessage
+    },
+    model: {
+      overwriteConfirmTitle: 'Overwrite model?',
+      getOverwriteConfirmMessage
+    },
+    'llm-prompt': {
+      overwriteConfirmTitle: 'Overwrite LLM prompt?',
+      getOverwriteConfirmMessage
+    },
+    document: {
+      overwriteConfirmTitle: 'Overwrite document?',
+      getOverwriteConfirmMessage
+    }
   }
+
+  return messagesByKind[kind.toLowerCase()] ?? messagesByKind['artifact']
 }

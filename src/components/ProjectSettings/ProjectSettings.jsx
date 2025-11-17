@@ -29,7 +29,6 @@ import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import { Button, ConfirmDialog, Loader } from 'igz-controls/components'
 
 import {
-  COMPLETED_STATE,
   generateMembers,
   isProjectMembersTabShown,
   page,
@@ -43,7 +42,11 @@ import {
 } from '../../elements/MembersPopUp/membersReducer'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { PROJECTS_SETTINGS_MEMBERS_TAB, PROJECTS_SETTINGS_SECRETS_TAB } from '../../constants'
+import {
+  COMPLETED_STATE,
+  PROJECTS_SETTINGS_MEMBERS_TAB,
+  PROJECTS_SETTINGS_SECRETS_TAB
+} from '../../constants'
 import { fetchProjects } from '../../reducers/projectReducer'
 import { onDeleteProject } from '../ProjectsPage/projects.util'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'

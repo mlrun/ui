@@ -20,6 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
+import { useParams } from 'react-router-dom'
 
 import {
   FormInput,
@@ -35,6 +36,7 @@ import { environmentVariablesTypeOptions } from '../formEnvironmentVariablesTabl
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { FORM_TABLE_EDITING_ITEM } from 'igz-controls/types'
 import { ENV_VARIABLE_TYPE_SECRET } from '../../../constants'
+import { getSecretNameValidator } from '../../../utils/getSecretNameValidator'
 
 import './formEnvironmentVariablesRow.scss'
 
@@ -54,6 +56,7 @@ const FormEnvironmentVariablesRow = ({
   uniquenessValidator
 }) => {
   const [fieldData, setFieldData] = useState(fields.value[index])
+  const { projectName }  = useParams()
 
   const tableRowClassNames = classnames(
     'form-table__row',
@@ -130,7 +133,10 @@ const FormEnvironmentVariablesRow = ({
                   name={`${rowPath}.data.secretName`}
                   placeholder="Secret Name"
                   required
-                  validationRules={getValidationRules('environmentVariables.secretName')}
+                  validationRules={
+                    (getValidationRules('environmentVariables.secretName'),
+                    [getSecretNameValidator(projectName, editingItem?.data?.typeName) ])
+                  }
                 />
                 <FormInput
                   density="normal"

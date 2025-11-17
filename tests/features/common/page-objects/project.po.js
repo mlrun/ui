@@ -52,10 +52,10 @@ const realtimeFunctionsNuclioTable = {
     root: '.project-data-card__header',
     sorters: {
       title: '.project-data-card__header-text a',
-      running_counter_number: '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-value .tooltip-wrapper',
+      running_counter_number: '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-value.statistics_running',
       running_counter_subtitle: '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-label span',
       running_counter_icon: '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-label i',
-      failed_counter_number: '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-value .tooltip-wrapper',
+      failed_counter_number: '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-value.statistics_failed',
       failed_counter_subtitle: '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-label span',
       failed_counter_icon: '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-label i',
       api_gateways_counter_number: '.project-data-card__statistics-item:nth-of-type(3) .project-data-card__statistics-value .tooltip-wrapper',

@@ -45,7 +45,8 @@
 
     &-cell {
       display: flex;
-      padding: 10px 5px 10px 0;
+      align-items: center;
+      padding: 8px 5px 8px 0;
       color: colors.$primary;
       line-height: 24px;
 
@@ -87,6 +88,27 @@
       .tooltip-wrapper {
         min-width: 8px;
         margin-right: 5px;
+      }
+
+      &.name-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+
+        &.table-cell_with-tag {
+          gap: 4px;
+          height: 57px;
+        }
+
+        .item-name {
+          width: 100%;
+        }
+
+        .item-tag {
+          display: inline;
+          max-width: 150px;
+          color: colors.$topaz;
+          line-height: 16px;
+        }
       }
 
       .table-body__cell {
