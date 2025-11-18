@@ -78,7 +78,7 @@ const MonitoringApplicationsPage = () => {
               dispatch,
               error,
               '',
-              'Failed to fetch Model Endpoints with suspected/detected issue'
+              'Failed to fetch model endpoints with suspected/detected issue'
             )
           })
       }

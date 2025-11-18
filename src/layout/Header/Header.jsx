@@ -56,7 +56,7 @@ const Header = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Function Hub
+          Function hub
         </a>
         <a
           alt="MLRUN on Slack"

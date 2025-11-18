@@ -55,7 +55,7 @@ const FormVolumesTable = ({
           <Tooltip template={<TextTooltipTemplate text="Type" />}>Type</Tooltip>
         </div>
         <div className="form-table__cell form-table__cell_1">
-          <Tooltip template={<TextTooltipTemplate text="Volume Name" />}>Volume Name</Tooltip>
+          <Tooltip template={<TextTooltipTemplate text="Volume name" />}>Volume name</Tooltip>
         </div>
         <div className="form-table__cell form-table__cell_1">
           <Tooltip template={<TextTooltipTemplate text="Path" />}>Path</Tooltip>

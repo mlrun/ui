@@ -66,7 +66,9 @@
     "build-storybook": "build-storybook",
     "mock-server": "node scripts/mockServer.js",
     "mock-server:dev": "nodemon --watch tests/mockServer scripts/mockServer.js",
+    "test": "vitest",
     "test:ui": "node scripts/testui.js",
+    "test:watch": "vitest --watch",
     "report": "node tests/report.js",
     "test:regression": "npm run test:ui && npm run report",
     "start:regression": "concurrently \"npm:mock-server\" \"npm:start\" \"npm:test:regression\"",
@@ -90,7 +92,9 @@
     "@storybook/addon-links": "^8.0.1",
     "@storybook/preset-scss": "^1.0.3",
     "@storybook/react": "^8.0.1",
-    "@testing-library/react": "^11.0.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@vitejs/plugin-react": "^4.3.4",
     "@vitejs/plugin-react-swc": "^3.8.0",
     "acorn": "^7.4.1",
@@ -123,6 +127,7 @@
     "geckodriver": "^3.0.1",
     "globals": "^15.14.0",
     "http-proxy-middleware": "^2.0.3",
+    "jsdom": "^27.2.0",
     "mime-types": "^2.1.35",
     "node": "^21.6.2",
     "nodemon": "^3.1.2",
@@ -149,7 +154,8 @@
     "vite": "^6.2.0",
     "vite-plugin-commonjs": "^0.10.4",
     "vite-plugin-eslint": "^1.8.1",
-    "vite-plugin-svgr": "^4.3.0"
+    "vite-plugin-svgr": "^4.3.0",
+    "vitest": "^4.0.10"
   },
   "babel": {
     "plugins": [

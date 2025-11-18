@@ -60,7 +60,7 @@ const FeatureSetsPanelDataSourceView = ({
 
   return (
     <div className="feature-set-panel__item new-item-side-panel__item data-source">
-      <FeatureSetsPanelSection title="Data Source">
+      <FeatureSetsPanelSection title="Data source">
         <div className="data-source__inputs">
           <Select
             className="data-source__inputs-item"
@@ -113,7 +113,7 @@ const FeatureSetsPanelDataSourceView = ({
             className="data-source__inputs-item"
             floatingLabel
             invalid={!validation.isParseDatesValid}
-            label="Parse Dates"
+            label="Parse dates"
             onBlur={event => {
               if (featureStore.newFeatureSet.spec.source.parse_dates !== event.target.value) {
                 dispatch(setNewFeatureSetDataSourceParseDates(event.target.value))

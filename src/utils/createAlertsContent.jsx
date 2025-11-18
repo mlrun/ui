@@ -274,7 +274,7 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects, showExpandButt
       {
         id: `alertName.${alert.id}`,
         headerId: 'alertName',
-        headerLabel: 'Alert Name',
+        headerLabel: 'Alert name',
         value: name,
         className: 'table-cell-name',
         getLink: () => (!showExpandButton ? getLink(alert) : ''),
@@ -293,7 +293,7 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects, showExpandButt
       {
         id: `eventType.${alert.id}`,
         headerId: 'eventType',
-        headerLabel: 'Event Type',
+        headerLabel: 'Event type',
         value: alert.event_kind?.split('-')?.join(' '),
         className: 'table-cell-1'
       },
@@ -307,7 +307,7 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects, showExpandButt
       {
         id: `entityType.${alert.id}`,
         headerId: 'entityType',
-        headerLabel: 'Entity Type',
+        headerLabel: 'Entity type',
         value: getEntityTypeData(alert.entity_kind).value,
         className: 'table-cell-small',
         tooltip: getEntityTypeData(alert.entity_kind).tooltip,

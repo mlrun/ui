@@ -91,7 +91,7 @@ const generateFunctionConfigurationContent = selectedFunction => {
   return [
     {
       id: 'runOnSpotNodes',
-      label: 'Run on Spot nodes',
+      label: 'Run on spot nodes',
       value: capitalize(selectedFunction.preemption_mode)
     },
     {
@@ -136,7 +136,7 @@ const generateFunctionConfigurationContent = selectedFunction => {
     },
     {
       id: 'nodeSelectors',
-      label: 'Node Selectors',
+      label: 'Node selectors',
       value: selectedFunction.node_selector,
       chipVariant: 'results'
     }
@@ -152,7 +152,7 @@ const generateModelEndpointDriftContent = modelEndpoint => {
     },
     {
       id: 'hellinger_mean',
-      label: 'Mean Hellinger',
+      label: 'Mean hellinger',
       value: roundFloats(modelEndpoint.status?.drift_measures?.hellinger_mean, 2) ?? '-'
     },
     {
@@ -162,7 +162,7 @@ const generateModelEndpointDriftContent = modelEndpoint => {
     },
     {
       id: 'drift_value',
-      label: 'Drift Actual Value',
+      label: 'Drift actual value',
       value:
         isNumber(modelEndpoint.status?.drift_measures?.hellinger_mean) &&
         isNumber(modelEndpoint.status?.drift_measures?.tvd_mean)
