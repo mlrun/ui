@@ -217,7 +217,7 @@ export const OPTIONS_LIST = PropTypes.arrayOf(
     id: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
     disabled: PropTypes.bool,
-    status: PropTypes.string,
+    status: PropTypes.string
   })
 )
 
