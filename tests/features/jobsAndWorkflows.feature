@@ -1578,7 +1578,6 @@ Feature: Jobs and workflows
         # Then verify arrow lines position on "Workflow_Graph" on "Workflows_Monitor_Tab" wizard
         When click on node with index 2 in "Workflow_Graph" graph on "Workflows_Monitor_Tab" wizard
         And wait load page
-        And wait load page
         Then verify "Header" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Updated" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard

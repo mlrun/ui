@@ -443,7 +443,7 @@ Feature: Monitoring app Page
     Then "Applications_Metrics_Title" element on "Application_Metrics" should contains "Applications metrics:" value
     Then verify "Endpoints_List_Section" element visibility on "Application_Metrics" wizard
     Then verify "Search_Endpoints_Counter" element visibility on "Application_Metrics" wizard
-    Then "Search_Endpoints_Counter" element on "Application_Metrics" should contains "4 endpoints found" value
+    Then "Search_Endpoints_Counter" element on "Application_Metrics" should contains "5 endpoints found" value
     Then verify "Endpoints_List_Table" element visibility on "Application_Metrics" wizard
     Then verify "Search_By_Endpoint_Filter_Input" element visibility on "Application_Metrics" wizard
     Then type value "boo" to "Search_By_Endpoint_Filter_Input" field on "Application_Metrics" wizard

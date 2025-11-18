@@ -592,12 +592,28 @@ const modelsRealTimeinfoPaneOverviewHeaders = {
   root: '.table-container',
   header: {},
   body: {
-    root: '.graph-pane',
+    root: '.graph-pane .graph-pane__section:nth-of-type(2)',
     offset: 1,
     row: {
       root: '.graph-pane__row',
       fields: {
         key: '.graph-pane__row-label'
+      }
+    }
+  }
+}
+
+const modelsRealTimeinfoPaneRunningModelsHeaders = {
+  root: '.table-container',
+  header: {},
+  body: {
+    root: '.graph-pane  .graph-pane__section:nth-of-type(3)',
+    offset: 0,
+    row: {
+      root: '.graph-pane__row',
+      fields: {
+        key: '.graph-pane__row-label',
+        key_value:'.graph-pane__row-value .link'
       }
     }
   }
@@ -1074,9 +1090,14 @@ export default {
   },
   modelsRealTimePipelineInfoPane: {
     Arrow_Back: commonArrowBack,
-    Header: By.css('.graph-pane__title span'),
+    Header: By.css('.graph-pane__title .graph-pane__title-label'),
+    Title_Icon: By.css('.graph-pane__title .graph-pane__title-icon'),
     Cross_Close_Button: By.css('.graph-pane__title .round-icon-cp .round-icon-cp__circle'),
-    Overview_Headers: commonTable(modelsRealTimeinfoPaneOverviewHeaders)
+    General_Section_Title: By.css('.graph-pane .graph-pane__section:nth-of-type(2) .graph-pane__section-title'),
+    Overview_Headers: commonTable(modelsRealTimeinfoPaneOverviewHeaders),
+    Running_Models_Section_Title: By.css('.graph-pane .graph-pane__section:nth-of-type(3) .graph-pane__section-title'),
+    Graph_Pane_Expand_Icon: By.css('.graph-pane .graph-pane__section:nth-of-type(3) .graph-pane__expand-icon'),
+    Running_Models_Headers: commonTable(modelsRealTimeinfoPaneRunningModelsHeaders)
   },
   llmPromptsInfoPane: {
     Header: header,
