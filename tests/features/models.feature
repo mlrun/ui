@@ -1116,7 +1116,7 @@ Feature: Models Page
     And select "Real-Time Pipelines" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
     Then verify "Real-Time Pipelines" tab is active in "Models_Tab_Selector" on "Models" wizard
-    Then save to context "name" column and "href" attribute on 3 row from "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    Then save to context "name" column and "href" attribute on 4 row from "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     When click on cell with value "model-monitoring-stream" in "name_link" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     And wait load page
     And wait load page
@@ -1129,7 +1129,7 @@ Feature: Models Page
     Then verify "Overview_Headers" on "Real_Time_Pipeline_Pane" wizard should contains "Real_Time_Pipeline_Pane"."Overview_Headers"
     Then click on "Arrow_Back" element on "Real_Time_Pipeline_Pane" wizard
     And wait load page
-    Then click on cell with row index 3 in "function" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    Then click on cell with row index 4 in "function" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     And wait load page
     Then verify if "Modal_Transition_Popup" popup dialog appears
     Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
@@ -1154,7 +1154,7 @@ Feature: Models Page
     Then verify "Cross_Close_Button" element visibility on "Modal_Transition_Popup" wizard
     Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
     And wait load page
-    Then click on cell with row index 3 in "function" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    Then click on cell with row index 4 in "function" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     And wait load page
     Then verify if "Modal_Transition_Popup" popup dialog appears
     Then verify "Tab_Selector" element visibility on "Modal_Transition_Popup" wizard
@@ -1181,6 +1181,84 @@ Feature: Models Page
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
     Then "No_Data_Message" element on "commonPagesHeader" should contains "The ingestion function has no steps and therefore no graph." value
+    And wait load page
+
+  @MLM
+  @passive
+  @smoke
+  Scenario: MLM039 - Check the model runner step on the Real-Time Pipeline graph
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    Then verify breadcrumbs "project" label should be equal "default" value
+    When click on "Model_Stats_Counter" element in "Models_Stats_Container" on "Project" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Models" value
+    And select "Real-Time Pipelines" tab in "Models_Tab_Selector" on "Models" wizard
+    And wait load page
+    Then verify "Real-Time Pipelines" tab is active in "Models_Tab_Selector" on "Models" wizard
+    When click on cell with value "function-with-llm" in "name_link" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    And wait load page
+    Then verify "Real_Time_Pipelines_Graph" element visibility on "Real_Time_Pipelines" wizard
+    Then verify "Pipeline_Back_Button" element visibility on "Real_Time_Pipelines" wizard
+    Then verify "Pipeline_Link_Title" element visibility on "Real_Time_Pipelines" wizard
+    Then "Pipeline_Link_Title" element on "Real_Time_Pipelines" should contains "function-with-llm" value
+    Then verify "Model_Runner_Step_Icon" element visibility on "Real_Time_Pipelines" wizard
+    Then verify "Model_Runner_Step_Label" element visibility on "Real_Time_Pipelines" wizard
+    Then "Model_Runner_Step_Label" element on "Real_Time_Pipelines" should contains "model-runner" value
+    Then verify "Model_Runner_Step_Sub_Label" element visibility on "Real_Time_Pipelines" wizard
+    Then "Model_Runner_Step_Sub_Label" element on "Real_Time_Pipelines" should contains "Model runner step" value
+    Then verify "Model_Runner_Monitoring_Icon" element visibility on "Real_Time_Pipelines" wizard
+    Then verify "Model_Runner_Monitoring_Icon" element on "Real_Time_Pipelines" wizard should display hover tooltip "Real_Time_Pipeline_Pane"."In_Monitoring_State"
+    Then verify "Model_Runner_Chips_Title" element visibility on "Real_Time_Pipelines" wizard
+    Then "Model_Runner_Chips_Title" element on "Real_Time_Pipelines" should contains "Running models" value
+    Then verify "Model_Runner_Chip_Container" element visibility on "Real_Time_Pipelines" wizard
+    Then verify "Model_Runner_Chip_Container" element on "Real_Time_Pipelines" wizard should display hover tooltip "Real_Time_Pipeline_Pane"."Chip_Tooltip"
+    When click on node with index 1 in "node_title" column in "Real_Time_Pipelines_Graph" graph on "Real_Time_Pipelines" wizard
+    And wait load page
+    Then verify "Header" element visibility on "Real_Time_Pipeline_Pane" wizard
+    Then verify "Title_Icon" element visibility on "Real_Time_Pipeline_Pane" wizard
+    Then verify "Cross_Close_Button" element visibility on "Real_Time_Pipeline_Pane" wizard
+    Then verify "General_Section_Title" element visibility on "Real_Time_Pipeline_Pane" wizard
+    Then "General_Section_Title" element on "Real_Time_Pipeline_Pane" should contains "General" value
+    Then verify "Overview_Headers" on "Real_Time_Pipeline_Pane" wizard should contains "Real_Time_Pipeline_Pane"."Overview_Headers_Model_Runner"
+    Then verify "Running_Models_Section_Title" element visibility on "Real_Time_Pipeline_Pane" wizard
+    Then "Running_Models_Section_Title" element on "Real_Time_Pipeline_Pane" should contains "Running models (1)" value
+    Then verify "Graph_Pane_Expand_Icon" element visibility on "Real_Time_Pipeline_Pane" wizard
+    Then click on "Graph_Pane_Expand_Icon" element on "Real_Time_Pipeline_Pane" wizard
+    And wait load page
+    Then verify "Running_Models_Headers" on "Real_Time_Pipeline_Pane" wizard should contains "Real_Time_Pipeline_Pane"."Running_Models_Headers"
+    When click on cell with value "c3e9308aaab54e53b1013ecda9234e43" in "key_value" column in "Running_Models_Headers" table on "Real_Time_Pipeline_Pane" wizard
+    And wait load page
+    Then verify if "Modal_Transition_Popup" popup dialog appears
+    Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
+    Then "Title" element on "Modal_Transition_Popup" should contains "my-endpoint" value
+    Then verify "Data_Status" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Cross_Close_Button" element visibility on "Modal_Transition_Popup" wizard
+    Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
+    And wait load page
+    When click on cell with value "store://llm-prompts/default/my_llm4#0@9c0c8773-b1ce-4fa0-ac94-2f6c1fb71554^d28e010ba24e272a3ba2ba522f6caecde05ff383" in "key_value" column in "Running_Models_Headers" table on "Real_Time_Pipeline_Pane" wizard
+    And wait load page
+    Then verify if "Modal_Transition_Popup" popup dialog appears
+    Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
+    Then "Title" element on "Modal_Transition_Popup" should contains "my_llm4" value
+    Then verify "Data_Status" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Cross_Close_Button" element visibility on "Modal_Transition_Popup" wizard
+    Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then click on "Arrow_Back" element on "Real_Time_Pipeline_Pane" wizard
+    And wait load page
+    When click on cell with value "model-monitoring-stream" in "name_link" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    And wait load page
+    Then verify "Real_Time_Pipelines_Graph" element visibility on "Real_Time_Pipelines" wizard
+    When click on node with index 1 in "Real_Time_Pipelines_Graph" graph on "Real_Time_Pipelines" wizard
+    Then verify "Header" element visibility on "Real_Time_Pipeline_Pane" wizard
+    Then verify "Cross_Close_Button" element visibility on "Real_Time_Pipeline_Pane" wizard
+    Then verify "Overview_Headers" on "Real_Time_Pipeline_Pane" wizard should contains "Real_Time_Pipeline_Pane"."Overview_Headers"
+    And wait load page
+    Then verify "Graph_Pane_Expand_Icon" element not exists on "Real_Time_Pipeline_Pane" wizard
+    Then click on "Arrow_Back" element on "Real_Time_Pipeline_Pane" wizard
     And wait load page
 
   @MLM
@@ -1551,7 +1629,7 @@ Feature: Models Page
     And wait load page
     And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
-    When click on cell with row index 3 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    When click on cell with value "GradientBoostingClassifier" in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Model_Endpoints_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Tab_List"
@@ -1608,7 +1686,7 @@ Feature: Models Page
     And wait load page
     And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
-    When click on cell with row index 3 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    When click on cell with value "GradientBoostingClassifier" in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     Then select "Metrics" tab in "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard
     Then click on "Choose_Metrics_Dropdown" element on "Model_Endpoints_Info_Pane" wizard
     And wait load page

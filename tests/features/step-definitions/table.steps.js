@@ -2063,10 +2063,23 @@ When(
       this.driver,
       pageObjects[wizardName][graphName].nodesTable.tableFields['name'](index)
     )
-    await this.driver.sleep(250)
+    await this.driver.sleep(350)
     await isComponentContainsClass(
       this.driver,
       pageObjects[wizardName][graphName].nodesTable.rowRoot(index),
+      'selected'
+    )
+  }
+)
+
+When(
+  'click on node with index {int} in {string} column in {string} graph on {string} wizard',
+  async function (index, column, graphName, wizard) {
+    await clickOnComponent(this.driver, pageObjects[wizard][graphName].nodesTable.tableFields[column](index))
+    await this.driver.sleep(250)
+    await isComponentContainsClass(
+      this.driver,
+      pageObjects[wizard][graphName].nodesTable.rowRoot(index),
       'selected'
     )
   }

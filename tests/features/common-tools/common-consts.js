@@ -68,14 +68,33 @@ export default {
     ]
   },
   Real_Time_Pipeline_Pane: {
+    In_Monitoring_State: 'In monitoring',
+    Chip_Tooltip: 'my-endpoint',
     Overview_Headers: [
       'Type:',
-      'After:',
       'Class name:',
       'Function name:',
+      'Arguments:',
       'Handler:',
       'Input path:',
       'Result path:'
+    ],
+    Overview_Headers_Model_Runner: [
+      'Type:',
+      'Class name:',
+      'Function name:',
+      'Arguments:',
+      'Input path:',
+      'Result path:'
+    ],
+    Running_Models_Headers: [
+      'Model endpoint:',
+      'Model artifact:',
+      'Class name:',
+      'Input path:',
+      'Result path:',
+      'Outputs:',
+      'Execution mechanism:'
     ]
   },
   Feature_Sets_Info_Pane: {

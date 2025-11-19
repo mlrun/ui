@@ -72,7 +72,7 @@
     "report": "node tests/report.js",
     "test:regression": "npm run test:ui && npm run report",
     "start:regression": "concurrently \"npm:mock-server\" \"npm:start\" \"npm:test:regression\"",
-    "ui-steps": "export BABEL_ENV=test; export NODE_ENV=test; npx -p @babel/core -p @babel/node babel-node --presets @babel/preset-env scripts/collectUITestsSteps.js",
+    "ui-steps": "cross-env BABEL_ENV=test; cross-env NODE_ENV=test; npx -p @babel/core -p @babel/node babel-node --presets @babel/preset-env scripts/collectUITestsSteps.js",
     "nli": "npm link iguazio.dashboard-react-controls",
     "nui": "npm unlink iguazio.dashboard-react-controls"
   },
