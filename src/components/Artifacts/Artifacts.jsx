@@ -112,11 +112,11 @@ const Artifacts = ({
     historyBackLink,
     'artifacts',
     params.id &&
-      getCloseDetailsLink(
-        isAllVersions ? ALL_VERSIONS_PATH : tab || page,
-        true,
-        params.artifactName
-      ),
+    getCloseDetailsLink(
+      isAllVersions ? ALL_VERSIONS_PATH : tab || page,
+      true,
+      params.artifactName
+    ),
     isAllVersions
   )
   const pageData = useMemo(
@@ -354,8 +354,7 @@ const Artifacts = ({
       }
 
       navigate(
-        `/projects/${params.projectName}/${page}${tab ? `/${tab}` : ''}/${params.artifactName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/${
-          changes.data.tag.currentFieldValue ? `:${changes.data.tag.currentFieldValue}` : ''
+        `/projects/${params.projectName}/${page}${tab ? `/${tab}` : ''}/${params.artifactName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/${changes.data.tag.currentFieldValue ? `:${changes.data.tag.currentFieldValue}` : ''
         }@${selectedItem.uid}/overview${window.location.search}`,
         { replace: true }
       )
@@ -532,6 +531,7 @@ const Artifacts = ({
       paginationConfigArtifactsRef={
         isAllVersions ? paginationConfigArtifactVersionsRef : paginationConfigArtifactsRef
       }
+      params={params}
       ref={{ artifactsRef }}
       requestErrorMessage={requestErrorMessage}
       renderPageTabs={renderPageTabs}

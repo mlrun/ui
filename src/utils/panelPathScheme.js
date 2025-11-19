@@ -27,20 +27,6 @@ import {
 } from '../constants'
 import { uniqBy } from 'lodash'
 
-export const generateProjectsList = (projectsList, currentProject) =>
-  projectsList
-    .map(projectItem => ({
-      label: projectItem === currentProject ? `${projectItem} (Current project)` : projectItem,
-      id: projectItem
-    }))
-    .sort((prevProject, nextProject) => {
-      return prevProject.id === currentProject
-        ? -1
-        : nextProject.id === currentProject
-          ? 1
-          : prevProject.id.localeCompare(nextProject.id)
-    })
-
 export const generateArtifactsList = artifacts => {
   const generatedArtifacts = artifacts
     .map(artifact => {

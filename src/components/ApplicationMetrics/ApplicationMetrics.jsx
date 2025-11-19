@@ -116,7 +116,7 @@ const ApplicationMetrics = () => {
       initialValues: {
         MEPSearchName: ''
       },
-      onSubmit: () => {}
+      onSubmit: () => { }
     })
   )
 
@@ -231,7 +231,7 @@ const ApplicationMetrics = () => {
     }
   }, [dispatch, modelEndpoints, navigate, params.id, params.appName, params.projectName])
 
-  useEffect(()=> {
+  useEffect(() => {
     return () => {
       dispatch(clearMetricsOptions())
     }
@@ -240,7 +240,7 @@ const ApplicationMetrics = () => {
   return (
     <div className="content-wrapper applications-metrics">
       <div className="content__header">
-        <Breadcrumbs />
+        <Breadcrumbs itemName={params.appName} />
       </div>
       <div className="content">
         <div className="application-metrics-container">
@@ -248,7 +248,7 @@ const ApplicationMetrics = () => {
             <HistoryBackLink
               link={`/projects/${params.projectName}/${MONITORING_APP_PAGE}/${params.appName}${window.location.search}`}
               itemName={params.appName}
-              customText={'Applications metrics'}
+              customText='Applications metrics'
               customIcon={<PresentMetricsIcon />}
             />
             <div className="action-bar">
@@ -273,12 +273,12 @@ const ApplicationMetrics = () => {
               applicationsStore.loading ||
               detailsStore.loadingCounter > 0) && <Loader />}
             {artifactsStore.modelEndpoints.loading ||
-            applicationsStore.loading ? null : modelEndpoints.length === 0 ? (
-              <NoData message={requestErrorMessage || 'No model endpoints found.'} />
-            ) : (
+              applicationsStore.loading ? null : modelEndpoints.length === 0 ? (
+                <NoData message={requestErrorMessage || 'No model endpoints found.'} />
+              ) : (
               <>
                 <div className="list-view__section list-view__section-list">
-                  <Form form={formRef.current} onSubmit={() => {}}>
+                  <Form form={formRef.current} onSubmit={() => { }}>
                     {() => (
                       <div className="list-view__section-list__search">
                         <div className="list-view__section-list__search__name-filter">
@@ -307,7 +307,7 @@ const ApplicationMetrics = () => {
                                 id={modelEndpoint.ui.identifierUnique}
                                 className={classNames(
                                   modelEndpoint?.metadata.uid ===
-                                    selectedModelEndpoint?.metadata?.uid && 'active'
+                                  selectedModelEndpoint?.metadata?.uid && 'active'
                                 )}
                               >
                                 <Link

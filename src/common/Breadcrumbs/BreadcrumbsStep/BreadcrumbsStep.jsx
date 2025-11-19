@@ -20,11 +20,11 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import classnames from 'classnames'
 
 import BreadcrumbsDropdown from '../../../elements/BreadcrumbsDropdown/BreadcrumbsDropdown'
 import { RoundedIcon } from 'igz-controls/components'
 
+import { BREADCRUMBS_STEP_ITEM_TYPE, BREADCRUMBS_STEP_PROJECT_TYPE, BREADCRUMBS_STEP_SCREEN_TYPE } from '../../../constants'
 import { scrollToElement } from '../../../utils/scroll.util'
 
 import ArrowIcon from 'igz-controls/images/arrow.svg?react'
@@ -45,33 +45,18 @@ const BreadcrumbsStep = React.forwardRef(
       setShowScreensList,
       showProjectsList,
       showScreensList,
-      urlPart,
+      pathItem,
       urlParts
     },
     ref
   ) => {
     const projectListRef = useRef()
+    const screenListRef = useRef()
     const separatorRef = useRef()
 
-    const isParam = useMemo(() => Object.values(params ?? {}).includes(urlPart), [urlPart, params])
-    const label = useMemo(
-      () => (isParam ? urlPart : urlPart.charAt(0).toUpperCase() + urlPart.slice(1)),
-      [urlPart, isParam]
-    )
-    const to = useMemo(
-      () => `/${urlParts.pathItems.slice(0, index + 1).join('/')}`,
-      [index, urlParts.pathItems]
-    )
     const isLastStep = useMemo(
       () => index === urlParts.pathItems.length - 1,
       [index, urlParts.pathItems.length]
-    )
-
-    const separatorClassNames = classnames(
-      'breadcrumbs__separator',
-      ((urlParts.pathItems[index + 1] === urlParts.screen?.id && !isParam) ||
-        urlParts.pathItems[index + 1] === params.projectName) &&
-        'breadcrumbs__separator_tumbler'
     )
 
     const handleSelectDropdownItem = separatorRef => {
@@ -110,13 +95,20 @@ const BreadcrumbsStep = React.forwardRef(
 
     const scrollProjectOptionToView = useCallback(() => {
       scrollToElement(projectListRef, `#${params.projectName}`, searchValue)
-    }, [params.projectName, projectListRef, searchValue])
+    }, [params.projectName, searchValue])
+
+    const scrollScreenOptionToView = useCallback(() => {
+      scrollToElement(screenListRef, `#${urlParts.screen.id}`, searchValue)
+    }, [searchValue, urlParts.screen?.id])
 
     useEffect(() => {
       if (showProjectsList && projectListRef.current) {
         scrollProjectOptionToView()
       }
-    }, [showProjectsList, scrollProjectOptionToView, projectListRef])
+      if (showScreensList && screenListRef.current) {
+        scrollScreenOptionToView()
+      }
+    }, [showProjectsList, projectListRef, screenListRef, showScreensList, scrollProjectOptionToView, scrollScreenOptionToView])
 
     useEffect(() => {
       window.addEventListener('click', handleCloseDropdown)
@@ -127,10 +119,25 @@ const BreadcrumbsStep = React.forwardRef(
     }, [handleCloseDropdown])
 
     const handleSeparatorClick = (nextItem, separatorRef) => {
-      const nextItemIsScreen = Boolean(mlrunScreens.find(screen => screen.label === nextItem))
+      if (nextItem.type === BREADCRUMBS_STEP_SCREEN_TYPE || nextItem.type === BREADCRUMBS_STEP_PROJECT_TYPE) {
 
-      if (nextItemIsScreen || nextItem === params.projectName) {
         const [activeSeparator] = document.getElementsByClassName('breadcrumbs__separator_active')
+
+        if (nextItem.type === BREADCRUMBS_STEP_PROJECT_TYPE) {
+          setShowProjectsList(state => !state)
+
+          if (showScreensList) {
+            setShowScreensList(false)
+          }
+        }
+
+        if (nextItem.type === BREADCRUMBS_STEP_SCREEN_TYPE) {
+          setShowScreensList(state => !state)
+
+          if (showProjectsList) {
+            setShowProjectsList(false)
+          }
+        }
 
         if (
           activeSeparator &&
@@ -139,83 +146,69 @@ const BreadcrumbsStep = React.forwardRef(
           activeSeparator.classList.remove('breadcrumbs__separator_active')
         }
 
-        if (nextItemIsScreen) {
-          setShowScreensList(state => !state)
-
-          if (showProjectsList) {
-            setShowProjectsList(false)
-          }
-        }
-
-        if (nextItem === params.projectName) {
-          setShowProjectsList(state => !state)
-
-          if (showScreensList) {
-            setShowScreensList(false)
-          }
-        }
-
         separatorRef.current.classList.toggle('breadcrumbs__separator_active')
       }
     }
 
-    return (
-      <>
-        {isLastStep ? (
-          <li
-            data-testid="breadcrumbs-last-item"
-            className="breadcrumbs__item"
-            key={`${index}${urlPart}`}
-          >
-            {label}
+    const nextBreadcrumbItem = urlParts.pathItems[index + 1]
+
+    return isLastStep ? (
+      <li
+        data-testid="breadcrumbs-last-item"
+        className="breadcrumbs__item"
+        key={pathItem.id + index}
+      >
+        {pathItem.label}
+      </li>
+    )
+      : (
+        <>
+          <li key={pathItem.id} className="breadcrumbs__item">
+            <Link to={pathItem.link} onClick={onClick}>
+              {pathItem.label}
+            </Link>
           </li>
-        ) : (
-          [
-            <li key={`${index}${urlPart}`} className="breadcrumbs__item">
-              <Link to={to} onClick={onClick}>
-                {label}
-              </Link>
-            </li>,
-            <li key={index} className="breadcrumbs__item">
-              <RoundedIcon
-                className={separatorClassNames}
-                id="separator"
-                ref={separatorRef}
-                onClick={() => handleSeparatorClick(urlParts.pathItems[index + 1], separatorRef)}
-              >
-                <ArrowIcon />
-              </RoundedIcon>
-              {showScreensList && urlParts.pathItems[index + 1] === urlParts.screen?.label && (
+          <li key={index} className="breadcrumbs__item">
+            {nextBreadcrumbItem?.type === BREADCRUMBS_STEP_ITEM_TYPE ? (<div className='breadcrumbs__separator'><ArrowIcon /></div >) : <RoundedIcon
+              className='breadcrumbs__separator'
+              id={`separator-${index}`}
+              ref={separatorRef}
+              onClick={() => handleSeparatorClick(nextBreadcrumbItem, separatorRef)}
+            >
+              <ArrowIcon />
+            </RoundedIcon>}
+            {showScreensList && nextBreadcrumbItem.type === BREADCRUMBS_STEP_SCREEN_TYPE && (
+              <BreadcrumbsDropdown
+                id="breadcrumbs-screens-dropdown"
+                link={pathItem.link}
+                list={mlrunScreens}
+                onClick={() => handleSelectDropdownItem(separatorRef)}
+                ref={screenListRef}
+                selectedItem={urlParts.screen?.id}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+              />
+            )}
+            {showProjectsList && nextBreadcrumbItem.type === BREADCRUMBS_STEP_PROJECT_TYPE && (
+              <>
                 <BreadcrumbsDropdown
-                  link={to}
-                  list={mlrunScreens}
+                  id="breadcrumbs-projects-dropdown"
+                  link={pathItem.link}
+                  list={projectsList}
                   onClick={() => handleSelectDropdownItem(separatorRef)}
-                  selectedItem={urlParts.screen?.id}
+                  ref={projectListRef}
+                  selectedItem={params.projectName}
                   searchValue={searchValue}
                   setSearchValue={setSearchValue}
+                  urlParts={urlParts}
+                  withSearch
+                  withAllProjects
                 />
-              )}
-              {showProjectsList && urlParts.pathItems[index + 1] === params.projectName && (
-                <>
-                  <BreadcrumbsDropdown
-                    link={to}
-                    list={projectsList}
-                    onClick={() => handleSelectDropdownItem(separatorRef)}
-                    ref={projectListRef}
-                    screen={urlParts.screen?.id}
-                    selectedItem={params.projectName}
-                    searchValue={searchValue}
-                    setSearchValue={setSearchValue}
-                    tab={urlParts.tab?.id}
-                    withSearch
-                  />
-                </>
-              )}
-            </li>
-          ]
-        )}
-      </>
-    )
+              </>
+            )}
+          </li>
+        </>
+      )
   }
 )
 
@@ -226,6 +219,7 @@ BreadcrumbsStep.propTypes = {
   mlrunScreens: PropTypes.arrayOf(PropTypes.object).isRequired,
   onClick: PropTypes.func,
   params: PropTypes.object.isRequired,
+  pathItem: PropTypes.object.isRequired,
   projectsList: PropTypes.arrayOf(PropTypes.object).isRequired,
   searchValue: PropTypes.string.isRequired,
   setSearchValue: PropTypes.func.isRequired,
@@ -233,16 +227,18 @@ BreadcrumbsStep.propTypes = {
   setShowScreensList: PropTypes.func.isRequired,
   showProjectsList: PropTypes.bool.isRequired,
   showScreensList: PropTypes.bool.isRequired,
-  urlPart: PropTypes.string.isRequired,
   urlParts: PropTypes.shape({
-    pathItems: PropTypes.arrayOf(PropTypes.string).isRequired,
+    pathItems: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      link: PropTypes.string,
+      type: PropTypes.string
+    })).isRequired,
     screen: PropTypes.shape({
       id: PropTypes.string,
-      label: PropTypes.string
+      label: PropTypes.string,
+      link: PropTypes.string
     }),
-    tab: PropTypes.shape({
-      id: PropTypes.string
-    })
   }).isRequired
 }
 

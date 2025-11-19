@@ -23,7 +23,7 @@ import { generateUri } from './resources'
 import { getFeatureVectorIdentifier } from './getUniqueIdentifier'
 
 export const parseFeatureVectors = featureVectors =>
-  featureVectors.map(featureVector => {
+  featureVectors?.map(featureVector => {
     const item = {
       kind: featureVector.kind,
       ...featureVector.metadata,
