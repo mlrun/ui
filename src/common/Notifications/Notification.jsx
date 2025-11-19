@@ -42,7 +42,7 @@ const Notification = ({ notification, timeoutMs = 10000, ...rest }) => {
   const nodeRef = useRef()
 
   const { pauseTimeout, resumeTimeout, cancelTimeout } = useTimeout(
-    () => handleRemoveNotification(notification.id),
+    () => dispatch(removeNotification(notification.id)),
     timeoutMs
   )
 

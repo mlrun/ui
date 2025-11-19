@@ -32,7 +32,9 @@ const DetailsCode = ({ code = '' }) => {
   }, [code])
 
   useEffect(() => {
-    decodeCode()
+    queueMicrotask(() => {
+      decodeCode()
+    })
   }, [decodeCode])
 
   const html = Prism.highlight(decoded, Prism.languages.py, 'py')
@@ -53,7 +55,7 @@ const DetailsCode = ({ code = '' }) => {
 }
 
 DetailsCode.propTypes = {
-  code: PropTypes.string,
+  code: PropTypes.string
 }
 
 export default DetailsCode

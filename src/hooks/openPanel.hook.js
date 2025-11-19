@@ -27,7 +27,9 @@ export const useOpenPanel = () => {
   const location = useLocation()
 
   useLayoutEffect(() => {
-    setPanelOpened(isPanelOpened(location.search))
+    queueMicrotask(() => {
+      setPanelOpened(isPanelOpened(location.search))
+    })
   }, [location.search])
 
   return panelOpened

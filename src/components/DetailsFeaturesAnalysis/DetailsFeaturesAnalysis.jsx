@@ -33,7 +33,7 @@ import './detailsFeaturesAnalysis.scss'
 const DetailsFeaturesAnalysis = ({ selectedItem }) => {
   const table = generateFeaturesAnalysis(selectedItem)
   const amethystColor = useMemo(() => getScssVariableValue('--amethystColor'), [])
-  const chartConfig = useMemo(getHistogramChartConfig, [])
+  const chartConfig = useMemo(() => getHistogramChartConfig, [])
 
   return (
     <div className="features-analysis">

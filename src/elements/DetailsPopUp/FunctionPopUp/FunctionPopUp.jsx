@@ -43,6 +43,7 @@ const FunctionPopUp = ({ funcTag = '', funcUri = null, isOpen, onResolve }) => {
   const { isDemoMode, isStagingMode } = useMode()
   const [isLoading, setIsLoading] = useState(true)
   const [selectedFunction, setSelectedFunction] = useState({})
+  const [pageData, setPageData] = useState({})
   const fetchFunctionLogsTimeout = useRef(null)
   const fetchFunctionNuclioLogsTimeout = useRef(null)
   const toggleConvertedYaml = useCallback(
@@ -100,8 +101,8 @@ const FunctionPopUp = ({ funcTag = '', funcUri = null, isOpen, onResolve }) => {
     [dispatch, isDemoMode, isStagingMode, toggleConvertedYaml, selectedFunction, fetchFunction]
   )
 
-  const pageData = useMemo(
-    () =>
+  useEffect(() => {
+    setPageData(
       generateFunctionsPageData(
         dispatch,
         selectedFunction,
@@ -109,13 +110,15 @@ const FunctionPopUp = ({ funcTag = '', funcUri = null, isOpen, onResolve }) => {
         fetchFunctionNuclioLogsTimeout,
         navigate,
         fetchFunction
-      ),
-    [dispatch, fetchFunction, navigate, selectedFunction]
-  )
+      )
+    )
+  }, [dispatch, fetchFunction, navigate, selectedFunction])
 
   useEffect(() => {
     if (isEmpty(selectedFunction)) {
-      fetchFunction()
+      queueMicrotask(() => {
+        fetchFunction()
+      })
     }
   }, [fetchFunction, selectedFunction])
 

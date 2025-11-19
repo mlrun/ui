@@ -17,8 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback, useEffect, useState, useMemo } from 'react'
-import { isEmpty, isNumber, orderBy, isEqual } from 'lodash'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { isEmpty, isEqual, isNumber, orderBy } from 'lodash'
 
 import ArrowIcon from 'igz-controls/images/back-arrow.svg?react'
 
@@ -38,7 +38,9 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
 
   useEffect(() => {
     if (!isEqual(config, sortConfig)) {
-      setConfig(sortConfig)
+      queueMicrotask(() => {
+        setConfig(sortConfig)
+      })
     }
   }, [sortConfig, config])
 
@@ -87,16 +89,13 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
   )
 
   const isSortableByIndex = useCallback(() => {
-    let isSortByIndex =
-      isNumber(allowSortBy) || isNumber(excludeSortBy)
-        ? true
-        : Array.isArray(allowSortBy)
-          ? allowSortBy.every(allowedIndex => isNumber(allowedIndex))
-          : Array.isArray(excludeSortBy)
-            ? excludeSortBy.every(allowedIndex => isNumber(allowedIndex))
-            : false
-
-    return isSortByIndex
+    return isNumber(allowSortBy) || isNumber(excludeSortBy)
+      ? true
+      : Array.isArray(allowSortBy)
+        ? allowSortBy.every(allowedIndex => isNumber(allowedIndex))
+        : Array.isArray(excludeSortBy)
+          ? excludeSortBy.every(allowedIndex => isNumber(allowedIndex))
+          : false
   }, [allowSortBy, excludeSortBy])
 
   const isSortable = useCallback(
@@ -202,28 +201,32 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
   }
 
   useEffect(() => {
-    if (direction && selectedColumnName) {
-      sortTable(selectedColumnName, direction)
-    } else if (defaultSortBy !== null && (!direction || defaultDirection) && content.length > 0) {
-      sortTable(
-        selectedColumnName
-          ? selectedColumnName
-          : isNumber(defaultSortBy)
-            ? headers[defaultSortBy].headerId
-            : defaultSortBy,
-        defaultDirection
-      )
-    } else {
-      setSortedTableContent(content)
-    }
+    queueMicrotask(() => {
+      if (direction && selectedColumnName) {
+        sortTable(selectedColumnName, direction)
+      } else if (defaultSortBy !== null && (!direction || defaultDirection) && content.length > 0) {
+        sortTable(
+          selectedColumnName
+            ? selectedColumnName
+            : isNumber(defaultSortBy)
+              ? headers[defaultSortBy].headerId
+              : defaultSortBy,
+          defaultDirection
+        )
+      } else {
+        setSortedTableContent(content)
+      }
+    })
   }, [content, defaultDirection, defaultSortBy, direction, headers, selectedColumnName, sortTable])
 
   useEffect(() => {
-    if (headers && headers.length > 0 && (excludeSortBy || allowSortBy)) {
-      const header = getSortableHeaders()
+    queueMicrotask(() => {
+      if (headers && headers.length > 0 && (excludeSortBy || allowSortBy)) {
+        const header = getSortableHeaders()
 
-      setSortedTableHeaders(header)
-    }
+        setSortedTableHeaders(header)
+      }
+    })
   }, [allowSortBy, excludeSortBy, getSortableHeaders, headers])
 
   return { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders }

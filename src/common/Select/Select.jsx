@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useCallback, useRef, useLayoutEffect } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
@@ -56,7 +56,7 @@ const Select = ({
   const [isConfirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const [isOpen, setOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
-  const { width: dropdownWidth } = selectRef?.current?.getBoundingClientRect() || {}
+  const [dropdownWidth, setDropdownWidth] = useState(0)
   const selectClassName = classNames(
     'select',
     className,
@@ -77,6 +77,18 @@ const Select = ({
   )
   const selectedOption = options.find(option => option.id === selectedId)
 
+  const clickHandler = event => {
+    if (selectRef.current !== event.target.closest('.select')) {
+      setOpen(false)
+    }
+  }
+
+  const handleScroll = event => {
+    if (!event.target.closest('.select__body')) {
+      setOpen(false)
+    }
+  }
+
   useEffect(() => {
     if (isOpen) {
       window.addEventListener('scroll', handleScroll, true)
@@ -90,18 +102,6 @@ const Select = ({
     }
   }, [isOpen])
 
-  const clickHandler = event => {
-    if (selectRef.current !== event.target.closest('.select')) {
-      setOpen(false)
-    }
-  }
-
-  const handleScroll = event => {
-    if (!event.target.closest('.select__body')) {
-      setOpen(false)
-    }
-  }
-
   const toggleOpen = () => {
     !disabled && setOpen(!isOpen)
   }
@@ -114,6 +114,13 @@ const Select = ({
       setSearchValue('')
     }
   }, [])
+
+  useLayoutEffect(() => {
+    if (selectRef.current) {
+      const { width } = selectRef.current.getBoundingClientRect()
+      setDropdownWidth(width)
+    }
+  }, [selectRef])
 
   const handleSelectOptionClick = (selectedOption, option) => {
     if (selectedOption !== selectedId) {

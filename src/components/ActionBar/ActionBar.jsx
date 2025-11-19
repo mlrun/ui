@@ -21,8 +21,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } fro
 import PropTypes from 'prop-types'
 import arrayMutators from 'final-form-arrays'
 import classnames from 'classnames'
-import { Field } from 'react-final-form'
-import { Form } from 'react-final-form'
+import { Field, Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import { isEmpty, isEqual, isNil, mapValues, pickBy } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
@@ -31,7 +30,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import DatePicker from '../../common/DatePicker/DatePicker'
 import FilterMenuModal from '../FilterMenuModal/FilterMenuModal'
 import NameFilter from '../../common/NameFilter/NameFilter'
-import { RoundedIcon, Button, FormCheckBox, FormOnChange } from 'igz-controls/components'
+import { Button, FormCheckBox, FormOnChange, RoundedIcon } from 'igz-controls/components'
 
 import {
   AUTO_REFRESH,
@@ -127,22 +126,20 @@ const ActionBar = ({
   }, [filtersConfig])
 
   const formInitialValues = useMemo(() => {
-    const initialValues = {
+    return {
       [AUTO_REFRESH_ID]: autoRefreshIsEnabled,
       [INTERNAL_AUTO_REFRESH_ID]: internalAutoRefreshIsEnabled,
       ...formFiltersInitialValues
     }
-
-    return initialValues
   }, [autoRefreshIsEnabled, formFiltersInitialValues, internalAutoRefreshIsEnabled])
 
-  const formRef = React.useRef(
-    createForm({
+  const [form] = useState(() => {
+    return createForm({
       initialValues: formInitialValues,
       mutators: { ...arrayMutators, setFieldState },
       onSubmit: () => {}
     })
-  )
+  })
 
   const filterMenuModalInitialState = useMemo(() => {
     return mapValues(
@@ -187,7 +184,8 @@ const ActionBar = ({
 
   const applyFilters = useCallback(
     async (formValues, filters, actionCanBePerformedChecked) => {
-      const actionCanBePerformed = actionCanBePerformedChecked || await performDetailsActionHelper(changes, dispatch, true)
+      const actionCanBePerformed =
+        actionCanBePerformedChecked || (await performDetailsActionHelper(changes, dispatch, true))
       const newFilters = { ...filters, ...formValues }
 
       if (actionCanBePerformed) {
@@ -277,14 +275,14 @@ const ActionBar = ({
   }
 
   useEffect(() => {
-    if (!isEqual(formRef.current?.getState().values, filterMenu)) {
-      formRef.current?.batch(() => {
+    if (!isEqual(form.getState().values, filterMenu)) {
+      form.batch(() => {
         for (const filterName in filterMenu) {
-          formRef.current?.change(filterName, filterMenu[filterName])
+          form.change(filterName, filterMenu[filterName])
         }
       })
     }
-  }, [filterMenu, filtersConfig])
+  }, [filterMenu, filtersConfig, form])
 
   useEffect(() => {
     if (
@@ -294,7 +292,7 @@ const ActionBar = ({
     ) {
       const intervalId = setInterval(() => {
         if (!autoRefreshIsStopped) {
-          refresh(formRef.current.getState())
+          refresh(form.getState())
         }
       }, 30000)
 
@@ -306,19 +304,24 @@ const ActionBar = ({
     refresh,
     withInternalAutoRefresh,
     filtersStore.internalAutoRefresh,
-    filtersStore.autoRefresh
+    filtersStore.autoRefresh,
+    form
   ])
 
   useEffect(() => {
     if (autoRefreshStopTrigger && filtersStore.internalAutoRefresh) {
-      formRef.current?.change(INTERNAL_AUTO_REFRESH_ID, false)
-      setInternalAutoRefreshPrevValue(true)
+      form.change(INTERNAL_AUTO_REFRESH_ID, false)
+      queueMicrotask(() => {
+        setInternalAutoRefreshPrevValue(true)
+      })
       dispatch(toggleInternalAutoRefresh(false))
       handleAutoRefreshPrevValueChange && handleAutoRefreshPrevValueChange(true)
     } else if (!autoRefreshStopTrigger && internalAutoRefreshPrevValue) {
-      setInternalAutoRefreshPrevValue(false)
+      queueMicrotask(() => {
+        setInternalAutoRefreshPrevValue(false)
+      })
       dispatch(toggleInternalAutoRefresh(true))
-      formRef.current?.change(INTERNAL_AUTO_REFRESH_ID, true)
+      form.change(INTERNAL_AUTO_REFRESH_ID, true)
       handleAutoRefreshPrevValueChange && handleAutoRefreshPrevValueChange(false)
     }
   }, [
@@ -326,7 +329,8 @@ const ActionBar = ({
     autoRefreshStopTrigger,
     handleAutoRefreshPrevValueChange,
     dispatch,
-    filtersStore.internalAutoRefresh
+    filtersStore.internalAutoRefresh,
+    form
   ])
 
   useEffect(() => {
@@ -336,21 +340,21 @@ const ActionBar = ({
   }, [])
 
   useLayoutEffect(() => {
-    const prevValues = formRef.current.getState().values
+    const prevValues = form.getState().values
     const valuesToReset = {
       [INTERNAL_AUTO_REFRESH_ID]: prevValues[INTERNAL_AUTO_REFRESH_ID],
       [AUTO_REFRESH_ID]: prevValues[AUTO_REFRESH_ID],
       ...formFiltersInitialValues
     }
-    formRef.current.reset(valuesToReset)
-  }, [formFiltersInitialValues])
+    form.reset(valuesToReset)
+  }, [formFiltersInitialValues, form])
 
   useLayoutEffect(() => {
-    formRef.current?.batch(() => {
-      formRef.current?.change(AUTO_REFRESH_ID, autoRefreshIsEnabled)
-      formRef.current?.change(INTERNAL_AUTO_REFRESH_ID, internalAutoRefreshIsEnabled)
+    form.batch(() => {
+      form.change(AUTO_REFRESH_ID, autoRefreshIsEnabled)
+      form.change(INTERNAL_AUTO_REFRESH_ID, internalAutoRefreshIsEnabled)
     })
-  }, [autoRefreshIsEnabled, internalAutoRefreshIsEnabled])
+  }, [autoRefreshIsEnabled, form, internalAutoRefreshIsEnabled])
 
   useEffect(() => {
     dispatch(toggleAutoRefresh(false))
@@ -358,7 +362,7 @@ const ActionBar = ({
   }, [dispatch, params.projectName])
 
   return (
-    <Form form={formRef.current} onSubmit={() => {}}>
+    <Form form={form} onSubmit={() => {}}>
       {formState => (
         <div className={actionBarClassNames}>
           <div className="action-bar__filters">
@@ -404,7 +408,9 @@ const ActionBar = ({
           </div>
           {!isEmpty(filterMenuModalInitialState) && (
             <FilterMenuModal
-              applyChanges={(filterMenuModal, actionCanBePerformedChecked) => applyFilters(formState.values, filterMenuModal, actionCanBePerformedChecked)}
+              applyChanges={(filterMenuModal, actionCanBePerformedChecked) =>
+                applyFilters(formState.values, filterMenuModal, actionCanBePerformedChecked)
+              }
               initialValues={filterMenuModalInitialState}
               values={filterMenuModal}
               detailsChanges={changes}

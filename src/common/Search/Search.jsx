@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useCallback, useRef, useLayoutEffect } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -45,37 +45,30 @@ const Search = ({
   wrapperClassName = ''
 }) => {
   const [searchValue, setSearchValue] = useState(value ?? '')
-  const [label, setLabel] = useState('')
+  // const [label, setLabel] = useState('')
   const [inputIsFocused, setInputFocused] = useState(false)
+  const [searchWidth, setSearchWidth] = useState(0)
+  const [hasMatch, setHasMatch] = useState(false)
   const searchRef = useRef()
   const popUpRef = useRef()
-
-  const { width: searchWidth } = searchRef?.current?.getBoundingClientRect() || {}
-
   const searchClassNames = classnames('search-container', className)
 
-  const handleSearchOnBlur = useCallback(
-    event => {
-      if (
-        (event.type === 'click' &&
-          searchRef.current &&
-          !searchRef.current.contains(event.target)) ||
-        (event.type === 'scroll' && popUpRef.current && !popUpRef?.current.contains(event.target))
-      ) {
-        setInputFocused(false)
-      }
-    },
-    [searchRef]
-  )
-
-  useEffect(() => {
-    if (matches.length > 0 && searchValue.length > 0) {
-      setLabel(
-        matches.find(item => item.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())) ??
-          ''
-      )
+  // === Обчислення ширини інпута після монтування ===
+  useLayoutEffect(() => {
+    if (searchRef.current) {
+      const { width } = searchRef.current.getBoundingClientRect()
+      setSearchWidth(width)
     }
-  }, [matches, searchValue])
+  }, [])
+
+  const handleSearchOnBlur = useCallback(event => {
+    if (
+      (event.type === 'click' && searchRef.current && !searchRef.current.contains(event.target)) ||
+      (event.type === 'scroll' && popUpRef.current && !popUpRef.current.contains(event.target))
+    ) {
+      setInputFocused(false)
+    }
+  }, [])
 
   useEffect(() => {
     window.addEventListener('click', handleSearchOnBlur)
@@ -87,46 +80,53 @@ const Search = ({
     }
   }, [handleSearchOnBlur])
 
-  const searchOnChange = value => {
-    if (value.length === 0 && label.length > 0) {
-      setLabel('')
-    }
-
-    onChange(value)
+  // === Основна логіка оновлення значення ===
+  const handleSearchChange = value => {
+    const cleanValue = deleteUnsafeHtml(value)
+    setSearchValue(cleanValue)
     setInputFocused(true)
-    setSearchValue(deleteUnsafeHtml(value))
+    onChange(cleanValue)
+
+    const matchExists = matches.some(item =>
+      item.toLocaleLowerCase().includes(cleanValue.toLocaleLowerCase())
+    )
+    setHasMatch(matchExists)
   }
 
-  const matchOnClick = item => {
-    setLabel('')
+  // === Клік на елемент зі списку ===
+  const handleMatchClick = item => {
     setSearchValue(item)
-    onChange(item)
+    setHasMatch(false)
     setInputFocused(false)
+    onChange(item)
   }
 
-  const handleSearchIconClick = event => {
+  // === Клік по іконці пошуку ===
+  const handleIconClick = event => {
     event.stopPropagation()
 
-    if (searchValue.length > 0) {
+    if (searchValue.trim().length > 0) {
       onChange(searchValue)
       setInputFocused(false)
     }
   }
 
   useEffect(() => {
-    if (searchValue.length > 0 && value !== searchValue) {
-      setSearchValue(value)
+    if (value !== searchValue) {
+      queueMicrotask(() => setSearchValue(value ?? ''))
     }
   }, [searchValue, value])
+
+  const filteredMatches = inputIsFocused
+    ? matches.filter(item => item.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))
+    : []
 
   return (
     <div
       data-testid="search-container"
       className={searchClassNames}
       ref={searchRef}
-      onClick={() => {
-        setInputFocused(true)
-      }}
+      onClick={() => setInputFocused(true)}
     >
       <Input
         className="search-input"
@@ -137,12 +137,12 @@ const Search = ({
         placeholder={placeholder}
         inputIcon={<SearchIcon />}
         iconClass="search-icon"
-        iconOnClick={handleSearchIconClick}
-        onChange={searchOnChange}
+        iconOnClick={handleIconClick}
+        onChange={handleSearchChange}
         onFocus={onFocus}
         focused={inputIsFocused}
         onKeyDown={event => {
-          if (event.key === 'Enter' && !searchWhileTyping && searchValue !== '') {
+          if (event.key === 'Enter' && !searchWhileTyping && searchValue.trim() !== '') {
             onChange(searchValue)
             setInputFocused(false)
           }
@@ -150,7 +150,8 @@ const Search = ({
         value={searchValue}
         withoutBorder={withoutBorder}
       />
-      {matches.length > 0 && label.length > 0 && inputIsFocused && (
+
+      {filteredMatches.length > 0 && hasMatch && (
         <PopUpDialog
           ref={popUpRef}
           className="search-dropdown"
@@ -160,33 +161,27 @@ const Search = ({
             position: 'bottom-right'
           }}
           style={{
-            maxWidth: `${searchWidth < 400 ? 400 : searchWidth}px`,
+            maxWidth: `${Math.max(searchWidth, 400)}px`,
             minWidth: `${searchWidth}px`
           }}
         >
           <ul data-testid="search-matches" className="search-matches">
-            {matches.reduce((options, item, index) => {
-              if (item?.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())) {
-                options.push(
-                  <SelectOption
-                    item={{
-                      id: item,
-                      label: item,
-                      labelHtml: item.replace(
-                        new RegExp(searchValue.toLocaleLowerCase(), 'gi'),
-                        match => (match ? `<b>${match}</b>` : match)
-                      )
-                    }}
-                    name={item}
-                    key={item + index}
-                    onClick={() => matchOnClick(item)}
-                    tabIndex={index}
-                  />
-                )
-              }
-
-              return options
-            }, [])}
+            {filteredMatches.map((item, index) => (
+              <SelectOption
+                key={item + index}
+                item={{
+                  id: item,
+                  label: item,
+                  labelHtml: item.replace(
+                    new RegExp(searchValue.toLocaleLowerCase(), 'gi'),
+                    match => (match ? `<b>${match}</b>` : match)
+                  )
+                }}
+                name={item}
+                onClick={() => handleMatchClick(item)}
+                tabIndex={index}
+              />
+            ))}
           </ul>
         </PopUpDialog>
       )}

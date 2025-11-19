@@ -80,21 +80,35 @@ const TargetPath = ({
     }
   }
 
+  const handlePathChange = useCallback(
+    value => {
+      if (value.length !== 0) {
+        formState.form.change(`${formStateFieldInfo}.value`, value.replace(/[^:/]*:[/]{2,3}/, ''))
+        formState.form.change(`${formStateFieldInfo}.pathType`, value.match(/^\w*:[/]{2,3}/)[0])
+
+        if (formStateDataInputState) {
+          formState.form.change(`${formStateDataInputState}`, dataInputState)
+        }
+      }
+    },
+    [dataInputState, formState.form, formStateDataInputState, formStateFieldInfo]
+  )
+
   const handleGetProjectsNames = useCallback(() => {
     getProjectsNames(dispatch, setDataInputState, params.projectName)
-  }, [dispatch, params.projectName])
+  }, [dispatch, setDataInputState, params.projectName])
 
   const handleGetArtifacts = useCallback(() => {
     getArtifacts(dispatch, dataInputState.project, dataInputState.storePathType, setDataInputState)
-  }, [dataInputState.project, dataInputState.storePathType, dispatch])
+  }, [dataInputState.project, dataInputState.storePathType, dispatch, setDataInputState])
 
   const handleGetFeatureVectors = useCallback(() => {
     getFeatureVectors(dispatch, dataInputState.project, setDataInputState)
-  }, [dataInputState.project, dispatch])
+  }, [dataInputState.project, dispatch, setDataInputState])
 
   const handleGetArtifact = useCallback(() => {
     getArtifact(dispatch, dataInputState.project, dataInputState.projectItem, setDataInputState)
-  }, [dataInputState.project, dataInputState.projectItem, dispatch])
+  }, [dataInputState.project, dataInputState.projectItem, dispatch, setDataInputState])
 
   const handleGetFeatureVector = useCallback(() => {
     getFeatureVector(
@@ -103,7 +117,7 @@ const TargetPath = ({
       dataInputState.projectItem,
       setDataInputState
     )
-  }, [dataInputState.project, dataInputState.projectItem, dispatch])
+  }, [dataInputState.project, dataInputState.projectItem, dispatch, setDataInputState])
 
   useEffect(() => {
     if (dataInputState.inputStorePathTypeEntered && dataInputState.projects.length === 0) {
@@ -120,24 +134,27 @@ const TargetPath = ({
     if (
       get(formState.values, `${formStateFieldInfo}.pathType`) === MLRUN_STORAGE_INPUT_PATH_SCHEME
     ) {
-      setDataInputState(prev => ({
-        ...prev,
-        comboboxMatches: generateComboboxMatchesList(
-          dataInputState.artifacts,
-          dataInputState.artifactsReferences,
-          dataInputState.featureVectors,
-          dataInputState.featureVectorsReferences,
-          dataInputState.inputProjectItemPathEntered,
-          dataInputState.inputProjectItemReferencePathEntered,
-          dataInputState.inputProjectPathEntered,
-          dataInputState.inputStorePathTypeEntered,
-          dataInputState.project,
-          dataInputState.projectItem,
-          dataInputState.projectItemReference,
-          dataInputState.projects,
-          dataInputState.storePathType
-        )
-      }))
+      //TODO
+      setTimeout(() => {
+        setDataInputState(prev => ({
+          ...prev,
+          comboboxMatches: generateComboboxMatchesList(
+            dataInputState.artifacts,
+            dataInputState.artifactsReferences,
+            dataInputState.featureVectors,
+            dataInputState.featureVectorsReferences,
+            dataInputState.inputProjectItemPathEntered,
+            dataInputState.inputProjectItemReferencePathEntered,
+            dataInputState.inputProjectPathEntered,
+            dataInputState.inputStorePathTypeEntered,
+            dataInputState.project,
+            dataInputState.projectItem,
+            dataInputState.projectItemReference,
+            dataInputState.projects,
+            dataInputState.storePathType
+          )
+        }))
+      }, 0)
     }
   }, [
     dataInputState.artifacts,
@@ -214,20 +231,6 @@ const TargetPath = ({
     handleGetArtifact,
     handleGetFeatureVector
   ])
-
-  const handlePathChange = useCallback(
-    value => {
-      if (value.length !== 0) {
-        formState.form.change(`${formStateFieldInfo}.value`, value.replace(/[^:/]*:[/]{2,3}/, ''))
-        formState.form.change(`${formStateFieldInfo}.pathType`, value.match(/^\w*:[/]{2,3}/)[0])
-
-        if (formStateDataInputState) {
-          formState.form.change(`${formStateDataInputState}`, dataInputState)
-        }
-      }
-    },
-    [dataInputState, formState.form, formStateDataInputState, formStateFieldInfo]
-  )
 
   return (
     <>

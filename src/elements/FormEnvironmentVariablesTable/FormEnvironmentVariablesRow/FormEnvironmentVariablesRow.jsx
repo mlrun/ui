@@ -71,7 +71,9 @@ const FormEnvironmentVariablesRow = ({
   )
 
   useEffect(() => {
-    setFieldData(fields.value[index])
+    queueMicrotask(() => {
+      setFieldData(fields.value[index])
+    })
   }, [fields.value, index])
 
   const handleTypeChange = useCallback(

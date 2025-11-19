@@ -92,7 +92,9 @@ const FeatureVectorPopUp = ({ featureVectorData, isOpen, onResolve }) => {
 
   useEffect(() => {
     if (isEmpty(selectedFeatureVector)) {
-      fetchFeatureVector()
+      queueMicrotask(() => {
+        fetchFeatureVector()
+      })
     }
   }, [fetchFeatureVector, selectedFeatureVector])
 

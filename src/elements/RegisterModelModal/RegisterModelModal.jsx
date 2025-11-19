@@ -27,7 +27,14 @@ import arrayMutators from 'final-form-arrays'
 import { v4 as uuidv4 } from 'uuid'
 
 import TargetPath from '../../common/TargetPath/TargetPath'
-import { Button, Modal, FormChipCell, FormInput, FormTextarea, Loader } from 'igz-controls/components'
+import {
+  Button,
+  Modal,
+  FormChipCell,
+  FormInput,
+  FormTextarea,
+  Loader
+} from 'igz-controls/components'
 
 import artifactApi from '../../api/artifacts-api'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
@@ -64,15 +71,16 @@ function RegisterModelModal({ actions = null, isOpen, onResolve, params, refresh
       }
     }
   }
-  const formRef = React.useRef(
-    createForm({
+  const [form] = useState(() => {
+    return createForm({
       initialValues,
       mutators: { ...arrayMutators, setFieldState },
       onSubmit: () => {}
     })
-  )
+  })
+
   const location = useLocation()
-  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
+  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, form)
   const dispatch = useDispatch()
 
   const registerModel = values => {
@@ -154,7 +162,7 @@ function RegisterModelModal({ actions = null, isOpen, onResolve, params, refresh
   }
 
   return (
-    <Form form={formRef.current} onSubmit={registerModel}>
+    <Form form={form} onSubmit={registerModel}>
       {formState => {
         return (
           <>

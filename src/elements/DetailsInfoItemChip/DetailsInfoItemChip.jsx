@@ -76,15 +76,15 @@ const DetailsInfoItemChip = ({
       handleFinishEdit(item.fieldData.name)
     }
   }, [
+    commonDetailsStore.changes.data,
     currentField,
     detailsInfoDispatch,
-    commonDetailsStore.changes.data,
     dispatch,
     formState.form,
     formState.values,
     handleFinishEdit,
     isFieldInEditMode,
-    item?.editModeType,
+    item.editModeType,
     item.fieldData.name
   ])
 

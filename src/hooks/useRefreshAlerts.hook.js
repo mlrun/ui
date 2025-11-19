@@ -90,7 +90,9 @@ export const useRefreshAlerts = (filters, isAlertsPage) => {
   )
 
   useEffect(() => {
-    !isAlertsPage && refreshAlerts(filters)
+    queueMicrotask(() => {
+      !isAlertsPage && refreshAlerts(filters)
+    })
   }, [isAlertsPage, refreshAlerts, filters])
 
   return {

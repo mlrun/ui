@@ -82,7 +82,9 @@ const FeatureSetPopUp = ({ featureSetData, isOpen, onResolve }) => {
 
   useEffect(() => {
     if (isEmpty(selectedFeatureSet)) {
-      fetchFeatureSetData()
+      queueMicrotask(() => {
+        fetchFeatureSetData()
+      })
     }
   }, [fetchFeatureSetData, selectedFeatureSet])
 

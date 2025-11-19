@@ -31,16 +31,15 @@ import { getJobsStatistics, getJobsTableData, groupByName, sortByDate } from './
 import { fetchProjectJobs } from '../../reducers/projectReducer'
 
 const ProjectJobs = () => {
-  const [groupedLatestItem, setGroupedLatestItem] = useState([])
   const params = useParams()
   const dispatch = useDispatch()
   const projectStore = useSelector(store => store.projectStore)
 
-  useEffect(() => {
-    if (projectStore.project?.jobs?.data) {
-      setGroupedLatestItem(sortByDate(groupByName(projectStore.project.jobs.data)))
-    }
-  }, [projectStore.project?.jobs?.data])
+  const groupedLatestItem = useMemo(() => {
+    return projectStore.project?.jobs?.data
+      ? sortByDate(groupByName(projectStore.project.jobs.data))
+      : []
+  }, [projectStore.project.jobs.data])
 
   useEffect(() => {
     const abortController = new AbortController()

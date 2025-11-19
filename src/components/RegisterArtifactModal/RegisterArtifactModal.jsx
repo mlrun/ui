@@ -70,16 +70,17 @@ const RegisterArtifactModal = ({
       }
     }
   }
-  const formRef = React.useRef(
-    createForm({
+  const [form] = useState(() => {
+    return createForm({
       initialValues,
       mutators: { ...arrayMutators, setFieldState },
       onSubmit: () => {}
     })
-  )
+  })
+
   const location = useLocation()
   const dispatch = useDispatch()
-  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
+  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, form)
   const messagesByKind = useMemo(() => {
     return createArtifactMessages[artifactKind.toLowerCase()]
   }, [artifactKind])
@@ -136,7 +137,7 @@ const RegisterArtifactModal = ({
       },
       onErrorCallback: resolveModal,
       showLoader: () => setIsLoading(true),
-      hideLoader: () => setIsLoading(false),
+      hideLoader: () => setIsLoading(false)
     })
   }
 
@@ -160,30 +161,30 @@ const RegisterArtifactModal = ({
   }
 
   return (
-    <Form form={formRef.current} onSubmit={registerArtifact}>
+    <Form form={form} onSubmit={registerArtifact}>
       {formState => {
         return (
           <>
-          {isLoading && <Loader />}
-          <Modal
-            data-testid="register-artifact"
-            actions={getModalActions(formState)}
-            className="artifact-register-form"
-            location={location}
-            onClose={handleCloseModal}
-            show={isOpen}
-            size={MODAL_SM}
-            title={title}
-          >
-            <RegisterArtifactModalForm
-              formState={formState}
-              initialValues={initialValues}
-              messagesByKind={messagesByKind}
-              params={params}
-              setFieldState={formState.form.mutators.setFieldState}
-              showType={artifactKind === ARTIFACT_TYPE}
-            />
-          </Modal>
+            {isLoading && <Loader />}
+            <Modal
+              data-testid="register-artifact"
+              actions={getModalActions(formState)}
+              className="artifact-register-form"
+              location={location}
+              onClose={handleCloseModal}
+              show={isOpen}
+              size={MODAL_SM}
+              title={title}
+            >
+              <RegisterArtifactModalForm
+                formState={formState}
+                initialValues={initialValues}
+                messagesByKind={messagesByKind}
+                params={params}
+                setFieldState={formState.form.mutators.setFieldState}
+                showType={artifactKind === ARTIFACT_TYPE}
+              />
+            </Modal>
           </>
         )
       }}

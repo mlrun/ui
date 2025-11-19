@@ -81,7 +81,7 @@ const Details = ({
     detailsRef,
     commonDetailsStore,
     doNotLeavePage,
-    formRef,
+    form,
     handleShowWarning,
     leavePage,
     location,
@@ -180,7 +180,7 @@ const Details = ({
       detailsStore={detailsStore}
       commonDetailsStore={commonDetailsStore}
       doNotLeavePage={doNotLeavePage}
-      formRef={formRef}
+      form={form}
       isDetailsPopUp={isDetailsPopUp}
       leavePage={leavePage}
       renderHeader={() => (
@@ -201,7 +201,7 @@ const Details = ({
           withActionMenu={withActionMenu}
         />
       )}
-      renderTabsContent={(formState) => (
+      renderTabsContent={formState => (
         <DetailsTabsContent
           applyChangesRef={applyChangesRef}
           detailsPopUpSelectedTab={detailsPopUpSelectedTab}

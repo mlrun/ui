@@ -37,7 +37,7 @@ export const useNuclioMode = () => {
 
   useLayoutEffect(() => {
     if (mode !== window.mlrunConfig.nuclioMode) {
-      setMode(window.mlrunConfig.nuclioMode)
+      queueMicrotask(() => setMode(window.mlrunConfig.nuclioMode))
     }
   }, [mode])
 

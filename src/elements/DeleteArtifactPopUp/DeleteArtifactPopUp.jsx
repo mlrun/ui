@@ -52,10 +52,8 @@ const DeleteArtifactPopUp = ({
 }) => {
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(true)
   const [disableConfirmButton, setDisableConfirmButton] = useState(false)
-  const dispatch = useDispatch()
-  const params = useParams()
-  const formRef = React.useRef(
-    createForm({
+  const [form] = useState(() => {
+    return createForm({
       initialValues: {
         deletion_strategy: 'metadata-only',
         extended_deletion_strategy: false,
@@ -64,7 +62,9 @@ const DeleteArtifactPopUp = ({
       mutators: { ...arrayMutators, setFieldState },
       onSubmit: () => {}
     })
-  )
+  })
+  const dispatch = useDispatch()
+  const params = useParams()
 
   const handleCancel = () => {
     setIsConfirmDialogOpen(false)
@@ -73,7 +73,7 @@ const DeleteArtifactPopUp = ({
   const handleDelete = useCallback(() => {
     const secrets = {}
 
-    formRef.current.getState().values.secrets.forEach(secret => {
+    form.getState().values.secrets.forEach(secret => {
       secrets[secret.data.key] = secret.data.value
     })
 
@@ -88,28 +88,29 @@ const DeleteArtifactPopUp = ({
       artifactType,
       category,
       false,
-      formRef.current.getState().values.deletion_strategy,
+      form.getState().values.deletion_strategy,
       secrets
     ).then(() => {
       setIsConfirmDialogOpen(false)
     })
   }, [
+    form,
+    dispatch,
+    params.projectName,
     artifact.db_key,
     artifact.uid,
-    artifactType,
-    category,
-    dispatch,
-    filters,
     refreshArtifacts,
     refreshAfterDeleteCallback,
-    params.projectName
+    filters,
+    artifactType,
+    category
   ])
 
   const toggleExtendedDeletionStrategy = value => {
-    formRef.current.change('deletion_strategy', value ? '' : 'metadata-only')
+    form.change('deletion_strategy', value ? '' : 'metadata-only')
 
-    if (formRef.current.getState().values.secrets.length > 0) {
-      formRef.current.change('secrets', [])
+    if (form.getState().values.secrets.length > 0) {
+      form.change('secrets', [])
     }
 
     setDisableConfirmButton(value)
@@ -138,7 +139,7 @@ const DeleteArtifactPopUp = ({
       isOpen={Boolean(isConfirmDialogOpen)}
       message={`Are you sure you want to delete the ${artifactType} "${artifact.db_key}" metadata? Deleted metadata can not be restored.`}
     >
-      <Form form={formRef.current} onSubmit={() => {}}>
+      <Form form={form} onSubmit={() => {}}>
         {formState => {
           const extended_deletion_strategy = formState.values.extended_deletion_strategy
 

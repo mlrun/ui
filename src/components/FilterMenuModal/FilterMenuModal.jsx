@@ -52,14 +52,14 @@ const FilterMenuModal = ({
   wizardClassName = ''
 }) => {
   const [filtersWizardIsShown, setFiltersWizardIsShown] = useState(false)
-  const filtersIconButtonRef = useRef()
-  const dispatch = useDispatch()
-  const formRef = React.useRef(
-    createForm({
+  const [form] = useState(() => {
+    return createForm({
       onSubmit: () => {},
       initialValues
     })
-  )
+  })
+  const filtersIconButtonRef = useRef()
+  const dispatch = useDispatch()
   const filtersIconClassnames = classnames(
     'filters-button',
     !isEqual(values, initialValues) && 'filters-button_applied'
@@ -68,14 +68,14 @@ const FilterMenuModal = ({
   const filtersWizardClassnames = classnames('filters-wizard', wizardClassName)
 
   useEffect(() => {
-    if (!isEqual(formRef.current?.getState().values, values)) {
-      formRef.current?.batch(() => {
+    if (!isEqual(form.getState().values, values)) {
+      form.batch(() => {
         for (const filterName in values) {
-          formRef.current?.change(filterName, values[filterName])
+          form.change(filterName, values[filterName])
         }
       })
     }
-  }, [values])
+  }, [form, values])
 
   const hideFiltersWizard = useCallback(event => {
     if (
@@ -102,8 +102,8 @@ const FilterMenuModal = ({
   }, [hideFiltersWizard])
 
   useLayoutEffect(() => {
-    formRef.current.reset(initialValues)
-  }, [initialValues])
+    form.reset(initialValues)
+  }, [form, initialValues])
 
   const getFilterCounter = formState => {
     const initialValuesLocal = applyChanges ? initialValues : formState.initialValues
@@ -144,7 +144,7 @@ const FilterMenuModal = ({
       }
 
       if (actionCanBePerformed) {
-        formRef.current.restart(initialValues)
+        form.restart(initialValues)
         setFiltersWizardIsShown(false)
 
         if (counter > 0) {
@@ -164,7 +164,7 @@ const FilterMenuModal = ({
   }
 
   return (
-    <Form form={formRef.current} onSubmit={() => {}}>
+    <Form form={form} onSubmit={() => {}}>
       {formState => {
         const counter = getFilterCounter(formState)
         return (

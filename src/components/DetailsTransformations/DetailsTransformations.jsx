@@ -155,34 +155,40 @@ const DetailsTransformations = ({ selectedItem }) => {
   }, [states, targets, selectedStep])
 
   useEffect(() => {
-    setStates(cloneDeep(selectedItem.graph?.steps))
-    setTargets(cloneDeep(selectedItem.targets))
+    queueMicrotask(() => {
+      setStates(cloneDeep(selectedItem.graph?.steps))
+      setTargets(cloneDeep(selectedItem.targets))
+    })
   }, [selectedItem.graph, selectedItem.targets])
 
   useEffect(() => {
-    let stepsList = reject(steps, ['id', selectedStep])
+    queueMicrotask(() => {
+      let stepsList = reject(steps, ['id', selectedStep])
 
-    setErrorSteps(reject(stepsList, ['id', 'Source']))
-    stepsList.unshift({
-      id: 'Source',
-      label: 'Source'
+      setErrorSteps(reject(stepsList, ['id', 'Source']))
+      stepsList.unshift({
+        id: 'Source',
+        label: 'Source'
+      })
+
+      setAfterSteps(stepsList)
     })
-
-    setAfterSteps(stepsList)
   }, [steps, selectedStep])
 
   useEffect(() => {
-    setNodes(nodes => {
-      return map(nodes, node => {
-        return {
-          ...node,
-          className:
-            node.id === selectedStep
-              ? node.className
-                ? (node.className += ' selected')
-                : 'selected'
-              : node.className?.replace('selected', '')
-        }
+    queueMicrotask(() => {
+      setNodes(nodes => {
+        return map(nodes, node => {
+          return {
+            ...node,
+            className:
+              node.id === selectedStep
+                ? node.className
+                  ? (node.className += ' selected')
+                  : 'selected'
+                : node.className?.replace('selected', '')
+          }
+        })
       })
     })
   }, [selectedStep])
@@ -193,7 +199,9 @@ const DetailsTransformations = ({ selectedItem }) => {
 
   useEffect(() => {
     if (selectedItem.uid !== selectedItemUid) {
-      setSelectedItemUid(selectedItem.uid)
+      queueMicrotask(() => {
+        setSelectedItemUid(selectedItem.uid)
+      })
     }
   }, [selectedItem, selectedItemUid])
 
