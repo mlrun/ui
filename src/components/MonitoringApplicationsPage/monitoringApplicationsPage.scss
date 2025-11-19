@@ -7,6 +7,32 @@ $applicationRowHeight: variables.$rowHeight;
 $applicationHeaderRowHeight: variables.$headerRowHeight;
 $applicationRowHeightExtended: variables.$rowHeightExtended;
 
+:root {
+  --applicationRowHeight: #{$applicationRowHeight};
+  --applicationHeaderRowHeight: #{$applicationHeaderRowHeight};
+  --applicationRowHeightExtended: #{$applicationRowHeightExtended};
+}
+
+.all-applications-table {
+  max-height: 450px;
+
+  .table__flex {
+    max-height: calc(100% - 25px);
+
+    .table__content {
+      height: 100%;
+
+      & > div {
+        height: 100%;
+
+        table.applications-table {
+          height: 100%;
+        }
+      }
+    }
+  }
+}
+
 .monitoring-app-content {
   .monitoring-apps-title {
     color: colors.$primary;
@@ -59,9 +85,9 @@ $applicationRowHeightExtended: variables.$rowHeightExtended;
 
       .applications-table {
         @include mixins.rowsHeight(
-                        $applicationHeaderRowHeight,
-                        $applicationRowHeight,
-                        $applicationRowHeightExtended
+          $applicationHeaderRowHeight,
+          $applicationRowHeight,
+          $applicationRowHeightExtended
         );
       }
 
@@ -92,8 +118,8 @@ $applicationRowHeightExtended: variables.$rowHeightExtended;
               left: 50%;
               font-weight: 500;
               font-size: 13px;
-            transform: translate(-50%, 0);
-          }
+              transform: translate(-50%, 0);
+            }
 
             &.loading {
               visibility: hidden;
