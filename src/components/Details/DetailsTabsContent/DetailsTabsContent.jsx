@@ -120,7 +120,7 @@ const DetailsTabsContent = ({
     case DETAILS_FEATURES_ANALYSIS_TAB:
       return <DetailsFeatureAnalysis selectedItem={selectedItem} />
     case DETAILS_METRICS_TAB:
-      return <DetailsMetrics selectedItem={selectedItem} />
+      return <DetailsMetrics selectedItem={selectedItem} isDetailsPopUp={isDetailsPopUp} />
     case DETAILS_ALERTS_TAB:
       return <DetailsAlerts selectedItem={selectedItem} key={selectedItem?.metadata?.uid} /> // todo [Alerts] in ML-9205 remove the key when alerts are refactored and the issue is fixed by refactoring
     case DETAILS_PREVIEW_TAB:
