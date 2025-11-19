@@ -19,7 +19,6 @@ such restriction.
 */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
-import nuclioApi from '../api/nuclio'
 import projectsApi from '../api/projects-api'
 import { hideLoading, showLoading } from './redux.util'
 import {
@@ -33,6 +32,7 @@ import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { parseSummaryData } from '../utils/parseSummaryData'
 import { mlrunUnhealthyErrors } from '../components/ProjectsPage/projects.util'
 import { aggregateApplicationStatuses, splitApplicationsContent } from '../utils/applications.utils'
+import { fetchNuclioFunctions } from './nuclioReducer'
 
 const initialState = {
   deletingProjects: {},
@@ -247,12 +247,12 @@ export const fetchProjectSecrets = createAsyncThunk(
     return projectsApi.getProjectSecrets(project).catch(error => thunkAPI.rejectWithValue(error))
   }
 )
-export const fetchProjectSummary = createAsyncThunk(
-  'fetchProjectSummary',
-  ({ project, signal }, thunkAPI) => {
+export const fetchProjectSummaryAndNuclioFuncs = createAsyncThunk(
+  'fetchProjectSummaryAndNuclioFuncs',
+  ({ project, projectSummarySignal, functionsSignal }, thunkAPI) => {
     return Promise.all([
-      projectsApi.getProjectSummary(project, signal),
-      nuclioApi.getFunctions(project)
+      projectsApi.getProjectSummary(project, projectSummarySignal),
+      thunkAPI.dispatch(fetchNuclioFunctions({ project, signal: functionsSignal })).unwrap()
     ])
       .then(([projectSummary, nuclioFunctions]) => {
         const parsedProjectSummary = parseSummaryData(projectSummary.data)
@@ -524,17 +524,17 @@ const projectStoreSlice = createSlice({
         loading: false
       }
     })
-    builder.addCase(fetchProjectSummary.pending, state => {
+    builder.addCase(fetchProjectSummaryAndNuclioFuncs.pending, state => {
       state.projectSummary.loading = true
     })
-    builder.addCase(fetchProjectSummary.fulfilled, (state, action) => {
+    builder.addCase(fetchProjectSummaryAndNuclioFuncs.fulfilled, (state, action) => {
       state.projectSummary = {
         data: action.payload,
         error: null,
         loading: false
       }
     })
-    builder.addCase(fetchProjectSummary.rejected, (state, action) => {
+    builder.addCase(fetchProjectSummaryAndNuclioFuncs.rejected, (state, action) => {
       state.projectSummary = {
         data: [],
         error: action.payload.message,
