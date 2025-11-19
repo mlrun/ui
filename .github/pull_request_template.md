@@ -50,6 +50,14 @@ Followed by a clear representation - e.g:
 
 ---
 
+Includes DRC change
+- [ ] Yes
+- [ ] No
+
+If yes -> requires bump NPM version
+
+---
+
 ## 🔍 Additional Notes
 <!-- Optional: other context, performance considerations, or follow-up work -->
 <!-- Example:
