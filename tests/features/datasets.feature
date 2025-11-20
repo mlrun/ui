@@ -802,10 +802,10 @@ Feature: Datasets Page
     Then "Title" element on "Modal_Wizard_Form" should contains "Train Model" value
     Then verify "Cross_Close_Button" element visibility on "Modal_Wizard_Form" wizard
     Then "Function_Title" element on "Modal_Wizard_Form" should contains "auto-trainer" value
-    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
+    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
     Then "Hyperparameter_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
     Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
-    Then "Step_1_Button_text" element on "commonPagesHeader" should contains "Run Details" value
+    Then "Step_1_Button_text" element on "commonPagesHeader" should contains "Run details" value
     Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
@@ -818,10 +818,10 @@ Feature: Datasets Page
     Then "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" should contains "Schedule training job" value
     Then verify "Back_Button" element not exists on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-    Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data Inputs" value
+    Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data inputs" value
     Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
-    Then "Step_2_Button_text" element on "commonPagesHeader" should contains "Data Inputs" value
+    Then "Step_2_Button_text" element on "commonPagesHeader" should contains "Data inputs" value
     Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then "Back_Button" element on "Modal_Wizard_Form" should contains "Back" value
     Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
@@ -902,7 +902,7 @@ Feature: Datasets Page
     Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
     And click on "Step_1_Button" element on "commonPagesHeader" wizard
-    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
+    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
     And click on "Step_3_Button" element on "commonPagesHeader" wizard
     Then "Form_Header_Parameters" element on "commonPagesHeader" should contains "Parameters" value
     And click on "Step_4_Button" element on "commonPagesHeader" wizard
@@ -928,7 +928,7 @@ Feature: Datasets Page
     And wait load page
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
+    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
     Then "Hyperparameter_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
     Then verify "Run_Name_Input" element visibility on "Modal_Wizard_Form" wizard
     Then type value "/" to "Run_Name_Input" field on "Modal_Wizard_Form" wizard
@@ -960,7 +960,7 @@ Feature: Datasets Page
 
   @MLD
   @smoke
-  Scenario: MLD021 - Check Data Inputs components on Train Model wizard
+  Scenario: MLD021 - Check Data inputs components on Train Model wizard
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -972,9 +972,9 @@ Feature: Datasets Page
     And wait load page
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
+    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-    Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data Inputs" value
+    Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data inputs" value
     Then verify "Data_Inputs_Headers" on "Modal_Wizard_Form" wizard should contains "Modal_Wizard_Form"."Data_Inputs_Table_Header"
     Then verify data in "Data_Inputs_Table" table on "Modal_Wizard_Form" wizard
             | name_verify |                     path_verify                       |      
@@ -1027,7 +1027,7 @@ Feature: Datasets Page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
+    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     Then "Form_Header_Parameters" element on "commonPagesHeader" should contains "Parameters" value
@@ -1105,7 +1105,7 @@ Feature: Datasets Page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
+    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
@@ -1209,7 +1209,7 @@ Feature: Datasets Page
     When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
     When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Config_Map_Input | Add_New_Row_Button |
-            |           Config Map             |                                      |                               |                                     |         yes        |
+            |           Config map             |                                      |                               |                                     |         yes        |
     Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
     Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
     Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
@@ -1286,7 +1286,7 @@ Feature: Datasets Page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
+    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
@@ -1323,7 +1323,7 @@ Feature: Datasets Page
     When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with several inputs
             | name_input | type_dropdown |             value_input            | value_input_key |
             |    name1   |    Secret     | mlrun-project-secrets-defaultinv   |   sectretKey1   |
-    Then verify "Env_Variables_Table_Secret_Name_Input" in "Advanced_Accordion" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Secret_Name_Rule_Options1"
+    Then verify "Env_Variables_Table_Secret_Name_Input" in "Advanced_Accordion" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Secret_Name_Rule_Options"
     When click on "Delete_New_Row_Button" element in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
     When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with several inputs
             | name_input | type_dropdown |             value_input            | value_input_key |
@@ -1337,7 +1337,7 @@ Feature: Datasets Page
     When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with several inputs
             | name_input | type_dropdown |     value_input     | value_input_key |
             |    name1   |    Secret     | mlrun-auth-secrets. |   sectretKey1   |
-    Then verify "Env_Variables_Table_Secret_Name_Input" in "Advanced_Accordion" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Secret_Name_Rule_Options1"
+    Then verify "Env_Variables_Table_Secret_Name_Input" in "Advanced_Accordion" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Secret_Name_Rule_Options"
     When click on "Delete_New_Row_Button" element in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
     When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with several inputs
             | name_input | type_dropdown |     value_input    | value_input_key |
@@ -1368,7 +1368,7 @@ Feature: Datasets Page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
+    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
     Then check "Hyperparameter_Checkbox" element on "Modal_Wizard_Form" wizard
     Then "Hyperparameter_Checkbox" element should be checked on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard

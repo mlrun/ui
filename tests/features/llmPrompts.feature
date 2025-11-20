@@ -426,11 +426,11 @@ Feature: LLM prompts Page
     Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
     Then click on cell with row index 1 in "name" column in "LLMPrompts_Table" table on "LLM_Prompts" wizard
     And wait load page
-    Then select "Generation Configuration" tab in "Info_Pane_Tab_Selector" on "LLM_Prompts_Info_Pane" wizard
+    Then select "Invocation Configuration" tab in "Info_Pane_Tab_Selector" on "LLM_Prompts_Info_Pane" wizard
     And wait load page
     Then verify "Prompt_Template_Tab_Selector" element visibility on "LLM_Prompts_Info_Pane" wizard
     Then verify "Prompt_Template_Tab_Selector" on "LLM_Prompts_Info_Pane" wizard should contains "LLM_Prompts_Info_Pane"."Tab_List"
-    Then verify "Generation Configuration" tab is active in "Prompt_Template_Tab_Selector" on "LLM_Prompts_Info_Pane" wizard
+    Then verify "Invocation Configuration" tab is active in "Prompt_Template_Tab_Selector" on "LLM_Prompts_Info_Pane" wizard
     Then verify "Header" element visibility on "LLM_Prompts_Info_Pane" wizard
     Then verify "Updated" element visibility on "LLM_Prompts_Info_Pane" wizard
     Then verify "Action_Menu" element visibility on "LLM_Prompts_Info_Pane" wizard
