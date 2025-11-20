@@ -157,7 +157,7 @@ export default {
     Overview_Producer_Headers: ['Name:', 'Kind:', 'Tag:', 'Owner:', 'UID:']
   },
   LLM_Prompts_Info_Pane: {
-    Tab_List: ['Overview', 'Prompt Template', 'Generation Configuration'],
+    Tab_List: ['Overview', 'Prompt Template', 'Invocation Configuration'],
     Tab_List_Prompt_Template: ['Prompt', 'Arguments'],
     Info_Banner_Message: /The LLM prompt is not in the filtered list\. Closing the details panel will return you to the current list\./,
     Overview_General_Headers: [
@@ -178,15 +178,15 @@ export default {
   },
   Alerts_Jobs_Info_Pane: {
     Overview_General_Headers: [
-      'Project Name:',
-      'Job Name:',
+      'Project name:',
+      'Job name:',
       'Type:',
       'Timestamp:',
       'Severity:',
       'Job:'
     ],
     Overview_General_Headers_PerProject: [
-      'Job Name:',
+      'Job name:',
       'Type:',
       'Timestamp:',
       'Severity:',
@@ -196,18 +196,18 @@ export default {
   },
   Alerts_Endpoint_Info_Pane: {
     Overview_General_Headers: [
-      'Project Name:',
+      'Project name:',
       'Endpoint ID:',
-      'Application Name:',
-      'Result Name:',
+      'Application name:',
+      'Result name:',
       'Type:',
       'Timestamp:',
       'Severity:'
     ],
     Overview_General_Headers_Per_Project: [
       'Endpoint ID:',
-      'Application Name:',
-      'Result Name:',
+      'Application name:',
+      'Result name:',
       'Type:',
       'Timestamp:',
       'Severity:'
@@ -216,14 +216,14 @@ export default {
   },
   Alerts_Application_Info_Pane: {
     Overview_General_Headers: [
-      'Project Name:',
-      'Application Name:',
+      'Project name:',
+      'Application name:',
       'Type:',
       'Timestamp:',
       'Severity:'
     ],
     Overview_General_Headers_Per_Project: [
-      'Application Name:',
+      'Application name:',
       'Type:',
       'Timestamp:',
       'Severity:'
@@ -319,7 +319,7 @@ export default {
       'Model class:',
       'Model artifact:',
       'Function URI:',
-      'Function Tag:',
+      'Function tag:',
       'Feature set:',
       'Sampling percentage:',
       'Last prediction:',
@@ -327,9 +327,9 @@ export default {
     ],
     Overview_Drift_Headers: [
       'Mean TVD:',
-      'Mean Hellinger:',
+      'Mean hellinger:',
       'Mean KLD:',
-      'Drift Actual Value:'
+      'Drift actual value:'
     ]
   },
   New_Feature_Store: {
@@ -645,7 +645,7 @@ export default {
     Overview_Headers: [
       'UID:',
       'Start time:',
-      'Last Updated:',
+      'Last updated:',
       'Run on spot:',
       'Node selector:',
       'Priority:',
@@ -804,9 +804,9 @@ export default {
       /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
     Common_Message_Monitor_Jobs_Name: /No data matches the filter: "Name: (.+?)"/,
     Common_Message_LLM_Prompt_Name: /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Show best iteration only: (.+?)"/,
-    Common_Message_LLM_Prompt_Label: /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Labels: (.+?), Show best iteration only: (.+?), Model name: (.+?), Model version tag: (.+?)"/,
+    Common_Message_LLM_Prompt_Label: /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Labels: (.+?), Show best iteration only: (.+?)"/,
     Common_Message_LLM_Prompt_Tag: /No data matches the filter: "LLM prompt version tag: (.+?), Show best iteration only: (.+?)"/,
-    Common_Message_LLM_Prompt_Model_Name_Tag: /No data matches the filter: "LLM prompt version tag: (.+?), Show best iteration only: (.+?)"/,
+    Common_Message_LLM_Prompt_Model_Name_Tag: /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Labels: (.+?), Show best iteration only: (.+?), Model name: (.+?), Model version tag: (.+?)"/,
     Common_Message_Artifact_Tag: /No data matches the filter: "Version tag: (.+?), Show best iteration only: (.+?)"/,
     Common_Message_Jobs_Monitoring_Workflow_Project:
       /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,

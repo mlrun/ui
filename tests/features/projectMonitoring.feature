@@ -450,11 +450,11 @@ Feature: Project Monitoring Page
         And click on row root with value "test" in "name" column in "Functions_Table" table on "Modal_Wizard_Form" wizard
         Then "Function_Title" element on "Modal_Wizard_Form" should contains "test" value
         Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
-        Then "Step_1_Button_text" element on "commonPagesHeader" should contains "Function Selection" value
+        Then "Step_1_Button_text" element on "commonPagesHeader" should contains "Function selection" value
         Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
-        Then "Step_2_Button_text" element on "commonPagesHeader" should contains "Run Details" value
+        Then "Step_2_Button_text" element on "commonPagesHeader" should contains "Run details" value
         Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
-        Then "Step_3_Button_text" element on "commonPagesHeader" should contains "Data Inputs" value
+        Then "Step_3_Button_text" element on "commonPagesHeader" should contains "Data inputs" value
         Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
         Then "Step_4_Button_text" element on "commonPagesHeader" should contains "Parameters" value
         Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
@@ -473,7 +473,7 @@ Feature: Project Monitoring Page
         And wait load page
         Then verify "Filter_Button_Hub_Tab" element visibility on "Modal_Wizard_Form" wizard
         And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-        Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
+        Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
         Then "Hyperparameter_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
         Then verify "Run_Name_Input" element visibility on "Modal_Wizard_Form" wizard
         Then verify "Version_Tag_Dropdown" element visibility on "Modal_Wizard_Form" wizard
@@ -482,7 +482,7 @@ Feature: Project Monitoring Page
         Then verify "Image_Name_Input_Run_Details" element visibility on "Modal_Wizard_Form" wizard
         Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
         And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-        Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data Inputs" value
+        Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data inputs" value
         Then verify "Data_Inputs_Headers" on "Modal_Wizard_Form" wizard should contains "Modal_Wizard_Form"."Data_Inputs_Table_Header"
         And click on "Next_Button" element on "Modal_Wizard_Form" wizard
         Then "Form_Header_Parameters" element on "commonPagesHeader" should contains "Parameters" value
@@ -680,7 +680,7 @@ Feature: Project Monitoring Page
         Then "Next_Button" element on "Modal_Wizard_Form" should contains "Next" value
         Then "Back_Button" element on "Modal_Wizard_Form" should contains "Back" value
         Then "Infer_Now_Button" element on "Modal_Wizard_Form" should contains "Infer now" value
-        Then "Schedule_Infer_Button" element on "Modal_Wizard_Form" should contains "Schedule Infer" value
+        Then "Schedule_Infer_Button" element on "Modal_Wizard_Form" should contains "Schedule infer" value
         Then verify "Accordion_Advanced_Subheader" element visibility on "Modal_Wizard_Form" wizard
         Then "Accordion_Advanced_Subheader" element on "Modal_Wizard_Form" should contains "Environment variables" value
         Then verify "Advanced_Environment_Variables_Table" element visibility on "Modal_Wizard_Form" wizard
@@ -857,7 +857,7 @@ Feature: Project Monitoring Page
         When turn on demo mode with query params "false"
         And wait load page
         Then select "ML function" option in "Quick_Actions" dropdown on "Project" wizard
-        Then "Title" element on "Create_ML_Function_Popup" should contains "Create New Function" value
+        Then "Title" element on "Create_ML_Function_Popup" should contains "Create new function" value
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -920,7 +920,7 @@ Feature: Project Monitoring Page
         When turn on demo mode with query params "false"
         And wait load page
         Then select "ML function" option in "Quick_Actions" dropdown on "Project" wizard
-        Then "Title" element on "Create_ML_Function_Popup" should contains "Create New Function" value
+        Then "Title" element on "Create_ML_Function_Popup" should contains "Create new function" value
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard

@@ -2063,7 +2063,7 @@ When(
       this.driver,
       pageObjects[wizardName][graphName].nodesTable.tableFields['name'](index)
     )
-    await this.driver.sleep(250)
+    await this.driver.sleep(350)
     await isComponentContainsClass(
       this.driver,
       pageObjects[wizardName][graphName].nodesTable.rowRoot(index),
