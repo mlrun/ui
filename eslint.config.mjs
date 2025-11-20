@@ -46,6 +46,14 @@ export default [
       'no-console': process.env.NODE_ENV === 'production' ? 2 : 1,
       quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: false }],
       semi: ['error', 'never']
-    }
+    },
+    overrides: [
+      {
+        files: ["**/*.test.jsx"],
+        rules: {
+          "import/named": "off"
+        }
+      }
+    ]
   }
 ]
