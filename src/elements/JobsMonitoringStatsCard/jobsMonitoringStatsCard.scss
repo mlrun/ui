@@ -13,9 +13,9 @@
     @include mixins.stats();
 
     &-card {
-      cursor: pointer;
-      border: 2px solid transparent;
       min-height: 144px;
+      border: 2px solid transparent;
+      cursor: pointer;
     }
 
     &__counter {

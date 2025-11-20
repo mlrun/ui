@@ -1,10 +1,40 @@
 {
-  "extends": ["stylelint-config-standard", "stylelint-config-rational-order"],
+  "extends": ["stylelint-config-standard", "stylelint-config-standard-scss", "stylelint-config-rational-order"],
   "plugins": [
     "stylelint-scss"
   ],
   "rules": {
     "at-rule-no-unknown": null,
-    "scss/at-rule-no-unknown": true
+    "selector-no-vendor-prefix": null,
+    "scss/at-mixin-argumentless-call-parentheses": null,
+    "scss/dollar-variable-empty-line-before": null,
+    "scss/at-rule-no-unknown": true,
+    "media-feature-range-notation": null,
+    "property-no-vendor-prefix": null,
+    "selector-class-pattern": [
+      "^[a-z0-9]+(?:-[a-z0-9]+)*(?:__(?:[a-z0-9]+(?:-[a-z0-9]+)*))*(?:_(?:[a-z0-9]+(?:-[a-z0-9]+)*)(?:_[a-z0-9]+(?:-[a-z0-9]+)*)?)?$",
+      {
+        "resolveNestedSelectors": true,
+        "message": "Expected kebab-case or BEM: block-name, block-name__elem-name(__sub-elem…), block-name_mod-name[_mod-val], block-name__elem-name_mod-name[_mod-val]"
+      }
+    ],
+    "scss/at-mixin-pattern": [
+      "^(?:[a-z][a-z0-9]*(?:-[a-z0-9]+)*|[a-z][a-z0-9]*(?:[A-Z][a-z0-9]*)*)$",
+      {
+        "message": "Expected mixin name to be kebab-case (my-mixin) or camelCase (myMixin)"
+      }
+    ],
+    "custom-property-pattern": [
+      "^(?:[a-z][a-z0-9]*(?:-[a-z0-9]+)*|[a-z][a-z0-9]*(?:[A-Z][a-z0-9]*)*)$",
+      {
+        "message": "Expected variable name to be kebab-case (my-variable) or camelCase (myVariable)"
+      }
+    ],
+    "scss/dollar-variable-pattern": [
+      "^(?:[a-z][a-z0-9]*(?:-[a-z0-9]+)*|[a-z][a-z0-9]*(?:[A-Z][a-z0-9]*)*)$",
+      {
+        "message": "Expected variable name to be kebab-case (my-variable) or camelCase (myVariable)"
+      }
+    ]
   }
 }

@@ -63,7 +63,7 @@
     "test:coverage": "npm run test -- --coverage --watchAll=false",
     "docker": "docker build -t ${MLRUN_DOCKER_REGISTRY}${MLRUN_DOCKER_REPO:-mlrun}/mlrun-ui:${MLRUN_DOCKER_TAG:-latest} --build-arg COMMIT_HASH=\"`git rev-parse --short HEAD`\" --build-arg DATE=\"`date -u`\" -f Dockerfile .",
     "generate-rn": "./generate-release-notes.js ${MLRUN_OLD_VERSION} ${MLRUN_VERSION} ${MLRUN_RELEASE_BRANCH} ${MLRUN_RELEASE_TYPE}",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "storybook dev -p 6006",
     "build-storybook": "build-storybook",
     "mock-server": "node scripts/mockServer.js",
     "mock-server:dev": "nodemon --watch tests/mockServer scripts/mockServer.js",

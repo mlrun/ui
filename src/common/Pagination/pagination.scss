@@ -2,11 +2,11 @@
 @use 'igz-controls/scss/variables';
 
 .pagination {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 4px 4px;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 4px 4px;
 
   .pagination-items-count,
   .pagination-items-selector {
@@ -19,8 +19,8 @@
   }
 
   .pagination-navigation {
-    flex-grow: 1;
     display: flex;
+    flex-grow: 1;
     justify-content: center;
   }
 
@@ -30,18 +30,18 @@
   }
 
   .pagination-btn {
-    color: colors.$primary;
-    cursor: default;
-    box-sizing: border-box;
     display: flex;
     justify-content: center;
-    border: none;
-    padding: 4px 5px;
+    box-sizing: border-box;
     margin: 0 2px;
-    font-size: 14px;
+    padding: 4px 5px;
+    color: colors.$primary;
     font-weight: normal;
+    font-size: 14px;
+    border: none;
+    cursor: default;
 
-    &:hover:not(.pagination-btn_active):not(:disabled) {
+    &:hover:not(.pagination-btn_active, :disabled) {
       cursor: pointer;
     }
 
@@ -56,10 +56,10 @@
     }
 
     .pagination-page-number {
-      padding: 2px 3px;
       box-sizing: content-box;
-      border-bottom: 2px solid transparent;
+      padding: 2px 3px;
       border-top: 2px solid transparent;
+      border-bottom: 2px solid transparent;
     }
 
     &.pagination-page-btn {
@@ -71,8 +71,8 @@
     }
 
     &.pagination-dots {
-      cursor: default;
       display: inline-flex;
+      cursor: default;
     }
   }
 

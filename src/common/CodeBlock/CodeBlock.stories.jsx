@@ -21,6 +21,8 @@ import React from 'react'
 
 import CodeBlock from './CodeBlock'
 
+import 'prismjs/components/prism-json'
+
 export default {
   title: 'Example/CodeBlock',
   component: CodeBlock
