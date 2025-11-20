@@ -27,35 +27,27 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
-import { ERROR_STATE, REQUEST_CANCELED } from '../../constants'
-import { fetchApiGateways, fetchNuclioFunctions } from '../../reducers/nuclioReducer'
+import {
+  ERROR_STATE,
+  FAILED_STATE,
+  FUNCTION_READY_STATE,
+  REQUEST_CANCELED,
+  RUNNING_STATE
+} from '../../constants'
+import { fetchApiGateways } from '../../reducers/nuclioReducer'
 import { generateNuclioLink } from '../../utils'
 import { groupByUniqName } from '../../utils/groupByUniqName'
 import { typesOfJob } from '../../utils/jobs.util'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
-const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
+const ProjectFunctions = ({ nuclioStreamsAreEnabled, project }) => {
   const params = useParams()
   const { isNuclioModeDisabled } = useNuclioMode()
   const nuclioStore = useSelector(store => store.nuclioStore)
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (!isNuclioModeDisabled) {
-      const abortController = new AbortController()
-
-      dispatch(
-        fetchNuclioFunctions({ project: params.projectName, signal: abortController.signal })
-      )
-
-      return () => {
-        abortController.abort(REQUEST_CANCELED)
-      }
-    }
-  }, [dispatch, isNuclioModeDisabled, params.projectName])
-
-  useEffect(() => {
-    if (!isNuclioModeDisabled) {
+    if (!isNuclioModeDisabled && project?.data?.metadata?.name === params.projectName) {
       const abortController = new AbortController()
 
       dispatch(fetchApiGateways({ project: params.projectName, signal: abortController.signal }))
@@ -64,7 +56,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
         abortController.abort(REQUEST_CANCELED)
       }
     }
-  }, [dispatch, isNuclioModeDisabled, params.projectName])
+  }, [dispatch, isNuclioModeDisabled, params.projectName, project?.data?.metadata?.name])
 
   const functions = useMemo(() => {
     const groupeFunctionsRunning = groupByUniqName(
@@ -73,7 +65,8 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
     )
 
     const functionsRunning = groupeFunctionsRunning.reduce(
-      (prev, curr) => (!curr.spec.disable && curr.status.state === 'ready' ? (prev += 1) : prev),
+      (prev, curr) =>
+        !curr.spec.disable && curr.status.state === FUNCTION_READY_STATE ? (prev += 1) : prev,
       0
     )
     const functionsFailed = groupeFunctionsRunning.reduce(
@@ -86,24 +79,24 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
         counterTooltip: 'Running',
         value: functionsRunning,
         label: 'Running',
-        className: 'running',
-        status: 'running',
+        className: RUNNING_STATE,
+        status: RUNNING_STATE,
         href: generateNuclioLink(`/projects/${params.projectName}/functions`),
         loading: nuclioStore.loading
       },
       failed: {
-        counterTooltip: 'Failed, Error, Unhealthy',
+        counterTooltip: 'Error, Unhealthy',
         value: functionsFailed,
         label: 'Failed',
-        status: 'failed',
-        className: functionsFailed > 0 ? 'failed' : 'running',
+        status: FAILED_STATE,
+        className: functionsFailed > 0 ? FAILED_STATE : RUNNING_STATE,
         href: generateNuclioLink(`/projects/${params.projectName}/functions`),
         loading: nuclioStore.loading
       },
       apiGateways: {
         value: nuclioStore.apiGateways,
         label: 'API gateways',
-        className: 'running',
+        className: RUNNING_STATE,
         href: generateNuclioLink(`/projects/${params.projectName}/api-gateways`),
         loading: nuclioStore.loading
       },
@@ -113,7 +106,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
             ? 'N/A'
             : (Object.keys(nuclioStore.v3ioStreams.data).length ?? 0),
           label: 'Consumer groups',
-          className: 'running',
+          className: RUNNING_STATE,
           link: `/projects/${params.projectName}/monitor${
             !isNuclioModeDisabled ? '/consumer-groups' : ''
           }`,
@@ -159,9 +152,9 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
           },
           status: {
             value:
-              func?.status?.state === 'ready' && !func?.spec?.disable
+              func?.status?.state === FUNCTION_READY_STATE && !func?.spec?.disable
                 ? 'Running'
-                : func?.status?.state === 'ready' && func?.spec?.disable
+                : func?.status?.state === FUNCTION_READY_STATE && func?.spec?.disable
                   ? 'Standby'
                   : [ERROR_STATE, 'unhealthy', 'imported', 'scaledToZero'].includes(
                         func?.status?.state
@@ -200,6 +193,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled }) => {
 }
 
 ProjectFunctions.propTypes = {
-  nuclioStreamsAreEnabled: PropTypes.bool.isRequired
+  nuclioStreamsAreEnabled: PropTypes.bool.isRequired,
+  project: PropTypes.object.isRequired
 }
 export default React.memo(ProjectFunctions)

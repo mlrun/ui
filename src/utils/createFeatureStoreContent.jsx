@@ -138,7 +138,7 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
       {
         id: `key.${feature.ui.identifierUnique}`,
         headerId: 'featurename',
-        headerLabel: 'Feature Name',
+        headerLabel: 'Feature name',
         type: feature.ui.type,
         value: feature.name,
         className: 'table-cell-name',

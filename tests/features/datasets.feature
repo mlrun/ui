@@ -514,10 +514,19 @@ Feature: Datasets Page
     Then hover on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
     When click on cell with row index 2 in "artifact_preview_btn" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then verify "Preview_Row" element visibility on "Artifact_Preview_Popup" wizard
-    Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
-    Then check "download_btn" visibility in "Preview_Row" on "Artifact_Preview_Popup" wizard with 1 offset
-    Then click on "Download_Button" element on "Artifact_Preview_Popup" wizard
+    Then verify "Preview_Table" element visibility on "Preview_Popup" wizard
+    Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contains "test_new_structure"
+    Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
+    Then verify "Download_Button" element visibility on "Preview_Popup" wizard
+    Then click on "Download_Button" element on "Preview_Popup" wizard
     And wait load page
     And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
@@ -527,7 +536,7 @@ Feature: Datasets Page
     Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
     Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
-    Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
+    Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
     When click on cell with value "auto-trainer-train_test_set" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
@@ -535,10 +544,19 @@ Feature: Datasets Page
     Then verify "Pop_Out_Button" element visibility on "Datasets_Info_Pane" wizard 
     Then click on "Pop_Out_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then verify "Preview_Row" element visibility on "Artifact_Preview_Popup" wizard
-    Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
-    Then check "download_btn" visibility in "Preview_Row" on "Artifact_Preview_Popup" wizard with 1 offset
-    Then click on "Download_Button" element on "Artifact_Preview_Popup" wizard
+    Then verify "Preview_Table" element visibility on "Preview_Popup" wizard
+    Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contains "auto-trainer-train_test_set"
+    Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
+    Then verify "Download_Button" element visibility on "Preview_Popup" wizard
+    Then click on "Download_Button" element on "Preview_Popup" wizard
     And wait load page
     And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
@@ -548,7 +566,7 @@ Feature: Datasets Page
     Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
     Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
-    Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
+    Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
   
   @MLD
   @smoke 
@@ -1202,7 +1220,7 @@ Feature: Datasets Page
             |             Secret               |                                      |                               |                                      |         yes        |
     Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
     Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Secret_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Secret_Name_Input" in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Secret_Name_Rule_Options"
     Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Mount_Path_Hint"
     When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
     When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
@@ -1213,6 +1231,47 @@ Feature: Datasets Page
     Then verify "Volume_Paths_Table_Claime_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
     Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Mount_Path_Hint"
     When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+
+    When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
+            |             Secret               |                                      |                               |   mlrun-project-secrets-defaultinv   |         yes        |
+    Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+    Then verify "Volume_Paths_Table_Secret_Name_Input" in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Secret_Name_Rule_Options"
+    When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
+            |             Secret               |            test                      |       test                    |   mlrun-project-secrets-default      |         yes        |
+    Then verify values in "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+            |  type  | volume_name  |  path  |
+            | Secret |    test      |  test  |
+    When click on data "remove_btn" in "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+            |  type  |
+            | Secret |
+    When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
+            |             Secret               |                                      |                               |         mlrun-auth-secrets.          |         yes        |
+    Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+    Then verify "Volume_Paths_Table_Secret_Name_Input" in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Secret_Name_Rule_Options"
+    When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
+            |             Secret               |            test                      |       test                    |         mlrun-auth-secrets           |         yes        |
+    Then verify values in "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+            |  type  | volume_name  |  path  |
+            | Secret |    test      |  test  |
+    When click on data "remove_btn" in "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+            |  type  |
+            | Secret |
+    Then verify "Cross_Close_Button" element visibility on "Modal_Wizard_Form" wizard
+    And click on "Cross_Close_Button" element on "Modal_Wizard_Form" wizard
+    And wait load page
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Datasets_Info_Pane" wizard
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
+    Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
 
   @MLD
   @smoke
@@ -1256,6 +1315,45 @@ Feature: Datasets Page
             |    name1    |        secret        | sectretName1:sectretKey1 |
             |    name2    |        value         |             1            | 
             |    name3    |        secret        | sectretName2:sectretKey2 |
+    When click on "delete_btn" in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with offset "false"
+            | name_verify |
+            |    name1    |
+            |    name2    |
+            |    name3    |
+    When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with several inputs
+            | name_input | type_dropdown |             value_input            | value_input_key |
+            |    name1   |    Secret     | mlrun-project-secrets-defaultinv   |   sectretKey1   |
+    Then verify "Env_Variables_Table_Secret_Name_Input" in "Advanced_Accordion" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Secret_Name_Rule_Options1"
+    When click on "Delete_New_Row_Button" element in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
+    When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with several inputs
+            | name_input | type_dropdown |             value_input            | value_input_key |
+            |    name1   |    Secret     |    mlrun-project-secrets-default   |   sectretKey1   |
+    Then verify data in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
+            | name_verify | type_dropdown_verify |                value_verify               |
+            |    name1    |        secret        | mlrun-project-secrets-default:sectretKey1 | 
+    When click on "delete_btn" in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with offset "false"
+            | name_verify |
+            |    name1    |
+    When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with several inputs
+            | name_input | type_dropdown |     value_input     | value_input_key |
+            |    name1   |    Secret     | mlrun-auth-secrets. |   sectretKey1   |
+    Then verify "Env_Variables_Table_Secret_Name_Input" in "Advanced_Accordion" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Secret_Name_Rule_Options1"
+    When click on "Delete_New_Row_Button" element in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
+    When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with several inputs
+            | name_input | type_dropdown |     value_input    | value_input_key |
+            |    name1   |    Secret     | mlrun-auth-secrets |   sectretKey1   |
+    Then verify data in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
+            | name_verify | type_dropdown_verify |         value_verify           |
+            |    name1    |        secret        | mlrun-auth-secrets:sectretKey1 | 
+    When click on "delete_btn" in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with offset "false"
+            | name_verify |
+            |    name1    |
+    Then verify "Cross_Close_Button" element visibility on "Modal_Wizard_Form" wizard
+    And click on "Cross_Close_Button" element on "Modal_Wizard_Form" wizard
+    And wait load page
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Datasets_Info_Pane" wizard
+    Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
+    Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
 
   @MLD
   @smoke
@@ -1342,127 +1440,64 @@ Feature: Datasets Page
 
   @MLD
   @smoke
-  Scenario: MLD027 - Verify dataset elements visibility on Datasets Table with high number of rows
-    * create "new_dataset_10" Dataset with "set_10" tag in "churn-project-admin" project with code 200
-    * create "new_dataset_11" Dataset with "set_11" tag in "churn-project-admin" project with code 200
-    * create "new_dataset_12" Dataset with "set_12" tag in "churn-project-admin" project with code 200
-    * create "new_dataset_13" Dataset with "set_13" tag in "churn-project-admin" project with code 200
-    * create "new_dataset_14" Dataset with "set_14" tag in "churn-project-admin" project with code 200
-    * create "new_dataset_15" Dataset with "set_15" tag in "churn-project-admin" project with code 200
-    * create "new_dataset_16" Dataset with "set_16" tag in "churn-project-admin" project with code 200
-    * create "new_dataset_17" Dataset with "set_17" tag in "churn-project-admin" project with code 200
-    * create "new_dataset_18" Dataset with "set_18" tag in "churn-project-admin" project with code 200
-    * create "new_dataset_19" Dataset with "set_19" tag in "churn-project-admin" project with code 200
-    * create "new_dataset_20" Dataset with "set_20" tag in "churn-project-admin" project with code 200
-    * create "new_dataset_21" Dataset with "set_21" tag in "churn-project-admin" project with code 200
-    * create "new_dataset_22" Dataset with "set_22" tag in "churn-project-admin" project with code 200
-    * create "new_dataset_23" Dataset with "set_23" tag in "churn-project-admin" project with code 200
-    * create "new_dataset_24" Dataset with "set_24" tag in "churn-project-admin" project with code 200
+  Scenario: MLD027 - Verify not in filtered list message dataset from the main page and version history 
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "tab" with "Datasets" value in breadcrumbs menu
     And wait load page
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column with scroll "false"
     And wait load page
-    Then verify that 24 row elements are displayed in "Datasets_Table" on "Datasets" wizard
-    Then check "new_dataset_10" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "new_dataset_24" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "data_clean_cleaned-data" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "BE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "FE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
-    Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
-    Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
-    Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 24" value
-    Then click on cell with value "data_clean_cleaned-data" in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then verify "History_Back_Button" element visibility on "Datasets" wizard
+    Then "Version_History_Model_Name" element on "Datasets" should contains "test-regressor_cox-test-summary" value
+    Then verify "Register_Dataset_Button" element visibility on "Datasets" wizard
+    Then click on "Register_Dataset_Button" element on "Datasets" wizard
+    Then verify if "Register_Dataset" popup dialog appears
+    Then type value "test-regressor_cox-test-summary" to "Name_Input" field on "Register_Dataset" wizard
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
+    When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
+    Then click on "Register_Button" element on "Register_Dataset" wizard
+    Then verify if "Confirm_Popup" popup dialog appears
+    Then "Title" element on "Confirm_Popup" should contains "Overwrite dataset?" value
+    When click on "Overwrite_Button" element on "Confirm_Popup" wizard
     And wait load page
-    Then "Header" element on "Datasets_Info_Pane" should contains "data_clean_cleaned-data" value
-    Then type value "new_dataset_10" to "Table_Name_Filter_Input" field on "Datasets" wizard
-    Then click on "Table_Refresh_Button" element on "Datasets" wizard
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
     And wait load page
-    Then "Header" element on "Datasets_Info_Pane" should contains "data_clean_cleaned-data" value
-    Then verify "Not_In_Filtered_List_Message" element visibility on "Datasets_Info_Pane" wizard
-    Then "Not_In_Filtered_List_Message" component on "Datasets_Info_Pane" should be equal "Datasets_Info_Pane"."Info_Banner_Message"
-    Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Register dataset initiated successfully" value
     And wait load page
-    Then verify "Header" element not exists on "Datasets_Info_Pane" wizard
-    Then value in "name" column with "text" in "Datasets_Table" on "Datasets" wizard should contains "new_dataset_10"
-    Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "BE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "FE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
-    Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
-    Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
-    Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 1" value
-    Then type value "new_data" to "Table_Name_Filter_Input" field on "Datasets" wizard
-    Then click on "Table_Refresh_Button" element on "Datasets" wizard
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then click on "History_Back_Button" element on "Datasets" wizard
     And wait load page
-    Then value in "name" column with "text" in "Datasets_Table" on "Datasets" wizard should contains "new_data"
-    Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "BE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "FE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
-    Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
-    Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
-    Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 15" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
-    And wait load page
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-    And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
-    And wait load page
-    Then verify that 24 row elements are displayed in "Datasets_Table" on "Datasets" wizard
-    Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "BE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "FE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
-    Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
-    Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
-    Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 24" value
     Then click on cell with value "test-regressor_cox-test-summary" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then verify that 24 row elements are displayed in "Datasets_Table" on "Datasets" wizard
-    Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "BE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "FE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "FE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
-    Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
-    Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
-    Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
-    Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
-    Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 24" value
+    Then "Header" element on "Datasets_Info_Pane" should contains "test-regressor_cox-test-summary" value
+    Then verify "Not_In_Filtered_List_Message" element visibility on "Datasets_Info_Pane" wizard
+    Then "Not_In_Filtered_List_Message" component on "Datasets_Info_Pane" should be equal "Datasets_Info_Pane"."Info_Banner_Message"
+    Then click on "Full_View_Button" element on "Datasets_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element not exists on "Datasets_Info_Pane" wizard
+    Then verify "Header_Full_View" element visibility on "Datasets_Info_Pane" wizard
+    Then "Header_Full_View" element on "Datasets_Info_Pane" should contains "test-regressor_cox-test-summary" value
+    Then verify "Not_In_Filtered_List_Message" element visibility on "Datasets_Info_Pane" wizard
+    Then "Not_In_Filtered_List_Message" component on "Datasets_Info_Pane" should be equal "Datasets_Info_Pane"."Info_Banner_Message"
+    Then click on "Refresh_Button_Full_View" element on "Datasets_Info_Pane" wizard
+    And wait load page
+    Then verify "Not_In_Filtered_List_Message" element visibility on "Datasets_Info_Pane" wizard
+    Then "Not_In_Filtered_List_Message" component on "Datasets_Info_Pane" should be equal "Datasets_Info_Pane"."Info_Banner_Message"
+    Then click on "Tabel_View_Button" element on "Datasets_Info_Pane" wizard
+    And wait load page
+    Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
+    Then "Header" element on "Datasets_Info_Pane" should contains "test-regressor_cox-test-summary" value
+    Then verify "Not_In_Filtered_List_Message" element visibility on "Datasets_Info_Pane" wizard
+    Then "Not_In_Filtered_List_Message" component on "Datasets_Info_Pane" should be equal "Datasets_Info_Pane"."Info_Banner_Message"
+    Then click on "Table_Refresh_Button" element on "Datasets" wizard
+    And wait load page
+    Then "Header" element on "Datasets_Info_Pane" should contains "test-regressor_cox-test-summary" value
+    Then verify "Not_In_Filtered_List_Message" element not exists on "Datasets_Info_Pane" wizard
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then verify "Header" element not exists on "Datasets_Info_Pane" wizard
+    Then verify "Datasets_Table" element visibility on "Datasets" wizard
 
   @MLD
   @smoke

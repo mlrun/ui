@@ -86,7 +86,7 @@ const createFunctionsRowData = (func, projectName, isAllVersions, showExpandButt
       {
         id: `command.${func.ui.identifierUnique}`,
         headerId: 'command',
-        headerLabel: 'Code Entry Point',
+        headerLabel: 'Code entry point',
         value: func.command,
         className: 'table-cell-2'
       },

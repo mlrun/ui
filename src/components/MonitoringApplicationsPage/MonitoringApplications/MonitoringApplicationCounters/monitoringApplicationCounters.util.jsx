@@ -17,18 +17,19 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize } from 'lodash'
+import { capitalize, isEmpty } from 'lodash'
+import classNames from 'classnames'
 
+import { aggregateApplicationStatuses } from '../../../../utils/applications.utils'
 import { formatMinutesToString } from '../../../../utils/measureTime'
 import {
   BATCH_FILTER,
-  ERROR_STATE,
-  FUNCTION_READY_STATE,
+  FAILED_STATE,
   ME_MODE_FILTER,
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE,
   REAL_TIME_FILTER,
-  UNHEALTHY_STATE
+  RUNNING_STATE
 } from '../../../../constants'
 
 export const generateCountersContent = (params, monitoringApplicationsStore) => {
@@ -39,13 +40,8 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
     loading: monitoringApplicationIsLoading,
     error: monitoringApplicationError
   } = monitoringApplicationsStore
-
-  const { ready: appReady, error: appError } = monitoringApplications.applications.reduce(
-    (acc, { status }) => ({
-      ready: acc.ready + (status === FUNCTION_READY_STATE ? 1 : 0),
-      error: acc.error + ([ERROR_STATE, UNHEALTHY_STATE].includes(status) ? 1 : 0)
-    }),
-    { ready: 0, error: 0 }
+  const { ready: appReady, error: appError } = aggregateApplicationStatuses(
+    monitoringApplications.applications
   )
 
   const applicationsCountersContent = [
@@ -61,21 +57,24 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
     },
     {
       id: 'appsStatus',
-      title: 'Apps Status',
+      title: 'Apps status',
       counterData: [
         {
-          id: 'running',
+          id: RUNNING_STATE,
           title: appReady,
           tooltipText: 'Running',
           subtitle: 'Running',
-          subtitleStatus: 'running'
+          subtitleStatus: RUNNING_STATE
         },
         {
-          id: 'failed',
+          id: FAILED_STATE,
+          counterClassName: classNames({
+            stats__failed: appError > 0
+          }),
           title: appError,
-          tooltipText: 'Failed, Error, Unhealthy',
+          tooltipText: 'Error, Unhealthy',
           subtitle: 'Failed',
-          subtitleStatus: 'failed'
+          subtitleStatus: FAILED_STATE
         }
       ]
     },
@@ -111,21 +110,21 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
     }
   ]
 
-  const aggregatedStreamStats = Object.values(
-    monitoringApplication?.stats?.stream_stats || {}
-  ).reduce(
-    (acc, { committed, lag }) => {
-      acc.committed += committed
-      acc.lag += lag
+  const aggregatedStreamStats = !isEmpty(monitoringApplication?.stats?.stream_stats)
+    ? Object.values(monitoringApplication.stats.stream_stats).reduce(
+        (acc, { committed, lag }) => {
+          acc.committed += committed
+          acc.lag += lag
 
-      return acc
-    },
-    { committed: 0, lag: 0 }
-  )
+          return acc
+        },
+        { committed: 0, lag: 0 }
+      )
+    : { committed: 'N/A', lag: 'N/A' }
   const applicationCountersContent = [
     {
       id: 'appStatus',
-      title: 'App Status',
+      title: 'App status',
       counterData: [
         {
           id: 'appStatus',
@@ -149,7 +148,7 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
     },
     {
       id: 'possibleDetections',
-      title: 'Possible Detections',
+      title: 'Possible detections',
       counterData: [
         { id: 'possibleDetections', title: monitoringApplication?.stats?.potential_detection }
       ]
@@ -162,7 +161,7 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
     },
     {
       id: 'commitedOffset',
-      title: 'Commited Offset',
+      title: 'Commited offset',
       tip: 'Total number of messages handled by the app',
       counterData: [{ id: 'commitedOffset', title: aggregatedStreamStats.committed }]
     }

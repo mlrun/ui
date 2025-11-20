@@ -30,6 +30,7 @@ import {
 } from 'igz-controls/utils/validation.util'
 
 import {
+  ABORTED_STATE,
   DATASETS_PAGE,
   DOCUMENTS_PAGE,
   FEATURE_SETS_TAB,
@@ -301,7 +302,7 @@ export const generateJobsContent = selectedItem => {
     startTime: {
       value: formatDatetime(
         selectedItem.startTime,
-        selectedItem.state?.value === 'aborted' ? 'N/A' : 'Not yet started'
+        selectedItem.state?.value === ABORTED_STATE ? 'N/A' : 'Not yet started'
       )
     },
     updated: {

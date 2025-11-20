@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import React from 'react'
 import { isEmpty } from 'lodash'
 
 import {
@@ -32,6 +33,8 @@ import { fetchModelEndpoint } from '../../../reducers/artifactsReducer'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 
 import Alert from 'igz-controls/images/alerts.svg?react'
+import MonitorIcon from 'igz-controls/images/monitor-icon.svg?react'
+import Yaml from 'igz-controls/images/yaml.svg?react'
 
 export const filtersConfig = {
   [ME_MODE_FILTER]: { label: 'Mode:', initialValue: FILTER_ALL_ITEMS, isModal: true },
@@ -43,11 +46,11 @@ const generateInfoHeaders = model_path => {
     { label: 'UID', id: 'uid' },
     { label: 'Model class', id: 'model_class' },
     {
-      label: model_path.includes('llm-prompts') ? 'LLM Prompt artifact' : 'Model artifact',
+      label: model_path.includes('llm-prompts') ? 'LLM prompt artifact' : 'Model artifact',
       id: 'model_artifact'
     },
     { label: 'Function URI', id: 'function_uri' },
-    { label: 'Function Tag', id: 'function_tag' },
+    { label: 'Function tag', id: 'function_tag' },
     { label: 'Feature set', id: 'monitoring_feature_set_uri' },
     { label: 'Sampling percentage', id: 'sampling_percentage' },
     { label: 'Last prediction', id: 'last_prediction' },
@@ -97,6 +100,35 @@ export const generatePageData = (
     additionalHeaderInfo: formatDatetime(selectedItem?.metadata?.created, 'N/A')
   }
 })
+
+export const generateActionsMenu = (
+  modelMonitoringDashboardUrl,
+  handleMonitoring,
+  toggleConvertedYaml,
+  selectedModelEndpoint,
+  dispatch
+) => {
+  return [
+    [
+      {
+        label: 'Monitoring',
+        icon: <MonitorIcon />,
+        tooltip: !modelMonitoringDashboardUrl ? 'Grafana service unavailable' : '',
+        disabled: !modelMonitoringDashboardUrl,
+        onClick: handleMonitoring,
+        hidden: !isEmpty(selectedModelEndpoint)
+      },
+      {
+        label: 'View YAML',
+        icon: <Yaml />,
+        onClick: modelEndpointMin =>
+          chooseOrFetchModelEndpoint(dispatch, selectedModelEndpoint, modelEndpointMin).then(
+            toggleConvertedYaml
+          )
+      }
+    ]
+  ]
+}
 
 export const monitorModelEndpoint = (model_monitoring_dashboard_url, item, projectName) => {
   let redirectUrl = model_monitoring_dashboard_url

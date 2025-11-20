@@ -20,7 +20,7 @@ such restriction.
 import { isEmpty } from 'lodash'
 
 import { groupByUniqName } from '../../utils/groupByUniqName'
-import { ERROR_STATE } from '../../constants'
+import { ERROR_STATE, FAILED_STATE, FUNCTION_READY_STATE, RUNNING_STATE } from '../../constants'
 
 export const generateProjectStatistic = (
   projectSummary = {},
@@ -32,7 +32,8 @@ export const generateProjectStatistic = (
 ) => {
   const grouppedNuclioFunctions = groupByUniqName(nuclioFunctions, 'metadata.name')
   const runningNuclioFunctions = Object.values(grouppedNuclioFunctions).reduce(
-    (prev, curr) => (curr.status.state === 'ready' && !curr.spec.disable ? (prev += 1) : prev),
+    (prev, curr) =>
+      curr.status.state === FUNCTION_READY_STATE && !curr.spec.disable ? (prev += 1) : prev,
     0
   )
   const failedNuclioFunctions = Object.values(grouppedNuclioFunctions).reduce(
@@ -46,7 +47,7 @@ export const generateProjectStatistic = (
         !fetchProjectsSummaryFailure &&
         !fetchNuclioFunctionsFailure &&
         projectSummary?.runs_running_count + runningNuclioFunctions > 0
-          ? 'running'
+          ? RUNNING_STATE
           : 'default',
       counterTooltip: 'ML jobs and Nuclio functions',
       label: 'Running',
@@ -63,7 +64,7 @@ export const generateProjectStatistic = (
         !fetchProjectsSummaryFailure &&
         !fetchNuclioFunctionsFailure &&
         projectSummary.runs_failed_recent_count + failedNuclioFunctions > 0
-          ? 'failed'
+          ? FAILED_STATE
           : 'default',
       counterTooltip: 'Failed ML jobs and nuclio functions in the last 24 hours',
       label: 'Failed',

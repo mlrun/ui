@@ -38,7 +38,7 @@ import {
 import {
   fetchProject,
   fetchProjectFunctions,
-  fetchProjectSummary,
+  fetchProjectSummaryAndNuclioFuncs,
   removeProjectData,
   removeProjectSummary
 } from '../../reducers/projectReducer'
@@ -67,6 +67,7 @@ const ProjectMonitor = () => {
   const projectAbortControllerRef = useRef(new AbortController())
   const projectSummariesAbortControllerRef = useRef(new AbortController())
   const v3ioStreamsAbortControllerRef = useRef(new AbortController())
+  const nuclioFunctionsAbortControllerRef = useRef(new AbortController())
   const frontendSpec = useSelector(state => state.appStore.frontendSpec)
   const functionsStore = useSelector(store => store.functionsStore)
   const projectStore = useSelector(store => store.projectStore)
@@ -127,6 +128,7 @@ const ProjectMonitor = () => {
   const fetchProjectDataAndSummary = useCallback(() => {
     projectAbortControllerRef.current = new AbortController()
     projectSummariesAbortControllerRef.current = new AbortController()
+    nuclioFunctionsAbortControllerRef.current = new AbortController()
 
     Promise.all([
       dispatch(
@@ -137,9 +139,10 @@ const ProjectMonitor = () => {
         })
       ).unwrap(),
       dispatch(
-        fetchProjectSummary({
+        fetchProjectSummaryAndNuclioFuncs({
           project: params.projectName,
-          signal: projectSummariesAbortControllerRef.current.signal
+          projectSummarySignal: projectSummariesAbortControllerRef.current.signal,
+          functionsSignal: nuclioFunctionsAbortControllerRef.current.signal
         })
       ).unwrap()
     ]).catch(error => {
@@ -156,6 +159,7 @@ const ProjectMonitor = () => {
       projectAbortControllerRef.current.abort(REQUEST_CANCELED)
       projectSummariesAbortControllerRef.current.abort(REQUEST_CANCELED)
       v3ioStreamsAbortControllerRef.current.abort(REQUEST_CANCELED)
+      nuclioFunctionsAbortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [params.projectName])
 

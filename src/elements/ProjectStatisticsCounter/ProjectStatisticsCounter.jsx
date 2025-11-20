@@ -65,7 +65,7 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
           <Loader section small secondary />
         ) : (
           <>
-            {generatedCountersContent.value}
+            {generatedCountersContent.value ?? 'N/A'}
             <Arrow className="project-data-card__statistics-arrow" />
           </>
         )}
@@ -91,7 +91,7 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
               textShow={Boolean(generatedCountersContent.tooltip)}
               template={<TextTooltipTemplate text={generatedCountersContent.tooltip} />}
             >
-              {generatedCountersContent.value}
+              {generatedCountersContent.value ?? 'N/A'}
             </Tooltip>
             <Arrow className="project-data-card__statistics-arrow" />
           </>
@@ -101,7 +101,7 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
         className="project-data-card__statistics-label"
         key={`label-${counterObject.label}-${uniqueId}`}
       >
-        <span>{counterObject.label}</span>
+        <span>{counterObject.label ?? 'N/A'}</span>
         {counterObject.status && <i className={`state-${counterObject.status}`} />}
       </div>
     ]

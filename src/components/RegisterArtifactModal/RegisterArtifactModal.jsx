@@ -38,7 +38,7 @@ import {
 import artifactApi from '../../api/artifacts-api'
 import { ARTIFACT_TYPE } from '../../constants'
 import { convertChipsData } from '../../utils/convertChipsData'
-import { createArtifactMessages } from '../../utils/createArtifact.util'
+import { getArtifactMessagesByKind } from '../../utils/createArtifact.util'
 import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
@@ -82,7 +82,7 @@ const RegisterArtifactModal = ({
   const dispatch = useDispatch()
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, form)
   const messagesByKind = useMemo(() => {
-    return createArtifactMessages[artifactKind.toLowerCase()]
+    return getArtifactMessagesByKind(artifactKind)
   }, [artifactKind])
 
   const registerArtifact = values => {

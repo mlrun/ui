@@ -74,8 +74,8 @@
           .stats__line {
             position: relative;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             width: 100%;
             padding-bottom: 0.5rem;
           }
@@ -124,7 +124,8 @@
             @include counterLinkHover;
           }
 
-          .stats__failed > .stats__counter {
+          .stats__failed > .stats__counter,
+          &.stats__failed > .stats__counter {
             color: colors.$amaranth;
             text-decoration: underline;
             text-underline-offset: 1px;

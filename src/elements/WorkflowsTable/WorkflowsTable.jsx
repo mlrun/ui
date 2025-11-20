@@ -31,6 +31,7 @@ import Workflow from '../../components/Workflow/Workflow'
 import { Loader } from 'igz-controls/components'
 
 import {
+  ABORTING_STATE,
   ERROR_STATE,
   FAILED_STATE,
   JOB_KIND_JOB,
@@ -233,7 +234,7 @@ const WorkflowsTable = (
 
   const handlePollAbortingJob = useCallback(
     (jobRun, refresh) => {
-      if (jobRun.abortTaskId && jobRun.state.value === 'aborting') {
+      if (jobRun.abortTaskId && jobRun.state.value === ABORTING_STATE) {
         const abortingJob = {
           [jobRun.abortTaskId]: {
             uid: jobRun.uid,
@@ -336,7 +337,7 @@ const WorkflowsTable = (
       setSelectedJob(state => ({
         ...state,
         abortTaskId: task,
-        state: getState('aborting', JOBS_PAGE, JOB_KIND_JOB)
+        state: getState(ABORTING_STATE, JOBS_PAGE, JOB_KIND_JOB)
       }))
     },
     [setSelectedJob]

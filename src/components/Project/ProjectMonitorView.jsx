@@ -125,10 +125,10 @@ const ProjectMonitorView = ({
             <ProjectsMonitoring />
             <div className="main-info__statistics-section">
               <div className="d-flex">
-                <ProjectJobs />
+                <ProjectJobs project={project} />
               </div>
               <div className="d-flex">
-                <ProjectFunctions nuclioStreamsAreEnabled={nuclioStreamsAreEnabled} />
+                <ProjectFunctions nuclioStreamsAreEnabled={nuclioStreamsAreEnabled} project={project} />
               </div>
             </div>
           </div>

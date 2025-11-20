@@ -20,6 +20,7 @@ such restriction.
 import React, { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { forEach } from 'lodash'
+import { useParams } from 'react-router-dom'
 
 import Input from '../../common/Input/Input'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
@@ -30,12 +31,15 @@ import {
   isPathNotUnique,
   V3IO
 } from '../VolumesTable/volumesTable.util'
+import { SECRET_VOLUME_TYPE } from '../../constants'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { getSecretNameValidator } from '../../utils/getSecretNameValidator'
 
 import Checkmark from 'igz-controls/images/checkmark.svg?react'
 
 import './editableVolumesRow.scss'
 
-const EditableVolumesRow = ({ content, handleEdit, selectedVolume, setSelectedVolume }) => {
+const EditableVolumesRow = ({ content, handleEdit, selectedVolume, setSelectedVolume, volume }) => {
   const [validation, setValidation] = useState({
     isNameValid: true,
     isTypeValid: true,
@@ -43,6 +47,7 @@ const EditableVolumesRow = ({ content, handleEdit, selectedVolume, setSelectedVo
     isPathValid: true,
     isAccessKeyValid: true
   })
+  const { projectName } = useParams()
   const volumeTypeInput = useMemo(
     () => getVolumeTypeInput(selectedVolume.type.value),
     [selectedVolume.type.value]
@@ -80,7 +85,7 @@ const EditableVolumesRow = ({ content, handleEdit, selectedVolume, setSelectedVo
                   ? 'Name already exists'
                   : 'This field is invalid'
               }
-              label="Volume Name"
+              label="Volume name"
               onChange={name =>
                 setSelectedVolume({
                   ...selectedVolume,
@@ -140,6 +145,13 @@ const EditableVolumesRow = ({ content, handleEdit, selectedVolume, setSelectedVo
             required={selectedVolume.type.value !== V3IO}
             requiredText="This field is invalid"
             setInvalid={value => setValidation(state => ({ ...state, isTypeNameValid: value }))}
+            validationRules={
+              selectedVolume?.type?.value?.toLowerCase() === SECRET_VOLUME_TYPE
+                ? getValidationRules('environmentVariables.secretName', [
+                    getSecretNameValidator(projectName, volume?.secret?.secretName)
+                  ])
+                : []
+            }
             type="text"
             value={selectedVolume.type.name}
           />
@@ -213,7 +225,8 @@ EditableVolumesRow.propTypes = {
   content: PropTypes.array.isRequired,
   handleEdit: PropTypes.func.isRequired,
   selectedVolume: PropTypes.object.isRequired,
-  setSelectedVolume: PropTypes.func.isRequired
+  setSelectedVolume: PropTypes.func.isRequired,
+  volume: PropTypes.object.isRequired
 }
 
 export default EditableVolumesRow

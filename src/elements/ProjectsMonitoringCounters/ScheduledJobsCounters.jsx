@@ -24,7 +24,7 @@ import { useSelector } from 'react-redux'
 import { Loader, PopUpDialog } from 'igz-controls/components'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
-import { generateMonitoringStats } from '../../utils/generateMonitoringData'
+import { countTotalValue, generateMonitoringStats } from '../../utils/generateMonitoringData'
 import { JOBS_MONITORING_SCHEDULED_TAB, SCHEDULE_TAB } from '../../constants'
 
 import ClockIcon from 'igz-controls/images/clock.svg?react'
@@ -53,22 +53,18 @@ const ScheduledJobsCounters = () => {
     const scheduled = projectStore.jobsMonitoringData?.scheduled
 
     if (projectName) {
-      const jobs = summaryData?.distinct_scheduled_jobs_pending_count || 0
-      const workflows = summaryData?.distinct_scheduled_pipelines_pending_count || 0
+      const jobs = summaryData?.distinct_scheduled_jobs_pending_count
+      const workflows = summaryData?.distinct_scheduled_pipelines_pending_count
 
       return {
         jobs,
         workflows,
-        total: jobs + workflows
+        total: countTotalValue([jobs, workflows])
       }
     }
 
     return (
-      scheduled || {
-        jobs: 0,
-        workflows: 0,
-        total: 0
-      }
+      scheduled || {}
     )
   }, [projectName, projectStore.projectSummary?.data, projectStore.jobsMonitoringData?.scheduled])
 

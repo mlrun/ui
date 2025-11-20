@@ -1082,6 +1082,34 @@ When(
 )
 
 When(
+  'click on data {string} in {string} table in {string} on {string} wizard',
+  async function (field, tableName, accordion, wizardName, dataTable) {
+    const column = dataTable['rawTable'][0][0]
+    const rows = dataTable.rows()
+
+    for (const row_indx in rows) {
+      const arr = await findRowIndexesByColumnValue(
+        this.driver,
+        pageObjects[wizardName][accordion][tableName],
+        column,
+        rows[row_indx][0]
+      )
+      const indx = arr[0] - pageObjects[wizardName][accordion][tableName].offset
+
+      await hoverComponent(
+        this.driver,
+        pageObjects[wizardName][accordion][tableName]['tableFields'][field](indx + 1),
+        false
+      )
+      await clickOnComponent(
+        this.driver,
+        pageObjects[wizardName][accordion][tableName]['tableFields'][field](indx + 1)
+      )
+    }
+  }
+)
+
+When(
   'click on data {string} in {string} table on {string} wizard',
   async function (field, tableName, wizardName, dataTable) {
     const column = dataTable['rawTable'][0][0]
@@ -2035,10 +2063,23 @@ When(
       this.driver,
       pageObjects[wizardName][graphName].nodesTable.tableFields['name'](index)
     )
-    await this.driver.sleep(250)
+    await this.driver.sleep(350)
     await isComponentContainsClass(
       this.driver,
       pageObjects[wizardName][graphName].nodesTable.rowRoot(index),
+      'selected'
+    )
+  }
+)
+
+When(
+  'click on node with index {int} in {string} column in {string} graph on {string} wizard',
+  async function (index, column, graphName, wizard) {
+    await clickOnComponent(this.driver, pageObjects[wizard][graphName].nodesTable.tableFields[column](index))
+    await this.driver.sleep(250)
+    await isComponentContainsClass(
+      this.driver,
+      pageObjects[wizard][graphName].nodesTable.rowRoot(index),
       'selected'
     )
   }

@@ -44,9 +44,11 @@ const MlReactFlowEdge = ({
   targetY
 }) => {
   const nodes = useNodes()
+  const markerEndIdConverted = useMemo(() => markerEndId?.replace(' ', '_'), [markerEndId])
+  const idConverted = useMemo(() => id?.replace(' ', '_'), [id])
   const markerEnd = useMemo(
-    () => getMarkerEnd(arrowHeadType, markerEndId, id),
-    [arrowHeadType, id, markerEndId]
+    () => getMarkerEnd(arrowHeadType, markerEndIdConverted, idConverted),
+    [arrowHeadType, idConverted, markerEndIdConverted]
   )
   const sourceNode = useMemo(() => nodes.find(n => n.id === source), [source, nodes])
   const targetNode = useMemo(() => nodes.find(n => n.id === target), [target, nodes])
@@ -98,7 +100,7 @@ const MlReactFlowEdge = ({
       <defs>
         <marker
           className="react-flow__arrowhead_closed"
-          id={`react-flow__ml-arrowclosed-${id}`}
+          id={`react-flow__ml-arrowclosed-${idConverted}`}
           markerWidth="12.5"
           markerHeight="12.5"
           viewBox="-10 -10 20 20"
@@ -115,7 +117,7 @@ const MlReactFlowEdge = ({
         </marker>
         <marker
           className="react-flow__arrowhead"
-          id={`react-flow__ml-arrow-${id}`}
+          id={`react-flow__ml-arrow-${idConverted}`}
           markerWidth="12.5"
           markerHeight="12.5"
           viewBox="-10 -10 20 20"
@@ -132,7 +134,7 @@ const MlReactFlowEdge = ({
           />
         </marker>
       </defs>
-      <BaseEdge id={id} path={path[0]} markerEnd={markerEnd} style={style} />
+      <BaseEdge id={idConverted} path={path[0]} markerEnd={markerEnd} style={style} />
     </>
   )
 }

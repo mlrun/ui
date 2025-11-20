@@ -25,14 +25,15 @@ import { isEmpty } from 'lodash'
 import { monitorJob, pollAbortingJobs, rerunJob } from '../components/Jobs/jobs.util'
 
 import {
-  BE_PAGE,
-  BE_PAGE_SIZE,
-  FILTER_ALL_ITEMS,
-  GROUP_BY_WORKFLOW,
-  JOBS_MONITORING_JOBS_TAB,
-  JOBS_MONITORING_PAGE,
-  MONITOR_JOBS_TAB,
-  SCHEDULE_TAB
+    ABORTING_STATE,
+    BE_PAGE,
+    BE_PAGE_SIZE,
+    FILTER_ALL_ITEMS,
+    GROUP_BY_WORKFLOW,
+    JOBS_MONITORING_JOBS_TAB,
+    JOBS_MONITORING_PAGE,
+    MONITOR_JOBS_TAB,
+    SCHEDULE_TAB
 } from '../constants'
 import { usePagination } from './usePagination.hook'
 import { parseJob } from '../utils/parseJob'
@@ -143,7 +144,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
           if (response?.runs) {
             const parsedJobs = response.runs.map(job => parseJob(job))
             const responseAbortingJobs = parsedJobs.reduce((acc, job) => {
-              if (job.state.value === 'aborting' && job.abortTaskId) {
+              if (job.state.value === ABORTING_STATE && job.abortTaskId) {
                 acc[job.abortTaskId] = {
                   uid: job.uid,
                   name: job.name
@@ -220,7 +221,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
               .map(job => parseJob(job, SCHEDULE_TAB))
               .filter(job => {
                 return (
-                  !filters.type || filters.type === FILTER_ALL_ITEMS || job.type === filters.type
+                  !filters.type || filters.type === FILTER_ALL_ITEMS || job.type === filters.type || (Array.isArray(filters.type) && filters.type.includes(job.type) || filters.type.includes(FILTER_ALL_ITEMS))
                 )
               })
 

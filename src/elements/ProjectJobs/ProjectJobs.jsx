@@ -17,10 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
+import PropTypes from 'prop-types'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
@@ -30,7 +31,7 @@ import { PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
 import { getJobsStatistics, getJobsTableData, groupByName, sortByDate } from './projectJobs.utils'
 import { fetchProjectJobs } from '../../reducers/projectReducer'
 
-const ProjectJobs = () => {
+const ProjectJobs = ({ project }) => {
   const params = useParams()
   const dispatch = useDispatch()
   const projectStore = useSelector(store => store.projectStore)
@@ -42,21 +43,23 @@ const ProjectJobs = () => {
   }, [projectStore.project.jobs.data])
 
   useEffect(() => {
-    const abortController = new AbortController()
-    const startTimeFrom = moment().add(-7, 'days').toISOString()
+    if (project?.data?.metadata?.name === params.projectName) {
+      const abortController = new AbortController()
+      const startTimeFrom = moment().add(-7, 'days').toISOString()
 
-    dispatch(
-      fetchProjectJobs({
-        project: params.projectName,
-        startTimeFrom,
-        signal: abortController.signal
-      })
-    )
+      dispatch(
+        fetchProjectJobs({
+          project: params.projectName,
+          startTimeFrom,
+          signal: abortController.signal
+        })
+      )
 
-    return () => {
-      abortController.abort(REQUEST_CANCELED)
+      return () => {
+        abortController.abort(REQUEST_CANCELED)
+      }
     }
-  }, [dispatch, params.projectName])
+  }, [dispatch, params.projectName, project?.data?.metadata?.name])
 
   const jobsData = useMemo(() => {
     const statistics = getJobsStatistics(projectStore.projectSummary, params.projectName)
@@ -85,6 +88,10 @@ const ProjectJobs = () => {
       title="Runs"
     />
   )
+}
+
+ProjectJobs.propTypes = {
+  project: PropTypes.object.isRequired
 }
 
 export default React.memo(ProjectJobs)

@@ -20,6 +20,7 @@ such restriction.
 import { isNil, map } from 'lodash'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { isCommunityEdition } from '../../utils/helper'
+import { getSecretNameValidator } from '../../utils/getSecretNameValidator'
 
 import {
   V3IO_VOLUME_TYPE,
@@ -37,7 +38,7 @@ const volumeTypeInputLabels = {
 
 const selectVolumeTypeOptions = [
   ...(isCommunityEdition() ? [] : [{ label: 'V3IO', id: V3IO_VOLUME_TYPE }]),
-  { label: 'Config Map', id: CONFIG_MAP_VOLUME_TYPE },
+  { label: 'Config map', id: CONFIG_MAP_VOLUME_TYPE },
   { label: 'Secret', id: SECRET_VOLUME_TYPE },
   { label: 'PVC', id: PVC_VOLUME_TYPE }
 ]
@@ -52,7 +53,8 @@ export const generateVolumeInputsData = (
   selectedItem,
   fields,
   editingItem,
-  accessKeyFocusHandler
+  accessKeyFocusHandler,
+  projectName
 ) => {
   const editingItemIndex = editingItem?.ui?.index
   const selectedType = selectedItem.data.type
@@ -90,7 +92,7 @@ export const generateVolumeInputsData = (
         return {
           ...fieldBase,
           inputDisabled: selectedItem.isDefault,
-          label: 'Volume Name',
+          label: 'Volume name',
           required: true,
           type: 'input',
           validationRules: [
@@ -137,7 +139,7 @@ export const generateVolumeInputsData = (
         return {
           ...fieldBase,
           inputHidden: selectedType !== V3IO_VOLUME_TYPE,
-          label: 'Access Key',
+          label: 'Access key',
           tip: 'A platform data-access key',
           required: true,
           customRequiredLabel:
@@ -156,7 +158,7 @@ export const generateVolumeInputsData = (
         return {
           ...fieldBase,
           inputHidden: selectedType !== V3IO_VOLUME_TYPE,
-          label: 'Resource Path',
+          label: 'Resource path',
           tip: 'A relative directory path within the data container',
           textHidden: true,
           type: 'input'
@@ -170,7 +172,11 @@ export const generateVolumeInputsData = (
           textHidden: true,
           type: 'input',
           validationRules:
-            selectedType === SECRET_VOLUME_TYPE ? getValidationRules('project.secrets.key') : []
+            selectedType === SECRET_VOLUME_TYPE
+              ? getValidationRules('environmentVariables.secretName', [
+                  getSecretNameValidator(projectName, editingItem?.data?.typeName)
+                ])
+              : []
         }
       default:
         return null

@@ -48,7 +48,7 @@ const MonitoringApplicationCard = ({
                 hidden={!counter.tooltipText}
                 template={<TextTooltipTemplate text={counter.tooltipText} />}
               >
-                <StatsCard.MainCounter id={`monitoring-app-${counter.id}`}>
+                <StatsCard.MainCounter id={`monitoring-app-${counter.id}`} className={counter.counterClassName}>
                   {loading ? (
                     <Loader section small secondary />
                   ) : error || isNil(counter.title) ? (

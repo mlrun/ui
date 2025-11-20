@@ -174,7 +174,7 @@ const MetricsSelector = ({
 
   const getSelectValue = () => {
     if (isEmpty(appliedMetrics)) {
-      return 'Choose Metrics...'
+      return 'Choose metrics...'
     }
 
     if (appliedMetrics.length === 1) {

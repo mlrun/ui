@@ -41,6 +41,10 @@
       font-size: 28px;
     }
 
+    .stats__failed > .stats__counter {
+      color: colors.$amaranth;
+    }
+
     .stats__status {
       margin-bottom: 10px;
     }

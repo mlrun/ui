@@ -31,6 +31,7 @@ import {
   ENTITY_ID,
   ENTITY_TYPE,
   EVENT_TYPE,
+  FAILED_STATE,
   FE_PAGE,
   FILTER_ALL_ITEMS,
   JOB,
@@ -60,7 +61,7 @@ import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 export const getAlertsFiltersConfig = (timeFrameLimit = false, isAlertsPage = false) => {
   return {
-    [NAME_FILTER]: { label: 'Alert Name:', initialValue: '', hidden: isAlertsPage },
+    [NAME_FILTER]: { label: 'Alert name:', initialValue: '', hidden: isAlertsPage },
     [DATES_FILTER]: {
       initialValue: getDatePickerFilterValue(
         datePickerPastOptions,
@@ -74,13 +75,13 @@ export const getAlertsFiltersConfig = (timeFrameLimit = false, isAlertsPage = fa
       initialValue: PROJECTS_FILTER_ALL_ITEMS,
       isModal: true
     },
-    [ENTITY_TYPE]: { label: 'Entity Type:', initialValue: FILTER_ALL_ITEMS, isModal: true },
+    [ENTITY_TYPE]: { label: 'Entity type:', initialValue: FILTER_ALL_ITEMS, isModal: true },
     [ENTITY_ID]: { label: 'Entity ID:', initialValue: '', isModal: true },
     [JOB_NAME]: { label: 'Job Name:', initialValue: '', isModal: true },
-    [ENDPOINT_APPLICATION]: { label: 'Application Name:', initialValue: '', isModal: true },
+    [ENDPOINT_APPLICATION]: { label: 'Application name:', initialValue: '', isModal: true },
     [ENDPOINT_RESULT]: { label: 'Result:', initialValue: '', isModal: true },
     [SEVERITY]: { label: 'Severity:', initialValue: [FILTER_ALL_ITEMS], isModal: true },
-    [EVENT_TYPE]: { label: 'Event Type:', initialValue: FILTER_ALL_ITEMS, isModal: true }
+    [EVENT_TYPE]: { label: 'Event type:', initialValue: FILTER_ALL_ITEMS, isModal: true }
   }
 }
 
@@ -141,7 +142,7 @@ export const filterAlertsSeverityOptions = [
 
 const alertsEventTypeOptions = [
   { label: upperFirst(FILTER_ALL_ITEMS), id: FILTER_ALL_ITEMS },
-  { label: 'Job failed', id: 'failed', ENTITY_TYPE: JOB_KIND_JOB },
+  { label: 'Job failed', id: FAILED_STATE, ENTITY_TYPE: JOB_KIND_JOB },
   { label: 'Data drift detected', id: 'data-drift-detected', ENTITY_TYPE: MODEL_ENDPOINT_RESULT },
   { label: 'Data drift suspected', id: 'data-drift-suspected', ENTITY_TYPE: MODEL_ENDPOINT_RESULT },
   {
@@ -200,25 +201,25 @@ export const alertsHeaders = (type, isCrossProjects) => {
   if (type) {
     const entityType = {
       [JOB]: [
-        { label: 'Project Name', id: 'projectName', hidden: !isCrossProjects },
-        { label: 'Job Name', id: 'jobName' },
+        { label: 'Project name', id: 'projectName', hidden: !isCrossProjects },
+        { label: 'Job name', id: 'jobName' },
         { label: 'Type', id: 'type' },
         { label: 'Timestamp', id: 'timestamp' },
         { label: 'Severity', id: SEVERITY },
         { label: 'Job', id: 'job' }
       ],
       [MODEL_ENDPOINT_RESULT]: [
-        { label: 'Project Name', id: 'projectName', hidden: !isCrossProjects },
+        { label: 'Project name', id: 'projectName', hidden: !isCrossProjects },
         { label: 'Endpoint ID', id: 'uid' },
-        { label: 'Application Name', id: 'applicationName' },
-        { label: 'Result Name', id: 'resultName' },
+        { label: 'Application name', id: 'applicationName' },
+        { label: 'Result name', id: 'resultName' },
         { label: 'Type', id: 'type' },
         { label: 'Timestamp', id: 'timestamp' },
         { label: 'Severity', id: SEVERITY }
       ],
       [MODEL_MONITORING_APPLICATION]: [
-        { label: 'Project Name', id: 'projectName', hidden: !isCrossProjects },
-        { label: 'Application Name', id: 'applicationName' },
+        { label: 'Project name', id: 'projectName', hidden: !isCrossProjects },
+        { label: 'Application name', id: 'applicationName' },
         { label: 'Type', id: 'type' },
         { label: 'Timestamp', id: 'timestamp' },
         { label: 'Severity', id: SEVERITY }

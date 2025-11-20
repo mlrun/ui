@@ -61,8 +61,8 @@ const JobsMonitoring = () => {
   const dispatch = useDispatch()
 
   const filters = useFiltersFromSearchParams(
-    initialTabData[JOBS_MONITORING_JOBS_TAB]?.filtersConfig,
-    initialTabData[JOBS_MONITORING_JOBS_TAB]?.parseQueryParamsCallback
+    initialTabData?.[JOBS_MONITORING_JOBS_TAB]?.filtersConfig,
+    initialTabData?.[JOBS_MONITORING_JOBS_TAB]?.parseQueryParamsCallback
   )
 
   const tableContent = useMemo(

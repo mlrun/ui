@@ -57,8 +57,8 @@ export const detailsMenu = [
     id: 'prompt-template'
   },
   {
-    label: 'Generation configuration',
-    id: 'generation-configuration'
+    label: 'Invocation configuration',
+    id: 'invocation-configuration'
   }
 ]
 

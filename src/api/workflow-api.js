@@ -20,7 +20,7 @@ such restriction.
 import { capitalize, set } from 'lodash'
 
 import { mainHttpClient } from '../httpClient'
-import { GROUP_BY_WORKFLOW, FILTER_ALL_ITEMS } from '../constants'
+import { GROUP_BY_WORKFLOW, FILTER_ALL_ITEMS, COMPLETED_STATE } from '../constants'
 
 const generateQueryParams = (project, filter) => {
   // Generating encoded JSON query string to send as a value to the filter query param
@@ -56,7 +56,9 @@ const generateQueryParams = (project, filter) => {
       key: 'status',
       op: 8,
       string_values: {
-        values: stateFilter.map(state => (state === 'completed' ? 'Succeeded' : capitalize(state)))
+        values: stateFilter.map(state =>
+          state === COMPLETED_STATE ? 'Succeeded' : capitalize(state)
+        )
       }
     })
   }

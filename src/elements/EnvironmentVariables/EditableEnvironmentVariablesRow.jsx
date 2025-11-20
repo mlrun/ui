@@ -19,6 +19,7 @@ such restriction.
 */
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import { useParams } from 'react-router-dom'
 
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
@@ -31,12 +32,15 @@ import {
   selectTypeOptions
 } from './environmentVariables.util'
 import { ENV_VARIABLE_TYPE_SECRET, ENV_VARIABLE_TYPE_VALUE } from '../../constants'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { getSecretNameValidator } from '../../utils/getSecretNameValidator'
 
 import Checkmark from 'igz-controls/images/checkmark.svg?react'
 
 const EditableEnvironmentVariablesRow = ({
   editEnvVariable,
   envVariables,
+  envVariable,
   selectedEnvVariable,
   setSelectedEnvVariable
 }) => {
@@ -48,6 +52,7 @@ const EditableEnvironmentVariablesRow = ({
     isSecretNameValid: true,
     isSecretKeyValid: true
   })
+  const { projectName } = useParams()
 
   useEffect(() => {
     if (selectedEnvVariable.type === ENV_VARIABLE_TYPE_SECRET) {
@@ -114,9 +119,12 @@ const EditableEnvironmentVariablesRow = ({
             <Input
               floatingLabel
               invalid={!validation.isSecretNameValid}
-              label="Secret Name"
+              label="Secret name"
               onChange={secretName => setSelectedEnvVariable(state => ({ ...state, secretName }))}
               pattern="^(?=[\S\s]{1,253}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?)*$"
+              validationRules={getValidationRules('environmentVariables.secretName', [
+                  getSecretNameValidator(projectName, envVariable?.value?.split?.(':')?.[0])
+                ])}
               required
               setInvalid={value => setValidation(state => ({ ...state, isSecretNameValid: value }))}
               tip={secretNameValidationTip}
@@ -125,7 +133,7 @@ const EditableEnvironmentVariablesRow = ({
             <Input
               floatingLabel
               invalid={!validation.isSecretKeyValid}
-              label="Secret Key"
+              label="Secret key"
               onChange={secretKey => setSelectedEnvVariable(state => ({ ...state, secretKey }))}
               pattern="^(?=[\S\s]{0,253}$)(?!\.$)(?!\.\.[\S\s]*$)[-._a-zA-Z0-9]*$"
               setInvalid={value => setValidation(state => ({ ...state, isSecretKeyValid: value }))}
@@ -162,6 +170,7 @@ const EditableEnvironmentVariablesRow = ({
 EditableEnvironmentVariablesRow.propTypes = {
   editEnvVariable: PropTypes.func.isRequired,
   envVariables: PropTypes.array.isRequired,
+  envVariable: PropTypes.object.isRequired,
   selectedEnvVariable: PropTypes.object.isRequired,
   setSelectedEnvVariable: PropTypes.func.isRequired
 }

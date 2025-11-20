@@ -67,7 +67,7 @@ Feature: Monitoring app Page
     Then "Apps_Status_Running_SubTitle" element on "Monitoring_App" should contains "Running" value
     Then verify "Apps_Status_Running_Counter" element visibility on "Monitoring_App" wizard
     Then verify "Apps_Status_Running_Tip" element visibility on "Monitoring_App" wizard
-    Then verify "Apps_Status_Running_Tip" element on "Monitoring_App" wizard should display hover tooltip "Common_Tooltips"."Running_Tip"
+    Then verify "Apps_Status_Running_Tip" element on "Monitoring_App" wizard should display hover tooltip "Common_Tooltips"."Running"
     Then verify "Apps_Status_Failed_SubTitle" element visibility on "Monitoring_App" wizard
     Then "Apps_Status_Failed_SubTitle" element on "Monitoring_App" should contains "Failed" value
     Then verify "Apps_Status_Failed_Counter" element visibility on "Monitoring_App" wizard
@@ -443,7 +443,7 @@ Feature: Monitoring app Page
     Then "Applications_Metrics_Title" element on "Application_Metrics" should contains "Applications metrics:" value
     Then verify "Endpoints_List_Section" element visibility on "Application_Metrics" wizard
     Then verify "Search_Endpoints_Counter" element visibility on "Application_Metrics" wizard
-    Then "Search_Endpoints_Counter" element on "Application_Metrics" should contains "4 endpoints found" value
+    Then "Search_Endpoints_Counter" element on "Application_Metrics" should contains "5 endpoints found" value
     Then verify "Endpoints_List_Table" element visibility on "Application_Metrics" wizard
     Then verify "Search_By_Endpoint_Filter_Input" element visibility on "Application_Metrics" wizard
     Then type value "boo" to "Search_By_Endpoint_Filter_Input" field on "Application_Metrics" wizard

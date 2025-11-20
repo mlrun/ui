@@ -46,10 +46,17 @@ export const CANCEL_REQUEST_TIMEOUT = 120000
 
 export const PROJECT_ONLINE_STATUS = 'online'
 
+export const ABORTED_STATE = 'aborted'
+export const ABORTING_STATE = 'aborting'
+export const COMPLETED_STATE = 'completed'
 export const ERROR_STATE = 'error'
 export const FAIL_STATE = 'fail'
 export const FAILED_STATE = 'failed'
 export const PENDING_STATE = 'pending'
+export const PENDING_RETRY_STATE = 'pendingRetry'
+export const RUNNING_STATE = 'running'
+export const SUCCEEDED_STATE = 'succeeded'
+export const TERMINATING_STATE = 'terminating'
 export const UNHEALTHY_STATE = 'unhealthy'
 export const UNKNOWN_STATE = 'unknown'
 
@@ -276,11 +283,15 @@ export const FUNCTION_FAILED_TO_DELETE_STATE = 'failedToDelete'
 export const FUNCTION_ERROR_STATE = 'error'
 export const FUNCTION_INITIALIZED_STATE = 'initialized'
 export const FUNCTION_READY_STATE = 'ready'
-export const FUNCTION_PENDINDG_STATE = 'pending'
+export const FUNCTION_PENDING_STATE = 'pending'
 export const FUNCTION_RUNNING_STATE = 'running'
 export const FUNCTION_DEFAULT_HANDLER = 'handler'
 export const FUNCTION_RUN_KINDS = [FUNCTION_TYPE_JOB]
 export const FUNCTION_FILTERS = 'FUNCTION_FILTERS'
+
+/*=========== PIPELINES =============*/
+
+export const MODEL_RUNNER_STEP_KIND = 'model_runner'
 
 /*=========== ARTIFACTS =============*/
 
@@ -313,7 +324,7 @@ export const DETAILS_RETURNED_FEATURES_TAB = 'returned-features'
 export const DETAILS_STATISTICS_TAB = 'statistics'
 export const DETAILS_TRANSFORMATIONS_TAB = 'transformations'
 export const DETAILS_PROMPT_TEMPLATE_TAB = 'prompt-template'
-export const DETAILS_GENERATION_CONFIGURATION_TAB = 'generation-configuration'
+export const DETAILS_INVOCATION_CONFIGURATION_TAB = 'invocation-configuration'
 export const FETCH_MODEL_FEATURE_VECTOR_BEGIN = 'FETCH_MODEL_FEATURE_VECTOR_BEGIN'
 export const FETCH_MODEL_FEATURE_VECTOR_FAILURE = 'FETCH_MODEL_FEATURE_VECTOR_FAILURE'
 export const FETCH_MODEL_FEATURE_VECTOR_SUCCESS = 'FETCH_MODEL_FEATURE_VECTOR_SUCCESS'
@@ -421,6 +432,7 @@ export const PANEL_DEFAULT_ACCESS_KEY = '$generate'
 /*=========== ML REACT FLOW =============*/
 
 export const ML_NODE = 'ml-node'
+export const ML_MODEL_RUNNER_NODE = 'ml-model-runner-node'
 
 export const INPUT_NODE = 'input-node'
 export const OUTPUT_NODE = 'output-node'

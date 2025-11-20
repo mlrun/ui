@@ -22,7 +22,13 @@ import Download from '../common/Download/Download'
 
 import api from '../api/artifacts-api'
 import { createArtifactPreviewContent } from './createArtifactPreviewContent'
-import { ARTIFACT_MAX_CHUNK_SIZE, DEFAULT_ABORT_MSG, REQUEST_CANCELED } from '../constants'
+import {
+  ARTIFACT_MAX_CHUNK_SIZE,
+  DEFAULT_ABORT_MSG,
+  ERROR_STATE,
+  REQUEST_CANCELED,
+  UNKNOWN_STATE
+} from '../constants'
 
 const fileSizes = {
   '100KB': 102400,
@@ -164,7 +170,7 @@ export const fetchArtifactPreviewFromPath = async (
                   : 'preview, use the download option instead'
               }`
             },
-            type: 'unknown'
+            type: UNKNOWN_STATE
           }
         ])
       } else {
@@ -195,7 +201,7 @@ export const fetchArtifactPreviewFromPath = async (
             body: err.response ? JSON.stringify(err.response, null, 2) : ''
           },
           content: [],
-          type: 'error'
+          type: ERROR_STATE
         }
       ])
     }

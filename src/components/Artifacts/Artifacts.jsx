@@ -40,7 +40,7 @@ import {
   TAG_FILTER,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
-import { checkForSelectedArtifact, setFullSelectedArtifact } from '../../utils/artifacts.util'
+import { checkForSelectedArtifact } from '../../utils/artifacts.util'
 import { fetchArtifactsFunctions, fetchArtifactTags } from '../../reducers/artifactsReducer'
 import { fetchModelFeatureVector } from '../../reducers/detailsReducer'
 import { getCloseDetailsLink, isDetailsTabExists } from '../../utils/link-helper.util'
@@ -412,29 +412,6 @@ const Artifacts = ({
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
-  const getAndSetSelectedArtifact = useCallback(() => {
-    setFullSelectedArtifact(
-      page,
-      tab,
-      dispatch,
-      navigate,
-      params.artifactName,
-      setSelectedArtifact,
-      params.projectName,
-      params.id,
-      isAllVersions
-    )
-  }, [
-    page,
-    tab,
-    dispatch,
-    navigate,
-    params.artifactName,
-    params.projectName,
-    params.id,
-    isAllVersions
-  ])
-
   useEffect(() => {
     if (params.id && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
@@ -447,11 +424,12 @@ const Artifacts = ({
     }
   }, [selectedArtifact])
 
-  useEffect(() => {
+  const getAndSetSelectedArtifact = useCallback((ignoreLastCheckedArtifact = false) => {
     checkForSelectedArtifact({
       artifactName: params.artifactName,
       artifacts: isAllVersions ? artifactVersions : artifacts,
       dispatch,
+      ignoreLastCheckedArtifact,
       isAllVersions,
       navigate,
       paginatedArtifacts: isAllVersions ? paginatedArtifactVersions : paginatedArtifacts,
@@ -486,6 +464,8 @@ const Artifacts = ({
     setSearchArtifactsParams,
     tab
   ])
+
+  useEffect(() => getAndSetSelectedArtifact(true), [getAndSetSelectedArtifact])
 
   useEffect(() => {
     const tagAbortControllerCurrent = tagAbortControllerRef.current

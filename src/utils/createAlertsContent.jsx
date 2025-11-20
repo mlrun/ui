@@ -47,7 +47,9 @@ import {
   SEVERITY_CRITICAL,
   SEVERITY_HIGH,
   SEVERITY_LOW,
-  SEVERITY_MEDIUM
+  SEVERITY_MEDIUM,
+  FAIL_STATE,
+  FAILED_STATE
 } from '../constants'
 
 const getEntityTypeData = entityType => {
@@ -177,7 +179,7 @@ const getNotificationData = notifications =>
     return {
       icon: (
         <div
-          data-testid={`${notification.kind}-${notification.err.length === 0 ? 'success' : 'fail'}`}
+          data-testid={`${notification.kind}-${notification.err.length === 0 ? 'success' : FAIL_STATE}`}
           className="alert-row-notification"
         >
           {alertsNotifications[notification.kind]}
@@ -189,7 +191,7 @@ const getNotificationData = notifications =>
         </div>
       ),
       tooltip: upperFirst(
-        `${notification.kind}: ${notification.summary.succeeded} success, ${notification.summary.failed} failed`
+        `${notification.kind}: ${notification.summary.succeeded} success, ${notification.summary.failed} ${FAILED_STATE}`
       ),
       kind: notification.kind,
       succeeded: notification.summary.succeeded,
@@ -272,7 +274,7 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects, showExpandButt
       {
         id: `alertName.${alert.id}`,
         headerId: 'alertName',
-        headerLabel: 'Alert Name',
+        headerLabel: 'Alert name',
         value: name,
         className: 'table-cell-name',
         getLink: () => (!showExpandButton ? getLink(alert) : ''),
@@ -291,7 +293,7 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects, showExpandButt
       {
         id: `eventType.${alert.id}`,
         headerId: 'eventType',
-        headerLabel: 'Event Type',
+        headerLabel: 'Event type',
         value: alert.event_kind?.split('-')?.join(' '),
         className: 'table-cell-1'
       },
@@ -305,7 +307,7 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects, showExpandButt
       {
         id: `entityType.${alert.id}`,
         headerId: 'entityType',
-        headerLabel: 'Entity Type',
+        headerLabel: 'Entity type',
         value: getEntityTypeData(alert.entity_kind).value,
         className: 'table-cell-small',
         tooltip: getEntityTypeData(alert.entity_kind).tooltip,

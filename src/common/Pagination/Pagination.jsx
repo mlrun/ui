@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -35,6 +35,7 @@ import {
   ITEMS_COUNT_END,
   ITEMS_COUNT_START
 } from '../../constants'
+import { MAIN_TABLE_ID } from 'igz-controls/constants'
 import { PAGINATION_CONFIG } from '../../types'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 
@@ -50,9 +51,10 @@ const Pagination = ({
   disableNextDoubleBtn = false,
   disabledNextDoubleBtnTooltip = '',
   paginationConfig,
-  selectedItemName = ''
+  selectedItemName = '',
+  tableId = MAIN_TABLE_ID
 }) => {
-  const [, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const paginationPagesRef = useRef()
 
@@ -215,6 +217,18 @@ const Pagination = ({
     [paginationConfig]
   )
 
+  useEffect(() => {
+    if (parseInt(searchParams.get(FE_PAGE)) !== paginationConfig[FE_PAGE]) {
+      const tableElement = document.getElementById(tableId)
+
+      if (tableElement) {
+        tableElement.scrollTo({
+          top: 0
+        })
+      }
+    }
+  }, [paginationConfig, searchParams, tableId])
+
   return (
     <div className="pagination">
       {paginationConfig.isNewResponse && (
@@ -316,7 +330,8 @@ Pagination.propTypes = {
   disableNextDoubleBtn: PropTypes.bool,
   disabledNextDoubleBtnTooltip: PropTypes.string,
   paginationConfig: PAGINATION_CONFIG.isRequired,
-  selectedItemName: PropTypes.string
+  selectedItemName: PropTypes.string,
+  tableId: PropTypes.string
 }
 
 export default Pagination

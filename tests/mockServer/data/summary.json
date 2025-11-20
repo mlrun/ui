@@ -52,6 +52,9 @@
     },
     {
       "name": "churn-project-admin",
+      "endpoint_alerts_count": 4,
+      "job_alerts_count": 2,
+      "other_alerts_count": 6,
       "files_count": 7,
       "feature_sets_count": 1,
       "failed_model_monitoring_functions": 1,
@@ -75,7 +78,7 @@
     {
       "name": "default",
       "endpoint_alerts_count": 3,
-      "project.job_alerts_count": 6,
+      "job_alerts_count": 6,
       "other_alerts_count": 1,
       "failed_model_monitoring_functions": 1,
       "files_count": 2,
@@ -124,6 +127,9 @@
     },
     {
       "name": "fsdemo-admin",
+      "endpoint_alerts_count": 4,
+      "job_alerts_count": 2,
+      "other_alerts_count": 6,
       "failed_model_monitoring_functions": 0,
       "files_count": 0,
       "feature_sets_count": 4,
@@ -143,6 +149,9 @@
     },
     {
       "name": "getting-started-tutorial-admin",
+      "endpoint_alerts_count": 4,
+      "job_alerts_count": 2,
+      "other_alerts_count": 6,
       "failed_model_monitoring_functions": 1,
       "files_count": 1,
       "feature_sets_count": 0,
@@ -165,6 +174,9 @@
     },
     {
       "name": "hedi-proj",
+      "endpoint_alerts_count": 4,
+      "job_alerts_count": 2,
+      "other_alerts_count": 6,
       "failed_model_monitoring_functions": 0,
       "files_count": 0,
       "feature_sets_count": 0,
@@ -187,6 +199,9 @@
     },
     {
       "name": "mask-detection",
+      "endpoint_alerts_count": 0,
+      "job_alerts_count": 0,
+      "other_alerts_count": 0,
       "failed_model_monitoring_functions": 0,
       "files_count": 0,
       "feature_sets_count": 0,
@@ -209,6 +224,9 @@
     },
     {
       "name": "model-deployment-pipeline-admin",
+      "endpoint_alerts_count": 0,
+      "job_alerts_count": 0,
+      "other_alerts_count": 0,
       "failed_model_monitoring_functions": 0,
       "files_count": 0,
       "feature_sets_count": 0,
@@ -231,6 +249,9 @@
     },
     {
       "name": "moreofthesame",
+      "endpoint_alerts_count": 0,
+      "job_alerts_count": 0,
+      "other_alerts_count": 0,
       "failed_model_monitoring_functions": 0,
       "files_count": 0,
       "feature_sets_count": 0,
@@ -253,6 +274,9 @@
     },
     {
       "name": "network-operations",
+      "endpoint_alerts_count": 0,
+      "job_alerts_count": 0,
+      "other_alerts_count": 0,
       "failed_model_monitoring_functions": 0,
       "files_count": 0,
       "feature_sets_count": 0,
@@ -275,6 +299,9 @@
     },
     {
       "name": "network-operations-admin",
+      "endpoint_alerts_count": 0,
+      "job_alerts_count": 0,
+      "other_alerts_count": 0,
       "failed_model_monitoring_functions": 13,
       "files_count": 13,
       "feature_sets_count": 0,
@@ -297,6 +324,9 @@
     },
     {
       "name": "sk-project-admin",
+      "endpoint_alerts_count": 0,
+      "job_alerts_count": 0,
+      "other_alerts_count": 0,
       "failed_model_monitoring_functions": 4,
       "files_count": 4,
       "feature_sets_count": 0,
@@ -319,6 +349,9 @@
     },
     {
       "name": "stocks",
+      "endpoint_alerts_count": 0,
+      "job_alerts_count": 0,
+      "other_alerts_count": 0,
       "failed_model_monitoring_functions": 0,
       "files_count": 0,
       "feature_sets_count": 2,
@@ -341,6 +374,9 @@
     },
     {
       "name": "stocks-admin",
+      "endpoint_alerts_count": 0,
+      "job_alerts_count": 0,
+      "other_alerts_count": 0,
       "failed_model_monitoring_functions": 0,
       "files_count": 0,
       "feature_sets_count": 2,
@@ -362,6 +398,9 @@
     },
     {
       "name": "test-test",
+      "endpoint_alerts_count": 0,
+      "job_alerts_count": 0,
+      "other_alerts_count": 0,
       "failed_model_monitoring_functions": 1,
       "files_count": 1,
       "feature_sets_count": 0,

@@ -754,26 +754,12 @@ Feature: Jobs Monitoring Page
         Then select "Terminate" option in action menu on "Jobs_Monitoring_Workflows_Tab" wizard in "Workflows_Table" table at row with "main 2021-08-30 05-36-35" value in "name" column
         Then verify if "Confirm_Popup" popup dialog appears
         Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
-        When click on "Delete_Button" element on "Confirm_Popup" wizard
-        And wait load page
-        Then verify if "Notification_Popup" popup dialog appears
-        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Trigger_Termination_Message"
-        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
-        When click on cell with row index 1 in "name" column in "Workflows_Table" table on "Jobs_Monitoring_Workflows_Tab" wizard
-        And wait load page
-        Then verify "Terminate_Button" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
-        Then "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" should contains "Terminate" value
-        Then verify "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard is disabled
-        Then click on "Arrow_Back" element on "Workflows_Monitor_Tab_Info_Pane" wizard
-        And wait load page
-        Then verify that in action menu on "Jobs_Monitoring_Workflows_Tab" wizard in "Workflows_Table" table with "main 2021-08-30 05-36-35" value in "name" column "Terminate" option is disabled
+        When click on "Cancel_Button" element on "Confirm_Popup" wizard
+        Then verify that in action menu on "Jobs_Monitoring_Workflows_Tab" wizard in "Workflows_Table" table with "main 2021-08-30 05-36-35" value in "name" column "Terminate" option is enabled
         And wait load page
         
     @MLJM
     @smoke
-    # !!! restart mock is required
     Scenario: MLJM018  - Check the Terminate functionality on Workflows tab of Jobs monitoring page with running status on workflow runs graph view   
         Given open url
         And wait load page
@@ -809,22 +795,11 @@ Feature: Jobs Monitoring Page
         Then click on "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
         Then verify if "Confirm_Popup" popup dialog appears
         Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
-        When click on "Delete_Button" element on "Confirm_Popup" wizard
-        And wait load page
-        Then verify if "Notification_Popup" popup dialog appears
-        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Trigger_Termination_Message"
-        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
-        Then verify "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard is disabled
-        Then click on "Arrow_Back" element on "Workflows_Monitor_Tab_Info_Pane" wizard
-        And wait load page
-        Then verify that in action menu on "Jobs_Monitoring_Workflows_Tab" wizard in "Workflows_Table" table with "main 2021-08-30 05-36-35" value in "name" column "Terminate" option is disabled
-        And wait load page
+        When click on "Cancel_Button" element on "Confirm_Popup" wizard
+        Then verify "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard is enabled
 
     @MLJM
     @smoke
-    # !!! restart mock is required
     Scenario: MLJM019  - Check the Terminate functionality on Workflows tab of Jobs monitoring page with running status on workflow runs list view
         Given open url
         And wait load page
@@ -867,22 +842,11 @@ Feature: Jobs Monitoring Page
         Then click on "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
         Then verify if "Confirm_Popup" popup dialog appears
         Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
-        When click on "Delete_Button" element on "Confirm_Popup" wizard
-        And wait load page
-        Then verify if "Notification_Popup" popup dialog appears
-        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Trigger_Termination_Message"
-        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
-        Then verify "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard is disabled
-        Then click on "Arrow_Back" element on "Workflows_Monitor_Tab_Info_Pane" wizard
-        And wait load page
-        Then verify that in action menu on "Jobs_Monitoring_Workflows_Tab" wizard in "Workflows_Table" table with "main 2021-08-30 05-36-35" value in "name" column "Terminate" option is disabled
-        And wait load page
+        When click on "Cancel_Button" element on "Confirm_Popup" wizard
+        Then verify "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard is enabled
 
     @MLJM
     @smoke
-    # !!! restart mock is required
     Scenario: MLJM020  - Check the Terminate functionality on Workflows tab of Jobs monitoring page with running status with run detail pane
         Given open url
         And wait load page
@@ -1082,9 +1046,20 @@ Feature: Jobs Monitoring Page
         Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
         Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
         Then verify "Project_Name_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
-        Then verify "Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
-        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
-        Then verify "Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Scheduled_Type_Filter_Options"
+        Then verify "Type_Filter_Dropdown_Schedule" element visibility on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then "Type_All_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Job_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Workflow_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Spark_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Horovod_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Dask_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Databricks_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Scheduled_Type_Filter_Options"       
         Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
         Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
         Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
@@ -1097,7 +1072,7 @@ Feature: Jobs Monitoring Page
         Then verify "Total_Job_Counter_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         When click on "Total_Job_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/*/jobs-monitoring/scheduled?type=job&dates=next24hours"
+        Then verify redirection to "projects/*/jobs-monitoring/scheduled?type=job%2Cspark%2Cmpijob%2Cdask%2Cdatabricks&dates=next24hours"
         And wait load page
         Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
@@ -1109,6 +1084,7 @@ Feature: Jobs Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard selected option value "Next 24 hours"
         Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Jobs_Monitoring_Scheduled_Tab" wizard should contains "Dropdown_Options"."Scheduled_Date_Picker_Filter_Options"
         Then verify "Table_FilterBy_Button" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then verify "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
         Then verify "Refresh_Button" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then click on "Refresh_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
         And wait load page
@@ -1117,9 +1093,20 @@ Feature: Jobs Monitoring Page
         Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
         Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
         Then verify "Project_Name_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
-        Then verify "Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
-        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Job"
-        Then verify "Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Scheduled_Type_Filter_Options"
+        Then verify "Type_Filter_Dropdown_Schedule" element visibility on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "5 items selected"
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then "Type_All_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Job_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Workflow_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Spark_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Horovod_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Dask_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Databricks_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Scheduled_Type_Filter_Options"
         Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
         Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
         Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
@@ -1143,13 +1130,25 @@ Feature: Jobs Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard selected option value "Next 24 hours"
         Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Jobs_Monitoring_Scheduled_Tab" wizard should contains "Dropdown_Options"."Scheduled_Date_Picker_Filter_Options"
         Then verify "Table_FilterBy_Button" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then verify "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
         Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
         Then verify "Project_Name_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
-        Then verify "Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
-        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Workflow"
-        Then verify "Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Scheduled_Type_Filter_Options"
+        Then verify "Type_Filter_Dropdown_Schedule" element visibility on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "Workflow"
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then "Type_All_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Job_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Workflow_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Spark_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Horovod_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Dask_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Databricks_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Scheduled_Type_Filter_Options"
         Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
         Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
         Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
@@ -1237,7 +1236,6 @@ Feature: Jobs Monitoring Page
         Then verify that 8 row elements are displayed in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard
         When pick up "Custom range" from "09/03/2024 00:00" to "09/04/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitoring_Scheduled_Tab" wizard
         And wait load page
-        And wait load page
         Then verify from "09/03/2024 00:00" to "09/04/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard
         And wait load page
     
@@ -1250,10 +1248,34 @@ Feature: Jobs Monitoring Page
         And wait load page
         Then verify redirection to "projects/*/jobs-monitoring/scheduled?type=all&dates=next24hours"
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
-        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
-        When select "Job" option in "Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then "Type_All_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Job_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Workflow_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Spark_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Horovod_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Dask_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Databricks_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
+        When select "Job" option in "Type_Filter_Dropdown_Schedule" filter dropdown on "FilterBy_Popup" wizard
+        And wait load page
         Then click on "Title" element on "FilterBy_Popup" wizard
+        And wait load page
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        Then "Type_All_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Job_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Workflow_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Spark_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Horovod_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Dask_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Databricks_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
         And wait load page
         Then verify "Scheduled_Table" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then select "View YAML" option in action menu on "Jobs_Monitoring_Scheduled_Tab" wizard in "Scheduled_Table" table at row with "clean-data" value in "name" column
@@ -1263,23 +1285,87 @@ Feature: Jobs Monitoring Page
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
         And wait load page
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
-        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Job"
-        When select "Workflow" option in "Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "Job"
+        When select "Job" option in "Type_Filter_Dropdown_Schedule" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        When select "Workflow" option in "Type_Filter_Dropdown_Schedule" filter dropdown on "FilterBy_Popup" wizard
         Then click on "Title" element on "FilterBy_Popup" wizard
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        Then "Type_All_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Job_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Workflow_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Spark_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Horovod_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Dask_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Databricks_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
         Then verify "Scheduled_Table" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
-        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
-        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Workflow"
-        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then select "View YAML" option in action menu on "Jobs_Monitoring_Scheduled_Tab" wizard in "Scheduled_Table" table at row with "main3" value in "name" column
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
-    
+        Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+        And wait load page
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "Workflow"
+
     @MLJM
     @smoke
-    # TODO: Total wf counter = 4, 3 row elements are displayed - known bug (due to running not in 24h period), couln't be fixed yet 
+    Scenario: MLJM021 - Check filter by Types options on Scheduled tab of Jobs monitoring page
+        Given open url
+        And wait load page
+        When click on "Total_Scheduled_Number" element in "Monitoring_Scheduled_Box" on "Projects" wizard
+        And wait load page
+        Then verify redirection to "projects/*/jobs-monitoring/scheduled?type=all&dates=next24hours"
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then verify "Project_Name_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Project_Name_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        When select "Databricks" option in "Type_Filter_Dropdown_Schedule" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "Databricks"
+        When select "Dask" option in "Type_Filter_Dropdown_Schedule" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "Dask, Databricks"
+        When select "Horovod" option in "Type_Filter_Dropdown_Schedule" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "3 items selected"
+        When select "Spark" option in "Type_Filter_Dropdown_Schedule" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "4 items selected"
+        When select "Workflow" option in "Type_Filter_Dropdown_Schedule" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "5 items selected"
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then verify "Scheduled_Table" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "5 items selected"
+        When select "Job" option in "Type_Filter_Dropdown_Schedule" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then verify "Scheduled_Table" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        When select "Spark" option in "Type_Filter_Dropdown_Schedule" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        When select "Horovod" option in "Type_Filter_Dropdown_Schedule" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "Spark, Horovod"
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Scheduled_Type"
+        
+    @MLJM
+    @smoke
+    # TODO: Total wf counter = 4, 3 row elements are displayed - known bug (due to running not in 24h period), couldn't be fixed yet 
     Scenario: MLJM012 - Check jobs/workflows/scheduled count consistency among counter data and Jobs monitoring Tabs
         Given open url
         And wait load page

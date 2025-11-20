@@ -63,6 +63,62 @@ const infoPaneTabSelector = {
   }
 }
 
+const promptTemplateTabSelector = {
+  root: '.table__item .item-header-wrapper .content-menu__tabs',
+  header: {},
+  body: {
+    row: {
+      root: '.content-menu__tab',
+      fields: {
+        key: '',
+        hintButton: '.tip-container'
+      }
+    }
+  }
+}
+
+const promptArgumentsTabSelector = {
+  root: '.table__item .item-info .content-menu__tabs',
+  header: {},
+  body: {
+    row: {
+      root: '.content-menu__tab',
+      fields: {
+        key: '',
+        hintButton: '.tip-container'
+      }
+    }
+  }
+}
+
+const argumentsTabTable = {
+  root: '.arguments-tab',
+  header: {},
+  body: {
+    row: {
+      root: '.arguments-tab__row',
+      fields: {
+        key: '.arguments-tab__row-key',
+        value: '.arguments-tab__row-value'
+      }
+    }
+  }
+}
+
+const generationConfigurationTabTable = {
+  root: '.generation-configuration-tab',
+  header: {},
+  body: {
+    row: {
+      root: '.generation-configuration-tab__row',
+      fields: {
+        key: '.generation-configuration-tab__row-key',
+        value: '.generation-configuration-tab__row-value'
+      }
+    }
+  }
+}
+
 const infoPaneOverviewHeaders = {
   root: '.table__item .item-info__details-wrapper:nth-of-type(1)',
   header: {},
@@ -78,6 +134,20 @@ const infoPaneOverviewHeaders = {
   }
 }
 
+const infoPaneOverviewPromptTable = {
+  root: '.table__item .prompt-tab__table',
+  header: {},
+  body: {
+    row: {
+      root: '.prompt-tab__row',
+      fields: {
+        role: '.prompt-tab__role',
+        content: '.prompt-tab__content'
+      }
+    }
+  }
+}
+
 const infoPaneOverviewProducerHeaders = {
   root: '.table__item .item-info__details-wrapper:nth-of-type(2)',
   header: {},
@@ -87,6 +157,7 @@ const infoPaneOverviewProducerHeaders = {
       fields: {
         key: '.details-item__header',
         link: '.details-item__data .link',
+        producer_link: '.details-item__link',
         value: '.details-item__data'
       }
     }
@@ -121,6 +192,7 @@ const infoPaneOverviewSourcesHeaders = {
     }
   }
 }
+
 const artifactOverviewTable = {
   root: '.table__item .item-info__details:nth-of-type(1)',
   header: {},
@@ -138,6 +210,20 @@ const artifactOverviewTable = {
         uid: '.details-item:nth-of-type(8) .details-item__data',
         updated: '.details-item:nth-of-type(9) .details-item__data',
         labels: '.details-item:nth-of-type(10) .details-item__data'
+      }
+    }
+  }
+}
+
+const llmPromptOverviewTable = {
+  root: '.table__item .item-info__details-wrapper:nth-of-type(1)',
+  header: {},
+  body: {
+    row: {
+      root: '',
+      fields: {
+        key: '.details-item:nth-of-type(1) .details-item__data',
+        tag: '.details-item:nth-of-type(5) .details-item__data'
       }
     }
   }
@@ -228,7 +314,7 @@ const infoPaneDriftHeaders = {
 }
 
 const filesInfoSourcesTable = {
-  root: '.info-sources .info-sources-table',
+  root: '.info-sources',
   header: {
     root: '.info-sources-table__header',
     sorters: {
@@ -238,10 +324,12 @@ const filesInfoSourcesTable = {
   },
   body: {
     row: {
-      root: '.info-sources-table__content',
+      root: '.info-sources__table',
       fields: {
-        name: '.info-sources-table__content-key .data-ellipsis',
-        path: '.info-sources-table__content-value'
+        name_key: '.info-sources__table-row:nth-of-type(1) .info-sources__table-key',
+        name_value: '.info-sources__table-row:nth-of-type(1) .info-sources__table-value',
+        path_key: '.info-sources__table-row:nth-of-type(2) .info-sources__table-key',
+        path_value: '.info-sources__table-row:nth-of-type(2) .info-sources__table-value'
       }
     }
   }
@@ -504,12 +592,28 @@ const modelsRealTimeinfoPaneOverviewHeaders = {
   root: '.table-container',
   header: {},
   body: {
-    root: '.graph-pane',
+    root: '.graph-pane .graph-pane__section:nth-of-type(2)',
     offset: 1,
     row: {
       root: '.graph-pane__row',
       fields: {
         key: '.graph-pane__row-label'
+      }
+    }
+  }
+}
+
+const modelsRealTimeinfoPaneRunningModelsHeaders = {
+  root: '.table-container',
+  header: {},
+  body: {
+    root: '.graph-pane  .graph-pane__section:nth-of-type(3)',
+    offset: 0,
+    row: {
+      root: '.graph-pane__row',
+      fields: {
+        key: '.graph-pane__row-label',
+        key_value:'.graph-pane__row-value .link'
       }
     }
   }
@@ -986,9 +1090,65 @@ export default {
   },
   modelsRealTimePipelineInfoPane: {
     Arrow_Back: commonArrowBack,
-    Header: By.css('.graph-pane__title span'),
+    Header: By.css('.graph-pane__title .graph-pane__title-label'),
+    Title_Icon: By.css('.graph-pane__title .graph-pane__title-icon'),
     Cross_Close_Button: By.css('.graph-pane__title .round-icon-cp .round-icon-cp__circle'),
-    Overview_Headers: commonTable(modelsRealTimeinfoPaneOverviewHeaders)
+    General_Section_Title: By.css('.graph-pane .graph-pane__section:nth-of-type(2) .graph-pane__section-title'),
+    Overview_Headers: commonTable(modelsRealTimeinfoPaneOverviewHeaders),
+    Running_Models_Section_Title: By.css('.graph-pane .graph-pane__section:nth-of-type(3) .graph-pane__section-title'),
+    Graph_Pane_Expand_Icon: By.css('.graph-pane .graph-pane__section:nth-of-type(3) .graph-pane__expand-icon'),
+    Running_Models_Headers: commonTable(modelsRealTimeinfoPaneRunningModelsHeaders)
+  },
+  llmPromptsInfoPane: {
+    Header: header,
+    Updated: updated,
+    Not_In_Filtered_List_Message: By.css('[data-testid="detailsPanel"] .item-header__status .info-banner'),
+    Action_Menu: commonActionMenu,
+    Apply_Changes_Button: applyChangesButton,
+    Apply_Button: applyButton,
+    Cross_Close_Button: crossCloseButton,
+    Full_View_Button: fullViewButton,
+    Tabel_View_Button: tabelViewButton,
+    Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
+    Prompt_Template_Tab_Selector: commonTable(promptTemplateTabSelector),
+    Prompt_Arguments_Tab_Selector: commonTable(promptArgumentsTabSelector),
+    Arguments_Tab_Table: commonTable(argumentsTabTable),
+    Generation_Configuration_Tab_Table: commonTable(generationConfigurationTabTable),
+    Find_In_Prompt_Filter_Input: inputGroup(
+      generateInputGroup(
+        '.search-navigator [data-testid="search-container"]',
+        true,
+        false
+      )
+    ),
+    Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
+    Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
+    Overview_Hash_Header: labelComponent(
+      generateLabelGroup(
+        '.item-info__details:nth-of-type(1) .details-item:nth-of-type(4) .details-item__header',
+        false,
+        true
+      )
+    ),
+    Overview_UID_Header: labelComponent(
+      generateLabelGroup(
+        '.item-info__details-wrapper:nth-of-type(2) .item-info__details .details-item:nth-of-type(5) .details-item__header',
+        false,
+        true
+      )
+    ),
+    Overview_Table: commonTable(llmPromptOverviewTable),
+    Prompt_Template_Table: commonTable(infoPaneOverviewPromptTable),
+    Prompt_Template_Argument: By.css('.prompt-tab__table .prompt-tab__row:nth-of-type(3) .prompt-tab__content span'),
+    Generation_Configuration_Counter: By.css('.generation-configuration-tab .generation-configuration-tab__counter'),
+    Edit_btn_table_view: commonEditBtnTableView,
+    Version_tag_Input: inputGroup(
+      generateInputGroup(
+        '.details-item:nth-of-type(5) .details-item__input-wrapper',
+        false,
+        false
+      )
+    )
   },
   paginationInfoPane: {
     BE_Pagination_Navigate_Prev: By.css(

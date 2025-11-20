@@ -449,7 +449,7 @@ Feature: ML Functions
             |             Secret               |                                      |                               |                                      |         yes        |
         Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Secret_Name_Input" in "Resources_Accordion" on "New_Function" wizard should display options "Input_Hint"."Secret_Name_Rule_Options"
         Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_Function" wizard should display hint "Input_Hint"."Mount_Path_Hint"
         When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "New_Function" wizard
         When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard using nontable inputs
@@ -537,7 +537,7 @@ Feature: ML Functions
             | Function_Environment_Variables_Name_Input | Function_Environment_Variables_Type_Dropdown | Function_Environment_Variables_Secret_Name_Input | Function_Environment_Variables_Secret_Key_Input | Add_Row_Button |
             |                                           |                    Secret                    |                                                 |                        @#$                     |       yes      |
         Then verify "Function_Environment_Variables_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
-        Then verify "Function_Environment_Variables_Secret_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Function_Environment_Variables_Secret_Name_Input" in "Environment_Variables_Accordion" on "New_Function" wizard should display options "Input_Hint"."Secret_Name_Rule_Options"
         Then verify "Function_Environment_Variables_Secret_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hint "Input_Hint"."SECRET_INPUT_HINT"
         Then verify "Function_Environment_Variables_Secret_Key_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then verify "Function_Environment_Variables_Secret_Key_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hint "Input_Hint"."VALUE_INPUT_HINT"
@@ -1110,7 +1110,7 @@ Feature: ML Functions
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
-        Then click on cell with row index 8 in "expand_btn" column in "Functions_Table" table on "ML_Functions" wizard
+        Then click on cell with row index 9 in "expand_btn" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
         Then select "View YAML" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "Nov 23, 2021, 10:31:51 AM" value in "name" column
         Then verify if "View_YAML" popup dialog appears

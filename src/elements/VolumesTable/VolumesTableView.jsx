@@ -21,6 +21,7 @@ import React, { useMemo } from 'react'
 import { find, has, map } from 'lodash'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
+import { useParams } from 'react-router-dom'
 
 import EditableVolumesRow from '../EditableVolumesRow/EditableVolumesRow'
 import Input from '../../common/Input/Input'
@@ -36,6 +37,9 @@ import {
   V3IO
 } from './volumesTable.util'
 import { joinDataOfArrayOrObject } from 'igz-controls/utils/string.util'
+import { SECRET_VOLUME_TYPE } from '../../constants'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { getSecretNameValidator } from '../../utils/getSecretNameValidator'
 
 import Plus from 'igz-controls/images/plus.svg?react'
 import Delete from 'igz-controls/images/delete.svg?react'
@@ -57,7 +61,8 @@ const VolumesTableView = ({
   setShowAddNewVolumeRow,
   setValidation,
   showAddNewVolumeRow,
-  validation
+  validation,
+  volumes
 }) => {
   const volumeTypeInput = useMemo(() => getVolumeTypeInput(newVolume.type), [newVolume.type])
   const tableClassNames = classnames(
@@ -70,6 +75,7 @@ const VolumesTableView = ({
     'input-row-wrapper',
     newVolume.type === V3IO && 'no-border'
   )
+  const { projectName } = useParams()
 
   const addVolumeButtonClassNames = classnames(isPanelEditMode && 'disabled', 'add-input')
 
@@ -96,6 +102,7 @@ const VolumesTableView = ({
               key={index}
               selectedVolume={selectedVolume}
               setSelectedVolume={setSelectedVolume}
+              volume={volumes?.[index]}
             />
           )
         } else {
@@ -140,7 +147,8 @@ const VolumesTableView = ({
                 onClick={type => {
                   setNewVolume(state => ({
                     ...state,
-                    type: find(selectTypeOptions.volumeType, ['id', type]).id
+                    type: find(selectTypeOptions.volumeType, ['id', type]).id,
+                    typeName: ''
                   }))
                   setValidation(state => ({
                     ...state,
@@ -160,7 +168,7 @@ const VolumesTableView = ({
                     ? 'Name already exists'
                     : 'This field is invalid'
                 }
-                label="Volume Name"
+                label="Volume name"
                 onChange={name => setNewVolume(state => ({ ...state, name }))}
                 required
                 requiredText="This field is required"
@@ -187,6 +195,7 @@ const VolumesTableView = ({
             </div>
             <div className={volumeTypeInputRowWrapperClassNames}>
               <Input
+                key={newVolume.type}
                 className="input-row__item"
                 disabled={newVolume.type.length === 0}
                 floatingLabel
@@ -198,6 +207,13 @@ const VolumesTableView = ({
                 setInvalid={value => setValidation(state => ({ ...state, isTypeNameValid: value }))}
                 tip={volumeTypeInput.tip}
                 type="text"
+                validationRules={
+                  newVolume.type?.toLowerCase() === SECRET_VOLUME_TYPE
+                    ? getValidationRules('environmentVariables.secretName', [
+                        getSecretNameValidator(projectName)
+                      ])
+                    : []
+                }
               />
               {newVolume.type === V3IO && (
                 <Input
@@ -282,7 +298,8 @@ VolumesTableView.propTypes = {
   setShowAddNewVolumeRow: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   showAddNewVolumeRow: PropTypes.bool.isRequired,
-  validation: PropTypes.object.isRequired
+  validation: PropTypes.object.isRequired,
+  volumes: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 
 export default VolumesTableView

@@ -81,10 +81,12 @@ Feature: Project Monitoring Page
         Then verify "Monitoring_App_Running_Counter_Subtitle" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
         Then "Monitoring_App_Running_Counter_Subtitle" element in "Monitoring_App_Stats_Container" on "Project" should contains "Running" value
         Then verify "Monitoring_App_Running_Counter_Status_Icon" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
+        Then verify "Monitoring_App_Running_Counter_Status_Icon" element in "Monitoring_App_Stats_Container" on "Project" wizard should display hover tooltip "Common_Tooltips"."Running"
         Then verify "Monitoring_App_Failed_Stats_Counter" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
         Then verify "Monitoring_App_Failed_Counter_Subtitle" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
         Then "Monitoring_App_Failed_Counter_Subtitle" element in "Monitoring_App_Stats_Container" on "Project" should contains "Failed" value
         Then verify "Monitoring_App_Failed_Counter_Status_Icon" element visibility in "Monitoring_App_Stats_Container" on "Project" wizard
+        Then verify "Monitoring_App_Failed_Counter_Status_Icon" element in "Monitoring_App_Stats_Container" on "Project" wizard should display hover tooltip "Common_Tooltips"."Failed_Tip"
         Then verify "Alerts_Stats_Title" element visibility in "Alerts_Stats_Container" on "Project" wizard
         Then "Alerts_Stats_Title" element in "Alerts_Stats_Container" on "Project" should contains "Alerts" value
         Then verify "Alerts_Stats_Title_Icon" element visibility in "Alerts_Stats_Container" on "Project" wizard
@@ -162,6 +164,8 @@ Feature: Project Monitoring Page
         Then verify visibility of header column "failed_counter_number" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
         Then check "Failed" header value in "failed_counter_subtitle" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
         Then verify visibility of header column "failed_counter_icon" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then verify "Running_Counter_Subtitle" element in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" wizard should display hover tooltip "Common_Tooltips"."Running"
+        Then verify "Failed_Counter_Subtitle" element in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" wizard should display hover tooltip "Common_Tooltips"."Failed_Tip"
         Then verify visibility of header column "api_gateways_counter_number" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
         Then check "API gateways" header value in "api_gateways_counter_subtitle" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
         Then verify visibility of header column "consumer_groups_counter_number" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
@@ -521,7 +525,323 @@ Feature: Project Monitoring Page
         Then verify "Parallel_Runs_Number_Input" element visibility on "Modal_Wizard_Form" wizard
         Then verify "Dask_Clutter_URL_Input" element visibility on "Modal_Wizard_Form" wizard
         Then "Teardown_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
-    
+
+    @MLPM
+    @passive
+    @smoke
+    Scenario: MLPM029 - Check the Secret name validation in the Resources step on the Batch run wizard
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then verify "Quick_Actions" element visibility on "Project" wizard
+        Then verify "Quick_Actions" dropdown element on "Project" wizard should contains "Project"."Quick_Actions_Options"
+        Then select "Batch run" option in "Quick_Actions" dropdown on "Project" wizard
+        And wait load page
+        Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
+        Then "Title" element on "Modal_Wizard_Form" should contains "Batch Run" value
+        Then verify "Cross_Close_Button" element visibility on "Modal_Wizard_Form" wizard
+        Then verify "Wizard_Steps_Content" element visibility on "Modal_Wizard_Form" wizard
+        And click on row root with value "aggregate" in "name" column in "Functions_Table" table on "Modal_Wizard_Form" wizard
+        Then "Function_Title" element on "Modal_Wizard_Form" should contains "aggregate" value
+        And click on "Step_5_Button" element on "commonPagesHeader" wizard
+        Then "Function_Title" element on "Modal_Wizard_Form" should contains "aggregate" value
+        Then "Title" element on "Modal_Wizard_Form" should contains "Batch Run" value
+        Then verify "Form_Header_Resources" element visibility on "commonPagesHeader" wizard
+        Then "Form_Header_Resources" element on "commonPagesHeader" should contains "Resources" value
+        Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Volumes_Subheader" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Label_Hint"."New_Job_Volumes"
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
+            |             Secret               |                                      |                               |   mlrun-project-secrets-defaultinv   |         yes        |
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+        Then verify "Volume_Paths_Table_Secret_Name_Input" in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Secret_Name_Rule_Options"
+        When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
+            |             Secret               |            test                      |       test                    |   mlrun-project-secrets-default      |         yes        |
+        Then verify values in "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+            |  type  | volume_name  |  path  |
+            | Secret |    test      |  test  |
+        When click on data "remove_btn" in "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+            |  type  |
+            | Secret |
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
+            |             Secret               |                                      |                               |         mlrun-auth-secrets.          |         yes        |
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+        Then verify "Volume_Paths_Table_Secret_Name_Input" in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Secret_Name_Rule_Options"
+        When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
+            |             Secret               |            test                      |       test                    |         mlrun-auth-secrets           |         yes        |
+        Then verify values in "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+            |  type  | volume_name  |  path  |
+            | Secret |    test      |  test  |
+        When click on data "remove_btn" in "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+            |  type  |
+            | Secret |
+        Then verify "Cross_Close_Button" element visibility on "Modal_Wizard_Form" wizard
+        And click on "Cross_Close_Button" element on "Modal_Wizard_Form" wizard
+        And wait load page
+        Then verify "Quick_Actions" element visibility on "Project" wizard
+        Then verify "Quick_Actions" dropdown element on "Project" wizard should contains "Project"."Quick_Actions_Options"
+
+    @MLPM
+    @passive
+    @smoke
+    Scenario: MLPM030 - Check the Secret name validation in the Advanced step on the Batch run wizard
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then verify "Quick_Actions" element visibility on "Project" wizard
+        Then verify "Quick_Actions" dropdown element on "Project" wizard should contains "Project"."Quick_Actions_Options"
+        Then select "Batch run" option in "Quick_Actions" dropdown on "Project" wizard
+        And wait load page
+        Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
+        Then "Title" element on "Modal_Wizard_Form" should contains "Batch Run" value
+        Then verify "Cross_Close_Button" element visibility on "Modal_Wizard_Form" wizard
+        Then verify "Wizard_Steps_Content" element visibility on "Modal_Wizard_Form" wizard
+        And click on row root with value "erann-job-func" in "name" column in "Functions_Table" table on "Modal_Wizard_Form" wizard
+        Then "Function_Title" element on "Modal_Wizard_Form" should contains "erann-job-func" value
+        And click on "Step_6_Button" element on "commonPagesHeader" wizard
+        Then "Function_Title" element on "Modal_Wizard_Form" should contains "erann-job-func" value
+        Then "Title" element on "Modal_Wizard_Form" should contains "Batch Run" value
+        Then verify "Form_Header_Advanced" element visibility on "commonPagesHeader" wizard
+        Then "Form_Header_Advanced" element on "commonPagesHeader" should contains "Advanced" value
+        Then "Accordion_Advanced_Subheader" element on "Modal_Wizard_Form" should contains "Environment variables" value
+        Then verify "Advanced_Environment_Variables_Table" element visibility on "Modal_Wizard_Form" wizard 
+        When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with several inputs
+            | name_input | type_dropdown |             value_input            | value_input_key |
+            |    name1   |    Secret     | mlrun-project-secrets-defaultinv   |   sectretKey1   |
+        Then verify "Env_Variables_Table_Secret_Name_Input" in "Advanced_Accordion" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Secret_Name_Rule_Options"
+        When click on "Delete_New_Row_Button" element in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
+        When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with several inputs
+            | name_input | type_dropdown |             value_input            | value_input_key |
+            |    name1   |    Secret     |    mlrun-project-secrets-default   |   sectretKey1   |
+        Then verify data in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
+            | name_verify | type_dropdown_verify |                value_verify               |
+            |    name1    |        secret        | mlrun-project-secrets-default:sectretKey1 | 
+        When click on "delete_btn" in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with offset "false"
+            | name_verify |
+            |    name1    |
+        When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with several inputs
+            | name_input | type_dropdown |     value_input     | value_input_key |
+            |    name1   |    Secret     | mlrun-auth-secrets. |   sectretKey1   |
+        Then verify "Env_Variables_Table_Secret_Name_Input" in "Advanced_Accordion" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Secret_Name_Rule_Options"
+        When click on "Delete_New_Row_Button" element in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
+        When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with several inputs
+            | name_input | type_dropdown |     value_input    | value_input_key |
+            |    name1   |    Secret     | mlrun-auth-secrets |   sectretKey1   |
+        Then verify data in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
+            | name_verify | type_dropdown_verify |         value_verify           |
+            |    name1    |        secret        | mlrun-auth-secrets:sectretKey1 | 
+        When click on "delete_btn" in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with offset "false"
+            | name_verify |
+            |    name1    |
+        Then verify "Cross_Close_Button" element visibility on "Modal_Wizard_Form" wizard
+        And click on "Cross_Close_Button" element on "Modal_Wizard_Form" wizard
+        And wait load page
+        Then verify "Quick_Actions" element visibility on "Project" wizard
+        Then verify "Quick_Actions" dropdown element on "Project" wizard should contains "Project"."Quick_Actions_Options"
+
+    @MLPM
+    @passive
+    @smoke
+    Scenario: MLPM031 - Check all mandatory components on Batch inference in Advanced section
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then verify "Quick_Actions" element visibility on "Project" wizard
+        Then verify "Quick_Actions" dropdown element on "Project" wizard should contains "Project"."Quick_Actions_Options"
+        Then select "Batch inference" option in "Quick_Actions" dropdown on "Project" wizard
+        And wait load page
+        Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
+        Then "Title" element on "Modal_Wizard_Form" should contains "Batch Inference" value
+        Then verify "Cross_Close_Button" element visibility on "Modal_Wizard_Form" wizard
+        Then verify "Wizard_Steps_Content" element visibility on "Modal_Wizard_Form" wizard
+        Then "Function_Title" element on "Modal_Wizard_Form" should contains "batch-inference-v2" value
+        And click on "Step_5_Button" element on "commonPagesHeader" wizard
+        Then "Function_Title" element on "Modal_Wizard_Form" should contains "batch-inference-v2" value
+        Then "Preview_text" element on "Modal_Wizard_Form" should contains "Tech Preview" value
+        Then "Title" element on "Modal_Wizard_Form" should contains "Batch Inference" value
+        Then verify "Form_Header_Advanced" element visibility on "commonPagesHeader" wizard
+        Then "Form_Header_Advanced" element on "commonPagesHeader" should contains "Advanced" value
+        Then "Accordion_Advanced_Subheader" element on "Modal_Wizard_Form" should contains "Environment variables" value
+        Then verify "Advanced_Environment_Variables_Table" element visibility on "Modal_Wizard_Form" wizard 
+        Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is disabled
+        Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
+        Then "Next_Button" element on "Modal_Wizard_Form" should contains "Next" value
+        Then "Back_Button" element on "Modal_Wizard_Form" should contains "Back" value
+        Then "Infer_Now_Button" element on "Modal_Wizard_Form" should contains "Infer now" value
+        Then "Schedule_Infer_Button" element on "Modal_Wizard_Form" should contains "Schedule Infer" value
+        Then verify "Accordion_Advanced_Subheader" element visibility on "Modal_Wizard_Form" wizard
+        Then "Accordion_Advanced_Subheader" element on "Modal_Wizard_Form" should contains "Environment variables" value
+        Then verify "Advanced_Environment_Variables_Table" element visibility on "Modal_Wizard_Form" wizard
+        When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with several inputs
+            | name_input | type_dropdown |  value_input | value_input_key |
+            |    name1   |     Value     |    value1    |                 |
+            |    name2   |     Secret    | sectretName1 |   sectretKey1   |
+            |    name3   |     Secret    | sectretName2 |   sectretKey2   |
+            |    name4   |     Value     |    value2    |                 |
+            |    name5   |     Secret    | sectretName3 |   sectretKey3   |
+            |    name6   |     Value     |    value3    |                 |
+            |    name7   |     Secret    | sectretName4 |   sectretKey4   |
+            |    name8   |     Value     |    value4    |                 |
+        Then verify data in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
+            | name_verify | type_dropdown_verify |       value_verify       |
+            |    name1    |        value         |          value1          |
+            |    name2    |        secret        | sectretName1:sectretKey1 | 
+            |    name3    |        secret        | sectretName2:sectretKey2 |
+            |    name4    |        value         |          value2          |
+            |    name5    |        secret        | sectretName3:sectretKey3 |
+            |    name6    |        value         |          value3          |
+            |    name7    |        secret        | sectretName4:sectretKey4 |
+            |    name8    |        value         |          value4          |
+        When click on "delete_btn" in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with offset "false"
+            | name_verify |
+            |    name1    |
+            |    name3    |
+            |    name6    |
+        Then verify data in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
+            | name_verify | type_dropdown_verify |       value_verify       |
+            |    name2    |        secret        | sectretName1:sectretKey1 | 
+            |    name4    |        value         |          value2          |
+            |    name5    |        secret        | sectretName3:sectretKey3 |
+            |    name7    |        secret        | sectretName4:sectretKey4 |
+            |    name8    |        value         |          value4          |
+        And wait load page
+        Then edit 1 row in "Advanced_Environment_Variables_Table" key-value table on "Modal_Wizard_Form" wizard
+            | name_input | value_input | 
+            |   edited   |    edited   |
+        Then verify data in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
+            | name_verify | type_dropdown_verify |          value_verify          |
+            | name2edited |        secret        | sectretName1edited:sectretKey1 | 
+            |    name4    |        value         |             value2             |
+            |    name5    |        secret        |    sectretName3:sectretKey3    |
+            |    name7    |        secret        |    sectretName4:sectretKey4    |
+            |    name8    |        value         |             value4             |
+        And wait load page
+        Then edit 5 row in "Advanced_Environment_Variables_Table" key-value table on "Modal_Wizard_Form" wizard
+            | name_input | value_input | 
+            |   edited   |    edited   |
+        Then verify data in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
+            | name_verify | type_dropdown_verify |          value_verify          |
+            | name2edited |        secret        | sectretName1edited:sectretKey1 | 
+            |    name4    |        value         |             value2             |
+            |    name5    |        secret        |    sectretName3:sectretKey3    |
+            |    name7    |        secret        |    sectretName4:sectretKey4    |
+            | name8edited |        value         |          value4edited          |
+        And wait load page
+        When click on "delete_btn" in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with offset "false"
+            | name_verify |
+            |    name4    |
+            |    name5    |
+        And wait load page
+        Then verify "Default_Input_Path_Input" element visibility in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
+        Then type value "test" to "Default_Input_Path_Input" field on "Advanced_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Default_Artifact_Path_Input" element visibility in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
+        Then "Default_Artifact_Path_Input" element in "Advanced_Accordion" on "Modal_Wizard_Form" should contains "v3io:///projects/{{run.project}}/artifacts" attribute value
+        Then verify "Access_Key_Checkbox" element visibility on "Modal_Wizard_Form" wizard
+        Then uncheck "Access_Key_Checkbox" element on "Modal_Wizard_Form" wizard
+        Then verify "Access_Key_Input" element visibility on "Modal_Wizard_Form" wizard
+        Then type value "  @" to "Access_Key_Input" field on "Modal_Wizard_Form" wizard
+        Then verify "Access_Key_Input" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
+        Then type value "" to "Access_Key_Input" field on "Modal_Wizard_Form" wizard
+        Then verify "Access_Key_Input" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then check "Access_Key_Checkbox" element on "Modal_Wizard_Form" wizard
+        When click on "delete_btn" in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with offset "false"
+            | name_verify |
+            | name2edited |
+            |    name7    |
+            | name8edited |
+        And wait load page
+        When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with several inputs
+            | name_input | type_dropdown |             value_input            | value_input_key |
+            |    name1   |    Secret     | mlrun-project-secrets-defaultinv   |   sectretKey1   |
+        Then verify "Env_Variables_Table_Secret_Name_Input" in "Advanced_Accordion" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Secret_Name_Rule_Options"
+        When click on "Delete_New_Row_Button" element in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
+        When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with several inputs
+            | name_input | type_dropdown |             value_input            | value_input_key |
+            |    name1   |    Secret     |    mlrun-project-secrets-default   |   sectretKey1   |
+        Then verify data in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
+            | name_verify | type_dropdown_verify |                value_verify               |
+            |    name1    |        secret        | mlrun-project-secrets-default:sectretKey1 | 
+        When click on "delete_btn" in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with offset "false"
+            | name_verify |
+            |    name1    |
+        When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with several inputs
+            | name_input | type_dropdown |     value_input     | value_input_key |
+            |    name1   |    Secret     | mlrun-auth-secrets. |   sectretKey1   |
+        Then verify "Env_Variables_Table_Secret_Name_Input" in "Advanced_Accordion" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Secret_Name_Rule_Options"
+        When click on "Delete_New_Row_Button" element in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
+        When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with several inputs
+            | name_input | type_dropdown |     value_input    | value_input_key |
+            |    name1   |    Secret     | mlrun-auth-secrets |   sectretKey1   |
+        Then verify data in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
+            | name_verify | type_dropdown_verify |         value_verify           |
+            |    name1    |        secret        | mlrun-auth-secrets:sectretKey1 | 
+        When click on "delete_btn" in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with offset "false"
+            | name_verify |
+            |    name1    |
+        And click on "Step_4_Button" element on "commonPagesHeader" wizard
+        Then "Function_Title" element on "Modal_Wizard_Form" should contains "batch-inference-v2" value
+        Then verify "Form_Header_Resources" element visibility on "commonPagesHeader" wizard
+        Then "Form_Header_Resources" element on "commonPagesHeader" should contains "Resources" value
+        Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Volumes_Subheader" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Label_Hint"."New_Job_Volumes"
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
+            |             Secret               |                                      |                               |   mlrun-project-secrets-defaultinv   |         yes        |
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+        Then verify "Volume_Paths_Table_Secret_Name_Input" in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Secret_Name_Rule_Options"
+        When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
+            |             Secret               |            test                      |       test                    |   mlrun-project-secrets-default      |         yes        |
+        Then verify values in "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+            |  type  | volume_name  |  path  |
+            | Secret |    test      |  test  |
+        When click on data "remove_btn" in "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+            |  type  |
+            | Secret |
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
+            |             Secret               |                                      |                               |         mlrun-auth-secrets.          |         yes        |
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+        Then verify "Volume_Paths_Table_Secret_Name_Input" in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Secret_Name_Rule_Options"
+        When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
+            |             Secret               |            test                      |       test                    |         mlrun-auth-secrets           |         yes        |
+        Then verify values in "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+            |  type  | volume_name  |  path  |
+            | Secret |    test      |  test  |
+        When click on data "remove_btn" in "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+            |  type  |
+            | Secret |
+        Then verify "Infer_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
+        And click on "Infer_Now_Button" element on "Modal_Wizard_Form" wizard
+        And wait load page
+        And wait load page
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "The batch run was started" value
+        And wait load page
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        And wait load page
+        Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "batch-inference-v2"
+
     @MLPM
     @passive
     @smoke
@@ -944,7 +1264,18 @@ Feature: Project Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Next 24 hours"
         Then verify "Table_FilterBy_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
-        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then "Type_All_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Job_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Workflow_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Spark_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Horovod_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Dask_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Databricks_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
         Then verify "Batch_Run_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then "Batch_Run_Button" element on "Schedule_Monitor_Tab" should contains "Batch run" value
         Then verify "Table_Refresh_Button" element visibility on "Schedule_Monitor_Tab" wizard
@@ -958,8 +1289,20 @@ Feature: Project Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Next 24 hours"
         Then verify "Table_FilterBy_Button" element visibility on "Schedule_Monitor_Tab" wizard
+        Then verify "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
         Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
-        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Job"
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "5 items selected"
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then "Type_All_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Job_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Workflow_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Spark_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Horovod_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Dask_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Databricks_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
         Then verify "Batch_Run_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then "Batch_Run_Button" element on "Schedule_Monitor_Tab" should contains "Batch run" value
         Then verify "Table_Refresh_Button" element visibility on "Schedule_Monitor_Tab" wizard
@@ -973,8 +1316,20 @@ Feature: Project Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Next 24 hours"
         Then verify "Table_FilterBy_Button" element visibility on "Schedule_Monitor_Tab" wizard
+        Then verify "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
         Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
-        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Workflow"
+        Then verify "Type_Filter_Dropdown_Schedule" dropdown on "FilterBy_Popup" wizard selected option value "Workflow"
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then "Type_All_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Job_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Workflow_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then "Type_Spark_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Horovod_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Dask_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then "Type_Databricks_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
+        Then click on "Type_Filter_Element" element on "FilterBy_Popup" wizard
+        And wait load page
         Then verify "Batch_Run_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then "Batch_Run_Button" element on "Schedule_Monitor_Tab" should contains "Batch run" value
         Then verify "Table_Refresh_Button" element visibility on "Schedule_Monitor_Tab" wizard

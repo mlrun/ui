@@ -68,14 +68,33 @@ export default {
     ]
   },
   Real_Time_Pipeline_Pane: {
+    In_Monitoring_State: 'In monitoring',
+    Chip_Tooltip: 'my-endpoint',
     Overview_Headers: [
       'Type:',
-      'After:',
       'Class name:',
       'Function name:',
+      'Arguments:',
       'Handler:',
       'Input path:',
       'Result path:'
+    ],
+    Overview_Headers_Model_Runner: [
+      'Type:',
+      'Class name:',
+      'Function name:',
+      'Arguments:',
+      'Input path:',
+      'Result path:'
+    ],
+    Running_Models_Headers: [
+      'Model endpoint:',
+      'Model artifact:',
+      'Class name:',
+      'Input path:',
+      'Result path:',
+      'Outputs:',
+      'Execution mechanism:'
     ]
   },
   Feature_Sets_Info_Pane: {
@@ -96,6 +115,7 @@ export default {
   },
   Feature_Vectors_Info_Pane: {
     Tab_List: ['Overview', 'Requested Features', 'Analysis'],
+    Tab_List_Extended: ['Overview', 'Requested Features', 'Returned Features', 'Statistics', 'Analysis'],
     Overview_General_Headers: [
       'Description:',
       'Labels:',
@@ -110,6 +130,7 @@ export default {
   },
   Common_Lists: {
     Action_Menu_List: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete', 'Delete all versions'],
+    Action_Menu_List_LLM_Prompt: ['Add a tag', 'Download', 'Copy URI', 'View YAML'],
     Action_Menu_List_Version_History: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete'],
     Action_Menu_List_Expanded: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete all'],
     Action_Menu_List_Dataset_Transition_Popup: ['Download', 'Copy URI', 'View YAML'],
@@ -142,6 +163,26 @@ export default {
     Tab_List: ['Overview', 'Collections'],
     Overview_General_Headers: [
       'Key:',
+      'Hash:',
+      'Version tag:',
+      'Original source:',
+      'Iter:',
+      'URI:',
+      'Path:',
+      'UID:',
+      'Updated:',
+      'Labels:'
+    ],
+    Overview_Producer_Headers: ['Name:', 'Kind:', 'Tag:', 'Owner:', 'UID:']
+  },
+  LLM_Prompts_Info_Pane: {
+    Tab_List: ['Overview', 'Prompt Template', 'Generation Configuration'],
+    Tab_List_Prompt_Template: ['Prompt', 'Arguments'],
+    Info_Banner_Message: /The LLM prompt is not in the filtered list\. Closing the details panel will return you to the current list\./,
+    Overview_General_Headers: [
+      'Key:',
+      'Description:',
+      'Model name:',
       'Hash:',
       'Version tag:',
       'Original source:',
@@ -287,6 +328,7 @@ export default {
       'Metrics:'
     ],
     Overview_Producer_Headers: ['Name:', 'Kind:', 'URI:', 'Owner:', 'Workflow:', 'UID:'],
+    Overview_Producer_Headers_Kind_Project: ['Name:', 'Kind:', 'Tag:', 'Owner:', 'UID:'],
     Overview_Sources_Headers: ['Name:', 'Path:']
   },
   Models_Endpoints_Info_Pane: {
@@ -399,6 +441,8 @@ export default {
     Auto_Refresh: 'Uncheck Auto Refresh to view more results',
     FilterBy_Button: 'Filter',
     FilterBy_Button_1: 'Filter (1)',
+    FilterBy_Button_2: 'Filter (2)',
+    Argument: 'The essence of all things',
     Show_All_Versions: 'Show all versions',
     Open_Metrics: 'Open metrics',
     Refresh_Button: 'Refresh',
@@ -406,7 +450,8 @@ export default {
     Expand_All_Button: 'Expand all',
     In_Process_Jobs: 'Aborting, Pending, Pending retry, Running',
     Running_Tip: 'Running, Terminating',
-    Failed_Tip: 'Failed',
+    Running: 'Running',
+    Failed_Tip: 'Error, Unhealthy',
     Failed_Jobs: 'Aborted, Error',
     Failed_Worflows: 'Error, Failed',
     Succeeded: 'Completed',
@@ -512,6 +557,14 @@ export default {
     Distinct_Keys: 'The partition is based on key.',
     Source_URL_Input:
       'Source URL is the Git Repo that is associated with the project. When the user pulls the project it will use the source URL to pull from',
+    Secret_Name_Rule_Options:
+      'Valid characters: a–z, A–Z, 0–9, –, _, .\n' +
+      'Must begin and end with: a–z, A–Z, 0–9\n' +
+      'No consecutive characters: ..,, .–,, –.\n' +
+      'Max length between two periods: 63\n' +
+      'Length – max: 253\n'+
+      'This field is required\n'+
+      'Secret does not reference an MLRun secret defined in another project',
     SECRET_INPUT_HINT:
       '• Valid characters: A-Z, a-z, 0-9, -, _, .\n' +
       '• Must begin and end with: A-Z, a-z, 0-9\n' +
@@ -545,6 +598,7 @@ export default {
     FeatureSets_Stats_Tip:  
       'Each feature set can have multiple versions, produced by multiple runs and given multiple tags.\n' +
       ' You can browse them in the Feature store page.',
+    Model_Version_Tag: 'Enter a model name to enable field.',
     Artifacts_Stats_Tip:  
       'Each artifact can have multiple versions, produced by multiple runs and given multiple tags.\n' +
       ' You can browse them in the Artifacts page.',
@@ -571,7 +625,9 @@ export default {
     Delete_Scheduled_Job:
       /Are you sure you want to delete the scheduled job "[^"]+[$"]\? Deleted scheduled jobs can not be restored\./,
     Delete_Feature:
-      /You try to delete feature "[^"]+[$"] from vector "[^"]+[$"]\. The feature could be added back later./
+      /You try to delete feature "[^"]+[$"] from vector "[^"]+[$"]\. The feature could be added back later./,
+    Add_A_Tag_Overwrite_Message:
+      /That combination of name and tag is already in use in an existing (artifact|dataset|plotly|LLM prompt)\. If you proceed, the existing (artifact|dataset|plotly|LLM prompt) will be overwritten/
   },
   Messages: {
     How_To_Create:
@@ -766,6 +822,11 @@ export default {
     Common_Message_Jobs_Monitoring:
       /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
     Common_Message_Monitor_Jobs_Name: /No data matches the filter: "Name: (.+?)"/,
+    Common_Message_LLM_Prompt_Name: /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Show best iteration only: (.+?)"/,
+    Common_Message_LLM_Prompt_Label: /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Labels: (.+?), Show best iteration only: (.+?), Model name: (.+?), Model version tag: (.+?)"/,
+    Common_Message_LLM_Prompt_Tag: /No data matches the filter: "LLM prompt version tag: (.+?), Show best iteration only: (.+?)"/,
+    Common_Message_LLM_Prompt_Model_Name_Tag: /No data matches the filter: "LLM prompt version tag: (.+?), Show best iteration only: (.+?)"/,
+    Common_Message_Artifact_Tag: /No data matches the filter: "Version tag: (.+?), Show best iteration only: (.+?)"/,
     Common_Message_Jobs_Monitoring_Workflow_Project:
       /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
     Common_Message_Jobs_Monitoring_Status:
@@ -797,8 +858,5 @@ export default {
     No_Models_data: 'No data matches the filter: "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"',
     No_Pods_data: 'Pods not found, it is likely because Kubernetes removed these pods listing',
     No_Pods_data_Completion: 'Pods not found, it is likely because Kubernetes removed these pods listing after their completion'
-  },
-  Preview_Pop_Up: {
-    Table_Header: ['Name', 'Path', 'Size', 'Updated']
   }
 }

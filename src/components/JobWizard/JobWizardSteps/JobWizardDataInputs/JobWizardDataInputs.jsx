@@ -28,7 +28,7 @@ const JobWizardDataInputs = ({ formState, params, stepIsActive = false }) => {
   return (
     <div className="job-wizard__data-inputs">
       <div className="form-row">
-        <h5 className="form-step-title">Data Inputs</h5>
+        <h5 className="form-step-title">Data inputs</h5>
       </div>
       <div className="form-row">
         <FormDataInputsTable
