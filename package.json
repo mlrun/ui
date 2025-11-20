@@ -132,7 +132,7 @@
     "http-proxy-middleware": "^2.0.3",
     "jsdom": "^27.2.0",
     "mime-types": "^2.1.35",
-    "node": "^21.6.2",
+    "node": "22.21.1",
     "nodemon": "^3.1.2",
     "pandas-js": "^0.2.4",
     "postcss": "^8.4.36",

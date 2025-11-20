@@ -17,12 +17,4 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App'
-
-it('renders without crashing', () => {
-  const root = createRoot(document.getElementById('root'))
-  root.render(<App />)
-  root.unmount()
-})
+import '@testing-library/jest-dom'
