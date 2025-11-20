@@ -200,7 +200,7 @@ Feature: ML Functions
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then click on "New_Function_Button" element on "ML_Functions" wizard
-        Then "Title" element on "Create_ML_Function_Popup" should contains "Create New Function" value
+        Then "Title" element on "Create_ML_Function_Popup" should contains "Create new function" value
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -221,7 +221,7 @@ Feature: ML Functions
     @passive
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    Scenario: MLF010 - Check all mandatory components in General Accordion on create New Function page
+    Scenario: MLF010 - Check all mandatory components in General Accordion on create new function page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -267,7 +267,7 @@ Feature: ML Functions
     @passive
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    Scenario: MLF011 - Check all mandatory components in Code Accordion on create New Function page
+    Scenario: MLF011 - Check all mandatory components in Code Accordion on create new function page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -313,7 +313,7 @@ Feature: ML Functions
     @passive
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    Scenario: MLF012 - Check all mandatory components in Resources Accordion on create New Function page
+    Scenario: MLF012 - Check all mandatory components in Resources Accordion on create new function page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -404,7 +404,7 @@ Feature: ML Functions
     @passive
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    Scenario: MLF013 - Verify behaviour of Volume Paths Table in Resources Accordion on create New Function page
+    Scenario: MLF013 - Verify behaviour of Volume Paths Table in Resources Accordion on create new function page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -438,7 +438,7 @@ Feature: ML Functions
         When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "New_Function" wizard
         When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Config_Map_Input | Add_New_Row_Button |
-            |           Config Map             |                                      |                               |                                     |         yes        |
+            |           Config map             |                                      |                               |                                     |         yes        |
         Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
@@ -510,7 +510,7 @@ Feature: ML Functions
     @passive
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    Scenario: MLF014 - Check all mandatory components in Resources Accordion on create New Function page
+    Scenario: MLF014 - Check all mandatory components in Resources Accordion on create new function page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1001,7 +1001,7 @@ Feature: ML Functions
     @passive
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    Scenario: MLF022 - Verify non-unique value input hint on Create New Function page
+    Scenario: MLF022 - Verify non-unique value input hint on Create new function page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1413,7 +1413,7 @@ Feature: ML Functions
     @MLF
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    Scenario: MLF002 - Check requirements field in Code Accordion on Create New Function page
+    Scenario: MLF002 - Check requirements field in Code Accordion on Create new function page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
