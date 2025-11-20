@@ -26,13 +26,13 @@ $itemInfoWithoutPadding: item-info-without-padding;
 
   &__header {
     margin: 0;
-    padding: 10px 0 7.5px 0;
+    padding: 10px 0 7.5px;
     font-size: 18px;
   }
 
   &__details {
     margin: 0 0 21px;
-    padding: 0 0 0 0;
+    padding: 0;
     list-style-type: none;
 
     &-wrapper {

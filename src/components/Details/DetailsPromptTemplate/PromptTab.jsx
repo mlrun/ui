@@ -111,54 +111,56 @@ const PromptTab = ({
   )
 
   useEffect(() => {
-    if (!isEmpty(selectedItem.prompt_template)) {
-      if (!isPromptTemplateValid(selectedItem.prompt_template)) {
-        setShowError(true)
-      } else {
-        setPromptTemplate(
-          generateJsxContent(selectedItem.prompt_template, selectedItem.prompt_legend)
-        )
-      }
-    } else if (isEmpty(artifactsStore.LLMPrompts.promptTemplate)) {
-      if (
-        !selectedItem.target_path.endsWith('.txt') &&
-        !selectedItem.target_path.endsWith('.json')
-      ) {
-        setShowError(true)
-      } else {
-        setLoading(true)
-        dispatch(
-          fetchLLMPromptTemplate({
-            project: selectedItem.project,
-            config: {
-              params: {
-                path: selectedItem.target_path
+    queueMicrotask(() => {
+      if (!isEmpty(selectedItem.prompt_template)) {
+        if (!isPromptTemplateValid(selectedItem.prompt_template)) {
+          setShowError(true)
+        } else {
+          setPromptTemplate(
+            generateJsxContent(selectedItem.prompt_template, selectedItem.prompt_legend)
+          )
+        }
+      } else if (isEmpty(artifactsStore.LLMPrompts.promptTemplate)) {
+        if (
+          !selectedItem.target_path.endsWith('.txt') &&
+          !selectedItem.target_path.endsWith('.json')
+        ) {
+          setShowError(true)
+        } else {
+          setLoading(true)
+          dispatch(
+            fetchLLMPromptTemplate({
+              project: selectedItem.project,
+              config: {
+                params: {
+                  path: selectedItem.target_path
+                }
               }
-            }
-          })
-        )
-          .unwrap()
-          .then(response => {
-            if (!isPromptTemplateValid(response.data)) {
-              setShowError(true)
-            } else {
-              setPromptTemplate(generateJsxContent(response.data, selectedItem.prompt_legend))
-            }
-          })
-          .catch(() => setShowError(true))
-          .finally(() => {
-            setLoading(false)
-          })
+            })
+          )
+            .unwrap()
+            .then(response => {
+              if (!isPromptTemplateValid(response.data)) {
+                setShowError(true)
+              } else {
+                setPromptTemplate(generateJsxContent(response.data, selectedItem.prompt_legend))
+              }
+            })
+            .catch(() => setShowError(true))
+            .finally(() => {
+              setLoading(false)
+            })
+        }
+      } else if (!isEmpty(artifactsStore.LLMPrompts.promptTemplate)) {
+        if (!isPromptTemplateValid(artifactsStore.LLMPrompts.promptTemplate)) {
+          return setShowError(true)
+        } else {
+          setPromptTemplate(
+            generateJsxContent(artifactsStore.LLMPrompts.promptTemplate, selectedItem.prompt_legend)
+          )
+        }
       }
-    } else if (!isEmpty(artifactsStore.LLMPrompts.promptTemplate)) {
-      if (!isPromptTemplateValid(artifactsStore.LLMPrompts.promptTemplate)) {
-        return setShowError(true)
-      } else {
-        setPromptTemplate(
-          generateJsxContent(artifactsStore.LLMPrompts.promptTemplate, selectedItem.prompt_legend)
-        )
-      }
-    }
+    })
   }, [
     selectedItem.prompt_template,
     selectedItem.prompt_legend,

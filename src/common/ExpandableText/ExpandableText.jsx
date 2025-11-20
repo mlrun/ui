@@ -35,7 +35,9 @@ const ExpandableText = ({
 
   useEffect(() => {
     if (forceExpand || contextForceExpand) {
-      setExpanded(forceExpand || contextForceExpand)
+      queueMicrotask(() => {
+        setExpanded(forceExpand || contextForceExpand)
+      })
     }
   }, [contextForceExpand, forceExpand])
 

@@ -104,13 +104,10 @@ const DatePickerView = React.forwardRef(
       isInputInvalid && 'input_invalid'
     )
     const inputLabelClassNames = classnames('input__label', label && 'active-label')
+    const { datePickerRef, datePickerViewRef } = ref
 
     return (
-      <div
-        data-testid="date-picker-container"
-        className={datePickerClassNames}
-        ref={ref.datePickerRef}
-      >
+      <div data-testid="date-picker-container" className={datePickerClassNames} ref={datePickerRef}>
         <div
           data-testid="date-picker-input"
           className="date-picker__input-wrapper input-wrapper"
@@ -169,12 +166,12 @@ const DatePickerView = React.forwardRef(
             className="date-picker__pop-up-wrapper"
             headerIsHidden
             customPosition={{
-              element: ref.datePickerRef,
+              element: datePickerRef,
               position: 'bottom-right',
               autoHorizontalPosition: true
             }}
           >
-            <div ref={ref.datePickerViewRef} className="date-picker__pop-up">
+            <div ref={datePickerViewRef} className="date-picker__pop-up">
               {datePickerOptions.map(option => (
                 <SelectOption
                   item={option}
@@ -195,13 +192,13 @@ const DatePickerView = React.forwardRef(
             className="date-picker__pop-up-wrapper"
             headerIsHidden
             customPosition={{
-              element: ref.datePickerRef,
+              element: datePickerRef,
               position: 'bottom-right',
               autoVerticalPosition: true,
               autoHorizontalPosition: true
             }}
           >
-            <div ref={ref.datePickerViewRef} className="date-picker__pop-up date-picker">
+            <div ref={datePickerViewRef} className="date-picker__pop-up date-picker">
               <div className="date-picker__calendars">
                 {config.map(item => (
                   <div className={classnames('date-picker__calendar')} key={item.id}>

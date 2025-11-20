@@ -13,16 +13,16 @@
     top: 0;
     margin: 0;
     padding: 0 0 16px;
-    background: colors.$white;
+    color: colors.$mulledWine;
     font-weight: 500;
     font-size: 20px;
     line-height: 23.44px;
-    color: colors.$mulledWine;
+    background: colors.$white;
   }
 
   &__list {
-    padding-right: 15px;
     margin: 0 -15px 0 0;
+    padding-right: 15px;
     overflow-y: auto;
   }
 
@@ -44,16 +44,16 @@
     position: relative;
 
     &::after {
-      content: '';
       position: absolute;
       top: 4px;
       right: 4px;
-      height: 10px;
+      z-index: 2;
       width: 10px;
+      height: 10px;
+      background: colors.$brightTurquoise;
       border: 2px solid colors.$white;
       border-radius: 50%;
-      background: colors.$brightTurquoise;
-      z-index: 2;
+      content: '';
     }
   }
 }

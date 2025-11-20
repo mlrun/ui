@@ -49,10 +49,12 @@ const ScheduledJobsCounters = () => {
   }
 
   const scheduledData = useMemo(() => {
+    const summaryData = projectStore.projectSummary?.data
+    const scheduled = projectStore.jobsMonitoringData?.scheduled
+
     if (projectName) {
-      const jobs = projectStore.projectSummary?.data?.distinct_scheduled_jobs_pending_count
-      const workflows =
-        projectStore.projectSummary?.data?.distinct_scheduled_pipelines_pending_count
+      const jobs = summaryData?.distinct_scheduled_jobs_pending_count
+      const workflows = summaryData?.distinct_scheduled_pipelines_pending_count
 
       return {
         jobs,
@@ -60,13 +62,11 @@ const ScheduledJobsCounters = () => {
         total: countTotalValue([jobs, workflows])
       }
     }
-    return projectStore?.jobsMonitoringData.scheduled || {}
-  }, [
-    projectName,
-    projectStore.projectSummary?.data?.distinct_scheduled_jobs_pending_count,
-    projectStore.projectSummary?.data?.distinct_scheduled_pipelines_pending_count,
-    projectStore.jobsMonitoringData?.scheduled
-  ])
+
+    return (
+      scheduled || {}
+    )
+  }, [projectName, projectStore.projectSummary?.data, projectStore.jobsMonitoringData?.scheduled])
 
   const scheduledStats = useMemo(
     () =>

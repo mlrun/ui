@@ -43,7 +43,9 @@ const DetailsPods = ({ isDetailsPopUp = false, noDataMessage = '' }) => {
   }, [detailsStore.detailsJobPods, detailsStore.pods, isDetailsPopUp])
 
   useEffect(() => {
-    setTable(generatePods(podsData))
+    queueMicrotask(() => {
+      setTable(generatePods(podsData))
+    })
 
     return () => {
       setSelectedPod(null)
@@ -52,7 +54,9 @@ const DetailsPods = ({ isDetailsPopUp = false, noDataMessage = '' }) => {
 
   useEffect(() => {
     if (!selectedPod) {
-      setSelectedPod(table[0])
+      queueMicrotask(() => {
+        setSelectedPod(table[0])
+      })
     }
   }, [selectedPod, table])
 

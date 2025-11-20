@@ -146,8 +146,8 @@
           justify-content: space-between;
           margin-bottom: 16px;
           color: colors.$primary;
-          font-size: 1em;
           font-weight: 500;
+          font-size: 1em;
           line-height: 23px;
         }
 
@@ -155,8 +155,8 @@
           display: flex;
           align-items: center;
           color: colors.$topaz;
-          font-size: 12px;
           font-weight: 400;
+          font-size: 12px;
 
           &-icon {
             flex: 0 1 12px;
@@ -202,9 +202,9 @@
         display: flex;
         align-items: center;
         min-height: 40px;
-        margin: 0 0 5px 0;
-        font-size: 14px;
+        margin: 0 0 5px;
         font-weight: 500;
+        font-size: 14px;
 
         .text-sm {
           margin-left: 5px;

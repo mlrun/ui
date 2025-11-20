@@ -42,7 +42,9 @@ const PanelCredentialsAccessKey = ({
 
   useEffect(() => {
     if (credentialsAccessKey !== PANEL_DEFAULT_ACCESS_KEY) {
-      setInputValue(credentialsAccessKey)
+      queueMicrotask(() => {
+        setInputValue(credentialsAccessKey)
+      })
     }
   }, [credentialsAccessKey])
 

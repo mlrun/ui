@@ -77,7 +77,9 @@ const Page = () => {
           navigate('/projects')
         })
     } else {
-      setProjectFetched(true)
+      queueMicrotask(() => {
+        setProjectFetched(true)
+      })
     }
   }, [dispatch, location.pathname, navigate, projectName, projectsList.length])
 

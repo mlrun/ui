@@ -125,7 +125,9 @@ const JobPopUp = ({ isOpen, jobData, onResolve }) => {
 
   useEffect(() => {
     if (isEmpty(selectedJob)) {
-      handleFetchJob()
+      queueMicrotask(() => {
+        handleFetchJob()
+      })
     }
   }, [handleFetchJob, selectedJob])
 

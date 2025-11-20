@@ -109,13 +109,15 @@ const NewFunctionPopUp = ({
   )
 
   useEffect(() => {
-    if (openPanelByDefault) {
-      setIsPopUpOpen(true)
-    }
+    queueMicrotask(() => {
+      if (openPanelByDefault) {
+        setIsPopUpOpen(true)
+      }
 
-    if (runtime) {
-      selectRuntime(runtime)
-    }
+      if (runtime) {
+        selectRuntime(runtime)
+      }
+    })
   }, [openPanelByDefault, selectRuntime, runtime])
 
   return (

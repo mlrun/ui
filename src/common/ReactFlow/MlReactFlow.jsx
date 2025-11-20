@@ -64,7 +64,9 @@ const MlReactFlow = ({ alignTriggerItem = '', edges, nodes, onNodeClick = () => 
 
   useEffect(() => {
     if (reactFlowInstance && !initialGraphViewGenerated && nodes.length > 0) {
-      setInitialGraphViewGenerated(true)
+      queueMicrotask(() => {
+        setInitialGraphViewGenerated(true)
+      })
     }
   }, [nodes.length, initialGraphViewGenerated, reactFlowInstance])
 

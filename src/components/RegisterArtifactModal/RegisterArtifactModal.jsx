@@ -70,16 +70,17 @@ const RegisterArtifactModal = ({
       }
     }
   }
-  const formRef = React.useRef(
-    createForm({
+  const [form] = useState(() => {
+    return createForm({
       initialValues,
       mutators: { ...arrayMutators, setFieldState },
       onSubmit: () => {}
     })
-  )
+  })
+
   const location = useLocation()
   const dispatch = useDispatch()
-  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
+  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, form)
   const messagesByKind = useMemo(() => {
     return getArtifactMessagesByKind(artifactKind)
   }, [artifactKind])
@@ -160,7 +161,7 @@ const RegisterArtifactModal = ({
   }
 
   return (
-    <Form form={formRef.current} onSubmit={registerArtifact}>
+    <Form form={form} onSubmit={registerArtifact}>
       {formState => {
         return (
           <>

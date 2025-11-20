@@ -62,10 +62,12 @@ const FeatureSetsPanelTitle = ({
 
   useEffect(() => {
     if (featureStore.newFeatureSet.spec.passthrough !== Boolean(data.passthrough)) {
-      setData(state => ({
-        ...state,
-        passthrough: featureStore.newFeatureSet.spec.passthrough ? 'passthrough' : ''
-      }))
+      queueMicrotask(() => {
+        setData(state => ({
+          ...state,
+          passthrough: featureStore.newFeatureSet.spec.passthrough ? 'passthrough' : ''
+        }))
+      })
     }
   }, [data.passthrough, featureStore.newFeatureSet.spec.passthrough])
 

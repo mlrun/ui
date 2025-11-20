@@ -3,8 +3,8 @@
 @use 'igz-controls/scss/mixins';
 
 .table__item-results {
-  display: flex;
   position: relative;
+  display: flex;
 
   .table {
     i {

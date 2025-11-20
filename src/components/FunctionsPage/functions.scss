@@ -1,5 +1,5 @@
 @use 'igz-controls/scss/variables';
-@use '/src/scss/mixins';
+@use '@/scss/mixins';
 
 $functionsRowHeight: variables.$rowHeight;
 $functionsHeaderRowHeight: variables.$headerRowHeight;

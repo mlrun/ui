@@ -92,37 +92,39 @@ const FeatureSetsPanelTargetStore = ({
   )
 
   useEffect(() => {
-    if (!targetsPathEditData.online.isModified && !targetsPathEditData.online.isEditMode) {
-      setData(state => ({
-        ...state,
-        online: {
-          ...state.online,
-          path: generatePath(
-            frontendSpec.feature_store_data_prefixes,
-            project,
-            state.online.kind,
-            featureStore.newFeatureSet.metadata.name,
-            ''
-          )
-        }
-      }))
-    }
+    queueMicrotask(() => {
+      if (!targetsPathEditData.online.isModified && !targetsPathEditData.online.isEditMode) {
+        setData(state => ({
+          ...state,
+          online: {
+            ...state.online,
+            path: generatePath(
+              frontendSpec.feature_store_data_prefixes,
+              project,
+              state.online.kind,
+              featureStore.newFeatureSet.metadata.name,
+              ''
+            )
+          }
+        }))
+      }
 
-    if (!targetsPathEditData.parquet.isModified && !targetsPathEditData.parquet.isEditMode) {
-      setData(state => ({
-        ...state,
-        parquet: {
-          ...state.parquet,
-          path: generatePath(
-            frontendSpec.feature_store_data_prefixes,
-            project,
-            PARQUET,
-            featureStore.newFeatureSet.metadata.name,
-            state.parquet?.partitioned ? '' : PARQUET
-          )
-        }
-      }))
-    }
+      if (!targetsPathEditData.parquet.isModified && !targetsPathEditData.parquet.isEditMode) {
+        setData(state => ({
+          ...state,
+          parquet: {
+            ...state.parquet,
+            path: generatePath(
+              frontendSpec.feature_store_data_prefixes,
+              project,
+              PARQUET,
+              featureStore.newFeatureSet.metadata.name,
+              state.parquet?.partitioned ? '' : PARQUET
+            )
+          }
+        }))
+      }
+    })
   }, [
     featureStore.newFeatureSet.metadata.name,
     featureStore.newFeatureSet.spec.source.kind,
@@ -207,29 +209,31 @@ const FeatureSetsPanelTargetStore = ({
   ])
 
   useEffect(() => {
-    if (isEmpty(frontendSpec.feature_store_data_prefixes)) {
-      setTargetsPathEditData(state => ({
-        ...state,
-        [PARQUET]: {
-          ...state[PARQUET],
-          isEditMode: true
-        },
-        [ONLINE]: {
-          ...state[ONLINE],
-          isEditMode: true
-        }
-      }))
-      setDisableButtons(state => ({
-        ...state,
-        isOfflineTargetPathEditModeClosed: false,
-        isOnlineTargetPathEditModeClosed: false
-      }))
-      setValidation(state => ({
-        ...state,
-        isOfflineTargetPathValid: false,
-        isOnlineTargetPathValid: false
-      }))
-    }
+    queueMicrotask(() => {
+      if (isEmpty(frontendSpec.feature_store_data_prefixes)) {
+        setTargetsPathEditData(state => ({
+          ...state,
+          [PARQUET]: {
+            ...state[PARQUET],
+            isEditMode: true
+          },
+          [ONLINE]: {
+            ...state[ONLINE],
+            isEditMode: true
+          }
+        }))
+        setDisableButtons(state => ({
+          ...state,
+          isOfflineTargetPathEditModeClosed: false,
+          isOnlineTargetPathEditModeClosed: false
+        }))
+        setValidation(state => ({
+          ...state,
+          isOfflineTargetPathValid: false,
+          isOnlineTargetPathValid: false
+        }))
+      }
+    })
   }, [frontendSpec.feature_store_data_prefixes, setDisableButtons, setValidation])
 
   useEffect(() => {
@@ -674,56 +678,58 @@ const FeatureSetsPanelTargetStore = ({
   ])
 
   useEffect(() => {
-    if (featureStore.newFeatureSet.spec.passthrough && !passthroughtEnabled) {
-      setPreviousTargets({
-        data: {
-          ...data,
-          [PARQUET]: {
-            ...data[PARQUET],
-            path: data[PARQUET].path ?? offlineTarget.path
-          },
-          [ONLINE]: {
-            ...data[ONLINE],
-            path: data[ONLINE].path ?? onlineTarget.path
-          }
-        },
-        featureSetTargets: featureStore.newFeatureSet.spec.targets,
-        selectedPartitionKind,
-        selectedTargetKind,
-        partitionRadioButtonsState
-      })
-
-      setPassThrouthEnabled(true)
-
-      if (selectedTargetKind.includes(ONLINE)) {
-        openPopUp(ConfirmDialog, {
-          confirmButton: {
-            label: 'Unset online-target',
-            variant: PRIMARY_BUTTON,
-            handler: () => {
-              clearTargets(false)
+    queueMicrotask(() => {
+      if (featureStore.newFeatureSet.spec.passthrough && !passthroughtEnabled) {
+        setPreviousTargets({
+          data: {
+            ...data,
+            [PARQUET]: {
+              ...data[PARQUET],
+              path: data[PARQUET].path ?? offlineTarget.path
+            },
+            [ONLINE]: {
+              ...data[ONLINE],
+              path: data[ONLINE].path ?? onlineTarget.path
             }
           },
-          cancelButton: {
-            label: 'Keep online-target set',
-            variant: TERTIARY_BUTTON,
-            handler: () => {
-              clearTargets(true)
-            }
-          },
-          closePopUp: () => {
-            dispatch(setNewFeatureSetPassthrough(false))
-          },
-          message:
-            'Passthrough set to "enabled" while online-target is set. Do you want to unset online-target?'
+          featureSetTargets: featureStore.newFeatureSet.spec.targets,
+          selectedPartitionKind,
+          selectedTargetKind,
+          partitionRadioButtonsState
         })
-      } else {
-        clearTargets(false)
+
+        setPassThrouthEnabled(true)
+
+        if (selectedTargetKind.includes(ONLINE)) {
+          openPopUp(ConfirmDialog, {
+            confirmButton: {
+              label: 'Unset online-target',
+              variant: PRIMARY_BUTTON,
+              handler: () => {
+                clearTargets(false)
+              }
+            },
+            cancelButton: {
+              label: 'Keep online-target set',
+              variant: TERTIARY_BUTTON,
+              handler: () => {
+                clearTargets(true)
+              }
+            },
+            closePopUp: () => {
+              dispatch(setNewFeatureSetPassthrough(false))
+            },
+            message:
+              'Passthrough set to "enabled" while online-target is set. Do you want to unset online-target?'
+          })
+        } else {
+          clearTargets(false)
+        }
+      } else if (!featureStore.newFeatureSet.spec.passthrough && passthroughtEnabled) {
+        restoreTargets()
+        setPassThrouthEnabled(false)
       }
-    } else if (!featureStore.newFeatureSet.spec.passthrough && passthroughtEnabled) {
-      restoreTargets()
-      setPassThrouthEnabled(false)
-    }
+    })
   }, [
     clearTargets,
     data,

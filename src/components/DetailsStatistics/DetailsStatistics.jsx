@@ -58,7 +58,7 @@ const DetailsStatistics = ({ selectedItem }) => {
     }),
     [detailsStatisticsHeaderRowHeight, detailsStatisticsRowHeight]
   )
-  const chartConfig = useMemo(getHistogramChartConfig, [])
+  const chartConfig = useMemo(() => getHistogramChartConfig, [])
   const headers = useMemo(
     () =>
       Object.entries(statistics[0]).map(([label, value]) => ({

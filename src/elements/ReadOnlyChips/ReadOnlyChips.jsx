@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useState } from 'react'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import PropTypes from 'prop-types'
@@ -30,16 +30,16 @@ import { setFieldState } from 'igz-controls/utils/form.util'
 import { CHIP_OPTIONS } from 'igz-controls/types'
 
 const ReadOnlyChips = ({ labels = [], chipOptions = getChipOptions('metrics'), ...args }) => {
-  const formRef = React.useRef(
-    createForm({
+  const [form] = useState(() => {
+    return createForm({
       initialValues: { labels: labels },
       mutators: { ...arrayMutators, setFieldState },
       onSubmit: () => {}
     })
-  )
+  })
 
   return (
-    <Form form={formRef.current} onSubmit={() => {}}>
+    <Form form={form} onSubmit={() => {}}>
       {formState => {
         return (
           <FormChipCell

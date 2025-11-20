@@ -69,9 +69,9 @@
         transition: all 0.3s ease-in-out;
 
         @media screen and (min-width: 1600px) {
+          top: -2px;
           width: 20px;
           height: 20px;
-          top: -2px;
         }
 
         svg {

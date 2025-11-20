@@ -1,7 +1,7 @@
 @use 'igz-controls/scss/colors';
 @use 'igz-controls/scss/shadows';
 @use 'igz-controls/scss/variables';
-@use '/src/scss/mixins';
+@use '@/scss/mixins';
 
 $applicationRowHeight: variables.$rowHeight;
 $applicationHeaderRowHeight: variables.$headerRowHeight;

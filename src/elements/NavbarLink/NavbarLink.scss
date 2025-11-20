@@ -12,15 +12,15 @@
       flex-flow: row nowrap;
       justify-content: flex-start;
       width: 100%;
-      min-height: 48px;
       min-width: 48px;
+      min-height: 48px;
       padding: 0 16px 0 13px;
       color: colors.$poloBlue;
       font-weight: normal;
+      white-space: nowrap;
       background-color: transparent;
       border: 2px solid transparent;
       border-radius: 8px;
-      white-space: nowrap;
       cursor: pointer;
       transition: border-color 0.3s ease-in-out;
 
@@ -50,7 +50,7 @@
     &:hover,
     &:focus-visible {
       &.btn {
-        &:not(:disabled):not([class*='active']) {
+        &:not(:disabled, [class*='active']) {
           color: colors.$poloBlue;
           background-color: transparent;
           border-color: colors.$poloBlue;

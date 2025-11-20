@@ -245,7 +245,9 @@ export const useVirtualization = ({
 
   useLayoutEffect(() => {
     if (isEmpty(rowsData.content) && !isEqual(rowsSizes, rowsSizesLocal)) {
-      setRowsSizesLocal(rowsSizes)
+      queueMicrotask(() => {
+        setRowsSizesLocal(rowsSizes)
+      })
     }
   }, [rowsSizesLocal, rowsData, rowsSizes])
 
@@ -260,7 +262,9 @@ export const useVirtualization = ({
       )
 
       if (!isEqual(rowsSizesLocal, newRowsSizes)) {
-        setRowsSizesLocal(newRowsSizes)
+        queueMicrotask(() => {
+          setRowsSizesLocal(newRowsSizes)
+        })
       }
     }
   }, [
@@ -355,7 +359,9 @@ export const useVirtualization = ({
       tableElement.addEventListener('scroll', calculateVirtualizationConfig)
       window.addEventListener('resize', calculateVirtualizationConfig)
     } else {
-      setVirtualizationConfig(virtualizationConfigInitialState)
+      queueMicrotask(() => {
+        setVirtualizationConfig(virtualizationConfigInitialState)
+      })
     }
 
     return () => {

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
@@ -32,16 +32,15 @@ import { getJobsStatistics, getJobsTableData, groupByName, sortByDate } from './
 import { fetchProjectJobs } from '../../reducers/projectReducer'
 
 const ProjectJobs = ({ project }) => {
-  const [groupedLatestItem, setGroupedLatestItem] = useState([])
   const params = useParams()
   const dispatch = useDispatch()
   const projectStore = useSelector(store => store.projectStore)
 
-  useEffect(() => {
-    if (projectStore.project?.jobs?.data) {
-      setGroupedLatestItem(sortByDate(groupByName(projectStore.project.jobs.data)))
-    }
-  }, [projectStore.project?.jobs?.data])
+  const groupedLatestItem = useMemo(() => {
+    return projectStore.project?.jobs?.data
+      ? sortByDate(groupByName(projectStore.project.jobs.data))
+      : []
+  }, [projectStore.project.jobs.data])
 
   useEffect(() => {
     if (project?.data?.metadata?.name === params.projectName) {

@@ -90,15 +90,15 @@ const FunctionsPanel = ({
   )
   const params = useParams()
   const navigate = useNavigate()
-  const formRef = React.useRef(
-    createForm({
+  const [form] = useState(() => {
+    return createForm({
       initialValues: {
         labels: parseChipsData(defaultData?.labels || {}, frontendSpec.internal_labels)
       },
       mutators: { ...arrayMutators, setFieldState },
       onSubmit: () => {}
     })
-  )
+  })
   const dispatch = useDispatch()
   const functionsStore = useSelector(store => store.functionsStore)
   const appStore = useSelector(store => store.appStore)
@@ -306,7 +306,7 @@ const FunctionsPanel = ({
   }
 
   return createPortal(
-    <Form form={formRef.current} onSubmit={() => {}}>
+    <Form form={form} onSubmit={() => {}}>
       {formState => {
         return (
           <>

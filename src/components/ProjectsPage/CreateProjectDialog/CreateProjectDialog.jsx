@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
@@ -46,7 +46,7 @@ import { useModalBlockHistory } from '../../../hooks/useModalBlockHistory.hook'
 
 import './createProjectDialog.scss'
 
-const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject, isOpen = false}) => {
+const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject, isOpen = false }) => {
   const projectStore = useSelector(store => store.projectStore)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const initialValues = {
@@ -55,15 +55,23 @@ const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject, isOpen
     labels: []
   }
 
-  const formRef = React.useRef(
-    createForm({
+  // const formRef = React.useRef(
+  //   createForm({
+  //     initialValues,
+  //     mutators: { ...arrayMutators, setFieldState },
+  //     onSubmit: handleCreateProject
+  //   })
+  // )
+
+  const [form] = useState(() => {
+    return createForm({
       initialValues,
       mutators: { ...arrayMutators, setFieldState },
       onSubmit: handleCreateProject
     })
-  )
+  })
   const dispatch = useDispatch()
-  const { handleCloseModal } = useModalBlockHistory(closeNewProjectPopUp, formRef.current)
+  const { handleCloseModal } = useModalBlockHistory(closeNewProjectPopUp, form)
 
   return (
     <PopUpDialog
@@ -73,7 +81,7 @@ const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject, isOpen
       isOpen={isOpen}
     >
       {projectStore.loading && <Loader />}
-      <Form form={formRef.current} onSubmit={handleCreateProject}>
+      <Form form={form} onSubmit={handleCreateProject}>
         {formState => {
           return (
             <>

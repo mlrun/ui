@@ -57,8 +57,6 @@ const Pagination = ({
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const paginationPagesRef = useRef()
-  const leftSideRef = useRef(0)
-  const rightSideRef = useRef(0)
 
   // Total pages are now calculated based on start and end pages
   const totalPagesCount = useMemo(
@@ -119,9 +117,6 @@ const Pagination = ({
         // Case when activePage is close to the end
         leftSide = lastPage - 4
       }
-
-      rightSideRef.current = rightSide
-      leftSideRef.current = leftSide
 
       if (leftSide > firstPage + 1) {
         items.push(threeDotsString)

@@ -162,13 +162,15 @@ const Jobs = () => {
   }, [getWorkflows, handleRefreshJobs, initialTabData, refreshScheduled])
 
   useLayoutEffect(() => {
-    setSelectedTab(
-      location.pathname.includes(`${JOBS_PAGE_PATH}/${MONITOR_JOBS_TAB}`)
-        ? MONITOR_JOBS_TAB
-        : location.pathname.includes(`${JOBS_PAGE_PATH}/${SCHEDULE_TAB}`)
-          ? SCHEDULE_TAB
-          : MONITOR_WORKFLOWS_TAB
-    )
+    queueMicrotask(() => {
+      setSelectedTab(
+        location.pathname.includes(`${JOBS_PAGE_PATH}/${MONITOR_JOBS_TAB}`)
+          ? MONITOR_JOBS_TAB
+          : location.pathname.includes(`${JOBS_PAGE_PATH}/${SCHEDULE_TAB}`)
+            ? SCHEDULE_TAB
+            : MONITOR_WORKFLOWS_TAB
+      )
+    })
   }, [location.pathname])
 
   useEffect(() => {
@@ -252,7 +254,9 @@ const Jobs = () => {
                 setSearchParams={setSearchParams}
                 tab={selectedTab}
                 withAutoRefresh={selectedTab === MONITOR_JOBS_TAB}
-                withInternalAutoRefresh={Boolean(selectedTab === MONITOR_JOBS_TAB && params.jobName)}
+                withInternalAutoRefresh={Boolean(
+                  selectedTab === MONITOR_JOBS_TAB && params.jobName
+                )}
                 withRefreshButton
                 withoutExpandButton
               >

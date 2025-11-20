@@ -17,14 +17,14 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo } from 'react'
+import React, { useId, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import { isNil } from 'lodash'
 
 import { Tooltip, TextTooltipTemplate, Loader } from 'igz-controls/components'
 
 import Arrow from 'igz-controls/images/arrow.svg?react'
-import { isNil } from 'lodash'
 
 const ProjectStatisticsCounter = ({ counterObject }) => {
   const MAX_VISIBLE_COUNTER = 999999
@@ -33,6 +33,7 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
     `statistics_${counterObject.className}`,
     typeof counterObject.value !== 'number' && 'project-data-card__statistics-value_not-available'
   )
+  const uniqueId = useId()
 
   const generatedCountersContent = useMemo(() => {
     if (!isNil(counterObject.value) && isFinite(Number(counterObject.value))) {
@@ -78,7 +79,10 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
     </Tooltip>
   ) : (
     [
-      <div key={counterObject.value + Math.random()} className={dataCardStatisticsValueClassNames}>
+      <div
+        key={`value-${counterObject.label}-${uniqueId}`}
+        className={dataCardStatisticsValueClassNames}
+      >
         {counterObject.loading ? (
           <Loader section small secondary />
         ) : (
@@ -95,7 +99,7 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
       </div>,
       <div
         className="project-data-card__statistics-label"
-        key={counterObject.label + Math.random()}
+        key={`label-${counterObject.label}-${uniqueId}`}
       >
         <span>{counterObject.label ?? 'N/A'}</span>
         {counterObject.status && <i className={`state-${counterObject.status}`} />}

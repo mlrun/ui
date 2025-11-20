@@ -41,11 +41,11 @@ export const useMode = () => {
   const urlMode = getUrlMode(window.location.search)
 
   useLayoutEffect(() => {
-    if (urlMode) {
+    if (urlMode && urlMode !== mode) {
       localStorageService.setStorageValue('mode', urlMode)
-      setMode(urlMode)
+      queueMicrotask(() => setMode(urlMode))
     }
-  }, [urlMode])
+  }, [mode, urlMode])
 
   return {
     isDemoMode: mode === 'demo',

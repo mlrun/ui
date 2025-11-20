@@ -63,12 +63,16 @@ const DetailsAnalysis = ({ artifact }) => {
         fetchPreviewFromAnalysis()
       } else {
         showErrorNotification(dispatch, '', '', 'The analysis type is malformed. Expected dict')
-        setNoData(true)
+        queueMicrotask(() => {
+          setNoData(true)
+        })
       }
 
       previewIsFetchedRef.current = true
     } else if (!artifact.analysis || isEmpty(artifact.analysis)) {
-      setNoData(true)
+      queueMicrotask(() => {
+        setNoData(true)
+      })
     }
   }, [artifact.analysis, fetchPreviewFromAnalysis, preview.length, frontendSpec, dispatch])
 

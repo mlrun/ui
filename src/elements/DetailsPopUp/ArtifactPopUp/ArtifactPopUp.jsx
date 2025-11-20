@@ -207,7 +207,9 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
 
   useEffect(() => {
     if (isEmpty(selectedArtifact)) {
-      fetchArtifact()
+      queueMicrotask(() => {
+        fetchArtifact()
+      })
     }
   }, [fetchArtifact, selectedArtifact])
 

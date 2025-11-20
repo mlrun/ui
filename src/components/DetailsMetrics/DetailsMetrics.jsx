@@ -136,7 +136,9 @@ const DetailsMetrics = ({
     const selectedDate = detailsStore.dates.selectedOptionId
     if (!selectedDate || !(selectedDate in timeRangeMapping)) return
 
-    setSelectedDate(timeRangeMapping[selectedDate])
+    queueMicrotask(() => {
+      setSelectedDate(timeRangeMapping[selectedDate])
+    })
   }, [detailsStore.dates.selectedOptionId])
 
   const fetchData = useCallback(
@@ -220,7 +222,9 @@ const DetailsMetrics = ({
         selectedItem.metadata.uid
       )
     } else {
-      setMetrics([])
+      queueMicrotask(() => {
+        setMetrics([])
+      })
     }
 
     return () => {

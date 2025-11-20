@@ -34,7 +34,9 @@ const FunctionsPanelEnvironmentVariables = () => {
   const functionsStore = useSelector(store => store.functionsStore)
 
   useEffect(() => {
-    setEnvVariables(parseEnvVariables(functionsStore.newFunction.spec.env))
+    queueMicrotask(() => {
+      setEnvVariables(parseEnvVariables(functionsStore.newFunction.spec.env))
+    })
   }, [functionsStore.newFunction.spec.env])
 
   const handleAddNewEnv = env => {

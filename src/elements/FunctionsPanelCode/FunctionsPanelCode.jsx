@@ -93,11 +93,15 @@ const FunctionsPanelCode = ({
           )
         )
         setImageType(EXISTING_IMAGE)
-        setData(state => ({
-          ...state,
-          image:
-            appStore.frontendSpec?.default_function_image_by_kind?.[functionsStore.newFunction.kind]
-        }))
+        queueMicrotask(() => {
+          setData(state => ({
+            ...state,
+            image:
+              appStore.frontendSpec?.default_function_image_by_kind?.[
+                functionsStore.newFunction.kind
+              ]
+          }))
+        })
       } else {
         const buildImage = (appStore.frontendSpec?.function_deployment_target_image_template || '')
           .replace('{project}', params.projectName)
@@ -118,15 +122,17 @@ const FunctionsPanelCode = ({
           )
         )
         dispatch(setNewFunctionBuildImage(buildImage))
-        setData(state => ({
-          ...state,
-          requirements: appStore.frontendSpec?.function_deployment_mlrun_requirement ?? '',
-          base_image:
-            appStore.frontendSpec?.default_function_image_by_kind?.[
-              functionsStore.newFunction.kind
-            ] ?? '',
-          build_image: buildImage
-        }))
+        queueMicrotask(() => {
+          setData(state => ({
+            ...state,
+            requirements: appStore.frontendSpec?.function_deployment_mlrun_requirement ?? '',
+            base_image:
+              appStore.frontendSpec?.default_function_image_by_kind?.[
+                functionsStore.newFunction.kind
+              ] ?? '',
+            build_image: buildImage
+          }))
+        })
       }
     } else if (
       (defaultData.image?.length > 0 ||
@@ -138,10 +144,12 @@ const FunctionsPanelCode = ({
     ) {
       dispatch(setNewFunctionImage(defaultData.image || DEFAULT_IMAGE))
       setImageType(EXISTING_IMAGE)
-      setData(state => ({
-        ...state,
-        image: defaultData.image || DEFAULT_IMAGE
-      }))
+      queueMicrotask(() => {
+        setData(state => ({
+          ...state,
+          image: defaultData.image || DEFAULT_IMAGE
+        }))
+      })
     } else if (imageType.length === 0) {
       setImageType(NEW_IMAGE)
     }

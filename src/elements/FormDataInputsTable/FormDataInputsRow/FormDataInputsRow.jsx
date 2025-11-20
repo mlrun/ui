@@ -66,7 +66,9 @@ const FormDataInputsRow = ({
   const [fieldData, setFieldData] = useState(fields.value[index])
 
   useEffect(() => {
-    setFieldData(fields.value[index])
+    queueMicrotask(() => {
+      setFieldData(fields.value[index])
+    })
   }, [fields.value, index])
 
   const isRowDisabled = () => {

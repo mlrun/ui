@@ -3,11 +3,11 @@
 @use 'igz-controls/scss/shadows';
 
 .job-card-template {
+  position: relative;
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-between;
   min-height: 165px;
-  position: relative;
   padding: 15px;
   background-color: colors.$white;
   border: borders.$primaryBorder;
@@ -30,15 +30,15 @@
   }
 
   &__header {
-    font-size: 18px;
-    font-weight: bold;
     margin-bottom: 8px;
     padding-right: 50px;
+    font-weight: bold;
+    font-size: 18px;
   }
 
   &__sub-header {
-    font-size: 15px;
     font-weight: 500;
+    font-size: 15px;
   }
 
   &__side-tag {
@@ -46,15 +46,15 @@
     top: 15px;
     right: 0;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     margin: 0;
     padding: 6px;
-    border-radius: 4px 0 0 4px;
     color: colors.$amethyst;
-    background-color: colors.$frenchLilac;
-    font-size: 10px;
     font-weight: bold;
+    font-size: 10px;
+    background-color: colors.$frenchLilac;
+    border-radius: 4px 0 0 4px;
   }
 
   &__description {

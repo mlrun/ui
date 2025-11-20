@@ -70,10 +70,12 @@ const FormVolumesRow = ({
   )
 
   useLayoutEffect(() => {
-    setFieldRowData(
-      generateVolumeInputsData(fields.value[index], fields, editingItem, accessKeyFocusHandler, projectName)
-    )
-    setFieldData(fields.value[index])
+    queueMicrotask(() => {
+      setFieldRowData(
+        generateVolumeInputsData(fields.value[index], fields, editingItem, accessKeyFocusHandler, projectName)
+      )
+      setFieldData(fields.value[index])
+    })
   }, [accessKeyFocusHandler, editingItem, fields, index, projectName])
 
   const handleTypeChange = useCallback(() => {

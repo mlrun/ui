@@ -95,13 +95,13 @@ const JobWizard = ({
   prePopulatedData = {},
   wizardTitle = 'Batch run'
 }) => {
-  const formRef = React.useRef(
-    createForm({
+  const [form] = useState(() => {
+    return createForm({
       onSubmit: () => {},
       mutators: { ...arrayMutators, setFieldState },
       initialValues: {}
     })
-  )
+  })
   const isEditMode = useMemo(() => mode === PANEL_EDIT_MODE || mode === PANEL_RERUN_MODE, [mode])
   const isRunMode = useMemo(() => mode === PANEL_FUNCTION_CREATE_MODE, [mode])
   const projectIsLoading = useSelector(store => store.projectStore.project.loading)
@@ -134,7 +134,7 @@ const JobWizard = ({
     onWizardClose && onWizardClose()
   }, [dispatch, onResolve, onWizardClose, showSchedule])
 
-  const { handleCloseModal, resolveModal } = useModalBlockHistory(closeModal, formRef.current)
+  const { handleCloseModal, resolveModal } = useModalBlockHistory(closeModal, form)
 
   useEffect(() => {
     if (!isEditMode) {
@@ -188,9 +188,11 @@ const JobWizard = ({
 
   useEffect(() => {
     if (!isEmpty(jobsStore.jobFunc)) {
-      setSelectedFunctionData({
-        name: jobsStore.jobFunc.metadata.name,
-        functions: [jobsStore.jobFunc]
+      queueMicrotask(() => {
+        setSelectedFunctionData({
+          name: jobsStore.jobFunc.metadata.name,
+          functions: [jobsStore.jobFunc]
+        })
       })
     }
   }, [isEditMode, isRunMode, jobsStore.jobFunc])
@@ -467,7 +469,7 @@ const JobWizard = ({
   )
 
   return (
-    <Form form={formRef.current} onSubmit={() => {}}>
+    <Form form={form} onSubmit={() => {}}>
       {formState => {
         formStateRef.current = formState
 
