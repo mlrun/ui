@@ -1635,7 +1635,7 @@ Feature: Models Page
     Then verify "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Tab_List"
     Then select "Metrics" tab in "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard
     Then verify "Choose_Metrics_Dropdown" element visibility on "Model_Endpoints_Info_Pane" wizard
-    Then "Choose_Metrics_Dropdown" element on "Model_Endpoints_Info_Pane" should contains "Choose Metrics..." value
+    Then "Choose_Metrics_Dropdown" element on "Model_Endpoints_Info_Pane" should contains "Choose metrics..." value
     Then verify "Date_Picker_Filter_Dropdown" element visibility on "Model_Endpoints_Info_Pane" wizard
     Then verify "Date_Picker_Filter_Dropdown" dropdown on "Model_Endpoints_Info_Pane" wizard selected option value "Past 24 hours"
     Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Model_Endpoints_Info_Pane" wizard should contains "Dropdown_Options"."Metrics_Date_Picker_Filter_Options"
