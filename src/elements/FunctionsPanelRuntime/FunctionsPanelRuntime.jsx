@@ -25,12 +25,7 @@ import FunctionsPanelRuntimeView from './FunctionsPanelRuntimeView'
 
 import { useMode } from '../../hooks/mode.hook'
 
-const FunctionsPanelRuntime = ({
-  defaultData = {},
-  sections,
-  setValidation,
-  validation
-}) => {
+const FunctionsPanelRuntime = ({ defaultData = {}, sections, setValidation, validation }) => {
   const { isStagingMode } = useMode()
   const functionsStore = useSelector(store => store.functionsStore)
 

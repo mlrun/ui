@@ -39,13 +39,15 @@ const MlModelRunnerNode = ({ data, isConnectable }) => {
   const formRef = React.useRef(
     createForm({
       initialValues: {
-        runningModels: Object.keys(data.customData.class_args.monitoring_data).map(runningModelName => {
-          return {
-            isKeyOnly: true,
-            key: runningModelName,
-            id: runningModelName
+        runningModels: Object.keys(data.customData.class_args.monitoring_data).map(
+          runningModelName => {
+            return {
+              isKeyOnly: true,
+              key: runningModelName,
+              id: runningModelName
+            }
           }
-        })
+        )
       },
       mutators: { ...arrayMutators, setFieldState },
       onSubmit: () => {}

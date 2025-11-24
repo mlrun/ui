@@ -71,7 +71,10 @@ const DetailsInfoView = React.forwardRef(
     ref
   ) => {
     const infoContent = useMemo(
-      () => (isDetailsPopUp ? commonDetailsStore.detailsPopUpInfoContent : commonDetailsStore.infoContent),
+      () =>
+        isDetailsPopUp
+          ? commonDetailsStore.detailsPopUpInfoContent
+          : commonDetailsStore.infoContent,
       [commonDetailsStore.infoContent, commonDetailsStore.detailsPopUpInfoContent, isDetailsPopUp]
     )
     const wrapperClassNames = classnames(

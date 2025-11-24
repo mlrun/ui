@@ -48,14 +48,13 @@ export const getCloseDetailsLink = (paramName, ignoreOrigin, objectName) => {
     pathname = pathname.slice(import.meta.env.VITE_PUBLIC_URL.length)
   }
 
-  let linkParts =
-    pathname
-      .split('/')
-      .splice(0, pathname.split('/').lastIndexOf(paramName) + 1)
-      
-  if (objectName && paramName === objectName && linkParts[linkParts.length - 1] === objectName) linkParts.pop()
+  let linkParts = pathname.split('/').splice(0, pathname.split('/').lastIndexOf(paramName) + 1)
 
-  const link = linkParts.join('/') + getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])
+  if (objectName && paramName === objectName && linkParts[linkParts.length - 1] === objectName)
+    linkParts.pop()
+
+  const link =
+    linkParts.join('/') + getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])
 
   return ignoreOrigin ? link : generateUrlFromRouterPath(link)
 }

@@ -39,7 +39,11 @@ import { BG_TASK_RUNNING } from '../../utils/poll.util'
 import { PROJECT_ONLINE_STATUS } from '../../constants'
 import { ConfirmDialog } from 'igz-controls/components'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { FORBIDDEN_ERROR_STATUS_CODE, NOTFOUND_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-controls/constants'
+import {
+  FORBIDDEN_ERROR_STATUS_CODE,
+  NOTFOUND_ERROR_STATUS_CODE,
+  PRIMARY_BUTTON
+} from 'igz-controls/constants'
 import { fetchBackgroundTasks } from '../../reducers/tasksReducer'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
@@ -110,7 +114,7 @@ const Projects = () => {
     project => {
       return filterByName.length > 0
         ? project.metadata.name.toLocaleLowerCase().includes(filterByName.toLocaleLowerCase()) &&
-        isValidProjectState(project)
+            isValidProjectState(project)
         : isValidProjectState(project)
     },
     [filterByName, isValidProjectState]
@@ -144,7 +148,7 @@ const Projects = () => {
           generateAlerts(result, dispatch)
         }
       })
-      .catch(() => { })
+      .catch(() => {})
 
     if (!isEmpty(deletingProjectsRef.current)) {
       dispatch(fetchBackgroundTasks({}))
@@ -233,11 +237,12 @@ const Projects = () => {
           fetchMinimalProjects()
         })
         .catch(error => {
-          const customErrorMsg = error.response?.status === NOTFOUND_ERROR_STATUS_CODE
-            ? `Failed to unarchive project ${project.metadata.name}. The project was not found.`
-            : error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? `You do not have permission to unarchive project ${project.metadata.name}`
-              : `Failed to unarchive project ${project.metadata.name}`
+          const customErrorMsg =
+            error.response?.status === NOTFOUND_ERROR_STATUS_CODE
+              ? `Failed to unarchive project ${project.metadata.name}. The project was not found.`
+              : error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+                ? `You do not have permission to unarchive project ${project.metadata.name}`
+                : `Failed to unarchive project ${project.metadata.name}`
 
           showErrorNotification(dispatch, error, '', customErrorMsg, () =>
             handleUnarchiveProject(project)
@@ -431,7 +436,7 @@ const Projects = () => {
           )
         }
       })
-      .catch(() => { })
+      .catch(() => {})
   }
 
   return (

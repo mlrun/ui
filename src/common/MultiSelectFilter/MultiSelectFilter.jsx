@@ -32,8 +32,8 @@ const MultiSelectFilter = ({ optionsList, name }) => {
     const isAllOptionsSelected = input.value?.includes?.(FILTER_ALL_ITEMS)
     return isAllOptionsSelected
       ? optionsList.map(option =>
-        option.id === FILTER_ALL_ITEMS ? { ...option, disabled: true } : option
-      )
+          option.id === FILTER_ALL_ITEMS ? { ...option, disabled: true } : option
+        )
       : optionsList
   }, [input.value, optionsList])
 
@@ -52,8 +52,8 @@ const MultiSelectFilter = ({ optionsList, name }) => {
       (!currentValue.includes(FILTER_ALL_ITEMS) &&
         selectedValue.includes(FILTER_ALL_ITEMS) &&
         selectedValue.indexOf(FILTER_ALL_ITEMS) > 0) ||
-      mappedOptionsList.filter(option => option.id !== FILTER_ALL_ITEMS && !option.hidden).length ===
-      selectedValue.length
+      mappedOptionsList.filter(option => option.id !== FILTER_ALL_ITEMS && !option.hidden)
+        .length === selectedValue.length
     ) {
       change(name, [FILTER_ALL_ITEMS])
     }

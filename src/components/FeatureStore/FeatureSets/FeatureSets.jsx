@@ -109,10 +109,7 @@ const FeatureSets = () => {
     () => getScssVariableValue('--featureSetsHeaderRowHeight'),
     []
   )
-  const pageData = useMemo(
-    () => generatePageData(selectedFeatureSet),
-    [selectedFeatureSet]
-  )
+  const pageData = useMemo(() => generatePageData(selectedFeatureSet), [selectedFeatureSet])
   const actionsMenu = useMemo(
     () => generateActionsMenu(dispatch, selectedFeatureSet, toggleConvertedYaml),
     [dispatch, selectedFeatureSet, toggleConvertedYaml]

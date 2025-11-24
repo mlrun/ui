@@ -96,7 +96,7 @@ const MonitoringApplicationsPage = () => {
               ...filters,
               labels: `mlrun/app-name=${params.name}`
             },
-            config: { params: { page: 1, 'page-size': 50, format: 'minimal'} } // limit to 50 artifacts the same as we have on Artifacts page per 1 FE page to avoid overload
+            config: { params: { page: 1, 'page-size': 50, format: 'minimal' } } // limit to 50 artifacts the same as we have on Artifacts page per 1 FE page to avoid overload
           })
         )
           .unwrap()
@@ -143,7 +143,7 @@ const MonitoringApplicationsPage = () => {
       <div className="content__header">
         <Breadcrumbs />
       </div>
-      <div className="content monitoring-app-content" ref={contentRef} >
+      <div className="content monitoring-app-content" ref={contentRef}>
         <div className="content__action-bar-wrapper">
           <span className="monitoring-apps-title">
             {params.name && (

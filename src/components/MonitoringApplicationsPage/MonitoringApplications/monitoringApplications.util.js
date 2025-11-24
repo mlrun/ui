@@ -86,7 +86,8 @@ export function groupDataToBins(data, startTime, endTime) {
   const DAY = 'day'
   const HOUR = 'hour'
   const MINUTES = 'minutes' // "minutes" represents 10 minutes
-  const timeDiffInHours = (new Date(endTime) - new Date(startTime) - allowedDeviation) / (1000 * 60 * 60)
+  const timeDiffInHours =
+    (new Date(endTime) - new Date(startTime) - allowedDeviation) / (1000 * 60 * 60)
   const basePeriod = timeDiffInHours > 72 ? DAY : timeDiffInHours > 6 ? HOUR : MINUTES
 
   const roundDate = date => {

@@ -48,7 +48,7 @@ const ScheduledJobs = () => {
   )
 
   useEffect(() => {
-    setDataIsLoaded((prevState) => {
+    setDataIsLoaded(prevState => {
       if (!prevState) {
         refreshJobs(filters)
         return true

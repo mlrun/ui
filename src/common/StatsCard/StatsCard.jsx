@@ -25,7 +25,7 @@ import { TextTooltipTemplate, Tip, Tooltip } from 'igz-controls/components'
 
 import './statsCard.scss'
 
-const StatsCard = ({ children, className = '', onClick = () => { } }) => {
+const StatsCard = ({ children, className = '', onClick = () => {} }) => {
   const cardClass = classNames('stats-card', className)
 
   return (
@@ -66,14 +66,12 @@ StatsCard.Col = ({ children }) => {
 }
 StatsCard.Col.displayName = 'StatsCard.Col'
 
-StatsCard.MainCounter = ({ children, className = '', id = '', onClick = () => { } }) => {
+StatsCard.MainCounter = ({ children, className = '', id = '', onClick = () => {} }) => {
   const mainCounterClass = classNames('stats__counter-main', className)
 
   return (
     <div className={mainCounterClass} data-testid={id} onClick={onClick}>
-      <div className="stats__counter">
-        {children}
-      </div>
+      <div className="stats__counter">{children}</div>
     </div>
   )
 }
@@ -84,14 +82,11 @@ StatsCard.SecondaryCounter = ({ children, className }) => {
 
   return (
     <div className={secondaryCounterClass}>
-      <div className="stats__counter">
-        {children}
-      </div>
+      <div className="stats__counter">{children}</div>
     </div>
   )
 }
 StatsCard.SecondaryCounter.displayName = 'StatsCard.SecondaryCounter'
-
 
 StatsCard.propTypes = {
   children: PropTypes.node.isRequired,

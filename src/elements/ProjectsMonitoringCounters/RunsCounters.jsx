@@ -67,9 +67,11 @@ const RunCounter = () => {
         </StatsCard.Header>
         <div onMouseLeave={handleClosePopUp} onMouseEnter={handleOpenPopUp}>
           <StatsCard.Row>
-            <StatsCard.MainCounter className="stats__link"
+            <StatsCard.MainCounter
+              className="stats__link"
               id="scheduled_total_counter"
-              onClick={jobStats.total.link}>
+              onClick={jobStats.total.link}
+            >
               {projectStore.projectsSummary.loading ? (
                 <Loader section small secondary />
               ) : (

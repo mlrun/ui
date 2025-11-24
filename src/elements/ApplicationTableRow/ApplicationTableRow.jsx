@@ -28,7 +28,12 @@ import { ACTIONS_MENU } from 'igz-controls/types'
 import './applicationTableRow.scss'
 
 const ApplicationTableRow = ({ actionsMenu, hideActionsMenu = false, rowItem }) => {
-  const rowClassNames = classnames('table-row', 'table-body-row', 'parent-row', 'application-table-row')
+  const rowClassNames = classnames(
+    'table-row',
+    'table-body-row',
+    'parent-row',
+    'application-table-row'
+  )
 
   return (
     <tr className={rowClassNames}>

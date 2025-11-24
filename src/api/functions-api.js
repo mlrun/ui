@@ -38,7 +38,7 @@ const functionsApi = {
     if (mlrunVersion) {
       headers['x-mlrun-client-version'] = mlrunVersion
     }
-    
+
     return mainHttpClient.post(
       `/projects/${data.function.metadata.project}/nuclio/${data.function.metadata.name}/deploy`,
       data,

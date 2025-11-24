@@ -43,7 +43,7 @@ const ScheduledMonitoring = () => {
   )
 
   useEffect(() => {
-    setDataIsLoaded((prevState) => {
+    setDataIsLoaded(prevState => {
       if (!prevState) {
         refreshScheduled(filters)
         return true

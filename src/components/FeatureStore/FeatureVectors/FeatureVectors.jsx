@@ -109,10 +109,7 @@ const FeatureVectors = () => {
     () => getScssVariableValue('--featureVectorsHeaderRowHeight'),
     []
   )
-  const pageData = useMemo(
-    () => generatePageData(selectedFeatureVector),
-    [selectedFeatureVector]
-  )
+  const pageData = useMemo(() => generatePageData(selectedFeatureVector), [selectedFeatureVector])
 
   const detailsFormInitialValues = useMemo(
     () => generateDetailsFormInitialValue(selectedFeatureVector, frontendSpec.internal_labels),

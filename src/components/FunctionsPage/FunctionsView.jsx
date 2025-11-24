@@ -130,7 +130,11 @@ const FunctionsView = ({
                 <Table
                   actionsMenu={actionsMenu}
                   getCloseDetailsLink={() =>
-                    getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : FUNCTIONS_PAGE_PATH, false, params.funcName)
+                    getCloseDetailsLink(
+                      isAllVersions ? ALL_VERSIONS_PATH : FUNCTIONS_PAGE_PATH,
+                      false,
+                      params.funcName
+                    )
                   }
                   handleCancel={handleCancel}
                   pageData={pageData}

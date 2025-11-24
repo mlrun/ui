@@ -47,10 +47,11 @@ export const createApplicationContent = (application, projectName) => {
         headerLabel: 'Name',
         value: application.name,
         className: 'table-cell-name',
-        getLink: () => `/projects/${projectName}/${MONITORING_APP_PAGE}/${application.name}${saveAndTransformSearchParams(
-          window.location.search,
-          true
-        )}`
+        getLink: () =>
+          `/projects/${projectName}/${MONITORING_APP_PAGE}/${application.name}${saveAndTransformSearchParams(
+            window.location.search,
+            true
+          )}`
       },
       {
         id: `lag.${identifierUnique}`,

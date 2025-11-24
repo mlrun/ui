@@ -111,7 +111,7 @@ const setMEPWithDetectionChartText = (context, tooltipModel, tooltipEl) => {
     let innerHtml = '<div class="tooltip-container">'
     const fullDate =
       context.tooltip.dataPoints[0].dataset?.dates?.[context.tooltip.dataPoints[0].dataIndex]
-   
+
     innerHtml += `<div class="tooltip-container-date">Date: ${fullDate}</div>`
     innerHtml += `<div class="tooltip-container-value">Value: ${context.tooltip.dataPoints[0].raw}</div>`
 
@@ -331,7 +331,7 @@ export const getHistogramChartConfig = () => {
 
 export const getMEPsWithDetectionChartConfig = () => {
   const barConfig = getMetricChartConfig(CHART_TYPE_BAR)
-  
+
   return {
     ...barConfig,
     options: {
@@ -358,8 +358,7 @@ export const getMEPsWithDetectionChartConfig = () => {
           enabled: false,
           intersect: false,
           mode: 'index',
-          external: context =>
-            generateCustomTooltip(context, null, setMEPWithDetectionChartText),
+          external: context => generateCustomTooltip(context, null, setMEPWithDetectionChartText)
         }
       }
     }

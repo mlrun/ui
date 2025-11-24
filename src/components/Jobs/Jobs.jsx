@@ -252,7 +252,9 @@ const Jobs = () => {
                 setSearchParams={setSearchParams}
                 tab={selectedTab}
                 withAutoRefresh={selectedTab === MONITOR_JOBS_TAB}
-                withInternalAutoRefresh={Boolean(selectedTab === MONITOR_JOBS_TAB && params.jobName)}
+                withInternalAutoRefresh={Boolean(
+                  selectedTab === MONITOR_JOBS_TAB && params.jobName
+                )}
                 withRefreshButton
                 withoutExpandButton
               >
