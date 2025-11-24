@@ -37,7 +37,7 @@ const NavbarLink = ({ externalLink = false, icon = {}, label = '', link = '', ..
           {...props}
           className="nav-link__button btn btn-secondary"
           activeclassname="active"
-          state={{navbarNavigate: true}}
+          state={{ navbarNavigate: true }}
         >
           {icon}
           <span className="nav-link__label">{label}</span>

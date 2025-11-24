@@ -201,7 +201,7 @@ const Details = ({
           withActionMenu={withActionMenu}
         />
       )}
-      renderTabsContent={(formState) => (
+      renderTabsContent={formState => (
         <DetailsTabsContent
           applyChangesRef={applyChangesRef}
           detailsPopUpSelectedTab={detailsPopUpSelectedTab}

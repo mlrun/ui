@@ -41,7 +41,7 @@ const NameFilter = ({ applyChanges }) => {
     }
   }
 
-  const handleValidationError = useCallback((isInvalid) => {
+  const handleValidationError = useCallback(isInvalid => {
     isInvalidRef.current = isInvalid
   }, [])
 

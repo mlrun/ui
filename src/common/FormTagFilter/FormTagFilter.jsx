@@ -163,7 +163,9 @@ const FormTagFilter = ({ content = null, label, name, onlyLatestByDefault = fals
 
       if (tagFilter.length === 0) {
         input.onChange(TAG_FILTER_LATEST)
-        setTagFilter(getTagFilterOptions(onlyLatestByDefault).find(tag => tag.id === TAG_FILTER_LATEST).label)
+        setTagFilter(
+          getTagFilterOptions(onlyLatestByDefault).find(tag => tag.id === TAG_FILTER_LATEST).label
+        )
       }
     }
   }

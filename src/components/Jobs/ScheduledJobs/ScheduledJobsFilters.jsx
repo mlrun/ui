@@ -36,7 +36,10 @@ const ScheduledJobsFilters = () => {
   return (
     <div>
       <div className="form-row">
-        <MultiSelectFilter optionsList={generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB)} name={TYPE_FILTER} />
+        <MultiSelectFilter
+          optionsList={generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB)}
+          name={TYPE_FILTER}
+        />
       </div>
       <div className="form-row">
         <FormInput

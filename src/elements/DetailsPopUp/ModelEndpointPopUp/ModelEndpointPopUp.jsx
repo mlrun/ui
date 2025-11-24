@@ -56,11 +56,7 @@ const ModelEndpointPopUp = ({
     setIsLoading(true)
 
     return modelEndpointsApi
-      .getModelEndpoint(
-        params.projectName,
-        modelEndpointName,
-        modelEndpointUid
-      )
+      .getModelEndpoint(params.projectName, modelEndpointName, modelEndpointUid)
       .then(({ data: endpoint }) => {
         setSelectedModelEndpoint(parseModelEndpoints([endpoint])?.[0])
         setIsLoading(false)

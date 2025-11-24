@@ -127,16 +127,16 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
       {(entityType === FILTER_ALL_ITEMS ||
         entityType === MODEL_MONITORING_APPLICATION ||
         entityType === MODEL_ENDPOINT_RESULT) && (
-          <div className="form-row">
-            <FormInput
-              label={entityType === MODEL_ENDPOINT_RESULT ? 'Endpoint ID' : 'Entity ID'}
-              name={ENTITY_ID}
-              placeholder="Search by ID"
-              tip="Search for case insensitive, full or partial strings"
-            />
-            <FormOnChange handler={value => handleInputChange(value, ENTITY_ID)} name={ENTITY_ID} />
-          </div>
-        )}
+        <div className="form-row">
+          <FormInput
+            label={entityType === MODEL_ENDPOINT_RESULT ? 'Endpoint ID' : 'Entity ID'}
+            name={ENTITY_ID}
+            placeholder="Search by ID"
+            tip="Search for case insensitive, full or partial strings"
+          />
+          <FormOnChange handler={value => handleInputChange(value, ENTITY_ID)} name={ENTITY_ID} />
+        </div>
+      )}
       {entityType === JOB && (
         <div className="form-row">
           <FormInput

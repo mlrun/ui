@@ -56,7 +56,10 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "lint": "eslint .",
+    "lint": "eslint 'src/**/*.{js,jsx}'",
+    "lint:fix": "eslint 'src/**/*.{js,jsx}' --fix",
+    "format:check": "prettier --check 'src/**/*.{js,jsx}'",
+    "format:write": "prettier --write 'src/**/*.{js,jsx}'",
     "preview": "vite preview",
     "preinstall": "npx force-resolutions",
     "test:coverage": "npm run test -- --coverage --watchAll=false",

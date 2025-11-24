@@ -23,11 +23,7 @@ import AddFeatureButton from '../elements/AddFeatureButton/AddFeatureButton'
 import FeatureValidator from '../elements/FeatureValidator/FeatureValidator'
 import FeatureSetPopUp from '../elements/DetailsPopUp/FeatureSetPopUp/FeatureSetPopUp'
 
-import {
-  FEATURE_STORE_PAGE,
-  FEATURE_SETS_TAB,
-  FEATURE_VECTORS_TAB
-} from '../constants'
+import { FEATURE_STORE_PAGE, FEATURE_SETS_TAB, FEATURE_VECTORS_TAB } from '../constants'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { generateLinkToDetailsPanel } from './link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'

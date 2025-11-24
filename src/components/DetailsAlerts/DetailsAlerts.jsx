@@ -51,7 +51,7 @@ const DetailsAlerts = () => {
   )
 
   const filters = useMemo(() => {
-    return {...alertsFilters, 'entity-type': 'model-endpoint-result'}
+    return { ...alertsFilters, 'entity-type': 'model-endpoint-result' }
   }, [alertsFilters])
 
   const { alerts, requestErrorMessage } = useRefreshAlerts(filters)

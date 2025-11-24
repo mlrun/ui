@@ -231,7 +231,7 @@ const ApplicationMetrics = () => {
     }
   }, [dispatch, modelEndpoints, navigate, params.id, params.appName, params.projectName])
 
-  useEffect(()=> {
+  useEffect(() => {
     return () => {
       dispatch(clearMetricsOptions())
     }

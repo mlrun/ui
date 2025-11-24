@@ -196,7 +196,8 @@ const Functions = () => {
               })
             }
           }
-        }).catch(() => {
+        })
+        .catch(() => {
           setFunctions([])
         })
     },
@@ -212,7 +213,7 @@ const Functions = () => {
   )
 
   const refreshFunctions = useCallback(
-      (filters, filtersAreHandled) => {
+    (filters, filtersAreHandled) => {
       setFunctions([])
       setSelectedFunctionMin({})
       setExpandedRowsData({})

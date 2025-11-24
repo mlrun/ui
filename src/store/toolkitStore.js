@@ -37,7 +37,6 @@ import workflowsStore from '../reducers/workflowReducer'
 import commonDetailsStore from 'igz-controls/reducers/commonDetailsReducer'
 import notificationStore from 'igz-controls/reducers/notificationReducer'
 
-
 const toolkitStore = configureStore({
   reducer: {
     alertsStore,

@@ -123,8 +123,8 @@ const EditableEnvironmentVariablesRow = ({
               onChange={secretName => setSelectedEnvVariable(state => ({ ...state, secretName }))}
               pattern="^(?=[\S\s]{1,253}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?)*$"
               validationRules={getValidationRules('environmentVariables.secretName', [
-                  getSecretNameValidator(projectName, envVariable?.value?.split?.(':')?.[0])
-                ])}
+                getSecretNameValidator(projectName, envVariable?.value?.split?.(':')?.[0])
+              ])}
               required
               setInvalid={value => setValidation(state => ({ ...state, isSecretNameValid: value }))}
               tip={secretNameValidationTip}

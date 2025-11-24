@@ -255,9 +255,11 @@ const AddToFeatureVectorPopUp = ({ action, currentProject }) => {
               />
               <Button
                 variant={PRIMARY_BUTTON}
-                disabled={[selectedProject, selectedFeatureVector, selectedFeatureVectorTag].includes(
-                  ''
-                )}
+                disabled={[
+                  selectedProject,
+                  selectedFeatureVector,
+                  selectedFeatureVectorTag
+                ].includes('')}
                 label="Select"
                 onClick={selectFeatureVector}
               />

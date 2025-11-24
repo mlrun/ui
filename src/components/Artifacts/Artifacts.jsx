@@ -424,46 +424,49 @@ const Artifacts = ({
     }
   }, [selectedArtifact])
 
-  const getAndSetSelectedArtifact = useCallback((ignoreLastCheckedArtifact = false) => {
-    checkForSelectedArtifact({
-      artifactName: params.artifactName,
-      artifacts: isAllVersions ? artifactVersions : artifacts,
+  const getAndSetSelectedArtifact = useCallback(
+    (ignoreLastCheckedArtifact = false) => {
+      checkForSelectedArtifact({
+        artifactName: params.artifactName,
+        artifacts: isAllVersions ? artifactVersions : artifacts,
+        dispatch,
+        ignoreLastCheckedArtifact,
+        isAllVersions,
+        navigate,
+        paginatedArtifacts: isAllVersions ? paginatedArtifactVersions : paginatedArtifacts,
+        paginationConfigRef: isAllVersions
+          ? paginationConfigArtifactVersionsRef
+          : paginationConfigArtifactsRef,
+        paramsId: params.id,
+        projectName: params.projectName,
+        searchParams: isAllVersions ? searchArtifactVersionsParams : searchArtifactsParams,
+        setSearchParams: isAllVersions ? setSearchArtifactVersionsParams : setSearchArtifactsParams,
+        setSelectedArtifact: setSelectedArtifact,
+        setSelectedArtifactIsBeyondTheList,
+        lastCheckedArtifactIdRef,
+        page,
+        tab
+      })
+    },
+    [
+      artifactVersions,
+      artifacts,
       dispatch,
-      ignoreLastCheckedArtifact,
       isAllVersions,
       navigate,
-      paginatedArtifacts: isAllVersions ? paginatedArtifactVersions : paginatedArtifacts,
-      paginationConfigRef: isAllVersions
-        ? paginationConfigArtifactVersionsRef
-        : paginationConfigArtifactsRef,
-      paramsId: params.id,
-      projectName: params.projectName,
-      searchParams: isAllVersions ? searchArtifactVersionsParams : searchArtifactsParams,
-      setSearchParams: isAllVersions ? setSearchArtifactVersionsParams : setSearchArtifactsParams,
-      setSelectedArtifact: setSelectedArtifact,
-      setSelectedArtifactIsBeyondTheList,
-      lastCheckedArtifactIdRef,
       page,
+      paginatedArtifactVersions,
+      paginatedArtifacts,
+      params.artifactName,
+      params.id,
+      params.projectName,
+      searchArtifactVersionsParams,
+      searchArtifactsParams,
+      setSearchArtifactVersionsParams,
+      setSearchArtifactsParams,
       tab
-    })
-  }, [
-    artifactVersions,
-    artifacts,
-    dispatch,
-    isAllVersions,
-    navigate,
-    page,
-    paginatedArtifactVersions,
-    paginatedArtifacts,
-    params.artifactName,
-    params.id,
-    params.projectName,
-    searchArtifactVersionsParams,
-    searchArtifactsParams,
-    setSearchArtifactVersionsParams,
-    setSearchArtifactsParams,
-    tab
-  ])
+    ]
+  )
 
   useEffect(() => getAndSetSelectedArtifact(true), [getAndSetSelectedArtifact])
 

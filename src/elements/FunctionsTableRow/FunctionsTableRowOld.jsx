@@ -126,7 +126,9 @@ const FunctionsTableRowOld = ({
                           !value.hidden && (
                             <TableCell
                               className={cellClassNames}
-                              cellData={value.expandedCellContent ? value.expandedCellContent : value}
+                              cellData={
+                                value.expandedCellContent ? value.expandedCellContent : value
+                              }
                               item={func.data}
                               link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
                               key={value.id}

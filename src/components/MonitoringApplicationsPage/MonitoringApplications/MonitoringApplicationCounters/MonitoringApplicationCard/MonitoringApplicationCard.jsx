@@ -48,13 +48,18 @@ const MonitoringApplicationCard = ({
                 hidden={!counter.tooltipText}
                 template={<TextTooltipTemplate text={counter.tooltipText} />}
               >
-                <StatsCard.MainCounter id={`monitoring-app-${counter.id}`} className={counter.counterClassName}>
+                <StatsCard.MainCounter
+                  id={`monitoring-app-${counter.id}`}
+                  className={counter.counterClassName}
+                >
                   {loading ? (
                     <Loader section small secondary />
                   ) : error || isNil(counter.title) ? (
                     'N/A'
                   ) : counter.link ? (
-                    <Link className="monitoring-stats__link" to={counter.link}>{counter.title}</Link>
+                    <Link className="monitoring-stats__link" to={counter.link}>
+                      {counter.title}
+                    </Link>
                   ) : (
                     counter.title
                   )}

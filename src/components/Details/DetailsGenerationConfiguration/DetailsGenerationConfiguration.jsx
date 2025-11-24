@@ -29,8 +29,8 @@ const DetailsGenerationConfiguration = ({ selectedItem }) => {
       {!isEmpty(selectedItem.invocation_config) && (
         <>
           <div className="generation-configuration-tab__counter">
-            {Object.entries(selectedItem.invocation_config || {}).length} modifications made to
-            the default configuration:
+            {Object.entries(selectedItem.invocation_config || {}).length} modifications made to the
+            default configuration:
           </div>
           <div className="generation-configuration-tab__table-header generation-configuration-tab__row">
             <div className="generation-configuration-tab__row-key">Key</div>

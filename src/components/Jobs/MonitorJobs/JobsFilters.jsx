@@ -23,7 +23,12 @@ import { useForm } from 'react-final-form'
 import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
 import MultiSelectFilter from '../../../common/MultiSelectFilter/MultiSelectFilter'
 
-import { JOBS_MONITORING_JOBS_TAB, LABELS_FILTER, STATUS_FILTER_NAME, TYPE_FILTER } from '../../../constants'
+import {
+  JOBS_MONITORING_JOBS_TAB,
+  LABELS_FILTER,
+  STATUS_FILTER_NAME,
+  TYPE_FILTER
+} from '../../../constants'
 import { generateTypeFilter, jobsStatuses } from '../../FilterMenu/filterMenu.settings'
 
 const JobsFilters = () => {

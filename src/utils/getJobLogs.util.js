@@ -20,7 +20,15 @@ such restriction.
 import { REQUEST_CANCELED } from '..//constants'
 import { fetchJobLogs } from '../reducers/jobReducer'
 
-export const getJobLogs = (id, project, streamLogsRef, setDetailsLogs, dispatch, attempt, signal) => {
+export const getJobLogs = (
+  id,
+  project,
+  streamLogsRef,
+  setDetailsLogs,
+  dispatch,
+  attempt,
+  signal
+) => {
   setDetailsLogs('')
 
   dispatch(fetchJobLogs({ id, project, attempt, signal }))
@@ -43,7 +51,8 @@ export const getJobLogs = (id, project, streamLogsRef, setDetailsLogs, dispatch,
         streamLogsRef.current = read
         read()
       }
-    }).catch((error) => {
+    })
+    .catch(error => {
       if (error.message === REQUEST_CANCELED) {
         setDetailsLogs('')
       }

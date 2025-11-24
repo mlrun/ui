@@ -102,7 +102,7 @@ export const generateResultsTableContent = (metrics = []) => {
         },
         time: {
           hidden: timeColumnIsHidden,
-          value:  formatDatetime(result.time, 'N/A'),
+          value: formatDatetime(result.time, 'N/A'),
           className: 'table-cell_medium'
         },
         status: {
@@ -158,7 +158,7 @@ export const generateMetricsTableContent = (metrics = []) => {
       className: 'table-cell_medium'
     },
     { value: 'Value (latest)', className: 'table-cell_medium' },
-    { value: 'Time (latest metric)', className: 'table-cell_medium', hidden: timeColumnIsHidden}
+    { value: 'Time (latest metric)', className: 'table-cell_medium', hidden: timeColumnIsHidden }
   ]
 
   return {

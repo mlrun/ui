@@ -53,7 +53,7 @@ const DetailsCode = ({ code = '' }) => {
 }
 
 DetailsCode.propTypes = {
-  code: PropTypes.string,
+  code: PropTypes.string
 }
 
 export default DetailsCode
