@@ -65,6 +65,20 @@ const JobPopUp = ({ isOpen, jobData, onResolve }) => {
     [frontendSpec.jobs_dashboard_url, jobData.project]
   )
 
+  const detailsFormInitialValues = useMemo(() => {
+    return {
+      labels: selectedJob.labels ?? [],
+      results: selectedJob.resultsChips ?? [],
+      parameters: selectedJob.parametersChips ?? [],
+      nodeSelector: selectedJob.nodeSelectorChips ?? []
+    }
+  }, [
+    selectedJob.labels,
+    selectedJob.nodeSelectorChips,
+    selectedJob.parametersChips,
+    selectedJob.resultsChips
+  ])
+
   const pageData = useMemo(
     () =>
       generatePageData(
@@ -132,6 +146,7 @@ const JobPopUp = ({ isOpen, jobData, onResolve }) => {
   return (
     <DetailsPopUp
       actionsMenu={actionsMenu}
+      formInitialValues={detailsFormInitialValues}
       handleRefresh={handleFetchJob}
       isLoading={isLoading}
       isOpen={isOpen}

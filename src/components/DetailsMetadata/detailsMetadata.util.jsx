@@ -27,7 +27,7 @@ import Partition from 'igz-controls/images/partition.svg?react'
 import TimestampKey from 'igz-controls/images/ic-calendar.svg?react'
 import LabelColumn from 'igz-controls/images/ic_target-with-dart.svg?react'
 
-import { parseKeyValues } from '../../utils'
+import { parseChipsData } from '../../utils/convertChipsData'
 
 export const generateMetadata = (selectedItem, primaryKey) => {
   return selectedItem.schema
@@ -152,7 +152,7 @@ export const generateArtifactMetadataFromEntities = selectedItem => {
           type: 'text'
         },
         labels: {
-          value: parseKeyValues(item.labels),
+          value: parseChipsData(item.labels),
           type: 'chip',
           className: 'table-body__labels'
         },
@@ -199,7 +199,7 @@ export const generateArtifactMetadataFromFeatures = selectedItem =>
         type: 'text'
       },
       labels: {
-        value: parseKeyValues(item.labels),
+        value: parseChipsData(item.labels),
         type: 'chip',
         className: 'table-body__labels'
       },
@@ -249,7 +249,7 @@ export const generateArtifactMetadataFromInputsAndOutputs = selectedItem =>
           type: 'text'
         },
         labels: {
-          value: parseKeyValues(item.labels),
+          value: parseChipsData(item.labels),
           type: 'chip',
           className: 'table-body__labels'
         },

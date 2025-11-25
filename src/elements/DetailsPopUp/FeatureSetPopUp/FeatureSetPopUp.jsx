@@ -32,6 +32,7 @@ import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
 import { toggleYaml } from '../../../reducers/appReducer'
 import { fetchFeatureSet } from '../../../reducers/featureStoreReducer'
+import { parseChipsData } from '../../../utils/convertChipsData'
 
 const FeatureSetPopUp = ({ featureSetData, isOpen, onResolve }) => {
   const dispatch = useDispatch()
@@ -51,6 +52,14 @@ const FeatureSetPopUp = ({ featureSetData, isOpen, onResolve }) => {
   )
 
   const pageData = useMemo(() => generatePageData(selectedFeatureSet), [selectedFeatureSet])
+
+  const detailsFormInitialValues = useMemo(
+    () => ({
+      description: selectedFeatureSet.description,
+      labels: parseChipsData(selectedFeatureSet.labels)
+    }),
+    [selectedFeatureSet.description, selectedFeatureSet.labels]
+  )
 
   const fetchFeatureSetData = useCallback(() => {
     setIsLoading(true)
@@ -89,6 +98,7 @@ const FeatureSetPopUp = ({ featureSetData, isOpen, onResolve }) => {
   return (
     <DetailsPopUp
       actionsMenu={actionsMenu}
+      formInitialValues={detailsFormInitialValues}
       handleRefresh={fetchFeatureSetData}
       isLoading={isLoading}
       isOpen={isOpen}

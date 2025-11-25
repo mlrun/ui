@@ -19,11 +19,11 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { map } from 'lodash'
 import cronstrue from 'cronstrue'
 
 import Accordion from '../../../common/Accordion/Accordion'
-import { Tooltip, TextTooltipTemplate, ChipCell } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, ReadOnlyChips } from 'igz-controls/components'
+import { parseChipsData } from '../../../utils/convertChipsData'
 
 import Arrow from 'igz-controls/images/arrow.svg?react'
 
@@ -51,10 +51,7 @@ const ConfigSource = ({ selectedItem }) => {
         <div className="row">
           <div className="row-label">Attributes:</div>
           <div className="row-value">
-            <ChipCell
-              elements={map(selectedItem.source?.attributes, (value, key) => `${key}: ${value}`)}
-              tooltip
-            />
+            <ReadOnlyChips labels={parseChipsData(selectedItem.source?.attributes)} shortChips />
           </div>
         </div>
         <div className="row">

@@ -110,8 +110,8 @@ const DetailsInfo = React.forwardRef(
     )
 
     const document_loader = useMemo(
-      () => generateDocumentLoaderDetailsInfo(selectedItem, isDetailsPopUp),
-      [selectedItem, isDetailsPopUp]
+      () => generateDocumentLoaderDetailsInfo(selectedItem, isDetailsPopUp, formState),
+      [selectedItem, isDetailsPopUp, formState]
     )
 
     const drift = useMemo(() => generateDriftDetailsInfo(selectedItem), [selectedItem])
@@ -119,8 +119,8 @@ const DetailsInfo = React.forwardRef(
     const alerts = useMemo(() => generateAlertsDetailsInfo(selectedItem), [selectedItem])
 
     const configuration = useMemo(
-      () => generateConfigurationDetailsInfo(selectedItem),
-      [selectedItem]
+      () => generateConfigurationDetailsInfo(selectedItem, formState),
+      [selectedItem, formState]
     )
 
     const finishEdit = useCallback(

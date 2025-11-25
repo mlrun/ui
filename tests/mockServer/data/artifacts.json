@@ -37697,7 +37697,11 @@
         "document_loader": {
           "loader_class_name": "langchain_community.document_loaders.CSVLoader",
           "src_name": "file_path",
-          "download_object": true
+          "download_object": true,
+          "kwargs": {
+            "aaa": "bbb",
+            "ccc": "ddd"
+          }
         },
         "db_key": "anxujkpvfi"
       },

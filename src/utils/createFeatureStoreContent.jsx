@@ -27,7 +27,7 @@ import { FEATURE_STORE_PAGE, FEATURE_SETS_TAB, FEATURE_VECTORS_TAB } from '../co
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { generateLinkToDetailsPanel } from './link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { parseKeyValues } from './object'
+import { parseChipsData, parseEntitiesData } from './convertChipsData'
 import { truncateUid } from 'igz-controls/utils/string.util'
 import { validateArguments } from './validateArguments'
 
@@ -94,7 +94,7 @@ export const createFeatureSetsRowData = (featureSet, project, pageTab, showExpan
         id: `labels.${featureSet.ui.identifierUnique}`,
         headerId: 'labels',
         headerLabel: 'Labels',
-        value: parseKeyValues(featureSet.labels),
+        value: parseChipsData(featureSet.labels),
         className: 'table-cell-4',
         type: 'labels'
       },
@@ -109,7 +109,7 @@ export const createFeatureSetsRowData = (featureSet, project, pageTab, showExpan
         id: `entity.${featureSet.ui.identifierUnique}`,
         headerId: 'entities',
         headerLabel: 'Entities',
-        value: featureSet.entities?.slice(0, 2).map(entity => entity.name) || '',
+        value: parseEntitiesData(featureSet.entities?.slice(0, 2)),
         type: 'labels',
         className: 'table-cell-2'
       },
@@ -186,7 +186,7 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         headerId: 'entities',
         headerLabel: 'Entities',
         type: 'labels',
-        value: feature.spec?.entities?.map(entity => entity.name) || '',
+        value: parseEntitiesData(feature.spec?.entities),
         className: 'table-cell-2'
       },
       {
@@ -200,7 +200,7 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         id: `labels.${feature.ui.identifierUnique}.${isTablePanelOpen}`,
         headerId: 'labels',
         headerLabel: 'Labels',
-        value: parseKeyValues(feature.labels),
+        value: parseChipsData(feature.labels),
         className: isTablePanelOpen ? 'table-cell-2' : 'table-cell-3',
         type: 'labels'
       },
@@ -303,7 +303,7 @@ export const createFeatureVectorsRowData = (featureVector, pageTab, project, sho
         id: `labels.${featureVector.ui.identifierUnique}`,
         headerId: 'labels',
         headerLabel: 'Labels',
-        value: parseKeyValues(featureVector.labels),
+        value: parseChipsData(featureVector.labels),
         className: 'table-cell-4',
         type: 'labels'
       },
@@ -318,7 +318,10 @@ export const createFeatureVectorsRowData = (featureVector, pageTab, project, sho
         id: `entity.${featureVector.ui.identifierUnique}`,
         headerId: 'entities',
         headerLabel: 'Entities',
-        value: featureVector.index_keys?.join(', ') ?? '',
+        value:
+          featureVector.index_keys?.length > 0
+            ? parseEntitiesData([{ name: featureVector.index_keys?.join(', ') }])
+            : [],
         className: 'table-cell-2'
       },
       {

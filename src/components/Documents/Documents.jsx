@@ -35,7 +35,10 @@ const Documents = ({ isAllVersions = false }) => {
   const generateDetailsFormInitialValues = useCallback(
     (selectedDocument, internal_labels) => ({
       tag: selectedDocument?.tag ?? '',
-      labels: parseChipsData(selectedDocument?.labels ?? {}, internal_labels)
+      labels: parseChipsData(selectedDocument?.labels ?? {}, internal_labels),
+      additionalInfo: {
+        parameters: parseChipsData(selectedDocument?.document_loader?.kwargs ?? {})
+      }
     }),
     []
   )

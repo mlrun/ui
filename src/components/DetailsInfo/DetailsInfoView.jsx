@@ -40,7 +40,6 @@ import {
   LLM_PROMPTS_PAGE,
   MODELS_PAGE
 } from '../../constants'
-import { parseKeyValues } from '../../utils'
 import { getChipOptions } from 'igz-controls/utils/chips.util'
 
 import RightArrow from 'igz-controls/images/ic_arrow-right.svg?react'
@@ -114,17 +113,9 @@ const DetailsInfoView = React.forwardRef(
                 let info = null
 
                 if (pageData.page === JOBS_PAGE) {
-                  if (infoContent[header.id]?.value === selectedItem.parametersChips) {
-                    chipsData.chips = selectedItem.parametersChips
-                    chipsData.chipOptions = getChipOptions('parameters')
-                  } else if (infoContent[header.id]?.value === selectedItem.resultsChips) {
-                    chipsData.chips = selectedItem.resultsChips
-                    chipsData.chipOptions = getChipOptions('results')
-                  } else if (infoContent[header.id]?.value === selectedItem.labels) {
-                    chipsData.chips = selectedItem.labels
-                    chipsData.chipOptions = getChipOptions('labels')
-                  } else if (infoContent[header.id]?.value === selectedItem.nodeSelectorChips) {
-                    chipsData.chips = selectedItem.nodeSelectorChips
+                  if (['parameters', 'results', 'labels'].includes(header.id)) {
+                    chipsData.chipOptions = getChipOptions(header.id)
+                  } else if (header.id === 'nodeSelector') {
                     chipsData.chipOptions = getChipOptions('results')
                   }
 
@@ -147,18 +138,10 @@ const DetailsInfoView = React.forwardRef(
                   pageData.page === DOCUMENTS_PAGE ||
                   pageData.page === LLM_PROMPTS_PAGE
                 ) {
-                  if (header.id === 'labels') {
+                  if (header.id === 'metrics' || header.id === 'labels') {
                     chipsData.validationRules = infoContent[header.id]?.validationRules
-                    chipsData.chips = formState.values.labels
-                      ? parseKeyValues(formState.values.labels)
-                      : parseKeyValues(infoContent[header.id]?.value)
-                    chipsData.chipOptions = getChipOptions(header.id)
-                  }
-                  if (header.id === 'metrics') {
-                    chipsData.chips = parseKeyValues(infoContent[header.id]?.value)
                     chipsData.chipOptions = getChipOptions(header.id)
                   } else if (header.id === 'relations') {
-                    chipsData.chips = parseKeyValues(infoContent[header.id]?.value)
                     chipsData.chipOptions = getChipOptions(header.id)
                     chipsData.delimiter = <RightArrow />
                   }

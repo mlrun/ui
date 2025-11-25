@@ -20,15 +20,20 @@ such restriction.
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import { Form } from 'react-final-form'
+import { createForm } from 'final-form'
+import arrayMutators from 'final-form-arrays'
 
-import { Chip } from 'igz-controls/components'
+import { FormChipCell, FormOnChange } from 'igz-controls/components'
+import { setFieldState } from 'igz-controls/utils/form.util'
 import { deleteUnsafeHtml } from 'igz-controls/utils/string.util'
+
 import { CHIP_INPUT_LIST, CHIP_OPTIONS } from 'igz-controls/types'
+import { LABELS } from '../../constants'
 
-import './chipInput.scss'
+import './suggestionsChips.scss'
 
-const ChipInput = ({
-  addChip,
+const SuggestionsChips = ({
   chipOptions = {
     background: 'grey',
     boldValue: false,
@@ -38,13 +43,23 @@ const ChipInput = ({
     font: 'primary'
   },
   className,
-  elements = [],
-  isDeleteMode = true,
+  elements,
   onInputChange,
   placeholder = '',
-  removeChip = () => {},
+  setElements,
   suggestionList
 }) => {
+  const [form] = useState(() =>
+    createForm({
+      initialValues: {
+        [LABELS]: []
+      },
+      mutators: { ...arrayMutators, setFieldState },
+      onSubmit: () => {}
+    })
+  )
+  const formStateRef = useRef(null)
+
   const [typedValue, setTypedValue] = useState('')
   const [filteredSuggestionList, setFilteredSuggestionList] = useState([])
   const [showSuggestionList, setShowSuggestionList] = useState(false)
@@ -76,11 +91,19 @@ const ChipInput = ({
   const handleAddChip = useCallback(
     suggestionItem => {
       if (!suggestionItem.disabled) {
-        addChip(suggestionItem)
+        const newChip = {
+          id: suggestionItem.id,
+          key: suggestionItem.label,
+          isKeyOnly: true,
+          originalContent: suggestionItem
+        }
+
         setTypedValue('')
+        formStateRef.current.form.mutators.push(LABELS, newChip)
+        setElements(prevState => [...prevState, newChip])
       }
     },
-    [addChip]
+    [setElements]
   )
 
   const handleInputChange = useCallback(
@@ -94,13 +117,6 @@ const ChipInput = ({
     [onInputChange]
   )
 
-  const handleRemoveChip = useCallback(
-    (event, chipIndex) => {
-      removeChip(chipIndex)
-    },
-    [removeChip]
-  )
-
   return (
     <div
       className={inputContainerClassNames}
@@ -109,31 +125,39 @@ const ChipInput = ({
         inputRef.current.focus()
       }}
     >
-      {elements.map((chip, index) => {
-        return (
-          <Chip
-            chip={{ value: chip.label, id: chip.id }}
-            chipIndex={index}
-            chipOptions={chipOptions}
-            handleRemoveChip={handleRemoveChip}
-            isDeleteMode={isDeleteMode}
-            key={`${chip.value}${index}`}
-            ref={inputContainerRef}
-            showChips
-          />
-        )
-      })}
-      <div className={autoResizeInputClassNames}>
-        <input
-          autoComplete="off"
-          name="chip-input"
-          ref={inputRef}
-          type="text"
-          onChange={handleInputChange}
-          placeholder={elements.length === 0 ? placeholder : ''}
-          value={typedValue}
-        />
-      </div>
+      <Form form={form} onSubmit={() => {}}>
+        {formState => {
+          formStateRef.current = formState
+
+          return (
+            <>
+              <FormChipCell
+                chipOptions={chipOptions}
+                formState={formState}
+                initialValues={formState.initialValues}
+                isDeletable
+                label=""
+                name={LABELS}
+                shortChips
+                visibleChipsMaxLength="all"
+              >
+                <div className={autoResizeInputClassNames}>
+                  <input
+                    autoComplete="off"
+                    name="chip-input"
+                    ref={inputRef}
+                    type="text"
+                    onChange={handleInputChange}
+                    placeholder={elements.length === 0 ? placeholder : ''}
+                    value={typedValue}
+                  />
+                </div>
+              </FormChipCell>
+              <FormOnChange name={LABELS} handler={setElements} />
+            </>
+          )
+        }}
+      </Form>
       {showSuggestionList && (
         <div className="suggestion-list">
           {filteredSuggestionList.map(suggestionItem => {
@@ -174,16 +198,14 @@ const ChipInput = ({
   )
 }
 
-ChipInput.propTypes = {
-  addChip: PropTypes.func.isRequired,
+SuggestionsChips.propTypes = {
   chipOptions: CHIP_OPTIONS,
   className: PropTypes.string,
-  elements: CHIP_INPUT_LIST,
-  isDeleteMode: PropTypes.bool,
+  elements: PropTypes.array.isRequired,
   onInputChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
-  removeChip: PropTypes.func.isRequired,
+  setElements: PropTypes.func.isRequired,
   suggestionList: CHIP_INPUT_LIST.isRequired
 }
 
-export default React.memo(ChipInput)
+export default React.memo(SuggestionsChips)

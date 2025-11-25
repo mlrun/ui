@@ -35,12 +35,14 @@ import {
 import { createDatasetsRowData } from '../../utils/createArtifactsContent'
 import { fetchDataSets, removeDataSets } from '../../reducers/artifactsReducer'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { parseChipsData } from '../../utils/convertChipsData'
 
 const Datasets = ({ isAllVersions = false }) => {
   const artifactsStore = useSelector(store => store.artifactsStore)
   const generateDetailsFormInitialValues = useCallback(
-    selectedDataset => ({
-      tag: selectedDataset.tag ?? ''
+    (selectedDataset, internal_labels) => ({
+      tag: selectedDataset.tag ?? '',
+      labels: parseChipsData(selectedDataset.labels ?? {}, internal_labels)
     }),
     []
   )

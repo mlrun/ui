@@ -33,13 +33,15 @@ import {
   getFiltersConfig,
   handleApplyDetailsChanges
 } from './llmPrompts.util'
+import { parseChipsData } from '../../utils/convertChipsData'
 
 const LLMPrompts = ({ isAllVersions }) => {
   const artifactsStore = useSelector(store => store.artifactsStore)
 
   const generateDetailsFormInitialValues = useCallback(
-    selectedLLMPrompt => ({
-      tag: selectedLLMPrompt.tag ?? ''
+    (selectedLLMPrompt, internal_labels) => ({
+      tag: selectedLLMPrompt.tag ?? '',
+      labels: parseChipsData(selectedLLMPrompt.labels ?? {}, internal_labels)
     }),
     []
   )

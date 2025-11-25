@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import PropTypes from 'prop-types'
+
 import {
   BE_PAGE,
   BE_PAGE_SIZE,

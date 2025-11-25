@@ -44,6 +44,7 @@ import {
 } from './workflow.util'
 import {
   DEFAULT_EDGE,
+  EMPTY_OBJECT,
   FUNCTION_RUNNING_STATE,
   GREY_NODE,
   JOB_KIND_JOB,
@@ -72,6 +73,7 @@ import './workflow.scss'
 
 const Workflow = ({
   actionsMenu,
+  detailsFormInitialValues = EMPTY_OBJECT,
   backLink,
   handleCancel,
   handleConfirmTerminateWorkflow,
@@ -285,6 +287,7 @@ const Workflow = ({
               <Details
                 actionsMenu={actionsMenu}
                 detailsMenu={pageData.details.menu}
+                formInitialValues={detailsFormInitialValues}
                 getCloseDetailsLink={() => getCloseDetailsLink(params.workflowId)}
                 handleCancel={handleCancel}
                 pageData={pageData}
@@ -296,6 +299,7 @@ const Workflow = ({
         ) : (
           <Table
             actionsMenu={actionsMenu}
+            detailsFormInitialValues={detailsFormInitialValues}
             getCloseDetailsLink={() => getCloseDetailsLink(params.workflowId)}
             handleCancel={handleCancel}
             hideActionsMenu
@@ -321,6 +325,7 @@ const Workflow = ({
 Workflow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   backLink: PropTypes.string.isRequired,
+  detailsFormInitialValues: PropTypes.object,
   handleCancel: PropTypes.func.isRequired,
   handleConfirmTerminateWorkflow: PropTypes.func,
   itemIsSelected: PropTypes.bool.isRequired,

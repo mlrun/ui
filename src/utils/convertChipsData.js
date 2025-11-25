@@ -29,37 +29,38 @@ export const convertChipsData = (chips = []) => {
 
 // {myKey: "myValue"} --> [{id: "myKey0", key: "myKey", value: "myValue"}]
 export const parseChipsData = (labels = {}, internalLabels = [], delimiter = null) => {
-  return labels == null
-    ? []
-    : Object.entries(labels).reduce((result, [key, value], idx) => {
-        const disabled = internalLabels.includes(key)
-        const tooltip = 'System-defined labels cannot be modified.'
-        value =
-          Array.isArray(value) && value.every(item => item)
-            ? value.map(arrayItem => {
-                return typeof arrayItem === 'object'
-                  ? Object.entries(arrayItem).map(([arrayItemKey, arrayItemValue]) => ({
-                      key: arrayItemKey,
-                      value: arrayItemValue
-                    }))
-                  : arrayItem
-              })
-            : typeof value === 'object' && value !== null
-              ? Object.entries(value).map(([arrayItemKey, arrayItemValue]) => ({
-                  key: arrayItemKey,
-                  value: arrayItemValue
-                }))
-              : value
+  if (labels == null) {
+    return []
+  }
 
-        result.push({
-          id: key + idx,
-          key,
-          value,
-          delimiter,
-          disabled,
-          tooltip: disabled ? tooltip : null
-        })
+  return Object.entries(labels).reduce((result, [key, value], idx) => {
+    const disabled = internalLabels.includes(key)
+    const tooltip = 'System-defined labels cannot be modified.'
 
-        return result
-      }, [])
+    const processedValue =
+      typeof value === 'object' && value !== null ? JSON.stringify(value, null, 2) : value
+
+    result.push({
+      id: key + idx,
+      key,
+      value: processedValue,
+      delimiter,
+      disabled,
+      tooltip: disabled ? tooltip : null
+    })
+
+    return result
+  }, [])
+}
+
+export const parseEntitiesData = (entities = []) => {
+  return (
+    entities.map((entity, index) => {
+      return {
+        id: index + entity.name,
+        key: entity.name,
+        isKeyOnly: true
+      }
+    }) || []
+  )
 }

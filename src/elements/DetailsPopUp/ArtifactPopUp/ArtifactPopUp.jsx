@@ -62,6 +62,7 @@ import artifactsApi from '../../../api/artifacts-api'
 import { parseArtifacts } from '../../../utils/parseArtifacts'
 import { generateArtifacts } from '../../../utils/generateArtifacts'
 import { filterArtifacts } from '../../../utils/filterArtifacts'
+import { parseChipsData } from '../../../utils/convertChipsData'
 
 const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
   const dispatch = useDispatch()
@@ -69,6 +70,13 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
   const [selectedArtifact, setSelectedArtifact] = useState({})
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const viewMode = getViewMode(window.location.search)
+
+  const detailsFormInitialValues = useMemo(() => {
+    return {
+      tag: selectedArtifact.tag ?? '',
+      labels: parseChipsData(selectedArtifact.labels ?? {})
+    }
+  }, [selectedArtifact.labels, selectedArtifact.tag])
 
   const artifactContext = useMemo(() => {
     switch (artifactData.kind) {
@@ -214,6 +222,7 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
   return (
     <DetailsPopUp
       actionsMenu={actionsMenu}
+      formInitialValues={detailsFormInitialValues}
       handleRefresh={fetchArtifact}
       isLoading={isLoading}
       isOpen={isOpen}
