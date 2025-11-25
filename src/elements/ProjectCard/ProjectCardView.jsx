@@ -23,7 +23,13 @@ import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
-import { Tooltip, TextTooltipTemplate, Loader, ActionsMenu, ReadOnlyChips } from 'igz-controls/components'
+import {
+  Tooltip,
+  TextTooltipTemplate,
+  Loader,
+  ActionsMenu,
+  ReadOnlyChips
+} from 'igz-controls/components'
 
 import { getTimeElapsedByDate } from 'igz-controls/utils/datetime.util'
 

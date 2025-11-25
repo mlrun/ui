@@ -74,7 +74,7 @@ const DownloadContainer = () => {
                 <CloseIcon />
               </button>
               <div className="download-container__body">
-                {downloadStore.downloadList.map((downloadItem) => {
+                {downloadStore.downloadList.map(downloadItem => {
                   return <DownloadItem downloadItem={downloadItem} key={downloadItem.id} />
                 })}
               </div>

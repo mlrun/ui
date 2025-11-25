@@ -49,7 +49,7 @@ const FeatureValidator = ({ validator = {} }) => {
 }
 
 FeatureValidator.propTypes = {
-  validator: PropTypes.object,
+  validator: PropTypes.object
 }
 
 export default FeatureValidator

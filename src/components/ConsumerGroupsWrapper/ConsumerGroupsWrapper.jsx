@@ -36,7 +36,7 @@ const ConsumerGroupsWrapper = () => {
   const navigate = useNavigate()
   const params = useParams()
   const frontendSpec = useSelector(state => state.appStore.frontendSpec)
-  const v3ioStreams = useSelector((store) => store.nuclioStore.v3ioStreams)
+  const v3ioStreams = useSelector(store => store.nuclioStore.v3ioStreams)
   const dispatch = useDispatch()
 
   const nuclioStreamsAreEnabled = useMemo(

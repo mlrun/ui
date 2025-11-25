@@ -37,10 +37,7 @@ const defaultParamsParsingCallback = (_, value) => value
 const getFiltersFromSearchParams = (filtersConfig, searchParams, paramsParsingCallback) => {
   if (!filtersConfig) return {}
 
-  const filtersConfigToApply = pickBy(
-    filtersConfig,
-    config => !config.hidden || config.applyHidden
-  )
+  const filtersConfigToApply = pickBy(filtersConfig, config => !config.hidden || config.applyHidden)
 
   return mapValues(filtersConfigToApply, (filterConfig, filterName) => {
     const searchParamValue = searchParams.get(filterName)?.trim?.()

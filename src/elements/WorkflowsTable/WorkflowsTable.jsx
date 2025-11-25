@@ -119,9 +119,14 @@ const WorkflowsTable = React.forwardRef(
         labels: selectedJob.labels ?? [],
         results: selectedJob.resultsChips ?? [],
         parameters: selectedJob.parametersChips ?? [],
-        nodeSelector: selectedJob.nodeSelectorChips ?? [],
+        nodeSelector: selectedJob.nodeSelectorChips ?? []
       }
-    }, [selectedJob.labels, selectedJob.nodeSelectorChips, selectedJob.parametersChips, selectedJob.resultsChips])
+    }, [
+      selectedJob.labels,
+      selectedJob.nodeSelectorChips,
+      selectedJob.parametersChips,
+      selectedJob.resultsChips
+    ])
 
     useEffect(() => {
       const projectNames = workflowsStore.workflows.data.map(workflow => workflow.project)

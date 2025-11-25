@@ -24,48 +24,69 @@ import nuclioApi from '../api/nuclio'
 import { parseV3ioStreams } from '../utils/parseV3ioStreams'
 import { parseV3ioStreamShardLags } from '../utils/parseV3ioStreamShardLags'
 
-export const fetchApiGateways = createAsyncThunk('fetchApiGateways', ({ project, signal }, { rejectWithValue }) => {
-  return nuclioApi.getApiGateways(project, signal).then(({ data }) => {
-    return Object.keys(data).length
-  }).catch(rejectWithValue)
-})
+export const fetchApiGateways = createAsyncThunk(
+  'fetchApiGateways',
+  ({ project, signal }, { rejectWithValue }) => {
+    return nuclioApi
+      .getApiGateways(project, signal)
+      .then(({ data }) => {
+        return Object.keys(data).length
+      })
+      .catch(rejectWithValue)
+  }
+)
 
 export const fetchNuclioFunctions = createAsyncThunk(
   'fetchNuclioFunctions',
   ({ project, signal }, { rejectWithValue }) => {
-    return nuclioApi.getFunctions(project, signal).then(({ data }) => {
-      return Object.values(data)
-    }).catch(rejectWithValue)
+    return nuclioApi
+      .getFunctions(project, signal)
+      .then(({ data }) => {
+        return Object.values(data)
+      })
+      .catch(rejectWithValue)
   }
 )
 
-export const fetchAllNuclioFunctions = createAsyncThunk('fetchAllNuclioFunctions', (_, { rejectWithValue }) => {
-  return nuclioApi.getFunctions().then(({ data }) => {
-    return groupBy(data, property(['metadata', 'labels', 'nuclio.io/project-name']))
-  }).catch(rejectWithValue)
-})
+export const fetchAllNuclioFunctions = createAsyncThunk(
+  'fetchAllNuclioFunctions',
+  (_, { rejectWithValue }) => {
+    return nuclioApi
+      .getFunctions()
+      .then(({ data }) => {
+        return groupBy(data, property(['metadata', 'labels', 'nuclio.io/project-name']))
+      })
+      .catch(rejectWithValue)
+  }
+)
 
 export const fetchNuclioV3ioStreamShardLags = createAsyncThunk(
   'fetchNuclioV3ioStreamShardLags',
   ({ project, body }, { rejectWithValue }) => {
-    return nuclioApi.getV3ioStreamShardLags(project, body).then(({ data }) => {
-      return {
-        data,
-        parsedData: parseV3ioStreamShardLags(data, body)
-      }
-    }).catch(rejectWithValue)
+    return nuclioApi
+      .getV3ioStreamShardLags(project, body)
+      .then(({ data }) => {
+        return {
+          data,
+          parsedData: parseV3ioStreamShardLags(data, body)
+        }
+      })
+      .catch(rejectWithValue)
   }
 )
 
 export const fetchNuclioV3ioStreams = createAsyncThunk(
   'fetchNuclioV3ioStreams',
   ({ project, signal }, { rejectWithValue }) => {
-    return nuclioApi.getV3ioStreams(project, signal).then(({ data }) => {
-      return {
-        data: data,
-        parsedData: parseV3ioStreams(data)
-      }
-    }).catch(rejectWithValue)
+    return nuclioApi
+      .getV3ioStreams(project, signal)
+      .then(({ data }) => {
+        return {
+          data: data,
+          parsedData: parseV3ioStreams(data)
+        }
+      })
+      .catch(rejectWithValue)
   }
 )
 

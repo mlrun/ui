@@ -39,4 +39,3 @@ export const getSecretNameValidator = (projectName, initialSecretName) => {
     }
   }
 }
-

@@ -46,7 +46,7 @@ import { useModalBlockHistory } from '../../../hooks/useModalBlockHistory.hook'
 
 import './createProjectDialog.scss'
 
-const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject, isOpen = false}) => {
+const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject, isOpen = false }) => {
   const projectStore = useSelector(store => store.projectStore)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const initialValues = {

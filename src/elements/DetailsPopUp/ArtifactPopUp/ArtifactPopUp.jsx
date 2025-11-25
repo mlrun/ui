@@ -74,7 +74,7 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
   const detailsFormInitialValues = useMemo(() => {
     return {
       tag: selectedArtifact.tag ?? '',
-      labels: parseChipsData(selectedArtifact.labels ?? {}),
+      labels: parseChipsData(selectedArtifact.labels ?? {})
     }
   }, [selectedArtifact.labels, selectedArtifact.tag])
 

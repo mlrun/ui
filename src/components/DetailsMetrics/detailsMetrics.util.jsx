@@ -168,7 +168,9 @@ const generateResultMessage = (driftStatus, resultKind) => {
 
 export const generateMetricsItems = (metrics, applicationName) => {
   return chain(metrics)
-    .filter(metric => !applicationName || metric.app === applicationName || metric.app === ML_RUN_INFRA) // todo remove filter when API will support app param
+    .filter(
+      metric => !applicationName || metric.app === applicationName || metric.app === ML_RUN_INFRA
+    ) // todo remove filter when API will support app param
     .sortBy(metric => metric.label)
     .map(metric => {
       return {

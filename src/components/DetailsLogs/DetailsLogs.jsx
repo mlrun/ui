@@ -98,7 +98,7 @@ const DetailsLogs = ({
         id: `${index + 1}`,
         label: `${index + 1}`
       }))
-      
+
       attemptsList[attemptsList.length - 1].id = '0'
 
       dispatch(setRunAttemptOptions(attemptsList))

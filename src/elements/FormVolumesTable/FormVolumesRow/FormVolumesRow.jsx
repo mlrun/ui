@@ -71,7 +71,13 @@ const FormVolumesRow = ({
 
   useLayoutEffect(() => {
     setFieldRowData(
-      generateVolumeInputsData(fields.value[index], fields, editingItem, accessKeyFocusHandler, projectName)
+      generateVolumeInputsData(
+        fields.value[index],
+        fields,
+        editingItem,
+        accessKeyFocusHandler,
+        projectName
+      )
     )
     setFieldData(fields.value[index])
   }, [accessKeyFocusHandler, editingItem, fields, index, projectName])

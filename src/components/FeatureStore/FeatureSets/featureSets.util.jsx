@@ -36,7 +36,7 @@ import { fetchFeatureSet } from '../../../reducers/featureStoreReducer'
 import Copy from 'igz-controls/images/copy-to-clipboard-icon.svg?react'
 import Yaml from 'igz-controls/images/yaml.svg?react'
 
-export const generateFeatureSetsDetailsMenu = (selectedItem) => [
+export const generateFeatureSetsDetailsMenu = selectedItem => [
   {
     label: 'overview',
     id: 'overview'
@@ -86,7 +86,7 @@ export const filtersConfig = {
   [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
 }
 
-export const generatePageData = (selectedFeatureSet) => {
+export const generatePageData = selectedFeatureSet => {
   return {
     page: FEATURE_STORE_PAGE,
     details: {

@@ -97,7 +97,7 @@ const FormVolumesTable = ({
                   addNewRow(...addRowArgs, {
                     data: isCommunityEdition()
                       ? {
-                          type: CONFIG_MAP_VOLUME_TYPE ,
+                          type: CONFIG_MAP_VOLUME_TYPE,
                           name: '',
                           mountPath: '',
                           typeName: ''

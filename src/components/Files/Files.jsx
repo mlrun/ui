@@ -43,7 +43,7 @@ const Files = ({ isAllVersions = false }) => {
   const generateDetailsFormInitialValues = useCallback(
     (selectedFile, internal_labels) => ({
       tag: selectedFile.tag ?? '',
-      labels: parseChipsData(selectedFile.labels ?? {}, internal_labels),
+      labels: parseChipsData(selectedFile.labels ?? {}, internal_labels)
     }),
     []
   )

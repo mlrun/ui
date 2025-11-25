@@ -222,8 +222,9 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
             setNotification({
               status: 200,
               id: Math.random(),
-              message: `Project "${deletingProjects?.[task.metadata.name]
-                }" was deleted successfully`
+              message: `Project "${
+                deletingProjects?.[task.metadata.name]
+              }" was deleted successfully`
             })
           )
         } else {

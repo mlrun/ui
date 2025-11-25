@@ -70,10 +70,14 @@ const JobPopUp = ({ isOpen, jobData, onResolve }) => {
       labels: selectedJob.labels ?? [],
       results: selectedJob.resultsChips ?? [],
       parameters: selectedJob.parametersChips ?? [],
-      nodeSelector: selectedJob.nodeSelectorChips ?? [],
+      nodeSelector: selectedJob.nodeSelectorChips ?? []
     }
-  }, [selectedJob.labels, selectedJob.nodeSelectorChips, selectedJob.parametersChips, selectedJob.resultsChips])
-
+  }, [
+    selectedJob.labels,
+    selectedJob.nodeSelectorChips,
+    selectedJob.parametersChips,
+    selectedJob.resultsChips
+  ])
 
   const pageData = useMemo(
     () =>

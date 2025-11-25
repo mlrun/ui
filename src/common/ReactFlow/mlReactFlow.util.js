@@ -73,7 +73,7 @@ export const getLayoutedElements = (nodes, edges, direction = 'TB') => {
     // so it matches the React Flow node anchor point (top left).
     node.position = {
       x: nodeWithPosition.x - nodeWidth / 2,
-      y: nodeWithPosition.y - nodeHeight / 2,
+      y: nodeWithPosition.y - nodeHeight / 2
     }
 
     return node

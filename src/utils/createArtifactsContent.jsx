@@ -415,7 +415,7 @@ export const getDriftStatusData = driftStatus => {
     case 'POSSIBLE_DRIFT':
       return {
         value: (
-          <span className='table-severity-warning-icon' data-testid="possible-drift">
+          <span className="table-severity-warning-icon" data-testid="possible-drift">
             <SeverityWarning />
           </span>
         ),
