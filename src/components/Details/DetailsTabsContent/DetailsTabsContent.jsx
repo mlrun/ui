@@ -44,6 +44,7 @@ import DetailsResults from '../../DetailsResults/DetailsResults'
 import DetailsStatistics from '../../DetailsStatistics/DetailsStatistics'
 import DetailsTransformations from '../../DetailsTransformations/DetailsTransformations'
 import NoData from '../../../common/NoData/NoData'
+import DetailsLLMPrompts from '../../DetailsLLMPrompts/DetailsLLMPrompts'
 
 import {
   DETAILS_ALERTS_TAB,
@@ -69,7 +70,8 @@ import {
   DETAILS_RESULTS_TAB,
   DETAILS_RETURNED_FEATURES_TAB,
   DETAILS_STATISTICS_TAB,
-  DETAILS_TRANSFORMATIONS_TAB
+  DETAILS_TRANSFORMATIONS_TAB,
+  DETAILS_LLM_PROMPTS_TAB
 } from '../../../constants'
 import { isJobKindDask, JOB_STEADY_STATES } from '../../Jobs/jobs.util'
 
@@ -244,6 +246,8 @@ const DetailsTabsContent = ({
       return <DetailsPromptTemplate selectedItem={selectedItem} />
     case DETAILS_INVOCATION_CONFIGURATION_TAB:
       return <DetailsGenerationConfiguration selectedItem={selectedItem} />
+    case DETAILS_LLM_PROMPTS_TAB:
+      return <DetailsLLMPrompts selectedItem={selectedItem} isDetailsPopUp={isDetailsPopUp} />
     default:
       return null
   }

@@ -28,7 +28,8 @@ import {
   MODELS_TAB,
   TAG_LATEST,
   MODEL_TYPE,
-  ARTIFACT_MAX_DOWNLOAD_SIZE
+  ARTIFACT_MAX_DOWNLOAD_SIZE,
+  DETAILS_LLM_PROMPTS_TAB
 } from '../../../constants'
 import {
   getErrorMsg,
@@ -113,6 +114,12 @@ export const generateModelsDetailsMenu = selectedModel => [
     id: 'statistics',
     hidden: !selectedModel.stats && !selectedModel.feature_stats && !selectedModel.feature_vector,
     tip: 'Note that some values may be empty due to the use of different engines for calculating statistics'
+  },
+  {
+    label: 'LLM Prompts',
+    id: DETAILS_LLM_PROMPTS_TAB,
+    tip: 'All LLM prompt artifacts linked to this model',
+    hidden: !selectedModel.has_children
   }
 ]
 

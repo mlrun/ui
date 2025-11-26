@@ -61,7 +61,6 @@ import { getInitialFiltersByConfig } from '../../hooks/useFiltersFromSearchParam
 import { useTableScroll } from 'igz-controls/hooks/useTable.hook'
 
 import './jobsTable.scss'
-import { parseChipsData } from '../../utils/convertChipsData'
 
 const JobsTable = React.forwardRef(
   (

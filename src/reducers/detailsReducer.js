@@ -17,18 +17,24 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { DATE_FILTER_ANY_TIME, DEFAULT_ABORT_MSG } from '../constants'
+import { isEmpty } from 'lodash'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import detailsApi from '../api/details-api'
+
 import { generatePods } from '../utils/generatePods'
-import modelEndpointsApi from '../api/modelEndpoints-api'
 import {
   generateMetricsItems,
   parseMetrics
 } from '../components/DetailsMetrics/detailsMetrics.util'
-import { isEmpty } from 'lodash'
+import { parseArtifacts } from '../utils/parseArtifacts'
+import { generateArtifacts } from '../utils/generateArtifacts'
+import { filterArtifacts } from '../utils/filterArtifacts'
 import { TIME_FRAME_LIMITS } from '../utils/datePicker.util'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
+import artifactsApi from '../api/artifacts-api'
+import modelEndpointsApi from '../api/modelEndpoints-api'
+import detailsApi from '../api/details-api'
+
+import { DATE_FILTER_ANY_TIME, DEFAULT_ABORT_MSG, LLM_PROMPTS_PAGE } from '../constants'
 
 const initialState = {
   dates: {
@@ -54,6 +60,10 @@ const initialState = {
     podsList: [],
     podsPending: [],
     podsTooltip: []
+  },
+  llmPromptsArtifacts: {
+    data: [],
+    loading: false
   },
   metricsOptions: {
     all: [],
@@ -95,6 +105,29 @@ export const fetchJobPods = createAsyncThunk('fetchJobPods', ({ project, uid, ki
     })
     .catch(error => thunkAPI.rejectWithValue(error))
 })
+
+export const fetchLLMPromptArtifacts = createAsyncThunk(
+  'fetchLLMPromptArtifacts',
+  ({ project, filters, config }, thunkAPI) => {
+    return artifactsApi
+      .getLLMPrompts(project, filters, config)
+      .then(({ data }) => {
+        const result = parseArtifacts(data.artifacts)
+
+        return generateArtifacts(filterArtifacts(result), LLM_PROMPTS_PAGE, data.artifacts)
+      })
+      .catch(error => {
+        largeResponseCatchHandler(
+          error,
+          'Failed to fetch LLM prompts',
+          thunkAPI.dispatch,
+          config?.ui?.setRequestErrorMessage
+        )
+
+        throw error
+      })
+  }
+)
 
 export const fetchModelEndpointMetrics = createAsyncThunk(
   'fetchEndpointMetrics',
@@ -149,6 +182,9 @@ const detailsStoreSlice = createSlice({
   name: 'detailsStore',
   initialState,
   reducers: {
+    removeDetailsLLMPrompts(state) {
+      state.llmPromptsArtifacts = initialState.llmPromptsArtifacts
+    },
     removeDetailsPods(state) {
       state.detailsJobPods = initialState.detailsJobPods
     },
@@ -234,6 +270,17 @@ const detailsStoreSlice = createSlice({
       state.pods.loading = false
       state.error = action.payload
     })
+    builder.addCase(fetchLLMPromptArtifacts.pending, state => {
+      state.llmPromptsArtifacts.loading = true
+    })
+    builder.addCase(fetchLLMPromptArtifacts.fulfilled, (state, action) => {
+      state.llmPromptsArtifacts.data = action.payload
+      state.llmPromptsArtifacts.loading = false
+    })
+    builder.addCase(fetchLLMPromptArtifacts.rejected, state => {
+      state.llmPromptsArtifacts.data = []
+      state.llmPromptsArtifacts.loading = false
+    })
     builder.addCase(fetchModelEndpointMetrics.pending, state => {
       state.loadingCounter = state.loadingCounter + 1
     })
@@ -286,6 +333,7 @@ const detailsStoreSlice = createSlice({
 })
 
 export const {
+  removeDetailsLLMPrompts,
   removeDetailsPods,
   removeModelFeatureVector,
   removePods,

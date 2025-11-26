@@ -58,6 +58,10 @@ const fetchArtifacts = (project, filters, config = {}, withLatestTag, withExactN
     params.tree = filters.tree
   }
 
+  if (filters?.parent) {
+    params.parent = filters.parent
+  }
+
   if (filters?.[MODEL_NAME_FILTER]) {
     params.parent = `${filters[MODEL_NAME_FILTER]}${filters[MODEL_TAG_FILTER] ? `:${filters[MODEL_TAG_FILTER]}` : ''}`
   }
