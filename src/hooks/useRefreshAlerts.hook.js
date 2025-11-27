@@ -69,7 +69,9 @@ export const useRefreshAlerts = (filters, isAlertsPage) => {
             },
             params: {
               page: isAlertsPage ? paginationConfigAlertsRef.current[BE_PAGE] : 1,
-              'page-size': isAlertsPage ? paginationConfigAlertsRef.current[BE_PAGE_SIZE] : ALERTS_DISPLAY_LIMIT
+              'page-size': isAlertsPage
+                ? paginationConfigAlertsRef.current[BE_PAGE_SIZE]
+                : ALERTS_DISPLAY_LIMIT
             }
           }
         })
