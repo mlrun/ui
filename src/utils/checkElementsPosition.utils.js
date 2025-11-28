@@ -43,3 +43,14 @@ export const isTargetElementInContainerElement = (targetElement, containerElemen
 
   return false
 }
+
+export const isClickInsideContainer = (event, element) => {
+  if (!element) return false
+
+  const rect = element.getBoundingClientRect()
+  const { clientX, clientY } = event
+
+  return (
+    clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom
+  )
+}
