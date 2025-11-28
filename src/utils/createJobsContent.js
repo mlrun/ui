@@ -17,6 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { get } from 'lodash'
+
 import JobPopUp from '../elements/DetailsPopUp/JobPopUp/JobPopUp'
 import FunctionPopUp from '../elements/DetailsPopUp/FunctionPopUp/FunctionPopUp'
 
@@ -51,7 +53,8 @@ import { formatDatetime } from 'igz-controls/utils/datetime.util'
 export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
-    const type = job.labels.kind ?? ''
+    const type = get(job, 'ui.originalContent.metadata.labels.kind', '')
+
     const getLink = tab => {
       if (jobName) {
         return validateArguments(job.uid, tab, job.name)
@@ -455,7 +458,8 @@ export const createJobsWorkflowContent = (
 export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
-    const type = job.labels.kind ?? ''
+    const type = get(job, 'ui.originalContent.metadata.labels.kind', '')
+
     const getLink = tab => {
       if (jobName) {
         return validateArguments(job.uid, tab, job.name)
