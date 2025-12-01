@@ -40,18 +40,22 @@ export const generateMlrunScreens = (projectName, isDemoMode) => {
     return list
   }, [])
 
-  mlrunScreens.push({
-    label: 'Alerts',
-    id: ALERTS_PAGE_PATH,
-    link: `/${PROJECTS_PAGE_PATH}/${projectName}/${ALERTS_PAGE_PATH}`
-  },
-  {
-    label: 'Settings',
-    id: 'settings',
-    link: `/${PROJECTS_PAGE_PATH}/${projectName}/${PROJECTS_SETTINGS_PAGE_PATH}`
-  })
+  mlrunScreens.push(
+    {
+      label: 'Alerts',
+      id: ALERTS_PAGE_PATH,
+      link: `/${PROJECTS_PAGE_PATH}/${projectName}/${ALERTS_PAGE_PATH}`
+    },
+    {
+      label: 'Settings',
+      id: 'settings',
+      link: `/${PROJECTS_PAGE_PATH}/${projectName}/${PROJECTS_SETTINGS_PAGE_PATH}`
+    }
+  )
 
-  return projectName ? mlrunScreens : [
+  return projectName
+    ? mlrunScreens
+    : [
         {
           label: 'Alerts monitoring',
           id: MONITOR_ALERTS_PAGE,

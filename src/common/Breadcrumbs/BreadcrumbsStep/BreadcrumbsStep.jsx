@@ -24,7 +24,11 @@ import { Link } from 'react-router-dom'
 import BreadcrumbsDropdown from '../../../elements/BreadcrumbsDropdown/BreadcrumbsDropdown'
 import { RoundedIcon } from 'igz-controls/components'
 
-import { BREADCRUMBS_STEP_ITEM_TYPE, BREADCRUMBS_STEP_PROJECT_TYPE, BREADCRUMBS_STEP_SCREEN_TYPE } from '../../../constants'
+import {
+  BREADCRUMBS_STEP_ITEM_TYPE,
+  BREADCRUMBS_STEP_PROJECT_TYPE,
+  BREADCRUMBS_STEP_SCREEN_TYPE
+} from '../../../constants'
 import { scrollToElement } from '../../../utils/scroll.util'
 
 import ArrowIcon from 'igz-controls/images/arrow.svg?react'
@@ -108,7 +112,14 @@ const BreadcrumbsStep = React.forwardRef(
       if (showScreensList && screenListRef.current) {
         scrollScreenOptionToView()
       }
-    }, [showProjectsList, projectListRef, screenListRef, showScreensList, scrollProjectOptionToView, scrollScreenOptionToView])
+    }, [
+      showProjectsList,
+      projectListRef,
+      screenListRef,
+      showScreensList,
+      scrollProjectOptionToView,
+      scrollScreenOptionToView
+    ])
 
     useEffect(() => {
       window.addEventListener('click', handleCloseDropdown)
@@ -119,8 +130,10 @@ const BreadcrumbsStep = React.forwardRef(
     }, [handleCloseDropdown])
 
     const handleSeparatorClick = (nextItem, separatorRef) => {
-      if (nextItem.type === BREADCRUMBS_STEP_SCREEN_TYPE || nextItem.type === BREADCRUMBS_STEP_PROJECT_TYPE) {
-
+      if (
+        nextItem.type === BREADCRUMBS_STEP_SCREEN_TYPE ||
+        nextItem.type === BREADCRUMBS_STEP_PROJECT_TYPE
+      ) {
         const [activeSeparator] = document.getElementsByClassName('breadcrumbs__separator_active')
 
         if (nextItem.type === BREADCRUMBS_STEP_PROJECT_TYPE) {
@@ -160,55 +173,60 @@ const BreadcrumbsStep = React.forwardRef(
       >
         {pathItem.label}
       </li>
-    )
-      : (
-        <>
-          <li key={pathItem.id} className="breadcrumbs__item">
-            <Link to={pathItem.link} onClick={onClick}>
-              {pathItem.label}
-            </Link>
-          </li>
-          <li key={index} className="breadcrumbs__item">
-            {nextBreadcrumbItem?.type === BREADCRUMBS_STEP_ITEM_TYPE ? (<div className='breadcrumbs__separator'><ArrowIcon /></div >) : <RoundedIcon
-              className='breadcrumbs__separator'
+    ) : (
+      <>
+        <li key={pathItem.id} className="breadcrumbs__item">
+          <Link to={pathItem.link} onClick={onClick}>
+            {pathItem.label}
+          </Link>
+        </li>
+        <li key={index} className="breadcrumbs__item">
+          {nextBreadcrumbItem?.type === BREADCRUMBS_STEP_ITEM_TYPE ? (
+            <div className="breadcrumbs__separator">
+              <ArrowIcon />
+            </div>
+          ) : (
+            <RoundedIcon
+              className="breadcrumbs__separator"
               id={`separator-${index}`}
               ref={separatorRef}
               onClick={() => handleSeparatorClick(nextBreadcrumbItem, separatorRef)}
             >
               <ArrowIcon />
-            </RoundedIcon>}
-            {showScreensList && nextBreadcrumbItem.type === BREADCRUMBS_STEP_SCREEN_TYPE && (
+            </RoundedIcon>
+          )}
+          {showScreensList && nextBreadcrumbItem.type === BREADCRUMBS_STEP_SCREEN_TYPE && (
+            <BreadcrumbsDropdown
+              id="breadcrumbs-screens-dropdown"
+              link={pathItem.link}
+              list={mlrunScreens}
+              onClick={() => handleSelectDropdownItem(separatorRef)}
+              ref={screenListRef}
+              selectedItem={urlParts.screen?.id}
+              searchValue={searchValue}
+              setSearchValue={setSearchValue}
+            />
+          )}
+          {showProjectsList && nextBreadcrumbItem.type === BREADCRUMBS_STEP_PROJECT_TYPE && (
+            <>
               <BreadcrumbsDropdown
-                id="breadcrumbs-screens-dropdown"
+                id="breadcrumbs-projects-dropdown"
                 link={pathItem.link}
-                list={mlrunScreens}
+                list={projectsList}
                 onClick={() => handleSelectDropdownItem(separatorRef)}
-                ref={screenListRef}
-                selectedItem={urlParts.screen?.id}
+                ref={projectListRef}
+                selectedItem={params.projectName}
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
+                urlParts={urlParts}
+                withSearch
+                withAllProjects
               />
-            )}
-            {showProjectsList && nextBreadcrumbItem.type === BREADCRUMBS_STEP_PROJECT_TYPE && (
-              <>
-                <BreadcrumbsDropdown
-                  id="breadcrumbs-projects-dropdown"
-                  link={pathItem.link}
-                  list={projectsList}
-                  onClick={() => handleSelectDropdownItem(separatorRef)}
-                  ref={projectListRef}
-                  selectedItem={params.projectName}
-                  searchValue={searchValue}
-                  setSearchValue={setSearchValue}
-                  urlParts={urlParts}
-                  withSearch
-                  withAllProjects
-                />
-              </>
-            )}
-          </li>
-        </>
-      )
+            </>
+          )}
+        </li>
+      </>
+    )
   }
 )
 
@@ -228,17 +246,19 @@ BreadcrumbsStep.propTypes = {
   showProjectsList: PropTypes.bool.isRequired,
   showScreensList: PropTypes.bool.isRequired,
   urlParts: PropTypes.shape({
-    pathItems: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
-      link: PropTypes.string,
-      type: PropTypes.string
-    })).isRequired,
+    pathItems: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        label: PropTypes.string.isRequired,
+        link: PropTypes.string,
+        type: PropTypes.string
+      })
+    ).isRequired,
     screen: PropTypes.shape({
       id: PropTypes.string,
       label: PropTypes.string,
       link: PropTypes.string
-    }),
+    })
   }).isRequired
 }
 

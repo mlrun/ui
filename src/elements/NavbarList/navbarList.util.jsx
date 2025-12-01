@@ -20,8 +20,27 @@ such restriction.
 import React from 'react'
 
 import {
-  ARTIFACTS_PAGE, API_GATEWAYS_PAGE, DATASETS_PAGE, DOCUMENTS_PAGE, FEATURE_STORE_PAGE_PATH, FILES_PAGE, FUNCTIONS_PAGE_PATH, JOBS_PAGE_PATH,
-  LLM_PROMPTS_PAGE, MODELS_PAGE, MODEL_ENDPOINTS_TAB, MONITORING_APP_PAGE, MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, NUCLIO_PAGE, PROJECTS_PAGE_PATH, PROJECT_MONITOR, PROJECT_QUICK_ACTIONS_PAGE, REAL_TIME_PIPELINES_TAB, REAL_TIME_FUNCTIONS_PAGE, SCHEDULE_TAB
+  ARTIFACTS_PAGE,
+  API_GATEWAYS_PAGE,
+  DATASETS_PAGE,
+  DOCUMENTS_PAGE,
+  FEATURE_STORE_PAGE_PATH,
+  FILES_PAGE,
+  FUNCTIONS_PAGE_PATH,
+  JOBS_PAGE_PATH,
+  LLM_PROMPTS_PAGE,
+  MODELS_PAGE,
+  MODEL_ENDPOINTS_TAB,
+  MONITORING_APP_PAGE,
+  MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_TAB,
+  NUCLIO_PAGE,
+  PROJECTS_PAGE_PATH,
+  PROJECT_MONITOR,
+  PROJECT_QUICK_ACTIONS_PAGE,
+  REAL_TIME_PIPELINES_TAB,
+  REAL_TIME_FUNCTIONS_PAGE,
+  SCHEDULE_TAB
 } from '../../constants'
 import { generateNuclioLink } from '../../utils'
 
@@ -55,7 +74,13 @@ export const getNavbarLinks = (projectName, isDemoMode) => {
       icon: <DatasetsIcon />,
       id: ARTIFACTS_PAGE,
       label: 'Data and artifacts',
-      screens: [DATASETS_PAGE, DOCUMENTS_PAGE, LLM_PROMPTS_PAGE, FILES_PAGE, FEATURE_STORE_PAGE_PATH],
+      screens: [
+        DATASETS_PAGE,
+        DOCUMENTS_PAGE,
+        LLM_PROMPTS_PAGE,
+        FILES_PAGE,
+        FEATURE_STORE_PAGE_PATH
+      ],
       nestedLinks: [
         {
           id: DATASETS_PAGE,
@@ -80,7 +105,7 @@ export const getNavbarLinks = (projectName, isDemoMode) => {
         {
           id: FEATURE_STORE_PAGE_PATH,
           label: 'Feature store',
-          link: `${pathname}/${FEATURE_STORE_PAGE_PATH}`,
+          link: `${pathname}/${FEATURE_STORE_PAGE_PATH}`
         }
       ]
     },

@@ -30,10 +30,7 @@ import {
   S3_INPUT_PATH_SCHEME,
   V3IO_INPUT_PATH_SCHEME
 } from '../../constants'
-import {
-  generateArtifactsList,
-  generateArtifactsReferencesList,
-} from '../../utils/panelPathScheme'
+import { generateArtifactsList, generateArtifactsReferencesList } from '../../utils/panelPathScheme'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
 import { fetchProjectsNames } from '../../reducers/projectReducer'
