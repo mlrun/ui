@@ -22,6 +22,7 @@ import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
 import {
+  ALERTS_DISPLAY_LIMIT,
   BE_PAGE,
   BE_PAGE_SIZE,
   MODEL_ENDPOINT_ID,
@@ -67,8 +68,10 @@ export const useRefreshAlerts = (filters, isAlertsPage) => {
               setRequestErrorMessage
             },
             params: {
-              page: paginationConfigAlertsRef.current[BE_PAGE],
-              'page-size': paginationConfigAlertsRef.current[BE_PAGE_SIZE]
+              page: isAlertsPage ? paginationConfigAlertsRef.current[BE_PAGE] : 1,
+              'page-size': isAlertsPage
+                ? paginationConfigAlertsRef.current[BE_PAGE_SIZE]
+                : ALERTS_DISPLAY_LIMIT
             }
           }
         })
