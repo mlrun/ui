@@ -35,7 +35,7 @@ const BreadcrumbsDropdown = forwardRef(
     {
       id = '',
       list = [],
-      onClick = () => { },
+      onClick = () => {},
       searchValue = '',
       setSearchValue,
       selectedItem,
@@ -72,35 +72,33 @@ const BreadcrumbsDropdown = forwardRef(
                 isItemSelected && 'breadcrumbs__dropdown-item_selected'
               )
 
-              return (
-                listItem.externalLink ? (
-                  <a
-                    href={listItem.link}
-                    id={listItem.id}
-                    data-testid={`breadcrumbs-dropdown-item-${listItem.id}`}
-                    key={listItem.id}
-                    className={dropdownItemClassNames}
-                  >
-                    <span>{listItem.label}</span>
-                    {isItemSelected && <CheckmarkIcon className="checkmark" />}
-                  </a>
-                ) : (
-                  <Link
-                    to={listItem.link}
-                    onClick={event => {
-                      isItemSelected ? event.preventDefault() : onClick(event)
-                    }}
-                    id={listItem.id}
-                    data-testid={`breadcrumbs-dropdown-item-${listItem.id}`}
-                    key={listItem.id}
-                    className={dropdownItemClassNames}
-                  >
-                    <Tooltip template={<TextTooltipTemplate text={listItem.label} />}>
-                      {listItem.label}
-                    </Tooltip>
-                    {isItemSelected && <CheckmarkIcon className="checkmark" />}
-                  </Link>
-                )
+              return listItem.externalLink ? (
+                <a
+                  href={listItem.link}
+                  id={listItem.id}
+                  data-testid={`breadcrumbs-dropdown-item-${listItem.id}`}
+                  key={listItem.id}
+                  className={dropdownItemClassNames}
+                >
+                  <span>{listItem.label}</span>
+                  {isItemSelected && <CheckmarkIcon className="checkmark" />}
+                </a>
+              ) : (
+                <Link
+                  to={listItem.link}
+                  onClick={event => {
+                    isItemSelected ? event.preventDefault() : onClick(event)
+                  }}
+                  id={listItem.id}
+                  data-testid={`breadcrumbs-dropdown-item-${listItem.id}`}
+                  key={listItem.id}
+                  className={dropdownItemClassNames}
+                >
+                  <Tooltip template={<TextTooltipTemplate text={listItem.label} />}>
+                    {listItem.label}
+                  </Tooltip>
+                  {isItemSelected && <CheckmarkIcon className="checkmark" />}
+                </Link>
               )
             })}
         </div>

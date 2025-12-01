@@ -73,7 +73,6 @@ const FunctionsView = ({
   setSearchFunctionsParams,
   tableContent
 }) => {
-
   return (
     <>
       <div className="content-wrapper">
