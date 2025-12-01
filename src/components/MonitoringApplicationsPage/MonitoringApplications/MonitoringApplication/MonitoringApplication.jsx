@@ -75,7 +75,13 @@ const MonitoringApplication = () => {
             <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
           ) : (
             <>
-              <SectionTable loading={loadingArtifacts} params={params} table={artifactsTable} rowHeight={57} maxTableHeight={385} />
+              <SectionTable
+                loading={loadingArtifacts}
+                params={params}
+                table={artifactsTable}
+                rowHeight={57}
+                maxTableHeight={385}
+              />
               <Link
                 className="link monitoring-app__see-all-link"
                 to={`/projects/${params.projectName}/${FILES_PAGE}?${LABELS_FILTER}=mlrun/app-name=${params.name}`}

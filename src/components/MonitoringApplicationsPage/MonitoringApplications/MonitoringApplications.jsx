@@ -73,12 +73,17 @@ const MonitoringApplications = () => {
               }
             />
           ) : (
-            <SectionTable loading={loading} params={params} table={operatingFunctionsTable} maxTableHeight={246} />
+            <SectionTable
+              loading={loading}
+              params={params}
+              table={operatingFunctionsTable}
+              maxTableHeight={246}
+            />
           )}
         </div>
       </div>
       <div className="monitoring-app__section section_big">
-        <AllApplicationsTable applications={applications} loading={loading} error={error}/>
+        <AllApplicationsTable applications={applications} loading={loading} error={error} />
       </div>
     </div>
   )

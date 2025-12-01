@@ -92,7 +92,7 @@ const AllApplicationsTable = ({ applications, loading, error = null }) => {
       rowHeight: applicationsRowHeight,
       rowHeightExtended: applicationRowHeightExtended
     }
-  }) 
+  })
 
   return (
     <div className="monitoring-app__section-item all-applications-table">
@@ -118,14 +118,17 @@ const AllApplicationsTable = ({ applications, loading, error = null }) => {
           skipTableWrapper
           virtualizationConfig={virtualizationConfig}
         >
-          {applicationsTableContent.map((tableItem, index) => (
-            isRowRendered(virtualizationConfig, index) && (<ApplicationTableRow
-              actionsMenu={applicationsTableActionsMenu}
-              key={index}
-              rowIndex={index}
-              rowItem={tableItem}
-            />)
-          ))}
+          {applicationsTableContent.map(
+            (tableItem, index) =>
+              isRowRendered(virtualizationConfig, index) && (
+                <ApplicationTableRow
+                  actionsMenu={applicationsTableActionsMenu}
+                  key={index}
+                  rowIndex={index}
+                  rowItem={tableItem}
+                />
+              )
+          )}
         </Table>
       )}
     </div>
