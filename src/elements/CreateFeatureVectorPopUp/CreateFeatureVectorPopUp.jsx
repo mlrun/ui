@@ -136,7 +136,6 @@ const CreateFeatureVectorPopUp = ({
                   label="Labels"
                   name="labels"
                   shortChips
-                  visibleChipsMaxLength="2"
                   validationRules={{
                     key: getValidationRules(
                       'common.tag',

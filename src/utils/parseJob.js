@@ -49,7 +49,14 @@ export const parseJob = (job, tab, customState, customError) => {
         ...job.scheduled_object,
         schedule: isString(job.scheduled_object?.schedule)
           ? job.scheduled_object?.schedule
-          : convertTriggerToCrontab(job.scheduled_object?.schedule)
+          : convertTriggerToCrontab(job.scheduled_object?.schedule),
+        task: {
+          ...job.scheduled_object.task,
+          metadata: {
+            ...job.scheduled_object.task.metadata,
+            labels: parseChipsData(job.scheduled_object.task.metadata.labels)
+          }
+        }
       },
       startTime: new Date(job.last_run?.status?.start_time),
       state: getState(

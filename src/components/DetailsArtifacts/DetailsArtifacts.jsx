@@ -36,7 +36,6 @@ import { ALLOW_SORT_BY, DEFAULT_SORT_BY, EXCLUDE_SORT_BY } from 'igz-controls/ty
 import { fetchArtifacts } from '../../reducers/artifactsReducer'
 import { fetchJob } from '../../reducers/jobReducer'
 import { generateArtifactIdentifiers } from '../Details/details.util'
-import { getChipLabelAndValue } from 'igz-controls/utils/chips.util'
 import { setIteration, setIterationOption } from '../../reducers/detailsReducer'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 
@@ -140,8 +139,7 @@ const DetailsArtifacts = ({
 
   const getJobArtifacts = useCallback(
     (job, iteration) => {
-      const workflowLabel = (job.labels ?? []).find(label => label.key === 'owner')?.value ?? ''
-      const { chipValue: workflowId } = getChipLabelAndValue({ value: workflowLabel ?? '' })
+      const workflowId = (job.labels ?? []).find(label => label.key === 'workflow')?.value ?? ''
       const config = {
         params: { tree: job.uid }
       }

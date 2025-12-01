@@ -64,3 +64,14 @@ export const parseEntitiesData = (entities = []) => {
     }) || []
   )
 }
+
+export const validateByInternalLabels = (labels = [], internalLabels = []) => {
+  if (internalLabels.length === 0) return labels
+
+  return labels.map(label => {
+    return {
+      ...label,
+      disabled: internalLabels.includes(label.key)
+    }
+  })
+}

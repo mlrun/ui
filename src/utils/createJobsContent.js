@@ -43,7 +43,6 @@ import { measureTime } from './measureTime'
 import { generateLinkToDetailsPanel } from './link-helper.util'
 import { getJobIdentifier, getWorkflowJobIdentifier } from './getUniqueIdentifier'
 import { validateArguments } from './validateArguments'
-import { parseChipsData } from './convertChipsData'
 import { typesOfJob } from './jobs.util'
 import { saveAndTransformSearchParams } from 'igz-controls/utils/filter.util'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
@@ -235,7 +234,7 @@ export const createJobsScheduleTabContent = jobs => {
           headerId: 'labels',
           headerLabel: 'Labels',
           id: `labels.${identifierUnique}`,
-          value: parseChipsData(job.scheduled_object?.task.metadata.labels || {}),
+          value: job.scheduled_object?.task.metadata.labels ?? [],
           className: 'table-cell-1',
           type: 'labels'
         },
@@ -644,7 +643,7 @@ export const createScheduleJobsMonitoringContent = jobs => {
           headerId: 'labels',
           headerLabel: 'Labels',
           id: `labels.${identifierUnique}`,
-          value: parseChipsData(job.scheduled_object?.task.metadata.labels || {}),
+          value: job.scheduled_object?.task.metadata.labels ?? [],
           className: 'table-cell-1',
           type: 'labels'
         },
