@@ -529,39 +529,6 @@ const parseVolumes = (volumes, volumeMounts, isEditMode) => {
   })
 }
 
-export const getCategoryName = categoryId => {
-  const categoriesNames = {
-    'data-analysis': 'Data Analysis',
-    'data-generation': 'Data Generation',
-    'data-preparation': 'Data Preparation',
-    'data-validation': 'Data Validation',
-    'deep-learning': 'Deep Learning',
-    'feature-store': 'Feature Store',
-    'machine-learning': 'Machine Learning',
-    'model-prep': 'Model Prep',
-    'model-serving': 'Model Serving',
-    'model-test': 'Model Test',
-    'model-testing': 'Model Testing',
-    'model-training': 'Model Training',
-    NLP: 'NLP',
-    audio: 'Audio',
-    dask: 'Dask',
-    dl: 'Deep Learning',
-    etl: 'ETL',
-    genai: 'GenAI',
-    huggingface: 'Hugging Face',
-    monitoring: 'Monitoring',
-    notifications: 'Alerts and Notifications',
-    other: 'Other',
-    pytorch: 'PyTorch',
-    simulators: 'Simulators',
-    training: 'Model Training',
-    utils: 'Utilities'
-  }
-
-  return categoriesNames[categoryId] ?? categoryId
-}
-
 const getDataInputData = (dataInputName, dataInputValue, dataInputIsChecked) => {
   const pathType = dataInputValue?.match(/^(.*?:\/\/+)/)?.[0] ?? ''
   const value = dataInputValue?.replace(pathType, '') ?? ''
