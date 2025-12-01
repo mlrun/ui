@@ -35,7 +35,7 @@ import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualizati
 
 import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
 
-import '../MonitoringApplicationsPage.scss'
+import '../monitoringApplicationsPage.scss'
 
 const AllApplicationsTable = ({ applications, loading, error = null }) => {
   const params = useParams()
