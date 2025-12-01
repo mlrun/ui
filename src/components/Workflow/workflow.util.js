@@ -176,8 +176,8 @@ export const isWorkflowJobSelected = (job, selectedJob) => {
 export const isWorkflowStepExecutable = job => {
   return Boolean(
     !isEmpty(job) &&
-    isWorkflowStepVisible(job) &&
-    (job?.run_uid || (isFunctionTypeSelectable(job) && job?.type !== WORKFLOW_TYPE_SKIPPED))
+      isWorkflowStepVisible(job) &&
+      (job?.run_uid || (isFunctionTypeSelectable(job) && job?.type !== WORKFLOW_TYPE_SKIPPED))
   )
 }
 

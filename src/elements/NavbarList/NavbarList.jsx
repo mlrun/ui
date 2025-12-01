@@ -63,13 +63,16 @@ const NavbarList = ({ navbarIsPinned, projectName }) => {
   }, [projectName, isDemoMode])
 
   const projectsList = useMemo(() => {
-    const projectsList = generateProjectsList(projectStore.projectsNames.data, params.projectName, true)
+    const projectsList = generateProjectsList(
+      projectStore.projectsNames.data,
+      params.projectName,
+      true
+    )
     return projectsList.map(project => ({
       ...project,
       link: pathname.replace(params.projectName, project.id)
     }))
   }, [projectStore.projectsNames.data, pathname, params.projectName])
-
 
   const handleOnMouseLeave = useCallback(() => {
     !navbarIsPinned && setShowProjectsList(false)
@@ -89,7 +92,9 @@ const NavbarList = ({ navbarIsPinned, projectName }) => {
     <>
       <div onMouseLeave={handleOnMouseLeave}>
         <div className="navbar__projects" ref={projectListWrapperRef}>
-          <span className="nav-link__icon"><HomepageIcon /></span>
+          <span className="nav-link__icon">
+            <HomepageIcon />
+          </span>
           <Button
             label={projectName}
             icon={<Caret />}
@@ -116,13 +121,19 @@ const NavbarList = ({ navbarIsPinned, projectName }) => {
       <Navbar.Divider />
       <Navbar.Body>
         <ul className="navbar-links">
-          {links.map(
-            (link, index) =>
-              <li className="nav-link" data-testid={`nav-link-${link.id}`} key={link.id}>
-                <NavbarLink {...link} index={index} setSelectedIndex={setSelectedIndex} selectedIndex={selectedIndex} />
-                {link.nestedLinks && (
-                  <ul className="navbar-links navbar-links_nested">
-                    {link.nestedLinks.filter(nestedLink => !nestedLink.hidden).map(nestedLink => (
+          {links.map((link, index) => (
+            <li className="nav-link" data-testid={`nav-link-${link.id}`} key={link.id}>
+              <NavbarLink
+                {...link}
+                index={index}
+                setSelectedIndex={setSelectedIndex}
+                selectedIndex={selectedIndex}
+              />
+              {link.nestedLinks && (
+                <ul className="navbar-links navbar-links_nested">
+                  {link.nestedLinks
+                    .filter(nestedLink => !nestedLink.hidden)
+                    .map(nestedLink => (
                       <li
                         className="nav-link"
                         data-testid={`nav-link-${nestedLink.id}`}
@@ -131,10 +142,10 @@ const NavbarList = ({ navbarIsPinned, projectName }) => {
                         <NavbarLink {...nestedLink} />
                       </li>
                     ))}
-                  </ul>
-                )}
-              </li>
-          )}
+                </ul>
+              )}
+            </li>
+          ))}
         </ul>
       </Navbar.Body>
       <Navbar.Divider />

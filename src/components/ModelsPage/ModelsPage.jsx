@@ -37,7 +37,9 @@ const ModelsPage = () => {
     <>
       <div className="content-wrapper">
         <div className="content__header">
-          <Breadcrumbs itemName={params.modelName || params.artifactName || params.pipelineId || params.name} />
+          <Breadcrumbs
+            itemName={params.modelName || params.artifactName || params.pipelineId || params.name}
+          />
         </div>
         <div className="content">
           {artifactsStore.loading && <Loader />}

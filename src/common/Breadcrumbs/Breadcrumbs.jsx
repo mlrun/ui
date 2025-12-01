@@ -29,11 +29,15 @@ import { PROJECTS_PAGE_PATH } from '../../constants'
 import { generateProjectsList } from '../../utils/projects'
 import { useMode } from '../../hooks/mode.hook'
 
-import { BREADCRUMBS_STEP_ITEM_TYPE, BREADCRUMBS_STEP_PROJECT_TYPE, BREADCRUMBS_STEP_SCREEN_TYPE } from '../../constants'
+import {
+  BREADCRUMBS_STEP_ITEM_TYPE,
+  BREADCRUMBS_STEP_PROJECT_TYPE,
+  BREADCRUMBS_STEP_SCREEN_TYPE
+} from '../../constants'
 
 import './breadcrumbs.scss'
 
-const Breadcrumbs = ({ itemName = '', onClick = () => { } }) => {
+const Breadcrumbs = ({ itemName = '', onClick = () => {} }) => {
   const [searchValue, setSearchValue] = useState('')
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
@@ -45,7 +49,7 @@ const Breadcrumbs = ({ itemName = '', onClick = () => { } }) => {
   const projectStore = useSelector(state => state.projectStore)
 
   const projectsList = useMemo(() => {
-    const projectsList = generateProjectsList(projectStore.projectsNames.data, params.projectName,)
+    const projectsList = generateProjectsList(projectStore.projectsNames.data, params.projectName)
     return projectsList.map(project => ({
       ...project,
       link: location.pathname.replace(params.projectName, project.id)
@@ -53,37 +57,47 @@ const Breadcrumbs = ({ itemName = '', onClick = () => { } }) => {
   }, [projectStore.projectsNames.data, location.pathname, params.projectName])
 
   const mlrunScreens = useMemo(() => {
-    return generateMlrunScreens(params?.projectName ?? '', isDemoMode).filter(screen => !screen.hidden)
+    return generateMlrunScreens(params?.projectName ?? '', isDemoMode).filter(
+      screen => !screen.hidden
+    )
   }, [isDemoMode, params?.projectName])
-
 
   const urlParts = useMemo(() => {
     const innerScreenName = params?.['*']?.split('/')[0]
     const [projects, projectName, page] = location.pathname.split('/').slice(1, 4)
-    const screen = mlrunScreens.find(screen => screen.id === (innerScreenName)) || mlrunScreens.find(screen => screen.id === (page))
+    const screen =
+      mlrunScreens.find(screen => screen.id === innerScreenName) ||
+      mlrunScreens.find(screen => screen.id === page)
 
     const pathItems = [
       { id: projects, label: 'Projects', link: `/${PROJECTS_PAGE_PATH}` },
-      { id: projectName, label: projectName, link: `/projects/${projectName}`, type: BREADCRUMBS_STEP_PROJECT_TYPE },
-      { id: screen?.id, label: screen?.label, link: screen?.link, type: BREADCRUMBS_STEP_SCREEN_TYPE }
+      {
+        id: projectName,
+        label: projectName,
+        link: `/projects/${projectName}`,
+        type: BREADCRUMBS_STEP_PROJECT_TYPE
+      },
+      {
+        id: screen?.id,
+        label: screen?.label,
+        link: screen?.link,
+        type: BREADCRUMBS_STEP_SCREEN_TYPE
+      }
     ]
 
     itemName && pathItems.push({ id: itemName, label: itemName, type: BREADCRUMBS_STEP_ITEM_TYPE })
 
-
     if (params.projectName) {
       return {
         pathItems,
-        screen,
+        screen
       }
     } else {
       return {
         pathItems: pathItems.filter(item => item.type !== BREADCRUMBS_STEP_PROJECT_TYPE),
-        screen,
+        screen
       }
     }
-
-
   }, [itemName, location.pathname, params, mlrunScreens])
 
   return (
