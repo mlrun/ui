@@ -31,7 +31,11 @@ import { parseProjects } from '../utils/parseProjects'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { parseSummaryData } from '../utils/parseSummaryData'
 import { mlrunUnhealthyErrors } from '../components/ProjectsPage/projects.util'
-import { aggregateApplicationStatuses, splitApplicationsContent } from '../utils/applications.utils'
+import {
+  aggregateApplicationStatuses,
+  filterNuclioAppFunctions,
+  splitApplicationsContent
+} from '../utils/applications.utils'
 import { fetchNuclioFunctions } from './nuclioReducer'
 
 const initialState = {
@@ -255,9 +259,10 @@ export const fetchProjectSummaryAndNuclioFuncs = createAsyncThunk(
       thunkAPI.dispatch(fetchNuclioFunctions({ project, signal: functionsSignal })).unwrap()
     ])
       .then(([projectSummary, nuclioFunctions]) => {
+        const nuclioApplicationFunctions = filterNuclioAppFunctions(nuclioFunctions)
         const parsedProjectSummary = parseSummaryData(projectSummary.data)
         const { ready: runningAppsNumber, error: failedAppsNumber } = aggregateApplicationStatuses(
-          splitApplicationsContent(nuclioFunctions.data).applications
+          splitApplicationsContent(nuclioApplicationFunctions).applications
         )
 
         return {
