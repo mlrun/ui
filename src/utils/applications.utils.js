@@ -17,8 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isArray, clone } from 'lodash'
-
 import { ERROR_STATE, FUNCTION_READY_STATE, UNHEALTHY_STATE } from '../constants'
 
 const OPERATING_FUNCTIONS_NAMES_LIST = [
@@ -36,15 +34,8 @@ export const splitApplicationsContent = (functions = []) => {
     operatingFunctions: [],
     applications: []
   }
-  let workingFunctions = clone(functions)
 
-  if (!isArray(functions)) {
-    workingFunctions = Object.values(functions).filter(app => {
-      return NUCLIO_FUNCTIONS_MLRUN_TYPES.includes(app.metadata.labels['mlrun__type'])
-    })
-  }
-
-  workingFunctions.forEach(func => {
+  functions.forEach(func => {
     const funcName = func.name
       ? func.name
       : func.metadata.name.replace(`${func.metadata.labels['nuclio.io/project-name']}-`, '')
@@ -71,4 +62,10 @@ export const aggregateApplicationStatuses = monitoringApplications => {
     },
     { ready: 0, error: 0 }
   )
+}
+
+export const filterNuclioAppFunctions = (nuclioFunctions = []) => {
+  return nuclioFunctions.filter(nuclioFunc => {
+    return NUCLIO_FUNCTIONS_MLRUN_TYPES.includes(nuclioFunc.metadata.labels['mlrun__type'])
+  })
 }
