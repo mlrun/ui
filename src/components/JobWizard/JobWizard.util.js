@@ -81,7 +81,7 @@ import {
   FORBIDDEN_ERROR_STATUS_CODE,
   NOTFOUND_ERROR_STATUS_CODE
 } from 'igz-controls/constants'
-import { convertChipsData, parseChipsData } from '../../utils/convertChipsData'
+import { convertChipsData, validateByInternalLabels } from '../../utils/convertChipsData'
 import { generateObjectFromKeyValue, parseObjectToKeyValue } from 'igz-controls/utils/form.util'
 import { getDefaultSchedule, scheduleDataInitialState } from '../SheduleWizard/scheduleWizard.util'
 import { getErrorDetail } from 'igz-controls/utils/common.util'
@@ -345,7 +345,7 @@ const getFunctionInfo = (selectedFunctionData, preSelectedVersion, isTrain) => {
 
 const getRunDefaultInfo = (defaultData, selectedFunction, internalLabels) => {
   return {
-    labels: parseChipsData(defaultData.task?.metadata?.labels, internalLabels),
+    labels: validateByInternalLabels(defaultData.task?.metadata?.labels, internalLabels),
     name: defaultData.task?.metadata?.name || '',
     handler: defaultData.task?.spec?.handler,
     handlerData: getHandlerData(selectedFunction, defaultData.task?.spec?.handler),

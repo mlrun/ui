@@ -126,7 +126,6 @@ const RegisterArtifactModalForm = ({
           label="labels"
           name="metadata.labels"
           shortChips
-          visibleChipsMaxLength="2"
           validationRules={{
             key: getValidationRules('common.tag'),
             value: getValidationRules('common.tag')

@@ -52,7 +52,6 @@ import {
 } from '../../reducers/jobReducer'
 import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
-import { generateKeyValues } from '../../utils'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { truncateUid } from 'igz-controls/utils/string.util'
@@ -144,8 +143,11 @@ export const tabs = [
   { id: SCHEDULE_TAB, label: 'Schedule' }
 ]
 
-export const isJobKindAbortable = (job, abortableFunctionKinds) =>
-  (abortableFunctionKinds ?? []).some(kindLabel => job?.labels.kind !== kindLabel)
+export const isJobKindAbortable = (job, abortableFunctionKinds) => {
+  const jobKind = get(job, 'ui.originalContent.metadata.labels.kind')
+
+  return (abortableFunctionKinds ?? []).some(kindLabel => jobKind !== kindLabel)
+}
 
 export const isJobAborting = (currentJob = {}) => {
   return currentJob?.state?.value === ABORTING_STATE
@@ -158,8 +160,8 @@ export const isJobKindDask = (jobLabels = []) => {
 export const isJobKindLocal = job =>
   [JOB_KIND_LOCAL, ''].includes(get(job, 'ui.originalContent.metadata.labels.kind'))
 
-export const arePodsHidden = (jobLabels = {}) => {
-  const jobKind = jobLabels.kind ?? ''
+export const arePodsHidden = (jobLabels = []) => {
+  const jobKind = jobLabels.find(label => label.key === 'kind')?.value ?? ''
 
   return ![
     JOB_KIND_DASK,
@@ -193,7 +195,7 @@ const generateEditableItem = (functionData, job) => {
       schedule: null,
       task: {
         metadata: {
-          labels: generateKeyValues(job.labels ?? {}),
+          labels: job.labels ?? {},
           name: job.name,
           project: job.project
         },

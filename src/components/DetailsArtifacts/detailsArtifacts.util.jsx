@@ -59,8 +59,8 @@ export const generateArtifactsPreviewContent = (selectedJob, artifacts) => {
       date: formatDatetime(selectedJob.startTime),
       size: artifact.size ? prettyBytes(artifact.size) : 'N/A',
       user: selectedJob?.labels
-        ?.find(item => item.match(/v3io_user|owner/g))
-        ?.replace(/(v3io_user|owner): /, '')
+        ?.find(item => item.key.match(/v3io_user|owner/))
+        ?.key.replace(/(v3io_user|owner): /, '')
     }
 
     return generatedArtifact
