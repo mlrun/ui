@@ -40,6 +40,7 @@ import { SelectOption } from 'igz-controls/elements'
 import { METRICS_SELECTOR_OPTIONS } from '../../types'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { filterMetrics, groupMetricByApplication, metricsTypes } from './metricsSelector.util'
+import { isClickInsideContainer } from '../../utils/checkElementsPosition.utils'
 
 import Arrow from 'igz-controls/images/arrow.svg?react'
 import Caret from 'igz-controls/images/dropdown.svg?react'
@@ -62,6 +63,7 @@ const MetricsSelector = ({
   const [isOpen, setIsOpen] = useState(false)
   const [appliedMetrics, setAppliedMetrics] = useState([])
   const selectorFieldRef = useRef()
+  const dropdownRef = useRef()
   const formRef = React.useRef(
     createForm({
       initialValues: {
@@ -124,7 +126,7 @@ const MetricsSelector = ({
         !event.target.closest('.metrics-selector-popup') &&
         !event.target.closest('.metrics-selector') &&
         !event.target.closest('.tooltip-template') &&
-        !event.target.closest('#overlay_container')
+        !isClickInsideContainer(event, dropdownRef.current)
       ) {
         setIsOpen(false)
       }
@@ -243,6 +245,7 @@ const MetricsSelector = ({
                   style={{
                     width: '280px'
                   }}
+                  ref={dropdownRef}
                 >
                   <div className="metrics-selector-search">
                     <div className="metrics-selector-search__name-filter">
