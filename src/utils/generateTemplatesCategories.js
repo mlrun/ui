@@ -24,21 +24,6 @@ import { FUNCTION_RUN_KINDS } from '../constants'
 
 const excludedFunctionNames = ['batch-inference']
 
-export const aliasToCategory = {
-  analysis: 'data-analysis',
-  BERT: 'other',
-  'concept-drift': 'other',
-  'data-movement': 'etl',
-  'data-source': 'etl',
-  embeddings: 'other',
-  experimental: 'other',
-  ops: 'notifications',
-  'sentiment analysis': 'data-analysis',
-  serve: 'model-serving',
-  serving: 'model-serving',
-  test: 'other'
-}
-
 export const generateCategories = functionTemplates => {
   const templates = Object.entries(functionTemplates)
     .map(([key, value]) => ({
@@ -56,7 +41,7 @@ export const generateCategories = functionTemplates => {
         state: ''
       },
       ui: {
-        categories: value?.categories.map(category => aliasToCategory[category] ?? category)
+        categories: value?.categories
       }
     }))
     .filter(template => FUNCTION_RUN_KINDS.includes(template.kind))
@@ -66,10 +51,9 @@ export const generateCategories = functionTemplates => {
   templates.forEach(template => {
     if (template.metadata.categories) {
       template.metadata.categories.forEach(category => {
-        const valueToAdd = aliasToCategory[category] ?? category
-        templatesCategories[valueToAdd] ??= []
-        if (!templatesCategories[valueToAdd].includes(template)) {
-          templatesCategories[valueToAdd].push(template)
+        templatesCategories[category] ??= []
+        if (!templatesCategories[category].includes(template)) {
+          templatesCategories[category].push(template)
         }
       })
     }
@@ -90,9 +74,7 @@ export const generateHubCategories = (functionTemplates, allowedHubFunctions = {
     .map(template => ({
       ...template,
       ui: {
-        categories: template.metadata?.categories.map(
-          category => aliasToCategory[category] ?? category
-        ),
+        categories: template.metadata?.categories,
         versions: functionTemplates
           .filter(funcTemplate => funcTemplate.metadata.name === template.metadata.name)
           .map(funcTemplate => funcTemplate.metadata.version)
@@ -103,10 +85,8 @@ export const generateHubCategories = (functionTemplates, allowedHubFunctions = {
 
   hubFunctions.forEach(template => {
     template.metadata.categories.forEach(category => {
-      const valueToAdd = aliasToCategory[category] ?? category
-
-      if (!hubFunctionsCategories.includes(valueToAdd)) {
-        hubFunctionsCategories.push(valueToAdd)
+      if (!hubFunctionsCategories.includes(category)) {
+        hubFunctionsCategories.push(category)
       }
     })
   })

@@ -38,7 +38,7 @@ import {
   JOB_WIZARD_FILTERS,
   TAG_LATEST
 } from '../../../../constants'
-import { generateJobWizardData, getCategoryName } from '../../JobWizard.util'
+import { generateJobWizardData } from '../../JobWizard.util'
 import { generateProjectsList } from '../../../../utils/projects'
 import { openConfirmPopUp } from 'igz-controls/utils/common.util'
 import { scrollToElement } from '../../../../utils/scroll.util'
@@ -112,12 +112,10 @@ const JobWizardFunctionSelection = ({
   const dispatch = useDispatch()
 
   const filterTemplates = useMemo(() => {
-    return templatesCategories.map(categoryId => {
-      const categoryName = getCategoryName(categoryId)
-
+    return templatesCategories.map(category => {
       return {
-        id: categoryId,
-        label: categoryName
+        id: category,
+        label: category
       }
     })
   }, [templatesCategories])
@@ -316,17 +314,19 @@ const JobWizardFunctionSelection = ({
             setTemplates(templatesObject.hubFunctions)
 
             formState.initialValues[FUNCTION_SELECTION_STEP].templatesLabels =
-              templatesObject.hubFunctions.reduce((labels, template) => {
-                labels[template.metadata.name] = template.ui.categories.map(categoryId => {
-                  return {
-                    id: categoryId,
-                    key: getCategoryName(categoryId),
-                    isKeyOnly: true
-                  }
-                })
+              templatesObject.hubFunctions
+                .filter(template => template.metadata?.tag === TAG_LATEST)
+                .reduce((labels, template) => {
+                  labels[template.metadata.name] = template.ui.categories.map(category => {
+                    return {
+                      id: category,
+                      key: category,
+                      isKeyOnly: true
+                    }
+                  })
 
-                return labels
-              }, {})
+                  return labels
+                }, {})
 
             hubFunctionLoadedRef.current = true
           }
