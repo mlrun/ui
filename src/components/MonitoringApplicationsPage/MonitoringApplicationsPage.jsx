@@ -141,7 +141,7 @@ const MonitoringApplicationsPage = () => {
   return (
     <div className="content-wrapper">
       <div className="content__header">
-        <Breadcrumbs />
+        <Breadcrumbs itemName={params.name} />
       </div>
       <div className="content monitoring-app-content" ref={contentRef}>
         <div className="content__action-bar-wrapper">

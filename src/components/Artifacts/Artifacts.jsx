@@ -535,6 +535,7 @@ const Artifacts = ({
       paginationConfigArtifactsRef={
         isAllVersions ? paginationConfigArtifactVersionsRef : paginationConfigArtifactsRef
       }
+      params={params}
       ref={{ artifactsRef }}
       requestErrorMessage={requestErrorMessage}
       renderPageTabs={renderPageTabs}

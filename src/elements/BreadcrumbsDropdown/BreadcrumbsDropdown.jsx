@@ -26,29 +26,30 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import SearchIcon from 'igz-controls/images/search.svg?react'
 import CheckmarkIcon from 'igz-controls/images/checkmark.svg?react'
+import HomepageIcon from 'igz-controls/images/navbar/mlrun-project-home.svg?react'
 
 import './breadcrumbsDropdown.scss'
 
 const BreadcrumbsDropdown = forwardRef(
   (
     {
-      link,
+      id = '',
       list = [],
       onClick = () => {},
-      screen = '',
-      searchValue,
+      searchValue = '',
       setSearchValue,
       selectedItem,
-      tab = '',
-      withSearch = false
+      withSearch = false,
+      withAllProjects = false
     },
     ref
   ) => {
     return (
-      <div className="breadcrumbs__dropdown-wrapper" data-testid="breadcrumbs-dropdown">
+      <div className="breadcrumbs__dropdown-wrapper" data-testid={id}>
         {withSearch && (
           <div className="breadcrumbs__dropdown-search" data-testid="breadcrumbs-search">
             <input
+              name="projects-search"
               className="input"
               onChange={event => setSearchValue(event.target.value)}
               placeholder="Type to search"
@@ -61,7 +62,7 @@ const BreadcrumbsDropdown = forwardRef(
         <div className="breadcrumbs__dropdown" ref={ref}>
           {list
             .filter(listItem =>
-              listItem.id.toLocaleLowerCase().startsWith(searchValue.toLocaleLowerCase())
+              listItem.id.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())
             )
             .map(listItem => {
               const isItemSelected = selectedItem === listItem.id
@@ -71,42 +72,53 @@ const BreadcrumbsDropdown = forwardRef(
                 isItemSelected && 'breadcrumbs__dropdown-item_selected'
               )
 
-              return (
-                !listItem.hidden &&
-                (listItem.link ? (
-                  <a
-                    href={listItem.link}
-                    id={listItem.id}
-                    data-testid={`breadcrumbs-dropdown-item-${listItem.id}`}
-                    key={listItem.id}
-                    className={dropdownItemClassNames}
-                  >
-                    <span>{listItem.label}</span>
-                    {isItemSelected && <CheckmarkIcon className="checkmark" />}
-                  </a>
-                ) : (
-                  <Link
-                    to={
-                      listItem.linkTo ||
-                      `${link}/${listItem.id}${screen ? `/${screen}` : ''}${tab ? `/${tab}` : ''}`
-                    }
-                    onClick={event => {
-                      isItemSelected ? event.preventDefault() : onClick(event)
-                    }}
-                    id={listItem.id}
-                    data-testid={`breadcrumbs-dropdown-item-${listItem.id}`}
-                    key={listItem.id}
-                    className={dropdownItemClassNames}
-                  >
-                    <Tooltip template={<TextTooltipTemplate text={listItem.label} />}>
-                      {listItem.label}
-                    </Tooltip>
-                    {isItemSelected && <CheckmarkIcon className="checkmark" />}
-                  </Link>
-                ))
+              return listItem.externalLink ? (
+                <a
+                  href={listItem.link}
+                  id={listItem.id}
+                  data-testid={`breadcrumbs-dropdown-item-${listItem.id}`}
+                  key={listItem.id}
+                  className={dropdownItemClassNames}
+                >
+                  <span>{listItem.label}</span>
+                  {isItemSelected && <CheckmarkIcon className="checkmark" />}
+                </a>
+              ) : (
+                <Link
+                  to={listItem.link}
+                  onClick={event => {
+                    isItemSelected ? event.preventDefault() : onClick(event)
+                  }}
+                  id={listItem.id}
+                  data-testid={`breadcrumbs-dropdown-item-${listItem.id}`}
+                  key={listItem.id}
+                  className={dropdownItemClassNames}
+                >
+                  <Tooltip template={<TextTooltipTemplate text={listItem.label} />}>
+                    {listItem.label}
+                  </Tooltip>
+                  {isItemSelected && <CheckmarkIcon className="checkmark" />}
+                </Link>
               )
             })}
         </div>
+        {withAllProjects && (
+          <>
+            <div className="navbar__separator"></div>
+            <div className="breadcrumbs__dropdown-all-projects">
+              <Link
+                to="/"
+                id="all-projects"
+                data-testid="breadcrumbs-dropdown-item-all-projects"
+                key="all-projects"
+                className="breadcrumbs__dropdown-item"
+              >
+                <HomepageIcon />
+                <span>All Projects</span>
+              </Link>
+            </div>
+          </>
+        )}
       </div>
     )
   }
@@ -115,15 +127,14 @@ const BreadcrumbsDropdown = forwardRef(
 BreadcrumbsDropdown.displayName = 'BreadcrumbsDropdown'
 
 BreadcrumbsDropdown.propTypes = {
-  link: PropTypes.string.isRequired,
+  id: PropTypes.string,
   list: PropTypes.arrayOf(PropTypes.object).isRequired,
   onClick: PropTypes.func,
-  screen: PropTypes.string,
   searchValue: PropTypes.string.isRequired,
   selectedItem: PropTypes.string.isRequired,
   setSearchValue: PropTypes.func.isRequired,
-  tab: PropTypes.string,
-  withSearch: PropTypes.bool
+  withSearch: PropTypes.bool,
+  withAllProjects: PropTypes.bool
 }
 
 export default BreadcrumbsDropdown

@@ -177,7 +177,7 @@ const ProjectsJobsMonitoring = () => {
     <>
       <div className="job-monitoring content-wrapper">
         <div className="content__header">
-          <Breadcrumbs />
+          <Breadcrumbs itemName={params.jobName || params.workflowProjectName} />
         </div>
         {selectedTab && filters && (
           <div className="content">

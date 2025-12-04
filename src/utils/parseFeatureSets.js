@@ -24,7 +24,7 @@ import { generateUri } from './resources'
 import { getFeatureSetIdentifier } from './getUniqueIdentifier'
 
 export const parseFeatureSets = featureSets =>
-  featureSets.map(featureSet => {
+  featureSets?.map(featureSet => {
     const item = {
       ...featureSet.status,
       ...featureSet.spec,

@@ -24,72 +24,91 @@ import { useSelector } from 'react-redux'
 
 import BreadcrumbsStep from './BreadcrumbsStep/BreadcrumbsStep'
 
-import { generateMlrunScreens, generateTabsList } from './breadcrumbs.util'
-import { MONITORING_APP_PAGE, PROJECTS_PAGE_PATH } from '../../constants'
+import { generateMlrunScreens } from './breadcrumbs.util'
+import { PROJECTS_PAGE_PATH } from '../../constants'
 import { generateProjectsList } from '../../utils/projects'
+import { useMode } from '../../hooks/mode.hook'
+
+import {
+  BREADCRUMBS_STEP_ITEM_TYPE,
+  BREADCRUMBS_STEP_PROJECT_TYPE,
+  BREADCRUMBS_STEP_SCREEN_TYPE
+} from '../../constants'
 
 import './breadcrumbs.scss'
 
-const Breadcrumbs = ({ onClick = () => {} }) => {
+const Breadcrumbs = ({ itemName = '', onClick = () => {} }) => {
   const [searchValue, setSearchValue] = useState('')
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
   const breadcrumbsRef = useRef()
   const params = useParams()
   const location = useLocation()
+  const { isDemoMode } = useMode()
 
   const projectStore = useSelector(state => state.projectStore)
 
   const projectsList = useMemo(() => {
-    return generateProjectsList(projectStore.projectsNames.data)
-  }, [projectStore.projectsNames.data])
+    const projectsList = generateProjectsList(projectStore.projectsNames.data, params.projectName)
+    return projectsList.map(project => ({
+      ...project,
+      link: location.pathname.replace(params.projectName, project.id)
+    }))
+  }, [projectStore.projectsNames.data, location.pathname, params.projectName])
 
   const mlrunScreens = useMemo(() => {
-    return generateMlrunScreens(params)
-  }, [params])
-  const projectTabs = useMemo(() => {
-    return generateTabsList()
-  }, [])
+    return generateMlrunScreens(params?.projectName ?? '', isDemoMode).filter(
+      screen => !screen.hidden
+    )
+  }, [isDemoMode, params?.projectName])
 
   const urlParts = useMemo(() => {
-    if (params.projectName) {
-      const [projects, projectName, screenName] = location.pathname.split('/').slice(1, 4)
-      const screen = mlrunScreens.find(screen => screen.id === screenName)
-      let tab = projectTabs.find(tab =>
-        location.pathname
-          .split('/')
-          .slice(3)
-          .find(pathItem => pathItem === tab.id)
-      )
+    const innerScreenName = params?.['*']?.split('/')[0]
+    const [projects, projectName, page] = location.pathname.split('/').slice(1, 4)
+    const screen =
+      mlrunScreens.find(screen => screen.id === innerScreenName) ||
+      mlrunScreens.find(screen => screen.id === page)
 
-      if (screen.id === MONITORING_APP_PAGE) {
-        tab = {}
+    const pathItems = [
+      { id: projects, label: 'Projects', link: `/${PROJECTS_PAGE_PATH}` },
+      {
+        id: projectName,
+        label: projectName,
+        link: `/projects/${projectName}`,
+        type: BREADCRUMBS_STEP_PROJECT_TYPE
+      },
+      {
+        id: screen?.id,
+        label: screen?.label,
+        link: screen?.link,
+        type: BREADCRUMBS_STEP_SCREEN_TYPE
       }
+    ]
 
+    itemName && pathItems.push({ id: itemName, label: itemName, type: BREADCRUMBS_STEP_ITEM_TYPE })
+
+    if (params.projectName) {
       return {
-        pathItems: [projects, projectName, screen?.label || screenName],
-        screen,
-        tab
+        pathItems,
+        screen
       }
     } else {
-      const [page] = location.pathname.split('/').slice(3, 4)
-      const screen = mlrunScreens.find(screen => screen.id === page)
-
       return {
-        pathItems: [PROJECTS_PAGE_PATH, screen?.label || page],
+        pathItems: pathItems.filter(item => item.type !== BREADCRUMBS_STEP_PROJECT_TYPE),
         screen
       }
     }
-  }, [location.pathname, params.projectName, mlrunScreens, projectTabs])
+  }, [itemName, location.pathname, params, mlrunScreens])
 
   return (
     <nav data-testid="breadcrumbs" className="breadcrumbs" ref={breadcrumbsRef}>
       <ul className="breadcrumbs__list">
-        {urlParts.pathItems.map((urlPart, index) => {
+        {urlParts.pathItems.map((pathItem, index) => {
           return (
             <BreadcrumbsStep
               key={index}
               index={index}
+              itemName={itemName}
               mlrunScreens={mlrunScreens}
               onClick={onClick}
               params={params}
@@ -101,7 +120,7 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
               setShowScreensList={setShowScreensList}
               showProjectsList={showProjectsList}
               showScreensList={showScreensList}
-              urlPart={urlPart}
+              pathItem={pathItem}
               urlParts={urlParts}
             />
           )
@@ -112,6 +131,7 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
 }
 
 Breadcrumbs.propTypes = {
+  itemName: PropTypes.string,
   onClick: PropTypes.func
 }
 

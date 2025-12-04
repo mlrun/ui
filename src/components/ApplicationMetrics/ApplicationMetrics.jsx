@@ -240,7 +240,7 @@ const ApplicationMetrics = () => {
   return (
     <div className="content-wrapper applications-metrics">
       <div className="content__header">
-        <Breadcrumbs />
+        <Breadcrumbs itemName={params.appName} />
       </div>
       <div className="content">
         <div className="application-metrics-container">
@@ -248,7 +248,7 @@ const ApplicationMetrics = () => {
             <HistoryBackLink
               link={`/projects/${params.projectName}/${MONITORING_APP_PAGE}/${params.appName}${window.location.search}`}
               itemName={params.appName}
-              customText={'Applications metrics'}
+              customText="Applications metrics"
               customIcon={<PresentMetricsIcon />}
             />
             <div className="action-bar">
