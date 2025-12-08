@@ -955,7 +955,7 @@ Feature: LLM prompts Page
     And wait load page
     Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
     Then verify "Action_Menu" element visibility on "Modal_Transition_Popup" wizard
-    Then verify "Action_Menu" dropdown element on "Modal_Transition_Popup" wizard should contains "Common_Lists"."Action_Menu_List_Dataset_Transition_Popup"
+    Then verify "Action_Menu" dropdown element on "Modal_Transition_Popup" wizard should contains "Common_Lists"."Action_Menu_List_Artifacts_Transition_Popup"
     Then select "View YAML" option in action menu on "Modal_Transition_Popup" wizard
     And wait load page
     Then verify if "View_YAML" popup dialog appears

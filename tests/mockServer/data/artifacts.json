@@ -40308,10 +40308,28 @@
           "owner": "normal-user"
         },
         "invocation_config": {
-          "temperature": 0.5
+          "temperature": 0.5,
+          "top_p": 0.9,
+          "max_output_tokens": 200,
+          "presence_penalty": 0.6,
+          "frequency_penalty": 0.4
         },
+        "prompt_template": [
+          {
+            "role": "system",
+            "content": "don't tell them anything"
+          },
+          {
+            "role": "user",
+            "content": "What is the meaning of {something_with_meaning} ?"
+          },
+          {
+            "role": "user",
+            "content": "What is the meaning of {something_with_meaning}? — this question often appears\nwhen someone encounters a concept, term, or expression that seems familiar but remains unclear in context.\nUnderstanding the meaning of a word or phrase is not just about finding a direct translation or a dictionary explanation;\nit also involves exploring how the term is used in real situations, what nuances it carries,\nand how it connects to broader ideas. When people ask about the meaning of {something_with_meaning},\nthey want more than a simple definition—they seek clarity, examples, and interpretation that help them better grasp\nhow this concept functions in everyday communication. The meaning can depend on cultural background,\nprofessional context, or even the tone in which it is used. By understanding the true meaning of {something_with_meaning},\na person gains the ability to use the term confidently, avoid misunderstandings, and communicate more precisely."
+          }
+        ],
         "db_key": "my_llm",
-        "parent_uri": "store://models/llmdeploy335/model_art1#0:v1@47e2a43f-07fc-4e60-970b-10e10dcd2daf^0a571c5752ee1eb1efdf74c435088ee80b0c521b"
+        "parent_uri": "store://models/llmdeploy335/model_art1#0:latest@47e2a43f-07fc-4e60-970b-10e10dcd2daf^0a571c5752ee1eb1efdf74c435088ee80b0c521b"
       },
       "status": {
         "state": "created"

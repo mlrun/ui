@@ -661,6 +661,21 @@ const featureSetTransformationGraph = {
   }
 }
 
+const modelsLLMPromptsTable = {
+  root: '[data-testid="detailsPanel"] .llm-artifacts .table',
+  header: {},
+  body: {
+    root: '.table-body',
+    row: {
+      root: '.table-row',
+      fields: {
+        name: '.table-body__cell:nth-of-type(1) .data-ellipsis',
+        producer: '.table-body__cell:nth-of-type(4)'
+      }
+    }
+  }
+}
+
 // common components
 const header = By.css('.table__item .item-header__data h3')
 const updated = By.css('.table__item .item-header__data span')
@@ -1034,6 +1049,7 @@ export default {
     ),
     Expand_Sources: By.css('.details-item .info-sources'),
     Overview_Table: commonTable(modelsOverviewTable),
+    LLMPrompts_Table: commonTable(modelsLLMPromptsTable),
     Info_Sources_Table: commonTable(filesInfoSourcesTable),
     Labels_Field: By.css(
       '.item-info__details-wrapper .details-item:nth-of-type(14) [data-testid="labels-add-chip"]'
