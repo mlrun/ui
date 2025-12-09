@@ -50,7 +50,11 @@ const DetailsLLMPrompts = ({ selectedItem, isDetailsPopUp = false }) => {
       dispatch(
         fetchLLMPromptArtifacts({
           project: selectedItem.project,
-          filters: { parent: `${selectedItem.db_key || selectedItem.key}:${selectedItem.tag}` },
+          filters: {
+            parent: selectedItem.URI
+              ? `${selectedItem.URI}`
+              : `${selectedItem.db_key || selectedItem.key}:${selectedItem.tag}`
+          },
           config: {
             ui: {
               controller: abortController,
