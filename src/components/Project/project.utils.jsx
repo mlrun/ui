@@ -114,7 +114,7 @@ export const generateCreateNewOptions = (
     id: 'createRealTimeFunction',
     icon: <Realtime />,
     handler: () =>
-      window.open(generateNuclioLink(`/projects/${params.projectName}/create-function`), '_blank')
+      window.location.assign(generateNuclioLink(`/projects/${params.projectName}/create-function`))
   },
   {
     label: 'Register model',
