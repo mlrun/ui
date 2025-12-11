@@ -27,6 +27,7 @@ import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
 import toolkitStore from './store/toolkitStore'
 import { HTTP, HTTPS } from './constants'
+import Sidebar from './components/Sidebar/Sidebar'
 
 if (!window.location.pathname.includes(import.meta.env.VITE_PUBLIC_URL)) {
   window.location.href = import.meta.env.VITE_PUBLIC_URL
@@ -54,6 +55,7 @@ fetch(`${import.meta.env.VITE_PUBLIC_URL}/config.json`, { cache: 'no-store' })
 
     root.render(
       <Provider store={toolkitStore}>
+        <Sidebar />
         <ErrorBoundary>
           <App />
         </ErrorBoundary>
