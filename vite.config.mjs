@@ -1,6 +1,6 @@
 import commonjs from 'vite-plugin-commonjs'
 import eslint from 'vite-plugin-eslint'
-import path from 'path'
+import path from 'node:path'
 import react from '@vitejs/plugin-react-swc'
 import svgr from 'vite-plugin-svgr'
 import { defineConfig, loadEnv } from 'vite'
@@ -59,7 +59,8 @@ export default defineConfig(({ mode }) => {
         'igz-controls': path.resolve(
           __dirname,
           'node_modules/iguazio.dashboard-react-controls/dist'
-        )
+        ),
+        "@": path.resolve(__dirname, "./src/components/Sidebar"),
       },
       dedupe: [
         'react',
