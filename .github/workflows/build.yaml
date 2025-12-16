@@ -39,11 +39,15 @@ on:
         description: 'The version to build, without prefix v (e.g. 1.1.0), if not provided version will be <latest-release>-<commit-hash>'
         required: false
         default: ''
+      runner_label:
+        description: 'The runner label to use for the workflow (default: ubuntu-latest)'
+        required: false
+        default: 'ubuntu-latest'
 
 jobs:
   build-images:
     name: Build and push ui image
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.inputs.runner_label || 'ubuntu-latest' }}
 
     # let's not run this on every fork, change to your fork when developing
     if: github.repository == 'mlrun/ui' || github.event_name == 'workflow_dispatch'
@@ -88,6 +92,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Docker login (quay.io)
+      if: ${{ github.event.inputs.runner_label == 'ubuntu-latest' || github.event.inputs.runner_label == '' || github.event.inputs.runner_label == null }}
       continue-on-error: true
       uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
       with:
@@ -96,6 +101,7 @@ jobs:
         password: ${{ secrets.QUAY_IO_DOCKER_REGISTRY_PASSWORD }}
 
     - name: Docker login (docker.com)
+      if: ${{ github.event.inputs.runner_label == 'ubuntu-latest' || github.event.inputs.runner_label == '' || github.event.inputs.runner_label == null }}
       continue-on-error: true
       uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
       with:
