@@ -35,7 +35,7 @@ on:
       - chore/repo-infra-enhancements
   workflow_dispatch:
     inputs:
-      runner_label:
+      runner:
         description: 'The runner label to use for the workflow (default: ubuntu-latest)'
         required: false
         default: 'ubuntu-latest'
@@ -43,7 +43,7 @@ on:
 jobs:
   pr_actions:
     name: PR Actions
-    runs-on: ${{ github.event.inputs.runner_label || 'ubuntu-22.04' }}
+    runs-on: ${{ github.event.inputs.runner || 'ubuntu-22.04' }}
     steps:
       - name: Checking Out
         uses: actions/checkout@v3
@@ -68,7 +68,7 @@ jobs:
 
   check-copyright:
     name: Check Copyright Existence
-    runs-on: ${{ github.event.inputs.runner_label || 'ubuntu-latest' }}
+    runs-on: ${{ github.event.inputs.runner || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@v3
       - uses: denoland/setup-deno@11b63cf76cfcafb4e43f97b6cad24d8e8438f62d # v1.5.2
@@ -83,7 +83,7 @@ jobs:
 
   build-docker:
     name: Build Docker
-    runs-on: ${{ github.event.inputs.runner_label || 'ubuntu-latest' }}
+    runs-on: ${{ github.event.inputs.runner || 'ubuntu-latest' }}
     outputs:
       igz-controls-import-error: ${{ steps.check-error.outputs.igz-controls-import-error }}
     steps:
