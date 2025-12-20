@@ -68,8 +68,14 @@ module.exports = {
         tooltip: {
           DEFAULT: 'hsl(var(--tooltip))',
           foreground: 'hsl(var(--tooltip-foreground))'
+        },
+        dropdown: {
+          border: 'hsla(var(--dropdown-border))',
         }
-  		}
+  		},
+      boxShadow: {
+        dropdown: '0 0 30px 0 rgba(0, 0, 0, 0.15)',
+      },
   	}
   },
   plugins: [require('tailwindcss-animate')]

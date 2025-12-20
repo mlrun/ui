@@ -60,6 +60,13 @@ export const TERMINATING_STATE = 'terminating'
 export const UNHEALTHY_STATE = 'unhealthy'
 export const UNKNOWN_STATE = 'unknown'
 
+/*=========== SIDEBAR =============*/
+
+export const MAX_VISIBLE_PROJECTS = 8
+export const PLACEHOLDER_SEARCH = 'Search project...'
+export const NO_PROJECTS_TEXT = 'No Projects Found'
+export const SEE_ALL_PROJECTS_TEXT = 'See All Projects'
+
 /*=========== PAGINATION =============*/
 
 export const BE_PAGE = 'bePage'
@@ -142,6 +149,10 @@ export const PROJECT_MONITOR = 'monitor'
 export const PROJECT_QUICK_ACTIONS_PAGE = 'quick-actions'
 
 export const ALL_VERSIONS_PATH = 'all-versions'
+
+export const NUCLIO_PAGE = 'nuclio'
+export const REAL_TIME_FUNCTIONS_PAGE = 'real-time-functions'
+export const API_GATEWAYS_PAGE = 'api-gateways'
 
 /*=========== CONSUMER_GROUPS =============*/
 

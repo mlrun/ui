@@ -12,7 +12,8 @@ const Input = React.forwardRef(({ className, type, ...props }, ref) => {
         className
       )}
       ref={ref}
-      {...props} />
+      {...props}
+    />
   )
 })
 Input.propTypes = {
@@ -32,8 +33,8 @@ Input.propTypes = {
     'week',
     'file',
     'checkbox',
-    'radio',
-  ]),
+    'radio'
+  ])
 }
 Input.displayName = 'Input'
 
