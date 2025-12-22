@@ -56,7 +56,6 @@
   "overrides": {
     "minimist": "^1.2.8"
   },
-
   "scripts": {
     "start": "vite",
     "build": "vite build",
@@ -153,7 +152,6 @@
     "selenium-webdriver": "^4.35.0",
     "source-map-loader": "^5.0.0",
     "stylelint": "^13.3.3",
-    "stylelint-config-rational-order": "^0.1.2",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-order": "^4.0.0",
     "stylelint-scss": "^3.17.2",
