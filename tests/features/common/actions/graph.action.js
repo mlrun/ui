@@ -20,6 +20,7 @@ such restriction.
 import { getNamedRowsGeometry, getNamedFieldsGeometry } from './table.action'
 
 import numjs from '@d4c/numjs'
+//TODO: Replace this package with an up to date one as this is vulnerable.
 import { expect } from 'chai'
 
 function diffMapper(array0, array1, deviation) {
