@@ -53,6 +53,10 @@
     "text-mask-addons": "^3.8.0",
     "uuid": "^9.0.1"
   },
+  "overrides": {
+    "minimist": "0.2.4"
+  },
+
   "scripts": {
     "start": "vite",
     "build": "vite build",
