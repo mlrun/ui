@@ -237,9 +237,10 @@ export const parseMetrics = (data, timeUnit) => {
       resultKind,
       app: getAppName(full_name),
       id: index,
-      labels: [],
+      formatedDates: [],
       dates: [],
       points: [],
+      timeUnit: timeUnit,
       title: getMetricTitle(full_name),
       driftStatusList: [],
       totalDriftStatus: null,
@@ -270,8 +271,8 @@ export const parseMetrics = (data, timeUnit) => {
       }
 
       metricsValueSum += parsedValue
-      parsedMetric.labels.push(timeFormatters[timeUnit].handler(date))
-      parsedMetric.dates.push(timeFormatters['full'].handler(date))
+      parsedMetric.dates.push(date)
+      parsedMetric.formatedDates.push(timeFormatters['full'].handler(date))
     })
 
     if (highestDrift) {

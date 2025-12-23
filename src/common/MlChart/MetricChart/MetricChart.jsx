@@ -23,6 +23,7 @@ import PropTypes from 'prop-types'
 import MlChart from '../MlChart'
 
 import { setChartGradient } from './metricChart.util'
+import { calculateVisiblePoints, getGapDefiningSegment } from '../../../utils/getChartConfig'
 
 import './metricChart.scss'
 
@@ -31,34 +32,37 @@ const MetricChart = ({ config, isInvocationCardExpanded = false, isInvocationCha
   const contextRef = useRef(null)
 
   const chartConfig = useMemo(() => {
-    const hasDriftStatusList = config.data.datasets[0]?.driftStatusList?.length !== 0
-    const isOnlyOnePoint = config?.data?.datasets[0]?.data?.length === 1
-    const totalDriftIndex = config.data.datasets[0]?.totalDriftStatus?.index
+    const dataset = config?.data?.datasets?.[0]
 
-    const customPoints = {
-      radius: context => {
-        const isCurrentIndexTotalDriftIndex = context.dataIndex === totalDriftIndex
-        return (hasDriftStatusList && isCurrentIndexTotalDriftIndex) || isOnlyOnePoint ? 2 : 0
-      },
-      pointStyle: () => (hasDriftStatusList || isOnlyOnePoint ? 'circle' : 'none'),
-      backgroundColor: () => (hasDriftStatusList || isOnlyOnePoint ? 'black' : undefined),
-      borderColor: () => 'white'
+    if (!dataset) return config
+
+    const visiblePoints = calculateVisiblePoints(
+      dataset.dates,
+      dataset.driftStatusList,
+      dataset.totalDriftStatus?.index
+    )
+
+    const enhancedDataset = {
+      ...dataset,
+      pointHoverRadius: visiblePoints,
+      pointRadius: visiblePoints,
+      segment: getGapDefiningSegment()
     }
 
     return {
       type: config.type,
-      data: config.data,
+      data: {
+        ...config.data,
+        datasets: [enhancedDataset]
+      },
       options: {
         ...config.options,
         animation: {
           duration: 0
-        },
-        elements: {
-          point: customPoints
         }
       }
     }
-  }, [config.data, config.options, config.type])
+  }, [config])
 
   const backgroundColor = useMemo(() => {
     return config?.data?.datasets[0].backgroundColor

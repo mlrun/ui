@@ -23,7 +23,7 @@ import MetricChart from '../../../../common/MlChart/MetricChart/MetricChart'
 import StatsCard from '../../../../common/StatsCard/StatsCard'
 import { TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 
-import { CHART_TYPE_LINE, CHART_TYPE_BAR } from '../../../../constants'
+import { CHART_TYPE_BAR, CHART_TYPE_LINE } from '../../../../constants'
 import { METRIC_DATA } from '../../../../types'
 import { calculateHistogram, METRIC_COMPUTED_AVG_POINTS } from '../../detailsMetrics.util'
 import { getMetricChartConfig } from '../../../../utils/getChartConfig'
@@ -33,39 +33,33 @@ import '../MetricsCards.scss'
 
 const ApplicationMetricCard = ({ metric }) => {
   const javaColor = useMemo(() => getScssVariableValue('--javaColor'), [])
-  const lineConfig = useMemo(() => getMetricChartConfig(CHART_TYPE_LINE), [])
+  const lineConfig = useMemo(() => getMetricChartConfig(CHART_TYPE_LINE, metric), [metric])
   const barConfig = useMemo(() => getMetricChartConfig(CHART_TYPE_BAR), [])
 
   const lineChartConfig = useMemo(() => {
     return {
       ...lineConfig,
       data: {
-        labels: metric.labels,
+        labels: metric.dates,
         datasets: [
           {
+            borderColor: metric.totalDriftStatus?.chartColor || javaColor,
+            borderWidth: 1,
+            chartType: CHART_TYPE_LINE,
             data: metric.points,
             dates: metric.dates,
-            chartType: CHART_TYPE_LINE,
-            metricType: metric.type,
             driftStatusList: metric.driftStatusList || [],
+            formatedDates: metric.formatedDates,
+            metricType: metric.type,
+            pointBackgroundColor: metric.totalDriftStatus?.chartColor || javaColor,
+            pointBorderWidth: 0,
             tension: 0.2,
-            totalDriftStatus: metric.totalDriftStatus,
-            borderWidth: 1,
-            borderColor: metric.totalDriftStatus?.chartColor || javaColor
+            totalDriftStatus: metric.totalDriftStatus
           }
         ]
       }
     }
-  }, [
-    javaColor,
-    lineConfig,
-    metric.dates,
-    metric.driftStatusList,
-    metric.labels,
-    metric.points,
-    metric.totalDriftStatus,
-    metric.type
-  ])
+  }, [javaColor, lineConfig, metric])
 
   const barChartConfig = useMemo(() => {
     return {
@@ -83,7 +77,7 @@ const ApplicationMetricCard = ({ metric }) => {
               <TextTooltipTemplate
                 text={
                   <div className="total-drift-status-tooltip">
-                    <div>Date: {metric.dates[metric.totalDriftStatus.index]}</div>
+                    <div>Date: {metric.formatedDates[metric.totalDriftStatus.index]}</div>
                     <div>Value:{metric.points[metric.totalDriftStatus.index]}</div>
                   </div>
                 }
