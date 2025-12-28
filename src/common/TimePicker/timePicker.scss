@@ -10,8 +10,33 @@
 
     &__wrapper {
       input {
-        padding: 0 16px;
+        padding: 0 12px 0 10px;
       }
+
+      .time-picker__dropdown-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-right: 4px;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.time-picker__dropdown {
+  .pop-up-dialog {
+    height: 200px;
+    padding: 0;
+  }
+
+  &-item {
+    height: 50px;
+    padding: 16px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
     }
   }
 }

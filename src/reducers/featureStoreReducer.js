@@ -515,6 +515,7 @@ const featureStoreSlice = createSlice({
     })
     builder.addCase(startFeatureSetIngest.pending, showLoading)
     builder.addCase(startFeatureSetIngest.fulfilled, hideLoading)
+    builder.addCase(startFeatureSetIngest.rejected, hideLoading)
   }
 })
 

@@ -26,6 +26,9 @@ import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseChipsData } from '../../utils/convertChipsData'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import JobPopUp from '../../elements/DetailsPopUp/JobPopUp/JobPopUp'
+import { LLM_PROMPTS_PAGE, MODEL_NAME_FILTER, MODEL_TAG_FILTER } from '../../constants'
+
+export const LLM_PROMPTS_DISPLAY_LIMIT = 100
 
 export const generateLLMPromptsTabContent = (artifacts, params, isDetailsPopUp = false) => {
   const handleOpenArtifactPopUp = artifact => {
@@ -64,14 +67,22 @@ export const generateLLMPromptsTabContent = (artifacts, params, isDetailsPopUp =
         headerId: 'name',
         headerLabel: 'LLM prompt name',
         template: (
-          <Tooltip template={<TextTooltipTemplate text={artifact.db_key || artifact.key} />}>
-            <span
+          <div className="name-wrapper">
+            <div
               className={classNames(!isDetailsPopUp && 'link')}
               onClick={!isDetailsPopUp ? () => handleOpenArtifactPopUp(artifact) : null}
             >
-              {artifact.db_key || artifact.key}
-            </span>
-          </Tooltip>
+              <Tooltip template={<TextTooltipTemplate text={artifact.db_key || artifact.key} />}>
+                {artifact.db_key || artifact.key}
+              </Tooltip>
+            </div>
+            <Tooltip
+              className="item-tag"
+              template={<TextTooltipTemplate text={artifact.tag ?? ''} />}
+            >
+              <span className="link-subtext">{artifact.tag ?? ''}</span>
+            </Tooltip>
+          </div>
         ),
         value: artifact.db_key || artifact.key,
         className: 'table-cell-3'
@@ -111,4 +122,12 @@ export const generateLLMPromptsTabContent = (artifacts, params, isDetailsPopUp =
       }
     ]
   })
+}
+
+export const navigateToLLMPromptsPage = (navigate, projectName, selectedItem) => {
+  const filters = {
+    [MODEL_NAME_FILTER]: selectedItem.db_key || selectedItem.key,
+    [MODEL_TAG_FILTER]: selectedItem.tag
+  }
+  navigate(`/projects/${projectName}/${LLM_PROMPTS_PAGE}?${new URLSearchParams(filters)}`)
 }

@@ -22,6 +22,7 @@ import PropTypes from 'prop-types'
 import MaskedInput from 'react-text-mask'
 import classnames from 'classnames'
 import { isEmpty } from 'lodash'
+import moment from 'moment'
 
 import TimePicker from '../TimePicker/TimePicker'
 import {
@@ -35,7 +36,7 @@ import {
 import { SelectOption } from 'igz-controls/elements'
 
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
-import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
+import { CUSTOM_RANGE_DATE_OPTION, getDatePipe } from '../../utils/datePicker.util'
 import { DATE_PICKER_TIME_FRAME_LIMITS } from '../../types'
 
 import Arrow from 'igz-controls/images/arrow.svg?react'
@@ -51,7 +52,6 @@ const DatePickerView = React.forwardRef(
       className,
       config,
       dateMask,
-      datePickerInputOnBlur,
       datePickerOptions,
       disabled,
       externalInvalidMessage,
@@ -125,18 +125,12 @@ const DatePickerView = React.forwardRef(
             </>
           ) : (
             <>
-              <MaskedInput
+              <Tooltip
                 className={inputClassNames}
-                keepCharPositions={true}
-                mask={dateMask}
-                disabled={disabled}
-                readOnly={isValueEmpty}
-                showMask={!isValueEmpty}
-                onBlur={datePickerInputOnBlur}
-                onChange={onInputChange}
-                pipe={autoCorrectedDatePipe}
-                value={valueDatePickerInput}
-              />
+                template={<TextTooltipTemplate text={valueDatePickerInput} />}
+              >
+                {valueDatePickerInput}
+              </Tooltip>
               {isValueEmpty && timeFrameLimit === Infinity && (
                 <span className="input__label input__label-empty">&nbsp;Any time</span>
               )}
@@ -205,6 +199,28 @@ const DatePickerView = React.forwardRef(
               <div className="date-picker__calendars">
                 {config.map(item => (
                   <div className={classnames('date-picker__calendar')} key={item.id}>
+                    <div className="date-picker__calendar__inputs">
+                      <MaskedInput
+                        className={inputClassNames}
+                        keepCharPositions={true}
+                        mask={dateMask}
+                        disabled={disabled}
+                        showMask={!isValueEmpty}
+                        onChange={event => onInputChange(event, item.id)}
+                        pipe={autoCorrectedDatePipe}
+                        value={moment(item.selectedDate).format(getDatePipe()?.toUpperCase())}
+                      />
+                      {isTime && (
+                        <div className="date-picker__time">
+                          <TimePicker
+                            key={item}
+                            onChange={time => onTimeChange(item.id, time, item.selectedDate)}
+                            value={moment(item.selectedDate).format('HH:mm')}
+                          />
+                        </div>
+                      )}
+                    </div>
+
                     <div className="date-picker__header">
                       <Arrow
                         data-testid="btn-previous-month"
@@ -261,16 +277,6 @@ const DatePickerView = React.forwardRef(
                         ))}
                       </div>
                     ))}
-                    {isTime && (
-                      <div className="date-picker__time">
-                        <TimePicker
-                          onChange={time => onTimeChange(item.id, time, item.selectedDate)}
-                          value={`${String(item.selectedDate.getHours()).padStart(2, '0')}:${String(
-                            item.selectedDate.getMinutes()
-                          ).padStart(2, '0')}`}
-                        />
-                      </div>
-                    )}
                   </div>
                 ))}
               </div>
@@ -305,7 +311,6 @@ DatePickerView.propTypes = {
   className: PropTypes.string.isRequired,
   config: PropTypes.arrayOf(PropTypes.object).isRequired,
   dateMask: PropTypes.array.isRequired,
-  datePickerInputOnBlur: PropTypes.func.isRequired,
   datePickerOptions: PropTypes.arrayOf(PropTypes.object).isRequired,
   disabled: PropTypes.bool.isRequired,
   externalInvalidMessage: PropTypes.string.isRequired,

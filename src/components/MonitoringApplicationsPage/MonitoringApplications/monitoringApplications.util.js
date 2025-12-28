@@ -135,19 +135,21 @@ export function groupDataToBins(data, startTime, endTime) {
   })
 
   const getLabel = (from, to) => {
-    const fromDate = moment(from)
-    const toDate = moment(to || from)
-    const shortFormatString =
-      basePeriod === MINUTES ? 'hh:mm A' : basePeriod === HOUR ? 'MM/DD, hh:mm A' : 'MM/DD/YY'
-    const fullFormatString = 'MM/DD/YY, hh:mm A'
+    const toDateObject = moment(to || from)
+    const shortFormatOptions =
+      basePeriod === MINUTES
+        ? { hour: '2-digit', minute: '2-digit' }
+        : basePeriod === HOUR
+          ? { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }
+          : { month: '2-digit', day: '2-digit', year: '2-digit' }
 
     if (!to) {
-      toDate.add(basePeriod === MINUTES ? 10 : 1, basePeriod)
+      toDateObject.add(basePeriod === MINUTES ? 10 : 1, basePeriod)
     }
 
     return {
-      label: `${fromDate.format(shortFormatString)}`,
-      fullDate: `${fromDate.format(fullFormatString)} - ${toDate.format(fullFormatString)}`
+      label: `${formatDatetime(from, 'N/A', shortFormatOptions)}`,
+      fullDate: `${formatDatetime(from, 'N/A')} - ${formatDatetime(toDateObject.toDate(), 'N/A')}`
     }
   }
 

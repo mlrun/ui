@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { isEqual, keyBy } from 'lodash'
-import { formatDate } from './datePicker.util'
 import {
   ADD_TO_FEATURE_VECTOR_TAB,
   ALERTS_PAGE,
@@ -69,6 +68,7 @@ import {
   MODEL_TAG_FILTER,
   ME_MODE_FILTER
 } from '../constants'
+import { formatDatetime } from 'igz-controls/utils/datetime.util'
 
 const messageNamesList = {
   [ADD_TO_FEATURE_VECTOR_TAB]: {
@@ -159,13 +159,7 @@ export const getNoDataMessage = (
 }
 
 const getSelectedDateValue = (filterType, filters) => {
-  const date = formatDate(
-    true,
-    true,
-    '/',
-    filters[DATES_FILTER]?.value?.[0] ?? new Date(),
-    filters[DATES_FILTER]?.value?.[1] ?? new Date()
-  )
+  const date = `${formatDatetime(filters[DATES_FILTER]?.value?.[0] ?? new Date())} - ${formatDatetime(filters[DATES_FILTER]?.value?.[1] ?? new Date())}`
 
   return (filterType === DATE_RANGE_TIME_FILTER &&
     !isEqual(filters[DATES_FILTER]?.value, DATE_FILTER_ANY_TIME)) ||

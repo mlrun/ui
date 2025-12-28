@@ -47,5 +47,11 @@ export default [
       quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: false }],
       semi: ['error', 'never']
     }
+  },
+  {
+    files: ["**/*.test.jsx"],
+    rules: {
+      "import/named": "off"
+    }
   }
 ]

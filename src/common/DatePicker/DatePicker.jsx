@@ -28,12 +28,11 @@ import React, {
 } from 'react'
 import PropTypes from 'prop-types'
 import { isNil } from 'lodash'
+import moment from 'moment'
 
 import DatePickerView from './DatePickerView'
-import { DATE_FILTER_ANY_TIME } from '../../constants'
 import { createAutoCorrectedDatePipe } from '../../utils/createAutoCorrectedDatePipe'
 import {
-  datesDivider,
   datePickerPastOptions,
   datePickerFutureOptions,
   decodeLocale,
@@ -45,13 +44,13 @@ import {
   getWeekDays,
   getWeekStart,
   months,
-  ANY_TIME_DATE_OPTION,
   getTimeFrameWarningMsg,
   CUSTOM_RANGE_DATE_OPTION,
   roundSeconds
 } from '../../utils/datePicker.util'
 import { initialState, datePickerActions, datePickerReducer } from './datePickerReducer'
 import { DATE_PICKER_TIME_FRAME_LIMITS } from '../../types'
+import { isTargetElementInContainerElement } from '../../utils/checkElementsPosition.utils'
 
 const defaultProps = {
   date: new Date(),
@@ -69,13 +68,11 @@ const DatePicker = ({
   externalInvalidMessage = 'This field is invalid',
   hasFutureOptions = false,
   label = 'Date',
-  onBlur = () => {},
   onChange,
   required = false,
   requiredText = 'This field is required',
   selectedOptionId = '',
   setExternalInvalid = () => {},
-  splitCharacter = '/',
   timeFrameLimit = Infinity,
   tip = '',
   type = 'date',
@@ -91,18 +88,14 @@ const DatePicker = ({
   const [isValueEmpty, setIsValueEmpty] = useState(true)
   const [selectedOption, setSelectedOption] = useState({})
   const [valueDatePickerInput, setValueDatePickerInput] = useState(
-    formatDate(isRange, isTime, splitCharacter, date, dateTo)
+    formatDate(isRange, isTime, date, dateTo)
   )
   const [isInputInvalid, setInputIsInvalid] = useState(false)
 
   const datePickerRef = useRef()
   const datePickerViewRef = useRef()
-  const dateMask = getDateMask(isRange, isTime, splitCharacter)
-  const autoCorrectedDatePipe = createAutoCorrectedDatePipe(
-    getDatePipe(isRange, isTime),
-    undefined,
-    isRange && datesDivider
-  )
+  const dateMask = getDateMask()
+  const autoCorrectedDatePipe = createAutoCorrectedDatePipe(getDatePipe(), undefined, null)
   const dateRegEx = getDateRegEx(dateMask)
   const startWeek = getWeekStart(decodeLocale(navigator.language))
 
@@ -126,7 +119,8 @@ const DatePicker = ({
         datePickerRef.current &&
         !datePickerRef.current.contains(event.target) &&
         datePickerViewRef.current &&
-        !datePickerViewRef.current.contains(event.target)
+        !datePickerViewRef.current.contains(event.target) &&
+        !isTargetElementInContainerElement(event.target, datePickerViewRef.current)
       ) {
         if (isDatePickerOptionsOpened) {
           setIsDatePickerOptionsOpened(false)
@@ -191,8 +185,8 @@ const DatePicker = ({
   }, [dateTo])
 
   useEffect(() => {
-    setValueDatePickerInput(formatDate(isRange, isTime, splitCharacter, date, dateTo))
-  }, [date, dateTo, isRange, isTime, splitCharacter])
+    setValueDatePickerInput(formatDate(isRange, isTime, date, dateTo))
+  }, [date, dateTo, isRange, isTime])
 
   useEffect(() => {
     const isInputValueEmpty = getInputValueValidity(valueDatePickerInput)
@@ -343,7 +337,6 @@ const DatePicker = ({
       formatDate(
         isRange,
         isTime,
-        splitCharacter,
         datePickerState.configFrom.selectedDate,
         datePickerState.configTo.selectedDate
       )
@@ -361,91 +354,29 @@ const DatePicker = ({
     onChange(dates, false, CUSTOM_RANGE_DATE_OPTION)
   }
 
-  const onInputDatePickerChange = event => {
-    setValueDatePickerInput(event.target.value)
-    isDatePickerOptionsOpened && setIsDatePickerOptionsOpened(false)
+  const onCalendarInputChange = (event, configName) => {
     let isValueEmpty = getInputValueValidity(event.target.value)
 
-    if (new RegExp(dateRegEx).test(event.target.value) || isValueEmpty) {
-      let dates = timeFrameLimit === Infinity ? DATE_FILTER_ANY_TIME : null
+    if (new RegExp(dateRegEx).test(event.target.value) && !isValueEmpty) {
+      const formattedDate = moment(event.target.value, getDatePipe()?.toUpperCase())
+      const timeMoment = moment(datePickerState[configName].selectedDate || new Date())
 
-      const anyTimeOption = datePickerOptions.find(option => option.id === ANY_TIME_DATE_OPTION)
-      const customRangeOption = datePickerOptions.find(
-        option => option.id === CUSTOM_RANGE_DATE_OPTION
-      )
+      formattedDate.set({
+        hour: timeMoment.hour(),
+        minute: timeMoment.minute(),
+        second: timeMoment.second()
+      })
 
-      if (isValueEmpty) {
-        setSelectedOption(anyTimeOption || customRangeOption)
-      } else {
-        setSelectedOption(customRangeOption)
-      }
+      const dataToISO = new Date(formattedDate.format('YYYY-MM-DD HH:mm:ss')) // not all formats are compatible with Date constructor
 
-      if (!isValueEmpty) {
-        dates = event.target.value
-          .split(datesDivider)
-          .map((date, index) => roundSeconds(date, index > 0))
-        const { isTimeRangeInvalid, timeRangeInvalidMessage } = validateTimeRange(dates)
+      setSelectedDate(configName, dataToISO)
 
-        if (isTimeRangeInvalid) {
-          dates = null
-          setInputIsInvalid(true)
-          setExternalInvalid(false)
-          setInvalidMessage(timeRangeInvalidMessage)
-        } else {
-          setInputIsInvalid(false)
-          setExternalInvalid(true)
-        }
-      } else if (required) {
-        setInputIsInvalid(true)
-        setExternalInvalid(false)
-      }
-
-      if (dates) onChange(dates, false, CUSTOM_RANGE_DATE_OPTION)
-    }
-  }
-
-  const datePickerInputOnBlur = event => {
-    let isValueEmpty = getInputValueValidity(event.target.value)
-
-    if (new RegExp(dateRegEx).test(event.target.value) || isValueEmpty) {
-      let dates = timeFrameLimit === Infinity ? DATE_FILTER_ANY_TIME : null
-
-      if (!isValueEmpty) {
-        dates = event.target.value.split(datesDivider).map(date => new Date(date))
-
-        if (validateTimeRange(dates).isTimeRangeInvalid) {
-          setSelectedDate('configFrom', dates[0])
-          datePickerDispatch({
-            type: datePickerActions.UPDATE_VISIBLE_DATE_FROM,
-            payload: dates[0]
-          })
-
-          if (isRange) {
-            setSelectedDate('configTo', dates[1])
-            datePickerDispatch({
-              type: datePickerActions.UPDATE_VISIBLE_DATE_TO,
-              payload: dates[1]
-            })
-          }
-
-          setInputIsInvalid(true)
-          setExternalInvalid(false)
-
-          dates = null
-        }
-      } else if (timeFrameLimit !== Infinity) {
-        setValueDatePickerInput(
-          formatDate(
-            isRange,
-            isTime,
-            splitCharacter,
-            datePickerState.configFrom.date,
-            datePickerState.configTo.date
-          )
-        )
-      }
-
-      if (dates) onBlur(dates)
+      datePickerDispatch({
+        type: datePickerActions[
+          configName === 'configFrom' ? 'UPDATE_VISIBLE_DATE_FROM' : 'UPDATE_VISIBLE_DATE_TO'
+        ],
+        payload: dataToISO
+      })
     }
   }
 
@@ -523,7 +454,6 @@ const DatePicker = ({
           : [datePickerState.configFrom]
       }
       dateMask={dateMask}
-      datePickerInputOnBlur={datePickerInputOnBlur}
       datePickerOptions={datePickerOptions}
       disabled={disabled}
       getInputValueValidity={getInputValueValidity}
@@ -541,7 +471,7 @@ const DatePicker = ({
       label={label}
       months={months}
       onApplyChanges={onDatePickerChange}
-      onInputChange={onInputDatePickerChange}
+      onInputChange={onCalendarInputChange}
       onInputClick={onInputDatePickerClick}
       onNextMonth={onChangeNextMonth}
       onPreviousMonth={onChangePreviousMonth}

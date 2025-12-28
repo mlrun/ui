@@ -17,14 +17,4 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { render } from '@testing-library/react'
-import React from 'react'
-import NoData from './NoData'
-
-describe('NoData component', () => {
-  it('renders without crashing', () => {
-    const { queryByTestId } = render(<NoData />)
-
-    expect(queryByTestId('no-data')).not.toBeNull()
-  })
-})
+import '@testing-library/jest-dom'

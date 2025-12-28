@@ -12,6 +12,11 @@
     cursor: pointer;
 
     .date-picker__input {
+      position: relative;
+      background-color: transparent;
+      border: borders.$primaryBorder;
+      border-radius: 4px;
+
       &_empty {
         cursor: pointer;
       }
@@ -23,6 +28,7 @@
 
       &.long-input {
         width: 300px;
+        padding: 12px 14px;
       }
     }
 
@@ -99,6 +105,18 @@
 
   .date-picker__calendar {
     margin: 0 15px;
+
+    &__inputs {
+      display: flex;
+      gap: 10px;
+
+      input {
+        width: 100px;
+        height: 40px;
+        padding: 5px;
+        text-align: center;
+      }
+    }
   }
 
   .date-picker__header {
@@ -226,12 +244,12 @@
     margin-bottom: 20px;
 
     .time-picker-container {
-      width: 100px;
+      width: 116px;
 
       input {
         width: 100%;
         margin: 0;
-        padding: 0 16px;
+        padding: 0 12px 0 10px;
       }
     }
   }

@@ -18,7 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { trim } from 'lodash'
+
 import { ANY_TIME, DATE_FILTER_ANY_TIME } from '../constants'
+import { formatDatetime, getSupportedLocale } from 'igz-controls/utils/datetime.util'
 
 export const datesDivider = ' - '
 
@@ -227,38 +229,37 @@ const getDates = (setDate, isFutureTime, isRange) => {
 
   setDate(fromDate, toDate)
 
-  if (isFutureTime && isRange) return [null, fromDate]
+  if (isFutureTime && isRange) return [undefined, fromDate]
 
   return [fromDate]
 }
 
-export const formatDate = (isRange, isTime, splitCharacter, date, dateTo) => {
+export const formatDate = (isRange, isTime, date, dateTo) => {
   if (!date) {
     return ''
   }
 
-  let dateString = formatSingleDate(isTime, splitCharacter, date)
+  let dateString = formatSingleDate(isTime, date)
 
   if (isRange) {
-    dateString += `${datesDivider}${formatSingleDate(isTime, splitCharacter, dateTo)}`
+    dateString += `${datesDivider}${formatSingleDate(isTime, dateTo)}`
   }
 
   return dateString
 }
 
-const formatSingleDate = (isTime, splitCharacter, date) => {
-  let dateString = `${String(date.getMonth() + 1).padStart(2, '0')}${splitCharacter}${String(
-    date.getDate()
-  ).padStart(2, '0')}${splitCharacter}${date.getFullYear()}`
-
-  if (isTime) {
-    dateString += ` ${String(date.getHours()).padStart(2, '0')}:${String(
-      date.getMinutes()
-    ).padStart(2, '0')}`
-  }
-
-  return dateString
-}
+const formatSingleDate = (isTime, date) =>
+  formatDatetime(date, 'N/A', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    ...(isTime
+      ? {
+          hour: '2-digit',
+          minute: '2-digit'
+        }
+      : {})
+  })
 
 export const generateCalendar = (date, startWeek) => {
   let firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
@@ -290,32 +291,44 @@ export const generateCalendar = (date, startWeek) => {
   return month
 }
 
-export const getDateMask = (isRange, isTime, splitCharacter) => {
-  let dateMask = [/\d/, /\d/, splitCharacter, /\d/, /\d/, splitCharacter, /\d/, /\d/, /\d/, /\d/]
+export const getDatePipe = () => {
+  const formatter = new Intl.DateTimeFormat(getSupportedLocale(), {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    numberingSystem: 'latn',
+    calendar: 'gregory'
+  })
 
-  if (isTime) {
-    dateMask.push(' ', /\d/, /\d/, ':', /\d/, /\d/)
+  const parts = formatter.formatToParts()
+
+  // Map Intl parts to Moment tokens
+  const mapping = {
+    day: 'DD',
+    month: 'MM',
+    year: 'YYYY'
   }
 
-  if (isRange) {
-    dateMask.push(...datesDivider.split(''), ...dateMask)
-  }
-
-  return dateMask
+  return parts
+    .map(part => {
+      if (part.type === 'literal') return part.value
+      return mapping[part.type] || ''
+    })
+    .join('')
+    .toLocaleLowerCase()
 }
 
-export const getDatePipe = (isRange, isTime) => {
-  let datePipe = 'mm/dd/yyyy'
+export const getDateMask = () => {
+  let pipe = getDatePipe()
 
-  if (isTime) {
-    datePipe += ' HH:MM'
-  }
-
-  if (isRange) {
-    datePipe += `${datesDivider}${datePipe}`
-  }
-
-  return datePipe
+  return pipe.split('').map(char => {
+    // If the character is D, M, or Y (case insensitive), it's a digit
+    if (/[dmy]/i.test(char)) {
+      return /\d/
+    }
+    // Otherwise, it is the separator
+    return char
+  })
 }
 
 export const getDateRegEx = dateMask => {

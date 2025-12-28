@@ -1,3 +1,21 @@
+@use 'igz-controls/scss/colors';
+
 .llm-artifacts {
   height: 100%;
+
+  .alerts-container__content-info {
+    div {
+      padding-right: 3px;
+    }
+  }
+
+  .table-body__cell {
+    .name-wrapper {
+      width: 100%;
+
+      .link {
+        color: colors.$cornflowerBlue;
+      }
+    }
+  }
 }

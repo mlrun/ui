@@ -17,12 +17,29 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App'
+import moment from 'moment'
 
-it('renders without crashing', () => {
-  const root = createRoot(document.getElementById('root'))
-  root.render(<App />)
-  root.unmount()
-})
+import { getSupportedLocale } from 'igz-controls/utils/datetime.util'
+
+export function is12HourFormat() {
+  const locale = getSupportedLocale()
+  const options = new Intl.DateTimeFormat(locale, {
+    hour: 'numeric'
+  }).resolvedOptions()
+
+  return options.hour12
+}
+
+export function generateTimeOptions(is12HourFormat = false) {
+  const times = []
+  const interval = 30
+  const current = moment().startOf('day')
+  const end = current.clone().add(1, 'day')
+
+  while (current.isBefore(end)) {
+    times.push(current.format(is12HourFormat ? 'hh:mm A' : 'HH:mm'))
+    current.add(interval, 'minutes')
+  }
+
+  return times
+}
