@@ -34,7 +34,7 @@ import { Input } from './ui/input'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
 import { generateProjectsList } from '../../utils/projects'
 
-import HomepageIcon from 'igz-controls/images/navbar/mlrun-project-home.svg?react'
+import HomepageIcon from './icons/mlrun-project-home.svg?react'
 import SearchIcon from 'igz-controls/images/search.svg?react'
 import { Button } from '@/ui/button'
 import {

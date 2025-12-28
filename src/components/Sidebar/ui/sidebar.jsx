@@ -11,8 +11,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tool
 import { ChevronLeftIcon, ChevronRightIcon, MenuIcon } from 'lucide-react'
 import PropTypes from 'prop-types'
 
-import SidebarClose from 'igz-controls/images/navbar/navbar-closed-icon.svg?react'
-import SidebarOpen from 'igz-controls/images/navbar/navbar-opened-icon.svg?react'
+import SidebarClose from '../icons/navbar-closed-icon.svg?react'
+import SidebarOpen from '../icons/navbar-opened-icon.svg?react'
 
 const SIDEBAR_COOKIE_NAME = 'sidebar_state'
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7

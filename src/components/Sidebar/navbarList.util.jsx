@@ -44,14 +44,14 @@ import {
 } from '../../constants'
 import { generateNuclioLink } from '../../utils'
 
-import Alerts from 'igz-controls/images/navbar/alerts-icon.svg?react'
-import DatasetsIcon from 'igz-controls/images/navbar/mlrun-datasets.svg?react'
-import MonitoringIcon from 'igz-controls/images/navbar/mlrun-project-monitoring.svg?react'
-import FunctionIcon from 'igz-controls/images/navbar/mlrun-ml-functions.svg?react'
-import JobsWorkflowIcon from 'igz-controls/images/navbar/mlrun-jobs-and-workflows.svg?react'
-import ModelsIcon from 'igz-controls/images/navbar/mlrun-models.svg?react'
-import NuclioIcon from 'igz-controls/images/navbar/mlrun-realtime-functions.svg?react'
-import SettingsIcon from 'igz-controls/images/navbar/mlrun-project-settings.svg?react'
+import Alerts from './icons/alerts-icon.svg?react'
+import DatasetsIcon from './icons/mlrun-datasets.svg?react'
+import MonitoringIcon from './icons/mlrun-project-monitoring.svg?react'
+import FunctionIcon from './icons/mlrun-ml-functions.svg?react'
+import JobsWorkflowIcon from './icons/mlrun-jobs-and-workflows.svg?react'
+import ModelsIcon from './icons/mlrun-models.svg?react'
+import NuclioIcon from './icons/mlrun-realtime-functions.svg?react'
+import SettingsIcon from './icons/mlrun-project-settings.svg?react'
 
 export const getLinks = projectName => {
   const pathname = `/${PROJECTS_PAGE_PATH}/${projectName}`
