@@ -43,6 +43,7 @@ const SidebarCollapseItem = ({ icon, label, nestedLinks }) => {
       <SidebarMenuItem className="flex-col px-3 py-0.5">
         <CollapsibleTrigger asChild>
           <SidebarMenuButton
+            data-testid="sidebar-collapsible-menu-item"
             className="flex gap-2 pl-3 py-3 text-sidebar-foreground cursor-pointer"
             isActive={(!open && isAnyChildActive) || (!sidebarOpen && isAnyChildActive)}
           >

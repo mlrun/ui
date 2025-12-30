@@ -211,6 +211,7 @@ const Sidebar = React.forwardRef(
               <Button
                 variant="outline"
                 tooltip={pinned ? 'Unpin sidebar' : 'Pin sidebar'}
+                data-testid='pin-sidebar-button'
                 side="right"
                 className="absolute top-2 left-full border bg-[#FAFAFA] border-gray-200 border-solid
                   w-fit h-fit rounded-l-none border-l-0 py-2 pr-[3px] pl-[1px]
@@ -218,7 +219,7 @@ const Sidebar = React.forwardRef(
                   hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 onClick={togglePin}
               >
-                {pinned ? <SidebarClose /> : <SidebarOpen />}
+                {pinned ? <SidebarClose data-testid='closeed-pin' /> : <SidebarOpen data-testid='opened-pin' />}
               </Button>
             )}
           </div>

@@ -47,6 +47,7 @@ function SidebarList({ projectName }) {
     <Sidebar
       collapsible="icon"
       className="sticky border-0 border-r border-solid border-gray-200 top-14 z-10 flex flex-col"
+      data-testid='sidebar'
     >
       <SidebarHeader className="px-3 min-h-[70px]">
         <ProjectDropdown projectName={projectName} />
@@ -64,7 +65,7 @@ function SidebarList({ projectName }) {
         </SidebarMenu>
       </SidebarContent>
       <SidebarSeparator />
-      <SidebarFooter className="pt-1 px-0 gap-y-1 group-data-[collapsible=icon]:gap-y-6">
+      <SidebarFooter data-testid='sidebar-footer' className="pt-1 px-0 gap-y-1 group-data-[collapsible=icon]:gap-y-6">
         <SidebarMenu>
           {footerLinks.map(link => (
             <SidebarItem key={link.id} {...link} />

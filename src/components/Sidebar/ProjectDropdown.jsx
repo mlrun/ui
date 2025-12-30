@@ -71,6 +71,7 @@ const ProjectDropdown = ({ projectName }) => {
       </SidebarMenuItem>
       <SidebarMenuItem className="h-full group-data-[collapsible=icon]:hidden">
         <DropdownMenu
+          data-testid="sidebar-project-dropdown"
           open={open}
           onOpenChange={isOpen => {
             setOpen(isOpen)
@@ -81,6 +82,7 @@ const ProjectDropdown = ({ projectName }) => {
         >
           <DropdownMenuTrigger
             asChild
+            data-testid="sidebar-project-dropdown-trigger"
             className="h-full px-3 py-2
               data-[state=open]:bg-accent
               data-[state=open]:text-accent-foreground
@@ -100,7 +102,9 @@ const ProjectDropdown = ({ projectName }) => {
               <ChevronDown className="ml-auto" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[--radix-popper-anchor-width] p-2">
+          <DropdownMenuContent
+            data-testid="sidebar-project-dropdown-content"
+            className="w-[--radix-popper-anchor-width] p-2">
             <div className="flex relative mb-2">
               <Input
                 type="text"
