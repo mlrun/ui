@@ -24,6 +24,7 @@ import { ChevronRightIcon, ChevronDownIcon } from 'lucide-react'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/ui/collapsible'
 import { SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, useSidebar } from '@/ui/sidebar'
 import SidebarItem from './SidebarItem'
+import { toTestId } from '../../utils/toTestId'
 
 const SidebarCollapseItem = ({ icon, label, nestedLinks }) => {
   const { pathname } = useLocation()
@@ -40,10 +41,12 @@ const SidebarCollapseItem = ({ icon, label, nestedLinks }) => {
       open={sidebarOpen && open}
       onOpenChange={setOpen}
     >
-      <SidebarMenuItem className="flex-col px-3 py-0.5">
+      <SidebarMenuItem
+        className="flex-col px-3 py-0.5"
+        data-testid={`sidebar-collapsible-menu-item-${toTestId(label)}`}
+      >
         <CollapsibleTrigger asChild>
           <SidebarMenuButton
-            data-testid={`sidebar-collapsible-menu-item-${label}`}
             className="flex gap-2 pl-3 py-3 text-sidebar-foreground cursor-pointer"
             isActive={(!open && isAnyChildActive) || (!sidebarOpen && isAnyChildActive)}
           >

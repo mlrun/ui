@@ -21,6 +21,7 @@ import { useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Link, useMatch } from 'react-router-dom'
 import { SidebarMenuButton, SidebarMenuItem } from './ui/sidebar'
+import { toTestId } from '../../utils/toTestId'
 
 const SidebarItem = ({
   link,
@@ -46,7 +47,7 @@ const SidebarItem = ({
 
   return (
     <SidebarMenuItem
-      data-testid={`sidebar-menu-item-${label}`}
+      data-testid={`sidebar-menu-item-${toTestId(label)}`}
       ref={ref}
       className={`px-3 py-0.5 ${menuItemClassname ?? ''}`}
     >
@@ -56,12 +57,16 @@ const SidebarItem = ({
         className={`gap-2 p-3 ${menuButtonClassName ?? ''}`}
       >
         {externalLink ? (
-          <a href={link} target="_top" data-testid={`sidebar-menu-item-${label}-external-link`}>
+          <a
+            href={link}
+            target="_top"
+            data-testid={`sidebar-menu-item-${toTestId(label)}-external-link`}
+          >
             {icon}
             <span className="group-data-[collapsible=icon]:hidden">{label}</span>
           </a>
         ) : (
-          <Link to={link} data-testid={`sidebar-menu-item-${label}-internal-link`}>
+          <Link to={link} data-testid={`sidebar-menu-item-${toTestId(label)}-internal-link`}>
             {icon}
             <span className="group-data-[collapsible=icon]:hidden">{label}</span>
           </Link>
