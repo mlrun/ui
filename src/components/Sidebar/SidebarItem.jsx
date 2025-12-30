@@ -45,19 +45,19 @@ const SidebarItem = ({
   }, [isActive])
 
   return (
-    <SidebarMenuItem data-testid='sidebar-menu-item' ref={ref} className={`px-3 py-0.5 ${menuItemClassname ?? ''}`}>
+    <SidebarMenuItem data-testid={`sidebar-menu-item-${label}`} ref={ref} className={`px-3 py-0.5 ${menuItemClassname ?? ''}`}>
       <SidebarMenuButton
         asChild
         isActive={isActive}
         className={`gap-2 p-3 ${menuButtonClassName ?? ''}`}
       >
         {externalLink ? (
-          <a href={link} target="_top" data-testid='sidebar-menu-item-external-link'>
+          <a href={link} target="_top" data-testid={`sidebar-menu-item-${label}-external-link`}>
             {icon}
             <span className="group-data-[collapsible=icon]:hidden">{label}</span>
           </a>
         ) : (
-          <Link to={link}  data-testid='sidebar-menu-item-internal-link'>
+          <Link to={link}  data-testid={`sidebar-menu-item-${label}-internal-link`}>
             {icon}
             <span className="group-data-[collapsible=icon]:hidden">{label}</span>
           </Link>
