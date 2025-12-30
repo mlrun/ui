@@ -104,7 +104,8 @@ const ProjectDropdown = ({ projectName }) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             data-testid="sidebar-project-dropdown-content"
-            className="w-[--radix-popper-anchor-width] p-2">
+            className="w-[--radix-popper-anchor-width] p-2"
+          >
             <div className="flex relative mb-2">
               <Input
                 type="text"
