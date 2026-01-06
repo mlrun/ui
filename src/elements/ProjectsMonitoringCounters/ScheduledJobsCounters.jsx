@@ -38,6 +38,8 @@ const ScheduledJobsCounters = () => {
   const [showPopup, setShowPopup] = useState(false)
   const anchorRef = useRef(null)
   const detailsRef = useRef(null)
+  const isDataLoading =
+    projectStore?.projectsSummary?.loading || projectStore?.projectSummary?.loading
 
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent
@@ -95,7 +97,7 @@ const ScheduledJobsCounters = () => {
               id="scheduled_total_counter"
               onClick={scheduledStats?.total?.link}
             >
-              {projectStore?.projectsSummary?.loading ? (
+              {isDataLoading ? (
                 <Loader section small secondary />
               ) : (
                 scheduledStats.total.counter
@@ -111,7 +113,7 @@ const ScheduledJobsCounters = () => {
               >
                 <h6 className="stats__subtitle">Jobs</h6>
                 <StatsCard.SecondaryCounter>
-                  {projectStore.projectsSummary.loading ? (
+                  {isDataLoading ? (
                     <Loader section small secondary />
                   ) : (
                     scheduledStats.jobs.counter.toLocaleString()
@@ -127,7 +129,7 @@ const ScheduledJobsCounters = () => {
               >
                 <h6 className="stats__subtitle">Workflows</h6>
                 <StatsCard.SecondaryCounter>
-                  {projectStore.projectsSummary.loading ? (
+                  {isDataLoading ? (
                     <Loader section small secondary />
                   ) : (
                     scheduledStats.workflows.counter.toLocaleString()

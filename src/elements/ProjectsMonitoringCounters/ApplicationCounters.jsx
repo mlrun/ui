@@ -33,6 +33,8 @@ const ApplicationCounter = () => {
   const { projectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
+  const isDataLoading =
+    projectStore?.projectsSummary?.loading || projectStore?.projectSummary?.loading
 
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent
@@ -84,7 +86,7 @@ const ApplicationCounter = () => {
               id="application_total_counter"
               onClick={applicationStats?.total?.link}
             >
-              {projectStore.projectsSummary.loading ? (
+              {isDataLoading ? (
                 <Loader section small secondary />
               ) : (
                 applicationStats?.total?.counter?.toLocaleString()
@@ -101,7 +103,7 @@ const ApplicationCounter = () => {
                       className={className}
                       onClick={link}
                     >
-                      {projectStore?.projectsSummary?.loading ? (
+                      {isDataLoading ? (
                         <Loader section small secondary />
                       ) : (
                         counter.toLocaleString()

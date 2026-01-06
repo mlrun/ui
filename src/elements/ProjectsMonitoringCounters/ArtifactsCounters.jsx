@@ -35,6 +35,8 @@ const ArtifactsCounters = () => {
   const { projectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
+  const isDataLoading =
+    projectStore?.projectsSummary?.loading || projectStore?.projectSummary?.loading
 
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent
@@ -75,7 +77,7 @@ const ArtifactsCounters = () => {
         <div onMouseEnter={handleOpenPopUp} onMouseLeave={handleClosePopUp}>
           <StatsCard.Row>
             <StatsCard.MainCounter id="artifacts_total_counter">
-              {projectStore.projectsSummary.loading ? (
+              {isDataLoading ? (
                 <Loader section small secondary />
               ) : (
                 data?.total?.counter?.toLocaleString()
@@ -91,7 +93,7 @@ const ArtifactsCounters = () => {
               >
                 <h6 className="stats__subtitle">Datasets</h6>
                 <StatsCard.SecondaryCounter>
-                  {projectStore.projectsSummary.loading ? (
+                  {isDataLoading ? (
                     <Loader section small secondary />
                   ) : (
                     data?.datasets.counter?.toLocaleString()
@@ -107,7 +109,7 @@ const ArtifactsCounters = () => {
               >
                 <h6 className="stats__subtitle">Documents</h6>
                 <StatsCard.SecondaryCounter>
-                  {projectStore.projectsSummary.loading ? (
+                  {isDataLoading ? (
                     <Loader section small secondary />
                   ) : (
                     data?.documents?.counter?.toLocaleString()
@@ -123,7 +125,7 @@ const ArtifactsCounters = () => {
               >
                 <h6 className="stats__subtitle">LLM prompt artifacts</h6>
                 <StatsCard.SecondaryCounter>
-                  {projectStore.projectsSummary.loading ? (
+                  {isDataLoading ? (
                     <Loader section small secondary />
                   ) : (
                     data?.llm_prompt?.counter?.toLocaleString()
@@ -139,7 +141,7 @@ const ArtifactsCounters = () => {
               >
                 <h6 className="stats__subtitle">Other artifacts</h6>
                 <StatsCard.SecondaryCounter>
-                  {projectStore.projectsSummary.loading ? (
+                  {isDataLoading ? (
                     <Loader section small secondary />
                   ) : (
                     data?.files?.counter?.toLocaleString()

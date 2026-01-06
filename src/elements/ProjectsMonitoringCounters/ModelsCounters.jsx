@@ -30,6 +30,8 @@ const ModelsAndApplication = () => {
   const projectStore = useSelector(store => store.projectStore)
   const { projectName } = useParams()
   const navigate = useNavigate()
+  const isDataLoading =
+    projectStore?.projectsSummary?.loading || projectStore?.projectSummary?.loading
 
   const modelsData = projectName
     ? projectStore.projectSummary.data?.models_count
@@ -49,7 +51,7 @@ const ModelsAndApplication = () => {
           id="models_total_counter"
           onClick={data.models.link}
         >
-          {projectStore?.projectsSummary?.loading ? (
+          {isDataLoading ? (
             <Loader section small secondary />
           ) : (
             data?.models?.counter?.toLocaleString()

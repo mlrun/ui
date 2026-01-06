@@ -41,6 +41,8 @@ const AlertsCounters = () => {
   const { projectName: paramProjectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
+  const isDataLoading =
+    projectStore?.projectsSummary?.loading || projectStore?.projectSummary?.loading
 
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent
@@ -109,7 +111,7 @@ const AlertsCounters = () => {
               id="alerts_total_counter"
               onClick={alertsStats?.total?.link}
             >
-              {projectStore?.projectsSummary?.loading ? (
+              {isDataLoading ? (
                 <Loader section small secondary />
               ) : (
                 alertsStats.total?.counter?.toLocaleString?.()
@@ -126,7 +128,7 @@ const AlertsCounters = () => {
               >
                 <h6 className="stats__subtitle">Endpoint</h6>
                 <StatsCard.SecondaryCounter>
-                  {projectStore?.projectsSummary?.loading ? (
+                  {isDataLoading ? (
                     <Loader section small secondary />
                   ) : (
                     alertsStats.endpoints?.counter?.toLocaleString?.()
@@ -142,7 +144,7 @@ const AlertsCounters = () => {
               >
                 <h6 className="stats__subtitle">Jobs</h6>
                 <StatsCard.SecondaryCounter>
-                  {projectStore?.projectsSummary?.loading ? (
+                  {isDataLoading ? (
                     <Loader section small secondary />
                   ) : (
                     alertsStats.job?.counter?.toLocaleString?.()
@@ -158,7 +160,7 @@ const AlertsCounters = () => {
               >
                 <div className="stats__subtitle">Application</div>
                 <StatsCard.SecondaryCounter>
-                  {projectStore.projectsSummary.loading ? (
+                  {projectStore.projectsSummary.loading || projectStore.projectSummary.loading ? (
                     <Loader section small secondary />
                   ) : (
                     alertsStats.application?.counter?.toLocaleString?.()
