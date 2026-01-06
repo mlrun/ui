@@ -99,7 +99,7 @@ const WorkflowsCounters = () => {
               id="wf_total_counter"
               onClick={workflowsStats?.total?.link}
             >
-              {isDataLoading || projectStore?.projectSummary?.loading ? (
+              {isDataLoading ? (
                 <Loader section small secondary />
               ) : (
                 workflowsStats?.total?.counter?.toLocaleString()
@@ -124,7 +124,7 @@ const WorkflowsCounters = () => {
                         </Tooltip>
                       </div>
                       <StatsCard.SecondaryCounter className={counterClassName}>
-                        {isDataLoading || projectStore?.projectSummary?.loading ? (
+                        {isDataLoading ? (
                           <Loader section small secondary />
                         ) : (
                           counter?.toLocaleString()

@@ -160,7 +160,7 @@ const AlertsCounters = () => {
               >
                 <div className="stats__subtitle">Application</div>
                 <StatsCard.SecondaryCounter>
-                  {projectStore.projectsSummary.loading || projectStore.projectSummary.loading ? (
+                  {isDataLoading ? (
                     <Loader section small secondary />
                   ) : (
                     alertsStats.application?.counter?.toLocaleString?.()
