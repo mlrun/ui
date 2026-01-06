@@ -97,11 +97,7 @@ const ScheduledJobsCounters = () => {
               id="scheduled_total_counter"
               onClick={scheduledStats?.total?.link}
             >
-              {isDataLoading ? (
-                <Loader section small secondary />
-              ) : (
-                scheduledStats.total.counter
-              )}
+              {isDataLoading ? <Loader section small secondary /> : scheduledStats.total.counter}
             </StatsCard.MainCounter>
           </StatsCard.Row>
           <div ref={detailsRef} className="stats__details">
