@@ -1284,7 +1284,6 @@ Feature: Models Page
        | name4        | value4        |
 
   @MLM
-  #TODO: arrow lines position - y not found
   @passive
   @smoke
   Scenario: MLM031 - Verify behaviour of Real-Time Pipelines table
@@ -1310,7 +1309,7 @@ Feature: Models Page
     And wait load page
     Then compare current browser URL with test "href" context value
     Then verify "Real_Time_Pipelines_Graph" element visibility on "Real_Time_Pipelines" wizard
-    # Then verify arrow lines position on "Real_Time_Pipelines_Graph" on "Real_Time_Pipelines" wizard
+    Then verify workflow graph nodes and arrows connections on "Real_Time_Pipelines_Graph" on "Real_Time_Pipelines" wizard
     When click on node with index 2 in "Real_Time_Pipelines_Graph" graph on "Real_Time_Pipelines" wizard
     Then verify "Header" element visibility on "Real_Time_Pipeline_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Real_Time_Pipeline_Pane" wizard

@@ -1558,7 +1558,6 @@ Feature: Jobs and workflows
         Then "Save_Button" element on "Modal_Wizard_Form" should contains "Save" value
 
     @MLJW
-    #TODO: arrow lines position - y not found
     @passive
     @smoke
     Scenario: MLJW081 - Check visibility of main components on Workflow graph View
@@ -1575,7 +1574,7 @@ Feature: Jobs and workflows
         When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then verify "Workflow_Graph" element visibility on "Workflows_Monitor_Tab" wizard
-        # Then verify arrow lines position on "Workflow_Graph" on "Workflows_Monitor_Tab" wizard
+        Then verify workflow graph nodes and arrows connections on "Workflow_Graph" on "Workflows_Monitor_Tab" wizard
         When click on node with index 2 in "Workflow_Graph" graph on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then verify "Header" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard

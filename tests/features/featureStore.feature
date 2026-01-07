@@ -325,7 +325,8 @@ Feature: Feature Store Page
         Then verify "Cancel_Button" element not exists on "Feature_Sets_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Transformations_Info_Pane" wizard
         Then verify "Transformation_Graph" element visibility on "Transformations_Info_Pane" wizard
-        # TO DO: Then verify arrow lines position on "Transformation_Graph" on "Transformations_Info_Pane" wizard   => Error: KeyError: y not found
+        And wait load page
+        Then verify workflow graph nodes and arrows connections on "Transformation_Graph" on "Transformations_Info_Pane" wizard
         # TO DO: configuration component for future work
 
     @MLFS
