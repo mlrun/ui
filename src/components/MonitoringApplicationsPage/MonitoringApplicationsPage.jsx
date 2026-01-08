@@ -62,10 +62,6 @@ const MonitoringApplicationsPage = () => {
             showErrorNotification(dispatch, error, '', 'Failed to fetch applications summary')
           })
         dispatch(fetchMonitoringApplications({ project: params.projectName, filters }))
-          .unwrap()
-          .catch(error => {
-            showErrorNotification(dispatch, error, '', 'Failed to fetch monitoring applications')
-          })
         dispatch(
           fetchMEPWithDetections({
             project: params.projectName,

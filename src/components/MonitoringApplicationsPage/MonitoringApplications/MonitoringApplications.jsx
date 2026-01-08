@@ -102,13 +102,7 @@ const MonitoringApplications = () => {
             <Tip text="System functions that are used for the monitoring application operation" />
           </div>
           {operatingFunctions.length === 0 && !loading ? (
-            <NoData
-              message={
-                error
-                  ? 'Failed to fetch monitoring applications'
-                  : MONITORING_APPLICATIONS_NO_DATA_MESSAGE
-              }
-            />
+            <NoData message={error ? error : MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
           ) : (
             <SectionTable loading={loading} params={params} table={operatingFunctionsTable} />
           )}
@@ -120,13 +114,7 @@ const MonitoringApplications = () => {
             <span>All applications</span>
           </div>
           {applications.length === 0 && !loading ? (
-            <NoData
-              message={
-                error
-                  ? 'Failed to fetch monitoring applications'
-                  : MONITORING_APPLICATIONS_NO_DATA_MESSAGE
-              }
-            />
+            <NoData message={error ? error : MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
           ) : loading ? (
             <Loader section secondary />
           ) : (
