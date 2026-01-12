@@ -47,6 +47,7 @@ export const usePagination = ({
   const [searchParams, setSearchParams] = useSearchParams()
   const [paginatedContent, setPaginatedContent] = useState([])
   const resetPaginationTriggerRef = useRef(resetPaginationTrigger)
+  const lastRequestedPageRef = useRef(null)
   const filtersStore = useSelector(store => store.filtersStore)
 
   const refreshContentDebounced = useMemo(() => {
@@ -67,6 +68,7 @@ export const usePagination = ({
         { replace: true }
       )
 
+      lastRequestedPageRef.current = null
       paginationConfigRef.current = {
         [BE_PAGE_SIZE]: bePageSize,
         [FE_PAGE_SIZE]: fePageSize,
@@ -160,18 +162,19 @@ export const usePagination = ({
   }, [hidden, paginationConfigRef, resetPagination, resetPaginationTrigger])
 
   useEffect(() => {
-    const paginationResponse = paginationConfigRef.current?.paginationResponse
+    if (hidden) return
 
-    if (
-      !hidden &&
-      searchParams.get(BE_PAGE) &&
-      (!paginationResponse ||
-        (paginationResponse?.page &&
-          paginationResponse?.page !== parseInt(searchParams.get(BE_PAGE))))
-    ) {
-      refreshContentDebounced(filters)
+    const bePage = Number(searchParams.get(BE_PAGE))
+
+    if (!bePage) return
+
+    if (lastRequestedPageRef.current === bePage) {
+      return
     }
-  }, [filters, hidden, paginationConfigRef, refreshContentDebounced, searchParams])
+
+    lastRequestedPageRef.current = bePage
+    refreshContentDebounced(filters)
+  }, [filters, hidden, refreshContentDebounced, searchParams])
 
   useEffect(() => {
     queueMicrotask(() => {
