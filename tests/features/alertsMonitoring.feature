@@ -117,7 +117,7 @@ Feature: Alerts Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Alerts_Monitoring" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Alerts_Monitoring" wizard selected option value "Past 24 hours"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Alerts_Monitoring" wizard
-        When pick up "Custom range" from "12/01/2024 00:00" to "12/31/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Alerts_Monitoring" wizard
+        When pick up "Custom range" from "12/01/2024 00:00" to "12/31/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Alerts_Monitoring" wizard
         Then verify from "12/01/2024 00:00" to "12/31/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Alerts_Monitoring" wizard
         And wait load page
         Then verify "Alerts_Table" element visibility on "Alerts_Monitoring" wizard
@@ -214,7 +214,7 @@ Feature: Alerts Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Alerts_Monitoring" wizard selected option value "Past 24 hours"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Alerts_Monitoring" wizard
         And wait load page
-        When pick up "Custom range" from "12/01/2024 00:00" to "12/31/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Alerts_Monitoring" wizard
+        When pick up "Custom range" from "12/01/2024 00:00" to "12/31/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Alerts_Monitoring" wizard
         Then verify from "12/01/2024 00:00" to "12/31/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Alerts_Monitoring" wizard
         And wait load page
         Then verify "Alerts_Table" element visibility on "Alerts_Monitoring" wizard
@@ -269,7 +269,7 @@ Feature: Alerts Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Alerts_Monitoring" wizard selected option value "Past 24 hours"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Alerts_Monitoring" wizard
         And wait load page
-        When pick up "Custom range" from "12/01/2024 00:00" to "12/31/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Alerts_Monitoring" wizard
+        When pick up "Custom range" from "12/01/2024 00:00" to "12/31/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Alerts_Monitoring" wizard
         Then verify from "12/01/2024 00:00" to "12/31/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Alerts_Monitoring" wizard
         And wait load page
         Then verify "Alerts_Table" element visibility on "Alerts_Monitoring" wizard
@@ -372,7 +372,7 @@ Feature: Alerts Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Alerts_Monitoring" wizard selected option value "Past 24 hours"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Alerts_Monitoring" wizard
         And wait load page
-        When pick up "Custom range" from "12/01/2024 00:00" to "12/31/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Alerts_Monitoring" wizard
+        When pick up "Custom range" from "12/01/2024 00:00" to "12/31/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Alerts_Monitoring" wizard
         Then verify from "12/01/2024 00:00" to "12/31/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Alerts_Monitoring" wizard
         And wait load page
         Then verify "Alerts_Table" element visibility on "Alerts_Monitoring" wizard

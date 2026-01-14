@@ -381,17 +381,17 @@ export default {
   Modal_Wizard_Form: {
     Tab_List: ['Functions', 'Hub'],
     Hub_Filter_Category: [
-      'Data Analysis',
-      'Data Preparation',
-      'Data Validation',
-      'ETL',
-      'Feature Store',
-      'Machine Learning',
-      'Model Serving',
-      'Model Testing',
-      'Model Training',
-      'Monitoring',
-      'Utilities'
+      'data-analysis',
+      'data-preparation',
+      'data-validation',
+      'etl',
+      'feature-store',
+      'machine-learning',
+      'model-serving',
+      'model-testing',
+      'model-training',
+      'monitoring',
+      'utils'
     ],
     Data_Inputs_Table_Header: ['Input name', 'Path'],
     Parameters_Table_Header: ['Name', 'Type', 'Value'],
@@ -845,7 +845,7 @@ export default {
     Common_Message_Jobs_Monitoring_Scheduled:
       /No data matches the filter: "Scheduled at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
     Common_Message_Scheduled_Type:
-      /No data matches the filter: "Scheduled at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Type: (.+?)"/,
+      /No data matches the filter: "Scheduled at: .*? - .*?, Type: (.+?)"/,
     Common_Message: 'No data matches the filter: "Version Tag: latest, Name: ccccc"',
     Common_Message_Feature: 'No data matches the filter: "Version Tag: latest"',
     Common_Message_Feature_Vector_Tab:

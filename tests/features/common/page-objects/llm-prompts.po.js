@@ -66,7 +66,7 @@ const overallTable = {
         labels: {
                   componentType: dropdownComponent,
                   structure: generateDropdownGroup(
-                    '.table-body__cell:nth-of-type(3)',
+                    '.table-body__cell:nth-of-type(3) input',
                     '.chip-block span.chips_button',
                     '.chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
                     false,

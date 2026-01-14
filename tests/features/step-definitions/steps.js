@@ -100,7 +100,8 @@ import {
 import {
   applyDatetimePickerRange,
   pickUpCustomDatetimeRange,
-  verifyTimeFilterBand
+  verifyTimeFilterBand,
+  setPickerTime
 } from '../common/actions/date-picker.action'
 import {
   isContainsSubstringInSuggestedOptions,
@@ -805,6 +806,18 @@ When(
   }
 )
 
+When(
+  'select {string} option at {string} dropdown options in {string} on {string} wizard',
+  async function(optionValue, dropdownName, accordionName, wizardName) {
+    await openDropdown(this.driver, pageObjects[wizardName][accordionName][dropdownName])
+    await selectOptionInDropdownWithoutCheck(
+      this.driver,
+      pageObjects[wizardName][accordionName][dropdownName],
+      optionValue
+    )
+  }
+)
+
 Then(
   'verify {string} filter band in {string} filter dropdown on {string} wizard',
   async function(optionValue, dropdownName, wizardName) {
@@ -817,13 +830,15 @@ Then(
 )
 
 When(
-  'pick up {string} from {string} to {string} in {string} via {string} on {string} wizard',
+  'pick up {string} from {string} to {string} in {string} via {string} with from {string} to {string} time dropdown on {string} wizard',
   async function(
     optionValue,
     fromDatetime,
     toDatetime,
     datetimePicker,
     dropdownName,
+    fromTimeDropdown,
+    toTimeDropdown,
     wizardName
   ) {
     await openDropdown(this.driver, pageObjects[wizardName][dropdownName])
@@ -840,6 +855,10 @@ When(
       toDatetime
     )
     await this.driver.sleep(2500)
+    await setPickerTime(this.driver, pageObjects[wizardName][fromTimeDropdown], fromDatetime)
+    await this.driver.sleep(500)
+    await setPickerTime(this.driver, pageObjects[wizardName][toTimeDropdown], toDatetime)
+    await this.driver.sleep(500)
     await applyDatetimePickerRange(
       this.driver,
       pageObjects[wizardName][datetimePicker]

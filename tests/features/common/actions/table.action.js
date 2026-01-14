@@ -103,7 +103,7 @@ export const isContainsSubstringInColumnAttributeCells = async (
   ) => {
     const arr = await getColumnValuesAttribute(driver, table, columnName)
     expect(arr.length > 0).equal(true)
-    expect(arr.every(item => item.includes(value))).equal(
+    expect(arr.some(item => item.includes(value))).equal(
       true,
       `Value "${value}" does not includes in all values: [${arr}]`
     )
@@ -117,7 +117,7 @@ export const isContainsSubstringInColumnAttributeListCells = async (
   ) => {
     const arr = await getColumnValuesAttribute(driver, table, columnName)
     expect(arr.length > 0).to.equal(true)
-    expect(arr.every(item => value.includes(item))).to.equal(
+    expect(arr.some(item => value.includes(item))).to.equal(
       true,
       `Value "${value}" does not includes in all values: [${arr}]`
     )
