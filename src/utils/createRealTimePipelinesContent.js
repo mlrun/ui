@@ -37,9 +37,8 @@ const createRealTimePipelinesContent = (pipelines, projectName) =>
           headerLabel: 'Name',
           value: pipeline.name,
           className: 'table-cell-name',
-          getLink: () => {
-            return `/projects/${projectName}/${MODELS_PAGE.toLowerCase()}/${REAL_TIME_PIPELINES_TAB}/pipeline/${pipeline.hash}${window.location.search}`
-          },
+          getLink: tab =>
+            `/projects/${projectName}/${MODELS_PAGE.toLowerCase()}/${REAL_TIME_PIPELINES_TAB}/${pipeline.hash}/${tab}${window.location.search}`,
           showTag: true,
           showStatus: true,
           expandedCellContent: {

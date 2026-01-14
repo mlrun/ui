@@ -21,12 +21,12 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import classnames from 'classnames'
-import { isNil } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
 
 import ActionBar from '../../ActionBar/ActionBar'
 import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
-import Pipeline from '../../Pipeline/Pipeline'
+import Details from '../../Details/Details'
 import RealTimePipelinesTableRow from '../../../elements/RealTimePipelinesTableRow/RealTimePipelinesTableRow'
 import Table from '../../Table/Table'
 import { Loader } from 'igz-controls/components'
@@ -38,8 +38,17 @@ import {
   REQUEST_CANCELED
 } from '../../../constants'
 import createRealTimePipelinesContent from '../../../utils/createRealTimePipelinesContent'
-import { fetchAndParseFunction, filtersConfig, generatePageData } from './realTimePipelines.util'
-import { fetchArtifactsFunctions, removePipelines } from '../../../reducers/artifactsReducer'
+import {
+  checkForSelectedPipeline,
+  fetchAndParseFunction,
+  filtersConfig,
+  generatePageData
+} from './realTimePipelines.util'
+import {
+  fetchArtifactsFunction,
+  fetchArtifactsFunctions,
+  removePipelines
+} from '../../../reducers/artifactsReducer'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { getScssVariableValue } from 'igz-controls/utils/common.util'
 import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
@@ -47,6 +56,7 @@ import { setFilters } from '../../../reducers/filtersReducer'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 import { useModelsPage } from '../ModelsPage.context'
+import { FULL_VIEW_MODE } from 'igz-controls/constants'
 
 import Yaml from 'igz-controls/images/yaml.svg?react'
 
@@ -55,6 +65,7 @@ import './realTimePipelines.scss'
 const RealTimePipelines = () => {
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [pipelines, setPipelines] = useState([])
+  const [selectedPipeline, setSelectedPipeline] = useState({})
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
@@ -137,6 +148,19 @@ const RealTimePipelines = () => {
     [fetchData]
   )
 
+  const getSelectedPipeline = useCallback(() => {
+    return dispatch(
+      fetchArtifactsFunction({
+        project: selectedPipeline.project,
+        name: selectedPipeline.name,
+        hash: selectedPipeline.hash,
+        tag: selectedPipeline.tag
+      })
+    )
+      .unwrap()
+      .then(setSelectedPipeline)
+  }, [dispatch, selectedPipeline])
+
   const tableContent = useMemo(() => {
     return createRealTimePipelinesContent(pipelines, params.projectName)
   }, [pipelines, params.projectName])
@@ -160,16 +184,13 @@ const RealTimePipelines = () => {
   }, [dispatch])
 
   useEffect(() => {
-    if (params.pipelineId && pipelines.length > 0) {
-      if (!pipelines.find(item => item.hash === params.pipelineId)) {
-        navigate(
-          `/projects/${params.projectName}/models/${REAL_TIME_PIPELINES_TAB}${window.location.search}`,
-          {
-            replace: true
-          }
-        )
-      }
-    }
+    checkForSelectedPipeline(
+      pipelines,
+      navigate,
+      params.pipelineId,
+      params.projectName,
+      setSelectedPipeline
+    )
   }, [navigate, params.pipelineId, params.projectName, pipelines])
 
   const virtualizationConfig = useVirtualization({
@@ -212,18 +233,17 @@ const RealTimePipelines = () => {
                 filtersStore
               )}
             />
-          ) : params.pipelineId ? (
-            <Pipeline content={pipelines} />
           ) : (
             <>
               <Table
                 actionsMenu={actionsMenu}
                 pageData={pageData}
-                selectedItem={{}}
+                selectedItem={selectedPipeline}
                 tab={REAL_TIME_PIPELINES_TAB}
                 tableClassName="pipelines-table"
                 tableHeaders={tableContent[0]?.content ?? []}
                 virtualizationConfig={virtualizationConfig}
+                viewMode={FULL_VIEW_MODE}
               >
                 {tableContent.map(
                   (tableItem, index) =>
@@ -236,6 +256,17 @@ const RealTimePipelines = () => {
                     )
                 )}
               </Table>
+              {!isEmpty(selectedPipeline) && (
+                <Details
+                  actionsMenu={actionsMenu}
+                  detailsMenu={pageData.details.menu}
+                  handleRefresh={getSelectedPipeline}
+                  isDetailsScreen
+                  pageData={pageData}
+                  tab={REAL_TIME_PIPELINES_TAB}
+                  selectedItem={selectedPipeline}
+                />
+              )}
             </>
           )}
         </div>

@@ -83,7 +83,8 @@ const ActionBar = ({
   withAutoRefresh = false,
   withInternalAutoRefresh = false,
   withRefreshButton = true,
-  withoutExpandButton
+  withoutExpandButton,
+  withoutSearchParams = false
 }) => {
   const [internalAutoRefreshPrevValue, setInternalAutoRefreshPrevValue] = useState(
     internalAutoRefreshIsEnabled
@@ -153,7 +154,7 @@ const ActionBar = ({
 
   const saveFilters = useCallback(
     filtersForSaving => {
-      if (!isEmpty(filtersForSaving)) {
+      if (!withoutSearchParams && !isEmpty(filtersForSaving)) {
         setSearchParams(
           prevSearchParams => {
             for (const [filterName, filterValue] of Object.entries(filtersForSaving)) {
@@ -182,7 +183,7 @@ const ActionBar = ({
         )
       }
     },
-    [filtersConfig, setSearchParams]
+    [filtersConfig, setSearchParams, withoutSearchParams]
   )
 
   const applyFilters = useCallback(
@@ -526,7 +527,8 @@ ActionBar.propTypes = {
   withAutoRefresh: PropTypes.bool,
   withInternalAutoRefresh: PropTypes.bool,
   withRefreshButton: PropTypes.bool,
-  withoutExpandButton: PropTypes.bool
+  withoutExpandButton: PropTypes.bool,
+  withoutSearchParams: PropTypes.bool
 }
 
 export default React.memo(ActionBar)

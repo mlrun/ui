@@ -17,15 +17,17 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useRef, useCallback, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
+import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
-import { fetchModelEndpoints } from '../../../reducers/artifactsReducer'
+import ModelEndpointsTable from '../ModelsPage/ModelEndpoints/ModelEndpointsTable'
 
-import ModelEndpointsTable from './ModelEndpointsTable'
+import { fetchModelEndpoints } from '../../reducers/artifactsReducer'
+import { FUNCTION_NAME_FILTER } from '../../constants'
 
-const ModelEndpoints = () => {
+const DetailsModelEndpoints = ({ selectedItem }) => {
   const params = useParams()
   const dispatch = useDispatch()
   const abortControllerRef = useRef(new AbortController())
@@ -38,7 +40,10 @@ const ModelEndpoints = () => {
       return dispatch(
         fetchModelEndpoints({
           project: params.projectName,
-          filters,
+          filters: {
+            ...filters,
+            [FUNCTION_NAME_FILTER]: selectedItem.name
+          },
           config: {
             ui: {
               controller: abortControllerRef.current,
@@ -51,7 +56,7 @@ const ModelEndpoints = () => {
         })
       )
     },
-    [dispatch, params.projectName]
+    [dispatch, params.projectName, selectedItem.name]
   )
 
   return (
@@ -59,8 +64,13 @@ const ModelEndpoints = () => {
       fetchEndpoints={fetchEndpoints}
       ref={abortControllerRef}
       requestErrorMessage={requestErrorMessage}
+      isDetails
     />
   )
 }
 
-export default ModelEndpoints
+DetailsModelEndpoints.propTypes = {
+  selectedItem: PropTypes.object.isRequired
+}
+
+export default DetailsModelEndpoints

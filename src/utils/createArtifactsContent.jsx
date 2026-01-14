@@ -44,6 +44,7 @@ import SeverityOk from 'igz-controls/images/severity-ok.svg?react'
 import SeverityWarning from 'igz-controls/images/severity-low.svg?react'
 import SeverityError from 'igz-controls/images/severity-error.svg?react'
 import TableModelCell from '../elements/TableModelCell/TableModelCell'
+import ModelEndpointPopUp from '../elements/DetailsPopUp/ModelEndpointPopUp/ModelEndpointPopUp'
 
 export const createArtifactsContent = (artifacts, page, pageTab, project, isAllVersions) => {
   return (artifacts.filter(artifact => !artifact.link_iteration) ?? []).map(artifact => {
@@ -440,11 +441,24 @@ export const getDriftStatusData = driftStatus => {
   }
 }
 
-export const createModelEndpointsRowData = (artifact, project) => {
-  const functionUri = artifact.spec?.function_uri
-    ? `store://functions/${artifact.spec.function_uri}`
-    : ''
+export const createModelEndpointsRowData = (
+  artifact,
+  project,
+  isDetails = false,
+  frontendSpec,
+  handleMonitoring,
+  toggleConvertedYaml
+) => {
+  const {
+    metadata,
+    spec,
+    status,
+    ui: { identifierUnique },
+    name
+  } = artifact
+  const functionUri = spec?.function_uri ? `store://functions/${spec.function_uri}` : ''
   const { key: functionName } = parseUri(functionUri)
+  const driftStatusData = getDriftStatusData(status?.result_status)
 
   return {
     data: {
@@ -452,100 +466,111 @@ export const createModelEndpointsRowData = (artifact, project) => {
     },
     content: [
       {
-        id: `key.${artifact.ui.identifierUnique}`,
+        id: `key.${identifierUnique}`,
         headerId: 'name',
         headerLabel: 'Name',
-        value: artifact.name,
+        value: name,
         className: 'table-cell-name',
-        getLink: tab =>
-          validateArguments(artifact.metadata?.uid, artifact.name)
-            ? generateLinkToDetailsPanel(
-                project,
-                MODELS_TAB,
-                MODEL_ENDPOINTS_TAB,
-                artifact.name,
-                artifact.metadata?.uid,
-                tab
-              )
-            : '',
         showStatus: true,
-        tooltip: artifact.spec?.model_uri
-          ? `${artifact.name} - ${artifact.spec?.model_uri}`
-          : artifact.name,
-        additionalInfo:
-          artifact.spec?.function_name &&
-          `${artifact.spec.function_name}:${artifact.spec.function_tag}`
+        tooltip: spec?.model_uri ? `${name} - ${spec?.model_uri}` : name,
+        additionalInfo: spec?.function_name && `${spec.function_name}:${spec.function_tag}`,
+        ...(isDetails
+          ? {
+              handleClick: () =>
+                validateArguments(metadata?.uid, name)
+                  ? openPopUp(ModelEndpointPopUp, {
+                      modelEndpointUid: metadata?.uid,
+                      modelEndpointName: name,
+                      frontendSpec,
+                      handleMonitoring,
+                      toggleConvertedYaml
+                    })
+                  : null
+            }
+          : {
+              getLink: tab =>
+                validateArguments(metadata?.uid, name)
+                  ? generateLinkToDetailsPanel(
+                      project,
+                      MODELS_TAB,
+                      MODEL_ENDPOINTS_TAB,
+                      name,
+                      metadata?.uid,
+                      tab
+                    )
+                  : ''
+            })
       },
       {
-        id: `functionName.${artifact.ui.identifierUnique}`,
+        id: `functionName.${identifierUnique}`,
         headerId: 'function',
         headerLabel: 'Function',
         value: functionName,
         className: 'table-cell-1',
         handleClick: () =>
           openPopUp(FunctionPopUp, {
-            funcUri: artifact.spec?.function_uri
+            funcUri: spec?.function_uri
           }),
         type: 'link',
         tooltip: functionUri
       },
       {
-        id: `state.${artifact.ui.identifierUnique}`,
+        id: `state.${identifierUnique}`,
         headerId: 'state',
-        value: artifact.status?.state,
+        value: status?.state,
         className: 'table-cell-small',
         type: 'hidden'
       },
       {
-        id: `functionTag.${artifact.ui.identifierUnique}`,
+        id: `functionTag.${identifierUnique}`,
         headerId: 'functionTag',
         headerLabel: 'Function tag',
-        value: artifact.spec?.function_tag,
+        value: spec?.function_tag,
         className: 'table-cell-small'
       },
       {
-        id: `modelClass.${artifact.ui.identifierUnique}`,
+        id: `modelClass.${identifierUnique}`,
         headerId: 'class',
         headerLabel: 'Class',
-        value: artifact.spec?.model_class,
+        value: spec?.model_class,
         className: 'table-cell-1'
       },
       {
-        id: `labels.${artifact.ui.identifierUnique}`,
+        id: `labels.${identifierUnique}`,
         headerId: 'labels',
         headerLabel: 'Labels',
-        value: parseChipsData(artifact.metadata?.labels),
+        value: parseChipsData(metadata?.labels),
         className: 'table-cell-1',
         type: 'labels'
       },
       {
-        id: `firstRequest.${artifact.ui.identifierUnique}`,
+        id: `firstRequest.${identifierUnique}`,
         headerId: 'uptime',
         headerLabel: 'First prediction',
-        value: formatDatetime(artifact.status?.first_request, '-'),
+        value: formatDatetime(status?.first_request, '-'),
         className: 'table-cell-1'
       },
       {
-        id: `lastRequest.${artifact.ui.identifierUnique}`,
+        id: `lastRequest.${identifierUnique}`,
         headerId: 'lastprediction',
         headerLabel: 'Last prediction',
-        value: formatDatetime(artifact.status?.last_request, '-'),
+        value: formatDatetime(status?.last_request, '-'),
         className: 'table-cell-1'
       },
       {
-        id: `errorCount.${artifact.ui.identifierUnique}`,
+        id: `errorCount.${identifierUnique}`,
         headerId: 'errorcount',
         headerLabel: 'Error count',
-        value: artifact.status?.error_count ?? '-',
+        value: status?.error_count ?? '-',
         className: 'table-cell-1'
       },
       {
-        id: `driftStatus.${artifact.ui.identifierUnique}`,
+        id: `driftStatus.${identifierUnique}`,
         headerId: 'drift',
         headerLabel: 'Drift Status',
-        value: getDriftStatusData(artifact.status?.result_status).value,
+        value: driftStatusData.value,
         className: 'table-cell-small',
-        tooltip: getDriftStatusData(artifact.status?.result_status).tooltip
+        tooltip: driftStatusData.tooltip
       }
     ]
   }

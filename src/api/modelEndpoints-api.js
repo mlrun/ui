@@ -18,7 +18,13 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { mainHttpClient } from '../httpClient'
-import { BATCH_FILTER, FILTER_ALL_ITEMS, ME_MODE_FILTER, REAL_TIME_FILTER } from '../constants'
+import {
+  BATCH_FILTER,
+  FILTER_ALL_ITEMS,
+  FUNCTION_NAME_FILTER,
+  ME_MODE_FILTER,
+  REAL_TIME_FILTER
+} from '../constants'
 
 const modelEndpointsApi = {
   getModelEndpoint: (project, name, uid) =>
@@ -41,6 +47,10 @@ const modelEndpointsApi = {
 
     if (filters[ME_MODE_FILTER] && filters[ME_MODE_FILTER] !== FILTER_ALL_ITEMS) {
       newConfig.params.mode = modesMap[filters[ME_MODE_FILTER]]
+    }
+
+    if (filters[FUNCTION_NAME_FILTER]) {
+      newConfig.params[FUNCTION_NAME_FILTER] = filters[FUNCTION_NAME_FILTER]
     }
 
     return mainHttpClient.get(`/projects/${project}/model-endpoints`, newConfig)

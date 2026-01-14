@@ -67,7 +67,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Cancel from 'igz-controls/images/cancel.svg?react'
 import ListView from 'igz-controls/images/listview.svg?react'
-import Pipelines from 'igz-controls/images/pipelines.svg?react'
+import PipelinesSvg from 'igz-controls/images/pipelines.svg?react'
 
 import './workflow.scss'
 
@@ -256,7 +256,7 @@ const Workflow = ({
                   )
                 }
               >
-                {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? <ListView /> : <Pipelines />}
+                {workflowsViewMode === WORKFLOW_GRAPH_VIEW ? <ListView /> : <PipelinesSvg />}
               </button>
             </Tooltip>
           </div>

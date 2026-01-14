@@ -17,19 +17,65 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { MODELS_PAGE, NAME_FILTER } from '../../../constants'
 import { parseFunction } from '../../../utils/parseFunction'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { fetchFunction } from '../../../reducers/functionReducer'
+import {
+  DETAILS_MODEL_ENDPOINTS_TAB,
+  DETAILS_OVERVIEW_TAB,
+  DETAILS_REALTIME_PIPELINE_TAB,
+  MODELS_PAGE,
+  NAME_FILTER,
+  REAL_TIME_PIPELINES_TAB
+} from '../../../constants'
 
 export const filtersConfig = {
   [NAME_FILTER]: { label: 'Name:', initialValue: '' }
 }
 
+const infoHeaders = [
+  { label: 'Name', id: 'name' },
+  { label: 'Main Function', id: 'mainFunction' },
+  { label: 'Child functions', id: 'childFunction' },
+  { label: 'Topology', id: 'topology' },
+  { label: 'Internal invocation URLs', id: 'internalUrl' },
+  { label: 'External invocation URLs', id: 'externalUrl' },
+  { label: 'Kind', id: 'kind' },
+  { label: 'Code entry point', id: 'command' },
+  { label: 'Image', id: 'image' },
+  { label: 'Version tag', id: 'tag' },
+  { label: 'Hash', id: 'hash' },
+  { label: 'Code origin', id: 'codeOrigin' },
+  { label: 'Updated', id: 'updated' },
+  { label: 'Default handler', id: 'defaultHandler' },
+  { label: 'Description', id: 'description' }
+]
+
+const detailsMenu = [
+  {
+    label: 'Realtime pipeline',
+    id: DETAILS_REALTIME_PIPELINE_TAB
+  },
+  {
+    label: 'overview',
+    id: DETAILS_OVERVIEW_TAB
+  },
+  {
+    label: 'Model endpoints',
+    id: DETAILS_MODEL_ENDPOINTS_TAB
+  }
+]
+
 export const generatePageData = hideFilterMenu => ({
   page: MODELS_PAGE,
+  pageTab: REAL_TIME_PIPELINES_TAB,
   hidePageActionMenu: true,
-  hideFilterMenu
+  hideFilterMenu,
+  details: {
+    menu: detailsMenu,
+    infoHeaders,
+    type: REAL_TIME_PIPELINES_TAB
+  }
 })
 
 export const fetchAndParseFunction = (selectedFunction, dispatch) => {
@@ -48,4 +94,30 @@ export const fetchAndParseFunction = (selectedFunction, dispatch) => {
     .catch(error => {
       showErrorNotification(dispatch, error, '', 'Failed to retrieve function data')
     })
+}
+
+export const checkForSelectedPipeline = (
+  pipelines,
+  navigate,
+  pipelineId,
+  projectName,
+  setSelectedPipeline
+) => {
+  if (pipelineId && pipelines.length > 0) {
+    const foundPipeline = pipelines.find(item => item.hash === pipelineId)
+
+    if (!foundPipeline) {
+      navigate(
+        `/projects/${projectName}/models/${REAL_TIME_PIPELINES_TAB}${window.location.search}`,
+        {
+          replace: true
+        }
+      )
+      setSelectedPipeline({})
+    } else {
+      setSelectedPipeline(foundPipeline)
+    }
+  } else {
+    setSelectedPipeline({})
+  }
 }

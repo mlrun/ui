@@ -21,7 +21,6 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { groupBy, forEach, isEmpty, map, concat, mapValues } from 'lodash'
-import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { Tooltip, TextTooltipTemplate, RoundedIcon, Loader } from 'igz-controls/components'
@@ -41,7 +40,6 @@ import {
   ML_NODE,
   MODEL_RUNNER_STEP_KIND,
   PRIMARY_NODE,
-  REAL_TIME_PIPELINES_TAB,
   ROUNDED_RECTANGLE_NODE_SHAPE,
   SECONDARY_NODE
 } from '../../constants'
@@ -52,33 +50,29 @@ import { parseUri } from '../../utils'
 import { useModelsPage } from '../ModelsPage/ModelsPage.context'
 
 import Arrow from 'igz-controls/images/arrow.svg?react'
-import Back from 'igz-controls/images/back-arrow.svg?react'
 import CloseIcon from 'igz-controls/images/close.svg?react'
 import ConnectionIcon from 'igz-controls/images/connections-icon.svg?react'
 
-import './pipeline.scss'
+import './detailsPipeline.scss'
 
-const Pipeline = ({ content }) => {
+const DetailsPipeline = ({ selectedItem }) => {
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
   const [pipeline, setPipeline] = useState({})
   const [selectedStep, setSelectedStep] = useState({})
   const [selectedStepData, setSelectedStepData] = useState({})
   const [stepIsSelected, setStepIsSelected] = useState(false)
-  const params = useParams()
   const dispatch = useDispatch()
   const functionsStore = useSelector(store => store.functionsStore)
   const { handleMonitoring, toggleConvertedYaml, frontendSpec } = useModelsPage()
 
   useEffect(() => {
-    const selectedFunction = content.find(contentItem => contentItem.hash === params.pipelineId)
-
-    if (selectedFunction) {
-      fetchAndParseFunction(selectedFunction, dispatch).then(func => {
+    if (selectedItem) {
+      fetchAndParseFunction(selectedItem, dispatch).then(func => {
         return setPipeline(func)
       })
     }
-  }, [content, dispatch, params.pipelineId])
+  }, [selectedItem, dispatch])
 
   useEffect(() => {
     if (selectedStep.data) {
@@ -343,25 +337,7 @@ const Pipeline = ({ content }) => {
 
   return (
     <div className="pipeline-container">
-      <div className="pipeline-header">
-        <div className="link-back">
-          <Link
-            to={`/projects/${params.projectName}/models/${
-              params.pageTab ?? REAL_TIME_PIPELINES_TAB
-            }${window.location.search}`}
-            className="link-back__icon"
-          >
-            <RoundedIcon id="pipeline-back-btn" tooltipText="Back">
-              <Back />
-            </RoundedIcon>
-          </Link>
-          <div className="link-back__title">
-            <Tooltip template={<TextTooltipTemplate text={pipeline?.name} />}>
-              {pipeline?.name}
-            </Tooltip>
-          </div>
-        </div>
-      </div>
+      <div className="pipeline-header"></div>
       {!isEmpty(pipeline?.graph) ? (
         <div className="graph-container pipeline-content">
           <div className="graph-view">
@@ -478,8 +454,8 @@ const Pipeline = ({ content }) => {
   )
 }
 
-Pipeline.propTypes = {
-  content: PropTypes.arrayOf(PropTypes.object).isRequired
+DetailsPipeline.propTypes = {
+  selectedItem: PropTypes.object.isRequired
 }
 
-export default React.memo(Pipeline)
+export default React.memo(DetailsPipeline)

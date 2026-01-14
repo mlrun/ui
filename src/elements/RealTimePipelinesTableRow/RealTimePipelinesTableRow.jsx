@@ -24,7 +24,7 @@ import { useParams } from 'react-router-dom'
 import { ActionsMenu, TableCell } from 'igz-controls/components'
 
 import { ACTIONS_MENU } from 'igz-controls/types'
-import { DETAILS_OVERVIEW_TAB } from '../../constants'
+import { DETAILS_REALTIME_PIPELINE_TAB } from '../../constants'
 
 const RealTimePipelinesTableRow = ({ actionsMenu, rowItem }) => {
   const params = useParams()
@@ -39,7 +39,7 @@ const RealTimePipelinesTableRow = ({ actionsMenu, rowItem }) => {
               firstCell={index === 0}
               item={rowItem.data}
               key={value.id}
-              link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
+              link={value.getLink?.(params.tab ?? DETAILS_REALTIME_PIPELINE_TAB)}
               onClick={value.handleClick}
             />
           )

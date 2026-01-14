@@ -187,7 +187,7 @@ const PromptTab = ({
       <div className="prompt-tab__header">
         <ContentMenu activeTab={selectedTab} fontSize="sm" onClick={handleTabChange} tabs={tabs} />
         <SearchNavigator
-          promptTemplate={promptTemplate}
+          searchTemplate={promptTemplate}
           setSearchResult={setSearchResult}
           searchOnChange={value => setForceExpandAll(Boolean(value))}
         />
