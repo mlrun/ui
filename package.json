@@ -130,7 +130,7 @@
     "eslint-plugin-react-refresh": "^0.4.14",
     "express": "^4.17.1",
     "file-loader": "^6.2.0",
-    "geckodriver": "^3.0.1",
+    "geckodriver": "^6.1.0",
     "globals": "^15.14.0",
     "http-proxy-middleware": "^2.0.3",
     "jsdom": "^27.2.0",
