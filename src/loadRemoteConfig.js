@@ -17,9 +17,17 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+
 import { HTTP, HTTPS } from './constants'
 
-export const loadRemoteConfig = async url => {
+export const loadRemoteConfig = async (url, services = {}) => {
+  /**
+   * Store host-provided services (auth bridge from igz-ui)
+   */
+  if (services && Object.keys(services).length > 0) {
+    window.__mlrunHostServices = services
+  }
+
   const response = await fetch(`${url ?? import.meta.env.VITE_PUBLIC_URL}/config.json`, {
     cache: 'no-store'
   })
