@@ -12,6 +12,7 @@
 # production
 /build
 .__mf__temp/
+*.tar
 
 # misc
 .DS_Store
