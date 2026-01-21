@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import ActionBar from '../../ActionBar/ActionBar'
@@ -38,7 +38,6 @@ import {
 } from '../../../constants'
 import {
   chooseOrFetchModelEndpoint,
-  filtersConfig,
   generateActionsMenu,
   generatePageData
 } from './modelEndpoints.util'
@@ -50,15 +49,25 @@ import { isDetailsTabExists } from '../../../utils/link-helper.util'
 import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { clearMetricsOptions } from '../../../reducers/detailsReducer'
-import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 import { useModelsPage } from '../ModelsPage.context'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
+import { FILTERS_CONFIG } from '../../../types'
 
 import './modelEndpoints.scss'
 
 const ModelEndpointsTable = React.forwardRef(
-  ({ fetchEndpoints, isDetails = false, requestErrorMessage }, ref) => {
+  (
+    {
+      fetchEndpoints,
+      filters,
+      filtersConfig,
+      setSearchParams = () => {},
+      isDetails = false,
+      requestErrorMessage
+    },
+    ref
+  ) => {
     const [modelEndpoints, setModelEndpoints] = useState([])
     const [selectedModelEndpoint, setSelectedModelEndpoint] = useState({})
     const artifactsStore = useSelector(store => store.artifactsStore)
@@ -68,8 +77,6 @@ const ModelEndpointsTable = React.forwardRef(
     const location = useLocation()
     const dispatch = useDispatch()
     const modelEndpointsRef = useRef(null)
-    const [, setSearchParams] = useSearchParams()
-    const filters = useFiltersFromSearchParams(filtersConfig)
 
     const { handleMonitoring, toggleConvertedYaml, frontendSpec } = useModelsPage()
 
@@ -269,7 +276,7 @@ const ModelEndpointsTable = React.forwardRef(
                 tab={MODEL_ENDPOINTS_TAB}
                 withRefreshButton={!isDetails}
                 withoutExpandButton
-                withoutSearchParams
+                withoutSearchParams={isDetails}
               >
                 <ModelEndpointsFilters isDetails={isDetails} />
               </ActionBar>
@@ -324,7 +331,10 @@ ModelEndpointsTable.displayName = 'ModelEndpointsTable'
 
 ModelEndpointsTable.propTypes = {
   fetchEndpoints: PropTypes.func.isRequired,
+  filters: PropTypes.object,
+  filtersConfig: FILTERS_CONFIG.isRequired,
   requestErrorMessage: PropTypes.string,
+  setSearchParams: PropTypes.func,
   isDetails: PropTypes.bool
 }
 

@@ -19,17 +19,21 @@ such restriction.
 */
 import React, { useRef, useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
-
-import { fetchModelEndpoints } from '../../../reducers/artifactsReducer'
+import { useParams, useSearchParams } from 'react-router-dom'
 
 import ModelEndpointsTable from './ModelEndpointsTable'
+
+import { fetchModelEndpoints } from '../../../reducers/artifactsReducer'
+import { filtersConfig } from './modelEndpoints.util'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 
 const ModelEndpoints = () => {
   const params = useParams()
   const dispatch = useDispatch()
   const abortControllerRef = useRef(new AbortController())
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
+  const [, setSearchParams] = useSearchParams()
+  const filters = useFiltersFromSearchParams(filtersConfig)
 
   const fetchEndpoints = useCallback(
     filters => {
@@ -57,8 +61,11 @@ const ModelEndpoints = () => {
   return (
     <ModelEndpointsTable
       fetchEndpoints={fetchEndpoints}
+      filters={filters}
+      filtersConfig={filtersConfig}
       ref={abortControllerRef}
       requestErrorMessage={requestErrorMessage}
+      setSearchParams={setSearchParams}
     />
   )
 }

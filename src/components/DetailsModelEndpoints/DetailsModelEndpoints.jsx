@@ -24,6 +24,7 @@ import { useParams } from 'react-router-dom'
 
 import ModelEndpointsTable from '../ModelsPage/ModelEndpoints/ModelEndpointsTable'
 
+import { filtersConfig } from './detailsModelEndpoints.util'
 import { fetchModelEndpoints } from '../../reducers/artifactsReducer'
 import { FUNCTION_NAME_FILTER } from '../../constants'
 
@@ -62,6 +63,7 @@ const DetailsModelEndpoints = ({ selectedItem }) => {
   return (
     <ModelEndpointsTable
       fetchEndpoints={fetchEndpoints}
+      filtersConfig={filtersConfig}
       ref={abortControllerRef}
       requestErrorMessage={requestErrorMessage}
       isDetails

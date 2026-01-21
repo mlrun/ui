@@ -54,6 +54,7 @@ import {
   toggleInternalAutoRefresh
 } from '../../reducers/filtersReducer'
 import { performDetailsActionHelper } from '../Details/details.util'
+import { getInitialFiltersByConfig } from '../../hooks/useFiltersFromSearchParams.hook'
 
 import CollapseIcon from 'igz-controls/images/collapse.svg?react'
 import ExpandIcon from 'igz-controls/images/expand.svg?react'
@@ -89,6 +90,11 @@ const ActionBar = ({
   const [internalAutoRefreshPrevValue, setInternalAutoRefreshPrevValue] = useState(
     internalAutoRefreshIsEnabled
   )
+
+  const [localFilters, setLocalFilters] = useState(() => {
+    return withoutSearchParams ? getInitialFiltersByConfig(filtersConfig) : {}
+  })
+
   const filtersStore = useSelector(store => store.filtersStore)
   const changes = useSelector(store => store.commonDetailsStore.changes)
   const dispatch = useDispatch()
@@ -97,11 +103,19 @@ const ActionBar = ({
 
   const actionBarClassNames = classnames('action-bar', hidden && 'action-bar_hidden')
 
+  const effectiveFilters = withoutSearchParams ? localFilters : filters
+
+  useEffect(() => {
+    if (withoutSearchParams) {
+      setLocalFilters(getInitialFiltersByConfig(filtersConfig))
+    }
+  }, [filtersConfig, withoutSearchParams])
+
   const getFilterMenu = useCallback(
     isModal => {
-      return filters && filtersConfig
+      return effectiveFilters && filtersConfig
         ? pickBy(
-            filters,
+            effectiveFilters,
             (_, filerName) =>
               filerName in filtersConfig &&
               !filtersConfig[filerName].hidden &&
@@ -109,7 +123,7 @@ const ActionBar = ({
           )
         : {}
     },
-    [filters, filtersConfig]
+    [effectiveFilters, filtersConfig]
   )
 
   const filterMenu = useMemo(() => getFilterMenu(false), [getFilterMenu])
@@ -210,7 +224,12 @@ const ActionBar = ({
           dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
         }
 
-        saveFilters(newFilters)
+        if (withoutSearchParams) {
+          setLocalFilters(newFilters)
+        } else {
+          saveFilters(newFilters)
+        }
+
         removeSelectedItem && dispatch(removeSelectedItem({}))
         setSelectedRowData && setSelectedRowData({})
         toggleAllRows && toggleAllRows(true)
@@ -228,7 +247,8 @@ const ActionBar = ({
       toggleAllRows,
       handleRefresh,
       navigate,
-      selectedItemName
+      selectedItemName,
+      withoutSearchParams
     ]
   )
 
@@ -240,15 +260,30 @@ const ActionBar = ({
         if (changes.counter > 0 && cancelRequest) {
           cancelRequest(REQUEST_CANCELED)
         } else {
-          saveFilters(formState.values)
-          handleRefresh({
-            ...filters,
+          const newFilters = {
+            ...effectiveFilters,
             ...formState.values
-          })
+          }
+
+          if (withoutSearchParams) {
+            setLocalFilters(newFilters)
+          } else {
+            saveFilters(formState.values)
+          }
+
+          handleRefresh(newFilters)
         }
       }
     },
-    [changes, dispatch, cancelRequest, saveFilters, handleRefresh, filters]
+    [
+      changes,
+      dispatch,
+      cancelRequest,
+      saveFilters,
+      handleRefresh,
+      effectiveFilters,
+      withoutSearchParams
+    ]
   )
 
   const handleDateChange = (dates, isPredefined, optionId, input, formState) => {
@@ -274,7 +309,7 @@ const ActionBar = ({
     const actionCanBePerformed = await performDetailsActionHelper(changes, dispatch)
 
     if (actionCanBePerformed) {
-      handler(params, handleRefresh, filters)
+      handler(params, handleRefresh, effectiveFilters)
     }
   }
 
@@ -512,7 +547,7 @@ ActionBar.propTypes = {
   cancelRequest: PropTypes.func,
   children: PropTypes.node,
   closeParamName: PropTypes.string,
-  filters: PropTypes.object.isRequired,
+  filters: PropTypes.object,
   filtersConfig: FILTERS_CONFIG.isRequired,
   handleAutoRefreshPrevValueChange: PropTypes.func,
   handleRefresh: PropTypes.func.isRequired,
