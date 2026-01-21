@@ -40,15 +40,11 @@ import {
 import createRealTimePipelinesContent from '../../../utils/createRealTimePipelinesContent'
 import {
   checkForSelectedPipeline,
-  fetchAndParseFunction,
+  fetchAndParsePipeline,
   filtersConfig,
   generatePageData
 } from './realTimePipelines.util'
-import {
-  fetchArtifactsFunction,
-  fetchArtifactsFunctions,
-  removePipelines
-} from '../../../reducers/artifactsReducer'
+import { fetchArtifactsFunctions, removePipelines } from '../../../reducers/artifactsReducer'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { getScssVariableValue } from 'igz-controls/utils/common.util'
 import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
@@ -73,6 +69,7 @@ const RealTimePipelines = () => {
   const dispatch = useDispatch()
   const abortControllerRef = useRef(new AbortController())
   const pipelinesRef = useRef(null)
+  const lastCheckedPipelineIdRef = useRef(null)
   const pageData = useMemo(() => generatePageData(params.pipelineId), [params.pipelineId])
   const { toggleConvertedYaml } = useModelsPage()
   const [, setSearchParams] = useSearchParams()
@@ -100,7 +97,7 @@ const RealTimePipelines = () => {
           label: 'View YAML',
           icon: <Yaml />,
           onClick: func =>
-            fetchAndParseFunction(func, dispatch).then(() => toggleConvertedYaml(func))
+            fetchAndParsePipeline(dispatch, func).then(() => toggleConvertedYaml(func))
         }
       ]
     ],
@@ -110,6 +107,7 @@ const RealTimePipelines = () => {
   const fetchData = useCallback(
     filters => {
       abortControllerRef.current = new AbortController()
+      lastCheckedPipelineIdRef.current = null
 
       dispatch(
         fetchArtifactsFunctions({
@@ -141,25 +139,13 @@ const RealTimePipelines = () => {
 
   const handleRefresh = useCallback(
     filters => {
+      setSelectedPipeline({})
       setPipelines([])
 
       return fetchData(filters)
     },
     [fetchData]
   )
-
-  const getSelectedPipeline = useCallback(() => {
-    return dispatch(
-      fetchArtifactsFunction({
-        project: selectedPipeline.project,
-        name: selectedPipeline.name,
-        hash: selectedPipeline.hash,
-        tag: selectedPipeline.tag
-      })
-    )
-      .unwrap()
-      .then(setSelectedPipeline)
-  }, [dispatch, selectedPipeline])
 
   const tableContent = useMemo(() => {
     return createRealTimePipelinesContent(pipelines, params.projectName)
@@ -172,6 +158,10 @@ const RealTimePipelines = () => {
     },
     [dispatch, fetchData]
   )
+
+  const handleRefreshSelectedItem = useCallback(() => {
+    fetchAndParsePipeline(dispatch, selectedPipeline).then(setSelectedPipeline)
+  }, [dispatch, selectedPipeline])
 
   useInitialTableFetch({ fetchData: fetchInitialData, filters })
 
@@ -186,12 +176,20 @@ const RealTimePipelines = () => {
   useEffect(() => {
     checkForSelectedPipeline(
       pipelines,
-      navigate,
       params.pipelineId,
+      navigate,
       params.projectName,
-      setSelectedPipeline
+      setSelectedPipeline,
+      dispatch,
+      lastCheckedPipelineIdRef
     )
-  }, [navigate, params.pipelineId, params.projectName, pipelines])
+  }, [dispatch, navigate, params.pipelineId, params.projectName, pipelines])
+
+  useEffect(() => {
+    if (isEmpty(selectedPipeline)) {
+      lastCheckedPipelineIdRef.current = null
+    }
+  }, [selectedPipeline])
 
   const virtualizationConfig = useVirtualization({
     rowsData: {
@@ -260,7 +258,7 @@ const RealTimePipelines = () => {
                 <Details
                   actionsMenu={actionsMenu}
                   detailsMenu={pageData.details.menu}
-                  handleRefresh={getSelectedPipeline}
+                  handleRefresh={handleRefreshSelectedItem}
                   isDetailsScreen
                   pageData={pageData}
                   tab={REAL_TIME_PIPELINES_TAB}

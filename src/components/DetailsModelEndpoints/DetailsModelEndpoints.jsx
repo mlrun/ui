@@ -24,14 +24,17 @@ import { useParams } from 'react-router-dom'
 
 import ModelEndpointsTable from '../ModelsPage/ModelEndpoints/ModelEndpointsTable'
 
+import { filtersConfig } from './detailsModelEndpoints.util'
 import { fetchModelEndpoints } from '../../reducers/artifactsReducer'
 import { FUNCTION_NAME_FILTER } from '../../constants'
+import { getInitialFiltersByConfig } from '../../hooks/useFiltersFromSearchParams.hook'
 
 const DetailsModelEndpoints = ({ selectedItem }) => {
   const params = useParams()
   const dispatch = useDispatch()
   const abortControllerRef = useRef(new AbortController())
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
+  const [localFilters, setLocalFilters] = useState(getInitialFiltersByConfig(filtersConfig))
 
   const fetchEndpoints = useCallback(
     filters => {
@@ -62,6 +65,9 @@ const DetailsModelEndpoints = ({ selectedItem }) => {
   return (
     <ModelEndpointsTable
       fetchEndpoints={fetchEndpoints}
+      filtersConfig={filtersConfig}
+      filters={localFilters}
+      setLocalFilters={setLocalFilters}
       ref={abortControllerRef}
       requestErrorMessage={requestErrorMessage}
       isDetails

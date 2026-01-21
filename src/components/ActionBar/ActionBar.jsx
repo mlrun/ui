@@ -76,6 +76,7 @@ const ActionBar = ({
   internalAutoRefreshIsEnabled = false,
   removeSelectedItem = null,
   selectedItemName = '',
+  setLocalFilters,
   setSearchParams,
   setSelectedRowData = null,
   tab = '',
@@ -89,6 +90,7 @@ const ActionBar = ({
   const [internalAutoRefreshPrevValue, setInternalAutoRefreshPrevValue] = useState(
     internalAutoRefreshIsEnabled
   )
+
   const filtersStore = useSelector(store => store.filtersStore)
   const changes = useSelector(store => store.commonDetailsStore.changes)
   const dispatch = useDispatch()
@@ -210,7 +212,12 @@ const ActionBar = ({
           dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
         }
 
-        saveFilters(newFilters)
+        if (withoutSearchParams) {
+          setLocalFilters(newFilters)
+        } else {
+          saveFilters(newFilters)
+        }
+
         removeSelectedItem && dispatch(removeSelectedItem({}))
         setSelectedRowData && setSelectedRowData({})
         toggleAllRows && toggleAllRows(true)
@@ -228,7 +235,9 @@ const ActionBar = ({
       toggleAllRows,
       handleRefresh,
       navigate,
-      selectedItemName
+      selectedItemName,
+      withoutSearchParams,
+      setLocalFilters
     ]
   )
 
@@ -240,15 +249,31 @@ const ActionBar = ({
         if (changes.counter > 0 && cancelRequest) {
           cancelRequest(REQUEST_CANCELED)
         } else {
-          saveFilters(formState.values)
-          handleRefresh({
+          const newFilters = {
             ...filters,
             ...formState.values
-          })
+          }
+
+          if (withoutSearchParams) {
+            setLocalFilters(newFilters)
+          } else {
+            saveFilters(formState.values)
+          }
+
+          handleRefresh(newFilters)
         }
       }
     },
-    [changes, dispatch, cancelRequest, saveFilters, handleRefresh, filters]
+    [
+      changes,
+      dispatch,
+      cancelRequest,
+      saveFilters,
+      handleRefresh,
+      filters,
+      withoutSearchParams,
+      setLocalFilters
+    ]
   )
 
   const handleDateChange = (dates, isPredefined, optionId, input, formState) => {
@@ -512,7 +537,7 @@ ActionBar.propTypes = {
   cancelRequest: PropTypes.func,
   children: PropTypes.node,
   closeParamName: PropTypes.string,
-  filters: PropTypes.object.isRequired,
+  filters: PropTypes.object,
   filtersConfig: FILTERS_CONFIG.isRequired,
   handleAutoRefreshPrevValueChange: PropTypes.func,
   handleRefresh: PropTypes.func.isRequired,
@@ -520,7 +545,8 @@ ActionBar.propTypes = {
   internalAutoRefreshIsEnabled: PropTypes.bool,
   removeSelectedItem: PropTypes.func,
   selectedItemName: PropTypes.string,
-  setSearchParams: PropTypes.func.isRequired,
+  setLocalFilters: PropTypes.func,
+  setSearchParams: PropTypes.func,
   setSelectedRowData: PropTypes.func,
   tab: PropTypes.string,
   toggleAllRows: PropTypes.func,

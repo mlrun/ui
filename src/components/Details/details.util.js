@@ -306,7 +306,7 @@ export const generateRealTimePipelinesContent = selectedItem => {
     name: {
       value: selectedItem.name
     },
-    mainFunction: {
+    rootFunction: {
       value: selectedItem.name,
       status: selectedItem.state.value,
       link: generateNuclioLink(`/projects/${selectedItem.project}/functions/${selectedItem.name}`)

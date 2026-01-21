@@ -17,9 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { parseFunction } from '../../../utils/parseFunction'
+import { debounce, isEqual } from 'lodash'
+
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
-import { fetchFunction } from '../../../reducers/functionReducer'
+import { fetchArtifactsFunction } from '../../../reducers/artifactsReducer'
 import {
   DETAILS_MODEL_ENDPOINTS_TAB,
   DETAILS_OVERVIEW_TAB,
@@ -35,7 +36,7 @@ export const filtersConfig = {
 
 const infoHeaders = [
   { label: 'Name', id: 'name' },
-  { label: 'Main Function', id: 'mainFunction' },
+  { label: 'Root function', id: 'rootFunction' },
   { label: 'Child functions', id: 'childFunction' },
   { label: 'Topology', id: 'topology' },
   { label: 'Internal invocation URLs', id: 'internalUrl' },
@@ -74,13 +75,14 @@ export const generatePageData = hideFilterMenu => ({
   details: {
     menu: detailsMenu,
     infoHeaders,
-    type: REAL_TIME_PIPELINES_TAB
+    type: REAL_TIME_PIPELINES_TAB,
+    hideCloseBtn: true
   }
 })
 
-export const fetchAndParseFunction = (selectedFunction, dispatch) => {
+export const fetchAndParsePipeline = (dispatch, selectedFunction) => {
   return dispatch(
-    fetchFunction({
+    fetchArtifactsFunction({
       project: selectedFunction.project,
       name: selectedFunction.name,
       hash: selectedFunction.hash,
@@ -88,36 +90,56 @@ export const fetchAndParseFunction = (selectedFunction, dispatch) => {
     })
   )
     .unwrap()
-    .then(func => {
-      return parseFunction(func, selectedFunction.project.project)
-    })
     .catch(error => {
-      showErrorNotification(dispatch, error, '', 'Failed to retrieve function data')
+      showErrorNotification(
+        dispatch,
+        error,
+        '',
+        'This real-time pipeline either does not exist or was deleted'
+      )
+      return null
     })
 }
 
-export const checkForSelectedPipeline = (
-  pipelines,
-  navigate,
-  pipelineId,
-  projectName,
-  setSelectedPipeline
-) => {
-  if (pipelineId && pipelines.length > 0) {
-    const foundPipeline = pipelines.find(item => item.hash === pipelineId)
+export const checkForSelectedPipeline = debounce(
+  (
+    pipelines,
+    pipelineId,
+    navigate,
+    projectName,
+    setSelectedPipeline,
+    dispatch,
+    lastCheckedPipelineIdRef
+  ) => {
+    if (pipelineId) {
+      if (pipelines.length > 0 && lastCheckedPipelineIdRef.current !== pipelineId) {
+        lastCheckedPipelineIdRef.current = pipelineId
 
-    if (!foundPipeline) {
-      navigate(
-        `/projects/${projectName}/models/${REAL_TIME_PIPELINES_TAB}${window.location.search}`,
-        {
-          replace: true
+        const foundPipeline = pipelines.find(item => item.hash === pipelineId)
+
+        if (foundPipeline) {
+          fetchAndParsePipeline(dispatch, foundPipeline).then(selectedPipeline => {
+            if (selectedPipeline) {
+              setSelectedPipeline(prevState => {
+                return isEqual(prevState, selectedPipeline) ? prevState : selectedPipeline
+              })
+            } else {
+              navigate(
+                `/projects/${projectName}/models/${REAL_TIME_PIPELINES_TAB}${window.location.search}`,
+                { replace: true }
+              )
+            }
+          })
+        } else {
+          navigate(
+            `/projects/${projectName}/models/${REAL_TIME_PIPELINES_TAB}${window.location.search}`,
+            { replace: true }
+          )
         }
-      )
-      setSelectedPipeline({})
+      }
     } else {
-      setSelectedPipeline(foundPipeline)
+      setSelectedPipeline({})
     }
-  } else {
-    setSelectedPipeline({})
-  }
-}
+  },
+  30
+)

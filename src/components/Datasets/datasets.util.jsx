@@ -96,6 +96,7 @@ export const generatePageData = (viewMode, isDetailsPopUp = false, selectedItem,
       infoHeaders,
       type: DATASETS_PAGE,
       hideBackBtn: viewMode === FULL_VIEW_MODE && !isDetailsPopUp,
+      hideCloseBtn: viewMode === FULL_VIEW_MODE && !isDetailsPopUp,
       withToggleViewBtn: true,
       actionButton: {
         label: 'Train',

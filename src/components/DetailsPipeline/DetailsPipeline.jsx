@@ -21,7 +21,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { groupBy, forEach, isEmpty, map, concat, mapValues } from 'lodash'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import { Tooltip, TextTooltipTemplate, RoundedIcon, Loader } from 'igz-controls/components'
 import Accordion from '../../common/Accordion/Accordion'
@@ -43,7 +43,6 @@ import {
   ROUNDED_RECTANGLE_NODE_SHAPE,
   SECONDARY_NODE
 } from '../../constants'
-import { fetchAndParseFunction } from '../ModelsPage/RealTimePipelines/realTimePipelines.util'
 import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseUri } from '../../utils'
@@ -58,21 +57,11 @@ import './detailsPipeline.scss'
 const DetailsPipeline = ({ selectedItem }) => {
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
-  const [pipeline, setPipeline] = useState({})
   const [selectedStep, setSelectedStep] = useState({})
   const [selectedStepData, setSelectedStepData] = useState({})
   const [stepIsSelected, setStepIsSelected] = useState(false)
-  const dispatch = useDispatch()
   const functionsStore = useSelector(store => store.functionsStore)
   const { handleMonitoring, toggleConvertedYaml, frontendSpec } = useModelsPage()
-
-  useEffect(() => {
-    if (selectedItem) {
-      fetchAndParseFunction(selectedItem, dispatch).then(func => {
-        return setPipeline(func)
-      })
-    }
-  }, [selectedItem, dispatch])
 
   useEffect(() => {
     if (selectedStep.data) {
@@ -161,7 +150,7 @@ const DetailsPipeline = ({ selectedItem }) => {
   }, [selectedStep])
 
   useEffect(() => {
-    const graph = pipeline?.graph
+    const graph = selectedItem?.graph
     const steps = graph?.routes || graph?.steps
 
     if (steps) {
@@ -317,7 +306,7 @@ const DetailsPipeline = ({ selectedItem }) => {
       setNodes(layoutedNodes)
       setEdges(layoutedEdges)
     }
-  }, [pipeline, selectedStep])
+  }, [selectedItem, selectedStep])
 
   const openModelRunnerPopUp = modelRunnerRowData => {
     if (modelRunnerRowData.value.startsWith('store://')) {
@@ -338,7 +327,7 @@ const DetailsPipeline = ({ selectedItem }) => {
   return (
     <div className="pipeline-container">
       <div className="pipeline-header"></div>
-      {!isEmpty(pipeline?.graph) ? (
+      {!isEmpty(selectedItem?.graph) ? (
         <div className="graph-container pipeline-content">
           <div className="graph-view">
             <MlReactFlow
