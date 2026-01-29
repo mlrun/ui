@@ -59,7 +59,7 @@ const documentsTable = {
         labels: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
-            '.table-body__cell:nth-of-type(3)',
+            '.table-body__cell:nth-of-type(3) input',
             '.chip-block .chip .chip__label',
             '.chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
             false,

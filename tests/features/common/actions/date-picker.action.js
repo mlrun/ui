@@ -19,6 +19,7 @@ such restriction.
 */
 import { expect } from 'chai'
 import { getAllCellsWithAttribute } from './table.action'
+import {  openDropdown, selectOptionInDropdownWithoutCheck } from './dropdown.action'
 
 const currentMonthAttribute = {
   attribute: 'class',
@@ -78,18 +79,16 @@ async function selectCalendarDay(driver, dateTimePicker, datetimePoint) {
   }
 }
 
-async function setPickerTime(driver, dateTimePicker, datetimePoint) {
-  const datetime = new Date(datetimePoint)
-  const timeInput = await driver.findElement(dateTimePicker.timeInput)
-  const timeString = datetime.toString().slice(16, 21)
-
-  await timeInput.clear()
-  await timeInput.sendKeys(timeString)
+export const setPickerTime = async (driver, dateTimePicker, datetimePoint) => {
+  const timeToSelect = datetimePoint.slice(-8)
+  
+  await openDropdown(driver, dateTimePicker)
+  await selectOptionInDropdownWithoutCheck(driver, dateTimePicker, timeToSelect)
 }
 
 export const verifyTimeFilterBand = async (driver, dropdown, diff) => {
     const selectedBand = await driver.findElement(dropdown.open_button)
-    const datetimePointsText = await selectedBand.getAttribute('value')
+    const datetimePointsText = await selectedBand.getText()
     const datetimePoints = datetimePointsText.split('-')
     const datetimeDiff =
       Date.parse(datetimePoints[1]) - Date.parse(datetimePoints[0])
@@ -111,11 +110,9 @@ export const pickUpCustomDatetimeRange = async (
   ) => {
     await selectMonthYear(driver, datetimePicker.fromDatePicker, fromDatetime)
     await selectCalendarDay(driver, datetimePicker.fromDatePicker, fromDatetime)
-    await setPickerTime(driver, datetimePicker.fromDatePicker, fromDatetime)
 
     await selectMonthYear(driver, datetimePicker.toDatePicker, toDatetime)
     await selectCalendarDay(driver, datetimePicker.toDatePicker, toDatetime)
-    await setPickerTime(driver, datetimePicker.toDatePicker, toDatetime)
   }
 
 export const applyDatetimePickerRange = async (driver, datetimePicker) => {

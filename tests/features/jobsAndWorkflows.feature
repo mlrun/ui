@@ -262,10 +262,10 @@ Feature: Jobs and workflows
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Past year"
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
-        When pick up "Custom range" from "10/01/2021 00:00" to "11/30/2021 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "10/01/2021 06:30 PM" to "11/30/2021 12:30 AM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         And wait load page
-        Then verify from "10/01/2021 00:00" to "11/30/2021 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then verify from "Oct 1, 2021, 06:30 PM" to "Nov 30, 2021, 12:30 AM" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
 
@@ -281,18 +281,25 @@ Feature: Jobs and workflows
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        When pick up "Custom range" from "03/31/2014 10:30" to "03/21/2015 19:15" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "03/31/2014 10:30 AM" to "03/21/2015 07:30 PM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then verify from "03/31/2014 10:30" to "03/21/2015 19:15" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        When pick up "Custom range" from "03/31/2044 10:30" to "03/21/2015 19:15" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        Then verify from "03/31/2014 10:30 AM" to "03/21/2015 07:30 PM" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When select "Past week" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Past week"
+        When pick up "Custom range" from "03/31/2044 10:30 AM" to "03/21/2015 07:30 PM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify error message in "Date_Time_Picker" on "Jobs_Monitor_Tab" wizard with value "Date_Time_Picker"."Error_Message"
         Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
-        When pick up "Custom range" from "03/31/2030 10:30" to "03/31/2030 10:31" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then verify from "03/31/2030 10:30" to "03/31/2030 10:31" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "03/31/2030 10:30 AM" to "03/31/2030 11:00 AM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
-        When pick up "Custom range" from "03/31/2025 10:31" to "03/21/2025 10:30" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        Then verify from "03/31/2030 10:30 AM" to "03/31/2030 11: AM" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When select "Past week" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Past week"
+        When pick up "Custom range" from "03/31/2025 11:30 AM" to "03/21/2025 10:30 AM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify error message in "Date_Time_Picker" on "Jobs_Monitor_Tab" wizard with value "Date_Time_Picker"."Error_Message"
 
@@ -428,9 +435,9 @@ Feature: Jobs and workflows
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        When pick up "Custom range" from "09/03/2021 00:00" to "09/04/2021 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "09/03/2021 12:00 AM" to "09/04/2021 12:00 AM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then verify from "09/03/2021 00:00" to "09/04/2021 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then verify from "09/03/2021 12:00 AM" to "09/04/2021 12:00 AM" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
         Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
@@ -446,8 +453,8 @@ Feature: Jobs and workflows
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Error"
-        When pick up "Custom range" from "10/01/2021 00:00" to "11/30/2021 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
-        Then verify from "10/01/2021 00:00" to "11/30/2021 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "10/01/2021 12:00 AM" to "11/30/2021 12:00 AM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitor_Tab" wizard
+        Then verify from "10/01/2021 12:00 AM" to "11/30/2021 12:00 AM" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
         Then select "Error" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
@@ -500,9 +507,9 @@ Feature: Jobs and workflows
         Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
         Then check "Auto_Refresh_Checkbox" element on "Jobs_Monitor_Tab" wizard
         Then "Auto_Refresh_Checkbox" element should be checked on "Jobs_Monitor_Tab" wizard
-        When pick up "Custom range" from "11/07/2021 17:00" to "11/08/2021 17:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "11/07/2021 05:00 PM" to "11/08/2021 05:00 PM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then verify from "11/07/2021 17:00" to "11/08/2021 17:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then verify from "11/07/2021 05:00 PM" to "11/08/2021 05:00 PM" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         And wait load page
         Then value in "datetime" column in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should be from "11/07/2021 18:00" to "11/08/2021 18:00"
@@ -523,9 +530,9 @@ Feature: Jobs and workflows
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
-        When pick up "Custom range" from "01/01/2021 00:00" to "01/01/2023 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "01/01/2021 12:00 AM" to "01/01/2023 12:00 AM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then verify from "01/01/2021 00:00" to "01/01/2023 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then verify from "01/01/2021 12:00 AM" to "01/01/2023 12:00 AM" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -1390,7 +1397,7 @@ Feature: Jobs and workflows
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When pick up "Custom range" from "09/01/2021 18:00" to "09/03/2021 18:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "09/01/2021 06:00 PM" to "09/03/2021 06:00 PM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         And wait load page
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
@@ -1407,7 +1414,7 @@ Feature: Jobs and workflows
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Running" value in "status" column should contains "Jobs_And_Workflows"."Running_Job_Action_Menu_Options"
-        When pick up "Custom range" from "08/28/2021 18:00" to "09/01/2021 18:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "08/28/2021 06:00 PM" to "09/01/2021 06:00 PM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
         Then select "Running" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
@@ -2012,7 +2019,7 @@ Feature: Jobs and workflows
         When click on "Apply_Button" element in "Filter_Dropdown" on "Modal_Wizard_Form" wizard
         And wait load page
         And click on "Title" element on "Modal_Wizard_Form" wizard
-        Then value in "labels" column with "attribute" in "Functions_Table" on "Modal_Wizard_Form" wizard should contains "ETL"
+        Then value in "labels" column with "attribute" in "Functions_Table" on "Modal_Wizard_Form" wizard should contains "etl"
         And click on "Filter_Button_Hub_Tab" element on "Modal_Wizard_Form" wizard
         When click on "Clear_Button" element in "Filter_Dropdown" on "Modal_Wizard_Form" wizard
         When type searchable fragment "test" into "Search_Input" on "Modal_Wizard_Form" wizard
@@ -2060,9 +2067,9 @@ Feature: Jobs and workflows
         Then verify "Clear_Button" not input element in "Filter_Dropdown" on "Modal_Wizard_Form" wizard is disabled
         Then verify "Apply_Button" not input element in "Filter_Dropdown" on "Modal_Wizard_Form" wizard is disabled
         And click on "Title" element on "Modal_Wizard_Form" wizard
-        Then select "Feature Store" option in "Category_Selector_Dropdown" filter dropdown on "Modal_Wizard_Form" wizard
+        Then select "feature-store" option in "Category_Selector_Dropdown" filter dropdown on "Modal_Wizard_Form" wizard
         When click on "Apply_Button" element in "Filter_Dropdown" on "Modal_Wizard_Form" wizard
-        Then select "Data Preparation" option in "Category_Selector_Dropdown" filter dropdown on "Modal_Wizard_Form" wizard
+        Then select "data-preparation" option in "Category_Selector_Dropdown" filter dropdown on "Modal_Wizard_Form" wizard
         And wait load page
         Then verify "Clear_Button" not input element in "Filter_Dropdown" on "Modal_Wizard_Form" wizard is enabled
         Then verify "Apply_Button" not input element in "Filter_Dropdown" on "Modal_Wizard_Form" wizard is enabled
@@ -2071,11 +2078,11 @@ Feature: Jobs and workflows
         Then verify "Clear_Button" not input element in "Filter_Dropdown" on "Modal_Wizard_Form" wizard is disabled
         Then verify "Apply_Button" not input element in "Filter_Dropdown" on "Modal_Wizard_Form" wizard is disabled
         And click on "Title" element on "Modal_Wizard_Form" wizard
-        Then select "ETL" option in "Category_Selector_Dropdown" filter dropdown on "Modal_Wizard_Form" wizard
+        Then select "etl" option in "Category_Selector_Dropdown" filter dropdown on "Modal_Wizard_Form" wizard
         When click on "Apply_Button" element in "Filter_Dropdown" on "Modal_Wizard_Form" wizard
         And wait load page
         And click on "Title" element on "Modal_Wizard_Form" wizard
-        Then value in "labels" column with "attribute" in "Functions_Table" on "Modal_Wizard_Form" wizard should contains "ETL"
+        Then value in "labels" column with "attribute" in "Functions_Table" on "Modal_Wizard_Form" wizard should contains "etl"
 
     @MLJW
     @smoke
@@ -2874,6 +2881,8 @@ Feature: Jobs and workflows
         Then verify "Schedule_item_Saturday" not input element in "Schedule_For_Later" on "Schedule_PopUp" wizard is NOT active
         When click on "Schedule_item_Saturday" element in "Schedule_For_Later" on "Schedule_PopUp" wizard
         Then verify "Schedule_item_Saturday" not input element in "Schedule_For_Later" on "Schedule_PopUp" wizard is active
+        Then verify "At_time_Dropdown" element visibility in "Schedule_For_Later" on "Schedule_PopUp" wizard
+        When select "07:00 AM" option at "At_time_Dropdown" dropdown options in "Schedule_For_Later" on "Schedule_PopUp" wizard
         # check minute options
         Then select "Minute" option in "Time_unit_Dropdown" dropdown on "Schedule_For_Later" on "Schedule_PopUp" wizard
         Then verify "Intervals_Dropdown" element visibility in "Schedule_For_Later" on "Schedule_PopUp" wizard
@@ -2895,15 +2904,16 @@ Feature: Jobs and workflows
         # check daily options
         Then select "Daily" option in "Time_unit_Dropdown" dropdown on "Schedule_For_Later" on "Schedule_PopUp" wizard
         Then verify "At_time_Input" element visibility in "Schedule_For_Later" on "Schedule_PopUp" wizard
-        Then type value "23:23" to "At_time_Input" field on "Schedule_For_Later" on "Schedule_PopUp" wizard
-        Then type value "15:15" to "At_time_Input" field on "Schedule_For_Later" on "Schedule_PopUp" wizard
-        Then type value "01:45" to "At_time_Input" field on "Schedule_For_Later" on "Schedule_PopUp" wizard
+        Then verify "At_time_Dropdown" element visibility in "Schedule_For_Later" on "Schedule_PopUp" wizard
+        When select "11:30 PM" option at "At_time_Dropdown" dropdown options in "Schedule_For_Later" on "Schedule_PopUp" wizard
+        When select "03:30 PM" option at "At_time_Dropdown" dropdown options in "Schedule_For_Later" on "Schedule_PopUp" wizard
+        When select "01:30 AM" option at "At_time_Dropdown" dropdown options in "Schedule_For_Later" on "Schedule_PopUp" wizard
         # check monthly options
         Then select "Monthly" option in "Time_unit_Dropdown" dropdown on "Schedule_For_Later" on "Schedule_PopUp" wizard
-        Then verify "At_time_Input" element visibility in "Schedule_For_Later" on "Schedule_PopUp" wizard
-        Then type value "23:23" to "At_time_Input" field on "Schedule_For_Later" on "Schedule_PopUp" wizard
-        Then type value "15:15" to "At_time_Input" field on "Schedule_For_Later" on "Schedule_PopUp" wizard
-        Then type value "01:45" to "At_time_Input" field on "Schedule_For_Later" on "Schedule_PopUp" wizard
+        Then verify "At_time_Dropdown" element visibility in "Schedule_For_Later" on "Schedule_PopUp" wizard
+        When select "11:30 PM" option at "At_time_Dropdown" dropdown options in "Schedule_For_Later" on "Schedule_PopUp" wizard
+        When select "03:30 PM" option at "At_time_Dropdown" dropdown options in "Schedule_For_Later" on "Schedule_PopUp" wizard
+        When select "01:30 AM" option at "At_time_Dropdown" dropdown options in "Schedule_For_Later" on "Schedule_PopUp" wizard
 
     @MLJW
     @smoke
@@ -3025,7 +3035,7 @@ Feature: Jobs and workflows
         Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Aborting"
-        Then wait for 10 seconds
+        Then wait for 5 seconds
         Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         And wait load page

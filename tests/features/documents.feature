@@ -197,12 +197,12 @@ Feature: Documents Page
     Then type value "kind" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then value in "labels" column with "text" in "Documents_Table" on "Documents" wizard should contains "kind"
+    Then value in "labels" column with "attribute" in "Documents_Table" on "Documents" wizard should contains "kind"
     Then click on "Table_FilterBy_Button" element on "Documents" wizard
     Then type value "kind=milvus" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then value in "labels" column with "text" in "Documents_Table" on "Documents" wizard should contains "kind=milvus"
+    Then value in "labels" column with "attribute_list" in "Documents_Table" on "Documents" wizard should contains "kind,milvus"
     Then click on "Table_FilterBy_Button" element on "Documents" wizard
     Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
