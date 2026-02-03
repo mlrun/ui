@@ -27,7 +27,6 @@ import { FormCheckBox, FormInput, FormKeyValueTable, FormOnChange } from 'igz-co
 import { ADVANCED_STEP } from '../../../../constants'
 import { secretsKindOptions } from './JobWizardAdvanced.util'
 
-
 import './jobWizardAdvanced.scss'
 
 const JobWizardAdvanced = ({ formState, stepIsActive = false }) => {
