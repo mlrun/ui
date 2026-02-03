@@ -43,7 +43,8 @@ import {
   DISPLAY_SYSTEM_PIPELINES_FILTER,
   PIPELINE_TOPOLOGY_FILTER,
   FILTER_ALL_ITEMS,
-  PIPELINE_FLOW_TOPOLOGY
+  PIPELINE_FLOW_TOPOLOGY,
+  DETAILS_REALTIME_PIPELINE_TAB
 } from '../../../constants'
 import createRealTimePipelinesContent from '../../../utils/createRealTimePipelinesContent'
 import {
@@ -313,13 +314,16 @@ const RealTimePipelines = () => {
             </ActionBar>
           </div>
           {!params.pipelineId && (
-            <RealTimePipelinesCounters
-              loading={isLoading}
-              statistics={statistics}
-            />
+            <RealTimePipelinesCounters loading={isLoading} statistics={statistics} />
           )}
           <div className="real-time-pipelines__section">
-            <div className="real-time-pipelines__section-item">
+            <div
+              className={classnames(
+                'real-time-pipelines__section-item',
+                params.tab === DETAILS_REALTIME_PIPELINE_TAB &&
+                  'real-time-pipelines__section-item-full-space'
+              )}
+            >
               <div className="section-item_title">
                 <span>All Serving Pipelines</span>
                 <Tip text="This data is relevant to the root function." />
