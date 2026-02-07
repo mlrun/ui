@@ -65,6 +65,7 @@ const ActionBar = ({
   autoRefreshIsEnabled = false,
   autoRefreshIsStopped = false,
   autoRefreshStopTrigger = false,
+  getCustomActions = null,
   cancelRequest = null,
   children,
   closeParamName = '',
@@ -76,6 +77,7 @@ const ActionBar = ({
   internalAutoRefreshIsEnabled = false,
   removeSelectedItem = null,
   selectedItemName = '',
+  setLocalFilters,
   setSearchParams,
   setSelectedRowData = null,
   tab = '',
@@ -83,11 +85,13 @@ const ActionBar = ({
   withAutoRefresh = false,
   withInternalAutoRefresh = false,
   withRefreshButton = true,
-  withoutExpandButton
+  withoutExpandButton,
+  withoutSearchParams = false
 }) => {
   const [internalAutoRefreshPrevValue, setInternalAutoRefreshPrevValue] = useState(
     internalAutoRefreshIsEnabled
   )
+
   const filtersStore = useSelector(store => store.filtersStore)
   const changes = useSelector(store => store.commonDetailsStore.changes)
   const dispatch = useDispatch()
@@ -153,7 +157,7 @@ const ActionBar = ({
 
   const saveFilters = useCallback(
     filtersForSaving => {
-      if (!isEmpty(filtersForSaving)) {
+      if (!withoutSearchParams && !isEmpty(filtersForSaving)) {
         setSearchParams(
           prevSearchParams => {
             for (const [filterName, filterValue] of Object.entries(filtersForSaving)) {
@@ -182,7 +186,7 @@ const ActionBar = ({
         )
       }
     },
-    [filtersConfig, setSearchParams]
+    [filtersConfig, setSearchParams, withoutSearchParams]
   )
 
   const applyFilters = useCallback(
@@ -209,7 +213,12 @@ const ActionBar = ({
           dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
         }
 
-        saveFilters(newFilters)
+        if (withoutSearchParams) {
+          setLocalFilters(newFilters)
+        } else {
+          saveFilters(newFilters)
+        }
+
         removeSelectedItem && dispatch(removeSelectedItem({}))
         setSelectedRowData && setSelectedRowData({})
         toggleAllRows && toggleAllRows(true)
@@ -227,7 +236,9 @@ const ActionBar = ({
       toggleAllRows,
       handleRefresh,
       navigate,
-      selectedItemName
+      selectedItemName,
+      withoutSearchParams,
+      setLocalFilters
     ]
   )
 
@@ -239,15 +250,31 @@ const ActionBar = ({
         if (changes.counter > 0 && cancelRequest) {
           cancelRequest(REQUEST_CANCELED)
         } else {
-          saveFilters(formState.values)
-          handleRefresh({
+          const newFilters = {
             ...filters,
             ...formState.values
-          })
+          }
+
+          if (withoutSearchParams) {
+            setLocalFilters(newFilters)
+          } else {
+            saveFilters(formState.values)
+          }
+
+          handleRefresh(newFilters)
         }
       }
     },
-    [changes, dispatch, cancelRequest, saveFilters, handleRefresh, filters]
+    [
+      changes,
+      dispatch,
+      cancelRequest,
+      saveFilters,
+      handleRefresh,
+      filters,
+      withoutSearchParams,
+      setLocalFilters
+    ]
   )
 
   const handleDateChange = (dates, isPredefined, optionId, input, formState) => {
@@ -363,6 +390,10 @@ const ActionBar = ({
       {formState => (
         <div className={actionBarClassNames}>
           <div className="action-bar__filters">
+            {getCustomActions &&
+              getCustomActions((value = {}) =>
+                applyFilters({ ...formState.values, ...value }, filterMenuModal)
+              )}
             {NAME_FILTER in filterMenu && !filtersConfig[NAME_FILTER].hidden && (
               <div key={NAME_FILTER} className="action-bar__filters-item">
                 <NameFilter
@@ -508,10 +539,11 @@ ActionBar.propTypes = {
   autoRefreshIsEnabled: PropTypes.bool,
   autoRefreshIsStopped: PropTypes.bool,
   autoRefreshStopTrigger: PropTypes.bool,
+  getCustomActions: PropTypes.func,
   cancelRequest: PropTypes.func,
   children: PropTypes.node,
   closeParamName: PropTypes.string,
-  filters: PropTypes.object.isRequired,
+  filters: PropTypes.object,
   filtersConfig: FILTERS_CONFIG.isRequired,
   handleAutoRefreshPrevValueChange: PropTypes.func,
   handleRefresh: PropTypes.func.isRequired,
@@ -519,14 +551,16 @@ ActionBar.propTypes = {
   internalAutoRefreshIsEnabled: PropTypes.bool,
   removeSelectedItem: PropTypes.func,
   selectedItemName: PropTypes.string,
-  setSearchParams: PropTypes.func.isRequired,
+  setLocalFilters: PropTypes.func,
+  setSearchParams: PropTypes.func,
   setSelectedRowData: PropTypes.func,
   tab: PropTypes.string,
   toggleAllRows: PropTypes.func,
   withAutoRefresh: PropTypes.bool,
   withInternalAutoRefresh: PropTypes.bool,
   withRefreshButton: PropTypes.bool,
-  withoutExpandButton: PropTypes.bool
+  withoutExpandButton: PropTypes.bool,
+  withoutSearchParams: PropTypes.bool
 }
 
 export default React.memo(ActionBar)

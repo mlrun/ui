@@ -21,40 +21,101 @@ import classnames from 'classnames'
 import dagre from '@dagrejs/dagre'
 import { Position } from 'reactflow'
 
-import { ERROR_STATE, FAILED_STATE, ML_MODEL_RUNNER_NODE } from '../../constants'
+import {
+  ERROR_STATE,
+  FAILED_STATE,
+  ML_NODE_WITH_SUB_ITEMS,
+  ML_QUEUE_NODE,
+  ML_COMMON_NODE,
+  ERROR_STEP_KIND,
+  ML_GROUP_NODE
+} from '../../constants'
 
 const nodeWidthByType = {
-  default: 300
+  default: 300,
+  [ML_QUEUE_NODE]: 220
 }
 const nodeHeightByType = {
-  [ML_MODEL_RUNNER_NODE]: 120,
+  [ML_NODE_WITH_SUB_ITEMS]: 120,
+  [ML_QUEUE_NODE]: 60,
+  [ML_COMMON_NODE]: 60,
   default: 80
 }
-const dagreGraph = new dagre.graphlib.Graph()
 
-export const getLayoutedElements = (nodes, edges, direction = 'TB') => {
+export const getLayoutedElements = (
+  nodesSteps,
+  edges,
+  direction = 'TB',
+  defaultErrorHandlerStepId,
+  cyclicEdges = [],
+  errorEdges = []
+) => {
+  const dagreGraph = new dagre.graphlib.Graph()
   const isHorizontal = direction === 'LR'
+  const errorHeight = nodeHeightByType[ML_COMMON_NODE]
+  const errorGap = 120 // space between parent and error node
+  const ranksep = isHorizontal ? 100 : 50
+  const nodesep = isHorizontal ? 80 : 50
   let layoutedNodes = []
   let layoutedEdges = []
+  const errorHandlersNodes = []
+  const nodes = isHorizontal
+    ? nodesSteps.filter(node => {
+        if (node.data?.customData?.kind !== ERROR_STEP_KIND) return true
+        if (node.id !== defaultErrorHandlerStepId) errorHandlersNodes.push(node)
+
+        return false
+      })
+    : nodesSteps
 
   dagreGraph.setDefaultEdgeLabel(() => ({}))
-  dagreGraph.setGraph({ rankdir: direction })
+  dagreGraph.setGraph({ rankdir: direction, ranksep, nodesep })
 
   nodes.forEach(node => {
     const nodeHeight = nodeHeightByType[node.type] ?? nodeHeightByType.default
     const nodeWidth = nodeWidthByType[node.type] ?? nodeWidthByType.default
-    dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight })
+    // in case of step has error handler, we need to increase the node height to fit the error node below
+    const effectiveHeight =
+      isHorizontal && node.data?.customData?.on_error
+        ? nodeHeight + errorGap + errorHeight + nodesep
+        : nodeHeight
+    dagreGraph.setNode(node.id, { width: nodeWidth, height: effectiveHeight })
   })
 
   edges.forEach(edge => {
-    dagreGraph.setEdge(edge.source, edge.target)
+    dagreGraph.setEdge(edge.source, edge.target, { weight: edge.weight || 1 })
   })
 
   dagre.layout(dagreGraph)
 
+  if (errorHandlersNodes.length) {
+    errorHandlersNodes.forEach(node => {
+      if (node.id === defaultErrorHandlerStepId) return
+      const nodeHeight = errorHeight
+      const nodeWidth = nodeWidthByType[node.type] ?? nodeWidthByType.default
+      const parentNode = nodes.find(parentNode => node.id === parentNode.data?.customData?.on_error)
+      const parentNodeNodeWithPosition = dagreGraph.node(parentNode.id)
+
+      dagreGraph.setNode(node.id, {
+        width: nodeWidth,
+        height: nodeHeight,
+        x: parentNodeNodeWithPosition.x,
+        y: parentNodeNodeWithPosition.y + nodeHeight + errorGap
+      })
+    })
+  }
+
+  errorEdges.forEach(edge => {
+    dagreGraph.setEdge(edge.source, edge.target)
+  })
+
+  cyclicEdges.forEach(edge => {
+    dagreGraph.setEdge(edge.source, edge.target)
+  })
+
   const selectedNode = nodes.find(node => node.className?.includes('selected'))
 
-  layoutedNodes = nodes.map(node => {
+  layoutedNodes = [...nodes, ...errorHandlersNodes].map(node => {
     const nodeHeight = nodeHeightByType[node.type] ?? nodeHeightByType.default
     const nodeWidth = nodeWidthByType[node.type] ?? nodeWidthByType.default
     const nodeWithPosition = dagreGraph.node(node.id)
@@ -79,18 +140,101 @@ export const getLayoutedElements = (nodes, edges, direction = 'TB') => {
     return node
   })
 
-  layoutedEdges = edges.map(edge => {
+  layoutedEdges = [...edges, ...errorEdges, ...cyclicEdges].map(edge => {
     const isSelected =
-      edge.data.isSelectable &&
+      edge.data?.isSelectable &&
       selectedNode?.id &&
       (edge.source === selectedNode.id || edge.target === selectedNode.id)
 
     edge.className = classnames(edge.className, isSelected && 'selected')
 
+    if (edge.data.isBackward) {
+      const sourceNode = dagreGraph.node(edge.source)
+      const targetNode = dagreGraph.node(edge.target)
+
+      const isTargetLower = sourceNode?.y <= targetNode?.y
+
+      const sourceHandle = isTargetLower ? 'top-source' : 'bottom-source'
+      const targetHandle = isTargetLower ? 'top' : 'bottom'
+
+      return {
+        ...edge,
+        sourceHandle,
+        targetHandle
+      }
+    }
+
     return edge
   })
 
   return [layoutedNodes, layoutedEdges]
+}
+
+function calculateNodeBounds(nodes) {
+  if (!nodes.length) return { x: 0, y: 0, width: 0, height: 0 }
+
+  let minX = Infinity,
+    minY = Infinity,
+    maxX = -Infinity,
+    maxY = -Infinity
+
+  nodes.forEach(node => {
+    const { x, y } = node.position
+    const width = node.style?.width || nodeWidthByType.default
+    const height = node.style?.height || nodeHeightByType.default
+
+    minX = Math.min(minX, x)
+    minY = Math.min(minY, y)
+    maxX = Math.max(maxX, x + width)
+    maxY = Math.max(maxY, y + height)
+  })
+
+  return {
+    x: minX,
+    y: minY,
+    width: maxX - minX,
+    height: maxY - minY
+  }
+}
+
+export function addVisualFramesForGroups(nodes, groupKeyFn, margin = 16) {
+  const groups = new Map()
+
+  nodes.forEach(node => {
+    const key = groupKeyFn(node)
+    if (!key) return
+    if (!groups.has(key)) groups.set(key, [])
+
+    groups.get(key).push(node)
+  })
+
+  const frameNodes = []
+
+  for (const [key, members] of groups.entries()) {
+    if (members.length < 2) continue
+
+    const bounds = calculateNodeBounds(members)
+
+    const frameWidth = bounds.width + margin * 2
+    const frameHeight = bounds.height + margin * 2
+    const frameX = bounds.x - margin
+    const frameY = bounds.y - margin
+
+    frameNodes.push({
+      id: `frame-${key}`,
+      type: ML_GROUP_NODE,
+      position: { x: frameX, y: frameY },
+      data: { label: key },
+      style: { width: frameWidth, height: frameHeight },
+      draggable: false,
+      selectable: false,
+      focusable: false,
+      deletable: false,
+      zIndex: -1
+    })
+  }
+
+  return [...nodes, ...frameNodes]
 }
 
 export const getNodeClassName = node => {
@@ -198,4 +342,12 @@ const nodeStates = {
   [ERROR_STATE]: 'Error',
   running: 'Running',
   omitted: 'Omitted'
+}
+
+export const onEdgeHover = event => {
+  const edgeGroup = event.currentTarget.closest('.react-flow__edge')
+
+  if (edgeGroup && edgeGroup.parentNode && edgeGroup.nextSibling) {
+    edgeGroup.parentNode.appendChild(edgeGroup)
+  }
 }

@@ -41,8 +41,9 @@ const AlertsCounters = () => {
   const { projectName: paramProjectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
-  const isDataLoading =
-    projectStore?.projectsSummary?.loading || projectStore?.projectSummary?.loading
+  const isDataLoading = paramProjectName
+    ? projectStore?.projectSummary?.loading
+    : projectStore?.projectsSummary?.loading
 
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent

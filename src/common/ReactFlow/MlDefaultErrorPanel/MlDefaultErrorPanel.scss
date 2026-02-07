@@ -1,0 +1,46 @@
+@use 'igz-controls/scss/borders';
+@use 'igz-controls/scss/colors';
+
+.react-flow__panel.react-flow__default-error-panel {
+  .react-flow__default-error-handler__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 290px;
+    height: 130px;
+    padding: 16px;
+    color: colors.$primary;
+    background-color: colors.$white;
+    border: 2px solid colors.$autumnMalt;
+    border-radius: 12px;
+
+    .react-flow__default-error-handler__title {
+      margin: 0;
+      color: colors.$primary;
+      font-weight: 500;
+    }
+
+    .react-flow__node {
+      position: static;
+      width: 100%;
+      height: 60px;
+
+      .react-flow__node-content {
+        &-label {
+          font-size: 14px;
+        }
+
+        &-sub-label {
+          font-size: 12px;
+        }
+      }
+    }
+
+    .separator {
+      width: 100%;
+      height: 1px;
+      background-color: colors.$autumnMalt;
+      border: none;
+    }
+  }
+}

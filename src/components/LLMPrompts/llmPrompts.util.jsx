@@ -89,6 +89,7 @@ export const generatePageData = (viewMode, isDetailsPopUp = false) => {
       menu: detailsMenu,
       infoHeaders,
       hideBackBtn: viewMode === FULL_VIEW_MODE && !isDetailsPopUp,
+      hideCloseBtn: viewMode === FULL_VIEW_MODE && !isDetailsPopUp,
       withToggleViewBtn: true
     }
   }

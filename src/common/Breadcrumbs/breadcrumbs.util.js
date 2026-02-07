@@ -119,12 +119,12 @@ export const generateTabsList = () => [
     id: FEATURES_TAB
   },
   {
-    label: MODEL_ENDPOINTS_TAB,
-    id: MODEL_ENDPOINTS_TAB
-  },
-  {
     label: REAL_TIME_PIPELINES_TAB,
     id: REAL_TIME_PIPELINES_TAB
+  },
+  {
+    label: MODEL_ENDPOINTS_TAB,
+    id: MODEL_ENDPOINTS_TAB
   },
   {
     label: MODELS_TAB,

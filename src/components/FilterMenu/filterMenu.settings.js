@@ -51,7 +51,9 @@ import {
   ABORTED_STATE,
   ABORTING_STATE,
   PENDING_RETRY_STATE,
-  TERMINATING_STATE
+  TERMINATING_STATE,
+  PIPELINE_FLOW_TOPOLOGY,
+  PIPELINE_ROUTER_TOPOLOGY
 } from '../../constants'
 
 export const jobsStatuses = [
@@ -153,3 +155,9 @@ export const getTagFilterOptions = (isLatestOnly = false) => {
     ...(isLatestOnly ? [] : [{ label: 'All tags', id: TAG_FILTER_ALL_ITEMS }])
   ]
 }
+
+export const pipelineTopologies = [
+  { label: 'All', id: FILTER_ALL_ITEMS },
+  { label: 'Flow', id: PIPELINE_FLOW_TOPOLOGY },
+  { label: 'Router', id: PIPELINE_ROUTER_TOPOLOGY }
+]

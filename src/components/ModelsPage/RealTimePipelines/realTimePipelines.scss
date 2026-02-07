@@ -1,5 +1,7 @@
 @use 'igz-controls/scss/variables';
+@use 'igz-controls/scss/colors';
 @use '/src/scss/mixins';
+@use 'igz-controls/scss/shadows';
 
 $pipelinesRowHeight: variables.$rowHeight;
 $pipelinesHeaderRowHeight: variables.$headerRowHeight;
@@ -11,10 +13,113 @@ $pipelinesRowHeightExtended: variables.$rowHeight;
   --pipelinesRowHeightExtended: #{$pipelinesRowHeightExtended};
 }
 
-.pipelines-table {
-  @include mixins.rowsHeight(
-    $pipelinesHeaderRowHeight,
-    $pipelinesRowHeight,
-    $pipelinesRowHeightExtended
-  );
+.real-time-pipelines__section {
+  display: grid;
+  gap: 15px;
+  margin-bottom: 25px;
+  height: 100%;
+
+  &.section_small {
+    grid-template-columns: repeat(2, 1fr);
+    min-height: 200px;
+  }
+
+  &.section_big {
+    min-height: 300px;
+  }
+
+  .real-time-pipelines__section-item {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    color: colors.$topaz;
+    background-color: colors.$white;
+    border: 1px solid colors.$frenchLilac;
+    border-radius: 8px;
+    box-shadow: shadows.$previewBoxShadowInit;
+    transition: all 0.3s ease-in-out;
+
+    .section-item_title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      color: colors.$primary;
+      font-size: 1rem;
+      line-height: 23px;
+    }
+
+    .table__item .item-header-wrapper .item-header__status {
+      display: none;
+    }
+
+    .section-table {
+      width: 100%;
+      height: auto;
+    }
+
+    .pipelines-table {
+      @include mixins.rowsHeight(
+        $pipelinesHeaderRowHeight,
+        $pipelinesRowHeight,
+        $pipelinesRowHeightExtended
+      );
+    }
+
+    &-full-space {
+      padding: 0;
+
+      .table__item_big {
+        padding: 0;
+
+        & > .item-header-wrapper {
+          padding: 20px 30px 0;
+        }
+
+        & > .item-info {
+          padding: 0;
+        }
+      }
+    }
+  }
+}
+
+.real-time-pipelines__summary-cards {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  .monitoring-stats {
+    flex: 1;
+    min-width: 0;
+    padding: 15px;
+    border: 1px solid colors.$frenchLilac;
+
+    .stats-card__row:last-child {
+      padding-bottom: 10px;
+    }
+
+    .stats__counter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: colors.$primary;
+      font-weight: 500;
+      font-size: 28px;
+    }
+
+    .stats__subtitle {
+      margin-top: 5px;
+    }
+
+    [class^='state'] {
+      margin-left: 5px;
+    }
+  }
+}
+
+.real-time-pipelines__top-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+  padding: 0 24px;
 }

@@ -21,50 +21,37 @@ import FunctionPopUp from '../elements/DetailsPopUp/FunctionPopUp/FunctionPopUp'
 
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
+import { DETAILS_MODEL_ENDPOINTS_TAB, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
 import { typesOfJob } from './jobs.util'
 
 const createRealTimePipelinesContent = (pipelines, projectName) =>
   pipelines.map(pipeline => {
+    const modelEndpointsCount =
+      Object.keys(pipeline.graph?.routes || {}).length ||
+      pipeline.graph?.model_endpoints_names?.length // todo: add model endpoints count
+
     return {
       data: {
         ...pipeline
       },
       content: [
         {
-          id: `name.${pipeline.ui.identifierUnique}`,
-          headerId: 'name',
-          headerLabel: 'Name',
+          id: `servingPipeline.${pipeline.ui.identifierUnique}`,
+          headerId: 'servingPipeline',
+          headerLabel: 'Serving pipeline',
           value: pipeline.name,
           className: 'table-cell-name',
-          getLink: () => {
-            return `/projects/${projectName}/${MODELS_PAGE.toLowerCase()}/${REAL_TIME_PIPELINES_TAB}/pipeline/${pipeline.hash}${window.location.search}`
-          },
-          showTag: true,
-          showStatus: true,
-          expandedCellContent: {
-            value: formatDatetime(pipeline.updated, 'N/A'),
-            className: 'table-cell-name',
-            type: 'date',
-            showTag: true,
-            showStatus: true
-          }
+          getLink: tab =>
+            `/projects/${projectName}/${MODELS_PAGE.toLowerCase()}/${REAL_TIME_PIPELINES_TAB}/${pipeline.hash}/${tab}${window.location.search}`
         },
         {
-          id: `kind.${pipeline.ui.identifierUnique}`,
-          headerId: 'type',
-          headerLabel: 'Type',
-          value: pipeline.graph?.kind === 'router' ? 'Router' : 'Flow',
-          className: 'table-cell-small',
-          type: 'type',
-          types: typesOfJob
-        },
-        {
-          id: `function.${pipeline.ui.identifierUnique}`,
-          headerId: 'function',
-          headerLabel: 'Function',
+          id: `rootFunction.${pipeline.ui.identifierUnique}`,
+          headerId: 'rootFunction',
+          headerLabel: 'Root function',
           value: pipeline.name,
           className: 'table-cell-2',
+          showStatus: true,
+          showTag: true,
           handleClick: () =>
             openPopUp(FunctionPopUp, {
               funcUri: `${pipeline.project}/${pipeline.name}@${pipeline.hash}`,
@@ -72,14 +59,49 @@ const createRealTimePipelinesContent = (pipelines, projectName) =>
             })
         },
         {
+          id: `topology.${pipeline.ui.identifierUnique}`,
+          headerId: 'topology',
+          headerLabel: 'Topology',
+          value: pipeline.graph?.kind === 'router' ? 'Router' : 'Flow',
+          className: 'table-cell-small',
+          type: 'type',
+          types: typesOfJob
+        },
+        {
+          id: `modelEndpoints.${pipeline.ui.identifierUnique}`,
+          headerId: 'modelEndpoints',
+          headerLabel: 'Model endpoints',
+          value: modelEndpointsCount ?? 'N/A',
+          className: 'table-cell-1',
+          type: 'number',
+          ...(modelEndpointsCount
+            ? {
+                linkTab: DETAILS_MODEL_ENDPOINTS_TAB,
+                className: 'table-cell-1 link-blue',
+                getLink: tab =>
+                  `/projects/${projectName}/${MODELS_PAGE.toLowerCase()}/${REAL_TIME_PIPELINES_TAB}/${pipeline.hash}/${tab}${window.location.search}`
+              }
+            : {})
+        },
+        {
+          id: `replicas.${pipeline.ui.identifierUnique}`,
+          headerId: 'replicas',
+          headerLabel: 'Replicas',
+          value:
+            pipeline.max_replicas && pipeline.min_replicas
+              ? `${pipeline.min_replicas} / ${pipeline.max_replicas}`
+              : 'N/A',
+          className: 'table-cell-1',
+          type: 'number',
+          tip: 'Min / Max replicas'
+        },
+        {
           id: `updated.${pipeline.ui.identifierUnique}`,
           headerId: 'updated',
+          headerLabel: 'Updated',
           value: formatDatetime(pipeline.updated, 'N/A'),
           className: 'table-cell-2',
-          type: 'date',
-          showTag: true,
-          showStatus: true,
-          hidden: true
+          type: 'date'
         }
       ]
     }

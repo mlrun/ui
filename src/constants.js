@@ -292,6 +292,10 @@ export const FUNCTION_FILTERS = 'FUNCTION_FILTERS'
 /*=========== PIPELINES =============*/
 
 export const MODEL_RUNNER_STEP_KIND = 'model_runner'
+export const QUEUE_STEP_KIND = 'queue'
+export const ERROR_STEP_KIND = 'error_step'
+export const HUB_STEP_KIND = 'hub_task'
+export const ROUTER_STEP_KIND = 'router'
 
 /*=========== ARTIFACTS =============*/
 
@@ -314,9 +318,11 @@ export const DETAILS_LOGS_TAB = 'logs'
 export const DETAILS_LLM_PROMPTS_TAB = 'llm-prompts'
 export const DETAILS_METADATA_TAB = 'metadata'
 export const DETAILS_METRICS_TAB = 'metrics'
+export const DETAILS_MODEL_ENDPOINTS_TAB = 'model-endpoints'
 export const DETAILS_OVERVIEW_TAB = 'overview'
 export const DETAILS_PODS_TAB = 'pods'
 export const DETAILS_PREVIEW_TAB = 'preview'
+export const DETAILS_REALTIME_PIPELINE_TAB = 'realtime-pipeline'
 export const DETAILS_REQUESTED_FEATURES_TAB = 'requested-features'
 export const DETAILS_ALERTS_TAB = 'alerts'
 export const DETAILS_ALERT_APPLICATION = 'alert'
@@ -384,9 +390,11 @@ export const LABELS_FILTER = 'labels'
 export const NAME_FILTER = 'name'
 export const ME_MODE_FILTER = 'me-mode'
 export const DATES_FILTER = 'dates'
+export const DISPLAY_SYSTEM_PIPELINES_FILTER = 'systemPipelines'
 export const PROJECT_FILTER = 'project'
 export const REAL_TIME_FILTER = 'realTime'
 export const BATCH_FILTER = 'batch'
+export const FUNCTION_NAME_FILTER = 'function-name'
 export const TYPE_FILTER = 'type'
 export const SHOW_UNTAGGED_FILTER = 'showUntagged'
 export const SORT_BY = 'sortBy'
@@ -406,6 +414,7 @@ export const ENTITY_KIND = 'entity-kind'
 export const ENTITY_ID = 'entity'
 export const EVENT_TYPE = 'event-type'
 export const EVENT_KIND = 'event-kind'
+export const PIPELINE_TOPOLOGY_FILTER = 'topology'
 
 export const SEVERITY = 'severity'
 export const JOB = 'job'
@@ -417,6 +426,9 @@ export const FILTER_MENU = 'filterMenu'
 export const FILTER_MENU_MODAL = 'filterMenuModal'
 export const JOB_WIZARD_FILTERS = 'jobWizardFilters'
 export const HUB_CATEGORIES_FILTER = 'hubCategories'
+
+export const PIPELINE_FLOW_TOPOLOGY = 'flow'
+export const PIPELINE_ROUTER_TOPOLOGY = 'router'
 
 /*=========== PANEL =============*/
 
@@ -433,11 +445,16 @@ export const PANEL_DEFAULT_ACCESS_KEY = '$generate'
 /*=========== ML REACT FLOW =============*/
 
 export const ML_NODE = 'ml-node'
-export const ML_MODEL_RUNNER_NODE = 'ml-model-runner-node'
+export const ML_NODE_WITH_SUB_ITEMS = 'ml-node-with-sub-items'
+export const ML_QUEUE_NODE = 'ml-queue-node'
+export const ML_COMMON_NODE = 'ml-common-node'
+export const ML_DEFAULT_ERROR_NODE = 'ml-default-error-node'
+export const ML_GROUP_NODE = 'ml-group-node'
 
 export const INPUT_NODE = 'input-node'
 export const OUTPUT_NODE = 'output-node'
 export const PRIMARY_NODE = 'primary-node'
+export const PRIMARY_PIPELINE_NODE = 'primary-pipeline-node'
 export const SECONDARY_NODE = 'secondary-node'
 export const GREY_NODE = 'grey-node'
 
@@ -445,6 +462,7 @@ export const OVAL_NODE_SHAPE = 'oval-shape'
 export const ROUNDED_RECTANGLE_NODE_SHAPE = 'rounded-rectangle-shape'
 
 export const ML_EDGE = 'ml-edge'
+export const ML_SMART_STEP_EDGE = 'ml-smart-step-edge'
 
 export const DEFAULT_EDGE = 'default-edge'
 export const FLOATING_EDGE = 'floating-edge'

@@ -30,8 +30,9 @@ const ModelsAndApplication = () => {
   const projectStore = useSelector(store => store.projectStore)
   const { projectName } = useParams()
   const navigate = useNavigate()
-  const isDataLoading =
-    projectStore?.projectsSummary?.loading || projectStore?.projectSummary?.loading
+  const isDataLoading = projectName
+    ? projectStore?.projectSummary?.loading
+    : projectStore?.projectsSummary?.loading
 
   const modelsData = projectName
     ? projectStore.projectSummary.data?.models_count

@@ -130,6 +130,7 @@ export const generatePageData = (viewMode, isDetailsPopUp = false, selectedItem)
     infoHeaders,
     type: MODELS_TAB,
     hideBackBtn: viewMode === FULL_VIEW_MODE && !isDetailsPopUp,
+    hideCloseBtn: viewMode === FULL_VIEW_MODE && !isDetailsPopUp,
     withToggleViewBtn: true
   }
 })

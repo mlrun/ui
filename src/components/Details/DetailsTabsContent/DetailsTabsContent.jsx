@@ -45,6 +45,8 @@ import DetailsStatistics from '../../DetailsStatistics/DetailsStatistics'
 import DetailsTransformations from '../../DetailsTransformations/DetailsTransformations'
 import NoData from '../../../common/NoData/NoData'
 import DetailsLLMPrompts from '../../DetailsLLMPrompts/DetailsLLMPrompts'
+import DetailsPipeline from '../../DetailsPipeline/DetailsPipeline'
+import DetailsModelEnpoints from '../../DetailsModelEndpoints/DetailsModelEndpoints'
 
 import {
   DETAILS_ALERTS_TAB,
@@ -71,7 +73,9 @@ import {
   DETAILS_RETURNED_FEATURES_TAB,
   DETAILS_STATISTICS_TAB,
   DETAILS_TRANSFORMATIONS_TAB,
-  DETAILS_LLM_PROMPTS_TAB
+  DETAILS_LLM_PROMPTS_TAB,
+  DETAILS_REALTIME_PIPELINE_TAB,
+  DETAILS_MODEL_ENDPOINTS_TAB
 } from '../../../constants'
 import { isJobKindDask, JOB_STEADY_STATES } from '../../Jobs/jobs.util'
 
@@ -248,6 +252,10 @@ const DetailsTabsContent = ({
       return <DetailsGenerationConfiguration selectedItem={selectedItem} />
     case DETAILS_LLM_PROMPTS_TAB:
       return <DetailsLLMPrompts selectedItem={selectedItem} isDetailsPopUp={isDetailsPopUp} />
+    case DETAILS_REALTIME_PIPELINE_TAB:
+      return <DetailsPipeline selectedItem={selectedItem} />
+    case DETAILS_MODEL_ENDPOINTS_TAB:
+      return <DetailsModelEnpoints selectedItem={selectedItem} />
     default:
       return null
   }

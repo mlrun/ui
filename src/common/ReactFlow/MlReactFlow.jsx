@@ -19,27 +19,65 @@ such restriction.
 */
 import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import ReactFlow, { ReactFlowProvider, MiniMap, Controls } from 'reactflow'
+import ReactFlow, {
+  ReactFlowProvider,
+  MiniMap,
+  Controls,
+  Background,
+  getConnectedEdges
+} from 'reactflow'
 
 import MlReactFlowNode from './MlReactFlowNode'
-import MlModelRunnerNode from './MlModelRunnerNode'
+import MlNodeWithSubItems from './MlNodeWithSubItems/MlNodeWithSubItems'
 import MlReactFlowEdge from './MlReactFlowEdge'
+import MlQueueNode from './MlQueueNode/MlQueueNode'
+import MlCommonNode from './MlCommonNode/MlCommonNode'
+import MlGroupNode from './MlGroupNode/MlGroupNode'
+import SmartStepEdge from './SmartStepEdge/SmartStepEdge.jsx'
+import MlDefaultErrorPanel from './MlDefaultErrorPanel/MlDefaultErrorPanel'
 
-import { ML_EDGE, ML_MODEL_RUNNER_NODE, ML_NODE } from '../../constants'
+import {
+  ML_EDGE,
+  ML_NODE_WITH_SUB_ITEMS,
+  ML_NODE,
+  ML_QUEUE_NODE,
+  ML_COMMON_NODE,
+  ML_GROUP_NODE,
+  ML_SMART_STEP_EDGE
+} from '../../constants'
 import { getNodeClassName } from './mlReactFlow.util'
 
 import './mlReactFlow.scss'
 
 const edgeTypes = {
-  [ML_EDGE]: MlReactFlowEdge
+  [ML_EDGE]: MlReactFlowEdge,
+  [ML_SMART_STEP_EDGE]: SmartStepEdge
 }
 
 const nodeTypes = {
   [ML_NODE]: MlReactFlowNode,
-  [ML_MODEL_RUNNER_NODE]: MlModelRunnerNode
+  [ML_NODE_WITH_SUB_ITEMS]: MlNodeWithSubItems,
+  [ML_QUEUE_NODE]: MlQueueNode,
+  [ML_COMMON_NODE]: MlCommonNode,
+  [ML_GROUP_NODE]: MlGroupNode
 }
 
-const MlReactFlow = ({ alignTriggerItem = '', edges, nodes, onNodeClick = () => {} }) => {
+const defaultEdgeOptions = {
+  selectable: false,
+  focusable: false,
+  interactionWidth: 20
+}
+
+const MlReactFlow = ({
+  alignTriggerItem = '',
+  edges,
+  nodes,
+  onNodeClick = () => {},
+  defaultErrorHandlerData = null,
+  withBackground = false,
+  withProvider = true,
+  legend = null
+}) => {
   const domChangeHandler = () => {
     const edgesWrapper = document.querySelector('.react-flow__edges > g')
     const selectedEdges = edgesWrapper.getElementsByClassName('selected')
@@ -50,6 +88,36 @@ const MlReactFlow = ({ alignTriggerItem = '', edges, nodes, onNodeClick = () => 
   const [reactFlowInstance, setReactFlowInstance] = useState(null)
   const [observer] = useState(new MutationObserver(domChangeHandler))
   const [initialGraphViewGenerated, setInitialGraphViewGenerated] = useState(false)
+
+  const onNodeMouseEnter = (_event, node) => {
+    const connectedEdges = getConnectedEdges([node], edges)
+
+    connectedEdges.forEach(edge => {
+      const pathElement = document.getElementById(edge.id?.replace(' ', '_'))
+      const edgeElement = pathElement?.parentElement
+
+      if (edgeElement) {
+        edgeElement.classList.add('forced-hover')
+
+        if (edgeElement.parentNode && edgeElement.nextSibling) {
+          edgeElement.parentNode.appendChild(edgeElement)
+        }
+      }
+    })
+  }
+
+  const onNodeMouseLeave = (_event, node) => {
+    const connectedEdges = getConnectedEdges([node], edges)
+
+    connectedEdges.forEach(edge => {
+      const pathElement = document.getElementById(edge.id?.replace(' ', '_'))
+      const edgeElement = pathElement?.parentElement
+
+      if (edgeElement) {
+        edgeElement.classList.remove('forced-hover')
+      }
+    })
+  }
 
   const handleFitGraphView = useCallback(() => {
     setTimeout(() => {
@@ -95,28 +163,37 @@ const MlReactFlow = ({ alignTriggerItem = '', edges, nodes, onNodeClick = () => 
     setReactFlowInstance(reactFlowInstance)
   }
 
-  return (
-    <ReactFlowProvider>
-      <ReactFlow
-        edgeTypes={edgeTypes}
-        edges={edges}
-        elementsSelectable={false}
-        multiSelectionKeyCode={null}
-        nodeTypes={nodeTypes}
-        nodes={nodes}
-        nodesConnectable={false}
-        nodesDraggable={false}
-        onInit={onInit}
-        onNodeClick={onNodeClick}
-        proOptions={{ hideAttribution: true }}
-        selectionKeyCode={null}
-      />
+  const flow = (
+    <ReactFlow
+      edgeTypes={edgeTypes}
+      edges={edges}
+      elementsSelectable={withBackground}
+      multiSelectionKeyCode={null}
+      nodeTypes={nodeTypes}
+      nodes={nodes}
+      nodesConnectable={false}
+      nodesDraggable={false}
+      onInit={onInit}
+      onNodeClick={onNodeClick}
+      proOptions={{ hideAttribution: true }}
+      selectionKeyCode={null}
+      defaultEdgeOptions={defaultEdgeOptions}
+      disableKeyboardA11y
+      onNodeMouseEnter={onNodeMouseEnter}
+      onNodeMouseLeave={onNodeMouseLeave}
+    >
+      {defaultErrorHandlerData && (
+        <MlDefaultErrorPanel data={defaultErrorHandlerData} onNodeClick={onNodeClick} />
+      )}
       <Controls
         fitViewOptions={{ padding: 0.2, duration: 200 }}
         position="top-left"
         showInteractive={false}
-        showZoom={false}
-      />
+        showZoom={true}
+        orientation="horizontal"
+      >
+        {legend}
+      </Controls>
       <MiniMap
         nodeStrokeWidth={3}
         nodeClassName={getNodeClassName}
@@ -125,15 +202,22 @@ const MlReactFlow = ({ alignTriggerItem = '', edges, nodes, onNodeClick = () => 
         zoomStep={1}
         zoomable
       />
-    </ReactFlowProvider>
+      {withBackground && <Background />}
+    </ReactFlow>
   )
+
+  return withProvider ? <ReactFlowProvider>{flow}</ReactFlowProvider> : flow
 }
 
 MlReactFlow.propTypes = {
   alignTriggerItem: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   edges: PropTypes.arrayOf(PropTypes.object).isRequired,
   nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onNodeClick: PropTypes.func
+  onNodeClick: PropTypes.func,
+  defaultErrorHandlerData: PropTypes.object,
+  withBackground: PropTypes.bool,
+  withProvider: PropTypes.bool,
+  legend: PropTypes.node
 }
 
 export default React.memo(MlReactFlow)

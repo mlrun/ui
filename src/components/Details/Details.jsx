@@ -36,14 +36,16 @@ import {
   JOBS_PAGE,
   LLM_PROMPTS_PAGE,
   MODEL_ENDPOINTS_TAB,
-  MODELS_TAB
+  MODELS_TAB,
+  REAL_TIME_PIPELINES_TAB
 } from '../../constants'
 import {
   generateAlertsContent,
   generateArtifactsContent,
   generateFeatureStoreContent,
   generateFunctionsContent,
-  generateJobsContent
+  generateJobsContent,
+  generateRealTimePipelinesContent
 } from './details.util'
 import { DETAILS_MENU, ACTIONS_MENU } from 'igz-controls/types'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
@@ -115,6 +117,8 @@ const Details = ({
     if (!isEveryObjectValueEmpty(selectedItem)) {
       if (pageData.details.type === JOBS_PAGE) {
         dispatch(setDetailsInfo(generateJobsContent(selectedItem)))
+      } else if (pageData.details.type === REAL_TIME_PIPELINES_TAB) {
+        dispatch(setDetailsInfo(generateRealTimePipelinesContent(selectedItem)))
       } else if (pageData.details.type === ALERTS_PAGE) {
         dispatch(setDetailsInfo(generateAlertsContent(selectedItem)))
       } else if (

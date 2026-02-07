@@ -17,24 +17,94 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { MODELS_PAGE, NAME_FILTER } from '../../../constants'
-import { parseFunction } from '../../../utils/parseFunction'
+import { debounce, isEqual } from 'lodash'
+
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
-import { fetchFunction } from '../../../reducers/functionReducer'
+import { fetchArtifactsFunction } from '../../../reducers/artifactsReducer'
+import {
+  DATES_FILTER,
+  DETAILS_MODEL_ENDPOINTS_TAB,
+  DETAILS_OVERVIEW_TAB,
+  DETAILS_REALTIME_PIPELINE_TAB,
+  DISPLAY_SYSTEM_PIPELINES_FILTER,
+  FILTER_ALL_ITEMS,
+  MODELS_PAGE,
+  NAME_FILTER,
+  PIPELINE_TOPOLOGY_FILTER,
+  REAL_TIME_PIPELINES_TAB
+} from '../../../constants'
+import {
+  ANY_TIME_DATE_OPTION,
+  datePickerPastOptions,
+  getDatePickerFilterValue
+} from '../../../utils/datePicker.util'
 
 export const filtersConfig = {
-  [NAME_FILTER]: { label: 'Name:', initialValue: '' }
+  [NAME_FILTER]: { label: 'Name:', initialValue: '' },
+  [DATES_FILTER]: {
+    label: 'Time range:',
+    initialValue: getDatePickerFilterValue(datePickerPastOptions, ANY_TIME_DATE_OPTION, true)
+  },
+  [DISPLAY_SYSTEM_PIPELINES_FILTER]: {
+    label: 'Display system pipelines:',
+    initialValue: false
+  },
+  [PIPELINE_TOPOLOGY_FILTER]: {
+    label: 'Topology:',
+    initialValue: FILTER_ALL_ITEMS,
+    isModal: true
+  }
 }
+
+const infoHeaders = [
+  { label: 'Name', id: 'name' },
+  { label: 'Root function', id: 'rootFunction' },
+  { label: 'Child functions', id: 'childFunction' },
+  { label: 'Topology', id: 'topology' },
+  { label: 'Internal invocation URLs', id: 'internalUrl' },
+  { label: 'External invocation URLs', id: 'externalUrl' },
+  { label: 'Kind', id: 'kind' },
+  { label: 'Code entry point', id: 'command' },
+  { label: 'Image', id: 'image' },
+  { label: 'Version tag', id: 'tag' },
+  { label: 'Hash', id: 'hash' },
+  { label: 'Code origin', id: 'codeOrigin' },
+  { label: 'Updated', id: 'updated' },
+  { label: 'Default handler', id: 'defaultHandler' },
+  { label: 'Description', id: 'description' }
+]
+
+const detailsMenu = [
+  {
+    label: 'Realtime pipeline',
+    id: DETAILS_REALTIME_PIPELINE_TAB
+  },
+  {
+    label: 'overview',
+    id: DETAILS_OVERVIEW_TAB
+  },
+  {
+    label: 'Model endpoints',
+    id: DETAILS_MODEL_ENDPOINTS_TAB
+  }
+]
 
 export const generatePageData = hideFilterMenu => ({
   page: MODELS_PAGE,
+  pageTab: REAL_TIME_PIPELINES_TAB,
   hidePageActionMenu: true,
-  hideFilterMenu
+  hideFilterMenu,
+  details: {
+    menu: detailsMenu,
+    infoHeaders,
+    type: REAL_TIME_PIPELINES_TAB,
+    hideCloseBtn: true
+  }
 })
 
-export const fetchAndParseFunction = (selectedFunction, dispatch) => {
+export const fetchAndParsePipeline = (dispatch, selectedFunction) => {
   return dispatch(
-    fetchFunction({
+    fetchArtifactsFunction({
       project: selectedFunction.project,
       name: selectedFunction.name,
       hash: selectedFunction.hash,
@@ -42,10 +112,56 @@ export const fetchAndParseFunction = (selectedFunction, dispatch) => {
     })
   )
     .unwrap()
-    .then(func => {
-      return parseFunction(func, selectedFunction.project.project)
-    })
     .catch(error => {
-      showErrorNotification(dispatch, error, '', 'Failed to retrieve function data')
+      showErrorNotification(
+        dispatch,
+        error,
+        '',
+        'This real-time pipeline either does not exist or was deleted'
+      )
+      return null
     })
 }
+
+export const checkForSelectedPipeline = debounce(
+  (
+    pipelines,
+    pipelineId,
+    navigate,
+    projectName,
+    setSelectedPipeline,
+    dispatch,
+    lastCheckedPipelineIdRef
+  ) => {
+    if (pipelineId) {
+      if (pipelines.length > 0 && lastCheckedPipelineIdRef.current !== pipelineId) {
+        lastCheckedPipelineIdRef.current = pipelineId
+
+        const foundPipeline = pipelines.find(item => item.hash === pipelineId)
+
+        if (foundPipeline) {
+          fetchAndParsePipeline(dispatch, foundPipeline).then(selectedPipeline => {
+            if (selectedPipeline) {
+              setSelectedPipeline(prevState => {
+                return isEqual(prevState, selectedPipeline) ? prevState : selectedPipeline
+              })
+            } else {
+              navigate(
+                `/projects/${projectName}/models/${REAL_TIME_PIPELINES_TAB}${window.location.search}`,
+                { replace: true }
+              )
+            }
+          })
+        } else {
+          navigate(
+            `/projects/${projectName}/models/${REAL_TIME_PIPELINES_TAB}${window.location.search}`,
+            { replace: true }
+          )
+        }
+      }
+    } else {
+      setSelectedPipeline({})
+    }
+  },
+  30
+)

@@ -4,19 +4,19 @@
 @mixin inputNode {
   color: colors.$white;
   background-color: colors.$hotPink;
-  fill: colors.$hotPink;
   border-color: colors.$hotPink;
-  stroke: colors.$hotPink;
   box-shadow: 0 3px 14px rgba(colors.$hotPink, 0.34);
+  fill: colors.$hotPink;
+  stroke: colors.$hotPink;
 }
 
 @mixin outputNode {
   color: colors.$white;
   background-color: colors.$malibu;
-  fill: colors.$malibu;
   border-color: colors.$malibu;
-  stroke: colors.$malibu;
   box-shadow: 0 3px 14px rgba(colors.$malibu, 0.5);
+  fill: colors.$malibu;
+  stroke: colors.$malibu;
 }
 
 @mixin primaryNode {
@@ -43,6 +43,23 @@
   }
 }
 
+@mixin primaryPipelineNode {
+  color: colors.$primary;
+  background-color: colors.$white;
+  border-color: colors.$autumnMalt;
+  stroke: colors.$autumnMalt;
+
+  &:hover {
+    border-color: colors.$malibu;
+  }
+
+  &.selected {
+    border-color: colors.$malibu;
+    box-shadow: none;
+    stroke: colors.$malibu;
+  }
+}
+
 @mixin nodes {
   &.input-node {
     @include inputNode;
@@ -54,6 +71,10 @@
 
   &.primary-node {
     @include primaryNode;
+  }
+
+  &.primary-pipeline-node {
+    @include primaryPipelineNode;
   }
 
   &.secondary-node {
@@ -80,25 +101,31 @@
 @mixin selectedNode {
   &.selected {
     border-color: colors.$brightTurquoise;
-    stroke: colors.$brightTurquoise;
     box-shadow: 0 4px 20px rgba(colors.$brightTurquoise, 0.5);
+    stroke: colors.$brightTurquoise;
 
     &.status-error,
     &.status-failed {
       border-color: colors.$burntSienna;
-      stroke: colors.$burntSienna;
       box-shadow: 0 4px 20px rgba(colors.$burntSienna, 0.5);
+      stroke: colors.$burntSienna;
     }
 
     &.status-running {
       border-color: colors.$pictonBlue;
-      stroke: colors.$pictonBlue;
       box-shadow: 0 4px 20px rgba(colors.$pictonBlue, 0.5);
+      stroke: colors.$pictonBlue;
     }
   }
 }
 
-.react-flow__renderer {
+@keyframes dash-animation {
+  from { stroke-dashoffset: 20; }
+  to { stroke-dashoffset: 0; }
+}
+
+.react-flow__renderer,
+.react-flow__default-error-panel {
   z-index: 5;
 
   &:active {
@@ -123,9 +150,9 @@
     .react-flow__node-label {
       position: relative;
       width: 100%;
+      overflow: hidden;
       font-size: 1.5rem;
       text-align: center;
-      overflow: hidden;
     }
 
     .react-flow__node-sub-label {
@@ -219,7 +246,19 @@
     }
   }
 
+  .react-flow__edge-path-selector,
+  .react-flow__edge-path {
+    pointer-events: stroke;
+  }
+
   .react-flow__edge {
+    transition: stroke 0.2s, stroke-width 0.2s;
+    pointer-events: stroke;
+
+    g > path:nth-child(2) {
+      pointer-events: stroke;
+    }
+
     path,
     polyline {
       stroke: colors.$bombay;
@@ -242,6 +281,18 @@
         polyline {
           fill: colors.$saltbox;
         }
+      }
+    }
+
+    &:hover,
+    &.forced-hover {
+      path,
+      polyline {
+        cursor: grab;
+        stroke: colors.$malibu;
+        stroke-width: 3px;
+        stroke-dasharray: 5;
+        animation: dash-animation 0.5s linear infinite;
       }
     }
   }

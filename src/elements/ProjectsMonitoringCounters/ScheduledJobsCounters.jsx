@@ -38,8 +38,9 @@ const ScheduledJobsCounters = () => {
   const [showPopup, setShowPopup] = useState(false)
   const anchorRef = useRef(null)
   const detailsRef = useRef(null)
-  const isDataLoading =
-    projectStore?.projectsSummary?.loading || projectStore?.projectSummary?.loading
+  const isDataLoading = projectName
+    ? projectStore?.projectSummary?.loading
+    : projectStore?.projectsSummary?.loading
 
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent

@@ -17,28 +17,43 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import classnames from 'classnames'
-import { isNil } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
 
 import ActionBar from '../../ActionBar/ActionBar'
 import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
-import Pipeline from '../../Pipeline/Pipeline'
+import Details from '../../Details/Details'
 import RealTimePipelinesTableRow from '../../../elements/RealTimePipelinesTableRow/RealTimePipelinesTableRow'
 import Table from '../../Table/Table'
-import { Loader } from 'igz-controls/components'
+import RealTimePipelinesFilters from './RealTimePipelinesFilters'
+import { Loader, Tip, FormToggle } from 'igz-controls/components'
 
 import {
   GROUP_BY_NAME,
   MODELS_PAGE,
   REAL_TIME_PIPELINES_TAB,
-  REQUEST_CANCELED
+  REQUEST_CANCELED,
+  FUNCTION_READY_STATE,
+  ERROR_STATE,
+  UNHEALTHY_STATE,
+  DISPLAY_SYSTEM_PIPELINES_FILTER,
+  PIPELINE_TOPOLOGY_FILTER,
+  FILTER_ALL_ITEMS,
+  PIPELINE_FLOW_TOPOLOGY,
+  DETAILS_REALTIME_PIPELINE_TAB
 } from '../../../constants'
 import createRealTimePipelinesContent from '../../../utils/createRealTimePipelinesContent'
-import { fetchAndParseFunction, filtersConfig, generatePageData } from './realTimePipelines.util'
+import {
+  checkForSelectedPipeline,
+  fetchAndParsePipeline,
+  filtersConfig,
+  generatePageData
+} from './realTimePipelines.util'
+import RealTimePipelinesCounters from './RealTimePipelinesCounters'
 import { fetchArtifactsFunctions, removePipelines } from '../../../reducers/artifactsReducer'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { getScssVariableValue } from 'igz-controls/utils/common.util'
@@ -47,6 +62,8 @@ import { setFilters } from '../../../reducers/filtersReducer'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 import { useModelsPage } from '../ModelsPage.context'
+import { FULL_VIEW_MODE } from 'igz-controls/constants'
+import { fetchNuclioFunctions } from '../../../reducers/nuclioReducer'
 
 import Yaml from 'igz-controls/images/yaml.svg?react'
 
@@ -55,13 +72,22 @@ import './realTimePipelines.scss'
 const RealTimePipelines = () => {
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [pipelines, setPipelines] = useState([])
-  const artifactsStore = useSelector(store => store.artifactsStore)
+  const [isLoading, setIsLoading] = useState(false)
+  const [selectedPipeline, setSelectedPipeline] = useState({})
+  const [statistics, setStatistics] = useState({
+    totalPipelines: 0,
+    runningFunctions: 0,
+    failedFunctions: 0,
+    modelEndpoints: 0
+  })
   const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const abortControllerRef = useRef(new AbortController())
+  const nuclioAbortControllerRef = useRef(new AbortController())
   const pipelinesRef = useRef(null)
+  const lastCheckedPipelineIdRef = useRef(null)
   const pageData = useMemo(() => generatePageData(params.pipelineId), [params.pipelineId])
   const { toggleConvertedYaml } = useModelsPage()
   const [, setSearchParams] = useSearchParams()
@@ -89,7 +115,7 @@ const RealTimePipelines = () => {
           label: 'View YAML',
           icon: <Yaml />,
           onClick: func =>
-            fetchAndParseFunction(func, dispatch).then(() => toggleConvertedYaml(func))
+            fetchAndParsePipeline(dispatch, func).then(() => toggleConvertedYaml(func))
         }
       ]
     ],
@@ -99,37 +125,98 @@ const RealTimePipelines = () => {
   const fetchData = useCallback(
     filters => {
       abortControllerRef.current = new AbortController()
+      nuclioAbortControllerRef.current = new AbortController()
+      lastCheckedPipelineIdRef.current = null
 
-      dispatch(
-        fetchArtifactsFunctions({
-          project: params.projectName,
-          filters,
-          config: {
-            params: { format: 'minimal', kind: 'serving' },
-            ui: {
-              controller: abortControllerRef.current,
-              setRequestErrorMessage
+      setIsLoading(true)
+      Promise.allSettled([
+        dispatch(
+          fetchArtifactsFunctions({
+            project: params.projectName,
+            filters,
+            config: {
+              params: { kind: 'serving' },
+              ui: {
+                controller: abortControllerRef.current,
+                setRequestErrorMessage
+              }
             }
-          }
-        })
-      )
-        .unwrap()
-        .then(result => {
-          if (!isNil(result)) {
-            setPipelines(
-              result.filter(
-                func =>
-                  !Object.keys(func.labels).some(labelKey => labelKey.includes('parent-function'))
-              )
-            )
-          }
-        })
+          })
+        ).unwrap(),
+        dispatch(
+          fetchNuclioFunctions({
+            project: params.projectName,
+            signal: nuclioAbortControllerRef.current.signal,
+            getOriginalData: true
+          })
+        ).unwrap()
+      ]).then(([mlrunFunctionsResult, nuclioFunctionsResult]) => {
+        if (mlrunFunctionsResult.status === 'fulfilled' && !isNil(mlrunFunctionsResult.value)) {
+          let totalPipelines = 0
+          let runningFunctions = 0
+          let failedFunctions = 0
+          let modelEndpoints = 0
+
+          const filteredPipelines = mlrunFunctionsResult.value.reduce((pipelinesList, func) => {
+            const nuclioFunc =
+              nuclioFunctionsResult?.value?.[func.nuclio_name || `${func.project}-${func.name}`] ||
+              {}
+            const hasParent = Object.keys(func.labels).some(key => key.includes('parent-function'))
+            const showSystems = filters[DISPLAY_SYSTEM_PIPELINES_FILTER]
+            const isMonitoringInfra = func.labels['mlrun__type'] === 'mlrun__model-monitoring-infra'
+            const topology = (func.graph?.kind || PIPELINE_FLOW_TOPOLOGY).toLowerCase()
+            const isCorrectTopology =
+              topology === filters[PIPELINE_TOPOLOGY_FILTER] ||
+              filters[PIPELINE_TOPOLOGY_FILTER] === FILTER_ALL_ITEMS
+
+            const filteredFunc =
+              !hasParent && (showSystems || !isMonitoringInfra) && isCorrectTopology
+
+            if (!filteredFunc) return pipelinesList
+
+            totalPipelines += 1
+
+            const state = nuclioFunc.status?.state || func.state?.value || func.status?.state
+
+            if (state === FUNCTION_READY_STATE) {
+              runningFunctions += 1
+            } else if (state === ERROR_STATE || state === UNHEALTHY_STATE) {
+              failedFunctions += 1
+            }
+
+            const modelEndpointsCount =
+              Object.keys(func.graph?.routes || {}).length ||
+              func.graph?.model_endpoints_names?.length // in the future we will get models endpoints count from the BE
+            if (modelEndpointsCount > 0) {
+              modelEndpoints += modelEndpointsCount
+            }
+
+            pipelinesList.push({
+              ...func,
+              nuclioFunc
+            })
+
+            return pipelinesList
+          }, [])
+
+          setPipelines(filteredPipelines)
+          setStatistics(prev => ({
+            ...prev,
+            totalPipelines,
+            runningFunctions,
+            failedFunctions,
+            modelEndpoints
+          }))
+        }
+        setIsLoading(false)
+      })
     },
     [dispatch, params.projectName]
   )
 
   const handleRefresh = useCallback(
     filters => {
+      setSelectedPipeline({})
       setPipelines([])
 
       return fetchData(filters)
@@ -149,6 +236,10 @@ const RealTimePipelines = () => {
     [dispatch, fetchData]
   )
 
+  const handleRefreshSelectedItem = useCallback(() => {
+    fetchAndParsePipeline(dispatch, selectedPipeline).then(setSelectedPipeline)
+  }, [dispatch, selectedPipeline])
+
   useInitialTableFetch({ fetchData: fetchInitialData, filters })
 
   useEffect(() => {
@@ -156,21 +247,27 @@ const RealTimePipelines = () => {
       setPipelines([])
       dispatch(removePipelines())
       abortControllerRef.current.abort(REQUEST_CANCELED)
+      nuclioAbortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [dispatch])
 
   useEffect(() => {
-    if (params.pipelineId && pipelines.length > 0) {
-      if (!pipelines.find(item => item.hash === params.pipelineId)) {
-        navigate(
-          `/projects/${params.projectName}/models/${REAL_TIME_PIPELINES_TAB}${window.location.search}`,
-          {
-            replace: true
-          }
-        )
-      }
+    checkForSelectedPipeline(
+      pipelines,
+      params.pipelineId,
+      navigate,
+      params.projectName,
+      setSelectedPipeline,
+      dispatch,
+      lastCheckedPipelineIdRef
+    )
+  }, [dispatch, navigate, params.pipelineId, params.projectName, pipelines])
+
+  useEffect(() => {
+    if (isEmpty(selectedPipeline)) {
+      lastCheckedPipelineIdRef.current = null
     }
-  }, [navigate, params.pipelineId, params.projectName, pipelines])
+  }, [selectedPipeline])
 
   const virtualizationConfig = useVirtualization({
     rowsData: {
@@ -186,7 +283,7 @@ const RealTimePipelines = () => {
 
   return (
     <>
-      {artifactsStore.pipelines.loading && <Loader />}
+      {isLoading && <Loader />}
       <div className="models" ref={pipelinesRef}>
         <div className="table-container">
           <div className={filterMenuClassNames}>
@@ -199,45 +296,87 @@ const RealTimePipelines = () => {
               setSearchParams={setSearchParams}
               tab={REAL_TIME_PIPELINES_TAB}
               withoutExpandButton
-            />
+              getCustomActions={applyFilters => [
+                <Fragment key={DISPLAY_SYSTEM_PIPELINES_FILTER}>
+                  <FormToggle
+                    className="action-bar__filters-item"
+                    name={DISPLAY_SYSTEM_PIPELINES_FILTER}
+                    label={filtersConfig[DISPLAY_SYSTEM_PIPELINES_FILTER].label}
+                    labelTip="Default display shows only user-created pipelines"
+                    onClick={event =>
+                      applyFilters({ [DISPLAY_SYSTEM_PIPELINES_FILTER]: event.target.checked })
+                    }
+                  />
+                </Fragment>
+              ]}
+            >
+              <RealTimePipelinesFilters />
+            </ActionBar>
           </div>
-          {artifactsStore.pipelines.loading ? null : pipelines.length === 0 ? (
-            <NoData
-              message={getNoDataMessage(
-                filters,
-                filtersConfig,
-                requestErrorMessage,
-                MODELS_PAGE,
-                REAL_TIME_PIPELINES_TAB,
-                filtersStore
-              )}
-            />
-          ) : params.pipelineId ? (
-            <Pipeline content={pipelines} />
-          ) : (
-            <>
-              <Table
-                actionsMenu={actionsMenu}
-                pageData={pageData}
-                selectedItem={{}}
-                tab={REAL_TIME_PIPELINES_TAB}
-                tableClassName="pipelines-table"
-                tableHeaders={tableContent[0]?.content ?? []}
-                virtualizationConfig={virtualizationConfig}
-              >
-                {tableContent.map(
-                  (tableItem, index) =>
-                    isRowRendered(virtualizationConfig, index) && (
-                      <RealTimePipelinesTableRow
-                        actionsMenu={actionsMenu}
-                        key={index}
-                        rowItem={tableItem}
-                      />
-                    )
-                )}
-              </Table>
-            </>
+          {!params.pipelineId && (
+            <RealTimePipelinesCounters loading={isLoading} statistics={statistics} />
           )}
+          <div className="real-time-pipelines__section">
+            <div
+              className={classnames(
+                'real-time-pipelines__section-item',
+                params.tab === DETAILS_REALTIME_PIPELINE_TAB &&
+                  'real-time-pipelines__section-item-full-space'
+              )}
+            >
+              <div className="section-item_title">
+                <span>All Serving Pipelines</span>
+                <Tip text="This data is relevant to the root function." />
+              </div>
+              {isLoading ? null : pipelines.length === 0 ? (
+                <NoData
+                  message={getNoDataMessage(
+                    filters,
+                    filtersConfig,
+                    requestErrorMessage,
+                    MODELS_PAGE,
+                    REAL_TIME_PIPELINES_TAB,
+                    filtersStore
+                  )}
+                />
+              ) : (
+                <>
+                  <Table
+                    actionsMenu={actionsMenu}
+                    pageData={pageData}
+                    selectedItem={selectedPipeline}
+                    tab={REAL_TIME_PIPELINES_TAB}
+                    tableClassName="pipelines-table"
+                    tableHeaders={tableContent[0]?.content ?? []}
+                    virtualizationConfig={virtualizationConfig}
+                    viewMode={FULL_VIEW_MODE}
+                  >
+                    {tableContent.map(
+                      (tableItem, index) =>
+                        isRowRendered(virtualizationConfig, index) && (
+                          <RealTimePipelinesTableRow
+                            actionsMenu={actionsMenu}
+                            key={index}
+                            rowItem={tableItem}
+                          />
+                        )
+                    )}
+                  </Table>
+                  {!isEmpty(selectedPipeline) && (
+                    <Details
+                      actionsMenu={actionsMenu}
+                      detailsMenu={pageData.details.menu}
+                      handleRefresh={handleRefreshSelectedItem}
+                      isDetailsScreen
+                      pageData={pageData}
+                      tab={REAL_TIME_PIPELINES_TAB}
+                      selectedItem={selectedPipeline}
+                    />
+                  )}
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </>

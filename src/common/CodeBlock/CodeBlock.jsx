@@ -49,7 +49,7 @@ const CodeBlock = ({ className = '', codeData = {}, label = '', language = 'json
 
 CodeBlock.propTypes = {
   className: PropTypes.string,
-  codeData: PropTypes.object,
+  codeData: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   label: PropTypes.string,
   language: PropTypes.string
 }

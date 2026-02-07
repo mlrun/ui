@@ -42,7 +42,7 @@ import {
   MODELS_TAB,
   TAG_LATEST
 } from '../../constants'
-import { generateLinkPath, parseUri } from '../../utils'
+import { generateLinkPath, generateNuclioLink, parseUri } from '../../utils'
 import { getFunctionImage } from '../FunctionsPage/functions.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
@@ -297,6 +297,62 @@ export const generateAlertsContent = selectedItem => {
     },
     notifications: {
       value: selectedItem.notifications
+    }
+  }
+}
+
+export const generateRealTimePipelinesContent = selectedItem => {
+  return {
+    name: {
+      value: selectedItem.name
+    },
+    rootFunction: {
+      value: selectedItem.name,
+      status: selectedItem.state.value,
+      link: generateNuclioLink(`/projects/${selectedItem.project}/functions/${selectedItem.name}`)
+    },
+    childFunction: {
+      value: (selectedItem.function_refs ?? []).map(item => item.name).join(', ')
+    },
+    topology: {
+      value: selectedItem.graph?.kind === 'router' ? 'Router' : 'Flow'
+    },
+    internalUrl: {
+      value: selectedItem.internal_invocation_urls,
+      copyToClipboard: true
+    },
+    externalUrl: {
+      value: selectedItem.external_invocation_urls,
+      copyToClipboard: true
+    },
+    kind: {
+      value: selectedItem.type
+    },
+    command: {
+      value: selectedItem.command,
+      copyToClipboard: selectedItem.type !== FUNCTION_TYPE_APPLICATION,
+      externalLink: selectedItem.type === FUNCTION_TYPE_APPLICATION
+    },
+    image: {
+      value: getFunctionImage(selectedItem)
+    },
+    tag: {
+      value: selectedItem.tag
+    },
+    hash: {
+      value: selectedItem.hash
+    },
+    codeOrigin: {
+      value: selectedItem.build?.code_origin ?? ''
+    },
+    updated: {
+      value: formatDatetime(selectedItem.updated, 'N/A')
+    },
+    defaultHandler: {
+      value: selectedItem.default_handler
+    },
+    description: {
+      value: selectedItem.description
     }
   }
 }
