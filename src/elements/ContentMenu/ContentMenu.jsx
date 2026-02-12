@@ -46,8 +46,9 @@ const ContentMenu = ({
         return '/'
       }
 
-      return `/projects${params.projectName ? `/${params.projectName}` : ''
-        }/${screen.toLowerCase()}/${tabId}`
+      return `/projects${
+        params.projectName ? `/${params.projectName}` : ''
+      }/${screen.toLowerCase()}/${tabId}`
     }
   }
 
