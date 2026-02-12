@@ -25,7 +25,8 @@ export default [
         ecmaFeatures: {
           jsx: true
         }
-      }
+      },
+      sourceType: 'module'
     },
     plugins: {
       react: react,
@@ -37,6 +38,7 @@ export default [
         version: 'detect'
       }
     },
+
     rules: {
       ...reactHooks.configs.recommended.rules,
       ...react.configs.recommended.rules,
@@ -52,9 +54,9 @@ export default [
     }
   },
   {
-    files: ["**/*.test.jsx"],
+    files: ['**/*.test.jsx'],
     rules: {
-      "import/named": "off"
+      'import/named': 'off'
     }
   }
 ]
