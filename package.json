@@ -32,7 +32,7 @@
     "prismjs": "^1.29.0",
     "prompts": "^2.4.2",
     "prop-types": "^15.8.1",
-    "qs": "^6.14.1",
+    "qs": "^6.14.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-final-form": "^6.5.9",
@@ -56,7 +56,9 @@
     "uuid": "^9.0.1"
   },
   "overrides": {
-    "minimist": "^1.2.8"
+    "minimist": "^1.2.8",
+    "qs": "^6.14.2",
+    "tmp": "^0.2.4"
   },
   "scripts": {
     "start": "vite",
@@ -92,7 +94,7 @@
     "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.13.12",
     "@babel/register": "^7.13.14",
-    "@cucumber/cucumber": "^10.3.1",
+    "@cucumber/cucumber": "12.6.0",
     "@eslint/js": "^9.19.0",
     "@storybook/addon-actions": "^8.0.1",
     "@storybook/addon-essentials": "^8.0.1",
@@ -139,7 +141,7 @@
     "node": "22.21.1",
     "nodemon": "^3.1.2",
     "pandas-js": "^0.2.4",
-    "postcss": "^8.4.36",
+    "postcss": "8.4.49",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-normalize": "^10.0.1",
     "postcss-preset-env": "^9.5.2",
