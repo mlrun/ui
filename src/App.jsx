@@ -69,6 +69,7 @@ import {
 import 'reactflow/dist/style.css'
 import 'igz-controls/index.css'
 import './scss/main.scss'
+import RemoteNuclioRouteWrapper from './components/RemoteNuclio/RemoteNuclioRouteWrapper'
 
 const Page = lazyRetry(() => import('./layout/Page/Page'))
 const Datasets = lazyRetry(() => import('./components/Datasets/Datasets'))
@@ -158,6 +159,11 @@ const App = () => {
       <>
         <Route path="" element={<Page isHeaderShown={isHeaderShown} />}>
           <Route path="projects" element={<Projects />} />
+          <Route path="projects/:projectName">
+            <Route path="real-time-functions/*" element={<RemoteNuclioRouteWrapper />} />
+            <Route path="create-function/*" element={<RemoteNuclioRouteWrapper />} />
+            <Route path="api-gateways/*" element={<RemoteNuclioRouteWrapper />} />
+          </Route>
           <Route path={`projects/*/${JOBS_MONITORING_PAGE}/*`} element={<ProjectsJobsMonitoring />}>
             {[
               `${JOBS_MONITORING_JOBS_TAB}/:jobName/:jobId/:tab`,
