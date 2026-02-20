@@ -181,7 +181,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled, project }) => {
         loading: nuclioStore.loading
       }}
       footerLinkText="All real-time functions"
-      href={`/projects/${params.projectName}/real-time-functions`}
+      href={generateNuclioLink(`/projects/${params.projectName}/real-time-functions`)}
       params={params}
       statistics={functions}
       subTitle="Recent real-time functions"

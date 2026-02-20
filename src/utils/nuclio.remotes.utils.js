@@ -25,9 +25,9 @@ const ensureNuclioRemote = async () => {
   if (registerPromise) return registerPromise
 
   // Hardcoded value for the nuclio remote as requested. to be removed
-  // const remoteEntryUrl = 'https://nuclio-ui.iguazio.vmdev210ig4.lab.iguazeng.com'
+  const remoteEntryUrl = 'https://nuclio-ui.iguazio.vmdev210ig4.lab.iguazeng.com'
 
-  const remoteEntryUrl = window?.mlrunConfig?.nuclioRemoteEntryUrl
+  // const remoteEntryUrl = window?.mlrunConfig?.nuclioRemoteEntryUrl
 
   registerPromise = (async () => {
     try {
