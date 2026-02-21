@@ -2,5 +2,5 @@
   "betaMode": "enabled",
   "nuclioMode": "enabled",
   "nuclioUiUrl": "https://igz-ui.iguazio.vmdev210ig4.lab.iguazeng.com",
-  "nuclioRemoteEntryUrl": "https://nuclio-ui.iguazio.vmdev210ig4.lab.iguazeng.com"
+  "nuclioRemoteEntryUrl": "https://igz-ui.iguazio.vmdev210ig4.lab.iguazeng.com/nuclio-ui"
 }
