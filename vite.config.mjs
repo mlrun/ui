@@ -31,7 +31,7 @@ export default defineConfig(async ({ mode }) => {
 
   return {
     plugins: [commonjs(), react(), federationPlugin, svgr(), eslint({ failOnError: false })],
-    base: env.NODE_ENV === 'production' ? env.VITE_PUBLIC_URL : '/',
+    base: '/mlrun-ui/',
     server: {
       proxy: {
         ...mlrunProxyConfig(env)
