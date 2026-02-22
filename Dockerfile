@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# build stage
-# node:20.18.2-alpine used as 20-alpine
-FROM quay.io/mlrun/node:20-alpine	 as build-stage
+# build stage (official Node on Alpine 3.20+ for CVE fixes: libxml2, busybox, libssl)
+FROM quay.io/mlrun/node:20-alpine3.20 AS build-stage
 
 RUN apk update && \
 	apk upgrade && \
@@ -34,7 +33,7 @@ RUN echo ${COMMIT_HASH} > ./build/COMMIT_HASH && \
     echo ${DATE} > ./build/BUILD_DATE
 
 # production stage
-FROM gcr.io/iguazio/nginx-unprivileged:1.21-alpine as production-stage
+FROM gcr.io/iguazio/nginx-unprivileged:1.29-alpine AS production-stage
 
 # align UID & GID with nginx-unprivileged image UID & GID
 ARG UID=101
