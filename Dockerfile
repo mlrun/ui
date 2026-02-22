@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# build stage: official Node 20 on Alpine 3.23 (multi-arch: amd64 + arm64).
-# Matches app (Node 20 LTS). Alpine 3.23 fixes all reported CVEs: libxml2,
-# busybox, ssl_client, libssl1.1/libcrypto1.1 → OpenSSL 3. Official image
-# auto-selects correct arch for CI (amd64) and arm64.
-FROM node:20-alpine3.23 AS build-stage
+# build stage: official Node 22 on Alpine 3.23 (multi-arch: amd64 + arm64).
+# Upgrade from Node 20: aligns with package.json (node 22.21.1), Vite 6–friendly.
+# Alpine 3.23 fixes all reported CVEs (libxml2, busybox, OpenSSL 3). Official
+# image auto-selects correct arch for CI (amd64) and arm64.
+FROM node:22-alpine3.23 AS build-stage
 
 RUN apk update && \
 	apk upgrade && \
