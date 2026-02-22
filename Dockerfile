@@ -12,8 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# build stage (official Node on Alpine 3.20+ for CVE fixes: libxml2, busybox, libssl)
-FROM --platform=linux/amd64 quay.io/mlrun/node:20-alpine3.20 AS build-stage
+# build stage: official Node 20 on Alpine 3.23 (multi-arch: amd64 + arm64).
+# Matches app (Node 20 LTS). Alpine 3.23 fixes all reported CVEs: libxml2,
+# busybox, ssl_client, libssl1.1/libcrypto1.1 → OpenSSL 3. Official image
+# auto-selects correct arch for CI (amd64) and arm64.
+FROM node:20-alpine3.23 AS build-stage
 
 RUN apk update && \
 	apk upgrade && \
@@ -32,8 +35,8 @@ ARG DATE
 RUN echo ${COMMIT_HASH} > ./build/COMMIT_HASH && \
     echo ${DATE} > ./build/BUILD_DATE
 
-# production stage (explicit platform for CI runners; match build stage)
-FROM --platform=linux/amd64 gcr.io/iguazio/nginx-unprivileged:1.29-alpine AS production-stage
+# production stage
+FROM gcr.io/iguazio/nginx-unprivileged:1.29-alpine as production-stage
 
 # align UID & GID with nginx-unprivileged image UID & GID
 ARG UID=101
