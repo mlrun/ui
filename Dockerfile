@@ -33,7 +33,7 @@ RUN echo ${COMMIT_HASH} > ./build/COMMIT_HASH && \
     echo ${DATE} > ./build/BUILD_DATE
 
 # production stage
-FROM gcr.io/iguazio/nginx-unprivileged:1.29-alpine AS production-stage
+FROM gcr.io/iguazio/nginx-unprivileged:1.29-alpine as production-stage
 
 # align UID & GID with nginx-unprivileged image UID & GID
 ARG UID=101
