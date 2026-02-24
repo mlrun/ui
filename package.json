@@ -8,7 +8,7 @@
     "@monaco-editor/react": "^4.7.0",
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "1.13.5",
-    "bfj": "^7.0.2",
+    "bfj": "^9.1.3",
     "camelcase": "^6.3.0",
     "chart.js": "^4.4.2",
     "chartjs-adapter-date-fns": "^3.0.0",
