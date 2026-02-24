@@ -56,7 +56,10 @@
     "uuid": "^9.0.1"
   },
   "overrides": {
+    "jsonpath": "^1.2.0",
     "minimist": "^1.2.8",
+    "minimatch": "^10.2.1",
+    "postcss": "^8.4.49",
     "qs": "^6.15.0",
     "tmp": "^0.2.5"
   },
