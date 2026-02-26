@@ -274,7 +274,7 @@ const ApplicationMetrics = () => {
               detailsStore.loadingCounter > 0) && <Loader />}
             {artifactsStore.modelEndpoints.loading ||
             applicationsStore.loading ? null : modelEndpoints.length === 0 ? (
-              <NoData message={requestErrorMessage || 'No model endpoints found.'} />
+              <NoData message={requestErrorMessage || 'No model endpoints found'} />
             ) : (
               <>
                 <div className="list-view__section list-view__section-list">

@@ -36,6 +36,8 @@ const headers = {
  */
 export const getHostAuth = () => window.__mlrunHostServices?.auth || window.__igzAuth || null
 
+// serialize a param with an array value as a repeated param, for example:
+// { label: ['host', 'owner=admin'] } => 'label=host&label=owner%3Dadmin'
 const paramsSerializer = params => qs.stringify(params, { arrayFormat: 'repeat' })
 
 const MAX_CONSECUTIVE_ERRORS_COUNT = 2
@@ -161,6 +163,7 @@ const requestLargeDataOnFulfill = config => {
     )
 
     config.signal = signal
+
     requestTimeouts[requestId] = timeoutId
     config.ui.requestId = requestId
     requestId++
@@ -168,8 +171,9 @@ const requestLargeDataOnFulfill = config => {
 
   return config
 }
-const requestLargeDataOnReject = error => Promise.reject(error)
-
+const requestLargeDataOnReject = error => {
+  return Promise.reject(error)
+}
 const responseFulfillInterceptor = response => {
   consecutiveErrorsCount = 0
 
@@ -187,6 +191,7 @@ const responseFulfillInterceptor = response => {
         response.config.ui.setRequestErrorMessage,
         response.config.ui.customErrorMessage
       )
+
       throw new Error(LARGE_REQUEST_CANCELED)
     } else {
       response.config.ui.setRequestErrorMessage('')
@@ -195,7 +200,6 @@ const responseFulfillInterceptor = response => {
 
   return response
 }
-
 const responseRejectInterceptor = error => {
   if (error.config?.ui?.requestId) {
     clearTimeout(requestTimeouts[error.config.ui.requestId])
@@ -221,9 +225,11 @@ const responseRejectInterceptor = error => {
   return Promise.reject(error)
 }
 
+// Request interceptors
 mainHttpClient.interceptors.request.use(requestLargeDataOnFulfill, requestLargeDataOnReject)
 mainHttpClientV2.interceptors.request.use(requestLargeDataOnFulfill, requestLargeDataOnReject)
 
+// Response interceptors
 mainHttpClient.interceptors.response.use(responseFulfillInterceptor, responseRejectInterceptor)
 mainHttpClientV2.interceptors.response.use(responseFulfillInterceptor, responseRejectInterceptor)
 

@@ -503,10 +503,10 @@ const Functions = ({ isAllVersions = false }) => {
   }, [params.projectName])
 
   useEffect(() => {
-    if (params.id && pageData.details.menu.length > 0) {
+    if (params.id && !isEmpty(selectedFunction) && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, pageData.details.menu, location, params.id, params.tab])
+  }, [navigate, pageData.details.menu, location, params.id, params.tab, selectedFunction])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))

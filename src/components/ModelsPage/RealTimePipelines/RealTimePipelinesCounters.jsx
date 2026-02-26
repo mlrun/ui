@@ -16,7 +16,7 @@ limitations under the License.
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { Loader } from 'igz-controls/components'
+import { Loader, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { FAILED_STATE, RUNNING_STATE } from '../../../constants'
 import StatsCard from '../../../common/StatsCard/StatsCard'
@@ -39,25 +39,35 @@ const RealTimePipelinesCounters = ({ statistics, loading }) => {
         <StatsCard.Header title="Root Functions Status" />
         <StatsCard.Row>
           <StatsCard.Col>
-            <StatsCard.MainCounter id="running-functions-counter" className={RUNNING_STATE}>
-              {loading ? <Loader section small secondary /> : statistics.runningFunctions}
-            </StatsCard.MainCounter>
-            <div className="stats__subtitle">
-              Running
-              <i className={`state-${RUNNING_STATE}`} />
-            </div>
+            <Tooltip className="data-ellipsis" template={<TextTooltipTemplate text="Running" />}>
+              <StatsCard.MainCounter id="running-functions-counter" className={RUNNING_STATE}>
+                {loading ? <Loader section small secondary /> : statistics.runningFunctions}
+              </StatsCard.MainCounter>
+
+              <div className="stats__subtitle">
+                Running
+                <i className={`state-${RUNNING_STATE}`} />
+              </div>
+            </Tooltip>
           </StatsCard.Col>
+
           <StatsCard.Col>
-            <StatsCard.MainCounter
-              id="failed-functions-counter"
-              className={statistics.failedFunctions > 0 ? FAILED_STATE : RUNNING_STATE}
+            <Tooltip
+              className="data-ellipsis"
+              template={<TextTooltipTemplate text="Error, Unhealthy" />}
             >
-              {loading ? <Loader section small secondary /> : statistics.failedFunctions}
-            </StatsCard.MainCounter>
-            <div className="stats__subtitle">
-              Failed
-              <i className={`state-${FAILED_STATE}`} />
-            </div>
+              <StatsCard.MainCounter
+                id="failed-functions-counter"
+                className={statistics.failedFunctions > 0 ? FAILED_STATE : RUNNING_STATE}
+              >
+                {loading ? <Loader section small secondary /> : statistics.failedFunctions}
+              </StatsCard.MainCounter>
+
+              <div className="stats__subtitle">
+                Failed
+                <i className={`state-${FAILED_STATE}`} />
+              </div>
+            </Tooltip>
           </StatsCard.Col>
         </StatsCard.Row>
       </StatsCard>

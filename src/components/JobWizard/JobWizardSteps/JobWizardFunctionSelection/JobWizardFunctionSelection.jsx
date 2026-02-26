@@ -331,6 +331,10 @@ const JobWizardFunctionSelection = ({
             hubFunctionLoadedRef.current = true
           }
         })
+        .catch(() => {
+          setTemplatesCategories([])
+          setTemplates([])
+        })
     }
   }, [activeTab, dispatch, formState.initialValues, setTemplates, setTemplatesCategories])
 

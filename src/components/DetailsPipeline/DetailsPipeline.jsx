@@ -72,7 +72,7 @@ const DetailsPipeline = ({ selectedItem }) => {
   const [stepIsSelected, setStepIsSelected] = useState(false)
   const [defaultErrorHandlerData, setDefaultErrorHandlerData] = useState(null)
   const defaultErrorHandlerIdRef = React.useRef(null)
-  const functionsStore = useSelector(store => store.functionsStore)
+  const isPipelineLoading = useSelector(store => store.artifactsStore.pipelines.loading)
   const { handleMonitoring, toggleConvertedYaml, frontendSpec } = useModelsPage()
   const reactFlowStoreApi = useStoreApi()
 
@@ -439,11 +439,12 @@ const DetailsPipeline = ({ selectedItem }) => {
             </Group>
           </div>
         )
-      ) : functionsStore.funcLoading ? (
+      ) : isPipelineLoading ? (
         <Loader />
       ) : (
-        <NoData message="The ingestion function has no steps and therefore no graph." />
+        <NoData message="The ingestion function has no steps and therefore no graph" />
       )}
+      {isPipelineLoading && !isEmpty(selectedItem?.graph) && <Loader />}
     </div>
   )
 }

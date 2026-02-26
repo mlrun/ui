@@ -46,7 +46,7 @@ export const filtersConfig = {
     initialValue: getDatePickerFilterValue(datePickerPastOptions, ANY_TIME_DATE_OPTION, true)
   },
   [DISPLAY_SYSTEM_PIPELINES_FILTER]: {
-    label: 'Display system pipelines:',
+    label: 'Display system pipelines',
     initialValue: false
   },
   [PIPELINE_TOPOLOGY_FILTER]: {
