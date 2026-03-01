@@ -17,20 +17,25 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { iguazioHttpClient } from '../httpClient'
+import projectsIguazioApi from '../api/projects-iguazio-api'
 
-const projectsIguazioApi = {
-  editProject: (projectId, data) => iguazioHttpClient.put(`/projects/${projectId}`, data),
-  getProjectPolicies: projectName =>
-    iguazioHttpClient.get(`/v1/authorization/projects/${projectName}/policies`),
-  setProjectMembership: (projectName, data) =>
-    iguazioHttpClient.put(`/v1/authorization/projects/${projectName}/roles`, data),
-  searchUsersMetadata: searchTerm =>
-    iguazioHttpClient.get('/v1/profile/search-users-metadata', { params: { searchTerm } }),
-  searchGroupsMetadata: searchTerm =>
-    iguazioHttpClient.get('/v1/profile/search-groups-metadata', { params: { searchTerm } }),
-  getActiveUser: () =>
-    iguazioHttpClient.get('/v1/authentication/self', { params: { format: 'full' } })
+const WRITE_ROLES = ['Owner', 'Admin', 'Editor']
+
+export const getActiveUsername = async () => {
+  const response = await projectsIguazioApi.getActiveUser()
+  return response.data.metadata?.username
 }
 
-export default projectsIguazioApi
+export const checkProjectWriteAccess = async (projectName, activeUsername = null) => {
+  if (!activeUsername) {
+    activeUsername = await getActiveUsername()
+  }
+
+  const policiesResponse = await projectsIguazioApi.getProjectPolicies(projectName)
+  const policies = policiesResponse.data.items || []
+  return policies.some(
+    policy =>
+      WRITE_ROLES.includes(policy.spec.displayName) &&
+      policy.status?.assignedMembers?.some(member => member.id === activeUsername)
+  )
+}

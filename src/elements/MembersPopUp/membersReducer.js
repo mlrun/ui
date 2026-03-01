@@ -23,8 +23,7 @@ import { groupBy } from 'lodash'
  * - activeUser               : logged in user data
  * - projectInfo              : additional information about the project such as ID and Owner of the project
  *                              (data is received from iguazio API).
- * - users                    : the list of user members (original list from response)
- * - useGroups                : the list of user-group members (original list from response)
+ * - projectAuthorizationRoles: the list of project policies from /authorization/projects/{project}/policies
  * - membersOriginal          : the list of users and user-groups that is used to revert changes
  * - members                  : the list of users and user-groups that is displayed in the table of the `Member` dialog (includes owner)
  * - groupedOriginalMembers   : grouped members list by their role, which is used to display the number of
@@ -43,8 +42,6 @@ export const initialMembersState = {
     }
   },
   projectAuthorizationRoles: [],
-  users: [],
-  userGroups: [],
   membersOriginal: [],
   members: [],
   groupedOriginalMembers: [],
@@ -60,9 +57,7 @@ export const membersActions = {
   SET_MEMBERS: 'SET_MEMBERS',
   SET_MEMBERS_ORIGINAL: 'SET_MEMBERS_ORIGINAL',
   SET_PROJECT_AUTHORIZATION_ROLES: 'SET_PROJECT_AUTHORIZATION_ROLES',
-  SET_PROJECT_INFO: 'SET_PROJECT_INFO',
-  SET_USERS: 'SET_USERS',
-  SET_USER_GROUPS: 'SET_USER_GROUPS'
+  SET_PROJECT_INFO: 'SET_PROJECT_INFO'
 }
 
 export const membersReducer = (state, { type, payload }) => {
@@ -106,16 +101,6 @@ export const membersReducer = (state, { type, payload }) => {
       return {
         ...state,
         projectInfo: payload
-      }
-    case membersActions.SET_USERS:
-      return {
-        ...state,
-        users: payload
-      }
-    case membersActions.SET_USER_GROUPS:
-      return {
-        ...state,
-        userGroups: payload
       }
     default:
       return state
