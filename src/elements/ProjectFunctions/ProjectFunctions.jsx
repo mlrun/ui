@@ -141,6 +141,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled, project }) => {
           `status-nuclio_${func?.status?.state}`,
           func?.spec?.disable && 'disabled'
         )
+
         return {
           name: {
             value: func.metadata.name,

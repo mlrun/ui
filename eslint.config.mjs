@@ -38,7 +38,6 @@ export default [
         version: 'detect'
       }
     },
-
     rules: {
       ...reactHooks.configs.recommended.rules,
       ...react.configs.recommended.rules,

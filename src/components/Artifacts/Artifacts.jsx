@@ -413,10 +413,10 @@ const Artifacts = ({
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
   useEffect(() => {
-    if (params.id && pageData.details.menu.length > 0) {
+    if (params.id && !isEmpty(selectedArtifact) && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, location, pageData.details.menu, params.tab, params.id])
+  }, [navigate, location, pageData.details.menu, params.tab, params.id, selectedArtifact])
 
   useEffect(() => {
     if (isEmpty(selectedArtifact)) {

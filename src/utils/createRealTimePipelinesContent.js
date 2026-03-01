@@ -17,18 +17,19 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import FunctionPopUp from '../elements/DetailsPopUp/FunctionPopUp/FunctionPopUp'
 
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
-import { openPopUp } from 'igz-controls/utils/common.util'
 import { DETAILS_MODEL_ENDPOINTS_TAB, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
 import { typesOfJob } from './jobs.util'
+import { generateNuclioLink } from './parseUri'
 
 const createRealTimePipelinesContent = (pipelines, projectName) =>
   pipelines.map(pipeline => {
     const modelEndpointsCount =
       Object.keys(pipeline.graph?.routes || {}).length ||
       pipeline.graph?.model_endpoints_names?.length // todo: add model endpoints count
+
+    const nuclioFunctionName = `${projectName}-${pipeline.name.toLowerCase()}`.slice(0, 63)
 
     return {
       data: {
@@ -49,14 +50,11 @@ const createRealTimePipelinesContent = (pipelines, projectName) =>
           headerId: 'rootFunction',
           headerLabel: 'Root function',
           value: pipeline.name,
-          className: 'table-cell-2',
+          className: 'table-cell-2 link-blue',
           showStatus: true,
           showTag: true,
-          handleClick: () =>
-            openPopUp(FunctionPopUp, {
-              funcUri: `${pipeline.project}/${pipeline.name}@${pipeline.hash}`,
-              funcTag: pipeline.tag
-            })
+          getLink: () =>
+            generateNuclioLink(`/projects/${projectName}/functions/${nuclioFunctionName}`)
         },
         {
           id: `topology.${pipeline.ui.identifierUnique}`,

@@ -21,6 +21,7 @@ import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
 
 import ActionBar from '../../ActionBar/ActionBar'
 import ArtifactsTableRow from '../../../elements/ArtifactsTableRow/ArtifactsTableRow'
@@ -205,10 +206,23 @@ const ModelEndpointsTable = React.forwardRef(
     ])
 
     useEffect(() => {
-      if (params.name && params.tag && pageData.details.menu.length > 0) {
+      if (
+        params.name &&
+        params.tag &&
+        !isEmpty(selectedModelEndpoint) &&
+        pageData.details.menu.length > 0
+      ) {
         isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
       }
-    }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
+    }, [
+      navigate,
+      location,
+      pageData.details.menu,
+      params.name,
+      params.tag,
+      params.tab,
+      selectedModelEndpoint
+    ])
 
     const tableContent = useMemo(() => {
       return modelEndpoints.map(contentItem =>

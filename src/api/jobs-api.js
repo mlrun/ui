@@ -78,7 +78,9 @@ const jobsApi = {
 
     return mainHttpClient.get(`/projects/${project}/logs/${id}`, {
       params,
-      signal
+      signal,
+      responseType: 'stream',
+      adapter: 'fetch'
     })
   },
   getScheduledJobs: (project, newConfig) => {

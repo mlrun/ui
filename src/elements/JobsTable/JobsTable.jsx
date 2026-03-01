@@ -218,10 +218,10 @@ const JobsTable = React.forwardRef(
     )
 
     useEffect(() => {
-      if (params.jobId && pageData.details.menu.length > 0) {
+      if (params.jobId && !isEmpty(selectedJob) && pageData.details.menu.length > 0) {
         isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
       }
-    }, [navigate, pageData.details.menu, location, params.jobId, params.tab])
+    }, [navigate, pageData.details.menu, location, params.jobId, params.tab, selectedJob])
 
     const handleConfirmAbortJob = useCallback(
       job => {

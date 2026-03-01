@@ -215,7 +215,7 @@ export const fetchHubFunctions = createAsyncThunk(
           thunkAPI.dispatch,
           setRequestErrorMessage
         )
-        thunkAPI.rejectWithValue(error)
+        return thunkAPI.rejectWithValue(error)
       })
   }
 )

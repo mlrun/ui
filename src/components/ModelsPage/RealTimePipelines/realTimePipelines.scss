@@ -64,22 +64,6 @@ $pipelinesRowHeightExtended: variables.$rowHeight;
         $pipelinesRowHeightExtended
       );
     }
-
-    &-full-space {
-      padding: 0;
-
-      .table__item_big {
-        padding: 0;
-
-        & > .item-header-wrapper {
-          padding: 20px 30px 0;
-        }
-
-        & > .item-info {
-          padding: 0;
-        }
-      }
-    }
   }
 }
 
