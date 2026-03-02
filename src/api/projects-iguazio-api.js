@@ -20,7 +20,11 @@ such restriction.
 import { iguazioHttpClient } from '../httpClient'
 
 const projectsIguazioApi = {
-  editProject: (projectId, data) => iguazioHttpClient.put(`/projects/${projectId}`, data),
+  updateProjectOwner: (projectName, owner) =>
+    iguazioHttpClient.put(`/v1/authorization/projects/${projectName}/owner`, {
+      owner,
+      project: projectName
+    }),
   getProjectPolicies: projectName =>
     iguazioHttpClient.get(`/v1/authorization/projects/${projectName}/policies`),
   setProjectMembership: (projectName, data) =>

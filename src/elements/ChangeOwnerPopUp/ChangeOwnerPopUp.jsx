@@ -38,8 +38,6 @@ import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { useDetectOutsideClick } from 'igz-controls/hooks'
 
-import { USER_ROLE } from '../../constants'
-
 import SearchIcon from 'igz-controls/images/search.svg?react'
 
 import './changeOwnerPopUp.scss'
@@ -75,23 +73,8 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
 
   const applyChanges = () => {
     if (newOwnerId) {
-      const projectData = {
-        data: {
-          type: 'project',
-          attributes: {},
-          relationships: {
-            owner: {
-              data: {
-                id: newOwnerId,
-                type: USER_ROLE
-              }
-            }
-          }
-        }
-      }
-
       projectsIguazioApi
-        .editProject(projectId, projectData)
+        .updateProjectOwner(projectId, newOwnerId)
         .then(changeOwnerCallback)
         .then(() => {
           dispatch(
@@ -108,7 +91,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
               ? 'Missing edit permission for the project'
               : getErrorMsg(error, 'Failed to edit project data')
 
-          showErrorNotification(dispatch, error, '', customErrorMsg, () => applyChanges(newOwnerId))
+          showErrorNotification(dispatch, error, '', customErrorMsg, () => applyChanges())
         })
         .finally(handleOnClose)
     }
