@@ -45,7 +45,6 @@ import {
   JOB_DEFAULT_OUTPUT_PATH,
   LIST_TUNING_STRATEGY,
   MAX_SELECTOR_CRITERIA,
-  PANEL_DEFAULT_ACCESS_KEY,
   PANEL_RERUN_MODE,
   PARAMETERS_FROM_FILE_VALUE,
   PARAMETERS_FROM_UI_VALUE,
@@ -171,8 +170,7 @@ export const generateJobWizardData = (
         currentProject?.spec?.artifact_path ||
         (frontendSpec.ce?.version && frontendSpec.default_artifact_path) ||
         JOB_DEFAULT_OUTPUT_PATH,
-      accessKey: true,
-      accessKeyInput: '',
+      apiTokenInput: '',
       environmentVariablesTable: parseEnvironmentVariables(environmentVariables)
       // secretSourcesTable - currently not shown
       // secretSourcesTable: []
@@ -290,12 +288,7 @@ export const generateJobWizardDefaultData = (
     [ADVANCED_STEP]: {
       inputPath: defaultData.task.spec.input_path,
       outputPath: defaultData.task.spec.output_path,
-      accessKey:
-        defaultData.function?.metadata?.credentials?.access_key === PANEL_DEFAULT_ACCESS_KEY,
-      accessKeyInput:
-        defaultData.function?.metadata?.credentials?.access_key === PANEL_DEFAULT_ACCESS_KEY
-          ? ''
-          : defaultData.function?.metadata?.credentials?.access_key,
+      apiTokenInput: defaultData.task.spec?.auth?.token_name ?? '',
       environmentVariablesTable: parseEnvironmentVariables(defaultData.function?.spec?.env ?? [])
       // secretSourcesTable - currently not shown
       // secretSourcesTable: parseSecretSources(defaultData.task.spec.secret_sources)
@@ -1025,6 +1018,9 @@ export const generateJobRequestData = (
         labels: convertChipsData(labels)
       },
       spec: {
+        ...(formData[ADVANCED_STEP].apiTokenInput && {
+          auth: { token_name: formData[ADVANCED_STEP].apiTokenInput }
+        }),
         inputs: generateDataInputs(formData[DATA_INPUTS_STEP].dataInputsTable),
         parameters: generateParameters(formData[PARAMETERS_STEP].parametersTable),
         // secretSourcesTable - currently not shown
@@ -1044,13 +1040,6 @@ export const generateJobRequestData = (
       }
     },
     function: {
-      metadata: {
-        credentials: {
-          access_key: formData[ADVANCED_STEP].accessKey
-            ? PANEL_DEFAULT_ACCESS_KEY
-            : formData[ADVANCED_STEP].accessKeyInput
-        }
-      },
       spec: {
         image:
           formData[RUN_DETAILS_STEP].image?.imageSource === EXISTING_IMAGE_SOURCE

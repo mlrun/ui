@@ -441,6 +441,8 @@ export const ENV_VARIABLE_TYPE_VALUE = 'value'
 export const ENV_VARIABLE_TYPE_SECRET = 'secret'
 
 export const PANEL_DEFAULT_ACCESS_KEY = '$generate'
+export const API_TOKEN_TIP =
+  'Get a valid API Token from your API tokens list (under Personal Settings)'
 
 /*=========== ML REACT FLOW =============*/
 
