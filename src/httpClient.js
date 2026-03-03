@@ -69,7 +69,7 @@ export const nuclioHttpClient = axios.create({
 })
 
 export const iguazioHttpClient = axios.create({
-  baseURL: import.meta.env.MODE === 'production' ? '/api' : '/iguazio/api',
+  baseURL: import.meta.env.MODE === 'production' ? '/igz/api' : '/iguazio/api',
   headers
 })
 
@@ -98,7 +98,7 @@ const attachHostAuth = client => {
       const req = err?.config
       if (!req) throw err
 
-      if ((status === 401 || status === 403) && !req._retry) {
+      if (status === 401 && !req._retry) {
         req._retry = true
 
         const token = await auth.refreshAccessToken?.()
