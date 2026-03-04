@@ -19,6 +19,7 @@ such restriction.
 */
 
 import { HTTP, HTTPS } from './constants'
+import chalk from 'react-dev-utils/chalk'
 
 const withProtocol = url => {
   if (!url || url.startsWith(HTTP) || url.startsWith(HTTPS)) return url
@@ -54,5 +55,7 @@ export const loadRemoteConfig = async (url, services = {}) => {
       nuclioUiUrl: uiUrl,
       nuclioRemoteEntryUrl: withProtocol(config.nuclioRemoteEntryUrl || uiUrl)
     }
-  } catch {}
+  } catch (err) {
+    throw new Error('[mlrun-ui] Config load failed. Falling back to Host injection.', err)
+  }
 }
