@@ -81,7 +81,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled, project }) => {
         label: 'Running',
         className: RUNNING_STATE,
         status: RUNNING_STATE,
-        href: generateNuclioLink(`/projects/${params.projectName}/functions`),
+        href: generateNuclioLink(`/projects/${params.projectName}/real-time-functions`),
         loading: nuclioStore.loading
       },
       failed: {
@@ -90,7 +90,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled, project }) => {
         label: 'Failed',
         status: FAILED_STATE,
         className: functionsFailed > 0 ? FAILED_STATE : RUNNING_STATE,
-        href: generateNuclioLink(`/projects/${params.projectName}/functions`),
+        href: generateNuclioLink(`/projects/${params.projectName}/real-time-functions`),
         loading: nuclioStore.loading
       },
       apiGateways: {
@@ -146,7 +146,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled, project }) => {
           name: {
             value: func.metadata.name,
             href: generateNuclioLink(
-              `/projects/${params.projectName}/functions/${func.metadata.name}`
+              `/projects/${params.projectName}/real-time-functions/${func.metadata.name}`
             ),
             className: 'table-cell_big'
           },
@@ -182,7 +182,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled, project }) => {
         loading: nuclioStore.loading
       }}
       footerLinkText="All real-time functions"
-      href={generateNuclioLink(`/projects/${params.projectName}/functions`)}
+      href={generateNuclioLink(`/projects/${params.projectName}/real-time-functions`)}
       params={params}
       statistics={functions}
       subTitle="Recent real-time functions"
