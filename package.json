@@ -61,6 +61,7 @@
     "minimatch": "^10.2.1",
     "postcss": "^8.4.49",
     "qs": "^6.15.0",
+    "serialize-javascript": "^7.0.3",
     "tmp": "^0.2.5"
   },
   "scripts": {
