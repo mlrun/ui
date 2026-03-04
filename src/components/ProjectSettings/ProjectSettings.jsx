@@ -42,11 +42,7 @@ import {
 } from '../../elements/MembersPopUp/membersReducer'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import {
-  COMPLETED_STATE,
-  PROJECTS_SETTINGS_MEMBERS_TAB,
-  PROJECTS_SETTINGS_SECRETS_TAB
-} from '../../constants'
+import { PROJECTS_SETTINGS_MEMBERS_TAB, PROJECTS_SETTINGS_SECRETS_TAB } from '../../constants'
 import { fetchProjects } from '../../reducers/projectReducer'
 import { onDeleteProject } from '../ProjectsPage/projects.util'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
@@ -75,7 +71,9 @@ const ProjectSettings = () => {
   )
 
   const userIsProjectOwner = useMemo(() => {
-    return membersState?.activeUser?.data?.id === membersState?.projectInfo?.owner.id
+    const activeUsername = membersState?.activeUser?.data?.attributes?.username
+    const ownerUsername = membersState?.projectInfo?.owner?.username
+    return Boolean(activeUsername && activeUsername === ownerUsername)
   }, [membersState])
 
   const projectMembersTabIsShown = useMemo(
@@ -83,93 +81,59 @@ const ProjectSettings = () => {
     [userIsProjectOwner, membersState, projectMembershipIsEnabled]
   )
 
-  const fetchProjectIdAndOwner = useCallback(() => {
+  const fetchProjectPolicies = useCallback(() => {
     return projectsIguazioApi
-      .getProjects({
-        params: { 'filter[name]': params.projectName, include: 'owner' }
+      .getProjectPolicies(params.projectName)
+      .then(policiesResponse => generateMembers(policiesResponse, membersDispatch))
+      .catch(error => {
+        showErrorNotification(dispatch, error, 'Failed to fetch project members')
+        throw error
       })
-      .then(projects => {
-        const currentProjectInfo = projects.data
-        const currentProjectData = currentProjectInfo.data?.[0]
-        const projectId = currentProjectData?.id
-        const ownerId = currentProjectData?.relationships?.owner?.data?.id ?? ''
-        const ownerInfo = currentProjectInfo?.included.find(data => data.id === ownerId)
-        const {
-          attributes: { username = '', first_name: firstName = '', last_name: lastName = '' } = {}
-        } = ownerInfo ?? {}
-        const payload = {
-          id: projectId,
-          owner: { id: ownerId, username, firstName, lastName }
-        }
+  }, [dispatch, params.projectName])
 
-        membersDispatch({
-          type: membersActions.SET_PROJECT_INFO,
-          payload
-        })
-
-        return payload
-      })
-  }, [params.projectName])
-
-  const fetchProjectMembers = useCallback(
-    (projectId, owner) => {
-      return projectsIguazioApi
-        .getProjectMembers(projectId)
-        .then(membersResponse => generateMembers(membersResponse, membersDispatch, owner))
-        .catch(error => showErrorNotification(dispatch, error, 'Failed to fetch project members'))
-    },
-    [dispatch]
-  )
-  const fetchProjectMembersVisibility = project => {
-    projectsIguazioApi
-      .getProjectMembersVisibility(project)
-      .then(() => {
-        setProjectMembersIsShown(true)
-      })
-      .catch(() => {
-        setProjectMembersIsShown(false)
-      })
-  }
   const fetchActiveUser = () => {
     projectsIguazioApi.getActiveUser().then(response => {
       const activeUser = response.data
-      activeUser.data.attributes.user_policies_collection = new Set([
-        ...activeUser.data.attributes.assigned_policies,
-        ...(activeUser.included?.reduce?.(
-          (policies, group) => [...policies, ...group.attributes.assigned_policies],
-          []
-        ) || [])
-      ])
+      const relationships = activeUser.relationships || []
+
+      const userGroupNames = new Set(
+        relationships
+          .filter(rel => rel['@type']?.includes('usergroup'))
+          .map(rel => rel.spec?.name)
+          .filter(Boolean)
+      )
+
+      const userPoliciesCollection = new Set(
+        relationships
+          .filter(rel => rel['@type']?.includes('policy.Policy'))
+          .map(rel => rel.spec?.displayName)
+          .filter(Boolean)
+      )
 
       membersDispatch({
         type: membersActions.SET_ACTIVE_USER,
-        payload: activeUser
+        payload: {
+          data: {
+            id: activeUser.metadata?.id,
+            attributes: {
+              username: activeUser.metadata?.username,
+              user_policies_collection: userPoliciesCollection,
+              user_group_names: userGroupNames
+            }
+          }
+        }
       })
     })
-  }
-  const fetchProjectOwnerVisibility = project => {
-    projectsIguazioApi
-      .getProjectOwnerVisibility(project)
-      .then(() => {
-        setProjectOwnerIsShown(true)
-      })
-      .catch(() => {
-        setProjectOwnerIsShown(false)
-      })
   }
 
   const fetchProjectUsersData = useCallback(() => {
     if (projectMembershipIsEnabled) {
-      fetchProjectOwnerVisibility(params.projectName)
-      fetchProjectIdAndOwner()
-        .then(({ id: projectId, owner }) => {
-          fetchActiveUser()
-          fetchProjectMembersVisibility(params.projectName)
+      fetchActiveUser()
 
-          return fetchProjectMembers(projectId, owner)
-        })
+      fetchProjectPolicies()
         .catch(() => {
           setProjectMembersIsShown(false)
+          setProjectOwnerIsShown(false)
         })
         .finally(() =>
           membersDispatch({
@@ -177,62 +141,64 @@ const ProjectSettings = () => {
           })
         )
     }
-  }, [fetchProjectIdAndOwner, fetchProjectMembers, params.projectName, projectMembershipIsEnabled])
+  }, [fetchProjectPolicies, projectMembershipIsEnabled])
 
-  const changeMembersCallback = (jobId, userIsValid) => {
-    const fetchJob = () => {
-      projectsIguazioApi
-        .getProjectJob(jobId)
-        .then(response => {
-          if (response.data.data.attributes.state !== COMPLETED_STATE) {
-            setTimeout(fetchJob, 1000)
-          } else {
-            if (userIsValid) {
-              fetchProjectMembers(membersState.projectInfo.id, membersState.projectInfo.owner).then(
-                () => {
-                  membersDispatch({
-                    type: membersActions.GET_PROJECT_USERS_DATA_END
-                  })
-                  dispatch(
-                    setNotification({
-                      status: 200,
-                      id: Math.random(),
-                      message: 'Members updated successfully'
-                    })
-                  )
-                }
-              )
-            } else {
-              dispatch(
-                setNotification({
-                  status: 200,
-                  id: Math.random(),
-                  message: 'Members updated successfully'
-                })
-              )
-              navigate('/projects/')
-            }
-          }
+  useEffect(() => {
+    const activeUsername = membersState?.activeUser?.data?.attributes?.username
+    const projectId = membersState?.projectInfo?.id
+
+    if (activeUsername && projectId) {
+      setProjectOwnerIsShown(userIsProjectOwner)
+      setProjectMembersIsShown(projectMembersTabIsShown)
+    }
+  }, [
+    membersState?.activeUser?.data?.attributes?.username,
+    membersState?.projectInfo?.id,
+    userIsProjectOwner,
+    projectMembersTabIsShown
+  ])
+
+  const changeMembersCallback = userIsStillMember => {
+    membersDispatch({
+      type: membersActions.GET_PROJECT_USERS_DATA_BEGIN
+    })
+
+    if (userIsStillMember) {
+      fetchProjectPolicies()
+        .then(() => {
+          membersDispatch({
+            type: membersActions.GET_PROJECT_USERS_DATA_END
+          })
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: 'Members updated successfully'
+            })
+          )
         })
         .catch(() => {
           membersDispatch({
             type: membersActions.GET_PROJECT_USERS_DATA_END
           })
         })
+    } else {
+      dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Members updated successfully'
+        })
+      )
+      navigate('/projects/')
     }
-
-    membersDispatch({
-      type: membersActions.GET_PROJECT_USERS_DATA_BEGIN
-    })
-
-    fetchJob()
   }
 
   const changeOwnerCallback = () => {
-    const prevOwner = membersState.projectInfo.owner.id
+    const prevOwnerUsername = membersState.projectInfo.owner.username
 
-    return fetchProjectIdAndOwner().then(() => {
-      if (!membersState.users.some(member => member.id === prevOwner)) {
+    return fetchProjectPolicies().then(() => {
+      if (!membersState.members.some(member => member.id === prevOwnerUsername)) {
         navigate('/projects/')
       }
     })

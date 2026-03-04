@@ -20,50 +20,21 @@ such restriction.
 import { iguazioHttpClient } from '../httpClient'
 
 const projectsIguazioApi = {
-  editProject: (projectId, data) => iguazioHttpClient.put(`/projects/${projectId}`, data),
-  getProjectJob: jobId => iguazioHttpClient.get(`/jobs/${jobId}`),
-  getProjects: config => {
-    return iguazioHttpClient.get('/projects', config)
-  },
-  getProjectMembers: projectId => {
-    return iguazioHttpClient.get(`/projects/${projectId}`, {
-      params: {
-        include:
-          'project_authorization_roles.principal_users,project_authorization_roles.principal_user_groups'
-      }
-    })
-  },
-  getProjectMembersVisibility: project => {
-    return iguazioHttpClient.get(`/projects/__name__/${project}/authorization`, {
-      params: {
-        action: 'authorization/roles',
-        sub_resource: 'authorization/roles'
-      }
-    })
-  },
-  getProjectOwnerVisibility: project => {
-    return iguazioHttpClient.get(`/projects/__name__/${project}/authorization`, {
-      params: {
-        action: 'update',
-        sub_resource: 'authorization/owner'
-      }
-    })
-  },
-  getProjectWorkflowsUpdateAuthorization: project => {
-    return iguazioHttpClient.get(`/projects/__name__/${project}/authorization`, {
-      params: {
-        action: 'update',
-        sub_resource: 'workflow'
-      }
-    })
-  },
-
-  updateProjectMembers: data => {
-    return iguazioHttpClient.post('/async_transactions', data)
-  },
-  getScrubbedUsers: config => iguazioHttpClient.get('/scrubbed_users', config),
-  getScrubbedUserGroups: config => iguazioHttpClient.get('/scrubbed_user_groups', config),
-  getActiveUser: () => iguazioHttpClient.get('/self')
+  updateProjectOwner: (projectName, owner) =>
+    iguazioHttpClient.put(`/v1/authorization/projects/${projectName}/owner`, {
+      owner,
+      project: projectName
+    }),
+  getProjectPolicies: projectName =>
+    iguazioHttpClient.get(`/v1/authorization/projects/${projectName}/policies`),
+  setProjectMembership: (projectName, data) =>
+    iguazioHttpClient.put(`/v1/authorization/projects/${projectName}/roles`, data),
+  searchUsersMetadata: searchTerm =>
+    iguazioHttpClient.get('/v1/profile/search-users-metadata', { params: { searchTerm } }),
+  searchGroupsMetadata: searchTerm =>
+    iguazioHttpClient.get('/v1/profile/search-groups-metadata', { params: { searchTerm } }),
+  getActiveUser: () =>
+    iguazioHttpClient.get('/v1/authentication/self', { params: { format: 'full' } })
 }
 
 export default projectsIguazioApi

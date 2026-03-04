@@ -34,12 +34,9 @@ import {
 } from 'igz-controls/constants'
 import { deleteUnsafeHtml } from 'igz-controls/utils/string.util'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
-import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { useDetectOutsideClick } from 'igz-controls/hooks'
-
-import { USER_ROLE } from '../../constants'
 
 import SearchIcon from 'igz-controls/images/search.svg?react'
 
@@ -76,23 +73,8 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
 
   const applyChanges = () => {
     if (newOwnerId) {
-      const projectData = {
-        data: {
-          type: 'project',
-          attributes: {},
-          relationships: {
-            owner: {
-              data: {
-                id: newOwnerId,
-                type: USER_ROLE
-              }
-            }
-          }
-        }
-      }
-
       projectsIguazioApi
-        .editProject(projectId, projectData)
+        .updateProjectOwner(projectId, newOwnerId)
         .then(changeOwnerCallback)
         .then(() => {
           dispatch(
@@ -109,39 +91,25 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
               ? 'Missing edit permission for the project'
               : getErrorMsg(error, 'Failed to edit project data')
 
-          showErrorNotification(dispatch, error, '', customErrorMsg, () => applyChanges(newOwnerId))
+          showErrorNotification(dispatch, error, '', customErrorMsg, () => applyChanges())
         })
         .finally(handleOnClose)
     }
   }
 
   const generateSuggestionList = async (memberName, resolve) => {
-    const params = {
-      'filter[assigned_policies]': '[$contains_any]Developer,Project Admin',
-      'page[size]': 200
-    }
-    const requiredIgzVersion = '3.5.3'
     let formattedUsers = []
 
-    if (isIgzVersionCompatible(requiredIgzVersion)) {
-      params['filter[username]'] = `[$contains_istr]${memberName}`
-    }
-
     try {
-      const response = await projectsIguazioApi.getScrubbedUsers({
-        params
-      })
-
-      const {
-        data: { data: users }
-      } = response
+      const response = await projectsIguazioApi.searchUsersMetadata(memberName)
+      const users = response.data.items || []
 
       formattedUsers = users.map(user => {
         return {
-          name: `${user.attributes.first_name} ${user.attributes.last_name}`,
-          username: user.attributes.username,
-          label: `${user.attributes.first_name} ${user.attributes.last_name} (${user.attributes.username})`,
-          id: user.id,
+          name: `${user.firstName} ${user.lastName}`,
+          username: user.username,
+          label: `${user.firstName} ${user.lastName} (${user.username})`,
+          id: user.username,
           role: ''
         }
       })

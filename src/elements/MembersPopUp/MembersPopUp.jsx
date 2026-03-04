@@ -34,11 +34,10 @@ import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
 import { getRoleOptions, initialNewMembersRole, DELETE_MODIFICATION } from './membersPopUp.util'
-import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
 import { membersActions } from './membersReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
-import { USER_GROUP_ROLE, USER_ROLE } from '../../constants'
+import { OWNER_ROLE, USER_GROUP_ROLE, USER_ROLE } from '../../constants'
 
 import Add from 'igz-controls/images/add.svg?react'
 import Close from 'igz-controls/images/close.svg?react'
@@ -97,79 +96,27 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
   }
 
   const applyMembersChanges = () => {
-    const changesBody = {
-      data: {
-        attributes: {
-          metadata: {
-            project_ids: [membersData.projectInfo.id],
-            notify_by_email: notifyByEmail
-          },
-          requests: []
+    const projectName = membersData.projectInfo.id
+    const visibleMembers = membersData.members.filter(
+      member => member.modification !== DELETE_MODIFICATION && member.role !== OWNER_ROLE
+    )
+    const groupedByRole = groupBy(visibleMembers, 'role')
+
+    const membership = {}
+
+    membersState.projectAuthorizationRoles
+      .filter(policy => policy.spec.displayName !== OWNER_ROLE)
+      .forEach(policy => {
+        const roleName = policy.spec.displayName.toLowerCase()
+        membership[roleName] = {
+          values: (groupedByRole[policy.spec.displayName] || []).map(member => member.id)
         }
-      }
+      })
+
+    const body = {
+      membership,
+      override: true
     }
-    const rolesData = {}
-    const modifiedRoles = Array.from(
-      membersData.members.reduce((prevValue, member) => {
-        if (member.modification) {
-          prevValue.add(member.role)
-
-          if (member.initialRole) {
-            prevValue.add(member.initialRole)
-          }
-        }
-
-        return prevValue
-      }, new Set())
-    )
-    const groupedVisibleMembers = groupBy(
-      membersData.members.filter(member => member.modification !== DELETE_MODIFICATION),
-      item => item.role
-    )
-
-    membersState.projectAuthorizationRoles.forEach(roleData => {
-      rolesData[roleData.attributes.name] = roleData
-    })
-
-    changesBody.data.attributes.requests = modifiedRoles.map(modifiedRole => {
-      const membersCopy = groupedVisibleMembers[modifiedRole] ?? []
-
-      return {
-        method: 'put',
-        resource: `project_authorization_roles/${rolesData[modifiedRole].id}`,
-        body: {
-          data: {
-            type: rolesData[modifiedRole].type,
-            attributes: {
-              name: modifiedRole,
-              permissions: rolesData[modifiedRole].attributes.permissions
-            },
-            relationships: {
-              project: {
-                data: {
-                  type: 'project',
-                  id: membersData.projectInfo.id
-                }
-              },
-              principal_users: {
-                data: membersCopy
-                  .filter(member => member.type === USER_ROLE)
-                  .map(member => {
-                    return { id: member.id, type: member.type }
-                  })
-              },
-              principal_user_groups: {
-                data: membersCopy
-                  .filter(member => member.type === 'user_group')
-                  .map(member => {
-                    return { id: member.id, type: member.type }
-                  })
-              }
-            }
-          }
-        }
-      }
-    })
 
     membersDispatch({
       type: membersActions.SET_MEMBERS,
@@ -177,23 +124,18 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
     })
 
     projectsIguazioApi
-      .updateProjectMembers(changesBody)
-      .then(response => {
-        const validMember = membersData.members?.some(
+      .setProjectMembership(projectName, body)
+      .then(() => {
+        const activeUsername = membersData.activeUser.data?.attributes?.username
+        const userIsStillMember = membersData.members?.some(
           member =>
             member.modification !== DELETE_MODIFICATION &&
-            (member.id === membersData.activeUser.data?.id ||
+            (member.id === activeUsername ||
               (member.type === USER_GROUP_ROLE &&
-                membersData.activeUser.data?.relationships?.user_groups?.data?.some?.(
-                  group => group.id === member.id
-                )))
+                membersData.activeUser.data?.attributes?.user_group_names?.has(member.id)))
         )
-        const userIsProjectSecurityAdmin =
-          membersData.activeUser.data?.attributes?.user_policies_collection?.has(
-            'Project Security Admin'
-          ) ?? false
 
-        changeMembersCallback(response.data.data.id, validMember || userIsProjectSecurityAdmin)
+        changeMembersCallback(userIsStillMember)
       })
       .catch(error => {
         const customErrorMsg =
@@ -225,59 +167,42 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
     handleOnClose()
   }
 
+  const toSuggestionItem = (id, type) => {
+    const existingMember = membersData.members.find(
+      member => member.id === id && member.modification !== DELETE_MODIFICATION
+    )
+
+    return {
+      label: id,
+      id,
+      subLabel: existingMember?.role ?? '',
+      disabled: Boolean(existingMember),
+      icon:
+        type === USER_ROLE ? (
+          <i data-identity-type="user">
+            <User />
+          </i>
+        ) : (
+          <i data-identity-type="user_group">
+            <Users />
+          </i>
+        ),
+      ui: { type }
+    }
+  }
+
   const generateUsersSuggestionList = debounce(searchQuery => {
-    const requiredIgzVersion = '3.5.3'
-    let paramsScrubbedUsers = {
-      'filter[username]': `[$match-i]^.*${searchQuery}.*$`,
-      'page[size]': 200
-    }
-    let paramsUserGroups = { 'filter[name]': `[$match-i]^.*${searchQuery}.*$`, 'page[size]': 200 }
-
-    if (isIgzVersionCompatible(requiredIgzVersion)) {
-      paramsScrubbedUsers['filter[username]'] = `[$contains_istr]${searchQuery}`
-      paramsUserGroups['filter[name]'] = `[$contains_istr]${searchQuery}`
-    }
-
-    const getUsersPromise = projectsIguazioApi.getScrubbedUsers({
-      params: paramsScrubbedUsers
-    })
-    const getUserGroupsPromise = projectsIguazioApi.getScrubbedUserGroups({
-      params: paramsUserGroups
-    })
-    const suggestionList = []
+    const getUsersPromise = projectsIguazioApi.searchUsersMetadata(searchQuery)
+    const getUserGroupsPromise = projectsIguazioApi.searchGroupsMetadata(searchQuery)
 
     Promise.all([getUsersPromise, getUserGroupsPromise])
-      .then(response => {
-        response.forEach(identityResponse => {
-          identityResponse.data.data.forEach(identity => {
-            const existingMember = membersData.members.find(
-              member => member.id === identity.id && member.modification !== DELETE_MODIFICATION
-            )
-
-            suggestionList.push({
-              label:
-                identity.type === USER_ROLE
-                  ? identity.attributes.username
-                  : identity.attributes.name,
-              id: identity.id,
-              subLabel: existingMember?.role ?? '',
-              disabled: Boolean(existingMember),
-              icon:
-                identity.type === USER_ROLE ? (
-                  <i data-identity-type="user">
-                    <User />
-                  </i>
-                ) : (
-                  <i data-identity-type="user_group">
-                    <Users />
-                  </i>
-                ),
-              ui: {
-                type: identity.type
-              }
-            })
-          })
-        })
+      .then(([usersResponse, groupsResponse]) => {
+        const users = usersResponse.data.items || []
+        const groups = groupsResponse.data.items || []
+        const suggestionList = [
+          ...users.map(user => toSuggestionItem(user.username, USER_ROLE)),
+          ...groups.map(group => toSuggestionItem(group.path || group.groupId, USER_GROUP_ROLE))
+        ]
 
         setNewMembersSuggestionList(suggestionList)
       })

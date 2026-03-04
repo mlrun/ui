@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { forEach, groupBy } from 'lodash'
 
 import { membersActions } from '../../elements/MembersPopUp/membersReducer'
 
@@ -77,58 +76,52 @@ const addMember = (members, name, id, type, initialRole, role) => {
   })
 }
 
-export const generateMembers = (membersResponse, membersDispatch, owner) => {
+export const generateMembers = (policiesResponse, membersDispatch) => {
   const members = []
-  const {
-    project_authorization_role: projectAuthorizationRoles = [],
-    user: users = [],
-    user_group: userGroups = []
-  } = groupBy(membersResponse.data.included, includeItem => {
-    return includeItem.type
-  })
+  const memberSet = new Set()
+  const policies = policiesResponse.data.items || []
+
   membersDispatch({
     type: membersActions.SET_PROJECT_AUTHORIZATION_ROLES,
-    payload: projectAuthorizationRoles
+    payload: policies
   })
+
+  const ownerPolicy = policies.find(policy => policy.spec.displayName === OWNER_ROLE)
+  const ownerMembers = ownerPolicy?.status?.assignedMembers || []
+  const ownerMemberIds = new Set(ownerMembers.map(m => m.id))
+  const ownerUsername = ownerMembers[0]?.id || ''
+
   membersDispatch({
-    type: membersActions.SET_USERS,
-    payload: users
-  })
-  membersDispatch({
-    type: membersActions.SET_USER_GROUPS,
-    payload: userGroups
-  })
-
-  if (owner.id && !isOwnerInMembersList(owner.id, users)) {
-    addMember(members, owner.username, owner.id, USER_ROLE, OWNER_ROLE, OWNER_ROLE)
-  }
-
-  projectAuthorizationRoles.forEach(role => {
-    if (role.relationships) {
-      forEach(role.relationships, relationData => {
-        relationData.data.forEach(identity => {
-          const identityList = identity.type === USER_ROLE ? users : userGroups
-
-          const {
-            attributes: { name, username },
-            id,
-            type
-          } = identityList.find(identityData => {
-            return identityData.id === identity.id
-          })
-
-          addMember(
-            members,
-            type === USER_ROLE ? username : name,
-            id,
-            type,
-            owner.id === id ? OWNER_ROLE : role.attributes.name,
-            owner.id === id ? OWNER_ROLE : role.attributes.name
-          )
-        })
-      })
+    type: membersActions.SET_PROJECT_INFO,
+    payload: {
+      id: policies[0]?.spec?.projectName || '',
+      owner: { id: ownerUsername, username: ownerUsername, firstName: '', lastName: '' }
     }
   })
+
+  policies.forEach(policy => {
+    const roleName = policy.spec.displayName
+    const assignedMembers = policy.status?.assignedMembers || []
+
+    assignedMembers.forEach(assignedMember => {
+      if (memberSet.has(assignedMember.id)) return
+
+      const memberType = assignedMember.kind === USER_ROLE ? USER_ROLE : USER_GROUP_ROLE
+      const isOwner = ownerMemberIds.has(assignedMember.id)
+      const effectiveRole = isOwner ? OWNER_ROLE : roleName
+
+      addMember(
+        members,
+        assignedMember.id,
+        assignedMember.id,
+        memberType,
+        effectiveRole,
+        effectiveRole
+      )
+      memberSet.add(assignedMember.id)
+    })
+  })
+
   membersDispatch({
     type: membersActions.SET_MEMBERS_ORIGINAL,
     payload: members
@@ -150,21 +143,14 @@ export const isProjectMembersTabShown = (
 
   const userIsProjectSecurityAdmin =
     activeUser.data?.attributes?.user_policies_collection?.has('Project Security Admin') ?? false
+  const activeUsername = activeUser.data?.attributes?.username
   const userIsAdmin = members.some(
     member =>
       member.role === ADMIN_ROLE &&
-      (member.id === activeUser.data?.id ||
+      (member.id === activeUsername ||
         (member.type === USER_GROUP_ROLE &&
-          activeUser.data?.relationships?.user_groups?.data?.some?.(
-            group => group.id === member.id
-          )))
+          activeUser.data?.attributes?.user_group_names?.has(member.id)))
   )
 
   return userIsProjectOwner || userIsAdmin || userIsProjectSecurityAdmin
-}
-
-const isOwnerInMembersList = (ownerId, membersList) => {
-  return membersList.some(member => {
-    return member.id === ownerId
-  })
 }
