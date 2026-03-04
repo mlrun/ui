@@ -19,7 +19,6 @@ such restriction.
 */
 
 import { HTTP, HTTPS } from './constants'
-import chalk from 'react-dev-utils/chalk'
 
 const withProtocol = url => {
   if (!url || url.startsWith(HTTP) || url.startsWith(HTTPS)) return url
