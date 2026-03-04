@@ -1,6 +1,6 @@
 {
   "betaMode": "enabled",
   "nuclioMode": "enabled",
-  "nuclioUiUrl": "https://igz-ui.iguazio.vmdev210ig4.lab.iguazeng.com",
-  "nuclioRemoteEntryUrl": "https://igz-ui.iguazio.vmdev210ig4.lab.iguazeng.com/nuclio-ui"
+  "nuclioUiUrl": "http://localhost:4000",
+  "nuclioRemoteEntryUrl": "http://localhost:5189"
 }

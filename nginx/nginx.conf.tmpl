@@ -13,19 +13,14 @@ server {
     add_header Access-Control-Allow-Headers 'Content-Type, Authorization';
 
     location / {
-        # Remote modules usually don't need index.html, but we keep it for fallback
-        index index.html;
-        try_files $uri $uri/ /index.html;
+        # Show landing page when accessing the remote directly
+        index landing.html;
+        try_files $uri $uri/ /landing.html;
 
-        # Ensure the remote entry point is fresh
+        # Ensure remote assets are always fresh
         if ($request_filename ~* .*\.(?:js|json)$ ) {
             add_header Cache-Control "no-cache, no-store, must-revalidate";
         }
-    }
-
-    # Health check
-    location /healthz {
-        return 200 'OK';
     }
 
     error_page 500 502 503 504 /50x.html;
