@@ -54,7 +54,5 @@ export const loadRemoteConfig = async (url, services = {}) => {
       nuclioUiUrl: uiUrl,
       nuclioRemoteEntryUrl: withProtocol(config.nuclioRemoteEntryUrl || uiUrl)
     }
-  } catch (err) {
-    console.warn('[mlrun-ui] Config load failed. Falling back to Host injection.', err)
-  }
+  } catch {}
 }
