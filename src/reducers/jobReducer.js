@@ -65,11 +65,6 @@ const initialState = {
       }
     },
     function: {
-      metadata: {
-        credentials: {
-          access_key: ''
-        }
-      },
       spec: {
         env: [],
         node_selector: {},

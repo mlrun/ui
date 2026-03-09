@@ -177,11 +177,6 @@ const generateEditableItem = (functionData, job) => {
   return {
     rerun_object: {
       function: {
-        metadata: {
-          credentials: {
-            access_key: functionData?.metadata?.credentials?.access_key ?? ''
-          }
-        },
         spec: {
           env: functionData?.spec.env ?? [],
           resources: functionData?.spec.resources,
@@ -200,6 +195,7 @@ const generateEditableItem = (functionData, job) => {
           project: job.project
         },
         spec: {
+          ...(job.auth?.token_name && { auth: { token_name: job.auth.token_name } }),
           hyper_param_options: job.hyper_param_options,
           function: job.function,
           handler: job?.handler ?? '',
