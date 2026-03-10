@@ -170,7 +170,7 @@ export const generateJobWizardData = (
         currentProject?.spec?.artifact_path ||
         (frontendSpec.ce?.version && frontendSpec.default_artifact_path) ||
         JOB_DEFAULT_OUTPUT_PATH,
-      apiTokenInput: '',
+      apiTokenInput: 'default',
       environmentVariablesTable: parseEnvironmentVariables(environmentVariables)
       // secretSourcesTable - currently not shown
       // secretSourcesTable: []
