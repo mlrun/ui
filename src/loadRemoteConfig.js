@@ -20,6 +20,11 @@ such restriction.
 
 import { HTTP, HTTPS } from './constants'
 
+const withProtocol = url => {
+  if (!url || url.startsWith(HTTP) || url.startsWith(HTTPS)) return url
+  return `${window.location.protocol}//${url.replace(/^\/+/, '')}`
+}
+
 export const loadRemoteConfig = async (url, services = {}) => {
   /**
    * Store host-provided services (auth bridge from igz-ui)
@@ -28,23 +33,28 @@ export const loadRemoteConfig = async (url, services = {}) => {
     window.__mlrunHostServices = services
   }
 
-  const response = await fetch(`${url ?? import.meta.env.VITE_PUBLIC_URL}/config.json`, {
-    cache: 'no-store'
-  })
+  // Priority 1: Use config injected by the Host (igz-ui)
+  if (window.mlrunConfig && Object.keys(window.mlrunConfig).length > 0) {
+    window.mlrunConfig.nuclioUiUrl = withProtocol(window.mlrunConfig.nuclioUiUrl)
+    window.mlrunConfig.nuclioRemoteEntryUrl = withProtocol(window.mlrunConfig.nuclioRemoteEntryUrl)
+    return
+  }
 
-  const config = await response.json()
+  // Priority 2: Standalone Fallback (Local Dev)
+  try {
+    const configPath = `${url ?? import.meta.env.VITE_PUBLIC_URL}/config.json`
+    const response = await fetch(configPath, { cache: 'no-store' })
+    if (!response.ok) throw new Error(response.status)
 
-  if (config.nuclioUiUrl) {
-    const mlrunProtocol =
-      config.nuclioUiUrl.startsWith(HTTP) || config.nuclioUiUrl.startsWith(HTTPS)
-        ? ''
-        : `${window.location.protocol}//`
+    const config = await response.json()
+    const uiUrl = withProtocol(config.nuclioUiUrl)
 
     window.mlrunConfig = {
       ...config,
-      nuclioUiUrl: `${mlrunProtocol}${config.nuclioUiUrl}`
+      nuclioUiUrl: uiUrl,
+      nuclioRemoteEntryUrl: withProtocol(config.nuclioRemoteEntryUrl || uiUrl)
     }
-  } else {
-    window.mlrunConfig = config
+  } catch (err) {
+    throw new Error('[mlrun-ui] Config load failed. Falling back to Host injection.', err)
   }
 }
