@@ -141,8 +141,8 @@ export const isProjectMembersTabShown = (
     return false
   }
 
-  const userIsProjectSecurityAdmin =
-    activeUser.data?.attributes?.user_policies_collection?.has('Project Security Admin') ?? false
+  const userIsSystemAdmin =
+    activeUser.data?.attributes?.user_policies_collection?.has('System Admin') ?? false
   const activeUsername = activeUser.data?.attributes?.username
   const userIsAdmin = members.some(
     member =>
@@ -152,5 +152,5 @@ export const isProjectMembersTabShown = (
           activeUser.data?.attributes?.user_group_names?.has(member.id)))
   )
 
-  return userIsProjectOwner || userIsAdmin || userIsProjectSecurityAdmin
+  return userIsProjectOwner || userIsAdmin || userIsSystemAdmin
 }
