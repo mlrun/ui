@@ -160,6 +160,7 @@ const App = () => {
         <Route path="" element={<Page isHeaderShown={isHeaderShown} />}>
           <Route path="projects" element={<Projects />} />
           <Route path="projects/:projectName">
+            <Route index element={<Navigate replace to={PROJECT_MONITOR} />} />
             <Route path="real-time-functions/*" element={<RemoteNuclioRouteWrapper />} />
             <Route path="create-function/*" element={<RemoteNuclioRouteWrapper />} />
             <Route path="api-gateways/*" element={<RemoteNuclioRouteWrapper />} />
@@ -190,7 +191,6 @@ const App = () => {
             <Route path={JOBS_MONITORING_SCHEDULED_TAB} element={<ScheduledMonitoring />} />
             <Route path="*" element={<Navigate to={JOBS_MONITORING_JOBS_TAB} replace />} />
           </Route>
-          <Route path="projects/:projectName" element={<Navigate replace to={PROJECT_MONITOR} />} />
           <Route path={`projects/:projectName/${PROJECT_MONITOR}`} element={<ProjectMonitor />} />
 
           {[

@@ -37,7 +37,6 @@ import {
   DOCUMENTS_PAGE,
   LLM_PROMPTS_PAGE
 } from '../../constants'
-import { generateNuclioLink } from '../../utils'
 
 export const generateMlrunScreens = params =>
   params.projectName
@@ -60,16 +59,8 @@ export const generateMlrunScreens = params =>
         { label: 'Monitoring app', id: MONITORING_APP_PAGE },
         { label: 'Jobs and workflows', id: 'jobs' },
         { label: 'ML functions', id: 'functions' },
-        {
-          label: 'Real-time functions',
-          id: 'Real-time functions',
-          link: generateNuclioLink(`/projects/${params.projectName}/functions`)
-        },
-        {
-          label: 'API gateways',
-          id: 'API gateways',
-          link: generateNuclioLink(`/projects/${params.projectName}/api-gateways`)
-        },
+        { label: 'Real-time functions', id: 'real-time-functions' },
+        { label: 'API gateways', id: 'api-gateways' },
         {
           label: 'Alerts',
           id: ALERTS_PAGE_PATH,

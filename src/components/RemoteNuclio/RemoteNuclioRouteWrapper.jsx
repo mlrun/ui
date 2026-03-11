@@ -24,12 +24,37 @@ import NuclioRemoteError from './NuclioRemoteError'
 import { Loader } from 'igz-controls/components'
 
 import './RemoteNuclio.scss'
+import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 
 const RemoteNuclioApp = React.lazy(() => loadNuclioApp())
 
 const RemoteNuclioRouteWrapper = () => {
   const [ready, setReady] = useState(false)
   const [error, setError] = useState(false)
+
+  useEffect(() => {
+    const origPushState = history.pushState
+    const origReplaceState = history.replaceState
+
+    history.pushState = function (...args) {
+      origPushState.apply(this, args)
+      Promise.resolve().then(() => {
+        window.dispatchEvent(new PopStateEvent('popstate'))
+      })
+    }
+
+    history.replaceState = function (...args) {
+      origReplaceState.apply(this, args)
+      Promise.resolve().then(() => {
+        window.dispatchEvent(new PopStateEvent('popstate'))
+      })
+    }
+
+    return () => {
+      history.pushState = origPushState
+      history.replaceState = origReplaceState
+    }
+  }, [])
 
   useEffect(() => {
     const init = async () => {
@@ -43,31 +68,40 @@ const RemoteNuclioRouteWrapper = () => {
     void init()
   }, [])
 
-  return (
-    <div className="remote-nuclio-container">
-      {error ? (
-        <NuclioRemoteError />
-      ) : !ready ? (
+  const renderContent = () => {
+    if (error) {
+      return <NuclioRemoteError />
+    }
+
+    if (!ready) {
+      return (
         <div className="flex-center">
           <Loader />
         </div>
-      ) : (
-        <ErrorBoundary fallback={<NuclioRemoteError />}>
-          <Suspense
-            fallback={
-              <div className="flex-center">
-                <Loader />
-              </div>
-            }
-          >
-            <div style={{ width: '100%', height: '100%', minHeight: '1200px' }}>
-              <RemoteNuclioApp />
+      )
+    }
+
+    return (
+      <ErrorBoundary fallback={<NuclioRemoteError />}>
+        <Suspense
+          fallback={
+            <div className="flex-center">
+              <Loader />
             </div>
-          </Suspense>
-        </ErrorBoundary>
-      )}
-    </div>
-  )
+          }
+        >
+          <div className="nuclio-app-wrapper">
+            <div className="content__header">
+              <Breadcrumbs />
+            </div>
+            <RemoteNuclioApp />
+          </div>
+        </Suspense>
+      </ErrorBoundary>
+    )
+  }
+
+  return <div className="remote-nuclio-container">{renderContent()}</div>
 }
 
 export default RemoteNuclioRouteWrapper
