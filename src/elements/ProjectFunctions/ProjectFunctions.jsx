@@ -21,7 +21,6 @@ import React, { useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 import classnames from 'classnames'
-import { lowerCase, upperFirst } from 'lodash'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -39,6 +38,7 @@ import { generateNuclioLink } from '../../utils'
 import { groupByUniqName } from '../../utils/groupByUniqName'
 import { typesOfJob } from '../../utils/jobs.util'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
+import { getNuclioFuncState } from '../../utils/getNuclioFuncState'
 
 const ProjectFunctions = ({ nuclioStreamsAreEnabled, project }) => {
   const params = useParams()
@@ -151,16 +151,7 @@ const ProjectFunctions = ({ nuclioStreamsAreEnabled, project }) => {
             className: 'table-cell_big'
           },
           status: {
-            value:
-              func?.status?.state === FUNCTION_READY_STATE && !func?.spec?.disable
-                ? 'Running'
-                : func?.status?.state === FUNCTION_READY_STATE && func?.spec?.disable
-                  ? 'Standby'
-                  : [ERROR_STATE, 'unhealthy', 'imported', 'scaledToZero'].includes(
-                        func?.status?.state
-                      )
-                    ? upperFirst(lowerCase(func.status.state))
-                    : 'Building',
+            value: getNuclioFuncState(func),
             types: typesOfJob,
             className: funcClassName
           }

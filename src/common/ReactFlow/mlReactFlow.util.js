@@ -197,7 +197,7 @@ function calculateNodeBounds(nodes) {
   }
 }
 
-export function addVisualFramesForGroups(nodes, groupKeyFn, margin = 16) {
+export function addVisualFramesForFunctions(nodes, groupKeyFn, margin = 34) {
   const groups = new Map()
 
   nodes.forEach(node => {
@@ -211,8 +211,6 @@ export function addVisualFramesForGroups(nodes, groupKeyFn, margin = 16) {
   const frameNodes = []
 
   for (const [key, members] of groups.entries()) {
-    if (members.length < 2) continue
-
     const bounds = calculateNodeBounds(members)
 
     const frameWidth = bounds.width + margin * 2

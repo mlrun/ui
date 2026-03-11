@@ -131,37 +131,58 @@ const DetailsInputs = ({ inputs, isDetailsPopUp = false }) => {
     [dispatch]
   )
 
-  useEffect(() => {
-    Object.entries(inputs || {}).forEach(([inputName, inputPath]) => {
-      if (inputPath.startsWith(MLRUN_STORAGE_INPUT_PATH_SCHEME)) {
-        const { iteration, key, project, tag, kind, tree, uid } = parseUri(inputPath)
-        const isFeatureVector = kind === FEATURE_VECTORS_KIND
-        const fetchData = isFeatureVector
-          ? () => fetchFeatureVector(project, key, tag, uid)
-          : () => fetchArtifactByKind(project, key, kind, tag, tree, iteration)
+  const getInputsContent = useCallback(
+    inputs => {
+      Object.entries(inputs || {}).forEach(([inputName, inputPath]) => {
+        if (inputPath && typeof inputPath === 'object') {
+          getInputsContent(inputPath)
+          return
+        }
 
-        setRequestsCounter(counter => ++counter)
+        if (inputPath.startsWith(MLRUN_STORAGE_INPUT_PATH_SCHEME)) {
+          const { iteration, key, project, tag, kind, tree, uid } = parseUri(inputPath)
+          const isFeatureVector = kind === FEATURE_VECTORS_KIND
+          const fetchData = isFeatureVector
+            ? () => fetchFeatureVector(project, key, tag, uid)
+            : () => fetchArtifactByKind(project, key, kind, tag, tree, iteration)
 
-        fetchData()
-          .then(input => {
-            if (input) {
-              setInputsContent(state => [
-                ...state,
-                {
-                  ...input,
-                  ui: {
-                    inputName: key,
-                    inputPath,
-                    inputResourceLink: generateStoreResourceLink(
-                      input,
-                      project ?? params.projectName
-                    ),
-                    isShowDetailsActive: true,
-                    isPreviewable: kind !== FEATURE_VECTORS_KIND
+          setRequestsCounter(counter => ++counter)
+
+          fetchData()
+            .then(input => {
+              if (input) {
+                setInputsContent(state => [
+                  ...state,
+                  {
+                    ...input,
+                    ui: {
+                      inputName: key,
+                      inputPath,
+                      inputResourceLink: generateStoreResourceLink(
+                        input,
+                        project ?? params.projectName
+                      ),
+                      isShowDetailsActive: true,
+                      isPreviewable: kind !== FEATURE_VECTORS_KIND
+                    }
                   }
-                }
-              ])
-            } else {
+                ])
+              } else {
+                setInputsContent(state => [
+                  ...state,
+                  {
+                    ui: {
+                      inputName: key,
+                      inputPath,
+                      isShowDetailsActive: false,
+                      isPreviewable: false,
+                      inputResourceLink: ''
+                    }
+                  }
+                ])
+              }
+            })
+            .catch(() => {
               setInputsContent(state => [
                 ...state,
                 {
@@ -174,46 +195,37 @@ const DetailsInputs = ({ inputs, isDetailsPopUp = false }) => {
                   }
                 }
               ])
-            }
-          })
-          .catch(() => {
-            setInputsContent(state => [
-              ...state,
-              {
-                ui: {
-                  inputName: key,
-                  inputPath,
-                  isShowDetailsActive: false,
-                  isPreviewable: false,
-                  inputResourceLink: ''
-                }
+            })
+            .finally(() => {
+              setRequestsCounter(counter => --counter)
+            })
+        } else {
+          setInputsContent(state => [
+            ...state,
+            {
+              ui: {
+                inputName,
+                inputPath,
+                isShowDetailsActive: false,
+                isPreviewable: false,
+                inputResourceLink: ''
               }
-            ])
-          })
-          .finally(() => {
-            setRequestsCounter(counter => --counter)
-          })
-      } else {
-        setInputsContent(state => [
-          ...state,
-          {
-            ui: {
-              inputName,
-              inputPath,
-              isShowDetailsActive: false,
-              isPreviewable: false,
-              inputResourceLink: ''
             }
-          }
-        ])
-      }
-    })
+          ])
+        }
+      })
+    },
+    [params.projectName, fetchFeatureVector, fetchArtifactByKind]
+  )
+
+  useEffect(() => {
+    getInputsContent(inputs)
 
     return () => {
       setInputsContent([])
       setArtifactsIds([])
     }
-  }, [inputs, dispatch, params.projectName, fetchFeatureVector, fetchArtifactByKind])
+  }, [getInputsContent, inputs])
 
   return requestsCounter ? (
     <Loader />

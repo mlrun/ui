@@ -175,8 +175,7 @@ const Artifacts = ({
           filters,
           config: {
             ui: {
-              controller: abortControllerRef.current,
-              setRequestErrorMessage
+              controller: abortControllerRef.current
             },
             params: requestParams
           }
@@ -223,7 +222,10 @@ const Artifacts = ({
         project: params.projectName,
         category: artifactType,
         config: {
-          signal: tagAbortControllerRef.current.signal
+          signal: tagAbortControllerRef.current.signal,
+          ui: {
+            setRequestErrorMessage
+          }
         }
       })
     )
