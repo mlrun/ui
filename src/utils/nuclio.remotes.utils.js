@@ -35,7 +35,10 @@ const ensureNuclioRemote = async () => {
    * FIX: Ensure the URL contains the /nuclio-ui proxy path.
    * If it's just the domain, append the required prefix.
    */
+
+  // TODO: Automate URL resolution (Local: remove suffix | Prod: append it)
   if (!remoteEntryUrl.includes('/nuclio-ui')) {
+    // remoteEntryUrl = remoteEntryUrl.replace(/\/$/, ''); // Uncomment for Local
     remoteEntryUrl = `${remoteEntryUrl.replace(/\/$/, '')}/nuclio-ui`
   }
 
