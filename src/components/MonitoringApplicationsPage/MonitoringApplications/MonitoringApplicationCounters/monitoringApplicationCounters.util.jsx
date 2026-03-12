@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize, isEmpty } from 'lodash'
+import { capitalize, isEmpty, isNil } from 'lodash'
 import classNames from 'classnames'
 
 import { aggregateApplicationStatuses } from '../../../../utils/applications.utils'
@@ -104,7 +104,9 @@ export const generateCountersContent = (params, monitoringApplicationsStore) => 
           id: 'interval',
           title: monitoringApplicationError
             ? null
-            : `Every ${formatMinutesToString(monitoringApplications.applications?.[0]?.base_period)}`
+            : isNil(monitoringApplications.applications?.[0]?.base_period)
+              ? 'N/A'
+              : `Every ${formatMinutesToString(monitoringApplications.applications?.[0]?.base_period)}`
         }
       ]
     }
