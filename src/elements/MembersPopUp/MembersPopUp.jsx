@@ -167,13 +167,13 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
     handleOnClose()
   }
 
-  const toSuggestionItem = (id, type) => {
+  const toSuggestionItem = (id, label, type) => {
     const existingMember = membersData.members.find(
       member => member.id === id && member.modification !== DELETE_MODIFICATION
     )
 
     return {
-      label: id,
+      label,
       id,
       subLabel: existingMember?.role ?? '',
       disabled: Boolean(existingMember),
@@ -200,8 +200,14 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
         const users = usersResponse.data.items || []
         const groups = groupsResponse.data.items || []
         const suggestionList = [
-          ...users.map(user => toSuggestionItem(user.username, USER_ROLE)),
-          ...groups.map(group => toSuggestionItem(group.path || group.groupId, USER_GROUP_ROLE))
+          ...users.map(user => toSuggestionItem(user.username, user.username, USER_ROLE)),
+          ...groups.map(group =>
+            toSuggestionItem(
+              group.groupId,
+              group.path.replace(/^\//, '') ?? group.groupId,
+              USER_GROUP_ROLE
+            )
+          )
         ]
 
         setNewMembersSuggestionList(suggestionList)
