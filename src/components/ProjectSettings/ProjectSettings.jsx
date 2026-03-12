@@ -84,14 +84,8 @@ const ProjectSettings = () => {
   )
 
   const projectMembersTabIsShown = useMemo(
-    () =>
-      isProjectMembersTabShown(
-        projectMembershipIsEnabled,
-        userIsProjectOwner,
-        userIsSystemAdmin,
-        membersState
-      ),
-    [userIsProjectOwner, userIsSystemAdmin, membersState, projectMembershipIsEnabled]
+    () => isProjectMembersTabShown(projectMembershipIsEnabled, userIsProjectOwner, membersState),
+    [userIsProjectOwner, membersState, projectMembershipIsEnabled]
   )
 
   const fetchProjectPolicies = useCallback(() => {

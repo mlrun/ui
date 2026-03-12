@@ -135,13 +135,14 @@ export const generateMembers = (policiesResponse, membersDispatch) => {
 export const isProjectMembersTabShown = (
   projectMembershipIsEnabled,
   userIsProjectOwner,
-  userIsSystemAdmin,
   { activeUser, members }
 ) => {
   if (!projectMembershipIsEnabled) {
     return false
   }
 
+  const userIsProjectSecurityAdmin =
+    activeUser.data?.attributes?.user_policies_collection?.has('Project Security Admin') ?? false
   const activeUsername = activeUser.data?.attributes?.username
   const userIsAdmin = members.some(
     member =>
@@ -151,5 +152,5 @@ export const isProjectMembersTabShown = (
           activeUser.data?.attributes?.user_group_names?.has(member.id)))
   )
 
-  return userIsProjectOwner || userIsAdmin || userIsSystemAdmin
+  return userIsProjectOwner || userIsAdmin || userIsProjectSecurityAdmin
 }
