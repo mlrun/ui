@@ -54,7 +54,7 @@ import { isTargetElementInContainerElement } from '../../utils/checkElementsPosi
 
 const defaultProps = {
   date: new Date(),
-  dateTo: new Date()
+  dateTo: null
 }
 
 const DatePicker = ({
@@ -88,7 +88,7 @@ const DatePicker = ({
   const [isValueEmpty, setIsValueEmpty] = useState(true)
   const [selectedOption, setSelectedOption] = useState({})
   const [valueDatePickerInput, setValueDatePickerInput] = useState(
-    formatDate(isRange, isTime, date, dateTo)
+    formatDate(isRange, isTime, date, dateTo || new Date())
   )
   const [isInputInvalid, setInputIsInvalid] = useState(false)
 
@@ -185,7 +185,7 @@ const DatePicker = ({
   }, [dateTo])
 
   useEffect(() => {
-    setValueDatePickerInput(formatDate(isRange, isTime, date, dateTo))
+    setValueDatePickerInput(formatDate(isRange, isTime, date, dateTo || new Date()))
   }, [date, dateTo, isRange, isTime])
 
   useEffect(() => {

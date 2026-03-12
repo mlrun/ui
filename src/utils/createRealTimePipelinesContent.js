@@ -25,10 +25,6 @@ import { generateNuclioLink } from './parseUri'
 
 const createRealTimePipelinesContent = (pipelines, projectName) =>
   pipelines.map(pipeline => {
-    const modelEndpointsCount =
-      Object.keys(pipeline.graph?.routes || {}).length ||
-      pipeline.graph?.model_endpoints_names?.length // todo: add model endpoints count
-
     const nuclioFunctionName = `${projectName}-${pipeline.name.toLowerCase()}`.slice(0, 63)
 
     return {
@@ -50,9 +46,10 @@ const createRealTimePipelinesContent = (pipelines, projectName) =>
           headerId: 'rootFunction',
           headerLabel: 'Root function',
           value: pipeline.name,
-          className: 'table-cell-2 link-blue',
+          className: 'table-cell-2',
           showStatus: true,
           showTag: true,
+          linkIsExternal: true,
           getLink: () =>
             generateNuclioLink(`/projects/${projectName}/functions/${nuclioFunctionName}`)
         },
@@ -69,10 +66,10 @@ const createRealTimePipelinesContent = (pipelines, projectName) =>
           id: `modelEndpoints.${pipeline.ui.identifierUnique}`,
           headerId: 'modelEndpoints',
           headerLabel: 'Model endpoints',
-          value: modelEndpointsCount ?? 'N/A',
+          value: pipeline.modelEndpointsCount || 'N/A',
           className: 'table-cell-1',
           type: 'number',
-          ...(modelEndpointsCount
+          ...(pipeline.modelEndpointsCount
             ? {
                 linkTab: DETAILS_MODEL_ENDPOINTS_TAB,
                 className: 'table-cell-1 link-blue',

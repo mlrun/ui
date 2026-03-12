@@ -64,6 +64,7 @@ export const UNKNOWN_STATE = 'unknown'
 
 export const BE_PAGE = 'bePage'
 export const FE_PAGE = 'fePage'
+export const FORCE_REFRESH = 'force-refresh'
 export const BE_PAGE_SIZE = 'bePageSize'
 export const FE_PAGE_SIZE = 'fePageSize'
 export const FE_PAGE_START = 'fePageStart'

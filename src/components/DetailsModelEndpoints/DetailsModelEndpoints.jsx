@@ -54,12 +54,13 @@ const DetailsModelEndpoints = ({ selectedItem }) => {
             }
           },
           params: {
-            latest_only: 'True'
+            latest_only: 'True',
+            'function-tag': selectedItem.tag
           }
         })
       )
     },
-    [dispatch, params.projectName, selectedItem.name]
+    [dispatch, params.projectName, selectedItem]
   )
 
   return (

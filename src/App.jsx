@@ -69,6 +69,7 @@ import {
 import 'reactflow/dist/style.css'
 import 'igz-controls/index.css'
 import './scss/main.scss'
+import RemoteNuclioRouteWrapper from './components/RemoteNuclio/RemoteNuclioRouteWrapper'
 
 const Page = lazyRetry(() => import('./layout/Page/Page'))
 const Datasets = lazyRetry(() => import('./components/Datasets/Datasets'))
@@ -158,6 +159,12 @@ const App = () => {
       <>
         <Route path="" element={<Page isHeaderShown={isHeaderShown} />}>
           <Route path="projects" element={<Projects />} />
+          <Route path="projects/:projectName">
+            <Route index element={<Navigate replace to={PROJECT_MONITOR} />} />
+            <Route path="real-time-functions/*" element={<RemoteNuclioRouteWrapper />} />
+            <Route path="create-function/*" element={<RemoteNuclioRouteWrapper />} />
+            <Route path="api-gateways/*" element={<RemoteNuclioRouteWrapper />} />
+          </Route>
           <Route path={`projects/*/${JOBS_MONITORING_PAGE}/*`} element={<ProjectsJobsMonitoring />}>
             {[
               `${JOBS_MONITORING_JOBS_TAB}/:jobName/:jobId/:tab`,
@@ -184,7 +191,6 @@ const App = () => {
             <Route path={JOBS_MONITORING_SCHEDULED_TAB} element={<ScheduledMonitoring />} />
             <Route path="*" element={<Navigate to={JOBS_MONITORING_JOBS_TAB} replace />} />
           </Route>
-          <Route path="projects/:projectName" element={<Navigate replace to={PROJECT_MONITOR} />} />
           <Route path={`projects/:projectName/${PROJECT_MONITOR}`} element={<ProjectMonitor />} />
 
           {[

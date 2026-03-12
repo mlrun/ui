@@ -1,5 +1,6 @@
 {
   "betaMode": "enabled",
   "nuclioMode": "enabled",
-  "nuclioUiUrl": "http://localhost:8070"
+  "nuclioUiUrl": "http://localhost:4000",
+  "nuclioRemoteEntryUrl": "http://localhost:5189"
 }

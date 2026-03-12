@@ -21,7 +21,7 @@ import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } fr
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import classnames from 'classnames'
-import { isEmpty, isNil } from 'lodash'
+import { cloneDeep, isEmpty, isNil, set } from 'lodash'
 
 import ActionBar from '../../ActionBar/ActionBar'
 import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
@@ -43,7 +43,9 @@ import {
   DISPLAY_SYSTEM_PIPELINES_FILTER,
   PIPELINE_TOPOLOGY_FILTER,
   FILTER_ALL_ITEMS,
-  PIPELINE_FLOW_TOPOLOGY
+  PIPELINE_FLOW_TOPOLOGY,
+  ROUTER_STEP_KIND,
+  FUNCTIONS_PAGE
 } from '../../../constants'
 import createRealTimePipelinesContent from '../../../utils/createRealTimePipelinesContent'
 import {
@@ -63,6 +65,8 @@ import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 import { useModelsPage } from '../ModelsPage.context'
 import { FULL_VIEW_MODE } from 'igz-controls/constants'
 import { fetchNuclioFunctions } from '../../../reducers/nuclioReducer'
+import { getNuclioFuncState } from '../../../utils/getNuclioFuncState'
+import getState from '../../../utils/getState'
 
 import Yaml from 'igz-controls/images/yaml.svg?react'
 
@@ -92,6 +96,7 @@ const RealTimePipelines = () => {
   const [, setSearchParams] = useSearchParams()
   const filters = useFiltersFromSearchParams(filtersConfig)
   const isPipelineLoading = useSelector(store => store.artifactsStore.pipelines.loading)
+  const [childPipelinesMap, setChildPipelinesMap] = useState({})
 
   const pipelinesRowHeight = useMemo(() => getScssVariableValue('--pipelinesRowHeight'), [])
   const pipelinesRowHeightExtended = useMemo(
@@ -102,6 +107,16 @@ const RealTimePipelines = () => {
     () => getScssVariableValue('--pipelinesHeaderRowHeight'),
     []
   )
+
+  const selectedPipelineWithChildren = useMemo(() => {
+    if (isEmpty(selectedPipeline)) return null
+
+    const childFunctions = childPipelinesMap[selectedPipeline.name]
+
+    if (isNil(childFunctions)) return selectedPipeline
+
+    return { ...selectedPipeline, childFunctions }
+  }, [childPipelinesMap, selectedPipeline])
 
   const filterMenuClassNames = classnames('content__action-bar-wrapper')
 
@@ -153,12 +168,16 @@ const RealTimePipelines = () => {
           let runningFunctions = 0
           let failedFunctions = 0
           let modelEndpoints = 0
+          const childFunctionsMap = {}
 
-          const filteredPipelines = mlrunFunctionsResult.value.reduce((pipelinesList, func) => {
+          const filteredPipelines = mlrunFunctionsResult.value.reduce((pipelinesList, _func) => {
+            const func = cloneDeep(_func)
             const nuclioFunc =
               nuclioFunctionsResult?.value?.[func.nuclio_name || `${func.project}-${func.name}`] ||
               {}
-            const hasParent = Object.keys(func.labels).some(key => key.includes('parent-function'))
+            const parent = Object.entries(func.labels).find(([key]) =>
+              key.includes('parent-function')
+            )?.[1]
             const showSystems = filters[DISPLAY_SYSTEM_PIPELINES_FILTER]
             const isMonitoringInfra = func.labels['mlrun__type'] === 'mlrun__model-monitoring-infra'
             const topology = (func.graph?.kind || PIPELINE_FLOW_TOPOLOGY).toLowerCase()
@@ -166,31 +185,55 @@ const RealTimePipelines = () => {
               topology === filters[PIPELINE_TOPOLOGY_FILTER] ||
               filters[PIPELINE_TOPOLOGY_FILTER] === FILTER_ALL_ITEMS
 
-            const filteredFunc =
-              !hasParent && (showSystems || !isMonitoringInfra) && isCorrectTopology
+            if (parent) {
+              childFunctionsMap[parent] = [
+                ...(childFunctionsMap[parent] || []),
+                { func, nuclioFunc }
+              ]
+            }
+
+            const filteredFunc = !parent && (showSystems || !isMonitoringInfra) && isCorrectTopology
 
             if (!filteredFunc) return pipelinesList
 
             totalPipelines += 1
 
-            const state = nuclioFunc.status?.state || func.state?.value || func.status?.state
+            const nuclioFuncState = !isEmpty(nuclioFunc)
+              ? (getNuclioFuncState(nuclioFunc) || '').toLocaleLowerCase()
+              : ''
 
-            if (state === FUNCTION_READY_STATE) {
+            const state = nuclioFuncState || func.state?.value || func.status?.state
+
+            if (state === FUNCTION_READY_STATE || state === 'running') {
               runningFunctions += 1
             } else if (state === ERROR_STATE || state === UNHEALTHY_STATE) {
               failedFunctions += 1
             }
 
-            const modelEndpointsCount =
+            set(func, 'state', getState(state, FUNCTIONS_PAGE, 'nuclioFunctions'))
+
+            const modelEndpointsMainCount =
               Object.keys(func.graph?.routes || {}).length ||
-              func.graph?.model_endpoints_names?.length // in the future we will get models endpoints count from the BE
-            if (modelEndpointsCount > 0) {
-              modelEndpoints += modelEndpointsCount
-            }
+              func.graph?.model_endpoints_names?.length ||
+              0 // in the future we will get models endpoints count from the BE
+
+            const routesInFlowCount = Object.values(func.graph?.steps || {}).reduce(
+              (count, step) => {
+                if (step?.kind === ROUTER_STEP_KIND) {
+                  count += Object.keys(step.routes || {}).length + 1 // routes + step itself
+                }
+                return count
+              },
+              0
+            )
+            const modelEndpointsCount = modelEndpointsMainCount + routesInFlowCount
+
+            modelEndpoints += modelEndpointsCount
 
             pipelinesList.push({
               ...func,
-              nuclioFunc
+              nuclioFunc,
+              modelEndpointsCount
             })
 
             return pipelinesList
@@ -204,6 +247,7 @@ const RealTimePipelines = () => {
             failedFunctions,
             modelEndpoints
           }))
+          setChildPipelinesMap(childFunctionsMap)
         }
         setIsLoading(false)
       })
@@ -333,7 +377,7 @@ const RealTimePipelines = () => {
                   <Table
                     actionsMenu={actionsMenu}
                     pageData={pageData}
-                    selectedItem={selectedPipeline}
+                    selectedItem={selectedPipelineWithChildren}
                     tab={REAL_TIME_PIPELINES_TAB}
                     tableClassName="pipelines-table"
                     tableHeaders={tableContent[0]?.content ?? []}
@@ -351,8 +395,8 @@ const RealTimePipelines = () => {
                         )
                     )}
                   </Table>
-                  {isPipelineLoading && isEmpty(selectedPipeline) && <Loader />}
-                  {!isEmpty(selectedPipeline) && (
+                  {isPipelineLoading && isEmpty(selectedPipelineWithChildren) && <Loader />}
+                  {!isEmpty(selectedPipelineWithChildren) && (
                     <Details
                       actionsMenu={actionsMenu}
                       detailsMenu={pageData.details.menu}
@@ -360,7 +404,7 @@ const RealTimePipelines = () => {
                       isDetailsScreen
                       pageData={pageData}
                       tab={REAL_TIME_PIPELINES_TAB}
-                      selectedItem={selectedPipeline}
+                      selectedItem={selectedPipelineWithChildren}
                     />
                   )}
                 </>

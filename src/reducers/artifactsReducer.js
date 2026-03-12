@@ -194,9 +194,18 @@ export const fetchArtifacts = createAsyncThunk(
 export const fetchArtifactTags = createAsyncThunk(
   'fetchArtifactTags',
   ({ project, category, config }, thunkAPI) => {
-    return artifactsApi
-      .getArtifactTags(project, category, config)
-      .catch(error => largeResponseCatchHandler(error, 'Failed to fetch tags', thunkAPI.dispatch))
+    config?.ui?.setRequestErrorMessage?.('')
+
+    return artifactsApi.getArtifactTags(project, category, config).catch(error => {
+      largeResponseCatchHandler(
+        error,
+        'Failed to fetch tags',
+        thunkAPI.dispatch,
+        config?.ui?.setRequestErrorMessage
+      )
+
+      throw error
+    })
   }
 )
 export const fetchDataSet = createAsyncThunk(

@@ -214,6 +214,7 @@ const Details = ({
           isDetailsPopUp={isDetailsPopUp}
           pageData={pageData}
           selectedItem={selectedItem}
+          handleCancel={handleCancel}
         />
       )}
       setBlocker={setBlocker}
