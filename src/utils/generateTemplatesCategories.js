@@ -85,7 +85,11 @@ export const generateHubCategories = (functionTemplates, allowedHubFunctions = {
 
   hubFunctions.forEach(template => {
     template.metadata.categories.forEach(category => {
-      if (!hubFunctionsCategories.includes(category)) {
+      const isDuplicate = hubFunctionsCategories.some(
+        existingCategory => existingCategory.toLowerCase() === category.toLowerCase()
+      )
+
+      if (!isDuplicate) {
         hubFunctionsCategories.push(category)
       }
     })
