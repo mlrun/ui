@@ -36,7 +36,7 @@ const SectionTable = ({ loading = false, params, table }) => {
         <thead>
           <tr className="section-table__table-header">
             <>
-              {table.header.map(
+              {table?.header?.map(
                 header =>
                   !header.hidden && (
                     <th
@@ -54,7 +54,7 @@ const SectionTable = ({ loading = false, params, table }) => {
           </tr>
         </thead>
         <tbody className="section-table__table-body">
-          {table.body.map((body, index) => {
+          {table?.body?.map((body, index) => {
             const extractedItemName = body['name'].value.startsWith(params.projectName)
               ? body['name'].value.slice(params.projectName.length + 1)
               : body['name'].value

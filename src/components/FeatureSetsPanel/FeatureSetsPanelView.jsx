@@ -118,6 +118,7 @@ const FeatureSetsPanelView = ({
           </Accordion>
           <PanelCredentialsAccessKey
             credentialsAccessKey={featureStore.newFeatureSet.credentials.access_key}
+            frontendSpec={frontendSpec}
             required={accessKeyRequired}
             setCredentialsAccessKey={value => dispatch(setNewFeatureSetCredentialsAccessKey(value))}
             setValidation={setValidation}

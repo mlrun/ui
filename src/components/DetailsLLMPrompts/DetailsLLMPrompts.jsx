@@ -38,7 +38,7 @@ import ExclamationMarkIcon from 'igz-controls/images/exclamation-mark.svg?react'
 
 import './detailsLLMPrompts.scss'
 
-const DetailsLLMPrompts = ({ selectedItem, isDetailsPopUp = false }) => {
+const DetailsLLMPrompts = ({ selectedItem, isDetailsPopUp = false, handleCancel = null }) => {
   const dispatch = useDispatch()
   const params = useParams()
   const navigate = useNavigate()
@@ -91,7 +91,9 @@ const DetailsLLMPrompts = ({ selectedItem, isDetailsPopUp = false }) => {
           <div>{`Displays only ${LLM_PROMPTS_DISPLAY_LIMIT} LLM prompts. View all prompts in the`}</div>
           <span
             className="link"
-            onClick={() => navigateToLLMPromptsPage(navigate, params.projectName, selectedItem)}
+            onClick={() =>
+              navigateToLLMPromptsPage(navigate, params.projectName, selectedItem, handleCancel)
+            }
           >
             LLM prompts screen
           </span>
@@ -148,7 +150,8 @@ const DetailsLLMPrompts = ({ selectedItem, isDetailsPopUp = false }) => {
 
 DetailsLLMPrompts.propTypes = {
   selectedItem: PropTypes.object.isRequired,
-  isDetailsPopUp: PropTypes.bool
+  isDetailsPopUp: PropTypes.bool,
+  handleCancel: PropTypes.func
 }
 
 export default DetailsLLMPrompts

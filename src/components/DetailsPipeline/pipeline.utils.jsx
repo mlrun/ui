@@ -265,7 +265,8 @@ const getDetailsGeneralData = selectedStepData => [
   {
     label: 'Data store profiles:',
     value: selectedStepData.path,
-    hidden: selectedStepData.stepType !== STEPS_TYPES.QUEUE || !selectedStepData.path
+    hidden: selectedStepData.stepType !== STEPS_TYPES.QUEUE || !selectedStepData.path,
+    type: STEP_FIELD_TYPES.COPY
   },
   {
     label: 'URL:',

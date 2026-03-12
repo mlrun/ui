@@ -1,64 +1,30 @@
-map $http_x_v3io_session_key $v3io_session_key {
-  default $http_x_v3io_session_key;
-  ""      "${MLRUN_V3IO_ACCESS_KEY}";
-}
-
 server {
+    listen      8090;
+    server_name localhost;
 
-  listen 8090;
+    root /usr/share/nginx/html;
 
-  include resolvers.conf;
+    # Basic Gzip as per standard defaults
+    gzip on;
 
-  # https://raw.githubusercontent.com
-  set $function_catalog ${MLRUN_FUNCTION_CATALOG_URL};
-  location /function-catalog {
-    rewrite /function-catalog/(.*) ${MLRUN_FUNCTION_CATALOG_PATH}/$1 break;
-    proxy_pass $function_catalog;
-  }
+    # CRITICAL: Allow the Global Host (IGZ) to fetch these assets
+    add_header Access-Control-Allow-Origin *;
+    add_header Access-Control-Allow-Methods 'GET, OPTIONS';
+    add_header Access-Control-Allow-Headers 'Content-Type, Authorization';
 
-  location /mlrun {
-    rewrite ^/mlrun(/|$)(.*) /$2 last;
-  }
-
-    # -------------------------------
-    # Serve Static Frontend + CORS preflight handling
-    # -------------------------------
     location / {
-      if ($request_method = 'OPTIONS') {
-        # CORS: Allowed origin from env
-        add_header 'Access-Control-Allow-Origin' '${MLRUN_IGZ_UI_ALLOWED_ORIGIN}';
-        add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS';
-        add_header 'Access-Control-Allow-Headers' 'Origin, Content-Type, Accept';
-        add_header 'Content-Length' 0;
-        add_header 'Content-Type' 'text/plain';
-        return 204;
-      }
+        # Show landing page when accessing the remote directly
+        index landing.html;
+        try_files $uri $uri/ /landing.html;
 
-      root   /usr/share/nginx/html;
-      index  index.html index.htm;
-      try_files $uri $uri/ /index.html;
-
-      # CORS: Allowed origin from env
-      add_header 'Access-Control-Allow-Origin' '${MLRUN_IGZ_UI_ALLOWED_ORIGIN}' always;
-      add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;
-      add_header 'Access-Control-Allow-Headers' 'Origin, Content-Type, Accept' always;
+        # Ensure remote assets are always fresh
+        if ($request_filename ~* .*\.(?:js|json)$ ) {
+            add_header Cache-Control "no-cache, no-store, must-revalidate";
+        }
     }
 
-  set $backend ${MLRUN_API_PROXY_URL};
-  location /api {
-    proxy_set_header x-v3io-session-key $v3io_session_key;
-    proxy_pass $backend;
-  }
-
-  set $nuclio_backend ${MLRUN_NUCLIO_API_URL};
-  location /nuclio {
-    rewrite ^/nuclio(/|$)(.*) /$2 break;
-    proxy_pass $nuclio_backend;
-  }
-
-  error_page   500 502 503 504  /50x.html;
-
-  location = /50x.html {
-    root   /usr/share/nginx/html;
-  }
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
 }

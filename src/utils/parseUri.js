@@ -117,13 +117,11 @@ const generateLinkPath = (uri = '') => {
 }
 
 const generateNuclioLink = pathname => {
-  const linkUrl = new URL(`${window.mlrunConfig.nuclioUiUrl}${pathname}`)
+  const base = window.mlrunConfig?.nuclioUiUrl || window.location.origin
 
-  if (window.location.origin !== window.mlrunConfig.nuclioUiUrl) {
-    linkUrl.searchParams.set?.('origin', window.location.origin)
-  }
+  const cleanPath = pathname.startsWith('/') ? pathname : `/${pathname}`
 
-  return linkUrl.toString()
+  return new URL(`${base}${cleanPath}`).toString()
 }
 
 export { generateLinkPath, generateNuclioLink, parseUri, parseIdentifier }

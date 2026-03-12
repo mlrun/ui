@@ -63,6 +63,14 @@ $pipelinesRowHeightExtended: variables.$rowHeight;
         $pipelinesRowHeight,
         $pipelinesRowHeightExtended
       );
+
+      .table-body__cell a.link {
+        display: flex;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
   }
 }
