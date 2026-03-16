@@ -63,6 +63,10 @@ export const generateCategories = functionTemplates => {
 }
 
 export const generateHubCategories = (functionTemplates, allowedHubFunctions = {}) => {
+  const categoryMap = {
+    genai: 'GenAI'
+  }
+
   const hubFunctions = functionTemplates
     .filter(
       template =>
@@ -74,7 +78,9 @@ export const generateHubCategories = (functionTemplates, allowedHubFunctions = {
     .map(template => ({
       ...template,
       ui: {
-        categories: template.metadata?.categories,
+        categories: template.metadata?.categories?.map(
+          cat => categoryMap[cat.toLowerCase()] || cat
+        ),
         versions: functionTemplates
           .filter(funcTemplate => funcTemplate.metadata.name === template.metadata.name)
           .map(funcTemplate => funcTemplate.metadata.version)
@@ -84,7 +90,7 @@ export const generateHubCategories = (functionTemplates, allowedHubFunctions = {
   const hubFunctionsCategories = []
 
   hubFunctions.forEach(template => {
-    template.metadata.categories.forEach(category => {
+    template.ui.categories.forEach(category => {
       const isDuplicate = hubFunctionsCategories.some(
         existingCategory => existingCategory.toLowerCase() === category.toLowerCase()
       )
@@ -94,6 +100,7 @@ export const generateHubCategories = (functionTemplates, allowedHubFunctions = {
       }
     })
   })
+
   hubFunctionsCategories.sort()
 
   return { hubFunctions, hubFunctionsCategories }
