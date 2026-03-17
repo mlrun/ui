@@ -26,12 +26,7 @@ import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseChipsData } from '../../utils/convertChipsData'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import JobPopUp from '../../elements/DetailsPopUp/JobPopUp/JobPopUp'
-import {
-  FORCE_REFRESH,
-  LLM_PROMPTS_PAGE,
-  MODEL_NAME_FILTER,
-  MODEL_TAG_FILTER
-} from '../../constants'
+import { FORCE_REFRESH, LLM_PROMPTS_PAGE, MODEL_NAME_FILTER } from '../../constants'
 
 export const LLM_PROMPTS_DISPLAY_LIMIT = 100
 
@@ -132,7 +127,6 @@ export const generateLLMPromptsTabContent = (artifacts, params, isDetailsPopUp =
 export const navigateToLLMPromptsPage = (navigate, projectName, selectedItem, handleCancel) => {
   const filters = {
     [MODEL_NAME_FILTER]: selectedItem.db_key || selectedItem.key,
-    [MODEL_TAG_FILTER]: selectedItem.tag,
     [FORCE_REFRESH]: true
   }
 
