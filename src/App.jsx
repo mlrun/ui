@@ -162,7 +162,6 @@ const App = () => {
           <Route path="projects/:projectName">
             <Route index element={<Navigate replace to={PROJECT_MONITOR} />} />
             <Route path="real-time-functions/*" element={<RemoteNuclioRouteWrapper />} />
-            <Route path="create-function/*" element={<RemoteNuclioRouteWrapper />} />
             <Route path="api-gateways/*" element={<RemoteNuclioRouteWrapper />} />
           </Route>
           <Route path={`projects/*/${JOBS_MONITORING_PAGE}/*`} element={<ProjectsJobsMonitoring />}>
