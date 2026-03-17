@@ -22,7 +22,6 @@ import { flatten, isEmpty } from 'lodash'
 import { generateArtifactPreviewData } from './generateArtifactPreviewData'
 import { generateUri } from './resources'
 import { ARTIFACT_TYPE, TAG_LATEST } from '../constants'
-import { formatDatetime } from 'igz-controls/utils/datetime.util'
 
 export const generateArtifacts = (artifacts, page, originalContent) => {
   return flatten(
@@ -76,9 +75,6 @@ export const generateArtifacts = (artifacts, page, originalContent) => {
                 item.feature_vector += `:${TAG_LATEST}`
               }
             }
-
-            item.created = formatDatetime(item.created + 'Z')
-            item.updated = formatDatetime(item.updated + 'Z')
 
             return item
           })
