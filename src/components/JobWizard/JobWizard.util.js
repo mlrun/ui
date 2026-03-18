@@ -42,7 +42,6 @@ import {
   EXISTING_IMAGE_SOURCE,
   FUNCTION_DEFAULT_HANDLER,
   HYPERPARAMETER_STRATEGY_STEP,
-  JOB_DEFAULT_OUTPUT_PATH,
   LIST_TUNING_STRATEGY,
   MAX_SELECTOR_CRITERIA,
   PANEL_RERUN_MODE,
@@ -166,10 +165,7 @@ export const generateJobWizardData = (
     },
     [ADVANCED_STEP]: {
       inputPath: null,
-      outputPath:
-        currentProject?.spec?.artifact_path ||
-        (frontendSpec.ce?.version && frontendSpec.default_artifact_path) ||
-        JOB_DEFAULT_OUTPUT_PATH,
+      outputPath: currentProject?.spec?.artifact_path || frontendSpec.default_artifact_path,
       apiTokenInput: 'default',
       environmentVariablesTable: parseEnvironmentVariables(environmentVariables)
       // secretSourcesTable - currently not shown

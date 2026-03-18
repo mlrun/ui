@@ -192,6 +192,7 @@ main {
 .state-created-function,
 .state-creating-function,
 .state-standby-function,
+.state-standby-nuclioFunctions,
 .state-pending-job {
   @include mixins.statusState(colors.$topaz, false);
 }

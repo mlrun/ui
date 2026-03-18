@@ -25,13 +25,7 @@ import { useSelector } from 'react-redux'
 import { Group, Panel } from 'react-resizable-panels'
 import { Position, ReactFlowProvider, useStoreApi } from 'reactflow'
 
-import {
-  Tooltip,
-  TextTooltipTemplate,
-  RoundedIcon,
-  Loader,
-  CopyToClipboard
-} from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, RoundedIcon, CopyToClipboard } from 'igz-controls/components'
 import Accordion from '../../common/Accordion/Accordion'
 import ArtifactPopUp from '../../elements/DetailsPopUp/ArtifactPopUp/ArtifactPopUp'
 import CodeBlock from '../../common/CodeBlock/CodeBlock'
@@ -441,12 +435,11 @@ const DetailsPipeline = ({ selectedItem }) => {
             </Group>
           </div>
         )
-      ) : isPipelineLoading ? (
-        <Loader />
       ) : (
-        <NoData message="The ingestion function has no steps and therefore no graph" />
+        !isPipelineLoading && (
+          <NoData message="The ingestion function has no steps and therefore no graph" />
+        )
       )}
-      {isPipelineLoading && !isEmpty(selectedItem?.graph) && <Loader />}
     </div>
   )
 }

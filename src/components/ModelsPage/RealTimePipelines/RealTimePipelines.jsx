@@ -112,11 +112,15 @@ const RealTimePipelines = () => {
     if (isEmpty(selectedPipeline)) return null
 
     const childFunctions = childPipelinesMap[selectedPipeline.name]
+    const correctStatusBasedOnNuclioFunction =
+      pipelines?.find(pipeline => pipeline.name === selectedPipeline.name)?.state ||
+      selectedPipeline.state
 
-    if (isNil(childFunctions)) return selectedPipeline
+    if (isNil(childFunctions))
+      return { ...selectedPipeline, state: correctStatusBasedOnNuclioFunction }
 
-    return { ...selectedPipeline, childFunctions }
-  }, [childPipelinesMap, selectedPipeline])
+    return { ...selectedPipeline, childFunctions, state: correctStatusBasedOnNuclioFunction }
+  }, [childPipelinesMap, pipelines, selectedPipeline])
 
   const filterMenuClassNames = classnames('content__action-bar-wrapper')
 
@@ -179,7 +183,8 @@ const RealTimePipelines = () => {
               key.includes('parent-function')
             )?.[1]
             const showSystems = filters[DISPLAY_SYSTEM_PIPELINES_FILTER]
-            const isMonitoringInfra = func.labels['mlrun__type'] === 'mlrun__model-monitoring-infra'
+            const isMonitoringInfra =
+              func.labels?.['mlrun__type'] === 'mlrun__model-monitoring-infra'
             const topology = (func.graph?.kind || PIPELINE_FLOW_TOPOLOGY).toLowerCase()
             const isCorrectTopology =
               topology === filters[PIPELINE_TOPOLOGY_FILTER] ||
@@ -191,12 +196,6 @@ const RealTimePipelines = () => {
                 { func, nuclioFunc }
               ]
             }
-
-            const filteredFunc = !parent && (showSystems || !isMonitoringInfra) && isCorrectTopology
-
-            if (!filteredFunc) return pipelinesList
-
-            totalPipelines += 1
 
             const nuclioFuncState = !isEmpty(nuclioFunc)
               ? (getNuclioFuncState(nuclioFunc) || '').toLocaleLowerCase()
@@ -211,6 +210,12 @@ const RealTimePipelines = () => {
             }
 
             set(func, 'state', getState(state, FUNCTIONS_PAGE, 'nuclioFunctions'))
+
+            const filteredFunc = !parent && (showSystems || !isMonitoringInfra) && isCorrectTopology
+
+            if (!filteredFunc) return pipelinesList
+
+            totalPipelines += 1
 
             const modelEndpointsMainCount =
               Object.keys(func.graph?.routes || {}).length ||
@@ -395,7 +400,7 @@ const RealTimePipelines = () => {
                         )
                     )}
                   </Table>
-                  {isPipelineLoading && isEmpty(selectedPipelineWithChildren) && <Loader />}
+                  {isPipelineLoading && <Loader />}
                   {!isEmpty(selectedPipelineWithChildren) && (
                     <Details
                       actionsMenu={actionsMenu}

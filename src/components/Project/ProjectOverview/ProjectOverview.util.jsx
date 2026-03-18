@@ -392,7 +392,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           icon: <RTFunctionIcon />,
           label: 'Create real-time function',
           handleClick: () => ({
-            path: generateNuclioLink(`${base_url}/create-function`),
+            path: generateNuclioLink(`${base_url}/real-time-functions/create-function`),
             externalLink: true
           }),
           tooltip:

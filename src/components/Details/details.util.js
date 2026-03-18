@@ -302,10 +302,9 @@ export const generateAlertsContent = selectedItem => {
 }
 
 export const generateRealTimePipelinesContent = selectedItem => {
-  const nuclioFunctionName = `${selectedItem.project}-${selectedItem.name.toLowerCase()}`.slice(
-    0,
-    63
-  )
+  const nuclioFunctionName =
+    selectedItem.nuclio_name ||
+    `${selectedItem.project}-${selectedItem.name.toLowerCase()}`.slice(0, 63)
 
   return {
     name: {
@@ -314,6 +313,7 @@ export const generateRealTimePipelinesContent = selectedItem => {
     rootFunction: {
       value: selectedItem.name,
       status: selectedItem.state.value,
+      className: selectedItem.state.className,
       link: generateNuclioLink(
         `/projects/${selectedItem.project}/real-time-functions/${nuclioFunctionName}`
       )
