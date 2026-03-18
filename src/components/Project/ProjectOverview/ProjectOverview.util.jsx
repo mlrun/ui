@@ -464,7 +464,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
         {
           id: 'nuclioFunctions',
           handleClick: () => ({
-            path: generateNuclioLink(`${base_url}/functions`),
+            path: generateNuclioLink(`${base_url}/real-time-functions`),
             externalLink: true
           }),
           label: 'Nuclio functions'

@@ -51,7 +51,7 @@ const createRealTimePipelinesContent = (pipelines, projectName) =>
           showTag: true,
           linkIsExternal: true,
           getLink: () =>
-            generateNuclioLink(`/projects/${projectName}/functions/${nuclioFunctionName}`)
+            generateNuclioLink(`/projects/${projectName}/real-time-functions/${nuclioFunctionName}`)
         },
         {
           id: `topology.${pipeline.ui.identifierUnique}`,

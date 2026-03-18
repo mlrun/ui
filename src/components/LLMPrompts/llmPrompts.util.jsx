@@ -143,7 +143,7 @@ export const generateActionsMenu = (
         disabled:
           !isTargetPathValid ||
           llmPromptMin.size >
-            (frontendSpec.artifact_limits.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
+            (frontendSpec.artifact_limits?.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
         icon: <DownloadIcon />,
         onClick: llmPromptMin => {
           getFullLLMPrompt(llmPromptMin).then(llmPrompt => {

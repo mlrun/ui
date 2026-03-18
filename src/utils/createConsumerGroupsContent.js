@@ -46,7 +46,7 @@ const createConsumerGroupsContent = (content, params) => {
           value: contentItem.functionName,
           getLink: () => {
             return generateNuclioLink(
-              `/projects/${params.projectName}/functions/${contentItem.functionName}`
+              `/projects/${params.projectName}/real-time-functions/${contentItem.functionName}`
             )
           },
           linkIsExternal: true,

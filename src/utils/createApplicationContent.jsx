@@ -105,7 +105,7 @@ export const createApplicationContent = (application, projectName) => {
         value: application.name,
         className: 'table-cell-2',
         getLink: () =>
-          generateNuclioLink(`/projects/${projectName}/functions/${nuclioFunctionName}`),
+          generateNuclioLink(`/projects/${projectName}/real-time-functions/${nuclioFunctionName}`),
         linkIsExternal: true,
         showStatus: true
       }

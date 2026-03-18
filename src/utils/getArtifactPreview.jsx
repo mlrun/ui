@@ -165,7 +165,7 @@ export const fetchArtifactPreviewFromPath = async (
           {
             data: {
               content: `The artifact is too large to ${
-                fileSize > artifactLimits.max_download_size
+                fileSize > artifactLimits?.max_download_size
                   ? `download. Go to ${path} to retrieve the data, or use mlrun api/sdk project.get_artifact('${artifact.db_key || artifact.name}').to_dataitem().get()`
                   : 'preview, use the download option instead'
               }`
