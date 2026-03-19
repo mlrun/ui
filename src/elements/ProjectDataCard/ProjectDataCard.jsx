@@ -36,7 +36,6 @@ const ProjectDataCard = ({
   hasUpdateDate = false,
   href = '',
   link = '',
-  params,
   statistics = {},
   subTitle,
   table = {},
@@ -82,7 +81,7 @@ const ProjectDataCard = ({
         <NoData />
       ) : (
         <>
-          <SectionTable params={params} table={table} />
+          <SectionTable table={table} />
           {href ? (
             <a href={href} target="_top" className="link project-data-card__see-all-link">
               {footerLinkText}
@@ -105,7 +104,6 @@ ProjectDataCard.propTypes = {
   hasUpdateDate: PropTypes.bool,
   href: PropTypes.string,
   link: PropTypes.string,
-  params: PropTypes.object.isRequired,
   statistics: PropTypes.object,
   subTitle: PropTypes.string,
   table: PropTypes.object,
