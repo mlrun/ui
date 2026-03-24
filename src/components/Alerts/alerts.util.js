@@ -190,7 +190,7 @@ const alertsEventTypeOptions = [
   },
   { label: 'MM app failed', id: 'mm-app-failed', ENTITY_TYPE: MODEL_MONITORING_APPLICATION },
   {
-    label: 'MM app lag detected',
+    label: 'MM lag detected',
     id: 'model-monitoring-lag-detected',
     ENTITY_TYPE: MODEL_MONITORING_INFRA
   }

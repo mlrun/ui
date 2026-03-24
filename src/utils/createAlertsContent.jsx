@@ -83,7 +83,11 @@ const getEntityTypeData = entityType => {
       }
     case MODEL_MONITORING_INFRA:
       return {
-        value: <Infra />,
+        value: (
+          <i className="entity-type-icon">
+            <Infra />
+          </i>
+        ),
         detailsValue: (
           <div className="alert-row__details-alert-icon-cell">
             <Infra /> <span>{upperFirst(ENTITY_TYPE_INFRA)}</span>
