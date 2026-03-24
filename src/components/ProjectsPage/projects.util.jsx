@@ -262,7 +262,8 @@ export const generateAlerts = (data, dispatch) => {
     projectAlerts[projectName] =
       (project?.endpoint_alerts_count || 0) +
       (project?.job_alerts_count || 0) +
-      (project?.other_alerts_count || 0)
+      (project?.application_alerts_count || 0) +
+      (project?.infra_alerts_count || 0)
   })
 
   dispatch(setProjectTotalAlerts(projectAlerts))
@@ -291,6 +292,7 @@ export const generateMonitoringCounters = (data, dispatch) => {
       endpoint: 0,
       jobs: 0,
       application: 0,
+      infra: 0,
       total: 0
     },
     models: {
@@ -335,11 +337,13 @@ export const generateMonitoringCounters = (data, dispatch) => {
 
     monitoringCounters.alerts.endpoint += project?.endpoint_alerts_count || 0
     monitoringCounters.alerts.jobs += project?.job_alerts_count || 0
-    monitoringCounters.alerts.application += project?.other_alerts_count || 0
+    monitoringCounters.alerts.application += project?.application_alerts_count || 0
+    monitoringCounters.alerts.infra += project?.infra_alerts_count || 0
     monitoringCounters.alerts.total =
       monitoringCounters.alerts.endpoint +
       monitoringCounters.alerts.jobs +
-      monitoringCounters.alerts.application
+      monitoringCounters.alerts.application +
+      monitoringCounters.alerts.infra
 
     monitoringCounters.models.total += project?.models_count || 0
 

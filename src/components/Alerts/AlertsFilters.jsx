@@ -46,6 +46,7 @@ import {
   JOB_NAME,
   MODEL_ENDPOINT_RESULT,
   MODEL_MONITORING_APPLICATION,
+  MODEL_MONITORING_INFRA,
   PROJECT_FILTER,
   SEVERITY
 } from '../../constants'
@@ -73,6 +74,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
     const fieldsByType = {
       [FILTER_ALL_ITEMS]: [ENTITY_ID],
       [MODEL_MONITORING_APPLICATION]: [ENTITY_ID],
+      [MODEL_MONITORING_INFRA]: [ENTITY_ID],
       [JOB]: [JOB_NAME],
       [MODEL_ENDPOINT_RESULT]: [ENDPOINT_APPLICATION, ENDPOINT_RESULT, ENTITY_ID]
     }
@@ -94,7 +96,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
 
     form.change(
       EVENT_TYPE,
-      params[ENTITY_TYPE] === selectedValue ||
+      (params[ENTITY_TYPE] === selectedValue && params[EVENT_TYPE]) ||
         (entityType === FILTER_ALL_ITEMS && params[EVENT_TYPE])
         ? params[EVENT_TYPE]
         : FILTER_ALL_ITEMS
@@ -126,6 +128,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
 
       {(entityType === FILTER_ALL_ITEMS ||
         entityType === MODEL_MONITORING_APPLICATION ||
+        entityType === MODEL_MONITORING_INFRA ||
         entityType === MODEL_ENDPOINT_RESULT) && (
         <div className="form-row">
           <FormInput

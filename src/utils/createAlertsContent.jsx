@@ -22,6 +22,7 @@ import { formatDatetime } from 'igz-controls/utils/datetime.util'
 
 import Application from 'igz-controls/images/entity-type-application.svg?react'
 import Endpoint from 'igz-controls/images/entity-type-endpoint.svg?react'
+import Infra from 'igz-controls/images/entity-type-infra.svg?react'
 import Error from 'igz-controls/images/notification-badge.svg?react'
 import Critical from 'igz-controls/images/severity-critical.svg?react'
 import Email from 'igz-controls/images/email-icon.svg?react'
@@ -38,9 +39,11 @@ import {
   APPLICATION,
   ENDPOINT,
   DETAILS_ALERT_APPLICATION,
+  ENTITY_TYPE_INFRA,
   JOB,
   MODEL_ENDPOINT_RESULT,
   MODEL_MONITORING_APPLICATION,
+  MODEL_MONITORING_INFRA,
   MONITOR_ALERTS_PAGE,
   PROJECTS_PAGE_PATH,
   SEVERITY,
@@ -77,6 +80,16 @@ const getEntityTypeData = entityType => {
           </div>
         ),
         tooltip: upperFirst(APPLICATION)
+      }
+    case MODEL_MONITORING_INFRA:
+      return {
+        value: <Infra />,
+        detailsValue: (
+          <div className="alert-row__details-alert-icon-cell">
+            <Infra /> <span>{upperFirst(ENTITY_TYPE_INFRA)}</span>
+          </div>
+        ),
+        tooltip: upperFirst(ENTITY_TYPE_INFRA)
       }
     case JOB:
       return {

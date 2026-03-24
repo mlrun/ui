@@ -1,6 +1,32 @@
 {
   "activations": [
     {
+      "id": 4439,
+      "name": "monitoring-lag-detected",
+      "project": "lag-detection-tutorial-admin",
+      "severity": "medium",
+      "activation_time": "2026-03-24T08:37:21.943000+00:00",
+      "entity_id": "lag-detection-tutorial-admin.writer.2",
+      "entity_kind": "model-monitoring-infra",
+      "criteria": {
+          "count": 1,
+          "period": null
+      },
+      "event_kind": "model-monitoring-lag-detected",
+      "number_of_events": 1,
+      "notifications": [
+        {
+          "kind": "webhook",
+          "err": "All webhook notifications failed. Errors: 404, message='Not Found', url='https://webhook.site/ababb050-5f4b-47f4-8748-48496970942e'",
+          "summary": {
+              "failed": 1,
+              "succeeded": 0
+          }
+        }
+      ],
+      "reset_time": "2026-03-24T08:37:21.943000+00:00"
+  },
+    {
       "id": 12,
       "name": "job-failure-alert1",
       "project": "kate-project-mm",

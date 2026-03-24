@@ -23,6 +23,7 @@ import {
   JOB,
   MODEL_ENDPOINT_RESULT,
   MODEL_MONITORING_APPLICATION,
+  MODEL_MONITORING_INFRA,
   MONITOR_ALERTS_PAGE
 } from '../constants'
 
@@ -49,6 +50,10 @@ export const generateAlertsStats = (data, navigate, projectName) => {
     application: {
       counter: data.application ?? 'N/A',
       link: () => navigateToAlertsPage({ [ENTITY_TYPE]: MODEL_MONITORING_APPLICATION })
+    },
+    infra: {
+      counter: data.infra ?? 'N/A',
+      link: () => navigateToAlertsPage({ [ENTITY_TYPE]: MODEL_MONITORING_INFRA })
     }
   }
 }

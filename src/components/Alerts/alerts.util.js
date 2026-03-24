@@ -30,6 +30,7 @@ import {
   ENDPOINT_RESULT,
   ENTITY_ID,
   ENTITY_TYPE,
+  ENTITY_TYPE_INFRA,
   EVENT_TYPE,
   FAILED_STATE,
   FE_PAGE,
@@ -39,6 +40,7 @@ import {
   JOB_NAME,
   MODEL_ENDPOINT_RESULT,
   MODEL_MONITORING_APPLICATION,
+  MODEL_MONITORING_INFRA,
   NAME_FILTER,
   PROJECT_FILTER,
   PROJECTS_FILTER_ALL_ITEMS,
@@ -130,7 +132,8 @@ export const filterAlertsEntityTypeOptions = [
   { label: upperFirst(FILTER_ALL_ITEMS), id: FILTER_ALL_ITEMS },
   { label: upperFirst(JOB), id: JOB_KIND_JOB },
   { label: upperFirst(ENDPOINT), id: MODEL_ENDPOINT_RESULT },
-  { label: upperFirst(APPLICATION), id: MODEL_MONITORING_APPLICATION }
+  { label: upperFirst(APPLICATION), id: MODEL_MONITORING_APPLICATION },
+  { label: upperFirst(ENTITY_TYPE_INFRA), id: MODEL_MONITORING_INFRA }
 ]
 
 export const filterAlertsSeverityOptions = [
@@ -185,7 +188,12 @@ const alertsEventTypeOptions = [
     id: 'mm-app-anomaly-suspected',
     ENTITY_TYPE: MODEL_ENDPOINT_RESULT
   },
-  { label: 'MM app failed', id: 'mm-app-failed', ENTITY_TYPE: MODEL_MONITORING_APPLICATION }
+  { label: 'MM app failed', id: 'mm-app-failed', ENTITY_TYPE: MODEL_MONITORING_APPLICATION },
+  {
+    label: 'MM app lag detected',
+    id: 'model-monitoring-lag-detected',
+    ENTITY_TYPE: MODEL_MONITORING_INFRA
+  }
 ]
 export const filterAlertsEventTypeOptions = entityType => {
   if (entityType === FILTER_ALL_ITEMS) {
@@ -218,6 +226,13 @@ export const alertsHeaders = (type, isCrossProjects) => {
         { label: 'Severity', id: SEVERITY }
       ],
       [MODEL_MONITORING_APPLICATION]: [
+        { label: 'Project name', id: 'projectName', hidden: !isCrossProjects },
+        { label: 'Application name', id: 'applicationName' },
+        { label: 'Type', id: 'type' },
+        { label: 'Timestamp', id: 'timestamp' },
+        { label: 'Severity', id: SEVERITY }
+      ],
+      [MODEL_MONITORING_INFRA]: [
         { label: 'Project name', id: 'projectName', hidden: !isCrossProjects },
         { label: 'Application name', id: 'applicationName' },
         { label: 'Type', id: 'type' },
