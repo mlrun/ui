@@ -231,7 +231,7 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects, showExpandButt
         : ''
     }
 
-    if (entityType === MODEL_MONITORING_APPLICATION) {
+    if (entityType === MODEL_MONITORING_APPLICATION || entityType === MODEL_MONITORING_INFRA) {
       const [, applicationName] = entity_id.split('_')
       return `/${PROJECTS_PAGE_PATH}/${projectName}/${alertPath}/${project}/${alertName}/${alertId}/${applicationName}/${uid}/${DETAILS_ALERT_APPLICATION}${queryString}`
     }
