@@ -17,59 +17,84 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useLocation, useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import BreadcrumbsStep from './BreadcrumbsStep/BreadcrumbsStep'
 
 import { generateMlrunScreens, generateTabsList } from './breadcrumbs.util'
 import { MONITORING_APP_PAGE, PROJECTS_PAGE_PATH } from '../../constants'
 import { generateProjectsList } from '../../utils/projects'
+import { fetchNuclioFunctions } from '../../reducers/nuclioReducer'
 
 import './breadcrumbs.scss'
 
 const Breadcrumbs = ({ onClick = () => {} }) => {
-  const [searchValue, setSearchValue] = useState('')
-  const [showScreensList, setShowScreensList] = useState(false)
-  const [showProjectsList, setShowProjectsList] = useState(false)
+  const [dropdownState, setDropdownState] = useState({ active: null, search: '' })
   const breadcrumbsRef = useRef()
+  const currentFunctionsProjectRef = useRef('')
   const params = useParams()
   const location = useLocation()
+  const dispatch = useDispatch()
 
   const projectStore = useSelector(state => state.projectStore)
+  const nuclioStore = useSelector(state => state.nuclioStore)
 
   const projectsList = useMemo(() => {
     return generateProjectsList(projectStore.projectsNames.data)
   }, [projectStore.projectsNames.data])
 
+  const currentProjectFunctions = nuclioStore.currentProjectFunctions || []
+  const nuclioFunctionsLoading = nuclioStore.loading
+
+  const loadProjectFunctions = useCallback(() => {
+    if (!params.projectName || nuclioFunctionsLoading) {
+      return
+    }
+
+    if (
+      currentFunctionsProjectRef.current !== params.projectName ||
+      !currentProjectFunctions.length
+    ) {
+      dispatch(fetchNuclioFunctions({ project: params.projectName }))
+      currentFunctionsProjectRef.current = params.projectName
+    }
+  }, [currentProjectFunctions.length, dispatch, nuclioFunctionsLoading, params.projectName])
+
   const mlrunScreens = useMemo(() => {
     return generateMlrunScreens(params)
   }, [params])
+
   const projectTabs = useMemo(() => {
     return generateTabsList()
   }, [])
 
   const urlParts = useMemo(() => {
     if (params.projectName) {
-      const [projects, projectName, screenName] = location.pathname.split('/').slice(1, 4)
-      const screen = mlrunScreens.find(screen => screen.id === screenName)
-      let tab = projectTabs.find(tab =>
-        location.pathname
-          .split('/')
-          .slice(3)
-          .find(pathItem => pathItem === tab.id)
-      )
+      const pathParts = location.pathname.split('/').slice(1)
+      const [projects, projectName, screenName, functionName, ...functionPath] = pathParts
 
-      if (screen.id === MONITORING_APP_PAGE) {
+      const screen = mlrunScreens.find(screen => screen.id === screenName)
+      let tab = projectTabs.find(tab => pathParts[2] === tab.id)
+
+      if (screen?.id === MONITORING_APP_PAGE) {
         tab = {}
       }
 
+      const pathItems = [projects, projectName, screenName]
+
+      if (screen?.id === 'real-time-functions' && functionName) {
+        pathItems.push(functionName)
+      }
+
       return {
-        pathItems: [projects, projectName, screen?.label || screenName],
+        pathItems,
         screen,
-        tab
+        tab,
+        functionName,
+        functionPath
       }
     } else {
       const [page] = location.pathname.split('/').slice(3, 4)
@@ -82,27 +107,66 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
     }
   }, [location.pathname, params.projectName, mlrunScreens, projectTabs])
 
+  const handleDropdownClose = useCallback(() => {
+    setDropdownState({ active: null, search: '' })
+  }, [])
+
+  const handleDropdownToggle = useCallback(dropdown => {
+    setDropdownState(prev => ({
+      active: prev.active === dropdown ? null : dropdown,
+      search: ''
+    }))
+  }, [])
+
+  const setSearchValue = useCallback(search => {
+    setDropdownState(prev => ({ ...prev, search }))
+  }, [])
+
+  useEffect(() => {
+    if (params.projectName && urlParts.screen?.id === 'real-time-functions') {
+      loadProjectFunctions()
+    }
+  }, [loadProjectFunctions, params.projectName, urlParts.screen?.id])
+
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (breadcrumbsRef.current && !breadcrumbsRef.current.contains(event.target)) {
+        handleDropdownClose()
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [handleDropdownClose])
+
+  useEffect(() => {
+    handleDropdownClose()
+  }, [location.pathname, handleDropdownClose])
+
   return (
     <nav data-testid="breadcrumbs" className="breadcrumbs" ref={breadcrumbsRef}>
       <ul className="breadcrumbs__list">
         {urlParts.pathItems.map((urlPart, index) => {
           return (
             <BreadcrumbsStep
-              key={index}
+              key={`${index}-${urlPart}`}
               index={index}
-              mlrunScreens={mlrunScreens}
-              onClick={onClick}
-              params={params}
-              projectsList={projectsList}
-              ref={breadcrumbsRef}
-              searchValue={searchValue}
-              setSearchValue={setSearchValue}
-              setShowProjectsList={setShowProjectsList}
-              setShowScreensList={setShowScreensList}
-              showProjectsList={showProjectsList}
-              showScreensList={showScreensList}
               urlPart={urlPart}
               urlParts={urlParts}
+              params={params}
+              dropdownState={dropdownState}
+              onDropdownToggle={handleDropdownToggle}
+              onDropdownClose={handleDropdownClose}
+              setSearchValue={setSearchValue}
+              options={{
+                screens: mlrunScreens,
+                projects: projectsList,
+                functions: currentProjectFunctions
+              }}
+              onClick={onClick}
             />
           )
         })}

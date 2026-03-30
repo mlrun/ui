@@ -538,3 +538,10 @@ export const RESULT_TYPE = 'result'
 
 export const COUNTERS_GENERAL_MESSAGE =
   'Counters use a caching mechanism, and are not auto-refreshed.'
+
+/*=========== BREADCRUMBS =============*/
+export const DROPDOWN_TYPES = {
+  SCREENS: 'screens',
+  PROJECTS: 'projects',
+  FUNCTIONS: 'functions'
+}
