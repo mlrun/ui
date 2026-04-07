@@ -416,7 +416,7 @@ const App = () => {
         <Suspense fallback={<LoaderForSuspenseFallback />}>
           <RouterProvider router={router} />
         </Suspense>
-        {createPortal(<Notifications />, document.getElementById('overlay_container'))}
+        {createPortal(<Notifications />, document.getElementById('mlrun_overlay_container'))}
       </div>
     </div>
   )

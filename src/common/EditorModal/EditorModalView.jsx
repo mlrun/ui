@@ -50,7 +50,7 @@ const EditorModalView = ({ closeModal, data, handleSaveCode, setData }) =>
         />
       </div>
     </div>,
-    document.getElementById('overlay_container')
+    document.getElementById('mlrun_overlay_container')
   )
 
 EditorModalView.propTypes = {

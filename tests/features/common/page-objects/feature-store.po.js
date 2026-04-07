@@ -391,7 +391,7 @@ export default {
     Table_Label_Filter_Input: commonLabelFilterInput,
     Feature_Sets_Table: commonTable(featureSetsTable),
     Feature_Store_Tab_Selector: featureStoreTabSelector,
-    Overlay: By.css('#overlay_container .chip-block-hidden_visible')
+    Overlay: By.css('#mlrun_overlay_container .chip-block-hidden_visible')
   },
   featuresTab: {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
@@ -414,7 +414,7 @@ export default {
     Table_Tag_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_Refresh_Button: tableRefreshButton,
     Feature_Vectors_Table: commonTable(featureVectorTable),
-    Overlay: By.css('#overlay_container .chip-block-hidden_visible')
+    Overlay: By.css('#mlrun_overlay_container .chip-block-hidden_visible')
   },
   datasets: {
     Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),

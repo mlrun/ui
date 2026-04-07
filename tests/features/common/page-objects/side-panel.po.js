@@ -767,7 +767,7 @@ export default {
       '.feature-set-panel .panel-title .checkbox'
     ),
     Passthrough_PopUp_Dialog:{
-      Dialog_PopUp: By.css('#overlay_container .pop-up-dialog'),
+      Dialog_PopUp: By.css('#mlrun_overlay_container .pop-up-dialog'),
       Close_Button: By.css('.pop-up-dialog .pop-up-dialog__header .pop-up-dialog__btn_close'),
       Dialog_Message: By.css('.pop-up-dialog .confirm-dialog__message'), 
       Keep_Online_Target_Set_Button: By.css('.pop-up-dialog .confirm-dialog__btn-container .btn-tertiary'),

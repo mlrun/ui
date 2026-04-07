@@ -38,7 +38,7 @@ const ensureNuclioRemote = async () => {
 
   // TODO: Automate URL resolution (Local: remove suffix | Prod: append it)
   if (!remoteEntryUrl.includes('/nuclio-ui')) {
-    // remoteEntryUrl = remoteEntryUrl.replace(/\/$/, ''); // Uncomment for Local
+    // remoteEntryUrl = remoteEntryUrl.replace(/\/$/, '') // Uncomment for Local
     remoteEntryUrl = `${remoteEntryUrl.replace(/\/$/, '')}/nuclio-ui`
   }
 

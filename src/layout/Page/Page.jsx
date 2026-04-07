@@ -113,7 +113,7 @@ const Page = () => {
       <main id="main" className={pinnedClasses} ref={mainRef} style={mainStyles}>
         <div id="main-wrapper">{isProjectsFetched ? <Outlet /> : <Loader />}</div>
       </main>
-      {createPortal(<ModalContainer />, document.getElementById('overlay_container'))}
+      {createPortal(<ModalContainer />, document.getElementById('mlrun_overlay_container'))}
       {convertedYaml.length > 0 && (
         <YamlModal
           convertedYaml={convertedYaml}

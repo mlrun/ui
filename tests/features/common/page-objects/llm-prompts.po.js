@@ -96,7 +96,7 @@ export default {
     Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
     Refresh_Button: By.css('[data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]'),
     LLMPrompts_Table: commonTable(overallTable),
-    Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
+    Overlay: By.css('#mlrun_overlay_container .chip-block-hidden_visible'),
     History_Back_Button: By.css('.history-back-link .history-back-link__icon'),
     Version_History_Title: By.css(
       '.history-back-link .history-back-link__title [data-testid="version-history"]'

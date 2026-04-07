@@ -268,7 +268,7 @@ export default {
       '.content__action-bar-wrapper .action-bar__actions [data-testid="refresh"]'
     ),
     Models_Table: commonTable(modelsTable),
-    Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
+    Overlay: By.css('#mlrun_overlay_container .chip-block-hidden_visible'),
     Register_Model_Button: By.css('.content__action-bar-wrapper .action-bar__actions .btn-tertiary'),
     Train_Model_Button: By.css('.content__action-bar-wrapper .action-bar__actions .btn-primary'),
     Table_FilterBy_Button: By.css('.models .action-bar [data-testid="filter-menu-btn"]'),
@@ -283,7 +283,7 @@ export default {
   modelEndpoints: {
     Table_Refresh_Button: tableRefreshButton,
     Model_Endpoints_Table: commonTable(modelsEndpointTable),
-    Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
+    Overlay: By.css('#mlrun_overlay_container .chip-block-hidden_visible'),
     Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
     Column_Name_Header: By.css('[data-testid="name"]'),
     Sort_By_Name: By.css('[data-testid="name"].sortable-header-cell_active svg'),

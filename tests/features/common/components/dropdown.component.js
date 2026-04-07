@@ -23,7 +23,7 @@ import { locatorBuilder } from '../../common-tools/common-tools'
 export default function(dropdownStructure) {
   const root = dropdownStructure.optionsInRoot
     ? dropdownStructure.root
-    : '#overlay_container'
+    : '#mlrun_overlay_container'
   const open_button = locatorBuilder`${0} ${1}`
   const options = locatorBuilder`${0} ${1} ${2}`
   const option = locatorBuilder`${0} ${1}:nth-of-type(${2}) ${3}`

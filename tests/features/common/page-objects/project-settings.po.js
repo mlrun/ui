@@ -199,6 +199,6 @@ export default {
     Secrets_Table: commonTable(secretsTable),
     Add_Secret_Button: By.css('[data-testid="secrets-add-btn"]'),
     Secrets_Hint: By.css('.settings__card-subtitle'),
-    Error_Message: By.css('#overlay_container .notification__body')
+    Error_Message: By.css('#mlrun_overlay_container .notification__body')
   }
 }
