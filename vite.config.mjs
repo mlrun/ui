@@ -24,7 +24,12 @@ export default defineConfig(async ({ mode }) => {
           },
           shared: {
             react: { requiredVersion: dependencies.react, singleton: true },
-            'react-dom': { requiredVersion: dependencies['react-dom'], singleton: true }
+            'react-dom': { requiredVersion: dependencies['react-dom'], singleton: true },
+            'react-redux': { requiredVersion: dependencies['react-redux'], singleton: true },
+            'react-router-dom': {
+              requiredVersion: dependencies['react-router-dom'],
+              singleton: true
+            }
           }
         })
       : null
@@ -56,6 +61,11 @@ export default defineConfig(async ({ mode }) => {
         'react-dom',
         'classnames',
         'final-form',
+        'react-redux',
+        'react/jsx-runtime',
+        'react-router-dom',
+        'react-router',
+        'react/jsx-dev-runtime',
         'final-form-arrays',
         'lodash',
         'prop-types',
