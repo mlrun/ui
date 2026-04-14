@@ -17,16 +17,17 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useLocation, useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import BreadcrumbsStep from './BreadcrumbsStep/BreadcrumbsStep'
 
 import { generateMlrunScreens, generateTabsList } from './breadcrumbs.util'
 import { MONITORING_APP_PAGE, PROJECTS_PAGE_PATH } from '../../constants'
 import { generateProjectsList } from '../../utils/projects'
+import { fetchNuclioFunctions } from '../../reducers/nuclioReducer'
 
 import './breadcrumbs.scss'
 
@@ -34,15 +35,26 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
   const [searchValue, setSearchValue] = useState('')
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
+  const [showFunctionsList, setShowFunctionsList] = useState(false)
   const breadcrumbsRef = useRef()
   const params = useParams()
   const location = useLocation()
+  const dispatch = useDispatch()
 
   const projectStore = useSelector(state => state.projectStore)
+  const nuclioStore = useSelector(state => state.nuclioStore)
 
   const projectsList = useMemo(() => {
     return generateProjectsList(projectStore.projectsNames.data)
   }, [projectStore.projectsNames.data])
+
+  const currentProjectFunctions = nuclioStore.currentProjectFunctions || []
+
+  useEffect(() => {
+    if (params.projectName && location.pathname.includes('real-time-functions')) {
+      dispatch(fetchNuclioFunctions({ project: params.projectName }))
+    }
+  }, [dispatch, params.projectName, location.pathname])
 
   const mlrunScreens = useMemo(() => {
     return generateMlrunScreens(params)
@@ -53,30 +65,35 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
 
   const urlParts = useMemo(() => {
     if (params.projectName) {
-      const [projects, projectName, screenName] = location.pathname.split('/').slice(1, 4)
-      const screen = mlrunScreens.find(screen => screen.id === screenName)
-      let tab = projectTabs.find(tab =>
-        location.pathname
-          .split('/')
-          .slice(3)
-          .find(pathItem => pathItem === tab.id)
-      )
+      const pathParts = location.pathname.split('/').slice(1)
+      const [projects, projectName, screenName, functionName, ...functionPath] = pathParts
 
-      if (screen.id === MONITORING_APP_PAGE) {
+      const screen = mlrunScreens.find(screen => screen.id === screenName)
+      let tab = projectTabs.find(tab => pathParts[2] === tab.id)
+
+      if (screen?.id === MONITORING_APP_PAGE) {
         tab = {}
       }
 
+      const pathItems = [projects, projectName, screen?.id || screenName]
+
+      if (screen?.id === 'real-time-functions' && functionName) {
+        pathItems.push(functionName)
+      }
+
       return {
-        pathItems: [projects, projectName, screen?.label || screenName],
+        pathItems,
         screen,
-        tab
+        tab,
+        functionName,
+        functionPath
       }
     } else {
       const [page] = location.pathname.split('/').slice(3, 4)
       const screen = mlrunScreens.find(screen => screen.id === page)
 
       return {
-        pathItems: [PROJECTS_PAGE_PATH, screen?.label || page],
+        pathItems: [PROJECTS_PAGE_PATH, screen?.id || page],
         screen
       }
     }
@@ -99,8 +116,11 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
               setSearchValue={setSearchValue}
               setShowProjectsList={setShowProjectsList}
               setShowScreensList={setShowScreensList}
+              setShowFunctionsList={setShowFunctionsList}
               showProjectsList={showProjectsList}
               showScreensList={showScreensList}
+              showFunctionsList={showFunctionsList}
+              currentProjectFunctions={currentProjectFunctions}
               urlPart={urlPart}
               urlParts={urlParts}
             />

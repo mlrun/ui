@@ -43,8 +43,11 @@ const BreadcrumbsStep = React.forwardRef(
       setSearchValue,
       setShowProjectsList,
       setShowScreensList,
+      setShowFunctionsList,
       showProjectsList,
       showScreensList,
+      showFunctionsList,
+      currentProjectFunctions,
       urlPart,
       urlParts
     },
@@ -54,10 +57,13 @@ const BreadcrumbsStep = React.forwardRef(
     const separatorRef = useRef()
 
     const isParam = useMemo(() => Object.values(params ?? {}).includes(urlPart), [urlPart, params])
-    const label = useMemo(
-      () => (isParam ? urlPart : urlPart.charAt(0).toUpperCase() + urlPart.slice(1)),
-      [urlPart, isParam]
-    )
+    const label = useMemo(() => {
+      if (isParam || urlPart === urlParts.functionName) return urlPart
+      if (urlParts.screen && urlPart === urlParts.screen.id) {
+        return urlParts.screen.label || urlPart
+      }
+      return urlPart.charAt(0).toUpperCase() + urlPart.slice(1)
+    }, [urlPart, isParam, urlParts.screen, urlParts.functionName])
     const to = useMemo(
       () => `/${urlParts.pathItems.slice(0, index + 1).join('/')}`,
       [index, urlParts.pathItems]
@@ -70,14 +76,34 @@ const BreadcrumbsStep = React.forwardRef(
     const separatorClassNames = classnames(
       'breadcrumbs__separator',
       ((urlParts.pathItems[index + 1] === urlParts.screen?.id && !isParam) ||
-        urlParts.pathItems[index + 1] === params.projectName) &&
+        urlParts.pathItems[index + 1] === params.projectName ||
+        urlParts.pathItems[index + 1] === urlParts.functionName) &&
         'breadcrumbs__separator_tumbler'
     )
+
+    const functionsListFormatted = useMemo(() => {
+      if (!Array.isArray(currentProjectFunctions)) return []
+
+      return currentProjectFunctions.map(func => {
+        const functionId = func?.metadata?.name || ''
+        const functionPath = urlParts?.functionPath?.length
+          ? `/${urlParts.functionPath.join('/')}`
+          : ''
+
+        return {
+          id: functionId,
+          label: functionId,
+          linkTo: `${to}/${functionId}${functionPath}`
+        }
+      })
+    }, [currentProjectFunctions, to, urlParts.functionPath])
 
     const handleSelectDropdownItem = separatorRef => {
       if (showProjectsList) setShowProjectsList(false)
 
       if (showScreensList) setShowScreensList(false)
+
+      if (showFunctionsList) setShowFunctionsList(false)
 
       separatorRef.current.classList.remove('breadcrumbs__separator_active')
     }
@@ -94,6 +120,8 @@ const BreadcrumbsStep = React.forwardRef(
           if (showScreensList) setShowScreensList(false)
 
           if (showProjectsList) setShowProjectsList(false)
+
+          if (showFunctionsList) setShowFunctionsList(false)
         }
 
         setSearchValue('')
@@ -103,8 +131,10 @@ const BreadcrumbsStep = React.forwardRef(
         setSearchValue,
         setShowProjectsList,
         setShowScreensList,
+        setShowFunctionsList,
         showProjectsList,
-        showScreensList
+        showScreensList,
+        showFunctionsList
       ]
     )
 
@@ -127,9 +157,12 @@ const BreadcrumbsStep = React.forwardRef(
     }, [handleCloseDropdown])
 
     const handleSeparatorClick = (nextItem, separatorRef) => {
-      const nextItemIsScreen = Boolean(mlrunScreens.find(screen => screen.label === nextItem))
+      const nextItemIsScreen = Boolean(mlrunScreens.find(screen => screen.id === nextItem))
+      const nextItemIsFunction = Boolean(
+        currentProjectFunctions.find(func => func.metadata.name === nextItem)
+      )
 
-      if (nextItemIsScreen || nextItem === params.projectName) {
+      if (nextItemIsScreen || nextItem === params.projectName || nextItemIsFunction) {
         const [activeSeparator] = document.getElementsByClassName('breadcrumbs__separator_active')
 
         if (
@@ -142,17 +175,22 @@ const BreadcrumbsStep = React.forwardRef(
         if (nextItemIsScreen) {
           setShowScreensList(state => !state)
 
-          if (showProjectsList) {
-            setShowProjectsList(false)
-          }
+          if (showProjectsList) setShowProjectsList(false)
+          if (showFunctionsList) setShowFunctionsList(false)
         }
 
         if (nextItem === params.projectName) {
           setShowProjectsList(state => !state)
 
-          if (showScreensList) {
-            setShowScreensList(false)
-          }
+          if (showScreensList) setShowScreensList(false)
+          if (showFunctionsList) setShowFunctionsList(false)
+        }
+
+        if (nextItemIsFunction) {
+          setShowFunctionsList(state => !state)
+
+          if (showScreensList) setShowScreensList(false)
+          if (showProjectsList) setShowProjectsList(false)
         }
 
         separatorRef.current.classList.toggle('breadcrumbs__separator_active')
@@ -185,7 +223,7 @@ const BreadcrumbsStep = React.forwardRef(
               >
                 <ArrowIcon />
               </RoundedIcon>
-              {showScreensList && urlParts.pathItems[index + 1] === urlParts.screen?.label && (
+              {showScreensList && urlParts.pathItems[index + 1] === urlParts.screen?.id && (
                 <BreadcrumbsDropdown
                   link={to}
                   list={mlrunScreens}
@@ -193,6 +231,17 @@ const BreadcrumbsStep = React.forwardRef(
                   selectedItem={urlParts.screen?.id}
                   searchValue={searchValue}
                   setSearchValue={setSearchValue}
+                />
+              )}
+              {showFunctionsList && urlParts.pathItems[index + 1] === urlParts.functionName && (
+                <BreadcrumbsDropdown
+                  link={to}
+                  list={functionsListFormatted}
+                  onClick={() => handleSelectDropdownItem(separatorRef)}
+                  selectedItem={urlParts.functionName}
+                  searchValue={searchValue}
+                  setSearchValue={setSearchValue}
+                  withSearch
                 />
               )}
               {showProjectsList && urlParts.pathItems[index + 1] === params.projectName && (
@@ -231,8 +280,11 @@ BreadcrumbsStep.propTypes = {
   setSearchValue: PropTypes.func.isRequired,
   setShowProjectsList: PropTypes.func.isRequired,
   setShowScreensList: PropTypes.func.isRequired,
+  setShowFunctionsList: PropTypes.func,
   showProjectsList: PropTypes.bool.isRequired,
   showScreensList: PropTypes.bool.isRequired,
+  showFunctionsList: PropTypes.bool,
+  currentProjectFunctions: PropTypes.arrayOf(PropTypes.object),
   urlPart: PropTypes.string.isRequired,
   urlParts: PropTypes.shape({
     pathItems: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -242,7 +294,9 @@ BreadcrumbsStep.propTypes = {
     }),
     tab: PropTypes.shape({
       id: PropTypes.string
-    })
+    }),
+    functionName: PropTypes.string,
+    functionPath: PropTypes.arrayOf(PropTypes.string)
   }).isRequired
 }
 
