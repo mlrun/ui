@@ -233,7 +233,9 @@ const DetailsInfoItem = React.forwardRef(
                   <Tooltip template={<TextTooltipTemplate text={infoItem} />}>{infoItem}</Tooltip>
                   {item.status && (
                     <div className="details-item__data details-item__status">
-                      <Tooltip template={<TextTooltipTemplate text={item.status} />}>
+                      <Tooltip
+                        template={<TextTooltipTemplate text={item.statusLabel || item.status} />}
+                      >
                         <i className={statusClassName} />
                       </Tooltip>
                     </div>
@@ -244,7 +246,9 @@ const DetailsInfoItem = React.forwardRef(
                   <Tooltip template={<TextTooltipTemplate text={infoItem} />}>{infoItem}</Tooltip>
                   {item.status && (
                     <div className="details-item__data details-item__status">
-                      <Tooltip template={<TextTooltipTemplate text={item.status} />}>
+                      <Tooltip
+                        template={<TextTooltipTemplate text={item.statusLabel || item.status} />}
+                      >
                         <i className={statusClassName} />
                       </Tooltip>
                     </div>

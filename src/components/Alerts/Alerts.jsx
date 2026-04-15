@@ -57,7 +57,8 @@ const Alerts = () => {
 
   const alertsFilters = useFiltersFromSearchParams(
     alertsFiltersConfig,
-    parseAlertsQueryParamsCallback
+    parseAlertsQueryParamsCallback,
+    params.projectName
   )
 
   const {

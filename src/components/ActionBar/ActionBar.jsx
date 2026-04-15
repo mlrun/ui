@@ -44,7 +44,13 @@ import {
   REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
-import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
+import {
+  ANY_TIME_DATE_OPTION,
+  CUSTOM_RANGE_DATE_OPTION,
+  datePickerFutureOptions,
+  datePickerPastOptions,
+  getDatePickerFilterValue
+} from '../../utils/datePicker.util'
 import { FILTERS_CONFIG } from '../../types'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
@@ -189,13 +195,36 @@ const ActionBar = ({
     [filtersConfig, setSearchParams, withoutSearchParams]
   )
 
+  const updateRelativeTimeValue = useCallback(
+    filters => {
+      if (
+        filters[DATES_FILTER]?.initialSelectedOptionId &&
+        filters[DATES_FILTER].initialSelectedOptionId !== CUSTOM_RANGE_DATE_OPTION &&
+        filters[DATES_FILTER].initialSelectedOptionId !== ANY_TIME_DATE_OPTION
+      ) {
+        const isFuture = filtersConfig[DATES_FILTER]?.isFuture
+        const options = isFuture ? datePickerFutureOptions : datePickerPastOptions
+
+        filters[DATES_FILTER] = getDatePickerFilterValue(
+          options,
+          filters[DATES_FILTER].initialSelectedOptionId,
+          isFuture
+        )
+        formRef.current.change(DATES_FILTER, filters[DATES_FILTER])
+        dispatch(setFilters({ relativeDateChange: Date.now() }))
+      }
+    },
+    [dispatch, filtersConfig]
+  )
+
   const applyFilters = useCallback(
     async (formValues, filters, actionCanBePerformedChecked) => {
       const actionCanBePerformed =
         actionCanBePerformedChecked || (await performDetailsActionHelper(changes, dispatch, true))
-      const newFilters = { ...filters, ...formValues }
 
       if (actionCanBePerformed) {
+        const newFilters = { ...filters, ...formValues }
+
         if (closeParamName) {
           navigate(getCloseDetailsLink(closeParamName, true, selectedItemName), { replace: true })
         }
@@ -216,6 +245,7 @@ const ActionBar = ({
         if (withoutSearchParams) {
           setLocalFilters(newFilters)
         } else {
+          updateRelativeTimeValue(newFilters)
           saveFilters(newFilters)
         }
 
@@ -228,17 +258,18 @@ const ActionBar = ({
     [
       changes,
       dispatch,
+      updateRelativeTimeValue,
       closeParamName,
       filtersStore.groupBy,
-      saveFilters,
+      withoutSearchParams,
       removeSelectedItem,
       setSelectedRowData,
       toggleAllRows,
       handleRefresh,
       navigate,
       selectedItemName,
-      withoutSearchParams,
-      setLocalFilters
+      setLocalFilters,
+      saveFilters
     ]
   )
 
@@ -258,6 +289,7 @@ const ActionBar = ({
           if (withoutSearchParams) {
             setLocalFilters(newFilters)
           } else {
+            updateRelativeTimeValue(newFilters)
             saveFilters(formState.values)
           }
 
@@ -269,11 +301,12 @@ const ActionBar = ({
       changes,
       dispatch,
       cancelRequest,
-      saveFilters,
-      handleRefresh,
       filters,
+      updateRelativeTimeValue,
       withoutSearchParams,
-      setLocalFilters
+      handleRefresh,
+      setLocalFilters,
+      saveFilters
     ]
   )
 

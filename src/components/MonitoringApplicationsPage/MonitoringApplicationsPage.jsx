@@ -49,7 +49,7 @@ const MonitoringApplicationsPage = () => {
   const params = useParams()
   const navigate = useNavigate()
   const filtersConfig = useMemo(() => getFiltersConfig(), [])
-  const filters = useFiltersFromSearchParams(filtersConfig)
+  const filters = useFiltersFromSearchParams(filtersConfig, undefined, params.projectName)
   const [, setSearchParams] = useSearchParams()
   const contentRef = useRef(null)
 

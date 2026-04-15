@@ -54,14 +54,14 @@ import { isTargetElementInContainerElement } from '../../utils/checkElementsPosi
 
 const defaultProps = {
   date: new Date(),
-  dateTo: null
+  setExternalInvalid: () => {}
 }
 
 const DatePicker = ({
   className = '',
   customOptions = null,
   date = defaultProps.date,
-  dateTo = defaultProps.dateTo,
+  dateTo = null,
   disabled = false,
   excludeCustomRange = false,
   externalInvalid = null,
@@ -72,7 +72,7 @@ const DatePicker = ({
   required = false,
   requiredText = 'This field is required',
   selectedOptionId = '',
-  setExternalInvalid = () => {},
+  setExternalInvalid = defaultProps.setExternalInvalid,
   timeFrameLimit = Infinity,
   tip = '',
   type = 'date',

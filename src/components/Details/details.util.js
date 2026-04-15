@@ -313,10 +313,12 @@ export const generateRealTimePipelinesContent = selectedItem => {
     rootFunction: {
       value: selectedItem.name,
       status: selectedItem.state.value,
+      statusLabel: selectedItem.state.label,
       className: selectedItem.state.className,
       link: generateNuclioLink(
         `/projects/${selectedItem.project}/real-time-functions/${nuclioFunctionName}`
-      )
+      ),
+      linkIsExternal: true
     },
     childFunction: {
       value: selectedItem.childFunctions ?? selectedItem.function_refs ?? [],

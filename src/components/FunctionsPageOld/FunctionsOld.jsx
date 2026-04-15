@@ -123,7 +123,11 @@ const Functions = () => {
     }
   }, [])
 
-  const functionsFilters = useFiltersFromSearchParams(functionsFiltersConfig)
+  const functionsFilters = useFiltersFromSearchParams(
+    functionsFiltersConfig,
+    undefined,
+    params.projectName
+  )
 
   const terminateDeleteTasksPolling = useCallback(() => {
     terminatePollRef?.current?.()
