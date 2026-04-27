@@ -77,13 +77,13 @@ jobs:
     name: Build and push ui image
     runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
 
-    # let's not run this on every fork, change to your fork when developing
-    if: github.repository == 'mlrun/ui' || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
+    # Run on mlrun/ui or when explicitly triggered (workflow_dispatch covers both direct and cross-repo calls)
+    if: github.repository == 'mlrun/ui' || github.event_name == 'workflow_dispatch'
 
     steps:
     - uses: actions/checkout@v3
       with:
-        repository: ${{ github.event_name == 'workflow_call' && 'mlrun/ui' || github.repository }}
+        repository: mlrun/ui
         ref: ${{ inputs.ref || github.ref }}
 
     - name: Install curl and jq
