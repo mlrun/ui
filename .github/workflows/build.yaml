@@ -48,9 +48,14 @@ on:
     inputs:
       docker_registries:
         description: 'Comma separated list of docker registries to push images to'
-        required: true
+        required: false
         type: string
         default: 'ghcr.io/'
+      artifactory_docker_repo:
+        description: 'Artifactory docker repo name (e.g. mlrun_ce). When set, overrides docker_registries with the Artifactory URL from secrets.'
+        required: false
+        type: string
+        default: ''
       docker_repo:
         description: 'Docker repo to push images to'
         required: false
@@ -107,9 +112,16 @@ jobs:
           input_docker_repo=${{ inputs.docker_repo }} && \
           default_docker_repo=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]') && \
           echo ${input_docker_repo:-`echo $default_docker_repo`})" >> $GITHUB_OUTPUT
-        echo "mlrun_docker_registries=$( \
-          input_docker_registries=${{ inputs.docker_registries }} && \
-          echo ${input_docker_registries:-ghcr.io/})" >> $GITHUB_OUTPUT
+        if [[ -n "$ARTIFACTORY_DOCKER_REPO_INPUT" && -n "$ARTIFACTORY_URL" ]]; then
+          echo "mlrun_docker_registries=${ARTIFACTORY_URL}/${ARTIFACTORY_DOCKER_REPO_INPUT}/" >> $GITHUB_OUTPUT
+        else
+          echo "mlrun_docker_registries=$( \
+            input_docker_registries=${{ inputs.docker_registries }} && \
+            echo ${input_docker_registries:-ghcr.io/})" >> $GITHUB_OUTPUT
+        fi
+      env:
+        ARTIFACTORY_DOCKER_REPO_INPUT: ${{ inputs.artifactory_docker_repo }}
+        ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
 
     - name: Setup Node.js
       uses: actions/setup-node@v3
@@ -142,7 +154,7 @@ jobs:
         password: ${{ secrets.DOCKER_HUB_DOCKER_REGISTRY_PASSWORD }}
 
     - name: Docker login (Private Artifactory)
-      if: contains(inputs.docker_registries, 'artifactory.iguazeng.com')
+      if: contains(inputs.docker_registries, 'artifactory.iguazeng.com') || inputs.artifactory_docker_repo != ''
       uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # 3.6.0
       with:
         registry: ${{ secrets.ARTIFACTORY_URL }}
