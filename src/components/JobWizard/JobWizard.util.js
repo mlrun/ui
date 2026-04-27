@@ -284,7 +284,7 @@ export const generateJobWizardDefaultData = (
     [ADVANCED_STEP]: {
       inputPath: defaultData.task.spec.input_path,
       outputPath: defaultData.task.spec.output_path,
-      apiTokenInput: defaultData.task.spec?.auth?.token_name ?? '',
+      apiTokenInput: defaultData.task.spec?.auth?.token_name ?? 'default',
       environmentVariablesTable: parseEnvironmentVariables(defaultData.function?.spec?.env ?? [])
       // secretSourcesTable - currently not shown
       // secretSourcesTable: parseSecretSources(defaultData.task.spec.secret_sources)
