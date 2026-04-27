@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import classNames from 'classnames'
@@ -111,7 +111,15 @@ const Page = () => {
     <>
       {projectName && <Navbar projectName={projectName} setIsNavbarPinned={setIsNavbarPinned} />}
       <main id="main" className={pinnedClasses} ref={mainRef} style={mainStyles}>
-        <div id="main-wrapper">{isProjectsFetched ? <Outlet /> : <Loader />}</div>
+        <div id="main-wrapper">
+          {isProjectsFetched ? (
+            <Suspense key={location.pathname.split('/')[3]} fallback={<Loader />}>
+              <Outlet />
+            </Suspense>
+          ) : (
+            <Loader />
+          )}
+        </div>
       </main>
       {createPortal(<ModalContainer />, document.getElementById('overlay_container'))}
       {convertedYaml.length > 0 && (
