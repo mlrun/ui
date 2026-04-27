@@ -71,7 +71,6 @@ on:
         required: false
         type: string
         default: ''
-    secrets: inherit
 
 jobs:
   build-images:
