@@ -56,6 +56,10 @@
     "uuid": "^14.0.0"
   },
   "overrides": {
+    "uuid": "^14.0.0",
+    "cucumber-html-reporter": {
+      "uuid": "^3.4.0"
+    },
     "dompurify": "^3.4.0",
     "jsonpath": "^1.2.0",
     "minimist": "^1.2.8",
