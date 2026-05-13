@@ -400,7 +400,10 @@
           "csv": "v3io://artifacts/csv_mock_data.csv",
           "yaml": "v3io://artifacts/yaml_mock_data.yaml",
           "text": "v3io://artifacts/text_mock_data.txt",
-          "html": "v3io://artifacts/html_mock_data.html"
+          "html": "v3io://artifacts/html_mock_data.html",
+          "code_python": "v3io://artifacts/python_script.py",
+          "code_js": "v3io://artifacts/javascript_script.js",
+          "code_archive": "v3io://artifacts/archive_python.zip"
         },
         "output_path": "v3io:///projects/{{run.project}}/artifacts"
       },

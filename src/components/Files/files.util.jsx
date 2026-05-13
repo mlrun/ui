@@ -63,7 +63,7 @@ export const detailsMenu = [
   }
 ]
 
-export const infoHeaders = [
+export const getInfoHeaders = selectedArtifact => [
   {
     label: 'Hash',
     id: 'hash',
@@ -76,16 +76,23 @@ export const infoHeaders = [
   { label: 'Path', id: 'target_path' },
   { label: 'URI', id: 'target_uri' },
   { label: 'Updated', id: 'updated' },
-  { label: 'Labels', id: 'labels' }
+  { label: 'Labels', id: 'labels' },
+  ...(selectedArtifact.kind === 'code'
+    ? [
+        { label: 'Code type', id: 'code_type' },
+        { label: 'Language', id: 'language' },
+        { label: 'Requirements', id: 'requirements' }
+      ]
+    : [])
 ]
 
-export const generatePageData = (viewMode, isDetailsPopUp = false) => {
+export const generatePageData = (viewMode, isDetailsPopUp = false, selectedArtifact) => {
   return {
     page: FILES_PAGE,
     details: {
       type: FILES_PAGE,
       menu: detailsMenu,
-      infoHeaders,
+      infoHeaders: getInfoHeaders(selectedArtifact),
       hideBackBtn: viewMode === FULL_VIEW_MODE && !isDetailsPopUp,
       hideCloseBtn: viewMode === FULL_VIEW_MODE && !isDetailsPopUp,
       withToggleViewBtn: true

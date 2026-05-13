@@ -29,6 +29,7 @@ import {
   REQUEST_CANCELED,
   UNKNOWN_STATE
 } from '../constants'
+import { commonLanguages } from '../common/Editor/editor.util'
 
 const fileSizes = {
   '100KB': 102400,
@@ -143,6 +144,29 @@ export const fetchArtifactPreviewFromPath = async (
 ) => {
   const user = path.startsWith('/User') && (artifact.user || artifact.producer?.owner)
   const fileFormat = path.replace(/.*\./g, '')
+  const isArchive = ['zip', 'gz', 'tgz'].includes(fileFormat)
+
+  if (isArchive) {
+    if (noData) {
+      setNoData(false)
+    }
+
+    return setPreview([
+      {
+        type: 'archive',
+        artifact,
+        data: {
+          path,
+          user: artifact.ui.user,
+          projectName,
+          fileFormat,
+          content: ''
+        },
+        hidePopupBtn: true
+      }
+    ])
+  }
+
   let fileSize = artifact.size
 
   try {
@@ -152,7 +176,9 @@ export const fetchArtifactPreviewFromPath = async (
       fileSize = fileStats.size
     }
 
-    if (supportedFormats.includes(fileFormat)) {
+    const isCode = artifact.kind === 'code' || Object.hasOwn(commonLanguages, fileFormat)
+
+    if (supportedFormats.includes(fileFormat) || isCode) {
       if (
         fileFormat &&
         fileFormat !== path &&
@@ -181,7 +207,8 @@ export const fetchArtifactPreviewFromPath = async (
           fileFormat,
           artifact.db_key,
           { fileSize, ...artifactLimits },
-          signal
+          signal,
+          artifact
         )
         setPreview([content])
 
@@ -215,7 +242,8 @@ export const fetchArtifactPreview = async (
   fileFormat,
   artifactName,
   sizeConfigs = {},
-  signal
+  signal,
+  artifact
 ) => {
   const defaultSizeLimit = fileSizes['100KB']
   const config = {
@@ -256,7 +284,7 @@ export const fetchArtifactPreview = async (
 
     response.data = fullFile
 
-    return createArtifactPreviewContent(response, fileFormat, path, artifactName)
+    return createArtifactPreviewContent(response, fileFormat, path, artifactName, false, artifact)
   }
 
   return api.getArtifactPreview(projectName, config).then(response => {
@@ -265,7 +293,8 @@ export const fetchArtifactPreview = async (
       fileFormat,
       path,
       artifactName,
-      sizeConfigs.fileSize > defaultSizeLimit
+      sizeConfigs.fileSize > defaultSizeLimit,
+      artifact
     )
   })
 }

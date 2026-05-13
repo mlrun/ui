@@ -139,6 +139,15 @@ export const LLM_PROMPTS_PAGE = 'llm-prompts'
 export const PROMPT_TAB = 'prompt'
 export const ARGUMENTS_TAB = 'arguments'
 
+export const ARTIFACT_PAGES = [
+  ARTIFACTS_PAGE,
+  DATASETS_PAGE,
+  DOCUMENTS_PAGE,
+  FILES_PAGE,
+  LLM_PROMPTS_PAGE,
+  MODELS_PAGE
+]
+
 export const PROJECT_MONITOR = 'monitor'
 
 export const PROJECT_QUICK_ACTIONS_PAGE = 'quick-actions'

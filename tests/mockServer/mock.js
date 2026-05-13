@@ -215,7 +215,7 @@ const artifactsCategories = {
   document: ['document'],
   model: ['model'],
   'llm-prompt': ['llm-prompt'],
-  other: ['', 'table', 'link', 'plot', 'chart', 'plotly', 'artifact']
+  other: ['', 'table', 'link', 'plot', 'chart', 'plotly', 'artifact', 'code']
 }
 
 // Support functions

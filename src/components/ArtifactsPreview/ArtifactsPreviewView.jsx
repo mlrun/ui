@@ -23,6 +23,8 @@ import Prism from 'prismjs'
 
 import DetailsResults from '../DetailsResults/DetailsResults'
 import PreviewError from './PreviewError/PreviewError'
+import CodePreview from './CodePreview/CodePreview'
+import Download from '../../common/Download/Download'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import WarningMessage from '../../common/WarningMessage/WarningMessage'
 
@@ -30,7 +32,13 @@ import { ARTIFACT_PREVIEW_TABLE_ROW_LIMIT, ERROR_STATE, UNKNOWN_STATE } from '..
 
 import './artifactsPreview.scss'
 
-const ArtifactsPreviewView = ({ className, preview, setShowErrorBody, showErrorBody }) => {
+const ArtifactsPreviewView = ({
+  className,
+  preview,
+  setShowErrorBody,
+  showErrorBody,
+  popupButton
+}) => {
   const [showWarningMsg, setShowWarningMsg] = useState(true)
   const content = useMemo(
     () =>
@@ -47,7 +55,7 @@ const ArtifactsPreviewView = ({ className, preview, setShowErrorBody, showErrorB
       {showWarningMsg && preview.warningMsg && (
         <WarningMessage message={preview.warningMsg} handleClose={() => setShowWarningMsg(false)} />
       )}
-      <div className="artifact-preview__wrapper">
+      <div className={`artifact-preview__wrapper artifact-preview__wrapper-${preview?.type}`}>
         {preview.header && (
           <div className="artifact-preview__header">
             <h5 className="artifact-preview__header-title">{preview.header}</h5>
@@ -113,6 +121,9 @@ const ArtifactsPreviewView = ({ className, preview, setShowErrorBody, showErrorB
               {preview?.type === 'text' && (
                 <div className="artifact-preview__text">{preview?.data.content}</div>
               )}
+              {preview?.type === 'code' && (
+                <CodePreview preview={preview} popupButton={popupButton} />
+              )}
               {preview?.type === 'html' && (
                 <iframe src={preview?.data.content} frameBorder="0" title="Preview" />
               )}
@@ -145,6 +156,22 @@ const ArtifactsPreviewView = ({ className, preview, setShowErrorBody, showErrorB
                   alt="preview"
                 />
               )}
+              {preview?.type === 'archive' && (
+                <div className="artifact-preview__archive">
+                  <span className="artifact-preview__archive-text">
+                    This artifact is an archive (.{preview?.data?.fileFormat})
+                  </span>
+                  <div className="artifact-preview__archive-download">
+                    <Download
+                      path={preview?.data?.path}
+                      user={preview?.data?.user}
+                      projectName={preview?.data?.projectName}
+                      withoutIcon
+                    />
+                    <span> to view contents</span>
+                  </div>
+                </div>
+              )}
               {preview?.type === UNKNOWN_STATE && (
                 <h3 className="artifact-preview__no-data">
                   {preview?.data?.content ? preview?.data.content : 'No preview'}
@@ -162,7 +189,8 @@ ArtifactsPreviewView.propTypes = {
   className: PropTypes.string.isRequired,
   preview: PropTypes.object.isRequired,
   setShowErrorBody: PropTypes.func.isRequired,
-  showErrorBody: PropTypes.bool.isRequired
+  showErrorBody: PropTypes.bool.isRequired,
+  popupButton: PropTypes.element
 }
 
 export default ArtifactsPreviewView

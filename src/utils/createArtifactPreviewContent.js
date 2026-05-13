@@ -20,6 +20,7 @@ such restriction.
 import { has, isString } from 'lodash'
 
 import { UNKNOWN_STATE } from '../constants'
+import { commonLanguages } from '../common/Editor/editor.util'
 
 const splitStringToArray = str => {
   return str.split(/,(?! )/g)
@@ -30,9 +31,12 @@ export const createArtifactPreviewContent = (
   fileFormat,
   path,
   artifactName,
-  isPreviewTruncated = false
+  isPreviewTruncated = false,
+  artifact
 ) => {
-  const artifact = {}
+  const previewContent = {
+    artifact
+  }
 
   if (res?.headers['content-type'].includes('text/csv') && isString(res?.data)) {
     const data = res.data.split('\n')
@@ -44,59 +48,67 @@ export const createArtifactPreviewContent = (
       content.pop()
       content = content.map(item => splitStringToArray(item))
 
-      artifact.type = 'table-results'
-      artifact.iterationStats = [headers].concat(content)
+      previewContent.type = 'table-results'
+      previewContent.iterationStats = [headers].concat(content)
     } else {
       let content = data.slice(1)
 
       content = content.map(item => splitStringToArray(item))
       content.pop()
-      artifact.type = 'table'
-      artifact.data = {
+      previewContent.type = 'table'
+      previewContent.data = {
         headers: data[0].split(','),
         content: content
       }
     }
   } else if (fileFormat === 'yaml' || fileFormat === 'yml') {
-    artifact.type = 'yaml'
-    artifact.data = {
+    previewContent.type = 'yaml'
+    previewContent.data = {
       content: res.data
+    }
+  } else if (artifact?.kind === 'code' || Object.hasOwn(commonLanguages, fileFormat)) {
+    previewContent.type = 'code'
+    previewContent.hidePopupBtn = true
+    previewContent.data = {
+      content: res.data,
+      fileFormat
     }
   } else if (
     res?.headers['content-type'].includes('text/plain') ||
     (res?.headers['content-type'].includes('application/octet-stream') && isString(res?.data))
   ) {
-    artifact.type = 'text'
-    artifact.data = {
+    previewContent.type = 'text'
+    previewContent.data = {
       content: String(res.data)
     }
   } else if (res?.headers['content-type'].includes('text/html')) {
-    artifact.type = 'html'
-    artifact.data = {
+    previewContent.type = 'html'
+    previewContent.data = {
       content: URL.createObjectURL(res.data)
     }
   } else if (res?.headers['content-type'].includes('application/json')) {
-    artifact.type = 'json'
-    artifact.data = {
+    previewContent.type = 'json'
+    previewContent.data = {
       content: JSON.stringify(res.data, null, 2)
     }
-    artifact.hidden = has(res.data, 'listdir')
+    previewContent.hidden = has(res.data, 'listdir')
   } else if (res?.headers['content-type'].includes('image')) {
-    artifact.type = 'image'
-    artifact.data = {
+    previewContent.type = 'image'
+    previewContent.data = {
       content: URL.createObjectURL(res.data)
     }
   } else {
-    artifact.type = UNKNOWN_STATE
+    previewContent.type = UNKNOWN_STATE
 
     if (path && artifactName) {
-      artifact.data = {
+      previewContent.data = {
         content: `Preview is not available for this artifact type. Go to ${path} to retrieve the data, or use mlrun api/sdk project.get_artifact('${artifactName}').to_dataitem().get()`
       }
     }
   }
 
-  if (isPreviewTruncated) artifact.warningMsg = 'The preview is truncated due to the file size'
+  if (isPreviewTruncated)
+    previewContent.warningMsg = 'The preview is truncated due to the file size'
 
-  return artifact
+  return previewContent
 }

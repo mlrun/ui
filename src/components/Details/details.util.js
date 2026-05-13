@@ -238,6 +238,23 @@ export const generateArtifactsContent = (
       },
       description: {
         value: selectedItem.description
+      },
+      language: {
+        value: selectedItem.language
+      },
+      code_type: {
+        fieldData: {
+          name: 'code_type'
+        },
+        editModeEnabled: false,
+        editModeType: 'chips'
+      },
+      requirements: {
+        fieldData: {
+          name: 'requirements'
+        },
+        editModeEnabled: false,
+        editModeType: 'chips'
       }
     }
   }
