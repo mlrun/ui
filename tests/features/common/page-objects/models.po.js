@@ -233,7 +233,7 @@ const realTimePipelinesGraph = {
         root: '',
         header: {},
         body: {
-          root: '.react-flow__edges g[transform]',
+          root: '.react-flow__edges g',
           row: {
             root: '.react-flow__edge',
             fields: {

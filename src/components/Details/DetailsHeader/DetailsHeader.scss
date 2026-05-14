@@ -1,0 +1,15 @@
+@use 'igz-controls/scss/colors';
+
+.item-header__kind-chip {
+  padding: 1px 12px;
+  border: 1px solid colors.$alto;
+  border-radius: 12px;
+  font-size: 11px;
+  margin-left: 8px;
+  color: colors.$doveGray;
+  text-transform: capitalize;
+  font-weight: normal;
+  line-height: 18px;
+  display: inline-block;
+  vertical-align: middle;
+}

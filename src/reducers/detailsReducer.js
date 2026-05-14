@@ -162,7 +162,7 @@ export const fetchModelEndpointMetricsValues = createAsyncThunk(
       .getModelEndpointMetricsValues(project, uid, config)
       .then(({ data = [] }) => {
         const differenceInDays = params.end - params.start
-        const timeUnit = differenceInDays > TIME_FRAME_LIMITS['24_HOURS'] ? 'days' : 'hours'
+        const timeUnit = differenceInDays > TIME_FRAME_LIMITS['24_HOURS'] ? 'day' : 'hour'
 
         return parseMetrics(data, timeUnit)
       })

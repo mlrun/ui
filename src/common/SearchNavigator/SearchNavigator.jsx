@@ -31,7 +31,7 @@ import Close from 'igz-controls/images/close.svg?react'
 
 import './searchNavigator.scss'
 
-const SearchNavigator = ({ promptTemplate, setSearchResult, searchOnChange = null }) => {
+const SearchNavigator = ({ searchTemplate, setSearchResult, searchOnChange = null }) => {
   const [matchCount, setMatchCount] = useState(0)
   const [activeMatchIndex, setActiveMatchIndex] = useState(0)
   const [matches, setMatches] = useState([])
@@ -42,13 +42,13 @@ const SearchNavigator = ({ promptTemplate, setSearchResult, searchOnChange = nul
   )
 
   const clearResults = useCallback(() => {
-    setSearchResult(promptTemplate)
+    setSearchResult(searchTemplate)
     setMatches([])
     setActiveMatchIndex(0)
     setSearchValue('')
     setMatchCount(0)
     searchOnChange?.('')
-  }, [promptTemplate, searchOnChange, setSearchResult])
+  }, [searchTemplate, searchOnChange, setSearchResult])
 
   const searchOnChangeHandler = useCallback(
     value => {
@@ -57,7 +57,7 @@ const SearchNavigator = ({ promptTemplate, setSearchResult, searchOnChange = nul
       }
 
       const regex = new RegExp(`(${value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
-      const highlighted = highlightMatches(promptTemplate, regex, 0)
+      const highlighted = highlightMatches(searchTemplate, regex, 0)
       const jsxMatchCount = countMatchesInTemplate(highlighted, regex)
 
       setSearchResult(highlighted)
@@ -67,7 +67,7 @@ const SearchNavigator = ({ promptTemplate, setSearchResult, searchOnChange = nul
       setSearchValue(value)
       searchOnChange?.(value)
     },
-    [promptTemplate, setSearchResult, searchOnChange, clearResults]
+    [searchTemplate, setSearchResult, searchOnChange, clearResults]
   )
 
   const highlightMatch = useCallback(
@@ -75,12 +75,12 @@ const SearchNavigator = ({ promptTemplate, setSearchResult, searchOnChange = nul
       if (!matches.length) return
 
       const regex = new RegExp(`(${searchValue})`, 'gi')
-      const highlighted = highlightMatches(promptTemplate, regex, index)
+      const highlighted = highlightMatches(searchTemplate, regex, index)
 
       setSearchResult(highlighted)
       setActiveMatchIndex(index)
     },
-    [matches, promptTemplate, searchValue, setSearchResult]
+    [matches, searchTemplate, searchValue, setSearchResult]
   )
 
   const goToPrevMatch = () => {
@@ -151,7 +151,7 @@ const SearchNavigator = ({ promptTemplate, setSearchResult, searchOnChange = nul
 }
 
 SearchNavigator.propTypes = {
-  promptTemplate: PropTypes.array.isRequired,
+  searchTemplate: PropTypes.array.isRequired,
   setSearchResult: PropTypes.func.isRequired,
   searchOnChange: PropTypes.func
 }

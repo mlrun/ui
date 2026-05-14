@@ -179,7 +179,7 @@ Feature: Jobs Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Jobs_Tab" wizard selected option value "Past year"
         Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
         Then verify that 50 row elements are displayed in "Jobs_Table" on "Jobs_Monitoring_Jobs_Tab" wizard
-        When pick up "Custom range" from "09/03/2024 00:00" to "09/04/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitoring_Jobs_Tab" wizard
+        When pick up "Custom range" from "09/03/2024 00:00" to "09/04/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
         And wait load page
         Then verify from "09/03/2024 00:00" to "09/04/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
         And wait load page
@@ -710,7 +710,7 @@ Feature: Jobs Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Workflows_Tab" wizard selected option value "Past year"
         Then verify "Workflows_Table" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
         Then verify that 3 row elements are displayed in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard
-        When pick up "Custom range" from "09/03/2024 00:00" to "09/04/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitoring_Workflows_Tab" wizard
+        When pick up "Custom range" from "09/03/2024 00:00" to "09/04/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitoring_Workflows_Tab" wizard
         And wait load page
         Then verify from "09/03/2024 00:00" to "09/04/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Workflows_Tab" wizard
         And wait load page
@@ -1234,7 +1234,7 @@ Feature: Jobs Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard selected option value "Next year"
         Then verify "Scheduled_Table" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then verify that 8 row elements are displayed in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard
-        When pick up "Custom range" from "09/03/2024 00:00" to "09/04/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitoring_Scheduled_Tab" wizard
+        When pick up "Custom range" from "09/03/2024 00:00" to "09/04/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard
         And wait load page
         Then verify from "09/03/2024 00:00" to "09/04/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard
         And wait load page

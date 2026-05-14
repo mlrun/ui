@@ -27,7 +27,7 @@ import { TextTooltipTemplate, Tooltip, Tip, Loader, ReadOnlyChips } from 'igz-co
 
 import './SectionTable.scss'
 
-const SectionTable = ({ loading = false, params, table }) => {
+const SectionTable = ({ loading = false, table }) => {
   return loading ? (
     <Loader section secondary />
   ) : (
@@ -36,7 +36,7 @@ const SectionTable = ({ loading = false, params, table }) => {
         <thead>
           <tr className="section-table__table-header">
             <>
-              {table.header.map(
+              {table?.header?.map(
                 header =>
                   !header.hidden && (
                     <th
@@ -54,11 +54,7 @@ const SectionTable = ({ loading = false, params, table }) => {
           </tr>
         </thead>
         <tbody className="section-table__table-body">
-          {table.body.map((body, index) => {
-            const extractedItemName = body['name'].value.startsWith(params.projectName)
-              ? body['name'].value.slice(params.projectName.length + 1)
-              : body['name'].value
-
+          {table?.body?.map((body, index) => {
             return (
               <tr key={index} className="section-table__table-row">
                 <>
@@ -89,10 +85,10 @@ const SectionTable = ({ loading = false, params, table }) => {
                                 >
                                   <Tooltip
                                     className="item-name"
-                                    template={<TextTooltipTemplate text={extractedItemName} />}
+                                    template={<TextTooltipTemplate text={body[key].value} />}
                                     textShow={true}
                                   >
-                                    {extractedItemName}
+                                    {body[key].value}
                                   </Tooltip>
                                 </a>
                               ) : body[key].link ? (
@@ -189,7 +185,6 @@ const SectionTable = ({ loading = false, params, table }) => {
 
 SectionTable.propTypes = {
   loading: PropTypes.bool,
-  params: PropTypes.object.isRequired,
   table: PropTypes.object.isRequired
 }
 

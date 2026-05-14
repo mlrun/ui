@@ -1,0 +1,353 @@
+[
+  {
+    "project": "lag-detection-tutorial-admin",
+    "id": 1001,
+    "name": "monitoring-lag-detected",
+    "description": "",
+    "summary": "Alert when model monitoring lag is detected",
+    "created": "2026-03-01T00:00:00.000000",
+    "severity": "medium",
+    "entities": {
+      "kind": "model-monitoring-infra",
+      "project": "lag-detection-tutorial-admin",
+      "ids": ["lag-detection-tutorial-admin.writer.2"]
+    },
+    "trigger": {
+      "events": ["model-monitoring-lag-detected"]
+    },
+    "criteria": {
+      "count": 1
+    },
+    "reset_policy": "auto",
+    "cooldown_period": "1h",
+    "notifications": [
+      {
+        "notification": {
+          "kind": "webhook",
+          "name": "webhook-notifier",
+          "message": "Monitoring lag detected in project lag-detection-tutorial-admin",
+          "severity": "medium",
+          "when": ["model-monitoring-lag-detected"],
+          "condition": "",
+          "status": "pending"
+        }
+      }
+    ],
+    "state": "active",
+    "count": 1,
+    "updated": "2026-03-24T08:37:21.943000+00:00"
+  },
+  {
+    "project": "kate-project-mm",
+    "id": 1002,
+    "name": "job-failure-alert1",
+    "description": "",
+    "summary": "Alert when a job fails more than twice in 10 minutes",
+    "created": "2024-11-01T00:00:00.000000",
+    "severity": "low",
+    "entities": {
+      "kind": "job",
+      "project": "kate-project-mm",
+      "ids": ["cat-vs-dog-classification"]
+    },
+    "trigger": {
+      "events": ["failed"]
+    },
+    "criteria": {
+      "count": 2,
+      "period": "10m"
+    },
+    "reset_policy": "auto",
+    "cooldown_period": "30m",
+    "notifications": [
+      {
+        "notification": {
+          "kind": "webhook",
+          "name": "webhook-notifier",
+          "message": "Job failure detected in kate-project-mm",
+          "severity": "low",
+          "when": ["failed"],
+          "condition": "",
+          "status": "pending"
+        }
+      }
+    ],
+    "state": "active",
+    "count": 3,
+    "updated": "2024-12-17T09:53:00.089000+00:00"
+  },
+  {
+    "project": "kate-project-mm",
+    "id": 1003,
+    "name": "data-drift",
+    "description": "",
+    "summary": "Alert when data drift is detected on model endpoint",
+    "created": "2024-11-01T00:00:00.000000",
+    "severity": "high",
+    "entities": {
+      "kind": "model-endpoint-result",
+      "project": "kate-project-mm",
+      "ids": ["540bae4d7c7c437fa5b9f0657a4187db.histogram-data-drift.result.general_drift"]
+    },
+    "trigger": {
+      "events": ["data-drift-detected"]
+    },
+    "criteria": {
+      "count": 1
+    },
+    "reset_policy": "manual",
+    "notifications": [
+      {
+        "notification": {
+          "kind": "webhook",
+          "name": "webhook-notifier",
+          "message": "Data drift detected in kate-project-mm",
+          "severity": "high",
+          "when": ["data-drift-detected"],
+          "condition": "",
+          "status": "pending"
+        }
+      }
+    ],
+    "state": "active",
+    "count": 6,
+    "updated": "2024-12-17T09:52:20.135000+00:00"
+  },
+  {
+    "project": "default",
+    "id": 1004,
+    "name": "mm-app-failure",
+    "description": "",
+    "summary": "Alert when a model monitoring application fails",
+    "created": "2024-11-15T00:00:00.000000",
+    "severity": "medium",
+    "entities": {
+      "kind": "model-monitoring-application",
+      "project": "default",
+      "ids": ["default-mm_myApp"]
+    },
+    "trigger": {
+      "events": ["mm-app-failed"]
+    },
+    "criteria": {
+      "count": 1
+    },
+    "reset_policy": "auto",
+    "cooldown_period": "1d",
+    "notifications": [
+      {
+        "notification": {
+          "kind": "webhook",
+          "name": "webhook-notifier",
+          "message": "Model monitoring application failure detected",
+          "severity": "medium",
+          "when": ["mm-app-failed"],
+          "condition": "",
+          "status": "pending"
+        }
+      }
+    ],
+    "state": "active",
+    "count": 1,
+    "updated": "2024-12-17T09:52:19.580000+00:00"
+  },
+  {
+    "project": "default",
+    "id": 1005,
+    "name": "manual-reset-alert",
+    "description": "",
+    "summary": "Alert with manual reset policy",
+    "created": "2026-04-01T00:00:00.000000",
+    "severity": "high",
+    "entities": {
+      "kind": "model-monitoring-application",
+      "project": "default",
+      "ids": ["default-mm_myApp"]
+    },
+    "trigger": {
+      "events": ["mm-app-failed"]
+    },
+    "criteria": {
+      "count": 1
+    },
+    "reset_policy": "manual",
+    "notifications": [
+      {
+        "notification": {
+          "kind": "slack",
+          "name": "slack-notifier",
+          "message": "Model monitoring application failure — manual reset required",
+          "severity": "high",
+          "when": ["mm-app-failed"],
+          "condition": "",
+          "status": "pending"
+        }
+      }
+    ],
+    "state": "active",
+    "count": 1,
+    "updated": "2026-04-28T10:00:00.000000+00:00"
+  },
+  {
+    "project": "default",
+    "id": 1006,
+    "name": "auto-reset-no-cooldown-alert",
+    "description": "",
+    "summary": "Alert with auto reset policy and no cooldown period",
+    "created": "2026-04-01T00:00:00.000000",
+    "severity": "low",
+    "entities": {
+      "kind": "model-monitoring-application",
+      "project": "default",
+      "ids": ["default-mm_myApp"]
+    },
+    "trigger": {
+      "events": ["mm-app-failed"]
+    },
+    "criteria": {
+      "count": 1
+    },
+    "reset_policy": "auto",
+    "notifications": [
+      {
+        "notification": {
+          "kind": "webhook",
+          "name": "webhook-notifier",
+          "message": "Model monitoring application failure detected",
+          "severity": "low",
+          "when": ["mm-app-failed"],
+          "condition": "",
+          "status": "pending"
+        }
+      }
+    ],
+    "state": "active",
+    "count": 1,
+    "updated": "2026-04-28T11:00:00.000000+00:00"
+  },
+  {
+    "project": "default",
+    "id": 1007,
+    "name": "alert-name-uqbxb-proj-default",
+    "description": "",
+    "summary": "Alert on model performance detection",
+    "created": "2025-09-01T00:00:00.000000",
+    "severity": "high",
+    "entities": {
+      "kind": "model-endpoint-result",
+      "project": "default",
+      "ids": ["a7c95783e6a726a1a233e581ea898ba33fa7e342.rujmfi.result.data_drift_test"]
+    },
+    "trigger": {
+      "events": ["model-performance-detected"]
+    },
+    "criteria": {
+      "count": 1
+    },
+    "reset_policy": "auto",
+    "cooldown_period": "5m",
+    "notifications": [
+      {
+        "notification": {
+          "kind": "git",
+          "name": "git-notifier",
+          "message": "Model performance issue detected",
+          "severity": "high",
+          "when": ["model-performance-detected"],
+          "condition": "",
+          "status": "pending"
+        }
+      }
+    ],
+    "state": "active",
+    "count": 2,
+    "updated": "2025-10-22T15:50:55.190000+00:00"
+  },
+  {
+    "project": "default",
+    "id": 1008,
+    "name": "alert-name-jukmn-proj-default",
+    "description": "",
+    "summary": "Alert on system performance detection",
+    "created": "2025-09-01T00:00:00.000000",
+    "severity": "high",
+    "entities": {
+      "kind": "model-endpoint-result",
+      "project": "default",
+      "ids": ["a7c95783e6a726a1a233e581ea898ba33fa7e342.hskoyl.result.data_drift_test"]
+    },
+    "trigger": {
+      "events": ["system-performance-detected"]
+    },
+    "criteria": {
+      "count": 1
+    },
+    "reset_policy": "auto",
+    "cooldown_period": "1h",
+    "notifications": [
+      {
+        "notification": {
+          "kind": "git",
+          "name": "git-notifier",
+          "message": "System performance issue detected",
+          "severity": "high",
+          "when": ["system-performance-detected"],
+          "condition": "",
+          "status": "pending"
+        }
+      }
+    ],
+    "state": "active",
+    "count": 2,
+    "updated": "2025-10-22T15:50:54.207000+00:00"
+  },
+  {
+    "project": "default",
+    "id": 1009,
+    "name": "alert-name-obryv-default",
+    "description": "",
+    "summary": "Alert on job failure",
+    "created": "2025-08-01T00:00:00.000000",
+    "severity": "low",
+    "entities": {
+      "kind": "job",
+      "project": "default",
+      "ids": ["test-func-oyn-handler"]
+    },
+    "trigger": {
+      "events": ["failed"]
+    },
+    "criteria": {
+      "count": 1
+    },
+    "reset_policy": "auto",
+    "cooldown_period": "30m",
+    "notifications": [
+      {
+        "notification": {
+          "kind": "git",
+          "name": "git-notifier",
+          "message": "Job failure detected",
+          "severity": "low",
+          "when": ["failed"],
+          "condition": "",
+          "status": "pending"
+        }
+      },
+      {
+        "notification": {
+          "kind": "webhook",
+          "name": "webhook-notifier",
+          "message": "Job failure detected",
+          "severity": "low",
+          "when": ["failed"],
+          "condition": "",
+          "status": "pending"
+        }
+      }
+    ],
+    "state": "active",
+    "count": 1,
+    "updated": "2025-09-04T12:46:17.816000+00:00"
+  }
+]

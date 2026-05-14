@@ -671,10 +671,22 @@ const WorkflowsTable = React.forwardRef(
     ])
 
     useEffect(() => {
-      if ((params.jobId || params.functionHash) && pageData.details.menu.length > 0) {
+      if (
+        (params.jobId || params.functionHash) &&
+        !isEmpty(selectedJob) &&
+        pageData.details.menu.length > 0
+      ) {
         isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
       }
-    }, [navigate, pageData.details.menu, location, params.jobId, params.functionHash, params.tab])
+    }, [
+      navigate,
+      pageData.details.menu,
+      location,
+      params.jobId,
+      params.functionHash,
+      params.tab,
+      selectedJob
+    ])
 
     useEffect(() => {
       const workflow = { ...workflowsStore.activeWorkflow?.data }

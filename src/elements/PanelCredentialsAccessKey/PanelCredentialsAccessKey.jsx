@@ -31,6 +31,7 @@ import './panelCredentialsAccessKey.scss'
 const PanelCredentialsAccessKey = ({
   className = '',
   credentialsAccessKey,
+  frontendSpec,
   isPanelEditMode = false,
   required = false,
   setCredentialsAccessKey,
@@ -48,24 +49,26 @@ const PanelCredentialsAccessKey = ({
 
   return (
     <div className={accessKeyClassNames}>
-      <CheckBox
-        disabled={isPanelEditMode}
-        item={{
-          id: PANEL_DEFAULT_ACCESS_KEY,
-          label: 'Auto-generate access key'
-        }}
-        onChange={value => {
-          if (value !== credentialsAccessKey && inputValue.length > 0) {
-            setInputValue('')
-          }
-          setCredentialsAccessKey(value === credentialsAccessKey ? '' : value)
-          setValidation(state => ({
-            ...state,
-            isAccessKeyValid: true
-          }))
-        }}
-        selectedId={credentialsAccessKey}
-      />
+      {!frontendSpec.ce?.version && (
+        <CheckBox
+          disabled={isPanelEditMode}
+          item={{
+            id: PANEL_DEFAULT_ACCESS_KEY,
+            label: 'Auto-generate access key'
+          }}
+          onChange={value => {
+            if (value !== credentialsAccessKey && inputValue.length > 0) {
+              setInputValue('')
+            }
+            setCredentialsAccessKey(value === credentialsAccessKey ? '' : value)
+            setValidation(state => ({
+              ...state,
+              isAccessKeyValid: true
+            }))
+          }}
+          selectedId={credentialsAccessKey}
+        />
+      )}
       {credentialsAccessKey !== PANEL_DEFAULT_ACCESS_KEY && (
         <Input
           floatingLabel
@@ -95,6 +98,7 @@ const PanelCredentialsAccessKey = ({
 PanelCredentialsAccessKey.propTypes = {
   className: PropTypes.string,
   credentialsAccessKey: PropTypes.string.isRequired,
+  frontendSpec: PropTypes.object.isRequired,
   isPanelEditMode: PropTypes.bool,
   required: PropTypes.bool,
   setCredentialsAccessKey: PropTypes.func.isRequired,

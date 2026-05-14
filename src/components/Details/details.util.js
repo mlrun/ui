@@ -42,7 +42,7 @@ import {
   MODELS_TAB,
   TAG_LATEST
 } from '../../constants'
-import { generateLinkPath, parseUri } from '../../utils'
+import { generateLinkPath, generateNuclioLink, parseUri } from '../../utils'
 import { getFunctionImage } from '../FunctionsPage/functions.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
@@ -238,6 +238,23 @@ export const generateArtifactsContent = (
       },
       description: {
         value: selectedItem.description
+      },
+      language: {
+        value: selectedItem.language
+      },
+      code_type: {
+        fieldData: {
+          name: 'code_type'
+        },
+        editModeEnabled: false,
+        editModeType: 'chips'
+      },
+      requirements: {
+        fieldData: {
+          name: 'requirements'
+        },
+        editModeEnabled: false,
+        editModeType: 'chips'
       }
     }
   }
@@ -297,6 +314,70 @@ export const generateAlertsContent = selectedItem => {
     },
     notifications: {
       value: selectedItem.notifications
+    }
+  }
+}
+
+export const generateRealTimePipelinesContent = selectedItem => {
+  const nuclioFunctionName =
+    selectedItem.nuclio_name ||
+    `${selectedItem.project}-${selectedItem.name.toLowerCase()}`.slice(0, 63)
+
+  return {
+    name: {
+      value: selectedItem.name
+    },
+    rootFunction: {
+      value: selectedItem.name,
+      status: selectedItem.state.value,
+      statusLabel: selectedItem.state.label,
+      className: selectedItem.state.className,
+      link: generateNuclioLink(`/projects/${selectedItem.project}/functions/${nuclioFunctionName}`),
+      linkIsExternal: true
+    },
+    childFunction: {
+      value: selectedItem.childFunctions ?? selectedItem.function_refs ?? [],
+      listOfFunctions: true
+    },
+    topology: {
+      value: selectedItem.graph?.kind === 'router' ? 'Router' : 'Flow'
+    },
+    internalUrl: {
+      value: selectedItem.internal_invocation_urls,
+      copyToClipboard: true
+    },
+    externalUrl: {
+      value: selectedItem.external_invocation_urls,
+      copyToClipboard: true
+    },
+    kind: {
+      value: selectedItem.type
+    },
+    command: {
+      value: selectedItem.command,
+      copyToClipboard: selectedItem.type !== FUNCTION_TYPE_APPLICATION,
+      externalLink: selectedItem.type === FUNCTION_TYPE_APPLICATION
+    },
+    image: {
+      value: getFunctionImage(selectedItem)
+    },
+    tag: {
+      value: selectedItem.tag
+    },
+    hash: {
+      value: selectedItem.hash
+    },
+    codeOrigin: {
+      value: selectedItem.build?.code_origin ?? ''
+    },
+    updated: {
+      value: formatDatetime(selectedItem.updated, 'N/A')
+    },
+    defaultHandler: {
+      value: selectedItem.default_handler
+    },
+    description: {
+      value: selectedItem.description
     }
   }
 }

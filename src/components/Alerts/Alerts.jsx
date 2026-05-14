@@ -57,7 +57,8 @@ const Alerts = () => {
 
   const alertsFilters = useFiltersFromSearchParams(
     alertsFiltersConfig,
-    parseAlertsQueryParamsCallback
+    parseAlertsQueryParamsCallback,
+    params.projectName
   )
 
   const {
@@ -105,6 +106,7 @@ const Alerts = () => {
   useEffect(() => {
     checkForSelectedAlert({
       alertId: params.alertId,
+      alertName: params.alertName,
       alerts,
       dispatch,
       isCrossProjects,

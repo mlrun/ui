@@ -19,13 +19,15 @@ such restriction.
 */
 import { useMemo } from 'react'
 import { mapValues, isNil, pickBy } from 'lodash'
+import { useSelector } from 'react-redux'
+import { useSearchParams } from 'react-router-dom'
+
 import {
   DATES_FILTER,
   ITERATIONS_FILTER,
   SHOW_ITERATIONS,
   SHOW_UNTAGGED_FILTER
 } from '../constants'
-import { useSearchParams } from 'react-router-dom'
 import {
   datePickerFutureOptions,
   datePickerPastOptions,
@@ -42,7 +44,19 @@ const getFiltersFromSearchParams = (filtersConfig, searchParams, paramsParsingCa
   return mapValues(filtersConfigToApply, (filterConfig, filterName) => {
     const searchParamValue = searchParams.get(filterName)?.trim?.()
 
-    if (isNil(searchParamValue)) return filterConfig.initialValue
+    if (isNil(searchParamValue)) {
+      if (filterName === DATES_FILTER) {
+        return (
+          getDatePickerFilterValue(
+            filterConfig.isFuture ? datePickerFutureOptions : datePickerPastOptions,
+            filterConfig.initialValue.initialSelectedOptionId,
+            filterConfig.isFuture
+          ) ?? filterConfig.initialValue
+        )
+      }
+
+      return filterConfig.initialValue
+    }
 
     let parsedValue = paramsParsingCallback(filterName, searchParamValue)
 
@@ -78,12 +92,21 @@ export const getInitialFiltersByConfig = (filtersConfig = {}) => {
 
 export const useFiltersFromSearchParams = (
   filtersConfig = null,
-  paramsParsingCallback = defaultParamsParsingCallback
+  paramsParsingCallback = defaultParamsParsingCallback,
+  triggerKey = ''
 ) => {
+  const relativeDateChange = useSelector(store => store.filtersStore.relativeDateChange)
   const [searchParams] = useSearchParams()
   const filters = useMemo(() => {
-    return getFiltersFromSearchParams(filtersConfig, searchParams, paramsParsingCallback)
-  }, [filtersConfig, paramsParsingCallback, searchParams])
+    // triggerKey and relativeDateChange are added to dependencies to trigger date (timestamp for relative time) filter recalculation
+    return getFiltersFromSearchParams(
+      filtersConfig,
+      searchParams,
+      paramsParsingCallback,
+      triggerKey,
+      relativeDateChange
+    )
+  }, [filtersConfig, paramsParsingCallback, searchParams, relativeDateChange, triggerKey])
 
   return filters
 }

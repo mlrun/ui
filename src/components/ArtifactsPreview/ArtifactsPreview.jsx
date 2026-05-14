@@ -25,7 +25,7 @@ import ArtifactsPreviewView from './ArtifactsPreviewView'
 import NoData from '../../common/NoData/NoData'
 import { Loader } from 'igz-controls/components'
 
-const ArtifactsPreview = ({ className = '', noData, preview }) => {
+const ArtifactsPreview = ({ className = '', noData, preview, popupButton }) => {
   const [showErrorBody, setShowErrorBody] = useState(false)
   const artifactsPreviewClasses = classnames('artifact-preview', className)
 
@@ -44,6 +44,7 @@ const ArtifactsPreview = ({ className = '', noData, preview }) => {
           preview={previewItem}
           setShowErrorBody={setShowErrorBody}
           showErrorBody={showErrorBody}
+          popupButton={popupButton}
         />
       ))}
     </>
@@ -66,7 +67,8 @@ ArtifactsPreview.propTypes = {
         content: PropTypes.any.isRequired
       })
     })
-  ).isRequired
+  ).isRequired,
+  popupButton: PropTypes.element
 }
 
 export default ArtifactsPreview

@@ -54,7 +54,6 @@ import {
   MONITOR_ALERTS_PAGE,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
-  PIPELINE_SUB_PAGE,
   PROJECTS_SETTINGS_GENERAL_TAB,
   PROJECT_MONITOR,
   PROJECT_QUICK_ACTIONS_PAGE,
@@ -329,14 +328,13 @@ const App = () => {
                 </Fragment>
               )
             )}
-            {[
-              `${REAL_TIME_PIPELINES_TAB}`,
-              `${REAL_TIME_PIPELINES_TAB}/${PIPELINE_SUB_PAGE}/:pipelineId`
-            ].map((path, index) => (
-              <Fragment key={index}>
-                <Route path={path} element={<RealTimePipelines />} />
-              </Fragment>
-            ))}
+            {[`${REAL_TIME_PIPELINES_TAB}`, `${REAL_TIME_PIPELINES_TAB}/:pipelineId/:tab`].map(
+              (path, index) => (
+                <Fragment key={index}>
+                  <Route path={path} element={<RealTimePipelines />} />
+                </Fragment>
+              )
+            )}
             <Route path="*" element={<Navigate to={MODELS_TAB} replace />} />
           </Route>
           {[

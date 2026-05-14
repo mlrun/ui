@@ -29,16 +29,11 @@ import { Tip } from 'igz-controls/components'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import {
   ALERTS_PAGE,
-  ARTIFACTS_PAGE,
-  DATASETS_PAGE,
-  DOCUMENTS_PAGE,
+  ARTIFACT_PAGES,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
-  FILES_PAGE,
   FUNCTIONS_PAGE,
-  JOBS_PAGE,
-  LLM_PROMPTS_PAGE,
-  MODELS_PAGE
+  JOBS_PAGE
 } from '../../constants'
 import { getChipOptions } from 'igz-controls/utils/chips.util'
 
@@ -86,15 +81,10 @@ const DetailsInfoView = React.forwardRef(
       !isEveryObjectValueEmpty(infoContent) && (
         <>
           <div className="item-info__details-wrapper">
-            {(pageData.page === ALERTS_PAGE ||
-              pageData.page === ARTIFACTS_PAGE ||
-              pageData.page === DATASETS_PAGE ||
-              pageData.page === FILES_PAGE ||
+            {(ARTIFACT_PAGES.includes(pageData.page) ||
+              pageData.page === ALERTS_PAGE ||
               pageData.page === FUNCTIONS_PAGE ||
-              pageData.page === MODELS_PAGE ||
-              pageData.page === FEATURE_STORE_PAGE ||
-              pageData.page === DOCUMENTS_PAGE ||
-              pageData.page === LLM_PROMPTS_PAGE) &&
+              pageData.page === FEATURE_STORE_PAGE) &&
               params.pageTab !== FEATURE_SETS_TAB && <h3 className="item-info__header">General</h3>}
             <ul className="item-info__details">
               {pageData.details.infoHeaders?.map(header => {
@@ -129,14 +119,9 @@ const DetailsInfoView = React.forwardRef(
                       : ''
                   info = infoContent[header.id]?.value
                 } else if (
+                  ARTIFACT_PAGES.includes(pageData.page) ||
                   pageData.page === ALERTS_PAGE ||
-                  pageData.page === ARTIFACTS_PAGE ||
-                  pageData.page === DATASETS_PAGE ||
-                  pageData.page === FILES_PAGE ||
-                  pageData.page === MODELS_PAGE ||
-                  pageData.page === FEATURE_STORE_PAGE ||
-                  pageData.page === DOCUMENTS_PAGE ||
-                  pageData.page === LLM_PROMPTS_PAGE
+                  pageData.page === FEATURE_STORE_PAGE
                 ) {
                   if (header.id === 'metrics' || header.id === 'labels') {
                     chipsData.validationRules = infoContent[header.id]?.validationRules
@@ -144,6 +129,8 @@ const DetailsInfoView = React.forwardRef(
                   } else if (header.id === 'relations') {
                     chipsData.chipOptions = getChipOptions(header.id)
                     chipsData.delimiter = <RightArrow />
+                  } else if (header.id === 'requirements' || header.id === 'code_type') {
+                    chipsData.chipOptions = getChipOptions(header.id)
                   }
 
                   info = !isNil(commonDetailsStore.changes.data[header.id])
@@ -226,6 +213,16 @@ const DetailsInfoView = React.forwardRef(
                   <h3 className="item-info__header">Trigger criteria</h3>
                   <ul className="item-info__details">
                     {additionalInfo?.alerts?.triggerCriteriaDetailsInfo}
+                  </ul>
+                </>
+              )}
+              {!isEveryObjectValueEmpty(additionalInfo?.alerts?.resetPolicyDetailsInfo) && (
+                <>
+                  <h3 className="item-info__header" data-testid="reset-policy-header">
+                    Reset policy
+                  </h3>
+                  <ul className="item-info__details">
+                    {additionalInfo?.alerts?.resetPolicyDetailsInfo}
                   </ul>
                 </>
               )}

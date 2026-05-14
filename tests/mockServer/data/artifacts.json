@@ -40374,6 +40374,128 @@
         "state": "created"
       },
       "project": "llmdeploy335"
+    },
+    {
+      "kind": "code",
+      "metadata": {
+        "key": "python_script",
+        "project": "default",
+        "iter": 0,
+        "tree": "mock-tree",
+        "hash": "mock-hash-1",
+        "uid": "mock-uid-1",
+        "updated": "2026-04-23 10:00:00.000000+00:00",
+        "created": "2026-04-23 10:00:00.000000+00:00",
+        "tag": "latest"
+      },
+      "spec": {
+        "target_path": "v3io://artifacts/python_script.py",
+        "size": 100,
+        "db_key": "python_script",
+        "language": "python",
+        "code_type": "function",
+        "requirements": ["pandas", "mlrun"]
+      },
+      "status": {
+        "state": "created"
+      },
+      "project": "default"
+    },
+    {
+      "kind": "code",
+      "metadata": {
+        "key": "javascript_script",
+        "project": "default",
+        "iter": 0,
+        "tree": "mock-tree",
+        "hash": "mock-hash-2",
+        "uid": "mock-uid-2",
+        "updated": "2026-04-23 10:00:00.000000+00:00",
+        "created": "2026-04-23 10:00:00.000000+00:00",
+        "tag": "latest"
+      },
+      "spec": {
+        "target_path": "v3io://artifacts/javascript_script.js",
+        "size": 120,
+        "db_key": "javascript_script",
+        "language": "javascript",
+        "code_type": "function",
+        "requirements": ["lodash"]
+      },
+      "status": {
+        "state": "created"
+      },
+      "project": "default"
+    },
+    {
+      "kind": "code",
+      "metadata": {
+        "key": "shell_script",
+        "project": "default",
+        "iter": 0,
+        "tree": "mock-tree",
+        "hash": "mock-hash-3",
+        "uid": "mock-uid-3",
+        "updated": "2026-04-23 10:00:00.000000+00:00",
+        "created": "2026-04-23 10:00:00.000000+00:00",
+        "tag": "latest"
+      },
+      "spec": {
+        "target_path": "v3io://artifacts/shell_script.sh",
+        "size": 80,
+        "db_key": "shell_script",
+        "code_type": "function"
+      },
+      "status": {
+        "state": "created"
+      },
+      "project": "default"
+    },
+    {
+      "kind": "code",
+      "metadata": {
+        "key": "archive_python",
+        "project": "default",
+        "iter": 0,
+        "tree": "mock-tree",
+        "hash": "mock-hash-4",
+        "uid": "mock-uid-4",
+        "updated": "2026-04-23 10:00:00.000000+00:00",
+        "created": "2026-04-23 10:00:00.000000+00:00",
+        "tag": "latest"
+      },
+      "spec": {
+        "target_path": "v3io://artifacts/archive_python.zip",
+        "size": 1024,
+        "db_key": "archive_python"
+      },
+      "status": {
+        "state": "created"
+      },
+      "project": "default"
+    },
+    {
+      "kind": "code",
+      "metadata": {
+        "key": "archive_js",
+        "project": "default",
+        "iter": 0,
+        "tree": "mock-tree",
+        "hash": "mock-hash-5",
+        "uid": "mock-uid-5",
+        "updated": "2026-04-23 10:00:00.000000+00:00",
+        "created": "2026-04-23 10:00:00.000000+00:00",
+        "tag": "latest"
+      },
+      "spec": {
+        "target_path": "v3io://artifacts/archive_js.zip",
+        "size": 1024,
+        "db_key": "archive_js"
+      },
+      "status": {
+        "state": "created"
+      },
+      "project": "default"
     }
   ]
 }

@@ -33,6 +33,7 @@ import {
   PANEL_FUNCTION_CREATE_MODE,
   PANEL_RERUN_MODE,
   PRIMARY_NODE,
+  PRIMARY_PIPELINE_NODE,
   ROUNDED_RECTANGLE_NODE_SHAPE,
   SECONDARY_NODE
 } from './constants'
@@ -182,7 +183,8 @@ export const METRIC_DATA = PropTypes.shape({
   resultKind: PropTypes.number,
   app: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
-  labels: PropTypes.arrayOf(PropTypes.string).isRequired,
+  timeUnit: PropTypes.string,
+  formattedDates: PropTypes.arrayOf(PropTypes.string),
   dates: PropTypes.arrayOf(PropTypes.string).isRequired,
   points: PropTypes.arrayOf(PropTypes.number).isRequired,
   title: PropTypes.string.isRequired,
@@ -246,8 +248,14 @@ export const MEMBER = PropTypes.shape({
 })
 
 export const REACT_FLOW_NODE_DATA = PropTypes.shape({
-  subType: PropTypes.oneOf([INPUT_NODE, OUTPUT_NODE, PRIMARY_NODE, SECONDARY_NODE, GREY_NODE])
-    .isRequired,
+  subType: PropTypes.oneOf([
+    INPUT_NODE,
+    OUTPUT_NODE,
+    PRIMARY_NODE,
+    SECONDARY_NODE,
+    GREY_NODE,
+    PRIMARY_PIPELINE_NODE
+  ]).isRequired,
   label: PropTypes.string.isRequired,
   tip: PropTypes.string,
   subLabel: PropTypes.string,
@@ -262,5 +270,8 @@ export const REACT_FLOW_NODE_DATA = PropTypes.shape({
     tooltip: PropTypes.string,
     className: PropTypes.string
   }),
-  customData: PropTypes.object
+  customData: PropTypes.object,
+  isLastStep: PropTypes.bool,
+  badgeIcon: PropTypes.element,
+  stepType: PropTypes.string
 })

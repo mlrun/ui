@@ -37,6 +37,9 @@ const WorkflowsCounters = () => {
   const { projectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
+  const isDataLoading = projectName
+    ? projectStore?.projectSummary?.loading
+    : projectStore?.projectsSummary?.loading
 
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent
@@ -97,7 +100,7 @@ const WorkflowsCounters = () => {
               id="wf_total_counter"
               onClick={workflowsStats?.total?.link}
             >
-              {projectStore?.projectsSummary?.loading ? (
+              {isDataLoading ? (
                 <Loader section small secondary />
               ) : (
                 workflowsStats?.total?.counter?.toLocaleString()
@@ -122,7 +125,7 @@ const WorkflowsCounters = () => {
                         </Tooltip>
                       </div>
                       <StatsCard.SecondaryCounter className={counterClassName}>
-                        {projectStore?.projectsSummary?.loading ? (
+                        {isDataLoading ? (
                           <Loader section small secondary />
                         ) : (
                           counter?.toLocaleString()

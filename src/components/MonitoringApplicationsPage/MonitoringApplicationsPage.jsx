@@ -49,7 +49,7 @@ const MonitoringApplicationsPage = () => {
   const params = useParams()
   const navigate = useNavigate()
   const filtersConfig = useMemo(() => getFiltersConfig(), [])
-  const filters = useFiltersFromSearchParams(filtersConfig)
+  const filters = useFiltersFromSearchParams(filtersConfig, undefined, params.projectName)
   const [, setSearchParams] = useSearchParams()
   const contentRef = useRef(null)
 
@@ -62,10 +62,6 @@ const MonitoringApplicationsPage = () => {
             showErrorNotification(dispatch, error, '', 'Failed to fetch applications summary')
           })
         dispatch(fetchMonitoringApplications({ project: params.projectName, filters }))
-          .unwrap()
-          .catch(error => {
-            showErrorNotification(dispatch, error, '', 'Failed to fetch monitoring applications')
-          })
         dispatch(
           fetchMEPWithDetections({
             project: params.projectName,

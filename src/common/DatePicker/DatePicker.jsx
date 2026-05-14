@@ -54,14 +54,14 @@ import { isTargetElementInContainerElement } from '../../utils/checkElementsPosi
 
 const defaultProps = {
   date: new Date(),
-  dateTo: new Date()
+  setExternalInvalid: () => {}
 }
 
 const DatePicker = ({
   className = '',
   customOptions = null,
   date = defaultProps.date,
-  dateTo = defaultProps.dateTo,
+  dateTo = null,
   disabled = false,
   excludeCustomRange = false,
   externalInvalid = null,
@@ -72,7 +72,7 @@ const DatePicker = ({
   required = false,
   requiredText = 'This field is required',
   selectedOptionId = '',
-  setExternalInvalid = () => {},
+  setExternalInvalid = defaultProps.setExternalInvalid,
   timeFrameLimit = Infinity,
   tip = '',
   type = 'date',
@@ -88,7 +88,7 @@ const DatePicker = ({
   const [isValueEmpty, setIsValueEmpty] = useState(true)
   const [selectedOption, setSelectedOption] = useState({})
   const [valueDatePickerInput, setValueDatePickerInput] = useState(
-    formatDate(isRange, isTime, date, dateTo)
+    formatDate(isRange, isTime, date, dateTo || new Date())
   )
   const [isInputInvalid, setInputIsInvalid] = useState(false)
 
@@ -185,7 +185,7 @@ const DatePicker = ({
   }, [dateTo])
 
   useEffect(() => {
-    setValueDatePickerInput(formatDate(isRange, isTime, date, dateTo))
+    setValueDatePickerInput(formatDate(isRange, isTime, date, dateTo || new Date()))
   }, [date, dateTo, isRange, isTime])
 
   useEffect(() => {

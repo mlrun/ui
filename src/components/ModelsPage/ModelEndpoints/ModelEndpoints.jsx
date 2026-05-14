@@ -17,107 +17,29 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import React, { useRef, useCallback, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useParams, useSearchParams } from 'react-router-dom'
 
-import ActionBar from '../../ActionBar/ActionBar'
-import ArtifactsTableRow from '../../../elements/ArtifactsTableRow/ArtifactsTableRow'
-import ModelEndpointsFilters from './ModelEndpointsFilters'
-import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
-import NoData from '../../../common/NoData/NoData'
-import Table from '../../Table/Table'
-import { Loader } from 'igz-controls/components'
+import ModelEndpointsTable from './ModelEndpointsTable'
 
-import {
-  GROUP_BY_NONE,
-  MODEL_ENDPOINTS_TAB,
-  MODELS_PAGE,
-  REQUEST_CANCELED
-} from '../../../constants'
-import {
-  chooseOrFetchModelEndpoint,
-  filtersConfig,
-  generateActionsMenu,
-  generatePageData
-} from './modelEndpoints.util'
-import { createModelEndpointsRowData } from '../../../utils/createArtifactsContent'
-import { fetchModelEndpoints, removeModelEndpoints } from '../../../reducers/artifactsReducer'
-import { getNoDataMessage } from '../../../utils/getNoDataMessage'
-import { getScssVariableValue } from 'igz-controls/utils/common.util'
-import { isDetailsTabExists } from '../../../utils/link-helper.util'
-import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
-import { setFilters } from '../../../reducers/filtersReducer'
-import { clearMetricsOptions } from '../../../reducers/detailsReducer'
+import { fetchModelEndpoints } from '../../../reducers/artifactsReducer'
+import { filtersConfig } from './modelEndpoints.util'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
-import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
-import { useModelsPage } from '../ModelsPage.context'
-import { useSortTable } from '../../../hooks/useSortTable.hook'
-
-import './modelEndpoints.scss'
 
 const ModelEndpoints = () => {
-  const [requestErrorMessage, setRequestErrorMessage] = useState('')
-  const [modelEndpoints, setModelEndpoints] = useState([])
-  const [selectedModelEndpoint, setSelectedModelEndpoint] = useState({})
-  const artifactsStore = useSelector(store => store.artifactsStore)
-  const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
-  const navigate = useNavigate()
-  const location = useLocation()
   const dispatch = useDispatch()
   const abortControllerRef = useRef(new AbortController())
-  const modelEndpointsRef = useRef(null)
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [, setSearchParams] = useSearchParams()
   const filters = useFiltersFromSearchParams(filtersConfig)
 
-  const { handleMonitoring, toggleConvertedYaml, frontendSpec } = useModelsPage()
-
-  const modelEndpointsRowHeight = useMemo(
-    () => getScssVariableValue('--modelEndpointsRowHeight'),
-    []
-  )
-  const modelEndpointsRowHeightExtended = useMemo(
-    () => getScssVariableValue('--modelEndpointsRowHeightExtended'),
-    []
-  )
-  const modelEndpointsHeaderRowHeight = useMemo(
-    () => getScssVariableValue('--modelEndpointsHeaderRowHeight'),
-    []
-  )
-  const pageData = useMemo(
-    () =>
-      generatePageData(
-        selectedModelEndpoint,
-        frontendSpec.model_monitoring_dashboard_url,
-        handleMonitoring
-      ),
-    [frontendSpec.model_monitoring_dashboard_url, handleMonitoring, selectedModelEndpoint]
-  )
-
-  const actionsMenu = useMemo(
-    () =>
-      generateActionsMenu(
-        frontendSpec.model_monitoring_dashboard_url,
-        handleMonitoring,
-        toggleConvertedYaml,
-        selectedModelEndpoint,
-        dispatch
-      ),
-    [
-      dispatch,
-      handleMonitoring,
-      selectedModelEndpoint,
-      toggleConvertedYaml,
-      frontendSpec.model_monitoring_dashboard_url
-    ]
-  )
-
-  const fetchData = useCallback(
+  const fetchEndpoints = useCallback(
     filters => {
       abortControllerRef.current = new AbortController()
 
-      dispatch(
+      return dispatch(
         fetchModelEndpoints({
           project: params.projectName,
           filters,
@@ -132,183 +54,19 @@ const ModelEndpoints = () => {
           }
         })
       )
-        .unwrap()
-        .then(modelEndpoints => {
-          if (modelEndpoints) {
-            setModelEndpoints(modelEndpoints)
-          }
-        })
     },
     [dispatch, params.projectName]
   )
 
-  const handleRefresh = useCallback(
-    filters => {
-      setModelEndpoints([])
-      setSelectedModelEndpoint({})
-
-      return fetchData(filters)
-    },
-    [fetchData]
-  )
-
-  const handleSelectItem = useCallback(
-    modelEndpointMin => {
-      chooseOrFetchModelEndpoint(dispatch, {}, modelEndpointMin).then(setSelectedModelEndpoint)
-    },
-    [dispatch]
-  )
-
-  const fetchInitialData = useCallback(
-    filters => {
-      fetchData(filters)
-      dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
-    },
-    [dispatch, fetchData]
-  )
-
-  useInitialTableFetch({ fetchData: fetchInitialData, filters })
-
-  useEffect(() => {
-    return () => {
-      setModelEndpoints([])
-      dispatch(removeModelEndpoints())
-      setSelectedModelEndpoint({})
-      abortControllerRef.current.abort(REQUEST_CANCELED)
-    }
-  }, [dispatch, params.projectName])
-
-  useEffect(() => {
-    return () => {
-      dispatch(clearMetricsOptions())
-    }
-  }, [dispatch])
-
-  useEffect(() => {
-    if (params.name && modelEndpoints.length > 0) {
-      const searchItem = modelEndpoints.find(item => item.metadata?.uid === params.tag)
-
-      if (!searchItem) {
-        navigate(
-          `/projects/${params.projectName}/models/${MODEL_ENDPOINTS_TAB}${window.location.search}`,
-          { replace: true }
-        )
-      } else if (searchItem.metadata.uid !== selectedModelEndpoint?.metadata?.uid) {
-        handleSelectItem(searchItem)
-      }
-    } else {
-      setSelectedModelEndpoint({})
-    }
-  }, [
-    dispatch,
-    handleSelectItem,
-    modelEndpoints,
-    navigate,
-    params.name,
-    params.projectName,
-    params.tag,
-    selectedModelEndpoint?.metadata
-  ])
-
-  useEffect(() => {
-    if (params.name && params.tag && pageData.details.menu.length > 0) {
-      isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
-    }
-  }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
-
-  const tableContent = useMemo(() => {
-    return modelEndpoints.map(contentItem =>
-      createModelEndpointsRowData(contentItem, params.projectName)
-    )
-  }, [modelEndpoints, params.projectName])
-
-  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
-
-  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
-    useSortTable({
-      headers: tableHeaders,
-      content: tableContent,
-      sortConfig: {
-        allowSortBy: ['name', 'function'],
-        defaultSortBy: 'function',
-        defaultDirection: 'asc'
-      }
-    })
-
-  const virtualizationConfig = useVirtualization({
-    rowsData: {
-      content: sortedTableContent,
-      selectedItem: selectedModelEndpoint
-    },
-    heightData: {
-      headerRowHeight: modelEndpointsHeaderRowHeight,
-      rowHeight: modelEndpointsRowHeight,
-      rowHeightExtended: modelEndpointsRowHeightExtended
-    }
-  })
-
   return (
-    <>
-      {(artifactsStore.modelEndpoints.modelEndpointLoading ||
-        artifactsStore.modelEndpoints.loading) && <Loader />}
-      <div className="models" ref={modelEndpointsRef}>
-        <div className="table-container">
-          <div className="content__action-bar-wrapper">
-            <ModelsPageTabs />
-            <ActionBar
-              filters={filters}
-              filtersConfig={filtersConfig}
-              handleRefresh={handleRefresh}
-              closeParamName={MODEL_ENDPOINTS_TAB}
-              setSearchParams={setSearchParams}
-              tab={MODEL_ENDPOINTS_TAB}
-              withoutExpandButton
-            >
-              <ModelEndpointsFilters />
-            </ActionBar>
-          </div>
-          {artifactsStore.modelEndpoints.loading ? null : modelEndpoints.length === 0 ? (
-            <NoData
-              message={getNoDataMessage(
-                filters,
-                filtersConfig,
-                requestErrorMessage,
-                MODELS_PAGE,
-                MODEL_ENDPOINTS_TAB,
-                filtersStore
-              )}
-            />
-          ) : (
-            <>
-              <Table
-                actionsMenu={actionsMenu}
-                pageData={pageData}
-                selectedItem={selectedModelEndpoint}
-                tab={MODEL_ENDPOINTS_TAB}
-                tableClassName="model-endpoints-table"
-                tableHeaders={sortedTableHeaders}
-                virtualizationConfig={virtualizationConfig}
-                sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
-              >
-                {sortedTableContent.map(
-                  (tableItem, index) =>
-                    isRowRendered(virtualizationConfig, index) && (
-                      <ArtifactsTableRow
-                        actionsMenu={actionsMenu}
-                        key={tableItem.data.ui.identifierUnique}
-                        rowIndex={index}
-                        rowItem={tableItem}
-                        selectedItem={selectedModelEndpoint}
-                        tab={MODEL_ENDPOINTS_TAB}
-                      />
-                    )
-                )}
-              </Table>
-            </>
-          )}
-        </div>
-      </div>
-    </>
+    <ModelEndpointsTable
+      fetchEndpoints={fetchEndpoints}
+      filters={filters}
+      filtersConfig={filtersConfig}
+      ref={abortControllerRef}
+      requestErrorMessage={requestErrorMessage}
+      setSearchParams={setSearchParams}
+    />
   )
 }
 

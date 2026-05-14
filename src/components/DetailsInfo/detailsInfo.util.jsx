@@ -35,7 +35,7 @@ import {
   MLRUN_STORAGE_INPUT_PATH_SCHEME
 } from '../../constants'
 import { parseUri } from '../../utils'
-import { getTriggerCriticalTimePeriod } from '../../utils/createAlertsContent'
+import { formatTimePeriod } from '../../utils/createAlertsContent'
 import { getChipOptions } from 'igz-controls/utils/chips.util'
 import { getLimitsGpuType } from '../../elements/FormResourcesUnits/formResourcesUnits.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
@@ -55,9 +55,36 @@ export const generateTriggerInfoContent = criteria => {
       {
         label: 'Trigger criteria time period',
         id: 'triggerCriteriaTimePeriod',
-        value: getTriggerCriticalTimePeriod(criteria?.period)
+        value: formatTimePeriod(criteria?.period)
       }
     ]
+  }
+
+  return []
+}
+
+export const generateResetPolicyInfoContent = selectedItem => {
+  const resetPolicy = selectedItem?.reset_policy
+  const cooldownPeriod = selectedItem?.cooldown_period
+
+  if (resetPolicy) {
+    const content = [
+      {
+        label: 'Policy type',
+        id: 'resetPolicyType',
+        value: capitalize(resetPolicy)
+      }
+    ]
+
+    if (resetPolicy === 'auto' && cooldownPeriod) {
+      content.push({
+        label: 'Cooldown period',
+        id: 'cooldownPeriod',
+        value: formatTimePeriod(cooldownPeriod)
+      })
+    }
+
+    return content
   }
 
   return []
@@ -229,9 +256,11 @@ export const generateDriftDetailsInfo = modelEndpoint => {
 export const generateAlertsDetailsInfo = selectedItem => {
   if (selectedItem.page === ALERTS_PAGE) {
     const triggerCriteriaContent = generateTriggerInfoContent(selectedItem?.criteria)
+    const resetPolicyContent = generateResetPolicyInfoContent(selectedItem)
     const AlertsDetailsInfo = {
       notificationsDetailsInfo: [],
-      triggerCriteriaDetailsInfo: []
+      triggerCriteriaDetailsInfo: [],
+      resetPolicyDetailsInfo: []
     }
     const notifications = selectedItem?.notifications
     AlertsDetailsInfo.notificationsDetailsInfo = notifications.map((notification, index) => (
@@ -261,6 +290,17 @@ export const generateAlertsDetailsInfo = selectedItem => {
             {trigger.label}:
           </div>
           <DetailsInfoItem info={trigger.value} />
+        </li>
+      )
+    })
+
+    AlertsDetailsInfo.resetPolicyDetailsInfo = resetPolicyContent.map(resetPolicy => {
+      return (
+        <li className="details-item" key={resetPolicy.id}>
+          <div className={classNames('details-item__header', 'details-item__header_long')}>
+            {resetPolicy.label}:
+          </div>
+          <DetailsInfoItem info={resetPolicy.value} />
         </li>
       )
     })

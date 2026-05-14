@@ -29,6 +29,7 @@ import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/componen
 import { ACTIONS_MENU } from 'igz-controls/types'
 import {
   ABORTED_STATE,
+  ARTIFACT_PAGES,
   DETAILS_ARTIFACTS_TAB,
   DETAILS_LOGS_TAB,
   JOBS_PAGE
@@ -41,6 +42,8 @@ import { useDetailsHeader } from 'igz-controls/hooks/useDetailsHeader.hook'
 
 import Back from 'igz-controls/images/back-arrow.svg?react'
 import InfoIcon from 'igz-controls/images/info-fill.svg?react'
+
+import './DetailsHeader.scss'
 
 const DetailsHeader = ({
   actionsMenu,
@@ -81,6 +84,10 @@ const DetailsHeader = ({
 
   const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
+
+  const isArtifactPage = useMemo(() => {
+    return ARTIFACT_PAGES.includes(pageData.page)
+  }, [pageData.page])
 
   const errorMessage = useMemo(
     () =>
@@ -130,6 +137,11 @@ const DetailsHeader = ({
         <Tooltip template={<TextTooltipTemplate text={selectedItem.name || selectedItem.db_key} />}>
           {selectedItem.name || selectedItem.db_key}
         </Tooltip>
+        {isArtifactPage && selectedItem.kind && (
+          <Tooltip template={<TextTooltipTemplate text={selectedItem.kind} />}>
+            <span className="item-header__kind-chip">{selectedItem.kind}</span>
+          </Tooltip>
+        )}
       </>
     )
   }, [
@@ -138,8 +150,10 @@ const DetailsHeader = ({
     isDetailsPopUp,
     getCloseDetailsLink,
     selectedItem.name,
+    selectedItem.db_key,
+    selectedItem.kind,
     handleBackClick,
-    selectedItem.db_key
+    isArtifactPage
   ])
 
   const renderStatus = useCallback(() => {

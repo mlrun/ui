@@ -48,6 +48,7 @@ import mime from 'mime-types'
 import moment from 'moment'
 
 import alerts from './data/alerts.json'
+import alertConfigs from './data/alert-configs.json'
 import frontendSpec from './data/frontendSpec.json'
 import projects from './data/projects.json'
 import projectsSummary from './data/summary.json'
@@ -215,7 +216,7 @@ const artifactsCategories = {
   document: ['document'],
   model: ['model'],
   'llm-prompt': ['llm-prompt'],
-  other: ['', 'table', 'link', 'plot', 'chart', 'plotly', 'artifact']
+  other: ['', 'table', 'link', 'plot', 'chart', 'plotly', 'artifact', 'code']
 }
 
 // Support functions
@@ -1069,6 +1070,22 @@ function getAlert(req, res) {
   }
 
   res.send(searchedAlert)
+}
+
+function getAlertConfig(req, res) {
+  const config = alertConfigs.find(
+    c => c.project === req.params.project && c.name === req.params.name
+  )
+
+  if (!config) {
+    res.statusCode = 404
+
+    return res.send({
+      detail: `MLRunNotFoundError('Alert not found: ${req.params.name}')`
+    })
+  }
+
+  res.send(config)
 }
 
 function patchRun(req, res) {
@@ -3034,6 +3051,7 @@ app.get(`${mlrunAPIIngress}/projects/:project/runs`, getRuns)
 app.get(`${mlrunAPIIngress}/projects/*/runs`, getRuns)
 app.get(`${mlrunAPIIngress}/projects/:project/alert-activations`, getAlerts)
 app.get(`${mlrunAPIIngress}/projects/:project/alert-activations/:id`, getAlert)
+app.get(`${mlrunAPIIngress}/projects/:project/alerts/:name`, getAlertConfig)
 app.get(`${mlrunAPIIngress}/projects/:project/runs/:uid`, getRun)
 app.patch(`${mlrunAPIIngress}/projects//:project/runs/:uid`, patchRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs/:uid`, deleteRun)

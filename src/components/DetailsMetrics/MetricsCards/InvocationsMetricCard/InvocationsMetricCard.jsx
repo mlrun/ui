@@ -66,7 +66,10 @@ const InvocationsMetricCard = forwardRef(
       () => getScssVariableValue('--cornflowerBlueTwoColor'),
       []
     )
-    const gradientConfig = useMemo(() => getMetricChartConfig(CHART_TYPE_GRADIENT_LINE), [])
+    const gradientConfig = useMemo(
+      () => getMetricChartConfig(CHART_TYPE_GRADIENT_LINE, metric),
+      [metric]
+    )
     const resultPercentageDrift = calculatePercentageDrift(
       previousTotalInvocation,
       metric[METRIC_RAW_TOTAL_POINTS]
@@ -76,31 +79,27 @@ const InvocationsMetricCard = forwardRef(
         gradient: true,
         ...gradientConfig,
         data: {
-          labels: metric.labels,
+          labels: metric.dates,
           datasets: [
             {
-              data: metric.points,
-              dates: metric.dates,
-              chartType: CHART_TYPE_LINE,
-              fill: true,
-              metricType: metric.type,
-              driftStatusList: [],
               backgroundColor: cornflowerBlueTwoColor,
               borderColor: cornflowerBlueTwoColor,
               borderWidth: 1,
+              chartType: CHART_TYPE_LINE,
+              data: metric.points,
+              dates: metric.dates,
+              driftStatusList: [],
+              fill: true,
+              formatedDates: metric.formatedDates,
+              metricType: metric.type,
+              pointBackgroundColor: metric.totalDriftStatus?.chartColor || cornflowerBlueTwoColor,
+              pointBorderWidth: 0,
               tension: 0.4
             }
           ]
         }
       }
-    }, [
-      cornflowerBlueTwoColor,
-      gradientConfig,
-      metric.dates,
-      metric.labels,
-      metric.points,
-      metric.type
-    ])
+    }, [cornflowerBlueTwoColor, gradientConfig, metric])
 
     return (
       <div className={invocationCardClassnames}>

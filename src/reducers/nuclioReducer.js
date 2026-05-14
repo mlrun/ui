@@ -38,11 +38,11 @@ export const fetchApiGateways = createAsyncThunk(
 
 export const fetchNuclioFunctions = createAsyncThunk(
   'fetchNuclioFunctions',
-  ({ project, signal }, { rejectWithValue }) => {
+  ({ project, signal, getOriginalData = false }, { rejectWithValue }) => {
     return nuclioApi
       .getFunctions(project, signal)
       .then(({ data }) => {
-        return Object.values(data)
+        return getOriginalData ? data : Object.values(data)
       })
       .catch(rejectWithValue)
   }

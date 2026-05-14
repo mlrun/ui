@@ -22,9 +22,13 @@ import { get } from 'lodash'
 
 import { defaultPendingHandler, defaultRejectedHandler } from './redux.util'
 import { splitApplicationsContent } from '../utils/applications.utils'
+import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
+import { getErrorMsg } from 'igz-controls/utils/common.util'
+
+import { DATES_FILTER } from '../constants'
+
 import monitoringApplicationsApi from '../api/monitoringApplications-api'
 import nuclioApi from '../api/nuclio'
-import { DATES_FILTER } from '../constants'
 
 const initialState = {
   applicationsSummary: {
@@ -95,7 +99,7 @@ export const fetchMonitoringApplication = createAsyncThunk(
 
 export const fetchMonitoringApplications = createAsyncThunk(
   'fetchMonitoringApplications',
-  async ({ project, filters }) => {
+  async ({ project, filters }, thunkAPI) => {
     const params = {
       start: filters[DATES_FILTER].value[0].getTime()
     }
@@ -110,7 +114,13 @@ export const fetchMonitoringApplications = createAsyncThunk(
     ])
 
     if (mlrunResult.status !== 'fulfilled') {
-      throw new Error(mlrunResult.reason)
+      largeResponseCatchHandler(
+        mlrunResult.reason,
+        'Failed to fetch monitoring applications',
+        thunkAPI.dispatch
+      )
+
+      return thunkAPI.rejectWithValue(getErrorMsg(mlrunResult.reason))
     }
 
     const mlrunApiApps = get(mlrunResult, 'value.data')
@@ -180,7 +190,10 @@ const monitoringApplicationsSlice = createSlice({
       state.loading = false
       state.error = null
     })
-    builder.addCase(fetchMonitoringApplications.rejected, defaultRejectedHandler)
+    builder.addCase(fetchMonitoringApplications.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.payload
+    })
     builder.addCase(fetchMonitoringApplicationsSummary.pending, state => {
       state.applicationsSummary.loading = true
     })

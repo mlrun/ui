@@ -158,6 +158,7 @@ const FunctionsPanelView = ({
             <PanelCredentialsAccessKey
               className="functions-panel__item"
               credentialsAccessKey={functionsStore.newFunction.metadata.credentials.access_key}
+              frontendSpec={frontendSpec}
               required={
                 functionsStore.newFunction.metadata.credentials.access_key !==
                 PANEL_DEFAULT_ACCESS_KEY

@@ -96,7 +96,10 @@ const functionStateLabels = {
   ready: 'Ready',
   running: 'Running',
   succeeded: 'Succeeded',
-  unhealthy: 'Unhealthy'
+  standby: 'Standby',
+  scaledToZero: 'Scaled to zero',
+  unhealthy: 'Unhealthy',
+  initialized: 'Initialized'
 }
 
 export default getState

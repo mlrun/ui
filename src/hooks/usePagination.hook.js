@@ -29,6 +29,7 @@ import {
   FE_PAGE_END,
   FE_PAGE_SIZE,
   FE_PAGE_START,
+  FORCE_REFRESH,
   ITEMS_COUNT_END,
   ITEMS_COUNT_START
 } from '../constants'
@@ -47,7 +48,9 @@ export const usePagination = ({
   const [searchParams, setSearchParams] = useSearchParams()
   const [paginatedContent, setPaginatedContent] = useState([])
   const resetPaginationTriggerRef = useRef(resetPaginationTrigger)
+  const lastRequestedPageRef = useRef(null)
   const filtersStore = useSelector(store => store.filtersStore)
+  let forceRefreshData = useMemo(() => ({ isForce: false }), [])
 
   const refreshContentDebounced = useMemo(() => {
     return debounce(filters => refreshContent(filters))
@@ -60,6 +63,7 @@ export const usePagination = ({
           if (resetSearchParams) {
             prevSearchParams.set(BE_PAGE, 1)
             prevSearchParams.set(FE_PAGE, 1)
+            prevSearchParams.delete(FORCE_REFRESH)
           }
 
           return prevSearchParams
@@ -67,6 +71,7 @@ export const usePagination = ({
         { replace: true }
       )
 
+      lastRequestedPageRef.current = null
       paginationConfigRef.current = {
         [BE_PAGE_SIZE]: bePageSize,
         [FE_PAGE_SIZE]: fePageSize,
@@ -113,6 +118,8 @@ export const usePagination = ({
           prevSearchParams => {
             prevSearchParams.set(BE_PAGE, newPaginationConfig[BE_PAGE])
             prevSearchParams.set(FE_PAGE, newPaginationConfig[FE_PAGE])
+            forceRefreshData.isForce = searchParams.get(FORCE_REFRESH) === 'true'
+            prevSearchParams.delete(FORCE_REFRESH)
             return prevSearchParams
           },
           { replace: true }
@@ -147,7 +154,16 @@ export const usePagination = ({
           : newPaginatedContent
       })
     }
-  }, [bePageSize, fePageSize, paginationConfigRef, content, searchParams, setSearchParams, hidden])
+  }, [
+    bePageSize,
+    fePageSize,
+    paginationConfigRef,
+    content,
+    searchParams,
+    setSearchParams,
+    hidden,
+    forceRefreshData
+  ])
 
   useEffect(() => {
     if (resetPaginationTrigger !== resetPaginationTriggerRef.current) {
@@ -160,18 +176,21 @@ export const usePagination = ({
   }, [hidden, paginationConfigRef, resetPagination, resetPaginationTrigger])
 
   useEffect(() => {
-    const paginationResponse = paginationConfigRef.current?.paginationResponse
+    if (hidden) return
 
-    if (
-      !hidden &&
-      searchParams.get(BE_PAGE) &&
-      (!paginationResponse ||
-        (paginationResponse?.page &&
-          paginationResponse?.page !== parseInt(searchParams.get(BE_PAGE))))
-    ) {
-      refreshContentDebounced(filters)
+    const bePage = Number(searchParams.get(BE_PAGE))
+
+    if (!bePage && !forceRefreshData.isForce) return
+
+    if (lastRequestedPageRef.current === bePage && !forceRefreshData.isForce) {
+      return
     }
-  }, [filters, hidden, paginationConfigRef, refreshContentDebounced, searchParams])
+
+    forceRefreshData.isForce = false
+
+    lastRequestedPageRef.current = bePage
+    refreshContentDebounced(filters)
+  }, [filters, hidden, refreshContentDebounced, searchParams, forceRefreshData])
 
   useEffect(() => {
     queueMicrotask(() => {
@@ -187,6 +206,7 @@ export const usePagination = ({
           prevSearchParams => {
             prevSearchParams.set(BE_PAGE, 1)
             prevSearchParams.set(FE_PAGE, 1)
+            prevSearchParams.delete(FORCE_REFRESH)
             return prevSearchParams
           },
           { replace: true }
@@ -206,6 +226,7 @@ export const usePagination = ({
           prevSearchParams => {
             prevSearchParams.set(BE_PAGE, 1)
             prevSearchParams.set(FE_PAGE, 1)
+            prevSearchParams.delete(FORCE_REFRESH)
             return prevSearchParams
           },
           { replace: true }

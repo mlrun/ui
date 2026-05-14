@@ -19,6 +19,7 @@ such restriction.
 */
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useSelector } from 'react-redux'
 
 import FormEnvironmentVariablesTable from '../../../../elements/FormEnvironmentVariablesTable/FormEnvironmentVariablesTable'
 import { FormCheckBox, FormInput, FormKeyValueTable, FormOnChange } from 'igz-controls/components'
@@ -30,6 +31,8 @@ import './jobWizardAdvanced.scss'
 
 const JobWizardAdvanced = ({ formState, stepIsActive = false }) => {
   const [showSecrets] = useState(false)
+
+  const frontendSpec = useSelector(state => state.appStore.frontendSpec)
 
   return (
     <div className="job-wizard__advanced">
@@ -71,9 +74,11 @@ const JobWizardAdvanced = ({ formState, stepIsActive = false }) => {
         </div>
       </div>
       <div className="form-row align-stretch">
-        <div className="access-key-checkbox">
-          <FormCheckBox label="Auto-generate access key" name={`${ADVANCED_STEP}.accessKey`} />
-        </div>
+        {!frontendSpec.ce?.version && (
+          <div className="access-key-checkbox">
+            <FormCheckBox label="Auto-generate access key" name={`${ADVANCED_STEP}.accessKey`} />
+          </div>
+        )}
         {!formState.values?.[ADVANCED_STEP]?.accessKey && (
           <div className="form-col-1">
             <FormInput name={`${ADVANCED_STEP}.accessKeyInput`} label="Access key" required />

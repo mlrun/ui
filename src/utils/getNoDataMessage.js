@@ -66,7 +66,8 @@ import {
   LLM_PROMPTS_PAGE,
   MODEL_NAME_FILTER,
   MODEL_TAG_FILTER,
-  ME_MODE_FILTER
+  ME_MODE_FILTER,
+  PIPELINE_TOPOLOGY_FILTER
 } from '../constants'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 
@@ -154,7 +155,7 @@ export const getNoDataMessage = (
 
     return visibleFilterTypes.length > 0
       ? generateNoEntriesFoundMessage(visibleFilterTypes, filtersConfig, filters, messageNames)
-      : `No ${messageNames.plural.toLocaleLowerCase()} found.`
+      : `No ${messageNames.plural.toLocaleLowerCase()} found`
   }
 }
 
@@ -202,7 +203,8 @@ const getVisibleFilterTypes = (filtersConfig, filters, filtersStore) => {
         type === LABELS_FILTER ||
         type === MODEL_NAME_FILTER ||
         type === MODEL_TAG_FILTER ||
-        type === NAME_FILTER) &&
+        type === NAME_FILTER ||
+        type === PIPELINE_TOPOLOGY_FILTER) &&
       filters[type]?.length > 0
     const isStatusVisible =
       type === STATUS_FILTER && !isEqual(filters[STATUS_FILTER], [FILTER_ALL_ITEMS])

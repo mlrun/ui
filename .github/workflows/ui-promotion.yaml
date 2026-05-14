@@ -1,0 +1,107 @@
+# Copyright 2019 Iguazio
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+name: UI Image Promotion
+
+permissions:
+
+  # Allow the action to upload images to ghcr
+  packages: write
+
+on:
+
+  workflow_dispatch:
+    inputs:
+      docker_registries:
+        description: 'Comma separated list of docker registries to push images to (default: ghcr.io/, use registry.hub.docker.com/ for docker hub)'
+        required: true
+        default: 'ghcr.io/,quay.io/,registry.hub.docker.com/'
+      version:
+        description: 'The version to build, without prefix v (e.g. 1.1.0), if not provided version will be <latest-release>-<commit-hash>'
+        required: true
+        default: ''
+      source_artifactory_docker_repo:
+        description: 'Source Artifactory Docker repository name'
+        required: false
+        default: 'mlrun-staging'
+        type: string
+      target_docker_registries:
+        description: 'Comma separated list of target docker registries to push promoted images to (e.g., ghcr.io/,quay.io/,registry.hub.docker.com/)'
+        required: false
+        default: 'ghcr.io/,quay.io/,registry.hub.docker.com/'
+        type: string
+      target_docker_repo:
+        description: 'Target Artifactory Docker repository name (for promotion, used when target includes Artifactory)'
+        required: false
+        default: 'mlrun'
+        type: string
+
+jobs:
+  promote-ui-image:
+    name: Promote UI Docker image from source to target
+    runs-on: mlrun-release
+    steps:
+
+      - name: Docker login (ghcr)
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker login (quay.io)
+        continue-on-error: true
+        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # 3.6.0
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_IO_DOCKER_REGISTRY_USERNAME }}
+          password: ${{ secrets.QUAY_IO_DOCKER_REGISTRY_PASSWORD }}
+
+      - name: Docker login (docker.com)
+        continue-on-error: true
+        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # 3.6.0
+        with:
+          registry: registry.hub.docker.com
+          username: ${{ secrets.DOCKER_HUB_DOCKER_REGISTRY_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_DOCKER_REGISTRY_PASSWORD }}
+
+      - name: Docker login (Source Artifactory)
+        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # 3.6.0
+        with:
+          registry: ${{ secrets.ARTIFACTORY_URL }}
+          username: ${{ secrets.ARTIFACTORY_USERNAME }}
+          password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+
+      - name: Pull, retag and push UI Docker image
+        run: |
+          SOURCE_IMAGE="${{ secrets.ARTIFACTORY_URL }}/${{ github.event.inputs.source_artifactory_docker_repo }}/mlrun/mlrun-ui:${{ github.event.inputs.version }}"
+          
+          echo "Pulling image: $SOURCE_IMAGE"
+          docker pull "$SOURCE_IMAGE"
+          
+          # Loop through target registries and push to each
+          IFS=',' read -ra REGISTRIES <<< "${{ github.event.inputs.target_docker_registries }}"
+          for registry in "${REGISTRIES[@]}"; do
+            registry=$(echo "$registry" | xargs)  # trim whitespace
+            
+            TARGET_IMAGE="${registry}${{ github.event.inputs.target_docker_repo }}/mlrun-ui:${{ github.event.inputs.version }}"
+            
+            echo "Tagging image as: $TARGET_IMAGE"
+            docker tag "$SOURCE_IMAGE" "$TARGET_IMAGE"
+            
+            echo "Pushing image: $TARGET_IMAGE"
+            docker push "$TARGET_IMAGE"
+            
+            echo "✅ Successfully promoted ui to $registry"
+          done

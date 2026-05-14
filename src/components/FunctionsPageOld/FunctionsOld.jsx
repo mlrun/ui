@@ -123,7 +123,11 @@ const Functions = () => {
     }
   }, [])
 
-  const functionsFilters = useFiltersFromSearchParams(functionsFiltersConfig)
+  const functionsFilters = useFiltersFromSearchParams(
+    functionsFiltersConfig,
+    undefined,
+    params.projectName
+  )
 
   const terminateDeleteTasksPolling = useCallback(() => {
     terminatePollRef?.current?.()
@@ -537,10 +541,22 @@ const Functions = () => {
   }, [params.projectName])
 
   useEffect(() => {
-    if ((params.funcName || params.hash) && pageData.details.menu.length > 0) {
+    if (
+      (params.funcName || params.hash) &&
+      !isEmpty(selectedFunction) &&
+      pageData.details.menu.length > 0
+    ) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, pageData.details.menu, location, params.hash, params.funcName, params.tab])
+  }, [
+    navigate,
+    pageData.details.menu,
+    location,
+    params.hash,
+    params.funcName,
+    params.tab,
+    selectedFunction
+  ])
 
   useEffect(() => {
     checkForSelectedFunction(

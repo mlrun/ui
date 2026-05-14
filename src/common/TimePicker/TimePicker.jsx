@@ -143,22 +143,22 @@ const TimePicker = ({
         >
           <Caret />
         </div>
+        {isDropDownMenuOpen && (
+          <PopUpDialog
+            key={selectKey}
+            className="time-picker__dropdown"
+            headerIsHidden
+            customPosition={{
+              element: timePickerRef,
+              position: 'bottom-right'
+            }}
+            ref={dropdownRef}
+            style={{ width: `${timePickerRef.current?.clientWidth || 116}px` }}
+          >
+            <TimePickerOptions key={selectKey} handleInputChange={handleInputChange} />
+          </PopUpDialog>
+        )}
       </div>
-      {isDropDownMenuOpen && (
-        <PopUpDialog
-          key={selectKey}
-          className="time-picker__dropdown"
-          headerIsHidden
-          customPosition={{
-            element: timePickerRef,
-            position: 'bottom-right'
-          }}
-          ref={dropdownRef}
-          style={{ width: '116px' }}
-        >
-          <TimePickerOptions key={selectKey} handleInputChange={handleInputChange} />
-        </PopUpDialog>
-      )}
     </div>
   )
 }

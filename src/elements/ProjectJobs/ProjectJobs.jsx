@@ -81,7 +81,6 @@ const ProjectJobs = ({ project }) => {
       })}`}
       hasUpdateDate={true}
       link={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
-      params={params}
       statistics={jobsData.statistics}
       subTitle="Recent jobs"
       table={jobsData.table}

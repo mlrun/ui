@@ -632,7 +632,7 @@ const featureSetTransformationGraph = {
           row: {
             root: '.react-flow__node-ml-node',
             fields: {
-              name: '.react-flow__node-label .data-ellipsis .data-ellipsis',
+              name: '.react-flow__node-label .data-ellipsis',
               top_handler: '.data-ellipsis .react-flow__handle-top',
               bottom_handler: '.data-ellipsis .react-flow__handle-bottom'
             }
@@ -646,7 +646,7 @@ const featureSetTransformationGraph = {
         root: '',
         header: {},
         body: {
-          root: '.react-flow__edges g[transform]',
+          root: '.react-flow__edges g',
           row: {
             root: '.react-flow__edge',
             fields: {

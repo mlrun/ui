@@ -2027,6 +2027,14 @@ export default {
           false
         )
       ),
+      At_time_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.schedule-wizard .form-row [data-testid="time-picker"]',
+          '.time-picker__dropdown-button',
+          '.time-picker__dropdown .time-picker__dropdown-item',
+          '.data-ellipsis span'
+        )
+      ),
       Schedule_item_Sunday: By.css(
         '.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(1)'
       ),

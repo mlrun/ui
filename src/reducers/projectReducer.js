@@ -127,12 +127,12 @@ const initialState = {
   },
   projectSummary: {
     error: null,
-    loading: false,
+    loading: true,
     data: []
   },
   projectsSummary: {
     error: null,
-    loading: false,
+    loading: true,
     data: []
   }
 }

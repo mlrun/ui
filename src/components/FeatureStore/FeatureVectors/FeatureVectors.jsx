@@ -458,10 +458,23 @@ const FeatureVectors = () => {
   }, [featureStore.featureVectors?.allData, navigate, params.name, params.projectName, params.tag])
 
   useEffect(() => {
-    if (params.name && params.tag && pageData.details.menu.length > 0) {
+    if (
+      params.name &&
+      params.tag &&
+      !isEmpty(selectedFeatureVector) &&
+      pageData.details.menu.length > 0
+    ) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
+  }, [
+    navigate,
+    location,
+    pageData.details.menu,
+    params.name,
+    params.tag,
+    params.tab,
+    selectedFeatureVector
+  ])
 
   useEffect(() => {
     checkTabIsValid(navigate, params, setSelectedFeatureVector, FEATURE_VECTORS_TAB)

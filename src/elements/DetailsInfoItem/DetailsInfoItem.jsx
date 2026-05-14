@@ -43,6 +43,7 @@ import { getValidationRules } from 'igz-controls/utils/validation.util'
 import Checkmark from 'igz-controls/images/checkmark2.svg?react'
 import Close from 'igz-controls/images/close.svg?react'
 import Edit from 'igz-controls/images/edit.svg?react'
+import classNames from 'classnames'
 
 const DetailsInfoItem = React.forwardRef(
   (
@@ -216,10 +217,44 @@ const DetailsInfoItem = React.forwardRef(
           {(Array.isArray(info) ? info : [info]).map((infoItem, index) => {
             if (!infoItem) return null
 
+            const statusClassName = classNames(
+              item.className || `state-${item.status}-function`,
+              'status-icon'
+            )
+
             return item.link ? (
-              <Link className="details-item__data details-item__link" to={item.link} key={index}>
-                <Tooltip template={<TextTooltipTemplate text={infoItem} />}>{infoItem}</Tooltip>
-              </Link>
+              item.linkIsExternal ? (
+                <a
+                  href={item.link}
+                  className="details-item__data details-item__link"
+                  target="_top"
+                  key={index}
+                >
+                  <Tooltip template={<TextTooltipTemplate text={infoItem} />}>{infoItem}</Tooltip>
+                  {item.status && (
+                    <div className="details-item__data details-item__status">
+                      <Tooltip
+                        template={<TextTooltipTemplate text={item.statusLabel || item.status} />}
+                      >
+                        <i className={statusClassName} />
+                      </Tooltip>
+                    </div>
+                  )}
+                </a>
+              ) : (
+                <Link className="details-item__data details-item__link" to={item.link} key={index}>
+                  <Tooltip template={<TextTooltipTemplate text={infoItem} />}>{infoItem}</Tooltip>
+                  {item.status && (
+                    <div className="details-item__data details-item__status">
+                      <Tooltip
+                        template={<TextTooltipTemplate text={item.statusLabel || item.status} />}
+                      >
+                        <i className={statusClassName} />
+                      </Tooltip>
+                    </div>
+                  )}
+                </Link>
+              )
             ) : (
               <a
                 key={index}
@@ -276,6 +311,32 @@ const DetailsInfoItem = React.forwardRef(
               )}
             </>
           )}
+        </div>
+      )
+    } else if (item.listOfFunctions && Array.isArray(item.value)) {
+      return (
+        <div className="details-item__functions-wrapper">
+          {item.value.map((itemFunc, index) => {
+            const name = itemFunc.func?.name || itemFunc.name || ''
+            const status = itemFunc.func?.state?.value || itemFunc.state?.value || ''
+            const statusClassName = classNames(
+              itemFunc.func?.state?.className || `state-${status}-function`,
+              'status-icon'
+            )
+            return (
+              <span key={index} className="details-item__functions-item">
+                <Tooltip template={<TextTooltipTemplate text={name} />}>{name}</Tooltip>
+                {status && (
+                  <Tooltip template={<TextTooltipTemplate text={status} />}>
+                    <i className={statusClassName} />
+                  </Tooltip>
+                )}
+                {index < item.value.length - 1 && (
+                  <span className="details-item__functions-comma">,</span>
+                )}
+              </span>
+            )
+          })}
         </div>
       )
     } else if (Array.isArray(info)) {

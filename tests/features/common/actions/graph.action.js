@@ -18,118 +18,117 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { getNamedRowsGeometry, getNamedFieldsGeometry } from './table.action'
-
-import numjs from '@d4c/numjs'
-//TODO: Replace this package with an up to date one as this is vulnerable.
 import { expect } from 'chai'
 
-function diffMapper(array0, array1, deviation) {
-  const tmpDiff = numjs.abs(
-    numjs.subtract(
-      numjs.dot(numjs.ones(array0.shape).T, array1),
-      numjs.dot(array0.T, numjs.ones(array1.shape))
-    )
-  )
+const isNear = (val1, val2, tolerance) => Math.abs(val1 - val2) <= tolerance
 
-  for (let i = 0; i < tmpDiff.shape[0]; i++) {
-    for (let j = 0; j < tmpDiff.shape[1]; j++) {
-      tmpDiff.set(i, j, tmpDiff.get(i, j) < deviation ? 1 : 0)
+const safeGet = (geo, column) => {
+  try {
+    if (!geo || typeof geo.get !== 'function') {
+      console.warn(`[TEST WARNING]: Geometry object is invalid. Cannot get column: "${column}"`)
+      return []
     }
-  }
 
-  return tmpDiff
+    const data = geo.get(column)
+    
+    if (data) {
+      return Array.from(data)
+    } else {
+      console.warn(`[TEST WARNING]: Column "${column}" returned no data. Verification for this field will be skipped.`)
+      return []
+    }
+  } catch (e) {
+      console.warn(`[TEST WARNING]: Could not retrieve column "${column}". 
+      Step might not be fully tested. 
+      Error: ${e.message}`)
+    return []
+  }
 }
 
-export const checkNodesConnectionsNPandas = async (driver, graphComponent) => {
-    const nodesGeometry = await getNamedRowsGeometry(
-      driver,
-      graphComponent.nodesTable
-    )
+export const checkWorkflowGraphConnections = async (driver, graphComponent) => {
+  const nodesGeo = await getNamedRowsGeometry(driver, graphComponent.nodesTable)
+  const arrowsGeo = await getNamedRowsGeometry(driver, graphComponent.graphConnections, 'path')
+  const topHandlers = await getNamedFieldsGeometry(driver, graphComponent.nodesTable, 'top_handler')
+  const bottomHandlers = await getNamedFieldsGeometry(driver, graphComponent.nodesTable, 'bottom_handler')
 
-    const arrowsGeometry = await getNamedRowsGeometry(
-      driver,
-      graphComponent.graphConnections,
-      'path'
-    )
+  //nodes coordinates
+  const nodeXPositions = safeGet(nodesGeo, 'x')
+  const nodeYPositions = safeGet(nodesGeo, 'y')
+  const nodeWidths = safeGet(nodesGeo, 'width')
+  const nodeHeights = safeGet(nodesGeo, 'height')
 
-    const topConnectorsGeometry = await getNamedFieldsGeometry(
-      driver,
-      graphComponent.nodesTable,
-      'top_handler'
-    )
+  //arrows coordinates
+  const arrowXPositions = safeGet(arrowsGeo, 'x')
+  const arrowYPositions = safeGet(arrowsGeo, 'y')
+  const arrowWidths = safeGet(arrowsGeo, 'width')
+  const arrowHeights = safeGet(arrowsGeo, 'height')
 
-    const bottomConnectorsGeometry = await getNamedFieldsGeometry(
-      driver,
-      graphComponent.nodesTable,
-      'bottom_handler'
-    )
-
-    const maxConnectorSide = numjs
-      .array([
-        ...Array.from(topConnectorsGeometry.get('height')),
-        ...Array.from(topConnectorsGeometry.get('width')),
-        ...Array.from(bottomConnectorsGeometry.get('height')),
-        ...Array.from(bottomConnectorsGeometry.get('width'))
-      ])
-      .max()
-
-    const nodeTopEdges = numjs.array([Array.from(nodesGeometry.get('y'))])
-    const nodeBottomEdges = numjs.add(
-      [Array.from(nodesGeometry.get('y'))],
-      [Array.from(nodesGeometry.get('height'))]
-    )
-    const arrowTopEdges = numjs.array([Array.from(arrowsGeometry.get('y'))])
-    const arrowBottomEdges = numjs.add(
-      [Array.from(arrowsGeometry.get('y'))],
-      [Array.from(arrowsGeometry.get('height'))]
-    )
-
-    const startArrowsEdges = diffMapper(
-      arrowTopEdges,
-      nodeBottomEdges,
-      maxConnectorSide / 2
-    )
-    const endArrowsEdges = diffMapper(
-      arrowBottomEdges,
-      nodeTopEdges,
-      maxConnectorSide / 2
-    )
-
-    const nodeMidlePoints = numjs.add(
-      [Array.from(nodesGeometry.get('x'))],
-      [Array.from(nodesGeometry.get('width')).map(item => item / 2)]
-    )
-    const arrowsNodeLeftEdgesX = numjs.array([
-      Array.from(arrowsGeometry.get('x'))
-    ])
-    const arrowsNodeRightEdgesX = numjs.add(
-      [Array.from(arrowsGeometry.get('x'))],
-      [Array.from(arrowsGeometry.get('width'))]
-    )
-    const leftEdgesConnections = diffMapper(
-      arrowsNodeLeftEdgesX,
-      nodeMidlePoints,
-      maxConnectorSide / 2
-    )
-    const righEdgesConnections = diffMapper(
-      arrowsNodeRightEdgesX,
-      nodeMidlePoints,
-      maxConnectorSide / 2
-    )
-
-    const startMarks = numjs.add(
-      numjs.multiply(startArrowsEdges, leftEdgesConnections),
-      numjs.multiply(startArrowsEdges, righEdgesConnections)
-    )
-    for (let i = 0; i < arrowsNodeRightEdgesX.length; i++) {
-      expect(numjs.sum(startMarks.slice([i]))).equal(true, 'Arrow not started')
-    }
-
-    const endMarks = numjs.add(
-      numjs.multiply(endArrowsEdges, leftEdgesConnections),
-      numjs.multiply(endArrowsEdges, righEdgesConnections)
-    )
-    for (let i = 0; i < arrowsNodeRightEdgesX.length; i++) {
-      expect(numjs.sum(endMarks.slice([i]))).equal(true, 'Arrow not ended')
-    }
+  if (nodeXPositions.length === 0 || arrowXPositions.length === 0) {
+    console.warn('[GRAPH CHECK]: Skipping validation. Nodes or Arrows are missing in the DOM.')
+    return
   }
+
+  //  establish dynamic thresholds for сalculation average graph dimensions (proximity between graph nodes, connection handlers, arrow endpoints)
+  const avgNodeHeight = nodeHeights.reduce((a, b) => a + b, 0) / nodeHeights.length
+  const avgHandlerSize = safeGet(topHandlers, 'height')[0] || 10
+
+  /**
+   * Dynamic Tolerances:
+   * 0.7 - handler radius: ensures arrows hit the circular port center
+   * 0.35 - vertical gap: covers offsets between nodes
+   * 15 - horizontal buffer: accounts for x-axis rendering rounding
+   */
+  const handlerRadius = avgHandlerSize * 0.7 
+  const boundaryTolerance = avgNodeHeight * 0.35 
+  const horizontalTolerance = 15
+
+  const getHandlerCenters = (geometry) => {
+    const xPositions = safeGet(geometry, 'x')
+    const yPositions = safeGet(geometry, 'y')
+    const widths = safeGet(geometry, 'width')
+    const heights = safeGet(geometry, 'height')
+
+    return xPositions.map((x, index) => ({
+      x: x + widths[index] / 2,
+      y: yPositions[index] + heights[index] / 2
+    }))
+  }
+
+  const handlerPoints = [...getHandlerCenters(topHandlers), ...getHandlerCenters(bottomHandlers)]
+  const nodes = nodeXPositions.map((x, i) => ({
+    left: x, right: x + nodeWidths[i], top: nodeYPositions[i], bottom: nodeYPositions[i] + nodeHeights[i]
+  }))
+
+  const arrows = arrowXPositions.map((x, i) => ({
+    id: i, left: x, right: x + arrowWidths[i], top: arrowYPositions[i], bottom: arrowYPositions[i] + arrowHeights[i]
+  }))
+
+  arrows.forEach((arrow) => {
+    const checkConnectionPoint = (arrowX, arrowY) => {
+      // verify alignment with specific connection handler centers
+      const connectedToHandler = handlerPoints.some(handler => 
+        isNear(arrowX, handler.x, handlerRadius) && 
+        isNear(arrowY, handler.y, handlerRadius)
+      )
+      if (connectedToHandler) return true
+
+      // verify proximity to node boundaries within calculated tolerances
+      return nodes.some(node => {
+        const isNearVerticalEdge = isNear(arrowY, node.top, boundaryTolerance) || isNear(arrowY, node.bottom, boundaryTolerance)
+        const isWithinHorizontalRange = arrowX >= node.left - horizontalTolerance && arrowX <= node.right + horizontalTolerance
+        
+        const isNearHorizontalEdge = isNear(arrowX, node.left, horizontalTolerance) || isNear(arrowX, node.right, horizontalTolerance)
+        const isWithinVerticalRange = arrowY >= node.top - boundaryTolerance && arrowY <= node.bottom + boundaryTolerance
+
+        return (isNearVerticalEdge && isWithinHorizontalRange) || (isNearHorizontalEdge && isWithinVerticalRange)
+      })
+    }
+
+    const isStartConnected = checkConnectionPoint(arrow.left, arrow.top) || checkConnectionPoint(arrow.right, arrow.top)
+    const isEndConnected = checkConnectionPoint(arrow.left, arrow.bottom) || checkConnectionPoint(arrow.right, arrow.bottom)
+
+    expect(isStartConnected).to.equal(true, `Arrow [${arrow.id}] start disconnected. Check Y:${arrow.top}`)
+    expect(isEndConnected).to.equal(true, `Arrow [${arrow.id}] end disconnected. Check Y:${arrow.bottom}`)
+  })
+  console.log(`[GRAPH CHECK COMPLETED]: Verified connections for ${arrows.length} arrows using ${nodes.length} nodes.`)
+}

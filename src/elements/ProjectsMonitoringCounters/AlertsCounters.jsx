@@ -41,6 +41,9 @@ const AlertsCounters = () => {
   const { projectName: paramProjectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
+  const isDataLoading = paramProjectName
+    ? projectStore?.projectSummary?.loading
+    : projectStore?.projectsSummary?.loading
 
   const handleOpenPopUp = () => {
     const isHidden = !detailsRef.current?.offsetParent
@@ -57,7 +60,8 @@ const AlertsCounters = () => {
     if (projectName !== '*') {
       const endpoint = projectStore?.projectSummary?.data?.endpoint_alerts_count
       const jobs = projectStore?.projectSummary?.data?.job_alerts_count
-      const application = projectStore?.projectSummary?.data?.other_alerts_count
+      const application = projectStore?.projectSummary?.data?.application_alerts_count
+      const infra = projectStore?.projectSummary?.data?.infra_alerts_count
 
       return {
         projectName,
@@ -65,7 +69,8 @@ const AlertsCounters = () => {
           endpoint,
           jobs,
           application,
-          total: countTotalValue([endpoint, jobs, application])
+          infra,
+          total: countTotalValue([endpoint, jobs, application, infra])
         }
       }
     }
@@ -79,7 +84,8 @@ const AlertsCounters = () => {
     projectStore?.jobsMonitoringData?.alerts,
     projectStore?.projectSummary?.data?.endpoint_alerts_count,
     projectStore?.projectSummary?.data?.job_alerts_count,
-    projectStore?.projectSummary?.data?.other_alerts_count
+    projectStore?.projectSummary?.data?.application_alerts_count,
+    projectStore?.projectSummary?.data?.infra_alerts_count
   ])
 
   const alertsStats = useMemo(
@@ -109,7 +115,7 @@ const AlertsCounters = () => {
               id="alerts_total_counter"
               onClick={alertsStats?.total?.link}
             >
-              {projectStore?.projectsSummary?.loading ? (
+              {isDataLoading ? (
                 <Loader section small secondary />
               ) : (
                 alertsStats.total?.counter?.toLocaleString?.()
@@ -126,7 +132,7 @@ const AlertsCounters = () => {
               >
                 <h6 className="stats__subtitle">Endpoint</h6>
                 <StatsCard.SecondaryCounter>
-                  {projectStore?.projectsSummary?.loading ? (
+                  {isDataLoading ? (
                     <Loader section small secondary />
                   ) : (
                     alertsStats.endpoints?.counter?.toLocaleString?.()
@@ -142,7 +148,7 @@ const AlertsCounters = () => {
               >
                 <h6 className="stats__subtitle">Jobs</h6>
                 <StatsCard.SecondaryCounter>
-                  {projectStore?.projectsSummary?.loading ? (
+                  {isDataLoading ? (
                     <Loader section small secondary />
                   ) : (
                     alertsStats.job?.counter?.toLocaleString?.()
@@ -158,10 +164,26 @@ const AlertsCounters = () => {
               >
                 <div className="stats__subtitle">Application</div>
                 <StatsCard.SecondaryCounter>
-                  {projectStore.projectsSummary.loading ? (
+                  {isDataLoading ? (
                     <Loader section small secondary />
                   ) : (
                     alertsStats.application?.counter?.toLocaleString?.()
+                  )}
+                </StatsCard.SecondaryCounter>
+              </div>
+            </StatsCard.Row>
+            <StatsCard.Row>
+              <div
+                onClick={alertsStats.infra.link}
+                className="stats__line stats__link"
+                data-testid="alerts_infra_counter"
+              >
+                <div className="stats__subtitle">Infra</div>
+                <StatsCard.SecondaryCounter>
+                  {isDataLoading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    alertsStats.infra?.counter?.toLocaleString?.()
                   )}
                 </StatsCard.SecondaryCounter>
               </div>

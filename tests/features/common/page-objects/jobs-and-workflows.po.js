@@ -210,7 +210,7 @@ const monitorWorkflowGraph = {
         root: '',
         header: {},
         body: {
-          root: '.react-flow__edges g[transform]',
+          root: '.react-flow__edges g',
           row: {
             root: '.react-flow__edge',
             fields: {
@@ -293,7 +293,7 @@ const calendarTable = {
     }
   },
   body: {
-    offset: 3,
+    offset: 4,
     row: {
       root: '.date-picker__week',
       fields: {
@@ -321,7 +321,6 @@ const dateTimePickerCalendars = {
       month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
       month_label: '.date-picker__header div .date-picker__header-month',
       year_label: '.date-picker__header div .date-picker__header-year',
-      time_input: '.date-picker__time input',
       calendar: {
         componentType: commonTable,
         structure: calendarTable
@@ -336,7 +335,6 @@ const dateTimePickerCalendars = {
       month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
       month_label: '.date-picker__header div .date-picker__header-month',
       year_label: '.date-picker__header div .date-picker__header-year',
-      time_input: '.date-picker__time input',
       calendar: {
         componentType: commonTable,
         structure: calendarTable
@@ -344,6 +342,24 @@ const dateTimePickerCalendars = {
     }
   }
 }
+
+const timePickerDropdownFrom = dropdownComponent(
+  generateDropdownGroup(
+    '.date-picker__calendar:nth-of-type(1) .date-picker__time [data-testid="time-picker"]',
+    '.time-picker__dropdown-button', // Open Component
+    '.time-picker__dropdown .time-picker__dropdown-item', // Options
+    '.data-ellipsis span' // Option value
+  )
+)
+
+const timePickerDropdownTo = dropdownComponent(
+  generateDropdownGroup(
+    '.date-picker__calendar:nth-of-type(2) .date-picker__time [data-testid="time-picker"]',
+    '.time-picker__dropdown-button', // Open Component
+    '.time-picker__dropdown .time-picker__dropdown-item', // Options
+    '.data-ellipsis span' // Option value
+  )
+)
 // datepicker end
 
 // Create job
@@ -453,7 +469,7 @@ const commonErrorMessage = By.css('[data-testid="no-data"] h3')
 const commonCustomRangeFilter = dropdownComponent(
   generateDropdownGroup(
     '[data-testid="date-picker-container"]',
-    '[data-testid="date-picker-input"] input',
+    '[data-testid="date-picker-input"] .input',
     '.date-picker__pop-up .select__item',
     '.data-ellipsis .data-ellipsis',
     false
@@ -493,6 +509,8 @@ export default {
     ),
     Start_Time_Filter_Dropdown: commonStartTimeFilter,
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
+    Time_Picker_Dropdown_From: timePickerDropdownFrom,
+    Time_Picker_Dropdown_To: timePickerDropdownTo,
     Jobs_Monitor_Table: commonTable(jobsMonitorTable)
   },
   WorkflowsMonitorTab: {

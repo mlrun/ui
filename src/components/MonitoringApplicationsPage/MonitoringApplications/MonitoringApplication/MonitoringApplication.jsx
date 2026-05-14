@@ -75,7 +75,7 @@ const MonitoringApplication = () => {
             <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
           ) : (
             <>
-              <SectionTable loading={loading} params={params} table={artifactsTable} />
+              <SectionTable loading={loading} table={artifactsTable} />
               <Link
                 className="link monitoring-app__see-all-link"
                 to={`/projects/${params.projectName}/${FILES_PAGE}?${LABELS_FILTER}=mlrun/app-name=${params.name}`}
@@ -95,7 +95,7 @@ const MonitoringApplication = () => {
           {resultsTable.body.length === 0 && !loading ? (
             <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
           ) : (
-            <SectionTable loading={loading} params={params} table={resultsTable} />
+            <SectionTable loading={loading} table={resultsTable} />
           )}
         </div>
         <div className="monitoring-app__section-item">
@@ -106,7 +106,7 @@ const MonitoringApplication = () => {
           {metricsTable.body.length === 0 && !loading ? (
             <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
           ) : (
-            <SectionTable loading={loading} params={params} table={metricsTable} />
+            <SectionTable loading={loading} table={metricsTable} />
           )}
         </div>
       </div>
@@ -119,7 +119,7 @@ const MonitoringApplication = () => {
           {shardsTable.body.length === 0 && !loading ? (
             <NoData message={MONITORING_APPLICATIONS_NO_DATA_MESSAGE} />
           ) : (
-            <SectionTable loading={loading} params={params} table={shardsTable} />
+            <SectionTable loading={loading} table={shardsTable} />
           )}
         </div>
       </div>

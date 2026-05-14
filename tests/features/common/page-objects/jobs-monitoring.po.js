@@ -250,7 +250,6 @@ const dateTimePickerCalendars = {
       month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
       month_label: '.date-picker__header div .date-picker__header-month',
       year_label: '.date-picker__header div .date-picker__header-year',
-      time_input: '.date-picker__time input',
       calendar: {
         componentType: commonTable,
         structure: calendarTable
@@ -265,7 +264,6 @@ const dateTimePickerCalendars = {
       month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
       month_label: '.date-picker__header div .date-picker__header-month',
       year_label: '.date-picker__header div .date-picker__header-year',
-      time_input: '.date-picker__time input',
       calendar: {
         componentType: commonTable,
         structure: calendarTable
@@ -273,6 +271,24 @@ const dateTimePickerCalendars = {
     }
   }
 }
+
+const timePickerDropdownFrom = dropdownComponent(
+  generateDropdownGroup(
+    '.date-picker__calendar:nth-of-type(1) .date-picker__time [data-testid="time-picker"]',
+    '.time-picker__dropdown-button', // Open Component
+    '.time-picker__dropdown .time-picker__dropdown-item', // Options
+    '.data-ellipsis span' // Option value
+  )
+)
+
+const timePickerDropdownTo = dropdownComponent(
+  generateDropdownGroup(
+    '.date-picker__calendar:nth-of-type(2) .date-picker__time [data-testid="time-picker"]',
+    '.time-picker__dropdown-button', // Open Component
+    '.time-picker__dropdown .time-picker__dropdown-item', // Options
+    '.data-ellipsis span' // Option value
+  )
+)
 // datepicker end
 
 const commonRefreshButton = By.css('[data-testid="refresh"]')
@@ -299,7 +315,9 @@ export default {
     Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Jobs_Table: commonTable(overallTable),
-    Arrow_Back: By.css('a.link-back__icon')
+    Arrow_Back: By.css('a.link-back__icon'),
+    Time_Picker_Dropdown_From: timePickerDropdownFrom,
+    Time_Picker_Dropdown_To: timePickerDropdownTo
   },
   crossWorkflowsMonitorTab: {
     Cross_Jobs_Tab_Selector: commonTable(tabSelector),

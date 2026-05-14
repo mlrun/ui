@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash'
 
 import FeatureSetsView from './FeatureSetsView'
 import { FeatureStoreContext } from '../FeatureStore'
@@ -391,10 +391,23 @@ const FeatureSets = () => {
   }, [featureStore.featureSets.allData, navigate, params.name, params.projectName, params.tag])
 
   useEffect(() => {
-    if (params.name && params.tag && pageData.details.menu.length > 0) {
+    if (
+      params.name &&
+      params.tag &&
+      !isEmpty(selectedFeatureSet) &&
+      pageData.details.menu.length > 0
+    ) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
+  }, [
+    navigate,
+    location,
+    pageData.details.menu,
+    params.name,
+    params.tag,
+    params.tab,
+    selectedFeatureSet
+  ])
 
   useEffect(() => {
     checkTabIsValid(navigate, params, selectedFeatureSet, FEATURE_SETS_TAB)

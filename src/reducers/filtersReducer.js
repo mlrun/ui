@@ -29,7 +29,8 @@ const initialState = {
   internalAutoRefresh: false,
   tagOptions: null,
   projectOptions: [],
-  [FILTER_MENU_MODAL]: {}
+  [FILTER_MENU_MODAL]: {},
+  relativeDateChange: null
 }
 
 export const getFilterTagOptions = createAsyncThunk(

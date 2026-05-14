@@ -44,13 +44,15 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
   const popupButtonIsDisplayed = useMemo(() => {
     return (
       artifact.target_path &&
+      !preview[0]?.hidePopupBtn &&
       (artifact.extra_data?.length > 0 ||
         (!preview[0]?.error && !preview.every(item => item.hidden)))
     )
   }, [artifact.extra_data, artifact.target_path, preview])
 
   const artifactsPreviewClassNames = classnames(
-    popupButtonIsDisplayed && 'artifact-preview__with-popout'
+    popupButtonIsDisplayed && 'artifact-preview__with-popout',
+    'artifact-preview'
   )
 
   useEffect(() => {
@@ -88,6 +90,19 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
     }
   }, [artifact, params.projectName])
 
+  const popupButton = (
+    <div className="preview-icon__wrapper">
+      <RoundedIcon
+        onClick={handlePreview}
+        className="preview_popout"
+        tooltipText="Pop-out"
+        id="details-preview"
+      >
+        <Popout />
+      </RoundedIcon>
+    </div>
+  )
+
   return (
     <div className="preview_container">
       <div className="preview_container__header">
@@ -97,22 +112,11 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
               <span>This table presents partial data. To view complete data, download it.</span>
             )}
         </div>
-        {popupButtonIsDisplayed && (
-          <div className="preview-icon__wrapper">
-            <RoundedIcon
-              onClick={handlePreview}
-              className="preview_popout"
-              tooltipText="Pop-out"
-              id="details-preview"
-            >
-              <Popout />
-            </RoundedIcon>
-          </div>
-        )}
+        {popupButtonIsDisplayed && popupButton}
       </div>
       <div className={artifactsPreviewClassNames}>
         {preview[0]?.hidden && artifact.extra_data?.length > 0 ? null : (
-          <ArtifactsPreview noData={noData} preview={preview} />
+          <ArtifactsPreview noData={noData} preview={preview} popupButton={popupButton} />
         )}
         {artifact.extra_data?.length > 0 && <ArtifactsExtraData artifact={artifact} />}
       </div>

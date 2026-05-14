@@ -83,7 +83,7 @@ const DetailsAnalysis = ({ artifact }) => {
   }, [artifact.analysis, params.projectName])
 
   return (
-    <div className="preview_container">
+    <div className="preview_container preview_container-multi">
       <ArtifactsPreview noData={noData} preview={preview} />
     </div>
   )
