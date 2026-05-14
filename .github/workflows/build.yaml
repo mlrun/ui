@@ -44,19 +44,55 @@ on:
         required: false
         default: 'ubuntu-latest'
 
+  workflow_call:
+    inputs:
+      docker_registries:
+        description: 'Comma separated list of docker registries to push images to'
+        required: false
+        type: string
+        default: 'ghcr.io/'
+      artifactory_docker_repo:
+        description: 'Artifactory docker repo name (e.g. mlrun_ce). When set, overrides docker_registries with the Artifactory URL from secrets.'
+        required: false
+        type: string
+        default: ''
+      docker_repo:
+        description: 'Docker repo to push images to'
+        required: false
+        type: string
+        default: ''
+      version:
+        description: 'The version to build, without prefix v'
+        required: false
+        type: string
+        default: ''
+      runner:
+        description: 'The runner label to use for the workflow'
+        required: false
+        type: string
+        default: 'ubuntu-latest'
+      ref:
+        description: 'The branch or tag to checkout and build'
+        required: false
+        type: string
+        default: ''
+
 jobs:
   build-images:
     name: Build and push ui image
-    runs-on: ${{ github.event.inputs.runner || 'ubuntu-latest' }}
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
 
-    # let's not run this on every fork, change to your fork when developing
+    # Run on mlrun/ui or when explicitly triggered (workflow_dispatch covers both direct and cross-repo calls)
     if: github.repository == 'mlrun/ui' || github.event_name == 'workflow_dispatch'
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        repository: mlrun/ui
+        ref: ${{ inputs.ref || github.ref }}
 
     - name: Install curl and jq
-      if: ${{ !github.event.inputs.runner || github.event.inputs.runner == 'ubuntu-latest' }}
+      if: ${{ !inputs.runner || inputs.runner == 'ubuntu-latest' }}
       run: sudo apt-get install curl jq
 
     - name: Extract git hashes and latest version
@@ -69,16 +105,23 @@ jobs:
       id: computed_params
       run: |
         echo "mlrun_version=$( \
-          input_mlrun_version=${{ github.event.inputs.version }} && \
+          input_mlrun_version=${{ inputs.version }} && \
           default_mlrun_version=$(echo ${{ steps.git_info.outputs.unstable_version_prefix }}-${{ steps.git_info.outputs.mlrun_commit_hash }}) && \
           echo ${input_mlrun_version:-`echo $default_mlrun_version`})" >> $GITHUB_OUTPUT
         echo "mlrun_docker_repo=$( \
-          input_docker_repo=${{ github.event.inputs.docker_repo }} && \
+          input_docker_repo=${{ inputs.docker_repo }} && \
           default_docker_repo=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]') && \
           echo ${input_docker_repo:-`echo $default_docker_repo`})" >> $GITHUB_OUTPUT
-        echo "mlrun_docker_registries=$( \
-          input_docker_registries=${{ github.event.inputs.docker_registries }} && \
-          echo ${input_docker_registries:-ghcr.io/})" >> $GITHUB_OUTPUT
+        if [[ -n "$ARTIFACTORY_DOCKER_REPO_INPUT" && -n "$ARTIFACTORY_URL" ]]; then
+          echo "mlrun_docker_registries=${ARTIFACTORY_URL}/${ARTIFACTORY_DOCKER_REPO_INPUT}/" >> $GITHUB_OUTPUT
+        else
+          echo "mlrun_docker_registries=$( \
+            input_docker_registries=${{ inputs.docker_registries }} && \
+            echo ${input_docker_registries:-ghcr.io/})" >> $GITHUB_OUTPUT
+        fi
+      env:
+        ARTIFACTORY_DOCKER_REPO_INPUT: ${{ inputs.artifactory_docker_repo }}
+        ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
 
     - name: Setup Node.js
       uses: actions/setup-node@v3
@@ -93,7 +136,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Docker login (quay.io)
-      if: ${{ !github.event.inputs.runner || github.event.inputs.runner == 'ubuntu-latest' }}
+      if: ${{ !inputs.runner || inputs.runner == 'ubuntu-latest' }}
       continue-on-error: true
       uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
       with:
@@ -102,7 +145,7 @@ jobs:
         password: ${{ secrets.QUAY_IO_DOCKER_REGISTRY_PASSWORD }}
 
     - name: Docker login (docker.com)
-      if: ${{ !github.event.inputs.runner || github.event.inputs.runner == 'ubuntu-latest' }}
+      if: ${{ !inputs.runner || inputs.runner == 'ubuntu-latest' }}
       continue-on-error: true
       uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
       with:
@@ -111,7 +154,7 @@ jobs:
         password: ${{ secrets.DOCKER_HUB_DOCKER_REGISTRY_PASSWORD }}
 
     - name: Docker login (Private Artifactory)
-      if: contains(inputs.docker_registries, 'artifactory.iguazeng.com')
+      if: contains(inputs.docker_registries, 'artifactory.iguazeng.com') || inputs.artifactory_docker_repo != ''
       uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # 3.6.0
       with:
         registry: ${{ secrets.ARTIFACTORY_URL }}
