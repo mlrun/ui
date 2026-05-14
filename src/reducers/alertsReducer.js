@@ -172,6 +172,10 @@ export const fetchAlertById = createAsyncThunk('fetchAlertById', ({ project, ale
   })
 })
 
+export const fetchAlertConfig = createAsyncThunk('fetchAlertConfig', ({ project, alertName }) => {
+  return alertsApi.getAlertConfig(project, alertName).then(({ data }) => data)
+})
+
 const alertsSlice = createSlice({
   name: 'alertsStore',
   initialState,

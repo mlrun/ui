@@ -111,7 +111,7 @@ const getEntityTypeData = entityType => {
       }
   }
 }
-export const getTriggerCriticalTimePeriod = line => {
+export const formatTimePeriod = line => {
   const units = {
     y: 'year',
     w: 'week',
@@ -356,7 +356,7 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects, showExpandButt
         id: `criteriaTime.${alert.id}`,
         headerId: 'criteriaTime',
         headerLabel: 'Trigger criteria time period',
-        value: getTriggerCriticalTimePeriod(alert.criteria?.period),
+        value: formatTimePeriod(alert.criteria?.period),
         className: 'table-cell-1'
       },
       {

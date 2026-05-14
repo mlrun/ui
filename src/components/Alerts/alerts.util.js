@@ -56,7 +56,7 @@ import {
   PAST_MONTH_DATE_OPTION,
   TIME_FRAME_LIMITS
 } from '../../utils/datePicker.util'
-import { fetchAlertById } from '../../reducers/alertsReducer'
+import { fetchAlertById, fetchAlertConfig } from '../../reducers/alertsReducer'
 import { generateObjectNotInTheListMessage } from '../../utils/generateMessage.util'
 import { createAlertRowData } from '../../utils/createAlertsContent'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
@@ -249,6 +249,7 @@ export const alertsHeaders = (type, isCrossProjects) => {
 
 export const checkForSelectedAlert = ({
   alertId,
+  alertName,
   alerts,
   dispatch,
   isCrossProjects,
@@ -268,36 +269,11 @@ export const checkForSelectedAlert = ({
     if (alerts && searchBePage === configBePage && lastCheckedAlertIdRef.current !== alertId) {
       lastCheckedAlertIdRef.current = alertId
 
-      dispatch(fetchAlertById({ project, alertId }))
-        .unwrap()
-        .then(selectedAlert => {
-          if (selectedAlert) {
-            const findAlertIndex = alerts => {
-              return alerts.findIndex(alert => alert.id && alert.id === selectedAlert.id)
-            }
-
-            const itemIndexInPaginatedList = findAlertIndex(paginatedAlerts)
-            const itemIndexInMainList =
-              itemIndexInPaginatedList !== -1 ? itemIndexInPaginatedList : findAlertIndex(alerts)
-
-            if (itemIndexInPaginatedList === -1) {
-              if (itemIndexInMainList > -1) {
-                const { fePageSize } = paginationConfigAlertsRef.current
-
-                setSearchParams(prevSearchParams => {
-                  prevSearchParams.set(FE_PAGE, Math.ceil((itemIndexInMainList + 1) / fePageSize))
-
-                  return prevSearchParams
-                })
-              } else {
-                selectedAlert.ui.infoMessage = generateObjectNotInTheListMessage('alert')
-              }
-            }
-
-            setSelectedAlert({ ...createAlertRowData(selectedAlert).data, page: ALERTS_PAGE })
-          }
-        })
-        .catch(error => {
+      Promise.allSettled([
+        dispatch(fetchAlertById({ project, alertId })).unwrap(),
+        dispatch(fetchAlertConfig({ project, alertName })).unwrap()
+      ]).then(([activationResult, configResult]) => {
+        if (activationResult.status === 'rejected') {
           setSelectedAlert({})
 
           navigate(
@@ -305,8 +281,50 @@ export const checkForSelectedAlert = ({
             { replace: true }
           )
 
-          showErrorNotification(dispatch, error, '', 'Failed to retrieve alert data')
-        })
+          showErrorNotification(
+            dispatch,
+            activationResult.reason,
+            '',
+            'Failed to retrieve alert data'
+          )
+
+          return
+        }
+
+        const selectedAlert = activationResult.value
+
+        if (selectedAlert) {
+          const findAlertIndex = alertList =>
+            alertList.findIndex(alert => alert.id && alert.id === selectedAlert.id)
+
+          const itemIndexInPaginatedList = findAlertIndex(paginatedAlerts)
+          const itemIndexInMainList =
+            itemIndexInPaginatedList !== -1 ? itemIndexInPaginatedList : findAlertIndex(alerts)
+
+          if (itemIndexInPaginatedList === -1) {
+            if (itemIndexInMainList > -1) {
+              const { fePageSize } = paginationConfigAlertsRef.current
+
+              setSearchParams(prevSearchParams => {
+                prevSearchParams.set(FE_PAGE, Math.ceil((itemIndexInMainList + 1) / fePageSize))
+
+                return prevSearchParams
+              })
+            } else {
+              selectedAlert.ui.infoMessage = generateObjectNotInTheListMessage('alert')
+            }
+          }
+
+          const alertConfig = configResult.status === 'fulfilled' ? configResult.value : null
+
+          setSelectedAlert({
+            ...createAlertRowData(selectedAlert).data,
+            reset_policy: alertConfig?.reset_policy,
+            cooldown_period: alertConfig?.cooldown_period,
+            page: ALERTS_PAGE
+          })
+        }
+      })
     }
   } else {
     setSelectedAlert({})

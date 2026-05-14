@@ -216,6 +216,16 @@ const DetailsInfoView = React.forwardRef(
                   </ul>
                 </>
               )}
+              {!isEveryObjectValueEmpty(additionalInfo?.alerts?.resetPolicyDetailsInfo) && (
+                <>
+                  <h3 className="item-info__header" data-testid="reset-policy-header">
+                    Reset policy
+                  </h3>
+                  <ul className="item-info__details">
+                    {additionalInfo?.alerts?.resetPolicyDetailsInfo}
+                  </ul>
+                </>
+              )}
               {!isEveryObjectValueEmpty(additionalInfo?.alerts?.triggerCriteriaDetailsInfo) && (
                 <>
                   <h3 className="item-info__header">Notifications</h3>

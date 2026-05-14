@@ -106,6 +106,7 @@ const Alerts = () => {
   useEffect(() => {
     checkForSelectedAlert({
       alertId: params.alertId,
+      alertName: params.alertName,
       alerts,
       dispatch,
       isCrossProjects,

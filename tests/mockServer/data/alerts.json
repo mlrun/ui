@@ -105,6 +105,58 @@
       "reset_time": "2024-12-17T09:52:19.580000+00:00"
     },
     {
+      "id": 100,
+      "name": "manual-reset-alert",
+      "project": "default",
+      "severity": "high",
+      "activation_time": "2026-04-28T10:00:00.000000+00:00",
+      "entity_id": "default-mm_myApp",
+      "entity_kind": "model-monitoring-application",
+      "criteria": {
+        "count": 1,
+        "period": null
+      },
+      "event_kind": "mm-app-failed",
+      "number_of_events": 1,
+      "notifications": [
+        {
+          "kind": "slack",
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 1
+          }
+        }
+      ],
+      "reset_time": "2026-04-28T10:00:00.000000+00:00"
+    },
+    {
+      "id": 101,
+      "name": "auto-reset-no-cooldown-alert",
+      "project": "default",
+      "severity": "low",
+      "activation_time": "2026-04-28T11:00:00.000000+00:00",
+      "entity_id": "default-mm_myApp",
+      "entity_kind": "model-monitoring-application",
+      "criteria": {
+        "count": 1,
+        "period": null
+      },
+      "event_kind": "mm-app-failed",
+      "number_of_events": 1,
+      "notifications": [
+        {
+          "kind": "webhook",
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 1
+          }
+        }
+      ],
+      "reset_time": "2026-04-28T11:00:00.000000+00:00"
+    },
+    {
       "id": 9,
       "name": "job-failure-alert1",
       "project": "kate-project-mm",
