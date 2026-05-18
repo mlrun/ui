@@ -70,7 +70,6 @@ const Artifacts = ({
   handleDeployArtifactFailure = null,
   isAllVersions = false,
   page,
-  renderPageTabs = null,
   removeArtifacts,
   storeArtifactTypeLoading,
   tab = ''
@@ -539,7 +538,6 @@ const Artifacts = ({
       }
       ref={{ artifactsRef }}
       requestErrorMessage={requestErrorMessage}
-      renderPageTabs={renderPageTabs}
       selectedArtifact={selectedArtifact}
       setSearchArtifactsParams={
         isAllVersions ? setSearchArtifactVersionsParams : setSearchArtifactsParams
@@ -567,7 +565,6 @@ Artifacts.propTypes = {
   handleDeployArtifactFailure: PropTypes.func,
   isAllVersions: PropTypes.bool,
   page: PropTypes.string.isRequired,
-  renderPageTabs: PropTypes.func,
   removeArtifacts: PropTypes.func.isRequired,
   storeArtifactTypeLoading: PropTypes.bool.isRequired,
   tab: PropTypes.string
