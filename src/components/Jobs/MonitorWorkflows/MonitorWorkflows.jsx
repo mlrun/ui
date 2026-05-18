@@ -108,33 +108,24 @@ const MonitorWorkflows = () => {
   }, [dispatch, getWorkflows, workflowsAreLoaded, params, dateFilter, filters])
 
   return (
-    <>
-      <div className="monitor-workflows">
-        {!params.workflowId && (
-          <p className="monitor-workflows__subtitle">
-            View running workflows and previously executed workflows
-          </p>
-        )}
-      </div>
-      <WorkflowsTable
-        backLink={`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}${window.location.search}`}
-        context={JobsContext}
-        filters={filters}
-        filtersConfig={workflowsFiltersConfig}
-        getWorkflows={getWorkflows}
-        itemIsSelected={itemIsSelected}
-        ref={{ abortJobRef }}
-        requestErrorMessage={requestErrorMessage}
-        selectedFunction={selectedFunction}
-        selectedJob={selectedJob}
-        setItemIsSelected={setItemIsSelected}
-        setSelectedFunction={setSelectedFunction}
-        setSelectedJob={setSelectedJob}
-        setWorkflowIsLoaded={setWorkflowIsLoaded}
-        tableContent={tableContent}
-        workflowIsLoaded={workflowIsLoaded}
-      />
-    </>
+    <WorkflowsTable
+      backLink={`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}${window.location.search}`}
+      context={JobsContext}
+      filters={filters}
+      filtersConfig={workflowsFiltersConfig}
+      getWorkflows={getWorkflows}
+      itemIsSelected={itemIsSelected}
+      ref={{ abortJobRef }}
+      requestErrorMessage={requestErrorMessage}
+      selectedFunction={selectedFunction}
+      selectedJob={selectedJob}
+      setItemIsSelected={setItemIsSelected}
+      setSelectedFunction={setSelectedFunction}
+      setSelectedJob={setSelectedJob}
+      setWorkflowIsLoaded={setWorkflowIsLoaded}
+      tableContent={tableContent}
+      workflowIsLoaded={workflowIsLoaded}
+    />
   )
 }
 

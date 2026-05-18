@@ -199,6 +199,15 @@ const Jobs = () => {
         {selectedTab && filters && (
           <div className="content">
             <div className="content__action-bar-wrapper content__action-bar-wrapper_multi-row">
+              {selectedTab === MONITOR_WORKFLOWS_TAB && (
+                <div className="monitor-workflows">
+                  {!params.workflowId && (
+                    <p className="monitor-workflows__subtitle">
+                      View running workflows and previously executed workflows
+                    </p>
+                  )}
+                </div>
+              )}
               <ActionBar
                 actionButtons={[
                   {
