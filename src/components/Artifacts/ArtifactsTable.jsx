@@ -58,7 +58,6 @@ let ArtifactsTable = ({
   pageData,
   paginationConfigArtifactsRef,
   requestErrorMessage,
-  renderPageTabs = null,
   selectedArtifact,
   setSearchArtifactsParams,
   setSelectedArtifact,
@@ -83,7 +82,7 @@ let ArtifactsTable = ({
   return (
     <div className="table-container">
       <div className="content__action-bar-wrapper">
-        {renderPageTabs ? renderPageTabs() : renderHistoryBackLink()}
+        {renderHistoryBackLink()}
         <ActionBar
           actionButtons={actionButtons}
           closeParamName={isAllVersions ? ALL_VERSIONS_PATH : tab || page}
@@ -103,7 +102,6 @@ let ArtifactsTable = ({
           />
         </ActionBar>
       </div>
-      {renderPageTabs && renderHistoryBackLink()}
       {artifactsStore.loading ? null : tableContent.length === 0 && isEmpty(selectedArtifact) ? (
         <NoData
           message={getNoDataMessage(
@@ -195,7 +193,6 @@ ArtifactsTable.propTypes = {
   pageData: PropTypes.object.isRequired,
   paginationConfigArtifactsRef: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string,
-  renderPageTabs: PropTypes.func,
   selectedArtifact: PropTypes.object.isRequired,
   setSearchArtifactsParams: PropTypes.func.isRequired,
   setSelectedArtifact: PropTypes.func.isRequired,
