@@ -194,7 +194,7 @@ const Jobs = () => {
     <>
       <div className="content-wrapper">
         <div className="content__header">
-          <Breadcrumbs />
+          <Breadcrumbs itemName={params.jobName || params.workflowId} />
         </div>
         {selectedTab && filters && (
           <div className="content">

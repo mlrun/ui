@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import ActionBar from '../ActionBar/ActionBar'
@@ -68,18 +67,17 @@ const FunctionsView = ({
   isDemoMode,
   pageData,
   paginationConfigFunctionsRef,
+  params,
   requestErrorMessage,
   selectedFunction,
   setSearchFunctionsParams,
   tableContent
 }) => {
-  const params = useParams()
-
   return (
     <>
       <div className="content-wrapper">
         <div className="content__header">
-          <Breadcrumbs />
+          <Breadcrumbs itemName={params.funcName} />
         </div>
         <div className="content">
           <div className="table-container">
@@ -228,6 +226,7 @@ FunctionsView.propTypes = {
   isDemoMode: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   paginationConfigFunctionsRef: PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedFunction: PropTypes.object.isRequired,
   setSearchFunctionsParams: PropTypes.func.isRequired,
