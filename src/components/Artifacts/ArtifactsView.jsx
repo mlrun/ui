@@ -99,7 +99,7 @@ let ArtifactsView = React.forwardRef(
       <>
         <div className="content-wrapper" ref={artifactsRef}>
           <div className="content__header">
-            <Breadcrumbs itemName={params.artifactName}/>
+            <Breadcrumbs itemName={params.artifactName} />
           </div>
           <div className="content">
             {artifactsStore.loading && <Loader />}

@@ -51,7 +51,7 @@ const FeatureStore = () => {
     <>
       <div className="content-wrapper">
         <div className="content__header">
-          <Breadcrumbs itemName={params.name}/>
+          <Breadcrumbs itemName={params.name} />
         </div>
         <div className="content">
           <div className={TABLE_CONTAINER}>

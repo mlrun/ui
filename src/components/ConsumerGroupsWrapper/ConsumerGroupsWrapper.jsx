@@ -87,7 +87,7 @@ const ConsumerGroupsWrapper = () => {
   return (
     <div className="page">
       <div className="page-breadcrumbs">
-        <Breadcrumbs itemName={params.streamName}/>
+        <Breadcrumbs itemName={params.streamName} />
       </div>
       <div className="page-content">
         <Outlet context={[requestErrorMessage]} />

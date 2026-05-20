@@ -38,7 +38,7 @@ const BreadcrumbsDropdown = forwardRef(
       searchValue = '',
       setSearchValue,
       selectedItem,
-      withSearch = false,
+      withSearch = false
     },
     ref
   ) => {
@@ -114,7 +114,7 @@ BreadcrumbsDropdown.propTypes = {
   searchValue: PropTypes.string.isRequired,
   selectedItem: PropTypes.string.isRequired,
   setSearchValue: PropTypes.func.isRequired,
-  withSearch: PropTypes.bool,
+  withSearch: PropTypes.bool
 }
 
 export default BreadcrumbsDropdown
