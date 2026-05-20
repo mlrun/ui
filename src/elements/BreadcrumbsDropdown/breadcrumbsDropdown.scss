@@ -69,22 +69,4 @@
     }
   }
 
-  &-all-projects {
-    margin-top: 5px;
-
-    .breadcrumbs__dropdown-item {
-      justify-content: flex-start;
-    }
-
-    svg {
-      flex: 0 0 20px;
-      width: 20px;
-      height: 20px;
-      margin-right: 5px;
-
-      & * {
-        fill: colors.$topaz;
-      }
-    }
-  }
 }
