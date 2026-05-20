@@ -4,9 +4,12 @@
   position: relative;
   max-width: 700px;
   color: colors.$topaz;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+
+  &:not(:has(.breadcrumbs__separator)) {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 
   &:last-child {
     color: colors.$mulledWine;

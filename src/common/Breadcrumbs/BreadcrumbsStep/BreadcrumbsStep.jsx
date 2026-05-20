@@ -102,7 +102,7 @@ const BreadcrumbsStep = React.forwardRef(
     }, [params.projectName, searchValue])
 
     const scrollScreenOptionToView = useCallback(() => {
-      scrollToElement(screenListRef, `#${urlParts.screen.id}`, searchValue)
+      scrollToElement(screenListRef, `#${urlParts.screen?.id}`, searchValue)
     }, [searchValue, urlParts.screen?.id])
 
     useEffect(() => {
