@@ -25,20 +25,26 @@ import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import { Loader } from 'igz-controls/components'
 
-import { ModelsPageProvider } from './ModelsPage.context'
+import { ModelsPageProvider, useModelsPage } from './ModelsPage.context'
 
 import './modelsPage.scss'
 
 const ModelsPage = () => {
   const params = useParams()
   const artifactsStore = useSelector(store => store.artifactsStore)
+  const { selectedItemName } = useModelsPage()
 
   return (
     <>
       <div className="content-wrapper">
         <div className="content__header">
           <Breadcrumbs
-            itemName={params.modelName || params.artifactName || params.pipelineId || params.name}
+            itemName={
+              selectedItemName ||
+              params.modelName ||
+              params.artifactName ||
+              params.name
+            }
           />
         </div>
         <div className="content">
