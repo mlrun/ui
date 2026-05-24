@@ -77,7 +77,7 @@ const FunctionsViewOld = ({
     <>
       <div className="content-wrapper">
         <div className="content__header">
-          <Breadcrumbs itemName={params.funcName} />
+          <Breadcrumbs itemName={params.funcName || selectedFunction?.name} />
         </div>
         <div className="content">
           <div className="table-container">

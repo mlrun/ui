@@ -67,7 +67,10 @@ const Breadcrumbs = ({ itemName = '', onClick = () => {} }) => {
     const [projects, projectName, page] = location.pathname.split('/').slice(1, 4)
     const screen =
       mlrunScreens.find(screen => screen.id === innerScreenName) ||
-      mlrunScreens.find(screen => screen.id === page)
+      mlrunScreens.find(screen => screen.id === page) ||
+      mlrunScreens.find(
+        screen => !screen.externalLink && screen.link?.split('/').pop() === page
+      )
 
     const pathItems = [
       { id: projects, label: 'Projects', link: `/${PROJECTS_PAGE_PATH}` },
