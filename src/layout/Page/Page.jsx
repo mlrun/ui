@@ -26,6 +26,7 @@ import { createPortal } from 'react-dom'
 import ModalContainer from 'react-modal-promise'
 
 import Navbar from '../Navbar/Navbar'
+import TokenExpiryBanner from '../../common/TokenExpiryBanner/TokenExpiryBanner'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import { Loader } from 'igz-controls/components'
 
@@ -111,6 +112,7 @@ const Page = () => {
     <>
       {projectName && <Navbar projectName={projectName} setIsNavbarPinned={setIsNavbarPinned} />}
       <main id="main" className={pinnedClasses} ref={mainRef} style={mainStyles}>
+        <TokenExpiryBanner />
         <div id="main-wrapper">
           {isProjectsFetched ? (
             <Suspense key={location.pathname.split('/')[3]} fallback={<Loader />}>
