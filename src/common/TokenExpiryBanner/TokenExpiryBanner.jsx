@@ -43,8 +43,7 @@ const TokenExpiryBanner = () => {
       <WarningTriangle className="token-expiry-banner__icon" />
 
       <span className="token-expiry-banner__message">
-        Your access token will expire in {daysLeftLabel}. Please renew it or create a new one
-        under{' '}
+        Your access token will expire in {daysLeftLabel}. Please renew it or create a new one under{' '}
         <a
           className="token-expiry-banner__link"
           href={`${window.location.pathname}?settings=tokens`}
