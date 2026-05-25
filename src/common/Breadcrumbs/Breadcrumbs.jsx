@@ -56,19 +56,21 @@ const Breadcrumbs = ({ itemName = '', onClick = () => {} }) => {
     }))
   }, [projectStore.projectsNames.data, location.pathname, params.projectName])
 
-  const mlrunScreens = useMemo(() => {
-    return generateMlrunScreens(params?.projectName ?? '', isDemoMode).filter(
-      screen => !screen.hidden
-    )
+  const allMlrunScreens = useMemo(() => {
+    return generateMlrunScreens(params?.projectName ?? '', isDemoMode)
   }, [isDemoMode, params?.projectName])
+
+  const mlrunScreens = useMemo(() => {
+    return allMlrunScreens.filter(screen => !screen.hidden)
+  }, [allMlrunScreens])
 
   const urlParts = useMemo(() => {
     const innerScreenName = params?.['*']?.split('/')[0]
     const [projects, projectName, page] = location.pathname.split('/').slice(1, 4)
     const screen =
-      mlrunScreens.find(screen => screen.id === innerScreenName) ||
-      mlrunScreens.find(screen => screen.id === page) ||
-      mlrunScreens.find(
+      allMlrunScreens.find(screen => screen.id === innerScreenName) ||
+      allMlrunScreens.find(screen => screen.id === page) ||
+      allMlrunScreens.find(
         screen => !screen.externalLink && screen.link?.split('/').pop() === page
       )
 
@@ -101,7 +103,7 @@ const Breadcrumbs = ({ itemName = '', onClick = () => {} }) => {
         screen
       }
     }
-  }, [itemName, location.pathname, params, mlrunScreens])
+  }, [itemName, location.pathname, params, allMlrunScreens])
 
   return (
     <nav data-testid="breadcrumbs" className="breadcrumbs" ref={breadcrumbsRef}>
