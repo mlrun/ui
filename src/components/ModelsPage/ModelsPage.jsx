@@ -39,12 +39,7 @@ const ModelsPage = () => {
       <div className="content-wrapper">
         <div className="content__header">
           <Breadcrumbs
-            itemName={
-              selectedItemName ||
-              params.modelName ||
-              params.artifactName ||
-              params.name
-            }
+            itemName={selectedItemName || params.modelName || params.artifactName || params.name}
           />
         </div>
         <div className="content">

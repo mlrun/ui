@@ -70,9 +70,7 @@ const Breadcrumbs = ({ itemName = '', onClick = () => {} }) => {
     const screen =
       allMlrunScreens.find(screen => screen.id === innerScreenName) ||
       allMlrunScreens.find(screen => screen.id === page) ||
-      allMlrunScreens.find(
-        screen => !screen.externalLink && screen.link?.split('/').pop() === page
-      )
+      allMlrunScreens.find(screen => !screen.externalLink && screen.link?.split('/').pop() === page)
 
     const pathItems = [
       { id: projects, label: 'Projects', link: `/${PROJECTS_PAGE_PATH}` },
