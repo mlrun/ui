@@ -19,6 +19,10 @@ such restriction.
 */
 import {
   ALERTS_PAGE_PATH,
+  FEATURE_SETS_TAB,
+  FEATURE_STORE_PAGE_PATH,
+  FEATURE_VECTORS_TAB,
+  FEATURES_TAB,
   MONITOR_ALERTS_PAGE,
   JOBS_MONITORING_PAGE,
   PROJECTS_PAGE_PATH,
@@ -41,13 +45,28 @@ export const generateMlrunScreens = projectName => {
 
   mlrunScreens.push(
     {
+      label: 'Feature sets',
+      id: FEATURE_SETS_TAB,
+      link: `/${PROJECTS_PAGE_PATH}/${projectName}/${FEATURE_STORE_PAGE_PATH}/${FEATURE_SETS_TAB}`
+    },
+    {
+      label: 'Feature vectors',
+      id: FEATURE_VECTORS_TAB,
+      link: `/${PROJECTS_PAGE_PATH}/${projectName}/${FEATURE_STORE_PAGE_PATH}/${FEATURE_VECTORS_TAB}`
+    },
+    {
+      label: 'Features',
+      id: FEATURES_TAB,
+      link: `/${PROJECTS_PAGE_PATH}/${projectName}/${FEATURE_STORE_PAGE_PATH}/${FEATURES_TAB}`
+    },
+    {
       label: 'Alerts',
       id: ALERTS_PAGE_PATH,
       link: `/${PROJECTS_PAGE_PATH}/${projectName}/${ALERTS_PAGE_PATH}`
     },
     {
       label: 'Settings',
-      id: 'settings',
+      id: PROJECTS_SETTINGS_PAGE_PATH,
       link: `/${PROJECTS_PAGE_PATH}/${projectName}/${PROJECTS_SETTINGS_PAGE_PATH}`
     }
   )
