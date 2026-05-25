@@ -27,7 +27,6 @@ import BreadcrumbsStep from './BreadcrumbsStep/BreadcrumbsStep'
 import { generateMlrunScreens } from './breadcrumbs.util'
 import { PROJECTS_PAGE_PATH } from '../../constants'
 import { generateProjectsList } from '../../utils/projects'
-import { useMode } from '../../hooks/mode.hook'
 
 import {
   BREADCRUMBS_STEP_ITEM_TYPE,
@@ -44,21 +43,12 @@ const Breadcrumbs = ({ itemName = '', onClick = () => {} }) => {
   const breadcrumbsRef = useRef()
   const params = useParams()
   const location = useLocation()
-  const { isDemoMode } = useMode()
 
   const projectStore = useSelector(state => state.projectStore)
 
-  const projectsList = useMemo(() => {
-    const projectsList = generateProjectsList(projectStore.projectsNames.data, params.projectName)
-    return projectsList.map(project => ({
-      ...project,
-      link: location.pathname.replace(params.projectName, project.id)
-    }))
-  }, [projectStore.projectsNames.data, location.pathname, params.projectName])
-
   const allMlrunScreens = useMemo(() => {
-    return generateMlrunScreens(params?.projectName ?? '', isDemoMode)
-  }, [isDemoMode, params?.projectName])
+    return generateMlrunScreens(params?.projectName ?? '')
+  }, [params?.projectName])
 
   const mlrunScreens = useMemo(() => {
     return allMlrunScreens.filter(screen => !screen.hidden)
@@ -81,8 +71,8 @@ const Breadcrumbs = ({ itemName = '', onClick = () => {} }) => {
         type: BREADCRUMBS_STEP_PROJECT_TYPE
       },
       {
-        id: screen?.id,
-        label: screen?.label,
+        id: screen?.id ?? page,
+        label: screen?.label ?? page,
         link: screen?.link,
         type: BREADCRUMBS_STEP_SCREEN_TYPE
       }
@@ -102,6 +92,17 @@ const Breadcrumbs = ({ itemName = '', onClick = () => {} }) => {
       }
     }
   }, [itemName, location.pathname, params, allMlrunScreens])
+
+  const projectsList = useMemo(() => {
+    const projectsList = generateProjectsList(projectStore.projectsNames.data, params.projectName)
+    const screenBaseLink = urlParts.screen?.link
+    return projectsList.map(project => ({
+      ...project,
+      link: screenBaseLink
+        ? screenBaseLink.replace(`/projects/${params.projectName}`, `/projects/${project.id}`)
+        : `/projects/${project.id}`
+    }))
+  }, [projectStore.projectsNames.data, params.projectName, urlParts.screen])
 
   return (
     <nav data-testid="breadcrumbs" className="breadcrumbs" ref={breadcrumbsRef}>

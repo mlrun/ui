@@ -24,11 +24,10 @@ import {
   PROJECTS_PAGE_PATH,
   PROJECTS_SETTINGS_PAGE_PATH
 } from '../../constants'
+import { getLinks } from '../../components/Sidebar/navbarList.util'
 
-import { getLinks } from '../../layout/Navbar/navbar.util'
-
-export const generateMlrunScreens = (projectName, isDemoMode) => {
-  const navbarLinks = getLinks(projectName, isDemoMode)
+export const generateMlrunScreens = projectName => {
+  const navbarLinks = getLinks(projectName)
 
   const mlrunScreens = navbarLinks.reduce((list, navbarLink) => {
     if (navbarLink.nestedLinks) {
