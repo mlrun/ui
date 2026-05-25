@@ -84,6 +84,7 @@ export const ITEMS_COUNT_END = 'itemsCountEnd'
 export const PROJECTS_PAGE = 'PROJECTS'
 export const PROJECTS_PAGE_PATH = 'projects'
 export const PROJECTS_SETTINGS_PAGE = 'SETTINGS'
+export const PROJECTS_SETTINGS_PAGE_PATH = 'settings'
 export const PROJECTS_SETTINGS_GENERAL_TAB = 'general'
 export const PROJECTS_SETTINGS_MEMBERS_TAB = 'members'
 export const PROJECTS_SETTINGS_SECRETS_TAB = 'secrets'
@@ -558,3 +559,8 @@ export const RESULT_TYPE = 'result'
 
 export const COUNTERS_GENERAL_MESSAGE =
   'Counters use a caching mechanism, and are not auto-refreshed.'
+
+/*=========== BREADCRUMBS TYPES =============*/
+export const BREADCRUMBS_STEP_PROJECT_TYPE = 'project'
+export const BREADCRUMBS_STEP_SCREEN_TYPE = 'screen'
+export const BREADCRUMBS_STEP_ITEM_TYPE = 'item'

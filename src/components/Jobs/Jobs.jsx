@@ -130,6 +130,12 @@ const Jobs = () => {
     setJobWizardMode(PANEL_CREATE_MODE)
   }
 
+  const workflowDisplayName = useMemo(() => {
+    if (!params.workflowId) return ''
+    const runName = workflowsStore.activeWorkflow.data?.run?.name
+    return runName ? runName.replace(`${params.projectName}-`, '') : ''
+  }, [params.workflowId, params.projectName, workflowsStore.activeWorkflow.data])
+
   const tabData = useMemo(() => {
     return defaultsDeep(
       {
@@ -194,7 +200,7 @@ const Jobs = () => {
     <>
       <div className="content-wrapper">
         <div className="content__header">
-          <Breadcrumbs />
+          <Breadcrumbs itemName={params.jobName || workflowDisplayName} />
         </div>
         {selectedTab && filters && (
           <div className="content">

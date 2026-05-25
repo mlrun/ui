@@ -18,25 +18,29 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import { Loader } from 'igz-controls/components'
 
-import { ModelsPageProvider } from './ModelsPage.context'
+import { ModelsPageProvider, useModelsPage } from './ModelsPage.context'
 
 import './modelsPage.scss'
 
 const ModelsPage = () => {
+  const params = useParams()
   const artifactsStore = useSelector(store => store.artifactsStore)
+  const { selectedItemName } = useModelsPage()
 
   return (
     <>
       <div className="content-wrapper">
         <div className="content__header">
-          <Breadcrumbs />
+          <Breadcrumbs
+            itemName={selectedItemName || params.modelName || params.artifactName || params.name}
+          />
         </div>
         <div className="content">
           {artifactsStore.loading && <Loader />}
