@@ -92,7 +92,7 @@ const ProjectsTableSelector = {
             root: '.project-card__actions-menu',
             menuElements: {
               open_button: 'button',
-              options: '#overlay_container .actions-menu__option'
+              options: '#mlrun_overlay_container .actions-menu__option'
             }
           }
         }
@@ -125,7 +125,7 @@ export default {
   Refresh_Projects_Button: By.css('.projects-content-header .data-ellipsis button'),
   Projects_Table: commonTable(ProjectsTableSelector),
   Project_Card_Alert_Icon: By.css('.project-card__header-title .project-card__alert'),
-  Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
+  Overlay: By.css('#mlrun_overlay_container .chip-block-hidden_visible'),
   Active_Projects_Button: By.css(
     '.projects__wrapper .projects-content-header .projects-content-header-item [data-testid="active"]'
   ),

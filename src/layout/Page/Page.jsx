@@ -123,7 +123,7 @@ const Page = () => {
           )}
         </div>
       </main>
-      {createPortal(<ModalContainer />, document.getElementById('overlay_container'))}
+      {createPortal(<ModalContainer />, document.getElementById('mlrun_overlay_container'))}
       {convertedYaml.length > 0 && (
         <YamlModal
           convertedYaml={convertedYaml}

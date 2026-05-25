@@ -757,7 +757,7 @@ export default {
     Cancel_Button: commonCancelButton,
     Confirm_Button: By.css('.confirm-dialog__btn-container button:not(.pop-up-dialog__btn_cancel)'),
     Delete_Button: commonDeleteButton,
-    Message: By.css('#overlay_container > div > div > div:nth-child(2)')
+    Message: By.css('#mlrun_overlay_container > div > div > div:nth-child(2)')
   },
   metricsSelectorPopup: {
     Search_Metrics_Input: inputGroup(
@@ -809,8 +809,8 @@ export default {
     Content_Application_Log_Info: By.css('.item-info .table__item-logs:nth-of-type(1)'),
     Title_Function_Log_Info: By.css('.item-info > div > h3:nth-of-type(2)'),
     Content_Function_Log_Info: By.css('.item-info .table__item-logs:nth-of-type(2)'),
-    Logs_Text_container: By.css('#overlay_container .table__item .table__item-logs-content'),
-    Logs_Refresh_Button: By.css('#overlay_container .table__item .logs-refresh'),
+    Logs_Text_container: By.css('#mlrun_overlay_container .table__item .table__item-logs-content'),
+    Logs_Refresh_Button: By.css('#mlrun_overlay_container .table__item .logs-refresh'),
     Requested_Features_Table: By.css('.item-info .item-requested-features__table'),
     Returned_Features_Table: By.css('.item-info .details-metadata__table'),
     Statistics_Table: By.css('.item-info #DETAILS_STATISTICS_TABLE_ID'),
@@ -843,10 +843,10 @@ export default {
     Category_Selector_Dropdown: categorySelect,
     Checkbox_Category_Selector: commonTable(checkboxCategorySelector),
     Overlay: By.css(
-      '#overlay_container .chip-block-hidden .chip-block-hidden__scrollable-container'
+      '#mlrun_overlay_container .chip-block-hidden .chip-block-hidden__scrollable-container'
     ),
     Hyperparameter_Checkbox: checkboxComponent({
-      root: '#overlay_container .form-field-checkbox',
+      root: '#mlrun_overlay_container .form-field-checkbox',
       elements: {
         checkbox: 'input',
         name: 'label',
@@ -1455,9 +1455,9 @@ export default {
     YAML_Modal_Container: By.css('.pop-up-dialog .yaml-modal-container pre')
   },
   jobLogsPopup: {
-    Title: By.css('#overlay_container .alerts-logs .modal__content .modal__header-title'),
-    Cross_Cancel_Button: By.css('#overlay_container .alerts-logs .modal__header-button .data-ellipsis'),
-    Alerts_Logs_Container: By.css('#overlay_container .alerts-logs .modal__body .table__item-logs-container')
+    Title: By.css('#mlrun_overlay_container .alerts-logs .modal__content .modal__header-title'),
+    Cross_Cancel_Button: By.css('#mlrun_overlay_container .alerts-logs .modal__header-button .data-ellipsis'),
+    Alerts_Logs_Container: By.css('#mlrun_overlay_container .alerts-logs .modal__body .table__item-logs-container')
   },
   confirmPopup: {
     Title: By.css('.pop-up-dialog .pop-up-dialog__header'),
@@ -1657,28 +1657,28 @@ export default {
     Table_Project_Filter_Input: commonProjectFilterInput,
     Project_Name_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
-        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="project-form-field-select"]',
+        '#mlrun_overlay_container [data-testid="pop-up-dialog"] [data-testid="project-form-field-select"]',
         '.form-field__control',
         '.options-list [data-testid="select-option"]'
       )
     ),
     Mode_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
-        '#overlay_container [data-testid="me-mode-form-field-select"] [data-testid="select-header"]',
+        '#mlrun_overlay_container [data-testid="me-mode-form-field-select"] [data-testid="select-header"]',
         '.form-field__control',
         '.options-list [data-testid="select-option"]'
       )
     ),
     Entity_Type_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
-        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="entity-type-form-field-select"]',
+        '#mlrun_overlay_container [data-testid="pop-up-dialog"] [data-testid="entity-type-form-field-select"]',
         '.form-field__control',
         '.options-list [data-testid="select-option"]'
       )
     ),
     Entity_ID_Filter_Input: inputGroup(
       generateInputGroup(
-        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="entity-form-field-input"]', 
+        '#mlrun_overlay_container [data-testid="pop-up-dialog"] [data-testid="entity-form-field-input"]', 
         true, 
         false, 
         true
@@ -1686,7 +1686,7 @@ export default {
     ),
     Endpoint_Application_Filter_Input: inputGroup(
       generateInputGroup(
-        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="endpoint-application-form-field-input"]', 
+        '#mlrun_overlay_container [data-testid="pop-up-dialog"] [data-testid="endpoint-application-form-field-input"]', 
         true, 
         false, 
         true
@@ -1694,7 +1694,7 @@ export default {
     ),
     Endpoint_Result_Filter_Input: inputGroup(
       generateInputGroup(
-        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="endpoint-result-form-field-input"]', 
+        '#mlrun_overlay_container [data-testid="pop-up-dialog"] [data-testid="endpoint-result-form-field-input"]', 
         true, 
         false, 
         true
@@ -1702,7 +1702,7 @@ export default {
     ),
     Job_Name_Filter_Input: inputGroup(
       generateInputGroup(
-        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="job-name-form-field-input"]', 
+        '#mlrun_overlay_container [data-testid="pop-up-dialog"] [data-testid="job-name-form-field-input"]', 
         true, 
         false, 
         true
@@ -1710,14 +1710,14 @@ export default {
     ),
     Severity_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
-        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="severity-form-field-select"]',
+        '#mlrun_overlay_container [data-testid="pop-up-dialog"] [data-testid="severity-form-field-select"]',
         '.form-field__control',
         '.options-list [data-testid="select-checkbox"]'
       )
     ),
     Event_Type_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
-        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="event-type-form-field-select"]',
+        '#mlrun_overlay_container [data-testid="pop-up-dialog"] [data-testid="event-type-form-field-select"]',
         '.form-field__control',
         '.options-list [data-testid="select-option"]'
       )
@@ -1763,7 +1763,7 @@ export default {
       )
     ),
     Show_Iterations_Checkbox: checkboxComponent({
-      root: '#overlay_container .form-field-checkbox input',
+      root: '#mlrun_overlay_container .form-field-checkbox input',
       elements: {
         checkbox: '',
         name: '',
@@ -1771,7 +1771,7 @@ export default {
       }
     }),
     Show_Untagged: checkboxComponent({
-      root: '#overlay_container .form-field-checkbox input',
+      root: '#mlrun_overlay_container .form-field-checkbox input',
       elements: {
         checkbox: '',
         name: '',
@@ -1930,7 +1930,7 @@ export default {
         icon: ''
       }
     }),
-    Checkbox_Label: By.css('#overlay_container .form-field-checkbox label'),
+    Checkbox_Label: By.css('#mlrun_overlay_container .form-field-checkbox label'),
     Table_Projects_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
         '[data-testid="project-form-field-select"] [data-testid="select-header"]',
@@ -1953,12 +1953,12 @@ export default {
     Header_Download_Pop_Up: By.css('[data-testid="download-container"] .download-container__header')
   },
   notificationPopUp: {
-    Title: By.css('#overlay_container .notification__body'),
-    Notification_Pop_Up: By.css('#overlay_container .notification__body'),
+    Title: By.css('#mlrun_overlay_container .notification__body'),
+    Notification_Pop_Up: By.css('#mlrun_overlay_container .notification__body'),
     Notification_Pop_Up_Cross_Close_Button: By.css(
-      '#overlay_container .notification__button-close'
+      '#mlrun_overlay_container .notification__button-close'
     ),
-    Retry_Button: By.css('#overlay_container .notification__body .notification__body__button-retry')
+    Retry_Button: By.css('#mlrun_overlay_container .notification__body .notification__body__button-retry')
   },
   addTagPopup: {
     Add_Tag_Popup: By.css('[data-testid="modal"]'),

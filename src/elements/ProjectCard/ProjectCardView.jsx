@@ -55,7 +55,7 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, alert, project, statist
             event.target.tagName !== 'A' &&
             !ref.current.contains(event.target) &&
             !chipRef.current?.contains(event.target) &&
-            !event.target.closest('#overlay_container')
+            !event.target.closest('#mlrun_overlay_container')
           ) {
             navigate(`/projects/${project.metadata.name}/monitor`)
           }

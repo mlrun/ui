@@ -212,7 +212,7 @@ const FeatureSetsPanel = ({ closePanel, createFeatureSetSuccess, project }) => {
         )
       }}
     </Form>,
-    document.getElementById('overlay_container')
+    document.getElementById('mlrun_overlay_container')
   )
 }
 

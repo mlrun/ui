@@ -39,10 +39,10 @@ export default {
   loader: By.css('.loader-wrapper .loader'),
   See_On_Github: By.css('header.header a[alt="MLRUN on Gihub"]'),
   See_On_Slack: By.css('header.header a[alt="MLRUN on Slack"]'),
-  Common_Hint: By.css('#overlay_container .tip'),
-  Common_Tolltip: By.css('#overlay_container .tooltip'),
+  Common_Hint: By.css('#mlrun_overlay_container .tip'),
+  Common_Tolltip: By.css('#mlrun_overlay_container .tooltip'),
   Common_Options: By.css(
-    '#overlay_container .options-menu .options-menu__body'
+    '#mlrun_overlay_container .options-menu .options-menu__body'
   ),
   MLRun_Logo: By.css('.header .header__logo'),
   No_Data_Message: By.css('.no-data-block h3'),
