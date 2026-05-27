@@ -104,9 +104,9 @@ const ProjectDropdown = ({ projectName }) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             data-testid="sidebar-project-dropdown-content"
-            className="w-[--radix-popper-anchor-width] p-2"
+            className="w-[--radix-popper-anchor-width] max-h-[32rem] p-2 flex flex-col"
           >
-            <div className="flex relative mb-2">
+            <div className="flex relative mb-2 shrink-0">
               <Input
                 type="text"
                 placeholder={PLACEHOLDER_SEARCH}
@@ -119,7 +119,7 @@ const ProjectDropdown = ({ projectName }) => {
             </div>
 
             {projectsList.length > 0 ? (
-              <>
+              <div className="flex flex-col min-h-0 overflow-y-auto flex-1">
                 {(showAllProjects ? projectsList : projectsList.slice(0, MAX_VISIBLE_PROJECTS)).map(
                   project => {
                     const isExternal = project.link.startsWith('http')
@@ -155,7 +155,7 @@ const ProjectDropdown = ({ projectName }) => {
                     </DropdownMenuItem>
                   </>
                 )}
-              </>
+              </div>
             ) : (
               <div className="text-sm">{NO_PROJECTS_TEXT}</div>
             )}
