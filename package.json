@@ -176,7 +176,7 @@
     "vite-plugin-commonjs": "^0.10.4",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-svgr": "^4.3.0",
-    "vitest": "^4.0.10"
+    "vitest": "^4.1.0"
   },
   "babel": {
     "plugins": [
