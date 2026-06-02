@@ -3,6 +3,7 @@
 @use 'igz-controls/scss/mixins';
 
 $itemInfoWithoutPadding: item-info-without-padding;
+$header-padding: 10px 0 7.5px 0;
 
 :root {
   --itemInfoWithoutPadding: #{$itemInfoWithoutPadding};
@@ -26,8 +27,21 @@ $itemInfoWithoutPadding: item-info-without-padding;
 
   &__header {
     margin: 0;
-    padding: 10px 0 7.5px 0;
+    padding: $header-padding;
     font-size: 18px;
+
+    &-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+    }
+
+    &-tip {
+      display: flex;
+      align-items: center;
+      padding: $header-padding;
+    }
   }
 
   &__details {

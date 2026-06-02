@@ -218,9 +218,15 @@ const DetailsInfoView = React.forwardRef(
               )}
               {!isEveryObjectValueEmpty(additionalInfo?.alerts?.resetPolicyDetailsInfo) && (
                 <>
-                  <h3 className="item-info__header" data-testid="reset-policy-header">
-                    Reset policy
-                  </h3>
+                  <div className="item-info__header-wrapper">
+                    <h3 className="item-info__header" data-testid="reset-policy-header">
+                      Reset policy
+                    </h3>
+                    <Tip
+                      className="item-info__header-tip"
+                      text="The displayed reset policy reflects the currently configured policy, which may differ from the policy that was in effect at the time of the alert activation."
+                    />
+                  </div>
                   <ul className="item-info__details">
                     {additionalInfo?.alerts?.resetPolicyDetailsInfo}
                   </ul>
