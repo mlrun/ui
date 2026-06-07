@@ -20,7 +20,7 @@ such restriction.
 import { useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Link, useMatch } from 'react-router-dom'
-import { SidebarMenuButton, SidebarMenuItem } from './ui/sidebar'
+import { SidebarMenuButton, SidebarMenuItem, useSidebar } from './ui/sidebar'
 import { toTestId } from '../../utils/toTestId'
 
 const SidebarItem = ({
@@ -32,18 +32,19 @@ const SidebarItem = ({
   externalLink
 }) => {
   const ref = useRef(null)
+  const { open: sidebarOpen } = useSidebar()
 
   const match = useMatch(link ? `${link}/*` : null)
   const isActive = Boolean(match)
 
   useEffect(() => {
-    if (isActive) {
-      ref.current?.scrollIntoView({
-        block: 'nearest',
-        behavior: 'smooth'
-      })
+    if (isActive && sidebarOpen) {
+      const timer = setTimeout(() => {
+        ref.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+      }, 300)
+      return () => clearTimeout(timer)
     }
-  }, [isActive])
+  }, [isActive, sidebarOpen])
 
   return (
     <SidebarMenuItem
