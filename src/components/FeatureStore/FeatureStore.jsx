@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useState } from 'react'
-import { Outlet, useParams } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
@@ -33,7 +33,6 @@ export const FeatureStoreContext = React.createContext({})
 
 const FeatureStore = () => {
   const dispatch = useDispatch()
-  const params = useParams()
 
   const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
   const [createVectorPopUpIsOpen, setCreateVectorPopUpIsOpen] = useState(false)
