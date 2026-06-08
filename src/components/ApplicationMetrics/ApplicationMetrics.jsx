@@ -79,7 +79,7 @@ const ApplicationMetrics = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const params = useParams()
-  const abortControllerRef = useRef()
+  const abortControllerRef = useRef(new AbortController())
 
   const filteredEndpoints = useMemo(() => {
     return modelEndpoints.filter(modelEndpoint => {
@@ -121,6 +121,7 @@ const ApplicationMetrics = () => {
   )
 
   const fetchModelEndpointsData = useCallback(() => {
+    abortControllerRef.current.abort(REQUEST_CANCELED)
     abortControllerRef.current = new AbortController()
 
     dispatch(
@@ -271,7 +272,7 @@ const ApplicationMetrics = () => {
           <div className="list-view">
             {(artifactsStore.modelEndpoints.loading ||
               applicationsStore.loading ||
-              detailsStore.loadingCounter > 0) && <Loader />}
+              detailsStore.loadingCounter > 0) && <Loader overlay />}
             {artifactsStore.modelEndpoints.loading ||
             applicationsStore.loading ? null : modelEndpoints.length === 0 ? (
               <NoData message={requestErrorMessage || 'No model endpoints found'} />

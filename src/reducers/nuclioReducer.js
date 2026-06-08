@@ -24,8 +24,8 @@ import nuclioApi from '../api/nuclio'
 import functionsApi from '../api/functions-api'
 import { parseV3ioStreams } from '../utils/parseV3ioStreams'
 import { parseV3ioStreamShardLags } from '../utils/parseV3ioStreamShardLags'
-import { DEFAULT_ABORT_MSG, REQUEST_CANCELED } from '../constants'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
+import { isRequestAborted } from '../utils/isRequestAborted'
 
 export const fetchApiGateways = createAsyncThunk(
   'fetchApiGateways',
@@ -117,7 +117,7 @@ export const fetchProjectApiGateways = createAsyncThunk(
         return []
       })
       .catch(error => {
-        if (![REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(error?.message)) {
+        if (!isRequestAborted(error?.message)) {
           showErrorNotification(dispatch, error, 'Failed to load API gateways')
           return rejectWithValue(error)
         }
@@ -185,7 +185,7 @@ const nuclioSlice = createSlice({
     builder.addCase(fetchApiGateways.rejected, (state, action) => {
       state.apiGateways = 0
       state.loading = false
-      state.error = action.error?.message
+      state.error = action.payload?.message
     })
     builder.addCase(fetchNuclioFunctions.pending, state => {
       state.loading = true
@@ -196,9 +196,10 @@ const nuclioSlice = createSlice({
       state.error = null
     })
     builder.addCase(fetchNuclioFunctions.rejected, (state, action) => {
+      if (isRequestAborted(action.payload?.message)) return
       state.currentProjectFunctions = []
       state.loading = false
-      state.error = action.error?.message
+      state.error = action.payload?.message
     })
     builder.addCase(fetchAllNuclioFunctions.pending, state => {
       state.loading = true
@@ -209,9 +210,10 @@ const nuclioSlice = createSlice({
       state.error = null
     })
     builder.addCase(fetchAllNuclioFunctions.rejected, (state, action) => {
+      if (isRequestAborted(action.payload?.message)) return
       state.functions = {}
       state.loading = false
-      state.error = action.error?.message
+      state.error = action.payload?.message
     })
     builder.addCase(fetchNuclioFunction.pending, state => {
       state.nuclioFunctionLoading = true

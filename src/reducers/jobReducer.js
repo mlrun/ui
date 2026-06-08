@@ -162,12 +162,14 @@ export const fetchAllJobRuns = createAsyncThunk(
         return data
       })
       .catch(error => {
-        largeResponseCatchHandler(
+        const isRequestCanceled = largeResponseCatchHandler(
           error,
           'Failed to fetch jobs',
           thunkAPI.dispatch,
           config?.ui?.setRequestErrorMessage
         )
+
+        return thunkAPI.rejectWithValue(isRequestCanceled ? { aborted: true } : error)
       })
   }
 )
@@ -218,12 +220,14 @@ export const fetchJobs = createAsyncThunk('fetchJobs', ({ project, filters, conf
       return data
     })
     .catch(error => {
-      largeResponseCatchHandler(
+      const isRequestCanceled = largeResponseCatchHandler(
         error,
         'Failed to fetch jobs',
         thunkAPI.dispatch,
         config?.ui?.setRequestErrorMessage
       )
+
+      return thunkAPI.rejectWithValue(isRequestCanceled ? { aborted: true } : error)
     })
 })
 export const fetchScheduledJobs = createAsyncThunk(
@@ -267,12 +271,14 @@ export const fetchScheduledJobs = createAsyncThunk(
         return (data || {}).schedules
       })
       .catch(error => {
-        largeResponseCatchHandler(
+        const isRequestCanceled = largeResponseCatchHandler(
           error,
           'Failed to fetch scheduled jobs',
           thunkAPI.dispatch,
           config?.ui?.setRequestErrorMessage
         )
+
+        return thunkAPI.rejectWithValue(isRequestCanceled ? { aborted: true } : error)
       })
   }
 )
@@ -344,7 +350,12 @@ const jobsSlice = createSlice({
       state.jobRuns = action.payload
       state.loading = false
     })
-    builder.addCase(fetchAllJobRuns.rejected, hideLoading)
+    builder.addCase(fetchAllJobRuns.rejected, (state, action) => {
+      if (action.payload?.aborted) return
+      state.error = action.payload
+      state.jobRuns = []
+      state.loading = false
+    })
     builder.addCase(fetchJob.pending, state => {
       state.jobLoadingCounter++
     })
@@ -400,6 +411,7 @@ const jobsSlice = createSlice({
       state.loading = false
     })
     builder.addCase(fetchJobs.rejected, (state, action) => {
+      if (action.payload?.aborted) return
       state.error = action.payload
       state.jobs = []
       state.loading = false
@@ -411,6 +423,7 @@ const jobsSlice = createSlice({
       state.loading = false
     })
     builder.addCase(fetchScheduledJobs.rejected, (state, action) => {
+      if (action.payload?.aborted) return
       state.error = action.payload
       state.scheduled = []
       state.loading = false

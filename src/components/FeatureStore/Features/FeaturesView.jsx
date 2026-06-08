@@ -26,6 +26,7 @@ import FeatureStorePageTabs from '../FeatureStorePageTabs/FeatureStorePageTabs'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
+import { Loader } from 'igz-controls/components'
 
 import { FEATURE_STORE_PAGE, FEATURES_TAB } from '../../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
@@ -81,7 +82,9 @@ const FeaturesView = React.forwardRef(
             <FeatureStoreFilters content={features} />
           </ActionBar>
         </div>
-        {featureStore.features.loading || featureStore.entities.loading ? null : features.length ===
+        {featureStore.features.loading || featureStore.entities.loading ? (
+          <Loader section secondary />
+        ) : features.length ===
           0 ? (
           <NoData
             message={getNoDataMessage(

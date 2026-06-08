@@ -72,7 +72,7 @@ const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject, isOpen
       closePopUp={handleCloseModal}
       isOpen={isOpen}
     >
-      {projectStore.loading && <Loader />}
+      {projectStore.loading && <Loader overlay />}
       <Form form={formRef.current} onSubmit={handleCreateProject}>
         {formState => {
           return (

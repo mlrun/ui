@@ -113,7 +113,7 @@ const FunctionsView = ({
               </ActionBar>
             </div>
             {functionsStore.loading ? (
-              <Loader />
+              <Loader overlay />
             ) : tableContent.length === 0 && isEmpty(selectedFunction) ? (
               <NoData
                 message={getNoDataMessage(
@@ -127,7 +127,7 @@ const FunctionsView = ({
               />
             ) : (
               <>
-                {functionsStore.funcLoading && <Loader />}
+                {functionsStore.funcLoading && <Loader overlay />}
                 <Table
                   actionsMenu={actionsMenu}
                   detailsFormInitialValues={detailsFormInitialValues}

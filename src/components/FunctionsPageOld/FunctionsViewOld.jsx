@@ -105,7 +105,7 @@ const FunctionsViewOld = ({
               </ActionBar>
             </div>
             {functionsStore.loading ? (
-              <Loader />
+              <Loader overlay />
             ) : functions.length === 0 ? (
               <NoData
                 message={getNoDataMessage(
@@ -119,7 +119,7 @@ const FunctionsViewOld = ({
               />
             ) : (
               <>
-                {functionsStore.funcLoading && <Loader />}
+                {functionsStore.funcLoading && <Loader overlay />}
                 <Table
                   actionsMenu={actionsMenu}
                   handleCancel={handleCancel}

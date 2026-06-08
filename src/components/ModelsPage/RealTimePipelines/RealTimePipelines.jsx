@@ -298,7 +298,6 @@ const RealTimePipelines = () => {
 
   return (
     <>
-      {isLoading && <Loader />}
       <div className="models" ref={pipelinesRef}>
         <div className="table-container">
           <div className={filterMenuClassNames}>
@@ -335,7 +334,9 @@ const RealTimePipelines = () => {
                 <span>All Serving Pipelines</span>
                 <Tip text="This data is relevant to the root function" />
               </div>
-              {isLoading ? null : pipelines.length === 0 ? (
+              {isLoading ? (
+                <Loader overlay />
+              ) : pipelines.length === 0 ? (
                 <NoData
                   message={getNoDataMessage(
                     filters,
@@ -369,7 +370,7 @@ const RealTimePipelines = () => {
                         )
                     )}
                   </Table>
-                  {isPipelineLoading && <Loader />}
+                  {isPipelineLoading && <Loader overlay />}
                   {!isEmpty(selectedPipelineWithChildren) && (
                     <Details
                       actionsMenu={actionsMenu}

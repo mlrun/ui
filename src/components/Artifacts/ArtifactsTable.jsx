@@ -104,7 +104,9 @@ let ArtifactsTable = ({
         </ActionBar>
       </div>
       {renderPageTabs && renderHistoryBackLink()}
-      {artifactsStore.loading ? null : tableContent.length === 0 && isEmpty(selectedArtifact) ? (
+      {artifactsStore.loading ? (
+        <Loader section secondary />
+      ) : tableContent.length === 0 && isEmpty(selectedArtifact) ? (
         <NoData
           message={getNoDataMessage(
             filters,
@@ -117,7 +119,7 @@ let ArtifactsTable = ({
         />
       ) : (
         <>
-          {storeArtifactTypeLoading && <Loader />}
+          {storeArtifactTypeLoading && <Loader overlay />}
           <Table
             actionsMenu={actionsMenu}
             applyDetailsChanges={applyDetailsChanges}

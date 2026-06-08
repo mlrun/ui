@@ -408,7 +408,7 @@ const JobsTable = React.forwardRef(
 
     return (
       <>
-        {jobsStore.loading && <Loader />}
+        {jobsStore.loading && <Loader overlay />}
         {paginatedJobs.length === 0 && !jobsStore.loading && filters && isEmpty(selectedJob) ? (
           <NoData
             message={getNoDataMessage(

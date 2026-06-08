@@ -118,6 +118,7 @@ const FeatureVectors = () => {
 
   const fetchData = useCallback(
     filters => {
+      abortControllerRef.current.abort(REQUEST_CANCELED)
       abortControllerRef.current = new AbortController()
 
       const config = {
@@ -143,6 +144,7 @@ const FeatureVectors = () => {
   )
 
   const fetchTags = useCallback(() => {
+    tagAbortControllerRef.current.abort(REQUEST_CANCELED)
     tagAbortControllerRef.current = new AbortController()
 
     return dispatch(

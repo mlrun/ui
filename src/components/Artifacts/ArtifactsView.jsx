@@ -103,7 +103,6 @@ let ArtifactsView = React.forwardRef(
             <Breadcrumbs />
           </div>
           <div className="content">
-            {artifactsStore.loading && <Loader />}
             <ArtifactsTable
               actionButtons={actionButtons}
               actionsMenu={actionsMenu}

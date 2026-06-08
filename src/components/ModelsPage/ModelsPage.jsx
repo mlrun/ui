@@ -39,7 +39,6 @@ const ModelsPage = () => {
           <Breadcrumbs />
         </div>
         <div className="content">
-          {artifactsStore.loading && <Loader />}
           <div className="table-container">
             <Outlet />
           </div>

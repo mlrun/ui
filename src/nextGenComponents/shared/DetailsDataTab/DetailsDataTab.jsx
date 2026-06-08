@@ -48,7 +48,7 @@ const DetailsDataTab = ({
   }, [data, filters, filterFn])
 
   if (isLoading) {
-    return <Loader />
+    return <Loader section />
   }
 
   return (

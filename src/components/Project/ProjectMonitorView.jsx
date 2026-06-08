@@ -67,7 +67,7 @@ const ProjectMonitorView = ({
         <Breadcrumbs />
       </div>
       {project.loading ? (
-        <Loader />
+        <Loader overlay />
       ) : project.error ? (
         <div className="project__error-container">
           {confirmData ? (

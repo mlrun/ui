@@ -93,6 +93,10 @@ let requestTimeouts = {}
 let largeResponsePopUpIsOpen = false
 
 const requestLargeDataOnFulfill = config => {
+  if (config?.ui?.controller && !config?.ui?.setRequestErrorMessage) {
+    config.signal = config.ui.controller.signal
+  }
+
   if (config?.ui?.setRequestErrorMessage) {
     const [signal, timeoutId] = getAbortSignal(
       config.ui?.controller,

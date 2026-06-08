@@ -128,12 +128,14 @@ export const fetchAlert = createAsyncThunk(
         return parseAlerts(data.activations || [])
       })
       .catch(error => {
-        largeResponseCatchHandler(
+        const isRequestCanceled = largeResponseCatchHandler(
           error,
           'Failed to fetch alerts',
           thunkAPI.dispatch,
           config?.ui?.setRequestErrorMessage
         )
+
+        return thunkAPI.rejectWithValue(isRequestCanceled ? { aborted: true } : error)
       })
   }
 )
@@ -156,12 +158,14 @@ export const fetchAlerts = createAsyncThunk(
         return { ...data, activations: parseAlerts(data.activations || []) }
       })
       .catch(error => {
-        largeResponseCatchHandler(
+        const isRequestCanceled = largeResponseCatchHandler(
           error,
           'Failed to fetch alerts',
           thunkAPI.dispatch,
           config?.ui?.setRequestErrorMessage
         )
+
+        return thunkAPI.rejectWithValue(isRequestCanceled ? { aborted: true } : error)
       })
   }
 )
@@ -194,6 +198,7 @@ const alertsSlice = createSlice({
         state.loading = false
       })
       .addCase(fetchAlert.rejected, (state, action) => {
+        if (action.payload?.aborted) return
         state.alerts = []
         state.error = action.payload
         state.loading = false
@@ -207,6 +212,7 @@ const alertsSlice = createSlice({
         state.alerts = action.payload
       })
       .addCase(fetchAlerts.rejected, (state, action) => {
+        if (action.payload?.aborted) return
         state.loading = false
         state.error = action.payload
       })

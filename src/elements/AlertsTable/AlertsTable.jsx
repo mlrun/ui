@@ -49,7 +49,7 @@ const AlertsTable = ({
   return (
     <>
       {alertsStore.loading ? (
-        <Loader />
+        <Loader overlay />
       ) : tableContent.length === 0 && isEmpty(selectedAlert) ? (
         <NoData
           message={getNoDataMessage(
@@ -63,7 +63,7 @@ const AlertsTable = ({
         />
       ) : (
         <>
-          {alertsStore.alertLoading && <Loader />}
+          {alertsStore.alertLoading && <Loader overlay />}
           <Table
             actionsMenu={[]}
             getCloseDetailsLink={() =>

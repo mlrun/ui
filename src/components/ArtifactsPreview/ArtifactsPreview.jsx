@@ -31,7 +31,7 @@ const ArtifactsPreview = ({ className = '', noData, preview, popupButton }) => {
 
   return !noData && preview.length === 0 ? (
     <div className="loader-container">
-      <Loader />
+      <Loader overlay />
     </div>
   ) : noData ? (
     <NoData />

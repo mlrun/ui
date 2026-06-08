@@ -22,7 +22,7 @@ import { Outlet } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import { ConfirmDialog, Loader } from 'igz-controls/components'
+import { ConfirmDialog } from 'igz-controls/components'
 
 import { TABLE_CONTAINER } from '../../constants'
 import { toggleYaml } from '../../reducers/appReducer'
@@ -65,9 +65,6 @@ const FeatureStore = () => {
             >
               <Outlet />
             </FeatureStoreContext.Provider>
-            {(featureStore.loading ||
-              featureStore.entities.loading ||
-              featureStore.features.loading) && <Loader />}
           </div>
         </div>
       </div>

@@ -76,7 +76,7 @@ const AddToFeatureVectorView = React.forwardRef(
               <AddToFeatureVectorFilters content={content} fetchTags={fetchTags} />
             </ActionBar>
           </div>
-          {(featureStore.loading || featureStore.features.loading) && <Loader />}
+          {(featureStore.loading || featureStore.features.loading) && <Loader overlay />}
           <div className="table-container">
             {featureStore.loading || featureStore.features.loading ? null : content.length === 0 ? (
               <NoData

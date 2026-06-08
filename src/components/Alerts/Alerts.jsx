@@ -161,7 +161,7 @@ const Alerts = () => {
               <AlertsFilters isAlertsPage isCrossProjects={isCrossProjects} />
             </ActionBar>
           </div>
-          {alertsStore.loading && <Loader />}
+          {alertsStore.loading && <Loader overlay />}
           {alertsStore.loading ? null : (
             <>
               <AlertsTable

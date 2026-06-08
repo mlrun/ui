@@ -124,6 +124,7 @@ const ModelEndpointsTable = React.forwardRef(
 
     const fetchData = useCallback(
       filters => {
+        ref.current.abort(REQUEST_CANCELED)
         ref.current = new AbortController()
 
         fetchEndpoints(filters)
@@ -276,8 +277,6 @@ const ModelEndpointsTable = React.forwardRef(
 
     return (
       <>
-        {(artifactsStore.modelEndpoints.modelEndpointLoading ||
-          artifactsStore.modelEndpoints.loading) && <Loader />}
         <div className="models" ref={modelEndpointsRef}>
           <div className="table-container">
             <div className="content__action-bar-wrapper">
@@ -297,7 +296,9 @@ const ModelEndpointsTable = React.forwardRef(
                 <ModelEndpointsFilters isDetails={isDetails} />
               </ActionBar>
             </div>
-            {artifactsStore.modelEndpoints.loading ? null : modelEndpoints.length === 0 ? (
+            {artifactsStore.modelEndpoints.loading ? (
+              <Loader section secondary />
+            ) : modelEndpoints.length === 0 ? (
               <NoData
                 message={getNoDataMessage(
                   filters,
@@ -310,6 +311,8 @@ const ModelEndpointsTable = React.forwardRef(
               />
             ) : (
               <>
+                {(artifactsStore.modelEndpoints.modelEndpointLoading ||
+                  artifactsStore.modelEndpoints.loading) && <Loader overlay />}
                 <Table
                   actionsMenu={actionsMenu}
                   pageData={pageData}

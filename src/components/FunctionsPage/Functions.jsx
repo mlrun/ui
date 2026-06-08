@@ -46,6 +46,7 @@ import {
   generateFunctionsPageData,
   pollDeletingFunctions
 } from './functions.util'
+import { isRequestAborted } from '../../utils/isRequestAborted'
 import {
   ANY_TIME_DATE_OPTION,
   datePickerPastOptions,
@@ -156,6 +157,7 @@ const Functions = ({ isAllVersions = false }) => {
   const fetchData = useCallback(
     filters => {
       terminateDeleteTasksPolling()
+      abortControllerRef.current.abort(REQUEST_CANCELED)
       abortControllerRef.current = new AbortController()
       const requestParams = {
         format: 'minimal',
@@ -237,8 +239,10 @@ const Functions = ({ isAllVersions = false }) => {
             resetFunctions([])
           }
         })
-        .catch(() => {
-          resetFunctions([])
+        .catch(error => {
+          if (!isRequestAborted(error?.message)) {
+            resetFunctions([])
+          }
         })
     },
     [

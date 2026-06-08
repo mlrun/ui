@@ -25,6 +25,7 @@ import {
 import featureStoreApi from '../api/featureStore-api'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { PANEL_DEFAULT_ACCESS_KEY } from '../constants'
+import { isRequestAborted } from '../utils/isRequestAborted'
 import { REDISNOSQL } from '../components/FeatureSetsPanel/FeatureSetsPanelTargetStore/featureSetsPanelTargetStore.util'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { hideLoading, showLoading } from './redux.util'
@@ -183,7 +184,7 @@ export const fetchFeatureSets = createAsyncThunk(
           config?.ui?.setRequestErrorMessage
         )
 
-        return thunkAPI.rejectWithValue(error.message)
+        return thunkAPI.rejectWithValue(error)
       })
   }
 )
@@ -455,6 +456,7 @@ const featureStoreSlice = createSlice({
     })
     builder.addCase(fetchFeatureSets.pending, showLoading)
     builder.addCase(fetchFeatureSets.rejected, (state, action) => {
+      if (isRequestAborted(action.payload?.message)) return
       state.loading = false
       state.error = action.payload
     })
@@ -488,6 +490,7 @@ const featureStoreSlice = createSlice({
     })
     builder.addCase(fetchFeatureVectors.pending, showLoading)
     builder.addCase(fetchFeatureVectors.rejected, (state, action) => {
+      if (isRequestAborted(action.payload?.message)) return
       state.loading = false
       state.error = action.payload
     })
@@ -505,6 +508,7 @@ const featureStoreSlice = createSlice({
       state.features.loading = true
     })
     builder.addCase(fetchFeatures.rejected, (state, action) => {
+      if (isRequestAborted(action.payload?.message)) return
       state.features.loading = false
       state.error = action.payload
     })

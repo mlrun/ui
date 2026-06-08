@@ -20,12 +20,13 @@ such restriction.
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { get } from 'lodash'
 
-import { defaultPendingHandler, defaultRejectedHandler } from './redux.util'
+import { defaultPendingHandler } from './redux.util'
 import { splitApplicationsContent } from '../utils/applications.utils'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
 
 import { DATES_FILTER } from '../constants'
+import { isRequestAborted } from '../utils/isRequestAborted'
 
 import monitoringApplicationsApi from '../api/monitoringApplications-api'
 import nuclioApi from '../api/nuclio'
@@ -55,7 +56,7 @@ const initialState = {
 
 export const fetchMEPWithDetections = createAsyncThunk(
   'fetchMEPWithDetections',
-  ({ project, filters }) => {
+  ({ project, filters, signal }) => {
     const params = {
       start: filters[DATES_FILTER].value[0].getTime()
     }
@@ -67,7 +68,7 @@ export const fetchMEPWithDetections = createAsyncThunk(
     const savedStartDate = filters[DATES_FILTER].value[0].getTime()
     const savedEndDate = (filters[DATES_FILTER].value[1] || new Date()).getTime()
 
-    return monitoringApplicationsApi.getMEPWithDetections(project, params).then(response => {
+    return monitoringApplicationsApi.getMEPWithDetections(project, params, signal).then(response => {
       return {
         values: response.data.values.map(([date, suspected, detected]) => [
           date,
@@ -82,7 +83,7 @@ export const fetchMEPWithDetections = createAsyncThunk(
 
 export const fetchMonitoringApplication = createAsyncThunk(
   'fetchMonitoringApplication',
-  ({ project, functionName, filters }) => {
+  ({ project, functionName, filters, signal }) => {
     const params = {
       start: filters[DATES_FILTER].value[0].getTime()
     }
@@ -92,14 +93,14 @@ export const fetchMonitoringApplication = createAsyncThunk(
     }
 
     return monitoringApplicationsApi
-      .getMonitoringApplication(project, functionName, params)
+      .getMonitoringApplication(project, functionName, params, signal)
       .then(response => response.data)
   }
 )
 
 export const fetchMonitoringApplications = createAsyncThunk(
   'fetchMonitoringApplications',
-  async ({ project, filters }, thunkAPI) => {
+  async ({ project, filters, signal }, thunkAPI) => {
     const params = {
       start: filters[DATES_FILTER].value[0].getTime()
     }
@@ -109,18 +110,20 @@ export const fetchMonitoringApplications = createAsyncThunk(
     }
 
     const [mlrunResult, nuclioResult] = await Promise.allSettled([
-      monitoringApplicationsApi.getMonitoringApplications(project, params),
-      nuclioApi.getFunctions(project)
+      monitoringApplicationsApi.getMonitoringApplications(project, params, signal),
+      nuclioApi.getFunctions(project, signal)
     ])
 
     if (mlrunResult.status !== 'fulfilled') {
-      largeResponseCatchHandler(
+      const isCanceled = largeResponseCatchHandler(
         mlrunResult.reason,
         'Failed to fetch monitoring applications',
         thunkAPI.dispatch
       )
 
-      return thunkAPI.rejectWithValue(getErrorMsg(mlrunResult.reason))
+      return thunkAPI.rejectWithValue(
+        isCanceled ? { aborted: true } : getErrorMsg(mlrunResult.reason)
+      )
     }
 
     const mlrunApiApps = get(mlrunResult, 'value.data')
@@ -143,9 +146,9 @@ export const fetchMonitoringApplications = createAsyncThunk(
 
 export const fetchMonitoringApplicationsSummary = createAsyncThunk(
   'fetchMonitoringApplicationsSummary',
-  ({ project }) => {
+  ({ project, signal }) => {
     return monitoringApplicationsApi
-      .getMonitoringApplicationsSummary(project)
+      .getMonitoringApplicationsSummary(project, signal)
       .then(response => response.data)
   }
 )
@@ -174,6 +177,8 @@ const monitoringApplicationsSlice = createSlice({
       state.endpointsWithDetections.error = null
     })
     builder.addCase(fetchMEPWithDetections.rejected, (state, action) => {
+      if (isRequestAborted(action.error?.message)) return
+
       state.endpointsWithDetections.loading = false
       state.endpointsWithDetections.error = action.error
     })
@@ -183,7 +188,12 @@ const monitoringApplicationsSlice = createSlice({
       state.loading = false
       state.error = null
     })
-    builder.addCase(fetchMonitoringApplication.rejected, defaultRejectedHandler)
+    builder.addCase(fetchMonitoringApplication.rejected, (state, action) => {
+      if (isRequestAborted(action.error?.message)) return
+
+      state.loading = false
+      state.error = action.error
+    })
     builder.addCase(fetchMonitoringApplications.pending, defaultPendingHandler)
     builder.addCase(fetchMonitoringApplications.fulfilled, (state, { payload }) => {
       state.monitoringApplications = payload
@@ -191,6 +201,8 @@ const monitoringApplicationsSlice = createSlice({
       state.error = null
     })
     builder.addCase(fetchMonitoringApplications.rejected, (state, action) => {
+      if (action.payload?.aborted) return
+
       state.loading = false
       state.error = action.payload
     })
@@ -203,6 +215,8 @@ const monitoringApplicationsSlice = createSlice({
       state.applicationsSummary.error = null
     })
     builder.addCase(fetchMonitoringApplicationsSummary.rejected, (state, action) => {
+      if (isRequestAborted(action.error?.message)) return
+
       state.applicationsSummary.loading = false
       state.applicationsSummary.error = action.error
     })

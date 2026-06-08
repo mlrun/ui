@@ -87,7 +87,7 @@ const ProjectOverview = () => {
       <div className="project-overview__header">
         <ProjectDetailsHeader projectData={project.data} projectName={params.projectName} />
       </div>
-      {project.loading && <Loader />}
+      {project.loading && <Loader overlay />}
       {isEmpty(project.data) && !project.loading ? (
         <NoData />
       ) : (
