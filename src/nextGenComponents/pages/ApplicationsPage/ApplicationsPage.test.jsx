@@ -23,6 +23,8 @@ import { render, screen } from '@testing-library/react'
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 
 import ApplicationsPage from './ApplicationsPage'
+import { DEFAULT_UPDATED_SORTING } from './applications.constants'
+import { DataTable } from 'igz-controls/nextGenComponents'
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
 
@@ -46,7 +48,7 @@ vi.mock('react-redux', () => ({
 }))
 
 vi.mock('igz-controls/nextGenComponents', () => ({
-  DataTable: props => (
+  DataTable: vi.fn(props => (
     <table data-testid="data-table">
       <tbody>
         {props.data.map((row, rowIndex) => (
@@ -62,7 +64,7 @@ vi.mock('igz-controls/nextGenComponents', () => ({
         ))}
       </tbody>
     </table>
-  ),
+  )),
   Loader: () => <div data-testid="loader" />,
   Tooltip: props => <>{props.children}</>,
   TooltipTrigger: props => <>{props.children}</>,
@@ -231,6 +233,13 @@ describe('ApplicationsPage', () => {
     it('renders action bar', () => {
       renderPage()
       expect(screen.getByTestId('action-bar')).toBeInTheDocument()
+    })
+
+    it('passes default sorting by "updated" descending to DataTable', () => {
+      renderPage()
+      const dataTableCalls = DataTable.mock.calls
+      const lastCallProps = dataTableCalls[dataTableCalls.length - 1][0]
+      expect(lastCallProps.initialSorting).toEqual(DEFAULT_UPDATED_SORTING)
     })
   })
 

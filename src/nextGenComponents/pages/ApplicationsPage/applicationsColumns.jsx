@@ -110,6 +110,7 @@ export const getApplicationsColumns = projectName => [
     id: 'updated',
     size: 15,
     header: 'Updated',
+    enableSorting: true,
     cell: ({ row }) => (
       <span className="text-igz-secondary text-body" data-testid="updated-cell">
         {formatDatetime(row.original.updated, '')}

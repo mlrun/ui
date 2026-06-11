@@ -107,3 +107,5 @@ export const APPLICATIONS_FILTERS_CONFIG = {
     formatFilterValue: formatStatusFilterValue
   }
 }
+
+export const DEFAULT_UPDATED_SORTING = [{ id: 'updated', desc: true }]
