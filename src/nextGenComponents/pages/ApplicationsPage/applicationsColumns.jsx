@@ -29,7 +29,7 @@ import {
 } from './ApplicationDetails/applicationDetails.constants'
 import { UNKNOWN_STATE_LABEL, UNKNOWN_STATE_CLASS } from './applications.constants'
 
-export const getApplicationsColumns = projectName => [
+export const getApplicationsColumns = (projectName, searchParams = '') => [
   {
     accessorKey: 'name',
     header: 'Name',
@@ -45,7 +45,7 @@ export const getApplicationsColumns = projectName => [
       return (
         <div className="flex items-center gap-2">
           <Link
-            to={`/projects/${projectName}/${APPLICATIONS_PAGE_PATH}/${row.original.name}/${identifier}/${DEFAULT_APPLICATION_DETAILS_TAB}`}
+            to={`/projects/${projectName}/${APPLICATIONS_PAGE_PATH}/${row.original.name}/${identifier}/${DEFAULT_APPLICATION_DETAILS_TAB}${searchParams}`}
             className="text-igz-primary text-body font-medium hover:underline"
             data-testid="application-name-link"
           >
@@ -96,7 +96,7 @@ export const getApplicationsColumns = projectName => [
 
       return (
         <Link
-          to={`/projects/${projectName}/${APPLICATIONS_PAGE_PATH}/${row.original.name}/${identifier}/${APPLICATION_DETAILS_TAB.MONITORING_ENDPOINTS}`}
+          to={`/projects/${projectName}/${APPLICATIONS_PAGE_PATH}/${row.original.name}/${identifier}/${APPLICATION_DETAILS_TAB.MONITORING_ENDPOINTS}${searchParams}`}
           className="!text-igz-link text-body hover:underline"
           data-testid="endpoints-count"
         >

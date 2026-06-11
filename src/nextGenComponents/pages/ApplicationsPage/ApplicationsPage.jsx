@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { HelpCircle, FileCode2 } from 'lucide-react'
@@ -65,6 +65,7 @@ import {
 const ApplicationsPage = () => {
   const params = useParams()
   const navigate = useNavigate()
+  const { search } = useLocation()
   const dispatch = useDispatch()
   const funcLoading = useSelector(
     store => store.functionsStore.funcLoading || store.nuclioStore.nuclioFunctionLoading
@@ -112,21 +113,21 @@ const ApplicationsPage = () => {
 
   const handleCloseDetails = useCallback(() => {
     setSelectedApplication({})
-    navigate(`/projects/${params.projectName}/${APPLICATIONS_PAGE_PATH}${window.location.search}`, {
+    navigate(`/projects/${params.projectName}/${APPLICATIONS_PAGE_PATH}${search}`, {
       replace: true
     })
-  }, [navigate, params.projectName])
+  }, [navigate, params.projectName, search])
 
   const handleTabChange = useCallback(
     tabId => {
       if (params.name && params.id) {
         navigate(
-          `/projects/${params.projectName}/${APPLICATIONS_PAGE_PATH}/${params.name}/${params.id}/${tabId}${window.location.search}`,
+          `/projects/${params.projectName}/${APPLICATIONS_PAGE_PATH}/${params.name}/${params.id}/${tabId}${search}`,
           { replace: true }
         )
       }
     },
-    [navigate, params.projectName, params.name, params.id]
+    [navigate, params.projectName, params.name, params.id, search]
   )
 
   const selectionArgs = useMemo(
@@ -187,7 +188,10 @@ const ApplicationsPage = () => {
     }
   }, [selectedApplication])
 
-  const columns = useMemo(() => getApplicationsColumns(params.projectName), [params.projectName])
+  const columns = useMemo(
+    () => getApplicationsColumns(params.projectName, search),
+    [params.projectName, search]
+  )
 
   return (
     <div
