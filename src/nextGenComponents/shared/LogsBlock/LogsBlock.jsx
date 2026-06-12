@@ -38,7 +38,11 @@ const LogsBlock = ({ logs, isLoading = false }) => {
 
   return (
     <div
-      className={cn('rounded-md h-full overflow-y-auto px-2 pt-2 pb-5', TERMINAL_BG)}
+      className={cn(
+        'rounded-md h-full overflow-y-auto px-2 pt-2 pb-5',
+        TERMINAL_BG,
+        '[scrollbar-color:rgba(255,255,255,0.2)_transparent]'
+      )}
       data-testid="logs-block"
     >
       {hasStructuredLogs ? (

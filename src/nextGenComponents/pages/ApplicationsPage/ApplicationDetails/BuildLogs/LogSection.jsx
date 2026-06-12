@@ -42,7 +42,7 @@ const LogSection = ({ title, logs, isLoading, isCopied, onCopy }) => (
           <Loader
             mode="inline"
             size="sm"
-            className="absolute top-2 right-2 border-white/20 border-t-white/70"
+            className="absolute top-2 right-4 border-white/20 border-t-white/70"
             aria-label="Loading logs"
             data-testid={`logs-loading-${title.toLowerCase()}`}
           />
@@ -51,7 +51,7 @@ const LogSection = ({ title, logs, isLoading, isCopied, onCopy }) => (
         <button
           type="button"
           onClick={onCopy}
-          className="absolute bottom-3 right-2 flex items-center justify-center w-7 h-7 rounded text-white transition-colors bg-white/[0.12]"
+          className="absolute bottom-3 right-4 flex items-center justify-center w-7 h-7 rounded text-white transition-colors bg-white/[0.12]"
           aria-label={`Copy ${title} logs`}
           data-testid={`copy-logs-${title.toLowerCase()}`}
         >
