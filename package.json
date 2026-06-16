@@ -5,8 +5,8 @@
   "homepage": "/mlrun",
   "dependencies": {
     "@dagrejs/dagre": "^1.1.5",
-    "@module-federation/runtime": "^0.23.0",
-    "@module-federation/vite": "^1.2.6",
+    "@module-federation/runtime": "0.23.0",
+    "@module-federation/vite": "1.11.0",
     "@monaco-editor/react": "^4.7.0",
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.16.0",
@@ -62,7 +62,7 @@
   "overrides": {
     "uuid": "^14.0.0",
     "cucumber-html-reporter": {
-      "uuid": "^11.1.1" 
+      "uuid": "^11.1.1"
     },
     "dompurify": "^3.4.0",
     "jsonpath": "^1.2.0",
