@@ -109,3 +109,4 @@ export const API_GATEWAYS_NO_DATA_MESSAGE = 'No API gateways found for this appl
 export const FILTER_ALL_OPTION = { value: 'all', label: 'All' }
 export const FILTER_ALL_OPTION_VALUE = FILTER_ALL_OPTION.value
 export const DEFAULT_NAME_SORTING = [{ id: 'name', desc: false }]
+export const DEFAULT_CREATED_AT_SORTING = [{ id: 'createdAt', desc: true }]

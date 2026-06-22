@@ -21,12 +21,7 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import Breadcrumbs from './Breadcrumbs'
-import {
-  DETAILS_OVERVIEW_TAB,
-  FEATURE_STORE_PAGE_PATH,
-  JOBS_PAGE_PATH,
-  MONITORING_APP_PAGE
-} from '../../constants'
+import { FEATURE_STORE_PAGE_PATH, JOBS_PAGE_PATH, MONITORING_APP_PAGE } from '../../constants'
 
 const mockUseParams = vi.fn()
 const mockUseLocation = vi.fn()
@@ -42,7 +37,7 @@ vi.mock('react-redux', () => ({
 }))
 
 vi.mock('./BreadcrumbsStep/BreadcrumbsStep', () => ({
-  default: ({ urlPart }) => <li data-testid="breadcrumb-step">{urlPart}</li>
+  default: ({ pathItem }) => <li data-testid="breadcrumb-step">{pathItem?.label}</li>
 }))
 
 vi.mock('./breadcrumbs.util', () => ({
@@ -50,8 +45,7 @@ vi.mock('./breadcrumbs.util', () => ({
     { id: FEATURE_STORE_PAGE_PATH, label: 'Feature Store' },
     { id: JOBS_PAGE_PATH, label: 'Jobs' },
     { id: MONITORING_APP_PAGE, label: 'Model Monitoring' }
-  ]),
-  generateTabsList: vi.fn(() => [{ id: DETAILS_OVERVIEW_TAB, label: 'Overview' }])
+  ])
 }))
 
 vi.mock('../../utils/projects', () => ({
@@ -98,7 +92,7 @@ describe('Breadcrumbs Component', () => {
     const steps = screen.getAllByTestId('breadcrumb-step')
 
     expect(steps).toHaveLength(3)
-    expect(steps[0]).toHaveTextContent('projects')
+    expect(steps[0]).toHaveTextContent('Projects')
     expect(steps[1]).toHaveTextContent(projectName)
     expect(steps[2]).toHaveTextContent('Feature Store')
   })
@@ -106,14 +100,14 @@ describe('Breadcrumbs Component', () => {
   it('generates correct steps when not inside a project (Cross Project Context)', () => {
     mockUseParams.mockReturnValue({})
 
-    mockUseLocation.mockReturnValue({ pathname: '/root/projects/settings' })
+    mockUseLocation.mockReturnValue({ pathname: `/projects/project-name/${JOBS_PAGE_PATH}` })
 
     render(<Breadcrumbs />)
 
     const steps = screen.getAllByTestId('breadcrumb-step')
 
     expect(steps).toHaveLength(2)
-    expect(steps[1]).toHaveTextContent('settings')
+    expect(steps[1]).toHaveTextContent('Jobs')
   })
 
   it('handles Monitoring Page specific logic', () => {

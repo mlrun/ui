@@ -1,5 +1,9 @@
 .monitor-workflows {
+  flex: 0;
+  margin-right: 20px;
+  margin-bottom: 15px;
+
   &__subtitle {
-    margin: 10px 0 0;
+    white-space: nowrap;
   }
 }

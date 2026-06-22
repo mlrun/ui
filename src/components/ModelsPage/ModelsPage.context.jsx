@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useContext } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
@@ -31,6 +31,7 @@ export const ModelsPageProvider = ({ children }) => {
   const dispatch = useDispatch()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const params = useParams()
+  const [selectedItemName, setSelectedItemName] = useState('')
 
   const toggleConvertedYaml = useCallback(
     data => {
@@ -51,7 +52,9 @@ export const ModelsPageProvider = ({ children }) => {
       value={{
         handleMonitoring,
         toggleConvertedYaml,
-        frontendSpec
+        frontendSpec,
+        selectedItemName,
+        setSelectedItemName
       }}
     >
       {children}

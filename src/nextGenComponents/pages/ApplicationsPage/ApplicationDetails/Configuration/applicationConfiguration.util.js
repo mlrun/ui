@@ -96,6 +96,12 @@ const getSecurityContext = (mlrunSpec, nuclioSpec) =>
 const getLoggerSinks = (application, mlrunSpec, nuclioSpec) =>
   application.config?.['spec.loggerSinks'] ?? mlrunSpec.loggerSinks ?? nuclioSpec.loggerSinks ?? []
 
+const getApplicationBuildConfig = application => {
+  const mlrunSpec = getMlrunSpec(application)
+
+  return application.build ?? mlrunSpec.build ?? {}
+}
+
 const getScaleToZeroWindow = spec => {
   const scaleResources = spec.scaleToZero?.scaleResources
   if (!scaleResources?.length) return null
@@ -198,8 +204,8 @@ export const getResourcesItems = application => {
 }
 
 export const getBuildItems = application => {
-  const mlrunSpec = getMlrunSpec(application)
-  const buildCommands = application.build?.commands ?? mlrunSpec.build?.commands
+  const buildConfig = getApplicationBuildConfig(application)
+  const buildCommands = buildConfig.commands
 
   return [
     {
@@ -208,7 +214,7 @@ export const getBuildItems = application => {
     },
     {
       label: BUILD_FIELD.BASE_IMAGE,
-      value: application.build?.base_image ?? mlrunSpec.build?.base_image ?? null
+      value: buildConfig.base_image ?? null
     },
     {
       label: BUILD_FIELD.BUILD_COMMANDS,
@@ -217,7 +223,7 @@ export const getBuildItems = application => {
     },
     {
       label: BUILD_FIELD.PULL_AT_RUNTIME,
-      value: mlrunSpec.load_source_on_run ? 'Yes' : 'No'
+      value: buildConfig.load_source_on_run ? 'Yes' : 'No'
     }
   ]
 }

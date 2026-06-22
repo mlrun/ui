@@ -17,8 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { describe, it, expect } from 'vitest'
-
 import {
   getBasicSettingsItems,
   getResourcesItems,
@@ -42,7 +40,8 @@ const MOCK_APPLICATION = {
   image: 'mlrun/mlrun',
   build: {
     base_image: 'python:3.9',
-    commands: ['pip install pandas', 'pip install numpy']
+    commands: ['pip install pandas', 'pip install numpy'],
+    load_source_on_run: true
   },
   volumes: [{ name: 'v3io', flexVolume: { driver: 'v3io/fuse' } }],
   volume_mounts: [{ name: 'v3io', mountPath: '/v3io', readOnly: false }],
@@ -88,7 +87,8 @@ const MOCK_APPLICATION = {
     build: {
       functionSourceCode: 'base64...',
       noBaseImagesPull: false,
-      codeEntryType: 'sourceCode'
+      codeEntryType: 'sourceCode',
+      load_source_on_run: true
     }
   },
   nuclioFunc: {
@@ -397,6 +397,7 @@ describe('applicationConfiguration.util', () => {
         label: 'Build commands',
         value: 'pip install pandas\npip install numpy'
       })
+      expect(items[3]).toEqual({ label: 'Pull at runtime', value: 'Yes' })
     })
 
     it('prefers application_image over image for Image name', () => {
@@ -423,7 +424,52 @@ describe('applicationConfiguration.util', () => {
       expect(items[3].value).toBe('No')
     })
 
-    it('returns "Yes" when load_source_on_run is true', () => {
+    it('returns "Yes" when spec.build.load_source_on_run is true', () => {
+      const app = {
+        ...MINIMAL_APPLICATION,
+        spec: {
+          build: {
+            load_source_on_run: true
+          }
+        }
+      }
+      const items = getBuildItems(app)
+      expect(items[3].value).toBe('Yes')
+    })
+
+    it('returns "Yes" for parsed function data where spec.build is mapped to application.build', () => {
+      const app = {
+        ...MINIMAL_APPLICATION,
+        build: {
+          base_image: 'python',
+          load_source_on_run: true,
+          source: 'git://github.com/iguazio/pipelines-tests-naipi.git#main',
+          requirements: ['flask']
+        },
+        spec: {
+          build: {
+            base_image: 'python',
+            load_source_on_run: true,
+            source: 'git://github.com/iguazio/pipelines-tests-naipi.git#main',
+            requirements: ['flask']
+          }
+        },
+        ui: {
+          originalContent: {
+            spec: {
+              build: {
+                load_source_on_run: true
+              }
+            }
+          }
+        }
+      }
+      const items = getBuildItems(app)
+      expect(items[1].value).toBe('python')
+      expect(items[3].value).toBe('Yes')
+    })
+
+    it('does not read load_source_on_run from spec root level', () => {
       const app = {
         ...MINIMAL_APPLICATION,
         spec: {
@@ -431,7 +477,7 @@ describe('applicationConfiguration.util', () => {
         }
       }
       const items = getBuildItems(app)
-      expect(items[3].value).toBe('Yes')
+      expect(items[3].value).toBe('No')
     })
   })
 

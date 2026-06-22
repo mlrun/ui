@@ -49,8 +49,8 @@ let ArtifactsView = React.forwardRef(
       page,
       pageData,
       paginationConfigArtifactsRef,
+      params,
       requestErrorMessage = '',
-      renderPageTabs = null,
       selectedArtifact,
       setSearchArtifactsParams,
       setSelectedArtifact,
@@ -85,7 +85,6 @@ let ArtifactsView = React.forwardRef(
           pageData={pageData}
           paginationConfigArtifactsRef={paginationConfigArtifactsRef}
           requestErrorMessage={requestErrorMessage}
-          renderPageTabs={renderPageTabs}
           selectedArtifact={selectedArtifact}
           setSearchArtifactsParams={setSearchArtifactsParams}
           setSelectedArtifact={setSelectedArtifact}
@@ -100,7 +99,7 @@ let ArtifactsView = React.forwardRef(
       <>
         <div className="content-wrapper" ref={artifactsRef}>
           <div className="content__header">
-            <Breadcrumbs />
+            <Breadcrumbs itemName={params.artifactName} />
           </div>
           <div className="content">
             {artifactsStore.loading && <Loader />}
@@ -166,8 +165,8 @@ ArtifactsView.propTypes = {
   page: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
   paginationConfigArtifactsRef: PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string,
-  renderPageTabs: PropTypes.func,
   selectedArtifact: PropTypes.object.isRequired,
   setSearchArtifactsParams: PropTypes.func.isRequired,
   setSelectedArtifact: PropTypes.func.isRequired,

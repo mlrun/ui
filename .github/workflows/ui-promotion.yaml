@@ -79,13 +79,13 @@ jobs:
       - name: Docker login (Source Artifactory)
         uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # 3.6.0
         with:
-          registry: ${{ secrets.ARTIFACTORY_URL }}
-          username: ${{ secrets.ARTIFACTORY_USERNAME }}
-          password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          registry: ${{ secrets.PRIVATE_ARTIFACTORY_DOCKER_URL }}
+          username: ${{ secrets.PRIVATE_ARTIFACTORY_USERNAME }}
+          password: ${{ secrets.PRIVATE_ARTIFACTORY_PASSWORD }}
 
       - name: Pull, retag and push UI Docker image
         run: |
-          SOURCE_IMAGE="${{ secrets.ARTIFACTORY_URL }}/${{ github.event.inputs.source_artifactory_docker_repo }}/mlrun/mlrun-ui:${{ github.event.inputs.version }}"
+          SOURCE_IMAGE="${{ secrets.PRIVATE_ARTIFACTORY_DOCKER_URL }}/${{ github.event.inputs.source_artifactory_docker_repo }}/mlrun/mlrun-ui:${{ github.event.inputs.version }}"
           
           echo "Pulling image: $SOURCE_IMAGE"
           docker pull "$SOURCE_IMAGE"

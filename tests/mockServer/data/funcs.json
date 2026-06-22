@@ -41,6 +41,33 @@
       }
     },
     {
+      "kind": "application",
+      "metadata": {
+        "project": "default",
+        "tag": "latest",
+        "name": "test-pull-at-runtime-app",
+        "hash": "3333333333333333333333333333333333333333",
+        "updated": "2026-06-16T09:00:00.000000+00:00"
+      },
+      "spec": {
+        "image": "mlrun/mlrun",
+        "description": "ML-12717 manual test: pull_at_runtime with archive source; Pull at runtime should show Yes.",
+        "internal_application_port": 8080,
+        "command": "",
+        "source": "https://example.com/archive.zip",
+        "build": {
+          "load_source_on_run": true,
+          "base_image": "python:3.9"
+        }
+      },
+      "verbose": false,
+      "status": {
+        "state": "ready",
+        "application_image": "iguazio/test-pull-at-runtime:0.1.0",
+        "sidecar_name": "test-pull-at-runtime-sidecar"
+      }
+    },
+    {
       "metadata": {
         "tag": "latest",
         "name": "function-with-llm",

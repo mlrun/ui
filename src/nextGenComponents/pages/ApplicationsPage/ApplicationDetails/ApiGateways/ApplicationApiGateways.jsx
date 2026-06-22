@@ -30,7 +30,7 @@ import { filterApiGatewaysBySearchFields } from './applicationApiGateways.util'
 import {
   API_GATEWAYS_FILTER_CONFIG,
   API_GATEWAYS_NO_DATA_MESSAGE,
-  DEFAULT_NAME_SORTING,
+  DEFAULT_CREATED_AT_SORTING,
   FILTER_ALL_OPTION,
   VIEW_YAML_LABEL
 } from '../applicationDetails.constants'
@@ -85,7 +85,7 @@ const ApplicationApiGateways = ({ application }) => {
         renderFilters={renderFilters}
         rowActions={rowActions}
         showRefreshButton={false}
-        initialSorting={DEFAULT_NAME_SORTING}
+        initialSorting={DEFAULT_CREATED_AT_SORTING}
         noDataMessage={API_GATEWAYS_NO_DATA_MESSAGE}
       />
       <YamlModal open={!!yamlGateway} data={yamlGateway} onClose={handleCloseYaml} />

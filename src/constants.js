@@ -60,6 +60,11 @@ export const TERMINATING_STATE = 'terminating'
 export const UNHEALTHY_STATE = 'unhealthy'
 export const UNKNOWN_STATE = 'unknown'
 
+/*=========== SIDEBAR =============*/
+
+export const PLACEHOLDER_SEARCH = 'Search project...'
+export const NO_PROJECTS_TEXT = 'No Projects Found'
+
 /*=========== PAGINATION =============*/
 
 export const BE_PAGE = 'bePage'
@@ -77,6 +82,7 @@ export const ITEMS_COUNT_END = 'itemsCountEnd'
 export const PROJECTS_PAGE = 'PROJECTS'
 export const PROJECTS_PAGE_PATH = 'projects'
 export const PROJECTS_SETTINGS_PAGE = 'SETTINGS'
+export const PROJECTS_SETTINGS_PAGE_PATH = 'settings'
 export const PROJECTS_SETTINGS_GENERAL_TAB = 'general'
 export const PROJECTS_SETTINGS_MEMBERS_TAB = 'members'
 export const PROJECTS_SETTINGS_SECRETS_TAB = 'secrets'
@@ -155,6 +161,10 @@ export const PROJECT_MONITOR = 'monitor'
 export const PROJECT_QUICK_ACTIONS_PAGE = 'quick-actions'
 
 export const ALL_VERSIONS_PATH = 'all-versions'
+
+export const NUCLIO_PAGE = 'nuclio'
+export const REAL_TIME_FUNCTIONS_PAGE = 'real-time-functions'
+export const API_GATEWAYS_PAGE = 'api-gateways'
 
 /*=========== CONSUMER_GROUPS =============*/
 
@@ -553,3 +563,8 @@ export const RESULT_TYPE = 'result'
 
 export const COUNTERS_GENERAL_MESSAGE =
   'Counters use a caching mechanism, and are not auto-refreshed.'
+
+/*=========== BREADCRUMBS TYPES =============*/
+export const BREADCRUMBS_STEP_PROJECT_TYPE = 'project'
+export const BREADCRUMBS_STEP_SCREEN_TYPE = 'screen'
+export const BREADCRUMBS_STEP_ITEM_TYPE = 'item'

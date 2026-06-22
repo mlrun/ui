@@ -20,20 +20,17 @@ such restriction.
 import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, Outlet, useNavigate, useLocation } from 'react-router-dom'
-import classNames from 'classnames'
 import { isEmpty } from 'lodash'
 import { createPortal } from 'react-dom'
 import ModalContainer from 'react-modal-promise'
 
-import Navbar from '../Navbar/Navbar'
-import HostLeaveGuard from '../../common/HostLeaveGuard/HostLeaveGuard'
-import TokenExpiryBanner from '../../common/TokenExpiryBanner/TokenExpiryBanner'
+import Sidebar from '../../nextGenComponents/shared/Sidebar'
+import { SidebarInset, SidebarProvider } from 'igz-controls/nextGenComponents'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import { Loader } from 'igz-controls/components'
 
 import { getTransitionEndEventName } from 'igz-controls/utils/common.util'
 import { fetchFrontendSpec, toggleYaml } from '../../reducers/appReducer'
-import { NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
 import { isProjectValid } from '../../utils/link-helper.util'
 import { generateProjectsList } from '../../utils/projects'
 import { fetchProjects } from '../../reducers/projectReducer'
@@ -41,7 +38,6 @@ import { fetchProjects } from '../../reducers/projectReducer'
 import './Page.scss'
 
 const Page = () => {
-  const [isNavbarPinned, setIsNavbarPinned] = useState(false)
   const [isProjectsFetched, setProjectFetched] = useState(false)
   const { projectName } = useParams()
   const mainRef = useRef()
@@ -49,14 +45,6 @@ const Page = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const transitionEndEventName = useMemo(() => getTransitionEndEventName(), [])
-  const pinnedClasses = classNames(!(isNavbarPinned && projectName) && 'unpinned')
-  const mainStyles = {
-    marginLeft: !projectName
-      ? 0
-      : isNavbarPinned
-        ? `${NAVBAR_WIDTH_OPENED}px`
-        : `${NAVBAR_WIDTH_CLOSED}px`
-  }
   const { frontendSpec, frontendSpecPopupIsOpened, convertedYaml } = useSelector(
     store => store.appStore
   )
@@ -90,7 +78,7 @@ const Page = () => {
         window.dispatchEvent(new CustomEvent('mainResize'))
       })
     }
-  }, [isNavbarPinned, transitionEndEventName])
+  }, [transitionEndEventName])
 
   useEffect(() => {
     if (isEmpty(frontendSpec)) {
@@ -110,29 +98,25 @@ const Page = () => {
   }, [dispatch, frontendSpec, frontendSpecPopupIsOpened])
 
   return (
-    <>
-      <HostLeaveGuard />
-      {projectName && <Navbar projectName={projectName} setIsNavbarPinned={setIsNavbarPinned} />}
-      <main id="main" className={pinnedClasses} ref={mainRef} style={mainStyles}>
-        <TokenExpiryBanner />
-        <div id="main-wrapper">
-          {isProjectsFetched ? (
-            <Suspense key={location.pathname.split('/')[3]} fallback={<Loader />}>
-              <Outlet />
-            </Suspense>
-          ) : (
-            <Loader />
+    <SidebarProvider defaultOpen={false}>
+      {projectName && <Sidebar projectName={projectName} />}
+      <SidebarInset>
+        <>
+          <Suspense>
+            <main id="main" ref={mainRef}>
+              <div id="main-wrapper">{isProjectsFetched ? <Outlet /> : <Loader />}</div>
+            </main>
+          </Suspense>
+          {createPortal(<ModalContainer />, document.getElementById('overlay_container'))}
+          {convertedYaml.length > 0 && (
+            <YamlModal
+              convertedYaml={convertedYaml}
+              toggleConvertToYaml={() => dispatch(toggleYaml())}
+            />
           )}
-        </div>
-      </main>
-      {createPortal(<ModalContainer />, document.getElementById('overlay_container'))}
-      {convertedYaml.length > 0 && (
-        <YamlModal
-          convertedYaml={convertedYaml}
-          toggleConvertToYaml={() => dispatch(toggleYaml())}
-        />
-      )}
-    </>
+        </>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }
 

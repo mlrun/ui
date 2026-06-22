@@ -64,7 +64,7 @@ const ProjectMonitorView = ({
   return (
     <div className="content-wrapper">
       <div className="content__header">
-        <Breadcrumbs />
+        <Breadcrumbs itemName={params.jobName || params.workflowProjectName} />
       </div>
       {project.loading ? (
         <Loader />
