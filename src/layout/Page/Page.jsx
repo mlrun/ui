@@ -102,7 +102,7 @@ const Page = () => {
       {projectName && <Sidebar projectName={projectName} />}
       <SidebarInset>
         <>
-          <Suspense>
+          <Suspense fallback={<Loader />}>
             <main id="main" ref={mainRef}>
               <div id="main-wrapper">{isProjectsFetched ? <Outlet /> : <Loader />}</div>
             </main>
