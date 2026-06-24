@@ -31,6 +31,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  EllipsisTooltip,
   Input,
   Tooltip,
   TooltipContent,
@@ -140,7 +141,9 @@ const ProjectDropdown = ({ projectName }) => {
                         to={project.link}
                         className={itemClassName}
                       >
-                        <span>{project.label}</span>
+                        <EllipsisTooltip className="min-w-0 flex-1 whitespace-nowrap">
+                          {project.label}
+                        </EllipsisTooltip>
                         {project.isCurrent && (
                           <Check className="h-4 w-4 shrink-0 text-green-600" aria-hidden="true" />
                         )}
