@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { NUCLIO_OWNER_LABEL } from '../applicationDetails.constants'
+import { buildNuclioOwner } from '../../../../../utils/nuclioEnrichment.util'
 
 export {
   buildGatewayEndpoint,
@@ -37,10 +37,7 @@ export const filterApiGatewaysBySearchFields = (gateways, filters) => {
       return false
     }
 
-    if (
-      ownerFilter &&
-      !gateway.metadata?.labels?.[NUCLIO_OWNER_LABEL]?.toLowerCase().includes(ownerFilter)
-    ) {
+    if (ownerFilter && !buildNuclioOwner(gateway.metadata?.labels).toLowerCase().includes(ownerFilter)) {
       return false
     }
 
