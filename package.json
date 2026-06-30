@@ -30,7 +30,6 @@
     "final-form-arrays": "^3.1.0",
     "fs-extra": "^10.0.0",
     "identity-obj-proxy": "^3.0.0",
-    "iguazio.dashboard-react-controls": "3.2.25",
     "is-wsl": "^1.1.0",
     "js-base64": "^2.6.4",
     "js-yaml": "^4.1.0",
@@ -100,9 +99,7 @@
     "report": "node tests/report.js",
     "test:regression": "npm run test:ui && npm run report",
     "start:regression": "concurrently \"npm:mock-server\" \"npm:start\" \"npm:test:regression\"",
-    "ui-steps": "cross-env BABEL_ENV=test; cross-env NODE_ENV=test; npx -p @babel/core -p @babel/node babel-node --presets @babel/preset-env scripts/collectUITestsSteps.js",
-    "nli": "npm link iguazio.dashboard-react-controls",
-    "nui": "npm unlink iguazio.dashboard-react-controls"
+    "ui-steps": "cross-env BABEL_ENV=test; cross-env NODE_ENV=test; npx -p @babel/core -p @babel/node babel-node --presets @babel/preset-env scripts/collectUITestsSteps.js"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",

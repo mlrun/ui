@@ -1,0 +1,41 @@
+@use '../../scss/colors';
+@use '../../scss/mixins';
+
+.form-field-radio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: colors.$primary;
+  margin-right: 15px;
+
+  &_readonly {
+    @include mixins.radioCheckReadonly;
+  }
+
+  input[type='radio'] {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+
+    @include mixins.radioCheckField;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      transform: scale(0);
+      transition: transform 0.2s ease-in-out;
+      box-shadow: inset 1em 1em currentColor;
+    }
+
+    &:checked {
+      &::before {
+        transform: scale(1);
+      }
+    }
+  }
+}

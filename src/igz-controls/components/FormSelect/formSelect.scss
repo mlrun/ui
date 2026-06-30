@@ -1,0 +1,98 @@
+@use '../../scss/mixins';
+@use '../../scss/colors';
+@use '../../scss/shadows';
+@use '../../scss/borders';
+
+.select-tooltip {
+  width: 100%;
+}
+
+.form-field-select {
+  width: 100%;
+
+  .form-field {
+    @include mixins.inputSelectField;
+
+    &__wrapper {
+      cursor: pointer;
+
+      &-active {
+        background: colors.$alabaster;
+      }
+
+      &-disabled {
+        cursor: not-allowed;
+
+        .form-field__caret {
+          path {
+            fill: colors.$spunPearl;
+          }
+        }
+      }
+    }
+
+    &__select {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 0 20px 0 16px;
+
+      &-value {
+        display: block;
+        font-size: 15px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      &-placeholder {
+        color: colors.$spunPearl;
+      }
+
+      &-sub_label {
+        display: block;
+        margin-left: 10px;
+        overflow: hidden;
+        color: colors.$topaz;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  &__options-list {
+    .pop-up-dialog {
+      width: 100%;
+      padding: 0;
+      border-radius: 0;
+    }
+
+    .options-list {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+      max-height: 250px;
+      overflow-y: auto;
+
+      &__body {
+        width: 100%;
+        color: colors.$mulledWineTwo;
+        background-color: colors.$white;
+        border: borders.$primaryBorder;
+        border-radius: 4px;
+        box-shadow: shadows.$filterShadow;
+      }
+
+      &__search {
+        width: 100%;
+
+        input {
+          width: 100%;
+          padding: 10px;
+          border: none;
+          border-bottom: borders.$primaryBorder;
+        }
+      }
+    }
+  }
+}

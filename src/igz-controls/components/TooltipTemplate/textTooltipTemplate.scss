@@ -1,0 +1,21 @@
+@use '../../scss/colors';
+@use '../../scss/shadows';
+
+.tooltip {
+  &-template {
+    padding: 6px 8px;
+    word-break: break-word;
+  }
+
+  &__text {
+    color: colors.$white;
+    background-color: colors.$primary;
+    border-radius: 4px;
+  }
+
+  &__warning {
+    color: colors.$amaranth;
+    background-color: colors.$white;
+    box-shadow: shadows.$tooltipShadow;
+  }
+}

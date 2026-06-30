@@ -1,0 +1,57 @@
+@use '../../scss/colors';
+
+.round-icon-cp {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 0 0.2rem;
+
+  &__circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 4px;
+
+    & > * {
+      position: relative;
+      z-index: 2;
+      display: inline-flex;
+      margin: 0 !important;
+    }
+
+    &::before {
+      position: absolute;
+      right: 0;
+      left: 0;
+      z-index: 1;
+      width: inherit;
+      height: inherit;
+      background-color: colors.$mulledWineThree;
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      content: '';
+    }
+
+    &:hover,
+    &-active {
+      &::before {
+        opacity: 1;
+      }
+    }
+
+    &-disabled {
+      path {
+        fill: colors.$spunPearl;
+      }
+
+      &:hover {
+        &::before {
+          opacity: 0;
+        }
+      }
+    }
+  }
+}

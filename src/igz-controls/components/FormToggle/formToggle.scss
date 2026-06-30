@@ -1,0 +1,79 @@
+@use '../../scss/colors';
+@use '../../scss/mixins';
+
+.form-field-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  &_has-label {
+    gap: 10px;
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  &__toggle-wrapper {
+    position: relative;
+    display: inline-flex;
+    cursor: pointer;
+  }
+
+  &__switch {
+    height: 24px;
+    width: 48px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    background-color: colors.$alto;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px colors.$lightBlack;
+
+    &:before {
+      content: '';
+      width: 20px;
+      height: 20px;
+      background-color: colors.$white;
+      border-radius: 50%;
+      transform: translateX(2px);
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 2px colors.$lightBlack;
+    }
+  }
+
+  .form-field__wrapper {
+    border: none;
+  }
+
+  input[type='checkbox'] {
+    display: none;
+    width: 0;
+    height: 0;
+
+    &:disabled {
+      & + .form-field-toggle__switch {
+        opacity: 0.5;
+        pointer-events: none;
+        cursor: default;
+      }
+    }
+
+    &:checked {
+      & + .form-field-toggle__switch {
+        background-color: colors.$malibu;
+
+        &:before {
+          transform: translateX(26px);
+        }
+      }
+    }
+  }
+
+  .form-field-toggle__toggle-wrapper:not(:has(input:disabled)):hover .form-field-toggle__switch {
+    opacity: 0.9;
+  }
+}

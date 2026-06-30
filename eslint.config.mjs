@@ -6,7 +6,7 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import eslintPluginImport from 'eslint-plugin-import'
 
 export default [
-  { ignores: ['dist'] },
+  { ignores: ['dist', 'src/igz-controls/nextGenComponents/**'] },
   js.configs.recommended,
   eslintConfigPrettier,
   {

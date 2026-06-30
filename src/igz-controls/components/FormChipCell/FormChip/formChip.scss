@@ -1,0 +1,71 @@
+@use '../../../scss/mixins';
+
+.chip {
+  position: relative;
+  margin: 2px 8px 2px 0;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 16px;
+  visibility: hidden;
+  cursor: default;
+
+  &_visible {
+    visibility: visible;
+  }
+
+  &_invisible {
+    visibility: hidden;
+    height: 30px;
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+
+    &-item {
+      flex: 1 1 50%;
+      max-width: fit-content;
+      align-self: flex-start;
+    }
+  }
+
+  &__delimiter {
+    display: flex;
+    align-items: center;
+    margin: 0 4px;
+  }
+
+  &__value {
+    min-width: 10px;
+  }
+
+  &.editable {
+    cursor: pointer;
+  }
+
+  &.chips_button {
+    padding: 8px 7px;
+    width: max-content;
+  }
+
+  &-background {
+    @include mixins.chipBackground(false);
+  }
+
+  &-border {
+    @include mixins.chipBorder();
+  }
+
+  &-density {
+    @include mixins.chipDensity(false, false);
+  }
+
+  &-font {
+    @include mixins.chipsFont(Chip);
+  }
+
+  &-value_bold {
+    font-weight: 700;
+    font-size: 15px;
+  }
+}

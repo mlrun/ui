@@ -1,0 +1,106 @@
+@use '../../../scss/colors';
+
+.wizard-steps {
+  display: flex;
+  flex-flow: row nowrap;
+  background-color: colors.$white;
+  min-width: 260px;
+  margin: 1.5rem 0;
+  padding: 0 2rem;
+
+  @media screen and (min-width: 1200px) {
+    flex-flow: column nowrap;
+    overflow-y: auto;
+    padding: 0 1rem;
+
+    & > *:not(:last-child) {
+      margin-bottom: 10px;
+    }
+  }
+
+  .wizard-steps {
+    &__item {
+      display: block;
+      background-color: inherit;
+      color: colors.$primary;
+      border: 0;
+      border-radius: 8px;
+      font-size: 1em;
+      padding: 8px;
+      min-height: 52px;
+      height: auto;
+      width: 100%;
+
+      @media screen and (min-width: 1200px) {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        & > * {
+          text-align: left;
+          white-space: normal;
+        }
+      }
+
+      .wizard-steps__indicator {
+        border-color: colors.$malibu;
+        color: colors.$malibu;
+        background-color: inherit;
+      }
+
+      &.wizard-steps__item_active {
+        background-color: colors.$malibuTwo;
+        color: colors.$cornflowerBlue;
+
+        .wizard-steps__indicator {
+          border-color: transparent;
+          color: colors.$white;
+          background-color: colors.$malibu;
+        }
+      }
+
+      &.wizard-steps__item_invalid {
+        color: colors.$amaranth;
+
+        &.wizard-steps__item_active {
+          background-color: rgba(colors.$amaranth, 0.15);
+        }
+
+        .wizard-steps__indicator {
+          border-color: colors.$amaranth;
+          color: colors.$amaranth;
+          background-color: inherit;
+        }
+      }
+
+      &:disabled {
+        border: 0;
+        color: colors.$spunPearl;
+
+        .wizard-steps__indicator {
+          border-color: colors.$spunPearl;
+          color: colors.$spunPearl;
+          background-color: inherit;
+        }
+      }
+    }
+
+    &__indicator {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid transparent;
+      border-radius: 50%;
+      padding: 10px;
+      margin: 0 0 10px 0;
+      width: 36px;
+      height: 36px;
+
+      @media screen and (min-width: 1200px) {
+        flex-flow: row nowrap;
+        text-align: left;
+        margin: 0 10px 0 0;
+      }
+    }
+  }
+}

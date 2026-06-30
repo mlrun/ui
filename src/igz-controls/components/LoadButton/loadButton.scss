@@ -1,0 +1,80 @@
+@use '../../scss/variables';
+@use '../../scss/colors';
+@use '../../scss/borders';
+
+.btn-load {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  height: 40px;
+  padding: 0 16px;
+  color: colors.$primary;
+  font-weight: 500;
+  font-size: 14px;
+  font-style: normal;
+  line-height: 16px;
+  background: colors.$white;
+  border: borders.$primaryBorder;
+  border-radius: variables.$mainBorderRadius;
+
+  svg {
+    path {
+      fill: colors.$white;
+    }
+  }
+
+  &:active {
+    background: colors.$gallery;
+  }
+
+  &:hover {
+    background: colors.$alabaster;
+  }
+
+  &:disabled {
+    color: colors.$spunPearl;
+    background: colors.$white;
+    cursor: not-allowed;
+
+    svg {
+      path {
+        fill: colors.$alto;
+      }
+    }
+  }
+
+  :first-child {
+    margin-right: 5px;
+  }
+
+  &-primary {
+    border-bottom: borders.$applyBtnBorder;
+
+    &:disabled {
+      border-bottom: 4px solid colors.$hummingBird;
+    }
+  }
+
+  &-secondary {
+    border-bottom: 4px solid colors.$malibu;
+
+    &:disabled {
+      border-bottom: 4px solid colors.$titanWhite;
+    }
+  }
+
+  &-tertiary {
+    border-bottom: 4px solid colors.$spunPearl;
+
+    svg {
+      path {
+        fill: colors.$primary;
+      }
+    }
+
+    &:disabled {
+      border-bottom: 4px solid colors.$athensGray;
+    }
+  }
+}

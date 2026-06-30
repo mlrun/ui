@@ -1,0 +1,283 @@
+@use './variables';
+@use './colors';
+@use './mixins';
+@use './borders';
+@use './shadows';
+
+@mixin tableCellWidth {
+  flex: 0 0 auto;
+  min-width: 75px;
+}
+
+.table {
+  &__flex {
+    display: flex;
+    flex: 1;
+    flex-flow: row wrap;
+  }
+
+  &__content {
+    position: relative;
+    flex: 1;
+
+    [class*='icon'] {
+      flex-wrap: nowrap;
+    }
+
+    .text-bold {
+      font-weight: 500;
+    }
+  }
+
+  &__wrapper {
+    .content & {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 2;
+      display: flex;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      color: colors.$mulledWine;
+      background-color: colors.$white;
+    }
+  }
+
+  & [class*='table-cell-'] {
+    @include tableCellWidth;
+  }
+
+  .table-row {
+    .table-cell {
+      &-1 {
+        flex: 1;
+      }
+
+      &-2 {
+        flex: 2;
+      }
+
+      &-3 {
+        flex: 3;
+      }
+
+      &-4 {
+        flex: 4;
+      }
+
+      &-5 {
+        flex: 5;
+      }
+
+      &-6 {
+        flex: 6;
+      }
+
+      &-7 {
+        flex: 7;
+      }
+
+      &-8 {
+        flex: 8;
+      }
+
+      &-9 {
+        flex: 9;
+      }
+
+      &-10 {
+        flex: 10;
+      }
+
+      &-extra-small {
+        flex: 1;
+        max-width: 85px;
+      }
+
+      &-small {
+        flex: 1;
+        max-width: 150px;
+      }
+    }
+
+    &:has(.actions-menu__container-active) {
+      background-color: colors.$ghostWhite;
+    }
+  }
+
+  &.table {
+    &__scrolled {
+      .table-cell-name {
+        &::after {
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          width: 5px;
+          background-color: inherit;
+          border-right: borders.$secondaryBorder;
+          box-shadow: 2px 0 2px -1px rgba(colors.$black, 0.2);
+          content: '';
+        }
+      }
+
+      .parent-row_expanded {
+        .row_grouped-by {
+          .table-cell-name {
+            border-right: none;
+            box-shadow: none;
+          }
+        }
+      }
+    }
+  }
+
+  .targets-cell {
+    flex-wrap: nowrap;
+    min-width: 130px;
+
+    svg {
+      margin: 0 5px;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+
+  &__panel-container {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    width: auto;
+    border-left: borders.$primaryBorder;
+    box-shadow: shadows.$tablePanelShadow;
+
+    &.hidden {
+      display: none;
+    }
+  }
+
+  &__panel {
+    height: 100%;
+    overflow: hidden auto;
+  }
+
+  .error-message {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .table {
+    &-header {
+      &__cell {
+        @include tableCellWidth;
+
+        &.buttonPopout,
+        &.buttonDownload {
+          @include mixins.tableColumnFlex(0.5, 80px);
+        }
+
+        &.align-right {
+          justify-content: flex-end;
+        }
+
+        .tip-container {
+          margin-left: 2px;
+        }
+      }
+
+      .icons-container {
+        min-width: 150px;
+      }
+    }
+
+    &-body {
+      color: colors.$mulledWine;
+
+      &__cell {
+        @include tableCellWidth;
+
+        &_hidden {
+          font-size: 0;
+
+          * {
+            visibility: hidden;
+          }
+
+          .chip {
+            visibility: hidden;
+          }
+        }
+
+        .cell_name {
+          position: relative;
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          margin: 0;
+        }
+
+        .text_small {
+          min-width: 100%;
+          max-width: 50px;
+        }
+
+        &.align-right {
+          justify-content: flex-end;
+        }
+
+        &_type {
+          display: inline-flex;
+          text-transform: capitalize;
+        }
+
+        a {
+          position: relative;
+          width: 100%;
+          margin: 0;
+          text-decoration: none;
+
+          span {
+            display: block;
+            width: 100%;
+          }
+        }
+
+        i {
+          margin-right: 5px;
+        }
+
+        button {
+          display: flex;
+          font-size: 15px;
+          background-color: transparent;
+          border: none;
+
+          &:disabled {
+            cursor: default;
+          }
+
+          &:not(:disabled) {
+            cursor: pointer;
+          }
+        }
+
+        .path-tooltip {
+          cursor: pointer;
+        }
+
+        .chip_short {
+          max-width: 100px;
+        }
+
+        .alert-icon-cell {
+          display: flex;
+          gap: 4px;
+          align-items: center;
+        }
+      }
+    }
+  }
+}

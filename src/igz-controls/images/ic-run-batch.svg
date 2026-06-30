@@ -1,0 +1,20 @@
+<svg width="48" height="49" viewBox="0 0 48 49" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="ic-run-batch">
+<g id="48x48">
+<g id="Union">
+<path d="M37.251 25.4278C38.2928 24.8074 38.2928 23.2988 37.251 22.6784L18.326 11.4087C17.9701 11.1968 17.5098 11.3135 17.2979 11.6694C17.0859 12.0253 17.2026 12.4856 17.5585 12.6975L36.4835 23.9672C36.5487 24.0059 36.5487 24.1002 36.4835 24.139L17.5585 35.4087C17.2026 35.6206 17.0859 36.0809 17.2979 36.4368C17.5098 36.7927 17.9701 36.9094 18.326 36.6975L37.251 25.4278Z" fill="url(#paint0_linear_250_272300)"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M31.6093 23.3179C32.1734 23.6456 32.1734 24.4603 31.6093 24.788L13.2767 35.4357C12.71 35.7648 11.9998 35.3559 11.9998 34.7006V13.4052C11.9998 12.7499 12.71 12.3411 13.2767 12.6702L31.6093 23.3179ZM13.4998 14.5344L29.8882 24.0529L13.4998 33.5714L13.4998 14.5344Z" fill="url(#paint1_linear_250_272300)"/>
+</g>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_250_272300" x1="38.0324" y1="25.7629" x2="11.9998" y2="25.7629" gradientUnits="userSpaceOnUse">
+<stop stop-color="#6D5E92"/>
+<stop offset="1" stop-color="#272C41"/>
+</linearGradient>
+<linearGradient id="paint1_linear_250_272300" x1="38.0324" y1="25.7629" x2="11.9998" y2="25.7629" gradientUnits="userSpaceOnUse">
+<stop stop-color="#6D5E92"/>
+<stop offset="1" stop-color="#272C41"/>
+</linearGradient>
+</defs>
+</svg>

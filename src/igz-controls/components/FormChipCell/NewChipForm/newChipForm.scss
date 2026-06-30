@@ -1,0 +1,80 @@
+@use '../../../scss/colors';
+@use '../../../scss/mixins';
+
+.edit-chip {
+  &-container {
+    display: inline-flex;
+    max-width: 100%;
+    margin: 2px 0 2px 0;
+    padding: 0 8px;
+    font-size: 14px;
+    line-height: 22px;
+
+    input {
+      display: flex;
+      padding: 0;
+      font-size: 14px;
+      background-color: transparent;
+      border: none;
+
+      &[disabled] {
+        pointer-events: none;
+      }
+
+      &.item_edited {
+        &_invalid {
+          color: colors.$amaranth;
+        }
+      }
+
+      &.input-label-key,
+      &.input-label-value {
+        &::placeholder {
+          color: colors.$topaz;
+        }
+      }
+    }
+
+    &-background {
+      @include mixins.chipBackground(false);
+    }
+
+    &-border {
+      @include mixins.chipBorder();
+    }
+
+    &-density {
+      @include mixins.chipDensity(true, false);
+    }
+
+    &-font {
+      @include mixins.chipsFont(EditableChip);
+    }
+
+    button.item-icon-close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.hidden {
+        display: none;
+      }
+
+      &.invisible {
+        visibility: hidden;
+      }
+
+      svg {
+        transform: scale(0.7);
+      }
+    }
+
+    &_disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  &-separator {
+    margin-right: 5px;
+  }
+}

@@ -1,0 +1,72 @@
+@use '../../scss/mixins';
+
+.chips {
+  @include mixins.inputSelectField;
+
+  & {
+    height: auto;
+    min-width: 0;
+  }
+
+  &__wrapper {
+    padding: 12px 16px;
+  }
+
+  &-wrapper {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    overflow: hidden;
+
+    &.chips-wrapper_all-visible {
+      flex-wrap: wrap;
+    }
+  }
+
+  &-cell {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    max-width: 100%;
+
+    .fixed-max-width {
+      max-width: 100%;
+    }
+
+    .chip {
+      &-block {
+        position: relative;
+        max-width: 100%;
+        margin-right: calc(#{var(--chipBlockMarginRight)});
+      }
+    }
+
+    .button-add {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 2px 0 2px 0;
+      border-radius: 32px;
+
+      &-background {
+        @include mixins.chipBackground(true);
+      }
+
+      &_border {
+        @include mixins.chipBorder();
+      }
+
+      &-density {
+        @include mixins.chipDensity(false, true);
+      }
+
+      &-font {
+        @include mixins.chipsFont(ButtonAddChip);
+      }
+    }
+  }
+
+  input:disabled {
+    cursor: default;
+  }
+}
