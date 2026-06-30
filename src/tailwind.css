@@ -112,3 +112,7 @@
     padding: 0;
   }
 }
+
+.group:has([data-testid="sidebar-project-dropdown-trigger"][data-state="open"]) [data-testid="pin-sidebar-button"] {
+  opacity: 1;
+}

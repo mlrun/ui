@@ -7,10 +7,9 @@ server {
     # Basic Gzip as per standard defaults
     gzip on;
 
-    # CRITICAL: Allow the Global Host (IGZ) to fetch these assets
-    add_header Access-Control-Allow-Origin *;
-    add_header Access-Control-Allow-Methods 'GET, OPTIONS';
-    add_header Access-Control-Allow-Headers 'Content-Type, Authorization';
+    # Clickjacking protection
+    add_header X-Frame-Options "DENY" always;
+    add_header Content-Security-Policy "frame-ancestors 'none';" always;
 
     location / {
         # Show landing page when accessing the remote directly
