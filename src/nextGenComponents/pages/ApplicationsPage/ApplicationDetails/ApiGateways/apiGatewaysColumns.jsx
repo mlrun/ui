@@ -25,7 +25,7 @@ import { buildGatewayEndpoint } from './applicationApiGateways.util'
 import {
   API_GATEWAY_STATE_CLASS,
   API_GATEWAY_STATE_LABEL,
-  FORCE_SSL_REDIRECT_ANNOTATION,
+  FORCE_SSL_REDIRECT_ANNOTATION
 } from '../applicationDetails.constants'
 import { buildNuclioOwner } from '../../../../../utils/nuclioEnrichment.util'
 

@@ -37,7 +37,10 @@ export const filterApiGatewaysBySearchFields = (gateways, filters) => {
       return false
     }
 
-    if (ownerFilter && !buildNuclioOwner(gateway.metadata?.labels).toLowerCase().includes(ownerFilter)) {
+    if (
+      ownerFilter &&
+      !buildNuclioOwner(gateway.metadata?.labels).toLowerCase().includes(ownerFilter)
+    ) {
       return false
     }
 
