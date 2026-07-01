@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Link, useMatch } from 'react-router-dom'
 import { SidebarMenuButton, SidebarMenuItem, useSidebar } from 'igz-controls/nextGenComponents'
@@ -34,7 +34,16 @@ const SidebarItem = ({
   const ref = useRef(null)
   const { open: sidebarOpen } = useSidebar()
 
-  const match = useMatch(link ? `${link}/*` : null)
+  const linkPath = useMemo(() => {
+    if (!link) return null
+    try {
+      return new URL(link).pathname
+    } catch {
+      return link
+    }
+  }, [link])
+
+  const match = useMatch(linkPath ? `${linkPath}/*` : null)
   const isActive = Boolean(match)
 
   useEffect(() => {
