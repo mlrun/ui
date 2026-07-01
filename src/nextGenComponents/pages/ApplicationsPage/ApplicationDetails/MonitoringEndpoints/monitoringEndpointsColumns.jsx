@@ -74,15 +74,6 @@ export const getMonitoringEndpointsColumns = onEndpointClick => [
     )
   },
   {
-    id: 'class',
-    header: 'Class',
-    size: 10,
-    accessorFn: row => row.spec?.model_class ?? '',
-    cell: ({ row }) => (
-      <span data-testid="monitoring-endpoint-class">{row.original.spec?.model_class || ''}</span>
-    )
-  },
-  {
     id: 'labels',
     header: 'Labels',
     size: 14,
