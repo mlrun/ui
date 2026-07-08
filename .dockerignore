@@ -1,26 +1,58 @@
-.DS_Store
-node_modules
-Dockerfile
+# Build output
 /build
 
-# local env files
-.env.local
-.env.*.local
+# Dependencies
+node_modules
 
-# Log files
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Docker
+Dockerfile
+.dockerignore
 
-# Editor directories and files
+# env files — only .env.production is needed for the build
+.env
+.env.*
+!.env.production
+
+# IDE and editor
 .idea
 .vscode
+.cursor
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+*.code-workspace
 
-# Git files
+# OS
+.DS_Store
+
+# Git
 .git
 .gitignore
+.gitattributes
+
+# CI / pipeline
+.github
+Jenkinsfile
+test_pr.groovy
+ui_ci.groovy
+ci_start_ui_tests.sh
+
+# Temp / local tooling
+.__mf__temp
+.claude
+.storybook
+
+# Archives
+*.tar
+*.tar.gz
+*.zip
+
+# Tests
+tests/
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

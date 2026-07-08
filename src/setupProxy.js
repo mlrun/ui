@@ -29,7 +29,6 @@ module.exports = function (app) {
         Connection: 'keep-alive'
       },
       onProxyReq: function (proxyReq) {
-        proxyReq.setHeader('x-v3io-session-key', import.meta.env.VITE_MLRUN_V3IO_ACCESS_KEY)
         proxyReq.setHeader('x-remote-user', 'admin')
       }
     })

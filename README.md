@@ -42,14 +42,13 @@ You can pass the following environment variables to the `docker run` command to 
 | `MLRUN_NUCLIO_MODE`           | Sets the MLRun Nuclio integration mode<br />Default: `disabled`<br />Example: `enabled`                                |
 | `MLRUN_NUCLIO_API_URL`        | Sets the base URL of the Nuclio API<br />Default: `http://localhost:8070`<br />Example: `http://17.220.101.245:30070`  |
 | `MLRUN_NUCLIO_UI_URL`         | Sets the base URL of the Nuclio UI<br />Default: `http://localhost:8070`<br />Example: `http://17.220.101.245:30070`   |
-| `MLRUN_V3IO_ACCESS_KEY`       | Sets the V3IO access key to use for accessing V3IO containers<br />Example: `a7097c94-6e8f-436d-9717-a84abe2861d1`     |
 | `MLRUN_FUNCTION_CATALOG_URL`  | Sets the base URL of the function-template catalog <br />Default: `https://raw.githubusercontent.com`                  |
 | `MLRUN_FUNCTION_CATALOG_PATH` | Sets the base URI of the function-template catalog <br />Default: `/mlrun/functions/master`                            |
 | `MLRUN_IGZ_UI_ALLOWED_ORIGIN` | Allowed origin for Module Federation and CORS<br />Example: `https://igz-ui.pini.vmdev90ig4.lab.iguazeng.com`          |
 
 Example:
 
-`docker run -it -d -p 8090:8090 --rm --name mlrun-ui -e MLRUN_API_PROXY_URL=http://17.220.101.245:30080 -e MLRUN_NUCLIO_MODE=enabled -e MLRUN_NUCLIO_API_URL=http://17.220.101.245:30070 -e MLRUN_NUCLIO_UI_URL=http://17.220.101.245:30070 -e MLRUN_FUNCTION_CATALOG_URL=https://raw.githubusercontent.com -e MLRUN_FUNCTION_CATALOG_PATH=/mlrun/functions/master -e MLRUN_V3IO_ACCESS_KEY=a7097c94-6e8f-436d-9717-a84abe2861d1 quay.io/mlrun/mlrun-ui:0.4.9`
+`docker run -it -d -p 8090:8090 --rm --name mlrun-ui -e MLRUN_API_PROXY_URL=http://17.220.101.245:30080 -e MLRUN_NUCLIO_MODE=enabled -e MLRUN_NUCLIO_API_URL=http://17.220.101.245:30070 -e MLRUN_NUCLIO_UI_URL=http://17.220.101.245:30070 -e MLRUN_FUNCTION_CATALOG_URL=https://raw.githubusercontent.com -e MLRUN_FUNCTION_CATALOG_PATH=/mlrun/functions/master quay.io/mlrun/mlrun-ui:0.4.9`
 
 ### Docker container contents
 
@@ -96,7 +95,6 @@ For example:
 
 ```
 VITE_MLRUN_API_URL=http://3.129.154.119:30080
-VITE_MLRUN_V3IO_ACCESS_KEY=2826d9df-033d-4ac2-b13a-1f8f9d14aaeb
 VITE_NUCLIO_API_URL=http://localhost:8070
 VITE_NUCLIO_UI_URL=http://localhost:8070
 VITE_FUNCTION_CATALOG_URL=https://raw.githubusercontent.com/mlrun/functions/master
