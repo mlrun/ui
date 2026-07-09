@@ -71,6 +71,8 @@ import logs from './data/logs.json'
 import modelEndpoints from './data/modelEndpoints.json'
 import metricsData from './data/metrics.json'
 
+import projectSyncEvents from './data/projectSyncEvents.json'
+
 import iguazioProjects from './data/iguazioProjects.json'
 import iguazioUserGrops from './data/iguazioUserGroups.json'
 import iguazioProjectAuthorizationRoles from './data/iguazioProjectAuthorizationRoles.json'
@@ -145,6 +147,25 @@ const backgroundTaskTemplate = {
     error: null
   }
 }
+
+;['sync-test-creating', 'sync-test-issue'].forEach(projectName => {
+  const now = new Date().toISOString()
+  const taskId = `sync-test-task-${projectName.replace('sync-test-', '')}`
+
+  set(backgroundTasks, taskId, {
+    ...cloneDeep(backgroundTaskTemplate),
+    metadata: {
+      ...backgroundTaskTemplate.metadata,
+      name: taskId,
+      project: projectName,
+      kind: 'project.creation',
+      created: now,
+      updated: now
+    },
+    status: { state: 'running', error: null }
+  })
+})
+
 const projectTemplate = {
   kind: 'project',
   metadata: { name: '', created: '', labels: null, annotations: null },
@@ -420,7 +441,19 @@ function getProjectTasks(req, res) {
 }
 
 function getTask(req, res) {
-  res.send(get(backgroundTasks, req.params.taskId, {}))
+  const task = get(backgroundTasks, req.params.taskId)
+
+  if (!task) {
+    res.statusCode = 404
+    res.send({})
+    return
+  }
+
+  res.send(task)
+}
+
+function getProjectSyncEvents(req, res) {
+  res.send(projectSyncEvents)
 }
 
 function getTasks(req, res) {
@@ -3224,6 +3257,7 @@ app.get(`${iguazioApiUrl}/api/users`, getIguazioUsers)
 app.get(`${iguazioApiUrl}/api/scrubbed_users`, getIguazioUsers)
 
 app.get(`${iguazioApiUrl}/api/jobs/:id`, getIguazioJob)
+app.get(`${iguazioApiUrl}/api/v1/events/activations`, getProjectSyncEvents)
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

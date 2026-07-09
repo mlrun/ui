@@ -61,6 +61,7 @@ import {
   setDeletingProjects
 } from '../../reducers/projectReducer'
 import { fetchAllNuclioFunctions } from '../../reducers/nuclioReducer'
+import { useProjectsSyncStatus } from '../../hooks/useProjectsSyncStatus.hook'
 
 const Projects = () => {
   const [actionsMenu, setActionsMenu] = useState({})
@@ -91,14 +92,22 @@ const Projects = () => {
     deletingProjectsRef.current = projectStore.deletingProjects
   }, [projectStore.deletingProjects])
 
-  const fetchMinimalProjects = useCallback(() => {
-    dispatch(
-      fetchProjects({
-        params: { format: 'minimal' },
-        setRequestErrorMessage: setProjectsRequestErrorMessage
-      })
-    )
-  }, [dispatch])
+  const fetchMinimalProjects = useCallback(
+    (silent = false) => {
+      dispatch(
+        fetchProjects({
+          params: { format: 'minimal' },
+          setRequestErrorMessage: setProjectsRequestErrorMessage,
+          silent
+        })
+      )
+    },
+    [dispatch]
+  )
+
+  const fetchMinimalProjectsSilently = useCallback(() => {
+    fetchMinimalProjects(true)
+  }, [fetchMinimalProjects])
 
   const isValidProjectState = useCallback(
     project => {
@@ -184,6 +193,11 @@ const Projects = () => {
         })
     }
   }, [isNuclioModeDisabled, dispatch, fetchMinimalProjects])
+
+  const { projectSyncStatusMap } = useProjectsSyncStatus(
+    projectStore.projects,
+    fetchMinimalProjectsSilently
+  )
 
   const handleSearchOnChange = useCallback(
     name => {
@@ -457,6 +471,7 @@ const Projects = () => {
       isDescendingOrder={isDescendingOrder}
       projectsRequestErrorMessage={projectsRequestErrorMessage}
       projectStore={projectStore}
+      projectSyncStatusMap={projectSyncStatusMap}
       refreshProjects={refreshProjects}
       selectedProjectsState={selectedProjectsState}
       setCreateProject={setCreateProject}

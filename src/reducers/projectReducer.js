@@ -546,7 +546,11 @@ const projectStoreSlice = createSlice({
         loading: false
       }
     })
-    builder.addCase(fetchProjects.pending, showLoading)
+    builder.addCase(fetchProjects.pending, (state, action) => {
+      if (!action.meta.arg?.silent) {
+        showLoading(state)
+      }
+    })
     builder.addCase(fetchProjects.fulfilled, (state, action) => {
       state.projects = action.payload
       state.loading = false

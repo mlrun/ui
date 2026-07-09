@@ -6,6 +6,7 @@
 .project-card {
   position: relative;
   min-height: 240px;
+  height: 100%;
   color: colors.$topaz;
   background-color: colors.$white;
   border-radius: 8px;
@@ -129,6 +130,13 @@
 
   &:hover {
     box-shadow: shadows.$previewBoxShadow;
+  }
+
+  &--dimmed {
+    opacity: 0.6;
+    filter: grayscale(100%);
+    cursor: default;
+    pointer-events: none;
   }
 
   .project-data-card__statistics {

@@ -57,6 +57,7 @@ const ProjectsView = ({
   isDescendingOrder,
   projectsRequestErrorMessage,
   projectStore,
+  projectSyncStatusMap,
   refreshProjects,
   selectedProjectsState,
   setCreateProject,
@@ -176,6 +177,7 @@ const ProjectsView = ({
                     projectSummary={projectStore.projectsSummary.data.find(
                       item => item.name === project.metadata.name
                     )}
+                    syncStatusTooltip={projectSyncStatusMap[project.metadata.name]}
                   />
                 )
               })}
@@ -215,6 +217,7 @@ ProjectsView.propTypes = {
   isDescendingOrder: PropTypes.bool.isRequired,
   projectStore: PropTypes.object.isRequired,
   projectsRequestErrorMessage: PropTypes.string.isRequired,
+  projectSyncStatusMap: PropTypes.object.isRequired,
   refreshProjects: PropTypes.func.isRequired,
   selectedProjectsState: PropTypes.string.isRequired,
   setCreateProject: PropTypes.func.isRequired,

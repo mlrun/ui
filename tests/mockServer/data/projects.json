@@ -1703,6 +1703,90 @@
       "status": {
         "state": "online"
       }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "sync-test-creating",
+        "created": "2026-07-08T00:00:00.000000",
+        "labels": {},
+        "annotations": {}
+      },
+      "spec": {
+        "description": "Manual test fixture: creation in progress (background task running)",
+        "owner": "admin",
+        "goals": null,
+        "params": {},
+        "functions": null,
+        "workflows": null,
+        "artifacts": null,
+        "artifact_path": null,
+        "conda": "",
+        "source": "",
+        "subpath": null,
+        "origin_url": null,
+        "desired_state": "online"
+      },
+      "status": {
+        "state": "creating",
+        "op_id": "sync-test-task-creating"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "sync-test-retrying",
+        "created": "2026-07-08T00:00:00.000000",
+        "labels": {},
+        "annotations": {}
+      },
+      "spec": {
+        "description": "Manual test fixture: background task lost/failed, system auto-retries",
+        "owner": "admin",
+        "goals": null,
+        "params": {},
+        "functions": null,
+        "workflows": null,
+        "artifacts": null,
+        "artifact_path": null,
+        "conda": "",
+        "source": "",
+        "subpath": null,
+        "origin_url": null,
+        "desired_state": "archived"
+      },
+      "status": {
+        "state": "deleting",
+        "op_id": "sync-test-task-retrying"
+      }
+    },
+    {
+      "kind": "project",
+      "metadata": {
+        "name": "sync-test-issue",
+        "created": "2026-07-08T00:00:00.000000",
+        "labels": {},
+        "annotations": {}
+      },
+      "spec": {
+        "description": "Manual test fixture: system-level Orca ProjectSync issue",
+        "owner": "admin",
+        "goals": null,
+        "params": {},
+        "functions": null,
+        "workflows": null,
+        "artifacts": null,
+        "artifact_path": null,
+        "conda": "",
+        "source": "",
+        "subpath": null,
+        "origin_url": null,
+        "desired_state": "online"
+      },
+      "status": {
+        "state": "creating",
+        "op_id": "sync-test-task-issue"
+      }
     }
   ]
 }

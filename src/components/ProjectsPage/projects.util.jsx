@@ -39,7 +39,13 @@ import {
 } from '../../reducers/projectReducer'
 import tasksApi from '../../api/tasks-api'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import { PROJECT_ONLINE_STATUS } from '../../constants'
+import {
+  PROJECT_CREATING_STATUS,
+  PROJECT_DELETING_STATUS,
+  PROJECT_ONLINE_STATUS,
+  PROJECT_SYNC_ISSUE_TOOLTIP,
+  PROJECT_TRANSITIONAL_STATUSES
+} from '../../constants'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
@@ -255,6 +261,31 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
   })
 }
 
+const projectSyncStateWords = {
+  [PROJECT_CREATING_STATUS]: { noun: 'creation', gerund: 'creating' },
+  [PROJECT_DELETING_STATUS]: { noun: 'deletion', gerund: 'deleting' }
+}
+
+export const getProjectSyncTooltip = (project, backgroundTaskState, hasSystemSyncIssue) => {
+  const state = project.status?.state
+
+  if (!PROJECT_TRANSITIONAL_STATUSES.includes(state)) {
+    return null
+  }
+
+  if (hasSystemSyncIssue) {
+    return PROJECT_SYNC_ISSUE_TOOLTIP
+  }
+
+  const { noun, gerund } = projectSyncStateWords[state]
+
+  if (backgroundTaskState === BG_TASK_FAILED) {
+    return `Issues were detected while ${gerund} the project. The system will automatically retry: no manual action is needed.`
+  }
+
+  return `The project is in ${noun} process.`
+}
+
 export const generateAlerts = (data, dispatch) => {
   const projectAlerts = {}
   data.forEach(project => {
@@ -411,6 +442,11 @@ export const handleDeleteProject = (
         }
 
         dispatch(setDeletingProjects(newDeletingProjects))
+
+        // Refetch immediately so `status.state: deleting` is picked up right away and
+        // the sync-status polling (see useProjectsSyncStatus.hook.js) starts covering this
+        // project even if no other project was already in a transitional state.
+        fetchMinimalProjects()
 
         if (refreshProjects) {
           pollDeletingProjects(terminatePollRef, newDeletingProjects, refreshProjects, dispatch)

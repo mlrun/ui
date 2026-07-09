@@ -45,6 +45,12 @@ export const NAVBAR_WIDTH_OPENED = 245
 export const CANCEL_REQUEST_TIMEOUT = 120000
 
 export const PROJECT_ONLINE_STATUS = 'online'
+export const PROJECT_CREATING_STATUS = 'creating'
+export const PROJECT_DELETING_STATUS = 'deleting'
+export const PROJECT_TRANSITIONAL_STATUSES = [PROJECT_CREATING_STATUS, PROJECT_DELETING_STATUS]
+export const PROJECT_SYNC_POLL_INTERVAL_MS = 10000
+export const PROJECT_SYNC_ISSUE_TOOLTIP =
+  'Project synchronization issues were detected. Contact the system admin.'
 
 export const ABORTED_STATE = 'aborted'
 export const ABORTING_STATE = 'aborting'

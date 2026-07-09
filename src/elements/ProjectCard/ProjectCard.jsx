@@ -25,7 +25,7 @@ import ProjectCardView from './ProjectCardView'
 
 import { generateProjectStatistic } from './projectCard.util'
 
-const ProjectCard = ({ actionsMenu, alert, project, projectSummary }) => {
+const ProjectCard = ({ actionsMenu, alert, project, projectSummary, syncStatusTooltip }) => {
   const [fetchNuclioFunctionsFailure, setFetchNuclioFunctionsFailure] = useState(false)
   const projectStore = useSelector(store => store.projectStore)
   const nuclioStore = useSelector(store => store.nuclioStore)
@@ -62,6 +62,7 @@ const ProjectCard = ({ actionsMenu, alert, project, projectSummary }) => {
       alert={alert}
       project={project}
       statistics={statistics}
+      syncStatusTooltip={syncStatusTooltip}
       ref={actionsMenuRef}
     />
   )
@@ -71,7 +72,8 @@ ProjectCard.propTypes = {
   actionsMenu: PropTypes.object.isRequired,
   alert: PropTypes.number.isRequired,
   project: PropTypes.object.isRequired,
-  projectSummary: PropTypes.object
+  projectSummary: PropTypes.object,
+  syncStatusTooltip: PropTypes.string
 }
 
 export default ProjectCard

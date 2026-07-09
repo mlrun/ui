@@ -1,0 +1,15 @@
+{
+  "activations": [
+    {
+      "id": "sync-test-activation-1",
+      "class": "Software.ProjectSync",
+      "severity": "critical",
+      "kind": "project_stuck_after_retries",
+      "description": "Project stuck in transitional state after multiple retries",
+      "parameters": {
+        "project": "sync-test-issue"
+      },
+      "created_at": "2026-07-08T00:00:00.000Z"
+    }
+  ]
+}

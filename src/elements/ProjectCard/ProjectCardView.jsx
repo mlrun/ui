@@ -20,6 +20,7 @@ such restriction.
 import React, { useRef } from 'react'
 import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 import { useNavigate } from 'react-router-dom'
 
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
@@ -38,92 +39,109 @@ import ClockIcon from 'igz-controls/images/clock.svg?react'
 
 import './projectCard.scss'
 
-const ProjectCardView = React.forwardRef(({ actionsMenu, alert, project, statistics }, ref) => {
-  const cardRef = useRef()
-  const chipRef = useRef()
-  const navigate = useNavigate()
+const ProjectCardView = React.forwardRef(
+  ({ actionsMenu, alert, project, statistics, syncStatusTooltip }, ref) => {
+    const cardRef = useRef()
+    const chipRef = useRef()
+    const navigate = useNavigate()
 
-  const { deletingProjects, projectsToDelete } = useSelector(state => state.projectStore)
+    const { deletingProjects, projectsToDelete } = useSelector(state => state.projectStore)
 
-  return (
-    <div className="project-card">
-      {(Object.values(deletingProjects).includes(project.metadata.name) ||
-        projectsToDelete.includes(project.metadata.name)) && <Loader section />}
-      <div
-        onClick={event => {
-          if (
-            event.target.tagName !== 'A' &&
-            !ref.current.contains(event.target) &&
-            !chipRef.current?.contains(event.target) &&
-            !event.target.closest('#overlay_container')
-          ) {
-            navigate(`/projects/${project.metadata.name}/monitor`)
-          }
-        }}
-        ref={cardRef}
+    const projectCardClassNames = classnames(
+      'project-card',
+      syncStatusTooltip && 'project-card--dimmed'
+    )
+
+    return (
+      <Tooltip
+        hidden={!syncStatusTooltip}
+        template={<TextTooltipTemplate text={syncStatusTooltip} />}
       >
-        <div className="project-card__general-info">
-          <div className="project-card__header">
-            <div className="project-card__header-title">
-              <Tooltip
-                className="project-card__title"
-                template={<TextTooltipTemplate text={project.metadata.name} />}
-              >
-                {project.metadata.name}
-              </Tooltip>
+        <div className={projectCardClassNames}>
+          {!syncStatusTooltip &&
+            (Object.values(deletingProjects).includes(project.metadata.name) ||
+              projectsToDelete.includes(project.metadata.name)) && <Loader section />}
+          <div
+            onClick={event => {
+              if (
+                event.target.tagName !== 'A' &&
+                !ref.current.contains(event.target) &&
+                !chipRef.current?.contains(event.target) &&
+                !event.target.closest('#overlay_container')
+              ) {
+                navigate(`/projects/${project.metadata.name}/monitor`)
+              }
+            }}
+            ref={cardRef}
+          >
+            <div className="project-card__general-info">
+              <div className="project-card__header">
+                <div className="project-card__header-title">
+                  <Tooltip
+                    className="project-card__title"
+                    template={<TextTooltipTemplate text={project.metadata.name} />}
+                  >
+                    {project.metadata.name}
+                  </Tooltip>
 
-              {alert ? (
-                <div className="project-card__alert">
-                  <Alerts className="project-card__alert-icon" />
-                  <div className="project-card__alert-text">{alert.toLocaleString()}</div>
+                  {alert ? (
+                    <div className="project-card__alert">
+                      <Alerts className="project-card__alert-icon" />
+                      <div className="project-card__alert-text">{alert.toLocaleString()}</div>
+                    </div>
+                  ) : null}
+                  <div className="project-card__info" data-testid="project-card__created">
+                    <ClockIcon className="project-card__info-icon" />
+                    <span>Created {getTimeElapsedByDate(project.metadata.created)}</span>
+                  </div>
                 </div>
-              ) : null}
-              <div className="project-card__info" data-testid="project-card__created">
-                <ClockIcon className="project-card__info-icon" />
-                <span>Created {getTimeElapsedByDate(project.metadata.created)}</span>
+
+                <div
+                  className={`project-card__header-sub-title project-card__info ${
+                    !project.spec.owner ? 'visibility-hidden' : ''
+                  } `}
+                  data-testid="project-card__owner"
+                >
+                  <span>Owner:</span>
+                  <span>{project.spec.owner}</span>
+                </div>
               </div>
-            </div>
 
-            <div
-              className={`project-card__header-sub-title project-card__info ${
-                !project.spec.owner ? 'visibility-hidden' : ''
-              } `}
-              data-testid="project-card__owner"
-            >
-              <span>Owner:</span>
-              <span>{project.spec.owner}</span>
-            </div>
-          </div>
+              <div className="project-card__content">
+                <div className="project-card__description" data-testid="project-card__description">
+                  {project?.spec.description && (
+                    <Tooltip template={<TextTooltipTemplate text={project.spec.description} />}>
+                      {project.spec.description}
+                    </Tooltip>
+                  )}
+                </div>
 
-          <div className="project-card__content">
-            <div className="project-card__description" data-testid="project-card__description">
-              {project?.spec.description && (
-                <Tooltip template={<TextTooltipTemplate text={project.spec.description} />}>
-                  {project.spec.description}
-                </Tooltip>
+                <div className="project-card__statistic">
+                  <ProjectStatistics statistics={statistics} />
+                </div>
+              </div>
+
+              {project.metadata.labels && (
+                <div
+                  className="project-card__info"
+                  ref={chipRef}
+                  data-testid="project-card__labels"
+                >
+                  <span>Labels:</span>
+                  <ReadOnlyChips labels={project.metadata.labels} shortChips />
+                </div>
               )}
             </div>
 
-            <div className="project-card__statistic">
-              <ProjectStatistics statistics={statistics} />
+            <div className="project-card__actions-menu" ref={ref}>
+              <ActionsMenu dataItem={project} menu={actionsMenu[project.metadata.name]} />
             </div>
           </div>
-
-          {project.metadata.labels && (
-            <div className="project-card__info" ref={chipRef} data-testid="project-card__labels">
-              <span>Labels:</span>
-              <ReadOnlyChips labels={project.metadata.labels} shortChips />
-            </div>
-          )}
         </div>
-
-        <div className="project-card__actions-menu" ref={ref}>
-          <ActionsMenu dataItem={project} menu={actionsMenu[project.metadata.name]} />
-        </div>
-      </div>
-    </div>
-  )
-})
+      </Tooltip>
+    )
+  }
+)
 
 ProjectCardView.displayName = 'ProjectCardView'
 
@@ -131,7 +149,8 @@ ProjectCardView.propTypes = {
   actionsMenu: PropTypes.object.isRequired,
   alert: PropTypes.number.isRequired,
   project: PropTypes.object.isRequired,
-  statistics: PropTypes.object.isRequired
+  statistics: PropTypes.object.isRequired,
+  syncStatusTooltip: PropTypes.string
 }
 
 export default ProjectCardView
