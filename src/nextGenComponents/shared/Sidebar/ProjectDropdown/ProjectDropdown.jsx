@@ -53,10 +53,12 @@ const ProjectDropdown = ({ projectName }) => {
   const currentProjectRef = useRef(null)
 
   const projectsList = useMemo(() => {
+    const parts = pathname.split('/')
+    const basePath = parts.length > 5 ? parts.slice(0, 4).join('/') : pathname
     return generateProjectsList(projectStore.projectsNames.data)
       .map(project => ({
         ...project,
-        link: pathname.replace(projectName, project.id),
+        link: basePath.replace(projectName, project.id),
         isCurrent: project.id === projectName
       }))
       .filter(project => project.label.toLowerCase().includes(filter.toLowerCase()))
