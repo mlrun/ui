@@ -15,16 +15,15 @@
 name: Publish mlrun-ui Image (feature/ig4)
 
 # Builds the mlrun-ui Docker image (micro-frontend variant, IS_MF=true) and
-# publishes it to JFrog Artifactory. Same job flow as nuclio-ui / oris-ui /
-# airun-ui, adapted to mlrun-ui:
+# publishes it to JFrog Artifactory. Job flow adapted from nuclio-ui / oris-ui
+# / airun-ui (golden-frog code-scan omitted — not supported in this repo):
 #   quality-gate           → lint + format + audit
-#   code-scan              → golden-frog gitguardian + xray
 #   publish-mlrun-image    → docker build (--build-arg IS_MF=true) and push
 #
 # Requires repository/org secrets:
-#   - REGISTRY               iguazio npm registry (for the npm-auth step)
-#   - SVC_15288_RW_USER      Artifactory service user
-#   - SVC_15288_RW_PASSWORD  Artifactory service password
+#   - DOCKER_IMAGE_REGISTRY        Artifactory Docker registry host
+#   - PRIVATE_ARTIFACTORY_USERNAME Artifactory Docker login user
+#   - PRIVATE_ARTIFACTORY_PASSWORD Artifactory Docker login password
 
 on:
   workflow_dispatch:
@@ -59,15 +58,6 @@ jobs:
           cache: npm
           cache-dependency-path: '**/package-lock.json'
 
-      - name: Configure npm registry auth
-        uses: McK-Private/.github/actions/igz/npm-auth@f5a22e0a5fc43a49d95746bc26ff478572641c1e
-        with:
-          registry: ${{ secrets.REGISTRY }}
-          scope: '@iguazio'
-          auth-method: basic
-          username: ${{ secrets.SVC_15288_RW_USER }}
-          password: ${{ secrets.SVC_15288_RW_PASSWORD }}
-
       - name: Pre-install Security Audit
         run: npm audit --package-lock-only --audit-level=high --registry=https://registry.npmjs.org/
 
@@ -80,27 +70,17 @@ jobs:
       - name: Verify Formatting
         run: npm run format:check
 
-  code-scan:
-    name: '🐸 goldenfrog-code-scan'
-    uses: Mck-Internal/golden-frog/.github/workflows/container-build-scan.yml@v1
-    with:
-      scan_code_with: "gitguardian"
-      scan_container_with: "xray"
-      env_file: .github/actions/custom.env
-    secrets: inherit
-
   publish-mlrun-image:
     name: Publish mlrun-ui Image
-    needs: [ quality-gate, code-scan ]
+    needs: [ quality-gate ]
     if: |
       github.repository == 'mlrun/ui' &&
       github.ref == 'refs/heads/feature/ig4' &&
-      needs.quality-gate.result == 'success' &&
-      needs.code-scan.result == 'success'
+      needs.quality-gate.result == 'success'
     runs-on: gh-larger-linux-mini
 
     env:
-      REGISTRY: 'mckinsey-ig4-next-gen-docker-local.jfrog.io'
+      REGISTRY: ${{ secrets.DOCKER_IMAGE_REGISTRY }}
       NAMESPACE: 'ui'
       IMAGE_NAME: 'mlrun-ui'
 
@@ -110,29 +90,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Configure npm registry auth
-        uses: McK-Private/.github/actions/igz/npm-auth@f5a22e0a5fc43a49d95746bc26ff478572641c1e
-        with:
-          registry: ${{ secrets.REGISTRY }}
-          scope: '@iguazio'
-          auth-method: basic
-          username: ${{ secrets.SVC_15288_RW_USER }}
-          password: ${{ secrets.SVC_15288_RW_PASSWORD }}
-
-      - name: Pre-install Security Audit
-        run: npm audit --package-lock-only --audit-level=high --registry=https://registry.npmjs.org/
-
-      - name: Install dependencies
-        run: npm ci
-
       - name: Login to Artifactory (Docker)
         run: |
-          echo "${{ secrets.SVC_15288_RW_PASSWORD }}" | docker login "${REGISTRY}" -u "${{ secrets.SVC_15288_RW_USER }}" --password-stdin
+          echo "${{ secrets.PRIVATE_ARTIFACTORY_PASSWORD }}" | docker login "${REGISTRY}" -u "${{ secrets.PRIVATE_ARTIFACTORY_USERNAME }}" --password-stdin
 
       - name: Generate Image Tags
         run: |
