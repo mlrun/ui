@@ -39,14 +39,19 @@ RUN echo "${COMMIT_HASH}" > ./build/COMMIT_HASH && \
     echo "${DATE}" > ./build/BUILD_DATE
 
 # production stage
-FROM gcr.io/iguazio/nginx-unprivileged:1.31.1-alpine AS production-stage
+# TODO: temporarily pulling from Docker Hub upstream. Switch back to the internal
+# artifactory mirror once DevOps syncs the 1.31.2-alpine3.23 tag (see IG4-3203 / IG4-3204).
+FROM nginxinc/nginx-unprivileged:1.31.2-alpine3.23 AS production-stage
 
 ARG UID=101
 ARG GID=101
 ARG IS_MF=false
 
 USER root
+# curl/libcurl are unused at runtime and the patched build (8.21.0-r0) is not yet
+# published to the Alpine 3.23 repos, so remove them entirely to clear the CVEs
 RUN apk update --no-cache && apk upgrade --no-cache \
+ && apk del curl libcurl \
  && rm -f /etc/nginx/conf.d/default.conf
 
 USER $UID
@@ -65,7 +70,7 @@ RUN if [ "$IS_MF" \
     fi && \
     chown -R $UID:0 /usr/share/nginx/html && \
     chmod -R g+w /usr/share/nginx/html && \
-    chmod 777 /etc/nginx/run_nginx
+    chmod 755 /etc/nginx/run_nginx
 
 USER $UID
 
