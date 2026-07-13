@@ -43,7 +43,7 @@ jobs:
     if: |
       github.repository == 'mlrun/ui' &&
       github.ref == 'refs/heads/feature/ig4'
-    runs-on: gh-larger-linux-mini
+    runs-on: mlrun-release
 
     steps:
       - name: Checkout
@@ -77,7 +77,7 @@ jobs:
       github.repository == 'mlrun/ui' &&
       github.ref == 'refs/heads/feature/ig4' &&
       needs.quality-gate.result == 'success'
-    runs-on: gh-larger-linux-mini
+    runs-on: mlrun-release
 
     env:
       REGISTRY: ${{ secrets.DOCKER_IMAGE_REGISTRY }}
