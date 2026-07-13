@@ -212,16 +212,16 @@ describe('ProjectDropdown', () => {
       expect(getAlphaHref()).toBe('/projects/alpha/datasets')
     })
 
-    it('strips to section root when on a selected job item (depth 7)', () => {
+    it('preserves sub-tab and strips item when on a selected job item (depth 7)', () => {
       mockPathname = '/projects/demo/jobs/monitor-jobs/job123/overview'
       renderDropdown('demo')
-      expect(getAlphaHref()).toBe('/projects/alpha/jobs')
+      expect(getAlphaHref()).toBe('/projects/alpha/jobs/monitor-jobs')
     })
 
-    it('strips to section root when on a selected model item (depth 8)', () => {
+    it('preserves sub-tab and strips item when on a selected model item (depth 8)', () => {
       mockPathname = '/projects/demo/models/models/my-model/abc123/overview'
       renderDropdown('demo')
-      expect(getAlphaHref()).toBe('/projects/alpha/models')
+      expect(getAlphaHref()).toBe('/projects/alpha/models/models')
     })
   })
 
