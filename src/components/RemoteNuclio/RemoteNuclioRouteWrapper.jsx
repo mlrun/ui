@@ -28,6 +28,9 @@ import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 
 const RemoteNuclioApp = React.lazy(() => loadNuclioApp())
 
+const isNuclioPath = pathname =>
+  /^\/projects\/[^/]+\/(real-time-functions|create-function|api-gateways)(\/|$)/.test(pathname)
+
 const RemoteNuclioRouteWrapper = () => {
   const [ready, setReady] = useState(false)
   const [error, setError] = useState(false)
@@ -39,14 +42,18 @@ const RemoteNuclioRouteWrapper = () => {
     history.pushState = function (...args) {
       origPushState.apply(this, args)
       Promise.resolve().then(() => {
-        window.dispatchEvent(new PopStateEvent('popstate'))
+        if (isNuclioPath(window.location.pathname)) {
+          window.dispatchEvent(new PopStateEvent('popstate'))
+        }
       })
     }
 
     history.replaceState = function (...args) {
       origReplaceState.apply(this, args)
       Promise.resolve().then(() => {
-        window.dispatchEvent(new PopStateEvent('popstate'))
+        if (isNuclioPath(window.location.pathname)) {
+          window.dispatchEvent(new PopStateEvent('popstate'))
+        }
       })
     }
 
