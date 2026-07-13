@@ -26,8 +26,10 @@ import ProjectDropdown from './ProjectDropdown'
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
 
+let mockPathname = '/projects/demo/functions'
+
 vi.mock('react-router-dom', () => ({
-  useLocation: () => ({ pathname: '/projects/demo/functions' }),
+  useLocation: () => ({ pathname: mockPathname }),
   Link: ({ to, children, ...rest }) => (
     <a href={to} {...rest}>
       {children}
@@ -73,6 +75,7 @@ vi.mock('igz-controls/nextGenComponents', () => ({
   DropdownMenuContent: ({ children }) => <div data-testid="dropdown-menu-content">{children}</div>,
   DropdownMenuItem: ({ children, asChild }) =>
     asChild ? <>{children}</> : <div data-testid="dropdown-menu-item">{children}</div>,
+  EllipsisTooltip: ({ children, className }) => <span className={className}>{children}</span>,
   Input: ({ value, onChange, placeholder, ...rest }) => (
     <input
       data-testid="search-input"
@@ -103,6 +106,7 @@ describe('ProjectDropdown', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockSidebarOpen = true
+    mockPathname = '/projects/demo/functions'
   })
   afterEach(() => vi.restoreAllMocks())
 
@@ -168,6 +172,56 @@ describe('ProjectDropdown', () => {
       const input = screen.getByTestId('search-input')
       fireEvent.change(input, { target: { value: 'zzz' } })
       expect(screen.getByText(/no projects/i)).toBeInTheDocument()
+    })
+  })
+
+  describe('project switch navigation', () => {
+    const getAlphaHref = () =>
+      screen
+        .getAllByRole('link')
+        .find(l => l.textContent === 'alpha')
+        .getAttribute('href')
+
+    it('keeps section root when on a flat section page (depth 4)', () => {
+      mockPathname = '/projects/demo/datasets'
+      renderDropdown('demo')
+      expect(getAlphaHref()).toBe('/projects/alpha/datasets')
+    })
+
+    it('keeps sub-tab when on a sub-tab main page (depth 5)', () => {
+      mockPathname = '/projects/demo/jobs/monitor-workflows'
+      renderDropdown('demo')
+      expect(getAlphaHref()).toBe('/projects/alpha/jobs/monitor-workflows')
+    })
+
+    it('keeps sub-tab when on models sub-tab main page (depth 5)', () => {
+      mockPathname = '/projects/demo/models/model-endpoints'
+      renderDropdown('demo')
+      expect(getAlphaHref()).toBe('/projects/alpha/models/model-endpoints')
+    })
+
+    it('strips to section root when on dataset version history (depth 6)', () => {
+      mockPathname = '/projects/demo/datasets/my-dataset/all-versions'
+      renderDropdown('demo')
+      expect(getAlphaHref()).toBe('/projects/alpha/datasets')
+    })
+
+    it('strips to section root when on a selected dataset item (depth 7)', () => {
+      mockPathname = '/projects/demo/datasets/my-dataset/abc123/overview'
+      renderDropdown('demo')
+      expect(getAlphaHref()).toBe('/projects/alpha/datasets')
+    })
+
+    it('preserves sub-tab and strips item when on a selected job item (depth 7)', () => {
+      mockPathname = '/projects/demo/jobs/monitor-jobs/job123/overview'
+      renderDropdown('demo')
+      expect(getAlphaHref()).toBe('/projects/alpha/jobs/monitor-jobs')
+    })
+
+    it('preserves sub-tab and strips item when on a selected model item (depth 8)', () => {
+      mockPathname = '/projects/demo/models/models/my-model/abc123/overview'
+      renderDropdown('demo')
+      expect(getAlphaHref()).toBe('/projects/alpha/models/models')
     })
   })
 

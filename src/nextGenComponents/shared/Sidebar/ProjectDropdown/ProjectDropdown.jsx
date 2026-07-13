@@ -42,7 +42,13 @@ import { generateProjectsList } from '../../../../utils/projects'
 
 import HomepageIcon from 'igz-controls/images/mlrun-project-home.svg?react'
 import SearchIcon from 'igz-controls/images/search.svg?react'
-import { NO_PROJECTS_TEXT, PLACEHOLDER_SEARCH } from '../../../../constants'
+import {
+  NO_PROJECTS_TEXT,
+  PLACEHOLDER_SEARCH,
+  PROJECT_PATH_SECTION_INDEX,
+  PROJECT_PATH_TAB_INDEX,
+  PROJECT_SECTION_TABS
+} from '../../../../constants'
 
 const ProjectDropdown = ({ projectName }) => {
   const { pathname } = useLocation()
@@ -53,10 +59,17 @@ const ProjectDropdown = ({ projectName }) => {
   const currentProjectRef = useRef(null)
 
   const projectsList = useMemo(() => {
+    const parts = pathname.split('/')
+    const sectionId = parts[PROJECT_PATH_SECTION_INDEX]
+    const subTabId = parts[PROJECT_PATH_TAB_INDEX]
+    const basePath = sectionId
+      ? `/projects/${projectName}/${sectionId}${PROJECT_SECTION_TABS.has(subTabId) ? `/${subTabId}` : ''}`
+      : `/projects/${projectName}`
+
     return generateProjectsList(projectStore.projectsNames.data)
       .map(project => ({
         ...project,
-        link: pathname.replace(projectName, project.id),
+        link: basePath.replace(projectName, project.id),
         isCurrent: project.id === projectName
       }))
       .filter(project => project.label.toLowerCase().includes(filter.toLowerCase()))
