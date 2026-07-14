@@ -19,10 +19,11 @@ such restriction.
 */
 import React, { useEffect, useState, Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { useParams } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 import { ensureNuclioRemote, loadNuclioApp } from '../../utils/nuclio.remotes.utils'
 import NuclioRemoteError from './NuclioRemoteError'
 import { Loader } from 'igz-controls/components'
+import HostLeaveGuard from '../../common/HostLeaveGuard/HostLeaveGuard'
 
 import './RemoteNuclio.scss'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
@@ -34,10 +35,18 @@ const isNuclioPath = pathname =>
 
 const RemoteNuclioRouteWrapper = () => {
   const params = useParams()
+  const location = useLocation()
   const [ready, setReady] = useState(false)
   const [error, setError] = useState(false)
 
   const nuclioItemName = params?.['*']?.split('/').filter(Boolean)[0] ?? ''
+
+  // location fires after every committed navigation including post-blocker proceed(), unlike the pushState patch which misses replayed navigations.
+  useEffect(() => {
+    if (isNuclioPath(location.pathname)) {
+      window.dispatchEvent(new PopStateEvent('popstate'))
+    }
+  }, [location.pathname])
 
   useEffect(() => {
     const origPushState = history.pushState
@@ -115,7 +124,12 @@ const RemoteNuclioRouteWrapper = () => {
     )
   }
 
-  return <div className="remote-nuclio-container">{renderContent()}</div>
+  return (
+    <>
+      <HostLeaveGuard />
+      <div className="remote-nuclio-container">{renderContent()}</div>
+    </>
+  )
 }
 
 export default RemoteNuclioRouteWrapper
