@@ -62,11 +62,10 @@ const buildProjectLink = (projectId, sectionId, subTabId) => {
 const ProjectDropdown = ({ projectName }) => {
   const { pathname } = useLocation()
   const projectStore = useSelector(state => state.projectStore)
-  const { setHoverLocked, setOpen: setSidebarOpen } = useSidebar()
+  const { setHoverLocked } = useSidebar()
   const [open, setOpen] = useState(false)
   const [filter, setFilter] = useState('')
   const currentProjectRef = useRef(null)
-  const isInitialProjectMount = useRef(true)
 
   const projectsList = useMemo(() => {
     const parts = pathname.split('/')
@@ -93,15 +92,6 @@ const ProjectDropdown = ({ projectName }) => {
 
     return () => clearTimeout(timer)
   }, [open])
-
-  useEffect(() => {
-    if (isInitialProjectMount.current) {
-      isInitialProjectMount.current = false
-      return
-    }
-    setSidebarOpen(false)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectName])
 
   return (
     <SidebarMenu>
