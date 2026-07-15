@@ -39,9 +39,7 @@ RUN echo "${COMMIT_HASH}" > ./build/COMMIT_HASH && \
     echo "${DATE}" > ./build/BUILD_DATE
 
 # production stage
-# TODO: temporarily pulling from Docker Hub upstream. Switch back to the internal
-# artifactory mirror once DevOps syncs the 1.31.2-alpine3.23 tag (see IG4-3203 / IG4-3204).
-FROM nginxinc/nginx-unprivileged:1.31.2-alpine3.23 AS production-stage
+FROM gcr.io/iguazio/nginx-unprivileged:1.31.2-alpine3.23 AS production-stage
 
 ARG UID=101
 ARG GID=101
