@@ -50,26 +50,33 @@ import {
   PROJECT_SECTION_TABS
 } from '../../../../constants'
 
+const normalizeSection = section =>
+  section === 'create-function' ? 'real-time-functions' : section
+
+const buildProjectLink = (projectId, sectionId, subTabId) => {
+  if (!sectionId) return `/projects/${projectId}`
+  const tab = PROJECT_SECTION_TABS.has(subTabId) ? `/${subTabId}` : ''
+  return `/projects/${projectId}/${sectionId}${tab}`
+}
+
 const ProjectDropdown = ({ projectName }) => {
   const { pathname } = useLocation()
   const projectStore = useSelector(state => state.projectStore)
-  const { setHoverLocked } = useSidebar()
+  const { setHoverLocked, setOpen: setSidebarOpen } = useSidebar()
   const [open, setOpen] = useState(false)
   const [filter, setFilter] = useState('')
   const currentProjectRef = useRef(null)
+  const isInitialProjectMount = useRef(true)
 
   const projectsList = useMemo(() => {
     const parts = pathname.split('/')
-    const sectionId = parts[PROJECT_PATH_SECTION_INDEX]
+    const sectionId = normalizeSection(parts[PROJECT_PATH_SECTION_INDEX])
     const subTabId = parts[PROJECT_PATH_TAB_INDEX]
-    const basePath = sectionId
-      ? `/projects/${projectName}/${sectionId}${PROJECT_SECTION_TABS.has(subTabId) ? `/${subTabId}` : ''}`
-      : `/projects/${projectName}`
 
     return generateProjectsList(projectStore.projectsNames.data)
       .map(project => ({
         ...project,
-        link: basePath.replace(projectName, project.id),
+        link: buildProjectLink(project.id, sectionId, subTabId),
         isCurrent: project.id === projectName
       }))
       .filter(project => project.label.toLowerCase().includes(filter.toLowerCase()))
@@ -86,6 +93,15 @@ const ProjectDropdown = ({ projectName }) => {
 
     return () => clearTimeout(timer)
   }, [open])
+
+  useEffect(() => {
+    if (isInitialProjectMount.current) {
+      isInitialProjectMount.current = false
+      return
+    }
+    setSidebarOpen(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectName])
 
   return (
     <SidebarMenu>
@@ -144,26 +160,22 @@ const ProjectDropdown = ({ projectName }) => {
 
             {projectsList.length > 0 ? (
               <div className="flex flex-col min-h-0 overflow-y-auto flex-1">
-                {projectsList.map(project => {
-                  const itemClassName = 'flex w-full items-center justify-between gap-2'
-
-                  return (
-                    <DropdownMenuItem key={project.id} asChild>
-                      <Link
-                        ref={project.isCurrent ? currentProjectRef : null}
-                        to={project.link}
-                        className={itemClassName}
-                      >
-                        <EllipsisTooltip className="min-w-0 flex-1 whitespace-nowrap">
-                          {project.label}
-                        </EllipsisTooltip>
-                        {project.isCurrent && (
-                          <Check className="h-4 w-4 shrink-0 text-green-600" aria-hidden="true" />
-                        )}
-                      </Link>
-                    </DropdownMenuItem>
-                  )
-                })}
+                {projectsList.map(project => (
+                  <DropdownMenuItem key={project.id} asChild>
+                    <Link
+                      ref={project.isCurrent ? currentProjectRef : null}
+                      to={project.link}
+                      className='flex w-full items-center justify-between gap-2'
+                    >
+                      <EllipsisTooltip className="min-w-0 flex-1 whitespace-nowrap">
+                        {project.label}
+                      </EllipsisTooltip>
+                      {project.isCurrent && (
+                        <Check className="h-4 w-4 shrink-0 text-green-600" aria-hidden="true" />
+                      )}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
               </div>
             ) : (
               <div className="text-sm">{NO_PROJECTS_TEXT}</div>
