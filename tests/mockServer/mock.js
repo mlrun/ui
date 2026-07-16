@@ -589,7 +589,21 @@ function createNewProject(req, res) {
     project.metadata.labels = req.body.metadata.labels
     project.metadata.created = currentDate.toISOString()
     project.spec.description = req.body.spec.description
+    project.status.state = 'creating'
     projects.projects.push(project)
+
+    const creationTask = createTask(null, {
+      kind: `project.creation.${project.metadata.name}`,
+      taskFunc: () =>
+        new Promise(resolve => {
+          setTimeout(() => {
+            project.status.state = 'online'
+            resolve()
+          }, random(5000, 10000))
+        })
+    })
+    project.status.op_id = creationTask.metadata.name
+
     const summary = cloneDeep(summuryTemplate)
     summary.name = req.body.metadata.name
     projectsSummary.project_summaries.push(summary)
@@ -628,6 +642,15 @@ function deleteProjectV2(req, res) {
       taskFunc,
       kind: `project.deletion.wrapper.${req.params.project}`
     })
+
+    const deletingProject = projects.projects.find(
+      project => project.metadata.name === req.params['project']
+    )
+
+    if (deletingProject) {
+      deletingProject.status.state = 'deleting'
+      deletingProject.status.op_id = task.metadata.name
+    }
 
     res.status = 202
     res.send(task)

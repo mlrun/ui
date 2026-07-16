@@ -443,10 +443,7 @@ export const handleDeleteProject = (
 
         dispatch(setDeletingProjects(newDeletingProjects))
 
-        // Refetch immediately so `status.state: deleting` is picked up right away and
-        // the sync-status polling (see useProjectsSyncStatus.hook.js) starts covering this
-        // project even if no other project was already in a transitional state.
-        fetchMinimalProjects()
+        fetchMinimalProjects(true)
 
         if (refreshProjects) {
           pollDeletingProjects(terminatePollRef, newDeletingProjects, refreshProjects, dispatch)

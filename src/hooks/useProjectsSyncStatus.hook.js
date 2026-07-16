@@ -39,68 +39,82 @@ const fetchBackgroundTaskState = async opId => {
 
     return data?.status?.state ?? null
   } catch (error) {
-    if (error.response?.status === NOTFOUND_ERROR_STATUS_CODE) {
-      return BG_TASK_FAILED
-    }
-    console.error('Failed to fetch project background task status', error)
-
-    return null
+    return error.response?.status === NOTFOUND_ERROR_STATUS_CODE ? BG_TASK_FAILED : null
   }
 }
 
-const fetchProjectNamesWithSyncIssues = async () => {
+const fetchProjectSyncIssueNames = async () => {
   try {
     const { data } = await eventsApi.getProjectSyncIssues()
 
-    return new Set(data?.activations?.map(a => a.parameters?.project).filter(Boolean) ?? [])
-  } catch (error) {
-    console.error('Failed to fetch project sync events', error)
-
+    return new Set(
+      data?.activations?.map(activation => activation.parameters?.project).filter(Boolean)
+    )
+  } catch {
     return new Set()
   }
 }
 
-const fetchProjectSyncTooltipEntry = async (project, syncIssuesPromise) => {
-  const [backgroundTaskState, syncIssues] = await Promise.all([
+const toSyncStatusMap = entries =>
+  Object.fromEntries(entries.filter(([, tooltip]) => Boolean(tooltip)))
+
+const fetchProjectSyncTooltipEntry = async (project, syncIssueNamesPromise) => {
+  const [backgroundTaskState, syncIssueNames] = await Promise.all([
     fetchBackgroundTaskState(project.status?.op_id),
-    syncIssuesPromise
+    syncIssueNamesPromise
   ])
 
   const tooltip = getProjectSyncTooltip(
     project,
     backgroundTaskState,
-    syncIssues.has(project.metadata?.name)
+    syncIssueNames.has(project.metadata?.name)
   )
 
   return [project.metadata?.name, tooltip]
 }
 
-const fetchProjectSyncStatusMap = async transitionalProjects => {
-  const syncIssuesPromise = fetchProjectNamesWithSyncIssues()
+const fetchSyncStatusMap = async transitionalProjects => {
+  const syncIssueNamesPromise = fetchProjectSyncIssueNames()
 
-  const tooltipEntries = await Promise.all(
-    transitionalProjects.map(project => fetchProjectSyncTooltipEntry(project, syncIssuesPromise))
+  const entries = await Promise.all(
+    transitionalProjects.map(project => fetchProjectSyncTooltipEntry(project, syncIssueNamesPromise))
   )
 
-  return Object.fromEntries(tooltipEntries.filter(([, tooltip]) => Boolean(tooltip)))
+  return toSyncStatusMap(entries)
 }
 
+const getBaselineSyncStatusMap = transitionalProjects =>
+  toSyncStatusMap(
+    transitionalProjects.map(project => [
+      project.metadata?.name,
+      getProjectSyncTooltip(project, null, false)
+    ])
+  )
+
+const mergeSyncStatusMaps = (baselineMap, polledMap) =>
+  Object.fromEntries(
+    Object.keys(baselineMap).map(name => [name, polledMap[name] ?? baselineMap[name]])
+  )
+
 export const useProjectsSyncStatus = (projects, refreshProjects) => {
-  const [projectSyncStatusMap, setProjectSyncStatusMap] = useState({})
+  const [polledSyncStatusMap, setPolledSyncStatusMap] = useState({})
   const latestProjectsRef = useRef(projects)
 
   useEffect(() => {
     latestProjectsRef.current = projects
   }, [projects])
 
-  const hasTransitionalProjects = useMemo(
-    () => selectTransitionalProjects(projects).length > 0,
-    [projects]
+  const transitionalProjects = useMemo(() => selectTransitionalProjects(projects), [projects])
+  const hasTransitionalProjects = transitionalProjects.length > 0
+
+  const baselineSyncStatusMap = useMemo(
+    () => getBaselineSyncStatusMap(transitionalProjects),
+    [transitionalProjects]
   )
 
   useEffect(() => {
     if (!hasTransitionalProjects) {
-      setProjectSyncStatusMap({})
+      setPolledSyncStatusMap({})
 
       return
     }
@@ -109,18 +123,18 @@ export const useProjectsSyncStatus = (projects, refreshProjects) => {
     const terminatePollRef = { current: null }
 
     const pollProjectSyncStatus = async () => {
-      const transitionalProjects = selectTransitionalProjects(latestProjectsRef.current)
+      const currentTransitionalProjects = selectTransitionalProjects(latestProjectsRef.current)
 
-      if (!transitionalProjects.length) {
+      if (!currentTransitionalProjects.length) {
         return null
       }
 
       refreshProjects()
 
-      const syncStatusMap = await fetchProjectSyncStatusMap(transitionalProjects)
+      const syncStatusMap = await fetchSyncStatusMap(currentTransitionalProjects)
 
       if (isActive) {
-        setProjectSyncStatusMap(syncStatusMap)
+        setPolledSyncStatusMap(syncStatusMap)
       }
 
       return syncStatusMap
@@ -136,6 +150,11 @@ export const useProjectsSyncStatus = (projects, refreshProjects) => {
       terminatePollRef.current?.()
     }
   }, [hasTransitionalProjects, refreshProjects])
+
+  const projectSyncStatusMap = useMemo(
+    () => mergeSyncStatusMaps(baselineSyncStatusMap, polledSyncStatusMap),
+    [baselineSyncStatusMap, polledSyncStatusMap]
+  )
 
   return { projectSyncStatusMap }
 }

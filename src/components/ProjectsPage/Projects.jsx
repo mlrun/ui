@@ -138,15 +138,17 @@ const Projects = () => {
     [isDescendingOrder, sortProjectId]
   )
 
-  const refreshProjects = useCallback(() => {
+  const refreshProjects = useCallback((silent = false) => {
     abortControllerRef.current = new AbortController()
 
     if (!isNuclioModeDisabled) {
       dispatch(fetchAllNuclioFunctions())
     }
 
-    dispatch(removeProjects())
-    fetchMinimalProjects()
+    if (!silent) {
+      dispatch(removeProjects())
+    }
+    fetchMinimalProjects(silent)
     dispatch(
       fetchProjectsSummary({ signal: abortControllerRef.current.signal, refresh: refreshProjects })
     )
@@ -439,7 +441,7 @@ const Projects = () => {
       .then(result => {
         if (result) {
           setCreateProject(false)
-          refreshProjects()
+          refreshProjects(true)
           dispatch(fetchProjectsNames())
           dispatch(
             setNotification({

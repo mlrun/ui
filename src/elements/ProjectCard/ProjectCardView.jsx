@@ -18,19 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useRef } from 'react'
-import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useNavigate } from 'react-router-dom'
 
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
-import {
-  Tooltip,
-  TextTooltipTemplate,
-  Loader,
-  ActionsMenu,
-  ReadOnlyChips
-} from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, ActionsMenu, ReadOnlyChips } from 'igz-controls/components'
 
 import { getTimeElapsedByDate } from 'igz-controls/utils/datetime.util'
 
@@ -45,8 +38,6 @@ const ProjectCardView = React.forwardRef(
     const chipRef = useRef()
     const navigate = useNavigate()
 
-    const { deletingProjects, projectsToDelete } = useSelector(state => state.projectStore)
-
     const projectCardClassNames = classnames(
       'project-card',
       syncStatusTooltip && 'project-card--dimmed'
@@ -58,9 +49,6 @@ const ProjectCardView = React.forwardRef(
         template={<TextTooltipTemplate text={syncStatusTooltip} />}
       >
         <div className={projectCardClassNames}>
-          {!syncStatusTooltip &&
-            (Object.values(deletingProjects).includes(project.metadata.name) ||
-              projectsToDelete.includes(project.metadata.name)) && <Loader section />}
           <div
             onClick={event => {
               if (
