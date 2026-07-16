@@ -4,13 +4,14 @@ import js from '@eslint/js'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import eslintPluginImport from 'eslint-plugin-import'
+import tseslint from 'typescript-eslint'
 
 export default [
-  { ignores: ['dist', 'src/igz-controls/nextGenComponents/**'] },
+  { ignores: ['dist'] },
   js.configs.recommended,
   eslintConfigPrettier,
   {
-    files: ['**/*.{js,jsx,ts,tsx}'],
+    files: ['**/*.{js,jsx}'],
     languageOptions: {
       ecmaVersion: 2021,
       globals: {
@@ -49,9 +50,49 @@ export default [
     }
   },
   {
-    files: ["**/*.test.jsx"],
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
+      ecmaVersion: 2021,
+      globals: {
+        ...globals.browser,
+        ...globals.jest,
+        ...globals.node
+      },
+      parser: tseslint.parser,
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true
+        }
+      }
+    },
+    plugins: {
+      react: react,
+      'react-hooks': reactHooks,
+      '@typescript-eslint': tseslint.plugin
+    },
+    settings: {
+      react: {
+        version: 'detect'
+      }
+    },
     rules: {
-      "import/named": "off"
+      ...reactHooks.configs.recommended.rules,
+      ...react.configs.recommended.rules,
+      'react/react-in-jsx-scope': 'off',
+      'react/no-unescaped-entities': 'off',
+      'react/prop-types': 'off',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': process.env.NODE_ENV === 'production' ? 2 : 1,
+      'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 1,
+      'no-console': process.env.NODE_ENV === 'production' ? 2 : 1,
+      quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: false }],
+      semi: ['error', 'never']
+    }
+  },
+  {
+    files: ['**/*.test.jsx'],
+    rules: {
+      'import/named': 'off'
     }
   }
 ]

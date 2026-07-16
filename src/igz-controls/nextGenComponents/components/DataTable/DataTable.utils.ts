@@ -1,7 +1,7 @@
 import type { Column } from '@tanstack/react-table'
 import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 
-import { DATATABLE_TEXT } from '@igz-controls/constants'
+import { DATATABLE_TEXT } from '../../constants'
 
 export const getColumnWidthCalculator = <TData>(columns: Column<TData, unknown>[]) => {
   const dataColumns = columns.filter(col => col.id !== DATATABLE_TEXT.CHECKBOX_COLUMN_ID)

@@ -33,6 +33,7 @@ import FormSelect from './FormSelect/FormSelect'
 import FormTextarea from './FormTextarea/FormTextarea'
 import FormToggle from './FormToggle/FormToggle'
 import LoadButton from './LoadButton/LoadButton'
+import MaskedInput from './MaskedInput/MaskedInput'
 import Loader from './Loader/Loader'
 import LoaderForSuspenseFallback from './Loader/LoaderForSuspenseFallback'
 import Modal from './Modal/Modal'
@@ -65,6 +66,7 @@ export {
   FormTextarea,
   FormToggle,
   LoadButton,
+  MaskedInput,
   Loader,
   LoaderForSuspenseFallback,
   Modal,

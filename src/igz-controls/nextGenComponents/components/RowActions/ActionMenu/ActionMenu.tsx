@@ -1,15 +1,15 @@
 import { EllipsisVertical } from 'lucide-react'
 import { FC } from 'react'
 
-import { Button } from '@igz-controls/components/ui/button'
+import { Button } from '../../ui/button'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem
-} from '@igz-controls/components/ui/dropdown-menu'
-import { MORE_ACTIONS } from '@igz-controls/constants'
-import { ActionMenuItem } from '@igz-controls/types/table/rowAction'
+} from '../../ui/dropdown-menu'
+import { MORE_ACTIONS } from '../../../constants'
+import { ActionMenuItem } from '../../../types/table/rowAction'
 
 type ActionMenuProps = {
   items: ActionMenuItem[]

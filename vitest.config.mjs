@@ -20,7 +20,6 @@ export default defineConfig({
       { find: 'igz-controls/nextGenComponents', replacement: path.resolve(__dirname, 'src/igz-controls/nextGenComponents/index.ts') },
       { find: 'igz-controls/index.css', replacement: path.resolve(__dirname, 'src/igz-controls/index.scss') },
       { find: 'igz-controls', replacement: path.resolve(__dirname, 'src/igz-controls') },
-      { find: '@igz-controls', replacement: path.resolve(__dirname, 'src/igz-controls/nextGenComponents') },
       { find: '@', replacement: path.resolve(__dirname, './src/nextGenComponents') }
     ]
   }

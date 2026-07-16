@@ -1,6 +1,6 @@
 import { ComponentType, FC, SVGProps } from 'react'
 
-import { Button } from '@igz-controls/components/ui/button'
+import { Button } from '../../ui/button'
 
 type SingleActionButtonProps = {
   icon?: ComponentType<SVGProps<SVGSVGElement>>

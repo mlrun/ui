@@ -1,9 +1,9 @@
 import { ComponentType, ReactNode, useMemo } from 'react'
 
 import Close from '../../../images/close.svg?react'
-import EllipsisTooltip from '@igz-controls/components/EllipsisTooltip/EllipsisTooltip'
-import { Button } from '@igz-controls/components/ui/button'
-import { DETAILS_FALLBACK_TITLE } from '@igz-controls/constants'
+import EllipsisTooltip from '../EllipsisTooltip/EllipsisTooltip'
+import { Button } from '../ui/button'
+import { DETAILS_FALLBACK_TITLE } from '../../constants'
 
 type DetailsPanelProps<TData extends object> = {
   row: TData

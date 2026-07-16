@@ -1,7 +1,7 @@
 import type { ClipboardEvent, KeyboardEvent } from 'react'
 import { useCallback, useRef, useState } from 'react'
 
-import { cn } from '@igz-controls/lib/utils'
+import { cn } from '../../lib/utils'
 
 export type MaskItem = RegExp | string
 

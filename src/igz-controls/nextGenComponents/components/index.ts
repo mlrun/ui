@@ -52,9 +52,6 @@ export * from './ui/select'
 export { Separator } from './ui/separator'
 export { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
-
-export { cn } from '../lib/utils'
-
 export {
   Sidebar,
   SidebarContent,
@@ -79,4 +76,6 @@ export {
   SidebarSeparator,
   SidebarTrigger,
   useSidebar
-} from './ui/sidebar.mjs'
+} from './ui/sidebar'
+
+export { cn } from '../lib/utils'

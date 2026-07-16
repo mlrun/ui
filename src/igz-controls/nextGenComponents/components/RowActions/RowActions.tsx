@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { ActionMenuItem } from '@igz-controls/types/table/rowAction'
+import { ActionMenuItem } from '../../types/table/rowAction'
 
 import ActionMenu from './ActionMenu/ActionMenu'
 import SingleActionButton from './SingleActionButton/SingleActionButton'

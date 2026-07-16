@@ -2,8 +2,8 @@ import * as DialogPrimitive from '@radix-ui/react-dialog'
 import * as React from 'react'
 
 import Close from '../../../images/close.svg?react'
-import { Button } from '@igz-controls/components/ui/button'
-import { cn } from '@igz-controls/lib/utils'
+import { Button } from './button'
+import { cn } from '../../lib/utils'
 
 const Dialog = DialogPrimitive.Root
 

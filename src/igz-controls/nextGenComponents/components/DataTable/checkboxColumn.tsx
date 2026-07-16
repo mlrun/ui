@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@tanstack/react-table'
 
-import { Checkbox } from '@igz-controls/components/ui/checkbox'
-import { DATATABLE_TEXT } from '@igz-controls/constants'
+import { Checkbox } from '../ui/checkbox'
+import { DATATABLE_TEXT } from '../../constants'
 
 const checkboxColumn: ColumnDef<object, unknown> = {
   id: DATATABLE_TEXT.CHECKBOX_COLUMN_ID,

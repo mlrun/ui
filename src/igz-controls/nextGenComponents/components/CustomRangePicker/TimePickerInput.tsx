@@ -4,15 +4,15 @@ import {
   MaskedInput,
   isMaskComplete,
   type MaskItem
-} from '@igz-controls/components/CustomRangePicker/MaskedInput'
+} from './MaskedInput'
 import SelectIcon from '../../../images/select.svg?react'
-import { cn } from '@igz-controls/lib/utils'
+import { cn } from '../../lib/utils'
 import {
   buildHalfHourOptions,
   getTimePlaceholder,
   is12HourFormat,
   parseTimeInput
-} from '@igz-controls/utils/date.utils'
+} from '../../utils/date.utils'
 
 type Props = {
   value: string

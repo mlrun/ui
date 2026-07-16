@@ -1,6 +1,6 @@
 import Refresh from '../../../images/refresh-2.svg?react'
-import { Button } from '@igz-controls/components/ui/button'
-import { REFRESH_BUTTON_TITLE } from '@igz-controls/constants'
+import { Button } from '../ui/button'
+import { REFRESH_BUTTON_TITLE } from '../../constants'
 
 const RefreshButton = ({ onClick }: { onClick?: () => void }) => (
   <Button

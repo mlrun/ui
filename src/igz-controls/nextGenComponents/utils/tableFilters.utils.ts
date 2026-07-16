@@ -1,5 +1,5 @@
-import type { DraftValues } from '@igz-controls/stores/tableStore'
-import type { FilterFieldDef, FilterSchema } from '@igz-controls/types/table/filter'
+import type { DraftValues } from '../stores/tableStore'
+import type { FilterFieldDef, FilterSchema } from '../types/table/filter'
 
 const objectValues = <T extends Record<string, unknown>>(obj: T) => {
   return Object.values(obj) as Array<T[keyof T]>

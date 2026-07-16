@@ -3,8 +3,8 @@ import { TooltipContentProps } from '@radix-ui/react-tooltip'
 import { cva, type VariantProps } from 'class-variance-authority'
 import React from 'react'
 
-import { Tooltip, TooltipContent, TooltipTrigger } from '@igz-controls/components/ui/tooltip'
-import { cn } from '@igz-controls/lib/utils'
+import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip'
+import { cn } from '../../lib/utils'
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:border disabled:bg-white disabled:text-igz-gray disabled:[&_svg]:text-igz-secondary [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',

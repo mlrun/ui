@@ -2,10 +2,10 @@ import { AlertCircle } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import type { DateRange } from 'react-day-picker'
 
-import { DateTimePickerPanel } from '@igz-controls/components/CustomRangePicker/DateTimePickerPanel'
-import { Button } from '@igz-controls/components/ui/button'
-import { FILTER_BUTTON_APPLY, RESET } from '@igz-controls/constants'
-import type { CustomDateRange } from '@igz-controls/types/table/timeFilter'
+import { DateTimePickerPanel } from './DateTimePickerPanel'
+import { Button } from '../ui/button'
+import { FILTER_BUTTON_APPLY, RESET } from '../../constants'
+import type { CustomDateRange } from '../../types/table/timeFilter'
 import {
   applyHourToDate,
   getDefaultSinceHour,
@@ -13,7 +13,7 @@ import {
   isoToHour,
   isoToLocalDate,
   toUTCISO
-} from '@igz-controls/utils/date.utils'
+} from '../../utils/date.utils'
 
 type Props = {
   onApply?: (range: CustomDateRange) => void

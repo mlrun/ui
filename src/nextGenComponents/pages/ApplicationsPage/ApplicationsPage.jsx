@@ -207,7 +207,7 @@ const ApplicationsPage = () => {
 
   return (
     <div
-      className="mlrun-tw-scope h-screen overflow-hidden bg-background flex flex-col w-full"
+      className="h-screen overflow-hidden bg-background flex flex-col w-full"
       data-testid="applications-page"
     >
       <TooltipProvider>

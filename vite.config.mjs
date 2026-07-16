@@ -62,7 +62,6 @@ export default defineConfig(({ mode }) => {
         ),
         'igz-controls/index.css': path.resolve(__dirname, 'src/igz-controls/index.scss'),
         'igz-controls': path.resolve(__dirname, 'src/igz-controls'),
-        '@igz-controls': path.resolve(__dirname, 'src/igz-controls/nextGenComponents'),
         '@': path.resolve(__dirname, './src/nextGenComponents')
       },
       dedupe: [

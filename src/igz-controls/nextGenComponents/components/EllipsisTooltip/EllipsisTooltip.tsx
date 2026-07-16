@@ -1,22 +1,24 @@
-import { ReactNode, useEffect, useRef, useState } from 'react'
+import { ComponentPropsWithoutRef, ReactNode, useRef, useState } from 'react'
 
-import { Tooltip, TooltipContent, TooltipTrigger } from '@igz-controls/components/ui/tooltip'
-import { cn } from '@igz-controls/lib/utils'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
+import { cn } from '../../lib/utils'
 
 type EllipsisTooltipProps = {
   children: ReactNode
   className?: string
-}
+} & Omit<ComponentPropsWithoutRef<typeof TooltipContent>, 'children'>
 
-const EllipsisTooltip = ({ children, className }: EllipsisTooltipProps) => {
+const EllipsisTooltip = ({ children, className, ...tooltipContentProps }: EllipsisTooltipProps) => {
   const ref = useRef<HTMLDivElement>(null)
   const [isOverflowed, setIsOverflowed] = useState(false)
 
-  useEffect(() => {
-    const text = ref.current
-    if (!text) return
-    setIsOverflowed(text.scrollWidth > text.clientWidth)
-  }, [children])
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      setIsOverflowed(false)
+      return
+    }
+    if (ref.current) setIsOverflowed(ref.current.scrollWidth > ref.current.clientWidth)
+  }
 
   const content = (
     <div ref={ref} className={cn('truncate overflow-hidden text-ellipsis w-full', className)}>
@@ -24,12 +26,13 @@ const EllipsisTooltip = ({ children, className }: EllipsisTooltipProps) => {
     </div>
   )
 
-  if (!isOverflowed) return content
-
   return (
-    <Tooltip>
+    <Tooltip open={isOverflowed} onOpenChange={handleOpenChange}>
       <TooltipTrigger asChild>{content}</TooltipTrigger>
-      <TooltipContent className="break-words *:text-white [&_*]:text-white">
+      <TooltipContent
+        className="break-words *:text-white [&_*]:text-white"
+        {...tooltipContentProps}
+      >
         <div className="select-text">{children}</div>
       </TooltipContent>
     </Tooltip>

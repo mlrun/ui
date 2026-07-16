@@ -32,6 +32,18 @@ export function getSupportedLocale() {
 
 export const supportedLocale = getSupportedLocale()
 
+const normalizeDatetimeString = datetime => {
+  if (
+    typeof datetime === 'string' &&
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(datetime) &&
+    !/Z$|[+-]\d{2}:?\d{2}$/.test(datetime)
+  ) {
+    return datetime + 'Z'
+  }
+
+  return datetime
+}
+
 export const formatDatetime = (
   datetime,
   invalidDateMessage,
@@ -49,7 +61,7 @@ export const formatDatetime = (
     return invalidDateMessage
   }
 
-  const date = new Date(datetime)
+  const date = new Date(normalizeDatetimeString(datetime))
 
   if (isNaN(date)) {
     return invalidDateMessage

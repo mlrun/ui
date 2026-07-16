@@ -26,7 +26,6 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/nextGenComponents/*"],
-      "@igz-controls/*": ["src/igz-controls/nextGenComponents/*"],
       "igz-controls/*": ["src/igz-controls/*"]
     }
   },

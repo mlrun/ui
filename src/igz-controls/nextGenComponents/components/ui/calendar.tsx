@@ -3,9 +3,9 @@ import type { DateRange } from 'react-day-picker'
 import { DayButton as DayButtonImport, DayPicker, getDefaultClassNames } from 'react-day-picker'
 
 import CalendarChevronSvg from '../../../images/calendar-chevron.svg?react'
-import { Button } from '@igz-controls/components/ui/button'
-import { cn } from '@igz-controls/lib/utils'
-import { getSupportedLocale } from '@igz-controls/utils/date.utils'
+import { Button } from './button'
+import { cn } from '../../lib/utils'
+import { getSupportedLocale } from '../../utils/date.utils'
 
 type CalendarProps = React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: React.ComponentProps<typeof Button>['variant']

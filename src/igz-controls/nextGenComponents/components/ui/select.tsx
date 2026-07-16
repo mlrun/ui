@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import Check from '../../../images/check.svg?react'
 import SelectIcon from '../../../images/select.svg?react'
-import { cn } from '@igz-controls/lib/utils'
+import { cn } from '../../lib/utils'
 
 const Select = SelectPrimitive.Root
 

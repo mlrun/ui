@@ -2,23 +2,23 @@ import { useState } from 'react'
 
 import Check from '../../../images/check.svg?react'
 import Select from '../../../images/select.svg?react'
-import CustomRangePicker from '@igz-controls/components/CustomRangePicker'
+import CustomRangePicker from '../CustomRangePicker'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem
-} from '@igz-controls/components/ui/dropdown-menu'
+} from '../ui/dropdown-menu'
 import {
   TIME_FILTER_CUSTOM_VALUE,
   TIME_FILTER_RESET_VALUE,
   TIME_FILTER_FALLBACK_LABEL,
   DEFAULT_TIME_FILTER_OPTIONS,
   START_TIME_LABEL
-} from '@igz-controls/constants'
-import { cn } from '@igz-controls/lib/utils'
-import { TimeFilterDropdownProps, TimeFilterValue } from '@igz-controls/types/table/timeFilter'
-import { formatCustomRangeLabel } from '@igz-controls/utils/date.utils'
+} from '../../constants'
+import { cn } from '../../lib/utils'
+import { TimeFilterDropdownProps, TimeFilterValue } from '../../types/table/timeFilter'
+import { formatCustomRangeLabel } from '../../utils/date.utils'
 
 const TimeFilterDropdown = ({
   value,

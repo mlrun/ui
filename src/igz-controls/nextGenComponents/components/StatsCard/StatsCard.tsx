@@ -1,10 +1,10 @@
 import { type FunctionComponent, type ReactNode, type SVGProps } from 'react'
 
 import Clock from '../../../images/clock.svg?react'
-import { Card, CardContent, CardHeader, CardTitle } from '@igz-controls/components'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@igz-controls/components/ui/tooltip'
-import { STATS_CARD_TIMESTAMP } from '@igz-controls/constants'
-import { cn } from '@igz-controls/lib/utils'
+import { Card, CardContent, CardHeader, CardTitle } from '..'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip'
+import { STATS_CARD_TIMESTAMP } from '../../constants'
+import { cn } from '../../lib/utils'
 
 type StatsCardProps = {
   children: ReactNode

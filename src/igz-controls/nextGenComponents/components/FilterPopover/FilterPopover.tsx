@@ -2,22 +2,22 @@ import { useMemo } from 'react'
 
 import ActiveFilter from '../../../images/activeFilter.svg?react'
 import Filter from '../../../images/filter-2.svg?react'
-import { Button } from '@igz-controls/components/ui/button'
-import { Input } from '@igz-controls/components/ui/input'
-import { Popover, PopoverTrigger, PopoverContent } from '@igz-controls/components/ui/popover'
-import { ScrollArea } from '@igz-controls/components/ui/scroll-area'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
+import { Popover, PopoverTrigger, PopoverContent } from '../ui/popover'
+import { ScrollArea } from '../ui/scroll-area'
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem
-} from '@igz-controls/components/ui/select'
-import { FILTER_POPOVER_DEFAULT_TITLE, FILTER_BUTTON_CLEAR, FILTER_BUTTON_APPLY } from '@igz-controls/constants'
-import { useTableStore, selectFilterPopover, DEFAULT_FILTER_SCOPE } from '@igz-controls/stores/tableStore'
-import type { FilterFieldDef, FilterSchema, FilterValues } from '@igz-controls/types/table/filter'
-import { buildInitialFromSchema, hasActiveFilters, objectValues } from '@igz-controls/utils/tableFilters.utils'
-import MultiSelectField from '@igz-controls/components/MultiSelectField'
+} from '../ui/select'
+import { FILTER_POPOVER_DEFAULT_TITLE, FILTER_BUTTON_CLEAR, FILTER_BUTTON_APPLY } from '../../constants'
+import { useTableStore, selectFilterPopover, DEFAULT_FILTER_SCOPE } from '../../stores/tableStore'
+import type { FilterFieldDef, FilterSchema, FilterValues } from '../../types/table/filter'
+import { buildInitialFromSchema, hasActiveFilters, objectValues } from '../../utils/tableFilters.utils'
+import MultiSelectField from '../MultiSelectField'
 
 type Props<K extends string> = {
   schema: FilterSchema<K>

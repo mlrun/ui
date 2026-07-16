@@ -7,9 +7,9 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious
-} from '@igz-controls/components/ui/pagination'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@igz-controls/components/ui/tooltip'
-import { cn } from '@igz-controls/lib/utils'
+} from '../ui/pagination'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip'
+import { cn } from '../../lib/utils'
 
 export type PaginationConfig = {
   currentPage: number

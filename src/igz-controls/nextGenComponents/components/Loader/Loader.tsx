@@ -1,6 +1,6 @@
 import { Loader2 } from 'lucide-react'
 
-import { cn } from '@igz-controls/lib/utils'
+import { cn } from '../../lib/utils'
 
 export type LoaderProps = {
   /** Controls overall placement and sizing strategy.

@@ -1,14 +1,14 @@
 import { useState } from 'react'
 
-import { Checkbox } from '@igz-controls/components/ui/checkbox'
+import { Checkbox } from '../ui/checkbox'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from '@igz-controls/components/ui/dropdown-menu'
-import type { DraftValues } from '@igz-controls/stores/tableStore'
-import type { FilterFieldDef } from '@igz-controls/types/table/filter'
+} from '../ui/dropdown-menu'
+import type { DraftValues } from '../../stores/tableStore'
+import type { FilterFieldDef } from '../../types/table/filter'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 

@@ -1,4 +1,4 @@
-import { TimeFilterOption } from '@igz-controls/types/table/timeFilter'
+import { TimeFilterOption } from '../types/table/timeFilter'
 
 export const COPY = 'Copy'
 

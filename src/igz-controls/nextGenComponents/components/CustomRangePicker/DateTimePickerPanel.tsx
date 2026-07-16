@@ -5,16 +5,16 @@ import {
   MaskedInput,
   isMaskComplete,
   type MaskItem
-} from '@igz-controls/components/CustomRangePicker/MaskedInput'
-import { TimePickerInput } from '@igz-controls/components/CustomRangePicker/TimePickerInput'
-import { Calendar } from '@igz-controls/components/ui/calendar'
-import { cn } from '@igz-controls/lib/utils'
+} from './MaskedInput'
+import { TimePickerInput } from './TimePickerInput'
+import { Calendar } from '../ui/calendar'
+import { cn } from '../../lib/utils'
 import {
   formatLocalDate,
   getDatePlaceholder,
   getSupportedLocale,
   parseLocalDate
-} from '@igz-controls/utils/date.utils'
+} from '../../utils/date.utils'
 
 type Props = {
   label: string

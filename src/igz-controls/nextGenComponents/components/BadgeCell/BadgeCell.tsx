@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import Badge, { getBadgeColor } from '@igz-controls/components/Badge'
-import { Popover, PopoverContent, PopoverTrigger } from '@igz-controls/components/ui/popover'
-import { cn } from '@igz-controls/lib/utils'
+import Badge, { getBadgeColor } from '../Badge'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { cn } from '../../lib/utils'
 
 export type BadgeItem = {
   key: string
