@@ -31,6 +31,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  EllipsisTooltip,
   Input,
   Tooltip,
   TooltipContent,
@@ -41,7 +42,13 @@ import { generateProjectsList } from '../../../../utils/projects'
 
 import HomepageIcon from 'igz-controls/images/mlrun-project-home.svg?react'
 import SearchIcon from 'igz-controls/images/search.svg?react'
-import { NO_PROJECTS_TEXT, PLACEHOLDER_SEARCH } from '../../../../constants'
+import {
+  NO_PROJECTS_TEXT,
+  PLACEHOLDER_SEARCH,
+  PROJECT_PATH_SECTION_INDEX,
+  PROJECT_PATH_TAB_INDEX,
+  PROJECT_SECTION_TABS
+} from '../../../../constants'
 
 const ProjectDropdown = ({ projectName }) => {
   const { pathname } = useLocation()
@@ -52,10 +59,17 @@ const ProjectDropdown = ({ projectName }) => {
   const currentProjectRef = useRef(null)
 
   const projectsList = useMemo(() => {
+    const parts = pathname.split('/')
+    const sectionId = parts[PROJECT_PATH_SECTION_INDEX]
+    const subTabId = parts[PROJECT_PATH_TAB_INDEX]
+    const basePath = sectionId
+      ? `/projects/${projectName}/${sectionId}${PROJECT_SECTION_TABS.has(subTabId) ? `/${subTabId}` : ''}`
+      : `/projects/${projectName}`
+
     return generateProjectsList(projectStore.projectsNames.data)
       .map(project => ({
         ...project,
-        link: pathname.replace(projectName, project.id),
+        link: basePath.replace(projectName, project.id),
         isCurrent: project.id === projectName
       }))
       .filter(project => project.label.toLowerCase().includes(filter.toLowerCase()))
@@ -140,7 +154,14 @@ const ProjectDropdown = ({ projectName }) => {
                         to={project.link}
                         className={itemClassName}
                       >
-                        <span>{project.label}</span>
+                        <EllipsisTooltip
+                          className="min-w-0 flex-1 whitespace-nowrap"
+                          side="bottom"
+                          align="start"
+                          sideOffset={10}
+                        >
+                          {project.label}
+                        </EllipsisTooltip>
                         {project.isCurrent && (
                           <Check className="h-4 w-4 shrink-0 text-green-600" aria-hidden="true" />
                         )}
