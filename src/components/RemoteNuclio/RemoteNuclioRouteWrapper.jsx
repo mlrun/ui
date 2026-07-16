@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useState, Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { useParams, useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { ensureNuclioRemote, loadNuclioApp } from '../../utils/nuclio.remotes.utils'
 import NuclioRemoteError from './NuclioRemoteError'
 import { Loader } from 'igz-controls/components'
@@ -35,46 +35,17 @@ const isNuclioPath = pathname =>
 
 const RemoteNuclioRouteWrapper = () => {
   const params = useParams()
-  const location = useLocation()
+  const { pathname } = useLocation()
   const [ready, setReady] = useState(false)
   const [error, setError] = useState(false)
 
   const nuclioItemName = params?.['*']?.split('/').filter(Boolean)[0] ?? ''
 
-  // location fires after every committed navigation including post-blocker proceed(), unlike the pushState patch which misses replayed navigations.
   useEffect(() => {
-    if (isNuclioPath(location.pathname)) {
+    if (isNuclioPath(pathname)) {
       window.dispatchEvent(new PopStateEvent('popstate'))
     }
-  }, [location.pathname])
-
-  useEffect(() => {
-    const origPushState = history.pushState
-    const origReplaceState = history.replaceState
-
-    history.pushState = function (...args) {
-      origPushState.apply(this, args)
-      Promise.resolve().then(() => {
-        if (isNuclioPath(window.location.pathname)) {
-          window.dispatchEvent(new PopStateEvent('popstate'))
-        }
-      })
-    }
-
-    history.replaceState = function (...args) {
-      origReplaceState.apply(this, args)
-      Promise.resolve().then(() => {
-        if (isNuclioPath(window.location.pathname)) {
-          window.dispatchEvent(new PopStateEvent('popstate'))
-        }
-      })
-    }
-
-    return () => {
-      history.pushState = origPushState
-      history.replaceState = origReplaceState
-    }
-  }, [])
+  }, [pathname])
 
   useEffect(() => {
     setReady(false)
