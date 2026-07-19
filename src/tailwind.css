@@ -64,7 +64,6 @@
     --dropdown-border: 260, 7%, 88%, 1;
   }
 }
-
 @layer base {
   .mlrun-tw-scope {
     font-family: Roboto, sans-serif;
@@ -111,8 +110,4 @@
     margin: 0;
     padding: 0;
   }
-}
-
-.group:has([data-testid="sidebar-project-dropdown-trigger"][data-state="open"]) [data-testid="pin-sidebar-button"] {
-  opacity: 1;
 }
