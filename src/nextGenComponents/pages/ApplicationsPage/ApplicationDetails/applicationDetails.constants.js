@@ -94,8 +94,6 @@ export const API_GATEWAY_STATE_CLASS = {
 
 export { GATEWAY_RELATIONSHIP } from '../../../../utils/apiGateway.util'
 
-export const NUCLIO_OWNER_LABEL = 'iguazio.com/username'
-
 export const FORCE_SSL_REDIRECT_ANNOTATION = 'nginx.ingress.kubernetes.io/force-ssl-redirect'
 
 export const API_GATEWAYS_FILTER_CONFIG = {
