@@ -17,8 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { vi, describe, it, expect, beforeEach } from 'vitest'
-
 import { enrichFunctionsWithNuclio, computeCounters } from '../utils/nuclioEnrichment.util'
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
@@ -28,7 +26,7 @@ vi.mock('../utils/getNuclioFuncState', () => ({
 }))
 
 vi.mock('../utils/getState', () => ({
-  default: vi.fn((state, _page, _kind) => ({
+  default: vi.fn(state => ({
     value: state,
     label: state.charAt(0).toUpperCase() + state.slice(1),
     className: `state-${state}-nuclioFunctions`

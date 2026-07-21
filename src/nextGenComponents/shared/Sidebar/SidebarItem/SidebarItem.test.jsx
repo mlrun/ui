@@ -26,6 +26,23 @@ import SidebarItem from './SidebarItem'
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
 
+const { MockSidebarMenuItem } = vi.hoisted(() => {
+  const React = require('react')
+
+  return {
+    MockSidebarMenuItem: React.forwardRef(function MockSidebarMenuItem(
+      { children, className, ...rest },
+      ref
+    ) {
+      return (
+        <li ref={ref} data-testid="sidebar-menu-item" className={className} {...rest}>
+          {children}
+        </li>
+      )
+    })
+  }
+})
+
 const mockMatch = vi.fn()
 
 vi.mock('react-router-dom', () => ({
@@ -53,11 +70,7 @@ vi.mock('igz-controls/nextGenComponents', () => ({
         {children}
       </button>
     ),
-  SidebarMenuItem: ({ children, className, ...rest }) => (
-    <li data-testid="sidebar-menu-item" className={className} {...rest}>
-      {children}
-    </li>
-  ),
+  SidebarMenuItem: MockSidebarMenuItem,
   useSidebar: () => ({ open: true })
 }))
 

@@ -34,11 +34,14 @@ vi.mock('./useContainerWidth.hook', () => ({
 
 vi.mock('igz-controls/nextGenComponents', () => ({
   cn: (...args) => args.filter(Boolean).join(' '),
-  Tabs: ({ children, value, onValueChange, ...props }) => (
-    <div data-testid="tabs" data-value={value} {...props}>
-      {children}
-    </div>
-  ),
+  Tabs: ({ children, value, onValueChange, ...props }) => {
+    void onValueChange
+    return (
+      <div data-testid="tabs" data-value={value} {...props}>
+        {children}
+      </div>
+    )
+  },
   TabsList: ({ children, ...props }) => (
     <div data-testid="tabs-list" {...props}>
       {children}

@@ -24,7 +24,6 @@ export default {
       'Register artifact',
       'Batch run',
       'Train model',
-      'Batch inference',
       'Create real-time function'
     ],
     Quick_Actions_Options_Demo: [
@@ -32,7 +31,6 @@ export default {
       'Register artifact',
       'Batch run',
       'Train model',
-      'Batch inference',
       'Create real-time function',
       'Register model',
       'ML function',
@@ -47,13 +45,13 @@ export default {
       'models. You can also run any additional code ' +
       'in batch, as well as define and run workflows.',
     Deployment_Description:
-      'Deploy online serving models or perform batch ' +
-      'inference, as well as define data and model ' +
+      'Deploy online serving models, as well as define data and model ' +
       'monitoring and notification.'
   },
   Feature_Store: {
     Tab_List: ['Feature Sets', 'Features', 'Feature Vectors'],
-    Delete_Feature_Vector_Message: /Are you sure you want to delete the feature vector "(.+?)"\?. You cannot restore a feature vector after deleting it./,
+    Delete_Feature_Vector_Message:
+      /Are you sure you want to delete the feature vector "(.+?)"\?. You cannot restore a feature vector after deleting it./
   },
   Models: {
     Tab_List: ['Models', 'Model Endpoints', 'Real-Time Pipelines'],
@@ -115,7 +113,13 @@ export default {
   },
   Feature_Vectors_Info_Pane: {
     Tab_List: ['Overview', 'Requested Features', 'Analysis'],
-    Tab_List_Extended: ['Overview', 'Requested Features', 'Returned Features', 'Statistics', 'Analysis'],
+    Tab_List_Extended: [
+      'Overview',
+      'Requested Features',
+      'Returned Features',
+      'Statistics',
+      'Analysis'
+    ],
     Overview_General_Headers: [
       'Description:',
       'Labels:',
@@ -129,13 +133,20 @@ export default {
     ]
   },
   Common_Lists: {
-    Action_Menu_List: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete', 'Delete all versions'],
+    Action_Menu_List: [
+      'Add a tag',
+      'Download',
+      'Copy URI',
+      'View YAML',
+      'Delete',
+      'Delete all versions'
+    ],
     Action_Menu_List_LLM_Prompt: ['Add a tag', 'Download', 'Copy URI', 'View YAML'],
     Action_Menu_List_Version_History: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete'],
     Action_Menu_List_Expanded: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete all'],
     Action_Menu_List_Artifacts_Transition_Popup: ['Download', 'Copy URI', 'View YAML'],
     Action_Menu_List_Function_Transition_Popup: ['View YAML'],
-    Action_Menu_List_Run_Transition_Popup: ['Run\'s resource monitoring', 'View YAML'],
+    Action_Menu_List_Run_Transition_Popup: ["Run's resource monitoring", 'View YAML'],
     Action_Menu_List_Feature_Set_Transition_Popup: ['View YAML'],
     Handler_List: ['train'],
     Pods_Priority_List: ['Low', 'Medium', 'High'],
@@ -143,7 +154,8 @@ export default {
   },
   Datasets_Info_Pane: {
     Tab_List: ['Overview', 'Preview', 'Metadata', 'Analysis'],
-    Info_Banner_Message: /The dataset is not in the filtered list\. Closing the details panel will return you to the current list\./,
+    Info_Banner_Message:
+      /The dataset is not in the filtered list\. Closing the details panel will return you to the current list\./,
     Overview_General_Headers: [
       'Hash:',
       'Key:',
@@ -178,7 +190,8 @@ export default {
   LLM_Prompts_Info_Pane: {
     Tab_List: ['Overview', 'Prompt Template', 'Invocation Configuration'],
     Tab_List_Prompt_Template: ['Prompt', 'Arguments'],
-    Info_Banner_Message: /The LLM prompt is not in the filtered list\. Closing the details panel will return you to the current list\./,
+    Info_Banner_Message:
+      /The LLM prompt is not in the filtered list\. Closing the details panel will return you to the current list\./,
     Overview_General_Headers: [
       'Key:',
       'Description:',
@@ -204,13 +217,7 @@ export default {
       'Severity:',
       'Job:'
     ],
-    Overview_General_Headers_PerProject: [
-      'Job name:',
-      'Type:',
-      'Timestamp:',
-      'Severity:',
-      'Job:'
-    ],
+    Overview_General_Headers_PerProject: ['Job name:', 'Type:', 'Timestamp:', 'Severity:', 'Job:'],
     Overview_Trigger_Criteria_Headers: ['Trigger criteria count:', 'Trigger criteria time period:']
   },
   Alerts_Endpoint_Info_Pane: {
@@ -241,12 +248,7 @@ export default {
       'Timestamp:',
       'Severity:'
     ],
-    Overview_General_Headers_Per_Project: [
-      'Application name:',
-      'Type:',
-      'Timestamp:',
-      'Severity:'
-    ],
+    Overview_General_Headers_Per_Project: ['Application name:', 'Type:', 'Timestamp:', 'Severity:'],
     Overview_Trigger_Criteria_Headers: ['Trigger criteria count:', 'Trigger criteria time period:']
   },
   ML_Functions_Tab: {
@@ -290,7 +292,8 @@ export default {
   },
   Files_Info_Pane: {
     Tab_List: ['Overview', 'Preview'],
-    Info_Banner_Message: /The (.+?) is not in the filtered list\. Closing the details panel will return you to the current list\./,
+    Info_Banner_Message:
+      /The (.+?) is not in the filtered list\. Closing the details panel will return you to the current list\./,
     Overview_General_Headers: [
       'Hash:',
       'Key:',
@@ -310,7 +313,8 @@ export default {
     Tab_List_Two_Tabs: ['Overview', 'Preview'],
     Tab_List_Extended: ['Overview', 'Preview', 'Features', 'Statistics'],
     Tab_List_Prompt: ['Overview', 'Preview', 'LLM Prompts'],
-    Info_Banner_Message: /The (.+?) is not in the filtered list\. Closing the details panel will return you to the current list\./,
+    Info_Banner_Message:
+      /The (.+?) is not in the filtered list\. Closing the details panel will return you to the current list\./,
     Overview_General_Headers: [
       'Hash:',
       'Key:',
@@ -345,12 +349,7 @@ export default {
       'Last prediction:',
       'Error count:'
     ],
-    Overview_Drift_Headers: [
-      'Mean TVD:',
-      'Mean hellinger:',
-      'Mean KLD:',
-      'Drift actual value:'
-    ]
+    Overview_Drift_Headers: ['Mean TVD:', 'Mean hellinger:', 'Mean KLD:', 'Drift actual value:']
   },
   New_Feature_Store: {
     Kind_Options: ['HTTP', 'CSV', 'PARQUET'],
@@ -456,8 +455,10 @@ export default {
     Failed_Jobs: 'Aborted, Error',
     Failed_Worflows: 'Error, Failed',
     Succeeded: 'Completed',
-    Statistics_Tab_Tip: 'Statistics reflect the data for the latest ingestion. \n Note that some values may be empty due to the use of different engines for calculating statistics',
-    Monitoring_Jobs_Box_Title_Tip: 'Number of Job runs, clicking on the counters navigates to jobs screen.',
+    Statistics_Tab_Tip:
+      'Statistics reflect the data for the latest ingestion. \n Note that some values may be empty due to the use of different engines for calculating statistics',
+    Monitoring_Jobs_Box_Title_Tip:
+      'Number of Job runs, clicking on the counters navigates to jobs screen.',
     Error_Content: 'Error. Columns must be same length as key',
     Error_Content_Workflow:
       "Error. 2021-08-29 20:01:36.582972: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library 'libcudart.so.11.0'; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/lib:/usr/local/lib: 2021-08-29 20:01:36.583019: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine. 2021-08-29 20:01:46.470042: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set 2021-08-29 20:01:46.470263: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/lib:/usr/local/lib: 2021-08-29 20:01:46.470283: W tensorflow/stream_executor/cuda/cuda_driver.cc:326] failed call to cuInit: UNKNOWN ERROR (303) 2021-08-29 20:01:46.470306: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (train-1193bacd-worker-0): /proc/driver/nvidia/version does not exist 2021-08-29 20:01:46.518782: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations: AVX2 FMA To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags. 2021-08-29 20:01:46.518927: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set Some callbacks may not have access to the averaged metrics, see https://github.com/horovod/horovod/issues/2440 Traceback (most recent call last): File \"/User/demos/image-classification-with-distributed-training/src-tfv2/horovod-training.py\", line 116, in <module> hvd.callbacks.LearningRateWarmupCallback(warmup_epochs=5, verbose=1), TypeError: __init__() missing 1 required positional argument: 'initial_lr'"
@@ -563,8 +564,8 @@ export default {
       'Must begin and end with: a–z, A–Z, 0–9\n' +
       'No consecutive characters: ..,, .–,, –.\n' +
       'Max length between two periods: 63\n' +
-      'Length – max: 253\n'+
-      'This field is required\n'+
+      'Length – max: 253\n' +
+      'This field is required\n' +
       'Secret does not reference an MLRun secret defined in another project',
     SECRET_INPUT_HINT:
       '• Valid characters: A-Z, a-z, 0-9, -, _, .\n' +
@@ -593,28 +594,29 @@ export default {
       ' Note that some values may be empty due to the use of different engines for calculating statistics',
     Models_Statistics:
       'Note that some values may be empty due to the use of different engines for calculating statistics',
-    Models_LLM_Prompts:
-      'All LLM prompt artifacts linked to this model',
-    Model_Stats_Tip:  
+    Models_LLM_Prompts: 'All LLM prompt artifacts linked to this model',
+    Model_Stats_Tip:
       'Each model can have multiple versions, produced by multiple runs and given multiple tags.\n' +
       ' You can browse them in the Models page.',
-    FeatureSets_Stats_Tip:  
+    FeatureSets_Stats_Tip:
       'Each feature set can have multiple versions, produced by multiple runs and given multiple tags.\n' +
       ' You can browse them in the Feature store page.',
     Model_Version_Tag: 'Enter a model name to enable field.',
-    Artifacts_Stats_Tip:  
+    Artifacts_Stats_Tip:
       'Each artifact can have multiple versions, produced by multiple runs and given multiple tags.\n' +
       ' You can browse them in the Artifacts page.',
     Model_Endpoint_With_Detections:
       'This chart displays the number of model endpoints that had at least one detected issue, in any monitoring application, in the relevant time period',
     Project_Monitoring_Counters: 'Counters use a caching mechanism, and are not auto-refreshed.',
     Operating_Functions: 'System functions that are used for the monitoring application operation',
-    Lag: 'Number of messages currently waiting in the app\'s queue',
+    Lag: "Number of messages currently waiting in the app's queue",
     Commited_Offset: 'Total number of messages handled by the app',
     Endpoints_Tip: 'Model endpoints processed by the monitoring app during the selected time frame',
-    Metrics_Tip: 'This table displays the values of the last metrics captured by the monitoring application. If there are metrics for more than one model endpoint at the same time, the table displays only one of those.',
+    Metrics_Tip:
+      'This table displays the values of the last metrics captured by the monitoring application. If there are metrics for more than one model endpoint at the same time, the table displays only one of those.',
     Shards_Partitions_Status_Tip: 'This table displays the current status of each shard',
-    Runs_Statistic_Section_Title_Tip: 'Number of Job runs, clicking on the counters navigates to jobs screen.'
+    Runs_Statistic_Section_Title_Tip:
+      'Number of Job runs, clicking on the counters navigates to jobs screen.'
   },
   Descriptions: {
     Archive_Project:
@@ -642,22 +644,48 @@ export default {
   },
   Jobs_And_Workflows: {
     Tab_List: ['Monitor Jobs', 'Monitor Workflows', 'Schedule'],
-    Job_Action_Menu_Options: ['Batch re-run', 'Run\'s resource monitoring', 'View YAML', 'Delete run'],
-    Job_List_Action_Menu_Options: ['Batch re-run', 'Run\'s resource monitoring', 'View YAML', 'Delete run', 'Delete all runs'],
-    Job_Overview_Action_Menu_Options: ['View YAML', 'Run\'s resource monitoring', 'Batch re-run', 'Delete run'],
-    Running_Job_Action_Menu_Options: ['Run\'s resource monitoring', 'Abort', 'View YAML'],
-    Delete_Run_Message: /Are you sure you want to delete the run with the UID "(.+?)" of the job "(.+?)"\? Deleted runs can not be restored./,
-    Delete_All_Runs_Message: /Are you sure you want to delete all runs of the job "(.+?)"\? Deleted runs can not be restored./,
-    Terminate_Workflow_Message: /Are you sure you want to terminate the workflow "(.+?)" \(stop its execution\)\? Workflows termination cannot be undone\./,
+    Job_Action_Menu_Options: [
+      'Batch re-run',
+      "Run's resource monitoring",
+      'View YAML',
+      'Delete run'
+    ],
+    Job_List_Action_Menu_Options: [
+      'Batch re-run',
+      "Run's resource monitoring",
+      'View YAML',
+      'Delete run',
+      'Delete all runs'
+    ],
+    Job_Overview_Action_Menu_Options: [
+      'View YAML',
+      "Run's resource monitoring",
+      'Batch re-run',
+      'Delete run'
+    ],
+    Running_Job_Action_Menu_Options: ["Run's resource monitoring", 'Abort', 'View YAML'],
+    Delete_Run_Message:
+      /Are you sure you want to delete the run with the UID "(.+?)" of the job "(.+?)"\? Deleted runs can not be restored./,
+    Delete_All_Runs_Message:
+      /Are you sure you want to delete all runs of the job "(.+?)"\? Deleted runs can not be restored./,
+    Terminate_Workflow_Message:
+      /Are you sure you want to terminate the workflow "(.+?)" \(stop its execution\)\? Workflows termination cannot be undone\./,
     Workflows_Action_Menu_Options: ['View YAML', 'Retry', 'Terminate'],
     Workflows_Running_Action_Menu_Options: ['View YAML', 'Terminate'],
     Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
-    Pending_Job_Action_Menu_Options: ['Batch re-run', 'Run\'s resource monitoring', 'Abort', 'View YAML'],
+    Pending_Job_Action_Menu_Options: [
+      'Batch re-run',
+      "Run's resource monitoring",
+      'Abort',
+      'View YAML'
+    ],
     Schedule_Action_Menu_Options: ['Run now', 'Edit', 'Delete', 'View YAML'],
     Workflows_Unsuccessful_Run_Message: 'Workflow did not run successfully\nRETRY',
     Workflows_Successful_Run_Message: 'Workflow run successfully.',
-    Workflows_Unsuccessful_Terminate_Message: 'Workflow "stocks-admin-main 2021-08-30 05-36-35 failed to terminate',
-    Workflows_Trigger_Termination_Message: 'A request to terminate workflow "stocks-admin-main 2021-08-30 05-36-35" was issued'
+    Workflows_Unsuccessful_Terminate_Message:
+      'Workflow "stocks-admin-main 2021-08-30 05-36-35 failed to terminate',
+    Workflows_Trigger_Termination_Message:
+      'A request to terminate workflow "stocks-admin-main 2021-08-30 05-36-35" was issued'
   },
   Jobs_Monitor_Tab_Info_Pane: {
     Pending_State: 'Pending',
@@ -713,8 +741,34 @@ export default {
     Status_Filter_Options: ['All', 'Completed', 'Running', 'Pending', 'Error', 'Aborted'],
     Entity_Type_Filter_Options: ['All', 'Job', 'Endpoint', 'Application'],
     Severity_Filter_Options: ['All', 'High', 'Medium', 'Low'],
-    Event_Type_Filter_Options: ['All', 'Job failed', 'Data drift detected', 'Data drift suspected', 'Conc drift detected', 'Conc drift suspected', 'MM performance detected', 'MM performance suspected', 'System performance detected', 'System performance suspected', 'MM app anomaly detected', 'MM app anomaly suspected', 'MM app failed'],
-    Event_Type_Endpoint_Filter_Options: ['All', 'Data drift detected', 'Data drift suspected', 'Conc drift detected', 'Conc drift suspected', 'MM performance detected', 'MM performance suspected', 'System performance detected', 'System performance suspected', 'MM app anomaly detected', 'MM app anomaly suspected'],
+    Event_Type_Filter_Options: [
+      'All',
+      'Job failed',
+      'Data drift detected',
+      'Data drift suspected',
+      'Conc drift detected',
+      'Conc drift suspected',
+      'MM performance detected',
+      'MM performance suspected',
+      'System performance detected',
+      'System performance suspected',
+      'MM app anomaly detected',
+      'MM app anomaly suspected',
+      'MM app failed'
+    ],
+    Event_Type_Endpoint_Filter_Options: [
+      'All',
+      'Data drift detected',
+      'Data drift suspected',
+      'Conc drift detected',
+      'Conc drift suspected',
+      'MM performance detected',
+      'MM performance suspected',
+      'System performance detected',
+      'System performance suspected',
+      'MM app anomaly detected',
+      'MM app anomaly suspected'
+    ],
     Event_Type_Job_Filter_Options: ['All', 'Job failed'],
     Event_Type_Application_Filter_Options: ['All', 'MM app failed'],
     Endpoint_Mode_Filter_Options: ['All', 'Real-time', 'Batch'],
@@ -728,7 +782,14 @@ export default {
       'Pending',
       'Pending retry'
     ],
-    Workflows_Status_Filter_Options: ['All', 'Error', 'Failed', 'Running', 'Completed', 'Terminating'],
+    Workflows_Status_Filter_Options: [
+      'All',
+      'Error',
+      'Failed',
+      'Running',
+      'Completed',
+      'Terminating'
+    ],
     Jobs_Type_Filter_Options: [
       'All',
       'Job',
@@ -825,19 +886,23 @@ export default {
     Common_Message_Jobs_Monitoring:
       /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
     Common_Message_Monitor_Jobs_Name: /No data matches the filter: "Name: (.+?)"/,
-    Common_Message_LLM_Prompt_Name: /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Show best iteration only: (.+?)"/,
-    Common_Message_LLM_Prompt_Label: /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Labels: (.+?), Show best iteration only: (.+?)"/,
-    Common_Message_LLM_Prompt_Tag: /No data matches the filter: "LLM prompt version tag: (.+?), Show best iteration only: (.+?)"/,
-    Common_Message_LLM_Prompt_Model_Name_Tag: /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Labels: (.+?), Show best iteration only: (.+?), Model name: (.+?), Model version tag: (.+?)"/,
-    Common_Message_Artifact_Tag: /No data matches the filter: "Version tag: (.+?), Show best iteration only: (.+?)"/,
+    Common_Message_LLM_Prompt_Name:
+      /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Show best iteration only: (.+?)"/,
+    Common_Message_LLM_Prompt_Label:
+      /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Labels: (.+?), Show best iteration only: (.+?)"/,
+    Common_Message_LLM_Prompt_Tag:
+      /No data matches the filter: "LLM prompt version tag: (.+?), Show best iteration only: (.+?)"/,
+    Common_Message_LLM_Prompt_Model_Name_Tag:
+      /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Labels: (.+?), Show best iteration only: (.+?), Model name: (.+?), Model version tag: (.+?)"/,
+    Common_Message_Artifact_Tag:
+      /No data matches the filter: "Version tag: (.+?), Show best iteration only: (.+?)"/,
     Common_Message_Jobs_Monitoring_Workflow_Project:
       /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
     Common_Message_Jobs_Monitoring_Status:
       /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Status: (.+?)"/,
     Common_Message_Monitoring_Workflow:
       /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}"/,
-    Common_Message_Monitoring_Workflow_Status:
-      /No data matches the filter: "Status: (.+?)"/,
+    Common_Message_Monitoring_Workflow_Status: /No data matches the filter: "Status: (.+?)"/,
     Common_Message_Jobs_Monitoring_Type:
       /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Type: (.+?)"/,
     Common_Message_Monitor_Jobs:
@@ -855,11 +920,16 @@ export default {
     No_Data: 'No data to show',
     No_Features_Yet: 'No features found.',
     No_Consumer_Group_Yet: 'You haven’t created any consumer group yet',
-    No_Datasets_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
-    No_Documents_data: 'No data matches the filter: "Version tag: latest, Show best iteration only: true"',
-    No_Files_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
-    No_Models_data: 'No data matches the filter: "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"',
+    No_Datasets_data:
+      'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
+    No_Documents_data:
+      'No data matches the filter: "Version tag: latest, Show best iteration only: true"',
+    No_Files_data:
+      'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
+    No_Models_data:
+      'No data matches the filter: "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"',
     No_Pods_data: 'Pods not found, it is likely because Kubernetes removed these pods listing',
-    No_Pods_data_Completion: 'Pods not found, it is likely because Kubernetes removed these pods listing after their completion'
+    No_Pods_data_Completion:
+      'Pods not found, it is likely because Kubernetes removed these pods listing after their completion'
   }
 }

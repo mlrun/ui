@@ -28,7 +28,6 @@ import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { generateNuclioLink } from '../../../utils'
 import { isSubmitDisabled } from 'igz-controls/utils/form.util'
 
-import BatchInferenceIcon from 'igz-controls/images/ic-batch-inference.svg?react'
 import CreatFunctionIcon from 'igz-controls/images/ic-create-new-function.svg?react'
 import CreateWorkflowIcon from 'igz-controls/images/ic-create-workflow.svg?react'
 import DataSetIcon from 'igz-controls/images/ic-register-dataset.svg?react'
@@ -385,14 +384,14 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
     deployment: {
       title: 'Deploy and monitor',
       subTitle:
-        'Deploy online serving models or perform batch inference, as well as define data and model monitoring and notification.',
+        'Deploy online serving models, as well as define data and model monitoring and notification.',
       actions: [
         {
           id: 'createRealTimeFunction',
           icon: <RTFunctionIcon />,
           label: 'Create real-time function',
           handleClick: () => ({
-            path: generateNuclioLink(`${base_url}/real-time-functions/create-function`),
+            path: generateNuclioLink(`${base_url}/create-function`),
             externalLink: true
           }),
           tooltip:
@@ -408,24 +407,6 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           tooltip:
             'Deploy model for real-time inference. The model can receive data as HTTP, stream, as well as execute a real-time serving pipeline.',
           hidden: !isDemoMode
-        },
-        {
-          id: 'batchInference',
-          icon: <BatchInferenceIcon />,
-          handleClick: () => {
-            return {
-              component: JobWizard,
-              props: {
-                params,
-                isBatchInference: true,
-                wizardTitle: 'Batch inference'
-              },
-              type: 'modal'
-            }
-          },
-          label: 'Batch inference',
-          tooltip:
-            'Run your model on a large dataset, usually read from an offline source, such as files or databases. The results are written to offline targets.'
         },
         {
           id: 'defineAlerts',
@@ -464,7 +445,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
         {
           id: 'nuclioFunctions',
           handleClick: () => ({
-            path: generateNuclioLink(`${base_url}/real-time-functions`),
+            path: generateNuclioLink(`${base_url}/functions`),
             externalLink: true
           }),
           label: 'Nuclio functions'

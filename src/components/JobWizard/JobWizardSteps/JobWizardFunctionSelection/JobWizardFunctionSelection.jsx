@@ -40,6 +40,7 @@ import {
 } from '../../../../constants'
 import { generateJobWizardData } from '../../JobWizard.util'
 import { generateProjectsList } from '../../../../utils/projects'
+import { excludedFunctionNames } from '../../../../utils/generateTemplatesCategories'
 import { openConfirmPopUp } from 'igz-controls/utils/common.util'
 import { scrollToElement } from '../../../../utils/scroll.util'
 import {
@@ -263,7 +264,10 @@ const JobWizardFunctionSelection = ({
       .then(response => {
         if (response?.funcs) {
           const validFunctions = response.funcs.filter(func => {
-            return includes(FUNCTION_RUN_KINDS, func.kind)
+            return (
+              includes(FUNCTION_RUN_KINDS, func.kind) &&
+              !excludedFunctionNames.includes(func.metadata.name)
+            )
           })
 
           const groupedFunctions = Object.values(
