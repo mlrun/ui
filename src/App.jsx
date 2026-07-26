@@ -176,269 +176,268 @@ const App = () => {
 
   const routeTree = (
     <>
-        <Route path="" element={<Page isHeaderShown={isHeaderShown} />}>
-          <Route path="projects" element={<Projects />} />
-          <Route path="projects/:projectName">
-            <Route index element={<Navigate replace to={PROJECT_MONITOR} />} />
-            <Route path="real-time-functions/*" element={<RemoteNuclioRouteWrapper />} />
-            <Route path="create-function/*" element={<RemoteNuclioRouteWrapper />} />
-            <Route path="api-gateways/*" element={<RemoteNuclioRouteWrapper />} />
-          </Route>
-          <Route path={`projects/*/${JOBS_MONITORING_PAGE}/*`} element={<ProjectsJobsMonitoring />}>
-            {[
-              `${JOBS_MONITORING_JOBS_TAB}/:jobName/:jobId/:tab`,
-              `${JOBS_MONITORING_JOBS_TAB}/:jobId/:tab`,
-              `${JOBS_MONITORING_JOBS_TAB}/:jobName`,
-              `${JOBS_MONITORING_JOBS_TAB}`
-            ].map((path, index) => {
-              return (
-                <Fragment key={index}>
-                  <Route path={path} element={<JobsMonitoring />} />
-                </Fragment>
-              )
-            })}
-            {[
-              `${JOBS_MONITORING_WORKFLOWS_TAB}/workflow/:workflowProjectName/:workflowId/:functionName/:functionHash/:tab`,
-              `${JOBS_MONITORING_WORKFLOWS_TAB}/workflow/:workflowProjectName/:workflowId/:jobId/:tab`,
-              `${JOBS_MONITORING_WORKFLOWS_TAB}/workflow/:workflowProjectName/:workflowId`,
-              `${JOBS_MONITORING_WORKFLOWS_TAB}`
-            ].map((path, index) => (
-              <Fragment key={index}>
-                <Route path={path} element={<WorkflowsMonitoring />} />
-              </Fragment>
-            ))}
-            <Route path={JOBS_MONITORING_SCHEDULED_TAB} element={<ScheduledMonitoring />} />
-            <Route path="*" element={<Navigate to={JOBS_MONITORING_JOBS_TAB} replace />} />
-          </Route>
-          <Route path={`projects/:projectName/${PROJECT_MONITOR}`} element={<ProjectMonitor />} />
-
-          {[
-            `projects/:id/${MONITOR_ALERTS_PAGE}`,
-            `projects/:id/${MONITOR_ALERTS_PAGE}/:project/:alertName/:alertId/:entityName/:uid/:tab`,
-            `projects/:projectName/${ALERTS_PAGE_PATH}`,
-            `projects/:projectName/${ALERTS_PAGE_PATH}/:project/:alertName/:alertId/:entityName/:uid/:tab`
-          ].map((path, index) => (
-            <Fragment key={index}>
-              <Route path={path} element={<ProjectsAlerts />} />
-            </Fragment>
-          ))}
-
-          {!isNuclioModeDisabled && (
-            <Route
-              path="projects/:projectName/monitor/consumer-groups/*"
-              element={<ConsumerGroupsWrapper />}
-            >
-              <Route path="" exact element={<ConsumerGroups />} />
-              <Route path=":functionName/:streamName" exact element={<ConsumerGroup />} />
-            </Route>
-          )}
-          <Route
-            path={`projects/:projectName/${PROJECT_QUICK_ACTIONS_PAGE}`}
-            element={<ProjectOverview />}
-          />
-          <Route
-            path="projects/:projectName/settings"
-            element={<Navigate to={`${PROJECTS_SETTINGS_GENERAL_TAB}`} replace />}
-          />
-          <Route path="/projects/:projectName/settings/:pageTab" element={<ProjectSettings />} />
-          {/*/!* Adding the next redirect for backwards compatability *!/*/}
-          <Route
-            path="projects/:projectName/jobs"
-            element={<Navigate to={`${MONITOR_JOBS_TAB}`} replace />}
-          />
-          <Route path="projects/:projectName/jobs/*" element={<Jobs />}>
-            {[
-              `${MONITOR_JOBS_TAB}/:jobName/:jobId/:tab`,
-              `${MONITOR_JOBS_TAB}/:jobId/:tab`,
-              /*/!* Adding for backwards compatibility, it redirects from INACTIVE_JOBS_TAB in Jobs.jxs to MONITOR_JOBS_TAB *!/*/
-              `${INACTIVE_JOBS_TAB}/:jobId/:tab`,
-              /*/!***********************************************************************************************************!/*/
-              `${MONITOR_JOBS_TAB}/:jobName`,
-              `${MONITOR_JOBS_TAB}`
-            ].map((path, index) => {
-              return (
-                <Fragment key={index}>
-                  <Route path={path} element={<MonitorJobs />} />
-                </Fragment>
-              )
-            })}
-            {[
-              `${MONITOR_WORKFLOWS_TAB}/workflow/:workflowId/:functionName/:functionHash/:tab`,
-              `${MONITOR_WORKFLOWS_TAB}/workflow/:workflowId/:jobId/:tab`,
-              `${MONITOR_WORKFLOWS_TAB}/workflow/:workflowId`,
-              `${MONITOR_WORKFLOWS_TAB}`
-            ].map((path, index) => (
-              <Fragment key={index}>
-                <Route path={path} element={<MonitorWorkflows />} />
-              </Fragment>
-            ))}
-            <Route path={`${SCHEDULE_TAB}`} element={<ScheduledJobs />} />
-            <Route path="*" element={<Navigate to={MONITOR_JOBS_TAB} />} replace />
-          </Route>
-          {isDemoMode
-            ? [
-                'projects/:projectName/functions',
-                'projects/:projectName/functions/:funcName/:id/:tab',
-                `projects/:projectName/functions/:funcName/${ALL_VERSIONS_PATH}`,
-                `projects/:projectName/functions/:funcName/${ALL_VERSIONS_PATH}/:id/:tab`
-              ].map((path, index) => (
-                <Fragment key={index}>
-                  <Route
-                    path={path}
-                    element={<FunctionsComponent isAllVersions={[2, 3].includes(index)} />}
-                  />
-                </Fragment>
-              ))
-            : [
-                'projects/:projectName/functions',
-                'projects/:projectName/functions/:hash/:tab',
-                'projects/:projectName/functions/:funcName/:tag/:tab'
-              ].map((path, index) => (
-                <Fragment key={index}>
-                  <Route path={path} element={<FunctionsOldComponent />} />
-                </Fragment>
-              ))}
-          {[
-            'projects/:projectName/datasets',
-            'projects/:projectName/datasets/:artifactName/:id/:tab',
-            `projects/:projectName/datasets/:artifactName/${ALL_VERSIONS_PATH}`,
-            `projects/:projectName/datasets/:artifactName/${ALL_VERSIONS_PATH}/:id/:tab`
-          ].map((path, index) => (
-            <Fragment key={index}>
-              <Route
-                path={path}
-                element={<DatasetsComponent isAllVersions={[2, 3].includes(index)} />}
-              />
-            </Fragment>
-          ))}
-          <Route
-            path="projects/:projectName/feature-store"
-            element={<Navigate to={`${FEATURE_SETS_TAB}`} replace />}
-          />
-          <Route
-            path="projects/:projectName/feature-store/add-to-feature-vector"
-            element={<AddToFeatureVectorPage />}
-          />
-          <Route path="projects/:projectName/feature-store/*" element={<FeatureStore />}>
-            {[`${FEATURE_SETS_TAB}`, `${FEATURE_SETS_TAB}/:name/:tag/:tab`].map((path, index) => (
-              <Fragment key={index}>
-                <Route path={path} element={<FeatureSets />} />
-              </Fragment>
-            ))}
-            {[`${FEATURE_VECTORS_TAB}`, `${FEATURE_VECTORS_TAB}/:name/:tag/:tab`].map(
-              (path, index) => (
-                <Fragment key={index}>
-                  <Route path={path} element={<FeatureVectors />} />
-                </Fragment>
-              )
-            )}
-            <Route path={`${FEATURES_TAB}`} element={<Features />} />
-            <Route path="*" element={<Navigate to={FEATURE_SETS_TAB} replace />} />
-          </Route>
-          <Route path="projects/:projectName/models/*" element={<ModelsPage />}>
-            {[
-              `${MODELS_TAB}`,
-              `${MODELS_TAB}/:artifactName/:id/:tab`,
-              `${MODELS_TAB}/:artifactName/${ALL_VERSIONS_PATH}`,
-              `${MODELS_TAB}/:artifactName/${ALL_VERSIONS_PATH}/:id/:tab`
-            ].map((path, index) => (
-              <Fragment key={index}>
-                <Route path={path} element={<Models isAllVersions={[2, 3].includes(index)} />} />
-              </Fragment>
-            ))}
-            {[`${MODEL_ENDPOINTS_TAB}`, `${MODEL_ENDPOINTS_TAB}/:name/:tag/:tab`].map(
-              (path, index) => (
-                <Fragment key={index}>
-                  <Route path={path} element={<ModelEndpoints />} />
-                </Fragment>
-              )
-            )}
-            {[`${REAL_TIME_PIPELINES_TAB}`, `${REAL_TIME_PIPELINES_TAB}/:pipelineId/:tab`].map(
-              (path, index) => (
-                <Fragment key={index}>
-                  <Route path={path} element={<RealTimePipelines />} />
-                </Fragment>
-              )
-            )}
-            <Route path="*" element={<Navigate to={MODELS_TAB} replace />} />
-          </Route>
-          {[
-            'projects/:projectName/files',
-            'projects/:projectName/files/:artifactName/:id/:tab',
-            `projects/:projectName/files/:artifactName/${ALL_VERSIONS_PATH}`,
-            `projects/:projectName/files/:artifactName/${ALL_VERSIONS_PATH}/:id/:tab`
-          ].map((path, index) => (
-            <Fragment key={index}>
-              <Route
-                path={path}
-                element={<FilesComponent isAllVersions={[2, 3].includes(index)} />}
-              />
-            </Fragment>
-          ))}
-          {[
-            `projects/:projectName/monitoring-app/:appName/${MODEL_ENDPOINTS_TAB}`,
-            `projects/:projectName/monitoring-app/:appName/${MODEL_ENDPOINTS_TAB}/:id`
-          ].map((path, index) => (
-            <Fragment key={index}>
-              <Route path={path} element={<ApplicationMetrics />} />
-            </Fragment>
-          ))}
-          <Route
-            path="projects/:projectName/monitoring-app/*"
-            element={<MonitoringApplicationsPage />}
-          >
-            <Route path="" element={<MonitoringApplications />} />
-            {[':name'].map((path, index) => (
-              <Fragment key={index}>
-                <Route path={path} element={<MonitoringApplication />} />
-              </Fragment>
-            ))}
-          </Route>
-          {[
-            `projects/:projectName/${APPLICATIONS_PAGE_PATH}`,
-            `projects/:projectName/${APPLICATIONS_PAGE_PATH}/:name/:id/:tab`
-          ].map((path, index) => (
-            <Fragment key={`app-${index}`}>
-              <Route path={path} element={<ApplicationsPage />} />
-            </Fragment>
-          ))}
-          {[
-            'projects/:projectName/documents',
-            'projects/:projectName/documents/:artifactName/:id/:tab',
-            `projects/:projectName/documents/:artifactName/${ALL_VERSIONS_PATH}`,
-            `projects/:projectName/documents/:artifactName/${ALL_VERSIONS_PATH}/:id/:tab`
-          ].map((path, index) => (
-            <Fragment key={index}>
-              <Route
-                path={path}
-                element={<DocumentsComponent isAllVersions={[2, 3].includes(index)} />}
-              />
-            </Fragment>
-          ))}
-          {[
-            'projects/:projectName/llm-prompts',
-            'projects/:projectName/llm-prompts/:artifactName/:id/:tab',
-            `projects/:projectName/llm-prompts/:artifactName/${ALL_VERSIONS_PATH}`,
-            `projects/:projectName/llm-prompts/:artifactName/${ALL_VERSIONS_PATH}/:id/:tab`
-          ].map((path, index) => (
-            <Fragment key={index}>
-              <Route
-                path={path}
-                element={<LLMPromptsComponent isAllVersions={[2, 3].includes(index)} />}
-              />
-            </Fragment>
-          ))}
-          <Route path="*" element={<Navigate replace to="projects" />} />
-          <Route path="/" element={<Navigate replace to="projects" />} />
+      <Route path="" element={<Page isHeaderShown={isHeaderShown} />}>
+        <Route path="projects" element={<Projects />} />
+        <Route path="projects/:projectName">
+          <Route index element={<Navigate replace to={PROJECT_MONITOR} />} />
+          <Route path="real-time-functions/*" element={<RemoteNuclioRouteWrapper />} />
+          <Route path="create-function/*" element={<RemoteNuclioRouteWrapper />} />
+          <Route path="api-gateways/*" element={<RemoteNuclioRouteWrapper />} />
         </Route>
-      </>
+        <Route path={`projects/*/${JOBS_MONITORING_PAGE}/*`} element={<ProjectsJobsMonitoring />}>
+          {[
+            `${JOBS_MONITORING_JOBS_TAB}/:jobName/:jobId/:tab`,
+            `${JOBS_MONITORING_JOBS_TAB}/:jobId/:tab`,
+            `${JOBS_MONITORING_JOBS_TAB}/:jobName`,
+            `${JOBS_MONITORING_JOBS_TAB}`
+          ].map((path, index) => {
+            return (
+              <Fragment key={index}>
+                <Route path={path} element={<JobsMonitoring />} />
+              </Fragment>
+            )
+          })}
+          {[
+            `${JOBS_MONITORING_WORKFLOWS_TAB}/workflow/:workflowProjectName/:workflowId/:functionName/:functionHash/:tab`,
+            `${JOBS_MONITORING_WORKFLOWS_TAB}/workflow/:workflowProjectName/:workflowId/:jobId/:tab`,
+            `${JOBS_MONITORING_WORKFLOWS_TAB}/workflow/:workflowProjectName/:workflowId`,
+            `${JOBS_MONITORING_WORKFLOWS_TAB}`
+          ].map((path, index) => (
+            <Fragment key={index}>
+              <Route path={path} element={<WorkflowsMonitoring />} />
+            </Fragment>
+          ))}
+          <Route path={JOBS_MONITORING_SCHEDULED_TAB} element={<ScheduledMonitoring />} />
+          <Route path="*" element={<Navigate to={JOBS_MONITORING_JOBS_TAB} replace />} />
+        </Route>
+        <Route path={`projects/:projectName/${PROJECT_MONITOR}`} element={<ProjectMonitor />} />
+
+        {[
+          `projects/:id/${MONITOR_ALERTS_PAGE}`,
+          `projects/:id/${MONITOR_ALERTS_PAGE}/:project/:alertName/:alertId/:entityName/:uid/:tab`,
+          `projects/:projectName/${ALERTS_PAGE_PATH}`,
+          `projects/:projectName/${ALERTS_PAGE_PATH}/:project/:alertName/:alertId/:entityName/:uid/:tab`
+        ].map((path, index) => (
+          <Fragment key={index}>
+            <Route path={path} element={<ProjectsAlerts />} />
+          </Fragment>
+        ))}
+
+        {!isNuclioModeDisabled && (
+          <Route
+            path="projects/:projectName/monitor/consumer-groups/*"
+            element={<ConsumerGroupsWrapper />}
+          >
+            <Route path="" exact element={<ConsumerGroups />} />
+            <Route path=":functionName/:streamName" exact element={<ConsumerGroup />} />
+          </Route>
+        )}
+        <Route
+          path={`projects/:projectName/${PROJECT_QUICK_ACTIONS_PAGE}`}
+          element={<ProjectOverview />}
+        />
+        <Route
+          path="projects/:projectName/settings"
+          element={<Navigate to={`${PROJECTS_SETTINGS_GENERAL_TAB}`} replace />}
+        />
+        <Route path="/projects/:projectName/settings/:pageTab" element={<ProjectSettings />} />
+        {/*/!* Adding the next redirect for backwards compatability *!/*/}
+        <Route
+          path="projects/:projectName/jobs"
+          element={<Navigate to={`${MONITOR_JOBS_TAB}`} replace />}
+        />
+        <Route path="projects/:projectName/jobs/*" element={<Jobs />}>
+          {[
+            `${MONITOR_JOBS_TAB}/:jobName/:jobId/:tab`,
+            `${MONITOR_JOBS_TAB}/:jobId/:tab`,
+            /*/!* Adding for backwards compatibility, it redirects from INACTIVE_JOBS_TAB in Jobs.jxs to MONITOR_JOBS_TAB *!/*/
+            `${INACTIVE_JOBS_TAB}/:jobId/:tab`,
+            /*/!***********************************************************************************************************!/*/
+            `${MONITOR_JOBS_TAB}/:jobName`,
+            `${MONITOR_JOBS_TAB}`
+          ].map((path, index) => {
+            return (
+              <Fragment key={index}>
+                <Route path={path} element={<MonitorJobs />} />
+              </Fragment>
+            )
+          })}
+          {[
+            `${MONITOR_WORKFLOWS_TAB}/workflow/:workflowId/:functionName/:functionHash/:tab`,
+            `${MONITOR_WORKFLOWS_TAB}/workflow/:workflowId/:jobId/:tab`,
+            `${MONITOR_WORKFLOWS_TAB}/workflow/:workflowId`,
+            `${MONITOR_WORKFLOWS_TAB}`
+          ].map((path, index) => (
+            <Fragment key={index}>
+              <Route path={path} element={<MonitorWorkflows />} />
+            </Fragment>
+          ))}
+          <Route path={`${SCHEDULE_TAB}`} element={<ScheduledJobs />} />
+          <Route path="*" element={<Navigate to={MONITOR_JOBS_TAB} />} replace />
+        </Route>
+        {isDemoMode
+          ? [
+              'projects/:projectName/functions',
+              'projects/:projectName/functions/:funcName/:id/:tab',
+              `projects/:projectName/functions/:funcName/${ALL_VERSIONS_PATH}`,
+              `projects/:projectName/functions/:funcName/${ALL_VERSIONS_PATH}/:id/:tab`
+            ].map((path, index) => (
+              <Fragment key={index}>
+                <Route
+                  path={path}
+                  element={<FunctionsComponent isAllVersions={[2, 3].includes(index)} />}
+                />
+              </Fragment>
+            ))
+          : [
+              'projects/:projectName/functions',
+              'projects/:projectName/functions/:hash/:tab',
+              'projects/:projectName/functions/:funcName/:tag/:tab'
+            ].map((path, index) => (
+              <Fragment key={index}>
+                <Route path={path} element={<FunctionsOldComponent />} />
+              </Fragment>
+            ))}
+        {[
+          'projects/:projectName/datasets',
+          'projects/:projectName/datasets/:artifactName/:id/:tab',
+          `projects/:projectName/datasets/:artifactName/${ALL_VERSIONS_PATH}`,
+          `projects/:projectName/datasets/:artifactName/${ALL_VERSIONS_PATH}/:id/:tab`
+        ].map((path, index) => (
+          <Fragment key={index}>
+            <Route
+              path={path}
+              element={<DatasetsComponent isAllVersions={[2, 3].includes(index)} />}
+            />
+          </Fragment>
+        ))}
+        <Route
+          path="projects/:projectName/feature-store"
+          element={<Navigate to={`${FEATURE_SETS_TAB}`} replace />}
+        />
+        <Route
+          path="projects/:projectName/feature-store/add-to-feature-vector"
+          element={<AddToFeatureVectorPage />}
+        />
+        <Route path="projects/:projectName/feature-store/*" element={<FeatureStore />}>
+          {[`${FEATURE_SETS_TAB}`, `${FEATURE_SETS_TAB}/:name/:tag/:tab`].map((path, index) => (
+            <Fragment key={index}>
+              <Route path={path} element={<FeatureSets />} />
+            </Fragment>
+          ))}
+          {[`${FEATURE_VECTORS_TAB}`, `${FEATURE_VECTORS_TAB}/:name/:tag/:tab`].map(
+            (path, index) => (
+              <Fragment key={index}>
+                <Route path={path} element={<FeatureVectors />} />
+              </Fragment>
+            )
+          )}
+          <Route path={`${FEATURES_TAB}`} element={<Features />} />
+          <Route path="*" element={<Navigate to={FEATURE_SETS_TAB} replace />} />
+        </Route>
+        <Route path="projects/:projectName/models/*" element={<ModelsPage />}>
+          {[
+            `${MODELS_TAB}`,
+            `${MODELS_TAB}/:artifactName/:id/:tab`,
+            `${MODELS_TAB}/:artifactName/${ALL_VERSIONS_PATH}`,
+            `${MODELS_TAB}/:artifactName/${ALL_VERSIONS_PATH}/:id/:tab`
+          ].map((path, index) => (
+            <Fragment key={index}>
+              <Route path={path} element={<Models isAllVersions={[2, 3].includes(index)} />} />
+            </Fragment>
+          ))}
+          {[`${MODEL_ENDPOINTS_TAB}`, `${MODEL_ENDPOINTS_TAB}/:name/:tag/:tab`].map(
+            (path, index) => (
+              <Fragment key={index}>
+                <Route path={path} element={<ModelEndpoints />} />
+              </Fragment>
+            )
+          )}
+          {[`${REAL_TIME_PIPELINES_TAB}`, `${REAL_TIME_PIPELINES_TAB}/:pipelineId/:tab`].map(
+            (path, index) => (
+              <Fragment key={index}>
+                <Route path={path} element={<RealTimePipelines />} />
+              </Fragment>
+            )
+          )}
+          <Route path="*" element={<Navigate to={MODELS_TAB} replace />} />
+        </Route>
+        {[
+          'projects/:projectName/files',
+          'projects/:projectName/files/:artifactName/:id/:tab',
+          `projects/:projectName/files/:artifactName/${ALL_VERSIONS_PATH}`,
+          `projects/:projectName/files/:artifactName/${ALL_VERSIONS_PATH}/:id/:tab`
+        ].map((path, index) => (
+          <Fragment key={index}>
+            <Route
+              path={path}
+              element={<FilesComponent isAllVersions={[2, 3].includes(index)} />}
+            />
+          </Fragment>
+        ))}
+        {[
+          `projects/:projectName/monitoring-app/:appName/${MODEL_ENDPOINTS_TAB}`,
+          `projects/:projectName/monitoring-app/:appName/${MODEL_ENDPOINTS_TAB}/:id`
+        ].map((path, index) => (
+          <Fragment key={index}>
+            <Route path={path} element={<ApplicationMetrics />} />
+          </Fragment>
+        ))}
+        <Route
+          path="projects/:projectName/monitoring-app/*"
+          element={<MonitoringApplicationsPage />}
+        >
+          <Route path="" element={<MonitoringApplications />} />
+          {[':name'].map((path, index) => (
+            <Fragment key={index}>
+              <Route path={path} element={<MonitoringApplication />} />
+            </Fragment>
+          ))}
+        </Route>
+        {[
+          `projects/:projectName/${APPLICATIONS_PAGE_PATH}`,
+          `projects/:projectName/${APPLICATIONS_PAGE_PATH}/:name/:id/:tab`
+        ].map((path, index) => (
+          <Fragment key={`app-${index}`}>
+            <Route path={path} element={<ApplicationsPage />} />
+          </Fragment>
+        ))}
+        {[
+          'projects/:projectName/documents',
+          'projects/:projectName/documents/:artifactName/:id/:tab',
+          `projects/:projectName/documents/:artifactName/${ALL_VERSIONS_PATH}`,
+          `projects/:projectName/documents/:artifactName/${ALL_VERSIONS_PATH}/:id/:tab`
+        ].map((path, index) => (
+          <Fragment key={index}>
+            <Route
+              path={path}
+              element={<DocumentsComponent isAllVersions={[2, 3].includes(index)} />}
+            />
+          </Fragment>
+        ))}
+        {[
+          'projects/:projectName/llm-prompts',
+          'projects/:projectName/llm-prompts/:artifactName/:id/:tab',
+          `projects/:projectName/llm-prompts/:artifactName/${ALL_VERSIONS_PATH}`,
+          `projects/:projectName/llm-prompts/:artifactName/${ALL_VERSIONS_PATH}/:id/:tab`
+        ].map((path, index) => (
+          <Fragment key={index}>
+            <Route
+              path={path}
+              element={<LLMPromptsComponent isAllVersions={[2, 3].includes(index)} />}
+            />
+          </Fragment>
+        ))}
+        <Route path="*" element={<Navigate replace to="projects" />} />
+        <Route path="/" element={<Navigate replace to="projects" />} />
+      </Route>
+    </>
   )
 
   if (!isEmbedded && !routerRef.current) {
-    routerRef.current = createBrowserRouter(
-      createRoutesFromElements(routeTree),
-      { basename: import.meta.env.VITE_PUBLIC_URL }
-    )
+    routerRef.current = createBrowserRouter(createRoutesFromElements(routeTree), {
+      basename: import.meta.env.VITE_PUBLIC_URL
+    })
   }
 
   return (

@@ -30,7 +30,6 @@ import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 
 const RemoteNuclioApp = React.lazy(() => loadNuclioApp())
 
-
 const RemoteNuclioRouteWrapper = () => {
   const params = useParams()
   const { setOpen: setSidebarOpen } = useSidebar()
@@ -42,7 +41,9 @@ const RemoteNuclioRouteWrapper = () => {
   // Close the sidebar when Nuclio blocks a navigation (e.g. unsaved changes dialog).
   useEffect(() => {
     if (window.__igzLeaveGuard) window.__igzLeaveGuard.onBlock = () => setSidebarOpen(false)
-    return () => { if (window.__igzLeaveGuard) delete window.__igzLeaveGuard.onBlock }
+    return () => {
+      if (window.__igzLeaveGuard) delete window.__igzLeaveGuard.onBlock
+    }
   }, [setSidebarOpen])
 
   useEffect(() => {
