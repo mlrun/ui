@@ -19,33 +19,31 @@ such restriction.
 */
 import React, { useEffect, useState, Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { useLocation, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
+import { useSidebar } from 'igz-controls/nextGenComponents'
 import { ensureNuclioRemote, loadNuclioApp } from '../../utils/nuclio.remotes.utils'
 import NuclioRemoteError from './NuclioRemoteError'
 import { Loader } from 'igz-controls/components'
-import HostLeaveGuard from '../../common/HostLeaveGuard/HostLeaveGuard'
 
 import './RemoteNuclio.scss'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 
 const RemoteNuclioApp = React.lazy(() => loadNuclioApp())
 
-const isNuclioPath = pathname =>
-  /^\/projects\/[^/]+\/(real-time-functions|create-function|api-gateways)(\/|$)/.test(pathname)
 
 const RemoteNuclioRouteWrapper = () => {
   const params = useParams()
-  const { pathname } = useLocation()
+  const { setOpen: setSidebarOpen } = useSidebar()
   const [ready, setReady] = useState(false)
   const [error, setError] = useState(false)
 
   const nuclioItemName = params?.['*']?.split('/').filter(Boolean)[0] ?? ''
 
+  // Close the sidebar when Nuclio blocks a navigation (e.g. unsaved changes dialog).
   useEffect(() => {
-    if (isNuclioPath(pathname)) {
-      window.dispatchEvent(new PopStateEvent('popstate'))
-    }
-  }, [pathname])
+    if (window.__igzLeaveGuard) window.__igzLeaveGuard.onBlock = () => setSidebarOpen(false)
+    return () => { if (window.__igzLeaveGuard) delete window.__igzLeaveGuard.onBlock }
+  }, [setSidebarOpen])
 
   useEffect(() => {
     setReady(false)
@@ -95,12 +93,7 @@ const RemoteNuclioRouteWrapper = () => {
     )
   }
 
-  return (
-    <>
-      <HostLeaveGuard />
-      <div className="remote-nuclio-container">{renderContent()}</div>
-    </>
-  )
+  return <div className="remote-nuclio-container">{renderContent()}</div>
 }
 
 export default RemoteNuclioRouteWrapper
