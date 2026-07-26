@@ -5,28 +5,25 @@ import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import eslintPluginImport from 'eslint-plugin-import'
 
-import { viteGlobals } from './eslint.mlrun-globals.mjs'
-
 export default [
-  { ignores: ['dist', '.__mf__temp'] },
+  { ignores: ['dist'] },
   js.configs.recommended,
   eslintConfigPrettier,
   {
-    files: ['**/*.{js,mjs,jsx,ts,tsx}'],
+    files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2021,
       globals: {
         ...globals.browser,
         ...globals.jest,
         ...globals.node,
-        ...viteGlobals
+        ...globals.vitest
       },
       parserOptions: {
         ecmaFeatures: {
           jsx: true
         }
-      },
-      sourceType: 'module'
+      }
     },
     plugins: {
       react: react,
@@ -53,9 +50,9 @@ export default [
     }
   },
   {
-    files: ['**/*.test.jsx'],
+    files: ["**/*.test.jsx"],
     rules: {
-      'import/named': 'off'
+      "import/named": "off"
     }
   }
 ]

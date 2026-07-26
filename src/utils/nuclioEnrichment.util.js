@@ -30,9 +30,16 @@ import {
   FUNCTIONS_PAGE,
   UNHEALTHY_STATE
 } from '../constants'
-
 const NUCLIO_FUNCTIONS_STATE_KIND = 'nuclioFunctions'
-const NUCLIO_OWNER_LABEL = 'iguazio.com/username'
+const NUCLIO_USERNAME_LABEL = 'iguazio.com/username'
+const NUCLIO_DOMAIN_LABEL = 'iguazio.com/domain'
+
+export const buildNuclioOwner = labels => {
+  const username = labels?.[NUCLIO_USERNAME_LABEL]
+  const domain = labels?.[NUCLIO_DOMAIN_LABEL]
+
+  return domain ? `${username}@${domain}` : (username ?? '')
+}
 
 const buildEndpointsCountMap = modelEndpoints => {
   const countMap = {}
@@ -67,7 +74,7 @@ export const enrichFunctionsWithNuclio = (
       : ''
 
     const state = nuclioFuncState || func.state?.value || ''
-    const owner = nuclioFunc?.metadata?.labels?.[NUCLIO_OWNER_LABEL] ?? ''
+    const owner = buildNuclioOwner(nuclioFunc?.metadata?.labels)
 
     const applicationGateways = filterGatewaysByFunction(
       projectApiGateways,

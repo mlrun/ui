@@ -17,10 +17,19 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { BadgeCell } from 'igz-controls/nextGenComponents'
+import { BadgeCell, Tooltip, TooltipContent, TooltipTrigger } from 'igz-controls/nextGenComponents'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
+import SeverityOk from 'igz-controls/images/severity-ok.svg?react'
+import SeverityWarning from 'igz-controls/images/severity-low.svg?react'
+import SeverityError from 'igz-controls/images/severity-error.svg?react'
 
-import { DRIFT_STATUS_LABEL, DRIFT_RESULT_NO_DATA } from './monitoringEndpoints.constants'
+import {
+  DRIFT_RESULT_DRIFT_DETECTED,
+  DRIFT_RESULT_NO_DATA,
+  DRIFT_RESULT_NO_DRIFT,
+  DRIFT_RESULT_POSSIBLE_DRIFT,
+  DRIFT_STATUS_LABEL
+} from './monitoringEndpoints.constants'
 
 const parseLabelsToBadges = (labels = {}) => {
   return Object.entries(labels).map(([key, value]) => ({
@@ -71,15 +80,6 @@ export const getMonitoringEndpointsColumns = onEndpointClick => [
       <span data-testid="monitoring-endpoint-function-tag">
         {row.original.spec?.function_tag || ''}
       </span>
-    )
-  },
-  {
-    id: 'class',
-    header: 'Class',
-    size: 10,
-    accessorFn: row => row.spec?.model_class ?? '',
-    cell: ({ row }) => (
-      <span data-testid="monitoring-endpoint-class">{row.original.spec?.model_class || ''}</span>
     )
   },
   {
@@ -135,7 +135,37 @@ export const getMonitoringEndpointsColumns = onEndpointClick => [
       const resultStatus = row.original.status?.result_status ?? DRIFT_RESULT_NO_DATA
       const label = DRIFT_STATUS_LABEL[resultStatus] ?? 'N/A'
 
-      return <span data-testid="monitoring-endpoint-drift-status">{label}</span>
+      if (resultStatus === DRIFT_RESULT_NO_DATA || !DRIFT_STATUS_LABEL[resultStatus]) {
+        return <span data-testid="monitoring-endpoint-drift-status">{label}</span>
+      }
+
+      const SeverityIcon = {
+        [DRIFT_RESULT_NO_DRIFT]: SeverityOk,
+        [DRIFT_RESULT_POSSIBLE_DRIFT]: SeverityWarning,
+        [DRIFT_RESULT_DRIFT_DETECTED]: SeverityError
+      }[resultStatus]
+
+      return (
+        <Tooltip delayDuration={100}>
+          <TooltipTrigger asChild>
+            <span
+              className={
+                resultStatus === DRIFT_RESULT_POSSIBLE_DRIFT
+                  ? 'table-severity-warning-icon'
+                  : undefined
+              }
+              role="img"
+              aria-label={label}
+              data-testid={`monitoring-endpoint-drift-status-${label
+                .toLowerCase()
+                .replaceAll(' ', '-')}`}
+            >
+              <SeverityIcon />
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="top-start">{label}</TooltipContent>
+        </Tooltip>
+      )
     }
   }
 ]

@@ -569,7 +569,6 @@ export const BREADCRUMBS_STEP_PROJECT_TYPE = 'project'
 export const BREADCRUMBS_STEP_SCREEN_TYPE = 'screen'
 export const BREADCRUMBS_STEP_ITEM_TYPE = 'item'
 
-
 /*=========== PROJECT URL PATH INDEXES =============*/
 export const PROJECT_PATH_SECTION_INDEX = 3
 export const PROJECT_PATH_TAB_INDEX = 4

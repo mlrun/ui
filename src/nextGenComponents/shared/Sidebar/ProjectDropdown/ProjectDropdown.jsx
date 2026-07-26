@@ -157,7 +157,12 @@ const ProjectDropdown = ({ projectName }) => {
                       to={project.link}
                       className="flex w-full items-center justify-between gap-2"
                     >
-                      <EllipsisTooltip className="min-w-0 flex-1 whitespace-nowrap">
+                      <EllipsisTooltip
+                        className="min-w-0 flex-1 whitespace-nowrap"
+                        side="bottom"
+                        align="start"
+                        sideOffset={10}
+                      >
                         {project.label}
                       </EllipsisTooltip>
                       {project.isCurrent && (

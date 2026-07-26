@@ -63,7 +63,6 @@ const JobWizardRunDetails = ({
   currentProject = null,
   formState,
   frontendSpec,
-  isBatchInference,
   isEditMode,
   jobAdditionalData,
   params,
@@ -81,10 +80,6 @@ const JobWizardRunDetails = ({
   const commonImageWarningMsg =
     'The image must include all the software packages that are required to run the function. ' +
     'For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version'
-  const batchInferenceWarningMsg =
-    'The image must include all the software packages that are required to run the model. ' +
-    'For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version'
-
   const selectedImageSource = useMemo(
     () => get(formState.values, imageSourcePath, EXISTING_IMAGE_SOURCE),
     [formState.values, imageSourcePath]
@@ -215,11 +210,9 @@ const JobWizardRunDetails = ({
         <div className="form-row">
           <h5 className="form-step-title">Run details</h5>
         </div>
-        {!isBatchInference && (
-          <div className="form-row">
-            <FormCheckBox label="Hyperparameter" name={`${RUN_DETAILS_STEP}.hyperparameter`} />
-          </div>
-        )}
+        <div className="form-row">
+          <FormCheckBox label="Hyperparameter" name={`${RUN_DETAILS_STEP}.hyperparameter`} />
+        </div>
         <div className="form-row">
           <div className="form-col-2">
             <FormInput
@@ -243,22 +236,20 @@ const JobWizardRunDetails = ({
               />
             </div>
           )}
-          {!isBatchInference ? (
-            jobAdditionalData.handlerOptions?.length !== 0 ? (
-              <div className="form-col-1">
-                <FormSelect
-                  label="Handler"
-                  name={handlerPath}
-                  options={jobAdditionalData.handlerOptions || []}
-                  scrollToView={false}
-                />
-              </div>
-            ) : (
-              <div className="form-col-1">
-                <FormInput label="Handler" name={handlerPath} disabled={isEditMode} />
-              </div>
-            )
-          ) : null}
+          {jobAdditionalData.handlerOptions?.length !== 0 ? (
+            <div className="form-col-1">
+              <FormSelect
+                label="Handler"
+                name={handlerPath}
+                options={jobAdditionalData.handlerOptions || []}
+                scrollToView={false}
+              />
+            </div>
+          ) : (
+            <div className="form-col-1">
+              <FormInput label="Handler" name={handlerPath} disabled={isEditMode} />
+            </div>
+          )}
         </div>
         <div className="form-row">
           <FormChipCell
@@ -297,9 +288,7 @@ const JobWizardRunDetails = ({
               required
               tip="The name of the function's container image"
             />
-            <div className="warning-text">
-              {isBatchInference ? batchInferenceWarningMsg : commonImageWarningMsg}
-            </div>
+            <div className="warning-text">{commonImageWarningMsg}</div>
           </>
         ) : (
           <>
@@ -391,7 +380,6 @@ JobWizardRunDetails.propTypes = {
   currentProject: PropTypes.object,
   formState: PropTypes.object.isRequired,
   frontendSpec: PropTypes.object.isRequired,
-  isBatchInference: PropTypes.bool.isRequired,
   isEditMode: PropTypes.bool.isRequired,
   jobAdditionalData: PropTypes.object.isRequired,
   params: PropTypes.object.isRequired,
