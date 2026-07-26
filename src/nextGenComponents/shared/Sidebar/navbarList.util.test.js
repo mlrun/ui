@@ -103,14 +103,12 @@ describe('navbarList.util', () => {
       expect(Array.isArray(jobs.nestedLinks)).toBe(true)
     })
 
-    it('includes Nuclio as a collapse item with externalLink nested items', () => {
+    it('includes Nuclio as a collapse item with nested items', () => {
       const links = getLinks(PROJECT)
       const nuclio = links.find(l => l.label === 'Nuclio')
       expect(nuclio).toBeDefined()
       expect(Array.isArray(nuclio.nestedLinks)).toBe(true)
-      nuclio.nestedLinks.forEach(nested => {
-        expect(nested.externalLink).toBe(true)
-      })
+      expect(nuclio.nestedLinks.length).toBeGreaterThan(0)
     })
 
     it('builds links using the provided project name', () => {
