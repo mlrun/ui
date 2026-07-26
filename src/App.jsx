@@ -17,14 +17,17 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { Fragment, Suspense } from 'react'
+import React, { Fragment, Suspense, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import {
   Route,
   Navigate,
+  Routes,
   createBrowserRouter,
   createRoutesFromElements,
-  RouterProvider
+  RouterProvider,
+  UNSAFE_RouteContext as RouteContext,
+  useInRouterContext
 } from 'react-router-dom'
 import classNames from 'classnames'
 import 'prismjs'
@@ -146,7 +149,17 @@ const MonitoringApplication = lazyRetry(
 const ApplicationsPage = lazyRetry(
   () => import('./nextGenComponents/pages/ApplicationsPage/ApplicationsPage')
 )
+// Resets the route-match context so <Routes> children match against the full
+// URL pathname instead of the remaining suffix after the parent consumed its prefix.
+const EmbeddedRouteReset = ({ children }) => (
+  <RouteContext.Provider value={{ outlet: null, matches: [], isDataRoute: false }}>
+    {children}
+  </RouteContext.Provider>
+)
+EmbeddedRouteReset.propTypes = { children: () => null }
+
 const App = () => {
+  const isEmbedded = useInRouterContext()
   const { isNuclioModeDisabled } = useNuclioMode()
   const { isDemoMode } = useMode()
   const isHeaderShown = localStorageService.getStorageValue('mlrunUi.headerHidden') !== 'true'
@@ -159,9 +172,10 @@ const App = () => {
   const FunctionsOldComponent = wrapComponentForNavbarNavigationTracking(FunctionsOld)
   const FunctionsComponent = wrapComponentForNavbarNavigationTracking(Functions)
 
-  const router = createBrowserRouter(
-    createRoutesFromElements(
-      <>
+  const routerRef = useRef(null)
+
+  const routeTree = (
+    <>
         <Route path="" element={<Page isHeaderShown={isHeaderShown} />}>
           <Route path="projects" element={<Projects />} />
           <Route path="projects/:projectName">
@@ -418,9 +432,14 @@ const App = () => {
           <Route path="/" element={<Navigate replace to="projects" />} />
         </Route>
       </>
-    ),
-    { basename: import.meta.env.VITE_PUBLIC_URL }
   )
+
+  if (!isEmbedded && !routerRef.current) {
+    routerRef.current = createBrowserRouter(
+      createRoutesFromElements(routeTree),
+      { basename: import.meta.env.VITE_PUBLIC_URL }
+    )
+  }
 
   return (
     <div className="ml-app">
@@ -428,7 +447,13 @@ const App = () => {
       <div className={mlAppContainerClasses}>
         <TooltipProvider>
           <Suspense fallback={<LoaderForSuspenseFallback />}>
-            <RouterProvider router={router} />
+            {isEmbedded ? (
+              <EmbeddedRouteReset>
+                <Routes>{routeTree}</Routes>
+              </EmbeddedRouteReset>
+            ) : (
+              <RouterProvider router={routerRef.current} />
+            )}
           </Suspense>
         </TooltipProvider>
         {createPortal(<Notifications />, document.getElementById('overlay_container'))}
