@@ -32,7 +32,9 @@ import { useBlocker } from 'react-router-dom'
  * It is a no-op whenever no remote guard is registered.
  */
 const HostLeaveGuard = () => {
-  const blocker = useBlocker(({ currentLocation, nextLocation }) => {
+  const blocker = useBlocker(({ currentLocation, nextLocation, historyAction }) => {
+    // POP (back/forward) is handled by the remote's own useBlocker.
+    if (historyAction === 'POP') return false
     try {
       return Boolean(
         window.__igzLeaveGuard?.shouldBlock(currentLocation.pathname, nextLocation.pathname)

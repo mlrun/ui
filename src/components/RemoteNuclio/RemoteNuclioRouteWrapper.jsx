@@ -26,6 +26,7 @@ import { Loader } from 'igz-controls/components'
 
 import './RemoteNuclio.scss'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+import HostLeaveGuard from '../../common/HostLeaveGuard/HostLeaveGuard'
 
 const RemoteNuclioApp = React.lazy(() => loadNuclioApp())
 
@@ -115,7 +116,10 @@ const RemoteNuclioRouteWrapper = () => {
     )
   }
 
-  return <div className="remote-nuclio-container">{renderContent()}</div>
+  return <>
+    <HostLeaveGuard />
+    <div className="remote-nuclio-container">{renderContent()}</div>
+  </>
 }
 
 export default RemoteNuclioRouteWrapper
