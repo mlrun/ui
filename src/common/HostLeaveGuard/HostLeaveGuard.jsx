@@ -19,6 +19,7 @@ such restriction.
 */
 import { useEffect, useRef } from 'react'
 import { useBlocker } from 'react-router-dom'
+import { useSidebar } from 'igz-controls/nextGenComponents'
 
 /**
  * Bridges host (mlrun-ui) navigation to a guard published by an embedded remote
@@ -32,6 +33,8 @@ import { useBlocker } from 'react-router-dom'
  * It is a no-op whenever no remote guard is registered.
  */
 const HostLeaveGuard = () => {
+  const { setOpen: setSidebarOpen } = useSidebar()
+
   const blocker = useBlocker(({ currentLocation, nextLocation, historyAction }) => {
     // POP (back/forward) is handled by the remote's own useBlocker.
     if (historyAction === 'POP') return false
@@ -52,6 +55,8 @@ const HostLeaveGuard = () => {
 
   useEffect(() => {
     if (blocker.state !== 'blocked') return
+
+    setSidebarOpen(false)
 
     let active = true
     const confirm = window.__igzLeaveGuard?.confirm
@@ -74,7 +79,7 @@ const HostLeaveGuard = () => {
     return () => {
       active = false
     }
-  }, [blocker.state])
+  }, [blocker.state, setSidebarOpen])
 
   return null
 }
