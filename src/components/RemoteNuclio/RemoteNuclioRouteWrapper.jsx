@@ -116,10 +116,12 @@ const RemoteNuclioRouteWrapper = () => {
     )
   }
 
-  return <>
-    <HostLeaveGuard />
-    <div className="remote-nuclio-container">{renderContent()}</div>
-  </>
+  return (
+    <>
+      <HostLeaveGuard />
+      <div className="remote-nuclio-container">{renderContent()}</div>
+    </>
+  )
 }
 
 export default RemoteNuclioRouteWrapper
