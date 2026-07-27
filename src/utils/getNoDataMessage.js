@@ -186,9 +186,11 @@ const generateNoEntriesFoundMessage = (visibleFilterTypes, filtersConfig, filter
           ? formatFilterValue(filters[filterType])
           : filters[filterType]
     const isLastElement = index === visibleFilterTypes.length - 1
+    const displayValue = Array.isArray(value) ? value.join(', ') : value
 
     return (
-      message + `${label.endsWith(':') ? label : `${label}:`} ${value}${isLastElement ? '"' : ', '}`
+      message +
+      `${label.endsWith(':') ? label : `${label}:`} ${displayValue}${isLastElement ? '"' : ', '}`
     )
   }, 'No data matches the filter: "')
 }
