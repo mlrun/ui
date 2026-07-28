@@ -101,9 +101,7 @@ export const generateCreateNewOptions = (
     id: 'createRealTimeFunction',
     icon: <Realtime />,
     handler: () => {
-      const url = generateNuclioLink(
-        `/projects/${params.projectName}/real-time-functions/create-function`
-      )
+      const url = generateNuclioLink(`/projects/${params.projectName}/create-function`)
 
       if (window.top && window.top !== window.self) {
         window.top.location.assign(url)
