@@ -798,7 +798,7 @@ Feature: Quick actions Page
         Then verify "Real_Time_Functions_Card_Statistics" element visibility on "Project" wizard
         When hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
-
+    
     @MLPH
     Scenario: MLPH024 - Check Train model wizard opens up
         Given open url
