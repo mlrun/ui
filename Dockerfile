@@ -72,6 +72,15 @@ RUN if [ "$IS_MF" \
 
 USER $UID
 
+# flatten stage - collapses every layer of production-stage into one, so the
+# removed curl/libcurl files leave no whiteout entries in the shipped image
+FROM scratch AS flatten-stage
+COPY --from=production-stage / /
+
+ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+ARG UID=101
+USER $UID
+
 EXPOSE 8090
 
 CMD ["/etc/nginx/run_nginx"]

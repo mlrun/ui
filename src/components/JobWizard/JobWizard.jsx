@@ -359,9 +359,14 @@ const JobWizard = ({
         mode,
         true
       )
+      const credentials = jobRequestData.function?.metadata?.credentials
+
+      delete jobRequestData.function.metadata
+
       dispatch(
         editJob({
           postData: {
+            credentials,
             scheduled_object: jobRequestData,
             cron_trigger: jobRequestData.schedule
           },

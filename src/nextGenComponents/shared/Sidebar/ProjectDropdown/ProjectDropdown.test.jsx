@@ -26,8 +26,6 @@ import ProjectDropdown from './ProjectDropdown'
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
 
-let mockPathname = '/projects/demo/functions'
-
 const { MockLink } = vi.hoisted(() => {
   const React = require('react')
 
@@ -41,6 +39,8 @@ const { MockLink } = vi.hoisted(() => {
     })
   }
 })
+
+let mockPathname = '/projects/demo/functions'
 
 vi.mock('react-router-dom', () => ({
   useLocation: () => ({ pathname: mockPathname }),
