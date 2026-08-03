@@ -27,15 +27,27 @@ export const getActiveUsername = async () => {
 }
 
 export const checkProjectWriteAccess = async (projectName, activeUsername = null) => {
-  if (!activeUsername) {
-    activeUsername = await getActiveUsername()
-  }
+  if (import.meta.env.VITE_FEDERATION === 'true') {
+    if (!activeUsername) {
+      activeUsername = await getActiveUsername()
+    }
 
-  const policiesResponse = await projectsIguazioApi.getProjectPolicies(projectName)
-  const policies = policiesResponse.data.items || []
-  return policies.some(
-    policy =>
-      WRITE_ROLES.includes(policy.spec.displayName) &&
-      policy.status?.assignedMembers?.some(member => member.id === activeUsername)
-  )
+    const policiesResponse = await projectsIguazioApi.getProjectPolicies(projectName)
+    const policies = policiesResponse.data.items || []
+    return policies.some(
+      policy =>
+        WRITE_ROLES.includes(policy.spec.displayName) &&
+        policy.status?.assignedMembers?.some(member => member.id === activeUsername)
+    )
+  } else {
+    return projectsIguazioApi
+      .getProjectOwnerVisibility(projectName)
+      .then(() => true)
+      .catch(() =>
+        projectsIguazioApi
+          .getProjectWorkflowsUpdateAuthorization(projectName)
+          .then(() => true)
+          .catch(() => false)
+      )
+  }
 }

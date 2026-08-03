@@ -69,7 +69,14 @@ export const nuclioHttpClient = axios.create({
 })
 
 export const iguazioHttpClient = axios.create({
-  baseURL: import.meta.env.MODE === 'production' ? '/oris/api' : '/oris-mlrun/api',
+  baseURL:
+    import.meta.env.MODE === 'production'
+      ? import.meta.env.VITE_FEDERATION === 'true'
+        ? '/oris/api'
+        : '/api'
+      : import.meta.env.VITE_FEDERATION === 'true'
+        ? '/oris-mlrun/api'
+        : '/iguazio/api',
   headers
 })
 

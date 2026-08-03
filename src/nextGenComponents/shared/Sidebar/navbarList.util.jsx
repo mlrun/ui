@@ -39,9 +39,10 @@ import {
   PROJECTS_PAGE_PATH,
   PROJECT_MONITOR,
   REAL_TIME_PIPELINES_TAB,
-  REAL_TIME_FUNCTIONS_PAGE,
+  NUCLIO_FUNCTIONS_PATH,
   SCHEDULE_TAB,
-  ALERTS_PAGE_PATH
+  ALERTS_PAGE_PATH,
+  IS_MF_MODE
 } from '../../../constants'
 import { generateNuclioLink } from '../../../utils'
 
@@ -158,14 +159,16 @@ export const getLinks = projectName => {
       label: 'Nuclio',
       nestedLinks: [
         {
-          id: REAL_TIME_FUNCTIONS_PAGE,
+          id: NUCLIO_FUNCTIONS_PATH,
           label: 'Real-time functions',
-          link: generateNuclioLink(`${pathname}/${REAL_TIME_FUNCTIONS_PAGE}`)
+          link: generateNuclioLink(`${pathname}/${NUCLIO_FUNCTIONS_PATH}`),
+          externalLink: !IS_MF_MODE
         },
         {
           id: API_GATEWAYS_PAGE,
           label: 'API gateways',
-          link: generateNuclioLink(`${pathname}/${API_GATEWAYS_PAGE}`)
+          link: generateNuclioLink(`${pathname}/${API_GATEWAYS_PAGE}`),
+          externalLink: !IS_MF_MODE
         }
       ]
     },

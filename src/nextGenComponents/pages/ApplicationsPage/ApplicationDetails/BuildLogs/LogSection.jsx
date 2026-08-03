@@ -25,7 +25,7 @@ import CheckIcon from 'igz-controls/images/double-check.svg?react'
 import LogsBlock from '../../../../shared/LogsBlock/LogsBlock'
 import { Loader } from 'igz-controls/nextGenComponents'
 
-const LogSection = ({ title, logs, isLoading, isCopied, onCopy }) => (
+const LogSection = ({ title, logs, isLoading, loadingMessage, isCopied, onCopy }) => (
   <div
     className="border border-igz-gray-light rounded-lg flex flex-col h-[85%] shrink-0"
     data-testid={`build-logs-section-${title.toLowerCase()}`}
@@ -36,7 +36,7 @@ const LogSection = ({ title, logs, isLoading, isCopied, onCopy }) => (
 
     <div className="p-4 bg-background rounded-b-lg flex-1 min-h-0">
       <div className="relative h-full">
-        <LogsBlock logs={logs} isLoading={isLoading} />
+        <LogsBlock logs={logs} isLoading={isLoading} loadingMessage={loadingMessage} />
 
         {isLoading && (
           <Loader
@@ -77,6 +77,7 @@ const LogSection = ({ title, logs, isLoading, isCopied, onCopy }) => (
 LogSection.propTypes = {
   isCopied: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,
+  loadingMessage: PropTypes.string,
   logs: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   onCopy: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired

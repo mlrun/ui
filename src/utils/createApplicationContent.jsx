@@ -22,7 +22,7 @@ import { capitalize } from 'lodash'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { generateNuclioLink } from './parseUri'
 import { saveAndTransformSearchParams } from 'igz-controls/utils/filter.util'
-import { MONITORING_APP_PAGE } from '../constants'
+import { IS_MF_MODE, MONITORING_APP_PAGE, NUCLIO_FUNCTIONS_PATH } from '../constants'
 
 export const createApplicationContent = (application, projectName) => {
   const identifierUnique = 'identifierUnique.' + application.name + application.application_class
@@ -105,8 +105,10 @@ export const createApplicationContent = (application, projectName) => {
         value: application.name,
         className: 'table-cell-2',
         getLink: () =>
-          generateNuclioLink(`/projects/${projectName}/real-time-functions/${nuclioFunctionName}`),
-        linkIsExternal: true,
+          generateNuclioLink(
+            `/projects/${projectName}/${NUCLIO_FUNCTIONS_PATH}/${nuclioFunctionName}`
+          ),
+        linkIsExternal: !IS_MF_MODE,
         showStatus: true
       }
     ]

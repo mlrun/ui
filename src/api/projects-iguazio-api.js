@@ -19,7 +19,36 @@ such restriction.
 */
 import { iguazioHttpClient } from '../httpClient'
 
-const projectsIguazioApi = {
+const igz3Api = {
+  editProject: (projectId, data) => iguazioHttpClient.put(`/projects/${projectId}`, data),
+  getProjectJob: jobId => iguazioHttpClient.get(`/jobs/${jobId}`),
+  getProjects: config => iguazioHttpClient.get('/projects', config),
+  getProjectMembers: projectId =>
+    iguazioHttpClient.get(`/projects/${projectId}`, {
+      params: {
+        include:
+          'project_authorization_roles.principal_users,project_authorization_roles.principal_user_groups'
+      }
+    }),
+  getProjectMembersVisibility: project =>
+    iguazioHttpClient.get(`/projects/__name__/${project}/authorization`, {
+      params: { action: 'authorization/roles', sub_resource: 'authorization/roles' }
+    }),
+  getProjectOwnerVisibility: project =>
+    iguazioHttpClient.get(`/projects/__name__/${project}/authorization`, {
+      params: { action: 'update', sub_resource: 'authorization/owner' }
+    }),
+  getProjectWorkflowsUpdateAuthorization: project =>
+    iguazioHttpClient.get(`/projects/__name__/${project}/authorization`, {
+      params: { action: 'update', sub_resource: 'workflow' }
+    }),
+  updateProjectMembers: data => iguazioHttpClient.post('/async_transactions', data),
+  getScrubbedUsers: config => iguazioHttpClient.get('/scrubbed_users', config),
+  getScrubbedUserGroups: config => iguazioHttpClient.get('/scrubbed_user_groups', config),
+  getActiveUser: () => iguazioHttpClient.get('/self')
+}
+
+const igz4Api = {
   updateProjectOwner: (projectName, owner) =>
     iguazioHttpClient.put(`/v1/authorization/projects/${projectName}/owner`, {
       owner,
@@ -37,4 +66,4 @@ const projectsIguazioApi = {
     iguazioHttpClient.get('/v1/authentication/self', { params: { format: 'full' } })
 }
 
-export default projectsIguazioApi
+export default import.meta.env.VITE_FEDERATION === 'true' ? igz4Api : igz3Api

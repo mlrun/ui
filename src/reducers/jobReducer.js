@@ -27,7 +27,8 @@ import {
   LABELS_FILTER,
   NAME_FILTER,
   STATUS_FILTER,
-  TYPE_FILTER
+  TYPE_FILTER,
+  IS_MF_MODE
 } from '../constants'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 import functionsApi from '../api/functions-api'
@@ -65,6 +66,13 @@ const initialState = {
       }
     },
     function: {
+      ...(!IS_MF_MODE && {
+        metadata: {
+          credentials: {
+            access_key: ''
+          }
+        }
+      }),
       spec: {
         env: [],
         node_selector: {},

@@ -42,6 +42,8 @@ export const initialMembersState = {
     }
   },
   projectAuthorizationRoles: [],
+  users: [],
+  userGroups: [],
   membersOriginal: [],
   members: [],
   groupedOriginalMembers: [],
@@ -57,7 +59,9 @@ export const membersActions = {
   SET_MEMBERS: 'SET_MEMBERS',
   SET_MEMBERS_ORIGINAL: 'SET_MEMBERS_ORIGINAL',
   SET_PROJECT_AUTHORIZATION_ROLES: 'SET_PROJECT_AUTHORIZATION_ROLES',
-  SET_PROJECT_INFO: 'SET_PROJECT_INFO'
+  SET_PROJECT_INFO: 'SET_PROJECT_INFO',
+  SET_USERS: 'SET_USERS',
+  SET_USER_GROUPS: 'SET_USER_GROUPS'
 }
 
 export const membersReducer = (state, { type, payload }) => {
@@ -101,6 +105,16 @@ export const membersReducer = (state, { type, payload }) => {
       return {
         ...state,
         projectInfo: payload
+      }
+    case membersActions.SET_USERS:
+      return {
+        ...state,
+        users: payload
+      }
+    case membersActions.SET_USER_GROUPS:
+      return {
+        ...state,
+        userGroups: payload
       }
     default:
       return state

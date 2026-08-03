@@ -24,7 +24,9 @@ import {
   DOCUMENTS_PAGE,
   LLM_PROMPTS_PAGE,
   PROJECT_MONITOR,
-  PROJECT_QUICK_ACTIONS_PAGE
+  PROJECT_QUICK_ACTIONS_PAGE,
+  NUCLIO_FUNCTIONS_PATH,
+  IS_MF_MODE
 } from '../../constants'
 import { generateNuclioLink } from '../../utils'
 
@@ -125,13 +127,15 @@ export const getLinks = projectName => {
       icon: <NuclioIcon />,
       id: 'real-time-functions',
       label: 'Real-time functions',
-      link: generateNuclioLink(`${pathname}/real-time-functions`)
+      link: generateNuclioLink(`${pathname}/${NUCLIO_FUNCTIONS_PATH}`),
+      externalLink: !IS_MF_MODE
     },
     {
       icon: <APIIcon />,
       id: 'api-gateways',
       label: 'API gateways',
-      link: generateNuclioLink(`${pathname}/api-gateways`)
+      link: generateNuclioLink(`${pathname}/api-gateways`),
+      externalLink: !IS_MF_MODE
     },
     {
       icon: <ApplicationsIcon />,

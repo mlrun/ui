@@ -64,8 +64,11 @@ vi.mock('igz-controls/nextGenComponents', () => ({
 }))
 
 vi.mock('../../../../shared/LogsBlock/LogsBlock', () => ({
-  default: ({ logs }) => (
+  default: ({ logs, loadingMessage }) => (
     <div data-testid="logs-block">
+      {loadingMessage && !logs && (
+        <span data-testid="logs-block-loading-message">{loadingMessage}</span>
+      )}
       {typeof logs === 'string' ? logs : JSON.stringify(logs ?? null)}
     </div>
   )
@@ -348,6 +351,19 @@ describe('ApplicationBuildLogs', () => {
 
       expect(showErrorNotification).not.toHaveBeenCalled()
       expect(screen.getByTestId(`logs-loading-${LOGS_SECTION_KEY.FUNCTION}`)).toBeInTheDocument()
+    })
+
+    it('shows the deploying placeholder inside the log panel while loading with no logs yet', async () => {
+      mockDispatch.mockImplementation(() => makeRejectedResponse(NOT_FOUND_ERROR))
+
+      await act(async () =>
+        renderComponent({
+          application: { ...SAMPLE_APPLICATION, state: { value: 'deploying' } }
+        })
+      )
+
+      expect(screen.getAllByTestId('logs-block-loading-message').length).toBeGreaterThan(0)
+      expect(screen.getAllByTestId('logs-block').length).toBeGreaterThan(0)
     })
 
     it('retries fetching while Deploying after a transient 404', async () => {

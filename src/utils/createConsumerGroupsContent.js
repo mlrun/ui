@@ -19,6 +19,7 @@ such restriction.
 */
 import { generateNuclioLink } from './parseUri'
 import { getV3ioStreamIdentifier } from './getUniqueIdentifier'
+import { IS_MF_MODE, NUCLIO_FUNCTIONS_PATH } from '../constants'
 
 const createConsumerGroupsContent = (content, params) => {
   return content.map(contentItem => {
@@ -46,10 +47,10 @@ const createConsumerGroupsContent = (content, params) => {
           value: contentItem.functionName,
           getLink: () => {
             return generateNuclioLink(
-              `/projects/${params.projectName}/real-time-functions/${contentItem.functionName}`
+              `/projects/${params.projectName}/${NUCLIO_FUNCTIONS_PATH}/${contentItem.functionName}`
             )
           },
-          linkIsExternal: true,
+          linkIsExternal: !IS_MF_MODE,
           className: 'table-cell-1'
         }
       }

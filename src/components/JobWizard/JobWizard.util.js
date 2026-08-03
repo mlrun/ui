@@ -42,8 +42,11 @@ import {
   EXISTING_IMAGE_SOURCE,
   FUNCTION_DEFAULT_HANDLER,
   HYPERPARAMETER_STRATEGY_STEP,
+  IS_MF_MODE,
+  JOB_DEFAULT_OUTPUT_PATH,
   LIST_TUNING_STRATEGY,
   MAX_SELECTOR_CRITERIA,
+  PANEL_DEFAULT_ACCESS_KEY,
   PANEL_RERUN_MODE,
   PARAMETERS_FROM_FILE_VALUE,
   PARAMETERS_FROM_UI_VALUE,
@@ -165,8 +168,12 @@ export const generateJobWizardData = (
     },
     [ADVANCED_STEP]: {
       inputPath: null,
-      outputPath: currentProject?.spec?.artifact_path || frontendSpec.default_artifact_path,
-      apiTokenInput: 'default',
+      outputPath: IS_MF_MODE
+        ? currentProject?.spec?.artifact_path || frontendSpec.default_artifact_path
+        : currentProject?.spec?.artifact_path ||
+          (frontendSpec.ce?.version && frontendSpec.default_artifact_path) ||
+          JOB_DEFAULT_OUTPUT_PATH,
+      ...(IS_MF_MODE ? { apiTokenInput: 'default' } : { accessKey: true, accessKeyInput: '' }),
       environmentVariablesTable: parseEnvironmentVariables(environmentVariables)
       // secretSourcesTable - currently not shown
       // secretSourcesTable: []
@@ -284,7 +291,16 @@ export const generateJobWizardDefaultData = (
     [ADVANCED_STEP]: {
       inputPath: defaultData.task.spec.input_path,
       outputPath: defaultData.task.spec.output_path,
-      apiTokenInput: defaultData.task.spec?.auth?.token_name ?? 'default',
+      ...(IS_MF_MODE
+        ? { apiTokenInput: defaultData.task.spec?.auth?.token_name ?? 'default' }
+        : {
+            accessKey:
+              defaultData.function?.metadata?.credentials?.access_key === PANEL_DEFAULT_ACCESS_KEY,
+            accessKeyInput:
+              defaultData.function?.metadata?.credentials?.access_key === PANEL_DEFAULT_ACCESS_KEY
+                ? ''
+                : defaultData.function?.metadata?.credentials?.access_key
+          }),
       environmentVariablesTable: parseEnvironmentVariables(defaultData.function?.spec?.env ?? [])
       // secretSourcesTable - currently not shown
       // secretSourcesTable: parseSecretSources(defaultData.task.spec.secret_sources)
@@ -1014,9 +1030,10 @@ export const generateJobRequestData = (
         labels: convertChipsData(labels)
       },
       spec: {
-        ...(formData[ADVANCED_STEP].apiTokenInput && {
-          auth: { token_name: formData[ADVANCED_STEP].apiTokenInput }
-        }),
+        ...(IS_MF_MODE &&
+          formData[ADVANCED_STEP].apiTokenInput && {
+            auth: { token_name: formData[ADVANCED_STEP].apiTokenInput }
+          }),
         inputs: generateDataInputs(formData[DATA_INPUTS_STEP].dataInputsTable),
         parameters: generateParameters(formData[PARAMETERS_STEP].parametersTable),
         // secretSourcesTable - currently not shown
@@ -1036,6 +1053,15 @@ export const generateJobRequestData = (
       }
     },
     function: {
+      ...(!IS_MF_MODE && {
+        metadata: {
+          credentials: {
+            access_key: formData[ADVANCED_STEP].accessKey
+              ? PANEL_DEFAULT_ACCESS_KEY
+              : formData[ADVANCED_STEP].accessKeyInput
+          }
+        }
+      }),
       spec: {
         image:
           formData[RUN_DETAILS_STEP].image?.imageSource === EXISTING_IMAGE_SOURCE

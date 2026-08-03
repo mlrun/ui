@@ -24,7 +24,8 @@ import {
   MONITOR_JOBS_TAB,
   FILES_PAGE,
   DATASETS_PAGE,
-  DOCUMENTS_PAGE
+  DOCUMENTS_PAGE,
+  IS_MF_MODE
 } from '../constants'
 
 /**
@@ -117,11 +118,17 @@ const generateLinkPath = (uri = '') => {
 }
 
 const generateNuclioLink = pathname => {
+  if (IS_MF_MODE) return pathname
+
   const base = window.mlrunConfig?.nuclioUiUrl || window.location.origin
-
   const cleanPath = pathname.startsWith('/') ? pathname : `/${pathname}`
+  const linkUrl = new URL(`${base}${cleanPath}`)
 
-  return new URL(`${base}${cleanPath}`).toString()
+  if (window.location.origin !== base) {
+    linkUrl.searchParams.set('origin', window.location.origin)
+  }
+
+  return linkUrl.toString()
 }
 
 export { generateLinkPath, generateNuclioLink, parseUri, parseIdentifier }

@@ -18,10 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
+import { forEach, groupBy } from 'lodash'
 
 import { membersActions } from '../../elements/MembersPopUp/membersReducer'
 
 import {
+  IS_MF_MODE,
   PROJECTS_SETTINGS_GENERAL_TAB,
   PROJECTS_SETTINGS_PAGE,
   PROJECTS_SETTINGS_MEMBERS_TAB,
@@ -76,7 +78,7 @@ const addMember = (members, name, id, type, initialRole, role) => {
   })
 }
 
-export const generateMembers = (policiesResponse, membersDispatch) => {
+const generateMembersMF = (policiesResponse, membersDispatch) => {
   const members = []
   const memberSet = new Set()
   const policies = policiesResponse.data.items || []
@@ -132,6 +134,78 @@ export const generateMembers = (policiesResponse, membersDispatch) => {
   })
 }
 
+const isOwnerInMembersList = (ownerId, membersList) => {
+  return membersList.some(member => {
+    return member.id === ownerId
+  })
+}
+
+const generateMembersIGZ3 = (membersResponse, membersDispatch, owner) => {
+  const members = []
+  const {
+    project_authorization_role: projectAuthorizationRoles = [],
+    user: users = [],
+    user_group: userGroups = []
+  } = groupBy(membersResponse.data.included, includeItem => {
+    return includeItem.type
+  })
+
+  membersDispatch({
+    type: membersActions.SET_PROJECT_AUTHORIZATION_ROLES,
+    payload: projectAuthorizationRoles
+  })
+  membersDispatch({
+    type: membersActions.SET_USERS,
+    payload: users
+  })
+  membersDispatch({
+    type: membersActions.SET_USER_GROUPS,
+    payload: userGroups
+  })
+
+  if (owner.id && !isOwnerInMembersList(owner.id, users)) {
+    addMember(members, owner.username, owner.id, USER_ROLE, OWNER_ROLE, OWNER_ROLE)
+  }
+
+  projectAuthorizationRoles.forEach(role => {
+    if (role.relationships) {
+      forEach(role.relationships, relationData => {
+        relationData.data.forEach(identity => {
+          const identityList = identity.type === USER_ROLE ? users : userGroups
+
+          const {
+            attributes: { name, username },
+            id,
+            type
+          } = identityList.find(identityData => {
+            return identityData.id === identity.id
+          })
+
+          addMember(
+            members,
+            type === USER_ROLE ? username : name,
+            id,
+            type,
+            owner.id === id ? OWNER_ROLE : role.attributes.name,
+            owner.id === id ? OWNER_ROLE : role.attributes.name
+          )
+        })
+      })
+    }
+  })
+
+  membersDispatch({
+    type: membersActions.SET_MEMBERS_ORIGINAL,
+    payload: members
+  })
+  membersDispatch({
+    type: membersActions.SET_MEMBERS,
+    payload: members
+  })
+}
+
+export const generateMembers = IS_MF_MODE ? generateMembersMF : generateMembersIGZ3
+
 export const isProjectMembersTabShown = (
   projectMembershipIsEnabled,
   userIsProjectOwner,
@@ -143,14 +217,27 @@ export const isProjectMembersTabShown = (
 
   const userIsProjectSecurityAdmin =
     activeUser.data?.attributes?.user_policies_collection?.has('Project Security Admin') ?? false
-  const activeUsername = activeUser.data?.attributes?.username
-  const userIsAdmin = members.some(
-    member =>
-      member.role === ADMIN_ROLE &&
-      (member.id === activeUsername ||
-        (member.type === USER_GROUP_ROLE &&
-          activeUser.data?.attributes?.user_group_names?.has(member.id)))
-  )
+
+  const userIsAdmin = IS_MF_MODE
+    ? (() => {
+        const activeUsername = activeUser.data?.attributes?.username
+        return members.some(
+          member =>
+            member.role === ADMIN_ROLE &&
+            (member.id === activeUsername ||
+              (member.type === USER_GROUP_ROLE &&
+                activeUser.data?.attributes?.user_group_names?.has(member.id)))
+        )
+      })()
+    : members.some(
+        member =>
+          member.role === ADMIN_ROLE &&
+          (member.id === activeUser.data?.id ||
+            (member.type === USER_GROUP_ROLE &&
+              activeUser.data?.relationships?.user_groups?.data?.some?.(
+                group => group.id === member.id
+              )))
+      )
 
   return userIsProjectOwner || userIsAdmin || userIsProjectSecurityAdmin
 }

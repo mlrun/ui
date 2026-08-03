@@ -319,6 +319,8 @@ const DetailsInfoItem = React.forwardRef(
           {item.value.map((itemFunc, index) => {
             const name = itemFunc.func?.name || itemFunc.name || ''
             const status = itemFunc.func?.state?.value || itemFunc.state?.value || ''
+            const statusLabel = itemFunc.func?.state?.label || itemFunc.state?.label || status
+
             const statusClassName = classNames(
               itemFunc.func?.state?.className || `state-${status}-function`,
               'status-icon'
@@ -327,7 +329,7 @@ const DetailsInfoItem = React.forwardRef(
               <span key={index} className="details-item__functions-item">
                 <Tooltip template={<TextTooltipTemplate text={name} />}>{name}</Tooltip>
                 {status && (
-                  <Tooltip template={<TextTooltipTemplate text={status} />}>
+                  <Tooltip template={<TextTooltipTemplate text={statusLabel} />}>
                     <i className={statusClassName} />
                   </Tooltip>
                 )}

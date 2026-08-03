@@ -32,8 +32,10 @@ process.on('unhandledRejection', err => {
   throw err
 })
 
-// Ensure environment variables are read.
-require('../config/env')
+// Load environment variables from .env* files.
+require('dotenv-expand')(require('dotenv').config({ path: '.env.test.local' }))
+require('dotenv-expand')(require('dotenv').config({ path: '.env.test' }))
+require('dotenv-expand')(require('dotenv').config({ path: '.env' }))
 
 const execSync = require('child_process').execSync
 // const argv = process.argv.slice(2)

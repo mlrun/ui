@@ -23,7 +23,7 @@ import JobWizard from '../../JobWizard/JobWizard'
 import RegisterArtifactModal from '../../RegisterArtifactModal/RegisterArtifactModal'
 import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
 
-import { ARTIFACT_TYPE, DATASET_TYPE } from '../../../constants'
+import { ARTIFACT_TYPE, DATASET_TYPE, IS_MF_MODE, NUCLIO_FUNCTIONS_PATH } from '../../../constants'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { generateNuclioLink } from '../../../utils'
 import { isSubmitDisabled } from 'igz-controls/utils/form.util'
@@ -391,8 +391,10 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           icon: <RTFunctionIcon />,
           label: 'Create real-time function',
           handleClick: () => ({
-            path: generateNuclioLink(`${base_url}/real-time-functions/create-function`),
-            externalLink: true
+            path: IS_MF_MODE
+              ? `/projects/${params.projectName}/${NUCLIO_FUNCTIONS_PATH}/create-function`
+              : generateNuclioLink(`/projects/${params.projectName}/create-function`),
+            externalLink: !IS_MF_MODE
           }),
           tooltip:
             'These are typically used for serving, APIs, and stream processing. Specify the code, resources, and triggers.'
@@ -445,8 +447,8 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
         {
           id: 'nuclioFunctions',
           handleClick: () => ({
-            path: generateNuclioLink(`${base_url}/real-time-functions`),
-            externalLink: true
+            path: generateNuclioLink(`${base_url}/${NUCLIO_FUNCTIONS_PATH}`),
+            externalLink: !IS_MF_MODE
           }),
           label: 'Nuclio functions'
         },

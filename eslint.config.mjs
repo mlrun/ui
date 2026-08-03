@@ -54,9 +54,13 @@ export default [
     }
   },
   {
-    files: ['**/*.test.jsx'],
+    files: ['**/*.test.js', '**/*.test.jsx'],
     rules: {
-      'import/named': 'off'
+      'import/named': 'off',
+      'no-unused-vars': [
+        process.env.NODE_ENV === 'production' ? 2 : 1,
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }
+      ]
     }
   }
 ]

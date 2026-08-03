@@ -65,7 +65,8 @@ import {
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_WORKFLOWS_TAB,
   JOBS_MONITORING_SCHEDULED_TAB,
-  INACTIVE_JOBS_TAB
+  INACTIVE_JOBS_TAB,
+  IS_MF_MODE
 } from './constants'
 
 import 'reactflow/dist/style.css'
@@ -74,77 +75,120 @@ import './tailwind.css'
 import './scss/main.scss'
 import RemoteNuclioRouteWrapper from './components/RemoteNuclio/RemoteNuclioRouteWrapper'
 
-const Page = lazyRetry(() => import('./layout/Page/Page'))
-const Datasets = lazyRetry(() => import('./components/Datasets/Datasets'))
-const FeatureStore = lazyRetry(() => import('./components/FeatureStore/FeatureStore'))
-const Files = lazyRetry(() => import('./components/Files/Files'))
-const FunctionsOld = lazyRetry(() => import('./components/FunctionsPageOld/FunctionsOld')) // todo [functionsWithPagination] delete FunctionsOld and other related logic in 1.9.0
-const Functions = lazyRetry(() => import('./components/FunctionsPage/Functions'))
-const Jobs = lazyRetry(() => import('./components/Jobs/Jobs'))
-const MonitorJobs = lazyRetry(() => import('./components/Jobs/MonitorJobs/MonitorJobs'))
-const MonitorWorkflows = lazyRetry(
-  () => import('./components/Jobs/MonitorWorkflows/MonitorWorkflows')
+const Page = lazyRetry(() => import('./layout/Page/Page'), 'Page')
+const Datasets = lazyRetry(() => import('./components/Datasets/Datasets'), 'Datasets')
+const FeatureStore = lazyRetry(
+  () => import('./components/FeatureStore/FeatureStore'),
+  'FeatureStore'
 )
-const ScheduledJobs = lazyRetry(() => import('./components/Jobs/ScheduledJobs/ScheduledJobs'))
-const Models = lazyRetry(() => import('./components/ModelsPage/Models/Models'))
+const Files = lazyRetry(() => import('./components/Files/Files'), 'Files')
+const FunctionsOld = lazyRetry(
+  () => import('./components/FunctionsPageOld/FunctionsOld'),
+  'FunctionsOld'
+) // todo [functionsWithPagination] delete FunctionsOld and other related logic in 1.9.0
+const Functions = lazyRetry(() => import('./components/FunctionsPage/Functions'), 'Functions')
+const Jobs = lazyRetry(() => import('./components/Jobs/Jobs'), 'Jobs')
+const MonitorJobs = lazyRetry(
+  () => import('./components/Jobs/MonitorJobs/MonitorJobs'),
+  'MonitorJobs'
+)
+const MonitorWorkflows = lazyRetry(
+  () => import('./components/Jobs/MonitorWorkflows/MonitorWorkflows'),
+  'MonitorWorkflows'
+)
+const ScheduledJobs = lazyRetry(
+  () => import('./components/Jobs/ScheduledJobs/ScheduledJobs'),
+  'ScheduledJobs'
+)
+const Models = lazyRetry(() => import('./components/ModelsPage/Models/Models'), 'Models')
 const RealTimePipelines = lazyRetry(
-  () => import('./components/ModelsPage/RealTimePipelines/RealTimePipelines')
+  () => import('./components/ModelsPage/RealTimePipelines/RealTimePipelines'),
+  'RealTimePipelines'
 )
 const ModelEndpoints = lazyRetry(
-  () => import('./components/ModelsPage/ModelEndpoints/ModelEndpoints')
+  () => import('./components/ModelsPage/ModelEndpoints/ModelEndpoints'),
+  'ModelEndpoints'
 )
-const ModelsPage = lazyRetry(() => import('./components/ModelsPage/ModelsPage'))
-const Projects = lazyRetry(() => import('./components/ProjectsPage/Projects'))
-const ProjectMonitor = lazyRetry(() => import('./components/Project/ProjectMonitor'))
+const ModelsPage = lazyRetry(() => import('./components/ModelsPage/ModelsPage'), 'ModelsPage')
+const Projects = lazyRetry(() => import('./components/ProjectsPage/Projects'), 'Projects')
+const ProjectMonitor = lazyRetry(
+  () => import('./components/Project/ProjectMonitor'),
+  'ProjectMonitor'
+)
 const ConsumerGroupsWrapper = lazyRetry(
-  () => import('./components/ConsumerGroupsWrapper/ConsumerGroupsWrapper')
+  () => import('./components/ConsumerGroupsWrapper/ConsumerGroupsWrapper'),
+  'ConsumerGroupsWrapper'
 )
-const ConsumerGroup = lazyRetry(() => import('./components/ConsumerGroup/ConsumerGroup'))
-const ConsumerGroups = lazyRetry(() => import('./components/ConsumerGroups/ConsumerGroups'))
+const ConsumerGroup = lazyRetry(
+  () => import('./components/ConsumerGroup/ConsumerGroup'),
+  'ConsumerGroup'
+)
+const ConsumerGroups = lazyRetry(
+  () => import('./components/ConsumerGroups/ConsumerGroups'),
+  'ConsumerGroups'
+)
 const ProjectOverview = lazyRetry(
-  () => import('./components/Project/ProjectOverview/ProjectOverview')
+  () => import('./components/Project/ProjectOverview/ProjectOverview'),
+  'ProjectOverview'
 )
-const ProjectSettings = lazyRetry(() => import('./components/ProjectSettings/ProjectSettings'))
+const ProjectSettings = lazyRetry(
+  () => import('./components/ProjectSettings/ProjectSettings'),
+  'ProjectSettings'
+)
 const AddToFeatureVectorPage = lazyRetry(
-  () => import('./components/AddToFeatureVectorPage/AddToFeatureVectorPage')
+  () => import('./components/AddToFeatureVectorPage/AddToFeatureVectorPage'),
+  'AddToFeatureVectorPage'
 )
-const FeatureSets = lazyRetry(() => import('./components/FeatureStore/FeatureSets/FeatureSets'))
-const Features = lazyRetry(() => import('./components/FeatureStore/Features/Features'))
+const FeatureSets = lazyRetry(
+  () => import('./components/FeatureStore/FeatureSets/FeatureSets'),
+  'FeatureSets'
+)
+const Features = lazyRetry(() => import('./components/FeatureStore/Features/Features'), 'Features')
 const FeatureVectors = lazyRetry(
-  () => import('./components/FeatureStore/FeatureVectors/FeatureVectors')
+  () => import('./components/FeatureStore/FeatureVectors/FeatureVectors'),
+  'FeatureVectors'
 )
 const ProjectsJobsMonitoring = lazyRetry(
-  () => import('./components/ProjectsJobsMonitoring/ProjectsJobsMonitoring')
+  () => import('./components/ProjectsJobsMonitoring/ProjectsJobsMonitoring'),
+  'ProjectsJobsMonitoring'
 )
-const ProjectsAlerts = lazyRetry(() => import('./components/Alerts/Alerts'))
+const ProjectsAlerts = lazyRetry(() => import('./components/Alerts/Alerts'), 'ProjectsAlerts')
 const JobsMonitoring = lazyRetry(
-  () => import('./components/ProjectsJobsMonitoring/JobsMonitoring/JobsMonitoring')
+  () => import('./components/ProjectsJobsMonitoring/JobsMonitoring/JobsMonitoring'),
+  'JobsMonitoring'
 )
 const ScheduledMonitoring = lazyRetry(
-  () => import('./components/ProjectsJobsMonitoring/ScheduledMonitoring/ScheduledMonitoring')
+  () => import('./components/ProjectsJobsMonitoring/ScheduledMonitoring/ScheduledMonitoring'),
+  'ScheduledMonitoring'
 )
 const WorkflowsMonitoring = lazyRetry(
-  () => import('./components/ProjectsJobsMonitoring/WorkflowsMonitoring/WorkflowsMonitoring')
+  () => import('./components/ProjectsJobsMonitoring/WorkflowsMonitoring/WorkflowsMonitoring'),
+  'WorkflowsMonitoring'
 )
-const Documents = lazyRetry(() => import('./components/Documents/Documents'))
-const LLMPrompts = lazyRetry(() => import('./components/LLMPrompts/LLMPrompts'))
+const Documents = lazyRetry(() => import('./components/Documents/Documents'), 'Documents')
+const LLMPrompts = lazyRetry(() => import('./components/LLMPrompts/LLMPrompts'), 'LLMPrompts')
 const ApplicationMetrics = lazyRetry(
-  () => import('./components/ApplicationMetrics/ApplicationMetrics')
+  () => import('./components/ApplicationMetrics/ApplicationMetrics'),
+  'ApplicationMetrics'
 )
 
 const MonitoringApplicationsPage = lazyRetry(
-  () => import('./components/MonitoringApplicationsPage/MonitoringApplicationsPage')
+  () => import('./components/MonitoringApplicationsPage/MonitoringApplicationsPage'),
+  'MonitoringApplicationsPage'
 )
 const MonitoringApplications = lazyRetry(
   () =>
-    import('./components/MonitoringApplicationsPage/MonitoringApplications/MonitoringApplications')
+    import('./components/MonitoringApplicationsPage/MonitoringApplications/MonitoringApplications'),
+  'MonitoringApplications'
 )
 const MonitoringApplication = lazyRetry(
   () =>
-    import('./components/MonitoringApplicationsPage/MonitoringApplications/MonitoringApplication/MonitoringApplication')
+    import('./components/MonitoringApplicationsPage/MonitoringApplications/MonitoringApplication/MonitoringApplication'),
+  'MonitoringApplication'
 )
 const ApplicationsPage = lazyRetry(
-  () => import('./nextGenComponents/pages/ApplicationsPage/ApplicationsPage')
+  () => import('./nextGenComponents/pages/ApplicationsPage/ApplicationsPage'),
+  'ApplicationsPage'
 )
 const App = () => {
   const { isNuclioModeDisabled } = useNuclioMode()
@@ -164,12 +208,14 @@ const App = () => {
       <>
         <Route path="" element={<Page isHeaderShown={isHeaderShown} />}>
           <Route path="projects" element={<Projects />} />
-          <Route path="projects/:projectName">
-            <Route index element={<Navigate replace to={PROJECT_MONITOR} />} />
-            <Route path="real-time-functions/*" element={<RemoteNuclioRouteWrapper />} />
-            <Route path="create-function/*" element={<RemoteNuclioRouteWrapper />} />
-            <Route path="api-gateways/*" element={<RemoteNuclioRouteWrapper />} />
-          </Route>
+          {IS_MF_MODE && (
+            <Route path="projects/:projectName">
+              <Route index element={<Navigate replace to={PROJECT_MONITOR} />} />
+              <Route path="real-time-functions/*" element={<RemoteNuclioRouteWrapper />} />
+              <Route path="create-function/*" element={<RemoteNuclioRouteWrapper />} />
+              <Route path="api-gateways/*" element={<RemoteNuclioRouteWrapper />} />
+            </Route>
+          )}
           <Route path={`projects/*/${JOBS_MONITORING_PAGE}/*`} element={<ProjectsJobsMonitoring />}>
             {[
               `${JOBS_MONITORING_JOBS_TAB}/:jobName/:jobId/:tab`,

@@ -233,6 +233,7 @@ const ApplicationBuildLogs = ({ application }) => {
           title="Application"
           logs={applicationLogs}
           isLoading={isAppLogsLoading}
+          loadingMessage={isDeploying ? BUILD_LOGS_INITIALIZED_MESSAGE : undefined}
           isCopied={copiedSection === LOGS_SECTION_KEY.APPLICATION}
           onCopy={handleCopyAppLogs}
         />
@@ -241,6 +242,7 @@ const ApplicationBuildLogs = ({ application }) => {
         title="Function"
         logs={functionLogs}
         isLoading={isFunctionLogsLoading}
+        loadingMessage={isDeploying ? BUILD_LOGS_INITIALIZED_MESSAGE : undefined}
         isCopied={copiedSection === LOGS_SECTION_KEY.FUNCTION}
         onCopy={handleCopyFunctionLogs}
       />

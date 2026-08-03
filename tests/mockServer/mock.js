@@ -2090,6 +2090,8 @@ function deleteFunc(req, res) {
 }
 
 const NOT_FOUND_LOGS_FUNCTION = 'test-deploying-app'
+// Ready state but no build logs exist — UI should show "No data to show" inside the log panel.
+const EMPTY_LOGS_FUNCTION = 'test-no-logs-app'
 
 function sendLogsNotFound(name, res) {
   res.statusCode = 404
@@ -2099,6 +2101,9 @@ function sendLogsNotFound(name, res) {
 function getNuclioLogs(req, res) {
   if (req.params.func === NOT_FOUND_LOGS_FUNCTION) {
     return sendLogsNotFound(req.params.func, res)
+  }
+  if (req.params.func === EMPTY_LOGS_FUNCTION) {
+    return res.send('')
   }
 
   sendLogsData(
@@ -2115,6 +2120,9 @@ function getNuclioLogs(req, res) {
 function getBuildStatus(req, res) {
   if (req.query.name === NOT_FOUND_LOGS_FUNCTION) {
     return sendLogsNotFound(req.query.name, res)
+  }
+  if (req.query.name === EMPTY_LOGS_FUNCTION) {
+    return res.send('')
   }
 
   sendLogsData(

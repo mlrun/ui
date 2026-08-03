@@ -54,7 +54,8 @@ import {
   PARAMETERS_STEP,
   RESOURCES_STEP,
   RUN_DETAILS_STEP,
-  SCHEDULE_TAB
+  SCHEDULE_TAB,
+  IS_MF_MODE
 } from '../../constants'
 import {
   generateJobRequestData,
@@ -359,9 +360,13 @@ const JobWizard = ({
         mode,
         true
       )
+      const credentials = IS_MF_MODE ? null : jobRequestData.function?.metadata?.credentials
+      if (!IS_MF_MODE) delete jobRequestData.function.metadata
+
       dispatch(
         editJob({
           postData: {
+            ...(credentials && { credentials }),
             scheduled_object: jobRequestData,
             cron_trigger: jobRequestData.schedule
           },

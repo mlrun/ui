@@ -21,6 +21,7 @@ import classnames from 'classnames'
 import moment from 'moment'
 
 import { generateNuclioLink } from '../../../utils'
+import { IS_MF_MODE, NUCLIO_FUNCTIONS_PATH } from '../../../constants'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
 
 export const generateOperatingFunctionsTable = (functions, projectName) => {
@@ -52,8 +53,8 @@ export const generateOperatingFunctionsTable = (functions, projectName) => {
     return {
       name: {
         value: func.name,
-        href: generateNuclioLink(
-          `/projects/${projectName}/real-time-functions/${nuclioFunctionName}`
+        [IS_MF_MODE ? 'link' : 'href']: generateNuclioLink(
+          `/projects/${projectName}/${NUCLIO_FUNCTIONS_PATH}/${nuclioFunctionName}`
         ),
         className: 'table-cell_big'
       },

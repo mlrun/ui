@@ -5,6 +5,28 @@
       "metadata": {
         "project": "default",
         "tag": "latest",
+        "name": "test-no-logs-app",
+        "hash": "3333333333333333333333333333333333333333",
+        "updated": "2026-06-15T15:00:00.000000+00:00"
+      },
+      "spec": {
+        "image": "mlrun/mlrun",
+        "description": "ML-12730 manual test: application in Ready state with no build logs (shows 'No data to show' inside the log panel).",
+        "internal_application_port": 8080,
+        "command": ""
+      },
+      "verbose": false,
+      "status": {
+        "state": "ready",
+        "nuclio_name": "app-demo-test-no-logs",
+        "sidecar_name": "test-no-logs-sidecar"
+      }
+    },
+    {
+      "kind": "application",
+      "metadata": {
+        "project": "default",
+        "tag": "latest",
         "name": "test-initialized-app",
         "hash": "1111111111111111111111111111111111111111",
         "updated": "2026-06-12T09:00:00.000000+00:00"
@@ -25178,9 +25200,111 @@
         "address": "app-demo-vizro.default-tenant.app.vmdev17.lab.iguazeng.com/",
         "container_image": "docker-registry.default-tenant.app.vmdev17.lab.iguazeng.com:80/nuclio/app-demo-app-demo-vizro-processor:latest",
         "state": "ready",
-        "internal_invocation_urls": [
-          "nuclio-app-demo-vizro.default-tenant.svc.cluster.local:8080"
-        ]
+        "internal_invocation_urls": ["nuclio-app-demo-vizro.default-tenant.svc.cluster.local:8080"]
+      }
+    },
+    {
+      "kind": "application",
+      "spec": {
+        "image": "mlrun/mlrun",
+        "config": {
+          "spec.sidecars": [
+            {
+              "name": "streamlit-sidecar",
+              "image": "iguazio/iris-streamlit:1.2.0",
+              "ports": [
+                {
+                  "name": "http",
+                  "containerPort": 8501,
+                  "protocol": "TCP"
+                }
+              ],
+              "livenessProbe": {
+                "httpGet": {
+                  "path": "/",
+                  "port": 5000,
+                  "scheme": "HTTP"
+                },
+                "initialDelaySeconds": 17,
+                "periodSeconds": 11
+              },
+              "readinessProbe": {
+                "httpGet": {
+                  "path": "/",
+                  "port": 5000,
+                  "scheme": "HTTP"
+                },
+                "initialDelaySeconds": 29,
+                "periodSeconds": 23
+              }
+            }
+          ]
+        },
+        "build": {
+          "origin_filename": "/User/apps/iris_streamlit.py",
+          "code_origin": "/User/apps/iris_streamlit.py",
+          "source": "https://github.com/mlrun/demos.git#refs/heads/main",
+          "base_image": "python:3.9-slim",
+          "commands": ["pip install streamlit pandas scikit-learn"]
+        },
+        "max_replicas": 2,
+        "description": "Interactive Iris classification dashboard built with Streamlit",
+        "default_handler": "handler",
+        "source": "https://github.com/mlrun/demos.git#refs/heads/main",
+        "priority_class_name": "igz-workload-medium",
+        "internal_application_port": 8501,
+        "min_replicas": 1,
+        "nuclio_runtime": "golang",
+        "disable_auto_mount": false,
+        "function_handler": "reverse_proxy:Handler",
+        "preemption_mode": "prevent",
+        "env": [
+          {
+            "name": "SIDECAR_PORT",
+            "value": "8501"
+          },
+          {
+            "name": "SIDECAR_HOST",
+            "value": "http://localhost"
+          }
+        ],
+        "resources": {
+          "requests": {
+            "memory": "256Mi",
+            "cpu": "100m"
+          },
+          "limits": {
+            "memory": "1Gi",
+            "cpu": "500m"
+          }
+        }
+      },
+      "metadata": {
+        "project": "default",
+        "tag": "latest",
+        "credentials": {
+          "access_key": "$ref:mlrun-auth-secrets.abc123"
+        },
+        "name": "iris-streamlit-app",
+        "hash": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0",
+        "updated": "2026-05-25T10:30:00.000000+00:00",
+        "labels": {
+          "owner": "admin",
+          "framework": "streamlit"
+        }
+      },
+      "verbose": false,
+      "status": {
+        "nuclio_name": "default-iris-streamlit-app",
+        "sidecar_name": "streamlit-sidecar",
+        "application_image": "iguazio/iris-streamlit:1.2.0",
+        "external_invocation_urls": [
+          "default-iris-streamlit-app.default-tenant.app.vmdev36.lab.iguazeng.com/"
+        ],
+        "address": "default-iris-streamlit-app.default-tenant.app.vmdev36.lab.iguazeng.com/",
+        "container_image": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/nuclio/default-iris-streamlit-app-processor:latest",
+        "state": "ready",
+        "internal_invocation_urls": ["nuclio-app-demo-vizro.default-tenant.svc.cluster.local:8080"]
       }
     },
     {
@@ -32554,6 +32678,71 @@
       },
       "verbose": false,
       "kind": "serving"
+    },
+    {
+      "kind": "serving",
+      "metadata": {
+        "name": "test-pipeline",
+        "tag": "latest",
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "project": "default",
+        "labels": {
+          "mlrun/class": "serving"
+        },
+        "updated": "2026-06-23T12:00:00.000000+00:00"
+      },
+      "spec": {
+        "command": "",
+        "args": [],
+        "image": "mlrun/mlrun",
+        "description": "ML-12395 manual test: serving pipeline with a child function in building state.",
+        "min_replicas": 1,
+        "max_replicas": 4,
+        "function_kind": "serving_v2",
+        "graph": {
+          "kind": "router",
+          "routes": {
+            "child-model": {
+              "kind": "task",
+              "class_name": "mlrun.serving.ModelRouter"
+            }
+          }
+        },
+        "build": {
+          "commands": []
+        },
+        "secret_sources": []
+      },
+      "verbose": false,
+      "kind": "serving"
+    },
+    {
+      "kind": "serving",
+      "metadata": {
+        "name": "test-pipeline-child",
+        "tag": "latest",
+        "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "project": "default",
+        "labels": {
+          "mlrun/class": "serving",
+          "parent-function": "test-pipeline"
+        },
+        "updated": "2026-06-23T12:00:00.000000+00:00"
+      },
+      "spec": {
+        "command": "",
+        "args": [],
+        "image": "mlrun/mlrun",
+        "description": "ML-12395 manual test: child function in building state.",
+        "function_kind": "serving_v2",
+        "build": {
+          "commands": []
+        }
+      },
+      "verbose": false,
+      "status": {
+        "state": "building"
+      }
     }
   ]
 }

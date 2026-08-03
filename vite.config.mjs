@@ -46,6 +46,10 @@ export default defineConfig(async ({ mode }) => {
     },
     resolve: {
       alias: {
+        'igz-controls/nextGenComponents': path.resolve(
+          __dirname,
+          'node_modules/iguazio.dashboard-react-controls/dist/nextGenComponents/index.mjs'
+        ),
         'igz-controls': path.resolve(
           __dirname,
           'node_modules/iguazio.dashboard-react-controls/dist'

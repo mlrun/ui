@@ -19,6 +19,8 @@ such restriction.
 */
 /*=========== GENERAL =============*/
 
+export const IS_MF_MODE = import.meta.env.VITE_FEDERATION === 'true'
+
 export const SET_LOADING = 'SET_LOADING'
 
 export const AZURE_STORAGE_INPUT_PATH_SCHEME = 'az://'
@@ -163,8 +165,8 @@ export const PROJECT_QUICK_ACTIONS_PAGE = 'quick-actions'
 export const ALL_VERSIONS_PATH = 'all-versions'
 
 export const NUCLIO_PAGE = 'nuclio'
-export const REAL_TIME_FUNCTIONS_PAGE = 'real-time-functions'
 export const API_GATEWAYS_PAGE = 'api-gateways'
+export const NUCLIO_FUNCTIONS_PATH = IS_MF_MODE ? 'real-time-functions' : 'functions'
 
 /*=========== CONSUMER_GROUPS =============*/
 
