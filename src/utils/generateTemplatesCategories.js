@@ -22,7 +22,7 @@ import { isEmpty } from 'lodash'
 
 import { FUNCTION_RUN_KINDS } from '../constants'
 
-const excludedFunctionNames = ['batch-inference']
+export const excludedFunctionNames = ['batch-inference', 'batch-inference-v2', 'batch_inference_v2']
 
 export const generateCategories = functionTemplates => {
   const templates = Object.entries(functionTemplates)

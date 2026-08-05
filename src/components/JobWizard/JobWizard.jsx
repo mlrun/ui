@@ -83,7 +83,6 @@ import './jobWizard.scss'
 
 const JobWizard = ({
   defaultData = {},
-  isBatchInference = false,
   isCrossProjects = false,
   isOpen,
   isTrain = false,
@@ -165,10 +164,8 @@ const JobWizard = ({
   }, [dispatch, setFunctions])
 
   useEffect(() => {
-    if (isBatchInference || isTrain) {
-      const hubFunctionName = isBatchInference ? 'batch_inference_v2' : 'auto-trainer'
-
-      dispatch(fetchHubFunction({ hubFunctionName }))
+    if (isTrain) {
+      dispatch(fetchHubFunction({ hubFunctionName: 'auto-trainer' }))
         .unwrap()
         .then(hubFunction => {
           if (hubFunction) {
@@ -184,7 +181,7 @@ const JobWizard = ({
           }
         })
     }
-  }, [dispatch, isBatchInference, isTrain, resolveModal])
+  }, [dispatch, isTrain, resolveModal])
 
   useEffect(() => {
     if (!isEmpty(jobsStore.jobFunc)) {
@@ -227,7 +224,7 @@ const JobWizard = ({
       setJobData(formStateRef.current, jobFormData, jobAdditionalData)
     } else if (
       formStateRef.current &&
-      (isBatchInference || isTrain || isRunMode) &&
+      (isTrain || isRunMode) &&
       !isEmpty(selectedFunctionData) &&
       isEmpty(jobAdditionalData) &&
       !isEmpty(currentProject)
@@ -248,7 +245,6 @@ const JobWizard = ({
   }, [
     defaultData,
     frontendSpec,
-    isBatchInference,
     isEditMode,
     isRunMode,
     isTrain,
@@ -269,7 +265,7 @@ const JobWizard = ({
         {
           id: FUNCTION_SELECTION_STEP,
           label: 'Function selection',
-          hidden: isEditMode || isRunMode || isBatchInference || isTrain,
+          hidden: isEditMode || isRunMode || isTrain,
           nextIsDisabled: isEmpty(selectedFunctionData)
         },
         {
@@ -289,7 +285,7 @@ const JobWizard = ({
         {
           id: HYPERPARAMETER_STRATEGY_STEP,
           label: 'Hyperparameter strategy',
-          hidden: !formState.values[RUN_DETAILS_STEP]?.hyperparameter || isBatchInference
+          hidden: !formState.values[RUN_DETAILS_STEP]?.hyperparameter
         },
         {
           id: RESOURCES_STEP,
@@ -311,7 +307,7 @@ const JobWizard = ({
 
       return stepsConfig
     },
-    [isBatchInference, isEditMode, isRunMode, isTrain, selectedFunctionData]
+    [isEditMode, isRunMode, isTrain, selectedFunctionData]
   )
 
   const runJobHandler = useCallback(
@@ -427,11 +423,7 @@ const JobWizard = ({
       return [
         {
           id: 'schedule-btn',
-          label: isBatchInference
-            ? 'Schedule infer'
-            : isTrain
-              ? 'Schedule training job'
-              : 'Schedule for later',
+          label: isTrain ? 'Schedule training job' : 'Schedule for later',
           onClick: () => {
             formState.handleSubmit()
 
@@ -447,14 +439,7 @@ const JobWizard = ({
         },
         {
           id: 'run-btn',
-          label:
-            mode === PANEL_EDIT_MODE
-              ? 'Save'
-              : isBatchInference
-                ? 'Infer now'
-                : isTrain
-                  ? 'Run training now'
-                  : 'Run',
+          label: mode === PANEL_EDIT_MODE ? 'Save' : isTrain ? 'Run training now' : 'Run',
           onClick: () => {
             submitRequest(formState, false, goToFirstInvalidStep)
           },
@@ -463,7 +448,7 @@ const JobWizard = ({
         }
       ]
     },
-    [isBatchInference, isTrain, mode, submitRequest]
+    [isTrain, mode, submitRequest]
   )
 
   return (
@@ -479,7 +464,7 @@ const JobWizard = ({
               id="jobWizard"
               isWizardOpen={isOpen}
               onWizardResolve={handleCloseModal}
-              previewText={isBatchInference ? 'Tech Preview' : ''}
+              previewText=""
               size={MODAL_MAX}
               stepsConfig={getStepsConfig(formState)}
               getActions={getActionsParams => getActions(getActionsParams, formState)}
@@ -517,7 +502,6 @@ const JobWizard = ({
                 currentProject={currentProject}
                 formState={formState}
                 frontendSpec={frontendSpec}
-                isBatchInference={isBatchInference}
                 isEditMode={isEditMode}
                 jobAdditionalData={jobAdditionalData}
                 params={params}
@@ -557,7 +541,6 @@ const JobWizard = ({
 
 JobWizard.propTypes = {
   defaultData: PropTypes.object,
-  isBatchInference: PropTypes.bool,
   isCrossProjects: PropTypes.bool,
   isOpen: PropTypes.bool.isRequired,
   isTrain: PropTypes.bool,

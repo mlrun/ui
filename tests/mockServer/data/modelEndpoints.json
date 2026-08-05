@@ -1272,12 +1272,12 @@
         "last_request": "2026-05-21T11:15:00.000000+00:00",
         "monitoring_mode": "enabled",
         "sampling_percentage": 100,
-        "result_status": 0,
+        "result_status": 1,
         "avg_latency": 32.8,
         "error_count": 0,
         "current_stats": {},
         "drift_measures": {},
-        "drift_status": "NO_DRIFT"
+        "drift_status": "POSSIBLE_DRIFT"
       }
     },
     {
@@ -1316,12 +1316,12 @@
         "last_request": "2026-05-22T16:40:00.000000+00:00",
         "monitoring_mode": "enabled",
         "sampling_percentage": 100,
-        "result_status": 0,
+        "result_status": 2,
         "avg_latency": 12.5,
         "error_count": 0,
         "current_stats": {},
         "drift_measures": {},
-        "drift_status": "NO_DRIFT"
+        "drift_status": "DRIFT_DETECTED"
       }
     },
     {

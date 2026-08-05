@@ -26,15 +26,25 @@ import ProjectDropdown from './ProjectDropdown'
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
 
+const { MockLink } = vi.hoisted(() => {
+  const React = require('react')
+
+  return {
+    MockLink: React.forwardRef(function MockLink({ to, children, ...rest }, ref) {
+      return (
+        <a ref={ref} href={to} {...rest}>
+          {children}
+        </a>
+      )
+    })
+  }
+})
+
 let mockPathname = '/projects/demo/functions'
 
 vi.mock('react-router-dom', () => ({
   useLocation: () => ({ pathname: mockPathname }),
-  Link: ({ to, children, ...rest }) => (
-    <a href={to} {...rest}>
-      {children}
-    </a>
-  )
+  Link: MockLink
 }))
 
 vi.mock('react-redux', () => ({
