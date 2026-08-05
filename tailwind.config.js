@@ -23,8 +23,7 @@ module.exports = {
   darkMode: ['class'],
   content: [
     './src/nextGenComponents/**/*.{js,jsx,ts,tsx}',
-    './src/igz-controls/nextGenComponents/**/*.{js,jsx,ts,tsx}',
-    './src/layout/**/*.{js,jsx,ts,tsx}'
+    './src/igz-controls/nextGenComponents/**/*.{js,jsx,ts,tsx}'
   ],
   corePlugins: {
     preflight: false
