@@ -33,34 +33,58 @@ export function capCollectionSize(collection) {
   }
 }
 
-// Guards against prototype pollution when the assignment key comes from request data
-// (e.g. a '__proto__'/'constructor'/'prototype' string would otherwise alter Object.prototype).
+// Bounds an array right before it's iterated/sorted/chunked, so a sink can't be driven
+// by an arbitrarily large collection even if it was built up from many prior requests.
+// Non-arrays are rejected to avoid trusting an attacker-controlled `.length`.
+export function boundArray(arr) {
+  if (!Array.isArray(arr)) {
+    return []
+  }
+  return arr.length > MAX_MOCK_COLLECTION_SIZE ? arr.slice(0, MAX_MOCK_COLLECTION_SIZE) : arr
+}
+
+// Prototype pollution guard: a '__proto__'/'constructor'/'prototype' key must never be used
+// to read or write a mock lookup object keyed by request data, since bracket access with one
+// of these names resolves to the object's prototype chain instead of an own property.
 const UNSAFE_OBJECT_KEYS = ['__proto__', 'constructor', 'prototype']
 
+export function isUnsafeObjectKey(key) {
+  return UNSAFE_OBJECT_KEYS.includes(key)
+}
+
+// Rejects the request with a 400 when `key` is unsafe to use against a mock lookup object,
+// so handlers can bail out before the key is ever read from or written to one. Returns
+// whether it rejected, so callers can `if (rejectIfUnsafeKey(res, key)) return`.
+export function rejectIfUnsafeKey(res, key) {
+  if (isUnsafeObjectKey(key)) {
+    res.statusCode = 400
+    res.send('Invalid key')
+    return true
+  }
+  return false
+}
+
 export function safeAssign(obj, key, value) {
-  if (UNSAFE_OBJECT_KEYS.includes(key)) {
+  if (isUnsafeObjectKey(key)) {
     return
   }
   obj[key] = value
 }
 
-// Resolves a mock function YAML file path from a user-supplied function name, rejecting
-// anything that would escape the intended data directory (e.g. via '..' path traversal).
+// Resolves `relativePath` under `baseDir`, rejecting anything that would escape baseDir
+// (e.g. via '..' path traversal) once the two are combined.
+function resolveWithinDir(baseDir, relativePath) {
+  const resolved = path.resolve(baseDir, relativePath)
+  return resolved === baseDir || resolved.startsWith(baseDir + path.sep) ? resolved : null
+}
+
 const FUNCTIONS_DATA_DIR = path.resolve('./tests/mockServer/data/mlrun/functions')
 
 export function resolveFunctionYAMLPath(rawName) {
-  if (typeof rawName !== 'string' || !rawName) {
+  if (typeof rawName !== 'string' || !rawName || path.basename(rawName) !== rawName) {
     return null
   }
-  const safeName = path.basename(rawName)
-  if (safeName !== rawName) {
-    return null
-  }
-  const resolved = path.resolve(FUNCTIONS_DATA_DIR, safeName, `${safeName}.yaml`)
-  if (!resolved.startsWith(FUNCTIONS_DATA_DIR + path.sep)) {
-    return null
-  }
-  return resolved
+  return resolveWithinDir(FUNCTIONS_DATA_DIR, path.join(rawName, `${rawName}.yaml`))
 }
 
 // Throttles the routes that touch the filesystem, so repeated requests can't be used
