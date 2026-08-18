@@ -718,13 +718,15 @@ function postSecretKeys(req, res) {
 }
 
 function deleteSecretKeys(req, res) {
-  if (rejectIfUnsafeKey(res, req.params['project'])) {
-    return
+  const project = req.params['project']
+  if (project === '__proto__' || project === 'constructor' || project === 'prototype') {
+    res.statusCode = 400
+    return res.send('Invalid key')
   }
 
-  secretKeys[req.params['project']].secret_keys = secretKeys[
-    req.params['project']
-  ].secret_keys.filter(item => item !== req.query.secret)
+  secretKeys[project].secret_keys = secretKeys[project].secret_keys.filter(
+    item => item !== req.query.secret
+  )
 
   res.statusCode = 204
   res.send('')
@@ -3053,8 +3055,9 @@ function putIguazioProject(req, res) {
 
 function postProjectMembers(req, res) {
   const projectId = req.body.data.attributes.metadata.project_ids[0]
-  if (rejectIfUnsafeKey(res, projectId)) {
-    return
+  if (projectId === '__proto__' || projectId === 'constructor' || projectId === 'prototype') {
+    res.statusCode = 400
+    return res.send('Invalid key')
   }
 
   const items = req.body.data.attributes.requests
