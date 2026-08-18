@@ -97,8 +97,11 @@ import {
 } from './dataGenerators.js'
 import {
   capCollectionSize,
+  boundArray,
+  rejectIfUnsafeKey,
   safeAssign,
   resolveFunctionYAMLPath,
+  resolveDataFilePath,
   fsAccessLimiter
 } from './security.js'
 
@@ -209,7 +212,6 @@ const secretKeyTemplate = {
 }
 
 // Mock constants
-const mockHome = process.cwd() + '/tests/mockServer'
 const mlrunIngress = '/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
 const mlrunAPIIngress = `${mlrunIngress}/api/v1`
 const mlrunAPIIngressV2 = `${mlrunIngress}/api/v2`
@@ -324,7 +326,7 @@ function getPaginationConfig(data, query) {
   let pageData = data
 
   if (query['page-size'] && query.page) {
-    const dataPaginated = chunk(data, query['page-size'])
+    const dataPaginated = chunk(boundArray(data), query['page-size'])
     pageData = dataPaginated[query.page - 1] ?? []
     const pageDataIsEmpty = isEmpty(pageData)
     const nextPageDataIsEmpty = isEmpty(dataPaginated[query.page])
@@ -674,10 +676,18 @@ function putProject(req, res) {
 }
 
 function getSecretKeys(req, res) {
+  if (rejectIfUnsafeKey(res, req.params['project'])) {
+    return
+  }
+
   res.send(secretKeys[req.params['project']])
 }
 
 function postSecretKeys(req, res) {
+  if (rejectIfUnsafeKey(res, req.params['project'])) {
+    return
+  }
+
   let respBody = ''
   const newSecretKey = Object.keys(req.body.secrets)[0]
 
@@ -707,6 +717,10 @@ function postSecretKeys(req, res) {
 }
 
 function deleteSecretKeys(req, res) {
+  if (rejectIfUnsafeKey(res, req.params['project'])) {
+    return
+  }
+
   secretKeys[req.params['project']].secret_keys = secretKeys[
     req.params['project']
   ].secret_keys.filter(item => item !== req.query.secret)
@@ -933,7 +947,7 @@ function getRuns(req, res) {
 
         if (!start_time_from || runStartTime >= new Date(start_time_from)) {
           if (states) {
-            if (isArray(states)) {
+            if (Array.isArray(states)) {
               return states.includes(run.status.state)
             } else {
               return run.status.state === states
@@ -967,7 +981,7 @@ function getRuns(req, res) {
       const states = req.query['states']
 
       collectedRuns = collectedRuns.filter(run => {
-        if (isArray(states)) {
+        if (Array.isArray(states)) {
           return states.includes(run.status.state)
         } else {
           return run.status.state === states
@@ -2049,7 +2063,7 @@ function getFuncs(req, res) {
     })
   }
 
-  collectedFuncs = orderBy(collectedFuncs, 'metadata.updated', 'desc')
+  collectedFuncs = orderBy(boundArray(collectedFuncs), 'metadata.updated', 'desc')
   const [paginatedFuncs, pagination] = getPaginationConfig(collectedFuncs, req.query)
 
   res.send({ funcs: paginatedFuncs, pagination })
@@ -2103,9 +2117,11 @@ function postFunc(req, res) {
 }
 
 function deleteFunc(req, res) {
-  const collectedFunc = funcs.funcs
-    .filter(func => func.metadata.project === req.params.project)
-    .filter(func => func.metadata.name === req.params.func)
+  const collectedFunc = boundArray(
+    funcs.funcs
+      .filter(func => func.metadata.project === req.params.project)
+      .filter(func => func.metadata.name === req.params.func)
+  )
 
   if (collectedFunc.length) {
     const taskFunc = id => {
@@ -2273,15 +2289,22 @@ function deployMLFunction(req, res) {
 }
 
 function getFile(req, res) {
-  const dataRoot = mockHome + '/data/'
-  const filePath = dataRoot + req.query['path'].split('://')[1]
+  const filePath = resolveDataFilePath(req.query['path'])
+  if (!filePath) {
+    res.statusCode = 400
+    return res.send('Invalid path')
+  }
 
   res.sendFile(filePath)
 }
 
 function getFileStats(req, res) {
-  const dataRoot = mockHome + '/data/'
-  const filePath = dataRoot + req.query['path'].split('://')[1]
+  const filePath = resolveDataFilePath(req.query['path'])
+  if (!filePath) {
+    res.statusCode = 400
+    return res.send('Invalid path')
+  }
+
   const { size } = fs.statSync(filePath)
   const mimeType = mime.lookup(filePath)
 
@@ -3017,6 +3040,10 @@ function putIguazioProject(req, res) {
 
 function postProjectMembers(req, res) {
   const projectId = req.body.data.attributes.metadata.project_ids[0]
+  if (rejectIfUnsafeKey(res, projectId)) {
+    return
+  }
+
   const items = req.body.data.attributes.requests
   const projectRelations = cloneDeep(iguazioProjectsRelations[projectId])
 
@@ -3163,14 +3190,18 @@ app.post(`${mlrunAPIIngress}/projects/:project/runs/:uid/abort`, abortRun)
 app.get(`${mlrunIngress}/catalog.json`, getFunctionCatalog)
 app.get(`${mlrunAPIIngress}/hub/sources/:project/items`, getFunctionCatalog)
 app.get(`${mlrunAPIIngress}/hub/sources/:project/items/:uid`, getFunctionItem)
-app.get(`${mlrunAPIIngress}/hub/sources/:project/item-object`, getFunctionObject)
-app.get(`${mlrunIngress}/:function/function.yaml`, getFunctionTemplate)
+app.get(`${mlrunAPIIngress}/hub/sources/:project/item-object`, fsAccessLimiter, getFunctionObject)
+app.get(`${mlrunIngress}/:function/function.yaml`, fsAccessLimiter, getFunctionTemplate)
 
 app.get(`${mlrunAPIIngress}/projects/:project/schedules`, getProjectsSchedules)
 app.get(`${mlrunAPIIngress}/projects/*/schedules`, getProjectsSchedules)
 app.get(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, getProjectsSchedule)
 app.delete(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, deleteSchedule)
-app.post(`${mlrunAPIIngress}/projects/:project/schedules/:schedule/invoke`, invokeSchedule)
+app.post(
+  `${mlrunAPIIngress}/projects/:project/schedules/:schedule/invoke`,
+  fsAccessLimiter,
+  invokeSchedule
+)
 app.put(`${mlrunAPIIngress}/projects/:project/schedules/:schedule/`, updateSchedule)
 
 app.get(`${mlrunAPIIngress}/projects/:project/pipelines`, getPipelines)
@@ -3250,7 +3281,7 @@ app.get(`${mlrunAPIIngressV2}/projects/:project/features`, getProjectsFeaturesEn
 app.get(`${mlrunAPIIngressV2}/projects/:project/entities`, getProjectsFeaturesEntities)
 app.get(`${mlrunAPIIngress}/projects/:project/feature-vectors`, getProjectsFeaturesEntities)
 
-app.post(`${mlrunAPIIngress}/submit_job`, postSubmitJob)
+app.post(`${mlrunAPIIngress}/submit_job`, fsAccessLimiter, postSubmitJob)
 
 app.get(`${nuclioApiUrl}/api/functions/:name`, getNuclioFunction)
 app.get(`${nuclioApiUrl}/api/functions`, getNuclioFunctions)
