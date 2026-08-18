@@ -93,7 +93,13 @@ export function resolveDataFilePath(rawPath) {
   if (typeof rawPath !== 'string' || !rawPath) {
     return null
   }
-  return resolveWithinDir(MOCK_DATA_DIR, rawPath.split('://')[1] ?? rawPath)
+  const relativePath = rawPath.split('://')[1] ?? rawPath
+  const hasTraversalSegment = relativePath.split(/[\\/]/).includes('..')
+
+  if (path.isAbsolute(relativePath) || hasTraversalSegment) {
+    return null
+  }
+  return resolveWithinDir(MOCK_DATA_DIR, relativePath)
 }
 
 // Throttles the routes that touch the filesystem, so repeated requests can't be used
