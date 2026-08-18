@@ -87,21 +87,6 @@ export function resolveFunctionYAMLPath(rawName) {
   return resolveWithinDir(FUNCTIONS_DATA_DIR, path.join(rawName, `${rawName}.yaml`))
 }
 
-const MOCK_DATA_DIR = path.resolve('./tests/mockServer/data')
-
-export function resolveDataFilePath(rawPath) {
-  if (typeof rawPath !== 'string' || !rawPath) {
-    return null
-  }
-  const relativePath = rawPath.split('://')[1] ?? rawPath
-  const hasTraversalSegment = relativePath.split(/[\\/]/).includes('..')
-
-  if (path.isAbsolute(relativePath) || hasTraversalSegment) {
-    return null
-  }
-  return resolveWithinDir(MOCK_DATA_DIR, relativePath)
-}
-
 // Throttles the routes that touch the filesystem, so repeated requests can't be used
 // to exhaust disk/CPU resources.
 export const fsAccessLimiter = rateLimit({

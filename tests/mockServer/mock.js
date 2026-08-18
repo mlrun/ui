@@ -21,6 +21,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import yaml from 'js-yaml'
 import fs from 'fs'
+import path from 'path'
 import crypto from 'node:crypto'
 import {
   chain,
@@ -101,7 +102,6 @@ import {
   rejectIfUnsafeKey,
   safeAssign,
   resolveFunctionYAMLPath,
-  resolveDataFilePath,
   fsAccessLimiter
 } from './security.js'
 
@@ -212,6 +212,7 @@ const secretKeyTemplate = {
 }
 
 // Mock constants
+const MOCK_DATA_DIR = path.resolve('./tests/mockServer/data')
 const mlrunIngress = '/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
 const mlrunAPIIngress = `${mlrunIngress}/api/v1`
 const mlrunAPIIngressV2 = `${mlrunIngress}/api/v2`
@@ -2289,8 +2290,14 @@ function deployMLFunction(req, res) {
 }
 
 function getFile(req, res) {
-  const filePath = resolveDataFilePath(req.query['path'])
-  if (!filePath) {
+  const rawPath = req.query['path']
+  if (typeof rawPath !== 'string' || rawPath.indexOf('..') !== -1) {
+    res.statusCode = 400
+    return res.send('Invalid path')
+  }
+
+  const filePath = path.resolve(MOCK_DATA_DIR, rawPath.split('://')[1] ?? rawPath)
+  if (!filePath.startsWith(MOCK_DATA_DIR + path.sep)) {
     res.statusCode = 400
     return res.send('Invalid path')
   }
@@ -2299,8 +2306,14 @@ function getFile(req, res) {
 }
 
 function getFileStats(req, res) {
-  const filePath = resolveDataFilePath(req.query['path'])
-  if (!filePath) {
+  const rawPath = req.query['path']
+  if (typeof rawPath !== 'string' || rawPath.indexOf('..') !== -1) {
+    res.statusCode = 400
+    return res.send('Invalid path')
+  }
+
+  const filePath = path.resolve(MOCK_DATA_DIR, rawPath.split('://')[1] ?? rawPath)
+  if (!filePath.startsWith(MOCK_DATA_DIR + path.sep)) {
     res.statusCode = 400
     return res.send('Invalid path')
   }
