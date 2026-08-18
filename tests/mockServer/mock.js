@@ -64,7 +64,7 @@ import runs from './data/runs.json'
 import run from './data/run.json'
 import itemsCatalog from './data/itemsCatalog.json'
 import pipelines from './data/pipelines.json'
-import secretKeys from './data/secretKeys.json'
+import secretKeysData from './data/secretKeys.json'
 import pipelineIDs from './data/piplineIDs.json'
 import schedules from './data/schedules.json'
 import funcs from './data/funcs.json'
@@ -77,8 +77,8 @@ import iguazioUserGrops from './data/iguazioUserGroups.json'
 import iguazioProjectAuthorizationRoles from './data/iguazioProjectAuthorizationRoles.json'
 import iguazioUsers from './data/iguazioUsers.json'
 import iguazioSelf from './data/iguazioSelf.json'
-import iguazioUserRelations from './data/iguazioUserRelations.json'
-import iguazioProjectsRelations from './data/iguazioProjectsRelations.json'
+import iguazioUserRelationsData from './data/iguazioUserRelations.json'
+import iguazioProjectsRelationsData from './data/iguazioProjectsRelations.json'
 
 import nuclioFunctions from './data/nuclioFunctions.json'
 import nuclioAPIGateways from './data/nuclioAPIGateways.json'
@@ -99,11 +99,15 @@ import {
 import {
   capCollectionSize,
   boundArray,
-  rejectIfUnsafeKey,
-  safeAssign,
   resolveFunctionYAMLPath,
   fsAccessLimiter
 } from './security.js'
+
+// Keyed by project name/id from request data, so a Map is used instead of a plain object
+// to keep lookups off the prototype chain.
+const secretKeys = new Map(Object.entries(secretKeysData))
+const iguazioProjectsRelations = new Map(Object.entries(iguazioProjectsRelationsData))
+const iguazioUserRelations = new Map(Object.entries(iguazioUserRelationsData))
 
 // Updating values in files with synthetic data
 updateRuns(runs)
@@ -358,7 +362,7 @@ function deleteProjectHandler(req, res, omitResponse) {
     remove(artifacts.artifacts, artifact => artifact.project === req.params['project'])
     remove(run.data, artifact => artifact.metadata.project === req.params['project'])
     remove(run.data, artifact => artifact.metadata.project === req.params['project'])
-    delete secretKeys[req.params.project]
+    secretKeys.delete(req.params.project)
     res.statusCode = 204
   } else {
     res.statusCode = 500
@@ -576,7 +580,7 @@ function createNewProject(req, res) {
     summary.name = req.body.metadata.name
     projectsSummary.project_summaries.push(summary)
     data = project
-    safeAssign(secretKeys, req.body.metadata.name, secretKeyTemplate)
+    secretKeys.set(req.body.metadata.name, secretKeyTemplate)
     res.statusCode = 201
   } else {
     res.statusCode = 409
@@ -677,18 +681,10 @@ function putProject(req, res) {
 }
 
 function getSecretKeys(req, res) {
-  if (rejectIfUnsafeKey(res, req.params['project'])) {
-    return
-  }
-
-  res.send(secretKeys[req.params['project']])
+  res.send(secretKeys.get(req.params['project']))
 }
 
 function postSecretKeys(req, res) {
-  if (rejectIfUnsafeKey(res, req.params['project'])) {
-    return
-  }
-
   let respBody = ''
   const newSecretKey = Object.keys(req.body.secrets)[0]
 
@@ -698,17 +694,17 @@ function postSecretKeys(req, res) {
       detail: `MLRunAccessDeniedError('Not allowed to create/update internal secrets (key starts with ${NOT_ALLOWED_SECRET_KEY})')`
     }
   } else {
-    const projectSecrets = get(secretKeys, [req.params['project'], 'secret_keys'])
+    const projectSecrets = secretKeys.get(req.params['project'])?.secret_keys
 
     if (projectSecrets) {
       if (!projectSecrets.includes(newSecretKey)) {
         projectSecrets.push(newSecretKey)
       }
     } else {
-      secretKeys[req.params['project']] = {
+      secretKeys.set(req.params['project'], {
         provider: 'kubernetes',
         secret_keys: [newSecretKey]
-      }
+      })
     }
 
     res.statusCode = 201
@@ -718,15 +714,9 @@ function postSecretKeys(req, res) {
 }
 
 function deleteSecretKeys(req, res) {
-  const project = req.params['project']
-  if (project === '__proto__' || project === 'constructor' || project === 'prototype') {
-    res.statusCode = 400
-    return res.send('Invalid key')
-  }
+  const projectSecrets = secretKeys.get(req.params['project'])
 
-  secretKeys[project].secret_keys = secretKeys[project].secret_keys.filter(
-    item => item !== req.query.secret
-  )
+  projectSecrets.secret_keys = projectSecrets.secret_keys.filter(item => item !== req.query.secret)
 
   res.statusCode = 204
   res.send('')
@@ -2919,13 +2909,12 @@ function getIguazioProjects(req, res) {
   let owner
   if (req.query.include === 'owner') {
     let ownerID
-    const keys = Object.keys(iguazioUserRelations)
-    for (let key of keys) {
-      const filterArr = iguazioUserRelations[key]
+    for (const [userID, relations] of iguazioUserRelations) {
+      const filterArr = relations
         .filter(item => item.type === 'project')
         .find(item => item.id === filteredProject.id)
       if (filterArr) {
-        ownerID = key
+        ownerID = userID
         break
       }
     }
@@ -2978,9 +2967,9 @@ function getIguazioProject(req, res) {
   if (include.includes('project_authorization_roles.principal_users')) {
     let principalUserIDs = []
     for (let authID of authRolesIDs) {
-      let tmp = iguazioProjectsRelations[req.params.id].find(
-        item => item.id === authID
-      )?.relationships
+      let tmp = iguazioProjectsRelations
+        .get(req.params.id)
+        .find(item => item.id === authID)?.relationships
       if (tmp) {
         let tmpIDs = tmp.principal_users?.data.map(item => item.id)
         if (tmpIDs) {
@@ -2999,9 +2988,9 @@ function getIguazioProject(req, res) {
   if (include.includes('project_authorization_roles.principal_user_groups')) {
     let principalUserGroupIDs = []
     for (let authID of authRolesIDs) {
-      let tmp = iguazioProjectsRelations[req.params.id].find(
-        item => item.id === authID
-      )?.relationships
+      let tmp = iguazioProjectsRelations
+        .get(req.params.id)
+        .find(item => item.id === authID)?.relationships
       if (tmp) {
         let tmpIDs = tmp.principal_user_groups?.data.map(item => item.id)
         if (tmpIDs) {
@@ -3027,23 +3016,23 @@ function putIguazioProject(req, res) {
   const prevOwner = req.params.id
   const newOwner = req.body.data.relationships.owner.data.id
   const filteredProject = iguazioProjects.data.find(item => item.id === req.params.id)
-  const keys = Object.keys(iguazioUserRelations)
   const relationTemplate = {
     type: 'project',
     id: req.params.id,
     relationships: null
   }
 
-  for (let key of keys) {
-    iguazioUserRelations[key] = iguazioUserRelations[key].filter(
-      item => item.type === 'project' && item.id !== prevOwner
+  for (const [userID, relations] of iguazioUserRelations) {
+    iguazioUserRelations.set(
+      userID,
+      relations.filter(item => item.type === 'project' && item.id !== prevOwner)
     )
   }
 
-  if (iguazioUserRelations[newOwner]) {
-    iguazioUserRelations[newOwner].push(relationTemplate)
+  if (iguazioUserRelations.has(newOwner)) {
+    iguazioUserRelations.get(newOwner).push(relationTemplate)
   } else {
-    iguazioUserRelations[newOwner] = [relationTemplate]
+    iguazioUserRelations.set(newOwner, [relationTemplate])
   }
 
   res.send({
@@ -3055,13 +3044,8 @@ function putIguazioProject(req, res) {
 
 function postProjectMembers(req, res) {
   const projectId = req.body.data.attributes.metadata.project_ids[0]
-  if (projectId === '__proto__' || projectId === 'constructor' || projectId === 'prototype') {
-    res.statusCode = 400
-    return res.send('Invalid key')
-  }
-
   const items = req.body.data.attributes.requests
-  const projectRelations = cloneDeep(iguazioProjectsRelations[projectId])
+  const projectRelations = cloneDeep(iguazioProjectsRelations.get(projectId))
 
   items.forEach(item => {
     const authRoleId = item.resource.split('/')[1]
@@ -3087,7 +3071,7 @@ function postProjectMembers(req, res) {
     }
   })
 
-  safeAssign(iguazioProjectsRelations, projectId, projectRelations)
+  iguazioProjectsRelations.set(projectId, projectRelations)
 
   res.send({
     data: {
@@ -3113,22 +3097,24 @@ function getNuclioStreams(req, res) {
 }
 
 function getNuclioShardLags(req, res) {
-  res.json({
-    [`${req.body.containerName}${req.body.streamPath}`]: {
-      [req.body.consumerGroup]: {
-        'shard-id-0': {
-          committed: '0_123',
-          current: '0_456',
-          lag: '0_789'
-        },
-        'shard-id-1': {
-          committed: '1_123',
-          current: '1_456',
-          lag: '1_789'
-        }
-      }
+  const shards = {
+    'shard-id-0': {
+      committed: '0_123',
+      current: '0_456',
+      lag: '0_789'
+    },
+    'shard-id-1': {
+      committed: '1_123',
+      current: '1_456',
+      lag: '1_789'
     }
-  })
+  }
+  // Keys come from the request body, so they are materialised via `Object.fromEntries`
+  // instead of computed property names to keep them off the prototype chain.
+  const consumerGroups = Object.fromEntries([[req.body.consumerGroup, shards]])
+  const streamKey = `${req.body.containerName}${req.body.streamPath}`
+
+  res.json(Object.fromEntries([[streamKey, consumerGroups]]))
 }
 
 function getIguazioJob(req, res) {

@@ -18,8 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 // Hardening helpers for mock.js request handlers (bounded collection growth,
-// prototype-pollution-safe assignment, path-traversal-safe file resolution,
-// filesystem-route rate limiting).
+// path-traversal-safe file resolution, filesystem-route rate limiting).
 import path from 'path'
 import { rateLimit } from 'express-rate-limit'
 
@@ -41,34 +40,6 @@ export function boundArray(arr) {
     return []
   }
   return arr.length > MAX_MOCK_COLLECTION_SIZE ? arr.slice(0, MAX_MOCK_COLLECTION_SIZE) : arr
-}
-
-// Prototype pollution guard: a '__proto__'/'constructor'/'prototype' key must never be used
-// to read or write a mock lookup object keyed by request data, since bracket access with one
-// of these names resolves to the object's prototype chain instead of an own property.
-const UNSAFE_OBJECT_KEYS = ['__proto__', 'constructor', 'prototype']
-
-export function isUnsafeObjectKey(key) {
-  return UNSAFE_OBJECT_KEYS.includes(key)
-}
-
-// Rejects the request with a 400 when `key` is unsafe to use against a mock lookup object,
-// so handlers can bail out before the key is ever read from or written to one. Returns
-// whether it rejected, so callers can `if (rejectIfUnsafeKey(res, key)) return`.
-export function rejectIfUnsafeKey(res, key) {
-  if (isUnsafeObjectKey(key)) {
-    res.statusCode = 400
-    res.send('Invalid key')
-    return true
-  }
-  return false
-}
-
-export function safeAssign(obj, key, value) {
-  if (isUnsafeObjectKey(key)) {
-    return
-  }
-  obj[key] = value
 }
 
 // Resolves `relativePath` under `baseDir`, rejecting anything that would escape baseDir
