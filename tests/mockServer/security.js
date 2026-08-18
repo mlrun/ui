@@ -35,7 +35,11 @@ export function capCollectionSize(collection) {
 
 // Bounds an array right before it's iterated/sorted/chunked, so a sink can't be driven
 // by an arbitrarily large collection even if it was built up from many prior requests.
+// Non-arrays are rejected to avoid trusting an attacker-controlled `.length`.
 export function boundArray(arr) {
+  if (!Array.isArray(arr)) {
+    return []
+  }
   return arr.length > MAX_MOCK_COLLECTION_SIZE ? arr.slice(0, MAX_MOCK_COLLECTION_SIZE) : arr
 }
 
