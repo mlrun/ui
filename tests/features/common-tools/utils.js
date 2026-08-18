@@ -80,7 +80,7 @@ export const getRule = (array, substring) => {
 
   return value
     .split(', ')
-    .map(el => el.replace(/\./g, '\\.'))
+    .map(el => el.replace(/\\/g, '\\\\').replace(/\./g, '\\.'))
     .join('')
 }
 
