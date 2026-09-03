@@ -28,11 +28,14 @@ import DetailsTabs from './DetailsTabs'
 
 vi.mock('igz-controls/nextGenComponents', () => ({
   cn: (...args) => args.filter(Boolean).join(' '),
-  Tabs: ({ children, value, ...rest }) => (
-    <div data-testid="tabs" data-value={value} {...rest}>
-      {children}
-    </div>
-  ),
+  Tabs: ({ children, value, onValueChange, ...rest }) => {
+    void onValueChange
+    return (
+      <div data-testid="tabs" data-value={value} {...rest}>
+        {children}
+      </div>
+    )
+  },
   TabsList: ({ children, ...rest }) => (
     <div data-testid="tabs-list" {...rest}>
       {children}

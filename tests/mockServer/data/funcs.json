@@ -1,6 +1,95 @@
 {
   "funcs": [
     {
+      "kind": "application",
+      "metadata": {
+        "project": "default",
+        "tag": "latest",
+        "name": "test-no-logs-app",
+        "hash": "3333333333333333333333333333333333333333",
+        "updated": "2026-06-15T15:00:00.000000+00:00"
+      },
+      "spec": {
+        "image": "mlrun/mlrun",
+        "description": "ML-12730 manual test: application in Ready state with no build logs (shows 'No data to show' inside the log panel).",
+        "internal_application_port": 8080,
+        "command": ""
+      },
+      "verbose": false,
+      "status": {
+        "state": "ready",
+        "nuclio_name": "app-demo-test-no-logs",
+        "sidecar_name": "test-no-logs-sidecar"
+      }
+    },
+    {
+      "kind": "application",
+      "metadata": {
+        "project": "default",
+        "tag": "latest",
+        "name": "test-initialized-app",
+        "hash": "1111111111111111111111111111111111111111",
+        "updated": "2026-06-12T09:00:00.000000+00:00"
+      },
+      "spec": {
+        "image": "mlrun/mlrun",
+        "description": "ML-12730 manual test: application in the Initialized state (never deployed).",
+        "internal_application_port": 8080,
+        "command": ""
+      },
+      "verbose": false,
+      "status": {}
+    },
+    {
+      "kind": "application",
+      "metadata": {
+        "project": "default",
+        "tag": "latest",
+        "name": "test-deploying-app",
+        "hash": "2222222222222222222222222222222222222222",
+        "updated": "2026-06-12T09:00:00.000000+00:00"
+      },
+      "spec": {
+        "image": "mlrun/mlrun",
+        "description": "ML-12730 manual test: application in the Deploying state; build/deploy logs return 404.",
+        "internal_application_port": 8080,
+        "command": ""
+      },
+      "verbose": false,
+      "status": {
+        "state": "building",
+        "application_image": "iguazio/test-deploying:0.1.0",
+        "sidecar_name": "test-deploying-sidecar"
+      }
+    },
+    {
+      "kind": "application",
+      "metadata": {
+        "project": "default",
+        "tag": "latest",
+        "name": "test-pull-at-runtime-app",
+        "hash": "3333333333333333333333333333333333333333",
+        "updated": "2026-06-16T09:00:00.000000+00:00"
+      },
+      "spec": {
+        "image": "mlrun/mlrun",
+        "description": "ML-12717 manual test: pull_at_runtime with archive source; Pull at runtime should show Yes.",
+        "internal_application_port": 8080,
+        "command": "",
+        "source": "https://example.com/archive.zip",
+        "build": {
+          "load_source_on_run": true,
+          "base_image": "python:3.9"
+        }
+      },
+      "verbose": false,
+      "status": {
+        "state": "ready",
+        "application_image": "iguazio/test-pull-at-runtime:0.1.0",
+        "sidecar_name": "test-pull-at-runtime-sidecar"
+      }
+    },
+    {
       "metadata": {
         "tag": "latest",
         "name": "function-with-llm",
@@ -24544,7 +24633,31 @@
             {
               "name": "streamlit-sidecar",
               "image": "iguazio/iris-streamlit:1.2.0",
-              "ports": [{ "name": "http", "containerPort": 8501, "protocol": "TCP" }]
+              "ports": [
+                {
+                  "name": "http",
+                  "containerPort": 8501,
+                  "protocol": "TCP"
+                }
+              ],
+              "livenessProbe": {
+                "httpGet": {
+                  "path": "/",
+                  "port": 5000,
+                  "scheme": "HTTP"
+                },
+                "initialDelaySeconds": 17,
+                "periodSeconds": 11
+              },
+              "readinessProbe": {
+                "httpGet": {
+                  "path": "/",
+                  "port": 5000,
+                  "scheme": "HTTP"
+                },
+                "initialDelaySeconds": 29,
+                "periodSeconds": 23
+              }
             }
           ]
         },
@@ -24567,33 +24680,158 @@
         "function_handler": "reverse_proxy:Handler",
         "preemption_mode": "prevent",
         "env": [
-          { "name": "SIDECAR_PORT", "value": "8501" },
-          { "name": "SIDECAR_HOST", "value": "http://localhost" }
+          {
+            "name": "SIDECAR_PORT",
+            "value": "8501"
+          },
+          {
+            "name": "SIDECAR_HOST",
+            "value": "http://localhost"
+          }
         ],
         "resources": {
-          "requests": { "memory": "256Mi", "cpu": "100m" },
-          "limits": { "memory": "1Gi", "cpu": "500m" }
+          "requests": {
+            "memory": "256Mi",
+            "cpu": "100m"
+          },
+          "limits": {
+            "memory": "1Gi",
+            "cpu": "500m"
+          }
         }
       },
       "metadata": {
         "project": "default",
         "tag": "latest",
-        "credentials": { "access_key": "$ref:mlrun-auth-secrets.abc123" },
+        "credentials": {
+          "access_key": "$ref:mlrun-auth-secrets.abc123"
+        },
         "name": "iris-streamlit-app",
         "hash": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0",
         "updated": "2026-05-25T10:30:00.000000+00:00",
-        "labels": { "owner": "admin", "framework": "streamlit" }
+        "labels": {
+          "owner": "admin",
+          "framework": "streamlit"
+        }
       },
       "verbose": false,
       "status": {
         "nuclio_name": "default-iris-streamlit-app",
         "sidecar_name": "streamlit-sidecar",
         "application_image": "iguazio/iris-streamlit:1.2.0",
-        "external_invocation_urls": ["default-iris-streamlit-app.default-tenant.app.vmdev36.lab.iguazeng.com/"],
+        "external_invocation_urls": [
+          "default-iris-streamlit-app.default-tenant.app.vmdev36.lab.iguazeng.com/"
+        ],
         "address": "default-iris-streamlit-app.default-tenant.app.vmdev36.lab.iguazeng.com/",
         "container_image": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/nuclio/default-iris-streamlit-app-processor:latest",
         "state": "ready",
-        "internal_invocation_urls": ["nuclio-default-iris-streamlit-app.default-tenant.svc.cluster.local:8080"]
+        "internal_invocation_urls": ["nuclio-app-demo-vizro.default-tenant.svc.cluster.local:8080"]
+      }
+    },
+    {
+      "kind": "application",
+      "spec": {
+        "image": "mlrun/mlrun",
+        "config": {
+          "spec.sidecars": [
+            {
+              "name": "streamlit-sidecar",
+              "image": "iguazio/iris-streamlit:1.2.0",
+              "ports": [
+                {
+                  "name": "http",
+                  "containerPort": 8501,
+                  "protocol": "TCP"
+                }
+              ],
+              "livenessProbe": {
+                "httpGet": {
+                  "path": "/",
+                  "port": 5000,
+                  "scheme": "HTTP"
+                },
+                "initialDelaySeconds": 17,
+                "periodSeconds": 11
+              },
+              "readinessProbe": {
+                "httpGet": {
+                  "path": "/",
+                  "port": 5000,
+                  "scheme": "HTTP"
+                },
+                "initialDelaySeconds": 29,
+                "periodSeconds": 23
+              }
+            }
+          ]
+        },
+        "build": {
+          "origin_filename": "/User/apps/iris_streamlit.py",
+          "code_origin": "/User/apps/iris_streamlit.py",
+          "source": "https://github.com/mlrun/demos.git#refs/heads/main",
+          "base_image": "python:3.9-slim",
+          "commands": ["pip install streamlit pandas scikit-learn"]
+        },
+        "max_replicas": 2,
+        "description": "Interactive Iris classification dashboard built with Streamlit",
+        "default_handler": "handler",
+        "source": "https://github.com/mlrun/demos.git#refs/heads/main",
+        "priority_class_name": "igz-workload-medium",
+        "internal_application_port": 8501,
+        "min_replicas": 1,
+        "nuclio_runtime": "golang",
+        "disable_auto_mount": false,
+        "function_handler": "reverse_proxy:Handler",
+        "preemption_mode": "prevent",
+        "env": [
+          {
+            "name": "SIDECAR_PORT",
+            "value": "8501"
+          },
+          {
+            "name": "SIDECAR_HOST",
+            "value": "http://localhost"
+          }
+        ],
+        "resources": {
+          "requests": {
+            "memory": "256Mi",
+            "cpu": "100m"
+          },
+          "limits": {
+            "memory": "1Gi",
+            "cpu": "500m"
+          }
+        }
+      },
+      "metadata": {
+        "project": "default",
+        "tag": "latest",
+        "credentials": {
+          "access_key": "$ref:mlrun-auth-secrets.abc123"
+        },
+        "name": "iris-streamlit-app",
+        "hash": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0",
+        "updated": "2026-05-25T10:30:00.000000+00:00",
+        "labels": {
+          "owner": "admin",
+          "framework": "streamlit"
+        }
+      },
+      "verbose": false,
+      "status": {
+        "nuclio_name": "default-iris-streamlit-app",
+        "sidecar_name": "streamlit-sidecar",
+        "application_image": "iguazio/iris-streamlit:1.2.0",
+        "external_invocation_urls": [
+          "default-iris-streamlit-app.default-tenant.app.vmdev36.lab.iguazeng.com/"
+        ],
+        "address": "default-iris-streamlit-app.default-tenant.app.vmdev36.lab.iguazeng.com/",
+        "container_image": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/nuclio/default-iris-streamlit-app-processor:latest",
+        "state": "ready",
+        "internal_invocation_urls": [
+          "nuclio-default-iris-streamlit-app.default-tenant.svc.cluster.local:8080"
+        ]
       }
     },
     {
@@ -24605,10 +24843,22 @@
             {
               "name": "fraud-sidecar",
               "image": "iguazio/fraud-detection-dashboard:2.1.0",
-              "ports": [{ "name": "http", "containerPort": 8080, "protocol": "TCP" }],
+              "ports": [
+                {
+                  "name": "http",
+                  "containerPort": 8080,
+                  "protocol": "TCP"
+                }
+              ],
               "env": [
-                { "name": "DB_HOST", "value": "postgres.default-tenant.svc" },
-                { "name": "ALERT_THRESHOLD", "value": "0.85" }
+                {
+                  "name": "DB_HOST",
+                  "value": "postgres.default-tenant.svc"
+                },
+                {
+                  "name": "ALERT_THRESHOLD",
+                  "value": "0.85"
+                }
               ]
             }
           ]
@@ -24629,30 +24879,57 @@
         "function_handler": "reverse_proxy:Handler",
         "preemption_mode": "prevent",
         "env": [
-          { "name": "SIDECAR_PORT", "value": "8080" },
-          { "name": "SIDECAR_HOST", "value": "http://localhost" },
-          { "name": "V3IO_ACCESS_KEY", "valueFrom": { "secretKeyRef": { "key": "accessKey", "name": "mlrun-auth-secrets.fraud123" } } }
+          {
+            "name": "SIDECAR_PORT",
+            "value": "8080"
+          },
+          {
+            "name": "SIDECAR_HOST",
+            "value": "http://localhost"
+          },
+          {
+            "name": "V3IO_ACCESS_KEY",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "accessKey",
+                "name": "mlrun-auth-secrets.fraud123"
+              }
+            }
+          }
         ],
         "resources": {
-          "requests": { "memory": "512Mi", "cpu": "250m" },
-          "limits": { "memory": "4Gi", "cpu": "2" }
+          "requests": {
+            "memory": "512Mi",
+            "cpu": "250m"
+          },
+          "limits": {
+            "memory": "4Gi",
+            "cpu": "2"
+          }
         }
       },
       "metadata": {
         "project": "default",
         "tag": "latest",
-        "credentials": { "access_key": "$ref:mlrun-auth-secrets.fraud123" },
+        "credentials": {
+          "access_key": "$ref:mlrun-auth-secrets.fraud123"
+        },
         "name": "fraud-detection-dashboard",
         "hash": "b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1",
         "updated": "2026-05-24T15:45:22.000000+00:00",
-        "labels": { "owner": "admin", "team": "security" }
+        "labels": {
+          "owner": "admin",
+          "team": "security"
+        }
       },
       "verbose": false,
       "status": {
         "nuclio_name": "default-fraud-detection-dashboard",
         "sidecar_name": "fraud-sidecar",
         "application_image": "iguazio/fraud-detection-dashboard:2.1.0",
-        "external_invocation_urls": ["default-fraud-detection-dashboard.default-tenant.app.vmdev36.lab.iguazeng.com/"],
+        "external_invocation_urls": [
+          "default-fraud-detection-dashboard.default-tenant.app.vmdev36.lab.iguazeng.com/"
+        ],
         "address": "default-fraud-detection-dashboard.default-tenant.app.vmdev36.lab.iguazeng.com/",
         "container_image": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/nuclio/default-fraud-detection-dashboard-processor:latest",
         "state": "error"
@@ -24667,14 +24944,23 @@
             {
               "name": "sentiment-sidecar",
               "image": "iguazio/sentiment-analyzer:0.9.3",
-              "ports": [{ "name": "http", "containerPort": 5000, "protocol": "TCP" }]
+              "ports": [
+                {
+                  "name": "http",
+                  "containerPort": 5000,
+                  "protocol": "TCP"
+                }
+              ]
             }
           ]
         },
         "build": {
           "source": "https://github.com/mlrun/nlp-apps.git",
           "base_image": "python:3.10",
-          "commands": ["pip install transformers torch flask", "python -m spacy download en_core_web_sm"]
+          "commands": [
+            "pip install transformers torch flask",
+            "python -m spacy download en_core_web_sm"
+          ]
         },
         "max_replicas": 3,
         "description": "NLP-powered customer sentiment analyzer with real-time feedback scoring",
@@ -24686,23 +24972,43 @@
         "function_handler": "reverse_proxy:Handler",
         "preemption_mode": "constrain",
         "env": [
-          { "name": "SIDECAR_PORT", "value": "5000" },
-          { "name": "SIDECAR_HOST", "value": "http://localhost" },
-          { "name": "MODEL_NAME", "value": "distilbert-base-uncased-finetuned-sst-2-english" }
+          {
+            "name": "SIDECAR_PORT",
+            "value": "5000"
+          },
+          {
+            "name": "SIDECAR_HOST",
+            "value": "http://localhost"
+          },
+          {
+            "name": "MODEL_NAME",
+            "value": "distilbert-base-uncased-finetuned-sst-2-english"
+          }
         ],
         "resources": {
-          "requests": { "memory": "2Gi", "cpu": "500m" },
-          "limits": { "memory": "8Gi", "cpu": "4", "nvidia.com/gpu": "1" }
+          "requests": {
+            "memory": "2Gi",
+            "cpu": "500m"
+          },
+          "limits": {
+            "memory": "8Gi",
+            "cpu": "4",
+            "nvidia.com/gpu": "1"
+          }
         }
       },
       "metadata": {
         "project": "default",
         "tag": "latest",
-        "credentials": { "access_key": "$ref:mlrun-auth-secrets.sentiment456" },
+        "credentials": {
+          "access_key": "$ref:mlrun-auth-secrets.sentiment456"
+        },
         "name": "customer-sentiment-analyzer",
         "hash": "c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2",
         "updated": "2026-05-26T08:12:33.000000+00:00",
-        "labels": { "owner": "admin" }
+        "labels": {
+          "owner": "admin"
+        }
       },
       "verbose": false,
       "status": {
@@ -24721,7 +25027,13 @@
             {
               "name": "recommender-sidecar",
               "image": "iguazio/real-time-recommender:3.0.1",
-              "ports": [{ "name": "http", "containerPort": 8888, "protocol": "TCP" }],
+              "ports": [
+                {
+                  "name": "http",
+                  "containerPort": 8888,
+                  "protocol": "TCP"
+                }
+              ],
               "command": ["/bin/sh", "-c"],
               "args": ["python app.py --workers 4 --model-cache-size 1024"]
             }
@@ -24743,33 +25055,60 @@
         "function_handler": "reverse_proxy:Handler",
         "preemption_mode": "prevent",
         "env": [
-          { "name": "SIDECAR_PORT", "value": "8888" },
-          { "name": "SIDECAR_HOST", "value": "http://localhost" },
-          { "name": "REDIS_URL", "value": "redis://redis.default-tenant.svc:6379" },
-          { "name": "MODEL_VERSION", "value": "v3.0.1" }
+          {
+            "name": "SIDECAR_PORT",
+            "value": "8888"
+          },
+          {
+            "name": "SIDECAR_HOST",
+            "value": "http://localhost"
+          },
+          {
+            "name": "REDIS_URL",
+            "value": "redis://redis.default-tenant.svc:6379"
+          },
+          {
+            "name": "MODEL_VERSION",
+            "value": "v3.0.1"
+          }
         ],
         "resources": {
-          "requests": { "memory": "1Gi", "cpu": "500m" },
-          "limits": { "memory": "4Gi", "cpu": "2" }
+          "requests": {
+            "memory": "1Gi",
+            "cpu": "500m"
+          },
+          "limits": {
+            "memory": "4Gi",
+            "cpu": "2"
+          }
         }
       },
       "metadata": {
         "project": "default",
         "tag": "latest",
-        "credentials": { "access_key": "$ref:mlrun-auth-secrets.recommender789" },
+        "credentials": {
+          "access_key": "$ref:mlrun-auth-secrets.recommender789"
+        },
         "name": "real-time-recommender",
         "hash": "d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3",
         "updated": "2026-05-23T20:10:05.000000+00:00",
-        "labels": { "owner": "admin", "team": "ml-platform" }
+        "labels": {
+          "owner": "admin",
+          "team": "ml-platform"
+        }
       },
       "verbose": false,
       "status": {
         "nuclio_name": "default-real-time-recommender",
         "sidecar_name": "recommender-sidecar",
         "application_image": "iguazio/real-time-recommender:3.0.1",
-        "external_invocation_urls": ["default-real-time-recommender.default-tenant.app.vmdev36.lab.iguazeng.com/"],
+        "external_invocation_urls": [
+          "default-real-time-recommender.default-tenant.app.vmdev36.lab.iguazeng.com/"
+        ],
         "state": "ready",
-        "internal_invocation_urls": ["nuclio-default-real-time-recommender.default-tenant.svc.cluster.local:8080"]
+        "internal_invocation_urls": [
+          "nuclio-default-real-time-recommender.default-tenant.svc.cluster.local:8080"
+        ]
       }
     },
     {
@@ -24781,7 +25120,13 @@
             {
               "name": "monitor-sidecar",
               "image": "iguazio/data-pipeline-monitor:1.5.0",
-              "ports": [{ "name": "http", "containerPort": 3000, "protocol": "TCP" }]
+              "ports": [
+                {
+                  "name": "http",
+                  "containerPort": 3000,
+                  "protocol": "TCP"
+                }
+              ]
             }
           ]
         },
@@ -24795,12 +25140,24 @@
         "function_handler": "reverse_proxy:Handler",
         "preemption_mode": "allow",
         "env": [
-          { "name": "SIDECAR_PORT", "value": "3000" },
-          { "name": "SIDECAR_HOST", "value": "http://localhost" }
+          {
+            "name": "SIDECAR_PORT",
+            "value": "3000"
+          },
+          {
+            "name": "SIDECAR_HOST",
+            "value": "http://localhost"
+          }
         ],
         "resources": {
-          "requests": { "memory": "128Mi", "cpu": "50m" },
-          "limits": { "memory": "512Mi", "cpu": "250m" }
+          "requests": {
+            "memory": "128Mi",
+            "cpu": "50m"
+          },
+          "limits": {
+            "memory": "512Mi",
+            "cpu": "250m"
+          }
         }
       },
       "metadata": {
@@ -24809,16 +25166,22 @@
         "name": "data-pipeline-monitor",
         "hash": "e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4",
         "updated": "2026-05-10T09:00:00.000000+00:00",
-        "labels": { "owner": "admin" }
+        "labels": {
+          "owner": "admin"
+        }
       },
       "verbose": false,
       "status": {
         "nuclio_name": "default-data-pipeline-monitor",
         "sidecar_name": "monitor-sidecar",
         "application_image": "iguazio/data-pipeline-monitor:1.5.0",
-        "external_invocation_urls": ["default-data-pipeline-monitor.default-tenant.app.vmdev36.lab.iguazeng.com/"],
+        "external_invocation_urls": [
+          "default-data-pipeline-monitor.default-tenant.app.vmdev36.lab.iguazeng.com/"
+        ],
         "state": "ready",
-        "internal_invocation_urls": ["nuclio-default-data-pipeline-monitor.default-tenant.svc.cluster.local:8080"]
+        "internal_invocation_urls": [
+          "nuclio-default-data-pipeline-monitor.default-tenant.svc.cluster.local:8080"
+        ]
       }
     },
     {
@@ -24830,7 +25193,13 @@
             {
               "name": "explorer-sidecar",
               "image": "iguazio/ml-model-explorer:2.0.0",
-              "ports": [{ "name": "http", "containerPort": 8502, "protocol": "TCP" }]
+              "ports": [
+                {
+                  "name": "http",
+                  "containerPort": 8502,
+                  "protocol": "TCP"
+                }
+              ]
             }
           ]
         },
@@ -24844,12 +25213,24 @@
         "function_handler": "reverse_proxy:Handler",
         "preemption_mode": "allow",
         "env": [
-          { "name": "SIDECAR_PORT", "value": "8502" },
-          { "name": "SIDECAR_HOST", "value": "http://localhost" }
+          {
+            "name": "SIDECAR_PORT",
+            "value": "8502"
+          },
+          {
+            "name": "SIDECAR_HOST",
+            "value": "http://localhost"
+          }
         ],
         "resources": {
-          "requests": { "memory": "256Mi", "cpu": "100m" },
-          "limits": { "memory": "2Gi", "cpu": "1" }
+          "requests": {
+            "memory": "256Mi",
+            "cpu": "100m"
+          },
+          "limits": {
+            "memory": "2Gi",
+            "cpu": "1"
+          }
         }
       },
       "metadata": {
@@ -24864,9 +25245,13 @@
         "nuclio_name": "default-ml-model-explorer",
         "sidecar_name": "explorer-sidecar",
         "application_image": "iguazio/ml-model-explorer:2.0.0",
-        "external_invocation_urls": ["default-ml-model-explorer.default-tenant.app.vmdev36.lab.iguazeng.com/"],
+        "external_invocation_urls": [
+          "default-ml-model-explorer.default-tenant.app.vmdev36.lab.iguazeng.com/"
+        ],
         "state": "ready",
-        "internal_invocation_urls": ["nuclio-default-ml-model-explorer.default-tenant.svc.cluster.local:8080"]
+        "internal_invocation_urls": [
+          "nuclio-default-ml-model-explorer.default-tenant.svc.cluster.local:8080"
+        ]
       }
     },
     {
@@ -24878,7 +25263,13 @@
             {
               "name": "forecaster-sidecar",
               "image": "iguazio/inventory-forecaster:1.0.5",
-              "ports": [{ "name": "http", "containerPort": 8080, "protocol": "TCP" }]
+              "ports": [
+                {
+                  "name": "http",
+                  "containerPort": 8080,
+                  "protocol": "TCP"
+                }
+              ]
             }
           ]
         },
@@ -24892,12 +25283,24 @@
         "function_handler": "reverse_proxy:Handler",
         "preemption_mode": "prevent",
         "env": [
-          { "name": "SIDECAR_PORT", "value": "8080" },
-          { "name": "SIDECAR_HOST", "value": "http://localhost" }
+          {
+            "name": "SIDECAR_PORT",
+            "value": "8080"
+          },
+          {
+            "name": "SIDECAR_HOST",
+            "value": "http://localhost"
+          }
         ],
         "resources": {
-          "requests": { "memory": "512Mi", "cpu": "250m" },
-          "limits": { "memory": "2Gi", "cpu": "1" }
+          "requests": {
+            "memory": "512Mi",
+            "cpu": "250m"
+          },
+          "limits": {
+            "memory": "2Gi",
+            "cpu": "1"
+          }
         }
       },
       "metadata": {
@@ -24906,16 +25309,22 @@
         "name": "inventory-forecaster",
         "hash": "a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6",
         "updated": "2026-05-20T11:05:45.000000+00:00",
-        "labels": { "owner": "admin" }
+        "labels": {
+          "owner": "admin"
+        }
       },
       "verbose": false,
       "status": {
         "nuclio_name": "default-inventory-forecaster",
         "sidecar_name": "forecaster-sidecar",
         "application_image": "iguazio/inventory-forecaster:1.0.5",
-        "external_invocation_urls": ["default-inventory-forecaster.default-tenant.app.vmdev36.lab.iguazeng.com/"],
+        "external_invocation_urls": [
+          "default-inventory-forecaster.default-tenant.app.vmdev36.lab.iguazeng.com/"
+        ],
         "state": "ready",
-        "internal_invocation_urls": ["nuclio-default-inventory-forecaster.default-tenant.svc.cluster.local:8080"]
+        "internal_invocation_urls": [
+          "nuclio-default-inventory-forecaster.default-tenant.svc.cluster.local:8080"
+        ]
       }
     },
     {
@@ -24927,25 +25336,83 @@
             {
               "name": "chatbot-sidecar",
               "image": "iguazio/chatbot-assistant:4.2.1",
-              "ports": [{ "name": "http", "containerPort": 7860, "protocol": "TCP" }],
+              "ports": [
+                {
+                  "name": "http",
+                  "containerPort": 7860,
+                  "protocol": "TCP"
+                }
+              ],
               "command": ["python"],
-              "args": ["-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860", "--workers", "2"],
+              "args": [
+                "-m",
+                "uvicorn",
+                "main:app",
+                "--host",
+                "0.0.0.0",
+                "--port",
+                "7860",
+                "--workers",
+                "2"
+              ],
               "env": [
-                { "name": "OPENAI_API_KEY", "valueFrom": { "secretKeyRef": { "key": "api-key", "name": "openai-secret" } } },
-                { "name": "MODEL_ENDPOINT", "value": "https://api.openai.com/v1/chat/completions" },
-                { "name": "MAX_TOKENS", "value": "4096" },
-                { "name": "TEMPERATURE", "value": "0.7" },
-                { "name": "VECTOR_DB_URL", "value": "http://milvus.default-tenant.svc:19530" },
-                { "name": "EMBEDDING_MODEL", "value": "text-embedding-ada-002" }
+                {
+                  "name": "OPENAI_API_KEY",
+                  "valueFrom": {
+                    "secretKeyRef": {
+                      "key": "api-key",
+                      "name": "openai-secret"
+                    }
+                  }
+                },
+                {
+                  "name": "MODEL_ENDPOINT",
+                  "value": "https://api.openai.com/v1/chat/completions"
+                },
+                {
+                  "name": "MAX_TOKENS",
+                  "value": "4096"
+                },
+                {
+                  "name": "TEMPERATURE",
+                  "value": "0.7"
+                },
+                {
+                  "name": "VECTOR_DB_URL",
+                  "value": "http://milvus.default-tenant.svc:19530"
+                },
+                {
+                  "name": "EMBEDDING_MODEL",
+                  "value": "text-embedding-ada-002"
+                }
               ],
               "resources": {
-                "requests": { "memory": "1Gi", "cpu": "500m" },
-                "limits": { "memory": "4Gi", "cpu": "2", "nvidia.com/gpu": "1" }
+                "requests": {
+                  "memory": "1Gi",
+                  "cpu": "500m"
+                },
+                "limits": {
+                  "memory": "4Gi",
+                  "cpu": "2",
+                  "nvidia.com/gpu": "1"
+                }
               },
               "volumeMounts": [
-                { "name": "model-cache", "mountPath": "/app/cache", "readOnly": false },
-                { "name": "config-volume", "mountPath": "/app/config", "readOnly": true },
-                { "name": "tls-certs", "mountPath": "/etc/ssl/custom", "readOnly": true }
+                {
+                  "name": "model-cache",
+                  "mountPath": "/app/cache",
+                  "readOnly": false
+                },
+                {
+                  "name": "config-volume",
+                  "mountPath": "/app/config",
+                  "readOnly": true
+                },
+                {
+                  "name": "tls-certs",
+                  "mountPath": "/etc/ssl/custom",
+                  "readOnly": true
+                }
               ]
             }
           ]
@@ -24969,24 +25436,46 @@
         "nuclio_runtime": "golang",
         "function_handler": "reverse_proxy:Handler",
         "preemption_mode": "prevent",
-        "node_selector": { "gpu-type": "a100", "zone": "us-east-1a" },
+        "node_selector": {
+          "gpu-type": "a100",
+          "zone": "us-east-1a"
+        },
         "env": [
-          { "name": "SIDECAR_PORT", "value": "7860" },
-          { "name": "SIDECAR_HOST", "value": "http://localhost" }
+          {
+            "name": "SIDECAR_PORT",
+            "value": "7860"
+          },
+          {
+            "name": "SIDECAR_HOST",
+            "value": "http://localhost"
+          }
         ],
         "resources": {
-          "requests": { "memory": "1Gi", "cpu": "500m" },
-          "limits": { "memory": "4Gi", "cpu": "2", "nvidia.com/gpu": "1" }
+          "requests": {
+            "memory": "1Gi",
+            "cpu": "500m"
+          },
+          "limits": {
+            "memory": "4Gi",
+            "cpu": "2",
+            "nvidia.com/gpu": "1"
+          }
         }
       },
       "metadata": {
         "project": "default",
         "tag": "latest",
-        "credentials": { "access_key": "$ref:mlrun-auth-secrets.chatbot999" },
+        "credentials": {
+          "access_key": "$ref:mlrun-auth-secrets.chatbot999"
+        },
         "name": "chatbot-assistant",
         "hash": "b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7",
         "updated": "2026-05-26T12:00:00.000000+00:00",
-        "labels": { "owner": "admin", "team": "ai-research", "version": "4.2.1" },
+        "labels": {
+          "owner": "admin",
+          "team": "ai-research",
+          "version": "4.2.1"
+        },
         "annotations": {
           "mlrun/created-by": "admin",
           "mlrun/framework": "langchain",
@@ -24998,11 +25487,15 @@
         "nuclio_name": "default-chatbot-assistant",
         "sidecar_name": "chatbot-sidecar",
         "application_image": "iguazio/chatbot-assistant:4.2.1",
-        "external_invocation_urls": ["default-chatbot-assistant.default-tenant.app.vmdev36.lab.iguazeng.com/"],
+        "external_invocation_urls": [
+          "default-chatbot-assistant.default-tenant.app.vmdev36.lab.iguazeng.com/"
+        ],
         "address": "default-chatbot-assistant.default-tenant.app.vmdev36.lab.iguazeng.com/",
         "container_image": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/nuclio/default-chatbot-assistant-processor:latest",
         "state": "ready",
-        "internal_invocation_urls": ["nuclio-default-chatbot-assistant.default-tenant.svc.cluster.local:8080"]
+        "internal_invocation_urls": [
+          "nuclio-default-chatbot-assistant.default-tenant.svc.cluster.local:8080"
+        ]
       }
     },
     {
@@ -25014,7 +25507,13 @@
             {
               "name": "classifier-sidecar",
               "image": "iguazio/image-classifier:2.5.0",
-              "ports": [{ "name": "http", "containerPort": 9000, "protocol": "TCP" }]
+              "ports": [
+                {
+                  "name": "http",
+                  "containerPort": 9000,
+                  "protocol": "TCP"
+                }
+              ]
             }
           ]
         },
@@ -25028,12 +25527,25 @@
         "function_handler": "reverse_proxy:Handler",
         "preemption_mode": "prevent",
         "env": [
-          { "name": "SIDECAR_PORT", "value": "9000" },
-          { "name": "SIDECAR_HOST", "value": "http://localhost" }
+          {
+            "name": "SIDECAR_PORT",
+            "value": "9000"
+          },
+          {
+            "name": "SIDECAR_HOST",
+            "value": "http://localhost"
+          }
         ],
         "resources": {
-          "requests": { "memory": "2Gi", "cpu": "1" },
-          "limits": { "memory": "8Gi", "cpu": "4", "nvidia.com/gpu": "2" }
+          "requests": {
+            "memory": "2Gi",
+            "cpu": "1"
+          },
+          "limits": {
+            "memory": "8Gi",
+            "cpu": "4",
+            "nvidia.com/gpu": "2"
+          }
         }
       },
       "metadata": {
@@ -25042,16 +25554,23 @@
         "name": "image-classifier-service",
         "hash": "c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8",
         "updated": "2026-05-22T16:33:00.000000+00:00",
-        "labels": { "owner": "admin", "framework": "pytorch" }
+        "labels": {
+          "owner": "admin",
+          "framework": "pytorch"
+        }
       },
       "verbose": false,
       "status": {
         "nuclio_name": "default-image-classifier-service",
         "sidecar_name": "classifier-sidecar",
         "application_image": "iguazio/image-classifier:2.5.0",
-        "external_invocation_urls": ["default-image-classifier-service.default-tenant.app.vmdev36.lab.iguazeng.com/"],
+        "external_invocation_urls": [
+          "default-image-classifier-service.default-tenant.app.vmdev36.lab.iguazeng.com/"
+        ],
         "state": "ready",
-        "internal_invocation_urls": ["nuclio-default-image-classifier-service.default-tenant.svc.cluster.local:8080"]
+        "internal_invocation_urls": [
+          "nuclio-default-image-classifier-service.default-tenant.svc.cluster.local:8080"
+        ]
       }
     },
     {
@@ -25063,7 +25582,13 @@
             {
               "name": "anomaly-sidecar",
               "image": "iguazio/anomaly-detector:1.8.2",
-              "ports": [{ "name": "http", "containerPort": 8080, "protocol": "TCP" }]
+              "ports": [
+                {
+                  "name": "http",
+                  "containerPort": 8080,
+                  "protocol": "TCP"
+                }
+              ]
             }
           ]
         },
@@ -25088,12 +25613,24 @@
         "function_handler": "reverse_proxy:Handler",
         "preemption_mode": "prevent",
         "env": [
-          { "name": "SIDECAR_PORT", "value": "8080" },
-          { "name": "SIDECAR_HOST", "value": "http://localhost" }
+          {
+            "name": "SIDECAR_PORT",
+            "value": "8080"
+          },
+          {
+            "name": "SIDECAR_HOST",
+            "value": "http://localhost"
+          }
         ],
         "resources": {
-          "requests": { "memory": "1Gi", "cpu": "500m" },
-          "limits": { "memory": "4Gi", "cpu": "2" }
+          "requests": {
+            "memory": "1Gi",
+            "cpu": "500m"
+          },
+          "limits": {
+            "memory": "4Gi",
+            "cpu": "2"
+          }
         }
       },
       "metadata": {
@@ -25102,16 +25639,23 @@
         "name": "anomaly-detector",
         "hash": "d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9",
         "updated": "2026-05-21T09:15:00.000000+00:00",
-        "labels": { "owner": "admin", "team": "data-science" }
+        "labels": {
+          "owner": "admin",
+          "team": "data-science"
+        }
       },
       "verbose": false,
       "status": {
         "nuclio_name": "default-anomaly-detector",
         "sidecar_name": "anomaly-sidecar",
         "application_image": "iguazio/anomaly-detector:1.8.2",
-        "external_invocation_urls": ["default-anomaly-detector.default-tenant.app.vmdev36.lab.iguazeng.com/"],
+        "external_invocation_urls": [
+          "default-anomaly-detector.default-tenant.app.vmdev36.lab.iguazeng.com/"
+        ],
         "state": "ready",
-        "internal_invocation_urls": ["nuclio-default-anomaly-detector.default-tenant.svc.cluster.local:8080"]
+        "internal_invocation_urls": [
+          "nuclio-default-anomaly-detector.default-tenant.svc.cluster.local:8080"
+        ]
       }
     },
     {
@@ -25123,7 +25667,13 @@
             {
               "name": "summarizer-sidecar",
               "image": "iguazio/text-summarizer:0.5.0-beta",
-              "ports": [{ "name": "http", "containerPort": 8080, "protocol": "TCP" }]
+              "ports": [
+                {
+                  "name": "http",
+                  "containerPort": 8080,
+                  "protocol": "TCP"
+                }
+              ]
             }
           ]
         },
@@ -25137,12 +25687,25 @@
         "function_handler": "reverse_proxy:Handler",
         "preemption_mode": "allow",
         "env": [
-          { "name": "SIDECAR_PORT", "value": "8080" },
-          { "name": "SIDECAR_HOST", "value": "http://localhost" }
+          {
+            "name": "SIDECAR_PORT",
+            "value": "8080"
+          },
+          {
+            "name": "SIDECAR_HOST",
+            "value": "http://localhost"
+          }
         ],
         "resources": {
-          "requests": { "memory": "4Gi", "cpu": "1" },
-          "limits": { "memory": "16Gi", "cpu": "4", "nvidia.com/gpu": "1" }
+          "requests": {
+            "memory": "4Gi",
+            "cpu": "1"
+          },
+          "limits": {
+            "memory": "16Gi",
+            "cpu": "4",
+            "nvidia.com/gpu": "1"
+          }
         }
       },
       "metadata": {
@@ -25167,9 +25730,24 @@
             {
               "name": "optimizer-sidecar",
               "image": "iguazio/price-optimizer:3.1.0",
-              "ports": [{ "name": "http", "containerPort": 8080, "protocol": "TCP" }],
+              "ports": [
+                {
+                  "name": "http",
+                  "containerPort": 8080,
+                  "protocol": "TCP"
+                }
+              ],
               "command": ["gunicorn"],
-              "args": ["--bind", "0.0.0.0:8080", "--workers", "4", "--timeout", "120", "--preload", "app:create_app()"]
+              "args": [
+                "--bind",
+                "0.0.0.0:8080",
+                "--workers",
+                "4",
+                "--timeout",
+                "120",
+                "--preload",
+                "app:create_app()"
+              ]
             }
           ]
         },
@@ -25184,12 +25762,24 @@
         "function_handler": "reverse_proxy:Handler",
         "preemption_mode": "prevent",
         "env": [
-          { "name": "SIDECAR_PORT", "value": "8080" },
-          { "name": "SIDECAR_HOST", "value": "http://localhost" }
+          {
+            "name": "SIDECAR_PORT",
+            "value": "8080"
+          },
+          {
+            "name": "SIDECAR_HOST",
+            "value": "http://localhost"
+          }
         ],
         "resources": {
-          "requests": { "memory": "512Mi", "cpu": "250m" },
-          "limits": { "memory": "2Gi", "cpu": "1" }
+          "requests": {
+            "memory": "512Mi",
+            "cpu": "250m"
+          },
+          "limits": {
+            "memory": "2Gi",
+            "cpu": "1"
+          }
         }
       },
       "metadata": {
@@ -25198,16 +25788,22 @@
         "name": "price-optimizer",
         "hash": "f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1",
         "updated": "2026-05-19T18:30:00.000000+00:00",
-        "labels": { "owner": "admin" }
+        "labels": {
+          "owner": "admin"
+        }
       },
       "verbose": false,
       "status": {
         "nuclio_name": "default-price-optimizer",
         "sidecar_name": "optimizer-sidecar",
         "application_image": "iguazio/price-optimizer:3.1.0",
-        "external_invocation_urls": ["default-price-optimizer.default-tenant.app.vmdev36.lab.iguazeng.com/"],
+        "external_invocation_urls": [
+          "default-price-optimizer.default-tenant.app.vmdev36.lab.iguazeng.com/"
+        ],
         "state": "ready",
-        "internal_invocation_urls": ["nuclio-default-price-optimizer.default-tenant.svc.cluster.local:8080"]
+        "internal_invocation_urls": [
+          "nuclio-default-price-optimizer.default-tenant.svc.cluster.local:8080"
+        ]
       }
     },
     {
@@ -25219,7 +25815,13 @@
             {
               "name": "log-analyzer-sidecar",
               "image": "iguazio/log-analyzer:0.2.0-alpha",
-              "ports": [{ "name": "http", "containerPort": 8080, "protocol": "TCP" }]
+              "ports": [
+                {
+                  "name": "http",
+                  "containerPort": 8080,
+                  "protocol": "TCP"
+                }
+              ]
             }
           ]
         },
@@ -25232,12 +25834,24 @@
         "function_handler": "reverse_proxy:Handler",
         "preemption_mode": "allow",
         "env": [
-          { "name": "SIDECAR_PORT", "value": "8080" },
-          { "name": "SIDECAR_HOST", "value": "http://localhost" }
+          {
+            "name": "SIDECAR_PORT",
+            "value": "8080"
+          },
+          {
+            "name": "SIDECAR_HOST",
+            "value": "http://localhost"
+          }
         ],
         "resources": {
-          "requests": { "memory": "64Mi", "cpu": "25m" },
-          "limits": { "memory": "256Mi", "cpu": "100m" }
+          "requests": {
+            "memory": "64Mi",
+            "cpu": "25m"
+          },
+          "limits": {
+            "memory": "256Mi",
+            "cpu": "100m"
+          }
         }
       },
       "metadata": {
@@ -25264,7 +25878,13 @@
             {
               "name": "gateway-test-sidecar",
               "image": "iguazio/api-gateway-test:1.0.0",
-              "ports": [{ "name": "http", "containerPort": 8080, "protocol": "TCP" }]
+              "ports": [
+                {
+                  "name": "http",
+                  "containerPort": 8080,
+                  "protocol": "TCP"
+                }
+              ]
             }
           ]
         },
@@ -25278,12 +25898,24 @@
         "function_handler": "reverse_proxy:Handler",
         "preemption_mode": "prevent",
         "env": [
-          { "name": "SIDECAR_PORT", "value": "8080" },
-          { "name": "SIDECAR_HOST", "value": "http://localhost" }
+          {
+            "name": "SIDECAR_PORT",
+            "value": "8080"
+          },
+          {
+            "name": "SIDECAR_HOST",
+            "value": "http://localhost"
+          }
         ],
         "resources": {
-          "requests": { "memory": "128Mi", "cpu": "50m" },
-          "limits": { "memory": "512Mi", "cpu": "250m" }
+          "requests": {
+            "memory": "128Mi",
+            "cpu": "50m"
+          },
+          "limits": {
+            "memory": "512Mi",
+            "cpu": "250m"
+          }
         }
       },
       "metadata": {
@@ -25292,16 +25924,23 @@
         "name": "api-gateway-test-app",
         "hash": "b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3",
         "updated": "2026-05-24T08:00:00.000000+00:00",
-        "labels": { "owner": "admin", "env": "staging" }
+        "labels": {
+          "owner": "admin",
+          "env": "staging"
+        }
       },
       "verbose": false,
       "status": {
         "nuclio_name": "default-api-gateway-test-app",
         "sidecar_name": "gateway-test-sidecar",
         "application_image": "iguazio/api-gateway-test:1.0.0",
-        "external_invocation_urls": ["default-api-gateway-test-app.default-tenant.app.vmdev36.lab.iguazeng.com/"],
+        "external_invocation_urls": [
+          "default-api-gateway-test-app.default-tenant.app.vmdev36.lab.iguazeng.com/"
+        ],
         "state": "ready",
-        "internal_invocation_urls": ["nuclio-default-api-gateway-test-app.default-tenant.svc.cluster.local:8080"]
+        "internal_invocation_urls": [
+          "nuclio-default-api-gateway-test-app.default-tenant.svc.cluster.local:8080"
+        ]
       }
     },
     {
@@ -31342,6 +31981,71 @@
       },
       "verbose": false,
       "kind": "serving"
+    },
+    {
+      "kind": "serving",
+      "metadata": {
+        "name": "test-pipeline",
+        "tag": "latest",
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "project": "default",
+        "labels": {
+          "mlrun/class": "serving"
+        },
+        "updated": "2026-06-23T12:00:00.000000+00:00"
+      },
+      "spec": {
+        "command": "",
+        "args": [],
+        "image": "mlrun/mlrun",
+        "description": "ML-12395 manual test: serving pipeline with a child function in building state.",
+        "min_replicas": 1,
+        "max_replicas": 4,
+        "function_kind": "serving_v2",
+        "graph": {
+          "kind": "router",
+          "routes": {
+            "child-model": {
+              "kind": "task",
+              "class_name": "mlrun.serving.ModelRouter"
+            }
+          }
+        },
+        "build": {
+          "commands": []
+        },
+        "secret_sources": []
+      },
+      "verbose": false,
+      "kind": "serving"
+    },
+    {
+      "kind": "serving",
+      "metadata": {
+        "name": "test-pipeline-child",
+        "tag": "latest",
+        "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "project": "default",
+        "labels": {
+          "mlrun/class": "serving",
+          "parent-function": "test-pipeline"
+        },
+        "updated": "2026-06-23T12:00:00.000000+00:00"
+      },
+      "spec": {
+        "command": "",
+        "args": [],
+        "image": "mlrun/mlrun",
+        "description": "ML-12395 manual test: child function in building state.",
+        "function_kind": "serving_v2",
+        "build": {
+          "commands": []
+        }
+      },
+      "verbose": false,
+      "status": {
+        "state": "building"
+      }
     }
   ]
 }

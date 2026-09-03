@@ -112,11 +112,18 @@ export const checkForSelectedApplication = debounce(
     lastCheckedApplicationIdRef
   }) => {
     if (applicationId) {
-      if (applications && lastCheckedApplicationIdRef.current !== applicationId) {
-        const { tag, uid: hash } = parseIdentifier(applicationId)
+      if (applications.length > 0 && lastCheckedApplicationIdRef.current !== applicationId) {
+        const { uid: hash, tag } = parseIdentifier(applicationId)
         lastCheckedApplicationIdRef.current = applicationId
 
-        fetchSingleEnrichedFunction({ name: applicationName, hash, tag })
+        const foundApplication = applications?.find(app => app.hash === hash)
+
+        fetchSingleEnrichedFunction({
+          name: applicationName,
+          hash: hash,
+          tag: foundApplication?.tag || tag,
+          nuclioName: foundApplication?.nuclio_name
+        })
           .then(selectedApplication => {
             if (!selectedApplication) {
               navigate(

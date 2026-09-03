@@ -23,9 +23,14 @@ import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import LogSection from './LogSection'
+import NoData from '../../../../shared/NoData/NoData'
 import { fetchFunctionLogs, fetchFunctionNuclioLogs } from '../../../../../reducers/functionReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
+import { NOTFOUND_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import {
+  APPLICATION_DEPLOYING_STATES,
+  APPLICATION_INITIALIZED_STATE,
+  BUILD_LOGS_INITIALIZED_MESSAGE,
   BUILD_LOGS_POLLING_INTERVAL_MS,
   COPY_RESET_TIMEOUT_MS,
   FUNCTION_STATUS_HEADER,
@@ -69,11 +74,15 @@ const ApplicationBuildLogs = ({ application }) => {
   const dispatch = useDispatch()
   const { projectName } = useParams()
 
+  const applicationState = application.state?.value
+  const isInitialized = applicationState === APPLICATION_INITIALIZED_STATE
+  const isDeploying = APPLICATION_DEPLOYING_STATES.includes(applicationState)
+
   const [applicationLogs, setApplicationLogs] = useState('')
   const [functionLogs, setFunctionLogs] = useState(null)
   const [copiedSection, setCopiedSection] = useState(null)
-  const [isAppLogsLoading, setIsAppLogsLoading] = useState(true)
-  const [isFunctionLogsLoading, setIsFunctionLogsLoading] = useState(true)
+  const [isAppLogsLoading, setIsAppLogsLoading] = useState(!isInitialized)
+  const [isFunctionLogsLoading, setIsFunctionLogsLoading] = useState(!isInitialized)
 
   const appLogsPollingRef = useRef(null)
   const functionLogsPollingRef = useRef(null)
@@ -87,6 +96,10 @@ const ApplicationBuildLogs = ({ application }) => {
   }, [])
 
   useEffect(() => {
+    if (isInitialized) {
+      return undefined
+    }
+
     let cancelled = false
 
     const fetchAppLogsSafe = () => {
@@ -107,6 +120,13 @@ const ApplicationBuildLogs = ({ application }) => {
         })
         .catch(error => {
           if (cancelled) return
+
+          if (isDeploying && error?.response?.status === NOTFOUND_ERROR_STATUS_CODE) {
+            setIsAppLogsLoading(true)
+            clearPolling(appLogsPollingRef)
+            appLogsPollingRef.current = setTimeout(fetchAppLogsSafe, BUILD_LOGS_POLLING_INTERVAL_MS)
+            return
+          }
           setIsAppLogsLoading(false)
           showErrorNotification(dispatch, error, 'Application logs failed to load')
         })
@@ -137,6 +157,16 @@ const ApplicationBuildLogs = ({ application }) => {
         })
         .catch(error => {
           if (cancelled) return
+
+          if (isDeploying && error?.response?.status === NOTFOUND_ERROR_STATUS_CODE) {
+            setIsFunctionLogsLoading(true)
+            clearPolling(functionLogsPollingRef)
+            functionLogsPollingRef.current = setTimeout(
+              fetchFunctionDeployLogsSafe,
+              BUILD_LOGS_POLLING_INTERVAL_MS
+            )
+            return
+          }
           setIsFunctionLogsLoading(false)
           showErrorNotification(dispatch, error, 'Function logs failed to load')
         })
@@ -151,7 +181,15 @@ const ApplicationBuildLogs = ({ application }) => {
       clearPolling(functionLogsPollingRef)
       clearTimeout(copyResetRef.current)
     }
-  }, [application.name, application.tag, clearPolling, dispatch, projectName])
+  }, [
+    application.name,
+    application.tag,
+    clearPolling,
+    dispatch,
+    isDeploying,
+    isInitialized,
+    projectName
+  ])
 
   const handleCopy = useCallback((text, sectionKey) => {
     navigator.clipboard.writeText(text).catch(() => {})
@@ -177,6 +215,14 @@ const ApplicationBuildLogs = ({ application }) => {
     [isAppLogsLoading, applicationLogs]
   )
 
+  if (isInitialized) {
+    return (
+      <div className="flex flex-col h-full py-4" data-testid="application-build-logs">
+        <NoData message={BUILD_LOGS_INITIALIZED_MESSAGE} />
+      </div>
+    )
+  }
+
   return (
     <div
       className="flex flex-col gap-6 py-4 h-full overflow-y-auto"
@@ -187,6 +233,7 @@ const ApplicationBuildLogs = ({ application }) => {
           title="Application"
           logs={applicationLogs}
           isLoading={isAppLogsLoading}
+          loadingMessage={isDeploying ? BUILD_LOGS_INITIALIZED_MESSAGE : undefined}
           isCopied={copiedSection === LOGS_SECTION_KEY.APPLICATION}
           onCopy={handleCopyAppLogs}
         />
@@ -195,6 +242,7 @@ const ApplicationBuildLogs = ({ application }) => {
         title="Function"
         logs={functionLogs}
         isLoading={isFunctionLogsLoading}
+        loadingMessage={isDeploying ? BUILD_LOGS_INITIALIZED_MESSAGE : undefined}
         isCopied={copiedSection === LOGS_SECTION_KEY.FUNCTION}
         onCopy={handleCopyFunctionLogs}
       />
@@ -205,7 +253,10 @@ const ApplicationBuildLogs = ({ application }) => {
 ApplicationBuildLogs.propTypes = {
   application: PropTypes.shape({
     name: PropTypes.string.isRequired,
-    tag: PropTypes.string
+    tag: PropTypes.string,
+    state: PropTypes.shape({
+      value: PropTypes.string
+    })
   }).isRequired
 }
 

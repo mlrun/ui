@@ -59,13 +59,15 @@ const getApplicationRuntimeResources = application => {
 const getNuclioSidecar = application => application?.nuclioFunc?.spec?.sidecars?.[0] ?? {}
 
 const getApplicationRuntimeEnv = application => {
+  const mlrunSidecar = getApplicationRuntimeSidecar(application)
   const nuclioSidecar = getNuclioSidecar(application)
-  return nuclioSidecar.env ?? []
+  return mlrunSidecar.env ?? nuclioSidecar.env ?? []
 }
 
 const getApplicationRuntimeVolumeMounts = application => {
+  const mlrunSidecar = getApplicationRuntimeSidecar(application)
   const nuclioSidecar = getNuclioSidecar(application)
-  return nuclioSidecar.volumeMounts ?? []
+  return mlrunSidecar.volumeMounts ?? nuclioSidecar.volumeMounts ?? []
 }
 
 const getGpuLimitValue = limits => {
@@ -94,6 +96,12 @@ const getSecurityContext = (mlrunSpec, nuclioSpec) =>
 const getLoggerSinks = (application, mlrunSpec, nuclioSpec) =>
   application.config?.['spec.loggerSinks'] ?? mlrunSpec.loggerSinks ?? nuclioSpec.loggerSinks ?? []
 
+const getApplicationBuildConfig = application => {
+  const mlrunSpec = getMlrunSpec(application)
+
+  return application.build ?? mlrunSpec.build ?? {}
+}
+
 const getScaleToZeroWindow = spec => {
   const scaleResources = spec.scaleToZero?.scaleResources
   if (!scaleResources?.length) return null
@@ -109,7 +117,7 @@ export const getBasicSettingsItems = application => {
   return [
     {
       label: BASIC_SETTINGS_FIELD.ENABLED,
-      value: nuclioSpec.disable ? 'No' : 'Yes'
+      value: (mlrunSpec.disable ?? nuclioSpec.disable) ? 'No' : 'Yes'
     },
     {
       label: BASIC_SETTINGS_FIELD.DESCRIPTION,
@@ -117,7 +125,7 @@ export const getBasicSettingsItems = application => {
     },
     {
       label: BASIC_SETTINGS_FIELD.SERVICE_ACCOUNT,
-      value: mlrunSpec.service_account || nuclioSpec.service_account || null
+      value: mlrunSpec.service_account || nuclioSpec.serviceAccount || null
     },
     {
       label: BASIC_SETTINGS_FIELD.RUN_AS_USER,
@@ -175,11 +183,11 @@ export const getResourcesItems = application => {
     },
     {
       label: RESOURCES_FIELD.REPLICAS_MIN,
-      value: (application.min_replicas ?? mlrunSpec.minReplicas)?.toString() || null
+      value: (application.min_replicas ?? mlrunSpec.min_replicas)?.toString() || null
     },
     {
       label: RESOURCES_FIELD.REPLICAS_MAX,
-      value: (application.max_replicas ?? mlrunSpec.maxReplicas)?.toString() || null
+      value: (application.max_replicas ?? mlrunSpec.max_replicas)?.toString() || null
     },
     {
       label: RESOURCES_FIELD.INACTIVITY_WINDOW,
@@ -187,14 +195,17 @@ export const getResourcesItems = application => {
     },
     {
       label: RESOURCES_FIELD.TARGET_CPU,
-      value: nuclioSpec.targetCPU ? `${nuclioSpec.targetCPU}%` : null
+      value:
+        (mlrunSpec.targetCPU ?? nuclioSpec.targetCPU)
+          ? `${mlrunSpec.targetCPU ?? nuclioSpec.targetCPU}%`
+          : null
     }
   ]
 }
 
 export const getBuildItems = application => {
-  const mlrunSpec = getMlrunSpec(application)
-  const buildCommands = application.build?.commands ?? mlrunSpec.build?.commands
+  const buildConfig = getApplicationBuildConfig(application)
+  const buildCommands = buildConfig.commands
 
   return [
     {
@@ -203,7 +214,7 @@ export const getBuildItems = application => {
     },
     {
       label: BUILD_FIELD.BASE_IMAGE,
-      value: application.build?.base_image ?? mlrunSpec.build?.base_image ?? null
+      value: buildConfig.base_image ?? null
     },
     {
       label: BUILD_FIELD.BUILD_COMMANDS,
@@ -212,7 +223,7 @@ export const getBuildItems = application => {
     },
     {
       label: BUILD_FIELD.PULL_AT_RUNTIME,
-      value: mlrunSpec.loadSourceOnRun ? 'Yes' : 'No'
+      value: buildConfig.load_source_on_run ? 'Yes' : 'No'
     }
   ]
 }
@@ -301,7 +312,8 @@ const findVolumeDefinition = (volumeDefinitions, name) => {
 }
 
 export const getVolumesData = application => {
-  const volumeDefinitions = getNuclioSpec(application).volumes ?? []
+  const volumeDefinitions =
+    getMlrunSpec(application).volumes ?? getNuclioSpec(application).volumes ?? []
   const volumeMounts = getApplicationRuntimeVolumeMounts(application)
 
   return volumeMounts.map(mount => {
@@ -386,11 +398,12 @@ const getProbeAdditionalSettings = probe => {
 }
 
 export const getProbesData = application => {
-  const nuclioSpec = getNuclioSpec(application)
+  const mlrunSidecar = getApplicationRuntimeSidecar(application)
+  const nuclioSidecar = getNuclioSidecar(application)
 
-  const readinessProbe = nuclioSpec.readinessProbe
-  const livenessProbe = nuclioSpec.livenessProbe
-  const startupProbe = nuclioSpec.startupProbe
+  const readinessProbe = mlrunSidecar.readinessProbe ?? nuclioSidecar.readinessProbe
+  const livenessProbe = mlrunSidecar.livenessProbe ?? nuclioSidecar.livenessProbe
+  const startupProbe = mlrunSidecar.startupProbe ?? nuclioSidecar.startupProbe
 
   const probes = []
 

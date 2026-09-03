@@ -38,7 +38,7 @@ const ProjectDetailsHeader = ({ projectData, projectName }) => {
       {projectData && (
         <div>
           <span className="project-details__details-label">
-            Created: {formatDatetime(projectData.metadata.created.replace('+00:00', '') + 'Z')}
+            Created: {formatDatetime(projectData.metadata.created)}
           </span>
           {projectData.spec.owner && !frontendSpec.ce?.version && (
             <span className="project-details__details-label">Owner: {projectData.spec.owner}</span>

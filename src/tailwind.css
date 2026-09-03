@@ -64,7 +64,6 @@
     --dropdown-border: 260, 7%, 88%, 1;
   }
 }
-
 @layer base {
   .mlrun-tw-scope {
     font-family: Roboto, sans-serif;

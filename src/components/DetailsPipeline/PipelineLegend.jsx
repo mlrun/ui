@@ -28,12 +28,14 @@ import ResponseIcon from 'igz-controls/images/response-indicator.svg?react'
 import QueueLegendIcon from 'igz-controls/images/legend-queue-icon.svg?react'
 import HubStepIcon from 'igz-controls/images/mlrun-hub-step-badge.svg?react'
 import RouterStepIcon from 'igz-controls/images/router-step-badge.svg?react'
+import ModelServerStepIcon from 'igz-controls/images/model-server-step-badge.svg?react'
 
 const legendItems = [
   { id: 'event', label: 'Event Operation', icon: <EventsStepIcon /> },
   { id: 'batch', label: 'Batch Operation', icon: <BatchStepIcon /> },
   { id: 'filter', label: 'Filter Operation', icon: <FilterStepIcon /> },
   { id: 'model-runner', label: 'Model runner', icon: <ConnectionIcon /> },
+  { id: 'model-server', label: 'Model server', icon: <ModelServerStepIcon /> },
   { id: 'router', label: 'Router', icon: <RouterStepIcon /> },
   { id: 'hub', label: 'MLRun hub', icon: <HubStepIcon /> },
   { id: 'choice', label: 'Choice', icon: <ChoiceStepIcon /> },

@@ -45,7 +45,7 @@ export const getApplicationsColumns = projectName => [
       return (
         <div className="flex items-center gap-2">
           <Link
-            to={`/projects/${projectName}/${APPLICATIONS_PAGE_PATH}/${row.original.name}/${identifier}/${DEFAULT_APPLICATION_DETAILS_TAB}`}
+            to={`/projects/${projectName}/${APPLICATIONS_PAGE_PATH}/${row.original.name}/${identifier}/${DEFAULT_APPLICATION_DETAILS_TAB}${window.location.search}`}
             className="text-igz-primary text-body font-medium hover:underline"
             data-testid="application-name-link"
           >
@@ -96,7 +96,7 @@ export const getApplicationsColumns = projectName => [
 
       return (
         <Link
-          to={`/projects/${projectName}/${APPLICATIONS_PAGE_PATH}/${row.original.name}/${identifier}/${APPLICATION_DETAILS_TAB.MONITORING_ENDPOINTS}`}
+          to={`/projects/${projectName}/${APPLICATIONS_PAGE_PATH}/${row.original.name}/${identifier}/${APPLICATION_DETAILS_TAB.MONITORING_ENDPOINTS}${window.location.search}`}
           className="!text-igz-link text-body hover:underline"
           data-testid="endpoints-count"
         >
@@ -110,6 +110,7 @@ export const getApplicationsColumns = projectName => [
     id: 'updated',
     size: 15,
     header: 'Updated',
+    enableSorting: true,
     cell: ({ row }) => (
       <span className="text-igz-secondary text-body" data-testid="updated-cell">
         {formatDatetime(row.original.updated, '')}

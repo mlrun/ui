@@ -113,7 +113,7 @@ const generateRequestParams = (filters, jobName) => {
     filters[STATUS_FILTER] !== FILTER_ALL_ITEMS &&
     !filters[STATUS_FILTER].includes(FILTER_ALL_ITEMS)
   ) {
-    params.state = filters[STATUS_FILTER]
+    params.states = filters[STATUS_FILTER]
   }
 
   if (filters?.[DATES_FILTER]) {

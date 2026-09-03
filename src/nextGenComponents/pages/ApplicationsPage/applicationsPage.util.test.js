@@ -18,12 +18,20 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 // eslint-disable-next-line import/named
-import { vi, describe, it, expect, beforeEach } from 'vitest'
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 
 import { APPLICATION_STATUS, APPLICATION_STATUS_OPTIONS } from './applications.constants'
-import { buildApiFilters, filterApplications } from './applicationsPage.util'
+import {
+  buildApiFilters,
+  checkForSelectedApplication,
+  filterApplications
+} from './applicationsPage.util'
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
+
+vi.mock('igz-controls/utils/notification.util', () => ({
+  showErrorNotification: vi.fn()
+}))
 
 vi.mock('../../../utils/datePicker.util', () => {
   const options = [
@@ -330,6 +338,163 @@ describe('applicationsPage.util', () => {
       const appsWithMissing = [...apps, { state: { value: 'running' } }]
       const result = filterApplications(appsWithMissing, { state: ['all'], owner: 'alice' })
       expect(result).toHaveLength(2)
+    })
+  })
+
+  // ── checkForSelectedApplication ────────────────────────────────────────────
+
+  describe('checkForSelectedApplication', () => {
+    const DEBOUNCE_MS = 30
+    const flushMicrotasks = async () => {
+      for (let i = 0; i < 5; i++) await Promise.resolve()
+    }
+
+    let navigate, setSelectedApplication, fetchSingleEnrichedFunction, dispatch
+    let lastCheckedApplicationIdRef, showErrorNotification
+
+    beforeEach(async () => {
+      vi.useFakeTimers()
+      navigate = vi.fn()
+      setSelectedApplication = vi.fn()
+      dispatch = vi.fn()
+      fetchSingleEnrichedFunction = vi.fn()
+      lastCheckedApplicationIdRef = { current: null }
+      const notifModule = await import('igz-controls/utils/notification.util')
+      showErrorNotification = notifModule.showErrorNotification
+      vi.clearAllMocks()
+      checkForSelectedApplication.cancel?.()
+    })
+
+    afterEach(() => {
+      checkForSelectedApplication.cancel?.()
+      vi.useRealTimers()
+    })
+
+    const flush = () => vi.advanceTimersByTime(DEBOUNCE_MS)
+
+    const makeArgs = (overrides = {}) => ({
+      applicationName: 'my-app',
+      applicationId: '@hash123',
+      applications: [{ hash: 'hash123', tag: 'v1', nuclio_name: 'proj-my-app' }],
+      navigate,
+      projectName: 'my-project',
+      setSelectedApplication,
+      fetchSingleEnrichedFunction,
+      dispatch,
+      lastCheckedApplicationIdRef,
+      ...overrides
+    })
+
+    it('calls setSelectedApplication({}) when applicationId is absent', async () => {
+      checkForSelectedApplication(makeArgs({ applicationId: null }))
+      flush()
+      await flushMicrotasks()
+      expect(setSelectedApplication).toHaveBeenCalledWith({})
+      expect(fetchSingleEnrichedFunction).not.toHaveBeenCalled()
+    })
+
+    it('does nothing when applications list is empty', async () => {
+      checkForSelectedApplication(makeArgs({ applications: [] }))
+      flush()
+      await flushMicrotasks()
+      expect(fetchSingleEnrichedFunction).not.toHaveBeenCalled()
+      expect(setSelectedApplication).not.toHaveBeenCalled()
+    })
+
+    it('does nothing when lastCheckedApplicationIdRef already matches applicationId', async () => {
+      lastCheckedApplicationIdRef.current = '@hash123'
+      checkForSelectedApplication(makeArgs())
+      flush()
+      await flushMicrotasks()
+      expect(fetchSingleEnrichedFunction).not.toHaveBeenCalled()
+    })
+
+    it('fetches using found-app data when application is in the filtered list', async () => {
+      fetchSingleEnrichedFunction.mockResolvedValue({ name: 'my-app', hash: 'hash123' })
+      checkForSelectedApplication(makeArgs())
+      flush()
+      await flushMicrotasks()
+      expect(fetchSingleEnrichedFunction).toHaveBeenCalledWith({
+        name: 'my-app',
+        hash: 'hash123',
+        tag: 'v1',
+        nuclioName: 'proj-my-app'
+      })
+    })
+
+    it('fetches using URL-parsed hash/tag when application is NOT in the filtered list', async () => {
+      fetchSingleEnrichedFunction.mockResolvedValue({ name: 'my-app', hash: 'hash123' })
+      checkForSelectedApplication(
+        makeArgs({
+          applications: [{ hash: 'other-hash', tag: 'v2', nuclio_name: 'proj-other' }]
+        })
+      )
+      flush()
+      await flushMicrotasks()
+      expect(fetchSingleEnrichedFunction).toHaveBeenCalledWith({
+        name: 'my-app',
+        hash: 'hash123',
+        tag: undefined,
+        nuclioName: undefined
+      })
+    })
+
+    it('uses tag from identifier when app is filtered out and identifier contains a tag', async () => {
+      fetchSingleEnrichedFunction.mockResolvedValue({ name: 'my-app', hash: 'hash123' })
+      checkForSelectedApplication(
+        makeArgs({
+          applicationId: ':latest@hash123',
+          applications: [{ hash: 'other-hash', tag: 'v2', nuclio_name: 'proj-other' }]
+        })
+      )
+      flush()
+      await flushMicrotasks()
+      expect(fetchSingleEnrichedFunction).toHaveBeenCalledWith({
+        name: 'my-app',
+        hash: 'hash123',
+        tag: 'latest',
+        nuclioName: undefined
+      })
+    })
+
+    it('calls setSelectedApplication with fetched data on success', async () => {
+      const enriched = { name: 'my-app', hash: 'hash123' }
+      fetchSingleEnrichedFunction.mockResolvedValue(enriched)
+      checkForSelectedApplication(makeArgs())
+      flush()
+      await flushMicrotasks()
+      expect(setSelectedApplication).toHaveBeenCalledWith(expect.any(Function))
+    })
+
+    it('navigates to the list page when fetch resolves with null', async () => {
+      fetchSingleEnrichedFunction.mockResolvedValue(null)
+      checkForSelectedApplication(makeArgs())
+      flush()
+      await flushMicrotasks()
+      expect(navigate).toHaveBeenCalledWith('/projects/my-project/applications', { replace: true })
+    })
+
+    it('navigates and shows error notification when fetch rejects', async () => {
+      const error = new Error('network error')
+      fetchSingleEnrichedFunction.mockRejectedValue(error)
+      checkForSelectedApplication(makeArgs())
+      flush()
+      await flushMicrotasks()
+      expect(navigate).toHaveBeenCalledWith('/projects/my-project/applications', { replace: true })
+      expect(showErrorNotification).toHaveBeenCalledWith(
+        dispatch,
+        error,
+        '',
+        'Failed to retrieve application data'
+      )
+    })
+
+    it('resets setSelectedApplication({}) on error before navigating', async () => {
+      fetchSingleEnrichedFunction.mockRejectedValue(new Error('fail'))
+      checkForSelectedApplication(makeArgs())
+      flush()
+      await flushMicrotasks()
+      expect(setSelectedApplication).toHaveBeenCalledWith({})
     })
   })
 })

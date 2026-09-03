@@ -25,9 +25,9 @@ import { buildGatewayEndpoint } from './applicationApiGateways.util'
 import {
   API_GATEWAY_STATE_CLASS,
   API_GATEWAY_STATE_LABEL,
-  FORCE_SSL_REDIRECT_ANNOTATION,
-  NUCLIO_OWNER_LABEL
+  FORCE_SSL_REDIRECT_ANNOTATION
 } from '../applicationDetails.constants'
+import { buildNuclioOwner } from '../../../../../utils/nuclioEnrichment.util'
 
 export const apiGatewaysColumns = [
   {
@@ -98,10 +98,13 @@ export const apiGatewaysColumns = [
     id: 'sslRedirect',
     header: 'SSL redirect',
     size: 8,
-    accessorFn: row => row.metadata?.annotations?.[FORCE_SSL_REDIRECT_ANNOTATION] ?? '',
+    accessorFn: row =>
+      row.metadata?.annotations?.[FORCE_SSL_REDIRECT_ANNOTATION] === 'true' ? 'True' : 'False',
     cell: ({ row }) => (
       <span className="text-igz-secondary">
-        {row.original.metadata?.annotations?.[FORCE_SSL_REDIRECT_ANNOTATION] ?? ''}
+        {row.original.metadata?.annotations?.[FORCE_SSL_REDIRECT_ANNOTATION] === 'true'
+          ? 'True'
+          : 'False'}
       </span>
     )
   },
@@ -121,19 +124,19 @@ export const apiGatewaysColumns = [
     header: 'Port',
     size: 6,
     accessorFn: row => row.matchedUpstream?.port ?? '',
-    cell: ({ row }) => (
-      <span className="text-igz-secondary">{row.original.matchedUpstream?.port ?? ''}</span>
-    )
+    cell: ({ row }) => {
+      return (
+        <span className="text-igz-secondary">
+          {parseInt(row.original.matchedUpstream?.port) || ''}
+        </span>
+      )
+    }
   },
   {
     id: 'owner',
     header: 'Owner',
     size: 10,
-    accessorFn: row => row.metadata?.labels?.[NUCLIO_OWNER_LABEL] ?? '',
-    cell: ({ row }) => (
-      <span className="text-igz-secondary">
-        {row.original.metadata?.labels?.[NUCLIO_OWNER_LABEL] || ''}
-      </span>
-    )
+    accessorFn: ({ metadata }) => buildNuclioOwner(metadata?.labels),
+    cell: ({ getValue }) => <span className="text-igz-secondary">{getValue()}</span>
   }
 ]

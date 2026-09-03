@@ -45,7 +45,7 @@ const projectsApi = {
     mainHttpClient.get(`/projects/${project}/artifacts?category=dataset`),
   getProjectFailedJobs: (project, signal) =>
     mainHttpClient.get(
-      `/projects/${project}/runs?state=error&start_time_from=${new Date(
+      `/projects/${project}/runs?states=error&start_time_from=${new Date(
         Date.now() - 24 * 60 * 60 * 1000
       ).toISOString()}`,
       {
@@ -66,7 +66,7 @@ const projectsApi = {
       signal: signal
     }),
   getProjectRunningJobs: (project, signal) =>
-    mainHttpClient.get(`/projects/${project}/runs?state=running`, {
+    mainHttpClient.get(`/projects/${project}/runs?states=running`, {
       signal: signal
     }),
   getProjectScheduledJobs: project => mainHttpClient.get(`/projects/${project}/schedules`),

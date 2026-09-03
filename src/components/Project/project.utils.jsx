@@ -25,7 +25,6 @@ import { ARTIFACT_TYPE, DATASET_TYPE } from '../../constants'
 import { PRIMARY_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
-import Api from 'igz-controls/images/mlrun-api-gateways.svg?react'
 import Artifacts from 'igz-controls/images/navbar/mlrun-artifacts.svg?react'
 import BatchRun from 'igz-controls/images/navbar/mlrun-jobs-and-workflows.svg?react'
 import Datasets from 'igz-controls/images/navbar/mlrun-datasets.svg?react'
@@ -94,18 +93,6 @@ export const generateCreateNewOptions = (
         isTrain: true,
         wizardTitle: 'Train model',
         isOverview: true
-      })
-    }
-  },
-  {
-    label: 'Batch inference',
-    id: 'batchInference',
-    icon: <Api />,
-    handler: () => {
-      openPopUp(JobWizard, {
-        params,
-        isBatchInference: true,
-        wizardTitle: 'Batch inference'
       })
     }
   },

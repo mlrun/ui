@@ -241,7 +241,7 @@ const ApplicationMetrics = () => {
   return (
     <div className="content-wrapper applications-metrics">
       <div className="content__header">
-        <Breadcrumbs />
+        <Breadcrumbs itemName={params.appName} />
       </div>
       <div className="content">
         <div className="application-metrics-container">

@@ -85,6 +85,10 @@ jobs:
     # Run on mlrun/ui or when explicitly triggered (workflow_dispatch covers both direct and cross-repo calls)
     if: github.repository == 'mlrun/ui' || github.event_name == 'workflow_dispatch'
 
+    # secrets can't be referenced in step `if:`, so expose the Artifactory host via env
+    env:
+      ARTIFACTORY_HOST: ${{ secrets.PRIVATE_ARTIFACTORY_DOCKER_URL }}
+
     steps:
     - uses: actions/checkout@v3
       with:
@@ -121,7 +125,7 @@ jobs:
         fi
       env:
         ARTIFACTORY_DOCKER_REPO_INPUT: ${{ inputs.artifactory_docker_repo }}
-        ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
+        ARTIFACTORY_URL: ${{ secrets.PRIVATE_ARTIFACTORY_DOCKER_URL }}
 
     - name: Setup Node.js
       uses: actions/setup-node@v3
@@ -154,12 +158,12 @@ jobs:
         password: ${{ secrets.DOCKER_HUB_DOCKER_REGISTRY_PASSWORD }}
 
     - name: Docker login (Private Artifactory)
-      if: contains(inputs.docker_registries, 'artifactory.iguazeng.com') || inputs.artifactory_docker_repo != ''
+      if: (env.ARTIFACTORY_HOST != '' && contains(inputs.docker_registries, env.ARTIFACTORY_HOST)) || inputs.artifactory_docker_repo != ''
       uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # 3.6.0
       with:
-        registry: ${{ secrets.ARTIFACTORY_URL }}
-        username: ${{ secrets.ARTIFACTORY_USERNAME }}
-        password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+        registry: ${{ secrets.PRIVATE_ARTIFACTORY_DOCKER_URL }}
+        username: ${{ secrets.PRIVATE_ARTIFACTORY_USERNAME }}
+        password: ${{ secrets.PRIVATE_ARTIFACTORY_PASSWORD }}
 
     - name: Build & push image
       run: |

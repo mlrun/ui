@@ -40,6 +40,7 @@ import ErrorStepIcon from 'igz-controls/images/error-step-badge.svg?react'
 import HubStepIcon from 'igz-controls/images/mlrun-hub-step-badge.svg?react'
 import ConnectionIcon from 'igz-controls/images/connections-icon.svg?react'
 import RouterStepIcon from 'igz-controls/images/router-step-badge.svg?react'
+import ModelServerStepIcon from 'igz-controls/images/model-server-step-badge.svg?react'
 
 export const STEPS_TYPES = {
   MODEL_RUNNER: 'ModelRunner',
@@ -58,7 +59,19 @@ export const STEPS_TYPES = {
   SAMPLE_WINDOW: 'SampleWindow',
   REMOTE_STEP: 'RemoteStep',
   CUSTOM_STEP: 'Custom',
-  ROUTER_STEP: 'Router'
+  ROUTER_STEP: 'Router',
+  MAP_CLASS: 'MapClass',
+  PARTITION: 'Partition',
+  REDUCE: 'Reduce',
+  BATCH_HTTP_REQUESTS: 'BatchHttpRequests',
+  SEND_TO_HTTP: 'SendToHttp',
+  MODEL_ROUTER: 'ModelRouter',
+  VOTING_ENSEMBLE: 'VotingEnsemble',
+  ONNX_MODEL_SERVER: 'ONNXModelServer',
+  PYTORCH_MODEL_SERVER: 'PyTorchModelServer',
+  SKLEARN_MODEL_SERVER: 'SKLearnModelServer',
+  TFKERAS_MODEL_SERVER: 'TFKerasModelServer',
+  XGBMODEL_SERVER: 'XGBModelServer'
 }
 
 export const STEP_FIELD_TYPES = {
@@ -128,7 +141,7 @@ const getNodeTypeDataByKind = step => {
 const nodeTypeByClassMatchers = [
   {
     regex: new RegExp(
-      `(${STEPS_TYPES.EXTEND}|${STEPS_TYPES.FLAT_MAP}|${STEPS_TYPES.FLATTEN}|${STEPS_TYPES.MAP_WITH_STATE})$`
+      `(${STEPS_TYPES.EXTEND}|${STEPS_TYPES.FLAT_MAP}|${STEPS_TYPES.FLATTEN}|${STEPS_TYPES.MAP_WITH_STATE}|${STEPS_TYPES.MAP_CLASS}|${STEPS_TYPES.PARTITION}|${STEPS_TYPES.REDUCE})$`
     ),
     data: { nodeType: ML_COMMON_NODE, badgeIcon: <EventsStepIcon />, group_type: 'Event operation' }
   },
@@ -137,7 +150,9 @@ const nodeTypeByClassMatchers = [
     data: { nodeType: ML_COMMON_NODE, badgeIcon: <ChoiceStepIcon />, group_type: 'Choice' }
   },
   {
-    regex: new RegExp(`(${STEPS_TYPES.BATCH}|${STEPS_TYPES.FOR_EACH})$`),
+    regex: new RegExp(
+      `(${STEPS_TYPES.BATCH}|${STEPS_TYPES.FOR_EACH}|${STEPS_TYPES.BATCH_HTTP_REQUESTS})$`
+    ),
     data: { nodeType: ML_COMMON_NODE, badgeIcon: <BatchStepIcon />, group_type: 'Batch operation' }
   },
   {
@@ -149,8 +164,14 @@ const nodeTypeByClassMatchers = [
     }
   },
   {
-    regex: new RegExp(`(${STEPS_TYPES.REMOTE_STEP})$`),
+    regex: new RegExp(`(${STEPS_TYPES.REMOTE_STEP}|${STEPS_TYPES.SEND_TO_HTTP})$`),
     data: { nodeType: ML_COMMON_NODE, badgeIcon: <RemoteStepIcon />, subLabel: 'Remote' }
+  },
+  {
+    regex: new RegExp(
+      `(${STEPS_TYPES.ONNX_MODEL_SERVER}|${STEPS_TYPES.PYTORCH_MODEL_SERVER}|${STEPS_TYPES.SKLEARN_MODEL_SERVER}|${STEPS_TYPES.TFKERAS_MODEL_SERVER}|${STEPS_TYPES.XGBMODEL_SERVER})$`
+    ),
+    data: { nodeType: ML_COMMON_NODE, badgeIcon: <ModelServerStepIcon />, subLabel: 'Model server' }
   }
 ]
 
@@ -208,7 +229,30 @@ const STEPS_DESCRIPTIONS = {
     'Emits a single event in a window of window_size events, in accordance with emit_period and emit_before_termination.',
   [STEPS_TYPES.MODEL_RUNNER]:
     'Runs multiple models on each event. When used in a graph, MLRun automatically imports the default language model class (LLModel) during function deployment.',
-  [STEPS_TYPES.REMOTE_STEP]: 'Class for calling remote HTTP endpoints.'
+  [STEPS_TYPES.REMOTE_STEP]: 'Class for calling remote HTTP endpoints.',
+  [STEPS_TYPES.MAP_CLASS]:
+    'Similar to Map, but instead of a function argument, this class should be extended and its do() method overridden.',
+  [STEPS_TYPES.PARTITION]:
+    'Partitions events by calling a predicate function on each event. Each processed event results in a Partitioned named tuple of (left=Optional[Event], right=Optional[Event]).',
+  [STEPS_TYPES.REDUCE]:
+    'Reduces incoming events into a single value that is returned upon the successful termination of the flow.',
+  [STEPS_TYPES.BATCH_HTTP_REQUESTS]: 'A class for calling remote endpoints in parallel.',
+  [STEPS_TYPES.SEND_TO_HTTP]:
+    'Joins each event with data from any HTTP source. Used for event augmentation.',
+  [STEPS_TYPES.MODEL_ROUTER]:
+    'Basic model router, for calling different models per each model path.',
+  [STEPS_TYPES.VOTING_ENSEMBLE]:
+    'An ensemble machine learning model that combines the prediction of several models.',
+  [STEPS_TYPES.ONNX_MODEL_SERVER]:
+    'A model serving class for serving ONYX Models. A sub-class of the V2ModelServer class.',
+  [STEPS_TYPES.PYTORCH_MODEL_SERVER]:
+    'A model serving class for serving PyTorch Models. A sub-class of the V2ModelServer class.',
+  [STEPS_TYPES.SKLEARN_MODEL_SERVER]:
+    'A model serving class for serving Sklearn Models. A sub-class of the V2ModelServer class.',
+  [STEPS_TYPES.TFKERAS_MODEL_SERVER]:
+    'A model serving class for serving TFKeras Models. A sub-class of the V2ModelServer class.',
+  [STEPS_TYPES.XGBMODEL_SERVER]:
+    'A model serving class for serving XGB Models. A sub-class of the V2ModelServer class.'
 }
 
 const getDetailsGeneralData = selectedStepData => [
@@ -383,7 +427,14 @@ export const getStepDescriptionFields = (selectedStep, graph) => {
     ...(selectedStep?.data?.customData || {})
   }
 
-  selectedStepData.description = STEPS_DESCRIPTIONS[selectedStepData.stepType] || ''
+  selectedStepData.description = STEPS_DESCRIPTIONS[selectedStepData.stepType] ?? ''
+
+  if (!selectedStepData.description) {
+    const exactClassName = selectedStepData.class_name?.substring(
+      selectedStepData.class_name.lastIndexOf('.') + 1
+    )
+    selectedStepData.description = STEPS_DESCRIPTIONS[exactClassName] ?? ''
+  }
 
   if (graph.allow_cyclic && (selectedStepData.cycle_from?.length || selectedStepData.cycleTo)) {
     selectedStepData.maxIterations = selectedStepData.max_iterations || graph.max_iterations || ''

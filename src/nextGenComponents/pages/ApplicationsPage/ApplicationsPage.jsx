@@ -39,6 +39,7 @@ import Breadcrumbs from '../../../common/Breadcrumbs/Breadcrumbs'
 import NoData from '../../shared/NoData/NoData'
 import YamlModal from '../../shared/YamlModal/YamlModal'
 
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 import { useNuclioEnrichedFunctions } from '../../../hooks/useNuclioEnrichedFunctions.hook'
 import { getApplicationsColumns } from './applicationsColumns'
@@ -48,6 +49,7 @@ import {
   APPLICATION_KIND,
   APPLICATIONS_ERROR_MESSAGE,
   APPLICATIONS_FILTERS_CONFIG,
+  DEFAULT_UPDATED_SORTING,
   TAG_WILDCARD
 } from './applications.constants'
 import {
@@ -58,7 +60,6 @@ import {
 import { APPLICATIONS_PAGE, APPLICATIONS_PAGE_PATH } from '../../../constants'
 import {
   DEFAULT_APPLICATION_DETAILS_TAB,
-  DEFAULT_NAME_SORTING,
   VIEW_YAML_LABEL
 } from './ApplicationDetails/applicationDetails.constants'
 
@@ -153,10 +154,25 @@ const ApplicationsPage = () => {
   )
 
   const handleRefreshDetails = useCallback(() => {
-    setDetailsRefreshKey(Date.now())
-    lastCheckedApplicationIdRef.current = null
-    checkForSelectedApplication(selectionArgs)
-  }, [selectionArgs])
+    fetchSingleEnrichedFunction({
+      name: selectedApplication.name,
+      hash: selectedApplication.hash,
+      tag: selectedApplication.tag,
+      nuclioName: selectedApplication.nuclio_name
+    })
+      .then(enriched => {
+        if (enriched) {
+          setSelectedApplication(enriched)
+          setDetailsRefreshKey(Date.now())
+        } else {
+          setSelectedApplication({})
+        }
+      })
+      .catch(error => {
+        setSelectedApplication({})
+        showErrorNotification(dispatch, error, '', 'Failed to retrieve application data')
+      })
+  }, [dispatch, fetchSingleEnrichedFunction, selectedApplication])
 
   const handleViewYaml = useCallback(application => {
     setYamlData(application.ui?.originalContent ?? application)
@@ -178,7 +194,7 @@ const ApplicationsPage = () => {
   useEffect(() => {
     checkForSelectedApplication(selectionArgs)
 
-    return () => checkForSelectedApplication.cancel()
+    return () => checkForSelectedApplication.cancel?.()
   }, [selectionArgs])
 
   useEffect(() => {
@@ -265,7 +281,7 @@ const ApplicationsPage = () => {
                     data={applications}
                     columns={columns}
                     rowActions={rowActions}
-                    initialSorting={DEFAULT_NAME_SORTING}
+                    initialSorting={DEFAULT_UPDATED_SORTING}
                   />
                 )}
               </div>

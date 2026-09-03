@@ -65,6 +65,13 @@ export const FUNCTION_STATUS_HEADER = 'x-mlrun-function-status'
 // Values mirror src/constants.js to avoid a cross-layer import from nextGenComponents into legacy.
 export const TRANSIENT_FUNCTION_STATUSES = ['pending', 'running']
 
+// Application state values (mirror src/utils/getState.js) used to gate build logs fetching.
+export const APPLICATION_INITIALIZED_STATE = 'initialized'
+export const APPLICATION_DEPLOYING_STATES = ['build', 'building', 'deploying', 'pending']
+
+export const BUILD_LOGS_INITIALIZED_MESSAGE =
+  'Build logs will be available once the application is deployed.'
+
 export const VIEW_YAML_LABEL = 'View YAML'
 
 export const API_GATEWAY_STATE = {
@@ -87,8 +94,6 @@ export const API_GATEWAY_STATE_CLASS = {
 
 export { GATEWAY_RELATIONSHIP } from '../../../../utils/apiGateway.util'
 
-export const NUCLIO_OWNER_LABEL = 'iguazio.com/username'
-
 export const FORCE_SSL_REDIRECT_ANNOTATION = 'nginx.ingress.kubernetes.io/force-ssl-redirect'
 
 export const API_GATEWAYS_FILTER_CONFIG = {
@@ -102,3 +107,4 @@ export const API_GATEWAYS_NO_DATA_MESSAGE = 'No API gateways found for this appl
 export const FILTER_ALL_OPTION = { value: 'all', label: 'All' }
 export const FILTER_ALL_OPTION_VALUE = FILTER_ALL_OPTION.value
 export const DEFAULT_NAME_SORTING = [{ id: 'name', desc: false }]
+export const DEFAULT_CREATED_AT_SORTING = [{ id: 'createdAt', desc: true }]

@@ -34,7 +34,7 @@ import {
 } from 'igz-controls/nextGenComponents'
 import { ArrowLeft, MoreVertical } from 'lucide-react'
 
-const TITLE_FONT_SIZE = 'text-[22px]'
+const TITLE_FONT_SIZE = 'text-[22px] leading-7'
 
 const DetailsTabs = ({
   activeTabId,

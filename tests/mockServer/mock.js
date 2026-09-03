@@ -21,6 +21,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import yaml from 'js-yaml'
 import fs from 'fs'
+import path from 'path'
 import crypto from 'node:crypto'
 import {
   chain,
@@ -63,7 +64,7 @@ import runs from './data/runs.json'
 import run from './data/run.json'
 import itemsCatalog from './data/itemsCatalog.json'
 import pipelines from './data/pipelines.json'
-import secretKeys from './data/secretKeys.json'
+import secretKeysData from './data/secretKeys.json'
 import pipelineIDs from './data/piplineIDs.json'
 import schedules from './data/schedules.json'
 import funcs from './data/funcs.json'
@@ -76,8 +77,8 @@ import iguazioUserGrops from './data/iguazioUserGroups.json'
 import iguazioProjectAuthorizationRoles from './data/iguazioProjectAuthorizationRoles.json'
 import iguazioUsers from './data/iguazioUsers.json'
 import iguazioSelf from './data/iguazioSelf.json'
-import iguazioUserRelations from './data/iguazioUserRelations.json'
-import iguazioProjectsRelations from './data/iguazioProjectsRelations.json'
+import iguazioUserRelationsData from './data/iguazioUserRelations.json'
+import iguazioProjectsRelationsData from './data/iguazioProjectsRelations.json'
 
 import nuclioFunctions from './data/nuclioFunctions.json'
 import nuclioAPIGateways from './data/nuclioAPIGateways.json'
@@ -95,6 +96,18 @@ import {
   generateRuns,
   generateAlerts
 } from './dataGenerators.js'
+import {
+  capCollectionSize,
+  boundArray,
+  resolveFunctionYAMLPath,
+  fsAccessLimiter
+} from './security.js'
+
+// Keyed by project name/id from request data, so a Map is used instead of a plain object
+// to keep lookups off the prototype chain.
+const secretKeys = new Map(Object.entries(secretKeysData))
+const iguazioProjectsRelations = new Map(Object.entries(iguazioProjectsRelationsData))
+const iguazioUserRelations = new Map(Object.entries(iguazioUserRelationsData))
 
 // Updating values in files with synthetic data
 updateRuns(runs)
@@ -203,7 +216,7 @@ const secretKeyTemplate = {
 }
 
 // Mock constants
-const mockHome = process.cwd() + '/tests/mockServer'
+const MOCK_DATA_DIR = path.resolve('./tests/mockServer/data')
 const mlrunIngress = '/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
 const mlrunAPIIngress = `${mlrunIngress}/api/v1`
 const mlrunAPIIngressV2 = `${mlrunIngress}/api/v2`
@@ -318,7 +331,7 @@ function getPaginationConfig(data, query) {
   let pageData = data
 
   if (query['page-size'] && query.page) {
-    const dataPaginated = chunk(data, query['page-size'])
+    const dataPaginated = chunk(boundArray(data), query['page-size'])
     pageData = dataPaginated[query.page - 1] ?? []
     const pageDataIsEmpty = isEmpty(pageData)
     const nextPageDataIsEmpty = isEmpty(dataPaginated[query.page])
@@ -349,7 +362,7 @@ function deleteProjectHandler(req, res, omitResponse) {
     remove(artifacts.artifacts, artifact => artifact.project === req.params['project'])
     remove(run.data, artifact => artifact.metadata.project === req.params['project'])
     remove(run.data, artifact => artifact.metadata.project === req.params['project'])
-    delete secretKeys[req.params.project]
+    secretKeys.delete(req.params.project)
     res.statusCode = 204
   } else {
     res.statusCode = 500
@@ -440,13 +453,19 @@ function getFeatureSet(req, res) {
     )
   }
 
-  if (req.query['name']) {
+  const featureSetName = req.query['name']
+
+  if (featureSetName) {
     collectedFeatureSets = collectedFeatureSets.filter(featureSet => {
-      if (req.query['name'].startsWith?.('~')) {
-        return featureSet.metadata.name.includes(req.query['name'].slice(1))
+      if (typeof featureSetName !== 'string') {
+        return false
       }
 
-      return featureSet.metadata.name === req.query['name']
+      if (featureSetName.startsWith('~')) {
+        return featureSet.metadata.name.includes(featureSetName.slice(1))
+      }
+
+      return featureSet.metadata.name === featureSetName
     })
   }
 
@@ -482,7 +501,7 @@ function createProjectsFeatureSet(req, res) {
   featureSet.status['state'] = null
   featureSets.feature_sets.push(featureSet)
 
-  res.send(featureSet)
+  res.json(featureSet)
 }
 
 function updateProjectsFeatureSet(req, res) {
@@ -503,7 +522,7 @@ function updateProjectsFeatureSet(req, res) {
   featureSet.metadata.updated = new Date().toISOString()
   featureSets.feature_sets[featureSetIndex] = featureSet
 
-  res.send(featureSet)
+  res.json(featureSet)
 }
 
 function deleteFeatureSet(req, res) {
@@ -561,7 +580,7 @@ function createNewProject(req, res) {
     summary.name = req.body.metadata.name
     projectsSummary.project_summaries.push(summary)
     data = project
-    secretKeys[req.body.metadata.name] = secretKeyTemplate
+    secretKeys.set(req.body.metadata.name, secretKeyTemplate)
     res.statusCode = 201
   } else {
     res.statusCode = 409
@@ -662,7 +681,7 @@ function putProject(req, res) {
 }
 
 function getSecretKeys(req, res) {
-  res.send(secretKeys[req.params['project']])
+  res.send(secretKeys.get(req.params['project']))
 }
 
 function postSecretKeys(req, res) {
@@ -675,17 +694,17 @@ function postSecretKeys(req, res) {
       detail: `MLRunAccessDeniedError('Not allowed to create/update internal secrets (key starts with ${NOT_ALLOWED_SECRET_KEY})')`
     }
   } else {
-    const projectSecrets = get(secretKeys, [req.params['project'], 'secret_keys'])
+    const projectSecrets = secretKeys.get(req.params['project'])?.secret_keys
 
     if (projectSecrets) {
       if (!projectSecrets.includes(newSecretKey)) {
         projectSecrets.push(newSecretKey)
       }
     } else {
-      secretKeys[req.params['project']] = {
+      secretKeys.set(req.params['project'], {
         provider: 'kubernetes',
         secret_keys: [newSecretKey]
-      }
+      })
     }
 
     res.statusCode = 201
@@ -695,9 +714,9 @@ function postSecretKeys(req, res) {
 }
 
 function deleteSecretKeys(req, res) {
-  secretKeys[req.params['project']].secret_keys = secretKeys[
-    req.params['project']
-  ].secret_keys.filter(item => item !== req.query.secret)
+  const projectSecrets = secretKeys.get(req.params['project'])
+
+  projectSecrets.secret_keys = projectSecrets.secret_keys.filter(item => item !== req.query.secret)
 
   res.statusCode = 204
   res.send('')
@@ -819,7 +838,11 @@ function getFunctionItem(req, res) {
 function getFunctionObject(req, res) {
   const urlParams = req.query.url
   const urlArray = urlParams.split('/')
-  const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${urlArray[6]}/${urlArray[6]}.yaml`
+  const funcYAMLPath = resolveFunctionYAMLPath(urlArray[6])
+  if (!funcYAMLPath) {
+    res.statusCode = 400
+    return res.send('Invalid function name')
+  }
   const funcObject = fs.readFileSync(funcYAMLPath, 'utf8')
 
   res.send(funcObject)
@@ -909,18 +932,18 @@ function getRuns(req, res) {
   let collectedRuns = runs.runs
   //get runs for Projects Monitoring page
   if (req.params['project'] === '*') {
-    const { start_time_from, state } = req.query
+    const { start_time_from, states } = req.query
     collectedRuns = runs.runs
       .filter(run => run.kind === 'run')
       .filter(run => {
         const runStartTime = new Date(run.status.start_time)
 
         if (!start_time_from || runStartTime >= new Date(start_time_from)) {
-          if (state) {
-            if (isArray(state)) {
-              return state.includes(run.status.state)
+          if (states) {
+            if (Array.isArray(states)) {
+              return states.includes(run.status.state)
             } else {
-              return run.status.state === state
+              return run.status.state === states
             }
           } else {
             return true
@@ -947,14 +970,14 @@ function getRuns(req, res) {
       )
     }
 
-    if (req.query['state']) {
-      const state = req.query['state']
+    if (req.query['states']) {
+      const states = req.query['states']
 
       collectedRuns = collectedRuns.filter(run => {
-        if (isArray(state)) {
-          return state.includes(run.status.state)
+        if (Array.isArray(states)) {
+          return states.includes(run.status.state)
         } else {
-          return run.status.state === state
+          return run.status.state === states
         }
       })
     }
@@ -976,12 +999,18 @@ function getRuns(req, res) {
     collectedRuns = getPartitionedData(collectedRuns, pathToPartition, 'status.last_update')
   }
 
-  if (req.query['name']) {
+  const runName = req.query['name']
+
+  if (runName) {
     collectedRuns = collectedRuns.filter(run => {
-      if (req.query['name'].includes('~')) {
-        return run.metadata.name ? run.metadata.name.includes(req.query['name'].slice(1)) : false
+      if (typeof runName !== 'string') {
+        return false
+      }
+
+      if (runName.includes('~')) {
+        return run.metadata.name ? run.metadata.name.includes(runName.slice(1)) : false
       } else {
-        return run.metadata.name === req.query['name']
+        return run.metadata.name === runName
       }
     })
   }
@@ -1010,9 +1039,11 @@ function getAlerts(req, res) {
     collectedAlerts = collectedAlerts.filter(alert => alert.project === req.params.project)
   }
 
-  if (req.query['name']) {
-    collectedAlerts = collectedAlerts.filter(schedule =>
-      schedule.name.includes(req.query['name'].slice(1))
+  const alertName = req.query['name']
+
+  if (alertName) {
+    collectedAlerts = collectedAlerts.filter(
+      schedule => typeof alertName === 'string' && schedule.name.includes(alertName.slice(1))
     )
   }
   if (req.query['severity']) {
@@ -1031,9 +1062,12 @@ function getAlerts(req, res) {
     )
   }
 
-  if (req.query['entity']) {
-    collectedAlerts = collectedAlerts.filter(schedule =>
-      schedule.entity_id.includes(req.query['entity'].slice(1, -1))
+  const alertEntity = req.query['entity']
+
+  if (alertEntity) {
+    collectedAlerts = collectedAlerts.filter(
+      schedule =>
+        typeof alertEntity === 'string' && schedule.entity_id.includes(alertEntity.slice(1, -1))
     )
   }
 
@@ -1165,7 +1199,11 @@ function getFunctionCatalog(req, res) {
 }
 
 function getFunctionTemplate(req, res) {
-  const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.params.function}/${req.params.function}.yaml`
+  const funcYAMLPath = resolveFunctionYAMLPath(req.params.function)
+  if (!funcYAMLPath) {
+    res.statusCode = 400
+    return res.send('Invalid function name')
+  }
   const funcObject = fs.readFileSync(funcYAMLPath, 'utf8')
 
   res.send(funcObject)
@@ -1180,9 +1218,11 @@ function getProjectsSchedules(req, res) {
     )
   }
 
-  if (req.query['name']) {
-    collectedSchedules = collectedSchedules.filter(schedule =>
-      schedule.name.includes(req.query['name'].slice(1))
+  const scheduleName = req.query['name']
+
+  if (scheduleName) {
+    collectedSchedules = collectedSchedules.filter(
+      schedule => typeof scheduleName === 'string' && schedule.name.includes(scheduleName.slice(1))
     )
   }
 
@@ -1275,9 +1315,11 @@ function invokeSchedule(req, res) {
         item.metadata.name === functionName
     )
   } else {
-    const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
-      6
-    )}/${req.body.task.spec.function.slice(6)}.yaml`
+    const funcYAMLPath = resolveFunctionYAMLPath(req.body.task.spec.function.slice(6))
+    if (!funcYAMLPath) {
+      res.statusCode = 400
+      return res.send('Invalid function name')
+    }
     funcObject = yaml.load(fs.readFileSync(funcYAMLPath, 'utf8'))
   }
   const funcUID = makeUID(32)
@@ -1386,19 +1428,25 @@ function getProjectsFeaturesEntities(req, res) {
       })
     }
 
-    if (req.query['name']) {
+    const artifactItemName = req.query['name']
+
+    if (artifactItemName) {
       collectedArtifacts = collectedArtifacts.filter(feature => {
-        if (req.query['name'].includes('~')) {
+        if (typeof artifactItemName !== 'string') {
+          return false
+        }
+
+        if (artifactItemName.includes('~')) {
           if (artifact === 'feature-vectors') {
-            return feature.metadata.name.includes(req.query['name'].slice(1))
+            return feature.metadata.name.includes(artifactItemName.slice(1))
           } else if (artifact === 'features' || artifact === 'entities') {
-            return feature.name.includes(req.query['name'].slice(1))
+            return feature.name.includes(artifactItemName.slice(1))
           }
         } else {
           if (artifact === 'feature-vectors') {
-            return feature.metadata.name.includes(req.query['name'].slice(1))
+            return feature.metadata.name.includes(artifactItemName.slice(1))
           } else if (artifact === 'features' || artifact === 'entities') {
-            return feature.name === req.query['name']
+            return feature.name === artifactItemName
           }
         }
       })
@@ -1502,20 +1550,26 @@ function getArtifacts(req, res) {
     )
   }
 
-  if (req.query['name']) {
+  const artifactsName = req.query['name']
+
+  if (artifactsName) {
     collectedArtifacts = collectedArtifacts.filter(artifact => {
-      if (req.query['name'].includes('~')) {
+      if (typeof artifactsName !== 'string') {
+        return false
+      }
+
+      if (artifactsName.includes('~')) {
         const value = artifact.spec?.db_key ?? artifact.db_key
 
-        if (req.query['name'].includes('~')) {
-          return value.includes(req.query['name'].slice(1))
+        if (artifactsName.includes('~')) {
+          return value.includes(artifactsName.slice(1))
         } else {
-          return value.includes(req.query['name'])
+          return value.includes(artifactsName)
         }
       } else {
         return (
-          (artifact.spec && artifact.spec.db_key === req.query['name']) ||
-          artifact.db_key === req.query['name']
+          (artifact.spec && artifact.spec.db_key === artifactsName) ||
+          artifact.db_key === artifactsName
         )
       }
     })
@@ -1542,9 +1596,11 @@ function getArtifacts(req, res) {
     )
   }
 
-  if (req.query['parent']) {
-    if (req.query['parent'].includes(':')) {
-      const [key, tag] = req.query['parent'].split(':')
+  const artifactParent = req.query['parent']
+
+  if (artifactParent) {
+    if (typeof artifactParent === 'string' && artifactParent.includes(':')) {
+      const [key, tag] = artifactParent.split(':')
 
       collectedArtifacts = collectedArtifacts.filter(artifact => {
         const match = artifact.spec.parent_uri.match(
@@ -1557,7 +1613,7 @@ function getArtifacts(req, res) {
       collectedArtifacts = collectedArtifacts.filter(artifact =>
         artifact.spec?.parent_uri
           ?.match(/^store:\/\/[^/]+\/[^/]+\/([^#/]+)/)?.[1]
-          ?.includes(req.query['parent'])
+          ?.includes(artifactParent)
       )
     }
   }
@@ -1624,7 +1680,7 @@ function getProjectsFeatureSets(req, res) {
     .filter(artifact => artifact.metadata.name === req.params.name)
     .filter(artifact => artifact.metadata.tag === req.params.tag)
 
-  res.send(featureArtifactTags[0])
+  res.json(featureArtifactTags[0])
 }
 
 function patchProjectsFeatureSets(req, res) {
@@ -1636,7 +1692,7 @@ function patchProjectsFeatureSets(req, res) {
   if (featureArtifactTags.length) {
     featureArtifactTags[0].metadata.labels = req.body.metadata.labels
   }
-  res.send(featureArtifactTags[0])
+  res.json(featureArtifactTags[0])
 }
 
 function postProjectsFeatureVectors(req, res) {
@@ -1654,7 +1710,7 @@ function postProjectsFeatureVectors(req, res) {
 
     featureVectors.feature_vectors.push(newFeatureVector)
 
-    res.send(newFeatureVector)
+    res.json(newFeatureVector)
   } else {
     res.statusCode = 409
     res.send({
@@ -1673,7 +1729,7 @@ function putProjectsFeatureVectors(req, res) {
 
   collectedFV[0] = req.body
 
-  res.send(req.body)
+  res.json(req.body)
 }
 
 function patchProjectsFeatureVectors(req, res) {
@@ -1707,7 +1763,7 @@ function getProjectsFeatureVector(req, res) {
   )
 
   if (featureVector) {
-    res.send(featureVector)
+    res.json(featureVector)
   } else {
     res.statusCode = 404
     res.send({
@@ -1940,12 +1996,18 @@ function getFuncs(req, res) {
     collectedFuncs = funcs.funcs.filter(func => func.metadata.project === req.params['project'])
   }
 
-  if (req.query['name']) {
+  const funcName = req.query['name']
+
+  if (funcName) {
     collectedFuncs = collectedFuncs.filter(func => {
-      if (req.query['name'].includes('~')) {
-        return func.metadata.name.includes(req.query['name'].slice(1))
+      if (typeof funcName !== 'string') {
+        return false
+      }
+
+      if (funcName.includes('~')) {
+        return func.metadata.name.includes(funcName.slice(1))
       } else {
-        return func.metadata.name === req.query['name']
+        return func.metadata.name === funcName
       }
     })
   }
@@ -1994,7 +2056,7 @@ function getFuncs(req, res) {
     })
   }
 
-  collectedFuncs = orderBy(collectedFuncs, 'metadata.updated', 'desc')
+  collectedFuncs = orderBy(boundArray(collectedFuncs), 'metadata.updated', 'desc')
   const [paginatedFuncs, pagination] = getPaginationConfig(collectedFuncs, req.query)
 
   res.send({ funcs: paginatedFuncs, pagination })
@@ -2042,14 +2104,17 @@ function postFunc(req, res) {
   }
 
   funcs.funcs.push(baseFunc)
+  capCollectionSize(funcs.funcs)
 
   res.send({ hash_key: hashPwd })
 }
 
 function deleteFunc(req, res) {
-  const collectedFunc = funcs.funcs
-    .filter(func => func.metadata.project === req.params.project)
-    .filter(func => func.metadata.name === req.params.func)
+  const collectedFunc = boundArray(
+    funcs.funcs
+      .filter(func => func.metadata.project === req.params.project)
+      .filter(func => func.metadata.name === req.params.func)
+  )
 
   if (collectedFunc.length) {
     const taskFunc = id => {
@@ -2089,7 +2154,23 @@ function deleteFunc(req, res) {
   }
 }
 
+const NOT_FOUND_LOGS_FUNCTION = 'test-deploying-app'
+// Ready state but no build logs exist — UI should show "No data to show" inside the log panel.
+const EMPTY_LOGS_FUNCTION = 'test-no-logs-app'
+
+function sendLogsNotFound(name, res) {
+  res.statusCode = 404
+  res.send({ detail: { reason: `MLRunNotFoundError('build pod not found for ${name}')` } })
+}
+
 function getNuclioLogs(req, res) {
+  if (req.params.func === NOT_FOUND_LOGS_FUNCTION) {
+    return sendLogsNotFound(req.params.func, res)
+  }
+  if (req.params.func === EMPTY_LOGS_FUNCTION) {
+    return res.send('')
+  }
+
   sendLogsData(
     {
       project: req.params.project,
@@ -2102,6 +2183,13 @@ function getNuclioLogs(req, res) {
 }
 
 function getBuildStatus(req, res) {
+  if (req.query.name === NOT_FOUND_LOGS_FUNCTION) {
+    return sendLogsNotFound(req.query.name, res)
+  }
+  if (req.query.name === EMPTY_LOGS_FUNCTION) {
+    return res.send('')
+  }
+
   sendLogsData(
     {
       project: req.query.name,
@@ -2136,6 +2224,7 @@ function sendLogsData(data, res) {
     })
   }
 
+  res.set('Content-Type', 'text/plain')
   res.send(logText)
 }
 
@@ -2193,15 +2282,34 @@ function deployMLFunction(req, res) {
 }
 
 function getFile(req, res) {
-  const dataRoot = mockHome + '/data/'
-  const filePath = dataRoot + req.query['path'].split('://')[1]
+  const rawPath = req.query['path']
+  if (typeof rawPath !== 'string' || rawPath.indexOf('..') !== -1) {
+    res.statusCode = 400
+    return res.send('Invalid path')
+  }
+
+  const filePath = path.resolve(MOCK_DATA_DIR, rawPath.split('://')[1] ?? rawPath)
+  if (!filePath.startsWith(MOCK_DATA_DIR + path.sep)) {
+    res.statusCode = 400
+    return res.send('Invalid path')
+  }
 
   res.sendFile(filePath)
 }
 
 function getFileStats(req, res) {
-  const dataRoot = mockHome + '/data/'
-  const filePath = dataRoot + req.query['path'].split('://')[1]
+  const rawPath = req.query['path']
+  if (typeof rawPath !== 'string' || rawPath.indexOf('..') !== -1) {
+    res.statusCode = 400
+    return res.send('Invalid path')
+  }
+
+  const filePath = path.resolve(MOCK_DATA_DIR, rawPath.split('://')[1] ?? rawPath)
+  if (!filePath.startsWith(MOCK_DATA_DIR + path.sep)) {
+    res.statusCode = 400
+    return res.send('Invalid path')
+  }
+
   const { size } = fs.statSync(filePath)
   const mimeType = mime.lookup(filePath)
 
@@ -2331,9 +2439,11 @@ function postSubmitJob(req, res) {
         .filter(item => item.metadata.project === filterPRJ)
         .filter(item => item.metadata.name === filterFunc)[0]
     } else {
-      const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
-        6
-      )}/${req.body.task.spec.function.slice(6)}.yaml`
+      const funcYAMLPath = resolveFunctionYAMLPath(req.body.task.spec.function.slice(6))
+      if (!funcYAMLPath) {
+        res.statusCode = 400
+        return res.send('Invalid function name')
+      }
       funcObject = yaml.load(fs.readFileSync(funcYAMLPath, 'utf8'))
     }
 
@@ -2732,7 +2842,7 @@ function getMetricsValues(req, res) {
     )?.metricsValues || []
 
   metricsValues = metricsValues
-    .filter(item => names.includes(item.full_name))
+    .filter(item => typeof names === 'string' && names.includes(item.full_name))
     .map(item => {
       if (!item.data) return item
 
@@ -2799,13 +2909,12 @@ function getIguazioProjects(req, res) {
   let owner
   if (req.query.include === 'owner') {
     let ownerID
-    const keys = Object.keys(iguazioUserRelations)
-    for (let key of keys) {
-      const filterArr = iguazioUserRelations[key]
+    for (const [userID, relations] of iguazioUserRelations) {
+      const filterArr = relations
         .filter(item => item.type === 'project')
         .find(item => item.id === filteredProject.id)
       if (filterArr) {
-        ownerID = key
+        ownerID = userID
         break
       }
     }
@@ -2839,9 +2948,10 @@ function getIguazioSelf(req, res) {
 
 function getIguazioProject(req, res) {
   let filteredProject = iguazioProjects.data.find(item => item.id === req.params.id)
+  const include = typeof req.query.include === 'string' ? req.query.include : ''
 
   let filteredAuthRoles = []
-  if (req.query.include.includes('project_authorization_roles')) {
+  if (include.includes('project_authorization_roles')) {
     filteredAuthRoles = cloneDeep(
       iguazioProjectAuthorizationRoles.data.filter(
         item => item.relationships.project.data.id === req.params.id
@@ -2854,12 +2964,12 @@ function getIguazioProject(req, res) {
   }
 
   let filteredPrincipalUsers = []
-  if (req.query.include.includes('project_authorization_roles.principal_users')) {
+  if (include.includes('project_authorization_roles.principal_users')) {
     let principalUserIDs = []
     for (let authID of authRolesIDs) {
-      let tmp = iguazioProjectsRelations[req.params.id].find(
-        item => item.id === authID
-      )?.relationships
+      let tmp = iguazioProjectsRelations
+        .get(req.params.id)
+        .find(item => item.id === authID)?.relationships
       if (tmp) {
         let tmpIDs = tmp.principal_users?.data.map(item => item.id)
         if (tmpIDs) {
@@ -2875,12 +2985,12 @@ function getIguazioProject(req, res) {
   }
 
   let filteredPrincipalUserGroups = []
-  if (req.query.include.includes('project_authorization_roles.principal_user_groups')) {
+  if (include.includes('project_authorization_roles.principal_user_groups')) {
     let principalUserGroupIDs = []
     for (let authID of authRolesIDs) {
-      let tmp = iguazioProjectsRelations[req.params.id].find(
-        item => item.id === authID
-      )?.relationships
+      let tmp = iguazioProjectsRelations
+        .get(req.params.id)
+        .find(item => item.id === authID)?.relationships
       if (tmp) {
         let tmpIDs = tmp.principal_user_groups?.data.map(item => item.id)
         if (tmpIDs) {
@@ -2906,23 +3016,23 @@ function putIguazioProject(req, res) {
   const prevOwner = req.params.id
   const newOwner = req.body.data.relationships.owner.data.id
   const filteredProject = iguazioProjects.data.find(item => item.id === req.params.id)
-  const keys = Object.keys(iguazioUserRelations)
   const relationTemplate = {
     type: 'project',
     id: req.params.id,
     relationships: null
   }
 
-  for (let key of keys) {
-    iguazioUserRelations[key] = iguazioUserRelations[key].filter(
-      item => item.type === 'project' && item.id !== prevOwner
+  for (const [userID, relations] of iguazioUserRelations) {
+    iguazioUserRelations.set(
+      userID,
+      relations.filter(item => item.type === 'project' && item.id !== prevOwner)
     )
   }
 
-  if (iguazioUserRelations[newOwner]) {
-    iguazioUserRelations[newOwner].push(relationTemplate)
+  if (iguazioUserRelations.has(newOwner)) {
+    iguazioUserRelations.get(newOwner).push(relationTemplate)
   } else {
-    iguazioUserRelations[newOwner] = [relationTemplate]
+    iguazioUserRelations.set(newOwner, [relationTemplate])
   }
 
   res.send({
@@ -2935,7 +3045,7 @@ function putIguazioProject(req, res) {
 function postProjectMembers(req, res) {
   const projectId = req.body.data.attributes.metadata.project_ids[0]
   const items = req.body.data.attributes.requests
-  const projectRelations = cloneDeep(iguazioProjectsRelations[projectId])
+  const projectRelations = cloneDeep(iguazioProjectsRelations.get(projectId))
 
   items.forEach(item => {
     const authRoleId = item.resource.split('/')[1]
@@ -2961,7 +3071,7 @@ function postProjectMembers(req, res) {
     }
   })
 
-  iguazioProjectsRelations[projectId] = projectRelations
+  iguazioProjectsRelations.set(projectId, projectRelations)
 
   res.send({
     data: {
@@ -2987,22 +3097,24 @@ function getNuclioStreams(req, res) {
 }
 
 function getNuclioShardLags(req, res) {
-  res.send({
-    [`${req.body.containerName}${req.body.streamPath}`]: {
-      [req.body.consumerGroup]: {
-        'shard-id-0': {
-          committed: '0_123',
-          current: '0_456',
-          lag: '0_789'
-        },
-        'shard-id-1': {
-          committed: '1_123',
-          current: '1_456',
-          lag: '1_789'
-        }
-      }
+  const shards = {
+    'shard-id-0': {
+      committed: '0_123',
+      current: '0_456',
+      lag: '0_789'
+    },
+    'shard-id-1': {
+      committed: '1_123',
+      current: '1_456',
+      lag: '1_789'
     }
-  })
+  }
+  // Keys come from the request body, so they are materialised via `Object.fromEntries`
+  // instead of computed property names to keep them off the prototype chain.
+  const consumerGroups = Object.fromEntries([[req.body.consumerGroup, shards]])
+  const streamKey = `${req.body.containerName}${req.body.streamPath}`
+
+  res.json(Object.fromEntries([[streamKey, consumerGroups]]))
 }
 
 function getIguazioJob(req, res) {
@@ -3019,7 +3131,7 @@ function getIguazioJob(req, res) {
 app.post('/set-failure-condition', (req, res) => {
   failAllRequests = req.body.shouldFail
 
-  res.send(`Failure condition set to ${failAllRequests}`)
+  res.json({ message: `Failure condition set to ${failAllRequests}` })
 })
 
 // REQUESTS
@@ -3080,14 +3192,18 @@ app.post(`${mlrunAPIIngress}/projects/:project/runs/:uid/abort`, abortRun)
 app.get(`${mlrunIngress}/catalog.json`, getFunctionCatalog)
 app.get(`${mlrunAPIIngress}/hub/sources/:project/items`, getFunctionCatalog)
 app.get(`${mlrunAPIIngress}/hub/sources/:project/items/:uid`, getFunctionItem)
-app.get(`${mlrunAPIIngress}/hub/sources/:project/item-object`, getFunctionObject)
-app.get(`${mlrunIngress}/:function/function.yaml`, getFunctionTemplate)
+app.get(`${mlrunAPIIngress}/hub/sources/:project/item-object`, fsAccessLimiter, getFunctionObject)
+app.get(`${mlrunIngress}/:function/function.yaml`, fsAccessLimiter, getFunctionTemplate)
 
 app.get(`${mlrunAPIIngress}/projects/:project/schedules`, getProjectsSchedules)
 app.get(`${mlrunAPIIngress}/projects/*/schedules`, getProjectsSchedules)
 app.get(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, getProjectsSchedule)
 app.delete(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, deleteSchedule)
-app.post(`${mlrunAPIIngress}/projects/:project/schedules/:schedule/invoke`, invokeSchedule)
+app.post(
+  `${mlrunAPIIngress}/projects/:project/schedules/:schedule/invoke`,
+  fsAccessLimiter,
+  invokeSchedule
+)
 app.put(`${mlrunAPIIngress}/projects/:project/schedules/:schedule/`, updateSchedule)
 
 app.get(`${mlrunAPIIngress}/projects/:project/pipelines`, getPipelines)
@@ -3145,14 +3261,14 @@ app.get(
 
 app.delete(`${mlrunAPIIngressV2}/projects/:project/functions/:func`, deleteFunc)
 
-app.get(`${mlrunAPIIngress}/projects/:project/nuclio/:func/deploy`, getNuclioLogs)
-app.get(`${mlrunAPIIngress}/build/status`, getBuildStatus)
-app.post(`${mlrunAPIIngress}/build/function`, deployMLFunction)
+app.get(`${mlrunAPIIngress}/projects/:project/nuclio/:func/deploy`, fsAccessLimiter, getNuclioLogs)
+app.get(`${mlrunAPIIngress}/build/status`, fsAccessLimiter, getBuildStatus)
+app.post(`${mlrunAPIIngress}/build/function`, fsAccessLimiter, deployMLFunction)
 
-app.get(`${mlrunAPIIngress}/projects/:project/files`, getFile)
-app.get(`${mlrunAPIIngress}/projects/:project/filestat`, getFileStats)
+app.get(`${mlrunAPIIngress}/projects/:project/files`, fsAccessLimiter, getFile)
+app.get(`${mlrunAPIIngress}/projects/:project/filestat`, fsAccessLimiter, getFileStats)
 
-app.get(`${mlrunAPIIngress}/projects/:project/logs/:uid`, getLog)
+app.get(`${mlrunAPIIngress}/projects/:project/logs/:uid`, fsAccessLimiter, getLog)
 
 app.get(`${mlrunAPIIngress}/projects/:project/runtime-resources`, getRuntimeResources)
 
@@ -3167,7 +3283,7 @@ app.get(`${mlrunAPIIngressV2}/projects/:project/features`, getProjectsFeaturesEn
 app.get(`${mlrunAPIIngressV2}/projects/:project/entities`, getProjectsFeaturesEntities)
 app.get(`${mlrunAPIIngress}/projects/:project/feature-vectors`, getProjectsFeaturesEntities)
 
-app.post(`${mlrunAPIIngress}/submit_job`, postSubmitJob)
+app.post(`${mlrunAPIIngress}/submit_job`, fsAccessLimiter, postSubmitJob)
 
 app.get(`${nuclioApiUrl}/api/functions/:name`, getNuclioFunction)
 app.get(`${nuclioApiUrl}/api/functions`, getNuclioFunctions)

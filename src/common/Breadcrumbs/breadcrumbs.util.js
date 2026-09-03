@@ -19,117 +19,70 @@ such restriction.
 */
 import {
   ALERTS_PAGE_PATH,
-  APPLICATIONS_PAGE_PATH,
   FEATURE_SETS_TAB,
+  FEATURE_STORE_PAGE_PATH,
   FEATURE_VECTORS_TAB,
   FEATURES_TAB,
-  MODEL_ENDPOINTS_TAB,
-  MONITOR_JOBS_TAB,
-  MODELS_TAB,
   MONITOR_ALERTS_PAGE,
-  MONITOR_WORKFLOWS_TAB,
-  PROJECT_MONITOR,
-  PROJECT_QUICK_ACTIONS_PAGE,
-  SCHEDULE_TAB,
-  REAL_TIME_PIPELINES_TAB,
   JOBS_MONITORING_PAGE,
   PROJECTS_PAGE_PATH,
-  MONITORING_APP_PAGE,
-  DOCUMENTS_PAGE,
-  LLM_PROMPTS_PAGE
+  PROJECTS_SETTINGS_PAGE_PATH
 } from '../../constants'
-import { generateNuclioLink } from '../../utils'
+import { getLinks } from '../../nextGenComponents/shared/Sidebar/navbarList.util'
 
-export const generateMlrunScreens = params =>
-  params.projectName
-    ? [
-        {
-          label: 'Project monitoring',
-          id: PROJECT_MONITOR
-        },
-        {
-          label: 'Quick actions',
-          id: PROJECT_QUICK_ACTIONS_PAGE,
-          hidden: true
-        },
-        { label: 'Feature store', id: 'feature-store' },
-        { label: 'Datasets', id: 'datasets' },
-        { label: 'Documents', id: DOCUMENTS_PAGE },
-        { label: 'LLM prompts', id: LLM_PROMPTS_PAGE },
-        { label: 'Artifacts', id: 'files' },
-        { label: 'Models', id: 'models' },
-        { label: 'Monitoring app', id: MONITORING_APP_PAGE },
-        { label: 'Applications', id: APPLICATIONS_PAGE_PATH },
-        { label: 'Jobs and workflows', id: 'jobs' },
-        { label: 'ML functions', id: 'functions' },
-        {
-          label: 'Real-time functions',
-          id: 'Real-time functions',
-          link: generateNuclioLink(`/projects/${params.projectName}/functions`)
-        },
-        {
-          label: 'API gateways',
-          id: 'API gateways',
-          link: generateNuclioLink(`/projects/${params.projectName}/api-gateways`)
-        },
-        {
-          label: 'Alerts',
-          id: ALERTS_PAGE_PATH,
-          linkTo: `/${PROJECTS_PAGE_PATH}/${params.projectName}/${ALERTS_PAGE_PATH}`
-        },
-        {
-          label: 'Settings',
-          id: 'settings'
-        }
-      ]
+export const generateMlrunScreens = projectName => {
+  const navbarLinks = getLinks(projectName)
+
+  const mlrunScreens = navbarLinks.reduce((list, navbarLink) => {
+    if (navbarLink.nestedLinks) {
+      navbarLink.nestedLinks.forEach(nestedScreen => list.push(nestedScreen))
+    } else {
+      list.push(navbarLink)
+    }
+
+    return list
+  }, [])
+
+  mlrunScreens.push(
+    {
+      label: 'Feature sets',
+      id: FEATURE_SETS_TAB,
+      link: `/${PROJECTS_PAGE_PATH}/${projectName}/${FEATURE_STORE_PAGE_PATH}/${FEATURE_SETS_TAB}`
+    },
+    {
+      label: 'Feature vectors',
+      id: FEATURE_VECTORS_TAB,
+      link: `/${PROJECTS_PAGE_PATH}/${projectName}/${FEATURE_STORE_PAGE_PATH}/${FEATURE_VECTORS_TAB}`
+    },
+    {
+      label: 'Features',
+      id: FEATURES_TAB,
+      link: `/${PROJECTS_PAGE_PATH}/${projectName}/${FEATURE_STORE_PAGE_PATH}/${FEATURES_TAB}`
+    },
+    {
+      label: 'Alerts',
+      id: ALERTS_PAGE_PATH,
+      link: `/${PROJECTS_PAGE_PATH}/${projectName}/${ALERTS_PAGE_PATH}`
+    },
+    {
+      label: 'Settings',
+      id: PROJECTS_SETTINGS_PAGE_PATH,
+      link: `/${PROJECTS_PAGE_PATH}/${projectName}/${PROJECTS_SETTINGS_PAGE_PATH}`
+    }
+  )
+
+  return projectName
+    ? mlrunScreens
     : [
         {
           label: 'Alerts monitoring',
           id: MONITOR_ALERTS_PAGE,
-          linkTo: `/${PROJECTS_PAGE_PATH}/*/${MONITOR_ALERTS_PAGE}`
+          link: `/${PROJECTS_PAGE_PATH}/*/${MONITOR_ALERTS_PAGE}`
         },
         {
           label: 'Jobs monitoring',
           id: JOBS_MONITORING_PAGE,
-          linkTo: `/${PROJECTS_PAGE_PATH}/*/${JOBS_MONITORING_PAGE}`
+          link: `/${PROJECTS_PAGE_PATH}/*/${JOBS_MONITORING_PAGE}`
         }
       ]
-
-export const generateTabsList = () => [
-  {
-    label: MONITOR_JOBS_TAB,
-    id: MONITOR_JOBS_TAB
-  },
-  {
-    label: MONITOR_WORKFLOWS_TAB,
-    id: MONITOR_WORKFLOWS_TAB
-  },
-  {
-    label: SCHEDULE_TAB,
-    id: SCHEDULE_TAB
-  },
-  {
-    label: FEATURE_SETS_TAB,
-    id: FEATURE_SETS_TAB
-  },
-  {
-    label: FEATURE_VECTORS_TAB,
-    id: FEATURE_VECTORS_TAB
-  },
-  {
-    label: FEATURES_TAB,
-    id: FEATURES_TAB
-  },
-  {
-    label: REAL_TIME_PIPELINES_TAB,
-    id: REAL_TIME_PIPELINES_TAB
-  },
-  {
-    label: MODEL_ENDPOINTS_TAB,
-    id: MODEL_ENDPOINTS_TAB
-  },
-  {
-    label: MODELS_TAB,
-    id: MODELS_TAB
-  }
-]
+}

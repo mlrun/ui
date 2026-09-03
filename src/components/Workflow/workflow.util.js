@@ -343,5 +343,5 @@ export const fetchMissingProjectPermission = async (projectName, currentMap, dis
         .catch(() => false)
     )
 
-  dispatch(setAccessibleProjectsMap({ [projectName]: hasPermission }))
+  dispatch(setAccessibleProjectsMap(Object.fromEntries([[projectName, hasPermission]])))
 }

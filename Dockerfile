@@ -34,7 +34,11 @@ RUN echo ${COMMIT_HASH} > ./build/COMMIT_HASH && \
     echo ${DATE} > ./build/BUILD_DATE
 
 # production stage
-FROM gcr.io/iguazio/nginx-unprivileged:1.21-alpine as production-stage
+
+FROM gcr.io/iguazio/nginx-unprivileged:1.31.1-alpine AS production-stage
+
+ARG GIT_COMMIT_SHA
+LABEL org.opencontainers.image.revision=$GIT_COMMIT_SHA
 
 # align UID & GID with nginx-unprivileged image UID & GID
 ARG UID=101

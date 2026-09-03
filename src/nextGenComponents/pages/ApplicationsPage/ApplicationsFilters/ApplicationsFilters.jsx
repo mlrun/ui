@@ -111,7 +111,10 @@ const ApplicationsFilters = ({ filters, applyFilter, applyMultipleFilters }) => 
           if (next.length === 0) return [FILTER_ALL_ITEMS]
           const hasSelectedAll = !prev.includes(FILTER_ALL_ITEMS) && next.includes(FILTER_ALL_ITEMS)
           if (hasSelectedAll) return [FILTER_ALL_ITEMS]
-          return next.filter(v => v !== FILTER_ALL_ITEMS)
+          const filtered = next.filter(v => v !== FILTER_ALL_ITEMS)
+          const allIndividualOptionsSelected = filtered.length === STATUS_POPOVER_OPTIONS.length - 1
+          if (allIndividualOptionsSelected) return [FILTER_ALL_ITEMS]
+          return filtered
         }
       },
       owner: {

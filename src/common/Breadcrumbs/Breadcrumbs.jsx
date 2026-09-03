@@ -17,101 +17,86 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { useLocation, useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 
 import BreadcrumbsStep from './BreadcrumbsStep/BreadcrumbsStep'
 
-import { generateMlrunScreens, generateTabsList } from './breadcrumbs.util'
-import { APPLICATIONS_PAGE_PATH, MONITORING_APP_PAGE, PROJECTS_PAGE_PATH } from '../../constants'
-import { generateProjectsList } from '../../utils/projects'
+import { generateMlrunScreens } from './breadcrumbs.util'
+import { PROJECTS_PAGE_PATH } from '../../constants'
+
+import {
+  BREADCRUMBS_STEP_ITEM_TYPE,
+  BREADCRUMBS_STEP_PROJECT_TYPE,
+  BREADCRUMBS_STEP_SCREEN_TYPE
+} from '../../constants'
 
 import './breadcrumbs.scss'
 
-const Breadcrumbs = ({ onClick = () => {} }) => {
-  const [searchValue, setSearchValue] = useState('')
-  const [showScreensList, setShowScreensList] = useState(false)
-  const [showProjectsList, setShowProjectsList] = useState(false)
-  const breadcrumbsRef = useRef()
+const Breadcrumbs = ({ itemName = '', onClick = () => {} }) => {
   const params = useParams()
   const location = useLocation()
 
-  const projectStore = useSelector(state => state.projectStore)
-
-  const projectsList = useMemo(() => {
-    return generateProjectsList(projectStore.projectsNames.data)
-  }, [projectStore.projectsNames.data])
-
-  const mlrunScreens = useMemo(() => {
-    return generateMlrunScreens(params)
-  }, [params])
-  const projectTabs = useMemo(() => {
-    return generateTabsList()
-  }, [])
+  const allMlrunScreens = useMemo(() => {
+    return generateMlrunScreens(params?.projectName ?? '')
+  }, [params?.projectName])
 
   const urlParts = useMemo(() => {
+    const innerScreenName = params?.['*']?.split('/')[0]
+    const [projects, projectName, page] = location.pathname.split('/').slice(1, 4)
+    const screen =
+      allMlrunScreens.find(screen => screen.id === innerScreenName) ||
+      allMlrunScreens.find(screen => screen.id === page) ||
+      allMlrunScreens.find(screen => !screen.externalLink && screen.link?.split('/').pop() === page)
+
+    const pathItems = [
+      { id: projects, label: 'Projects', link: `/${PROJECTS_PAGE_PATH}` },
+      {
+        id: projectName,
+        label: projectName,
+        link: `/projects/${projectName}`,
+        type: BREADCRUMBS_STEP_PROJECT_TYPE
+      },
+      {
+        id: screen?.id ?? page,
+        label: screen?.label ?? page,
+        link: screen?.link,
+        type: BREADCRUMBS_STEP_SCREEN_TYPE
+      }
+    ]
+
+    itemName && pathItems.push({ id: itemName, label: itemName, type: BREADCRUMBS_STEP_ITEM_TYPE })
+
     if (params.projectName) {
-      const [projects, projectName, screenName] = location.pathname.split('/').slice(1, 4)
-      const screen = mlrunScreens.find(screen => screen.id === screenName)
-      let tab = projectTabs.find(tab =>
-        location.pathname
-          .split('/')
-          .slice(3)
-          .find(pathItem => pathItem === tab.id)
-      )
-
-      if (screen?.id === MONITORING_APP_PAGE || screen?.id === APPLICATIONS_PAGE_PATH) {
-        tab = {}
-      }
-
-      return {
-        pathItems: [projects, projectName, screen?.label || screenName],
-        screen,
-        tab
-      }
+      return { pathItems, screen }
     } else {
-      const [page] = location.pathname.split('/').slice(3, 4)
-      const screen = mlrunScreens.find(screen => screen.id === page)
-
       return {
-        pathItems: [PROJECTS_PAGE_PATH, screen?.label || page],
+        pathItems: pathItems.filter(item => item.type !== BREADCRUMBS_STEP_PROJECT_TYPE),
         screen
       }
     }
-  }, [location.pathname, params.projectName, mlrunScreens, projectTabs])
+  }, [itemName, location.pathname, params, allMlrunScreens])
 
   return (
-    <nav data-testid="breadcrumbs" className="breadcrumbs" ref={breadcrumbsRef}>
+    <nav data-testid="breadcrumbs" className="breadcrumbs">
       <ul className="breadcrumbs__list">
-        {urlParts.pathItems.map((urlPart, index) => {
-          return (
-            <BreadcrumbsStep
-              key={index}
-              index={index}
-              mlrunScreens={mlrunScreens}
-              onClick={onClick}
-              params={params}
-              projectsList={projectsList}
-              ref={breadcrumbsRef}
-              searchValue={searchValue}
-              setSearchValue={setSearchValue}
-              setShowProjectsList={setShowProjectsList}
-              setShowScreensList={setShowScreensList}
-              showProjectsList={showProjectsList}
-              showScreensList={showScreensList}
-              urlPart={urlPart}
-              urlParts={urlParts}
-            />
-          )
-        })}
+        {urlParts.pathItems.map((pathItem, index) => (
+          <BreadcrumbsStep
+            key={index}
+            index={index}
+            onClick={onClick}
+            pathItem={pathItem}
+            urlParts={urlParts}
+          />
+        ))}
       </ul>
     </nav>
   )
 }
 
 Breadcrumbs.propTypes = {
+  itemName: PropTypes.string,
   onClick: PropTypes.func
 }
 

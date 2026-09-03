@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 // format data in accordance with ISO 8601 with ms
+import crypto from 'node:crypto'
 
 export function makeUID(length) {
   let result = ''
@@ -25,7 +26,7 @@ export function makeUID(length) {
   const charactersLength = characters.length
 
   for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+    result += characters.charAt(crypto.randomInt(charactersLength))
   }
 
   return result
@@ -224,7 +225,7 @@ export const generateArtifacts = existingArtifacts => {
       let prompt
 
       if (existingPromptsPool.length && Math.random() < 0.5) {
-        const oldPrompt = existingPromptsPool[Math.floor(Math.random() * existingPromptsPool.length)]  
+        const oldPrompt = existingPromptsPool[crypto.randomInt(existingPromptsPool.length)]
         existingPromptsPool
           .filter(p => p.metadata.key === oldPrompt.metadata.key)
           .forEach(p => p.metadata.tag = '')

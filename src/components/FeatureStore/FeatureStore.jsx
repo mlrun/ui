@@ -33,6 +33,7 @@ export const FeatureStoreContext = React.createContext({})
 
 const FeatureStore = () => {
   const dispatch = useDispatch()
+
   const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
   const [createVectorPopUpIsOpen, setCreateVectorPopUpIsOpen] = useState(false)
   const [confirmData, setConfirmData] = useState(null)

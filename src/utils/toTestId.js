@@ -17,23 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
-
-import SideBarView from './SideBarView'
-
-const SideBar = ({ location }) => {
-  const [currentPage, setCurrentPage] = useState(location.pathname.split('/')[1])
-
-  useEffect(() => {
-    setCurrentPage(location.pathname.split('/')[1])
-  }, [location.pathname])
-
-  return <SideBarView currentPage={currentPage} />
+export const toTestId = (title, suffix = '') => {
+  const formattedTitle = title.replace(/\s+/g, '-').toLowerCase()
+  return suffix ? formattedTitle + '-' + suffix : formattedTitle
 }
-
-SideBar.propTypes = {
-  location: PropTypes.object.isRequired
-}
-
-export default SideBar

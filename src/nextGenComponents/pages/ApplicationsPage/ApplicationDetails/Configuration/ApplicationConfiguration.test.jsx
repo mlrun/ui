@@ -141,15 +141,19 @@ const MOCK_APPLICATION = {
   volume_mounts: [],
   labels: { owner: 'admin' },
   spec: {
-    disable: false,
-    serviceAccount: 'my-sa',
-    securityContext: { runAsUser: 1000 },
-    loggerSinks: [{ level: 'debug' }],
-    readinessProbe: {
-      httpGet: { path: '/health', port: 8080 },
-      initialDelaySeconds: 10,
-      periodSeconds: 5
-    }
+    service_account: 'my-sa',
+    security_context: { runAsUser: 1000 }
+  },
+  config: {
+    'spec.sidecars': [
+      {
+        readinessProbe: {
+          httpGet: { path: '/health', port: 8080 },
+          initialDelaySeconds: 10,
+          periodSeconds: 5
+        }
+      }
+    ]
   },
   nuclioFunc: {
     metadata: {
@@ -161,11 +165,15 @@ const MOCK_APPLICATION = {
       serviceAccount: 'my-sa',
       securityContext: { runAsUser: 1000 },
       loggerSinks: [{ level: 'debug' }],
-      readinessProbe: {
-        httpGet: { path: '/health', port: 8080 },
-        initialDelaySeconds: 10,
-        periodSeconds: 5
-      }
+      sidecars: [
+        {
+          readinessProbe: {
+            httpGet: { path: '/health', port: 8080 },
+            initialDelaySeconds: 10,
+            periodSeconds: 5
+          }
+        }
+      ]
     }
   },
   ui: { originalContent: { spec: {} } }
