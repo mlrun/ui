@@ -21,7 +21,13 @@ import axios from 'axios'
 import qs from 'qs'
 
 import { ConfirmDialog } from 'igz-controls/components'
-import { CANCEL_REQUEST_TIMEOUT, LARGE_REQUEST_CANCELED, PROJECTS_PAGE_PATH } from './constants'
+import {
+  CANCEL_REQUEST_TIMEOUT,
+  IS_MF_MODE,
+  LARGE_REQUEST_CANCELED,
+  PROJECTS_PAGE_PATH,
+  PUBLIC_URL
+} from './constants'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { mlrunUnhealthyErrors } from './components/ProjectsPage/projects.util'
 
@@ -43,8 +49,8 @@ const paramsSerializer = params => qs.stringify(params, { arrayFormat: 'repeat' 
 const MAX_CONSECUTIVE_ERRORS_COUNT = 2
 let consecutiveErrorsCount = 0
 
-export const mainBaseUrl = `${import.meta.env.VITE_PUBLIC_URL}/api/v1`
-export const mainBaseUrlV2 = `${import.meta.env.VITE_PUBLIC_URL}/api/v2`
+export const mainBaseUrl = `${PUBLIC_URL}/api/v1`
+export const mainBaseUrlV2 = `${PUBLIC_URL}/api/v2`
 
 export const mainHttpClient = axios.create({
   baseURL: mainBaseUrl,
@@ -59,22 +65,22 @@ export const mainHttpClientV2 = axios.create({
 })
 
 export const functionTemplatesHttpClient = axios.create({
-  baseURL: `${import.meta.env.VITE_PUBLIC_URL}/function-catalog`,
+  baseURL: `${PUBLIC_URL}/function-catalog`,
   headers
 })
 
 export const nuclioHttpClient = axios.create({
-  baseURL: `${import.meta.env.VITE_PUBLIC_URL}/nuclio/api`,
+  baseURL: `${PUBLIC_URL}/nuclio/api`,
   headers
 })
 
 export const iguazioHttpClient = axios.create({
   baseURL:
     import.meta.env.MODE === 'production'
-      ? import.meta.env.VITE_FEDERATION === 'true'
+      ? IS_MF_MODE
         ? '/oris/api'
         : '/api'
-      : import.meta.env.VITE_FEDERATION === 'true'
+      : IS_MF_MODE
         ? '/oris-mlrun/api'
         : '/iguazio/api',
   headers
@@ -222,9 +228,9 @@ const responseRejectInterceptor = error => {
 
       if (
         consecutiveErrorsCount === MAX_CONSECUTIVE_ERRORS_COUNT &&
-        window.location.pathname !== `${import.meta.env.VITE_PUBLIC_URL}/${PROJECTS_PAGE_PATH}`
+        window.location.pathname !== `${PUBLIC_URL}/${PROJECTS_PAGE_PATH}`
       ) {
-        window.location.href = `${import.meta.env.VITE_PUBLIC_URL}/${PROJECTS_PAGE_PATH}`
+        window.location.href = `${PUBLIC_URL}/${PROJECTS_PAGE_PATH}`
       }
     }
   }

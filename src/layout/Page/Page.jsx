@@ -31,6 +31,8 @@ import TokenExpiryBanner from '../../common/TokenExpiryBanner/TokenExpiryBanner'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import { Loader } from 'igz-controls/components'
 
+import { IS_MF_MODE } from '../../constants'
+
 import { getTransitionEndEventName } from 'igz-controls/utils/common.util'
 import { fetchFrontendSpec, toggleYaml } from '../../reducers/appReducer'
 import { isProjectValid } from '../../utils/link-helper.util'
@@ -107,7 +109,7 @@ const Page = () => {
         <>
           <Suspense fallback={<Loader />}>
             <main id="main" ref={mainRef}>
-              <TokenExpiryBanner />
+              {IS_MF_MODE && <TokenExpiryBanner />}
               <div id="main-wrapper">{isProjectsFetched ? <Outlet /> : <Loader />}</div>
             </main>
           </Suspense>

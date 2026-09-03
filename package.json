@@ -2,7 +2,6 @@
   "name": "mlrun.ui",
   "version": "1.10.0",
   "private": true,
-  "homepage": "/mlrun",
   "dependencies": {
     "@dagrejs/dagre": "^1.1.5",
     "@module-federation/runtime": "0.23.0",
@@ -87,7 +86,7 @@
     "preview": "vite preview",
     "preinstall": "npx force-resolutions",
     "test:coverage": "npm run test -- --coverage --watchAll=false",
-    "docker": "docker buildx build --platform linux/amd64 -t ${MLRUN_DOCKER_REGISTRY}${MLRUN_DOCKER_REPO:-mlrun}/mlrun-ui:${MLRUN_DOCKER_TAG:-latest} --build-arg COMMIT_HASH=\"`git rev-parse --short HEAD`\" --build-arg DATE=\"`date -u`\" --build-arg IS_MF=${npm_config_IS_MF:-false} -f Dockerfile .",
+    "docker": "docker buildx build --platform linux/amd64 -t ${MLRUN_DOCKER_REGISTRY}${MLRUN_DOCKER_REPO:-mlrun}/mlrun-ui:${MLRUN_DOCKER_TAG:-latest} --build-arg COMMIT_HASH=\"`git rev-parse --short HEAD`\" --build-arg GIT_COMMIT_SHA=\"`git rev-parse HEAD`\" --build-arg DATE=\"`date -u`\" -f Dockerfile .",
     "generate-rn": "./generate-release-notes.js ${MLRUN_OLD_VERSION} ${MLRUN_VERSION} ${MLRUN_RELEASE_BRANCH} ${MLRUN_RELEASE_TYPE}",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",

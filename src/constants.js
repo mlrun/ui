@@ -19,7 +19,20 @@ such restriction.
 */
 /*=========== GENERAL =============*/
 
-export const IS_MF_MODE = import.meta.env.VITE_FEDERATION === 'true'
+// Detected at runtime rather than baked in at build time: the igz4-ui host sets
+// window.mlrunConfig synchronously before it ever imports this app's exposed
+// Module Federation modules (./loadRemoteConfig, ./app), so by the time this
+// module graph is first evaluated under MF, window.mlrunConfig is already
+// populated. In the standalone entry (index.jsx), this module also evaluates
+// before the async loadRemoteConfig() fetch resolves, so it correctly reads as
+// "not MF" here regardless of that later, unrelated config fetch.
+export const IS_MF_MODE =
+  typeof window !== 'undefined' &&
+  window.mlrunConfig !== undefined &&
+  window.mlrunConfig !== null &&
+  Object.keys(window.mlrunConfig).length > 0
+
+export const PUBLIC_URL = IS_MF_MODE ? '' : import.meta.env.VITE_PUBLIC_URL
 
 export const SET_LOADING = 'SET_LOADING'
 

@@ -21,15 +21,6 @@ Examples:
 | `npm run docker`                                                                                 | `mlrun/mlrun-ui:latest`          |
 | `MLRUN_DOCKER_REGISTRY=quay.io/ MLRUN_DOCKER_REPO=iguazio MLRUN_DOCKER_TAG=0.4.9 npm run docker` | `quay.io/iguazio/mlrun-ui:0.4.9` |
 
-### Docker build argument
-
-The Docker build supports an optional argument:
-
-`--build-arg IS_MF=${npm_config_IS_MF:-false}`
-
-By default, `IS_MF` is `false`, and the image is built as a standard **mlrun-ui** build.<br />
-When set to `true`, the image is built in **Module Federation** mode.
-
 ### `docker run` environment variables
 
 The Docker container runs a Nginx server, which listens on exposed port number 8090, serves the web-app, and proxies to the backend API.
@@ -44,7 +35,7 @@ You can pass the following environment variables to the `docker run` command to 
 | `MLRUN_NUCLIO_UI_URL`         | Sets the base URL of the Nuclio UI<br />Default: `http://localhost:8070`<br />Example: `http://17.220.101.245:30070`   |
 | `MLRUN_FUNCTION_CATALOG_URL`  | Sets the base URL of the function-template catalog <br />Default: `https://raw.githubusercontent.com`                  |
 | `MLRUN_FUNCTION_CATALOG_PATH` | Sets the base URI of the function-template catalog <br />Default: `/mlrun/functions/master`                            |
-| `MLRUN_IGZ_UI_ALLOWED_ORIGIN` | Allowed origin for Module Federation and CORS<br />Example: `https://igz-ui.pini.vmdev90ig4.lab.iguazeng.com`          |
+| `MLRUN_IGZ_UI_ALLOWED_ORIGIN` | Allowed origin for Module Federation and CORS<br />Example: `https://someorigin.com`                                   |
 
 Example:
 

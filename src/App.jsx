@@ -66,7 +66,8 @@ import {
   JOBS_MONITORING_WORKFLOWS_TAB,
   JOBS_MONITORING_SCHEDULED_TAB,
   INACTIVE_JOBS_TAB,
-  IS_MF_MODE
+  IS_MF_MODE,
+  PUBLIC_URL
 } from './constants'
 
 import 'reactflow/dist/style.css'
@@ -465,7 +466,7 @@ const App = () => {
         </Route>
       </>
     ),
-    { basename: import.meta.env.VITE_PUBLIC_URL }
+    { basename: PUBLIC_URL }
   )
 
   return (

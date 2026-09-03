@@ -14,11 +14,12 @@
 #
 name: Publish mlrun-ui Image (feature/ig4)
 
-# Builds the mlrun-ui Docker image (micro-frontend variant, IS_MF=true) and
+# Builds the mlrun-ui Docker image (single build, works both standalone and
+# as a Module Federation remote — see IS_MF_MODE in src/constants.js) and
 # publishes it to JFrog Artifactory. Job flow adapted from nuclio-ui / oris-ui
 # / airun-ui (golden-frog code-scan omitted — not supported in this repo):
 #   quality-gate           → lint + format + audit
-#   publish-mlrun-image    → docker build (--build-arg IS_MF=true) and push
+#   publish-mlrun-image    → docker build and push
 #
 # Requires repository/org secrets:
 #   - DOCKER_IMAGE_REGISTRY        Artifactory Docker registry host
@@ -107,7 +108,6 @@ jobs:
       - name: Build Image
         run: |
           docker build --no-cache --pull \
-            --build-arg IS_MF=true \
             -t ${{ env.FULL_IMAGE_NAME }} \
             .
 

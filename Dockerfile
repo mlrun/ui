@@ -22,15 +22,6 @@ RUN npm install
 
 COPY . .
 
-# build arg
-ARG IS_MF=false
-
-RUN echo ">>> IS_MF ARG = $IS_MF" && \
-    sed -i "/^VITE_FEDERATION=/d" .env.production && \
-    echo "VITE_FEDERATION=$IS_MF" >> .env.production && \
-    sed -i "s|^VITE_PUBLIC_URL=/mlrun|VITE_PUBLIC_URL=|" .env.production && \
-    echo ">>> Final .env.production:" && grep '^VITE_' .env.production
-
 RUN npm run build
 
 ARG COMMIT_HASH
@@ -41,9 +32,11 @@ RUN echo "${COMMIT_HASH}" > ./build/COMMIT_HASH && \
 # production stage
 FROM gcr.io/iguazio/nginx-unprivileged:1.31.2-alpine3.23 AS production-stage
 
+ARG GIT_COMMIT_SHA
+LABEL org.opencontainers.image.revision=$GIT_COMMIT_SHA
+
 ARG UID=101
 ARG GID=101
-ARG IS_MF=false
 
 USER root
 # curl/libcurl are unused at runtime and the patched build (8.21.0-r0) is not yet
@@ -55,18 +48,13 @@ RUN apk update --no-cache && apk upgrade --no-cache \
 USER $UID
 
 COPY --from=build-stage /app/build /usr/share/nginx/html
-COPY --from=build-stage /app/.env.production /usr/share/nginx/html/
+COPY config.json.tmpl /usr/share/nginx/html/
 
-COPY nginx/nginx.conf.tmpl /etc/nginx/conf.d/
+COPY nginx/nginx.conf.tmpl nginx/nginx-mf.conf.tmpl /etc/nginx/conf.d/
 COPY nginx/run_nginx /etc/nginx/
 
 USER root
-RUN if [ "$IS_MF" \
-    = "true" ]; then \
-      INDEX=/usr/share/nginx/html/index.html; \
-      [ -f "$INDEX" ] && sed -i 's|<base href="/mlrun"|<base href="/projects"|g' "$INDEX"; \
-    fi && \
-    chown -R $UID:0 /usr/share/nginx/html && \
+RUN chown -R $UID:0 /usr/share/nginx/html && \
     chmod -R g+w /usr/share/nginx/html && \
     chmod 755 /etc/nginx/run_nginx
 
@@ -77,10 +65,26 @@ USER $UID
 FROM scratch AS flatten-stage
 COPY --from=production-stage / /
 
+ARG GIT_COMMIT_SHA
+LABEL org.opencontainers.image.revision=$GIT_COMMIT_SHA
+
 ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 ARG UID=101
 USER $UID
 
 EXPOSE 8090
+
+# Runtime configuration, common to igz3, igz4 (Module Federation), and CE.
+# Substituted into nginx.conf and config.json at container start (see
+# nginx/run_nginx); MLRUN_IGZ_UI_ALLOWED_ORIGIN selects igz3/CE vs igz4.
+ENV MLRUN_API_PROXY_URL="${MLRUN_API_PROXY_URL:-http://localhost:8090}" \
+    MLRUN_BETA_MODE="${MLRUN_BETA_MODE:-enabled}" \
+    MLRUN_FUNCTION_CATALOG_URL="${MLRUN_FUNCTION_CATALOG_URL:-https://raw.githubusercontent.com}" \
+    MLRUN_FUNCTION_CATALOG_PATH="${MLRUN_FUNCTION_CATALOG_PATH:-/mlrun/functions/master}" \
+    MLRUN_IGZ_UI_ALLOWED_ORIGIN="${MLRUN_IGZ_UI_ALLOWED_ORIGIN:-}" \
+    MLRUN_NUCLIO_API_URL="${MLRUN_NUCLIO_API_URL:-http://localhost:8070}" \
+    MLRUN_NUCLIO_MODE="${MLRUN_NUCLIO_MODE:-disabled}" \
+    MLRUN_NUCLIO_UI_URL="${MLRUN_NUCLIO_UI_URL:-http://localhost:8070}" \
+    MLRUN_V3IO_ACCESS_KEY="${MLRUN_V3IO_ACCESS_KEY:-\"\"}"
 
 CMD ["/etc/nginx/run_nginx"]

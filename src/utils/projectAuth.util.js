@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import projectsIguazioApi from '../api/projects-iguazio-api'
+import { IS_MF_MODE } from '../constants'
 
 const WRITE_ROLES = ['Owner', 'Admin', 'Editor']
 
@@ -27,7 +28,7 @@ export const getActiveUsername = async () => {
 }
 
 export const checkProjectWriteAccess = async (projectName, activeUsername = null) => {
-  if (import.meta.env.VITE_FEDERATION === 'true') {
+  if (IS_MF_MODE) {
     if (!activeUsername) {
       activeUsername = await getActiveUsername()
     }

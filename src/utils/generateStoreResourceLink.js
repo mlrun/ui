@@ -23,6 +23,7 @@ import {
   FEATURE_VECTORS_TAB,
   FILES_PAGE,
   MODELS_TAB,
+  PUBLIC_URL,
   TAG_FILTER_LATEST
 } from '../constants'
 
@@ -36,19 +37,19 @@ export const generateStoreResourceLink = (resource, projectName) => {
   }
 
   const inputsLinks = {
-    model: `${import.meta.env.VITE_PUBLIC_URL}/projects/${projectName}/models/${MODELS_TAB}/${
+    model: `${PUBLIC_URL}/projects/${projectName}/models/${MODELS_TAB}/${
       input.db_key || input.key
     }/${input.tag ?? input.tree ?? TAG_FILTER_LATEST}${input.iter ? `/${input.iter}` : ''}/overview`,
-    dataset: `${import.meta.env.VITE_PUBLIC_URL}/projects/${projectName}/${DATASETS_PAGE}/${
+    dataset: `${PUBLIC_URL}/projects/${projectName}/${DATASETS_PAGE}/${
       input.db_key || input.key
     }/${input.tag ?? input.tree ?? TAG_FILTER_LATEST}${input.iter ? `/${input.iter}` : ''}/overview`,
-    document: `${import.meta.env.VITE_PUBLIC_URL}/projects/${projectName}/${DOCUMENTS_PAGE}/${
+    document: `${PUBLIC_URL}/projects/${projectName}/${DOCUMENTS_PAGE}/${
       input.db_key || input.key
     }/${input.tag ?? input.tree ?? TAG_FILTER_LATEST}${input.iter ? `/${input.iter}` : ''}/overview`,
-    files: `${import.meta.env.VITE_PUBLIC_URL}/projects/${projectName}/${FILES_PAGE}/${input.db_key || input.key}/${input.tag ?? input.tree ?? TAG_FILTER_LATEST}${
+    files: `${PUBLIC_URL}/projects/${projectName}/${FILES_PAGE}/${input.db_key || input.key}/${input.tag ?? input.tree ?? TAG_FILTER_LATEST}${
       input.iter ? `/${input.iter}` : ''
     }/overview`,
-    FeatureVector: `${import.meta.env.VITE_PUBLIC_URL}/projects/${projectName}/feature-store/${FEATURE_VECTORS_TAB}/${input.name ?? input.key}/${input.tag ?? input.uid ?? TAG_FILTER_LATEST}/overview`
+    FeatureVector: `${PUBLIC_URL}/projects/${projectName}/feature-store/${FEATURE_VECTORS_TAB}/${input.name ?? input.key}/${input.tag ?? input.uid ?? TAG_FILTER_LATEST}/overview`
   }
 
   return input ? (inputsLinks[input.kind] ?? inputsLinks.files) : ''

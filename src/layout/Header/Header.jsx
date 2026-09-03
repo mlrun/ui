@@ -24,6 +24,7 @@ import Logo from 'igz-controls/images/mlrun-blue-logo.svg?react'
 import GithubIcon from 'igz-controls/images/github-icon.svg?react'
 import SlackIcon from 'igz-controls/images/slack-icon.svg?react'
 
+import { PUBLIC_URL } from '../../constants'
 import './header.scss'
 
 const Header = () => {
@@ -32,7 +33,7 @@ const Header = () => {
   return (
     <header className="header" data-testid="header">
       <div className="header__brand">
-        <a href={`${import.meta.env.VITE_PUBLIC_URL}/`}>
+        <a href={`${PUBLIC_URL}/`}>
           <Logo className="header__logo" alt="MLRun" />
         </a>
         <div>

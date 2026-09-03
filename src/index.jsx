@@ -27,9 +27,10 @@ import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
 import toolkitStore from './store/toolkitStore'
 import { loadRemoteConfig } from './loadRemoteConfig'
+import { PUBLIC_URL } from './constants'
 
-if (!window.location.pathname.includes(import.meta.env.VITE_PUBLIC_URL)) {
-  window.location.href = import.meta.env.VITE_PUBLIC_URL
+if (!window.location.pathname.includes(PUBLIC_URL)) {
+  window.location.href = PUBLIC_URL
 }
 
 loadRemoteConfig().then(() => {

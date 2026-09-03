@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { iguazioHttpClient } from '../httpClient'
+import { IS_MF_MODE } from '../constants'
 
 const igz3Api = {
   editProject: (projectId, data) => iguazioHttpClient.put(`/projects/${projectId}`, data),
@@ -66,4 +67,4 @@ const igz4Api = {
     iguazioHttpClient.get('/v1/authentication/self', { params: { format: 'full' } })
 }
 
-export default import.meta.env.VITE_FEDERATION === 'true' ? igz4Api : igz3Api
+export default IS_MF_MODE ? igz4Api : igz3Api

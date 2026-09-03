@@ -1,0 +1,35 @@
+server {
+    listen      8090;
+    server_name localhost;
+
+    root /usr/share/nginx/html;
+
+    gzip on;
+
+    # Safe for Module Federation: the igz4-ui host loads this app's
+    # remoteEntry.js via a plain <script> tag, which is unaffected by
+    # X-Frame-Options / frame-ancestors (those only govern framing this page
+    # itself in an <iframe>, not script loading).
+    add_header X-Frame-Options "DENY" always;
+    add_header Content-Security-Policy "frame-ancestors 'none';" always;
+
+    location /mlrun {
+        rewrite ^/mlrun(/|$)(.*) /$2 last;
+    }
+
+    location / {
+        # Landing page shown when hitting this container directly, without
+        # going through the igz4-ui host.
+        index landing.html;
+        try_files $uri $uri/ /landing.html;
+
+        if ($request_filename ~* .*\.(?:js|json)$ ) {
+            add_header Cache-Control "no-cache, no-store, must-revalidate";
+        }
+    }
+
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+}
