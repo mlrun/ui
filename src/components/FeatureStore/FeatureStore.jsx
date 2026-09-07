@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useState } from 'react'
 import { Outlet } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import { ConfirmDialog } from 'igz-controls/components'
@@ -37,7 +37,6 @@ const FeatureStore = () => {
   const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
   const [createVectorPopUpIsOpen, setCreateVectorPopUpIsOpen] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
-  const featureStore = useSelector(store => store.featureStore)
 
   const toggleConvertedYaml = useCallback(
     data => {
