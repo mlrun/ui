@@ -24,15 +24,15 @@ const isNear = (val1, val2, tolerance) => Math.abs(val1 - val2) <= tolerance
 
 const safeGet = (geo, column) => {
   try {
-    if (!geo || typeof geo.get !== 'function') {
+    if (!Array.isArray(geo)) {
       console.warn(`[TEST WARNING]: Geometry object is invalid. Cannot get column: "${column}"`)
       return []
     }
 
-    const data = geo.get(column)
-    
-    if (data) {
-      return Array.from(data)
+    const data = geo.map(row => row[column])
+
+    if (data.length > 0) {
+      return data
     } else {
       console.warn(`[TEST WARNING]: Column "${column}" returned no data. Verification for this field will be skipped.`)
       return []
