@@ -39,7 +39,7 @@ import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { useDetectOutsideClick } from 'igz-controls/hooks'
 
-import { USER_ROLE } from '../../constants'
+import { IS_MF_MODE, USER_ROLE } from '../../constants'
 
 import SearchIcon from 'igz-controls/images/search.svg?react'
 
@@ -74,48 +74,104 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
     setShowSuggestionList(false)
   }
 
-  const applyChanges = () => {
-    if (newOwnerId) {
-      const projectData = {
-        data: {
-          type: 'project',
-          attributes: {},
-          relationships: {
-            owner: {
-              data: {
-                id: newOwnerId,
-                type: USER_ROLE
-              }
+  const applyChangesMF = () => {
+    projectsIguazioApi
+      .updateProjectOwner(projectId, newOwnerId)
+      .then(changeOwnerCallback)
+      .then(() => {
+        dispatch(
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: 'Owner updated successfully'
+          })
+        )
+      })
+      .catch(error => {
+        const customErrorMsg =
+          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+            ? 'Missing edit permission for the project'
+            : getErrorMsg(error, 'Failed to edit project data')
+
+        showErrorNotification(dispatch, error, '', customErrorMsg, () => applyChanges())
+      })
+      .finally(handleOnClose)
+  }
+
+  const applyChangesIGZ3 = () => {
+    const projectData = {
+      data: {
+        type: 'project',
+        attributes: {},
+        relationships: {
+          owner: {
+            data: {
+              id: newOwnerId,
+              type: USER_ROLE
             }
           }
         }
       }
+    }
 
-      projectsIguazioApi
-        .editProject(projectId, projectData)
-        .then(changeOwnerCallback)
-        .then(() => {
-          dispatch(
-            setNotification({
-              status: 200,
-              id: Math.random(),
-              message: 'Owner updated successfully'
-            })
-          )
-        })
-        .catch(error => {
-          const customErrorMsg =
-            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'Missing edit permission for the project'
-              : getErrorMsg(error, 'Failed to edit project data')
+    projectsIguazioApi
+      .editProject(projectId, projectData)
+      .then(changeOwnerCallback)
+      .then(() => {
+        dispatch(
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: 'Owner updated successfully'
+          })
+        )
+      })
+      .catch(error => {
+        const customErrorMsg =
+          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+            ? 'Missing edit permission for the project'
+            : getErrorMsg(error, 'Failed to edit project data')
 
-          showErrorNotification(dispatch, error, '', customErrorMsg, () => applyChanges(newOwnerId))
-        })
-        .finally(handleOnClose)
+        showErrorNotification(dispatch, error, '', customErrorMsg, () => applyChanges(newOwnerId))
+      })
+      .finally(handleOnClose)
+  }
+
+  const applyChanges = () => {
+    if (newOwnerId) {
+      if (IS_MF_MODE) {
+        applyChangesMF()
+      } else {
+        applyChangesIGZ3()
+      }
     }
   }
 
-  const generateSuggestionList = async (memberName, resolve) => {
+  const generateSuggestionListMF = async (memberName, resolve) => {
+    let formattedUsers = []
+
+    try {
+      const response = await projectsIguazioApi.searchUsersMetadata(memberName)
+      const users = response.data.items || []
+
+      formattedUsers = users.map(user => {
+        return {
+          name: `${user.firstName} ${user.lastName}`,
+          username: user.username,
+          label: `${user.firstName} ${user.lastName} (${user.username})`,
+          id: user.username,
+          role: ''
+        }
+      })
+      setUsersList(formattedUsers)
+    } catch (error) {
+      showErrorNotification(dispatch, error, 'Failed to fetch users')
+    }
+
+    resolve(formattedUsers)
+  }
+
+  const generateSuggestionListIGZ3 = async (memberName, resolve) => {
     const params = {
       'filter[assigned_policies]': '[$contains_any]Developer,Project Admin',
       'page[size]': 200
@@ -128,10 +184,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
     }
 
     try {
-      const response = await projectsIguazioApi.getScrubbedUsers({
-        params
-      })
-
+      const response = await projectsIguazioApi.getScrubbedUsers({ params })
       const {
         data: { data: users }
       } = response
@@ -152,6 +205,8 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
 
     resolve(formattedUsers)
   }
+
+  const generateSuggestionList = IS_MF_MODE ? generateSuggestionListMF : generateSuggestionListIGZ3
 
   const onSearchChange = debounce(memberName => {
     const memberNameEscaped = deleteUnsafeHtml(memberName)

@@ -23,8 +23,7 @@ import { groupBy } from 'lodash'
  * - activeUser               : logged in user data
  * - projectInfo              : additional information about the project such as ID and Owner of the project
  *                              (data is received from iguazio API).
- * - users                    : the list of user members (original list from response)
- * - useGroups                : the list of user-group members (original list from response)
+ * - projectAuthorizationRoles: the list of project policies from /authorization/projects/{project}/policies
  * - membersOriginal          : the list of users and user-groups that is used to revert changes
  * - members                  : the list of users and user-groups that is displayed in the table of the `Member` dialog (includes owner)
  * - groupedOriginalMembers   : grouped members list by their role, which is used to display the number of

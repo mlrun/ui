@@ -1,23 +1,29 @@
 #!/bin/sh
+set -e
 
-# update nginx configuration with env
-envsubst '${MLRUN_API_PROXY_URL} \
-          ${MLRUN_BETA_MODE} \
+echo resolver $(awk 'BEGIN{ORS=" "} $1=="nameserver" {if ($2 ~ /:/) print "["$2"]"; else print $2}' /etc/resolv.conf) ";" > /etc/nginx/resolvers.conf
+
+if [ -n "${MLRUN_IGZ_UI_ALLOWED_ORIGIN}" ]; then
+  NGINX_CONF_SRC=/etc/nginx/conf.d/nginx-mf.conf.tmpl
+  ENVSUBST_VARS='${MLRUN_IGZ_UI_ALLOWED_ORIGIN}'
+else
+  NGINX_CONF_SRC=/etc/nginx/conf.d/nginx.conf.tmpl
+  ENVSUBST_VARS='${MLRUN_API_PROXY_URL} \
           ${MLRUN_FUNCTION_CATALOG_URL} \
           ${MLRUN_FUNCTION_CATALOG_PATH} \
           ${MLRUN_NUCLIO_API_URL} \
-          ${MLRUN_NUCLIO_MODE} \
-          ${MLRUN_NUCLIO_UI_URL} \
-          ${MLRUN_V3IO_ACCESS_KEY}' \
-< /etc/nginx/conf.d/nginx.conf.tmpl \
+          ${MLRUN_V3IO_ACCESS_KEY}'
+
+  envsubst '${MLRUN_BETA_MODE} \
+            ${MLRUN_NUCLIO_MODE} \
+            ${MLRUN_NUCLIO_UI_URL}' \
+  < /usr/share/nginx/html/config.json.tmpl \
+  > /usr/share/nginx/html/config.json
+fi
+
+envsubst "$ENVSUBST_VARS" \
+< "$NGINX_CONF_SRC" \
 > /etc/nginx/conf.d/nginx.conf
 
-# update configuration with env
-envsubst '${MLRUN_BETA_MODE} \
-          ${MLRUN_NUCLIO_MODE} \
-          ${MLRUN_NUCLIO_UI_URL}' \
-< /usr/share/nginx/html/config.json.tmpl \
-> /usr/share/nginx/html/config.json
-
-# start nginx in the foreground
-nginx -g 'daemon off;'
+nginx -t
+exec nginx -g 'daemon off;'

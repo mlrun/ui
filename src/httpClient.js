@@ -21,13 +21,26 @@ import axios from 'axios'
 import qs from 'qs'
 
 import { ConfirmDialog } from 'igz-controls/components'
-import { CANCEL_REQUEST_TIMEOUT, LARGE_REQUEST_CANCELED, PROJECTS_PAGE_PATH } from './constants'
+import {
+  CANCEL_REQUEST_TIMEOUT,
+  IS_MF_MODE,
+  LARGE_REQUEST_CANCELED,
+  PROJECTS_PAGE_PATH,
+  PUBLIC_URL
+} from './constants'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { mlrunUnhealthyErrors } from './components/ProjectsPage/projects.util'
 
 const headers = {
   'Cache-Control': 'no-cache'
 }
+
+/**
+ * Resolve auth bridge provided by igz-ui (host).
+ * - Primary: injected via Module Federation
+ * - Fallback: host global (timing safety)
+ */
+export const getHostAuth = () => window.__mlrunHostServices?.auth || window.__igzAuth || null
 
 // serialize a param with an array value as a repeated param, for example:
 // { label: ['host', 'owner=admin'] } => 'label=host&label=owner%3Dadmin'
@@ -36,8 +49,8 @@ const paramsSerializer = params => qs.stringify(params, { arrayFormat: 'repeat' 
 const MAX_CONSECUTIVE_ERRORS_COUNT = 2
 let consecutiveErrorsCount = 0
 
-export const mainBaseUrl = `${import.meta.env.VITE_PUBLIC_URL}/api/v1`
-export const mainBaseUrlV2 = `${import.meta.env.VITE_PUBLIC_URL}/api/v2`
+export const mainBaseUrl = `${PUBLIC_URL}/api/v1`
+export const mainBaseUrlV2 = `${PUBLIC_URL}/api/v2`
 
 export const mainHttpClient = axios.create({
   baseURL: mainBaseUrl,
@@ -52,19 +65,77 @@ export const mainHttpClientV2 = axios.create({
 })
 
 export const functionTemplatesHttpClient = axios.create({
-  baseURL: `${import.meta.env.VITE_PUBLIC_URL}/function-catalog`,
+  baseURL: `${PUBLIC_URL}/function-catalog`,
   headers
 })
 
 export const nuclioHttpClient = axios.create({
-  baseURL: `${import.meta.env.VITE_PUBLIC_URL}/nuclio/api`,
+  baseURL: `${PUBLIC_URL}/nuclio/api`,
   headers
 })
 
 export const iguazioHttpClient = axios.create({
-  baseURL: import.meta.env.MODE === 'production' ? '/api' : '/iguazio/api',
+  baseURL:
+    import.meta.env.MODE === 'production'
+      ? IS_MF_MODE
+        ? '/oris/api'
+        : '/api'
+      : IS_MF_MODE
+        ? '/oris-mlrun/api'
+        : '/iguazio/api',
   headers
 })
+
+/**
+ * Module Federation auth:
+ * token injection and refresh are handled by the igz-ui host
+ */
+
+const attachHostAuth = client => {
+  const auth = getHostAuth()
+  if (!auth) return
+
+  client.interceptors.request.use(config => {
+    const token = auth.getAccessToken?.()
+    if (token) {
+      config.headers = config.headers ?? {}
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  })
+
+  client.interceptors.response.use(
+    res => res,
+    async err => {
+      const status = err?.response?.status
+      const req = err?.config
+      if (!req) throw err
+
+      if (status === 401 && !req._retry) {
+        req._retry = true
+
+        const token = await auth.refreshAccessToken?.()
+        if (!token) {
+          auth.redirectToLogin?.()
+          throw err
+        }
+
+        req.headers = req.headers ?? {}
+        req.headers.Authorization = `Bearer ${token}`
+
+        return client(req)
+      }
+
+      throw err
+    }
+  )
+}
+
+attachHostAuth(mainHttpClient)
+attachHostAuth(mainHttpClientV2)
+attachHostAuth(functionTemplatesHttpClient)
+attachHostAuth(nuclioHttpClient)
+attachHostAuth(iguazioHttpClient)
 
 const getAbortSignal = (controller, abortCallback, timeoutMs) => {
   let timeoutId = null
@@ -157,9 +228,9 @@ const responseRejectInterceptor = error => {
 
       if (
         consecutiveErrorsCount === MAX_CONSECUTIVE_ERRORS_COUNT &&
-        window.location.pathname !== `${import.meta.env.VITE_PUBLIC_URL}/${PROJECTS_PAGE_PATH}`
+        window.location.pathname !== `${PUBLIC_URL}/${PROJECTS_PAGE_PATH}`
       ) {
-        window.location.href = `${import.meta.env.VITE_PUBLIC_URL}/${PROJECTS_PAGE_PATH}`
+        window.location.href = `${PUBLIC_URL}/${PROJECTS_PAGE_PATH}`
       }
     }
   }

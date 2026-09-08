@@ -176,7 +176,7 @@ export const generateActionsMenu = (
         disabled:
           !isTargetPathValid ||
           datasetMin.size >
-            (frontendSpec.artifact_limits.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
+            (frontendSpec.artifact_limits?.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
         icon: <DownloadIcon />,
         onClick: datasetMin => {
           getFullDataset(datasetMin).then(dataset => {

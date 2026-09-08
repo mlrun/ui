@@ -24,7 +24,7 @@ import { useSelector } from 'react-redux'
 import FormEnvironmentVariablesTable from '../../../../elements/FormEnvironmentVariablesTable/FormEnvironmentVariablesTable'
 import { FormCheckBox, FormInput, FormKeyValueTable, FormOnChange } from 'igz-controls/components'
 
-import { ADVANCED_STEP } from '../../../../constants'
+import { ADVANCED_STEP, API_TOKEN_TIP, IS_MF_MODE } from '../../../../constants'
 import { secretsKindOptions } from './JobWizardAdvanced.util'
 
 import './jobWizardAdvanced.scss'
@@ -73,19 +73,35 @@ const JobWizardAdvanced = ({ formState, stepIsActive = false }) => {
           <FormInput name={`${ADVANCED_STEP}.outputPath`} label="Default artifact path" required />
         </div>
       </div>
-      <div className="form-row align-stretch">
-        {!frontendSpec.ce?.version && (
-          <div className="access-key-checkbox">
-            <FormCheckBox label="Auto-generate access key" name={`${ADVANCED_STEP}.accessKey`} />
-          </div>
-        )}
-        {!formState.values?.[ADVANCED_STEP]?.accessKey && (
-          <div className="form-col-1">
-            <FormInput name={`${ADVANCED_STEP}.accessKeyInput`} label="Access key" required />
-          </div>
-        )}
-      </div>
-      {stepIsActive && (
+      {!frontendSpec.ce?.version && (
+        <div className="form-row align-stretch">
+          {IS_MF_MODE ? (
+            <div className="form-col-1 api-token-field">
+              <FormInput
+                name={`${ADVANCED_STEP}.apiTokenInput`}
+                label="API Token"
+                tip={API_TOKEN_TIP}
+                required
+              />
+            </div>
+          ) : (
+            <>
+              <div className="access-key-checkbox">
+                <FormCheckBox
+                  label="Auto-generate access key"
+                  name={`${ADVANCED_STEP}.accessKey`}
+                />
+              </div>
+              {!formState.values?.[ADVANCED_STEP]?.accessKey && (
+                <div className="form-col-1">
+                  <FormInput name={`${ADVANCED_STEP}.accessKeyInput`} label="Access key" required />
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
+      {!IS_MF_MODE && formState.values?.[ADVANCED_STEP] !== undefined && stepIsActive && (
         <FormOnChange
           handler={() => formState.form.change(`${ADVANCED_STEP}.accessKeyInput`, '')}
           name={`${ADVANCED_STEP}.accessKey`}

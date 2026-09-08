@@ -21,7 +21,7 @@ import React from 'react'
 
 import JobWizard from '../JobWizard/JobWizard'
 
-import { ARTIFACT_TYPE, DATASET_TYPE } from '../../constants'
+import { ARTIFACT_TYPE, DATASET_TYPE, IS_MF_MODE, NUCLIO_FUNCTIONS_PATH } from '../../constants'
 import { PRIMARY_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
@@ -101,7 +101,11 @@ export const generateCreateNewOptions = (
     id: 'createRealTimeFunction',
     icon: <Realtime />,
     handler: () => {
-      const url = generateNuclioLink(`/projects/${params.projectName}/create-function`)
+      if (IS_MF_MODE) {
+        return navigate(`/projects/${params.projectName}/${NUCLIO_FUNCTIONS_PATH}/create-function`)
+      }
+
+      const url = generateNuclioLink(`/projects/${params.projectName}}/create-function`)
 
       if (window.top && window.top !== window.self) {
         window.top.location.assign(url)

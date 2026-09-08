@@ -48,8 +48,8 @@ const Download = ({
     () =>
       disabled ||
       !path ||
-      (artifactLimits?.max_download_size && fileSize > artifactLimits.max_download_size),
-    [disabled, artifactLimits.max_download_size, fileSize, path]
+      (artifactLimits?.max_download_size && fileSize > artifactLimits?.max_download_size),
+    [disabled, artifactLimits?.max_download_size, fileSize, path]
   )
   const downloadClassNames = classnames(
     'download',

@@ -33,11 +33,11 @@ import { useLayoutEffect, useState } from 'react'
  */
 
 export const useNuclioMode = () => {
-  const [mode, setMode] = useState(window.mlrunConfig.nuclioMode)
+  const [mode, setMode] = useState(window?.mlrunConfig?.nuclioMode)
 
   useLayoutEffect(() => {
-    if (mode !== window.mlrunConfig.nuclioMode) {
-      setMode(window.mlrunConfig.nuclioMode)
+    if (mode !== window?.mlrunConfig?.nuclioMode) {
+      setMode(window?.mlrunConfig?.nuclioMode)
     }
   }, [mode])
 

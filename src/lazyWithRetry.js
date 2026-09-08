@@ -19,26 +19,33 @@ such restriction.
 */
 import { lazy } from 'react'
 // a function to retry loading a chunk to avoid chunk load error for out of date code
-export const lazyRetry = componentImport =>
-  lazy(() => {
+export const lazyRetry = (componentImport, name) => {
+  if (!name) {
+    throw new Error('lazyRetry requires a name for the component being imported')
+  }
+
+  return lazy(() => {
     return new Promise((resolve, reject) => {
       // check if the window has already been refreshed
-      const hasRefreshed = JSON.parse(
-        window.sessionStorage.getItem('retry-lazy-refreshed') || 'false'
-      )
+      const componentStorageKey = `retry-lazy-refreshed-${name}`
+      const hasRefreshed = JSON.parse(window.sessionStorage.getItem(componentStorageKey) || 'false')
       // try to import the component
       componentImport()
         .then(component => {
-          window.sessionStorage.setItem('retry-lazy-refreshed', 'false') // success so reset the refresh
+          window.sessionStorage.setItem(componentStorageKey, 'false') // success so reset the refresh
           resolve(component)
         })
         .catch(error => {
+          window.sessionStorage.setItem(componentStorageKey, 'true')
           if (!hasRefreshed) {
             // not been refreshed yet
             window.sessionStorage.setItem('retry-lazy-refreshed', 'true') // we are now going to refresh
             return window.location.reload() // refresh the page
           }
-          reject(error) // Default error behaviour as already tried refresh
+          // eslint-disable-next-line no-console
+          console.error(`Failed to load component ${name} after retrying`, error)
+          reject(error) // Default error behavior as already tried refresh
         })
     })
   })
+}
