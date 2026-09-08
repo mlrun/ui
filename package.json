@@ -80,7 +80,19 @@
     "postcss": "^8.5.23",
     "qs": "^6.15.2",
     "serialize-javascript": "^7.0.3",
-    "tmp": "^0.2.6"
+    "tmp": "^0.2.6",
+    "@module-federation/dts-plugin": {
+      "adm-zip": "0.6.0"
+    },
+    "@module-federation/vite": {
+      "adm-zip": "0.6.0"
+    },
+    "adm-zip": {
+      "adm-zip": "0.6.0"
+    },
+    "chromedriver": {
+      "adm-zip": "0.6.0"
+    }
   },
   "scripts": {
     "start": "vite",
