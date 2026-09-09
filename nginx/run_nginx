@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-echo resolver $(awk 'BEGIN{ORS=" "} $1=="nameserver" {if ($2 ~ /:/) print "["$2"]"; else print $2}' /etc/resolv.conf) ";" > /etc/nginx/resolvers.conf
+echo resolver $(awk 'BEGIN{ORS=" "} $1=="nameserver" {if ($2 ~ /:/) print "["$2"]"; else print $2}' /etc/resolv.conf) ";" > /tmp/resolvers.conf
 
 if [ -n "${MLRUN_IGZ_UI_ALLOWED_ORIGIN}" ]; then
   NGINX_CONF_SRC=/etc/nginx/conf.d/nginx-mf.conf.tmpl
@@ -17,13 +17,13 @@ else
   envsubst '${MLRUN_BETA_MODE} \
             ${MLRUN_NUCLIO_MODE} \
             ${MLRUN_NUCLIO_UI_URL}' \
-  < /usr/share/nginx/html/config.json.tmpl \
-  > /usr/share/nginx/html/config.json
+  < /etc/nginx/config.json.tmpl \
+  > /tmp/config.json
 fi
 
 envsubst "$ENVSUBST_VARS" \
 < "$NGINX_CONF_SRC" \
-> /etc/nginx/conf.d/nginx.conf
+> /tmp/nginx.conf
 
 nginx -t
 exec nginx -g 'daemon off;'

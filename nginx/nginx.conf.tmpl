@@ -7,7 +7,7 @@ server {
 
   listen 8090;
 
-  include resolvers.conf;
+  include /tmp/resolvers.conf;
 
   # https://raw.githubusercontent.com
   set $function_catalog ${MLRUN_FUNCTION_CATALOG_URL};
@@ -18,6 +18,10 @@ server {
 
   location /mlrun {
     rewrite ^/mlrun(/|$)(.*) /$2 last;
+  }
+
+  location = /config.json {
+    alias /tmp/config.json;
   }
 
   location / {

@@ -48,15 +48,16 @@ RUN apk update --no-cache && apk upgrade --no-cache \
 USER $UID
 
 COPY --from=build-stage /app/build /usr/share/nginx/html
-COPY config.json.tmpl /usr/share/nginx/html/
+COPY config.json.tmpl /etc/nginx/
 
+COPY nginx/default.conf /etc/nginx/conf.d/
 COPY nginx/nginx.conf.tmpl nginx/nginx-mf.conf.tmpl /etc/nginx/conf.d/
 COPY nginx/run_nginx /etc/nginx/
 
 USER root
-RUN chown -R $UID:0 /usr/share/nginx/html && \
-    chmod -R g+w /usr/share/nginx/html && \
-    chmod 755 /etc/nginx/run_nginx
+# runtime writes (rendered nginx.conf/config.json/resolvers.conf, pid, temp &
+# log dirs) all live under /tmp, so the rest of the image can stay read-only
+RUN chmod 755 /etc/nginx/run_nginx
 
 USER $UID
 
