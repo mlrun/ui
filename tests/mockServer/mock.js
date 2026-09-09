@@ -19,6 +19,7 @@ such restriction.
 */
 import express from 'express'
 import bodyParser from 'body-parser'
+import rateLimit from 'express-rate-limit'
 import yaml from 'js-yaml'
 import fs from 'fs'
 import crypto from 'node:crypto'
@@ -35,6 +36,7 @@ import {
   isEmpty,
   isFunction,
   isNil,
+  isString,
   maxBy,
   noop,
   omit,
@@ -905,11 +907,26 @@ function getMonitoringApplicationDrift(req, res) {
   })
 }
 
+// Query params can be polluted into arbitrary objects (e.g. `?states[x]=y`), so only
+// accept plain strings or arrays of strings rather than trusting the parsed shape.
+function sanitizeStatesQueryParam(states) {
+  if (isString(states)) {
+    return states
+  }
+
+  if (isArray(states) && states.every(isString)) {
+    return states
+  }
+
+  return undefined
+}
+
 function getRuns(req, res) {
   let collectedRuns = runs.runs
   //get runs for Projects Monitoring page
   if (req.params['project'] === '*') {
-    const { start_time_from, states } = req.query
+    const { start_time_from } = req.query
+    const states = sanitizeStatesQueryParam(req.query.states)
     collectedRuns = runs.runs
       .filter(run => run.kind === 'run')
       .filter(run => {
@@ -947,9 +964,9 @@ function getRuns(req, res) {
       )
     }
 
-    if (req.query['states']) {
-      const states = req.query['states']
+    const states = sanitizeStatesQueryParam(req.query.states)
 
+    if (states) {
       collectedRuns = collectedRuns.filter(run => {
         if (isArray(states)) {
           return states.includes(run.status.state)
@@ -3190,7 +3207,14 @@ app.get(`${mlrunAPIIngressV2}/projects/:project/features`, getProjectsFeaturesEn
 app.get(`${mlrunAPIIngressV2}/projects/:project/entities`, getProjectsFeaturesEntities)
 app.get(`${mlrunAPIIngress}/projects/:project/feature-vectors`, getProjectsFeaturesEntities)
 
-app.post(`${mlrunAPIIngress}/submit_job`, postSubmitJob)
+const submitJobRateLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 60,
+  standardHeaders: true,
+  legacyHeaders: false
+})
+
+app.post(`${mlrunAPIIngress}/submit_job`, submitJobRateLimiter, postSubmitJob)
 
 app.get(`${nuclioApiUrl}/api/functions/:name`, getNuclioFunction)
 app.get(`${nuclioApiUrl}/api/functions`, getNuclioFunctions)

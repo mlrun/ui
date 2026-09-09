@@ -38,18 +38,31 @@ require('dotenv-expand')(require('dotenv').config({ path: '.env.test.local' }))
 require('dotenv-expand')(require('dotenv').config({ path: '.env.test' }))
 require('dotenv-expand')(require('dotenv').config({ path: '.env' }))
 
-const execSync = require('child_process').execSync
+const execFileSync = require('child_process').execFileSync
+const path = require('path')
 const argv = process.argv.slice(2)
 
-// build cucumber executive command
-const cucumberCommand =
-  'cucumber-js --require-module @babel/register --require-module @babel/polyfill ' +
-  '-f json:' +
-  report +
-  '.json -f html:' +
-  report +
-  '_default.html tests ' +
-  argv.join(' ')
+// Resolve the local binary directly so we don't need a shell to find it on any platform
+// (on Windows, the .bin shim is a .cmd/.ps1 file that a shell-less spawn can't launch).
+const cucumberBin = path.join(
+  __dirname,
+  '../node_modules/.bin',
+  process.platform === 'win32' ? 'cucumber-js.cmd' : 'cucumber-js'
+)
+
+// build cucumber executive command args
+const cucumberArgs = [
+  '--require-module',
+  '@babel/register',
+  '--require-module',
+  '@babel/polyfill',
+  '-f',
+  `json:${report}.json`,
+  '-f',
+  `html:${report}_default.html`,
+  'tests',
+  ...argv
+]
 
 // check and create report folder
 const reportDir = report.split('/').slice(0, -1).join('/')
@@ -60,7 +73,7 @@ if (!fs.existsSync(reportDir)) {
 
 function runCrossPlatform() {
   try {
-    execSync(cucumberCommand)
+    execFileSync(cucumberBin, cucumberArgs, { stdio: 'inherit', shell: false })
     return true
   } catch (e) {
     return false
