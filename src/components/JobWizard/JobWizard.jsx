@@ -23,8 +23,8 @@ import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
-import { isEmpty, get } from 'lodash-es'
-import { useNavigate } from 'react-router-dom'
+import { isEmpty, isEqual, get } from 'lodash-es'
+import { useNavigate } from 'react-router'
 
 import FormDirtySpy from '../../common/FormDirtySpy/FormDirtySpy'
 import JobWizardAdvanced from './JobWizardSteps/JobWizardAdvanced/JobWizardAdvanced'
@@ -94,7 +94,7 @@ const JobWizard = ({
   prePopulatedData = {},
   wizardTitle = 'Batch run'
 }) => {
-  const formRef = React.useRef(
+  const [form] = React.useState(() =>
     createForm({
       onSubmit: () => {},
       mutators: { ...arrayMutators, setFieldState },
@@ -106,8 +106,6 @@ const JobWizard = ({
   const projectIsLoading = useSelector(store => store.projectStore.project.loading)
   const [currentProject, setCurrentProject] = useState(null)
   const [selectedFunctionData, setSelectedFunctionData] = useState({})
-  const [filteredFunctions, setFilteredFunctions] = useState([])
-  const [filteredTemplates, setFilteredTemplates] = useState([])
   const [functions, setFunctions] = useState([])
   const [templatesCategories, setTemplatesCategories] = useState([])
   const [templates, setTemplates] = useState([])
@@ -133,7 +131,7 @@ const JobWizard = ({
     onWizardClose && onWizardClose()
   }, [dispatch, onResolve, onWizardClose, showSchedule])
 
-  const { handleCloseModal, resolveModal } = useModalBlockHistory(closeModal, formRef.current)
+  const { handleCloseModal, resolveModal } = useModalBlockHistory(closeModal, form)
 
   useEffect(() => {
     if (!isEditMode) {
@@ -183,14 +181,16 @@ const JobWizard = ({
     }
   }, [dispatch, isTrain, resolveModal])
 
-  useEffect(() => {
-    if (!isEmpty(jobsStore.jobFunc)) {
-      setSelectedFunctionData({
-        name: jobsStore.jobFunc.metadata.name,
-        functions: [jobsStore.jobFunc]
-      })
+  if (!isEmpty(jobsStore.jobFunc)) {
+    const nextSelectedFunctionData = {
+      name: jobsStore.jobFunc.metadata.name,
+      functions: [jobsStore.jobFunc]
     }
-  }, [isEditMode, isRunMode, jobsStore.jobFunc])
+
+    if (!isEqual(selectedFunctionData, nextSelectedFunctionData)) {
+      setSelectedFunctionData(nextSelectedFunctionData)
+    }
+  }
 
   const setJobData = useCallback(
     (formState, jobFormData, jobAdditionalData) => {
@@ -452,7 +452,7 @@ const JobWizard = ({
   )
 
   return (
-    <Form form={formRef.current} onSubmit={() => {}}>
+    <Form form={form} onSubmit={() => {}}>
       {formState => {
         formStateRef.current = formState
 
@@ -475,8 +475,6 @@ const JobWizard = ({
                 activeTab={activeTab}
                 currentProject={currentProject}
                 defaultData={defaultData}
-                filteredFunctions={filteredFunctions}
-                filteredTemplates={filteredTemplates}
                 formState={formState}
                 frontendSpec={frontendSpec}
                 functions={functions}
@@ -486,8 +484,6 @@ const JobWizard = ({
                 selectedFunctionData={selectedFunctionData}
                 selectedFunctionTab={selectedFunctionTab}
                 setActiveTab={setActiveTab}
-                setFilteredFunctions={setFilteredFunctions}
-                setFilteredTemplates={setFilteredTemplates}
                 setFunctions={setFunctions}
                 setJobAdditionalData={setJobAdditionalData}
                 setSelectedFunctionData={setSelectedFunctionData}

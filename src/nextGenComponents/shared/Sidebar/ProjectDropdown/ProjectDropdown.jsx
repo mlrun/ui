@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useLocation, Link } from 'react-router-dom'
+import { useLocation, Link } from 'react-router'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { Check, ChevronDown } from 'lucide-react'

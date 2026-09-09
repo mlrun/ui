@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState, useCallback, useRef } from 'react'
+import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash-es'
@@ -33,241 +33,221 @@ import WarningIcon from 'igz-controls/images/warning.svg?react'
 
 import './textArea.scss'
 
-const TextArea = React.forwardRef(
-  (
-    {
-      className = '',
-      disabled = false,
-      floatingLabel = false,
-      focused = false,
-      iconClass = '',
-      invalid = false,
-      invalidText = 'This field is invalid',
-      label = '',
-      maxLength = null,
-      onBlur = () => {},
-      onChange = () => {},
-      onKeyDown = () => {},
-      placeholder = '',
-      required = false,
-      requiredText = 'This field is required',
-      rows = 2,
-      setInvalid = () => {},
-      textAreaIcon = null,
-      tip = '',
-      validationRules: rules = [],
-      value = '',
-      wrapperClassName = ''
-    },
-    ref
-  ) => {
-    const [textAreaIsFocused, setTextAreaIsFocused] = useState(false)
-    const [isInvalid, setIsInvalid] = useState(false)
-    const [validationRules, setValidationRules] = useState(rules)
-    const [showValidationRules, setShowValidationRules] = useState(false)
-    const [textAreaCount, setTextAreaCount] = useState(value.length)
-    const wrapperRef = useRef()
-    ref ??= wrapperRef
-    const textAreaRef = React.useRef()
-    const labelRef = React.useRef()
-    useDetectOutsideClick(ref, () => setShowValidationRules(false))
+function TextArea({
+  className = '',
+  disabled = false,
+  floatingLabel = false,
+  focused = false,
+  iconClass = '',
+  invalid = false,
+  invalidText = 'This field is invalid',
+  label = '',
+  maxLength = null,
+  onBlur = () => {},
+  onChange = () => {},
+  onKeyDown = () => {},
+  placeholder = '',
+  ref,
+  required = false,
+  requiredText = 'This field is required',
+  rows = 2,
+  setInvalid = () => {},
+  textAreaIcon = null,
+  tip = '',
+  validationRules: rules = [],
+  value = '',
+  wrapperClassName = ''
+}) {
+  const [textAreaIsFocused, setTextAreaIsFocused] = useState(false)
+  const [localInvalid, setLocalInvalid] = useState(false)
+  const [validationRules, setValidationRules] = useState(rules)
+  const [showValidationRules, setShowValidationRules] = useState(false)
+  const wrapperRef = useRef()
+  ref ??= wrapperRef
+  const textAreaRef = React.useRef()
+  const labelRef = React.useRef()
+  useDetectOutsideClick(ref, () => setShowValidationRules(false))
 
-    const textAreaClassNames = classnames(
-      'text-area',
-      className,
-      textAreaIsFocused && floatingLabel && 'text-area_active',
-      isInvalid && 'text-area_invalid',
-      !isEmpty(validationRules) && isInvalid && 'input_rules-invalid'
-    )
-    const wrapperClassNames = classnames(wrapperClassName, 'text-area-wrapper')
-    const labelClassNames = classnames(
-      'text-area__label',
-      textAreaIsFocused && floatingLabel && 'active-label',
-      floatingLabel && 'text-area__label-floating'
-    )
+  const stringValue = String(value ?? '')
+  const isInvalid = useMemo(() => {
+    if (required && stringValue.trim().length === 0) {
+      return true
+    }
+    if (localInvalid) {
+      return true
+    }
+    return invalid
+  }, [required, stringValue, localInvalid, invalid])
 
-    useEffect(() => {
-      if (value.length > 0) {
-        setTextAreaIsFocused(true)
-      } else if (textAreaIsFocused && value.length === 0) {
-        setTextAreaIsFocused(false)
+  const labelActive = textAreaIsFocused || stringValue.length > 0
+
+  const textAreaClassNames = classnames(
+    'text-area',
+    className,
+    labelActive && floatingLabel && 'text-area_active',
+    isInvalid && 'text-area_invalid',
+    !isEmpty(validationRules) && isInvalid && 'input_rules-invalid'
+  )
+  const wrapperClassNames = classnames(wrapperClassName, 'text-area-wrapper')
+  const labelClassNames = classnames(
+    'text-area__label',
+    labelActive && floatingLabel && 'active-label',
+    floatingLabel && 'text-area__label-floating'
+  )
+
+  useEffect(() => {
+    if (focused) {
+      textAreaRef.current?.focus()
+    }
+  }, [focused])
+
+  const handleScroll = useCallback(event => {
+    if (!event.target.closest('.options-menu') && !event.target.classList.contains('area-input')) {
+      setShowValidationRules(false)
+    }
+  }, [])
+
+  const handleTextAreaScroll = useCallback(event => {
+    if (event.target.scrollTop > 5) {
+      labelRef.current.classList.add('text-area__label_hidden')
+    } else if (
+      event.target.scrollTop <= 5 &&
+      labelRef.current.classList.contains('text-area__label_hidden')
+    ) {
+      labelRef.current.classList.remove('text-area__label_hidden')
+    }
+  }, [])
+
+  useEffect(() => {
+    if (showValidationRules) {
+      window.addEventListener('scroll', handleScroll, true)
+    }
+    return () => {
+      window.removeEventListener('scroll', handleScroll, true)
+    }
+  }, [showValidationRules, handleScroll])
+
+  useEffect(() => {
+    const textArea = textAreaRef.current
+
+    if (textAreaRef.current && labelRef.current) {
+      textAreaRef.current.addEventListener('scroll', handleTextAreaScroll)
+    }
+
+    return () => {
+      if (textArea) {
+        textArea.removeEventListener('scroll', handleTextAreaScroll)
       }
+    }
+  }, [handleTextAreaScroll])
 
-      if (focused) {
-        textAreaRef.current.focus()
-      }
-    }, [focused, textAreaIsFocused, value])
+  const handleChange = event => {
+    if (event.target.value.length > 0) {
+      setTextAreaIsFocused(true)
+    } else {
+      setTextAreaIsFocused(false)
+    }
 
-    useEffect(() => {
-      if (isInvalid !== invalid) {
-        if (required && value.trim().length === 0) {
-          setIsInvalid(true)
-          setInvalid && setInvalid(false)
-        } else {
-          setIsInvalid(invalid)
-        }
-      }
-    }, [invalid, isInvalid, required, setInvalid, value])
+    if (required && event.target.value.trim().length === 0) {
+      setLocalInvalid(true)
+      setInvalid && setInvalid(false)
+    } else {
+      setLocalInvalid(false)
+      setInvalid && setInvalid(true)
+    }
 
-    const handleScroll = event => {
-      if (
-        !event.target.closest('.options-menu') &&
-        !event.target.classList.contains('area-input')
-      ) {
+    validateField(event.target.value)
+    onChange(event.target.value)
+  }
+
+  const renderValidationRules = validationRules.map(({ isValid = false, label, name }) => {
+    return <ValidationTemplate valid={isValid} validationMessage={label} key={name} />
+  })
+
+  const validateField = value => {
+    let isFieldValidByPattern = true
+
+    if (!isEmpty(validationRules)) {
+      const [newRules, isValidField] = checkPatternsValidity(validationRules, value)
+      isFieldValidByPattern = isValidField
+      setValidationRules(newRules)
+
+      if ((isFieldValidByPattern && showValidationRules) || value.trim() === '') {
         setShowValidationRules(false)
       }
     }
-    const handleTextAreaScroll = useCallback(
-      event => {
-        if (event.target.scrollTop > 5) {
-          labelRef.current.classList.add('text-area__label_hidden')
-        } else if (
-          event.target.scrollTop <= 5 &&
-          labelRef.current.classList.contains('text-area__label_hidden')
-        ) {
-          labelRef.current.classList.remove('text-area__label_hidden')
-        }
-      },
-      [labelRef]
-    )
 
-    useEffect(() => {
-      if (showValidationRules) {
-        window.addEventListener('scroll', handleScroll, true)
-      }
-      return () => {
-        window.removeEventListener('scroll', handleScroll, true)
-      }
-    }, [showValidationRules])
+    const fieldInvalid = (required && value.trim().length === 0) || !isFieldValidByPattern
 
-    useEffect(() => {
-      const textArea = textAreaRef.current
-
-      if (textAreaRef.current && labelRef.current) {
-        textAreaRef.current.addEventListener('scroll', handleTextAreaScroll)
-      }
-
-      return () => {
-        if (textArea) {
-          textArea.removeEventListener('scroll', handleTextAreaScroll)
-        }
-      }
-    }, [handleTextAreaScroll, textAreaRef])
-
-    const handleChange = event => {
-      if (event.target.value.length > 0) {
-        setTextAreaIsFocused(true)
-      } else {
-        setTextAreaIsFocused(false)
-      }
-
-      if (required && event.target.value.trim().length === 0) {
-        setIsInvalid(true)
-        setInvalid && setInvalid(false)
-      } else {
-        setIsInvalid(false)
-        setInvalid && setInvalid(true)
-      }
-
-      setTextAreaCount(event.target.value.length)
-      validateField(event.target.value)
-      onChange(event.target.value)
-    }
-
-    const renderValidationRules = validationRules.map(({ isValid = false, label, name }) => {
-      return <ValidationTemplate valid={isValid} validationMessage={label} key={name} />
-    })
-
-    const validateField = value => {
-      let isFieldValidByPattern = true
-
-      if (!isEmpty(validationRules)) {
-        const [newRules, isValidField] = checkPatternsValidity(validationRules, value)
-        isFieldValidByPattern = isValidField
-        setValidationRules(newRules)
-
-        if ((isFieldValidByPattern && showValidationRules) || value.trim() === '') {
-          setShowValidationRules(false)
-        }
-      }
-
-      const fieldInvalid = (required && value.trim().length === 0) || !isFieldValidByPattern
-
-      setIsInvalid(fieldInvalid)
-      setInvalid(!fieldInvalid)
-    }
-
-    const toggleValidationRulesMenu = () => {
-      setShowValidationRules(!showValidationRules)
-      textAreaRef.current.focus()
-      setTextAreaIsFocused(true)
-    }
-
-    return (
-      <div ref={ref} className={wrapperClassNames}>
-        <textarea
-          className={textAreaClassNames}
-          data-testid="text-area"
-          disabled={disabled}
-          maxLength={maxLength}
-          onBlur={onBlur}
-          onChange={handleChange}
-          onKeyDown={onKeyDown}
-          placeholder={placeholder}
-          rows={rows}
-          required={isInvalid}
-          ref={textAreaRef}
-          value={value && value}
-        />
-        {label && (
-          <label data-testid="label" className={labelClassNames} ref={labelRef}>
-            {label}
-            {required && <span className="text-area__label-mandatory"> *</span>}
-          </label>
-        )}
-        {isInvalid && !isEmpty(validationRules) && (
-          <i
-            className="text-area-input__warning input__warning"
-            onClick={toggleValidationRulesMenu}
-          >
-            <WarningIcon />
-          </i>
-        )}
-        {isInvalid && isEmpty(validationRules) && (
-          <Tooltip
-            className="text-area__warning"
-            template={
-              <TextTooltipTemplate
-                text={required && value.length === 0 ? requiredText : invalidText}
-                warning
-              />
-            }
-          >
-            <ExclamationMarkIcon />
-          </Tooltip>
-        )}
-        {tip && !required && <Tip text={tip} className="text-area__tip" />}
-        {textAreaIcon && (
-          <span data-testid="text-area__icon" className={iconClass}>
-            {textAreaIcon}
-          </span>
-        )}
-        {!isEmpty(validationRules) && (
-          <OptionsMenu show={showValidationRules} ref={{ refInputContainer: ref }}>
-            {renderValidationRules}
-          </OptionsMenu>
-        )}
-        {maxLength && (
-          <div className="text-area__counter">{`${maxLength - textAreaCount} ${
-            maxLength - textAreaCount !== 1 ? 'characters' : 'character'
-          } left`}</div>
-        )}
-      </div>
-    )
+    setLocalInvalid(!isFieldValidByPattern)
+    setInvalid(!fieldInvalid)
   }
-)
 
-TextArea.displayName = 'TextArea'
+  const toggleValidationRulesMenu = () => {
+    setShowValidationRules(!showValidationRules)
+    textAreaRef.current.focus()
+    setTextAreaIsFocused(true)
+  }
+
+  return (
+    <div ref={ref} className={wrapperClassNames}>
+      <textarea
+        className={textAreaClassNames}
+        data-testid="text-area"
+        disabled={disabled}
+        maxLength={maxLength}
+        onBlur={onBlur}
+        onChange={handleChange}
+        onKeyDown={onKeyDown}
+        placeholder={placeholder}
+        rows={rows}
+        required={isInvalid}
+        ref={textAreaRef}
+        value={value && value}
+      />
+      {label && (
+        <label data-testid="label" className={labelClassNames} ref={labelRef}>
+          {label}
+          {required && <span className="text-area__label-mandatory"> *</span>}
+        </label>
+      )}
+      {isInvalid && !isEmpty(validationRules) && (
+        <i className="text-area-input__warning input__warning" onClick={toggleValidationRulesMenu}>
+          <WarningIcon />
+        </i>
+      )}
+      {isInvalid && isEmpty(validationRules) && (
+        <Tooltip
+          className="text-area__warning"
+          template={
+            <TextTooltipTemplate
+              text={required && stringValue.length === 0 ? requiredText : invalidText}
+              warning
+            />
+          }
+        >
+          <ExclamationMarkIcon />
+        </Tooltip>
+      )}
+      {tip && !required && <Tip text={tip} className="text-area__tip" />}
+      {textAreaIcon && (
+        <span data-testid="text-area__icon" className={iconClass}>
+          {textAreaIcon}
+        </span>
+      )}
+      {!isEmpty(validationRules) && (
+        <OptionsMenu show={showValidationRules} refInputContainer={ref}>
+          {renderValidationRules}
+        </OptionsMenu>
+      )}
+      {maxLength && (
+        <div className="text-area__counter">{`${maxLength - stringValue.length} ${
+          maxLength - stringValue.length !== 1 ? 'characters' : 'character'
+        } left`}</div>
+      )}
+    </div>
+  )
+}
 
 TextArea.propTypes = {
   className: PropTypes.string,

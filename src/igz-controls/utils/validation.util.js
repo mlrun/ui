@@ -14,7 +14,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import lodash, { isEmpty } from 'lodash'
+import lodash, { isEmpty } from 'lodash-es'
 
 import { validation as ValidationConstants } from '../constants'
 

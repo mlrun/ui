@@ -14,10 +14,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect, useRef, forwardRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
-import { isEmpty, isNil } from 'lodash'
+import { isEmpty, isNil } from 'lodash-es'
 import { Field, useField } from 'react-final-form'
 
 import InputNumberButtons from './InputNumberButtons/InputNumberButtons'
@@ -46,52 +46,69 @@ const defaultProps = {
   rules: []
 }
 
-let FormInput = (
-  {
-    async = false,
-    className = '',
-    customRequiredLabel = '',
-    density = 'normal',
-    disabled = false,
-    focused = false,
-    iconClass = '',
-    iconClick = defaultProps.iconClick,
-    inputIcon = null,
-    invalidText = 'This field is invalid',
-    label = '',
-    link = defaultProps.link,
-    name,
-    onBlur = defaultProps.onBlur,
-    onFocus,
-    onKeyDown = defaultProps.onKeyDown,
-    pattern = null,
-    required = false,
-    onValidationError = defaultProps.onValidationError,
-    suggestionList = [],
-    step = '1',
-    tip = '',
-    type = 'text',
-    validationRules: rules = defaultProps.rules,
-    validator = defaultProps.validator,
-    withoutBorder = false,
-    ...inputProps
-  },
-  ref
-) => {
+const mapValidationRulesWithErrors = (rulesList, error) =>
+  rulesList.map(rule => ({
+    ...rule,
+    isValid: !error || !Array.isArray(error) ? true : !error.some(err => err.name === rule.name)
+  }))
+
+function FormInput({
+  async = false,
+  className = '',
+  customRequiredLabel = '',
+  density = 'normal',
+  disabled = false,
+  focused = false,
+  iconClass = '',
+  iconClick = defaultProps.iconClick,
+  inputIcon = null,
+  invalidText = 'This field is invalid',
+  label = '',
+  link = defaultProps.link,
+  name,
+  onBlur = defaultProps.onBlur,
+  onFocus,
+  onKeyDown = defaultProps.onKeyDown,
+  pattern = null,
+  required = false,
+  onValidationError = defaultProps.onValidationError,
+  suggestionList = [],
+  step = '1',
+  tip = '',
+  type = 'text',
+  validationRules: rules = defaultProps.rules,
+  validator = defaultProps.validator,
+  withoutBorder = false,
+  ref,
+  ...inputProps
+}) {
   const { input, meta } = useField(name)
-  const [isInvalid, setIsInvalid] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
-  const [typedValue, setTypedValue] = useState('')
   const [validationPattern] = useState(RegExp(pattern))
-  const [validationRules, setValidationRules] = useState(rules)
   const [showValidationRules, setShowValidationRules] = useState(false)
   const wrapperRef = useRef()
   ref ??= wrapperRef
   const inputRef = useRef()
-  const errorsRef = useRef()
-  const isRequiredRulePresentRef = useRef(false)
   useDetectOutsideClick(ref, () => setShowValidationRules(false))
   const debounceAsync = useDebounce()
+
+  const fieldError = meta.error
+  const typedValue = String(input.value ?? '')
+  const validationRules = useMemo(
+    () => mapValidationRulesWithErrors(rules, meta.error),
+    [rules, meta.error]
+  )
+
+  const hasRequiredRuleInRules = rules.some(rule => rule.name === ValidationConstants.REQUIRED.NAME)
+  const isInputInvalid = Boolean(
+    fieldError &&
+    meta.invalid &&
+    (meta.validating || meta.modified || (meta.submitFailed && meta.touched))
+  )
+
+  useEffect(() => {
+    onValidationError(isInputInvalid)
+  }, [isInputInvalid, onValidationError])
 
   const formFieldClassNames = classNames('form-field-input', className)
 
@@ -99,47 +116,28 @@ let FormInput = (
     'form-field__wrapper',
     `form-field__wrapper-${density}`,
     disabled && 'form-field__wrapper-disabled',
-    isInvalid && 'form-field__wrapper-invalid',
+    isInputInvalid && 'form-field__wrapper-invalid',
     withoutBorder && 'without-border'
   )
   const labelClassNames = classNames('form-field__label', disabled && 'form-field__label-disabled')
 
-  useEffect(() => {
-    setTypedValue(String(input.value)) // convert from number to string
-  }, [input.value])
+  const handleScroll = useCallback(event => {
+    if (inputRef.current && inputRef.current.contains(event.target)) return
 
-  useEffect(() => {
-    const isInputInvalid =
-      errorsRef.current &&
-      meta.invalid &&
-      (meta.validating || meta.modified || (meta.submitFailed && meta.touched))
-    setIsInvalid(isInputInvalid)
-    onValidationError(isInputInvalid)
-  }, [
-    meta.invalid,
-    meta.modified,
-    meta.submitFailed,
-    meta.touched,
-    meta.validating,
-    onValidationError
-  ])
-
-  useEffect(() => {
-    if (!errorsRef.current) {
-      if (meta.valid && showValidationRules) {
-        setShowValidationRules(false)
-      }
+    if (
+      !event.target.closest('.options-menu') &&
+      !event.target.classList.contains('form-field-input')
+    ) {
+      setShowValidationRules(false)
     }
-  }, [meta.valid, showValidationRules])
+  }, [])
 
   useEffect(() => {
     if (showValidationRules) {
       window.addEventListener('scroll', handleScroll, true)
+      return () => window.removeEventListener('scroll', handleScroll, true)
     }
-    return () => {
-      window.removeEventListener('scroll', handleScroll, true)
-    }
-  }, [showValidationRules])
+  }, [showValidationRules, handleScroll])
 
   useEffect(() => {
     if (focused) {
@@ -147,35 +145,18 @@ let FormInput = (
     }
   }, [focused])
 
-  useEffect(() => {
-    setValidationRules(() => {
-      isRequiredRulePresentRef.current = false
-
-      return rules.map(rule => {
-        if (rule.name === ValidationConstants.REQUIRED.NAME) {
-          isRequiredRulePresentRef.current = true
-        }
-
-        return {
-          ...rule,
-          isValid:
-            !errorsRef.current || !Array.isArray(errorsRef.current)
-              ? true
-              : !errorsRef.current.some(err => err.name === rule.name)
-        }
-      })
-    })
-  }, [rules])
-
   const getValidationRules = () => {
     return validationRules.map(({ isValid = false, label, name }) => {
       return <ValidationTemplate valid={isValid} validationMessage={label} key={name} />
     })
   }
 
-  const isValueEmptyAndValid = value => {
-    return (!value && !required) || disabled
-  }
+  const isValueEmptyAndValid = useCallback(
+    value => {
+      return (!value && !required) || disabled
+    },
+    [disabled, required]
+  )
 
   const handleInputBlur = event => {
     input.onBlur && input.onBlur(event)
@@ -196,17 +177,6 @@ let FormInput = (
     onKeyDown && onKeyDown(event)
   }
 
-  const handleScroll = event => {
-    if (inputRef.current && inputRef.current.contains(event.target)) return
-
-    if (
-      !event.target.closest('.options-menu') &&
-      !event.target.classList.contains('form-field-input')
-    ) {
-      setShowValidationRules(false)
-    }
-  }
-
   const handleSuggestionClick = item => {
     input.onChange && input.onChange(item)
     setIsFocused(false)
@@ -218,80 +188,97 @@ let FormInput = (
     setShowValidationRules(state => !state)
   }
 
-  const validateField = (value, allValues) => {
-    let valueToValidate = isNil(value) ? '' : String(value)
+  const validateField = useCallback(
+    (value, allValues) => {
+      let valueToValidate = isNil(value) ? '' : String(value)
 
-    if (isValueEmptyAndValid(valueToValidate)) return
+      if (isValueEmptyAndValid(valueToValidate)) return
 
-    let validationError = null
+      let validationError = null
 
-    if (required && valueToValidate.trim().length === 0 && !isRequiredRulePresentRef.current) {
-      validationError = {
-        name: 'required',
-        label: customRequiredLabel || 'This field is required'
+      if (required && valueToValidate.trim().length === 0 && !hasRequiredRuleInRules) {
+        validationError = {
+          name: 'required',
+          label: customRequiredLabel || 'This field is required'
+        }
+      } else if (!isEmpty(rules) && !async) {
+        const [newRules, isValidField] = checkPatternsValidity(rules, valueToValidate)
+        const invalidRules = newRules.filter(rule => !rule.isValid)
+
+        if (!isValidField) {
+          validationError = invalidRules.map(rule => ({ name: rule.name, label: rule.label }))
+        }
       }
-    } else if (!isEmpty(rules) && !async) {
-      const [newRules, isValidField] = checkPatternsValidity(rules, valueToValidate)
-      const invalidRules = newRules.filter(rule => !rule.isValid)
 
-      if (!isValidField) {
-        validationError = invalidRules.map(rule => ({ name: rule.name, label: rule.label }))
+      if (isEmpty(validationError)) {
+        if (type === 'number') {
+          if (inputProps.max && +valueToValidate > +inputProps.max) {
+            validationError = {
+              name: 'maxValue',
+              label: `The maximum value must be ${inputProps.max}`
+            }
+          }
+
+          if (inputProps.min && +valueToValidate < +inputProps.min) {
+            validationError = {
+              name: 'minValue',
+              label: `The minimum value must be ${inputProps.min}`
+            }
+          }
+        }
+        if (pattern && !validationPattern.test(valueToValidate)) {
+          validationError = { name: 'pattern', label: invalidText }
+        } else if (valueToValidate.startsWith(' ')) {
+          validationError = { name: 'empty', label: invalidText }
+        }
       }
-    }
 
-    if (isEmpty(validationError)) {
-      if (type === 'number') {
-        if (inputProps.max && +valueToValidate > +inputProps.max) {
-          validationError = {
-            name: 'maxValue',
-            label: `The maximum value must be ${inputProps.max}`
+      if (!validationError && validator) {
+        validationError = validator(value, allValues)
+      }
+
+      return validationError
+    },
+    [
+      async,
+      customRequiredLabel,
+      hasRequiredRuleInRules,
+      inputProps.max,
+      inputProps.min,
+      invalidText,
+      isValueEmptyAndValid,
+      pattern,
+      required,
+      rules,
+      type,
+      validationPattern,
+      validator
+    ]
+  )
+
+  const validateFieldAsync = useMemo(
+    () =>
+      debounceAsync(async (value, allValues) => {
+        let valueToValidate = isNil(value) ? '' : String(value)
+
+        if (isValueEmptyAndValid(valueToValidate)) return
+
+        let validationError = validateField(valueToValidate, allValues)
+
+        if (!isEmpty(rules)) {
+          const [newRules, isValidField] = await checkPatternsValidityAsync(rules, valueToValidate)
+
+          const invalidRules = newRules.filter(rule => !rule.isValid)
+
+          if (!isValidField) {
+            validationError = invalidRules.map(rule => ({ name: rule.name, label: rule.label }))
           }
         }
 
-        if (inputProps.min && +valueToValidate < +inputProps.min) {
-          validationError = {
-            name: 'minValue',
-            label: `The minimum value must be ${inputProps.min}`
-          }
-        }
-      }
-      if (pattern && !validationPattern.test(valueToValidate)) {
-        validationError = { name: 'pattern', label: invalidText }
-      } else if (valueToValidate.startsWith(' ')) {
-        validationError = { name: 'empty', label: invalidText }
-      }
-    }
-
-    if (!validationError && validator) {
-      validationError = validator(value, allValues)
-    }
-
-    errorsRef.current = validationError
-
-    return validationError
-  }
-
-  const validateFieldAsync = debounceAsync(async (value, allValues) => {
-    let valueToValidate = isNil(value) ? '' : String(value)
-
-    if (isValueEmptyAndValid(valueToValidate)) return
-
-    let validationError = validateField(valueToValidate, allValues)
-
-    if (!isEmpty(rules)) {
-      const [newRules, isValidField] = await checkPatternsValidityAsync(rules, valueToValidate)
-
-      const invalidRules = newRules.filter(rule => !rule.isValid)
-
-      if (!isValidField) {
-        validationError = invalidRules.map(rule => ({ name: rule.name, label: rule.label }))
-      }
-    }
-
-    errorsRef.current = validationError
-
-    return validationError
-  }, 400)
+        return validationError
+      }, 400),
+    [debounceAsync, isValueEmptyAndValid, rules, validateField]
+  )
 
   const parseField = val => {
     return type === 'number' && val ? parseFloat(val) || val : val
@@ -339,7 +326,7 @@ let FormInput = (
                   data-testid={name ? `${name}-form-input` : 'form-input'}
                   id={input.name}
                   ref={inputRef}
-                  required={isInvalid || required}
+                  required={isInputInvalid || required}
                   {...{
                     disabled,
                     pattern,
@@ -354,17 +341,17 @@ let FormInput = (
                 />
               </div>
               <div className="form-field__icons">
-                {isInvalid && !Array.isArray(errorsRef.current) && (
+                {isInputInvalid && !Array.isArray(fieldError) && (
                   <Tooltip
                     className="form-field__warning"
                     template={
-                      <TextTooltipTemplate text={errorsRef.current?.label ?? invalidText} warning />
+                      <TextTooltipTemplate text={fieldError?.label ?? invalidText} warning />
                     }
                   >
                     <ExclamationMarkIcon />
                   </Tooltip>
                 )}
-                {isInvalid && Array.isArray(errorsRef.current) && (
+                {isInputInvalid && Array.isArray(fieldError) && (
                   <button className="form-field__warning" onClick={toggleValidationRulesMenu}>
                     <WarningIcon />
                   </button>
@@ -401,8 +388,8 @@ let FormInput = (
                 })}
               </ul>
             )}
-            {!isEmpty(validationRules) && isInvalid && Array.isArray(errorsRef.current) && (
-              <OptionsMenu show={showValidationRules} ref={{ refInputContainer: ref }}>
+            {!isEmpty(validationRules) && isInputInvalid && Array.isArray(fieldError) && (
+              <OptionsMenu show={showValidationRules && isInputInvalid} refInputContainer={ref}>
                 {getValidationRules()}
               </OptionsMenu>
             )}
@@ -412,8 +399,6 @@ let FormInput = (
     </Field>
   )
 }
-
-FormInput = React.memo(forwardRef(FormInput))
 
 FormInput.displayName = 'FormInput'
 

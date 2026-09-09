@@ -26,7 +26,7 @@ import { FEATURE_STORE_PAGE_PATH, JOBS_PAGE_PATH, MONITORING_APP_PAGE } from '..
 const mockUseParams = vi.fn()
 const mockUseLocation = vi.fn()
 
-vi.mock('react-router-dom', () => ({
+vi.mock('react-router', () => ({
   useParams: () => mockUseParams(),
   useLocation: () => mockUseLocation()
 }))

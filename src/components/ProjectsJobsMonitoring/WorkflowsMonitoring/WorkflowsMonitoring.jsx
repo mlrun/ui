@@ -18,12 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash-es'
 
 import WorkflowsTable from '../../../elements/WorkflowsTable/WorkflowsTable'
-import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
+import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring.context'
 
 import {
   JOBS_MONITORING_PAGE,
@@ -38,7 +38,7 @@ import { usePods } from '../../../hooks/usePods.hook'
 
 const WorkflowsMonitoring = () => {
   const [selectedFunction, setSelectedFunction] = useState({})
-  const [workflowsAreLoaded, setWorkflowsAreLoaded] = useState(false)
+  const workflowsAreLoadedRef = useRef(false)
   const [workflowIsLoaded, setWorkflowIsLoaded] = useState(false)
   const [itemIsSelected, setItemIsSelected] = useState(false)
   const [selectedJob, setSelectedJob] = useState({})
@@ -73,7 +73,7 @@ const WorkflowsMonitoring = () => {
 
     return () => {
       setWorkflowIsLoaded(false)
-      setWorkflowsAreLoaded(false)
+      workflowsAreLoadedRef.current = false
       setItemIsSelected(false)
       setSelectedJob({})
       setSelectedFunction({})
@@ -84,23 +84,17 @@ const WorkflowsMonitoring = () => {
   useEffect(() => {
     return () => {
       dispatch(deleteWorkflows())
-      setWorkflowsAreLoaded(false)
+      workflowsAreLoadedRef.current = false
     }
   }, [dispatch])
 
   useEffect(() => {
-    if (!workflowsAreLoaded && !params.workflowId) {
-      getWorkflows(filters)
+    if (!workflowsAreLoadedRef.current && !params.workflowId) {
+      workflowsAreLoadedRef.current = true
 
-      setWorkflowsAreLoaded(true)
+      getWorkflows(filters)
     }
-  }, [
-    filters,
-    getWorkflows,
-    params.workflowId,
-    workflowsAreLoaded,
-    workflowsStore.workflows.data.length
-  ])
+  }, [filters, getWorkflows, params.workflowId, workflowsStore.workflows.data.length])
 
   return (
     <>
@@ -111,7 +105,7 @@ const WorkflowsMonitoring = () => {
         filtersConfig={workflowsFiltersConfig}
         getWorkflows={getWorkflows}
         itemIsSelected={itemIsSelected}
-        ref={{ abortJobRef }}
+        abortJobRef={abortJobRef}
         requestErrorMessage={requestErrorMessage}
         selectedFunction={selectedFunction}
         selectedJob={selectedJob}

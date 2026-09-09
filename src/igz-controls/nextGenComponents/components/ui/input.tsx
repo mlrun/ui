@@ -2,14 +2,13 @@ import * as React from 'react'
 
 import { cn } from '../../lib/utils'
 
-const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(
-  ({ className, type = 'text', ...props }, ref) => {
-    return (
-      <input
-        type={type}
-        ref={ref}
-        className={cn(
-          `
+function Input({ className, type = 'text', ref, ...props }: React.ComponentProps<'input'>) {
+  return (
+    <input
+      type={type}
+      ref={ref}
+      className={cn(
+        `
         flex h-10 w-full
         rounded-md
         border border-solid border-input
@@ -21,13 +20,12 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(
         file:border-0 file:bg-transparent file:text-sm file:font-medium file:foreground
         md:text-sm
       `,
-          className
-        )}
-        {...props}
-      />
-    )
-  }
-)
+        className
+      )}
+      {...props}
+    />
+  )
+}
 
 Input.displayName = 'Input'
 

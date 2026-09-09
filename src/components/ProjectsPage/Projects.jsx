@@ -17,11 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty, last, orderBy } from 'lodash-es'
-import FileSaver from 'file-saver'
-import yaml from 'js-yaml'
+import saveAs from 'file-saver'
+import * as yaml from 'js-yaml'
 
 import ProjectsView from './ProjectsView'
 
@@ -48,7 +48,7 @@ import { fetchBackgroundTasks } from '../../reducers/tasksReducer'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { useMode } from '../../hooks/mode.hook'
-import { useNuclioMode } from '../../hooks/nuclioMode.hook'
+import { isNuclioModeDisabled as checkNuclioModeDisabled } from '../../utils/helper'
 import {
   changeProjectState,
   createNewProject,
@@ -67,7 +67,6 @@ const Projects = () => {
   const [confirmData, setConfirmData] = useState(null)
   const [convertedYaml, setConvertedYaml] = useState('')
   const [createProject, setCreateProject] = useState(false)
-  const [filteredProjects, setFilteredProjects] = useState([])
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
   const [isDescendingOrder, setIsDescendingOrder] = useState(false)
@@ -82,7 +81,7 @@ const Projects = () => {
 
   const dispatch = useDispatch()
   const { isDemoMode } = useMode()
-  const { isNuclioModeDisabled } = useNuclioMode()
+  const isNuclioModeDisabled = checkNuclioModeDisabled()
   const alertStore = useSelector(store => store.projectStore.projectTotalAlerts)
   const projectStore = useSelector(store => store.projectStore)
   const tasksStore = useSelector(store => store.tasksStore)
@@ -206,7 +205,7 @@ const Projects = () => {
   }
 
   const handleArchiveProject = useCallback(
-    project => {
+    function handleArchiveProject(project) {
       dispatch(changeProjectState({ project: project.metadata.name, status: 'archived' }))
         .unwrap()
         .then(() => {
@@ -228,7 +227,7 @@ const Projects = () => {
   )
 
   const handleUnarchiveProject = useCallback(
-    project => {
+    function handleUnarchiveProject(project) {
       dispatch(
         changeProjectState({ project: project.metadata.name, status: PROJECT_ONLINE_STATUS })
       )
@@ -283,14 +282,14 @@ const Projects = () => {
   )
 
   const exportYaml = useCallback(
-    projectMinimal => {
+    function exportYaml(projectMinimal) {
       if (projectMinimal?.metadata?.name) {
         dispatch(fetchProject({ project: projectMinimal.metadata.name }))
           .unwrap()
           .then(response => {
             var blob = new Blob([yaml.dump(response?.data, { lineWidth: -1 })])
 
-            FileSaver.saveAs(blob, `${projectMinimal.metadata.name}.yaml`)
+            saveAs(blob, `${projectMinimal.metadata.name}.yaml`)
           })
           .catch(error => {
             showErrorNotification(dispatch, error, '', "Failed to fetch project's YAML", () =>
@@ -303,7 +302,7 @@ const Projects = () => {
   )
 
   const viewYaml = useCallback(
-    projectMinimal => {
+    function viewYaml(projectMinimal) {
       const yamlByteSizeLimit = 2000000
       if (projectMinimal?.metadata?.name) {
         dispatch(fetchProject({ project: projectMinimal.metadata.name }))
@@ -385,15 +384,23 @@ const Projects = () => {
     }
   }, [])
 
-  useEffect(() => {
-    setFilteredProjects(handleSortProjects(projectStore.projects.filter(handleFilterProject)))
-  }, [handleFilterProject, handleSortProjects, projectStore.projects])
+  const filteredProjects = useMemo(
+    () => handleSortProjects(projectStore.projects.filter(handleFilterProject)),
+    [handleFilterProject, handleSortProjects, projectStore.projects]
+  )
 
-  useEffect(() => {
+  const [prevFilterMatchKey, setPrevFilterMatchKey] = useState({ filterByName, filteredProjects })
+
+  if (
+    prevFilterMatchKey.filterByName !== filterByName ||
+    prevFilterMatchKey.filteredProjects !== filteredProjects
+  ) {
+    setPrevFilterMatchKey({ filterByName, filteredProjects })
+
     if (filterByName.length > 0) {
       setFilterMatches(filteredProjects.map(func => func.metadata.name))
     }
-  }, [filterByName, filteredProjects])
+  }
 
   const closeNewProjectPopUp = useCallback(() => {
     if (projectStore.newProject.error) {

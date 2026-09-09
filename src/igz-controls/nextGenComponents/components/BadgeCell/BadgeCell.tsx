@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import Badge, { getBadgeColor } from '../Badge'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
@@ -28,6 +28,8 @@ const formatLabel = (badge: BadgeItem, delimiter: string) => {
 const BadgeCell = ({ badges, delimiter = ':', maxVisible, className }: BadgeCellProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const measureRef = useRef<HTMLDivElement>(null)
+  const lastThrottleCallRef = useRef(0)
+  const throttleTimeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [visibleCount, setVisibleCount] = useState(badges.length)
 
   const calculateVisibleCount = useCallback(() => {
@@ -64,39 +66,30 @@ const BadgeCell = ({ badges, delimiter = ':', maxVisible, className }: BadgeCell
     setVisibleCount(Math.max(count, 0))
   }, [badges.length, maxVisible])
 
-  const throttledCalculate = useMemo(() => {
-    let lastCall = 0
-    let timeoutId: ReturnType<typeof setTimeout> | null = null
+  const cancelThrottledCalculate = useCallback(() => {
+    if (throttleTimeoutIdRef.current) {
+      clearTimeout(throttleTimeoutIdRef.current)
+      throttleTimeoutIdRef.current = null
+    }
+  }, [])
 
-    const throttled = () => {
-      const now = Date.now()
-      const remaining = 150 - (now - lastCall)
+  const throttledCalculate = useCallback(() => {
+    const now = Date.now()
+    const remaining = 150 - (now - lastThrottleCallRef.current)
 
-      if (remaining <= 0) {
-        lastCall = now
+    if (remaining <= 0) {
+      lastThrottleCallRef.current = now
+      calculateVisibleCount()
+    } else if (!throttleTimeoutIdRef.current) {
+      throttleTimeoutIdRef.current = setTimeout(() => {
+        lastThrottleCallRef.current = Date.now()
+        throttleTimeoutIdRef.current = null
         calculateVisibleCount()
-      } else if (!timeoutId) {
-        timeoutId = setTimeout(() => {
-          lastCall = Date.now()
-          timeoutId = null
-          calculateVisibleCount()
-        }, remaining)
-      }
+      }, remaining)
     }
-
-    throttled.cancel = () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId)
-        timeoutId = null
-      }
-    }
-
-    return throttled
   }, [calculateVisibleCount])
 
   useEffect(() => {
-    calculateVisibleCount()
-
     const observer = new ResizeObserver(throttledCalculate)
     if (containerRef.current) {
       observer.observe(containerRef.current)
@@ -104,9 +97,9 @@ const BadgeCell = ({ badges, delimiter = ':', maxVisible, className }: BadgeCell
 
     return () => {
       observer.disconnect()
-      throttledCalculate.cancel()
+      cancelThrottledCalculate()
     }
-  }, [calculateVisibleCount, throttledCalculate])
+  }, [calculateVisibleCount, throttledCalculate, cancelThrottledCalculate])
 
   if (badges.length === 0) {
     return null

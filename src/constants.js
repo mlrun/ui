@@ -40,8 +40,6 @@ export const DEFAULT_ABORT_MSG = 'canceled'
 
 export const MODEL_PATH_DATA_INPUT = 'model_path'
 
-export const NAVBAR_WIDTH_CLOSED = 57
-export const NAVBAR_WIDTH_OPENED = 245
 export const CANCEL_REQUEST_TIMEOUT = 120000
 
 export const PROJECT_ONLINE_STATUS = 'online'

@@ -20,7 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 import { TableTypeCell } from 'igz-controls/elements'
 import { TextTooltipTemplate, Tooltip, Tip, Loader, ReadOnlyChips } from 'igz-controls/components'

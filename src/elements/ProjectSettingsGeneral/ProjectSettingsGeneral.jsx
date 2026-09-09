@@ -24,7 +24,7 @@ import { Form } from 'react-final-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 import { cloneDeep, isEmpty } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 import {
   FormKeyValueTable,
@@ -73,20 +73,19 @@ import { fetchProject, removeProjectData } from '../../reducers/projectReducer'
 
 import './projectSettingsGeneral.scss'
 
-/* eslint-disable */
 const ProjectSettingsGeneral = ({
   changeOwnerCallback,
   membersState,
   projectMembershipIsEnabled,
   projectOwnerIsShown
 }) => {
-  const [projectIsInitialized, setProjectIsInitialized] = useState(false)
+  const projectIsInitializedRef = useRef(false)
   const [lastEditedProjectValues, setLastEditedProjectValues] = useState({})
   const internalLabelsValidatedRef = useRef(true)
   const projectStore = useSelector(store => store.projectStore)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
-  const formRef = useRef(
+  const [form] = useState(
     createForm({
       initialValues: {},
       mutators: { ...arrayMutators, setFieldState },
@@ -98,8 +97,8 @@ const ProjectSettingsGeneral = ({
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (!projectIsInitialized) {
-      setProjectIsInitialized(true)
+    if (!projectIsInitializedRef.current) {
+      projectIsInitializedRef.current = true
 
       dispatch(fetchProject({ project: params.projectName }))
         .unwrap()
@@ -137,7 +136,7 @@ const ProjectSettingsGeneral = ({
           showErrorNotification(dispatch, error, '', customErrorMsg)
         })
     }
-  }, [params.pageTab, params.projectName, dispatch, frontendSpec, projectIsInitialized])
+  }, [params.pageTab, params.projectName, dispatch, frontendSpec])
 
   useEffect(() => {
     if (
@@ -162,12 +161,12 @@ const ProjectSettingsGeneral = ({
   useEffect(() => {
     return () => {
       dispatch(removeProjectData())
-      setProjectIsInitialized(false)
+      projectIsInitializedRef.current = false
     }
   }, [dispatch])
 
   const sendProjectSettingsData = useCallback(
-    projectData => {
+    function sendProjectSettingsDataCallback(projectData) {
       projectsApi
         .editProject(params.projectName, projectData)
         .then(() => {
@@ -186,11 +185,10 @@ const ProjectSettingsGeneral = ({
               : getErrorMsg(error, 'Failed to edit project data')
 
           showErrorNotification(dispatch, error, '', customErrorMsg, () =>
-            sendProjectSettingsData(projectData)
+            sendProjectSettingsDataCallback(projectData)
           )
         })
     },
-
     [dispatch, params.projectName]
   )
 
@@ -248,7 +246,7 @@ const ProjectSettingsGeneral = ({
     <>
       {(projectStore.loading || projectStore.project.loading) && <Loader />}
 
-      <Form form={formRef.current} onSubmit={() => {}}>
+      <Form form={form} onSubmit={() => {}}>
         {formState => {
           formStateRef.current = formState
 
@@ -420,7 +418,17 @@ const ProjectSettingsGeneral = ({
 }
 
 ProjectSettingsGeneral.propTypes = {
-  changeOwnerCallback: PropTypes.func.isRequired
+  changeOwnerCallback: PropTypes.func.isRequired,
+  membersState: PropTypes.shape({
+    projectInfo: PropTypes.shape({
+      id: PropTypes.string,
+      owner: PropTypes.shape({
+        username: PropTypes.string
+      })
+    })
+  }).isRequired,
+  projectMembershipIsEnabled: PropTypes.bool,
+  projectOwnerIsShown: PropTypes.bool
 }
 
 export default ProjectSettingsGeneral

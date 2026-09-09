@@ -20,7 +20,7 @@ such restriction.
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import Prism from 'prismjs'
-import yaml from 'js-yaml'
+import * as yaml from 'js-yaml'
 
 import {
   Button,

@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams, Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { useParams, Outlet, useNavigate, useLocation } from 'react-router'
 import { isEmpty } from 'lodash-es'
 import { createPortal } from 'react-dom'
 import ModalContainer from 'react-modal-promise'
@@ -54,8 +54,10 @@ const Page = () => {
     return generateProjectsList(projectsNames.data)
   }, [projectsNames.data])
 
+  const shouldFetchProjects = projectsList.length === 0 && location.pathname !== '/projects'
+
   useEffect(() => {
-    if (projectsList.length === 0 && location.pathname !== '/projects') {
+    if (shouldFetchProjects) {
       dispatch(fetchProjects({ params: { format: 'minimal' }, showNotification: false }))
         .unwrap()
         .then(projects => {
@@ -66,18 +68,26 @@ const Page = () => {
           setProjectFetched(true)
           navigate('/projects')
         })
-    } else {
-      setProjectFetched(true)
     }
-  }, [dispatch, location.pathname, navigate, projectName, projectsList.length])
+  }, [dispatch, navigate, projectName, shouldFetchProjects])
+
+  if (!isProjectsFetched && !shouldFetchProjects) {
+    setProjectFetched(true)
+  }
 
   useEffect(() => {
-    if (mainRef) {
-      mainRef.current.addEventListener(transitionEndEventName, event => {
-        if (event.target !== mainRef.current) return
-        window.dispatchEvent(new CustomEvent('mainResize'))
-      })
+    const node = mainRef?.current
+
+    if (!node) return
+
+    const handleTransitionEnd = event => {
+      if (event.target !== node) return
+      window.dispatchEvent(new CustomEvent('mainResize'))
     }
+
+    node.addEventListener(transitionEndEventName, handleTransitionEnd)
+
+    return () => node.removeEventListener(transitionEndEventName, handleTransitionEnd)
   }, [transitionEndEventName])
 
   useEffect(() => {

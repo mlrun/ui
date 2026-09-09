@@ -42,7 +42,7 @@ const { MockLink } = vi.hoisted(() => {
 
 let mockPathname = '/projects/demo/functions'
 
-vi.mock('react-router-dom', () => ({
+vi.mock('react-router', () => ({
   useLocation: () => ({ pathname: mockPathname }),
   Link: MockLink
 }))

@@ -17,9 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState, useMemo, useLayoutEffect } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { useNavigate, useParams, Outlet, useLocation } from 'react-router-dom'
+import { useNavigate, useParams, Outlet, useLocation } from 'react-router'
 import { defaultsDeep, isEmpty } from 'lodash-es'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
@@ -53,16 +53,26 @@ import ScheduledJobsFilters from './ScheduledJobs/ScheduledJobsFilters'
 import { useJobsPageData } from '../../hooks/useJobsPageData'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 
-export const JobsContext = React.createContext({})
+import { JobsContext } from './Jobs.context'
+
+const getSelectedTabFromPathname = pathname =>
+  pathname.includes(`${JOBS_PAGE_PATH}/${MONITOR_JOBS_TAB}`)
+    ? MONITOR_JOBS_TAB
+    : pathname.includes(`${JOBS_PAGE_PATH}/${SCHEDULE_TAB}`)
+      ? SCHEDULE_TAB
+      : MONITOR_WORKFLOWS_TAB
 
 const Jobs = () => {
-  const [confirmData, setConfirmData] = useState(null)
-  const [selectedTab, setSelectedTab] = useState(null)
-  const [autoRefreshPrevValue, setAutoRefreshPrevValue] = useState(false)
-  const [selectedJob, setSelectedJob] = useState({})
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const [confirmData, setConfirmData] = useState(null)
+  const [selectedTab, setSelectedTab] = useState(() =>
+    getSelectedTabFromPathname(location.pathname)
+  )
+  const [prevPathname, setPrevPathname] = useState(location.pathname)
+  const [autoRefreshPrevValue, setAutoRefreshPrevValue] = useState(false)
+  const [selectedJob, setSelectedJob] = useState({})
   const functionsStore = useSelector(store => store.functionsStore)
   const jobsStore = useSelector(store => store.jobsStore)
   const workflowsStore = useSelector(store => store.workflowsStore)
@@ -88,6 +98,8 @@ const Jobs = () => {
         parseQueryParamsCallback: parseScheduledQueryParamsCallback
       }
     }
+    // intentionally added params.projectName and selectedTab to generate new configs
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.jobName, params.projectName, selectedTab])
 
   const {
@@ -107,6 +119,7 @@ const Jobs = () => {
     jobs,
     lastCheckedJobIdRef,
     paginatedJobs,
+    paginationConfig,
     paginationConfigJobsRef,
     refreshAfterDeleteCallback,
     refreshJobs,
@@ -155,15 +168,10 @@ const Jobs = () => {
     )
   }, [getWorkflows, handleRefreshJobs, initialTabData, refreshScheduled])
 
-  useLayoutEffect(() => {
-    setSelectedTab(
-      location.pathname.includes(`${JOBS_PAGE_PATH}/${MONITOR_JOBS_TAB}`)
-        ? MONITOR_JOBS_TAB
-        : location.pathname.includes(`${JOBS_PAGE_PATH}/${SCHEDULE_TAB}`)
-          ? SCHEDULE_TAB
-          : MONITOR_WORKFLOWS_TAB
-    )
-  }, [location.pathname])
+  if (location.pathname !== prevPathname) {
+    setPrevPathname(location.pathname)
+    setSelectedTab(getSelectedTabFromPathname(location.pathname))
+  }
 
   useEffect(() => {
     const urlPathArray = location.pathname.split('/')
@@ -280,6 +288,7 @@ const Jobs = () => {
                   jobsFiltersConfig: initialTabData[MONITOR_JOBS_TAB].filtersConfig,
                   lastCheckedJobIdRef,
                   paginatedJobs,
+                  paginationConfig,
                   paginationConfigJobsRef,
                   refreshAfterDeleteCallback,
                   refreshJobs,

@@ -19,8 +19,8 @@ such restriction.
 */
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { isEmpty } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { isEmpty, isEqual } from 'lodash-es'
+import { useParams } from 'react-router'
 
 import ConsumerGroupShardLagTableRow from '../../elements/ConsumerGroupShardLagTableRow/ConsumerGroupShardLagTableRow'
 import NoData from '../../common/NoData/NoData'
@@ -44,7 +44,6 @@ import RefreshIcon from 'igz-controls/images/refresh.svg?react'
 const ConsumerGroup = () => {
   const [currentV3ioStream, setCurrentV3ioStream] = useState([])
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
-  const [filteredV3ioStreamShardLags, setFilteredV3ioStreamShardLags] = useState([])
   const filtersStore = useSelector(store => store.filtersStore)
   const nuclioStore = useSelector(store => store.nuclioStore)
   const [localFilters, setLocalFilters] = useState({ [NAME_FILTER]: '' })
@@ -57,16 +56,14 @@ const ConsumerGroup = () => {
     }
   }, [])
 
-  useEffect(() => {
-    const v3ioStream = nuclioStore.v3ioStreams.parsedData.find(
-      stream =>
-        stream.functionName === params.functionName && stream.streamName === params.streamName
-    )
+  const matchedV3ioStream = nuclioStore.v3ioStreams.parsedData.find(
+    stream => stream.functionName === params.functionName && stream.streamName === params.streamName
+  )
 
-    if (v3ioStream) {
-      setCurrentV3ioStream(v3ioStream)
-    }
-  }, [nuclioStore.v3ioStreams.parsedData, params.functionName, params.streamName])
+  if (matchedV3ioStream && !isEqual(currentV3ioStream, matchedV3ioStream)) {
+    setCurrentV3ioStream(matchedV3ioStream)
+    setRequestErrorMessage('')
+  }
 
   const refreshConsumerGroup = useCallback(
     currentV3ioStream => {
@@ -85,19 +82,28 @@ const ConsumerGroup = () => {
 
   useEffect(() => {
     if (!isEmpty(currentV3ioStream)) {
-      refreshConsumerGroup(currentV3ioStream)
+      dispatch(
+        fetchNuclioV3ioStreamShardLags({
+          project: params.projectName,
+          body: {
+            consumerGroup: currentV3ioStream.consumerGroup,
+            containerName: currentV3ioStream.containerName,
+            streamPath: currentV3ioStream.streamPath
+          }
+        })
+      )
     }
-  }, [currentV3ioStream, refreshConsumerGroup])
+  }, [currentV3ioStream, dispatch, params.projectName])
 
-  useEffect(() => {
-    setFilteredV3ioStreamShardLags(
+  const filteredV3ioStreamShardLags = useMemo(
+    () =>
       nuclioStore.v3ioStreamShardLags.parsedData.filter(shardLag =>
         localFilters[NAME_FILTER]
           ? shardLag.shardLagId.toLowerCase().includes(localFilters[NAME_FILTER])
           : true
-      )
-    )
-  }, [localFilters, nuclioStore.v3ioStreamShardLags.parsedData])
+      ),
+    [localFilters, nuclioStore.v3ioStreamShardLags.parsedData]
+  )
 
   useEffect(() => {
     if (!isEmpty(currentV3ioStream) && nuclioStore.v3ioStreamShardLags.error) {

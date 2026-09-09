@@ -130,11 +130,9 @@ const MlReactFlow = ({
     }, 50)
   }, [reactFlowInstance])
 
-  useEffect(() => {
-    if (reactFlowInstance && !initialGraphViewGenerated && nodes.length > 0) {
-      setInitialGraphViewGenerated(true)
-    }
-  }, [nodes.length, initialGraphViewGenerated, reactFlowInstance])
+  if (reactFlowInstance && !initialGraphViewGenerated && nodes.length > 0) {
+    setInitialGraphViewGenerated(true)
+  }
 
   useEffect(() => {
     if (reactFlowInstance && initialGraphViewGenerated) {

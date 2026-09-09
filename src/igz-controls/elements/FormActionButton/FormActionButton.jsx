@@ -17,23 +17,21 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { forwardRef } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import Plus from '../../images/plus.svg?react'
 
-let FormActionButton = (
-  {
-    disabled = false,
-    fields,
-    fieldsPath,
-    hidden = false,
-    id = '',
-    label = 'Add new item',
-    onClick
-  },
+function FormActionButton({
+  disabled = false,
+  fields,
+  fieldsPath,
+  hidden = false,
+  id = '',
+  label = 'Add new item',
+  onClick,
   ref
-) => {
+}) {
   return (
     <>
       {!hidden && (
@@ -53,8 +51,6 @@ let FormActionButton = (
     </>
   )
 }
-
-FormActionButton = forwardRef(FormActionButton)
 
 FormActionButton.displayName = 'FormActionButton'
 

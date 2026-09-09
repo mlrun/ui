@@ -18,8 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
-import path from 'node:path'
-
 export default {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: ['@storybook/addon-links', '@storybook/addon-docs', '@storybook/preset-scss'],

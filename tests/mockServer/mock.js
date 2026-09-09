@@ -19,7 +19,7 @@ such restriction.
 */
 import express from 'express'
 import bodyParser from 'body-parser'
-import yaml from 'js-yaml'
+import * as yaml from 'js-yaml'
 import fs from 'fs'
 import crypto from 'node:crypto'
 import {
@@ -2809,14 +2809,24 @@ function getNuclioAPIGateways(req, res) {
 }
 
 // Iguazio
+function getIguazioProjectFilterName(req) {
+  return req.query.filter?.name ?? req.query['filter[name]']
+}
+
 function getIguazioProjects(req, res) {
   let resultTemplate = cloneDeep(iguazioProjects)
 
+  const filterName = getIguazioProjectFilterName(req)
   let filteredProject = {}
-  if (req.query.filter.name) {
+  if (filterName) {
     filteredProject = cloneDeep(
-      iguazioProjects.data.find(item => item.attributes.name === req.query.filter.name)
+      iguazioProjects.data.find(item => item.attributes.name === filterName)
     )
+  }
+
+  if (!filteredProject?.id) {
+    res.status(404).send({ errors: [{ detail: 'Project not found' }] })
+    return
   }
 
   let owner
@@ -2833,6 +2843,11 @@ function getIguazioProjects(req, res) {
       }
     }
     owner = iguazioUsers.data.find(item => item.id === ownerID)
+  }
+
+  if (!owner) {
+    res.status(404).send({ errors: [{ detail: 'Project owner not found' }] })
+    return
   }
 
   filteredProject.attributes.owner_username = owner.attributes.username

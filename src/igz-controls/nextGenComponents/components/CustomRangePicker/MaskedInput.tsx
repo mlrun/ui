@@ -2,11 +2,7 @@ import type { ClipboardEvent, KeyboardEvent } from 'react'
 import { useCallback, useRef, useState } from 'react'
 
 import { cn } from '../../lib/utils'
-
-export type MaskItem = RegExp | string
-
-export const isMaskComplete = (value: string, placeholderChar = '_'): boolean =>
-  value.length > 0 && !value.includes(placeholderChar)
+import type { MaskItem } from './maskedInput.types'
 
 type Props = {
   mask: MaskItem[] | ((value: string) => MaskItem[])

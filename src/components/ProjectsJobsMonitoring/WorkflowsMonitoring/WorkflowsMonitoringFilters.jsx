@@ -32,7 +32,7 @@ import {
   PROJECTS_FILTER_ALL_ITEMS,
   STATUS_FILTER_NAME
 } from '../../../constants'
-import { workflowsStatuses } from '../../FilterMenu/filterMenu.settings'
+import { workflowsStatuses } from '../../FilterMenuModal/filterMenuModal.settings.js'
 import { useMode } from '../../../hooks/mode.hook'
 import { generateProjectsList } from '../../../utils/projects'
 

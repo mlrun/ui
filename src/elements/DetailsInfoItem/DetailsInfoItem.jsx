@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash-es'
 import Prism from 'prismjs'
@@ -45,331 +45,326 @@ import Close from 'igz-controls/images/close.svg?react'
 import Edit from 'igz-controls/images/edit.svg?react'
 import classNames from 'classnames'
 
-const DetailsInfoItem = React.forwardRef(
-  (
-    {
-      chipsClassName = '',
-      chipsData = {
-        chips: [],
-        chipOptions: {},
-        delimiter: null,
-        isEditEnabled: true
-      },
-      currentField = '',
-      detailsInfoDispatch = () => {},
-      editableFieldType = '',
-      formState = {},
-      handleDiscardChanges = null,
-      handleFinishEdit = () => {},
-      info = null,
-      isDetailsPopUp = false,
-      isFieldInEditMode = false,
-      item = {},
-      onClick = null,
-      state = ''
-    },
-    ref
-  ) => {
-    const [inputIsValid, setInputIsValid] = useState(true)
-    const commonDetailsStore = useSelector(store => store.commonDetailsStore)
+function DetailsInfoItem({
+  chipsClassName = '',
+  chipsData = {
+    chips: [],
+    chipOptions: {},
+    delimiter: null,
+    isEditEnabled: true
+  },
+  currentField = '',
+  detailsInfoDispatch = () => {},
+  editableFieldType = '',
+  formState = {},
+  handleDiscardChanges = null,
+  handleFinishEdit = () => {},
+  info = null,
+  isDetailsPopUp = false,
+  isFieldInEditMode = false,
+  item = {},
+  onClick = null,
+  ref,
+  state = ''
+}) {
+  const [inputIsValid, setInputIsValid] = useState(true)
+  const commonDetailsStore = useSelector(store => store.commonDetailsStore)
 
-    const discardChanges = () => {
-      handleDiscardChanges && handleDiscardChanges(currentField)
-      item.handleDiscardChanges && item.handleDiscardChanges(formState, commonDetailsStore)
-    }
+  const discardChanges = () => {
+    handleDiscardChanges && handleDiscardChanges(currentField)
+    item.handleDiscardChanges && item.handleDiscardChanges(formState, commonDetailsStore)
+  }
 
-    if (item?.editModeType === 'chips') {
-      return (
-        <DetailsInfoItemChip
-          chipsClassName={chipsClassName}
-          chipsData={chipsData}
-          currentField={currentField}
-          detailsInfoDispatch={detailsInfoDispatch}
-          commonDetailsStore={commonDetailsStore}
-          editableFieldType={editableFieldType}
-          formState={formState}
-          handleFinishEdit={handleFinishEdit}
-          isEditable={!isDetailsPopUp && item?.editModeEnabled}
-          isFieldInEditMode={isFieldInEditMode}
-          item={item}
-        />
-      )
-    } else if (item?.editModeEnabled && isFieldInEditMode && !isDetailsPopUp) {
-      return (
-        <div className="details-item__input-wrapper" ref={ref}>
-          {editableFieldType === 'input' && (
-            <Input
+  if (item?.editModeType === 'chips') {
+    return (
+      <DetailsInfoItemChip
+        chipsClassName={chipsClassName}
+        chipsData={chipsData}
+        currentField={currentField}
+        detailsInfoDispatch={detailsInfoDispatch}
+        commonDetailsStore={commonDetailsStore}
+        editableFieldType={editableFieldType}
+        formState={formState}
+        handleFinishEdit={handleFinishEdit}
+        isEditable={!isDetailsPopUp && item?.editModeEnabled}
+        isFieldInEditMode={isFieldInEditMode}
+        item={item}
+      />
+    )
+  } else if (item?.editModeEnabled && isFieldInEditMode && !isDetailsPopUp) {
+    return (
+      <div className="details-item__input-wrapper" ref={ref}>
+        {editableFieldType === 'input' && (
+          <Input
+            focused
+            onChange={item.onChange}
+            invalid={!inputIsValid}
+            setInvalid={value => setInputIsValid(value)}
+            value={info}
+            validationRules={item.validationRules}
+          />
+        )}
+        {editableFieldType === 'textarea' && (
+          <FormTextarea focused maxLength={500} name={item.fieldData.name} />
+        )}
+        {editableFieldType === 'formInput' && (
+          <>
+            <FormInput
+              async={item.fieldData.async}
               focused
-              onChange={item.onChange}
-              invalid={!inputIsValid}
-              setInvalid={value => setInputIsValid(value)}
-              value={info}
-              validationRules={item.validationRules}
+              name={item.fieldData.name}
+              validationRules={getValidationRules(
+                item.fieldData.validationRules.name,
+                item.fieldData.validationRules.additionalRules ?? []
+              )}
             />
-          )}
-          {editableFieldType === 'textarea' && (
-            <FormTextarea focused maxLength={500} name={item.fieldData.name} />
-          )}
-          {editableFieldType === 'formInput' && (
-            <>
-              <FormInput
-                async={item.fieldData.async}
-                focused
-                name={item.fieldData.name}
-                validationRules={getValidationRules(
-                  item.fieldData.validationRules.name,
-                  item.fieldData.validationRules.additionalRules ?? []
-                )}
+            <FormOnChange
+              name={item.fieldData.name}
+              handler={value => {
+                formState.form.change(item.fieldData.name, value.length === 0 ? '' : value)
+              }}
+            />
+          </>
+        )}
+        <RoundedIcon
+          disabled={!inputIsValid || formState.invalid || formState.validating}
+          onClick={() => handleFinishEdit(item.fieldData.name)}
+          tooltipText="Apply"
+        >
+          <Checkmark />
+        </RoundedIcon>
+
+        <RoundedIcon onClick={discardChanges} tooltipText="Discard changes">
+          <Close />
+        </RoundedIcon>
+      </div>
+    )
+  } else if (item?.copyToClipboard && info) {
+    return (
+      <div className="details-item__data details-item__data_multiline">
+        {(Array.isArray(info) ? info : [info]).map((infoItem, index) => {
+          return (
+            <CopyToClipboard
+              key={index}
+              className="details-item__data details-item__copy-to-clipboard"
+              textToCopy={infoItem}
+              tooltipText="Click to copy"
+            >
+              {infoItem}
+            </CopyToClipboard>
+          )
+        })}
+      </div>
+    )
+  } else if (currentField === 'usage_example') {
+    return (
+      <div className="details-item__data details-item__usage-example">
+        {info.map((infoItem, index) => (
+          <div key={index}>
+            <div>
+              {infoItem.title}
+              <CopyToClipboard
+                className="details-item__btn-copy"
+                textToCopy={infoItem.code}
+                tooltipText="Copy"
               />
-              <FormOnChange
-                name={item.fieldData.name}
-                handler={value => {
-                  formState.form.change(item.fieldData.name, value.length === 0 ? '' : value)
+            </div>
+            <pre>
+              <code
+                dangerouslySetInnerHTML={{
+                  __html: infoItem.code && Prism.highlight(infoItem.code, Prism.languages.py, 'py')
                 }}
               />
-            </>
-          )}
-          <RoundedIcon
-            disabled={!inputIsValid || formState.invalid || formState.validating}
-            onClick={() => handleFinishEdit(item.fieldData.name)}
-            tooltipText="Apply"
-          >
-            <Checkmark />
-          </RoundedIcon>
+            </pre>
+          </div>
+        ))}
+      </div>
+    )
+  } else if (currentField === 'sparkUiUrl' && !isDetailsPopUp) {
+    return (
+      <Tooltip
+        className="details-item__data details-item__link"
+        template={<TextTooltipTemplate text={info} />}
+      >
+        <a className="link" href={'https://' + info} target="_blank" rel="noreferrer">
+          {info}
+        </a>
+      </Tooltip>
+    )
+  } else if (state) {
+    return (
+      <div className="details-item__data details-item__status">
+        {state}
+        <i className={`state-${state}-job status-icon`} />
+      </div>
+    )
+  } else if (!isEmpty(info) && item.shouldPopUp && item.handleClick && !isDetailsPopUp) {
+    return (
+      <div
+        className="details-item__data details-item__link link"
+        onClick={info && item.handleClick}
+      >
+        <Tooltip template={<TextTooltipTemplate text={info} />}>{info}</Tooltip>
+      </div>
+    )
+  } else if ((item.link || item.externalLink) && info && !isDetailsPopUp) {
+    return (
+      <div className="details-item__data details-item__data_multiline">
+        {(Array.isArray(info) ? info : [info]).map((infoItem, index) => {
+          if (!infoItem) return null
 
-          <RoundedIcon onClick={discardChanges} tooltipText="Discard changes">
-            <Close />
-          </RoundedIcon>
-        </div>
-      )
-    } else if (item?.copyToClipboard && info) {
-      return (
-        <div className="details-item__data details-item__data_multiline">
-          {(Array.isArray(info) ? info : [info]).map((infoItem, index) => {
-            return (
-              <CopyToClipboard
-                key={index}
-                className="details-item__data details-item__copy-to-clipboard"
-                textToCopy={infoItem}
-                tooltipText="Click to copy"
-              >
-                {infoItem}
-              </CopyToClipboard>
-            )
-          })}
-        </div>
-      )
-    } else if (currentField === 'usage_example') {
-      return (
-        <div className="details-item__data details-item__usage-example">
-          {info.map((infoItem, index) => (
-            <div key={index}>
-              <div>
-                {infoItem.title}
-                <CopyToClipboard
-                  className="details-item__btn-copy"
-                  textToCopy={infoItem.code}
-                  tooltipText="Copy"
-                />
-              </div>
-              <pre>
-                <code
-                  dangerouslySetInnerHTML={{
-                    __html:
-                      infoItem.code && Prism.highlight(infoItem.code, Prism.languages.py, 'py')
-                  }}
-                />
-              </pre>
-            </div>
-          ))}
-        </div>
-      )
-    } else if (currentField === 'sparkUiUrl' && !isDetailsPopUp) {
-      return (
-        <Tooltip
-          className="details-item__data details-item__link"
-          template={<TextTooltipTemplate text={info} />}
-        >
-          <a className="link" href={'https://' + info} target="_blank" rel="noreferrer">
-            {info}
-          </a>
-        </Tooltip>
-      )
-    } else if (state) {
-      return (
-        <div className="details-item__data details-item__status">
-          {state}
-          <i className={`state-${state}-job status-icon`} />
-        </div>
-      )
-    } else if (!isEmpty(info) && item.shouldPopUp && item.handleClick && !isDetailsPopUp) {
-      return (
-        <div
-          className="details-item__data details-item__link link"
-          onClick={info && item.handleClick}
-        >
-          <Tooltip template={<TextTooltipTemplate text={info} />}>{info}</Tooltip>
-        </div>
-      )
-    } else if ((item.link || item.externalLink) && info && !isDetailsPopUp) {
-      return (
-        <div className="details-item__data details-item__data_multiline">
-          {(Array.isArray(info) ? info : [info]).map((infoItem, index) => {
-            if (!infoItem) return null
+          const statusClassName = classNames(
+            item.className || `state-${item.status}-function`,
+            'status-icon'
+          )
 
-            const statusClassName = classNames(
-              item.className || `state-${item.status}-function`,
-              'status-icon'
-            )
-
-            return item.link ? (
-              item.linkIsExternal ? (
-                <a
-                  href={item.link}
-                  className="details-item__data details-item__link"
-                  target="_top"
-                  key={index}
-                >
-                  <Tooltip template={<TextTooltipTemplate text={infoItem} />}>{infoItem}</Tooltip>
-                  {item.status && (
-                    <div className="details-item__data details-item__status">
-                      <Tooltip
-                        template={<TextTooltipTemplate text={item.statusLabel || item.status} />}
-                      >
-                        <i className={statusClassName} />
-                      </Tooltip>
-                    </div>
-                  )}
-                </a>
-              ) : (
-                <Link className="details-item__data details-item__link" to={item.link} key={index}>
-                  <Tooltip template={<TextTooltipTemplate text={infoItem} />}>{infoItem}</Tooltip>
-                  {item.status && (
-                    <div className="details-item__data details-item__status">
-                      <Tooltip
-                        template={<TextTooltipTemplate text={item.statusLabel || item.status} />}
-                      >
-                        <i className={statusClassName} />
-                      </Tooltip>
-                    </div>
-                  )}
-                </Link>
-              )
-            ) : (
+          return item.link ? (
+            item.linkIsExternal ? (
               <a
-                key={index}
+                href={item.link}
                 className="details-item__data details-item__link"
-                href={
-                  !infoItem.startsWith?.('http')
-                    ? `${window.location.protocol}//${infoItem}`
-                    : infoItem
-                }
-                target="_blank"
-                rel="noreferrer"
+                target="_top"
+                key={index}
               >
-                <Tooltip className="link" template={<TextTooltipTemplate text={infoItem} />}>
-                  {infoItem}
-                </Tooltip>
+                <Tooltip template={<TextTooltipTemplate text={infoItem} />}>{infoItem}</Tooltip>
+                {item.status && (
+                  <div className="details-item__data details-item__status">
+                    <Tooltip
+                      template={<TextTooltipTemplate text={item.statusLabel || item.status} />}
+                    >
+                      <i className={statusClassName} />
+                    </Tooltip>
+                  </div>
+                )}
               </a>
+            ) : (
+              <Link className="details-item__data details-item__link" to={item.link} key={index}>
+                <Tooltip template={<TextTooltipTemplate text={infoItem} />}>{infoItem}</Tooltip>
+                {item.status && (
+                  <div className="details-item__data details-item__status">
+                    <Tooltip
+                      template={<TextTooltipTemplate text={item.statusLabel || item.status} />}
+                    >
+                      <i className={statusClassName} />
+                    </Tooltip>
+                  </div>
+                )}
+              </Link>
             )
-          })}
-        </div>
-      )
-    } else if (
-      (typeof info !== 'object' || Array.isArray(info)) &&
-      item?.editModeEnabled &&
-      !isDetailsPopUp
-    ) {
-      return (
-        <div className="details-item__data">
-          {info.length === 0 ? (
-            <span
-              className="details-item__data-add-placeholder"
-              onClick={() => {
-                if (editableFieldType.length === 0) {
-                  onClick(currentField, item?.editModeType, info)
-                }
-              }}
-            >
-              Click to add
-            </span>
           ) : (
-            <>
-              <Tooltip template={<TextTooltipTemplate text={info} />}>{info}</Tooltip>
-              {info !== TAG_LATEST && (
-                <RoundedIcon
-                  className="details-item__data-btn-edit"
-                  onClick={() => {
-                    if (editableFieldType.length === 0) {
-                      onClick(currentField, item?.editModeType, info)
-                    }
-                  }}
-                  tooltipText="Edit"
-                >
-                  <Edit />
-                </RoundedIcon>
-              )}
-            </>
-          )}
-        </div>
-      )
-    } else if (item.listOfFunctions && Array.isArray(item.value)) {
-      return (
-        <div className="details-item__functions-wrapper">
-          {item.value.map((itemFunc, index) => {
-            const name = itemFunc.func?.name || itemFunc.name || ''
-            const status = itemFunc.func?.state?.value || itemFunc.state?.value || ''
-            const statusLabel = itemFunc.func?.state?.label || itemFunc.state?.label || status
-
-            const statusClassName = classNames(
-              itemFunc.func?.state?.className || `state-${status}-function`,
-              'status-icon'
-            )
-            return (
-              <span key={index} className="details-item__functions-item">
-                <Tooltip template={<TextTooltipTemplate text={name} />}>{name}</Tooltip>
-                {status && (
-                  <Tooltip template={<TextTooltipTemplate text={statusLabel} />}>
-                    <i className={statusClassName} />
-                  </Tooltip>
-                )}
-                {index < item.value.length - 1 && (
-                  <span className="details-item__functions-comma">,</span>
-                )}
-              </span>
-            )
-          })}
-        </div>
-      )
-    } else if (Array.isArray(info)) {
-      return (
-        <div className="details-item__data details-item__data_multiline">
-          {info.map((infoItem, index) => {
-            return (
-              <div className="details-item__data" key={index}>
-                {typeof infoItem === 'string' ? (
-                  <Tooltip template={<TextTooltipTemplate text={infoItem} />}>{infoItem}</Tooltip>
-                ) : (
-                  infoItem
-                )}
-              </div>
-            )
-          })}
-        </div>
-      )
-    }
-
+            <a
+              key={index}
+              className="details-item__data details-item__link"
+              href={
+                !infoItem.startsWith?.('http')
+                  ? `${window.location.protocol}//${infoItem}`
+                  : infoItem
+              }
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Tooltip className="link" template={<TextTooltipTemplate text={infoItem} />}>
+                {infoItem}
+              </Tooltip>
+            </a>
+          )
+        })}
+      </div>
+    )
+  } else if (
+    (typeof info !== 'object' || Array.isArray(info)) &&
+    item?.editModeEnabled &&
+    !isDetailsPopUp
+  ) {
     return (
       <div className="details-item__data">
-        {typeof info === 'string' ? (
-          <Tooltip template={<TextTooltipTemplate text={info} />}>{info}</Tooltip>
+        {info.length === 0 ? (
+          <span
+            className="details-item__data-add-placeholder"
+            onClick={() => {
+              if (editableFieldType.length === 0) {
+                onClick(currentField, item?.editModeType, info)
+              }
+            }}
+          >
+            Click to add
+          </span>
         ) : (
-          info
+          <>
+            <Tooltip template={<TextTooltipTemplate text={info} />}>{info}</Tooltip>
+            {info !== TAG_LATEST && (
+              <RoundedIcon
+                className="details-item__data-btn-edit"
+                onClick={() => {
+                  if (editableFieldType.length === 0) {
+                    onClick(currentField, item?.editModeType, info)
+                  }
+                }}
+                tooltipText="Edit"
+              >
+                <Edit />
+              </RoundedIcon>
+            )}
+          </>
         )}
       </div>
     )
+  } else if (item.listOfFunctions && Array.isArray(item.value)) {
+    return (
+      <div className="details-item__functions-wrapper">
+        {item.value.map((itemFunc, index) => {
+          const name = itemFunc.func?.name || itemFunc.name || ''
+          const status = itemFunc.func?.state?.value || itemFunc.state?.value || ''
+          const statusLabel = itemFunc.func?.state?.label || itemFunc.state?.label || status
+
+          const statusClassName = classNames(
+            itemFunc.func?.state?.className || `state-${status}-function`,
+            'status-icon'
+          )
+          return (
+            <span key={index} className="details-item__functions-item">
+              <Tooltip template={<TextTooltipTemplate text={name} />}>{name}</Tooltip>
+              {status && (
+                <Tooltip template={<TextTooltipTemplate text={statusLabel} />}>
+                  <i className={statusClassName} />
+                </Tooltip>
+              )}
+              {index < item.value.length - 1 && (
+                <span className="details-item__functions-comma">,</span>
+              )}
+            </span>
+          )
+        })}
+      </div>
+    )
+  } else if (Array.isArray(info)) {
+    return (
+      <div className="details-item__data details-item__data_multiline">
+        {info.map((infoItem, index) => {
+          return (
+            <div className="details-item__data" key={index}>
+              {typeof infoItem === 'string' ? (
+                <Tooltip template={<TextTooltipTemplate text={infoItem} />}>{infoItem}</Tooltip>
+              ) : (
+                infoItem
+              )}
+            </div>
+          )
+        })}
+      </div>
+    )
   }
-)
+
+  return (
+    <div className="details-item__data">
+      {typeof info === 'string' ? (
+        <Tooltip template={<TextTooltipTemplate text={info} />}>{info}</Tooltip>
+      ) : (
+        info
+      )}
+    </div>
+  )
+}
 
 DetailsInfoItem.propTypes = {
   chipsClassName: PropTypes.string,

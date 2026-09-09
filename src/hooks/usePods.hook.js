@@ -19,7 +19,7 @@ such restriction.
 */
 import { useEffect } from 'react'
 import { isEmpty, get } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 import { arePodsHidden } from '../components/Jobs/jobs.util'
 import { JOB_KIND_JOB } from '../constants'

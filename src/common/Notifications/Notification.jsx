@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { Transition } from 'react-transition-group'
 import { inRange } from 'lodash-es'
@@ -42,7 +42,7 @@ const Notification = ({ notification, timeoutMs = 10000, ...rest }) => {
   const nodeRef = useRef()
 
   const { pauseTimeout, resumeTimeout, cancelTimeout } = useTimeout(
-    () => handleRemoveNotification(notification.id),
+    () => dispatch(removeNotification(notification.id)),
     timeoutMs
   )
 
@@ -67,10 +67,14 @@ const Notification = ({ notification, timeoutMs = 10000, ...rest }) => {
     () => inRange(notification.status, 200, 300),
     [notification.status]
   )
-  const handleRemoveNotification = itemId => {
-    dispatch(removeNotification(itemId))
-    cancelTimeout()
-  }
+  const handleRemoveNotification = useCallback(
+    itemId => {
+      dispatch(removeNotification(itemId))
+      cancelTimeout()
+    },
+    [dispatch, cancelTimeout]
+  )
+
   const handleRetry = item => {
     handleRemoveNotification(item.id)
     cancelTimeout()

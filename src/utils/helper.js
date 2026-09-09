@@ -35,6 +35,9 @@ export const isPanelOpened = search => {
 export const areNuclioStreamsEnabled = frontendSpec =>
   frontendSpec?.feature_flags?.nuclio_streams === 'enabled'
 
+/** Whether the Nuclio backend is not deployed (from boot-time config). */
+export const isNuclioModeDisabled = () => window.mlrunConfig.nuclioMode === 'disabled'
+
 export const isCommunityEdition = () => {
   return !localStorageService.getStorageValue('igzFullVersion')
 }

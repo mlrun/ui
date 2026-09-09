@@ -18,13 +18,13 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash-es'
 
 import WorkflowsTable from '../../../elements/WorkflowsTable/WorkflowsTable'
 
-import { JobsContext } from '../Jobs'
+import { JobsContext } from '../Jobs.context'
 import { MONITOR_WORKFLOWS_TAB, REQUEST_CANCELED } from '../../../constants'
 import { createJobsWorkflowsTabContent } from '../../../utils/createJobsContent'
 import { deleteWorkflows } from '../../../reducers/workflowReducer'
@@ -115,7 +115,7 @@ const MonitorWorkflows = () => {
       filtersConfig={workflowsFiltersConfig}
       getWorkflows={getWorkflows}
       itemIsSelected={itemIsSelected}
-      ref={{ abortJobRef }}
+      abortJobRef={abortJobRef}
       requestErrorMessage={requestErrorMessage}
       selectedFunction={selectedFunction}
       selectedJob={selectedJob}

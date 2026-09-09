@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router'
 import classnames from 'classnames'
 import { isEmpty, isNil } from 'lodash-es'
 
@@ -61,7 +61,7 @@ import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { getScssVariableValue } from 'igz-controls/utils/common.util'
 import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
-import { useModelsPage } from '../ModelsPage.context'
+import { useModelsPage } from '../useModelsPage.hook'
 import { useNuclioEnrichedFunctions } from '../../../hooks/useNuclioEnrichedFunctions.hook'
 import { FULL_VIEW_MODE } from 'igz-controls/constants'
 
@@ -110,20 +110,30 @@ const RealTimePipelines = () => {
   })
 
   const { pipelines, statistics, childPipelinesMap } = useMemo(() => {
-    let totalPipelines = 0
-    let runningFunctions = 0
-    let failedFunctions = 0
-    let modelEndpoints = 0
-    const childFunctionsMap = {}
+    const initialAccumulator = {
+      filteredPipelines: [],
+      totalPipelines: 0,
+      runningFunctions: 0,
+      failedFunctions: 0,
+      modelEndpoints: 0,
+      childFunctionsMap: {}
+    }
 
-    const filteredPipelines = enrichedFunctions.reduce((pipelinesList, func) => {
+    const {
+      filteredPipelines,
+      totalPipelines,
+      runningFunctions,
+      failedFunctions,
+      modelEndpoints,
+      childFunctionsMap
+    } = enrichedFunctions.reduce((accumulator, func) => {
       const parent = Object.entries(func.labels || {}).find(([key]) =>
         key.includes('parent-function')
       )?.[1]
 
       if (parent) {
-        childFunctionsMap[parent] = [
-          ...(childFunctionsMap[parent] || []),
+        accumulator.childFunctionsMap[parent] = [
+          ...(accumulator.childFunctionsMap[parent] || []),
           { func, nuclioFunc: func.nuclioFunc }
         ]
       }
@@ -136,15 +146,15 @@ const RealTimePipelines = () => {
         topology === filters[PIPELINE_TOPOLOGY_FILTER] ||
         filters[PIPELINE_TOPOLOGY_FILTER] === FILTER_ALL_ITEMS
 
-      if (parent || (!showSystems && isMonitoringInfra) || !isCorrectTopology) return pipelinesList
+      if (parent || (!showSystems && isMonitoringInfra) || !isCorrectTopology) return accumulator
 
-      totalPipelines += 1
+      accumulator.totalPipelines += 1
 
       const stateValue = func.state?.value
       if (stateValue === FUNCTION_READY_STATE || stateValue === FUNCTION_RUNNING_STATE) {
-        runningFunctions += 1
+        accumulator.runningFunctions += 1
       } else if (stateValue === ERROR_STATE || stateValue === UNHEALTHY_STATE) {
-        failedFunctions += 1
+        accumulator.failedFunctions += 1
       }
 
       const modelEndpointsMainCount =
@@ -160,11 +170,11 @@ const RealTimePipelines = () => {
       }, 0)
 
       const modelEndpointsCount = modelEndpointsMainCount + routesInFlowCount
-      modelEndpoints += modelEndpointsCount
+      accumulator.modelEndpoints += modelEndpointsCount
 
-      pipelinesList.push({ ...func, modelEndpointsCount })
-      return pipelinesList
-    }, [])
+      accumulator.filteredPipelines.push({ ...func, modelEndpointsCount })
+      return accumulator
+    }, initialAccumulator)
 
     return {
       pipelines: filteredPipelines,
@@ -285,6 +295,7 @@ const RealTimePipelines = () => {
 
   useEffect(() => {
     setSelectedItemName(selectedPipeline?.name || '')
+
     return () => setSelectedItemName('')
   }, [selectedPipeline, setSelectedItemName])
 

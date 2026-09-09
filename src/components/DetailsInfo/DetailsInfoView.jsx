@@ -41,214 +41,206 @@ import RightArrow from 'igz-controls/images/ic_arrow-right.svg?react'
 
 import './detailsInfo.scss'
 
-const DetailsInfoView = React.forwardRef(
-  (
-    {
-      additionalInfo = {
-        drift: [],
-        producer: [],
-        sources: {},
-        alerts: []
-      },
-      detailsInfoDispatch,
-      detailsInfoState,
-      commonDetailsStore,
-      formState,
-      handleDiscardChanges,
-      handleFinishEdit,
-      handleInfoItemClick,
-      isDetailsPopUp,
-      pageData,
-      params,
-      selectedItem
-    },
-    ref
-  ) => {
-    const infoContent = useMemo(
-      () =>
-        isDetailsPopUp
-          ? commonDetailsStore.detailsPopUpInfoContent
-          : commonDetailsStore.infoContent,
-      [commonDetailsStore.infoContent, commonDetailsStore.detailsPopUpInfoContent, isDetailsPopUp]
-    )
-    const wrapperClassNames = classnames(
-      !isEveryObjectValueEmpty(additionalInfo)
-        ? 'item-info__details-wrapper'
-        : 'item-info__full-width'
-    )
+function DetailsInfoView({
+  additionalInfo = {
+    drift: [],
+    producer: [],
+    sources: {},
+    alerts: []
+  },
+  detailsInfoDispatch,
+  detailsInfoState,
+  commonDetailsStore,
+  formState,
+  handleDiscardChanges,
+  handleFinishEdit,
+  handleInfoItemClick,
+  isDetailsPopUp,
+  pageData,
+  params,
+  ref,
+  selectedItem
+}) {
+  const infoContent = useMemo(
+    () =>
+      isDetailsPopUp ? commonDetailsStore.detailsPopUpInfoContent : commonDetailsStore.infoContent,
+    [commonDetailsStore.infoContent, commonDetailsStore.detailsPopUpInfoContent, isDetailsPopUp]
+  )
+  const wrapperClassNames = classnames(
+    !isEveryObjectValueEmpty(additionalInfo)
+      ? 'item-info__details-wrapper'
+      : 'item-info__full-width'
+  )
 
-    return (
-      !isEveryObjectValueEmpty(infoContent) && (
-        <>
-          <div className="item-info__details-wrapper">
-            {(ARTIFACT_PAGES.includes(pageData.page) ||
-              pageData.page === ALERTS_PAGE ||
-              pageData.page === FUNCTIONS_PAGE ||
-              pageData.page === FEATURE_STORE_PAGE) &&
-              params.pageTab !== FEATURE_SETS_TAB && <h3 className="item-info__header">General</h3>}
-            <ul className="item-info__details">
-              {pageData.details.infoHeaders?.map(header => {
-                let chipsData = {
-                  chips: [],
-                  chipOptions: {},
-                  delimiter: null
-                }
-                let chipsClassName = ''
-                const detailsItemClassNames = classnames(
-                  'details-item',
-                  header.hidden && 'details-item_hidden'
-                )
-                let func = ''
-                let state = ''
-                let info = null
+  return (
+    !isEveryObjectValueEmpty(infoContent) && (
+      <>
+        <div className="item-info__details-wrapper">
+          {(ARTIFACT_PAGES.includes(pageData.page) ||
+            pageData.page === ALERTS_PAGE ||
+            pageData.page === FUNCTIONS_PAGE ||
+            pageData.page === FEATURE_STORE_PAGE) &&
+            params.pageTab !== FEATURE_SETS_TAB && <h3 className="item-info__header">General</h3>}
+          <ul className="item-info__details">
+            {pageData.details.infoHeaders?.map(header => {
+              let chipsData = {
+                chips: [],
+                chipOptions: {},
+                delimiter: null
+              }
+              let chipsClassName = ''
+              const detailsItemClassNames = classnames(
+                'details-item',
+                header.hidden && 'details-item_hidden'
+              )
+              let func = ''
+              let state = ''
+              let info = null
 
-                if (pageData.page === JOBS_PAGE) {
-                  if (['parameters', 'results', 'labels'].includes(header.id)) {
-                    chipsData.chipOptions = getChipOptions(header.id)
-                  } else if (header.id === 'nodeSelector') {
-                    chipsData.chipOptions = getChipOptions('results')
-                  }
-
-                  func =
-                    infoContent[header.id]?.value === selectedItem.function
-                      ? selectedItem.function
-                      : ''
-                  state =
-                    infoContent[header.id]?.value === selectedItem.state?.value
-                      ? selectedItem.state?.value
-                      : ''
-                  info = infoContent[header.id]?.value
-                } else if (
-                  ARTIFACT_PAGES.includes(pageData.page) ||
-                  pageData.page === ALERTS_PAGE ||
-                  pageData.page === FEATURE_STORE_PAGE
-                ) {
-                  if (header.id === 'metrics' || header.id === 'labels') {
-                    chipsData.validationRules = infoContent[header.id]?.validationRules
-                    chipsData.chipOptions = getChipOptions(header.id)
-                  } else if (header.id === 'relations') {
-                    chipsData.chipOptions = getChipOptions(header.id)
-                    chipsData.delimiter = <RightArrow />
-                  } else if (header.id === 'requirements' || header.id === 'code_type') {
-                    chipsData.chipOptions = getChipOptions(header.id)
-                  }
-
-                  info = !isNil(commonDetailsStore.changes.data[header.id])
-                    ? commonDetailsStore.changes.data[header.id].currentFieldValue
-                    : selectedItem && infoContent[header.id]?.value
-                } else if (pageData.page === FUNCTIONS_PAGE) {
-                  info =
-                    header.id === 'kind'
-                      ? infoContent[header.id]?.value || 'Local'
-                      : infoContent[header.id]?.value || ''
+              if (pageData.page === JOBS_PAGE) {
+                if (['parameters', 'results', 'labels'].includes(header.id)) {
+                  chipsData.chipOptions = getChipOptions(header.id)
+                } else if (header.id === 'nodeSelector') {
+                  chipsData.chipOptions = getChipOptions('results')
                 }
 
-                return (
-                  <li className={detailsItemClassNames} key={header.id}>
-                    <>
-                      <div className="details-item__header">
-                        {header.label}:
-                        {header.tip && <Tip className="details-item__tip" text={header.tip} />}
-                      </div>
-                      <DetailsInfoItem
-                        chipsClassName={chipsClassName}
-                        chipsData={chipsData}
-                        currentField={header.id}
-                        detailsInfoDispatch={detailsInfoDispatch}
-                        detailsInfoState={detailsInfoState}
-                        editableFieldType={detailsInfoState.editMode.fieldType}
-                        formState={formState}
-                        func={func}
-                        handleDiscardChanges={handleDiscardChanges}
-                        handleFinishEdit={handleFinishEdit}
-                        info={info}
-                        isDetailsPopUp={isDetailsPopUp}
-                        isFieldInEditMode={detailsInfoState.editMode.field === header.id}
-                        item={infoContent[header.id]}
-                        onClick={handleInfoItemClick}
-                        params={params}
-                        ref={ref}
-                        state={state}
-                      />
-                    </>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-          {!isEveryObjectValueEmpty(additionalInfo) && (
-            <div className={wrapperClassNames} data-testid="additional-info">
-              {!isEveryObjectValueEmpty(additionalInfo.producer) && (
-                <>
-                  <h3 className="item-info__header">Producer</h3>
-                  <ul className="item-info__details">{additionalInfo.producer}</ul>
-                </>
-              )}
-              {!isEveryObjectValueEmpty(additionalInfo.document_loader) && (
-                <>
-                  <h3 className="item-info__header">Document loader</h3>
-                  <ul className="item-info__details">{additionalInfo.document_loader}</ul>
-                </>
-              )}
-              {!isEveryObjectValueEmpty(additionalInfo.drift) && (
-                <>
-                  <h3 className="item-info__header">Histogram data drift application</h3>
-                  <ul className="item-info__details">{additionalInfo.drift}</ul>
-                </>
-              )}
-              {!isEveryObjectValueEmpty(additionalInfo.configuration) && (
-                <>
-                  <h3 className="item-info__header">Configuration</h3>
-                  <ul className="item-info__details">{additionalInfo.configuration}</ul>
-                </>
-              )}
-              {!isEveryObjectValueEmpty(additionalInfo.sources) && (
-                <ArtifactInfoSources
-                  isDetailsPopUp={isDetailsPopUp}
-                  sources={additionalInfo.sources}
-                />
-              )}
-              {!isEveryObjectValueEmpty(additionalInfo?.alerts?.triggerCriteriaDetailsInfo) && (
-                <>
-                  <h3 className="item-info__header">Trigger criteria</h3>
-                  <ul className="item-info__details">
-                    {additionalInfo?.alerts?.triggerCriteriaDetailsInfo}
-                  </ul>
-                </>
-              )}
-              {!isEveryObjectValueEmpty(additionalInfo?.alerts?.resetPolicyDetailsInfo) && (
-                <>
-                  <div className="item-info__header-wrapper">
-                    <h3 className="item-info__header" data-testid="reset-policy-header">
-                      Reset policy
-                    </h3>
-                    <Tip
-                      className="item-info__header-tip"
-                      text="The displayed reset policy reflects the currently configured policy, which may differ from the policy that was in effect at the time of the alert activation."
+                func =
+                  infoContent[header.id]?.value === selectedItem.function
+                    ? selectedItem.function
+                    : ''
+                state =
+                  infoContent[header.id]?.value === selectedItem.state?.value
+                    ? selectedItem.state?.value
+                    : ''
+                info = infoContent[header.id]?.value
+              } else if (
+                ARTIFACT_PAGES.includes(pageData.page) ||
+                pageData.page === ALERTS_PAGE ||
+                pageData.page === FEATURE_STORE_PAGE
+              ) {
+                if (header.id === 'metrics' || header.id === 'labels') {
+                  chipsData.validationRules = infoContent[header.id]?.validationRules
+                  chipsData.chipOptions = getChipOptions(header.id)
+                } else if (header.id === 'relations') {
+                  chipsData.chipOptions = getChipOptions(header.id)
+                  chipsData.delimiter = <RightArrow />
+                } else if (header.id === 'requirements' || header.id === 'code_type') {
+                  chipsData.chipOptions = getChipOptions(header.id)
+                }
+
+                info = !isNil(commonDetailsStore.changes.data[header.id])
+                  ? commonDetailsStore.changes.data[header.id].currentFieldValue
+                  : selectedItem && infoContent[header.id]?.value
+              } else if (pageData.page === FUNCTIONS_PAGE) {
+                info =
+                  header.id === 'kind'
+                    ? infoContent[header.id]?.value || 'Local'
+                    : infoContent[header.id]?.value || ''
+              }
+
+              return (
+                <li className={detailsItemClassNames} key={header.id}>
+                  <>
+                    <div className="details-item__header">
+                      {header.label}:
+                      {header.tip && <Tip className="details-item__tip" text={header.tip} />}
+                    </div>
+                    <DetailsInfoItem
+                      chipsClassName={chipsClassName}
+                      chipsData={chipsData}
+                      currentField={header.id}
+                      detailsInfoDispatch={detailsInfoDispatch}
+                      detailsInfoState={detailsInfoState}
+                      editableFieldType={detailsInfoState.editMode.fieldType}
+                      formState={formState}
+                      func={func}
+                      handleDiscardChanges={handleDiscardChanges}
+                      handleFinishEdit={handleFinishEdit}
+                      info={info}
+                      isDetailsPopUp={isDetailsPopUp}
+                      isFieldInEditMode={detailsInfoState.editMode.field === header.id}
+                      item={infoContent[header.id]}
+                      onClick={handleInfoItemClick}
+                      params={params}
+                      ref={ref}
+                      state={state}
                     />
-                  </div>
-                  <ul className="item-info__details">
-                    {additionalInfo?.alerts?.resetPolicyDetailsInfo}
-                  </ul>
-                </>
-              )}
-              {!isEveryObjectValueEmpty(additionalInfo?.alerts?.triggerCriteriaDetailsInfo) && (
-                <>
-                  <h3 className="item-info__header">Notifications</h3>
-                  <ul className="item-info__details alert-row__item-info-notification">
-                    {additionalInfo?.alerts?.notificationsDetailsInfo}
-                  </ul>
-                </>
-              )}
-            </div>
-          )}
-        </>
-      )
+                  </>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+        {!isEveryObjectValueEmpty(additionalInfo) && (
+          <div className={wrapperClassNames} data-testid="additional-info">
+            {!isEveryObjectValueEmpty(additionalInfo.producer) && (
+              <>
+                <h3 className="item-info__header">Producer</h3>
+                <ul className="item-info__details">{additionalInfo.producer}</ul>
+              </>
+            )}
+            {!isEveryObjectValueEmpty(additionalInfo.document_loader) && (
+              <>
+                <h3 className="item-info__header">Document loader</h3>
+                <ul className="item-info__details">{additionalInfo.document_loader}</ul>
+              </>
+            )}
+            {!isEveryObjectValueEmpty(additionalInfo.drift) && (
+              <>
+                <h3 className="item-info__header">Histogram data drift application</h3>
+                <ul className="item-info__details">{additionalInfo.drift}</ul>
+              </>
+            )}
+            {!isEveryObjectValueEmpty(additionalInfo.configuration) && (
+              <>
+                <h3 className="item-info__header">Configuration</h3>
+                <ul className="item-info__details">{additionalInfo.configuration}</ul>
+              </>
+            )}
+            {!isEveryObjectValueEmpty(additionalInfo.sources) && (
+              <ArtifactInfoSources
+                isDetailsPopUp={isDetailsPopUp}
+                sources={additionalInfo.sources}
+              />
+            )}
+            {!isEveryObjectValueEmpty(additionalInfo?.alerts?.triggerCriteriaDetailsInfo) && (
+              <>
+                <h3 className="item-info__header">Trigger criteria</h3>
+                <ul className="item-info__details">
+                  {additionalInfo?.alerts?.triggerCriteriaDetailsInfo}
+                </ul>
+              </>
+            )}
+            {!isEveryObjectValueEmpty(additionalInfo?.alerts?.resetPolicyDetailsInfo) && (
+              <>
+                <div className="item-info__header-wrapper">
+                  <h3 className="item-info__header" data-testid="reset-policy-header">
+                    Reset policy
+                  </h3>
+                  <Tip
+                    className="item-info__header-tip"
+                    text="The displayed reset policy reflects the currently configured policy, which may differ from the policy that was in effect at the time of the alert activation."
+                  />
+                </div>
+                <ul className="item-info__details">
+                  {additionalInfo?.alerts?.resetPolicyDetailsInfo}
+                </ul>
+              </>
+            )}
+            {!isEveryObjectValueEmpty(additionalInfo?.alerts?.triggerCriteriaDetailsInfo) && (
+              <>
+                <h3 className="item-info__header">Notifications</h3>
+                <ul className="item-info__details alert-row__item-info-notification">
+                  {additionalInfo?.alerts?.notificationsDetailsInfo}
+                </ul>
+              </>
+            )}
+          </div>
+        )}
+      </>
     )
-  }
-)
-
-DetailsInfoView.displayName = 'DetailsInfoView'
+  )
+}
 
 DetailsInfoView.propTypes = {
   additionalInfo: PropTypes.shape({

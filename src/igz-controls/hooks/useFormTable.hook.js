@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { get, omit } from 'lodash'
+import { get, omit } from 'lodash-es'
 import { ARRAY_ERROR } from 'final-form'
 
 export const useFormTable = (formState, exitEditModeTriggerItem, onExitEditModeCallback) => {

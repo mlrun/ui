@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useState, useLayoutEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { useSelector } from 'react-redux'
 
 import { GROUP_BY_NAME, GROUP_BY_NONE } from '../constants'
@@ -133,18 +133,25 @@ export const useGroupContent = (
     }
   }, [params.jobId, params.pipelineId, content])
 
-  useLayoutEffect(() => {
-    if (Object.keys(groupedContent).length > 0) {
-      setAllRowsAreExpanded(expandedRowsCount === Object.keys(groupedContent).length)
+  const groupedContentRowsCount = Object.keys(groupedContent).length
+
+  if (groupedContentRowsCount > 0) {
+    const nextAllRowsAreExpanded = expandedRowsCount === groupedContentRowsCount
+
+    if (nextAllRowsAreExpanded !== allRowsAreExpanded) {
+      setAllRowsAreExpanded(nextAllRowsAreExpanded)
     }
-  }, [expandedRowsCount, groupedContent])
+  }
 
   useLayoutEffect(() => {
-    if (filtersStore.groupBy === GROUP_BY_NAME) {
-      handleGroupByName()
-    } else if (filtersStore.groupBy === GROUP_BY_NONE) {
-      handleGroupByNone()
-    }
+    // Defer grouped-content sync to avoid set-state-in-effect
+    queueMicrotask(() => {
+      if (filtersStore.groupBy === GROUP_BY_NAME) {
+        handleGroupByName()
+      } else if (filtersStore.groupBy === GROUP_BY_NONE) {
+        handleGroupByNone()
+      }
+    })
 
     return () => {
       setGroupedContent({})

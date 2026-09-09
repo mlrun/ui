@@ -17,10 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo, useRef } from 'react'
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { createPortal } from 'react-dom'
 import { isEmpty } from 'lodash-es'
 
@@ -47,10 +47,13 @@ const FeatureStoreTableRow = ({
 }) => {
   const parent = useRef()
   const params = useParams()
-  const rowIsExpanded = useMemo(
-    () => isRowExpanded(parent, selectedRowData, rowItem),
-    [rowItem, selectedRowData]
+  const [rowIsExpanded, setRowIsExpanded] = useState(() =>
+    Boolean(selectedRowData && rowItem.data.ui.identifier in selectedRowData)
   )
+
+  useLayoutEffect(() => {
+    setRowIsExpanded(isRowExpanded(parent, selectedRowData, rowItem))
+  }, [rowItem, selectedRowData])
   const getIdentifier = useMemo(() => getIdentifierMethod(pageTab), [pageTab])
   const rowClassNames = classnames(
     'table-row',

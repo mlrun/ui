@@ -103,8 +103,7 @@ MaskedInput.propTypes = {
   keepCharPositions: PropTypes.bool,
   showMask: PropTypes.bool,
   onBlur: PropTypes.func,
-  onChange: PropTypes.func,
-  ref: PropTypes.object
+  onChange: PropTypes.func
 }
 
 export default MaskedInput

@@ -14,11 +14,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { forwardRef, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { createPortal } from 'react-dom'
-import { throttle } from 'lodash'
+import { throttle } from 'lodash-es'
 
 import RoundedIcon from '../RoundedIcon/RoundedIcon'
 import Tooltip from '../Tooltip/Tooltip'
@@ -29,23 +29,20 @@ import CloseIcon from '../../images/close.svg?react'
 
 import './popUpDialog.scss'
 
-let PopUpDialog = (
-  {
-    children,
-    className = '',
-    closePopUp = null,
-    customPosition = {},
-    headerIsHidden = false,
-    headerText = '',
-    isOpen = true,
-    onResolve = null,
-    style = {},
-    tooltipText = ''
-  },
+function PopUpDialog({
+  children,
+  className = '',
+  closePopUp = null,
+  customPosition = {},
+  headerIsHidden = false,
+  headerText = '',
+  isOpen = true,
+  onResolve = null,
+  style = {},
+  tooltipText = '',
   ref
-) => {
+}) {
   const popUpOverlayRef = useRef(null)
-  ref ??= popUpOverlayRef
   const popUpClassNames = classnames(
     className,
     'pop-up-dialog__overlay',
@@ -58,9 +55,9 @@ let PopUpDialog = (
   }, [closePopUp, onResolve])
 
   const calculateCustomPopUpPosition = useCallback(() => {
-    if (customPosition?.element?.current && ref?.current) {
+    if (customPosition?.element?.current && popUpOverlayRef.current) {
       const elementRect = customPosition.element.current.getBoundingClientRect()
-      const popUpRect = ref.current.getBoundingClientRect()
+      const popUpRect = popUpOverlayRef.current.getBoundingClientRect()
       const [verticalPosition, horizontalPosition] = customPosition.position.split('-')
       const popupMargin = 15
       const elementMargin = 5
@@ -113,15 +110,28 @@ let PopUpDialog = (
         }
       }
 
-      ref.current.style.top = `${topPosition}px`
+      popUpOverlayRef.current.style.top = `${topPosition}px`
 
       if (style.left && !(customPosition.autoHorizontalPosition && isEnoughSpaceFromRight)) {
-        ref.current.style.left = `calc(${leftPosition}px + ${style.left})`
+        popUpOverlayRef.current.style.left = `calc(${leftPosition}px + ${style.left})`
       } else {
-        ref.current.style.left = `${leftPosition}px`
+        popUpOverlayRef.current.style.left = `${leftPosition}px`
       }
     }
-  }, [customPosition, style.left, ref])
+  }, [customPosition, style.left])
+
+  const setPopUpOverlayRef = useCallback(
+    node => {
+      popUpOverlayRef.current = node
+
+      if (typeof ref === 'function') {
+        ref(node)
+      } else if (ref) {
+        ref.current = node
+      }
+    },
+    [ref]
+  )
 
   useLayoutEffect(() => {
     calculateCustomPopUpPosition()
@@ -134,7 +144,7 @@ let PopUpDialog = (
         leading: true
       })
       const popupObserver = new ResizeObserver(throttledCalculatedCustomPopUpPosition)
-      const popupElement = ref.current
+      const popupElement = popUpOverlayRef.current
 
       popupObserver.observe(popupElement)
       window.addEventListener('resize', throttledCalculatedCustomPopUpPosition)
@@ -144,11 +154,11 @@ let PopUpDialog = (
         window.removeEventListener('resize', throttledCalculatedCustomPopUpPosition)
       }
     }
-  }, [calculateCustomPopUpPosition, ref, isOpen])
+  }, [calculateCustomPopUpPosition, isOpen])
 
   return isOpen
     ? createPortal(
-        <div ref={ref} className={popUpClassNames} style={style}>
+        <div ref={setPopUpOverlayRef} className={popUpClassNames} style={style}>
           <div data-testid="pop-up-dialog" className="pop-up-dialog">
             {!headerIsHidden && (
               <div className="pop-up-dialog__header">
@@ -176,8 +186,6 @@ let PopUpDialog = (
       )
     : null
 }
-
-PopUpDialog = forwardRef(PopUpDialog)
 
 PopUpDialog.displayName = 'PopUpDialog'
 

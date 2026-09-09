@@ -72,26 +72,11 @@ export default defineConfig(({ mode }) => {
           import.meta.dirname,
           'src/igz-controls/nextGenComponents/index.ts'
         ),
-        'igz-controls/index.css': path.resolve(
-          import.meta.dirname,
-          'src/igz-controls/index.scss'
-        ),
+        'igz-controls/index.css': path.resolve(import.meta.dirname, 'src/igz-controls/index.scss'),
         'igz-controls': path.resolve(import.meta.dirname, 'src/igz-controls'),
         '@': path.resolve(import.meta.dirname, './src/nextGenComponents')
       },
-      dedupe: [
-        'react',
-        'react-dom',
-        'classnames',
-        'final-form',
-        'final-form-arrays',
-        'lodash',
-        'prop-types',
-        'react-final-form',
-        'react-final-form-arrays',
-        'react-modal-promise',
-        'react-transition-group'
-      ]
+      dedupe: ['react', 'react-dom']
     },
     optimizeDeps: {
       force: true

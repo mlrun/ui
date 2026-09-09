@@ -18,42 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import PropTypes from 'prop-types'
-import { Tooltip, TooltipContent, TooltipTrigger } from 'igz-controls/nextGenComponents'
-import { HelpCircle } from 'lucide-react'
 
-import {
-  KEY_TOOLTIP_TEXT,
-  ANNOTATION_KEY_TOOLTIP_TEXT,
-  TOOLTIP_DELAY_MS,
-  TOOLTIP_COLLISION_PADDING
-} from './applicationConfiguration.constants'
-
-const KeyHeaderWithTooltip = ({ tooltipText }) => (
-  <div className="flex items-center gap-1">
-    <span>Key</span>
-    <Tooltip delayDuration={TOOLTIP_DELAY_MS}>
-      <TooltipTrigger asChild>
-        <HelpCircle
-          className="w-3 h-3 text-igz-secondary cursor-default"
-          aria-label="Help"
-          data-testid="key-column-help-icon"
-        />
-      </TooltipTrigger>
-      <TooltipContent
-        side="top"
-        collisionPadding={TOOLTIP_COLLISION_PADDING}
-        className="max-w-md whitespace-normal"
-      >
-        {tooltipText}
-      </TooltipContent>
-    </Tooltip>
-  </div>
-)
-
-KeyHeaderWithTooltip.propTypes = {
-  tooltipText: PropTypes.string.isRequired
-}
+import { ANNOTATION_KEY_TOOLTIP_TEXT, KEY_TOOLTIP_TEXT } from './applicationConfiguration.constants'
+import KeyHeaderWithTooltip from './KeyHeaderWithTooltip'
 
 export const environmentVariablesColumns = [
   {

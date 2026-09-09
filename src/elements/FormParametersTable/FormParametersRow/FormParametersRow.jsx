@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import PropTypes from 'prop-types'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import classnames from 'classnames'
 import { isPlainObject } from 'lodash-es'
 
@@ -69,7 +69,7 @@ const FormParametersRow = ({
   withHyperparameters = false,
   withRequiredParameters = true
 }) => {
-  const [fieldData, setFieldData] = useState(fields.value[index])
+  const fieldData = fields.value[index]
   const [typeIsChanging, setTypeIsChanging] = useState(false)
   const tableRowClassNames = classnames(
     'form-table__row',
@@ -263,10 +263,6 @@ const FormParametersRow = ({
   const isRowDisabled = () => {
     return disabled || !fieldData.data?.isChecked
   }
-
-  useEffect(() => {
-    setFieldData(fields.value[index])
-  }, [fields.value, index])
 
   return (
     <>

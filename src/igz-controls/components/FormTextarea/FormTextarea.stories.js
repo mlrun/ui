@@ -37,15 +37,15 @@ Normal.args = {
   label: 'Normal'
 }
 
-export const withTip = Template.bind({})
-withTip.args = {
+export const WithTip = Template.bind({})
+WithTip.args = {
   ...commonArgs,
   label: 'With Tip',
   tip: 'Tip'
 }
 
-export const withMaxLength = Template.bind({})
-withMaxLength.args = {
+export const WithMaxLength = Template.bind({})
+WithMaxLength.args = {
   ...commonArgs,
   label: 'With max length',
   maxLength: 50

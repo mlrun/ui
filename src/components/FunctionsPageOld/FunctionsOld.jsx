@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash-es'
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router'
 
 import FunctionsViewOld from './FunctionsViewOld'
 import JobWizard from '../JobWizard/JobWizard'
@@ -85,7 +85,7 @@ const Functions = () => {
   const [selectedFunction, setSelectedFunction] = useState({})
   const [editableItem, setEditableItem] = useState(null)
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
-  const [jobWizardIsOpened, setJobWizardIsOpened] = useState(false)
+  const jobWizardIsOpenedRef = useRef(false)
   const [jobWizardMode, setJobWizardMode] = useState(null)
   const filtersStore = useSelector(store => store.filtersStore)
   const [expandedRowsData, setExpandedRowsData] = useState({})
@@ -135,7 +135,7 @@ const Functions = () => {
   }, [])
 
   const fetchData = useCallback(
-    (filters, filtersAreHandled = false) => {
+    function fetchDataCallback(filters, filtersAreHandled = false) {
       terminateDeleteTasksPolling()
       abortControllerRef.current = new AbortController()
       setFunctions([])
@@ -175,7 +175,7 @@ const Functions = () => {
                 params.projectName,
                 terminatePollRef,
                 deletingFunctions,
-                () => fetchData(filters),
+                () => fetchDataCallback(filters),
                 dispatch
               )
             }
@@ -368,7 +368,7 @@ const Functions = () => {
   )
 
   const buildAndRunFunc = useCallback(
-    func => {
+    function buildAndRunFuncCallback(func) {
       const data = {
         function: {
           kind: func.type,
@@ -461,7 +461,7 @@ const Functions = () => {
         })
         .catch(error => {
           showErrorNotification(dispatch, error, 'Failed to build and run function.', '', () => {
-            buildAndRunFunc(func)
+            buildAndRunFuncCallback(func)
           })
         })
     },
@@ -479,7 +479,15 @@ const Functions = () => {
         fetchData,
         filtersStore
       ),
-    [dispatch, fetchData, filtersStore, navigate, selectedFunction]
+    [
+      dispatch,
+      fetchData,
+      fetchFunctionLogsTimeout,
+      fetchFunctionNuclioLogsTimeout,
+      filtersStore,
+      navigate,
+      selectedFunction
+    ]
   )
 
   const actionsMenu = useMemo(
@@ -693,19 +701,19 @@ const Functions = () => {
   }
 
   useEffect(() => {
-    if (!jobWizardIsOpened && jobWizardMode) {
+    if (!jobWizardIsOpenedRef.current && jobWizardMode) {
+      jobWizardIsOpenedRef.current = true
+
       openPopUp(JobWizard, {
         params,
         onWizardClose: () => {
           setJobWizardMode(null)
-          setJobWizardIsOpened(false)
+          jobWizardIsOpenedRef.current = false
         },
         mode: jobWizardMode
       })
-
-      setJobWizardIsOpened(true)
     }
-  }, [editableItem, jobWizardIsOpened, jobWizardMode, params])
+  }, [editableItem, jobWizardMode, params])
 
   const virtualizationConfig = useVirtualization({
     rowsData: {

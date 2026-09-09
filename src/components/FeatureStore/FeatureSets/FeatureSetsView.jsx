@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import PropTypes from 'prop-types'
 
 import { Loader } from 'igz-controls/components'
@@ -38,120 +38,114 @@ import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered } from '../../../hooks/useVirtualization.hook'
 import { createFeatureSetTitle } from '../featureStore.util'
 
-const FeatureSetsView = React.forwardRef(
-  (
-    {
-      actionsMenu,
-      applyDetailsChanges,
-      applyDetailsChangesCallback,
-      closePanel,
-      createFeatureSetSuccess,
-      detailsFormInitialValues,
-      featureSets,
-      featureSetsPanelIsOpen,
-      featureStore,
-      filters,
-      filtersStore,
-      handleRefresh,
-      pageData,
-      requestErrorMessage,
-      selectedFeatureSet,
-      selectedRowData,
-      setFeatureSetsPanelIsOpen,
-      setSearchParams,
-      setSelectedFeatureSetMin,
-      tableContent,
-      toggleRow,
-      virtualizationConfig
-    },
-    { featureStoreRef }
-  ) => {
-    const params = useParams()
+function FeatureSetsView({
+  actionsMenu,
+  applyDetailsChanges,
+  applyDetailsChangesCallback,
+  closePanel,
+  createFeatureSetSuccess,
+  detailsFormInitialValues,
+  featureSets,
+  featureSetsPanelIsOpen,
+  featureStore,
+  featureStoreRef,
+  filters,
+  filtersStore,
+  handleRefresh,
+  pageData,
+  requestErrorMessage,
+  selectedFeatureSet,
+  selectedRowData,
+  setFeatureSetsPanelIsOpen,
+  setSearchParams,
+  setSelectedFeatureSetMin,
+  tableContent,
+  toggleRow,
+  virtualizationConfig
+}) {
+  const params = useParams()
 
-    return (
-      <div className="feature-store" ref={featureStoreRef}>
-        <div className="content__action-bar-wrapper">
-          <FeatureStorePageTabs />
-          <ActionBar
-            actionButtons={[
-              {
-                className: 'action-button',
-                label: createFeatureSetTitle,
-                variant: PRIMARY_BUTTON,
-                onClick: () => setFeatureSetsPanelIsOpen(true)
-              }
-            ]}
-            closeParamName={FEATURE_SETS_TAB}
-            filters={filters}
-            filtersConfig={filtersConfig}
-            handleRefresh={handleRefresh}
-            setSearchParams={setSearchParams}
-            tab={FEATURE_SETS_TAB}
-            withoutExpandButton
-          >
-            <FeatureStoreFilters content={featureSets} />
-          </ActionBar>
-        </div>
-        {featureStore.loading ? null : featureSets.length === 0 ? (
-          <NoData
-            message={getNoDataMessage(
-              filters,
-              filtersConfig,
-              requestErrorMessage,
-              FEATURE_STORE_PAGE,
-              FEATURE_SETS_TAB,
-              FEATURE_SETS_TAB,
-              filtersStore
-            )}
-          />
-        ) : (
-          <>
-            {(selectedRowData.loading || featureStore.featureSets.featureSetLoading) && <Loader />}
-            <Table
-              actionsMenu={actionsMenu}
-              applyDetailsChanges={applyDetailsChanges}
-              applyDetailsChangesCallback={applyDetailsChangesCallback}
-              detailsFormInitialValues={detailsFormInitialValues}
-              handleCancel={() => setSelectedFeatureSetMin({})}
-              pageData={pageData}
-              selectedItem={selectedFeatureSet}
-              tab={FEATURE_SETS_TAB}
-              tableClassName="feature-sets-table"
-              tableHeaders={tableContent[0]?.content ?? []}
-              virtualizationConfig={virtualizationConfig}
-            >
-              {tableContent.map(
-                (tableItem, index) =>
-                  isRowRendered(virtualizationConfig, index) && (
-                    <FeatureStoreTableRow
-                      actionsMenu={actionsMenu}
-                      key={tableItem.data.ui.identifier}
-                      pageTab={FEATURE_SETS_TAB}
-                      rowIndex={index}
-                      rowItem={tableItem}
-                      selectedItem={selectedFeatureSet}
-                      selectedRowData={selectedRowData}
-                      toggleRow={toggleRow}
-                      withQuickActions={true}
-                    />
-                  )
-              )}
-            </Table>
-          </>
-        )}
-        {featureSetsPanelIsOpen && (
-          <FeatureSetsPanel
-            closePanel={closePanel}
-            createFeatureSetSuccess={createFeatureSetSuccess}
-            project={params.projectName}
-          />
-        )}
+  return (
+    <div className="feature-store" ref={featureStoreRef}>
+      <div className="content__action-bar-wrapper">
+        <FeatureStorePageTabs />
+        <ActionBar
+          actionButtons={[
+            {
+              className: 'action-button',
+              label: createFeatureSetTitle,
+              variant: PRIMARY_BUTTON,
+              onClick: () => setFeatureSetsPanelIsOpen(true)
+            }
+          ]}
+          closeParamName={FEATURE_SETS_TAB}
+          filters={filters}
+          filtersConfig={filtersConfig}
+          handleRefresh={handleRefresh}
+          setSearchParams={setSearchParams}
+          tab={FEATURE_SETS_TAB}
+          withoutExpandButton
+        >
+          <FeatureStoreFilters content={featureSets} />
+        </ActionBar>
       </div>
-    )
-  }
-)
-
-FeatureSetsView.displayName = 'FeatureSetsView'
+      {featureStore.loading ? null : featureSets.length === 0 ? (
+        <NoData
+          message={getNoDataMessage(
+            filters,
+            filtersConfig,
+            requestErrorMessage,
+            FEATURE_STORE_PAGE,
+            FEATURE_SETS_TAB,
+            FEATURE_SETS_TAB,
+            filtersStore
+          )}
+        />
+      ) : (
+        <>
+          {(selectedRowData.loading || featureStore.featureSets.featureSetLoading) && <Loader />}
+          <Table
+            actionsMenu={actionsMenu}
+            applyDetailsChanges={applyDetailsChanges}
+            applyDetailsChangesCallback={applyDetailsChangesCallback}
+            detailsFormInitialValues={detailsFormInitialValues}
+            handleCancel={() => setSelectedFeatureSetMin({})}
+            pageData={pageData}
+            selectedItem={selectedFeatureSet}
+            tab={FEATURE_SETS_TAB}
+            tableClassName="feature-sets-table"
+            tableHeaders={tableContent[0]?.content ?? []}
+            virtualizationConfig={virtualizationConfig}
+          >
+            {tableContent.map(
+              (tableItem, index) =>
+                isRowRendered(virtualizationConfig, index) && (
+                  <FeatureStoreTableRow
+                    actionsMenu={actionsMenu}
+                    key={tableItem.data.ui.identifier}
+                    pageTab={FEATURE_SETS_TAB}
+                    rowIndex={index}
+                    rowItem={tableItem}
+                    selectedItem={selectedFeatureSet}
+                    selectedRowData={selectedRowData}
+                    toggleRow={toggleRow}
+                    withQuickActions={true}
+                  />
+                )
+            )}
+          </Table>
+        </>
+      )}
+      {featureSetsPanelIsOpen && (
+        <FeatureSetsPanel
+          closePanel={closePanel}
+          createFeatureSetSuccess={createFeatureSetSuccess}
+          project={params.projectName}
+        />
+      )}
+    </div>
+  )
+}
 
 FeatureSetsView.propTypes = {
   actionsMenu: PropTypes.array.isRequired,
@@ -163,6 +157,7 @@ FeatureSetsView.propTypes = {
   featureSets: PropTypes.arrayOf(PropTypes.object).isRequired,
   featureSetsPanelIsOpen: PropTypes.bool.isRequired,
   featureStore: PropTypes.object.isRequired,
+  featureStoreRef: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   handleRefresh: PropTypes.func.isRequired,

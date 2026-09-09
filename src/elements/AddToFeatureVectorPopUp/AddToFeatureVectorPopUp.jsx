@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -51,14 +51,24 @@ const AddToFeatureVectorPopUp = ({ action, currentProject }) => {
   const [projectsList, setProjectsList] = useState(
     generateProjectsList(projectStore.projectsNames.data)
   )
+  const [prevCurrentProject, setPrevCurrentProject] = useState(currentProject)
+  const [prevProjectsNamesData, setPrevProjectsNamesData] = useState(
+    projectStore.projectsNames.data
+  )
   const addToFeatureVectorBtn = useRef(null)
   const dispatch = useDispatch()
 
-  useEffect(() => {
+  if (
+    currentProject !== prevCurrentProject ||
+    projectStore.projectsNames.data !== prevProjectsNamesData
+  ) {
+    setPrevCurrentProject(currentProject)
+    setPrevProjectsNamesData(projectStore.projectsNames.data)
+
     if (projectsList.length === 0) {
       setProjectsList(generateProjectsList(projectStore.projectsNames.data, currentProject))
     }
-  }, [currentProject, projectStore.projectsNames.data, projectsList.length])
+  }
 
   const closePopUp = () => {
     setIsPopUpOpen(false)

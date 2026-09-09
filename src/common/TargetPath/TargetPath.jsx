@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useState, useEffect, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { get, isNil } from 'lodash-es'
+import { get, isEqual, isNil } from 'lodash-es'
 import PropTypes from 'prop-types'
 
 import { FormCombobox, FormOnChange } from 'igz-controls/components'
@@ -116,47 +116,30 @@ const TargetPath = ({
     handleGetProjectsNames
   ])
 
-  useEffect(() => {
-    if (
-      get(formState.values, `${formStateFieldInfo}.pathType`) === MLRUN_STORAGE_INPUT_PATH_SCHEME
-    ) {
+  if (get(formState.values, `${formStateFieldInfo}.pathType`) === MLRUN_STORAGE_INPUT_PATH_SCHEME) {
+    const nextComboboxMatches = generateComboboxMatchesList(
+      dataInputState.artifacts,
+      dataInputState.artifactsReferences,
+      dataInputState.featureVectors,
+      dataInputState.featureVectorsReferences,
+      dataInputState.inputProjectItemPathEntered,
+      dataInputState.inputProjectItemReferencePathEntered,
+      dataInputState.inputProjectPathEntered,
+      dataInputState.inputStorePathTypeEntered,
+      dataInputState.project,
+      dataInputState.projectItem,
+      dataInputState.projectItemReference,
+      dataInputState.projects,
+      dataInputState.storePathType
+    )
+
+    if (!isEqual(dataInputState.comboboxMatches, nextComboboxMatches)) {
       setDataInputState(prev => ({
         ...prev,
-        comboboxMatches: generateComboboxMatchesList(
-          dataInputState.artifacts,
-          dataInputState.artifactsReferences,
-          dataInputState.featureVectors,
-          dataInputState.featureVectorsReferences,
-          dataInputState.inputProjectItemPathEntered,
-          dataInputState.inputProjectItemReferencePathEntered,
-          dataInputState.inputProjectPathEntered,
-          dataInputState.inputStorePathTypeEntered,
-          dataInputState.project,
-          dataInputState.projectItem,
-          dataInputState.projectItemReference,
-          dataInputState.projects,
-          dataInputState.storePathType
-        )
+        comboboxMatches: nextComboboxMatches
       }))
     }
-  }, [
-    dataInputState.artifacts,
-    dataInputState.artifactsReferences,
-    dataInputState.featureVectors,
-    dataInputState.featureVectorsReferences,
-    dataInputState.inputProjectItemPathEntered,
-    dataInputState.inputProjectItemReferencePathEntered,
-    dataInputState.inputProjectPathEntered,
-    dataInputState.inputStorePathTypeEntered,
-    dataInputState.project,
-    dataInputState.projectItem,
-    dataInputState.projectItemReference,
-    dataInputState.projects,
-    dataInputState.storePathType,
-    formState.values,
-    formStateFieldInfo,
-    setDataInputState
-  ])
+  }
 
   useEffect(() => {
     if (

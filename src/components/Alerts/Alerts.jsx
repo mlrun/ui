@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash-es'
 
@@ -66,6 +66,7 @@ const Alerts = () => {
     handleRefreshAlerts,
     lastCheckedAlertIdRef,
     paginatedAlerts,
+    paginationConfig,
     paginationConfigAlertsRef,
     requestErrorMessage,
     searchParams,
@@ -99,6 +100,8 @@ const Alerts = () => {
   )
 
   const pageData = useMemo(
+    // false-positive eslint error, lastCheckedAlertIdRef in handleFetchJobLogs uses during logs refresh and not during a render
+    // eslint-disable-next-line react-hooks/refs
     () => generatePageData(selectedAlert, handleFetchJobLogs, isCrossProjects),
     [handleFetchJobLogs, isCrossProjects, selectedAlert]
   )
@@ -182,7 +185,7 @@ const Alerts = () => {
               <Pagination
                 closeParamName={isCrossProjects ? MONITOR_ALERTS_PAGE : ALERTS_PAGE_PATH}
                 page={pageData.page}
-                paginationConfig={paginationConfigAlertsRef.current}
+                paginationConfig={paginationConfig}
               />
             </>
           )}

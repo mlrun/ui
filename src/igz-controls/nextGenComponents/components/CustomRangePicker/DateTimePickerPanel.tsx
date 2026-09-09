@@ -1,11 +1,9 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import type { DateRange } from 'react-day-picker'
 
-import {
-  MaskedInput,
-  isMaskComplete,
-  type MaskItem
-} from './MaskedInput'
+import { MaskedInput } from './MaskedInput'
+import { isMaskComplete } from './maskedInput.utils'
+import type { MaskItem } from './maskedInput.types'
 import { TimePickerInput } from './TimePickerInput'
 import { Calendar } from '../ui/calendar'
 import { cn } from '../../lib/utils'
@@ -82,15 +80,18 @@ export const DateTimePickerPanel = ({
   onHourChange,
   onSelectDate
 }: Props) => {
+  const dateValueTime = dateValue?.getTime()
   const [maskedDate, setMaskedDate] = useState(dateValue ? formatLocalDate(dateValue) : '')
   const [displayedMonth, setDisplayedMonth] = useState<Date>(dateValue ?? new Date())
+  const [prevDateValueTime, setPrevDateValueTime] = useState(dateValueTime)
 
-  useEffect(() => {
+  if (dateValueTime !== prevDateValueTime) {
+    setPrevDateValueTime(dateValueTime)
     setMaskedDate(dateValue ? formatLocalDate(dateValue) : '')
     if (dateValue) {
       setDisplayedMonth(dateValue)
     }
-  }, [dateValue])
+  }
 
   const handleMaskedDateChange = useCallback(
     (masked: string) => {

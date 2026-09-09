@@ -137,7 +137,7 @@ const Calendar = ({
           defaultClassNames.dropdowns
         ),
         dropdown: cn('bg-popover absolute inset-0 opacity-0', defaultClassNames.dropdown),
-        table: 'w-full border-collapse',
+        month_grid: 'w-full border-collapse',
         weekdays: cn('flex border-b border-slate-100 pb-2', defaultClassNames.weekdays),
         weekday: cn(
           'text-muted-foreground flex-1 select-none rounded-md text-[0.8rem] font-normal',
@@ -157,7 +157,7 @@ const Calendar = ({
         range_middle: 'bg-transparent',
         range_end: 'bg-transparent',
         outside: cn(
-          'text-muted-foreground aria-selected:text-muted-foreground',
+          'text-muted-foreground aria-selected:text-muted-foreground text-muted-foreground opacity-50',
           defaultClassNames.outside
         ),
         disabled: cn('text-muted-foreground opacity-50', defaultClassNames.disabled),

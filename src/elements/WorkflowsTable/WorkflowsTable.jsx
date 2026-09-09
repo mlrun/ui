@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router'
 import PropTypes from 'prop-types'
 import { find, isEmpty } from 'lodash-es'
 
@@ -78,240 +78,267 @@ import { useSortTable } from '../../hooks/useSortTable.hook'
 
 import './workflowsTable.scss'
 
-const WorkflowsTable = React.forwardRef(
-  (
-    {
-      backLink,
-      context,
-      filters,
-      filtersConfig,
-      getWorkflows,
-      itemIsSelected,
-      requestErrorMessage,
-      selectedFunction,
-      selectedJob,
-      setItemIsSelected,
-      setSelectedFunction,
-      setSelectedJob,
-      setWorkflowIsLoaded,
-      tableContent = [],
-      workflowIsLoaded
-    },
-    abortJobRef
-  ) => {
-    const [dataIsLoading, setDataIsLoading] = useState(false)
-    const [rerunIsDisabled, setRerunIsDisabled] = useState(false)
-    const [workflowsViewMode, setWorkflowsViewMode] = useState(WORKFLOW_GRAPH_VIEW)
-    const workflowsStore = useSelector(state => state.workflowsStore)
-    const filtersStore = useSelector(state => state.filtersStore)
-    const appStore = useSelector(store => store.appStore)
-    const params = useParams()
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const location = useLocation()
-    const fetchJobFunctionsPromiseRef = useRef()
-    let fetchFunctionLogsTimeout = useRef(null)
-    const accessibleProjectsMap = useSelector(state => state.projectStore.accessibleProjectsMap)
-    const [permissionsLoading, setPermissionsLoading] = useState(false)
+function WorkflowsTable({
+  abortJobRef,
+  backLink,
+  context,
+  filters,
+  filtersConfig,
+  getWorkflows,
+  itemIsSelected,
+  requestErrorMessage,
+  selectedFunction,
+  selectedJob,
+  setItemIsSelected,
+  setSelectedFunction,
+  setSelectedJob,
+  setWorkflowIsLoaded,
+  tableContent = [],
+  workflowIsLoaded
+}) {
+  const [dataIsLoading, setDataIsLoading] = useState(false)
+  const [workflowsViewMode, setWorkflowsViewMode] = useState(WORKFLOW_GRAPH_VIEW)
+  const workflowsStore = useSelector(state => state.workflowsStore)
+  const filtersStore = useSelector(state => state.filtersStore)
+  const appStore = useSelector(store => store.appStore)
+  const params = useParams()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const fetchJobFunctionsPromiseRef = useRef()
+  const fetchFunctionLogsTimeout = useRef(null)
+  const accessibleProjectsMap = useSelector(state => state.projectStore.accessibleProjectsMap)
+  const [permissionsLoading, setPermissionsLoading] = useState(false)
+  const [rerunCooldownActive, setRerunCooldownActive] = useState(false)
+  const permissionsFetchKey = useMemo(
+    () => workflowsStore.workflows.data.map(workflow => workflow.project).join('\0'),
+    [workflowsStore.workflows.data]
+  )
+  const [prevPermissionsFetchKey, setPrevPermissionsFetchKey] = useState('')
 
-    const detailsFormInitialValues = useMemo(() => {
-      return {
-        labels: selectedJob.labels ?? [],
-        results: selectedJob.resultsChips ?? [],
-        parameters: selectedJob.parametersChips ?? [],
-        nodeSelector: selectedJob.nodeSelectorChips ?? []
+  if (permissionsFetchKey && permissionsFetchKey !== prevPermissionsFetchKey) {
+    setPrevPermissionsFetchKey(permissionsFetchKey)
+    setPermissionsLoading(true)
+  }
+
+  const rerunInProgress = workflowsStore.workflows.rerunInProgress
+  const [prevRerunInProgress, setPrevRerunInProgress] = useState(rerunInProgress)
+
+  if (rerunInProgress !== prevRerunInProgress) {
+    setPrevRerunInProgress(rerunInProgress)
+
+    if (rerunInProgress) {
+      setRerunCooldownActive(true)
+    }
+  }
+
+  const detailsFormInitialValues = useMemo(() => {
+    return {
+      labels: selectedJob.labels ?? [],
+      results: selectedJob.resultsChips ?? [],
+      parameters: selectedJob.parametersChips ?? [],
+      nodeSelector: selectedJob.nodeSelectorChips ?? []
+    }
+  }, [
+    selectedJob.labels,
+    selectedJob.nodeSelectorChips,
+    selectedJob.parametersChips,
+    selectedJob.resultsChips
+  ])
+
+  useEffect(() => {
+    if (!permissionsFetchKey) {
+      return
+    }
+
+    const projectNames = workflowsStore.workflows.data.map(workflow => workflow.project)
+    let cancelled = false
+
+    fetchMissingProjectsPermissions(projectNames, accessibleProjectsMap, dispatch).finally(() => {
+      if (!cancelled) {
+        setPermissionsLoading(false)
       }
-    }, [
-      selectedJob.labels,
-      selectedJob.nodeSelectorChips,
-      selectedJob.parametersChips,
-      selectedJob.resultsChips
-    ])
-
-    useEffect(() => {
-      const projectNames = workflowsStore.workflows.data.map(workflow => workflow.project)
-      setPermissionsLoading(true)
-      projectNames &&
-        fetchMissingProjectsPermissions(projectNames, accessibleProjectsMap, dispatch).finally(
-          () => {
-            setPermissionsLoading(false)
-          }
-        )
-    }, [dispatch, workflowsStore.workflows.data, accessibleProjectsMap])
-
-    const monitorWorkflowsRowHeight = useMemo(
-      () => getScssVariableValue('--monitorWorkflowsRowHeight'),
-      []
-    )
-    const monitorWorkflowsRowHeightExtended = useMemo(
-      () => getScssVariableValue('--monitorWorkflowsRowHeightExtended'),
-      []
-    )
-    const monitorWorkflowsHeaderRowHeight = useMemo(
-      () => getScssVariableValue('--monitorWorkflowsHeaderRowHeight'),
-      []
-    )
-
-    const {
-      editableItem,
-      handleMonitoring,
-      handleRerunJob,
-      jobWizardIsOpened,
-      jobWizardMode,
-      setConfirmData,
-      setEditableItem,
-      setJobWizardIsOpened,
-      setJobWizardMode
-    } = React.useContext(context)
-
-    const { sortedTableContent } = useSortTable({
-      headers: tableContent[0]?.content,
-      content: tableContent,
-      sortConfig: { defaultSortBy: 'createdat', defaultDirection: 'desc' }
     })
 
-    const handleRetry = useCallback(() => {
-      getWorkflows(filters)
-    }, [filters, getWorkflows])
+    return () => {
+      cancelled = true
+    }
+  }, [dispatch, permissionsFetchKey, accessibleProjectsMap, workflowsStore.workflows.data])
 
-    const handleFetchFunctionLogs = useCallback(
-      (item, projectName, setDetailsLogs) => {
-        return getFunctionLogs(
-          dispatch,
-          fetchFunctionLogsTimeout,
-          projectName,
-          item.name,
-          item.tag,
-          setDetailsLogs
-        )
-      },
-      [fetchFunctionLogsTimeout, dispatch]
-    )
+  const monitorWorkflowsRowHeight = useMemo(
+    () => getScssVariableValue('--monitorWorkflowsRowHeight'),
+    []
+  )
+  const monitorWorkflowsRowHeightExtended = useMemo(
+    () => getScssVariableValue('--monitorWorkflowsRowHeightExtended'),
+    []
+  )
+  const monitorWorkflowsHeaderRowHeight = useMemo(
+    () => getScssVariableValue('--monitorWorkflowsHeaderRowHeight'),
+    []
+  )
 
-    const handleFetchJobLogs = useCallback(
-      (item, projectName, setDetailsLogs, streamLogsRef) => {
-        return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, dispatch)
-      },
-      [dispatch]
-    )
+  const {
+    editableItem,
+    handleMonitoring,
+    handleRerunJob,
+    jobWizardIsOpened,
+    jobWizardMode,
+    setConfirmData,
+    setEditableItem,
+    setJobWizardIsOpened,
+    setJobWizardMode
+  } = React.useContext(context)
 
-    const toggleConvertedYaml = useCallback(
-      data => {
-        return dispatch(toggleYaml(data))
-      },
-      [dispatch]
-    )
+  const { sortedTableContent } = useSortTable({
+    headers: tableContent[0]?.content,
+    content: tableContent,
+    sortConfig: { defaultSortBy: 'createdat', defaultDirection: 'desc' }
+  })
 
-    const handleRemoveFunctionLogs = useCallback(() => {
-      clearTimeout(fetchFunctionLogsTimeout.current)
-    }, [fetchFunctionLogsTimeout])
+  const handleRetry = useCallback(() => {
+    getWorkflows(filters)
+  }, [filters, getWorkflows])
 
-    const pageData = useMemo(
-      () =>
-        generatePageData(
-          selectedFunction,
-          handleFetchFunctionLogs,
-          handleFetchJobLogs,
-          handleRemoveFunctionLogs,
-          selectedJob
-        ),
-      [
-        handleFetchJobLogs,
-        handleFetchFunctionLogs,
-        handleRemoveFunctionLogs,
-        selectedFunction,
-        selectedJob
-      ]
-    )
-
-    const refreshWorkflow = useCallback(() => {
-      return dispatch(
-        fetchWorkflow({
-          project: params.workflowProjectName || params.projectName,
-          workflowId: params.workflowId
-        })
+  const handleFetchFunctionLogs = useCallback(
+    (item, projectName, setDetailsLogs) => {
+      return getFunctionLogs(
+        dispatch,
+        fetchFunctionLogsTimeout,
+        projectName,
+        item.name,
+        item.tag,
+        setDetailsLogs
       )
-        .unwrap()
-        .catch(error => {
-          showErrorNotification(dispatch, error, 'Failed to fetch workflow')
-          navigate(backLink, {
-            replace: true
-          })
+    },
+    [dispatch, fetchFunctionLogsTimeout]
+  )
+
+  const handleFetchJobLogs = useCallback(
+    (item, projectName, setDetailsLogs, streamLogsRef) => {
+      return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, dispatch)
+    },
+    [dispatch]
+  )
+
+  const toggleConvertedYaml = useCallback(
+    data => {
+      return dispatch(toggleYaml(data))
+    },
+    [dispatch]
+  )
+
+  const handleRemoveFunctionLogs = useCallback(() => {
+    clearTimeout(fetchFunctionLogsTimeout.current)
+  }, [fetchFunctionLogsTimeout])
+
+  const pageData = useMemo(
+    () =>
+      generatePageData(
+        selectedFunction,
+        handleFetchFunctionLogs,
+        handleFetchJobLogs,
+        handleRemoveFunctionLogs,
+        selectedJob
+      ),
+    [
+      handleFetchJobLogs,
+      handleFetchFunctionLogs,
+      handleRemoveFunctionLogs,
+      selectedFunction,
+      selectedJob
+    ]
+  )
+
+  const refreshWorkflow = useCallback(() => {
+    return dispatch(
+      fetchWorkflow({
+        project: params.workflowProjectName || params.projectName,
+        workflowId: params.workflowId
+      })
+    )
+      .unwrap()
+      .catch(error => {
+        showErrorNotification(dispatch, error, 'Failed to fetch workflow')
+        navigate(backLink, {
+          replace: true
         })
-    }, [
-      backLink,
-      dispatch,
-      navigate,
-      params.projectName,
-      params.workflowId,
-      params.workflowProjectName
-    ])
+      })
+  }, [
+    backLink,
+    dispatch,
+    navigate,
+    params.projectName,
+    params.workflowId,
+    params.workflowProjectName
+  ])
 
-    const handlePollAbortingJob = useCallback(
-      (jobRun, refresh) => {
-        if (jobRun.abortTaskId && jobRun.state.value === ABORTING_STATE) {
-          const abortingJob = {
-            [jobRun.abortTaskId]: {
-              uid: jobRun.uid,
-              name: jobRun.name
-            }
+  const handlePollAbortingJob = useCallback(
+    (jobRun, refresh) => {
+      if (jobRun.abortTaskId && jobRun.state.value === ABORTING_STATE) {
+        const abortingJob = {
+          [jobRun.abortTaskId]: {
+            uid: jobRun.uid,
+            name: jobRun.name
           }
-
-          pollAbortingJobs(
-            params.workflowProjectName || params.projectName,
-            abortJobRef,
-            abortingJob,
-            refresh,
-            dispatch
-          )
         }
-      },
-      [abortJobRef, dispatch, params.projectName, params.workflowProjectName]
-    )
 
-    const modifyAndSelectRun = useCallback(
-      (jobRun, refresh) => {
-        return enrichRunWithFunctionFields(dispatch, jobRun, fetchJobFunctionsPromiseRef).then(
-          jobRun => {
-            setSelectedJob(jobRun)
-            setSelectedFunction({})
-            setItemIsSelected(true)
-
-            if (refresh) {
-              handlePollAbortingJob(jobRun, refresh)
-            }
-          }
-        )
-      },
-      [dispatch, handlePollAbortingJob, setItemIsSelected, setSelectedFunction, setSelectedJob]
-    )
-
-    const findSelectedWorkflowJob = useCallback(() => {
-      if (workflowsStore.activeWorkflow?.data) {
-        const workflow = { ...workflowsStore.activeWorkflow.data }
-
-        return find(
-          workflow.graph,
-          workflowItem => workflowItem.run_type === 'run' && workflowItem.run_uid === params.jobId
+        pollAbortingJobs(
+          params.workflowProjectName || params.projectName,
+          abortJobRef,
+          abortingJob,
+          refresh,
+          dispatch
         )
       }
-    }, [params.jobId, workflowsStore.activeWorkflow.data])
+    },
+    [abortJobRef, dispatch, params.projectName, params.workflowProjectName]
+  )
 
-    const getPipelineError = useCallback(
-      isErrorState => {
-        return isErrorState &&
-          workflowsStore.activeWorkflow?.data?.run?.error &&
-          workflowsStore.activeWorkflow.data.run.error !== 'None'
-          ? {
-              title: 'Pipeline error - ',
-              message: workflowsStore.activeWorkflow.data.run.error
-            }
-          : {}
-      },
-      [workflowsStore.activeWorkflow.data]
-    )
+  const modifyAndSelectRun = useCallback(
+    (jobRun, refresh) => {
+      return enrichRunWithFunctionFields(dispatch, jobRun, fetchJobFunctionsPromiseRef).then(
+        jobRun => {
+          setSelectedJob(jobRun)
+          setSelectedFunction({})
+          setItemIsSelected(true)
 
-    const fetchRun = useCallback(() => {
+          if (refresh) {
+            handlePollAbortingJob(jobRun, refresh)
+          }
+        }
+      )
+    },
+    [dispatch, handlePollAbortingJob, setItemIsSelected, setSelectedFunction, setSelectedJob]
+  )
+
+  const findSelectedWorkflowJob = useCallback(() => {
+    if (workflowsStore.activeWorkflow?.data) {
+      const workflow = { ...workflowsStore.activeWorkflow.data }
+
+      return find(
+        workflow.graph,
+        workflowItem => workflowItem.run_type === 'run' && workflowItem.run_uid === params.jobId
+      )
+    }
+  }, [params.jobId, workflowsStore.activeWorkflow.data])
+
+  const getPipelineError = useCallback(
+    isErrorState => {
+      return isErrorState &&
+        workflowsStore.activeWorkflow?.data?.run?.error &&
+        workflowsStore.activeWorkflow.data.run.error !== 'None'
+        ? {
+            title: 'Pipeline error - ',
+            message: workflowsStore.activeWorkflow.data.run.error
+          }
+        : {}
+    },
+    [workflowsStore.activeWorkflow.data]
+  )
+
+  const fetchRun = useCallback(
+    function fetchRunCallback() {
       return dispatch(
         fetchJob({ project: params.workflowProjectName || params.projectName, jobId: params.jobId })
       )
@@ -324,7 +351,7 @@ const WorkflowsTable = React.forwardRef(
 
           return modifyAndSelectRun(
             parseJob(job, MONITOR_WORKFLOWS_TAB, customJobState, getPipelineError(isErrorState)),
-            fetchRun
+            fetchRunCallback
           )
         })
         .catch(() =>
@@ -335,7 +362,8 @@ const WorkflowsTable = React.forwardRef(
         .finally(() => {
           fetchJobFunctionsPromiseRef.current = null
         })
-    }, [
+    },
+    [
       backLink,
       dispatch,
       findSelectedWorkflowJob,
@@ -345,295 +373,271 @@ const WorkflowsTable = React.forwardRef(
       params.projectName,
       params.workflowProjectName,
       getPipelineError
-    ])
+    ]
+  )
 
-    const setJobStatusAborting = useCallback(
-      task => {
-        setSelectedJob(state => ({
-          ...state,
-          abortTaskId: task,
-          state: getState(ABORTING_STATE, JOBS_PAGE, JOB_KIND_JOB)
-        }))
-      },
-      [setSelectedJob]
-    )
+  const setJobStatusAborting = useCallback(
+    task => {
+      setSelectedJob(state => ({
+        ...state,
+        abortTaskId: task,
+        state: getState(ABORTING_STATE, JOBS_PAGE, JOB_KIND_JOB)
+      }))
+    },
+    [setSelectedJob]
+  )
 
-    const onAbortJob = useCallback(
-      job => {
-        const refresh = () => {
-          refreshWorkflow()
-          fetchRun()
-        }
-
-        handleAbortJob(
-          job,
-          setNotification,
-          refresh,
-          setConfirmData,
-          dispatch,
-          abortJobRef,
-          setJobStatusAborting
-        )
-      },
-      [abortJobRef, dispatch, fetchRun, refreshWorkflow, setConfirmData, setJobStatusAborting]
-    )
-
-    const handleConfirmAbortJob = useCallback(
-      job => {
-        setConfirmData({
-          item: job,
-          header: 'Abort job?',
-          message: (
-            <div>
-              Are you sure you want to abort the job "{job.name}"? <br />
-              {isJobKindLocal(job) &&
-                'This is a local run. You can abort the run, though the actual process will continue.'}
-            </div>
-          ),
-          btnConfirmLabel: 'Abort',
-          btnConfirmType: DANGER_BUTTON,
-          rejectHandler: () => {
-            setConfirmData(null)
-          },
-          confirmHandler: () => {
-            onAbortJob(job)
-            setConfirmData(null)
-          }
-        })
-      },
-      [onAbortJob, setConfirmData]
-    )
-
-    const onTerminateWorkflow = useCallback(
-      job => {
-        handleTerminateWorkflow(job, dispatch)
-      },
-      [dispatch]
-    )
-
-    const onDeleteJob = useCallback(
-      job => {
-        handleDeleteJob(false, job, refreshWorkflow, null, filters, dispatch).then(() => {
-          navigate(
-            location.pathname
-              .split('/')
-              .splice(0, location.pathname.split('/').indexOf(params.workflowId) + 1)
-              .join('/') + window.location.search
-          )
-        })
-      },
-      [dispatch, filters, location.pathname, navigate, params.workflowId, refreshWorkflow]
-    )
-
-    const handleConfirmDeleteJob = useCallback(
-      job => {
-        setConfirmData({
-          item: job,
-          header: 'Delete job?',
-          message: `Are you sure you want to delete the job "${job.name}"? Deleted jobs can not be restored.`,
-          btnConfirmLabel: 'Delete',
-          btnConfirmType: DANGER_BUTTON,
-          rejectHandler: () => {
-            setConfirmData(null)
-          },
-          confirmHandler: () => {
-            onDeleteJob(job)
-            setConfirmData(null)
-          }
-        })
-      },
-      [onDeleteJob, setConfirmData]
-    )
-
-    const handleConfirmTerminateWorkflow = useCallback(
-      job => {
-        setConfirmData({
-          item: job,
-          header: 'Terminate workflow',
-          message: `Are you sure you want to terminate the workflow "${job.name}" (stop its execution)? Workflows termination cannot be undone.`,
-          btnConfirmLabel: 'Terminate',
-          btnConfirmType: DANGER_BUTTON,
-          rejectHandler: () => {
-            setConfirmData(null)
-          },
-          confirmHandler: () => {
-            onTerminateWorkflow(job)
-            setConfirmData(null)
-          }
-        })
-      },
-      [onTerminateWorkflow, setConfirmData]
-    )
-
-    const handleRerun = useCallback(
-      workflow => {
-        dispatch(rerunWorkflow({ project: workflow.project, workflowId: workflow.id }))
-          .unwrap()
-          .then(() => {
-            handleRetry()
-            dispatch(
-              setNotification({
-                status: 200,
-                id: Math.random(),
-                message: 'Workflow run successfully.'
-              })
-            )
-          })
-          .catch(error => {
-            showErrorNotification(dispatch, error, 'Workflow did not run successfully', '', () =>
-              handleRerun(workflow)
-            )
-          })
-      },
-      [dispatch, handleRetry]
-    )
-
-    const actionsMenu = useMemo(() => {
-      return job =>
-        generateActionsMenu(
-          job,
-          handleRerunJob,
-          appStore.frontendSpec.jobs_dashboard_url,
-          handleMonitoring,
-          appStore.frontendSpec.abortable_function_kinds,
-          appStore?.frontendSpec?.ce?.version,
-          handleConfirmAbortJob,
-          handleConfirmDeleteJob,
-          handleConfirmTerminateWorkflow,
-          accessibleProjectsMap,
-          toggleConvertedYaml,
-          handleRerun,
-          rerunIsDisabled
-        )
-    }, [
-      handleRerunJob,
-      appStore.frontendSpec.jobs_dashboard_url,
-      appStore.frontendSpec.abortable_function_kinds,
-      appStore.frontendSpec?.ce?.version,
-      handleMonitoring,
-      handleConfirmAbortJob,
-      handleConfirmDeleteJob,
-      handleConfirmTerminateWorkflow,
-      accessibleProjectsMap,
-      toggleConvertedYaml,
-      handleRerun,
-      rerunIsDisabled
-    ])
-
-    const handleCancel = useCallback(() => {
-      setSelectedJob({})
-      setSelectedFunction({})
-      setItemIsSelected(false)
-    }, [setItemIsSelected, setSelectedFunction, setSelectedJob])
-
-    const findSelectedWorkflowFunction = useCallback(
-      withoutRunType => {
-        if (workflowsStore.activeWorkflow?.data) {
-          const workflow = { ...workflowsStore.activeWorkflow.data }
-
-          return find(workflow.graph, workflowItem => {
-            let workflowItemIsFound =
-              workflowItem.function?.includes(`${params.functionName}@${params.functionHash}`) ||
-              workflowItem.function?.includes(params.functionName) ||
-              workflowItem.function?.includes(params.jobId)
-
-            if (withoutRunType) {
-              workflowItemIsFound = workflowItemIsFound && workflowItem.run_type !== 'run'
-            }
-
-            return workflowItemIsFound
-          })
-        }
-      },
-      [params.functionName, params.functionHash, params.jobId, workflowsStore.activeWorkflow.data]
-    )
-
-    const checkIfWorkflowItemIsJob = useCallback(() => {
-      if (workflowsStore.activeWorkflow?.data?.graph) {
-        let selectedWorkflowItem = findSelectedWorkflowFunction(true)
-
-        if (isEmpty(selectedWorkflowItem)) {
-          selectedWorkflowItem = findSelectedWorkflowFunction(false)
-        }
-
-        return !['deploy', 'build'].includes(selectedWorkflowItem?.run_type)
+  const onAbortJob = useCallback(
+    job => {
+      const refresh = () => {
+        refreshWorkflow()
+        fetchRun()
       }
-    }, [workflowsStore.activeWorkflow.data.graph, findSelectedWorkflowFunction])
 
-    const handleCatchRequest = useCallback(
-      (error, message) => {
-        showErrorNotification(dispatch, error, message, '')
+      handleAbortJob(
+        job,
+        setNotification,
+        refresh,
+        setConfirmData,
+        dispatch,
+        abortJobRef,
+        setJobStatusAborting
+      )
+    },
+    [abortJobRef, dispatch, fetchRun, refreshWorkflow, setConfirmData, setJobStatusAborting]
+  )
+
+  const handleConfirmAbortJob = useCallback(
+    job => {
+      setConfirmData({
+        item: job,
+        header: 'Abort job?',
+        message: (
+          <div>
+            Are you sure you want to abort the job "{job.name}"? <br />
+            {isJobKindLocal(job) &&
+              'This is a local run. You can abort the run, though the actual process will continue.'}
+          </div>
+        ),
+        btnConfirmLabel: 'Abort',
+        btnConfirmType: DANGER_BUTTON,
+        rejectHandler: () => {
+          setConfirmData(null)
+        },
+        confirmHandler: () => {
+          onAbortJob(job)
+          setConfirmData(null)
+        }
+      })
+    },
+    [onAbortJob, setConfirmData]
+  )
+
+  const onTerminateWorkflow = useCallback(
+    job => {
+      handleTerminateWorkflow(job, dispatch)
+    },
+    [dispatch]
+  )
+
+  const onDeleteJob = useCallback(
+    job => {
+      handleDeleteJob(false, job, refreshWorkflow, null, filters, dispatch).then(() => {
         navigate(
           location.pathname
             .split('/')
             .splice(0, location.pathname.split('/').indexOf(params.workflowId) + 1)
             .join('/') + window.location.search
         )
-      },
-      [dispatch, location.pathname, navigate, params.workflowId]
-    )
+      })
+    },
+    [dispatch, filters, location.pathname, navigate, params.workflowId, refreshWorkflow]
+  )
 
-    useEffect(() => {
-      if (
-        !fetchJobFunctionsPromiseRef.current &&
-        params.jobId &&
-        (isEmpty(selectedJob) || params.jobId !== selectedJob.uid) &&
-        checkIfWorkflowItemIsJob() &&
-        !dataIsLoading
-      ) {
-        setDataIsLoading(true)
-        fetchRun().finally(() => setDataIsLoading(false))
-      }
-    }, [fetchRun, params.jobId, selectedJob, checkIfWorkflowItemIsJob, dataIsLoading])
+  const handleConfirmDeleteJob = useCallback(
+    job => {
+      setConfirmData({
+        item: job,
+        header: 'Delete job?',
+        message: `Are you sure you want to delete the job "${job.name}"? Deleted jobs can not be restored.`,
+        btnConfirmLabel: 'Delete',
+        btnConfirmType: DANGER_BUTTON,
+        rejectHandler: () => {
+          setConfirmData(null)
+        },
+        confirmHandler: () => {
+          onDeleteJob(job)
+          setConfirmData(null)
+        }
+      })
+    },
+    [onDeleteJob, setConfirmData]
+  )
 
-    useEffect(() => {
-      const functionToBeSelected = findSelectedWorkflowFunction(true)
+  const handleConfirmTerminateWorkflow = useCallback(
+    job => {
+      setConfirmData({
+        item: job,
+        header: 'Terminate workflow',
+        message: `Are you sure you want to terminate the workflow "${job.name}" (stop its execution)? Workflows termination cannot be undone.`,
+        btnConfirmLabel: 'Terminate',
+        btnConfirmType: DANGER_BUTTON,
+        rejectHandler: () => {
+          setConfirmData(null)
+        },
+        confirmHandler: () => {
+          onTerminateWorkflow(job)
+          setConfirmData(null)
+        }
+      })
+    },
+    [onTerminateWorkflow, setConfirmData]
+  )
 
-      if (isWorkflowStepExecutable(functionToBeSelected)) {
-        const workflow = { ...workflowsStore.activeWorkflow?.data }
-        const graphFunctionState = functionToBeSelected?.phase?.toLowerCase()
-        const isErrorState = [FAILED_STATE, ERROR_STATE].includes(graphFunctionState)
-        const customFunctionState = isErrorState ? graphFunctionState : ''
-        const pipelineError = getPipelineError(isErrorState)
+  const handleRerun = useCallback(
+    function handleRerunCallback(workflow) {
+      dispatch(rerunWorkflow({ project: workflow.project, workflowId: workflow.id }))
+        .unwrap()
+        .then(() => {
+          handleRetry()
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: 'Workflow run successfully.'
+            })
+          )
+        })
+        .catch(error => {
+          showErrorNotification(dispatch, error, 'Workflow did not run successfully', '', () =>
+            handleRerunCallback(workflow)
+          )
+        })
+    },
+    [dispatch, handleRetry]
+  )
 
-        if (
-          workflow.graph &&
-          params.functionHash &&
-          (isEmpty(selectedFunction) || params.functionHash !== selectedFunction.hash)
-        ) {
-          if (params.functionName !== selectedFunction.name) {
-            dispatch(
-              fetchFunction({
-                project: params.workflowProjectName || params.projectName,
-                name: params.functionName,
-                hash: params.functionHash === 'latest' ? '' : params.functionHash
-              })
-            )
-              .unwrap()
-              .then(func => {
-                setSelectedFunction(
-                  parseFunction(
-                    func,
-                    params.workflowProjectName || params.projectName,
-                    customFunctionState,
-                    pipelineError
-                  )
-                )
-                setItemIsSelected(true)
-                setSelectedJob({})
-              })
-              .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
+  const rerunIsDisabled = workflowsStore.workflows.rerunInProgress || rerunCooldownActive
+
+  const actionsMenu = useMemo(() => {
+    return job =>
+      generateActionsMenu(
+        job,
+        handleRerunJob,
+        appStore.frontendSpec.jobs_dashboard_url,
+        handleMonitoring,
+        appStore.frontendSpec.abortable_function_kinds,
+        appStore.frontendSpec.ce?.version,
+        handleConfirmAbortJob,
+        handleConfirmDeleteJob,
+        handleConfirmTerminateWorkflow,
+        accessibleProjectsMap,
+        toggleConvertedYaml,
+        handleRerun,
+        rerunIsDisabled
+      )
+  }, [
+    handleRerunJob,
+    appStore.frontendSpec.jobs_dashboard_url,
+    appStore.frontendSpec.abortable_function_kinds,
+    appStore.frontendSpec.ce?.version,
+    handleMonitoring,
+    handleConfirmAbortJob,
+    handleConfirmDeleteJob,
+    handleConfirmTerminateWorkflow,
+    accessibleProjectsMap,
+    toggleConvertedYaml,
+    handleRerun,
+    rerunIsDisabled
+  ])
+
+  const handleCancel = useCallback(() => {
+    setSelectedJob({})
+    setSelectedFunction({})
+    setItemIsSelected(false)
+  }, [setItemIsSelected, setSelectedFunction, setSelectedJob])
+
+  const findSelectedWorkflowFunction = useCallback(
+    withoutRunType => {
+      if (workflowsStore.activeWorkflow?.data) {
+        const workflow = { ...workflowsStore.activeWorkflow.data }
+
+        return find(workflow.graph, workflowItem => {
+          let workflowItemIsFound =
+            workflowItem.function?.includes(`${params.functionName}@${params.functionHash}`) ||
+            workflowItem.function?.includes(params.functionName) ||
+            workflowItem.function?.includes(params.jobId)
+
+          if (withoutRunType) {
+            workflowItemIsFound = workflowItemIsFound && workflowItem.run_type !== 'run'
           }
-        } else if (
-          workflow.graph &&
-          params.jobId &&
-          (isEmpty(selectedFunction) || params.jobId !== selectedFunction.name) &&
-          !checkIfWorkflowItemIsJob()
-        ) {
+
+          return workflowItemIsFound
+        })
+      }
+    },
+    [params.functionName, params.functionHash, params.jobId, workflowsStore.activeWorkflow.data]
+  )
+
+  const checkIfWorkflowItemIsJob = useCallback(() => {
+    if (workflowsStore.activeWorkflow?.data?.graph) {
+      let selectedWorkflowItem = findSelectedWorkflowFunction(true)
+
+      if (isEmpty(selectedWorkflowItem)) {
+        selectedWorkflowItem = findSelectedWorkflowFunction(false)
+      }
+
+      return !['deploy', 'build'].includes(selectedWorkflowItem?.run_type)
+    }
+  }, [workflowsStore.activeWorkflow.data.graph, findSelectedWorkflowFunction])
+
+  const handleCatchRequest = useCallback(
+    (error, message) => {
+      showErrorNotification(dispatch, error, message, '')
+      navigate(
+        location.pathname
+          .split('/')
+          .splice(0, location.pathname.split('/').indexOf(params.workflowId) + 1)
+          .join('/') + window.location.search
+      )
+    },
+    [dispatch, location.pathname, navigate, params.workflowId]
+  )
+
+  useEffect(() => {
+    if (
+      !fetchJobFunctionsPromiseRef.current &&
+      params.jobId &&
+      (isEmpty(selectedJob) || params.jobId !== selectedJob.uid) &&
+      checkIfWorkflowItemIsJob() &&
+      !dataIsLoading
+    ) {
+      setDataIsLoading(true)
+      fetchRun().finally(() => setDataIsLoading(false))
+    }
+  }, [fetchRun, params.jobId, selectedJob, checkIfWorkflowItemIsJob, dataIsLoading])
+
+  useEffect(() => {
+    const functionToBeSelected = findSelectedWorkflowFunction(true)
+
+    if (isWorkflowStepExecutable(functionToBeSelected)) {
+      const workflow = { ...workflowsStore.activeWorkflow?.data }
+      const graphFunctionState = functionToBeSelected?.phase?.toLowerCase()
+      const isErrorState = [FAILED_STATE, ERROR_STATE].includes(graphFunctionState)
+      const customFunctionState = isErrorState ? graphFunctionState : ''
+      const pipelineError = getPipelineError(isErrorState)
+
+      if (
+        workflow.graph &&
+        params.functionHash &&
+        (isEmpty(selectedFunction) || params.functionHash !== selectedFunction.hash)
+      ) {
+        if (params.functionName !== selectedFunction.name) {
           dispatch(
             fetchFunction({
               project: params.workflowProjectName || params.projectName,
-              name: params.jobId
+              name: params.functionName,
+              hash: params.functionHash === 'latest' ? '' : params.functionHash
             })
           )
             .unwrap()
@@ -651,209 +655,244 @@ const WorkflowsTable = React.forwardRef(
             })
             .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
         }
-      }
-    }, [
-      findSelectedWorkflowFunction,
-      handleCatchRequest,
-      params.functionHash,
-      params.functionName,
-      params.projectName,
-      selectedFunction,
-      workflowsStore.activeWorkflow,
-      checkIfWorkflowItemIsJob,
-      params.jobId,
-      dispatch,
-      setSelectedFunction,
-      setItemIsSelected,
-      setSelectedJob,
-      params.workflowProjectName,
-      getPipelineError
-    ])
-
-    useEffect(() => {
-      if (
-        (params.jobId || params.functionHash) &&
-        !isEmpty(selectedJob) &&
-        pageData.details.menu.length > 0
+      } else if (
+        workflow.graph &&
+        params.jobId &&
+        (isEmpty(selectedFunction) || params.jobId !== selectedFunction.name) &&
+        !checkIfWorkflowItemIsJob()
       ) {
-        isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
+        dispatch(
+          fetchFunction({
+            project: params.workflowProjectName || params.projectName,
+            name: params.jobId
+          })
+        )
+          .unwrap()
+          .then(func => {
+            setSelectedFunction(
+              parseFunction(
+                func,
+                params.workflowProjectName || params.projectName,
+                customFunctionState,
+                pipelineError
+              )
+            )
+            setItemIsSelected(true)
+            setSelectedJob({})
+          })
+          .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
       }
-    }, [
-      navigate,
-      pageData.details.menu,
-      location,
-      params.jobId,
-      params.functionHash,
-      params.tab,
-      selectedJob
-    ])
+    }
+  }, [
+    findSelectedWorkflowFunction,
+    handleCatchRequest,
+    params.functionHash,
+    params.functionName,
+    params.projectName,
+    selectedFunction,
+    workflowsStore.activeWorkflow,
+    checkIfWorkflowItemIsJob,
+    params.jobId,
+    dispatch,
+    setSelectedFunction,
+    setItemIsSelected,
+    setSelectedJob,
+    params.workflowProjectName,
+    getPipelineError
+  ])
 
-    useEffect(() => {
-      const workflow = { ...workflowsStore.activeWorkflow?.data }
+  useEffect(() => {
+    if (
+      (params.jobId || params.functionHash) &&
+      !isEmpty(selectedJob) &&
+      pageData.details.menu.length > 0
+    ) {
+      isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
+    }
+  }, [
+    navigate,
+    pageData.details.menu,
+    location,
+    params.jobId,
+    params.functionHash,
+    params.tab,
+    selectedJob
+  ])
 
-      if (!params.workflowId && workflow.graph) {
-        dispatch(resetWorkflow())
+  useEffect(() => {
+    const workflow = { ...workflowsStore.activeWorkflow?.data }
+
+    if (!params.workflowId && workflow.graph) {
+      dispatch(resetWorkflow())
+    }
+
+    if (!workflow.graph && params.workflowId && !workflowIsLoaded) {
+      refreshWorkflow()
+      setWorkflowIsLoaded(true)
+    }
+
+    if (
+      ['Running', 'None'].includes(workflow?.run?.status) &&
+      params.workflowId &&
+      workflow.graph
+    ) {
+      const timeout = setTimeout(refreshWorkflow, 10000)
+
+      return () => clearTimeout(timeout)
+    }
+  }, [
+    refreshWorkflow,
+    dispatch,
+    workflowIsLoaded,
+    params.workflowId,
+    workflowsStore.activeWorkflow,
+    setWorkflowIsLoaded
+  ])
+
+  useEffect(() => {
+    if (
+      jobWizardMode &&
+      !jobWizardIsOpened &&
+      ((jobWizardMode === PANEL_RERUN_MODE && editableItem?.rerun_object) ||
+        jobWizardMode !== PANEL_RERUN_MODE)
+    ) {
+      openPopUp(JobWizard, {
+        params: {
+          ...params,
+          projectName: editableItem?.rerun_object?.task?.metadata?.project || params.projectName
+        },
+        onWizardClose: () => {
+          setEditableItem(null)
+          setJobWizardMode(null)
+          setJobWizardIsOpened(false)
+        },
+        defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
+        mode: jobWizardMode,
+        wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Batch re-run' : undefined
+      })
+
+      setJobWizardIsOpened(true)
+    }
+  }, [
+    editableItem?.rerun_object,
+    filters,
+    jobWizardIsOpened,
+    jobWizardMode,
+    params,
+    setEditableItem,
+    setJobWizardIsOpened,
+    setJobWizardMode
+  ])
+
+  useEffect(() => {
+    abortJobRef.current?.()
+  }, [abortJobRef, params.jobId])
+
+  useEffect(() => {
+    if (!params.functionHash && !params.jobId) {
+      setItemIsSelected(false)
+      setSelectedJob({})
+      setSelectedFunction({})
+    }
+  }, [params.functionHash, params.jobId, setItemIsSelected, setSelectedFunction, setSelectedJob])
+
+  useEffect(() => {
+    if (!rerunInProgress) {
+      return
+    }
+
+    let cancelled = false
+
+    const timeoutId = setTimeout(() => {
+      if (!cancelled) {
+        setRerunCooldownActive(false)
       }
+    }, 5000)
 
-      if (!workflow.graph && params.workflowId && !workflowIsLoaded) {
-        refreshWorkflow()
-        setWorkflowIsLoaded(true)
-      }
+    return () => {
+      cancelled = true
+      clearTimeout(timeoutId)
+    }
+  }, [rerunInProgress])
 
-      if (
-        ['Running', 'None'].includes(workflow?.run?.status) &&
-        params.workflowId &&
-        workflow.graph
-      ) {
-        const timeout = setTimeout(refreshWorkflow, 10000)
+  const virtualizationConfig = useVirtualization({
+    rowsData: {
+      content: tableContent
+    },
+    heightData: {
+      headerRowHeight: monitorWorkflowsHeaderRowHeight,
+      rowHeight: monitorWorkflowsRowHeight,
+      rowHeightExtended: monitorWorkflowsRowHeightExtended
+    }
+  })
 
-        return () => clearTimeout(timeout)
-      }
-    }, [
-      refreshWorkflow,
-      dispatch,
-      workflowIsLoaded,
-      params.workflowId,
-      workflowsStore.activeWorkflow,
-      setWorkflowIsLoaded
-    ])
-
-    useEffect(() => {
-      if (
-        jobWizardMode &&
-        !jobWizardIsOpened &&
-        ((jobWizardMode === PANEL_RERUN_MODE && editableItem?.rerun_object) ||
-          jobWizardMode !== PANEL_RERUN_MODE)
-      ) {
-        openPopUp(JobWizard, {
-          params: {
-            ...params,
-            projectName: editableItem?.rerun_object?.task?.metadata?.project || params.projectName
-          },
-          onWizardClose: () => {
-            setEditableItem(null)
-            setJobWizardMode(null)
-            setJobWizardIsOpened(false)
-          },
-          defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
-          mode: jobWizardMode,
-          wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Batch re-run' : undefined
-        })
-
-        setJobWizardIsOpened(true)
-      }
-    }, [
-      editableItem?.rerun_object,
-      filters,
-      jobWizardIsOpened,
-      jobWizardMode,
-      params,
-      setEditableItem,
-      setJobWizardIsOpened,
-      setJobWizardMode
-    ])
-
-    useEffect(() => {
-      abortJobRef.current?.()
-    }, [abortJobRef, params.jobId])
-
-    useEffect(() => {
-      if (!params.functionHash && !params.jobId) {
-        setItemIsSelected(false)
-        setSelectedJob({})
-        setSelectedFunction({})
-      }
-    }, [params.functionHash, params.jobId, setItemIsSelected, setSelectedFunction, setSelectedJob])
-
-    useEffect(() => {
-      if (workflowsStore.workflows.rerunInProgress) {
-        setRerunIsDisabled(true)
-        setTimeout(() => {
-          setRerunIsDisabled(false)
-        }, 5000)
-      }
-    }, [workflowsStore.workflows.rerunInProgress])
-
-    const virtualizationConfig = useVirtualization({
-      rowsData: {
-        content: tableContent
-      },
-      heightData: {
-        headerRowHeight: monitorWorkflowsHeaderRowHeight,
-        rowHeight: monitorWorkflowsRowHeight,
-        rowHeightExtended: monitorWorkflowsRowHeightExtended
-      }
-    })
-
-    return (
-      <>
-        {(workflowsStore.workflows.loading || permissionsLoading) && <Loader />}
-        {workflowsStore.workflows.loading ? null : (!workflowsStore.workflows.loading &&
-            !params.workflowId &&
-            workflowsStore.workflows.data.length === 0) ||
-          requestErrorMessage ? (
-          <NoData
-            message={getNoDataMessage(
-              filters,
-              filtersConfig,
-              requestErrorMessage,
-              JOBS_PAGE,
-              MONITOR_WORKFLOWS_TAB,
-              filtersStore
-            )}
-          />
-        ) : (
-          <>
-            {params.workflowId ? (
-              <Workflow
-                actionsMenu={actionsMenu}
-                backLink={backLink}
-                detailsFormInitialValues={detailsFormInitialValues}
-                handleCancel={handleCancel}
-                handleConfirmTerminateWorkflow={handleConfirmTerminateWorkflow}
-                itemIsSelected={itemIsSelected}
-                pageData={pageData}
-                selectedFunction={selectedFunction}
-                selectedJob={selectedJob}
-                setWorkflowsViewMode={setWorkflowsViewMode}
-                workflow={workflowsStore.activeWorkflow?.data}
-                workflowsViewMode={workflowsViewMode}
-              />
-            ) : (
-              <Table
-                actionsMenu={actionsMenu}
-                detailsFormInitialValues={detailsFormInitialValues}
-                handleCancel={handleCancel}
-                pageData={pageData}
-                selectedItem={selectedJob}
-                tab={MONITOR_JOBS_TAB}
-                tableClassName="monitor-workflows-table"
-                tableHeaders={sortedTableContent[0]?.content ?? []}
-                virtualizationConfig={virtualizationConfig}
-              >
-                {sortedTableContent.map(
-                  (tableItem, index) =>
-                    isRowRendered(virtualizationConfig, index) && (
-                      <JobsTableRow
-                        actionsMenu={actionsMenu}
-                        key={index}
-                        rowItem={tableItem}
-                        selectedJob={selectedJob}
-                      />
-                    )
-                )}
-              </Table>
-            )}
-          </>
-        )}
-      </>
-    )
-  }
-)
-
-WorkflowsTable.displayName = 'WorkflowsTable'
+  return (
+    <>
+      {(workflowsStore.workflows.loading || permissionsLoading) && <Loader />}
+      {workflowsStore.workflows.loading ? null : (!workflowsStore.workflows.loading &&
+          !params.workflowId &&
+          workflowsStore.workflows.data.length === 0) ||
+        requestErrorMessage ? (
+        <NoData
+          message={getNoDataMessage(
+            filters,
+            filtersConfig,
+            requestErrorMessage,
+            JOBS_PAGE,
+            MONITOR_WORKFLOWS_TAB,
+            filtersStore
+          )}
+        />
+      ) : (
+        <>
+          {params.workflowId ? (
+            <Workflow
+              actionsMenu={actionsMenu}
+              backLink={backLink}
+              detailsFormInitialValues={detailsFormInitialValues}
+              handleCancel={handleCancel}
+              handleConfirmTerminateWorkflow={handleConfirmTerminateWorkflow}
+              itemIsSelected={itemIsSelected}
+              pageData={pageData}
+              selectedFunction={selectedFunction}
+              selectedJob={selectedJob}
+              setWorkflowsViewMode={setWorkflowsViewMode}
+              workflow={workflowsStore.activeWorkflow?.data}
+              workflowsViewMode={workflowsViewMode}
+            />
+          ) : (
+            <Table
+              actionsMenu={actionsMenu}
+              detailsFormInitialValues={detailsFormInitialValues}
+              handleCancel={handleCancel}
+              pageData={pageData}
+              selectedItem={selectedJob}
+              tab={MONITOR_JOBS_TAB}
+              tableClassName="monitor-workflows-table"
+              tableHeaders={sortedTableContent[0]?.content ?? []}
+              virtualizationConfig={virtualizationConfig}
+            >
+              {sortedTableContent.map(
+                (tableItem, index) =>
+                  isRowRendered(virtualizationConfig, index) && (
+                    <JobsTableRow
+                      actionsMenu={actionsMenu}
+                      key={index}
+                      rowItem={tableItem}
+                      selectedJob={selectedJob}
+                    />
+                  )
+              )}
+            </Table>
+          )}
+        </>
+      )}
+    </>
+  )
+}
 
 WorkflowsTable.propTypes = {
+  abortJobRef: PropTypes.object.isRequired,
   backLink: PropTypes.string.isRequired,
   context: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,

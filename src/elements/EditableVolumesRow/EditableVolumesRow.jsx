@@ -20,7 +20,7 @@ such restriction.
 import React, { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { forEach } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 import Input from '../../common/Input/Input'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'

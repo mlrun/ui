@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { useDispatch } from 'react-redux'
 import { isEmpty } from 'lodash-es'
 import PropTypes from 'prop-types'
@@ -55,7 +55,6 @@ const FunctionPopUp = ({ funcTag = '', funcUri = null, isOpen, onResolve }) => {
   const fetchFunction = useCallback(() => {
     const parsedFuncUri = parseFunctionUri(funcUri)
 
-    setIsLoading(true)
     return functionsApi
       .getFunction(
         parsedFuncUri.project,
@@ -79,6 +78,11 @@ const FunctionPopUp = ({ funcTag = '', funcUri = null, isOpen, onResolve }) => {
       })
   }, [dispatch, funcTag, funcUri, onResolve])
 
+  const refreshFunction = useCallback(() => {
+    setIsLoading(true)
+    return fetchFunction()
+  }, [fetchFunction])
+
   const actionsMenu = useMemo(
     () => func =>
       generateActionsMenu(
@@ -94,24 +98,32 @@ const FunctionPopUp = ({ funcTag = '', funcUri = null, isOpen, onResolve }) => {
         () => {},
         {},
         selectedFunction,
-        fetchFunction,
+        refreshFunction,
         true
       ),
-    [dispatch, isDemoMode, isStagingMode, toggleConvertedYaml, selectedFunction, fetchFunction]
+    [dispatch, isDemoMode, isStagingMode, toggleConvertedYaml, selectedFunction, refreshFunction]
   )
 
-  const pageData = useMemo(
-    () =>
-      generateFunctionsPageData(
-        dispatch,
-        selectedFunction,
-        fetchFunctionLogsTimeout,
-        fetchFunctionNuclioLogsTimeout,
-        navigate,
-        fetchFunction
-      ),
-    [dispatch, fetchFunction, navigate, selectedFunction]
-  )
+  const pageData = useMemo(() => {
+    // Ref passed to log handlers, not read during render
+    /* eslint-disable react-hooks/refs */
+    return generateFunctionsPageData(
+      dispatch,
+      selectedFunction,
+      fetchFunctionLogsTimeout,
+      fetchFunctionNuclioLogsTimeout,
+      navigate,
+      refreshFunction
+    )
+    /* eslint-enable react-hooks/refs */
+  }, [
+    dispatch,
+    refreshFunction,
+    navigate,
+    selectedFunction,
+    fetchFunctionLogsTimeout,
+    fetchFunctionNuclioLogsTimeout
+  ])
 
   useEffect(() => {
     if (isEmpty(selectedFunction)) {
@@ -122,7 +134,7 @@ const FunctionPopUp = ({ funcTag = '', funcUri = null, isOpen, onResolve }) => {
   return (
     <DetailsPopUp
       actionsMenu={actionsMenu}
-      handleRefresh={fetchFunction}
+      handleRefresh={refreshFunction}
       isLoading={isLoading}
       isOpen={isOpen}
       onResolve={onResolve}

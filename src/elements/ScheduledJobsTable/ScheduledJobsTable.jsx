@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import PropTypes from 'prop-types'
 
 import JobWizard from '../../components/JobWizard/JobWizard'
@@ -108,7 +108,7 @@ const ScheduledJobsTable = ({
   )
 
   const handleRunJob = useCallback(
-    job => {
+    function handleRunJobCallback(job) {
       dispatch(
         handleRunScheduledJob({
           postData: {
@@ -134,7 +134,9 @@ const ScheduledJobsTable = ({
               ? 'You do not have permission to run a new job.'
               : getErrorMsg(error, 'Failed to start job')
 
-          showErrorNotification(dispatch, error, '', customErrorMsg, () => handleRunJob(job))
+          showErrorNotification(dispatch, error, '', customErrorMsg, () =>
+            handleRunJobCallback(job)
+          )
         })
     },
     [dispatch, params.projectName]

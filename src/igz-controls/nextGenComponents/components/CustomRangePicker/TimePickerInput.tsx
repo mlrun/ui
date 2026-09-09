@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import {
-  MaskedInput,
-  isMaskComplete,
-  type MaskItem
-} from './MaskedInput'
+import { MaskedInput } from './MaskedInput'
+import { isMaskComplete } from './maskedInput.utils'
+import type { MaskItem } from './maskedInput.types'
 import SelectIcon from '../../../images/select.svg?react'
 import { cn } from '../../lib/utils'
 import {
@@ -47,15 +45,17 @@ const timeMask = use12h ? timeMask12h : timeMask24h
 const timePlaceholder = getTimePlaceholder()
 
 export const TimePickerInput = ({ value, onChange, className }: Props) => {
-  const [maskedValue, setMaskedValue] = useState('')
+  const [maskedValue, setMaskedValue] = useState(value)
+  const [prevValue, setPrevValue] = useState(value)
   const [isOpen, setIsOpen] = useState(false)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const options = useMemo(() => buildHalfHourOptions(), [])
 
-  useEffect(() => {
+  if (value !== prevValue) {
+    setPrevValue(value)
     setMaskedValue(value)
-  }, [value])
+  }
 
   useEffect(() => {
     if (!isOpen) return

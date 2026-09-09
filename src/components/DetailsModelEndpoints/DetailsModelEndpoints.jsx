@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 import ModelEndpointsTable from '../ModelsPage/ModelEndpoints/ModelEndpointsTable'
 

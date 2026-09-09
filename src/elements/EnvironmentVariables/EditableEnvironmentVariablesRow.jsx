@@ -17,9 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
@@ -53,15 +53,27 @@ const EditableEnvironmentVariablesRow = ({
     isSecretKeyValid: true
   })
   const { projectName } = useParams()
+  const [prevSelectedEnvVariable, setPrevSelectedEnvVariable] = useState({
+    type: selectedEnvVariable.type,
+    value: selectedEnvVariable.value
+  })
 
-  useEffect(() => {
+  if (
+    selectedEnvVariable.type !== prevSelectedEnvVariable.type ||
+    selectedEnvVariable.value !== prevSelectedEnvVariable.value
+  ) {
+    setPrevSelectedEnvVariable({
+      type: selectedEnvVariable.type,
+      value: selectedEnvVariable.value
+    })
+
     if (selectedEnvVariable.type === ENV_VARIABLE_TYPE_SECRET) {
       const [name, key] = selectedEnvVariable.value.split(':')
 
       setSecretName(name)
       setSecretKey(key)
     }
-  }, [selectedEnvVariable.type, selectedEnvVariable.value])
+  }
 
   return (
     <div className="table__row edit-row">

@@ -79,7 +79,7 @@ const DetailsStatisticsTableRow = ({ statisticsItem, headers, chartConfig }) => 
         }
 
         return (
-          <div key={Date.now() + index} className={statisticsItemClassNames}>
+          <div key={headers[index].label + index} className={statisticsItemClassNames}>
             {statisticsValue.type.match(/icon/) && !statisticsValue.hidden && statisticsValue.value}
             {statisticsValue.type === 'chart' && statisticsValue.value[1]?.length > 0 && (
               <HistogramChart config={config} showLoader={false} />

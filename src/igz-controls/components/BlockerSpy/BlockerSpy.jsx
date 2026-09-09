@@ -17,16 +17,18 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useBlocker } from 'react-router-dom'
+import { useBlocker } from 'react-router'
 
 const BlockerSpy = ({ setBlocker, shouldBlock }) => {
   const blocker = useBlocker(shouldBlock)
+  const [prevBlocker, setPrevBlocker] = useState(blocker)
 
-  useEffect(() => {
+  if (blocker !== prevBlocker) {
+    setPrevBlocker(blocker)
     setBlocker(blocker)
-  }, [setBlocker, blocker])
+  }
 
   return <></>
 }

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
@@ -35,15 +35,11 @@ const Sort = ({
   selectedId,
   setIsDescendingOrder
 }) => {
-  const [selectedOption, setSelectedOption] = useState(null)
+  const selectedOption = options.find(option => option.id === selectedId)
   const arrowDirectionClassName = classNames(
     'sort-icon',
     isDescendingOrder ? 'sort-icon_down' : 'sort-icon_up'
   )
-
-  useEffect(() => {
-    setSelectedOption(options.find(option => option.id === selectedId))
-  }, [options, selectedId])
 
   return (
     <div className="sort">

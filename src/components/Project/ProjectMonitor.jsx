@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useState, useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 import { isEmpty } from 'lodash-es'
 
 import ProjectMonitorView from './ProjectMonitorView'
@@ -42,7 +42,10 @@ import {
   removeProjectData,
   removeProjectSummary
 } from '../../reducers/projectReducer'
-import { areNuclioStreamsEnabled } from '../../utils/helper'
+import {
+  areNuclioStreamsEnabled,
+  isNuclioModeDisabled as checkNuclioModeDisabled
+} from '../../utils/helper'
 import { fetchNuclioV3ioStreams } from '../../reducers/nuclioReducer'
 import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -51,7 +54,6 @@ import { removeFunctionsError, removeNewFunction } from '../../reducers/function
 import { removeNewFeatureSet } from '../../reducers/featureStoreReducer'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
-import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 import { useMode } from '../../hooks/mode.hook'
 
 const ProjectMonitor = () => {
@@ -62,7 +64,7 @@ const ProjectMonitor = () => {
   const navigate = useNavigate()
   const params = useParams()
   const dispatch = useDispatch()
-  const { isNuclioModeDisabled } = useNuclioMode()
+  const isNuclioModeDisabled = checkNuclioModeDisabled()
   const { isDemoMode } = useMode()
   const projectAbortControllerRef = useRef(new AbortController())
   const projectSummariesAbortControllerRef = useRef(new AbortController())

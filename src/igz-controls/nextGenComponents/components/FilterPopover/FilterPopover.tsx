@@ -6,17 +6,19 @@ import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Popover, PopoverTrigger, PopoverContent } from '../ui/popover'
 import { ScrollArea } from '../ui/scroll-area'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../ui/select'
 import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem
-} from '../ui/select'
-import { FILTER_POPOVER_DEFAULT_TITLE, FILTER_BUTTON_CLEAR, FILTER_BUTTON_APPLY } from '../../constants'
+  FILTER_POPOVER_DEFAULT_TITLE,
+  FILTER_BUTTON_CLEAR,
+  FILTER_BUTTON_APPLY
+} from '../../constants'
 import { useTableStore, selectFilterPopover, DEFAULT_FILTER_SCOPE } from '../../stores/tableStore'
 import type { FilterFieldDef, FilterSchema, FilterValues } from '../../types/table/filter'
-import { buildInitialFromSchema, hasActiveFilters, objectValues } from '../../utils/tableFilters.utils'
+import {
+  buildInitialFromSchema,
+  hasActiveFilters,
+  objectValues
+} from '../../utils/tableFilters.utils'
 import MultiSelectField from '../MultiSelectField'
 
 type Props<K extends string> = {

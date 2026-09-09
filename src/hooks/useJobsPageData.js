@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { useLocation, useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash-es'
 
@@ -90,7 +90,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
   }, [])
 
   const refreshJobs = useCallback(
-    (filters, { forceFetchJobs = false } = {}) => {
+    function refreshJobsCallback(filters, { forceFetchJobs = false } = {}) {
       const isJobRunsRequest = params.jobName && !forceFetchJobs
 
       if (isJobRunsRequest) {
@@ -159,7 +159,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
                 filters.project?.toLowerCase?.() || params.projectName || '*',
                 abortJobRef,
                 responseAbortingJobs,
-                () => refreshJobs(filters),
+                () => refreshJobsCallback(filters),
                 dispatch
               )
             }
@@ -265,7 +265,14 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
     [dispatch]
   )
 
-  const [handleRefreshJobs, paginatedJobs, searchJobsParams, setSearchJobsParams] = usePagination({
+  const [
+    handleRefreshJobs,
+    paginatedJobs,
+    searchJobsParams,
+    setSearchJobsParams,
+    ,
+    paginationConfigJobs
+  ] = usePagination({
     hidden:
       ![MONITOR_JOBS_TAB, JOBS_MONITORING_JOBS_TAB].includes(selectedTab) ||
       Boolean(params.jobName),
@@ -275,7 +282,14 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
     paginationConfigRef: paginationConfigJobsRef,
     resetPaginationTrigger: `${params.projectName}_${selectedTab}_${refreshAfterDeleteTrigger}`
   })
-  const [handleRefreshRuns, paginatedRuns, searchRunsParams, setSearchRunsParams] = usePagination({
+  const [
+    handleRefreshRuns,
+    paginatedRuns,
+    searchRunsParams,
+    setSearchRunsParams,
+    ,
+    paginationConfigRuns
+  ] = usePagination({
     hidden: ![MONITOR_JOBS_TAB, JOBS_MONITORING_JOBS_TAB].includes(selectedTab) || !params.jobName,
     content: jobRuns ?? [],
     refreshContent: refreshJobs,
@@ -302,6 +316,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
     jobs,
     lastCheckedJobIdRef,
     paginatedJobs: params.jobName ? paginatedRuns : paginatedJobs,
+    paginationConfig: params.jobName ? paginationConfigRuns : paginationConfigJobs,
     paginationConfigJobsRef: params.jobName ? paginationConfigRunsRef : paginationConfigJobsRef,
     refreshAfterDeleteCallback,
     refreshJobs,

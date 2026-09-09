@@ -62,12 +62,17 @@ const resetWidths = () => {
 }
 
 // ── ResizeObserver mock ───────────────────────────────────────────────────────
-// The throttled observer is present but never fires during synchronous tests;
-// all measurement is covered by the useLayoutEffect path.
+// Real browsers queue an initial callback as soon as observe() is called,
+// reporting the element's current size - this mock replicates that so the
+// leading-edge-throttled recalculation in UrlCell fires during tests too.
 
 class MockResizeObserver {
-  constructor() {}
-  observe() {}
+  constructor(callback) {
+    this.callback = callback
+  }
+  observe(element) {
+    this.callback([{ target: element, contentRect: element.getBoundingClientRect() }])
+  }
   disconnect() {}
 }
 

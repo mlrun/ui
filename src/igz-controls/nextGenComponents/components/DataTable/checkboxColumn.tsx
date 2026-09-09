@@ -1,9 +1,14 @@
-import type { ColumnDef } from '@tanstack/react-table'
+import type { ColumnDef, RowData } from '@tanstack/react-table'
 
 import { Checkbox } from '../ui/checkbox'
 import { DATATABLE_TEXT } from '../../constants'
 
-const checkboxColumn: ColumnDef<object, unknown> = {
+import type { DataTableFeatures } from './dataTableFeatures'
+
+export const createCheckboxColumn = <TData extends RowData>(): ColumnDef<
+  DataTableFeatures,
+  TData
+> => ({
   id: DATATABLE_TEXT.CHECKBOX_COLUMN_ID,
   header: ({ table }) => (
     <Checkbox
@@ -25,6 +30,6 @@ const checkboxColumn: ColumnDef<object, unknown> = {
   ),
   enableSorting: false,
   enableHiding: false
-}
+})
 
-export default checkboxColumn
+export default createCheckboxColumn

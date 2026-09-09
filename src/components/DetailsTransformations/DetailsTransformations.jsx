@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { cloneDeep, concat, find, forEach, map, reject } from 'lodash-es'
+import { cloneDeep, concat, find, forEach, isEqual, map, reject } from 'lodash-es'
 
 import ConfigFunctionTemplate from './ConfigFunctionTemplate/ConfigFunctionTemplate'
 import ConfigSource from './ConfigSource/ConfigSource'
@@ -27,6 +27,7 @@ import ConfigSteps from './ConfigSteps/ConfigSteps'
 import ConfigTargets from './ConfigTargets/ConfigTargets'
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
+import { useHasValueChanged } from '../../hooks/useHasValueChanged.hook'
 import {
   DEFAULT_EDGE,
   GREY_NODE,
@@ -154,24 +155,28 @@ const DetailsTransformations = ({ selectedItem }) => {
     })
   }, [states, targets, selectedStep])
 
-  useEffect(() => {
+  const graphStepsChanged = useHasValueChanged(selectedItem.graph?.steps)
+  const targetsChanged = useHasValueChanged(selectedItem.targets)
+
+  if (graphStepsChanged || targetsChanged) {
     setStates(cloneDeep(selectedItem.graph?.steps))
     setTargets(cloneDeep(selectedItem.targets))
-  }, [selectedItem.graph, selectedItem.targets])
+  }
 
-  useEffect(() => {
-    let stepsList = reject(steps, ['id', selectedStep])
+  const stepsList = reject(steps, ['id', selectedStep])
+  const nextErrorSteps = reject(stepsList, ['id', 'Source'])
 
-    setErrorSteps(reject(stepsList, ['id', 'Source']))
-    stepsList.unshift({
-      id: 'Source',
-      label: 'Source'
-    })
+  if (!isEqual(errorSteps, nextErrorSteps)) {
+    setErrorSteps(nextErrorSteps)
+  }
 
-    setAfterSteps(stepsList)
-  }, [steps, selectedStep])
+  const nextAfterSteps = [{ id: 'Source', label: 'Source' }, ...stepsList]
 
-  useEffect(() => {
+  if (!isEqual(afterSteps, nextAfterSteps)) {
+    setAfterSteps(nextAfterSteps)
+  }
+
+  if (useHasValueChanged(selectedStep)) {
     setNodes(nodes => {
       return map(nodes, node => {
         return {
@@ -185,17 +190,15 @@ const DetailsTransformations = ({ selectedItem }) => {
         }
       })
     })
-  }, [selectedStep])
+  }
 
   useEffect(() => {
     generateGraphData()
   }, [generateGraphData])
 
-  useEffect(() => {
-    if (selectedItem.uid !== selectedItemUid) {
-      setSelectedItemUid(selectedItem.uid)
-    }
-  }, [selectedItem, selectedItemUid])
+  if (selectedItem.uid !== selectedItemUid) {
+    setSelectedItemUid(selectedItem.uid)
+  }
 
   return (
     <div className="graph-container transformations-tab">

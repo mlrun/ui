@@ -19,7 +19,7 @@ such restriction.
 */
 import { useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
-import { Link, useMatch } from 'react-router-dom'
+import { Link, useMatch } from 'react-router'
 import { SidebarMenuButton, SidebarMenuItem, useSidebar } from 'igz-controls/nextGenComponents'
 import { toTestId } from '../../../../utils/toTestId'
 

@@ -24,7 +24,7 @@ import { FormInput, FormOnChange } from 'igz-controls/components'
 import MultiSelectFilter from '../../../common/MultiSelectFilter/MultiSelectFilter'
 
 import { LABELS_FILTER, STATUS_FILTER_NAME } from '../../../constants'
-import { workflowsStatuses } from '../../FilterMenu/filterMenu.settings'
+import { workflowsStatuses } from '../../FilterMenuModal/filterMenuModal.settings.js'
 import { useMode } from '../../../hooks/mode.hook'
 
 const WorkflowsFilters = () => {

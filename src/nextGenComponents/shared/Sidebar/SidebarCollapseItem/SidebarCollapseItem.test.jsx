@@ -28,7 +28,7 @@ import SidebarCollapseItem from './SidebarCollapseItem'
 
 const mockPathname = vi.fn(() => '/projects/demo/jobs')
 
-vi.mock('react-router-dom', () => ({
+vi.mock('react-router', () => ({
   useLocation: () => ({ pathname: mockPathname() })
 }))
 

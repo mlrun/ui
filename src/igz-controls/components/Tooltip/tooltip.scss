@@ -1,8 +1,10 @@
 .tooltip {
   position: fixed;
   z-index: 9;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: min(400px, calc(100vw - 16px));
   display: flex;
-  max-width: 400px;
   font-weight: 400;
   font-size: 15px;
   line-height: 1.4;

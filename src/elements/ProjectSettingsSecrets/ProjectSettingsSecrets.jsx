@@ -23,7 +23,7 @@ import { Form } from 'react-final-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 import { differenceWith, isEmpty, isEqual } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import arrayMutators from 'final-form-arrays'
 
 import { FormKeyValueTable, Loader } from 'igz-controls/components'
@@ -48,7 +48,7 @@ const ProjectSettingsSecrets = ({ setNotification }) => {
   const params = useParams()
   const dispatch = useDispatch()
   const projectStore = useSelector(store => store.projectStore)
-  const formRef = React.useRef(
+  const [form] = useState(() =>
     createForm({
       initialValues: {},
       mutators: { ...arrayMutators, setFieldState },
@@ -57,21 +57,22 @@ const ProjectSettingsSecrets = ({ setNotification }) => {
   )
   const formStateRef = useRef(null)
 
-  const fetchSecrets = useCallback(() => {
-    setIsUserAllowed(true)
-    dispatch(fetchProjectSecrets({ project: params.projectName }))
-      .unwrap()
-      .catch(error => {
-        const customErrorMsg =
-          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'Permission denied'
-            : getErrorMsg(error, 'Failed to fetch project data')
+  const fetchSecrets = useCallback(
+    function fetchSecretsCallback() {
+      setIsUserAllowed(true)
+      dispatch(fetchProjectSecrets({ project: params.projectName }))
+        .unwrap()
+        .catch(error => {
+          const customErrorMsg =
+            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'Permission denied'
+              : getErrorMsg(error, 'Failed to fetch project data')
 
-        showErrorNotification(dispatch, error, '', customErrorMsg, () => {
-          fetchSecrets()
+          showErrorNotification(dispatch, error, '', customErrorMsg, () => fetchSecretsCallback())
         })
-      })
-  }, [dispatch, params.projectName])
+    },
+    [dispatch, params.projectName]
+  )
 
   useEffect(() => {
     fetchSecrets()
@@ -175,7 +176,7 @@ const ProjectSettingsSecrets = ({ setNotification }) => {
   }, [modifyProjectSecret, lastEditedFormValues])
 
   return (
-    <Form form={formRef.current} onSubmit={() => {}}>
+    <Form form={form} onSubmit={() => {}}>
       {formState => {
         formStateRef.current = formState
 

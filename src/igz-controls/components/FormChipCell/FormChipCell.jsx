@@ -15,7 +15,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useState, useCallback, useMemo } from 'react'
-import lodash, { get, isEmpty, set, isNil } from 'lodash'
+import lodash, { get, isEmpty, set, isNil } from 'lodash-es'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
@@ -382,7 +382,10 @@ let FormChipCell = ({
           isDeletable={isDeletable}
           isEditable={isEditable}
           name={name}
-          ref={{ chipsCellRef, chipsWrapperRef, hiddenChipsCounterRef, hiddenChipsPopUpRef }}
+          chipsCellRef={chipsCellRef}
+          chipsWrapperRef={chipsWrapperRef}
+          hiddenChipsCounterRef={hiddenChipsCounterRef}
+          hiddenChipsPopUpRef={hiddenChipsPopUpRef}
           setChipSizeIsRecalculated={setChipSizeIsRecalculated}
           setChipsSizes={setChipsSizes}
           setEditConfig={setEditConfig}

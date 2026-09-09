@@ -72,7 +72,7 @@ export const useNuclioEnrichedFunctions = ({
   const modelEndpointsControllerRef = useRef(null)
   const [enrichedFunctions, setEnrichedFunctions] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-  const [hasFetched, setHasFetched] = useState(null)
+  const hasFetchedRef = useRef(null)
 
   useEffect(() => {
     const controllers = [
@@ -204,11 +204,11 @@ export const useNuclioEnrichedFunctions = ({
   )
 
   useEffect(() => {
-    if (buildFetchConfig && hasFetched !== projectName) {
-      setHasFetched(projectName)
+    if (buildFetchConfig && hasFetchedRef.current !== projectName) {
+      hasFetchedRef.current = projectName
       fetchData(buildFetchConfig(filters))
     }
-  }, [fetchData, buildFetchConfig, filters, hasFetched, projectName])
+  }, [fetchData, buildFetchConfig, filters, projectName])
 
   const { filteredData, counters } = useMemo(() => {
     const filtered = filterFn ? filterFn(enrichedFunctions, filters) : enrichedFunctions

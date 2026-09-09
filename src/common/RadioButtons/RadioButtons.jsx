@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -35,6 +35,12 @@ const RadioButtons = ({
   selectedValue = null
 }) => {
   const [checked, setChecked] = useState('')
+  const [prevSelectedValue, setPrevSelectedValue] = useState(selectedValue)
+
+  if (selectedValue !== prevSelectedValue) {
+    setPrevSelectedValue(selectedValue)
+    setChecked(selectedValue)
+  }
 
   const radioButtonsClassNames = classnames('radio-buttons', disabled && 'disabled', className)
 
@@ -42,10 +48,6 @@ const RadioButtons = ({
     setChecked(event.currentTarget.value)
     onChangeCallback(event.currentTarget.value)
   }
-
-  useEffect(() => {
-    setChecked(selectedValue)
-  }, [selectedValue])
 
   return (
     <div className={radioButtonsClassNames}>

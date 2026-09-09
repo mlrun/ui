@@ -33,11 +33,16 @@ const ExpandableText = ({
   const contentRef = useRef(null)
   const { contextForceExpand } = useContext(context)
 
-  useEffect(() => {
-    if (forceExpand || contextForceExpand) {
-      setExpanded(forceExpand || contextForceExpand)
+  const forceExpandValue = forceExpand || contextForceExpand
+  const [prevForceExpandValue, setPrevForceExpandValue] = useState(forceExpandValue)
+
+  if (forceExpandValue !== prevForceExpandValue) {
+    setPrevForceExpandValue(forceExpandValue)
+
+    if (forceExpandValue) {
+      setExpanded(forceExpandValue)
     }
-  }, [contextForceExpand, forceExpand])
+  }
 
   useEffect(() => {
     const element = contentRef.current

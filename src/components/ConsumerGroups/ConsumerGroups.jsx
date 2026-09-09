@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams, useOutletContext } from 'react-router-dom'
+import { useParams, useOutletContext } from 'react-router'
 
 import NoData from '../../common/NoData/NoData'
 import PageHeader from '../../elements/PageHeader/PageHeader'
@@ -35,7 +35,6 @@ import { setFilters } from '../../reducers/filtersReducer'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 
 const ConsumerGroups = () => {
-  const [filteredV3ioStreams, setFilteredV3ioStreams] = useState([])
   const nuclioStore = useSelector(store => store.nuclioStore)
   const params = useParams()
   const dispatch = useDispatch()
@@ -53,15 +52,15 @@ const ConsumerGroups = () => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
   }, [dispatch])
 
-  useEffect(() => {
-    setFilteredV3ioStreams(
+  const filteredV3ioStreams = useMemo(
+    () =>
       nuclioStore.v3ioStreams.parsedData.filter(v3ioStreamData =>
         localFilters[NAME_FILTER]
           ? v3ioStreamData.consumerGroup.toLowerCase().includes(localFilters[NAME_FILTER])
           : true
-      )
-    )
-  }, [nuclioStore.v3ioStreams.parsedData, localFilters])
+      ),
+    [nuclioStore.v3ioStreams.parsedData, localFilters]
+  )
 
   const pageData = useMemo(() => generatePageData(), [])
 

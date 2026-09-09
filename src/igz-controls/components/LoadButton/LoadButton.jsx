@@ -25,10 +25,13 @@ import { PRIMARY_BUTTON, SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../constan
 
 import './loadButton.scss'
 
-let LoadButton = (
-  { className = '', label = 'Load button', variant = TERTIARY_BUTTON, ...restProps },
-  ref
-) => {
+function LoadButton({
+  className = '',
+  label = 'Load button',
+  variant = TERTIARY_BUTTON,
+  ref,
+  ...restProps
+}) {
   const buttonClassName = classNames('btn-load', `btn-load-${variant}`, className)
 
   return (
@@ -37,8 +40,6 @@ let LoadButton = (
     </button>
   )
 }
-
-LoadButton = React.forwardRef(LoadButton)
 
 LoadButton.displayName = 'LoadButton'
 

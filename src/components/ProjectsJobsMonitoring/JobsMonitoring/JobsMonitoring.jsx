@@ -18,13 +18,13 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useMemo, useEffect, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { useDispatch } from 'react-redux'
 
 import JobsTable from '../../../elements/JobsTable/JobsTable'
 import TableTop from '../../../elements/TableTop/TableTop'
 
-import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
+import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring.context'
 import { createJobsMonitoringContent } from '../../../utils/createJobsContent'
 import { useMode } from '../../../hooks/mode.hook'
 import { JOBS_MONITORING_JOBS_TAB, REQUEST_CANCELED } from '../../../constants'
@@ -46,6 +46,7 @@ const JobsMonitoring = () => {
     jobs,
     jobsFiltersConfig,
     paginatedJobs,
+    paginationConfig,
     refreshJobs,
     requestErrorMessage,
     searchParams,
@@ -99,7 +100,9 @@ const JobsMonitoring = () => {
         jobRuns={jobRuns}
         jobs={jobs}
         paginatedJobs={paginatedJobs}
-        ref={{ abortJobRef, fetchJobFunctionsPromiseRef }}
+        paginationConfig={paginationConfig}
+        abortJobRef={abortJobRef}
+        fetchJobFunctionsPromiseRef={fetchJobFunctionsPromiseRef}
         refreshJobs={() => refreshJobs(filters)}
         requestErrorMessage={requestErrorMessage}
         searchParams={searchParams}

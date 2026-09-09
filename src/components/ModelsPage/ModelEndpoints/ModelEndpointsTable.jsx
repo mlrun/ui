@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash-es'
 
@@ -50,208 +50,202 @@ import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualizati
 import { setFilters } from '../../../reducers/filtersReducer'
 import { clearMetricsOptions } from '../../../reducers/detailsReducer'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
-import { useModelsPage } from '../ModelsPage.context'
+import { useModelsPage } from '../useModelsPage.hook'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { FILTERS_CONFIG } from '../../../types'
 
 import './modelEndpoints.scss'
 
-const ModelEndpointsTable = React.forwardRef(
-  (
-    {
-      fetchEndpoints,
-      filters,
-      filtersConfig,
-      setLocalFilters = () => {},
-      setSearchParams = () => {},
-      isDetails = false,
-      requestErrorMessage
-    },
-    ref
-  ) => {
-    const [modelEndpoints, setModelEndpoints] = useState([])
-    const [selectedModelEndpoint, setSelectedModelEndpoint] = useState({})
-    const artifactsStore = useSelector(store => store.artifactsStore)
-    const filtersStore = useSelector(store => store.filtersStore)
-    const params = useParams()
-    const navigate = useNavigate()
-    const location = useLocation()
-    const dispatch = useDispatch()
-    const modelEndpointsRef = useRef(null)
+function ModelEndpointsTable({
+  fetchEndpoints,
+  filters,
+  filtersConfig,
+  ref,
+  setLocalFilters = () => {},
+  setSearchParams = () => {},
+  isDetails = false,
+  requestErrorMessage
+}) {
+  const [modelEndpoints, setModelEndpoints] = useState([])
+  const [selectedModelEndpoint, setSelectedModelEndpoint] = useState({})
+  const artifactsStore = useSelector(store => store.artifactsStore)
+  const filtersStore = useSelector(store => store.filtersStore)
+  const params = useParams()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const dispatch = useDispatch()
+  const modelEndpointsRef = useRef(null)
 
-    const { handleMonitoring, toggleConvertedYaml, frontendSpec } = useModelsPage()
+  const { handleMonitoring, toggleConvertedYaml, frontendSpec } = useModelsPage()
 
-    const modelEndpointsRowHeight = useMemo(
-      () => getScssVariableValue('--modelEndpointsRowHeight'),
-      []
-    )
-    const modelEndpointsRowHeightExtended = useMemo(
-      () => getScssVariableValue('--modelEndpointsRowHeightExtended'),
-      []
-    )
-    const modelEndpointsHeaderRowHeight = useMemo(
-      () => getScssVariableValue('--modelEndpointsHeaderRowHeight'),
-      []
-    )
-    const pageData = useMemo(
-      () =>
-        generatePageData(
-          selectedModelEndpoint,
-          frontendSpec.model_monitoring_dashboard_url,
-          handleMonitoring
-        ),
-      [frontendSpec.model_monitoring_dashboard_url, handleMonitoring, selectedModelEndpoint]
-    )
-
-    const actionsMenu = useMemo(
-      () =>
-        generateActionsMenu(
-          frontendSpec.model_monitoring_dashboard_url,
-          handleMonitoring,
-          toggleConvertedYaml,
-          selectedModelEndpoint,
-          dispatch
-        ),
-      [
-        dispatch,
-        handleMonitoring,
+  const modelEndpointsRowHeight = useMemo(
+    () => getScssVariableValue('--modelEndpointsRowHeight'),
+    []
+  )
+  const modelEndpointsRowHeightExtended = useMemo(
+    () => getScssVariableValue('--modelEndpointsRowHeightExtended'),
+    []
+  )
+  const modelEndpointsHeaderRowHeight = useMemo(
+    () => getScssVariableValue('--modelEndpointsHeaderRowHeight'),
+    []
+  )
+  const pageData = useMemo(
+    () =>
+      generatePageData(
         selectedModelEndpoint,
+        frontendSpec.model_monitoring_dashboard_url,
+        handleMonitoring
+      ),
+    [frontendSpec.model_monitoring_dashboard_url, handleMonitoring, selectedModelEndpoint]
+  )
+
+  const actionsMenu = useMemo(
+    () =>
+      generateActionsMenu(
+        frontendSpec.model_monitoring_dashboard_url,
+        handleMonitoring,
         toggleConvertedYaml,
-        frontendSpec.model_monitoring_dashboard_url
-      ]
-    )
-
-    const fetchData = useCallback(
-      filters => {
-        ref.current = new AbortController()
-
-        fetchEndpoints(filters)
-          .unwrap()
-          .then(modelEndpoints => {
-            if (modelEndpoints) {
-              setModelEndpoints(modelEndpoints)
-            }
-          })
-      },
-      [fetchEndpoints, ref]
-    )
-
-    const handleRefresh = useCallback(
-      filters => {
-        setModelEndpoints([])
-        setSelectedModelEndpoint({})
-
-        return fetchData(filters)
-      },
-      [fetchData]
-    )
-
-    const handleSelectItem = useCallback(
-      modelEndpointMin => {
-        chooseOrFetchModelEndpoint(dispatch, {}, modelEndpointMin).then(setSelectedModelEndpoint)
-      },
-      [dispatch]
-    )
-
-    const fetchInitialData = useCallback(
-      filters => {
-        fetchData(filters)
-        dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
-      },
-      [dispatch, fetchData]
-    )
-
-    useInitialTableFetch({ fetchData: fetchInitialData, filters })
-
-    useEffect(() => {
-      return () => {
-        setModelEndpoints([])
-        dispatch(removeModelEndpoints())
-        setSelectedModelEndpoint({})
-        ref.current.abort(REQUEST_CANCELED)
-      }
-    }, [dispatch, params.projectName, ref])
-
-    useEffect(() => {
-      return () => {
-        dispatch(clearMetricsOptions())
-      }
-    }, [dispatch])
-
-    useEffect(() => {
-      if (params.name && modelEndpoints.length > 0) {
-        const searchItem = modelEndpoints.find(item => item.metadata?.uid === params.tag)
-
-        if (!searchItem) {
-          navigate(
-            `/projects/${params.projectName}/models/${MODEL_ENDPOINTS_TAB}${window.location.search}`,
-            { replace: true }
-          )
-        } else if (searchItem.metadata.uid !== selectedModelEndpoint?.metadata?.uid) {
-          handleSelectItem(searchItem)
-        }
-      } else {
-        setSelectedModelEndpoint({})
-      }
-    }, [
+        selectedModelEndpoint,
+        dispatch
+      ),
+    [
       dispatch,
-      handleSelectItem,
-      modelEndpoints,
-      navigate,
-      params.name,
-      params.projectName,
-      params.tag,
-      selectedModelEndpoint?.metadata
-    ])
-
-    useEffect(() => {
-      if (
-        params.name &&
-        params.tag &&
-        !isEmpty(selectedModelEndpoint) &&
-        pageData.details.menu.length > 0
-      ) {
-        isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
-      }
-    }, [
-      navigate,
-      location,
-      pageData.details.menu,
-      params.name,
-      params.tag,
-      params.tab,
-      selectedModelEndpoint
-    ])
-
-    const tableContent = useMemo(() => {
-      return modelEndpoints.map(contentItem =>
-        createModelEndpointsRowData(
-          contentItem,
-          params.projectName,
-          isDetails,
-          frontendSpec,
-          handleMonitoring,
-          toggleConvertedYaml
-        )
-      )
-    }, [
-      modelEndpoints,
-      params.projectName,
-      isDetails,
-      frontendSpec,
       handleMonitoring,
-      toggleConvertedYaml
-    ])
+      selectedModelEndpoint,
+      toggleConvertedYaml,
+      frontendSpec.model_monitoring_dashboard_url
+    ]
+  )
 
-    const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
+  const fetchData = useCallback(
+    filters => {
+      ref.current = new AbortController()
 
-    const {
-      sortTable,
-      selectedColumnName,
-      getSortingIcon,
-      sortedTableContent,
-      sortedTableHeaders
-    } = useSortTable({
+      fetchEndpoints(filters)
+        .unwrap()
+        .then(modelEndpoints => {
+          if (modelEndpoints) {
+            setModelEndpoints(modelEndpoints)
+          }
+        })
+    },
+    [fetchEndpoints, ref]
+  )
+
+  const handleRefresh = useCallback(
+    filters => {
+      setModelEndpoints([])
+      setSelectedModelEndpoint({})
+
+      return fetchData(filters)
+    },
+    [fetchData]
+  )
+
+  const handleSelectItem = useCallback(
+    modelEndpointMin => {
+      chooseOrFetchModelEndpoint(dispatch, {}, modelEndpointMin).then(setSelectedModelEndpoint)
+    },
+    [dispatch]
+  )
+
+  const fetchInitialData = useCallback(
+    filters => {
+      fetchData(filters)
+      dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
+    },
+    [dispatch, fetchData]
+  )
+
+  useInitialTableFetch({ fetchData: fetchInitialData, filters })
+
+  if (!(params.name && modelEndpoints.length > 0) && !isEmpty(selectedModelEndpoint)) {
+    setSelectedModelEndpoint({})
+  }
+
+  useEffect(() => {
+    return () => {
+      setModelEndpoints([])
+      dispatch(removeModelEndpoints())
+      setSelectedModelEndpoint({})
+      ref.current.abort(REQUEST_CANCELED)
+    }
+  }, [dispatch, params.projectName, ref])
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearMetricsOptions())
+    }
+  }, [dispatch])
+
+  useEffect(() => {
+    if (params.name && modelEndpoints.length > 0) {
+      const searchItem = modelEndpoints.find(item => item.metadata?.uid === params.tag)
+
+      if (!searchItem) {
+        navigate(
+          `/projects/${params.projectName}/models/${MODEL_ENDPOINTS_TAB}${window.location.search}`,
+          { replace: true }
+        )
+      } else if (searchItem.metadata.uid !== selectedModelEndpoint?.metadata?.uid) {
+        handleSelectItem(searchItem)
+      }
+    }
+  }, [
+    dispatch,
+    handleSelectItem,
+    modelEndpoints,
+    navigate,
+    params.name,
+    params.projectName,
+    params.tag,
+    selectedModelEndpoint?.metadata
+  ])
+
+  useEffect(() => {
+    if (
+      params.name &&
+      params.tag &&
+      !isEmpty(selectedModelEndpoint) &&
+      pageData.details.menu.length > 0
+    ) {
+      isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
+    }
+  }, [
+    navigate,
+    location,
+    pageData.details.menu,
+    params.name,
+    params.tag,
+    params.tab,
+    selectedModelEndpoint
+  ])
+
+  const tableContent = useMemo(() => {
+    return modelEndpoints.map(contentItem =>
+      createModelEndpointsRowData(
+        contentItem,
+        params.projectName,
+        isDetails,
+        frontendSpec,
+        handleMonitoring,
+        toggleConvertedYaml
+      )
+    )
+  }, [
+    modelEndpoints,
+    params.projectName,
+    isDetails,
+    frontendSpec,
+    handleMonitoring,
+    toggleConvertedYaml
+  ])
+
+  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
+
+  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
+    useSortTable({
       headers: tableHeaders,
       content: tableContent,
       sortConfig: {
@@ -261,87 +255,84 @@ const ModelEndpointsTable = React.forwardRef(
       }
     })
 
-    const virtualizationConfig = useVirtualization({
-      rowsData: {
-        content: sortedTableContent,
-        selectedItem: selectedModelEndpoint
-      },
-      heightData: {
-        headerRowHeight: modelEndpointsHeaderRowHeight,
-        rowHeight: modelEndpointsRowHeight,
-        rowHeightExtended: modelEndpointsRowHeightExtended
-      }
-    })
+  const virtualizationConfig = useVirtualization({
+    rowsData: {
+      content: sortedTableContent,
+      selectedItem: selectedModelEndpoint
+    },
+    heightData: {
+      headerRowHeight: modelEndpointsHeaderRowHeight,
+      rowHeight: modelEndpointsRowHeight,
+      rowHeightExtended: modelEndpointsRowHeightExtended
+    }
+  })
 
-    return (
-      <>
-        {(artifactsStore.modelEndpoints.modelEndpointLoading ||
-          artifactsStore.modelEndpoints.loading) && <Loader />}
-        <div className="models" ref={modelEndpointsRef}>
-          <div className="table-container">
-            <div className="content__action-bar-wrapper">
-              <ActionBar
-                filters={filters}
-                filtersConfig={filtersConfig}
-                handleRefresh={handleRefresh}
-                closeParamName={MODEL_ENDPOINTS_TAB}
-                setLocalFilters={setLocalFilters}
-                setSearchParams={setSearchParams}
-                tab={MODEL_ENDPOINTS_TAB}
-                withRefreshButton={!isDetails}
-                withoutExpandButton
-                withoutSearchParams={isDetails}
-              >
-                <ModelEndpointsFilters isDetails={isDetails} />
-              </ActionBar>
-            </div>
-            {artifactsStore.modelEndpoints.loading ? null : modelEndpoints.length === 0 ? (
-              <NoData
-                message={getNoDataMessage(
-                  filters,
-                  filtersConfig,
-                  requestErrorMessage,
-                  MODELS_PAGE,
-                  MODEL_ENDPOINTS_TAB,
-                  filtersStore
-                )}
-              />
-            ) : (
-              <>
-                <Table
-                  actionsMenu={actionsMenu}
-                  pageData={pageData}
-                  selectedItem={selectedModelEndpoint}
-                  tab={MODEL_ENDPOINTS_TAB}
-                  tableClassName="model-endpoints-table"
-                  tableHeaders={sortedTableHeaders}
-                  virtualizationConfig={virtualizationConfig}
-                  sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
-                >
-                  {sortedTableContent.map(
-                    (tableItem, index) =>
-                      isRowRendered(virtualizationConfig, index) && (
-                        <ArtifactsTableRow
-                          actionsMenu={actionsMenu}
-                          key={tableItem.data.ui.identifierUnique}
-                          rowIndex={index}
-                          rowItem={tableItem}
-                          selectedItem={selectedModelEndpoint}
-                          tab={MODEL_ENDPOINTS_TAB}
-                        />
-                      )
-                  )}
-                </Table>
-              </>
-            )}
+  return (
+    <>
+      {(artifactsStore.modelEndpoints.modelEndpointLoading ||
+        artifactsStore.modelEndpoints.loading) && <Loader />}
+      <div className="models" ref={modelEndpointsRef}>
+        <div className="table-container">
+          <div className="content__action-bar-wrapper">
+            <ActionBar
+              filters={filters}
+              filtersConfig={filtersConfig}
+              handleRefresh={handleRefresh}
+              closeParamName={MODEL_ENDPOINTS_TAB}
+              setLocalFilters={setLocalFilters}
+              setSearchParams={setSearchParams}
+              tab={MODEL_ENDPOINTS_TAB}
+              withRefreshButton={!isDetails}
+              withoutExpandButton
+              withoutSearchParams={isDetails}
+            >
+              <ModelEndpointsFilters isDetails={isDetails} />
+            </ActionBar>
           </div>
+          {artifactsStore.modelEndpoints.loading ? null : modelEndpoints.length === 0 ? (
+            <NoData
+              message={getNoDataMessage(
+                filters,
+                filtersConfig,
+                requestErrorMessage,
+                MODELS_PAGE,
+                MODEL_ENDPOINTS_TAB,
+                filtersStore
+              )}
+            />
+          ) : (
+            <>
+              <Table
+                actionsMenu={actionsMenu}
+                pageData={pageData}
+                selectedItem={selectedModelEndpoint}
+                tab={MODEL_ENDPOINTS_TAB}
+                tableClassName="model-endpoints-table"
+                tableHeaders={sortedTableHeaders}
+                virtualizationConfig={virtualizationConfig}
+                sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
+              >
+                {sortedTableContent.map(
+                  (tableItem, index) =>
+                    isRowRendered(virtualizationConfig, index) && (
+                      <ArtifactsTableRow
+                        actionsMenu={actionsMenu}
+                        key={tableItem.data.ui.identifierUnique}
+                        rowIndex={index}
+                        rowItem={tableItem}
+                        selectedItem={selectedModelEndpoint}
+                        tab={MODEL_ENDPOINTS_TAB}
+                      />
+                    )
+                )}
+              </Table>
+            </>
+          )}
         </div>
-      </>
-    )
-  }
-)
-
-ModelEndpointsTable.displayName = 'ModelEndpointsTable'
+      </div>
+    </>
+  )
+}
 
 ModelEndpointsTable.propTypes = {
   fetchEndpoints: PropTypes.func.isRequired,

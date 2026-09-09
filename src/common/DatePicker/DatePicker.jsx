@@ -17,15 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useLayoutEffect,
-  useCallback,
-  useReducer,
-  useMemo
-} from 'react'
+import React, { useState, useRef, useEffect, useCallback, useReducer, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { isNil } from 'lodash-es'
 import moment from 'moment'
@@ -79,18 +71,22 @@ const DatePicker = ({
   withLabels = false
 }) => {
   const [datePickerState, datePickerDispatch] = useReducer(datePickerReducer, initialState)
-  const [invalidMessage, setInvalidMessage] = useState('')
-  const [isTimeRangeNegative, setIsTimeRangeNegative] = useState(false)
   const [isDatePickerOpened, setIsDatePickerOpened] = useState(false)
   const [isDatePickerOptionsOpened, setIsDatePickerOptionsOpened] = useState(false)
   const [isRange] = useState(type.includes('range'))
   const [isTime] = useState(type.includes('time'))
-  const [isValueEmpty, setIsValueEmpty] = useState(true)
-  const [selectedOption, setSelectedOption] = useState({})
   const [valueDatePickerInput, setValueDatePickerInput] = useState(
     formatDate(isRange, isTime, date, dateTo || new Date())
   )
   const [isInputInvalid, setInputIsInvalid] = useState(false)
+  const [prevExternalInvalid, setPrevExternalInvalid] = useState(externalInvalid)
+
+  const [prevDateRange, setPrevDateRange] = useState({ date, dateTo })
+
+  if (date !== prevDateRange.date || dateTo !== prevDateRange.dateTo) {
+    setPrevDateRange({ date, dateTo })
+    setValueDatePickerInput(formatDate(isRange, isTime, date, dateTo || new Date()))
+  }
 
   const datePickerRef = useRef()
   const datePickerViewRef = useRef()
@@ -112,6 +108,19 @@ const DatePicker = ({
         (!excludeCustomRange || option.id !== CUSTOM_RANGE_DATE_OPTION)
     )
   }, [customOptions, excludeCustomRange, hasFutureOptions, timeFrameLimit])
+
+  const [selectedOption, setSelectedOption] = useState(() =>
+    selectedOptionId ? datePickerOptions.find(option => option.id === selectedOptionId) : {}
+  )
+  const [prevSelectedOptionId, setPrevSelectedOptionId] = useState(selectedOptionId)
+
+  if (selectedOptionId !== prevSelectedOptionId) {
+    setPrevSelectedOptionId(selectedOptionId)
+
+    if (selectedOptionId) {
+      setSelectedOption(datePickerOptions.find(option => option.id === selectedOptionId))
+    }
+  }
 
   const handleCloseDatePickerOutside = useCallback(
     event => {
@@ -164,11 +173,20 @@ const DatePicker = ({
     return inputValue.length === 0
   }, [])
 
-  useLayoutEffect(() => {
-    if (selectedOptionId) {
-      setSelectedOption(datePickerOptions.find(option => option.id === selectedOptionId))
+  const isValueEmpty = useMemo(
+    () => Boolean(datePickerOptions && getInputValueValidity(valueDatePickerInput)),
+    [datePickerOptions, getInputValueValidity, valueDatePickerInput]
+  )
+
+  const [prevValueForClose, setPrevValueForClose] = useState(valueDatePickerInput)
+
+  if (valueDatePickerInput !== prevValueForClose) {
+    setPrevValueForClose(valueDatePickerInput)
+
+    if (getInputValueValidity(valueDatePickerInput)) {
+      setIsDatePickerOpened(false)
     }
-  }, [datePickerOptions, selectedOptionId])
+  }
 
   useEffect(() => {
     datePickerDispatch({
@@ -183,18 +201,6 @@ const DatePicker = ({
       payload: dateTo || roundSeconds(new Date(), true)
     })
   }, [dateTo])
-
-  useEffect(() => {
-    setValueDatePickerInput(formatDate(isRange, isTime, date, dateTo || new Date()))
-  }, [date, dateTo, isRange, isTime])
-
-  useEffect(() => {
-    const isInputValueEmpty = getInputValueValidity(valueDatePickerInput)
-
-    setIsValueEmpty(datePickerOptions && isInputValueEmpty)
-
-    isInputValueEmpty && setIsDatePickerOpened(false)
-  }, [getInputValueValidity, valueDatePickerInput, datePickerOptions])
 
   const validateTimeRange = useCallback(
     ([dateFrom, dateTo]) => {
@@ -229,14 +235,16 @@ const DatePicker = ({
     [isRange, timeFrameLimit]
   )
 
-  useEffect(() => {
+  const { invalidMessage, isTimeRangeNegative } = useMemo(() => {
     const { timeRangeInvalidMessage, timeRangeIsNegative } = validateTimeRange([
       datePickerState.configFrom.selectedDate,
       datePickerState.configTo.selectedDate
     ])
 
-    setIsTimeRangeNegative(timeRangeIsNegative)
-    setInvalidMessage(timeRangeInvalidMessage)
+    return {
+      invalidMessage: timeRangeInvalidMessage,
+      isTimeRangeNegative: timeRangeIsNegative
+    }
   }, [
     datePickerState.configFrom.selectedDate,
     datePickerState.configTo.selectedDate,
@@ -268,23 +276,25 @@ const DatePicker = ({
     }
   }, [handleCloseDatePickerOutside, isDatePickerOpened, isDatePickerOptionsOpened])
 
-  useEffect(() => {
-    if (isInputInvalid !== externalInvalid) {
-      if (required && getInputValueValidity(valueDatePickerInput)) {
+  const requiredValueIsValid = required && getInputValueValidity(valueDatePickerInput)
+
+  if (externalInvalid !== prevExternalInvalid) {
+    setPrevExternalInvalid(externalInvalid)
+
+    if (requiredValueIsValid) {
+      if (!isInputInvalid) {
         setInputIsInvalid(true)
-        setExternalInvalid(false)
-      } else if (!isNil(externalInvalid)) {
-        setInputIsInvalid(externalInvalid)
       }
+    } else if (!isNil(externalInvalid)) {
+      setInputIsInvalid(externalInvalid)
     }
-  }, [
-    getInputValueValidity,
-    externalInvalid,
-    isInputInvalid,
-    required,
-    setExternalInvalid,
-    valueDatePickerInput
-  ])
+  }
+
+  useEffect(() => {
+    if (isInputInvalid && requiredValueIsValid && externalInvalid !== false) {
+      setExternalInvalid(false)
+    }
+  }, [isInputInvalid, requiredValueIsValid, externalInvalid, setExternalInvalid])
 
   const isRangeDateValid = day => {
     const dateFromMs = new Date(datePickerState.configFrom.selectedDate).setHours(0, 0, 0, 0)
@@ -477,7 +487,8 @@ const DatePicker = ({
       onPreviousMonth={onChangePreviousMonth}
       onSelectOption={onSelectOption}
       onTimeChange={onTimeChange}
-      ref={{ datePickerRef, datePickerViewRef }}
+      datePickerRef={datePickerRef}
+      datePickerViewRef={datePickerViewRef}
       required={required}
       requiredText={requiredText}
       selectedOption={selectedOption}
@@ -515,7 +526,4 @@ DatePicker.propTypes = {
   withLabels: PropTypes.bool
 }
 
-export default React.memo(
-  DatePicker,
-  (prev, next) => prev.date === next.date && prev.onChange === next.onChange
-)
+export default React.memo(DatePicker)

@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import moment from 'moment'
 import PropTypes from 'prop-types'
 
@@ -36,12 +36,15 @@ const ProjectJobs = ({ project }) => {
   const params = useParams()
   const dispatch = useDispatch()
   const projectStore = useSelector(store => store.projectStore)
+  const [prevJobsData, setPrevJobsData] = useState(projectStore.project?.jobs?.data)
 
-  useEffect(() => {
+  if (projectStore.project?.jobs?.data !== prevJobsData) {
+    setPrevJobsData(projectStore.project?.jobs?.data)
+
     if (projectStore.project?.jobs?.data) {
       setGroupedLatestItem(sortByDate(groupByName(projectStore.project.jobs.data)))
     }
-  }, [projectStore.project?.jobs?.data])
+  }
 
   useEffect(() => {
     if (project?.data?.metadata?.name === params.projectName) {

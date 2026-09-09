@@ -66,7 +66,7 @@ const FunctionsView = ({
   isAllVersions,
   isDemoMode,
   pageData,
-  paginationConfigFunctionsRef,
+  paginationConfig,
   params,
   requestErrorMessage,
   selectedFunction,
@@ -162,7 +162,7 @@ const FunctionsView = ({
                   ))}
                 </Table>
                 <Pagination
-                  paginationConfig={paginationConfigFunctionsRef.current}
+                  paginationConfig={paginationConfig}
                   closeParamName={isAllVersions ? ALL_VERSIONS_PATH : FUNCTIONS_PAGE_PATH}
                   selectedItemName={params.funcName}
                 />
@@ -225,7 +225,7 @@ FunctionsView.propTypes = {
   isAllVersions: PropTypes.bool.isRequired,
   isDemoMode: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
-  paginationConfigFunctionsRef: PropTypes.object.isRequired,
+  paginationConfig: PropTypes.object.isRequired,
   params: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedFunction: PropTypes.object.isRequired,

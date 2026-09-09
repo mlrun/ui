@@ -1,14 +1,13 @@
+'use no memo'
+
 import {
   flexRender,
-  useReactTable,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
   type ColumnDef,
+  type OnChangeFn,
+  type RowData,
   type RowSelectionState,
   type SortingState
 } from '@tanstack/react-table'
-import { useVirtualizer } from '@tanstack/react-virtual'
 import { ComponentType, ReactNode, useRef, useMemo } from 'react'
 
 import SortArrow from '../../../images/sort-arrow.svg?react'
@@ -16,14 +15,21 @@ import DetailsPanel from '../DetailsPanel'
 import EllipsisTooltip from '../EllipsisTooltip'
 import PaginationControls, { PaginationConfig } from '../PaginationControls'
 import { RowActions, ActionMenuItem } from '../RowActions'
-import { DATATABLE_TEXT, ESTIMATED_ROW_HEIGHT, NO_ROWS_MESSAGES, SORT_DIRECTION } from '../../constants'
+import {
+  DATATABLE_TEXT,
+  ESTIMATED_ROW_HEIGHT,
+  NO_ROWS_MESSAGES,
+  SORT_DIRECTION
+} from '../../constants'
 import { useClickOutside } from '../../hooks/useClickOutside'
 import { cn } from '../../lib/utils'
 
-import checkboxColumn from './checkboxColumn'
+import createCheckboxColumn from './checkboxColumn'
+import { type DataTableFeatures } from './dataTableFeatures'
 import { getColumnSize, getColumnWidthCalculator, getVirtualPadding } from './DataTable.utils'
+import { useDataTable, useVirtualizer } from './useDataTable'
 
-export type DetailsPanelConfig<TData extends object> = {
+export type DetailsPanelConfig<TData extends RowData> = {
   content: ComponentType<TData>
   titleAccessorKey?: keyof TData
   titleAccessorFn?: (row: TData) => string | ReactNode
@@ -37,10 +43,10 @@ export type CheckboxSelectionConfig = {
   onRowSelectionChange: (state: RowSelectionState) => void
 }
 
-export type DataTableProps<TData extends object> = {
+export type DataTableProps<TData extends RowData> = {
   className?: string
   data: TData[]
-  columns: ColumnDef<TData, unknown>[]
+  columns: ColumnDef<DataTableFeatures, TData>[]
   initialSorting?: SortingState
   pagination?: PaginationConfig
   rowActions?: (row: TData) => ActionMenuItem[]
@@ -48,7 +54,7 @@ export type DataTableProps<TData extends object> = {
   checkboxSelection?: CheckboxSelectionConfig
 }
 
-const DataTable = <TData extends object>({
+const DataTable = <TData extends RowData>({
   className,
   data,
   columns,
@@ -62,20 +68,21 @@ const DataTable = <TData extends object>({
   const tableContainerRef = useRef<HTMLDivElement>(null)
   const wrapperRef = useClickOutside(selectedRow ? onRowClose : undefined)
 
-  const detailsPanelSelection = useMemo(() => {
+  const detailsPanelSelection = useMemo((): RowSelectionState => {
     if (!selectedRow) return {}
     const index = data.indexOf(selectedRow)
-    return index >= 0 ? { [index]: true } : {}
+    return index >= 0 ? { [String(index)]: true } : {}
   }, [selectedRow, data])
 
-  const rowSelection = checkboxSelection ? checkboxSelection.rowSelection : detailsPanelSelection
+  const rowSelection: RowSelectionState = checkboxSelection
+    ? checkboxSelection.rowSelection
+    : detailsPanelSelection
 
-  const allColumns = useMemo(
-    () => (checkboxSelection ? [checkboxColumn as ColumnDef<TData, unknown>, ...columns] : columns),
-    [checkboxSelection, columns]
-  )
+  const allColumns = useMemo((): ColumnDef<DataTableFeatures, TData>[] => {
+    return checkboxSelection ? [createCheckboxColumn<TData>(), ...columns] : columns
+  }, [checkboxSelection, columns])
 
-  const table = useReactTable({
+  const table = useDataTable<TData>({
     data,
     columns: allColumns,
     defaultColumn: {
@@ -85,15 +92,12 @@ const DataTable = <TData extends object>({
     state: {
       rowSelection
     },
-    onRowSelectionChange: updaterOrValue => {
+    onRowSelectionChange: (updaterOrValue => {
       if (!checkboxSelection) return
       const newSelection =
         typeof updaterOrValue === 'function' ? updaterOrValue(rowSelection) : updaterOrValue
       checkboxSelection.onRowSelectionChange(newSelection)
-    },
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    }) satisfies OnChangeFn<RowSelectionState>,
     enableRowSelection: true,
     enableMultiRowSelection: !!checkboxSelection,
     enableSorting: true,
@@ -130,13 +134,16 @@ const DataTable = <TData extends object>({
         ref={wrapperRef}
         className="flex flex-col relative flex-grow min-h-0"
       >
-        <div ref={tableContainerRef} className={cn('overflow-auto rounded-lg border', className)}>
+        <div
+          ref={tableContainerRef}
+          className={cn('overflow-auto rounded-lg border border-solid border-border', className)}
+        >
           <table className="w-full border-collapse table-fixed">
             <thead>
               {table.getHeaderGroups().map(headerGroup => (
                 <tr
                   key={headerGroup.id}
-                  className="sticky top-0 z-10 bg-white shadow-[0_1px_0_0_#eee]"
+                  className="sticky top-0 z-10 border border-solid border-border bg-white shadow-[0_1px_0_0_#eee]"
                   data-testid="data-table-header-row"
                 >
                   {headerGroup.headers.map((header, headerIndex) => {
@@ -235,7 +242,7 @@ const DataTable = <TData extends object>({
                         ref={rowVirtualizer.measureElement}
                         data-index={virtualRow.index}
                         className={cn(
-                          'group hover:bg-igz-accent-hover h-12 border-b border-[#eee] last:border-none',
+                          'group hover:bg-igz-accent-hover h-12 border-solid border-0 border-b border-border last:border-none',
                           detailsPanel && 'cursor-pointer',
                           row.getIsSelected() && 'bg-[#f2f7ff]'
                         )}
@@ -246,8 +253,7 @@ const DataTable = <TData extends object>({
                             cell.column.id === DATATABLE_TEXT.CHECKBOX_COLUMN_ID
                           const isFirstDataColumn = checkboxSelection ? idx === 1 : idx === 0
                           const columnMeta = cell.column.columnDef.meta as
-                            | { skipEllipsisTooltip?: boolean; tdClassName?: string }
-                            | undefined
+                            { skipEllipsisTooltip?: boolean; tdClassName?: string } | undefined
                           const skipEllipsisTooltip = Boolean(columnMeta?.skipEllipsisTooltip)
                           const renderedCell = flexRender(
                             cell.column.columnDef.cell,

@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useMemo } from 'react'
 import { useForm } from 'react-final-form'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { useSelector } from 'react-redux'
 
 import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
@@ -33,7 +33,7 @@ import {
   PROJECTS_FILTER_ALL_ITEMS,
   STATUS_FILTER_NAME
 } from '../../../constants'
-import { generateTypeFilter, jobsStatuses } from '../../FilterMenu/filterMenu.settings'
+import { generateTypeFilter, jobsStatuses } from '../../FilterMenuModal/filterMenuModal.settings.js'
 import { generateProjectsList } from '../../../utils/projects'
 import { upperFirst } from 'lodash-es'
 

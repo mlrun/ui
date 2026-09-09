@@ -19,13 +19,8 @@ such restriction.
 */
 import React, { Fragment, Suspense } from 'react'
 import { createPortal } from 'react-dom'
-import {
-  Route,
-  Navigate,
-  createBrowserRouter,
-  createRoutesFromElements,
-  RouterProvider
-} from 'react-router-dom'
+import { Route, Navigate, createBrowserRouter, createRoutesFromElements } from 'react-router'
+import { RouterProvider } from 'react-router/dom'
 import classNames from 'classnames'
 import 'prismjs'
 import 'prismjs/themes/prism.css'
@@ -41,7 +36,7 @@ import Notifications from './common/Notifications/Notifications'
 import localStorageService from './utils/localStorageService'
 import { lazyRetry } from './lazyWithRetry'
 import { useMode } from './hooks/mode.hook'
-import { useNuclioMode } from './hooks/nuclioMode.hook'
+import { isNuclioModeDisabled as checkNuclioModeDisabled } from './utils/helper'
 import wrapComponentForNavbarNavigationTracking from './utils/wrapComponentForNavbarNavigationTracking'
 
 import {
@@ -146,7 +141,7 @@ const ApplicationsPage = lazyRetry(
   () => import('./nextGenComponents/pages/ApplicationsPage/ApplicationsPage')
 )
 const App = () => {
-  const { isNuclioModeDisabled } = useNuclioMode()
+  const isNuclioModeDisabled = checkNuclioModeDisabled()
   const { isDemoMode } = useMode()
   const isHeaderShown = localStorageService.getStorageValue('mlrunUi.headerHidden') !== 'true'
   const mlAppContainerClasses = classNames('ml-app-container', isHeaderShown && 'has-header')

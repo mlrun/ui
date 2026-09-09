@@ -14,7 +14,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useLayoutEffect, forwardRef } from 'react'
+import React, { useLayoutEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import NewChipForm from '../NewChipForm/NewChipForm'
@@ -23,35 +23,33 @@ import { CHIP_OPTIONS } from '../../../types'
 
 import './formChip.scss'
 
-let FormChip = (
-  {
-    chip,
-    chipIndex,
-    chipSizeIsRecalculated,
-    setChipSizeIsRecalculated,
-    chipOptions = {
-      background: 'purple',
-      boldValue: false,
-      borderRadius: 'primary',
-      borderColor: 'transparent',
-      density: 'dense',
-      font: 'purple'
-    },
-    editConfig,
-    handleEditChip,
-    handleRemoveChip,
-    handleToEditMode,
-    isDeletable = false,
-    isEditable = false,
-    keyName = '',
-    meta,
-    setChipsSizes,
-    setEditConfig,
-    validationRules = {},
-    valueName = ''
+function FormChip({
+  chip,
+  chipIndex,
+  chipSizeIsRecalculated,
+  setChipSizeIsRecalculated,
+  chipOptions = {
+    background: 'purple',
+    boldValue: false,
+    borderRadius: 'primary',
+    borderColor: 'transparent',
+    density: 'dense',
+    font: 'purple'
   },
+  editConfig,
+  handleEditChip,
+  handleRemoveChip,
+  handleToEditMode,
+  isDeletable = false,
+  isEditable = false,
+  keyName = '',
+  meta,
+  setChipsSizes,
+  setEditConfig,
+  validationRules = {},
+  valueName = '',
   ref
-) => {
+}) {
   const chipRef = React.useRef()
   useLayoutEffect(() => {
     if (chipRef.current && setChipsSizes && chipSizeIsRecalculated) {
@@ -85,8 +83,6 @@ let FormChip = (
     </div>
   )
 }
-
-FormChip = forwardRef(FormChip)
 
 FormChip.displayName = 'FormChip'
 

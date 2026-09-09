@@ -16,7 +16,7 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { isNil } from 'lodash'
+import { isNil } from 'lodash-es'
 
 import { performFloatOperation } from '../../../utils/math.util'
 

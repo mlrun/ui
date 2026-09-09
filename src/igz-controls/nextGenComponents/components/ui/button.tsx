@@ -39,41 +39,47 @@ const buttonVariants = cva(
 )
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends
+    React.ComponentProps<'button'>,
     VariantProps<typeof buttonVariants>,
-    Omit<TooltipContentProps, keyof React.ButtonHTMLAttributes<HTMLButtonElement>> {
+    Omit<TooltipContentProps, keyof React.ComponentProps<'button'>> {
   asChild?: boolean
   tooltip?: string
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    { className, variant, size, tooltip = '', side = 'top', asChild = false, disabled, ...props },
-    ref
-  ) => {
-    const Comp = asChild ? Slot : 'button'
-    const buttonEl = (
-      <Comp
-        className={cn(
-          buttonVariants({ variant, size, className }),
-          tooltip && disabled && 'disabled:pointer-events-auto'
-        )}
-        disabled={disabled}
-        ref={ref}
-        {...props}
-      />
-    )
+function Button({
+  className,
+  variant,
+  size,
+  tooltip = '',
+  side = 'top',
+  asChild = false,
+  disabled,
+  ref,
+  ...props
+}: ButtonProps) {
+  const Comp = asChild ? Slot : 'button'
+  const buttonEl = (
+    <Comp
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        tooltip && disabled && 'disabled:pointer-events-auto'
+      )}
+      disabled={disabled}
+      ref={ref}
+      {...props}
+    />
+  )
 
-    if (!tooltip) return buttonEl
+  if (!tooltip) return buttonEl
 
-    return (
-      <Tooltip>
-        <TooltipTrigger asChild>{buttonEl}</TooltipTrigger>
-        <TooltipContent side={side}>{tooltip}</TooltipContent>
-      </Tooltip>
-    )
-  }
-)
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{buttonEl}</TooltipTrigger>
+      <TooltipContent side={side}>{tooltip}</TooltipContent>
+    </Tooltip>
+  )
+}
 Button.displayName = 'Button'
 
 export { Button }

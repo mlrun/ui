@@ -91,7 +91,7 @@ export const infoHeaders = [
 ]
 export const TRANSIENT_FUNCTION_STATUSES = [FUNCTION_PENDING_STATE, FUNCTION_RUNNING_STATE]
 
-const handleFetchFunctionLogs = (
+export const handleFetchFunctionLogs = (
   dispatch,
   item,
   projectName,

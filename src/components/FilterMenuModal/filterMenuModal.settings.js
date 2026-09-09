@@ -54,7 +54,7 @@ import {
   TERMINATING_STATE,
   PIPELINE_FLOW_TOPOLOGY,
   PIPELINE_ROUTER_TOPOLOGY
-} from '../../constants'
+} from '../../constants.js'
 
 export const jobsStatuses = [
   { label: 'All', id: FILTER_ALL_ITEMS, status: FILTER_ALL_ITEMS },

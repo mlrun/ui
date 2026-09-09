@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router'
 import { isEmpty } from 'lodash-es'
 
 import AddToFeatureVectorView from './AddToFeatureVectorView'
@@ -117,7 +117,7 @@ const AddToFeatureVectorPage = () => {
   }, [dispatch, navigateToFeatureVectorsScreen])
 
   const handleCreateFeatureVector = useCallback(
-    featureVector => {
+    function createFeatureVector(featureVector) {
       dispatch(createNewFeatureVector({ data: featureVector }))
         .unwrap()
         .then(response => {
@@ -138,7 +138,7 @@ const AddToFeatureVectorPage = () => {
               : 'Feature vector creation failed'
 
           showErrorNotification(dispatch, error, '', customErrorMsg, () =>
-            handleCreateFeatureVector(featureVector)
+            createFeatureVector(featureVector)
           )
 
           if (error.response.status === FORBIDDEN_ERROR_STATUS_CODE) {

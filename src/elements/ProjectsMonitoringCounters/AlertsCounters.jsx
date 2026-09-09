@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useMemo, useRef, useState } from 'react'
 import classNames from 'classnames'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 import { useSelector } from 'react-redux'
 import { defaults } from 'lodash-es'
 

@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useEffect, useMemo, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { debounce } from 'lodash-es'
 
 export const useInitialTableFetch = ({ fetchData, fetchTags, filters, requestTrigger } = {}) => {
@@ -27,23 +27,28 @@ export const useInitialTableFetch = ({ fetchData, fetchTags, filters, requestTri
 
   const sendInitialRequest = useMemo(
     () =>
-      debounce(({ filters, fetchData, fetchTags } = {}) => {
-        if (!isInitialRequestSent.current) {
-          if (fetchTags) {
-            fetchTags()
-          }
-          fetchData(filters)
-          isInitialRequestSent.current = true
+      debounce(({ filters, fetchData, fetchTags, onSent } = {}) => {
+        if (fetchTags) {
+          fetchTags()
         }
+        fetchData(filters)
+        onSent?.()
       }),
     []
   )
 
   useEffect(() => {
+    if (isInitialRequestSent.current) {
+      return
+    }
+
     sendInitialRequest({
       filters,
       fetchData,
-      fetchTags
+      fetchTags,
+      onSent: () => {
+        isInitialRequestSent.current = true
+      }
     })
   }, [fetchData, fetchTags, filters, sendInitialRequest])
 

@@ -21,7 +21,7 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import { v4 as uuidv4 } from 'uuid'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 import { TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 import ArtifactsPreviewController from '../../components/ArtifactsPreview/ArtifactsPreviewController'

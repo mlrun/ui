@@ -17,12 +17,12 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import Prism from 'prismjs'
 import classnames from 'classnames'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 import NoData from '../../common/NoData/NoData'
 import { Tooltip, TextTooltipTemplate, Loader } from 'igz-controls/components'
@@ -34,7 +34,6 @@ import { PENDING_STATE } from '../../constants'
 
 const DetailsPods = ({ isDetailsPopUp = false, noDataMessage = '' }) => {
   const [selectedPod, setSelectedPod] = useState(null)
-  const [table, setTable] = useState([])
   const params = useParams()
   const detailsStore = useSelector(store => store.detailsStore)
 
@@ -42,19 +41,17 @@ const DetailsPods = ({ isDetailsPopUp = false, noDataMessage = '' }) => {
     return isDetailsPopUp ? detailsStore.detailsJobPods : detailsStore.pods
   }, [detailsStore.detailsJobPods, detailsStore.pods, isDetailsPopUp])
 
-  useEffect(() => {
-    setTable(generatePods(podsData))
+  const table = useMemo(() => generatePods(podsData), [podsData])
 
-    return () => {
-      setSelectedPod(null)
-    }
-  }, [podsData, params.jobId])
+  // Reset the selected pod whenever the pods data (or the job we're viewing) changes.
+  const [prevPodsResetKey, setPrevPodsResetKey] = useState([podsData, params.jobId])
 
-  useEffect(() => {
-    if (!selectedPod) {
-      setSelectedPod(table[0])
-    }
-  }, [selectedPod, table])
+  if (podsData !== prevPodsResetKey[0] || params.jobId !== prevPodsResetKey[1]) {
+    setPrevPodsResetKey([podsData, params.jobId])
+    setSelectedPod(null)
+  } else if (!selectedPod && !Object.is(selectedPod, table[0])) {
+    setSelectedPod(table[0])
+  }
 
   return (
     <>

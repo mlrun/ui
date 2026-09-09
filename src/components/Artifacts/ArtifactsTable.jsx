@@ -56,7 +56,7 @@ let ArtifactsTable = ({
   isOnlyTabScreen,
   page,
   pageData,
-  paginationConfigArtifactsRef,
+  paginationConfig,
   requestErrorMessage,
   selectedArtifact,
   setSearchArtifactsParams,
@@ -149,7 +149,7 @@ let ArtifactsTable = ({
             ))}
           </Table>
           <Pagination
-            paginationConfig={paginationConfigArtifactsRef.current}
+            paginationConfig={paginationConfig}
             closeParamName={isAllVersions ? ALL_VERSIONS_PATH : tab || page}
             selectedItemName={artifactName}
           />
@@ -191,7 +191,7 @@ ArtifactsTable.propTypes = {
   isOnlyTabScreen: PropTypes.bool.isRequired,
   page: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
-  paginationConfigArtifactsRef: PropTypes.object.isRequired,
+  paginationConfig: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string,
   selectedArtifact: PropTypes.object.isRequired,
   setSearchArtifactsParams: PropTypes.func.isRequired,

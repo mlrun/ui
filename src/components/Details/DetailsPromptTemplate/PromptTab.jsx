@@ -31,7 +31,23 @@ import NoData from '../../../common/NoData/NoData'
 import { ARGUMENTS_TAB } from '../../../constants'
 import { fetchLLMPromptTemplate } from '../../../reducers/artifactsReducer'
 
-export const ExpandContext = createContext({})
+const ExpandContext = createContext({})
+// Module-local only — keeps react-refresh happy (no extra exports from this file).
+
+const resolvePromptSource = (localTemplate, remoteTemplate, targetPath, isValid) => {
+  if (!isEmpty(localTemplate)) {
+    return { source: isValid(localTemplate) ? localTemplate : null, needsFetch: false }
+  }
+
+  if (!isEmpty(remoteTemplate)) {
+    return { source: isValid(remoteTemplate) ? remoteTemplate : null, needsFetch: false }
+  }
+
+  return {
+    source: null,
+    needsFetch: targetPath?.endsWith('.txt') || targetPath?.endsWith('.json')
+  }
+}
 
 const PromptTab = ({
   handleTabChange,
@@ -46,6 +62,8 @@ const PromptTab = ({
   const [forceExpandAll, setForceExpandAll] = useState(false)
   const [loading, setLoading] = useState(false)
   const [showError, setShowError] = useState(false)
+  const [prevSourcePromptTemplate, setPrevSourcePromptTemplate] = useState(null)
+  const [prevPromptLegend, setPrevPromptLegend] = useState(null)
   const dispatch = useDispatch()
   const artifactsStore = useSelector(store => store.artifactsStore)
 
@@ -110,77 +128,69 @@ const PromptTab = ({
     [setSelectedArgument, setSelectedTab]
   )
 
+  const { source: sourcePromptTemplate, needsFetch } = resolvePromptSource(
+    selectedItem.prompt_template,
+    artifactsStore.LLMPrompts.promptTemplate,
+    selectedItem.target_path,
+    isPromptTemplateValid
+  )
+  const isError = !sourcePromptTemplate && !needsFetch
+
+  // Sync derived state during render (not in useEffect) — avoids react-hooks/set-state-in-effect
+  // and an extra paint. See React docs: "Adjusting some state when a prop changes".
+  if (isError && !showError) {
+    setShowError(true)
+  }
+
+  if (
+    sourcePromptTemplate &&
+    (sourcePromptTemplate !== prevSourcePromptTemplate ||
+      selectedItem.prompt_legend !== prevPromptLegend)
+  ) {
+    setPrevSourcePromptTemplate(sourcePromptTemplate)
+    setPrevPromptLegend(selectedItem.prompt_legend)
+    setPromptTemplate(generateJsxContent(sourcePromptTemplate, selectedItem.prompt_legend))
+  }
+
+  if (needsFetch && !loading) {
+    setLoading(true)
+  }
+
+  // Only the network request belongs in an effect; loading/error/template sync is handled above.
   useEffect(() => {
-    if (!isEmpty(selectedItem.prompt_template)) {
-      if (!isPromptTemplateValid(selectedItem.prompt_template)) {
-        setShowError(true)
-      } else {
-        setPromptTemplate(
-          generateJsxContent(selectedItem.prompt_template, selectedItem.prompt_legend)
-        )
-      }
-    } else if (isEmpty(artifactsStore.LLMPrompts.promptTemplate)) {
-      if (
-        !selectedItem.target_path.endsWith('.txt') &&
-        !selectedItem.target_path.endsWith('.json')
-      ) {
-        setShowError(true)
-      } else {
-        setLoading(true)
-        dispatch(
-          fetchLLMPromptTemplate({
-            project: selectedItem.project,
-            config: {
-              params: {
-                path: selectedItem.target_path
-              }
+    if (needsFetch) {
+      dispatch(
+        fetchLLMPromptTemplate({
+          project: selectedItem.project,
+          config: {
+            params: {
+              path: selectedItem.target_path
             }
-          })
-        )
-          .unwrap()
-          .then(response => {
-            if (!isPromptTemplateValid(response.data)) {
-              setShowError(true)
-            } else {
-              setPromptTemplate(generateJsxContent(response.data, selectedItem.prompt_legend))
-            }
-          })
-          .catch(() => setShowError(true))
-          .finally(() => {
-            setLoading(false)
-          })
-      }
-    } else if (!isEmpty(artifactsStore.LLMPrompts.promptTemplate)) {
-      if (!isPromptTemplateValid(artifactsStore.LLMPrompts.promptTemplate)) {
-        return setShowError(true)
-      } else {
-        setPromptTemplate(
-          generateJsxContent(artifactsStore.LLMPrompts.promptTemplate, selectedItem.prompt_legend)
-        )
-      }
+          }
+        })
+      )
+        .unwrap()
+        .then(response => {
+          if (!isPromptTemplateValid(response.data)) {
+            setShowError(true)
+          } else {
+            setPromptTemplate(generateJsxContent(response.data, selectedItem.prompt_legend))
+          }
+        })
+        .catch(() => setShowError(true))
+        .finally(() => {
+          setLoading(false)
+        })
     }
   }, [
-    selectedItem.prompt_template,
+    needsFetch,
     selectedItem.prompt_legend,
-    setSelectedArgument,
-    setSelectedTab,
     selectedItem.project,
     selectedItem.target_path,
     generateJsxContent,
     dispatch,
-    artifactsStore.LLMPrompts.promptTemplate,
     isPromptTemplateValid
   ])
-
-  useEffect(() => {
-    return () => {
-      setPromptTemplate([])
-      setSearchResult('')
-      setForceExpandAll(false)
-      setShowError(false)
-      setLoading(false)
-    }
-  }, [])
 
   return (
     <div className="prompt-tab">

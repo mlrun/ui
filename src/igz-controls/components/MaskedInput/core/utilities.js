@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
-import { isArray } from 'lodash'
+import { isArray } from 'lodash-es'
 
 import { placeholderChar as defaultPlaceholderChar } from './constants'
 

@@ -17,10 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { groupBy, forEach, isEmpty, map } from 'lodash-es'
+import { groupBy, forEach, isEmpty, isEqual, map, omit } from 'lodash-es'
 import { useSelector } from 'react-redux'
 import { Group, Panel } from 'react-resizable-panels'
 import { Position, ReactFlowProvider, useStoreApi } from 'reactflow'
@@ -51,12 +51,153 @@ import {
 } from '../../common/ReactFlow/mlReactFlow.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseUri } from '../../utils'
-import { useModelsPage } from '../ModelsPage/ModelsPage.context'
+import { useModelsPage } from '../ModelsPage/useModelsPage.hook'
 
 import Arrow from 'igz-controls/images/arrow.svg?react'
 import CloseIcon from 'igz-controls/images/close.svg?react'
 
 import './detailsPipeline.scss'
+
+const buildStepNodesAndConnections = (steps, graph, defaultErrorHandlerStepId) => {
+  const nodes = []
+  const edgesMap = {}
+  const cyclicEdgesMap = {}
+  const errorsMap = {}
+  const nodesConnectionMap = {} // [after]: [step]
+  let defaultErrorHandlerData = null
+
+  forEach(steps, (step, stepName) => {
+    if (!step.kind) return
+
+    const stepData = { ...step, track_models: graph.track_models }
+    const nodeTypeData = getStepsNodeData(stepData)
+
+    if (step.kind === ERROR_STEP_KIND && stepName === defaultErrorHandlerStepId) {
+      defaultErrorHandlerData = {
+        ...nodeTypeData,
+        id: stepName,
+        subType: PRIMARY_PIPELINE_NODE,
+        label: stepName,
+        isSelectable: true,
+        customData: stepData
+      }
+
+      return
+    } else if (step.kind === ERROR_STEP_KIND && !step.function && step.base_step) {
+      stepData.function = steps[step.base_step]?.function || ''
+    }
+
+    nodes.push({
+      id: stepName,
+      type: nodeTypeData.nodeType,
+      data: {
+        ...nodeTypeData,
+        subType: PRIMARY_PIPELINE_NODE,
+        label: stepName,
+        isSelectable: true,
+        customData: stepData
+      },
+      position: { x: 0, y: 0 },
+      sourcePosition: Position.Right,
+      targetPosition: Position.Left
+    })
+
+    if (stepData.after && Array.isArray(stepData.after) && stepData.after.length) {
+      const nonCyclicAfter = stepData.cycle_from?.length
+        ? stepData.after.filter(stepName => !stepData.cycle_from.includes(stepName))
+        : stepData.after
+
+      if (nonCyclicAfter.length) {
+        edgesMap[stepName] = nonCyclicAfter
+        nonCyclicAfter.forEach(after => {
+          ;(nodesConnectionMap[after] ??= []).push(stepName)
+        })
+      }
+    }
+
+    if (stepData.on_error) {
+      errorsMap[stepName] = stepData.on_error
+    }
+
+    if (stepData.cycle_from?.length) {
+      stepData.cycle_from.forEach(cycleFrom => {
+        ;(cyclicEdgesMap[cycleFrom] ??= []).push(stepName)
+      })
+    }
+  })
+
+  return { nodes, edgesMap, cyclicEdgesMap, errorsMap, nodesConnectionMap, defaultErrorHandlerData }
+}
+
+const applyNodeConnectionFlags = (nodes, nodesConnectionMap, cyclicEdgesMap) => {
+  nodes.forEach(node => {
+    // hide right handle for nodes without connections
+    if (!(node.id in nodesConnectionMap)) {
+      node.data.isLastStep = true
+    }
+
+    if (node.id in cyclicEdgesMap) {
+      node.data.cycleTo = cyclicEdgesMap[node.id]
+    }
+  })
+}
+
+const buildStepEdges = (edgesMap, errorsMap, cyclicEdgesMap) => {
+  const nodesEdges = map(edgesMap, (sources, target) => {
+    const sourcesArray = Array.isArray(sources) ? sources : [sources]
+
+    return sourcesArray.map(source => ({
+      type: ML_EDGE,
+      data: {
+        subType: SMOOTH_STEP_EDGE,
+        isHorizontalFlow: true,
+        arrowHeadType: 'arrow'
+      },
+      id: `e.${source}.${target}`,
+      source,
+      target,
+      sourceHandle: 'right',
+      targetHandle: 'left',
+      weight: 10
+    }))
+  }).flat()
+
+  const errorEdges = map(errorsMap, (target, source) => ({
+    type: ML_EDGE,
+    data: {
+      subType: DEFAULT_EDGE,
+      arrowHeadType: ''
+    },
+    id: `e.${source}.${target}`,
+    source,
+    target,
+    sourceHandle: 'bottom-error-handler',
+    targetHandle: 'top-error-handler',
+    animated: true,
+    weight: 1
+  }))
+
+  const cyclicEdges = map(cyclicEdgesMap, (targets, source) => {
+    const targetsArray = Array.isArray(targets) ? targets : [targets]
+
+    return targetsArray.map(target => ({
+      type: ML_SMART_STEP_EDGE,
+      data: {
+        isBackward: true
+      },
+      id: `e.${source}.${target}`,
+      source,
+      target,
+      sourceHandle: 'top',
+      targetHandle: 'top',
+      weight: 1
+    }))
+  }).flat()
+
+  const sortedNodesEdges = Object.values(groupBy(nodesEdges, 'source')).flat()
+
+  return { sortedNodesEdges, errorEdges, cyclicEdges }
+}
 
 const DetailsPipeline = ({ selectedItem }) => {
   const [nodes, setNodes] = useState([])
@@ -65,212 +206,116 @@ const DetailsPipeline = ({ selectedItem }) => {
   const [selectedStepData, setSelectedStepData] = useState({})
   const [stepIsSelected, setStepIsSelected] = useState(false)
   const [defaultErrorHandlerData, setDefaultErrorHandlerData] = useState(null)
-  const defaultErrorHandlerIdRef = React.useRef(null)
   const isPipelineLoading = useSelector(store => store.artifactsStore.pipelines.loading)
   const { handleMonitoring, toggleConvertedYaml, frontendSpec } = useModelsPage()
   const reactFlowStoreApi = useStoreApi()
 
+  if (selectedStep.data) {
+    const nextSelectedStepData = getStepDescriptionFields(selectedStep, selectedItem.graph)
+
+    if (!isEqual(selectedStepData, nextSelectedStepData)) {
+      setSelectedStepData(nextSelectedStepData)
+    }
+  }
+
+  const nextStepIsSelected = Boolean(selectedStep.id)
+
+  if (stepIsSelected !== nextStepIsSelected) {
+    setStepIsSelected(nextStepIsSelected)
+  }
+
+  const defaultErrorHandlerStepId = useMemo(
+    () => selectedItem?.graph?.on_error,
+    [selectedItem?.graph]
+  )
+
+  if (defaultErrorHandlerStepId && defaultErrorHandlerData) {
+    const nextClassName = defaultErrorHandlerStepId === selectedStep?.id ? 'selected' : ''
+
+    if (defaultErrorHandlerData.className !== nextClassName) {
+      setDefaultErrorHandlerData(stepData => ({
+        ...stepData,
+        className: nextClassName
+      }))
+    }
+  }
+
   useEffect(() => {
-    if (selectedStep.data) {
-      setSelectedStepData(getStepDescriptionFields(selectedStep, selectedItem.graph))
-    }
-
-    if (defaultErrorHandlerIdRef.current) {
-      const isDefaultErrorHandlerSelected = defaultErrorHandlerIdRef.current === selectedStep?.id
-
-      setDefaultErrorHandlerData(stepData => {
-        if (!stepData) return stepData
-
-        return {
-          ...stepData,
-          className: isDefaultErrorHandlerSelected ? 'selected' : ''
-        }
-      })
-    }
-
-    if (isEmpty(selectedStep) || defaultErrorHandlerIdRef.current === selectedStep?.id) {
+    if (isEmpty(selectedStep) || defaultErrorHandlerStepId === selectedStep?.id) {
       reactFlowStoreApi.getState().unselectNodesAndEdges()
     }
+  }, [selectedStep, reactFlowStoreApi, defaultErrorHandlerStepId])
 
-    setStepIsSelected(Boolean(selectedStep.id))
-  }, [selectedItem.graph, reactFlowStoreApi, selectedStep])
-
-  useEffect(() => {
+  const computedGraphElements = useMemo(() => {
     const graph = selectedItem?.graph
     const steps = graph?.steps || []
 
-    if (steps && graph) {
-      const newNodes = []
-      const edgesMap = {}
-      const cyclicEdgesMap = {}
-      const errorsMap = {}
-      const defaultErrorHandlerStepId = graph?.on_error
-      const nodesConnectionMap = {} // [after]: [step]
-
-      defaultErrorHandlerIdRef.current = defaultErrorHandlerStepId
-
-      forEach(steps, (step, stepName) => {
-        if (!step.kind) return
-
-        const stepData = { ...step, track_models: graph.track_models }
-        const nodeTypeData = getStepsNodeData(stepData)
-
-        if (step.kind === ERROR_STEP_KIND && stepName === defaultErrorHandlerStepId) {
-          return setDefaultErrorHandlerData({
-            ...nodeTypeData,
-            id: stepName,
-            subType: PRIMARY_PIPELINE_NODE,
-            label: stepName,
-            isSelectable: true,
-            customData: stepData
-          })
-        } else if (step.kind === ERROR_STEP_KIND && !step.function && step.base_step) {
-          stepData.function = steps[step.base_step]?.function || ''
-        }
-
-        const newNode = {
-          id: stepName,
-          type: nodeTypeData.nodeType,
-          data: {
-            ...nodeTypeData,
-            subType: PRIMARY_PIPELINE_NODE,
-            label: stepName,
-            isSelectable: true,
-            customData: stepData
-          },
-          position: { x: 0, y: 0 },
-          sourcePosition: Position.Right,
-          targetPosition: Position.Left
-        }
-
-        newNodes.push(newNode)
-
-        if (stepData.after && Array.isArray(stepData.after) && stepData.after.length) {
-          if (stepData.cycle_from?.length) {
-            const filteredAfter = stepData.after.filter(
-              stepName => !stepData.cycle_from.includes(stepName)
-            )
-            if (filteredAfter.length) {
-              edgesMap[stepName] = filteredAfter
-              filteredAfter.forEach(after => {
-                ;(nodesConnectionMap[after] ??= []).push(stepName)
-              })
-            }
-          } else {
-            edgesMap[stepName] = stepData.after
-            stepData.after.forEach(after => {
-              ;(nodesConnectionMap[after] ??= []).push(stepName)
-            })
-          }
-        }
-
-        if (stepData.on_error) {
-          errorsMap[stepName] = stepData.on_error
-        }
-
-        if (stepData.cycle_from?.length) {
-          stepData.cycle_from.forEach(cycleFrom => {
-            if (cyclicEdgesMap[cycleFrom]) {
-              cyclicEdgesMap[cycleFrom].push(stepName)
-            } else {
-              cyclicEdgesMap[cycleFrom] = [stepName]
-            }
-          })
-        }
-      })
-
-      newNodes.forEach(node => {
-        // hide right handle for nodes without connections
-        if (!(node.id in nodesConnectionMap)) {
-          node.data.isLastStep = true
-        }
-
-        if (node.id in cyclicEdgesMap) {
-          node.data.cycleTo = cyclicEdgesMap[node.id]
-        }
-      })
-
-      const nodesEdges = map(edgesMap, (sources, target) => {
-        const sourcesArray = Array.isArray(sources) ? sources : [sources]
-
-        return sourcesArray.map(source => ({
-          type: ML_EDGE,
-          data: {
-            subType: SMOOTH_STEP_EDGE,
-            isHorizontalFlow: true,
-            arrowHeadType: 'arrow'
-          },
-          id: `e.${source}.${target}`,
-          source,
-          target,
-          sourceHandle: 'right',
-          targetHandle: 'left',
-          weight: 10
-        }))
-      }).flat()
-
-      const errorEdges = map(errorsMap, (target, source) => {
-        return {
-          type: ML_EDGE,
-          data: {
-            subType: DEFAULT_EDGE,
-            arrowHeadType: ''
-          },
-          id: `e.${source}.${target}`,
-          source: source,
-          target: target,
-          sourceHandle: 'bottom-error-handler',
-          targetHandle: 'top-error-handler',
-          animated: true,
-          weight: 1
-        }
-      })
-
-      const cyclicEdges = map(cyclicEdgesMap, (targets, source) => {
-        const targetsArray = Array.isArray(targets) ? targets : [targets]
-
-        return targetsArray.map(target => {
-          return {
-            type: ML_SMART_STEP_EDGE,
-            data: {
-              isBackward: true
-            },
-            id: `e.${source}.${target}`,
-            source: source,
-            target: target,
-            sourceHandle: 'top',
-            targetHandle: 'top',
-            weight: 1
-          }
-        })
-      }).flat()
-
-      const groupedNodesEdges = groupBy(nodesEdges, 'source')
-      const sortedNodesEdges = []
-
-      forEach(groupedNodesEdges, edgesGroup => {
-        sortedNodesEdges.push(...edgesGroup)
-      })
-
-      const [layoutedNodes, layoutedEdges] = getLayoutedElements(
-        newNodes,
-        sortedNodesEdges,
-        'LR',
-        defaultErrorHandlerStepId,
-        errorEdges,
-        cyclicEdges,
-        true
-      )
-
-      const groupedNodes = addVisualFramesForFunctions(
-        layoutedNodes,
-        node => node.data?.customData?.function
-      )
-
-      setNodes(groupedNodes)
-      setEdges(layoutedEdges)
+    if (!steps || !graph) {
+      return { computedNodes: [], computedEdges: [], computedDefaultErrorHandlerData: null }
     }
-  }, [selectedItem])
+
+    const {
+      nodes,
+      edgesMap,
+      cyclicEdgesMap,
+      errorsMap,
+      nodesConnectionMap,
+      defaultErrorHandlerData
+    } = buildStepNodesAndConnections(steps, graph, defaultErrorHandlerStepId)
+
+    applyNodeConnectionFlags(nodes, nodesConnectionMap, cyclicEdgesMap)
+
+    const { sortedNodesEdges, errorEdges, cyclicEdges } = buildStepEdges(
+      edgesMap,
+      errorsMap,
+      cyclicEdgesMap
+    )
+
+    const [layoutedNodes, layoutedEdges] = getLayoutedElements(
+      nodes,
+      sortedNodesEdges,
+      'LR',
+      defaultErrorHandlerStepId,
+      errorEdges,
+      cyclicEdges,
+      true
+    )
+
+    const groupedNodes = addVisualFramesForFunctions(
+      layoutedNodes,
+      node => node.data?.customData?.function
+    )
+
+    return {
+      computedNodes: groupedNodes,
+      computedEdges: layoutedEdges,
+      computedDefaultErrorHandlerData: defaultErrorHandlerData
+    }
+  }, [selectedItem, defaultErrorHandlerStepId])
+
+  const { computedNodes, computedEdges, computedDefaultErrorHandlerData } = computedGraphElements
+
+  if (!isEqual(nodes, computedNodes)) {
+    setNodes(computedNodes)
+  }
+
+  if (!isEqual(edges, computedEdges)) {
+    setEdges(computedEdges)
+  }
+
+  if (
+    computedDefaultErrorHandlerData &&
+    !isEqual(omit(defaultErrorHandlerData, 'className'), computedDefaultErrorHandlerData)
+  ) {
+    // `className` is derived separately (above) from the current selection, so it must be
+    // excluded from this comparison and preserved across updates — otherwise this block and
+    // the `className` sync above perpetually invalidate each other, causing an infinite
+    // render loop ("Too many re-renders").
+    setDefaultErrorHandlerData(stepData => ({
+      ...computedDefaultErrorHandlerData,
+      className: stepData?.className ?? ''
+    }))
+  }
 
   const openModelPopUp = rowData => {
     if (rowData.value.startsWith('store://')) {

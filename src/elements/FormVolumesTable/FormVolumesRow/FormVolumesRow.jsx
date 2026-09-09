@@ -17,11 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useLayoutEffect, useState } from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { isEmpty, pick } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 import {
   FormSelect,
@@ -51,8 +51,7 @@ const FormVolumesRow = ({
   rowPath,
   setFieldValue
 }) => {
-  const [fieldData, setFieldData] = useState(fields.value[index])
-  const [fieldRowData, setFieldRowData] = useState([])
+  const fieldData = fields.value[index]
   const tableRowClassNames = classnames(
     'form-table__row',
     'form-table__volume-row',
@@ -69,18 +68,13 @@ const FormVolumesRow = ({
     [rowPath, setFieldValue]
   )
 
-  useLayoutEffect(() => {
-    setFieldRowData(
-      generateVolumeInputsData(
-        fields.value[index],
-        fields,
-        editingItem,
-        accessKeyFocusHandler,
-        projectName
-      )
-    )
-    setFieldData(fields.value[index])
-  }, [accessKeyFocusHandler, editingItem, fields, index, projectName])
+  const fieldRowData = generateVolumeInputsData(
+    fields.value[index],
+    fields,
+    editingItem,
+    accessKeyFocusHandler,
+    projectName
+  )
 
   const handleTypeChange = useCallback(() => {
     if (isCurrentRowEditing(rowPath)) {

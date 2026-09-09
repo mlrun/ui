@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
@@ -39,13 +39,16 @@ const PanelCredentialsAccessKey = ({
   validation
 }) => {
   const [inputValue, setInputValue] = useState('')
+  const [prevCredentialsAccessKey, setPrevCredentialsAccessKey] = useState(credentialsAccessKey)
   const accessKeyClassNames = classnames(className, 'new-item-side-panel__item', 'access-key')
 
-  useEffect(() => {
+  if (credentialsAccessKey !== prevCredentialsAccessKey) {
+    setPrevCredentialsAccessKey(credentialsAccessKey)
+
     if (credentialsAccessKey !== PANEL_DEFAULT_ACCESS_KEY) {
       setInputValue(credentialsAccessKey)
     }
-  }, [credentialsAccessKey])
+  }
 
   return (
     <div className={accessKeyClassNames}>

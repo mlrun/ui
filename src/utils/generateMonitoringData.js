@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { generateTypeFilter } from '../components/FilterMenu/filterMenu.settings'
+import { generateTypeFilter } from '../components/FilterMenuModal/filterMenuModal.settings.js'
 
 import {
   APPLICATION,

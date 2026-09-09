@@ -30,94 +30,88 @@ import { useTable } from 'igz-controls/hooks/useTable.hook'
 
 import 'igz-controls/scss/table.scss'
 
-const Table = React.forwardRef(
-  (
-    {
-      actionsMenu,
-      applyDetailsChanges = () => {},
-      applyDetailsChangesCallback = () => {},
-      children,
-      detailsFormInitialValues = EMPTY_OBJECT,
-      getCloseDetailsLink = null,
-      handleCancel = () => {},
-      hideActionsMenu = false,
-      mainRowItemsCount = 1,
-      pageData,
-      selectedItem = {},
-      skipTableWrapper = false,
-      sortProps = null,
-      tab = '',
-      tableClassName = '',
-      tableHeaders = [],
-      viewMode = '',
-      virtualizationConfig = {
-        tableBodyPaddingTop: 0,
-        startIndex: -1,
-        endIndex: -1
-      },
-      withActionMenu
-    },
-    ref
-  ) => {
-    const {
-      TableContainer,
-      tableBodyRef,
-      tableClass,
-      tableContentRef,
-      tableHeadRef,
-      tablePanelRef,
-      tableRef,
-      tableStore,
-      tableWrapperClass
-    } = useTable({
-      ref,
-      selectedItem,
-      skipTableWrapper,
-      tableClassName
-    })
+function Table({
+  actionsMenu,
+  applyDetailsChanges = () => {},
+  applyDetailsChangesCallback = () => {},
+  children,
+  detailsFormInitialValues = EMPTY_OBJECT,
+  getCloseDetailsLink = null,
+  handleCancel = () => {},
+  hideActionsMenu = false,
+  mainRowItemsCount = 1,
+  pageData,
+  ref,
+  selectedItem = {},
+  skipTableWrapper = false,
+  sortProps = null,
+  tab = '',
+  tableClassName = '',
+  tableHeaders = [],
+  viewMode = '',
+  virtualizationConfig = {
+    tableBodyPaddingTop: 0,
+    startIndex: -1,
+    endIndex: -1
+  },
+  withActionMenu
+}) {
+  const {
+    TableContainer,
+    tableBodyRef,
+    tableClass,
+    tableContentRef,
+    tableHeadRef,
+    tablePanelRef,
+    tableRef,
+    tableStore,
+    tableWrapperClass
+  } = useTable({
+    ref,
+    selectedItem,
+    skipTableWrapper,
+    tableClassName
+  })
 
-    return (
-      <TableContainer
-        hideActionsMenu={hideActionsMenu}
-        mainRowItemsCount={mainRowItemsCount}
-        pageData={pageData}
-        sortProps={sortProps}
-        tableBodyRef={tableBodyRef}
-        tableClass={tableClass}
-        tableHeadRef={tableHeadRef}
-        tableHeaders={tableHeaders}
-        tablePanelRef={tablePanelRef}
-        tableRef={tableRef}
-        tableStore={tableStore}
-        tableWrapperClass={tableWrapperClass}
-        virtualizationConfig={virtualizationConfig}
-        tableContentRef={tableContentRef}
-        renderDetails={() =>
-          !isEmpty(selectedItem) &&
-          viewMode !== FULL_VIEW_MODE && (
-            <Details
-              actionsMenu={actionsMenu}
-              applyDetailsChanges={applyDetailsChanges}
-              applyDetailsChangesCallback={applyDetailsChangesCallback}
-              detailsMenu={pageData.details.menu}
-              formInitialValues={detailsFormInitialValues}
-              getCloseDetailsLink={getCloseDetailsLink}
-              handleCancel={handleCancel}
-              pageData={pageData}
-              selectedItem={selectedItem}
-              tab={tab}
-              withActionMenu={withActionMenu}
-            />
-          )
-        }
-      >
-        {children}
-      </TableContainer>
-    )
-  }
-)
-
-Table.displayName = 'Table'
+  return (
+    <TableContainer
+      hideActionsMenu={hideActionsMenu}
+      mainRowItemsCount={mainRowItemsCount}
+      pageData={pageData}
+      sortProps={sortProps}
+      tableBodyRef={tableBodyRef}
+      tableClass={tableClass}
+      tableHeadRef={tableHeadRef}
+      tableHeaders={tableHeaders}
+      tablePanelRef={tablePanelRef}
+      tableRef={tableRef}
+      tableStore={tableStore}
+      tableWrapperClass={tableWrapperClass}
+      virtualizationConfig={virtualizationConfig}
+      tableContentRef={tableContentRef}
+      renderDetails={() =>
+        !isEmpty(selectedItem) &&
+        viewMode !== FULL_VIEW_MODE && (
+          <Details
+            actionsMenu={actionsMenu}
+            applyDetailsChanges={applyDetailsChanges}
+            applyDetailsChangesCallback={applyDetailsChangesCallback}
+            detailsMenu={pageData.details.menu}
+            formInitialValues={detailsFormInitialValues}
+            getCloseDetailsLink={getCloseDetailsLink}
+            handleCancel={handleCancel}
+            pageData={pageData}
+            selectedItem={selectedItem}
+            tab={tab}
+            withActionMenu={withActionMenu}
+          />
+        )
+      }
+    >
+      {children}
+    </TableContainer>
+  )
+}
 
 Table.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,

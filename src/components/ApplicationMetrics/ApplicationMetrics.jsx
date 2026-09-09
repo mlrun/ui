@@ -18,9 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
-import { debounce, isEmpty } from 'lodash-es'
+import { debounce, isEmpty, isEqual } from 'lodash-es'
 import { createForm } from 'final-form'
 import { Form } from 'react-final-form'
 import classNames from 'classnames'
@@ -111,7 +111,7 @@ const ApplicationMetrics = () => {
     tableId: LIST_ITEMS_ID
   })
 
-  const formRef = React.useRef(
+  const [formRef] = useState(() =>
     createForm({
       initialValues: {
         MEPSearchName: ''
@@ -199,6 +199,8 @@ const ApplicationMetrics = () => {
     }
 
     // navigate triggers this use effect when we select first item in the list if id is not in the URL
+    // if adding new deps, please double check it by removing next comment
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     applicationsStore.monitoringApplications.applications,
     dispatch,
@@ -206,6 +208,16 @@ const ApplicationMetrics = () => {
     params.appName,
     params.projectName
   ])
+
+  if (params.id && modelEndpoints.length > 0) {
+    const searchItem = modelEndpoints.find(item => item.metadata?.uid === params.id)
+
+    if (searchItem && !isEqual(selectedModelEndpoint, searchItem)) {
+      setSelectedModelEndpoint(searchItem)
+    }
+  } else if (modelEndpoints.length === 0 && !isEqual(selectedModelEndpoint, {})) {
+    setSelectedModelEndpoint({})
+  }
 
   useEffect(() => {
     if (params.id && modelEndpoints.length > 0) {
@@ -216,16 +228,12 @@ const ApplicationMetrics = () => {
           `/projects/${params.projectName}/${MONITORING_APP_PAGE}/${params.appName}/${MODEL_ENDPOINTS_TAB}/${modelEndpoints[0].metadata.uid}${window.location.search}`,
           { replace: true }
         )
-      } else {
-        setSelectedModelEndpoint(searchItem)
       }
     } else if (modelEndpoints.length > 0) {
       navigate(
         `/projects/${params.projectName}/${MONITORING_APP_PAGE}/${params.appName}/${MODEL_ENDPOINTS_TAB}/${modelEndpoints[0].metadata.uid}${window.location.search}`,
         { replace: true }
       )
-    } else {
-      setSelectedModelEndpoint({})
     }
   }, [dispatch, modelEndpoints, navigate, params.id, params.appName, params.projectName])
 
@@ -276,7 +284,7 @@ const ApplicationMetrics = () => {
             ) : (
               <>
                 <div className="list-view__section list-view__section-list">
-                  <Form form={formRef.current} onSubmit={() => {}}>
+                  <Form form={formRef} onSubmit={() => {}}>
                     {() => (
                       <div className="list-view__section-list__search">
                         <div className="list-view__section-list__search__name-filter">

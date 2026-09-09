@@ -14,7 +14,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { forwardRef, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -25,10 +25,15 @@ import TextTooltipTemplate from '../../TooltipTemplate/TextTooltipTemplate'
 import { CHIP_OPTIONS } from '../../../types'
 import { useHiddenChipsBlock } from '../../../hooks'
 
-let HiddenChipsBlock = (
-  { chipClassNames, chipOptions, chips, handleShowElements, textOverflowEllipsis = false },
-  { hiddenChipsCounterRef, hiddenChipsPopUpRef }
-) => {
+function HiddenChipsBlock({
+  chipClassNames,
+  chipOptions,
+  chips,
+  handleShowElements,
+  textOverflowEllipsis = false,
+  hiddenChipsCounterRef,
+  hiddenChipsPopUpRef
+}) {
   const { hiddenChipsBlockClassNames } = useHiddenChipsBlock(
     hiddenChipsCounterRef,
     hiddenChipsPopUpRef
@@ -102,8 +107,6 @@ let HiddenChipsBlock = (
   )
 }
 
-HiddenChipsBlock = forwardRef(HiddenChipsBlock)
-
 HiddenChipsBlock.displayName = 'HiddenChipsBlock'
 
 HiddenChipsBlock.propTypes = {
@@ -111,7 +114,9 @@ HiddenChipsBlock.propTypes = {
   chipOptions: CHIP_OPTIONS.isRequired,
   chips: PropTypes.array.isRequired,
   handleShowElements: PropTypes.func.isRequired,
-  textOverflowEllipsis: PropTypes.bool
+  textOverflowEllipsis: PropTypes.bool,
+  hiddenChipsCounterRef: PropTypes.shape({ current: PropTypes.any }),
+  hiddenChipsPopUpRef: PropTypes.shape({ current: PropTypes.any })
 }
 
 export default HiddenChipsBlock

@@ -21,7 +21,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import prettyBytes from 'pretty-bytes'
 import PropTypes from 'prop-types'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { has } from 'lodash-es'
 
 import ArtifactsPreview from '../../components/ArtifactsPreview/ArtifactsPreview'

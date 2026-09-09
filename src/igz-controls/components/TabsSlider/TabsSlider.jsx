@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useState, useRef } from 'react'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -151,11 +151,9 @@ const TabsSlider = ({
     moveToSelectedTab()
   }, [moveToSelectedTab])
 
-  useEffect(() => {
-    if (params.tab && params.tab !== selectedTab && !isDetailsPopUp) {
-      setSelectedTab(tabsList.find(tab => tab.id === params.tab)?.id)
-    }
-  }, [isDetailsPopUp, params.tab, selectedTab, tabsList])
+  if (params.tab && params.tab !== selectedTab && !isDetailsPopUp) {
+    setSelectedTab(tabsList.find(tab => tab.id === params.tab)?.id)
+  }
 
   const getTabContent = useCallback(tab => {
     return (

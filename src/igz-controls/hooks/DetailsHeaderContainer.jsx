@@ -18,30 +18,26 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
-import React, { useCallback, useRef } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link } from 'react-router'
 
-import {
-  Button,
-  RoundedIcon,
-  TextTooltipTemplate,
-  Tooltip,
-  LoadButton,
-  ActionsMenu
-} from 'igz-controls/components'
+import ActionsMenu from '../components/ActionsMenu/ActionsMenu'
+import Button from '../components/Button/Button'
+import LoadButton from '../components/LoadButton/LoadButton'
+import RoundedIcon from '../components/RoundedIcon/RoundedIcon'
+import TextTooltipTemplate from '../components/TooltipTemplate/TextTooltipTemplate'
+import Tooltip from '../components/Tooltip/Tooltip'
 
-import { ACTION_BUTTON, ACTIONS_MENU } from 'igz-controls/types'
-import { TERTIARY_BUTTON, VIEW_SEARCH_PARAMETER, FULL_VIEW_MODE } from 'igz-controls/constants'
-import { getFilteredSearchParams } from 'igz-controls/utils/filter.util'
-import { getViewMode } from 'igz-controls/utils/common.util'
+import { ACTION_BUTTON, ACTIONS_MENU } from '../types'
+import { TERTIARY_BUTTON, VIEW_SEARCH_PARAMETER, FULL_VIEW_MODE } from '../constants'
+import { getFilteredSearchParams } from '../utils/filter.util'
 
-import Close from 'igz-controls/images/close.svg?react'
-import EnlargeIcon from 'igz-controls/images/ml-enlarge.svg?react'
-import HistoryIcon from 'igz-controls/images/history.svg?react'
-import MinimizeIcon from 'igz-controls/images/ml-minimize.svg?react'
-import Refresh from 'igz-controls/images/refresh.svg?react'
+import Close from '../images/close.svg?react'
+import EnlargeIcon from '../images/ml-enlarge.svg?react'
+import HistoryIcon from '../images/history.svg?react'
+import MinimizeIcon from '../images/ml-minimize.svg?react'
+import Refresh from '../images/refresh.svg?react'
 
 const DetailsHeaderContainer = ({
   actionButton = null,
@@ -52,6 +48,7 @@ const DetailsHeaderContainer = ({
   commonDetailsStore,
   getCloseDetailsLink = null,
   getDefaultCloseDetailsLink,
+  handleActionClick,
   handleCancelClick,
   handleRefresh = null,
   headerRef,
@@ -113,7 +110,9 @@ const DetailsHeaderContainer = ({
           <Button
             disabled={actionButton.disabled}
             label={actionButton.label}
-            onClick={actionButton.onClick}
+            onClick={event => {
+              handleActionClick(event, actionButton.onClick)
+            }}
             tooltip={actionButton.tooltip}
             variant={actionButton.variant}
           />
@@ -168,7 +167,7 @@ const DetailsHeaderContainer = ({
               )}
             </>
           )}
-          {!pageData.details.hideBackBtn &&
+          {!pageData.details.hideCloseBtn &&
             (isDetailsPopUp ? (
               <div
                 className="details-close-btn"
@@ -210,6 +209,7 @@ DetailsHeaderContainer.propTypes = {
   commonDetailsStore: PropTypes.object.isRequired,
   getCloseDetailsLink: PropTypes.func,
   getDefaultCloseDetailsLink: PropTypes.func.isRequired,
+  handleActionClick: PropTypes.func.isRequired,
   handleCancelClick: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func,
   headerRef: PropTypes.object.isRequired,
@@ -230,43 +230,4 @@ DetailsHeaderContainer.propTypes = {
   withToggleViewBtn: PropTypes.bool
 }
 
-export const useDetailsHeader = ({ handleCancel, handleShowWarning, isDetailsPopUp, pageData }) => {
-  const commonDetailsStore = useSelector(store => store.commonDetailsStore)
-  const params = useParams()
-  const navigate = useNavigate()
-  const viewMode = getViewMode(window.location.search)
-  const { actionButton, withToggleViewBtn, showAllVersions } = pageData.details
-  const headerRef = useRef()
-  const location = useLocation()
-  const dispatch = useDispatch()
-
-  const handleBackClick = useCallback(() => {
-    if (commonDetailsStore.changes.counter > 0) {
-      handleShowWarning(true)
-    } else if (handleCancel) {
-      handleCancel()
-    }
-  }, [commonDetailsStore.changes.counter, handleCancel, handleShowWarning])
-
-  const handleCancelClick = useCallback(() => {
-    if (handleCancel && (commonDetailsStore.changes.counter === 0 || isDetailsPopUp)) {
-      handleCancel()
-    }
-  }, [commonDetailsStore.changes.counter, handleCancel, isDetailsPopUp])
-
-  return {
-    DetailsHeaderContainer,
-    actionButton,
-    commonDetailsStore,
-    dispatch,
-    handleBackClick,
-    handleCancelClick,
-    headerRef,
-    location,
-    navigate,
-    params,
-    showAllVersions,
-    viewMode,
-    withToggleViewBtn
-  }
-}
+export default DetailsHeaderContainer

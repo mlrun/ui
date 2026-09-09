@@ -14,7 +14,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { forwardRef } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
@@ -23,18 +23,16 @@ import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import './roundedIcon.scss'
 
-let RoundedIcon = (
-  {
-    children,
-    className = '',
-    disabled = false,
-    id = '',
-    isActive = false,
-    onClick = () => {},
-    tooltipText = ''
-  },
+function RoundedIcon({
+  children,
+  className = '',
+  disabled = false,
+  id = '',
+  isActive = false,
+  onClick = () => {},
+  tooltipText = '',
   ref
-) => {
+}) {
   const wrapperClassNames = classNames('round-icon-cp', className)
   const IconClassNames = classNames(
     'round-icon-cp__circle',
@@ -53,8 +51,6 @@ let RoundedIcon = (
   )
 }
 
-RoundedIcon = React.memo(forwardRef(RoundedIcon))
-
 RoundedIcon.displayName = 'RoundedIcon'
 
 RoundedIcon.propTypes = {
@@ -67,4 +63,4 @@ RoundedIcon.propTypes = {
   tooltipText: PropTypes.string
 }
 
-export default RoundedIcon
+export default React.memo(RoundedIcon)

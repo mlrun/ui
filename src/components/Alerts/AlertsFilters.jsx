@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useEffect, useMemo } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import { useForm, useFormState } from 'react-final-form'

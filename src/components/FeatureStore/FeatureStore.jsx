@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
@@ -29,7 +29,7 @@ import { toggleYaml } from '../../reducers/appReducer'
 
 import './featureStore.scss'
 
-export const FeatureStoreContext = React.createContext({})
+import { FeatureStoreContext } from './FeatureStore.context'
 
 const FeatureStore = () => {
   const dispatch = useDispatch()

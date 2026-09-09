@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { useDispatch } from 'react-redux'
 
 import {
@@ -42,11 +42,8 @@ export const useRefreshAlerts = (filters, isAlertsPage) => {
   const params = useParams()
   const dispatch = useDispatch()
 
-  const refreshAlerts = useCallback(
+  const dispatchAlertsFetch = useCallback(
     filters => {
-      setAlerts(null)
-      lastCheckedAlertIdRef.current = null
-      abortControllerRef.current = new AbortController()
       const projectName = !isAlertsPage
         ? params.projectName || params.id
         : filters?.[PROJECT_FILTER]?.toLowerCase?.() !== PROJECTS_FILTER_ALL_ITEMS &&
@@ -54,14 +51,15 @@ export const useRefreshAlerts = (filters, isAlertsPage) => {
           ? filters[PROJECT_FILTER]?.toLowerCase()
           : params.id || params.projectName
 
+      let requestFilters = filters
       if (!isAlertsPage) {
-        filters = { ...filters, [MODEL_ENDPOINT_ID]: params.tag }
+        requestFilters = { ...filters, [MODEL_ENDPOINT_ID]: params.tag }
       }
 
       dispatch(
         fetchAlerts({
           project: projectName,
-          filters,
+          filters: requestFilters,
           config: {
             ui: {
               controller: abortControllerRef.current,
@@ -92,9 +90,21 @@ export const useRefreshAlerts = (filters, isAlertsPage) => {
     [dispatch, isAlertsPage, params.id, params.projectName, params.tag]
   )
 
+  const refreshAlerts = useCallback(
+    filters => {
+      queueMicrotask(() => setAlerts(null))
+      lastCheckedAlertIdRef.current = null
+      abortControllerRef.current = new AbortController()
+      dispatchAlertsFetch(filters)
+    },
+    [dispatchAlertsFetch]
+  )
+
   useEffect(() => {
-    !isAlertsPage && refreshAlerts(filters)
-  }, [isAlertsPage, refreshAlerts, filters])
+    if (!isAlertsPage) {
+      refreshAlerts(filters)
+    }
+  }, [filters, isAlertsPage, refreshAlerts])
 
   return {
     abortControllerRef,

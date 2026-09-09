@@ -17,15 +17,15 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { useParams, useSearchParams } from 'react-router-dom'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useParams, useSearchParams } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { mapValues, map } from 'lodash-es'
 
 import AddToFeatureVectorPopUp from '../../../elements/AddToFeatureVectorPopUp/AddToFeatureVectorPopUp'
 import FeaturesTablePanel from '../../../elements/FeaturesTablePanel/FeaturesTablePanel'
 import FeaturesView from './FeaturesView'
-import { FeatureStoreContext } from '../FeatureStore'
+import { FeatureStoreContext } from '../FeatureStore.context'
 
 import {
   CANCEL_REQUEST_TIMEOUT,
@@ -107,7 +107,10 @@ const Features = () => {
     [toggleConvertedYaml]
   )
 
-  useLayoutEffect(() => {
+  const [prevIsTablePanelOpen, setPrevIsTablePanelOpen] = useState(tableStore.isTablePanelOpen)
+
+  if (tableStore.isTablePanelOpen !== prevIsTablePanelOpen) {
+    setPrevIsTablePanelOpen(tableStore.isTablePanelOpen)
     setSelectedRowData(prevSelectedRowData => {
       return mapValues(prevSelectedRowData, feature => ({
         ...feature,
@@ -116,7 +119,7 @@ const Features = () => {
         )
       }))
     })
-  }, [tableStore.isTablePanelOpen, setSelectedRowData])
+  }
 
   const fetchData = useCallback(
     filters => {
@@ -349,7 +352,7 @@ const Features = () => {
       getPopUpTemplate={getPopUpTemplate}
       handleRefresh={handleRefresh}
       pageData={pageData}
-      ref={{ featureStoreRef }}
+      featureStoreRef={featureStoreRef}
       requestErrorMessage={requestErrorMessage}
       selectedRowData={selectedRowData}
       setSearchParams={setSearchParams}

@@ -98,8 +98,8 @@ ChunkyMandatory.args = {
   requiredText: 'Field is required'
 }
 
-export const withValidationRules = Template.bind({})
-withValidationRules.args = {
+export const WithValidationRules = Template.bind({})
+WithValidationRules.args = {
   ...commonArgs,
   density: 'chunky',
   invalid: true,
@@ -110,8 +110,8 @@ withValidationRules.args = {
   value: ' test#2!'
 }
 
-export const withStaticLink = Template.bind({})
-withStaticLink.args = {
+export const WithStaticLink = Template.bind({})
+WithStaticLink.args = {
   ...commonArgs,
   label: 'label with static link',
   link: {
@@ -121,9 +121,9 @@ withStaticLink.args = {
   value: 'test'
 }
 
-export const withDynamicLink = Template.bind({})
+export const WithDynamicLink = Template.bind({})
 const value = 'some text'
-withDynamicLink.args = {
+WithDynamicLink.args = {
   ...commonArgs,
   label: 'label with dynamic link',
   link: {

@@ -29,7 +29,7 @@ const ApplicationCounters = ({ counters, isLoading }) => {
   return (
     <div className="flex gap-5 mt-6" data-testid="application-counters">
       <div data-testid="applications-card">
-        <StatsCard className="flex-none bg-background border rounded-lg shadow-card">
+        <StatsCard className="flex-none bg-background border border-solid border-border rounded-lg shadow-card">
           <div className="p-5 pr-14 flex flex-col gap-3">
             <span className="text-[15px] font-bold text-igz-primary">Applications</span>
             <span
@@ -43,7 +43,7 @@ const ApplicationCounters = ({ counters, isLoading }) => {
       </div>
 
       <div data-testid="applications-status-card">
-        <StatsCard className="flex-none bg-background border rounded-lg shadow-card">
+        <StatsCard className="flex-none bg-background border border-solid border-border rounded-lg shadow-card">
           <div className="p-5 pr-14 flex flex-col gap-3">
             <span className="text-[15px] font-bold text-igz-primary">Applications status</span>
             <div className="flex items-baseline gap-6">

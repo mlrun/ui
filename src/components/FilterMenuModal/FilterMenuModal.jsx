@@ -36,7 +36,7 @@ import FilterIcon from 'igz-controls/images/filter.svg?react'
 
 import './filterMenuModal.scss'
 
-export const FilterMenuWizardContext = React.createContext({})
+const FilterMenuWizardContext = React.createContext({})
 
 const FilterMenuModal = ({
   applyChanges = null,

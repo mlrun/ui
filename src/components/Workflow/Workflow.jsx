@@ -17,11 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { forEach, isEmpty, lowerCase } from 'lodash-es'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 
 import Details from '../Details/Details'
 import JobsFunctionsTableRow from './JobsFunctionsTableRow/JobsFunctionsTableRow'
@@ -85,9 +85,6 @@ const Workflow = ({
   workflow = {},
   workflowsViewMode
 }) => {
-  const [jobsContent, setJobsContent] = useState([])
-  const [nodes, setNodes] = useState([])
-  const [edges, setEdges] = useState([])
   const params = useParams()
   const navigate = useNavigate()
   const { isStagingMode } = useMode()
@@ -105,31 +102,7 @@ const Workflow = ({
     (selectedJob?.uid || selectedFunction?.hash) && 'with-selected-job'
   )
 
-  const tableContent = useMemo(() => {
-    return createJobsWorkflowContent(
-      jobsContent,
-      params.projectName,
-      params.workflowProjectName,
-      params.workflowId,
-      isStagingMode,
-      !isEmpty(selectedJob)
-    )
-  }, [
-    isStagingMode,
-    jobsContent,
-    params.projectName,
-    params.workflowProjectName,
-    params.workflowId,
-    selectedJob
-  ])
-
-  const { sortedTableContent } = useSortTable({
-    headers: tableContent[0]?.content,
-    content: tableContent,
-    sortConfig: { defaultSortBy: 'startedAt' }
-  })
-
-  useEffect(() => {
+  const { nodes, edges, jobsContent } = useMemo(() => {
     const newEdges = []
     const newNodes = []
     const jobs = []
@@ -203,11 +176,35 @@ const Workflow = ({
     if (!isEmpty(newNodes)) {
       const [layoutedNodes, layoutedEdges] = getLayoutedElements(newNodes, newEdges)
 
-      setNodes(layoutedNodes)
-      setEdges(layoutedEdges)
-      setJobsContent(jobs)
+      return { nodes: layoutedNodes, edges: layoutedEdges, jobsContent: jobs }
     }
+
+    return { nodes: [], edges: [], jobsContent: [] }
   }, [selectedFunction.hash, selectedFunction.name, selectedJob.uid, workflow.graph])
+
+  const tableContent = useMemo(() => {
+    return createJobsWorkflowContent(
+      jobsContent,
+      params.projectName,
+      params.workflowProjectName,
+      params.workflowId,
+      isStagingMode,
+      !isEmpty(selectedJob)
+    )
+  }, [
+    isStagingMode,
+    jobsContent,
+    params.projectName,
+    params.workflowProjectName,
+    params.workflowId,
+    selectedJob
+  ])
+
+  const { sortedTableContent } = useSortTable({
+    headers: tableContent[0]?.content,
+    content: tableContent,
+    sortConfig: { defaultSortBy: 'startedAt' }
+  })
 
   const onNodeClick = (event, node) => {
     const detailsLink = params.workflowProjectName

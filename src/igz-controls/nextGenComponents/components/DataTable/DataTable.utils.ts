@@ -1,9 +1,13 @@
-import type { Column } from '@tanstack/react-table'
+import type { Column, RowData } from '@tanstack/react-table'
 import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 
 import { DATATABLE_TEXT } from '../../constants'
 
-export const getColumnWidthCalculator = <TData>(columns: Column<TData, unknown>[]) => {
+import type { DataTableFeatures } from './dataTableFeatures'
+
+export const getColumnWidthCalculator = <TData extends RowData>(
+  columns: Column<DataTableFeatures, TData>[]
+) => {
   const dataColumns = columns.filter(col => col.id !== DATATABLE_TEXT.CHECKBOX_COLUMN_ID)
   const totalSize = dataColumns.reduce((sum, col) => sum + col.getSize(), 0)
   return (size: number) => `${(size / totalSize) * 100}%`

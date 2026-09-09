@@ -17,9 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useLayoutEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router'
 import { defaultsDeep, isEmpty } from 'lodash-es'
 
 import { ConfirmDialog, Loader } from 'igz-controls/components'
@@ -52,20 +52,30 @@ import { useJobsPageData } from '../../hooks/useJobsPageData'
 
 import './projectsJobsMonitoring.scss'
 
-export const ProjectJobsMonitoringContext = React.createContext({})
+import { ProjectJobsMonitoringContext } from './ProjectsJobsMonitoring.context'
+
+const getSelectedTabFromPathname = pathname =>
+  pathname.includes(JOBS_MONITORING_WORKFLOWS_TAB)
+    ? JOBS_MONITORING_WORKFLOWS_TAB
+    : pathname.includes(JOBS_MONITORING_SCHEDULED_TAB)
+      ? JOBS_MONITORING_SCHEDULED_TAB
+      : JOBS_MONITORING_JOBS_TAB
 
 const ProjectsJobsMonitoring = () => {
+  const location = useLocation()
+  const params = useParams()
+  const navigate = useNavigate()
   const [selectedJob, setSelectedJob] = useState({})
   const [confirmData, setConfirmData] = useState(null)
-  const [selectedTab, setSelectedTab] = useState(null)
+  const [selectedTab, setSelectedTab] = useState(() =>
+    getSelectedTabFromPathname(location.pathname)
+  )
+  const [prevPathname, setPrevPathname] = useState(location.pathname)
   const { jobsMonitoringData } = useSelector(store => store.projectStore)
   const [selectedCard, setSelectedCard] = useState(
     jobsMonitoringData.filters?.status || STATS_TOTAL_CARD
   )
   const [autoRefreshPrevValue, setAutoRefreshPrevValue] = useState(false)
-  const location = useLocation()
-  const params = useParams()
-  const navigate = useNavigate()
   const artifactsStore = useSelector(store => store.artifactsStore)
   const jobsStore = useSelector(store => store.jobsStore)
   const workflowsStore = useSelector(store => store.workflowsStore)
@@ -114,6 +124,7 @@ const ProjectsJobsMonitoring = () => {
     jobs,
     lastCheckedJobIdRef,
     paginatedJobs,
+    paginationConfig,
     paginationConfigJobsRef,
     refreshAfterDeleteCallback,
     refreshJobs,
@@ -138,15 +149,10 @@ const ProjectsJobsMonitoring = () => {
     navigate(`/projects/*/${JOBS_MONITORING_PAGE}/${tabName}`)
   }
 
-  useLayoutEffect(() => {
-    setSelectedTab(
-      location.pathname.includes(JOBS_MONITORING_WORKFLOWS_TAB)
-        ? JOBS_MONITORING_WORKFLOWS_TAB
-        : location.pathname.includes(JOBS_MONITORING_SCHEDULED_TAB)
-          ? JOBS_MONITORING_SCHEDULED_TAB
-          : JOBS_MONITORING_JOBS_TAB
-    )
-  }, [location.pathname])
+  if (location.pathname !== prevPathname) {
+    setPrevPathname(location.pathname)
+    setSelectedTab(getSelectedTabFromPathname(location.pathname))
+  }
 
   const tabData = useMemo(() => {
     return defaultsDeep(
@@ -236,6 +242,7 @@ const ProjectsJobsMonitoring = () => {
                   jobsMonitoringData,
                   lastCheckedJobIdRef,
                   paginatedJobs,
+                  paginationConfig,
                   paginationConfigJobsRef,
                   refreshAfterDeleteCallback,
                   refreshJobs,

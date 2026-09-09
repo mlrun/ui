@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 
@@ -45,8 +45,11 @@ const FunctionsPanelParameters = ({ defaultData }) => {
   const [validation, setValidation] = useState(validationInitialState)
   const dispatch = useDispatch()
   const functionsStore = useSelector(store => store.functionsStore)
+  const [prevDefaultParameters, setPrevDefaultParameters] = useState(defaultData.parameters)
 
-  useEffect(() => {
+  if (defaultData.parameters !== prevDefaultParameters) {
+    setPrevDefaultParameters(defaultData.parameters)
+
     if (!isEveryObjectValueEmpty(defaultData.parameters ?? {})) {
       setParameters(
         Object.entries(defaultData.parameters).map(([key, value]) => ({
@@ -59,7 +62,7 @@ const FunctionsPanelParameters = ({ defaultData }) => {
         }))
       )
     }
-  }, [defaultData.parameters])
+  }
 
   const discardChanges = () => {
     setNewParameter(newParameterInitialState)

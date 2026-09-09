@@ -17,15 +17,15 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useContext, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
+import PropTypes from 'prop-types'
 
 import { monitorModelEndpoint } from './ModelEndpoints/modelEndpoints.util'
 import { toggleYaml } from '../../reducers/appReducer'
-import PropTypes from 'prop-types'
 
-export const ModelsPageContext = React.createContext({})
+import { ModelsPageContext } from './ModelsPage.context.state'
 
 export const ModelsPageProvider = ({ children }) => {
   const dispatch = useDispatch()
@@ -65,5 +65,3 @@ export const ModelsPageProvider = ({ children }) => {
 ModelsPageProvider.propTypes = {
   children: PropTypes.node.isRequired
 }
-
-export const useModelsPage = () => useContext(ModelsPageContext)

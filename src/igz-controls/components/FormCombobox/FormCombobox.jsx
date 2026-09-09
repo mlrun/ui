@@ -16,7 +16,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Field, useField } from 'react-final-form'
-import { isEmpty } from 'lodash'
+import { isEmpty, isEqual } from 'lodash-es'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -89,31 +89,28 @@ const FormCombobox = ({
     selectValue.id.length === 0 && 'form-field-combobox__input_hidden'
   )
 
-  useEffect(() => {
-    setValidationRules(prevState =>
-      prevState.map(rule => ({
-        ...rule,
-        isValid:
-          !meta.error || !Array.isArray(meta.error)
-            ? true
-            : !meta.error.some(err => err.name === rule.name)
-      }))
-    )
-  }, [meta.error])
+  const nextValidationRules = validationRules.map(rule => ({
+    ...rule,
+    isValid:
+      !meta.error || !Array.isArray(meta.error)
+        ? true
+        : !meta.error.some(err => err.name === rule.name)
+  }))
 
-  useEffect(() => {
-    if (!searchIsFocused) {
-      if (JSON.stringify(dropdownList) !== JSON.stringify(suggestionList)) {
-        setDropdownList(suggestionList)
-      }
-    }
-  }, [dropdownList, suggestionList, searchIsFocused])
+  if (!isEqual(validationRules, nextValidationRules)) {
+    setValidationRules(nextValidationRules)
+  }
 
-  useEffect(() => {
-    setIsInvalid(
-      meta.invalid && (meta.validating || meta.modified || (meta.submitFailed && meta.touched))
-    )
-  }, [meta.invalid, meta.modified, meta.submitFailed, meta.touched, meta.validating])
+  if (!searchIsFocused && JSON.stringify(dropdownList) !== JSON.stringify(suggestionList)) {
+    setDropdownList(suggestionList)
+  }
+
+  const nextIsInvalid =
+    meta.invalid && (meta.validating || meta.modified || (meta.submitFailed && meta.touched))
+
+  if (isInvalid !== nextIsInvalid) {
+    setIsInvalid(nextIsInvalid)
+  }
 
   const handleOutsideClick = useCallback(
     event => {
@@ -476,7 +473,7 @@ const FormCombobox = ({
               )}
             </div>
             {!isEmpty(validationRules) && (
-              <OptionsMenu show={showValidationRules} ref={{ refInputContainer: comboboxRef }}>
+              <OptionsMenu show={showValidationRules} refInputContainer={comboboxRef}>
                 {getValidationRules()}
               </OptionsMenu>
             )}

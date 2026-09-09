@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
-import { isString, isNumber } from 'lodash'
+import { isString, isNumber } from 'lodash-es'
 
 import adjustCaretPosition from './adjustCaretPosition'
 import conformToMask from './conformToMask'

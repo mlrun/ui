@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Input, TimeFilterDropdown, FilterPopover } from 'igz-controls/nextGenComponents'
 
@@ -45,10 +45,12 @@ import {
 const ApplicationsFilters = ({ filters, applyFilter, applyMultipleFilters }) => {
   const nameFilter = filters[NAME_FILTER]
   const [nameValue, setNameValue] = useState(nameFilter ?? '')
+  const [prevNameFilter, setPrevNameFilter] = useState(nameFilter)
 
-  useEffect(() => {
+  if (nameFilter !== prevNameFilter) {
+    setPrevNameFilter(nameFilter)
     setNameValue(nameFilter ?? '')
-  }, [nameFilter])
+  }
 
   const handleNameSubmit = useCallback(() => {
     applyFilter(NAME_FILTER, nameValue)

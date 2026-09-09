@@ -18,12 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { cloneDeep, isEmpty } from 'lodash-es'
 
 import FeatureVectorsView from './FeatureVectorsView'
-import { FeatureStoreContext } from '../FeatureStore'
+import { FeatureStoreContext } from '../FeatureStore.context'
 
 import {
   FEATURE_STORE_PAGE,
@@ -158,7 +158,7 @@ const FeatureVectors = () => {
   }, [dispatch, params.projectName])
 
   const handleDeleteFeatureVector = useCallback(
-    featureVector => {
+    function handleDeleteFeatureVector(featureVector) {
       dispatch(
         deleteFeatureVector({ project: params.projectName, featureVector: featureVector.name })
       )
@@ -411,9 +411,12 @@ const FeatureVectors = () => {
     }
   }
 
-  useEffect(() => {
+  const [prevFilterTag, setPrevFilterTag] = useState(featureVectorsFilters.tag)
+
+  if (featureVectorsFilters.tag !== prevFilterTag) {
+    setPrevFilterTag(featureVectorsFilters.tag)
     setSelectedRowData({})
-  }, [featureVectorsFilters.tag])
+  }
 
   useInitialTableFetch({
     fetchData,
@@ -526,7 +529,7 @@ const FeatureVectors = () => {
       filtersStore={filtersStore}
       handleRefresh={handleRefresh}
       pageData={pageData}
-      ref={{ featureStoreRef }}
+      featureStoreRef={featureStoreRef}
       requestErrorMessage={requestErrorMessage}
       selectedFeatureVector={selectedFeatureVector}
       selectedRowData={selectedRowData}

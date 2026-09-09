@@ -17,19 +17,21 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Field } from 'react-final-form'
 import PropTypes from 'prop-types'
 
 const OnChangeState = ({ inputValue, handler }) => {
-  const [previousValue, setPreviousValue] = useState(inputValue)
+  const previousValueRef = useRef(inputValue)
 
   useEffect(() => {
-    if (inputValue !== previousValue) {
-      setPreviousValue(inputValue)
+    if (inputValue !== previousValueRef.current) {
+      const previousValue = previousValueRef.current
+
+      previousValueRef.current = inputValue
       handler(inputValue, previousValue)
     }
-  }, [handler, inputValue, previousValue])
+  }, [handler, inputValue])
 
   return null
 }

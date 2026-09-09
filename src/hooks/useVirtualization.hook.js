@@ -245,6 +245,7 @@ export const useVirtualization = ({
 
   useLayoutEffect(() => {
     if (isEmpty(rowsData.content) && !isEqual(rowsSizes, rowsSizesLocal)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setRowsSizesLocal(rowsSizes)
     }
   }, [rowsSizesLocal, rowsData, rowsSizes])
@@ -260,6 +261,7 @@ export const useVirtualization = ({
       )
 
       if (!isEqual(rowsSizesLocal, newRowsSizes)) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setRowsSizesLocal(newRowsSizes)
       }
     }

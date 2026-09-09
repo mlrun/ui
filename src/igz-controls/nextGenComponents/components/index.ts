@@ -76,6 +76,6 @@ export {
   SidebarSeparator,
   SidebarTrigger,
   useSidebar
-} from './ui/sidebar'
+} from './Sidebar'
 
 export { cn } from '../lib/utils'

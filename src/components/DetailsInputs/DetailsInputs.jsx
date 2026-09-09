@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { isEmpty, orderBy } from 'lodash-es'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -132,10 +132,10 @@ const DetailsInputs = ({ inputs, isDetailsPopUp = false }) => {
   )
 
   const getInputsContent = useCallback(
-    inputs => {
+    function processInputs(inputs) {
       Object.entries(inputs || {}).forEach(([inputName, inputPath]) => {
         if (inputPath && typeof inputPath === 'object') {
-          getInputsContent(inputPath)
+          processInputs(inputPath)
           return
         }
 

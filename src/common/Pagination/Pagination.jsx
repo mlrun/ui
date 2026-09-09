@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router'
 import { max, min } from 'lodash-es'
 
 import { RoundedIcon } from 'igz-controls/components'
@@ -45,26 +45,29 @@ import Arrow from 'igz-controls/images/pagination-arrow.svg?react'
 import './pagination.scss'
 
 const threeDotsString = '...'
+const paginationConfigDefault = {}
 
 const Pagination = ({
   closeParamName = '',
   disableNextDoubleBtn = false,
   disabledNextDoubleBtnTooltip = '',
-  paginationConfig,
+  paginationConfig = paginationConfigDefault,
   selectedItemName = '',
   tableId = MAIN_TABLE_ID
 }) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const paginationPagesRef = useRef()
-  const leftSideRef = useRef(0)
-  const rightSideRef = useRef(0)
 
   // Total pages are now calculated based on start and end pages
-  const totalPagesCount = useMemo(
-    () => paginationConfig[FE_PAGE_END] - paginationConfig[FE_PAGE_START] + 1,
-    [paginationConfig]
-  )
+  const totalPagesCount = useMemo(() => {
+    const start = paginationConfig[FE_PAGE_START]
+    const end = paginationConfig[FE_PAGE_END]
+    if (start == null || end == null) {
+      return 0
+    }
+    return end - start + 1
+  }, [paginationConfig])
 
   const navigationDisableState = useMemo(() => {
     return {
@@ -119,9 +122,6 @@ const Pagination = ({
         // Case when activePage is close to the end
         leftSide = lastPage - 4
       }
-
-      rightSideRef.current = rightSide
-      leftSideRef.current = leftSide
 
       if (leftSide > firstPage + 1) {
         items.push(threeDotsString)

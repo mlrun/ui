@@ -17,10 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { forwardRef } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 
 import Tip from '../../components/Tip/Tip'
 import Tooltip from '../../components/Tooltip/Tooltip'
@@ -28,10 +28,14 @@ import TextTooltipTemplate from '../../components/TooltipTemplate/TextTooltipTem
 
 import { SORT_PROPS } from '../../types'
 
-let TableHead = (
-  { content, hideActionsMenu = false, mainRowItemsCount, selectedItem, sortProps = null },
+function TableHead({
+  content,
+  hideActionsMenu = false,
+  mainRowItemsCount,
+  selectedItem,
+  sortProps = null,
   ref
-) => {
+}) {
   const getHeaderCellClasses = (
     headerId,
     isSortable,
@@ -81,8 +85,6 @@ let TableHead = (
     </thead>
   )
 }
-
-TableHead = forwardRef(TableHead)
 
 TableHead.displayName = 'TableHead'
 

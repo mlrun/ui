@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useMemo, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 import { useSelector } from 'react-redux'
 
 import { Loader, PopUpDialog } from 'igz-controls/components'
@@ -63,7 +63,7 @@ const ScheduledJobsCounters = () => {
         total: countTotalValue([jobs, workflows])
       }
     }
-    return projectStore?.jobsMonitoringData.scheduled || {}
+    return projectStore.jobsMonitoringData?.scheduled || {}
   }, [
     projectName,
     projectStore.projectSummary?.data?.distinct_scheduled_jobs_pending_count,

@@ -14,10 +14,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
-import { isEmpty, isNumber } from 'lodash'
+import { isEmpty, isNumber } from 'lodash-es'
 
 import Button from '../Button/Button'
 import Modal from '../Modal/Modal'
@@ -51,28 +51,21 @@ const Wizard = ({
     return stepsConfig?.filter(step => !step.hidden) || []
   }, [stepsConfig])
 
-  useLayoutEffect(() => {
-    const disabledStep = visibleSteps.find((step, stepIdx) => {
-      if (step.disabled) {
-        setFirstDisabledStepIdx(stepIdx)
-      }
+  const disabledStepIdx = visibleSteps.findIndex(step => step.disabled)
+  const nextFirstDisabledStepIdx = disabledStepIdx === -1 ? null : disabledStepIdx
 
-      return step.disabled
-    })
+  if (firstDisabledStepIdx !== nextFirstDisabledStepIdx) {
+    setFirstDisabledStepIdx(nextFirstDisabledStepIdx)
+  }
 
-    if (!disabledStep) {
-      setFirstDisabledStepIdx(null)
-    }
-  }, [visibleSteps])
-
-  useEffect(() => {
+  if (jumpingToFirstInvalid) {
     const firstInvalidStepIdx = visibleSteps.findIndex(step => step.invalid)
 
-    if (jumpingToFirstInvalid && isNumber(firstInvalidStepIdx) && firstInvalidStepIdx !== -1) {
+    if (isNumber(firstInvalidStepIdx) && firstInvalidStepIdx !== -1) {
       setActiveStepNumber(firstInvalidStepIdx)
       setJumpingToFirstInvalid(false)
     }
-  }, [jumpingToFirstInvalid, visibleSteps])
+  }
 
   const stepsTemplate = useMemo(() => {
     return React.Children.toArray(children)

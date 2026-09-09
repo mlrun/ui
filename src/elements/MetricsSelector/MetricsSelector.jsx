@@ -21,7 +21,7 @@ import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { FieldArray } from 'react-final-form-arrays'
 import classNames from 'classnames'
-import { capitalize, debounce, isEmpty } from 'lodash-es'
+import { capitalize, debounce, isEmpty, isEqual } from 'lodash-es'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { createForm } from 'final-form'
@@ -64,7 +64,7 @@ const MetricsSelector = ({
   const [appliedMetrics, setAppliedMetrics] = useState([])
   const selectorFieldRef = useRef()
   const dropdownRef = useRef()
-  const formRef = React.useRef(
+  const [form] = React.useState(() =>
     createForm({
       initialValues: {
         metrics: [],
@@ -97,28 +97,33 @@ const MetricsSelector = ({
     disabled && 'metrics-selector-header_disabled'
   )
 
+  if (!isOpen && nameFilter !== '') {
+    setNameFilter('')
+  }
+
   useEffect(() => {
     if (!isOpen) {
-      formRef.current?.batch(() => {
-        formRef.current.change(
+      form?.batch(() => {
+        form.change(
           'metrics',
           appliedMetrics.map(metricItem => metricItem.full_name)
         )
-        formRef.current.change('metricSearchName', '')
+        form.change('metricSearchName', '')
       })
-
-      setNameFilter('')
     }
-  }, [appliedMetrics, isOpen])
+  }, [appliedMetrics, isOpen, form])
+
+  if (preselectedMetrics && !isEqual(appliedMetrics, preselectedMetrics)) {
+    setAppliedMetrics(preselectedMetrics)
+  }
 
   useEffect(() => {
     if (preselectedMetrics) {
-      formRef.current.reset({
+      form.reset({
         metrics: preselectedMetrics.map(metricItem => metricItem.full_name)
       })
-      setAppliedMetrics(preselectedMetrics)
     }
-  }, [preselectedMetrics])
+  }, [preselectedMetrics, form])
 
   const windowClickHandler = useCallback(
     event => {
@@ -157,7 +162,7 @@ const MetricsSelector = ({
 
   const handleApply = () => {
     const newAppliedMetrics =
-      formRef.current?.getFieldState('metrics')?.value?.map(metricFullName => {
+      form?.getFieldState('metrics')?.value?.map(metricFullName => {
         return metrics.find(metric => metric.full_name === metricFullName)
       }) || []
 
@@ -167,7 +172,7 @@ const MetricsSelector = ({
   }
 
   const handleClear = () => {
-    formRef.current?.change('metrics', [])
+    form?.change('metrics', [])
   }
 
   const getSelectValue = () => {
@@ -204,7 +209,7 @@ const MetricsSelector = ({
   }
 
   return (
-    <Form form={formRef.current} onSubmit={() => {}}>
+    <Form form={form} onSubmit={() => {}}>
       {formState => (
         <Tooltip
           hidden={!disabled}

@@ -17,7 +17,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
-import { isNumber } from 'lodash'
+import { isNumber } from 'lodash-es'
 
 import Button from '../../Button/Button'
 

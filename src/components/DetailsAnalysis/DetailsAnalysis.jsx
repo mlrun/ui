@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { isArray, isEmpty, isObject } from 'lodash-es'
 
@@ -57,18 +57,22 @@ const DetailsAnalysis = ({ artifact }) => {
     })
   }, [artifact, noData, params.projectName, frontendSpec])
 
+  const analysisIsMalformed =
+    artifact.analysis && (!isObject(artifact.analysis) || isArray(artifact.analysis))
+
+  if ((!artifact.analysis || isEmpty(artifact.analysis) || analysisIsMalformed) && !noData) {
+    setNoData(true)
+  }
+
   useEffect(() => {
     if (artifact.analysis && preview.length === 0 && !previewIsFetchedRef.current && frontendSpec) {
       if (isObject(artifact.analysis) && !isArray(artifact.analysis)) {
         fetchPreviewFromAnalysis()
       } else {
         showErrorNotification(dispatch, '', '', 'The analysis type is malformed. Expected dict')
-        setNoData(true)
       }
 
       previewIsFetchedRef.current = true
-    } else if (!artifact.analysis || isEmpty(artifact.analysis)) {
-      setNoData(true)
     }
   }, [artifact.analysis, fetchPreviewFromAnalysis, preview.length, frontendSpec, dispatch])
 

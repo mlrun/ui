@@ -20,7 +20,7 @@ such restriction.
 
 import axios from 'axios'
 import fs from 'fs-extra'
-import yaml from 'js-yaml'
+import * as yaml from 'js-yaml'
 import lodash from 'lodash-es'
 
 // fs-extra exports are sometimes tricky in ESM, we destructure what we need

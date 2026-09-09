@@ -59,8 +59,6 @@ const FeatureVectorPopUp = ({ featureVectorData, isOpen, onResolve }) => {
   )
 
   const fetchFeatureVector = useCallback(() => {
-    setIsLoading(true)
-
     featureStoreApi
       .getFeatureVector(featureVectorData.project, featureVectorData.key, featureVectorData.tag)
       .then(response => {
@@ -90,6 +88,11 @@ const FeatureVectorPopUp = ({ featureVectorData, isOpen, onResolve }) => {
       })
   }, [dispatch, onResolve, featureVectorData.key, featureVectorData.project, featureVectorData.tag])
 
+  const refreshFeatureVector = useCallback(() => {
+    setIsLoading(true)
+    return fetchFeatureVector()
+  }, [fetchFeatureVector])
+
   useEffect(() => {
     if (isEmpty(selectedFeatureVector)) {
       fetchFeatureVector()
@@ -100,7 +103,7 @@ const FeatureVectorPopUp = ({ featureVectorData, isOpen, onResolve }) => {
     <DetailsPopUp
       actionsMenu={actionsMenu}
       formInitialValues={detailsFormInitialValues}
-      handleRefresh={fetchFeatureVector}
+      handleRefresh={refreshFeatureVector}
       isLoading={isLoading}
       isOpen={isOpen}
       onResolve={onResolve}

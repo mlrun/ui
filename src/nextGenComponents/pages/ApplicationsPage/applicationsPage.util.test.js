@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-// eslint-disable-next-line import/named
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 
 import { APPLICATION_STATUS, APPLICATION_STATUS_OPTIONS } from './applications.constants'

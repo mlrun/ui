@@ -17,17 +17,17 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 import ScheduledJobsTable from '../../../elements/ScheduledJobsTable/ScheduledJobsTable'
-import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
+import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring.context'
 
 import { createScheduleJobsMonitoringContent } from '../../../utils/createJobsContent'
 import { JOBS_MONITORING_SCHEDULED_TAB } from '../../../constants'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 
 const ScheduledMonitoring = () => {
-  const [, setDataIsLoaded] = useState(false)
+  const dataIsLoadedRef = useRef(false)
   const {
     initialTabData,
     requestErrorMessage,
@@ -43,19 +43,15 @@ const ScheduledMonitoring = () => {
   )
 
   useEffect(() => {
-    setDataIsLoaded(prevState => {
-      if (!prevState) {
-        refreshScheduled(filters)
-        return true
-      } else {
-        return prevState
-      }
-    })
+    if (!dataIsLoadedRef.current) {
+      dataIsLoadedRef.current = true
+      refreshScheduled(filters)
+    }
   }, [filters, refreshScheduled])
 
   useEffect(() => {
     return () => {
-      setDataIsLoaded(false)
+      dataIsLoadedRef.current = false
       setScheduledJobs([])
     }
   }, [setScheduledJobs])

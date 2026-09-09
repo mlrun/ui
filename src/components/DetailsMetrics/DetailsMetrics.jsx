@@ -49,6 +49,7 @@ import {
   setSelectedMetricsOptions
 } from '../../reducers/detailsReducer'
 import { groupMetricByApplication } from '../../elements/MetricsSelector/metricsSelector.util'
+import { useHasValueChanged } from '../../hooks/useHasValueChanged.hook'
 import { REQUEST_CANCELED } from '../../constants'
 
 import MetricsIcon from 'igz-controls/images/metrics-icon.svg?react'
@@ -69,7 +70,6 @@ const DetailsMetrics = ({
   const invocationBodyCardRef = useRef(null)
   const metricsContainerRef = useRef(null)
   const metricsValuesAbortController = useRef(new AbortController())
-  const prevSelectedEndPointNameRef = useRef('')
   const [metricOptionsAreLoaded, setMetricOptionsAreLoaded] = useState(false)
   const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
@@ -132,12 +132,16 @@ const DetailsMetrics = ({
       .then(() => setMetricOptionsAreLoaded(true))
   }, [applicationNameProp, dispatch, selectedItem.metadata.project, selectedItem.metadata.uid])
 
-  useEffect(() => {
-    const selectedDate = detailsStore.dates.selectedOptionId
-    if (!selectedDate || !(selectedDate in timeRangeMapping)) return
+  const storeSelectedOptionId = detailsStore.dates.selectedOptionId
+  const [prevStoreSelectedOptionId, setPrevStoreSelectedOptionId] = useState(storeSelectedOptionId)
 
-    setSelectedDate(timeRangeMapping[selectedDate])
-  }, [detailsStore.dates.selectedOptionId])
+  if (storeSelectedOptionId !== prevStoreSelectedOptionId) {
+    setPrevStoreSelectedOptionId(storeSelectedOptionId)
+
+    if (storeSelectedOptionId && storeSelectedOptionId in timeRangeMapping) {
+      setSelectedDate(timeRangeMapping[storeSelectedOptionId])
+    }
+  }
 
   const fetchData = useCallback(
     (selectedMetricsParams, preInvocationMetricParams, selectedItemProject, selectedItemUid) => {
@@ -162,28 +166,41 @@ const DetailsMetrics = ({
             setRequestErrorMessage
           })
         ).unwrap()
-      ]).then(([metrics, previousInvocation]) => {
-        if (metrics) setMetrics(metrics)
+      ])
+        .then(([metrics, previousInvocation]) => {
+          if (metrics) setMetrics(metrics)
 
-        if (!!previousInvocation && previousInvocation.length !== 0) {
-          setPreviousTotalInvocation(previousInvocation[0][METRIC_RAW_TOTAL_POINTS])
-        }
-      })
+          if (!!previousInvocation && previousInvocation.length !== 0) {
+            setPreviousTotalInvocation(previousInvocation[0][METRIC_RAW_TOTAL_POINTS])
+          }
+        })
+        .catch(() => {
+          // Errors (including request cancellation on endpoint switch/unmount) are already
+          // surfaced via `setRequestErrorMessage`/notifications inside the thunk itself, so
+          // there is nothing left to do here besides preventing an unhandled rejection.
+        })
     },
     [dispatch, setMetrics, metricsValuesAbortController]
   )
 
+  const justSwitchedEndpoint = useHasValueChanged(selectedItem.metadata.uid)
+
+  const shouldFetchMetrics =
+    metricOptionsAreLoaded &&
+    selectedItem.metadata?.uid &&
+    detailsStore.metricsOptions.all.length > 0 &&
+    detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
+
+  if (!justSwitchedEndpoint && !shouldFetchMetrics && metrics.length > 0) {
+    setMetrics([])
+  }
+
   useEffect(() => {
-    if (selectedItem.metadata.uid !== prevSelectedEndPointNameRef.current) {
-      prevSelectedEndPointNameRef.current = selectedItem.metadata.uid
+    if (justSwitchedEndpoint) {
       return
     }
-    if (
-      metricOptionsAreLoaded &&
-      selectedItem.metadata?.uid &&
-      detailsStore.metricsOptions.all.length > 0 &&
-      detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
-    ) {
+
+    if (shouldFetchMetrics) {
       const selectedMetrics =
         detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
       const invocationMetric = detailsStore.metricsOptions.all.find(
@@ -219,8 +236,6 @@ const DetailsMetrics = ({
         selectedItem.metadata.project,
         selectedItem.metadata.uid
       )
-    } else {
-      setMetrics([])
     }
 
     return () => {
@@ -228,7 +243,8 @@ const DetailsMetrics = ({
       setMetrics([])
     }
   }, [
-    metricOptionsAreLoaded,
+    justSwitchedEndpoint,
+    shouldFetchMetrics,
     fetchData,
     selectedItem.metadata.uid,
     selectedItem.metadata.project,

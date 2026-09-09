@@ -22,7 +22,7 @@ const StatsCardBase = ({
   return (
     <Card
       className={cn(
-        'border bg-card text-card-foreground',
+        'border border-solid border-border bg-card text-card-foreground',
         variant === 'default' && 'flex-1 rounded-lg shadow-stat-card',
         variant === 'compact' && 'rounded-md w-fit',
         className

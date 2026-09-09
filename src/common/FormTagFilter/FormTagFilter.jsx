@@ -26,7 +26,7 @@ import classnames from 'classnames'
 
 import { PopUpDialog, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { getTagFilterOptions } from '../../components/FilterMenu/filterMenu.settings'
+import { getTagFilterOptions } from '../../components/FilterMenuModal/filterMenuModal.settings.js'
 import { TAG_FILTER_LATEST } from '../../constants'
 
 import Caret from 'igz-controls/images/dropdown.svg?react'
@@ -37,7 +37,7 @@ const FormTagFilter = ({ content = null, label, name, onlyLatestByDefault = fals
   const { input } = useField(name)
   const [isDropDownMenuOpen, setIsDropDownMenuOpen] = useState(false)
   const [tagFilter, setTagFilter] = useState(input.value)
-  const [tagOptions, setTagOptions] = useState(getTagFilterOptions(onlyLatestByDefault))
+  const [listFilter, setListFilter] = useState('')
   const tagFilterRef = useRef()
   const dropdownRef = useRef()
   const previousInputValueRef = useRef(input.value)
@@ -92,11 +92,13 @@ const FormTagFilter = ({ content = null, label, name, onlyLatestByDefault = fals
     return [...pageTagList, ...newTagOptions]
   }, [content, filtersStore.tagOptions, onlyLatestByDefault])
 
-  useEffect(() => {
-    if (!isEqual(options, filtersStore.tagOptions)) {
-      setTagOptions(options)
+  const tagOptions = useMemo(() => {
+    if (!listFilter) {
+      return options
     }
-  }, [filtersStore.tagOptions, options])
+
+    return options.filter(tag => tag.label.startsWith(listFilter))
+  }, [listFilter, options])
 
   useEffect(() => {
     if (!isEqual(input.value, previousInputValueRef.current)) {
@@ -106,11 +108,12 @@ const FormTagFilter = ({ content = null, label, name, onlyLatestByDefault = fals
   }, [input.value])
 
   const handleInputChange = event => {
-    const filteredOptions = options.filter(tag => tag.label.startsWith(event.target.value))
-    input.onChange(event.target.value)
-    setTagFilter(event.target.value)
+    const value = event.target.value
+    const filteredOptions = options.filter(tag => tag.label.startsWith(value))
+    input.onChange(value)
+    setTagFilter(value)
+    setListFilter(value)
     setIsDropDownMenuOpen(filteredOptions.length !== 0)
-    setTagOptions(filteredOptions)
   }
 
   const handleSelectFilter = (event, tag) => {
@@ -121,6 +124,7 @@ const FormTagFilter = ({ content = null, label, name, onlyLatestByDefault = fals
       setTagFilter(tag.id)
     }
 
+    setListFilter('')
     setIsDropDownMenuOpen(false)
   }
 
@@ -144,6 +148,7 @@ const FormTagFilter = ({ content = null, label, name, onlyLatestByDefault = fals
         }
 
         setIsDropDownMenuOpen(false)
+        setListFilter('')
       }
     },
     [input, onlyLatestByDefault, tagFilter]
@@ -166,8 +171,9 @@ const FormTagFilter = ({ content = null, label, name, onlyLatestByDefault = fals
   const toggleDropdown = event => {
     event.stopPropagation()
 
-    if (tagOptions.length > 0) {
+    if (options.length > 0) {
       setIsDropDownMenuOpen(state => !state)
+      setListFilter('')
 
       if (tagFilter.length === 0) {
         input.onChange(TAG_FILTER_LATEST)
@@ -183,7 +189,7 @@ const FormTagFilter = ({ content = null, label, name, onlyLatestByDefault = fals
       className="form-tag-filter"
       ref={tagFilterRef}
       onClick={() => {
-        !isDropDownMenuOpen && tagOptions.length > 0 && setIsDropDownMenuOpen(true)
+        !isDropDownMenuOpen && options.length > 0 && setIsDropDownMenuOpen(true)
       }}
     >
       <div className="form-tag-filter__label" onClick={handleLabelClick}>

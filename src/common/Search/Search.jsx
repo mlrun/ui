@@ -25,6 +25,7 @@ import Input from '../Input/Input'
 import { SelectOption } from 'igz-controls/elements'
 import { PopUpDialog } from 'igz-controls/components'
 
+import { useElementWidth } from '../../hooks/useElementWidth.hook'
 import { deleteUnsafeHtml } from 'igz-controls/utils/string.util'
 
 import SearchIcon from 'igz-controls/images/search.svg?react'
@@ -45,12 +46,26 @@ const Search = ({
   wrapperClassName = ''
 }) => {
   const [searchValue, setSearchValue] = useState(value ?? '')
-  const [label, setLabel] = useState('')
+  const [prevSearchProp, setPrevSearchProp] = useState(value)
   const [inputIsFocused, setInputFocused] = useState(false)
   const searchRef = useRef()
   const popUpRef = useRef()
 
-  const { width: searchWidth } = searchRef?.current?.getBoundingClientRect() || {}
+  const searchWidth = useElementWidth(searchRef)
+
+  const label =
+    matches.length > 0 && searchValue.length > 0
+      ? (matches.find(item => item.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())) ??
+        '')
+      : ''
+
+  if (value !== prevSearchProp) {
+    setPrevSearchProp(value)
+
+    if (searchValue.length > 0 && value !== searchValue) {
+      setSearchValue(value)
+    }
+  }
 
   const searchClassNames = classnames('search-container', className)
 
@@ -69,15 +84,6 @@ const Search = ({
   )
 
   useEffect(() => {
-    if (matches.length > 0 && searchValue.length > 0) {
-      setLabel(
-        matches.find(item => item.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())) ??
-          ''
-      )
-    }
-  }, [matches, searchValue])
-
-  useEffect(() => {
     window.addEventListener('click', handleSearchOnBlur)
     window.addEventListener('scroll', handleSearchOnBlur, true)
 
@@ -88,17 +94,12 @@ const Search = ({
   }, [handleSearchOnBlur])
 
   const searchOnChange = value => {
-    if (value.length === 0 && label.length > 0) {
-      setLabel('')
-    }
-
     onChange(value)
     setInputFocused(true)
     setSearchValue(deleteUnsafeHtml(value))
   }
 
   const matchOnClick = item => {
-    setLabel('')
     setSearchValue(item)
     onChange(item)
     setInputFocused(false)
@@ -112,12 +113,6 @@ const Search = ({
       setInputFocused(false)
     }
   }
-
-  useEffect(() => {
-    if (searchValue.length > 0 && value !== searchValue) {
-      setSearchValue(value)
-    }
-  }, [searchValue, value])
 
   return (
     <div

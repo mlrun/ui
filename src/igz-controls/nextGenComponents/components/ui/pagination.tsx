@@ -13,25 +13,30 @@ const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => (
 )
 Pagination.displayName = 'Pagination'
 
-const PaginationContent = React.forwardRef<HTMLUListElement, React.ComponentProps<'ul'>>(
-  ({ className, ...props }, ref) => (
-    <ul ref={ref} className={cn('flex flex-row items-center gap-2', className)} {...props} />
-  )
-)
+function PaginationContent({ className, ref, ...props }: React.ComponentProps<'ul'>) {
+  return <ul ref={ref} className={cn('flex flex-row items-center gap-2', className)} {...props} />
+}
 PaginationContent.displayName = 'PaginationContent'
 
-const PaginationItem = React.forwardRef<HTMLLIElement, React.ComponentProps<'li'>>(
-  ({ className, ...props }, ref) => <li ref={ref} className={cn('', className)} {...props} />
-)
+function PaginationItem({ className, ref, ...props }: React.ComponentProps<'li'>) {
+  return <li ref={ref} className={cn('', className)} {...props} />
+}
 PaginationItem.displayName = 'PaginationItem'
 
 type PaginationLinkProps = {
   isActive?: boolean
   disabled?: boolean
-} & React.ComponentPropsWithoutRef<'a'>
+} & React.ComponentProps<'a'>
 
-const PaginationLink = React.forwardRef<HTMLAnchorElement, PaginationLinkProps>(
-  ({ className, isActive, disabled, children, ...props }, ref) => (
+function PaginationLink({
+  className,
+  isActive,
+  disabled,
+  children,
+  ref,
+  ...props
+}: PaginationLinkProps) {
+  return (
     <a
       ref={ref}
       aria-current={isActive ? 'page' : undefined}
@@ -51,39 +56,41 @@ const PaginationLink = React.forwardRef<HTMLAnchorElement, PaginationLinkProps>(
       {children}
     </a>
   )
-)
+}
 PaginationLink.displayName = 'PaginationLink'
 
-const PaginationPrevious = React.forwardRef<
-  HTMLAnchorElement,
-  React.ComponentPropsWithoutRef<typeof PaginationLink>
->(({ className, ...props }, ref) => (
-  <PaginationLink
-    ref={ref}
-    data-testid="pagination-prev"
-    aria-label="Go to previous page"
-    className={className}
-    {...props}
-  >
-    <ChevronLeft className="h-4 w-4" />
-  </PaginationLink>
-))
+function PaginationPrevious({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof PaginationLink>) {
+  return (
+    <PaginationLink
+      ref={ref}
+      data-testid="pagination-prev"
+      aria-label="Go to previous page"
+      className={className}
+      {...props}
+    >
+      <ChevronLeft className="h-4 w-4" />
+    </PaginationLink>
+  )
+}
 PaginationPrevious.displayName = 'PaginationPrevious'
 
-const PaginationNext = React.forwardRef<
-  HTMLAnchorElement,
-  React.ComponentPropsWithoutRef<typeof PaginationLink>
->(({ className, ...props }, ref) => (
-  <PaginationLink
-    ref={ref}
-    data-testid="pagination-next"
-    aria-label="Go to next page"
-    className={className}
-    {...props}
-  >
-    <ChevronRight className="h-4 w-4" />
-  </PaginationLink>
-))
+function PaginationNext({ className, ref, ...props }: React.ComponentProps<typeof PaginationLink>) {
+  return (
+    <PaginationLink
+      ref={ref}
+      data-testid="pagination-next"
+      aria-label="Go to next page"
+      className={className}
+      {...props}
+    >
+      <ChevronRight className="h-4 w-4" />
+    </PaginationLink>
+  )
+}
 PaginationNext.displayName = 'PaginationNext'
 
 const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<'span'>) => (

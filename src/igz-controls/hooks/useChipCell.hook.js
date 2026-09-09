@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { throttle } from 'lodash'
+import { throttle } from 'lodash-es'
 
 import {
   getScssVariableValue,
@@ -159,18 +159,10 @@ export const useChipCell = (isEditMode, visibleChipsMaxLength, withInitialParent
       setVisibleChipsCount(chipIndex)
       setShowChips(true)
     }
-  }, [
-    chipBlockMarginRight,
-    chipCellInitialWidth,
-    chipsSizes,
-    isEditMode,
-    withInitialParentWidth,
-    // Forces a follow-up pass once the counter badge mounts, so its real width gets budgeted in.
-    visibleChipsCount
-  ])
+  }, [chipBlockMarginRight, chipCellInitialWidth, chipsSizes, isEditMode, withInitialParentWidth])
   useLayoutEffect(() => {
     resizeChipCell()
-  }, [resizeChipCell])
+  }, [resizeChipCell, visibleChipsCount])
 
   useEffect(() => {
     const resizeChipCellDebounced = throttle(resizeChipCell, 500)

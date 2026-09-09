@@ -20,7 +20,7 @@ such restriction.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { isEmpty } from 'lodash-es'
 import PropTypes from 'prop-types'
 
@@ -64,8 +64,6 @@ const EndpointDetailsDialog = ({
     abortControllerRef.current = new AbortController()
     const { signal } = abortControllerRef.current
 
-    setIsLoading(true)
-
     return modelEndpointsApi
       .getModelEndpoint(projectName, modelEndpointName, modelEndpointUid, { signal })
       .then(({ data: endpoint }) => {
@@ -81,6 +79,11 @@ const EndpointDetailsDialog = ({
         onClose()
       })
   }, [dispatch, modelEndpointName, modelEndpointUid, onClose, projectName])
+
+  const refreshModelEndpoint = useCallback(() => {
+    setIsLoading(true)
+    return fetchModelEndpoint()
+  }, [fetchModelEndpoint])
 
   const actionsMenu = useMemo(
     () =>
@@ -141,7 +144,7 @@ const EndpointDetailsDialog = ({
               detailsPopUpSelectedTab={detailsPopUpSelectedTab}
               formInitialValues={{}}
               handleCancel={onClose}
-              handleRefresh={fetchModelEndpoint}
+              handleRefresh={refreshModelEndpoint}
               isDetailsPopUp
               isDetailsScreen
               pageData={pageData}

@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
@@ -54,7 +54,7 @@ const DeleteArtifactPopUp = ({
   const [disableConfirmButton, setDisableConfirmButton] = useState(false)
   const dispatch = useDispatch()
   const params = useParams()
-  const formRef = React.useRef(
+  const [form] = React.useState(() =>
     createForm({
       initialValues: {
         deletion_strategy: 'metadata-only',
@@ -73,7 +73,7 @@ const DeleteArtifactPopUp = ({
   const handleDelete = useCallback(() => {
     const secrets = {}
 
-    formRef.current.getState().values.secrets.forEach(secret => {
+    form.getState().values.secrets.forEach(secret => {
       secrets[secret.data.key] = secret.data.value
     })
 
@@ -88,7 +88,7 @@ const DeleteArtifactPopUp = ({
       artifactType,
       category,
       false,
-      formRef.current.getState().values.deletion_strategy,
+      form.getState().values.deletion_strategy,
       secrets
     ).then(() => {
       setIsConfirmDialogOpen(false)
@@ -102,14 +102,15 @@ const DeleteArtifactPopUp = ({
     filters,
     refreshArtifacts,
     refreshAfterDeleteCallback,
-    params.projectName
+    params.projectName,
+    form
   ])
 
   const toggleExtendedDeletionStrategy = value => {
-    formRef.current.change('deletion_strategy', value ? '' : 'metadata-only')
+    form.change('deletion_strategy', value ? '' : 'metadata-only')
 
-    if (formRef.current.getState().values.secrets.length > 0) {
-      formRef.current.change('secrets', [])
+    if (form.getState().values.secrets.length > 0) {
+      form.change('secrets', [])
     }
 
     setDisableConfirmButton(value)
@@ -138,7 +139,7 @@ const DeleteArtifactPopUp = ({
       isOpen={Boolean(isConfirmDialogOpen)}
       message={`Are you sure you want to delete the ${artifactType} "${artifact.db_key}" metadata? Deleted metadata can not be restored.`}
     >
-      <Form form={formRef.current} onSubmit={() => {}}>
+      <Form form={form} onSubmit={() => {}}>
         {formState => {
           const extended_deletion_strategy = formState.values.extended_deletion_strategy
 

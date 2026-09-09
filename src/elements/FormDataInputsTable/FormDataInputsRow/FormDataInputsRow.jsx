@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
@@ -63,11 +63,7 @@ const FormDataInputsRow = ({
   setFieldState,
   uniquenessValidator
 }) => {
-  const [fieldData, setFieldData] = useState(fields.value[index])
-
-  useEffect(() => {
-    setFieldData(fields.value[index])
-  }, [fields.value, index])
+  const fieldData = fields.value[index]
 
   const isRowDisabled = () => {
     return disabled || !fieldData.data?.isChecked

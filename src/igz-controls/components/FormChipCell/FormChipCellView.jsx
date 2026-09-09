@@ -14,11 +14,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { forwardRef } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { FieldArray } from 'react-final-form-arrays'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 
 import FormChip from './FormChip/FormChip'
 import HiddenChipsBlock from './HiddenChipsBlock/HiddenChipsBlock'
@@ -31,40 +31,41 @@ import { uniquenessError } from './formChipCell.util'
 
 import Add from '../../images/add.svg?react'
 
-let FormChipCellView = (
-  {
-    chipOptions = {
-      background: 'purple',
-      boldValue: false,
-      borderRadius: 'primary',
-      borderColor: 'transparent',
-      density: 'dense',
-      font: 'purple'
-    },
-    chipSizeIsRecalculated,
-    setChipSizeIsRecalculated,
-    children,
-    chips,
-    editConfig,
-    handleAddNewChip,
-    handleEditChip,
-    handleRemoveChip,
-    handleShowElements,
-    handleToEditMode,
-    isDeletable = false,
-    isEditable = false,
-    name,
-    setChipsSizes,
-    setEditConfig,
-    shortChips = false,
-    showChips,
-    showHiddenChips,
-    validateFields,
-    validationRules = {},
-    visibleChipsMaxLength = null
+function FormChipCellView({
+  chipOptions = {
+    background: 'purple',
+    boldValue: false,
+    borderRadius: 'primary',
+    borderColor: 'transparent',
+    density: 'dense',
+    font: 'purple'
   },
-  { chipsCellRef, chipsWrapperRef, hiddenChipsCounterRef, hiddenChipsPopUpRef }
-) => {
+  chipSizeIsRecalculated,
+  setChipSizeIsRecalculated,
+  children,
+  chips,
+  editConfig,
+  handleAddNewChip,
+  handleEditChip,
+  handleRemoveChip,
+  handleShowElements,
+  handleToEditMode,
+  isDeletable = false,
+  isEditable = false,
+  name,
+  setChipsSizes,
+  setEditConfig,
+  shortChips = false,
+  showChips,
+  showHiddenChips,
+  validateFields,
+  validationRules = {},
+  visibleChipsMaxLength = null,
+  chipsCellRef,
+  chipsWrapperRef,
+  hiddenChipsCounterRef,
+  hiddenChipsPopUpRef
+}) {
   const buttonAddClassNames = classnames(
     'button-add',
     chipOptions.background && `button-add-background_${chipOptions.background}`,
@@ -178,7 +179,8 @@ let FormChipCellView = (
                       chipOptions={chipOptions}
                       chips={chips.hiddenChips}
                       handleShowElements={handleShowElements}
-                      ref={{ hiddenChipsCounterRef, hiddenChipsPopUpRef }}
+                      hiddenChipsCounterRef={hiddenChipsCounterRef}
+                      hiddenChipsPopUpRef={hiddenChipsPopUpRef}
                       textOverflowEllipsis
                     />
                   )}
@@ -212,8 +214,6 @@ let FormChipCellView = (
   )
 }
 
-FormChipCellView = forwardRef(FormChipCellView)
-
 FormChipCellView.displayName = 'FormChipCellView'
 
 FormChipCellView.propTypes = {
@@ -239,7 +239,11 @@ FormChipCellView.propTypes = {
   showHiddenChips: PropTypes.bool.isRequired,
   validateFields: PropTypes.func.isRequired,
   validationRules: PropTypes.object,
-  visibleChipsMaxLength: VISIBLE_CHIPS_MAX_LENGTH
+  visibleChipsMaxLength: VISIBLE_CHIPS_MAX_LENGTH,
+  chipsCellRef: PropTypes.shape({ current: PropTypes.any }),
+  chipsWrapperRef: PropTypes.shape({ current: PropTypes.any }),
+  hiddenChipsCounterRef: PropTypes.shape({ current: PropTypes.any }),
+  hiddenChipsPopUpRef: PropTypes.shape({ current: PropTypes.any })
 }
 
 export default FormChipCellView

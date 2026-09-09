@@ -15,7 +15,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { create } from 'react-modal-promise'
-import { differenceWith, isEqual, get, omit, isEmpty, isNumber } from 'lodash'
+import { differenceWith, isEqual, get, omit, isEmpty, isNumber } from 'lodash-es'
 
 import ConfirmDialog from '../components/ConfirmDialog/ConfirmDialog'
 
@@ -164,15 +164,17 @@ export const performDetailsActionHelper = async (changes, dispatch, filtersWasHa
 
   if (changes.counter > 0) {
     actionCanBePerformed = await new Promise(resolve => {
+      const onDiscard = () => resolver(true)
+      const onCancelLeave = () => resolver(false)
       const resolver = isSuccess => {
-        window.removeEventListener('discardChanges', resolver)
-        window.removeEventListener('cancelLeave', resolver)
+        window.removeEventListener('discardChanges', onDiscard)
+        window.removeEventListener('cancelLeave', onCancelLeave)
 
         resolve(isSuccess)
       }
 
-      window.addEventListener('discardChanges', () => resolver(true))
-      window.addEventListener('cancelLeave', () => resolver(false))
+      window.addEventListener('discardChanges', onDiscard)
+      window.addEventListener('cancelLeave', onCancelLeave)
 
       dispatch(setFiltersWasHandled(filtersWasHandled))
       dispatch(showWarning(true))

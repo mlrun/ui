@@ -17,10 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo, useRef } from 'react'
+import React, { useLayoutEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { isEmpty } from 'lodash-es'
 
 import { ActionsMenu, TableCell } from 'igz-controls/components'
@@ -44,10 +44,13 @@ const FunctionsTableRowOld = ({
 }) => {
   const parent = useRef()
   const params = useParams()
-  const rowIsExpanded = useMemo(
-    () => isRowExpanded(parent, expandedRowsData, rowItem),
-    [rowItem, expandedRowsData]
+  const [rowIsExpanded, setRowIsExpanded] = useState(() =>
+    Boolean(expandedRowsData && rowItem.data.ui.identifier in expandedRowsData)
   )
+
+  useLayoutEffect(() => {
+    setRowIsExpanded(isRowExpanded(parent, expandedRowsData, rowItem))
+  }, [rowItem, expandedRowsData])
   const rowClassNames = classnames(
     'table-row',
     'table-body-row',

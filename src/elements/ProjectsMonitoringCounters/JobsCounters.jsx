@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 import StatsCard from '../../common/StatsCard/StatsCard'
 import { Tooltip, TextTooltipTemplate, Loader } from 'igz-controls/components'

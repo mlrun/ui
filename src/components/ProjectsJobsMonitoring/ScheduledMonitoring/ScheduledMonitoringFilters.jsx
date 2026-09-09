@@ -33,7 +33,7 @@ import {
   PROJECTS_FILTER_ALL_ITEMS,
   TYPE_FILTER
 } from '../../../constants'
-import { generateTypeFilter } from '../../FilterMenu/filterMenu.settings'
+import { generateTypeFilter } from '../../FilterMenuModal/filterMenuModal.settings.js'
 import { generateProjectsList } from '../../../utils/projects'
 
 const ScheduledMonitoringFilters = () => {

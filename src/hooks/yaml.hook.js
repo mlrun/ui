@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import yaml from 'js-yaml'
+import * as yaml from 'js-yaml'
 import { useCallback, useState } from 'react'
 import { set, cloneDeep, omit } from 'lodash-es'
 

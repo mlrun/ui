@@ -20,7 +20,7 @@ such restriction.
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash-es'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 
 import Breadcrumbs from '../../../common/Breadcrumbs/Breadcrumbs'
 import NoData from '../../../common/NoData/NoData'

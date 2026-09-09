@@ -14,11 +14,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { forwardRef } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { Field, useField } from 'react-final-form'
 
-let NewChipInput = ({ name, onChange, onFocus, ...inputProps }, ref) => {
+function NewChipInput({ name, onChange, onFocus, ref, ...inputProps }) {
   const { input } = useField(name)
 
   const handleInputChange = event => {
@@ -50,8 +50,6 @@ let NewChipInput = ({ name, onChange, onFocus, ...inputProps }, ref) => {
     </Field>
   )
 }
-
-NewChipInput = forwardRef(NewChipInput)
 
 NewChipInput.displayName = 'NewChipInput'
 

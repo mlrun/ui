@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Tooltip, TooltipContent, TooltipTrigger } from 'igz-controls/nextGenComponents'
 
@@ -56,18 +56,15 @@ const UrlCell = ({ items = [] }) => {
     setVisibleCount(calculateVisibleCount(containerWidth, itemWidths, badgeWidth))
   }, [containerEl, items])
 
-  useLayoutEffect(() => {
-    recalculate()
-  }, [recalculate])
-
   useEffect(() => {
     if (!containerEl) return
 
     const throttledRecalculate = () => {
       if (throttleTimerRef.current) return
+
+      recalculate()
       throttleTimerRef.current = setTimeout(() => {
         throttleTimerRef.current = null
-        recalculate()
       }, RESIZE_THROTTLE_MS)
     }
 

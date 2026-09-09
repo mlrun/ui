@@ -27,6 +27,7 @@ import Tooltip from '../Tooltip/Tooltip'
 
 import { DENSITY, SELECT_OPTIONS } from '../../types'
 import { TERTIARY_BUTTON } from '../../constants'
+import { useElementWidth } from '../../../hooks/useElementWidth.hook'
 
 import Caret from '../../images/dropdown.svg?react'
 
@@ -61,7 +62,7 @@ let FormSelect = ({
   const popUpRef = useRef()
   const selectRef = useRef()
   const searchRef = useRef()
-  const { width: selectWidth } = selectRef?.current?.getBoundingClientRect() || {}
+  const selectWidth = useElementWidth(selectRef)
 
   const selectWrapperClassNames = classNames(
     'form-field__wrapper',
@@ -135,11 +136,12 @@ let FormSelect = ({
         : `${input.value.length} items selected`
   }
 
-  useEffect(() => {
-    setIsInvalid(
-      meta.invalid && (meta.validating || meta.modified || (meta.submitFailed && meta.touched))
-    )
-  }, [meta.invalid, meta.modified, meta.submitFailed, meta.touched, meta.validating])
+  const nextIsInvalid =
+    meta.invalid && (meta.validating || meta.modified || (meta.submitFailed && meta.touched))
+
+  if (isInvalid !== nextIsInvalid) {
+    setIsInvalid(nextIsInvalid)
+  }
 
   const openMenu = useCallback(() => {
     if (!isOpen) {

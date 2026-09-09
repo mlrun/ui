@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash-es'
 import { HelpCircle, FileCode2 } from 'lucide-react'
@@ -72,7 +72,7 @@ const ApplicationsPage = () => {
   )
   const lastCheckedApplicationIdRef = useRef(null)
   const [selectedApplication, setSelectedApplication] = useState({})
-  const [detailsRefreshKey, setDetailsRefreshKey] = useState(Date.now())
+  const [detailsRefreshKey, setDetailsRefreshKey] = useState(() => Date.now())
   const [yamlData, setYamlData] = useState(null)
 
   const isDetailsOpen = !isEmpty(selectedApplication)

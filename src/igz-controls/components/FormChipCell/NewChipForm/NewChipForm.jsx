@@ -14,17 +14,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  forwardRef
-} from 'react'
+import React, { useState, useCallback, useEffect, useLayoutEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { isEmpty, get, isNil, throttle } from 'lodash'
+import { isEmpty, get, isEqual, isNil, throttle } from 'lodash-es'
 
 import NewChipInput from '../NewChipInput/NewChipInput'
 import OptionsMenu from '../../../elements/OptionsMenu/OptionsMenu'
@@ -43,26 +36,24 @@ const defaultProps = {
   rules: {}
 }
 
-let NewChipForm = (
-  {
-    chip,
-    chipIndex,
-    chipOptions,
-    className = '',
-    editConfig,
-    handleRemoveChip,
-    isDeletable,
-    isEditable,
-    keyName,
-    meta,
-    onChange,
-    setChipSizeIsRecalculated,
-    setEditConfig,
-    validationRules: rules = defaultProps.rules,
-    valueName
-  },
+function NewChipForm({
+  chip,
+  chipIndex,
+  chipOptions,
+  className = '',
+  editConfig,
+  handleRemoveChip,
+  isDeletable,
+  isEditable,
+  keyName,
+  meta,
+  onChange,
+  setChipSizeIsRecalculated,
+  setEditConfig,
+  validationRules: rules = defaultProps.rules,
+  valueName,
   ref
-) => {
+}) {
   const [chipData, setChipData] = useState({
     isKeyOnly: chip.isKeyOnly,
     key: chip.key,
@@ -382,39 +373,45 @@ let NewChipForm = (
     [keyName, minWidthInput, ref, minWidthValueInput]
   )
 
-  useLayoutEffect(() => {
-    if (editConfig.chipIndex === chipIndex) {
-      setSelectedInput(editConfig.isKeyFocused ? 'key' : editConfig.isValueFocused ? 'value' : null)
-    }
-  }, [editConfig.isKeyFocused, editConfig.isValueFocused, editConfig.chipIndex, chipIndex])
+  if (editConfig.chipIndex === chipIndex) {
+    const nextSelectedInput = editConfig.isKeyFocused
+      ? 'key'
+      : editConfig.isValueFocused
+        ? 'value'
+        : null
 
-  useEffect(() => {
-    if (meta.valid && showValidationRules) {
-      setShowValidationRules(false)
+    if (selectedInput !== nextSelectedInput) {
+      setSelectedInput(nextSelectedInput)
     }
-  }, [meta.valid, showValidationRules])
+  }
 
-  useEffect(() => {
-    if (meta.error) {
-      setValidationRules(prevState => {
-        return {
-          ...prevState,
-          [selectedInput]: prevState[selectedInput]?.map(rule => {
-            return {
-              ...rule,
-              isValid: isEmpty(get(meta, ['error', editConfig.chipIndex, selectedInput], []))
-                ? true
-                : !meta.error[editConfig.chipIndex][selectedInput].some(
-                    err => err && err.name === rule.name
-                  )
-            }
-          })
-        }
-      })
+  if (meta.valid && showValidationRules) {
+    setShowValidationRules(false)
+  }
 
-      !showValidationRules && setShowValidationRules(true)
+  if (meta.error) {
+    const nextRulesForSelectedInput = validationRules[selectedInput]?.map(rule => {
+      return {
+        ...rule,
+        isValid: isEmpty(get(meta, ['error', editConfig.chipIndex, selectedInput], []))
+          ? true
+          : !meta.error[editConfig.chipIndex][selectedInput].some(
+              err => err && err.name === rule.name
+            )
+      }
+    })
+
+    if (!isEqual(validationRules[selectedInput], nextRulesForSelectedInput)) {
+      setValidationRules(prevState => ({
+        ...prevState,
+        [selectedInput]: nextRulesForSelectedInput
+      }))
     }
-  }, [meta, showValidationRules, selectedInput, editConfig.chipIndex])
+
+    if (!showValidationRules) {
+      setShowValidationRules(true)
+    }
+  }
 
   const getValidationRules = useCallback(() => {
     return validationRules[selectedInput]?.map(({ isValid = false, label, name }) => {
@@ -472,15 +469,17 @@ let NewChipForm = (
         (editConfig.isKeyFocused ? !isEmpty(chipData.key) : !isEmpty(chipData.value)) &&
         editConfig.chipIndex === chipIndex &&
         !isEmpty(get(meta, ['error', editConfig.chipIndex, selectedInput], [])) && (
-          <OptionsMenu show={showValidationRules} ref={{ refInputContainer, validationRulesRef }}>
+          <OptionsMenu
+            show={showValidationRules}
+            refInputContainer={refInputContainer}
+            validationRulesRef={validationRulesRef}
+          >
             {getValidationRules()}
           </OptionsMenu>
         )}
     </div>
   )
 }
-
-NewChipForm = forwardRef(NewChipForm)
 
 NewChipForm.displayName = 'NewChipForm'
 

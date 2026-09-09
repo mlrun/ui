@@ -20,7 +20,7 @@ such restriction.
 import { useMemo } from 'react'
 import { mapValues, isNil, pickBy } from 'lodash-es'
 import { useSelector } from 'react-redux'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router'
 
 import {
   DATES_FILTER,
@@ -97,7 +97,8 @@ export const useFiltersFromSearchParams = (
 ) => {
   const relativeDateChange = useSelector(store => store.filtersStore.relativeDateChange)
   const [searchParams] = useSearchParams()
-  const filters = useMemo(() => {
+
+  return useMemo(() => {
     // triggerKey and relativeDateChange are added to dependencies to trigger date (timestamp for relative time) filter recalculation
     return getFiltersFromSearchParams(
       filtersConfig,
@@ -107,6 +108,4 @@ export const useFiltersFromSearchParams = (
       relativeDateChange
     )
   }, [filtersConfig, paramsParsingCallback, searchParams, relativeDateChange, triggerKey])
-
-  return filters
 }

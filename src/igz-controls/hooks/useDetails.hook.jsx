@@ -17,21 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import PropTypes from 'prop-types'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import arrayMutators from 'final-form-arrays'
 import classnames from 'classnames'
-import { Form } from 'react-final-form'
-import { cloneDeep, isEqual, pickBy } from 'lodash'
+import { cloneDeep, isEqual, pickBy } from 'lodash-es'
 import { createForm } from 'final-form'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation, useParams } from 'react-router-dom'
-
-import BlockerSpy from '../components/BlockerSpy/BlockerSpy'
-import ErrorMessage from '../components/ErrorMessage/ErrorMessage'
-import Loader from '../components/Loader/Loader'
-import TabsSlider from '../components/TabsSlider/TabsSlider'
-import ConfirmDialog from '../components/ConfirmDialog/ConfirmDialog'
+import { useLocation, useParams } from 'react-router'
 
 import {
   removeDetailsPopUpInfoContent,
@@ -43,97 +35,10 @@ import {
   setInfoContent,
   showWarning
 } from '../reducers/commonDetailsReducer'
-import { PRIMARY_BUTTON, TERTIARY_BUTTON } from '../constants'
 import { VIEW_SEARCH_PARAMETER } from '../constants'
-import { DETAILS_MENU } from '../types'
 import { setFieldState } from '../utils/form.util'
 
-const DetailsContainer = ({
-  blocker,
-  commonDetailsStore,
-  detailsMenu,
-  detailsPanelClassNames,
-  detailsPopUpSelectedTab = '',
-  detailsRef,
-  detailsStore,
-  doNotLeavePage,
-  formRef,
-  isDetailsPopUp = null,
-  leavePage,
-  params,
-  renderHeader,
-  renderTabsContent,
-  setBlocker,
-  setDetailsPopUpSelectedTab = null,
-  shouldDetailsBlock,
-  withActionMenu = true
-}) => {
-  return (
-    <Form form={formRef.current} onSubmit={() => {}}>
-      {formState => (
-        <div className={detailsPanelClassNames} ref={detailsRef} data-testid="detailsPanel">
-          {detailsStore.loadingCounter > 0 && <Loader />}
-          {detailsStore.error && <ErrorMessage message={detailsStore.error.message} />}
-          <div className="item-header-wrapper">
-            {renderHeader()}
-            {withActionMenu && (
-              <TabsSlider
-                initialTab={isDetailsPopUp ? detailsPopUpSelectedTab : params.tab}
-                isDetailsPopUp={isDetailsPopUp}
-                onClick={newTab => setDetailsPopUpSelectedTab && setDetailsPopUpSelectedTab(newTab)}
-                skipLink={isDetailsPopUp}
-                tabsList={detailsMenu}
-              />
-            )}
-          </div>
-          <div className="item-info">{renderTabsContent(formState)}</div>
-          {(blocker.state === 'blocked' || commonDetailsStore.showWarning) && (
-            <ConfirmDialog
-              cancelButton={{
-                handler: doNotLeavePage,
-                label: 'Cancel',
-                variant: TERTIARY_BUTTON
-              }}
-              closePopUp={doNotLeavePage}
-              confirmButton={{
-                handler: leavePage,
-                label: 'Yes',
-                variant: PRIMARY_BUTTON
-              }}
-              header="You have unsaved changes."
-              isOpen={blocker.state === 'blocked' || commonDetailsStore.showWarning}
-              message="Do you want to discard the changes?"
-            />
-          )}
-          {!isDetailsPopUp && (
-            <BlockerSpy setBlocker={setBlocker} shouldBlock={shouldDetailsBlock} />
-          )}
-        </div>
-      )}
-    </Form>
-  )
-}
-
-DetailsContainer.propTypes = {
-  blocker: PropTypes.object.isRequired,
-  detailsMenu: DETAILS_MENU.isRequired,
-  detailsPanelClassNames: PropTypes.string.isRequired,
-  detailsPopUpSelectedTab: PropTypes.string,
-  detailsRef: PropTypes.object.isRequired,
-  detailsStore: PropTypes.object.isRequired,
-  commonDetailsStore: PropTypes.object.isRequired,
-  doNotLeavePage: PropTypes.func.isRequired,
-  formRef: PropTypes.object.isRequired,
-  isDetailsPopUp: PropTypes.bool,
-  leavePage: PropTypes.func.isRequired,
-  params: PropTypes.object.isRequired,
-  renderHeader: PropTypes.func.isRequired,
-  renderTabsContent: PropTypes.func.isRequired,
-  setBlocker: PropTypes.func.isRequired,
-  setDetailsPopUpSelectedTab: PropTypes.func,
-  shouldDetailsBlock: PropTypes.func.isRequired,
-  withActionMenu: PropTypes.bool
-}
+import DetailsContainer from './DetailsContainer'
 
 export const useDetails = ({
   applyDetailsChanges,
@@ -165,7 +70,7 @@ export const useDetails = ({
     isDetailsPopUp && 'table__item-popup'
   )
 
-  const formRef = useRef(
+  const [formRef] = useState(() =>
     createForm({
       initialValues: formInitialValues,
       mutators: { ...arrayMutators, setFieldState },
@@ -229,14 +134,14 @@ export const useDetails = ({
 
   useEffect(() => {
     if (
-      formRef.current &&
+      formRef &&
       commonDetailsStore.changes.counter === 0 &&
-      !isEqual(pickBy(formInitialValues), pickBy(formRef.current.getState()?.values)) &&
-      !formRef.current.getState()?.active
+      !isEqual(pickBy(formInitialValues), pickBy(formRef.getState()?.values)) &&
+      !formRef.getState()?.active
     ) {
-      formRef.current.restart(formInitialValues)
+      formRef.restart(formInitialValues)
     }
-  }, [formInitialValues, commonDetailsStore.changes.counter])
+  }, [formInitialValues, commonDetailsStore.changes.counter, formRef])
 
   useEffect(() => {
     const currentPathname = location.pathname.substring(
@@ -245,11 +150,11 @@ export const useDetails = ({
     )
 
     if (previousPathnameRef.current !== currentPathname && !isDetailsPopUp) {
-      formRef.current.restart(formInitialValues)
+      formRef.restart(formInitialValues)
       dispatch(setEditMode(false))
       previousPathnameRef.current = currentPathname
     }
-  }, [dispatch, formInitialValues, isDetailsPopUp, location.pathname, params.tab])
+  }, [dispatch, formInitialValues, formRef, isDetailsPopUp, location.pathname, params.tab])
 
   const applyChanges = useCallback(() => {
     applyDetailsChanges(commonDetailsStore.changes)
@@ -275,9 +180,9 @@ export const useDetails = ({
   const cancelChanges = useCallback(() => {
     if (commonDetailsStore.changes.counter > 0) {
       dispatch(resetChanges())
-      formRef.current.reset(formInitialValues)
+      formRef.reset(formInitialValues)
     }
-  }, [commonDetailsStore.changes.counter, dispatch, formInitialValues])
+  }, [commonDetailsStore.changes.counter, dispatch, formInitialValues, formRef])
 
   const leavePage = useCallback(() => {
     cancelChanges()

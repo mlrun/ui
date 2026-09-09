@@ -21,7 +21,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import { isNil } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 import FunctionsPanelCodeView from './FunctionsPanelCodeView'
 
@@ -85,66 +85,75 @@ const FunctionsPanelCode = ({
   ])
 
   useEffect(() => {
-    if (mode === PANEL_CREATE_MODE && imageType.length === 0) {
-      if (appStore.frontendSpec.default_function_image_by_kind?.[functionsStore.newFunction.kind]) {
-        dispatch(
-          setNewFunctionImage(
-            appStore.frontendSpec.default_function_image_by_kind[functionsStore.newFunction.kind]
+    // Defer multi-state init to avoid set-state-in-effect
+    queueMicrotask(() => {
+      if (mode === PANEL_CREATE_MODE && imageType.length === 0) {
+        if (
+          appStore.frontendSpec.default_function_image_by_kind?.[functionsStore.newFunction.kind]
+        ) {
+          dispatch(
+            setNewFunctionImage(
+              appStore.frontendSpec.default_function_image_by_kind[functionsStore.newFunction.kind]
+            )
           )
-        )
+          setImageType(EXISTING_IMAGE)
+          setData(state => ({
+            ...state,
+            image:
+              appStore.frontendSpec?.default_function_image_by_kind?.[
+                functionsStore.newFunction.kind
+              ]
+          }))
+        } else {
+          const buildImage = (
+            appStore.frontendSpec?.function_deployment_target_image_template || ''
+          )
+            .replace('{project}', params.projectName)
+            .replace('{name}', functionsStore.newFunction.metadata.name)
+            .replace('{tag}', functionsStore.newFunction.metadata.tag || TAG_LATEST)
+
+          dispatch(
+            setNewFunctionRequirements(
+              trimSplit(appStore.frontendSpec?.function_deployment_mlrun_requirement ?? '', ',')
+            )
+          )
+          setImageType(NEW_IMAGE)
+          dispatch(
+            setNewFunctionBaseImage(
+              appStore.frontendSpec?.default_function_image_by_kind?.[
+                functionsStore.newFunction.kind
+              ] ?? ''
+            )
+          )
+          dispatch(setNewFunctionBuildImage(buildImage))
+          setData(state => ({
+            ...state,
+            requirements: appStore.frontendSpec?.function_deployment_mlrun_requirement ?? '',
+            base_image:
+              appStore.frontendSpec?.default_function_image_by_kind?.[
+                functionsStore.newFunction.kind
+              ] ?? '',
+            build_image: buildImage
+          }))
+        }
+      } else if (
+        (defaultData.image?.length > 0 ||
+          (defaultData.build?.base_image?.length === 0 &&
+            defaultData.build?.commands?.length === 0 &&
+            defaultData.build?.image?.length === 0 &&
+            defaultData.image?.length === 0)) &&
+        imageType.length === 0
+      ) {
+        dispatch(setNewFunctionImage(defaultData.image || DEFAULT_IMAGE))
         setImageType(EXISTING_IMAGE)
         setData(state => ({
           ...state,
-          image:
-            appStore.frontendSpec?.default_function_image_by_kind?.[functionsStore.newFunction.kind]
+          image: defaultData.image || DEFAULT_IMAGE
         }))
-      } else {
-        const buildImage = (appStore.frontendSpec?.function_deployment_target_image_template || '')
-          .replace('{project}', params.projectName)
-          .replace('{name}', functionsStore.newFunction.metadata.name)
-          .replace('{tag}', functionsStore.newFunction.metadata.tag || TAG_LATEST)
-
-        dispatch(
-          setNewFunctionRequirements(
-            trimSplit(appStore.frontendSpec?.function_deployment_mlrun_requirement ?? '', ',')
-          )
-        )
+      } else if (imageType.length === 0) {
         setImageType(NEW_IMAGE)
-        dispatch(
-          setNewFunctionBaseImage(
-            appStore.frontendSpec?.default_function_image_by_kind?.[
-              functionsStore.newFunction.kind
-            ] ?? ''
-          )
-        )
-        dispatch(setNewFunctionBuildImage(buildImage))
-        setData(state => ({
-          ...state,
-          requirements: appStore.frontendSpec?.function_deployment_mlrun_requirement ?? '',
-          base_image:
-            appStore.frontendSpec?.default_function_image_by_kind?.[
-              functionsStore.newFunction.kind
-            ] ?? '',
-          build_image: buildImage
-        }))
       }
-    } else if (
-      (defaultData.image?.length > 0 ||
-        (defaultData.build?.base_image?.length === 0 &&
-          defaultData.build?.commands?.length === 0 &&
-          defaultData.build?.image?.length === 0 &&
-          defaultData.image?.length === 0)) &&
-      imageType.length === 0
-    ) {
-      dispatch(setNewFunctionImage(defaultData.image || DEFAULT_IMAGE))
-      setImageType(EXISTING_IMAGE)
-      setData(state => ({
-        ...state,
-        image: defaultData.image || DEFAULT_IMAGE
-      }))
-    } else if (imageType.length === 0) {
-      setImageType(NEW_IMAGE)
-    }
+    })
   }, [
     appStore.frontendSpec,
     defaultData.build,

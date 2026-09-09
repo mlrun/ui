@@ -34,7 +34,12 @@ import artifactsApi from '../api/artifacts-api'
 import modelEndpointsApi from '../api/modelEndpoints-api'
 import detailsApi from '../api/details-api'
 
-import { DATE_FILTER_ANY_TIME, DEFAULT_ABORT_MSG, LLM_PROMPTS_PAGE } from '../constants'
+import {
+  DATE_FILTER_ANY_TIME,
+  DEFAULT_ABORT_MSG,
+  LLM_PROMPTS_PAGE,
+  REQUEST_CANCELED
+} from '../constants'
 
 const initialState = {
   dates: {
@@ -173,7 +178,10 @@ export const fetchModelEndpointMetricsValues = createAsyncThunk(
           thunkAPI.dispatch,
           setRequestErrorMessage
         )
-        return thunkAPI.rejectWithValue(error?.message === DEFAULT_ABORT_MSG ? null : error)
+
+        if (![REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(error?.message)) {
+          return thunkAPI.rejectWithValue(error)
+        }
       })
   }
 )

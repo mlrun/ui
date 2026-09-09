@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router'
 import { chunk, debounce, isEqual, isNull } from 'lodash-es'
 import { useSelector } from 'react-redux'
 
@@ -47,10 +47,11 @@ export const usePagination = ({
 }) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [paginatedContent, setPaginatedContent] = useState([])
+  const [paginationConfig, setPaginationConfig] = useState({})
   const resetPaginationTriggerRef = useRef(resetPaginationTrigger)
   const lastRequestedPageRef = useRef(null)
   const filtersStore = useSelector(store => store.filtersStore)
-  let forceRefreshData = useMemo(() => ({ isForce: false }), [])
+  const forceRefreshDataRef = useRef({ isForce: false })
 
   const refreshContentDebounced = useMemo(() => {
     return debounce(filters => refreshContent(filters))
@@ -118,7 +119,7 @@ export const usePagination = ({
           prevSearchParams => {
             prevSearchParams.set(BE_PAGE, newPaginationConfig[BE_PAGE])
             prevSearchParams.set(FE_PAGE, newPaginationConfig[FE_PAGE])
-            forceRefreshData.isForce = searchParams.get(FORCE_REFRESH) === 'true'
+            forceRefreshDataRef.current.isForce = searchParams.get(FORCE_REFRESH) === 'true'
             prevSearchParams.delete(FORCE_REFRESH)
             return prevSearchParams
           },
@@ -154,16 +155,19 @@ export const usePagination = ({
           : newPaginatedContent
       })
     }
-  }, [
-    bePageSize,
-    fePageSize,
-    paginationConfigRef,
-    content,
-    searchParams,
-    setSearchParams,
-    hidden,
-    forceRefreshData
-  ])
+  }, [bePageSize, fePageSize, paginationConfigRef, content, searchParams, setSearchParams, hidden])
+
+  useEffect(() => {
+    if (hidden) return
+
+    queueMicrotask(() => {
+      setPaginationConfig(prevConfig =>
+        isEqual(prevConfig, paginationConfigRef.current)
+          ? prevConfig
+          : { ...paginationConfigRef.current }
+      )
+    })
+  }, [content, hidden, paginatedContent, paginationConfigRef, searchParams])
 
   useEffect(() => {
     if (resetPaginationTrigger !== resetPaginationTriggerRef.current) {
@@ -180,17 +184,17 @@ export const usePagination = ({
 
     const bePage = Number(searchParams.get(BE_PAGE))
 
-    if (!bePage && !forceRefreshData.isForce) return
+    if (!bePage && !forceRefreshDataRef.current.isForce) return
 
-    if (lastRequestedPageRef.current === bePage && !forceRefreshData.isForce) {
+    if (lastRequestedPageRef.current === bePage && !forceRefreshDataRef.current.isForce) {
       return
     }
 
-    forceRefreshData.isForce = false
+    forceRefreshDataRef.current.isForce = false
 
     lastRequestedPageRef.current = bePage
     refreshContentDebounced(filters)
-  }, [filters, hidden, refreshContentDebounced, searchParams, forceRefreshData])
+  }, [filters, hidden, refreshContentDebounced, searchParams])
 
   useEffect(() => {
     queueMicrotask(() => {
@@ -250,7 +254,14 @@ export const usePagination = ({
     }
   }
 
-  return [handleRefresh, paginatedContent, searchParams, setSearchParams, resetPagination]
+  return [
+    handleRefresh,
+    paginatedContent,
+    searchParams,
+    setSearchParams,
+    resetPagination,
+    paginationConfig
+  ]
 }
 
 export const getPaginatedContent = (

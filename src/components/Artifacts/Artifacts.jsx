@@ -20,7 +20,7 @@ such restriction.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router'
 import { chain, isEmpty, isNil } from 'lodash-es'
 import PropTypes from 'prop-types'
 
@@ -369,7 +369,9 @@ const Artifacts = ({
     handleRefreshArtifacts,
     paginatedArtifacts,
     searchArtifactsParams,
-    setSearchArtifactsParams
+    setSearchArtifactsParams,
+    ,
+    paginationConfigArtifacts
   ] = usePagination({
     hidden: isAllVersions,
     content: artifacts ?? [],
@@ -383,7 +385,9 @@ const Artifacts = ({
     handleRefreshArtifactVersions,
     paginatedArtifactVersions,
     searchArtifactVersionsParams,
-    setSearchArtifactVersionsParams
+    setSearchArtifactVersionsParams,
+    ,
+    paginationConfigArtifactVersions
   ] = usePagination({
     hidden: !isAllVersions,
     content: artifactVersions ?? [],
@@ -533,11 +537,11 @@ const Artifacts = ({
       isSelectedArtifactBeyondTheList={isSelectedArtifactBeyondTheList}
       page={page}
       pageData={pageData}
-      paginationConfigArtifactsRef={
-        isAllVersions ? paginationConfigArtifactVersionsRef : paginationConfigArtifactsRef
+      paginationConfig={
+        isAllVersions ? paginationConfigArtifactVersions : paginationConfigArtifacts
       }
       params={params}
-      ref={{ artifactsRef }}
+      artifactsRef={artifactsRef}
       requestErrorMessage={requestErrorMessage}
       selectedArtifact={selectedArtifact}
       setSearchArtifactsParams={

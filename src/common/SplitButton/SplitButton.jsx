@@ -92,7 +92,7 @@ const SplitButton = ({
         </div>
       </div>
       {!isEmpty(options) && (
-        <OptionsMenu show={isBodyOpen} ref={{ refInputContainer: mainRef }}>
+        <OptionsMenu show={isBodyOpen} refInputContainer={mainRef}>
           {options.map(option => {
             return (
               <SelectOption

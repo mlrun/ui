@@ -20,7 +20,7 @@ such restriction.
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 import { createPortal } from 'react-dom'
 import { chain, cloneDeep } from 'lodash-es'
 import { Form, FormSpy } from 'react-final-form'
@@ -90,7 +90,7 @@ const FunctionsPanel = ({
   )
   const params = useParams()
   const navigate = useNavigate()
-  const formRef = React.useRef(
+  const [form] = useState(() =>
     createForm({
       initialValues: {
         labels: parseChipsData(defaultData?.labels || {}, frontendSpec.internal_labels)
@@ -176,7 +176,7 @@ const FunctionsPanel = ({
     const functionPayload = cloneDeep(functionsStore.newFunction)
     const funcTag = functionPayload.metadata.tag || 'latest'
 
-    functionPayload.labels = convertChipsData(formRef.current.getFieldState('labels')?.value)
+    functionPayload.labels = convertChipsData(form.getFieldState('labels')?.value)
 
     dispatch(createNewFunction({ project: params.projectName, data: functionPayload }))
       .unwrap()
@@ -202,7 +202,7 @@ const FunctionsPanel = ({
               },
               metadata: {
                 ...functionsStore.newFunction.metadata,
-                labels: convertChipsData(formRef.current.getFieldState('labels')?.value)
+                labels: convertChipsData(form.getFieldState('labels')?.value)
               }
             },
             skip_deployed,
@@ -306,7 +306,7 @@ const FunctionsPanel = ({
   }
 
   return createPortal(
-    <Form form={formRef.current} onSubmit={() => {}}>
+    <Form form={form} onSubmit={() => {}}>
       {formState => {
         return (
           <>
@@ -333,7 +333,7 @@ const FunctionsPanel = ({
               onChange={() => {
                 setValidation(prevState => ({
                   ...prevState,
-                  areLabelsValid: formRef.current?.getFieldState?.('labels')?.valid ?? true
+                  areLabelsValid: form?.getFieldState?.('labels')?.valid ?? true
                 }))
               }}
             />

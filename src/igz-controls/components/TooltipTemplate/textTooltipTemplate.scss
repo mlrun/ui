@@ -4,7 +4,7 @@
 .tooltip {
   &-template {
     padding: 6px 8px;
-    word-break: break-word;
+    overflow-wrap: break-word;
   }
 
   &__text {

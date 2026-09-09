@@ -32,7 +32,7 @@ import { CHIP_OPTIONS } from '../../types'
 const defaultChipOptions = getChipOptions('metrics')
 
 const ReadOnlyChips = ({ chipOptions = defaultChipOptions, labels = [], ...args }) => {
-  const formRef = React.useRef(
+  const [form] = React.useState(() =>
     createForm({
       initialValues: { labels: labels },
       mutators: { ...arrayMutators, setFieldState },
@@ -41,7 +41,7 @@ const ReadOnlyChips = ({ chipOptions = defaultChipOptions, labels = [], ...args 
   )
 
   return (
-    <Form form={formRef.current} onSubmit={() => {}}>
+    <Form form={form} onSubmit={() => {}}>
       {formState => {
         return (
           <FormChipCell

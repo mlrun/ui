@@ -40,8 +40,14 @@ export type MultiSelectFieldProps = {
   filterField: FilterFieldDef
   value: DraftValues[string]
   setFilterDraft: (draft: DraftValues | ((prev: DraftValues) => DraftValues)) => void
+  collisionBoundary?: Element
 }
-const MultiSelectField = ({ filterField, value, setFilterDraft }: MultiSelectFieldProps) => {
+const MultiSelectField = ({
+  filterField,
+  value,
+  setFilterDraft,
+  collisionBoundary
+}: MultiSelectFieldProps) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const currentValues: string[] = Array.isArray(value) ? value : []
@@ -72,8 +78,9 @@ const MultiSelectField = ({ filterField, value, setFilterDraft }: MultiSelectFie
   }
 
   return (
-    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen} modal={false}>
       <DropdownMenuTrigger
+        onClick={() => setIsOpen(true)}
         style={{
           height: 40,
           width: '100%',
@@ -103,6 +110,11 @@ const MultiSelectField = ({ filterField, value, setFilterDraft }: MultiSelectFie
       <DropdownMenuContent
         align="start"
         sideOffset={4}
+        collisionBoundary={collisionBoundary}
+        onEscapeKeyDown={event => {
+          event.stopPropagation()
+          setIsOpen(false)
+        }}
         style={{
           width: 'var(--radix-dropdown-menu-trigger-width)',
           color: 'var(--igz-primary, #4B4760)'
@@ -112,6 +124,9 @@ const MultiSelectField = ({ filterField, value, setFilterDraft }: MultiSelectFie
         {options.map(option => {
           const isChecked = currentValues.includes(option.value)
           const color = option.meta?.color as string | undefined
+          const optionTestId =
+            ((option.meta as Record<string, unknown>)?.filterTestId as string | undefined) ??
+            option.value
           const isDisabled =
             Boolean((option.meta as Record<string, unknown>)?.disabled) ||
             Boolean(filterField.computeDisabled?.(option.value, currentValues))
@@ -125,7 +140,7 @@ const MultiSelectField = ({ filterField, value, setFilterDraft }: MultiSelectFie
                 e.preventDefault()
                 if (!isDisabled) handleToggle(option.value)
               }}
-              data-testid={`filter-popover-multiselect-${filterField.key}-${option.value}`}
+              data-testid={`filter-popover-multiselect-${filterField.key}-${optionTestId}`}
             >
               <Checkbox
                 checked={isChecked}
