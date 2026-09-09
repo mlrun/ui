@@ -17,16 +17,27 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { ADMIN_ROLE, ALL_ROLES, EDITOR_ROLE, OWNER_ROLE, VIEWER_ROLE } from '../../constants'
+import { ADMIN_ROLE, ALL_ROLES, EDITOR_ROLE, VIEWER_ROLE } from '../../constants'
 
 export const DELETE_MODIFICATION = 'delete'
 export const initialNewMembersRole = VIEWER_ROLE
+
+const BASE_ROLES = [VIEWER_ROLE, EDITOR_ROLE, ADMIN_ROLE]
+
+// Hidden so Select still resolves it for the closed-header label without offering it as a
+// pickable item in the open dropdown - a role outside BASE_ROLES must never be re-selectable.
+const getCurrentRoleOption = memberRole => {
+  if (!memberRole || BASE_ROLES.includes(memberRole)) {
+    return null
+  }
+
+  return { id: memberRole, label: memberRole, hidden: true }
+}
+
 export const getRoleOptions = (memberRole = '', allOption = false) => {
   return [
     { id: ALL_ROLES, label: ALL_ROLES, hidden: !allOption },
-    { id: OWNER_ROLE, label: OWNER_ROLE, hidden: memberRole !== OWNER_ROLE },
-    { id: VIEWER_ROLE, label: VIEWER_ROLE },
-    { id: EDITOR_ROLE, label: EDITOR_ROLE },
-    { id: ADMIN_ROLE, label: ADMIN_ROLE }
-  ]
+    getCurrentRoleOption(memberRole),
+    ...BASE_ROLES.map(roleName => ({ id: roleName, label: roleName }))
+  ].filter(Boolean)
 }
