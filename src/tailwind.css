@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  .ml-app,
+  :where(:root) {
     --igz-light-purple: #869cff;
     --igz-tab-active-bg: #f5f7ff;
     --igz-purple: #5f52cc;
