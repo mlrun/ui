@@ -24,12 +24,12 @@ import {
 } from '../utils/getUniqueIdentifier'
 import featureStoreApi from '../api/featureStore-api'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import { PANEL_DEFAULT_ACCESS_KEY } from '../constants'
 import { isRequestAborted } from '../utils/isRequestAborted'
 import { REDISNOSQL } from '../components/FeatureSetsPanel/FeatureSetsPanelTargetStore/featureSetsPanelTargetStore.util'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { hideLoading, showLoading } from './redux.util'
 import { isCommunityEdition } from '../utils/helper'
+import { IS_MF_MODE, PANEL_DEFAULT_ACCESS_KEY } from '../constants'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 import { parseFeatureSets } from '../utils/parseFeatureSets'
 import { parseFeatureVectors } from '../utils/parseFeatureVectors'
@@ -68,7 +68,7 @@ const initialState = {
   loading: false,
   newFeatureSet: {
     credentials: {
-      access_key: PANEL_DEFAULT_ACCESS_KEY
+      access_key: IS_MF_MODE ? 'default' : PANEL_DEFAULT_ACCESS_KEY
     },
     metadata: {
       name: '',

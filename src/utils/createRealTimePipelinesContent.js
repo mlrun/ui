@@ -19,7 +19,13 @@ such restriction.
 */
 
 import { formatDatetime } from 'igz-controls/utils/datetime.util'
-import { DETAILS_MODEL_ENDPOINTS_TAB, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
+import {
+  DETAILS_MODEL_ENDPOINTS_TAB,
+  IS_MF_MODE,
+  MODELS_PAGE,
+  NUCLIO_FUNCTIONS_PATH,
+  REAL_TIME_PIPELINES_TAB
+} from '../constants'
 import { typesOfJob } from './jobs.util'
 import { generateNuclioLink } from './parseUri'
 
@@ -50,9 +56,11 @@ const createRealTimePipelinesContent = (pipelines, projectName) =>
           className: 'table-cell-2',
           showStatus: true,
           showTag: true,
-          linkIsExternal: true,
+          linkIsExternal: !IS_MF_MODE,
           getLink: () =>
-            generateNuclioLink(`/projects/${projectName}/functions/${nuclioFunctionName}`)
+            generateNuclioLink(
+              `/projects/${projectName}/${NUCLIO_FUNCTIONS_PATH}/${nuclioFunctionName}`
+            )
         },
         {
           id: `topology.${pipeline.ui.identifierUnique}`,

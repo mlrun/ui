@@ -19,6 +19,21 @@ such restriction.
 */
 /*=========== GENERAL =============*/
 
+// Detected at runtime rather than baked in at build time: the igz4-ui host sets
+// window.mlrunConfig synchronously before it ever imports this app's exposed
+// Module Federation modules (./loadRemoteConfig, ./app), so by the time this
+// module graph is first evaluated under MF, window.mlrunConfig is already
+// populated. In the standalone entry (index.jsx), this module also evaluates
+// before the async loadRemoteConfig() fetch resolves, so it correctly reads as
+// "not MF" here regardless of that later, unrelated config fetch.
+export const IS_MF_MODE =
+  typeof window !== 'undefined' &&
+  window.mlrunConfig !== undefined &&
+  window.mlrunConfig !== null &&
+  Object.keys(window.mlrunConfig).length > 0
+
+export const PUBLIC_URL = IS_MF_MODE ? '' : import.meta.env.VITE_PUBLIC_URL
+
 export const SET_LOADING = 'SET_LOADING'
 
 export const AZURE_STORAGE_INPUT_PATH_SCHEME = 'az://'
@@ -163,8 +178,8 @@ export const PROJECT_QUICK_ACTIONS_PAGE = 'quick-actions'
 export const ALL_VERSIONS_PATH = 'all-versions'
 
 export const NUCLIO_PAGE = 'nuclio'
-export const REAL_TIME_FUNCTIONS_PAGE = 'real-time-functions'
 export const API_GATEWAYS_PAGE = 'api-gateways'
+export const NUCLIO_FUNCTIONS_PATH = IS_MF_MODE ? 'real-time-functions' : 'functions'
 
 /*=========== CONSUMER_GROUPS =============*/
 
@@ -467,6 +482,8 @@ export const ENV_VARIABLE_TYPE_VALUE = 'value'
 export const ENV_VARIABLE_TYPE_SECRET = 'secret'
 
 export const PANEL_DEFAULT_ACCESS_KEY = '$generate'
+export const API_TOKEN_TIP =
+  'Get a valid API Token from your API tokens list (under Personal Settings)'
 
 /*=========== ML REACT FLOW =============*/
 

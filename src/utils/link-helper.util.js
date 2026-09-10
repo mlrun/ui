@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { DETAILS_OVERVIEW_TAB } from '../constants'
+import { DETAILS_OVERVIEW_TAB, PUBLIC_URL } from '../constants'
 import { VIEW_SEARCH_PARAMETER } from 'igz-controls/constants'
 import { generateUrlFromRouterPath } from 'igz-controls/utils/common.util'
 import { getFilteredSearchParams } from 'igz-controls/utils/filter.util'
@@ -44,8 +44,8 @@ export const isProjectValid = (navigate, projects, currentProjectName, dispatch)
 export const getCloseDetailsLink = (paramName, ignoreOrigin, objectName) => {
   let pathname = window.location.pathname
 
-  if (ignoreOrigin && pathname.startsWith(import.meta.env.VITE_PUBLIC_URL)) {
-    pathname = pathname.slice(import.meta.env.VITE_PUBLIC_URL.length)
+  if (ignoreOrigin && pathname.startsWith(PUBLIC_URL)) {
+    pathname = pathname.slice(PUBLIC_URL.length)
   }
 
   let linkParts = pathname.split('/').splice(0, pathname.split('/').lastIndexOf(paramName) + 1)

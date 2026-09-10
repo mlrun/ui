@@ -38,9 +38,14 @@ const SidebarCollapseItem = ({ icon, label, nestedLinks }) => {
   const [open, setOpen] = useState(false)
   const { open: sidebarOpen } = useSidebar()
 
-  const isAnyChildActive = nestedLinks.some(nested =>
-    nested.link ? pathname.includes(nested.link.toLowerCase()) : false
-  )
+  const isAnyChildActive = nestedLinks.some(nested => {
+    if (!nested.link) return false
+    try {
+      return pathname.toLowerCase().startsWith(new URL(nested.link).pathname.toLowerCase())
+    } catch {
+      return pathname.toLowerCase().startsWith(nested.link.toLowerCase())
+    }
+  })
 
   return (
     <Collapsible

@@ -31,7 +31,7 @@ import {
   JOBS_MONITORING_WORKFLOWS_TAB,
   WORKFLOW_TYPE_SKIPPED
 } from '../../constants'
-import projectsIguazioApi from '../../api/projects-iguazio-api'
+import { checkProjectWriteAccess } from '../../utils/projectAuth.util'
 import tasksApi from '../../api/tasks-api'
 import workflowsApi from '../../api/workflow-api'
 import { page } from '../Jobs/jobs.util'
@@ -312,15 +312,10 @@ export const fetchMissingProjectsPermissions = async (projectNames, currentMap, 
     await Promise.all(
       missingProjects.map(async projectName => {
         try {
-          await projectsIguazioApi.getProjectOwnerVisibility(projectName)
-          return [projectName, true]
+          const hasAccess = await checkProjectWriteAccess(projectName)
+          return [projectName, hasAccess]
         } catch {
-          try {
-            await projectsIguazioApi.getProjectWorkflowsUpdateAuthorization(projectName)
-            return [projectName, true]
-          } catch {
-            return [projectName, false]
-          }
+          return [projectName, false]
         }
       })
     )
@@ -333,15 +328,12 @@ export const fetchMissingProjectsPermissions = async (projectNames, currentMap, 
 export const fetchMissingProjectPermission = async (projectName, currentMap, dispatch) => {
   if (projectName in currentMap) return
 
-  const hasPermission = await projectsIguazioApi
-    .getProjectOwnerVisibility(projectName)
-    .then(() => true)
-    .catch(() =>
-      projectsIguazioApi
-        .getProjectWorkflowsUpdateAuthorization(projectName)
-        .then(() => true)
-        .catch(() => false)
-    )
+  let hasPermission = false
+  try {
+    hasPermission = await checkProjectWriteAccess(projectName)
+  } catch {
+    hasPermission = false
+  }
 
   dispatch(setAccessibleProjectsMap(Object.fromEntries([[projectName, hasPermission]])))
 }

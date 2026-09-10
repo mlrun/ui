@@ -38,7 +38,7 @@ import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
 import { membersActions } from './membersReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
-import { USER_GROUP_ROLE, USER_ROLE } from '../../constants'
+import { IS_MF_MODE, OWNER_ROLE, USER_GROUP_ROLE, USER_ROLE } from '../../constants'
 
 import Add from 'igz-controls/images/add.svg?react'
 import Close from 'igz-controls/images/close.svg?react'
@@ -96,7 +96,61 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
     setMembersData(state => ({ ...state, members: membersCopy }))
   }
 
-  const applyMembersChanges = () => {
+  const applyMembersChangesMF = () => {
+    const projectName = membersData.projectInfo.id
+    const visibleMembers = membersData.members.filter(
+      member => member.modification !== DELETE_MODIFICATION && member.role !== OWNER_ROLE
+    )
+    const groupedByRole = groupBy(visibleMembers, 'role')
+
+    const membership = {}
+
+    membersState.projectAuthorizationRoles
+      .filter(policy => policy.spec.displayName !== OWNER_ROLE)
+      .forEach(policy => {
+        const roleName = policy.spec.role
+        membership[roleName] = {
+          values: (groupedByRole[policy.spec.displayName] || []).map(member => member.id)
+        }
+      })
+
+    const body = {
+      membership,
+      override: true
+    }
+
+    membersDispatch({
+      type: membersActions.SET_MEMBERS,
+      payload: membersData.members
+    })
+
+    projectsIguazioApi
+      .setProjectMembership(projectName, body)
+      .then(() => {
+        const activeUsername = membersData.activeUser.data?.attributes?.username
+        const userIsStillMember = membersData.members?.some(
+          member =>
+            member.modification !== DELETE_MODIFICATION &&
+            (member.id === activeUsername ||
+              (member.type === USER_GROUP_ROLE &&
+                membersData.activeUser.data?.attributes?.user_group_names?.has(member.id)))
+        )
+
+        changeMembersCallback(userIsStillMember)
+      })
+      .catch(error => {
+        const customErrorMsg =
+          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+            ? 'Missing edit permission for the project'
+            : getErrorMsg(error, 'Failed to edit project data')
+
+        showErrorNotification(dispatch, error, '', customErrorMsg, () => applyMembersChanges())
+      })
+
+    handleOnClose()
+  }
+
+  const applyMembersChangesIGZ3 = () => {
     const changesBody = {
       data: {
         attributes: {
@@ -207,6 +261,8 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
     handleOnClose()
   }
 
+  const applyMembersChanges = IS_MF_MODE ? applyMembersChangesMF : applyMembersChangesIGZ3
+
   const areChangesMade = () => {
     return membersData.members.some(member => member.modification !== '')
   }
@@ -225,13 +281,66 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
     handleOnClose()
   }
 
-  const generateUsersSuggestionList = debounce(searchQuery => {
+  const toSuggestionItem = (id, label, type) => {
+    const existingMember = membersData.members.find(
+      member => member.id === id && member.modification !== DELETE_MODIFICATION
+    )
+
+    return {
+      label,
+      id,
+      subLabel: existingMember?.role ?? '',
+      disabled: Boolean(existingMember),
+      icon:
+        type === USER_ROLE ? (
+          <i data-identity-type="user">
+            <User />
+          </i>
+        ) : (
+          <i data-identity-type="user_group">
+            <Users />
+          </i>
+        ),
+      ui: { type }
+    }
+  }
+
+  const generateUsersSuggestionListMF = debounce(searchQuery => {
+    const getUsersPromise = projectsIguazioApi.searchUsersMetadata(searchQuery)
+    const getUserGroupsPromise = projectsIguazioApi.searchGroupsMetadata(searchQuery)
+
+    Promise.all([getUsersPromise, getUserGroupsPromise])
+      .then(([usersResponse, groupsResponse]) => {
+        const users = usersResponse.data.items || []
+        const groups = groupsResponse.data.items || []
+        const suggestionList = [
+          ...users.map(user => toSuggestionItem(user.username, user.username, USER_ROLE)),
+          ...groups.map(group =>
+            toSuggestionItem(
+              group.groupId,
+              group.path.replace(/^\//, '') ?? group.groupId,
+              USER_GROUP_ROLE
+            )
+          )
+        ]
+
+        setNewMembersSuggestionList(suggestionList)
+      })
+      .catch(error => {
+        showErrorNotification(dispatch, error, 'Failed to fetch users')
+      })
+  }, 400)
+
+  const generateUsersSuggestionListIGZ3 = debounce(searchQuery => {
     const requiredIgzVersion = '3.5.3'
     let paramsScrubbedUsers = {
       'filter[username]': `[$match-i]^.*${searchQuery}.*$`,
       'page[size]': 200
     }
-    let paramsUserGroups = { 'filter[name]': `[$match-i]^.*${searchQuery}.*$`, 'page[size]': 200 }
+    let paramsUserGroups = {
+      'filter[name]': `[$match-i]^.*${searchQuery}.*$`,
+      'page[size]': 200
+    }
 
     if (isIgzVersionCompatible(requiredIgzVersion)) {
       paramsScrubbedUsers['filter[username]'] = `[$contains_istr]${searchQuery}`
@@ -285,6 +394,10 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
         showErrorNotification(dispatch, error, 'Failed to fetch users')
       })
   }, 400)
+
+  const generateUsersSuggestionList = IS_MF_MODE
+    ? generateUsersSuggestionListMF
+    : generateUsersSuggestionListIGZ3
 
   return (
     <div className="settings__members">

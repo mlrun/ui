@@ -19,7 +19,7 @@ such restriction.
 */
 import { isNil } from 'lodash'
 
-import { mainBaseUrl, mainHttpClient } from '../httpClient'
+import { mainHttpClient } from '../httpClient'
 
 const jobsApi = {
   abortJob: (project, jobId, iter) => {
@@ -76,10 +76,17 @@ const jobsApi = {
       params = `?attempt=${attempt}`
     }
 
-    return fetch(`${mainBaseUrl}/projects/${project}/logs/${id}${params}`, {
-      method: 'get',
-      signal
-    })
+    // when we use adapter: 'fetch' in axios, we need to pass params as query string, because axios drops params in this case
+    const queryParams = new URLSearchParams(params).toString()
+
+    return mainHttpClient.get(
+      `/projects/${project}/logs/${id}${queryParams ? '?' + queryParams : ''}`,
+      {
+        signal,
+        responseType: 'stream',
+        adapter: 'fetch'
+      }
+    )
   },
   getScheduledJobs: (project, newConfig) => {
     return mainHttpClient.get(`/projects/${project}/schedules`, newConfig)

@@ -23,6 +23,7 @@ import { forEach, groupBy } from 'lodash'
 import { membersActions } from '../../elements/MembersPopUp/membersReducer'
 
 import {
+  IS_MF_MODE,
   PROJECTS_SETTINGS_GENERAL_TAB,
   PROJECTS_SETTINGS_PAGE,
   PROJECTS_SETTINGS_MEMBERS_TAB,
@@ -77,7 +78,69 @@ const addMember = (members, name, id, type, initialRole, role) => {
   })
 }
 
-export const generateMembers = (membersResponse, membersDispatch, owner) => {
+const generateMembersMF = (policiesResponse, membersDispatch) => {
+  const members = []
+  const memberSet = new Set()
+  const policies = policiesResponse.data.items || []
+
+  membersDispatch({
+    type: membersActions.SET_PROJECT_AUTHORIZATION_ROLES,
+    payload: policies
+  })
+
+  const ownerPolicy = policies.find(policy => policy.spec.displayName === OWNER_ROLE)
+  const ownerMembers = ownerPolicy?.status?.assignedMembers || []
+  const ownerMemberIds = new Set(ownerMembers.map(m => m.id))
+  const ownerUsername = ownerMembers[0]?.id || ''
+
+  membersDispatch({
+    type: membersActions.SET_PROJECT_INFO,
+    payload: {
+      id: policies[0]?.spec?.projectName || '',
+      owner: { id: ownerUsername, username: ownerUsername, firstName: '', lastName: '' }
+    }
+  })
+
+  policies.forEach(policy => {
+    const roleName = policy.spec.displayName
+    const assignedMembers = policy.status?.assignedMembers || []
+
+    assignedMembers.forEach(assignedMember => {
+      if (memberSet.has(assignedMember.id)) return
+
+      const memberType = assignedMember.kind === USER_ROLE ? USER_ROLE : USER_GROUP_ROLE
+      const isOwner = ownerMemberIds.has(assignedMember.id)
+      const effectiveRole = isOwner ? OWNER_ROLE : roleName
+
+      addMember(
+        members,
+        assignedMember.id,
+        assignedMember.id,
+        memberType,
+        effectiveRole,
+        effectiveRole
+      )
+      memberSet.add(assignedMember.id)
+    })
+  })
+
+  membersDispatch({
+    type: membersActions.SET_MEMBERS_ORIGINAL,
+    payload: members
+  })
+  membersDispatch({
+    type: membersActions.SET_MEMBERS,
+    payload: members
+  })
+}
+
+const isOwnerInMembersList = (ownerId, membersList) => {
+  return membersList.some(member => {
+    return member.id === ownerId
+  })
+}
+
+const generateMembersIGZ3 = (membersResponse, membersDispatch, owner) => {
   const members = []
   const {
     project_authorization_role: projectAuthorizationRoles = [],
@@ -86,6 +149,7 @@ export const generateMembers = (membersResponse, membersDispatch, owner) => {
   } = groupBy(membersResponse.data.included, includeItem => {
     return includeItem.type
   })
+
   membersDispatch({
     type: membersActions.SET_PROJECT_AUTHORIZATION_ROLES,
     payload: projectAuthorizationRoles
@@ -129,6 +193,7 @@ export const generateMembers = (membersResponse, membersDispatch, owner) => {
       })
     }
   })
+
   membersDispatch({
     type: membersActions.SET_MEMBERS_ORIGINAL,
     payload: members
@@ -138,6 +203,8 @@ export const generateMembers = (membersResponse, membersDispatch, owner) => {
     payload: members
   })
 }
+
+export const generateMembers = IS_MF_MODE ? generateMembersMF : generateMembersIGZ3
 
 export const isProjectMembersTabShown = (
   projectMembershipIsEnabled,
@@ -150,21 +217,27 @@ export const isProjectMembersTabShown = (
 
   const userIsProjectSecurityAdmin =
     activeUser.data?.attributes?.user_policies_collection?.has('Project Security Admin') ?? false
-  const userIsAdmin = members.some(
-    member =>
-      member.role === ADMIN_ROLE &&
-      (member.id === activeUser.data?.id ||
-        (member.type === USER_GROUP_ROLE &&
-          activeUser.data?.relationships?.user_groups?.data?.some?.(
-            group => group.id === member.id
-          )))
-  )
+
+  const userIsAdmin = IS_MF_MODE
+    ? (() => {
+        const activeUsername = activeUser.data?.attributes?.username
+        return members.some(
+          member =>
+            member.role === ADMIN_ROLE &&
+            (member.id === activeUsername ||
+              (member.type === USER_GROUP_ROLE &&
+                activeUser.data?.attributes?.user_group_names?.has(member.id)))
+        )
+      })()
+    : members.some(
+        member =>
+          member.role === ADMIN_ROLE &&
+          (member.id === activeUser.data?.id ||
+            (member.type === USER_GROUP_ROLE &&
+              activeUser.data?.relationships?.user_groups?.data?.some?.(
+                group => group.id === member.id
+              )))
+      )
 
   return userIsProjectOwner || userIsAdmin || userIsProjectSecurityAdmin
-}
-
-const isOwnerInMembersList = (ownerId, membersList) => {
-  return membersList.some(member => {
-    return member.id === ownerId
-  })
 }

@@ -26,8 +26,12 @@ import ModalContainer from 'react-modal-promise'
 
 import Sidebar from '../../nextGenComponents/shared/Sidebar'
 import { SidebarInset, SidebarProvider } from 'igz-controls/nextGenComponents'
+import HostLeaveGuard from '../../common/HostLeaveGuard/HostLeaveGuard'
+import TokenExpiryBanner from '../../common/TokenExpiryBanner/TokenExpiryBanner'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import { Loader } from 'igz-controls/components'
+
+import { IS_MF_MODE } from '../../constants'
 
 import { getTransitionEndEventName } from 'igz-controls/utils/common.util'
 import { fetchFrontendSpec, toggleYaml } from '../../reducers/appReducer'
@@ -99,11 +103,13 @@ const Page = () => {
 
   return (
     <SidebarProvider defaultOpen={false}>
+      <HostLeaveGuard />
       {projectName && <Sidebar projectName={projectName} />}
       <SidebarInset>
         <>
           <Suspense fallback={<Loader />}>
             <main id="main" ref={mainRef}>
+              {IS_MF_MODE && <TokenExpiryBanner />}
               <div id="main-wrapper">{isProjectsFetched ? <Outlet /> : <Loader />}</div>
             </main>
           </Suspense>

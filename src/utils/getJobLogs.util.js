@@ -34,7 +34,7 @@ export const getJobLogs = (
   dispatch(fetchJobLogs({ id, project, attempt, signal }))
     .unwrap()
     .then(res => {
-      const reader = res.body?.getReader()
+      const reader = res.data?.getReader()
 
       if (reader) {
         const decoder = new TextDecoder()

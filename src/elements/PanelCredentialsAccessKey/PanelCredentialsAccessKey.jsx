@@ -24,7 +24,7 @@ import PropTypes from 'prop-types'
 import CheckBox from '../../common/CheckBox/CheckBox'
 import Input from '../../common/Input/Input'
 
-import { PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
+import { PANEL_DEFAULT_ACCESS_KEY, API_TOKEN_TIP, IS_MF_MODE } from '../../constants'
 
 import './panelCredentialsAccessKey.scss'
 
@@ -49,7 +49,7 @@ const PanelCredentialsAccessKey = ({
 
   return (
     <div className={accessKeyClassNames}>
-      {!frontendSpec.ce?.version && (
+      {!frontendSpec.ce?.version && !IS_MF_MODE && (
         <CheckBox
           disabled={isPanelEditMode}
           item={{
@@ -69,10 +69,10 @@ const PanelCredentialsAccessKey = ({
           selectedId={credentialsAccessKey}
         />
       )}
-      {credentialsAccessKey !== PANEL_DEFAULT_ACCESS_KEY && (
+      {(IS_MF_MODE || credentialsAccessKey !== PANEL_DEFAULT_ACCESS_KEY) && (
         <Input
           floatingLabel
-          label="Access Key"
+          label={IS_MF_MODE ? 'API Token' : 'Access Key'}
           invalid={!validation.isAccessKeyValid}
           onBlur={event => {
             if (credentialsAccessKey !== event.target.value) {
@@ -87,6 +87,7 @@ const PanelCredentialsAccessKey = ({
               isAccessKeyValid: value
             }))
           }
+          tip={IS_MF_MODE ? API_TOKEN_TIP : ''}
           value={inputValue}
           wrapperClassName="access-key__input"
         />
@@ -99,6 +100,7 @@ PanelCredentialsAccessKey.propTypes = {
   className: PropTypes.string,
   credentialsAccessKey: PropTypes.string.isRequired,
   frontendSpec: PropTypes.object.isRequired,
+  IS_MF_MODE: PropTypes.bool,
   isPanelEditMode: PropTypes.bool,
   required: PropTypes.bool,
   setCredentialsAccessKey: PropTypes.func.isRequired,

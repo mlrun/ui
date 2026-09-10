@@ -116,7 +116,10 @@
           "steps": {
             "model-runner": {
               "class_args": {
-                "model_selector": [null, null],
+                "model_selector": [
+                  null,
+                  null
+                ],
                 "execution_mechanism_by_model_name": {
                   "my-endpoint": "shared_executor"
                 },
@@ -133,7 +136,10 @@
                 "monitoring_data": {
                   "my-endpoint": {
                     "inputs": [],
-                    "outputs": ["output1", "output2"],
+                    "outputs": [
+                      "output1",
+                      "output2"
+                    ],
                     "input_path": "input_path",
                     "result_path": "result_path",
                     "creation_strategy": "inplace",
@@ -155,7 +161,10 @@
                   },
                   "endpoint3": {
                     "inputs": [],
-                    "outputs": ["output1", "output2"],
+                    "outputs": [
+                      "output1",
+                      "output2"
+                    ],
                     "input_path": "input_path",
                     "result_path": "result_path",
                     "creation_strategy": "inplace",
@@ -190,18 +199,24 @@
                 }
               },
               "shape": "folder",
-              "cycle_from": ["route"]
+              "cycle_from": [
+                "route"
+              ]
             },
             "step-above-1": {
               "model_endpoint_creation_strategy": "skip",
-              "after": ["model-runner"],
+              "after": [
+                "model-runner"
+              ],
               "kind": "task",
               "class_name": "LoopStep",
               "endpoint_type": 1
             },
             "step-above-2": {
               "model_endpoint_creation_strategy": "skip",
-              "after": ["model-runner"],
+              "after": [
+                "model-runner"
+              ],
               "kind": "task",
               "class_name": "LoopStep",
               "endpoint_type": 1,
@@ -209,23 +224,31 @@
             },
             "step1": {
               "model_endpoint_creation_strategy": "skip",
-              "after": ["model-runner"],
+              "after": [
+                "model-runner"
+              ],
               "kind": "task",
               "class_name": "LoopStep",
               "endpoint_type": 1,
               "function": "function-test",
-              "cycle_from": ["step2"]
+              "cycle_from": [
+                "step2"
+              ]
             },
             "step-below-1": {
               "model_endpoint_creation_strategy": "skip",
-              "after": ["model-runner"],
+              "after": [
+                "model-runner"
+              ],
               "kind": "task",
               "class_name": "LoopStep",
               "endpoint_type": 1
             },
             "step2": {
               "model_endpoint_creation_strategy": "skip",
-              "after": ["step1"],
+              "after": [
+                "step1"
+              ],
               "kind": "task",
               "class_name": "DecideNext",
               "endpoint_type": 1,
@@ -233,17 +256,23 @@
                 "limit": 5
               },
               "function": "function-test",
-              "cycle_from": ["route"]
+              "cycle_from": [
+                "route"
+              ]
             },
             "stream": {
-              "after": ["step2"],
+              "after": [
+                "step2"
+              ],
               "shards": 7,
               "kind": "queue",
               "path": "v3io:///projects/mronetttbl//out-stream"
             },
             "route": {
               "model_endpoint_creation_strategy": "skip",
-              "after": ["stream"],
+              "after": [
+                "stream"
+              ],
               "kind": "task",
               "class_name": "mlrun.serving.steps.ChoiceByField",
               "endpoint_type": 1,
@@ -254,7 +283,9 @@
             "exit": {
               "responder": true,
               "model_endpoint_creation_strategy": "skip",
-              "after": ["route"],
+              "after": [
+                "route"
+              ],
               "kind": "task",
               "endpoint_type": 1,
               "handler": "exit_handler"
@@ -290,7 +321,9 @@
             },
             "extend_step": {
               "model_endpoint_creation_strategy": "skip",
-              "after": ["choice_by_field"],
+              "after": [
+                "choice_by_field"
+              ],
               "endpoint_type": 1,
               "class_name": "storey.Extend",
               "class_args": {
@@ -302,7 +335,9 @@
             },
             "flatmap_step": {
               "model_endpoint_creation_strategy": "skip",
-              "after": ["extend_step"],
+              "after": [
+                "extend_step"
+              ],
               "endpoint_type": 1,
               "class_name": "storey.FlatMap",
               "class_args": {
@@ -314,14 +349,18 @@
             },
             "flatten_step": {
               "model_endpoint_creation_strategy": "skip",
-              "after": ["flatmap_step"],
+              "after": [
+                "flatmap_step"
+              ],
               "endpoint_type": 1,
               "class_name": "storey.Flatten",
               "kind": "task"
             },
             "map_with_state_step": {
               "model_endpoint_creation_strategy": "skip",
-              "after": ["flatten_step"],
+              "after": [
+                "flatten_step"
+              ],
               "endpoint_type": 1,
               "class_name": "storey.MapWithState",
               "class_args": {
@@ -333,7 +372,9 @@
             },
             "batch_step": {
               "model_endpoint_creation_strategy": "skip",
-              "after": ["map_with_state_step"],
+              "after": [
+                "map_with_state_step"
+              ],
               "endpoint_type": 1,
               "class_name": "storey.Batch",
               "class_args": {
@@ -346,14 +387,18 @@
             },
             "foreach_step": {
               "model_endpoint_creation_strategy": "skip",
-              "after": ["batch_step"],
+              "after": [
+                "batch_step"
+              ],
               "endpoint_type": 1,
               "class_name": "storey.ForEach",
               "kind": "task"
             },
             "filter_step": {
               "model_endpoint_creation_strategy": "skip",
-              "after": ["foreach_step"],
+              "after": [
+                "foreach_step"
+              ],
               "endpoint_type": 1,
               "class_name": "storey.Filter",
               "class_args": {
@@ -366,7 +411,9 @@
             "sample_window_step": {
               "model_endpoint_creation_strategy": "skip",
               "on_error": "sample_window_error_handler",
-              "after": ["filter_step"],
+              "after": [
+                "filter_step"
+              ],
               "endpoint_type": 1,
               "class_name": "storey.SampleWindow",
               "class_args": {
@@ -389,7 +436,9 @@
               "kind": "task"
             },
             "custom_step": {
-              "after": ["remote_step"],
+              "after": [
+                "remote_step"
+              ],
               "model_endpoint_creation_strategy": "skip",
               "endpoint_type": 1,
               "class_name": "CustomLogicStep",
@@ -399,11 +448,15 @@
               "kind": "task"
             },
             "queue_step": {
-              "after": ["router_step_mock"],
+              "after": [
+                "router_step_mock"
+              ],
               "kind": "queue"
             },
             "final": {
-              "after": ["queue_step"],
+              "after": [
+                "queue_step"
+              ],
               "responder": true,
               "model_endpoint_creation_strategy": "skip",
               "endpoint_type": 1,
@@ -445,7 +498,9 @@
               "base_step": "remote_step"
             },
             "router_step_mock": {
-              "after": ["custom_step"],
+              "after": [
+                "custom_step"
+              ],
               "routes": {
                 "model_0": {
                   "model_endpoint_creation_strategy": "inplace",
@@ -509,8 +564,18 @@
               "kind": "router"
             },
             "s1": {
-              "after": ["s2", "s3", "s4", "s5"],
-              "cycle_from": ["s2", "s3", "s4", "s5"],
+              "after": [
+                "s2",
+                "s3",
+                "s4",
+                "s5"
+              ],
+              "cycle_from": [
+                "s2",
+                "s3",
+                "s4",
+                "s5"
+              ],
               "model_endpoint_creation_strategy": "skip",
               "endpoint_type": 1,
               "class_args": {
@@ -520,7 +585,9 @@
               "class_name": "HubStep"
             },
             "s2": {
-              "after": ["s1"],
+              "after": [
+                "s1"
+              ],
               "model_endpoint_creation_strategy": "skip",
               "endpoint_type": 1,
               "class_args": {
@@ -530,7 +597,9 @@
               "class_name": "CycleStep"
             },
             "s3": {
-              "after": ["s1"],
+              "after": [
+                "s1"
+              ],
               "model_endpoint_creation_strategy": "skip",
               "endpoint_type": 1,
               "class_args": {
@@ -540,7 +609,9 @@
               "class_name": "CycleStep"
             },
             "s4": {
-              "after": ["s1"],
+              "after": [
+                "s1"
+              ],
               "model_endpoint_creation_strategy": "skip",
               "endpoint_type": 1,
               "class_args": {
@@ -550,7 +621,9 @@
               "class_name": "CycleStep"
             },
             "s5": {
-              "after": ["s1"],
+              "after": [
+                "s1"
+              ],
               "model_endpoint_creation_strategy": "skip",
               "endpoint_type": 1,
               "class_args": {
@@ -560,14 +633,18 @@
               "class_name": "CycleStep"
             },
             "s6": {
-              "after": ["s1"],
+              "after": [
+                "s1"
+              ],
               "model_endpoint_creation_strategy": "skip",
               "endpoint_type": 1,
               "kind": "task",
               "class_name": "ExitStep"
             },
             "final2": {
-              "after": ["s6"],
+              "after": [
+                "s6"
+              ],
               "model_endpoint_creation_strategy": "skip",
               "endpoint_type": 1,
               "responder": true,
@@ -591,7 +668,9 @@
           "engine": "async",
           "on_error": "default_error_handler",
           "track_models": true,
-          "model_endpoints_names": ["my-endpoint"],
+          "model_endpoints_names": [
+            "my-endpoint"
+          ],
           "shared_models_mechanism": {
             "model-deployment": "naive"
           }
@@ -1522,7 +1601,10 @@
           "author": "Iguazio",
           "framework": "churn"
         },
-        "categories": ["model-serving", "machine-learning"],
+        "categories": [
+          "model-serving",
+          "machine-learning"
+        ],
         "updated": "2021-08-29T19:52:08.784284+00:00"
       },
       "spec": {
@@ -1627,7 +1709,9 @@
           "author": "yasha",
           "framework": "xgboost"
         },
-        "categories": ["data-prep"],
+        "categories": [
+          "data-prep"
+        ],
         "updated": "2021-08-29T19:52:14.659970+00:00"
       },
       "spec": {
@@ -1749,7 +1833,9 @@
           "author": "yasha",
           "framework": "xgboost"
         },
-        "categories": ["data-prep"],
+        "categories": [
+          "data-prep"
+        ],
         "updated": "2021-08-29T19:52:14.764573+00:00"
       },
       "spec": {
@@ -1872,7 +1958,10 @@
           "author": "yjb",
           "framework": "survival"
         },
-        "categories": ["model-training", "machine-learning"],
+        "categories": [
+          "model-training",
+          "machine-learning"
+        ],
         "updated": "2021-08-29T19:54:07.099282+00:00"
       },
       "spec": {
@@ -2045,7 +2134,9 @@
         "labels": {
           "author": "Iguazio"
         },
-        "categories": ["data-analysis"],
+        "categories": [
+          "data-analysis"
+        ],
         "updated": "2021-08-29T19:54:07.149817+00:00"
       },
       "spec": {
@@ -2170,7 +2261,9 @@
         "labels": {
           "author": "Daniel"
         },
-        "categories": ["model-training"],
+        "categories": [
+          "model-training"
+        ],
         "updated": "2021-08-29T19:54:07.194668+00:00"
       },
       "spec": {
@@ -2299,7 +2392,10 @@
                 "name": "eval_metrics",
                 "type": "list",
                 "doc": "([\"error\", \"auc\"]) learning curve metrics",
-                "default": ["error", "auc"]
+                "default": [
+                  "error",
+                  "auc"
+                ]
               },
               {
                 "name": "file_ext",
@@ -2343,7 +2439,10 @@
           "author": "yjb",
           "framework": "survival"
         },
-        "categories": ["model-training", "machine-learning"],
+        "categories": [
+          "model-training",
+          "machine-learning"
+        ],
         "updated": "2021-08-29T19:54:07.198262+00:00"
       },
       "spec": {
@@ -2517,7 +2616,9 @@
         "labels": {
           "author": "Iguazio"
         },
-        "categories": ["data-analysis"],
+        "categories": [
+          "data-analysis"
+        ],
         "updated": "2021-08-29T19:54:07.253784+00:00"
       },
       "spec": {
@@ -2643,7 +2744,9 @@
         "labels": {
           "author": "Daniel"
         },
-        "categories": ["model-training"],
+        "categories": [
+          "model-training"
+        ],
         "updated": "2021-08-29T19:54:07.448801+00:00"
       },
       "spec": {
@@ -2772,7 +2875,10 @@
                 "name": "eval_metrics",
                 "type": "list",
                 "doc": "([\"error\", \"auc\"]) learning curve metrics",
-                "default": ["error", "auc"]
+                "default": [
+                  "error",
+                  "auc"
+                ]
               },
               {
                 "name": "file_ext",
@@ -2817,7 +2923,10 @@
           "author": "Iguazio",
           "framework": "survival"
         },
-        "categories": ["machine-learning", "model-testing"],
+        "categories": [
+          "machine-learning",
+          "model-testing"
+        ],
         "updated": "2021-08-29T19:54:36.019295+00:00"
       },
       "spec": {
@@ -2935,7 +3044,10 @@
           "author": "Iguazio",
           "framework": "survival"
         },
-        "categories": ["machine-learning", "model-testing"],
+        "categories": [
+          "machine-learning",
+          "model-testing"
+        ],
         "updated": "2021-08-29T19:54:36.160546+00:00"
       },
       "spec": {
@@ -3054,7 +3166,9 @@
           "author": "Daniel",
           "framework": "xgboost"
         },
-        "categories": ["model-testing"],
+        "categories": [
+          "model-testing"
+        ],
         "updated": "2021-08-29T19:55:05.773651+00:00"
       },
       "spec": {
@@ -3174,7 +3288,9 @@
           "author": "Daniel",
           "framework": "xgboost"
         },
-        "categories": ["model-testing"],
+        "categories": [
+          "model-testing"
+        ],
         "updated": "2021-08-29T19:55:06.030248+00:00"
       },
       "spec": {
@@ -3295,7 +3411,10 @@
           "author": "Iguazio",
           "framework": "churn"
         },
-        "categories": ["model-serving", "machine-learning"],
+        "categories": [
+          "model-serving",
+          "machine-learning"
+        ],
         "updated": "2021-08-29T19:57:30.175073+00:00"
       },
       "spec": {
@@ -3567,7 +3686,9 @@
           "author": "yasha",
           "framework": "xgboost"
         },
-        "categories": ["data-prep"],
+        "categories": [
+          "data-prep"
+        ],
         "updated": "2021-09-03T14:01:18.754734+00:00"
       },
       "spec": {
@@ -3684,7 +3805,10 @@
           "author": "yjb",
           "framework": "survival"
         },
-        "categories": ["model-training", "machine-learning"],
+        "categories": [
+          "model-training",
+          "machine-learning"
+        ],
         "updated": "2021-09-03T14:01:34.261127+00:00"
       },
       "spec": {
@@ -3852,7 +3976,9 @@
         "labels": {
           "author": "Iguazio"
         },
-        "categories": ["data-analysis"],
+        "categories": [
+          "data-analysis"
+        ],
         "updated": "2021-09-03T14:01:50.141532+00:00"
       },
       "spec": {
@@ -3972,7 +4098,9 @@
         "labels": {
           "author": "Daniel"
         },
-        "categories": ["model-training"],
+        "categories": [
+          "model-training"
+        ],
         "updated": "2021-09-03T14:02:00.207532+00:00"
       },
       "spec": {
@@ -4095,7 +4223,10 @@
                 "name": "eval_metrics",
                 "type": "list",
                 "doc": "([\"error\", \"auc\"]) learning curve metrics",
-                "default": ["error", "auc"]
+                "default": [
+                  "error",
+                  "auc"
+                ]
               },
               {
                 "name": "file_ext",
@@ -4140,7 +4271,10 @@
           "author": "Iguazio",
           "framework": "survival"
         },
-        "categories": ["machine-learning", "model-testing"],
+        "categories": [
+          "machine-learning",
+          "model-testing"
+        ],
         "updated": "2021-09-03T14:02:08.179856+00:00"
       },
       "spec": {
@@ -4325,7 +4459,9 @@
           "author": "Daniel",
           "framework": "xgboost"
         },
-        "categories": ["model-testing"],
+        "categories": [
+          "model-testing"
+        ],
         "updated": "2021-09-16T07:47:04.729125+00:00"
       },
       "spec": {
@@ -4482,7 +4618,10 @@
           "framework": "churn",
           "mlrun/class": "serving"
         },
-        "categories": ["model-serving", "machine-learning"],
+        "categories": [
+          "model-serving",
+          "machine-learning"
+        ],
         "updated": "2021-10-19T07:38:01.804056+00:00"
       },
       "spec": {
@@ -4719,7 +4858,10 @@
           "framework": "churn",
           "mlrun/class": "serving"
         },
-        "categories": ["model-serving", "machine-learning"],
+        "categories": [
+          "model-serving",
+          "machine-learning"
+        ],
         "updated": "2021-11-02T08:00:39.037764+00:00"
       },
       "spec": {
@@ -4956,7 +5098,10 @@
           "framework": "churn",
           "mlrun/class": "serving"
         },
-        "categories": ["model-serving", "machine-learning"],
+        "categories": [
+          "model-serving",
+          "machine-learning"
+        ],
         "updated": "2021-11-08T16:23:10.167494+00:00",
         "credentials": {
           "access_key": "$generate"
@@ -5192,7 +5337,9 @@
           "author": "yasha",
           "framework": "xgboost"
         },
-        "categories": ["data-prep"],
+        "categories": [
+          "data-prep"
+        ],
         "updated": "2021-11-08T16:24:30.260459+00:00",
         "credentials": {
           "access_key": "$generate"
@@ -5312,7 +5459,10 @@
           "author": "yjb",
           "framework": "survival"
         },
-        "categories": ["model-training", "machine-learning"],
+        "categories": [
+          "model-training",
+          "machine-learning"
+        ],
         "updated": "2021-11-08T16:24:36.350962+00:00",
         "credentials": {
           "access_key": "$generate"
@@ -5483,7 +5633,9 @@
         "labels": {
           "author": "Iguazio"
         },
-        "categories": ["data-analysis"],
+        "categories": [
+          "data-analysis"
+        ],
         "updated": "2021-11-08T16:24:41.982167+00:00",
         "credentials": {
           "access_key": "$generate"
@@ -5606,7 +5758,9 @@
         "labels": {
           "author": "Daniel"
         },
-        "categories": ["model-training"],
+        "categories": [
+          "model-training"
+        ],
         "updated": "2021-11-08T16:24:49.683849+00:00",
         "credentials": {
           "access_key": "$generate"
@@ -5732,7 +5886,10 @@
                 "name": "eval_metrics",
                 "type": "list",
                 "doc": "([\"error\", \"auc\"]) learning curve metrics",
-                "default": ["error", "auc"]
+                "default": [
+                  "error",
+                  "auc"
+                ]
               },
               {
                 "name": "file_ext",
@@ -5777,7 +5934,10 @@
           "author": "Iguazio",
           "framework": "survival"
         },
-        "categories": ["machine-learning", "model-testing"],
+        "categories": [
+          "machine-learning",
+          "model-testing"
+        ],
         "updated": "2021-11-08T16:24:56.465889+00:00",
         "credentials": {
           "access_key": "$generate"
@@ -5893,7 +6053,9 @@
           "author": "Daniel",
           "framework": "xgboost"
         },
-        "categories": ["model-testing"],
+        "categories": [
+          "model-testing"
+        ],
         "updated": "2021-11-08T16:25:02.183253+00:00",
         "credentials": {
           "access_key": "$generate"
@@ -6067,7 +6229,10 @@
           "author": "Iguazio",
           "framework": "survival"
         },
-        "categories": ["machine-learning", "model-testing"],
+        "categories": [
+          "machine-learning",
+          "model-testing"
+        ],
         "updated": "2021-11-09T15:39:47.022491+00:00",
         "credentials": {
           "access_key": "$generate"
@@ -6290,7 +6455,9 @@
         "args": [],
         "build": {
           "base_image": "",
-          "commands": ["pip install pandas"],
+          "commands": [
+            "pip install pandas"
+          ],
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ""
         },
@@ -6441,7 +6608,9 @@
         "args": [],
         "build": {
           "base_image": "",
-          "commands": ["failed & fail"],
+          "commands": [
+            "failed & fail"
+          ],
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ""
         },
@@ -6486,7 +6655,10 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-failed-func:latest",
           "base_image": "",
-          "commands": ["failed & fail", "python -m pip install \"mlrun[complete]==0.7.0-rc13\""]
+          "commands": [
+            "failed & fail",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc13\""
+          ]
         },
         "disable_auto_mount": false,
         "priority_class_name": "",
@@ -6525,7 +6697,10 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-failed-func:latest",
           "base_image": "",
-          "commands": ["failed & fail", "python -m pip install \"mlrun[complete]==0.7.0-rc13\""]
+          "commands": [
+            "failed & fail",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc13\""
+          ]
         },
         "disable_auto_mount": false,
         "priority_class_name": "",
@@ -6726,7 +6901,9 @@
         "labels": {
           "author": "avia"
         },
-        "categories": ["data-preparation"],
+        "categories": [
+          "data-preparation"
+        ],
         "updated": "2021-09-03T13:53:30.457597+00:00"
       },
       "spec": {
@@ -6780,13 +6957,17 @@
                 "name": "metric_aggs",
                 "type": "list",
                 "doc": "Array containing a list of aggregation function names to run on {metrics}. (Ex: 'mean', 'std') (default='mean')",
-                "default": ["mean"]
+                "default": [
+                  "mean"
+                ]
               },
               {
                 "name": "label_aggs",
                 "type": "list",
                 "doc": "Array containing a list of aggregation function names to run on {metrics}. (Ex: 'max', 'min') (default='max') ",
-                "default": ["max"]
+                "default": [
+                  "max"
+                ]
               },
               {
                 "name": "suffix",
@@ -6856,7 +7037,9 @@
         "labels": {
           "author": "yaronh"
         },
-        "categories": ["utils"],
+        "categories": [
+          "utils"
+        ],
         "updated": "2021-09-03T13:53:51.859167+00:00"
       },
       "spec": {
@@ -7002,7 +7185,10 @@
         "args": [],
         "build": {
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""],
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ],
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ""
         },
@@ -7035,7 +7221,9 @@
         "args": [],
         "build": {
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH"],
+          "commands": [
+            "echo $PATH"
+          ],
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ""
         },
@@ -7068,7 +7256,9 @@
         "args": [],
         "build": {
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install \"mlrun[complete]==0.7.0-rc15\""],
+          "commands": [
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ],
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ""
         },
@@ -7114,7 +7304,9 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install \"mlrun[complete]==0.7.0-rc15\""]
+          "commands": [
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ]
         },
         "disable_auto_mount": false,
         "priority_class_name": "",
@@ -7150,7 +7342,9 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install \"mlrun[complete]==0.7.0-rc15\""]
+          "commands": [
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ]
         },
         "disable_auto_mount": false,
         "priority_class_name": "",
@@ -7173,7 +7367,9 @@
         "args": [],
         "build": {
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH"],
+          "commands": [
+            "echo $PATH"
+          ],
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest"
         },
@@ -7219,7 +7415,9 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH"]
+          "commands": [
+            "echo $PATH"
+          ]
         },
         "disable_auto_mount": false,
         "priority_class_name": "",
@@ -7242,7 +7440,10 @@
         "args": [],
         "build": {
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \\\"mlrun[complete]==0.7.0-rc15\\\""],
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \\\"mlrun[complete]==0.7.0-rc15\\\""
+          ],
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest"
         },
@@ -7288,7 +7489,10 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \\\"mlrun[complete]==0.7.0-rc15\\\""]
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \\\"mlrun[complete]==0.7.0-rc15\\\""
+          ]
         },
         "disable_auto_mount": false,
         "priority_class_name": "",
@@ -7311,7 +7515,10 @@
         "args": [],
         "build": {
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""],
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ],
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest"
         },
@@ -7357,7 +7564,10 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""]
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ]
         },
         "disable_auto_mount": false,
         "priority_class_name": "",
@@ -7376,7 +7586,9 @@
         "labels": {
           "author": "avia"
         },
-        "categories": ["data-preparation"],
+        "categories": [
+          "data-preparation"
+        ],
         "updated": "2021-09-07T11:42:54.086929+00:00"
       },
       "spec": {
@@ -7441,13 +7653,17 @@
                 "name": "metric_aggs",
                 "type": "list",
                 "doc": "Array containing a list of aggregation function names to run on {metrics}. (Ex: 'mean', 'std') (default='mean')",
-                "default": ["mean"]
+                "default": [
+                  "mean"
+                ]
               },
               {
                 "name": "label_aggs",
                 "type": "list",
                 "doc": "Array containing a list of aggregation function names to run on {metrics}. (Ex: 'max', 'min') (default='max') ",
-                "default": ["max"]
+                "default": [
+                  "max"
+                ]
               },
               {
                 "name": "suffix",
@@ -7521,7 +7737,10 @@
         "args": [],
         "build": {
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""],
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ],
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest"
         },
@@ -7624,7 +7843,10 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""]
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ]
         },
         "disable_auto_mount": false,
         "priority_class_name": "",
@@ -7647,7 +7869,9 @@
         "args": [],
         "build": {
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install \"mlrun[complete]==0.7.0-rc16\""],
+          "commands": [
+            "python -m pip install \"mlrun[complete]==0.7.0-rc16\""
+          ],
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ""
         },
@@ -7692,7 +7916,9 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-with-mlrun:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install \"mlrun[complete]==0.7.0-rc16\""]
+          "commands": [
+            "python -m pip install \"mlrun[complete]==0.7.0-rc16\""
+          ]
         },
         "disable_auto_mount": false,
         "priority_class_name": "",
@@ -7728,7 +7954,9 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-with-mlrun:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install \"mlrun[complete]==0.7.0-rc16\""]
+          "commands": [
+            "python -m pip install \"mlrun[complete]==0.7.0-rc16\""
+          ]
         },
         "disable_auto_mount": false,
         "priority_class_name": "",
@@ -7751,7 +7979,10 @@
         "args": [],
         "build": {
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""],
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ],
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest"
         },
@@ -7854,7 +8085,10 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""]
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ]
         },
         "disable_auto_mount": false,
         "priority_class_name": "",
@@ -7919,7 +8153,10 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""]
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ]
         },
         "disable_auto_mount": false,
         "priority_class_name": "",
@@ -7942,7 +8179,10 @@
         "args": [],
         "build": {
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""],
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ],
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest"
         },
@@ -8708,7 +8948,9 @@
                 "attributes": {
                   "ingresses": {
                     "0": {
-                      "paths": ["/"],
+                      "paths": [
+                        "/"
+                      ],
                       "hostTemplate": "@nuclio.fromDefault"
                     }
                   },
@@ -8753,7 +8995,9 @@
               "class_args": {
                 "_fn": "(event is not None)"
               },
-              "after": ["ProcessEndpointEvent"]
+              "after": [
+                "ProcessEndpointEvent"
+              ]
             },
             "flatten_events": {
               "kind": "task",
@@ -8761,7 +9005,9 @@
               "class_args": {
                 "_fn": "(event)"
               },
-              "after": ["filter_none"]
+              "after": [
+                "filter_none"
+              ]
             },
             "MapFeatureNames": {
               "kind": "task",
@@ -8772,7 +9018,9 @@
                 "access_key": "76ceea19-4b10-47d9-afbb-f687c91b9231",
                 "infer_columns_from_data": true
               },
-              "after": ["flatten_events"]
+              "after": [
+                "flatten_events"
+              ]
             },
             "Aggregates": {
               "kind": "task",
@@ -8782,21 +9030,33 @@
                   {
                     "name": "predictions",
                     "column": "endpoint_id",
-                    "operations": ["count"],
-                    "windows": ["5m", "1h"],
+                    "operations": [
+                      "count"
+                    ],
+                    "windows": [
+                      "5m",
+                      "1h"
+                    ],
                     "period": "30s"
                   },
                   {
                     "name": "latency",
                     "column": "latency",
-                    "operations": ["avg"],
-                    "windows": ["5m", "1h"],
+                    "operations": [
+                      "avg"
+                    ],
+                    "windows": [
+                      "5m",
+                      "1h"
+                    ],
                     "period": "30s"
                   }
                 ],
                 "table": "."
               },
-              "after": ["MapFeatureNames"]
+              "after": [
+                "MapFeatureNames"
+              ]
             },
             "sample": {
               "kind": "task",
@@ -8805,12 +9065,16 @@
                 "window_size": 10,
                 "key": "endpoint_id"
               },
-              "after": ["Aggregates"]
+              "after": [
+                "Aggregates"
+              ]
             },
             "ProcessBeforeKV": {
               "kind": "task",
               "class_name": "ProcessBeforeKV",
-              "after": ["sample"]
+              "after": [
+                "sample"
+              ]
             },
             "WriteToKV": {
               "kind": "task",
@@ -8819,7 +9083,9 @@
                 "container": "users",
                 "table": "pipelines/default/model-endpoints/endpoints/"
               },
-              "after": ["ProcessBeforeKV"]
+              "after": [
+                "ProcessBeforeKV"
+              ]
             },
             "InferSchema": {
               "kind": "task",
@@ -8830,20 +9096,28 @@
                 "container": "users",
                 "table": "pipelines/default/model-endpoints/endpoints/"
               },
-              "after": ["WriteToKV"]
+              "after": [
+                "WriteToKV"
+              ]
             },
             "ProcessBeforeTSDB": {
               "kind": "task",
               "class_name": "ProcessBeforeTSDB",
-              "after": ["sample"]
+              "after": [
+                "sample"
+              ]
             },
             "FilterAndUnpackKeys1": {
               "kind": "task",
               "class_name": "FilterAndUnpackKeys",
               "class_args": {
-                "keys": ["base_metrics"]
+                "keys": [
+                  "base_metrics"
+                ]
               },
-              "after": ["ProcessBeforeTSDB"]
+              "after": [
+                "ProcessBeforeTSDB"
+              ]
             },
             "tsdb1": {
               "kind": "task",
@@ -8855,20 +9129,29 @@
                 "container": "users",
                 "access_key": "76ceea19-4b10-47d9-afbb-f687c91b9231",
                 "v3io_frames": "http://framesd:8080",
-                "index_cols": ["endpoint_id", "record_type"],
+                "index_cols": [
+                  "endpoint_id",
+                  "record_type"
+                ],
                 "max_events": 10,
                 "timeout_secs": 300,
                 "key": "endpoint_id"
               },
-              "after": ["FilterAndUnpackKeys1"]
+              "after": [
+                "FilterAndUnpackKeys1"
+              ]
             },
             "FilterAndUnpackKeys2": {
               "kind": "task",
               "class_name": "FilterAndUnpackKeys",
               "class_args": {
-                "keys": ["endpoint_features"]
+                "keys": [
+                  "endpoint_features"
+                ]
               },
-              "after": ["ProcessBeforeTSDB"]
+              "after": [
+                "ProcessBeforeTSDB"
+              ]
             },
             "tsdb2": {
               "kind": "task",
@@ -8880,20 +9163,29 @@
                 "container": "users",
                 "access_key": "76ceea19-4b10-47d9-afbb-f687c91b9231",
                 "v3io_frames": "http://framesd:8080",
-                "index_cols": ["endpoint_id", "record_type"],
+                "index_cols": [
+                  "endpoint_id",
+                  "record_type"
+                ],
                 "max_events": 10,
                 "timeout_secs": 300,
                 "key": "endpoint_id"
               },
-              "after": ["FilterAndUnpackKeys2"]
+              "after": [
+                "FilterAndUnpackKeys2"
+              ]
             },
             "FilterAndUnpackKeys3": {
               "kind": "task",
               "class_name": "FilterAndUnpackKeys",
               "class_args": {
-                "keys": ["custom_metrics"]
+                "keys": [
+                  "custom_metrics"
+                ]
               },
-              "after": ["ProcessBeforeTSDB"]
+              "after": [
+                "ProcessBeforeTSDB"
+              ]
             },
             "FilterNotNone": {
               "kind": "task",
@@ -8901,7 +9193,9 @@
               "class_args": {
                 "_fn": "(event is not None)"
               },
-              "after": ["FilterAndUnpackKeys3"]
+              "after": [
+                "FilterAndUnpackKeys3"
+              ]
             },
             "tsdb3": {
               "kind": "task",
@@ -8913,12 +9207,17 @@
                 "container": "users",
                 "access_key": "76ceea19-4b10-47d9-afbb-f687c91b9231",
                 "v3io_frames": "http://framesd:8080",
-                "index_cols": ["endpoint_id", "record_type"],
+                "index_cols": [
+                  "endpoint_id",
+                  "record_type"
+                ],
                 "max_events": 10,
                 "timeout_secs": 300,
                 "key": "endpoint_id"
               },
-              "after": ["FilterNotNone"]
+              "after": [
+                "FilterNotNone"
+              ]
             },
             "ProcessBeforeParquet": {
               "kind": "task",
@@ -8926,7 +9225,9 @@
               "class_args": {
                 "_fn": "(event)"
               },
-              "after": ["MapFeatureNames"]
+              "after": [
+                "MapFeatureNames"
+              ]
             }
           },
           "final_step": "ProcessBeforeParquet"
@@ -9044,7 +9345,10 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""]
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ]
         },
         "disable_auto_mount": true,
         "priority_class_name": "",
@@ -9125,7 +9429,10 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""]
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ]
         },
         "disable_auto_mount": true,
         "priority_class_name": "",
@@ -9144,7 +9451,9 @@
         "labels": {
           "author": "saarc"
         },
-        "categories": ["utils"],
+        "categories": [
+          "utils"
+        ],
         "updated": "2021-10-06T14:10:00.382460+00:00"
       },
       "spec": {
@@ -9255,7 +9564,10 @@
         "args": [],
         "build": {
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""],
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ],
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest"
         },
@@ -9401,7 +9713,9 @@
         "args": [],
         "build": {
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install \"mlrun[complete]==0.8.0-rc6\""],
+          "commands": [
+            "python -m pip install \"mlrun[complete]==0.8.0-rc6\""
+          ],
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/mlrun/func-default-test-m:latest"
         },
@@ -9448,7 +9762,9 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/mlrun/func-default-test-m:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install \"mlrun[complete]==0.8.0-rc6\""]
+          "commands": [
+            "python -m pip install \"mlrun[complete]==0.8.0-rc6\""
+          ]
         },
         "disable_auto_mount": false,
         "priority_class_name": "",
@@ -9484,7 +9800,9 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/mlrun/func-default-test-m:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install \"mlrun[complete]==0.8.0-rc6\""]
+          "commands": [
+            "python -m pip install \"mlrun[complete]==0.8.0-rc6\""
+          ]
         },
         "disable_auto_mount": false,
         "priority_class_name": "",
@@ -9507,7 +9825,9 @@
         "args": [],
         "build": {
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install \"mlrun[complete]==0.8.0-rc6\""],
+          "commands": [
+            "python -m pip install \"mlrun[complete]==0.8.0-rc6\""
+          ],
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/mlrun/func-default-test-m:latest"
         },
@@ -9571,7 +9891,9 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/mlrun/func-default-test-m:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install \"mlrun[complete]==0.8.0-rc6\""]
+          "commands": [
+            "python -m pip install \"mlrun[complete]==0.8.0-rc6\""
+          ]
         },
         "disable_auto_mount": true,
         "priority_class_name": "",
@@ -9655,7 +9977,10 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""]
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ]
         },
         "disable_auto_mount": true,
         "priority_class_name": "",
@@ -9739,7 +10064,10 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""]
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ]
         },
         "disable_auto_mount": true,
         "priority_class_name": "",
@@ -9765,7 +10093,10 @@
         "args": [],
         "build": {
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""],
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ],
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest"
         },
@@ -9844,7 +10175,10 @@
         "args": [],
         "build": {
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""],
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ],
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest"
         },
@@ -9953,7 +10287,9 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/mlrun/func-default-test-m:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install \"mlrun[complete]==0.8.0-rc6\""]
+          "commands": [
+            "python -m pip install \"mlrun[complete]==0.8.0-rc6\""
+          ]
         },
         "disable_auto_mount": true,
         "priority_class_name": "",
@@ -10037,7 +10373,10 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""]
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ]
         },
         "disable_auto_mount": true,
         "priority_class_name": "",
@@ -10103,7 +10442,9 @@
         "labels": {
           "author": "avia"
         },
-        "categories": ["data-preparation"],
+        "categories": [
+          "data-preparation"
+        ],
         "updated": "2021-11-08T11:42:59.051991+00:00",
         "credentials": {
           "access_key": "$generate"
@@ -10188,13 +10529,17 @@
                 "name": "metric_aggs",
                 "type": "list",
                 "doc": "Array containing a list of aggregation function names to run on {metrics}. (Ex: 'mean', 'std') (default='mean')",
-                "default": ["mean"]
+                "default": [
+                  "mean"
+                ]
               },
               {
                 "name": "label_aggs",
                 "type": "list",
                 "doc": "Array containing a list of aggregation function names to run on {metrics}. (Ex: 'max', 'min') (default='max') ",
-                "default": ["max"]
+                "default": [
+                  "max"
+                ]
               },
               {
                 "name": "suffix",
@@ -10517,7 +10862,10 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""]
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ]
         },
         "disable_auto_mount": true,
         "priority_class_name": "",
@@ -10649,7 +10997,9 @@
         "labels": {
           "author": "yaronh"
         },
-        "categories": ["utils"],
+        "categories": [
+          "utils"
+        ],
         "updated": "2021-11-08T11:43:11.577361+00:00",
         "credentials": {
           "access_key": "$generate"
@@ -10812,7 +11162,9 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-with-mlrun:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install \"mlrun[complete]==0.7.0-rc16\""]
+          "commands": [
+            "python -m pip install \"mlrun[complete]==0.7.0-rc16\""
+          ]
         },
         "disable_auto_mount": true,
         "priority_class_name": "",
@@ -11259,7 +11611,10 @@
           "functionSourceCode": "ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp",
           "image": ".mlrun/func-default-erann-test:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["echo $PATH", "python -m pip install \"mlrun[complete]==0.7.0-rc15\""]
+          "commands": [
+            "echo $PATH",
+            "python -m pip install \"mlrun[complete]==0.7.0-rc15\""
+          ]
         },
         "disable_auto_mount": true,
         "priority_class_name": "",
@@ -11278,7 +11633,9 @@
         "labels": {
           "author": "avia"
         },
-        "categories": ["data-preparation"],
+        "categories": [
+          "data-preparation"
+        ],
         "updated": "2021-11-25T15:20:00.058634+00:00",
         "credentials": {
           "access_key": "$generate"
@@ -11352,13 +11709,17 @@
                 "name": "metric_aggs",
                 "type": "list",
                 "doc": "Array containing a list of aggregation function names to run on {metrics}. (Ex: 'mean', 'std') (default='mean')",
-                "default": ["mean"]
+                "default": [
+                  "mean"
+                ]
               },
               {
                 "name": "label_aggs",
                 "type": "list",
                 "doc": "Array containing a list of aggregation function names to run on {metrics}. (Ex: 'max', 'min') (default='max') ",
-                "default": ["max"]
+                "default": [
+                  "max"
+                ]
               },
               {
                 "name": "suffix",
@@ -11796,7 +12157,9 @@
                   "bad": "bed"
                 }
               },
-              "after": ["DropColumns"]
+              "after": [
+                "DropColumns"
+              ]
             },
             "Aggregates": {
               "kind": "task",
@@ -11806,79 +12169,149 @@
                   {
                     "name": "hr_h",
                     "column": "hr",
-                    "operations": ["avg", "max", "min"],
-                    "windows": ["1h"]
+                    "operations": [
+                      "avg",
+                      "max",
+                      "min"
+                    ],
+                    "windows": [
+                      "1h"
+                    ]
                   },
                   {
                     "name": "hr_d",
                     "column": "hr",
-                    "operations": ["avg", "max", "min"],
-                    "windows": ["1d"]
+                    "operations": [
+                      "avg",
+                      "max",
+                      "min"
+                    ],
+                    "windows": [
+                      "1d"
+                    ]
                   },
                   {
                     "name": "rr_h",
                     "column": "rr",
-                    "operations": ["avg", "max", "min"],
-                    "windows": ["1h"]
+                    "operations": [
+                      "avg",
+                      "max",
+                      "min"
+                    ],
+                    "windows": [
+                      "1h"
+                    ]
                   },
                   {
                     "name": "rr_d",
                     "column": "rr",
-                    "operations": ["avg", "max", "min"],
-                    "windows": ["1d"]
+                    "operations": [
+                      "avg",
+                      "max",
+                      "min"
+                    ],
+                    "windows": [
+                      "1d"
+                    ]
                   },
                   {
                     "name": "spo2_h",
                     "column": "spo2",
-                    "operations": ["avg", "max", "min"],
-                    "windows": ["1h"]
+                    "operations": [
+                      "avg",
+                      "max",
+                      "min"
+                    ],
+                    "windows": [
+                      "1h"
+                    ]
                   },
                   {
                     "name": "spo2_d",
                     "column": "spo2",
-                    "operations": ["avg", "max", "min"],
-                    "windows": ["1d"]
+                    "operations": [
+                      "avg",
+                      "max",
+                      "min"
+                    ],
+                    "windows": [
+                      "1d"
+                    ]
                   },
                   {
                     "name": "movements_h",
                     "column": "movements",
-                    "operations": ["avg", "max", "min"],
-                    "windows": ["1h"]
+                    "operations": [
+                      "avg",
+                      "max",
+                      "min"
+                    ],
+                    "windows": [
+                      "1h"
+                    ]
                   },
                   {
                     "name": "movements_d",
                     "column": "movements",
-                    "operations": ["avg", "max", "min"],
-                    "windows": ["1d"]
+                    "operations": [
+                      "avg",
+                      "max",
+                      "min"
+                    ],
+                    "windows": [
+                      "1d"
+                    ]
                   },
                   {
                     "name": "turn_count_h",
                     "column": "turn_count",
-                    "operations": ["avg", "max", "min"],
-                    "windows": ["1h"]
+                    "operations": [
+                      "avg",
+                      "max",
+                      "min"
+                    ],
+                    "windows": [
+                      "1h"
+                    ]
                   },
                   {
                     "name": "turn_count_d",
                     "column": "turn_count",
-                    "operations": ["avg", "max", "min"],
-                    "windows": ["1d"]
+                    "operations": [
+                      "avg",
+                      "max",
+                      "min"
+                    ],
+                    "windows": [
+                      "1d"
+                    ]
                   },
                   {
                     "name": "in_bed_h",
                     "column": "is_in_bed",
-                    "operations": ["avg"],
-                    "windows": ["1h"]
+                    "operations": [
+                      "avg"
+                    ],
+                    "windows": [
+                      "1h"
+                    ]
                   },
                   {
                     "name": "in_bed_d",
                     "column": "is_in_bed",
-                    "operations": ["avg"],
-                    "windows": ["1d"]
+                    "operations": [
+                      "avg"
+                    ],
+                    "windows": [
+                      "1d"
+                    ]
                   }
                 ],
                 "table": "."
               },
-              "after": ["RenameColumns"]
+              "after": [
+                "RenameColumns"
+              ]
             }
           }
         },
@@ -13014,7 +13447,9 @@
         "labels": {
           "author": "Iguazio"
         },
-        "categories": ["data-analysis"],
+        "categories": [
+          "data-analysis"
+        ],
         "updated": "2021-08-30T05:14:53.493169+00:00"
       },
       "spec": {
@@ -13140,7 +13575,9 @@
         "labels": {
           "author": "Iguazio"
         },
-        "categories": ["data-analysis"],
+        "categories": [
+          "data-analysis"
+        ],
         "updated": "2021-08-30T05:14:53.592028+00:00"
       },
       "spec": {
@@ -13268,7 +13705,10 @@
           "author": "yjb",
           "framework": "sklearn"
         },
-        "categories": ["machine-learning", "model-testing"],
+        "categories": [
+          "machine-learning",
+          "model-testing"
+        ],
         "updated": "2021-08-30T05:15:13.536559+00:00"
       },
       "spec": {
@@ -13410,7 +13850,10 @@
           "author": "yjb",
           "framework": "sklearn"
         },
-        "categories": ["machine-learning", "model-testing"],
+        "categories": [
+          "machine-learning",
+          "model-testing"
+        ],
         "updated": "2021-08-30T05:15:13.671388+00:00"
       },
       "spec": {
@@ -14138,7 +14581,10 @@
           "author": "yjb",
           "framework": "sklearn"
         },
-        "categories": ["machine-learning", "model-testing"],
+        "categories": [
+          "machine-learning",
+          "model-testing"
+        ],
         "updated": "2021-08-30T05:18:55.370709+00:00"
       },
       "spec": {
@@ -14776,7 +15222,9 @@
         "labels": {
           "author": "Iguazio"
         },
-        "categories": ["data-analysis"],
+        "categories": [
+          "data-analysis"
+        ],
         "updated": "2021-11-08T16:20:45.979095+00:00",
         "credentials": {
           "access_key": "$generate"
@@ -15017,7 +15465,10 @@
           "author": "yjb",
           "framework": "sklearn"
         },
-        "categories": ["machine-learning", "model-testing"],
+        "categories": [
+          "machine-learning",
+          "model-testing"
+        ],
         "updated": "2021-11-08T16:21:28.102237+00:00",
         "credentials": {
           "access_key": "$generate"
@@ -15156,7 +15607,10 @@
           "author": "yjb",
           "framework": "sklearn"
         },
-        "categories": ["machine-learning", "model-testing"],
+        "categories": [
+          "machine-learning",
+          "model-testing"
+        ],
         "updated": "2021-11-08T16:26:14.881359+00:00",
         "credentials": {
           "access_key": "$generate"
@@ -15298,7 +15752,9 @@
         "labels": {
           "author": "Iguazio"
         },
-        "categories": ["data-analysis"],
+        "categories": [
+          "data-analysis"
+        ],
         "updated": "2021-11-08T16:26:23.973930+00:00",
         "credentials": {
           "access_key": "$generate"
@@ -15433,7 +15889,10 @@
         "args": [],
         "build": {
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install \"mlrun[complete]==0.8.0-rc15\"", "echo test"],
+          "commands": [
+            "python -m pip install \"mlrun[complete]==0.8.0-rc15\"",
+            "echo test"
+          ],
           "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKZnJvbSBza2xlYXJuIGltcG9ydCBsaW5lYXJfbW9kZWwKZnJvbSBza2xlYXJuIGltcG9ydCBkYXRhc2V0cwpmcm9tIHNrbGVhcm4ubW9kZWxfc2VsZWN0aW9uIGltcG9ydCB0cmFpbl90ZXN0X3NwbGl0CmZyb20gY2xvdWRwaWNrbGUgaW1wb3J0IGR1bXBzCmltcG9ydCBwYW5kYXMgYXMgcGQKCmZyb20gbWxydW4uZXhlY3V0aW9uIGltcG9ydCBNTENsaWVudEN0eApmcm9tIG1scnVuLmRhdGFzdG9yZSBpbXBvcnQgRGF0YUl0ZW0KZnJvbSBtbHJ1bi5tbHV0aWxzLmRhdGEgaW1wb3J0IGdldF9zYW1wbGUKZnJvbSBtbHJ1bi5tbHV0aWxzLnBsb3RzIGltcG9ydCBldmFsX21vZGVsX3YyCgpkZWYgdHJhaW5faXJpcyhjb250ZXh0OiBNTENsaWVudEN0eCwKICAgICAgICAgICAgICAgZGF0YXNldDogRGF0YUl0ZW0sCiAgICAgICAgICAgICAgIGxhYmVsX2NvbHVtbjogc3RyID0gImxhYmVscyIpOgoKICAgIHJhdywgbGFiZWxzLCBoZWFkZXIgPSBnZXRfc2FtcGxlKGRhdGFzZXQsIHNhbXBsZT0tMSwgbGFiZWw9bGFiZWxfY29sdW1uKQogICAgCiAgICBYX3RyYWluLCBYX3Rlc3QsIHlfdHJhaW4sIHlfdGVzdCA9IHRyYWluX3Rlc3Rfc3BsaXQoCiAgICAgICAgcmF3LCBsYWJlbHMsIHRlc3Rfc2l6ZT0wLjIsIHJhbmRvbV9zdGF0ZT00MikKICAgIAogICAgY29udGV4dC5sb2dfZGF0YXNldCgndHJhaW5fc2V0JywgCiAgICAgICAgICAgICAgICAgICAgICAgIGRmPXBkLmNvbmNhdChbWF90cmFpbiwgeV90cmFpbi50b19mcmFtZSgpXSwgYXhpcz0xKSwKICAgICAgICAgICAgICAgICAgICAgICAgZm9ybWF0PSdjc3YnLCBpbmRleD1GYWxzZSwgCiAgICAgICAgICAgICAgICAgICAgICAgIGFydGlmYWN0X3BhdGg9Y29udGV4dC5hcnRpZmFjdF9zdWJwYXRoKCdkYXRhJykpCgogICAgY29udGV4dC5sb2dfZGF0YXNldCgndGVzdF9zZXQnLCAKICAgICAgICAgICAgICAgICAgICAgICAgZGY9cGQuY29uY2F0KFtYX3Rlc3QsIHlfdGVzdC50b19mcmFtZSgpXSwgYXhpcz0xKSwKICAgICAgICAgICAgICAgICAgICAgICAgZm9ybWF0PSdjc3YnLCBpbmRleD1GYWxzZSwgCiAgICAgICAgICAgICAgICAgICAgICAgIGxhYmVscz17ImRhdGEtdHlwZSI6ICJoZWxkLW91dCJ9LAogICAgICAgICAgICAgICAgICAgICAgICBhcnRpZmFjdF9wYXRoPWNvbnRleHQuYXJ0aWZhY3Rfc3VicGF0aCgnZGF0YScpKQogICAgCiAgICBtb2RlbCA9IGxpbmVhcl9tb2RlbC5Mb2dpc3RpY1JlZ3Jlc3Npb24obWF4X2l0ZXI9MTAwMDApCiAgICBtb2RlbC5maXQoWF90cmFpbiwgeV90cmFpbikKICAgIAogICAgZXZhbF9tZXRyaWNzID0gZXZhbF9tb2RlbF92Mihjb250ZXh0LCBYX3Rlc3QsIHlfdGVzdCwgbW9kZWwpCiAgICAKICAgIGNvbnRleHQubG9nX21vZGVsKCJtb2RlbCIsCiAgICAgICAgICAgICAgICAgICAgICBib2R5PWR1bXBzKG1vZGVsKSwKICAgICAgICAgICAgICAgICAgICAgIGFydGlmYWN0X3BhdGg9Y29udGV4dC5hcnRpZmFjdF9zdWJwYXRoKCJtb2RlbHMiKSwKICAgICAgICAgICAgICAgICAgICAgIGV4dHJhX2RhdGE9ZXZhbF9tZXRyaWNzLCAKICAgICAgICAgICAgICAgICAgICAgIG1vZGVsX2ZpbGU9Im1vZGVsLnBrbCIsCiAgICAgICAgICAgICAgICAgICAgICBtZXRyaWNzPWNvbnRleHQucmVzdWx0cywKICAgICAgICAgICAgICAgICAgICAgIGxhYmVscz17ImNsYXNzIjogInNrbGVhcm4ubGluZWFyX21vZGVsLkxvZ2lzdGljUmVncmVzc2lvbiJ9KQoK",
           "image": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/mlrun/func-getting-started-tutorial-admin-train-iris:latest"
         },
@@ -15544,7 +16003,10 @@
           "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKZnJvbSBza2xlYXJuIGltcG9ydCBsaW5lYXJfbW9kZWwKZnJvbSBza2xlYXJuIGltcG9ydCBkYXRhc2V0cwpmcm9tIHNrbGVhcm4ubW9kZWxfc2VsZWN0aW9uIGltcG9ydCB0cmFpbl90ZXN0X3NwbGl0CmZyb20gY2xvdWRwaWNrbGUgaW1wb3J0IGR1bXBzCmltcG9ydCBwYW5kYXMgYXMgcGQKCmZyb20gbWxydW4uZXhlY3V0aW9uIGltcG9ydCBNTENsaWVudEN0eApmcm9tIG1scnVuLmRhdGFzdG9yZSBpbXBvcnQgRGF0YUl0ZW0KZnJvbSBtbHJ1bi5tbHV0aWxzLmRhdGEgaW1wb3J0IGdldF9zYW1wbGUKZnJvbSBtbHJ1bi5tbHV0aWxzLnBsb3RzIGltcG9ydCBldmFsX21vZGVsX3YyCgpkZWYgdHJhaW5faXJpcyhjb250ZXh0OiBNTENsaWVudEN0eCwKICAgICAgICAgICAgICAgZGF0YXNldDogRGF0YUl0ZW0sCiAgICAgICAgICAgICAgIGxhYmVsX2NvbHVtbjogc3RyID0gImxhYmVscyIpOgoKICAgIHJhdywgbGFiZWxzLCBoZWFkZXIgPSBnZXRfc2FtcGxlKGRhdGFzZXQsIHNhbXBsZT0tMSwgbGFiZWw9bGFiZWxfY29sdW1uKQogICAgCiAgICBYX3RyYWluLCBYX3Rlc3QsIHlfdHJhaW4sIHlfdGVzdCA9IHRyYWluX3Rlc3Rfc3BsaXQoCiAgICAgICAgcmF3LCBsYWJlbHMsIHRlc3Rfc2l6ZT0wLjIsIHJhbmRvbV9zdGF0ZT00MikKICAgIAogICAgY29udGV4dC5sb2dfZGF0YXNldCgndHJhaW5fc2V0JywgCiAgICAgICAgICAgICAgICAgICAgICAgIGRmPXBkLmNvbmNhdChbWF90cmFpbiwgeV90cmFpbi50b19mcmFtZSgpXSwgYXhpcz0xKSwKICAgICAgICAgICAgICAgICAgICAgICAgZm9ybWF0PSdjc3YnLCBpbmRleD1GYWxzZSwgCiAgICAgICAgICAgICAgICAgICAgICAgIGFydGlmYWN0X3BhdGg9Y29udGV4dC5hcnRpZmFjdF9zdWJwYXRoKCdkYXRhJykpCgogICAgY29udGV4dC5sb2dfZGF0YXNldCgndGVzdF9zZXQnLCAKICAgICAgICAgICAgICAgICAgICAgICAgZGY9cGQuY29uY2F0KFtYX3Rlc3QsIHlfdGVzdC50b19mcmFtZSgpXSwgYXhpcz0xKSwKICAgICAgICAgICAgICAgICAgICAgICAgZm9ybWF0PSdjc3YnLCBpbmRleD1GYWxzZSwgCiAgICAgICAgICAgICAgICAgICAgICAgIGxhYmVscz17ImRhdGEtdHlwZSI6ICJoZWxkLW91dCJ9LAogICAgICAgICAgICAgICAgICAgICAgICBhcnRpZmFjdF9wYXRoPWNvbnRleHQuYXJ0aWZhY3Rfc3VicGF0aCgnZGF0YScpKQogICAgCiAgICBtb2RlbCA9IGxpbmVhcl9tb2RlbC5Mb2dpc3RpY1JlZ3Jlc3Npb24obWF4X2l0ZXI9MTAwMDApCiAgICBtb2RlbC5maXQoWF90cmFpbiwgeV90cmFpbikKICAgIAogICAgZXZhbF9tZXRyaWNzID0gZXZhbF9tb2RlbF92Mihjb250ZXh0LCBYX3Rlc3QsIHlfdGVzdCwgbW9kZWwpCiAgICAKICAgIGNvbnRleHQubG9nX21vZGVsKCJtb2RlbCIsCiAgICAgICAgICAgICAgICAgICAgICBib2R5PWR1bXBzKG1vZGVsKSwKICAgICAgICAgICAgICAgICAgICAgIGFydGlmYWN0X3BhdGg9Y29udGV4dC5hcnRpZmFjdF9zdWJwYXRoKCJtb2RlbHMiKSwKICAgICAgICAgICAgICAgICAgICAgIGV4dHJhX2RhdGE9ZXZhbF9tZXRyaWNzLCAKICAgICAgICAgICAgICAgICAgICAgIG1vZGVsX2ZpbGU9Im1vZGVsLnBrbCIsCiAgICAgICAgICAgICAgICAgICAgICBtZXRyaWNzPWNvbnRleHQucmVzdWx0cywKICAgICAgICAgICAgICAgICAgICAgIGxhYmVscz17ImNsYXNzIjogInNrbGVhcm4ubGluZWFyX21vZGVsLkxvZ2lzdGljUmVncmVzc2lvbiJ9KQoK",
           "image": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/mlrun/func-getting-started-tutorial-admin-train-iris:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install \"mlrun[complete]==0.8.0-rc15\"", "echo test"]
+          "commands": [
+            "python -m pip install \"mlrun[complete]==0.8.0-rc15\"",
+            "echo test"
+          ]
         },
         "disable_auto_mount": false,
         "priority_class_name": "",
@@ -15615,7 +16077,10 @@
           "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKZnJvbSBza2xlYXJuIGltcG9ydCBsaW5lYXJfbW9kZWwKZnJvbSBza2xlYXJuIGltcG9ydCBkYXRhc2V0cwpmcm9tIHNrbGVhcm4ubW9kZWxfc2VsZWN0aW9uIGltcG9ydCB0cmFpbl90ZXN0X3NwbGl0CmZyb20gY2xvdWRwaWNrbGUgaW1wb3J0IGR1bXBzCmltcG9ydCBwYW5kYXMgYXMgcGQKCmZyb20gbWxydW4uZXhlY3V0aW9uIGltcG9ydCBNTENsaWVudEN0eApmcm9tIG1scnVuLmRhdGFzdG9yZSBpbXBvcnQgRGF0YUl0ZW0KZnJvbSBtbHJ1bi5tbHV0aWxzLmRhdGEgaW1wb3J0IGdldF9zYW1wbGUKZnJvbSBtbHJ1bi5tbHV0aWxzLnBsb3RzIGltcG9ydCBldmFsX21vZGVsX3YyCgpkZWYgdHJhaW5faXJpcyhjb250ZXh0OiBNTENsaWVudEN0eCwKICAgICAgICAgICAgICAgZGF0YXNldDogRGF0YUl0ZW0sCiAgICAgICAgICAgICAgIGxhYmVsX2NvbHVtbjogc3RyID0gImxhYmVscyIpOgoKICAgIHJhdywgbGFiZWxzLCBoZWFkZXIgPSBnZXRfc2FtcGxlKGRhdGFzZXQsIHNhbXBsZT0tMSwgbGFiZWw9bGFiZWxfY29sdW1uKQogICAgCiAgICBYX3RyYWluLCBYX3Rlc3QsIHlfdHJhaW4sIHlfdGVzdCA9IHRyYWluX3Rlc3Rfc3BsaXQoCiAgICAgICAgcmF3LCBsYWJlbHMsIHRlc3Rfc2l6ZT0wLjIsIHJhbmRvbV9zdGF0ZT00MikKICAgIAogICAgY29udGV4dC5sb2dfZGF0YXNldCgndHJhaW5fc2V0JywgCiAgICAgICAgICAgICAgICAgICAgICAgIGRmPXBkLmNvbmNhdChbWF90cmFpbiwgeV90cmFpbi50b19mcmFtZSgpXSwgYXhpcz0xKSwKICAgICAgICAgICAgICAgICAgICAgICAgZm9ybWF0PSdjc3YnLCBpbmRleD1GYWxzZSwgCiAgICAgICAgICAgICAgICAgICAgICAgIGFydGlmYWN0X3BhdGg9Y29udGV4dC5hcnRpZmFjdF9zdWJwYXRoKCdkYXRhJykpCgogICAgY29udGV4dC5sb2dfZGF0YXNldCgndGVzdF9zZXQnLCAKICAgICAgICAgICAgICAgICAgICAgICAgZGY9cGQuY29uY2F0KFtYX3Rlc3QsIHlfdGVzdC50b19mcmFtZSgpXSwgYXhpcz0xKSwKICAgICAgICAgICAgICAgICAgICAgICAgZm9ybWF0PSdjc3YnLCBpbmRleD1GYWxzZSwgCiAgICAgICAgICAgICAgICAgICAgICAgIGxhYmVscz17ImRhdGEtdHlwZSI6ICJoZWxkLW91dCJ9LAogICAgICAgICAgICAgICAgICAgICAgICBhcnRpZmFjdF9wYXRoPWNvbnRleHQuYXJ0aWZhY3Rfc3VicGF0aCgnZGF0YScpKQogICAgCiAgICBtb2RlbCA9IGxpbmVhcl9tb2RlbC5Mb2dpc3RpY1JlZ3Jlc3Npb24obWF4X2l0ZXI9MTAwMDApCiAgICBtb2RlbC5maXQoWF90cmFpbiwgeV90cmFpbikKICAgIAogICAgZXZhbF9tZXRyaWNzID0gZXZhbF9tb2RlbF92Mihjb250ZXh0LCBYX3Rlc3QsIHlfdGVzdCwgbW9kZWwpCiAgICAKICAgIGNvbnRleHQubG9nX21vZGVsKCJtb2RlbCIsCiAgICAgICAgICAgICAgICAgICAgICBib2R5PWR1bXBzKG1vZGVsKSwKICAgICAgICAgICAgICAgICAgICAgIGFydGlmYWN0X3BhdGg9Y29udGV4dC5hcnRpZmFjdF9zdWJwYXRoKCJtb2RlbHMiKSwKICAgICAgICAgICAgICAgICAgICAgIGV4dHJhX2RhdGE9ZXZhbF9tZXRyaWNzLCAKICAgICAgICAgICAgICAgICAgICAgIG1vZGVsX2ZpbGU9Im1vZGVsLnBrbCIsCiAgICAgICAgICAgICAgICAgICAgICBtZXRyaWNzPWNvbnRleHQucmVzdWx0cywKICAgICAgICAgICAgICAgICAgICAgIGxhYmVscz17ImNsYXNzIjogInNrbGVhcm4ubGluZWFyX21vZGVsLkxvZ2lzdGljUmVncmVzc2lvbiJ9KQoK",
           "image": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/mlrun/func-getting-started-tutorial-admin-train-iris:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install \"mlrun[complete]==0.8.0-rc15\"", "echo test"]
+          "commands": [
+            "python -m pip install \"mlrun[complete]==0.8.0-rc15\"",
+            "echo test"
+          ]
         },
         "disable_auto_mount": false,
         "priority_class_name": "",
@@ -16026,7 +16491,9 @@
           "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKZnJvbSByYW5kb20gaW1wb3J0IHJhbmRpbnQsIHJhbmRvbQpmcm9tIGRhdGV0aW1lIGltcG9ydCBkYXRldGltZSwgdGltZWRlbHRhCmltcG9ydCBqc29uCmltcG9ydCB1dWlkCmZyb20gZmFrZXIgaW1wb3J0IEZha2VyCmltcG9ydCB2M2lvLmRhdGFwbGFuZQppbXBvcnQgb3MKZnJvbSBtbHJ1bi5leGVjdXRpb24gaW1wb3J0IE1MQ2xpZW50Q3R4CgpkZWYgZ2VuX3Bvc3Rjb2RlKGlzX2NodXJuKToKICAgIGJhc2VfcG9zdGNvZGUgPSAzICogcmFuZGludCgzMzM0LCAzMzMzMykKICAgIGdyb3VwID0gcmFuZGludCgwLCAxKQogICAgaWYgaXNfY2h1cm46CiAgICAgICAgcmV0dXJuIGJhc2VfcG9zdGNvZGUgKyBncm91cAogICAgZWxzZToKICAgICAgICByZXR1cm4gYmFzZV9wb3N0Y29kZSArIChncm91cCAqIDIpCgoKZGVmIG5ld19yZWdpc3RyYXRpb24oZmFrZSwgdXNlcl9pZCwgZXZlbnRfdGltZSwgaXNfY2h1cm4pOgogICAgcmV0dXJuIHsndXNlcl9pZCc6IHVzZXJfaWQsCiAgICAgICAgICAgICdldmVudF90eXBlJzogJ3JlZ2lzdHJhdGlvbicsCiAgICAgICAgICAgICdldmVudF90aW1lJzogZXZlbnRfdGltZSwKICAgICAgICAgICAgJ25hbWUnOiBmYWtlLm5hbWUoKSwKICAgICAgICAgICAgJ2RhdGVfb2ZfYmlydGgnOiBmYWtlLmRhdGUoKSwKICAgICAgICAgICAgJ3N0cmVldF9hZGRyZXNzJzogZmFrZS5zdHJlZXRfYWRkcmVzcygpLAogICAgICAgICAgICAnY2l0eSc6IGZha2UuY2l0eSgpLAogICAgICAgICAgICAnY291bnRyeSc6IGZha2UuY291bnRyeSgpLAogICAgICAgICAgICAncG9zdGNvZGUnOiBnZW5fcG9zdGNvZGUoaXNfY2h1cm4pLAogICAgICAgICAgICAnYWZmaWxpYXRlX3VybCc6IGZha2UuaW1hZ2VfdXJsKCksCiAgICAgICAgICAgICdjYW1wYWlnbic6IGZha2UuZWFuOCgpfQoKCmRlZiBuZXdfcHVyY2hhc2UoZmFrZSwgdXNlcl9pZCwgZXZlbnRfdGltZSk6CiAgICByZXR1cm4geyd1c2VyX2lkJzogdXNlcl9pZCwKICAgICAgICAgICAgJ2V2ZW50X3R5cGUnOiAncHVyY2hhc2UnLAogICAgICAgICAgICAnZXZlbnRfdGltZSc6IGV2ZW50X3RpbWUsCiAgICAgICAgICAgICdhbW91bnQnOiBmYWtlLnJhbmRvbWl6ZV9uYl9lbGVtZW50cyhudW1iZXI9NTApfQoKCmRlZiBuZXdfYmV0KGZha2UsIHVzZXJfaWQsIGV2ZW50X3RpbWUpOgogICAgcmV0dXJuIHsndXNlcl9pZCc6IHVzZXJfaWQsCiAgICAgICAgICAgICdldmVudF90eXBlJzogJ2JldCcsCiAgICAgICAgICAgICdldmVudF90aW1lJzogZXZlbnRfdGltZSwKICAgICAgICAgICAgJ2JldF9hbW91bnQnOiBmYWtlLnJhbmRvbWl6ZV9uYl9lbGVtZW50cyhudW1iZXI9MTApfQoKCmRlZiBuZXdfd2luKGZha2UsIHVzZXJfaWQsIGV2ZW50X3RpbWUpOgogICAgcmV0dXJuIHsndXNlcl9pZCc6IHVzZXJfaWQsCiAgICAgICAgICAgICdldmVudF90eXBlJzogJ3dpbicsCiAgICAgICAgICAgICdldmVudF90aW1lJzogZXZlbnRfdGltZSwKICAgICAgICAgICAgJ3dpbl9hbW91bnQnOiBmYWtlLnJhbmRvbWl6ZV9uYl9lbGVtZW50cyhudW1iZXI9MjAwKX0KCgpkZWYgZ2VuX2V2ZW50X2RhdGUoaXNfY2h1cm4sIHByZXZfZXZlbnRfZGF0ZT1Ob25lKToKICAgIGlmIHByZXZfZXZlbnRfZGF0ZSBpcyBOb25lOgogICAgICAgIHJldHVybiBkYXRldGltZS5ub3coKSAtIHRpbWVkZWx0YShob3Vycz1yYW5kaW50KDQ4LCA5NikpCiAgICBlbHNlOgogICAgICAgIGlmIHByZXZfZXZlbnRfZGF0ZSArIHRpbWVkZWx0YShob3Vycz0zMCkgPCBkYXRldGltZS5ub3coKSBhbmQgbm90IGlzX2NodXJuIGFuZCByYW5kaW50KDEsIDEwMDApIDw9IDU6CiAgICAgICAgICAgIHJldHVybiBwcmV2X2V2ZW50X2RhdGUgKyB0aW1lZGVsdGEoaG91cnM9cmFuZGludCgxNSwgMjQpKQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIHJldHVybiBwcmV2X2V2ZW50X2RhdGUgKyB0aW1lZGVsdGEoc2Vjb25kcz1yYW5kaW50KDUsIDEwMCkpCgoKZGVmIGdlbmVyYXRlX2V2ZW50cyhmYWtlLCBudW1fdXNlcnMsIGV2ZW50c19kaXN0LCBudW1fZXZlbnRzLCBpc19jaHVybik6CiAgICB1c2VyX2lkcyA9IGdlbmVyYXRlX3VzZXJfaWRzKG51bV91c2VycykKICAgIGV2ZW50cyA9IFtdCiAgICBmb3IgdXNlcl9pZCBpbiB1c2VyX2lkczoKICAgICAgICBldmVudF90aW1lID0gZ2VuX2V2ZW50X2RhdGUoaXNfY2h1cm4pCiAgICAgICAgcmVnX2V2ZW50ID0gbmV3X3JlZ2lzdHJhdGlvbihmYWtlLCB1c2VyX2lkLCBldmVudF90aW1lLCBpc19jaHVybikKICAgICAgICByZWdfZXZlbnRbJ2xhYmVsJ10gPSBpbnQoaXNfY2h1cm4pCiAgICAgICAgZXZlbnRzLmFwcGVuZChyZWdfZXZlbnQpCiAgICAgICAgZm9yIF8gaW4gcmFuZ2UobnVtX2V2ZW50cyk6CiAgICAgICAgICAgIGFjY19wcm9iID0gMAogICAgICAgICAgICByYW5kID0gcmFuZG9tKCkKICAgICAgICAgICAgZm9yIGV2ZW50X2Rpc3QgaW4gZXZlbnRzX2Rpc3Q6CiAgICAgICAgICAgICAgICBpZiByYW5kIDw9IGV2ZW50X2Rpc3RbJ3Byb2JhYmlsaXR5J10gKyBhY2NfcHJvYjoKICAgICAgICAgICAgICAgICAgICBldmVudF90aW1lID0gZ2VuX2V2ZW50X2RhdGUoaXNfY2h1cm4sIGV2ZW50X3RpbWUpCiAgICAgICAgICAgICAgICAgICAgbmV3X2V2ZW50ID0gZXZlbnRfZGlzdFsnZ2VuZXJhdG9yJ10oZmFrZSwgdXNlcl9pZCwgZXZlbnRfdGltZSkKICAgICAgICAgICAgICAgICAgICBldmVudHMuYXBwZW5kKG5ld19ldmVudCkKICAgICAgICAgICAgICAgICAgICBicmVhawogICAgICAgICAgICAgICAgZWxzZToKICAgICAgICAgICAgICAgICAgICBhY2NfcHJvYiArPSBldmVudF9kaXN0Wydwcm9iYWJpbGl0eSddCiAgICByZXR1cm4gZXZlbnRzCgoKZGVmIGdlbmVyYXRlX3VzZXJfaWRzKG46IGludCk6CiAgICByZXR1cm4gKHN0cih1dWlkLnV1aWQ0KCkpIGZvciBfIGluIHJhbmdlKG4pKQoKCmRlZiBnZW5lcmF0ZV9ldmVudF9zdHJlYW0odjNpb19jbGllbnQsCiAgICAgICAgICAgICAgICAgICAgICAgICAgY29udGFpbmVyLAogICAgICAgICAgICAgICAgICAgICAgICAgIG91dHB1dF9zdHJlYW1fcGF0aCwKICAgICAgICAgICAgICAgICAgICAgICAgICBudW1fdXNlcnNfZ3JvdXAxLAogICAgICAgICAgICAgICAgICAgICAgICAgIG51bV91c2Vyc19ncm91cDIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgZXZlbnRzX3Blcl91c2VyKToKCiAgICBmYWtlID0gRmFrZXIoKQoKICAgIGdyb3VwMV9ldmVudHNfZGlzdCA9IFt7J3Byb2JhYmlsaXR5JzogMC4xLCAnZ2VuZXJhdG9yJzogbmV3X3B1cmNoYXNlfSwKICAgICAgICAgICAgICAgICAgICAgICAgICB7J3Byb2JhYmlsaXR5JzogMC44OSwgJ2dlbmVyYXRvcic6IG5ld19iZXR9LAogICAgICAgICAgICAgICAgICAgICAgICAgIHsncHJvYmFiaWxpdHknOiAwLjAxLCAnZ2VuZXJhdG9yJzogbmV3X3dpbn1dCgogICAgZ3JvdXAyX2V2ZW50c19kaXN0ID0gW3sncHJvYmFiaWxpdHknOiAwLjEsICdnZW5lcmF0b3InOiBuZXdfcHVyY2hhc2V9LAogICAgICAgICAgICAgICAgICAgICAgICAgIHsncHJvYmFiaWxpdHknOiAwLjg1LCAnZ2VuZXJhdG9yJzogbmV3X2JldH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgeydwcm9iYWJpbGl0eSc6IDAuMDUsICdnZW5lcmF0b3InOiBuZXdfd2lufV0KCiAgICBncm91cDFfZXZlbnRzID0gZ2VuZXJhdGVfZXZlbnRzKGZha2UsIG51bV91c2Vyc19ncm91cDEsIGdyb3VwMV9ldmVudHNfZGlzdCwgZXZlbnRzX3Blcl91c2VyLCBUcnVlKQogICAgZ3JvdXAyX2V2ZW50cyA9IGdlbmVyYXRlX2V2ZW50cyhmYWtlLCBudW1fdXNlcnNfZ3JvdXAyLCBncm91cDJfZXZlbnRzX2Rpc3QsIGV2ZW50c19wZXJfdXNlciwgRmFsc2UpCgogICAgZXZlbnRzID0gKGdyb3VwMV9ldmVudHMgKyBncm91cDJfZXZlbnRzKQogICAgZXZlbnRzLnNvcnQoa2V5PWxhbWJkYSBldmVudDogZXZlbnQuZ2V0KCdldmVudF90aW1lJykpCgogICAgYmF0Y2hfc2l6ZSA9IDEwMDAKICAgIGZvciBpIGluIHJhbmdlKDAsIGxlbihldmVudHMpLCBiYXRjaF9zaXplKToKICAgICAgICByZWNvcmRzID0gW3snZGF0YSc6IGpzb24uZHVtcHMoZXZlbnQsIGRlZmF1bHQ9c3RyKX0gZm9yIGV2ZW50IGluIGV2ZW50c1tpOmkrYmF0Y2hfc2l6ZV1dCiAgICAgICAgdjNpb19jbGllbnQuYmF0Y2guc3RyZWFtLnB1dF9yZWNvcmRzKGNvbnRhaW5lcj1jb250YWluZXIsIHN0cmVhbV9wYXRoPW91dHB1dF9zdHJlYW1fcGF0aCwgcmVjb3Jkcz1yZWNvcmRzKQoKICAgIHJldHVybiB2M2lvX2NsaWVudC5iYXRjaC53YWl0KCkKCgpkZWYgY3JlYXRlX2VucmljaG1lbnRfdGFibGUodjNpb19jbGllbnQsIGNvbnRhaW5lciwgZW5yaWNobWVudF90YWJsZV9wYXRoKToKICAgIGZvciBwb3N0Y29kZSBpbiByYW5nZSgxMDAwMCwgOTk5OTkpOgogICAgICAgIHJlbWFpbmRlciA9IHBvc3Rjb2RlICUgMwogICAgICAgIGlmIHJlbWFpbmRlciA9PSAwOgogICAgICAgICAgICBpZHggPSByYW5kaW50KDMsIDUpCiAgICAgICAgZWxpZiByZW1haW5kZXIgPT0gMToKICAgICAgICAgICAgaWR4ID0gcmFuZGludCgxLCAzKQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIGlkeCA9IHJhbmRpbnQoNSwgNykKCiAgICAgICAgYXR0ciA9IHsncG9zdGNvZGUnOiBwb3N0Y29kZSwgJ3NvY2lvZWNvbm9taWNfaWR4JzogaWR4fQogICAgICAgIHYzaW9fY2xpZW50LmJhdGNoLmt2LnB1dChjb250YWluZXI9Y29udGFpbmVyLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0YWJsZV9wYXRoPWVucmljaG1lbnRfdGFibGVfcGF0aCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2V5PXN0cihwb3N0Y29kZSksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJpYnV0ZXM9YXR0cikKICAgIHJldHVybiB2M2lvX2NsaWVudC5iYXRjaC53YWl0KCkKCmRlZiBtYWluKGNvbnRleHQ6IE1MQ2xpZW50Q3R4LAogICAgICAgICBjb250YWluZXI6IHN0ciwKICAgICAgICAgb3V0cHV0X3N0cmVhbV9wYXRoOiBzdHIsCiAgICAgICAgIGVucmljaG1lbnRfdGFibGVfcGF0aDogc3RyLAogICAgICAgICBudW1fdXNlcnNfZ3JvdXAxOiBpbnQgPSAxNDAwLAogICAgICAgICBudW1fdXNlcnNfZ3JvdXAyOiBpbnQgPSA2MDAsCiAgICAgICAgIGV2ZW50c19wZXJfdXNlcjogaW50ID0gMTAwMCkgLT4gTm9uZToKCiAgICB2M2lvX2NsaWVudCA9IHYzaW8uZGF0YXBsYW5lLkNsaWVudChlbmRwb2ludD1vcy5nZXRlbnYoJ1YzSU9fQVBJJyksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhY2Nlc3Nfa2V5PW9zLmdldGVudignVjNJT19BQ0NFU1NfS0VZJykpCiAgICAKICAgIHRhYmxlX3Jlc3BzID0gY3JlYXRlX2VucmljaG1lbnRfdGFibGUodjNpb19jbGllbnQsIGNvbnRhaW5lciwgZW5yaWNobWVudF90YWJsZV9wYXRoKQogICAgd3JpdHRlbl9pdGVtcyA9IHN1bShpbnQocmVzcC5zdGF0dXNfY29kZSA9PSAyMDApIGZvciByZXNwIGluIHRhYmxlX3Jlc3BzKQogICAgY29udGV4dC5sb2dnZXIuaW5mbyhmJ0NyZWF0ZWQgZW5yaWNobWVudCB0YWJsZSB3aXRoIHt3cml0dGVuX2l0ZW1zfSBpdGVtcycpCiAgICAKICAgIHN0cmVhbV9yZXNwcyA9IGdlbmVyYXRlX2V2ZW50X3N0cmVhbSh2M2lvX2NsaWVudCwgY29udGFpbmVyLCBvdXRwdXRfc3RyZWFtX3BhdGgsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbnVtX3VzZXJzX2dyb3VwMSwgbnVtX3VzZXJzX2dyb3VwMiwgZXZlbnRzX3Blcl91c2VyKQoKICAgIHJlY29yZHNfc2VudCA9IHN1bShsZW4oanNvbi5sb2FkcyhyZXNwLmJvZHkpWydSZWNvcmRzJ10pIGZvciByZXNwIGluIHN0cmVhbV9yZXNwcykKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidSZWNvcmRzIHNlbnQge3JlY29yZHNfc2VudH0nKQoKICAgIGZhaWxlZF9yZWNvcmRzID0gc3VtKGpzb24ubG9hZHMocmVzcC5ib2R5KVsnRmFpbGVkUmVjb3JkQ291bnQnXSBmb3IgcmVzcCBpbiBzdHJlYW1fcmVzcHMpCgogICAgaWYgZmFpbGVkX3JlY29yZHMgPiAwOgogICAgICAgIGNvbnRleHQubG9nZ2VyLndhcm4oZidGYWlsZWQgdG8gc3RyZWFtIHtmYWlsZWRfcmVjb3Jkc30nKQogICAgZWxzZToKICAgICAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdBbGwgZGF0YSBzdHJlYW1lZCBzdWNjZXNzZnVsbHkuJykKCiAgICBwYXNzCgo=",
           "image": ".mlrun/func-model-deployment-pipeline-admin-data-generator:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install faker"],
+          "commands": [
+            "python -m pip install faker"
+          ],
           "code_origin": "functions/data-generator.ipynb",
           "origin_filename": "functions/data-generator.ipynb"
         },
@@ -16363,7 +16830,9 @@
           "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKZnJvbSByYW5kb20gaW1wb3J0IHJhbmRpbnQsIHJhbmRvbQpmcm9tIGRhdGV0aW1lIGltcG9ydCBkYXRldGltZSwgdGltZWRlbHRhCmltcG9ydCBqc29uCmltcG9ydCB1dWlkCmZyb20gZmFrZXIgaW1wb3J0IEZha2VyCmltcG9ydCB2M2lvLmRhdGFwbGFuZQppbXBvcnQgb3MKZnJvbSBtbHJ1bi5leGVjdXRpb24gaW1wb3J0IE1MQ2xpZW50Q3R4CgpkZWYgZ2VuX3Bvc3Rjb2RlKGlzX2NodXJuKToKICAgIGJhc2VfcG9zdGNvZGUgPSAzICogcmFuZGludCgzMzM0LCAzMzMzMykKICAgIGdyb3VwID0gcmFuZGludCgwLCAxKQogICAgaWYgaXNfY2h1cm46CiAgICAgICAgcmV0dXJuIGJhc2VfcG9zdGNvZGUgKyBncm91cAogICAgZWxzZToKICAgICAgICByZXR1cm4gYmFzZV9wb3N0Y29kZSArIChncm91cCAqIDIpCgoKZGVmIG5ld19yZWdpc3RyYXRpb24oZmFrZSwgdXNlcl9pZCwgZXZlbnRfdGltZSwgaXNfY2h1cm4pOgogICAgcmV0dXJuIHsndXNlcl9pZCc6IHVzZXJfaWQsCiAgICAgICAgICAgICdldmVudF90eXBlJzogJ3JlZ2lzdHJhdGlvbicsCiAgICAgICAgICAgICdldmVudF90aW1lJzogZXZlbnRfdGltZSwKICAgICAgICAgICAgJ25hbWUnOiBmYWtlLm5hbWUoKSwKICAgICAgICAgICAgJ2RhdGVfb2ZfYmlydGgnOiBmYWtlLmRhdGUoKSwKICAgICAgICAgICAgJ3N0cmVldF9hZGRyZXNzJzogZmFrZS5zdHJlZXRfYWRkcmVzcygpLAogICAgICAgICAgICAnY2l0eSc6IGZha2UuY2l0eSgpLAogICAgICAgICAgICAnY291bnRyeSc6IGZha2UuY291bnRyeSgpLAogICAgICAgICAgICAncG9zdGNvZGUnOiBnZW5fcG9zdGNvZGUoaXNfY2h1cm4pLAogICAgICAgICAgICAnYWZmaWxpYXRlX3VybCc6IGZha2UuaW1hZ2VfdXJsKCksCiAgICAgICAgICAgICdjYW1wYWlnbic6IGZha2UuZWFuOCgpfQoKCmRlZiBuZXdfcHVyY2hhc2UoZmFrZSwgdXNlcl9pZCwgZXZlbnRfdGltZSk6CiAgICByZXR1cm4geyd1c2VyX2lkJzogdXNlcl9pZCwKICAgICAgICAgICAgJ2V2ZW50X3R5cGUnOiAncHVyY2hhc2UnLAogICAgICAgICAgICAnZXZlbnRfdGltZSc6IGV2ZW50X3RpbWUsCiAgICAgICAgICAgICdhbW91bnQnOiBmYWtlLnJhbmRvbWl6ZV9uYl9lbGVtZW50cyhudW1iZXI9NTApfQoKCmRlZiBuZXdfYmV0KGZha2UsIHVzZXJfaWQsIGV2ZW50X3RpbWUpOgogICAgcmV0dXJuIHsndXNlcl9pZCc6IHVzZXJfaWQsCiAgICAgICAgICAgICdldmVudF90eXBlJzogJ2JldCcsCiAgICAgICAgICAgICdldmVudF90aW1lJzogZXZlbnRfdGltZSwKICAgICAgICAgICAgJ2JldF9hbW91bnQnOiBmYWtlLnJhbmRvbWl6ZV9uYl9lbGVtZW50cyhudW1iZXI9MTApfQoKCmRlZiBuZXdfd2luKGZha2UsIHVzZXJfaWQsIGV2ZW50X3RpbWUpOgogICAgcmV0dXJuIHsndXNlcl9pZCc6IHVzZXJfaWQsCiAgICAgICAgICAgICdldmVudF90eXBlJzogJ3dpbicsCiAgICAgICAgICAgICdldmVudF90aW1lJzogZXZlbnRfdGltZSwKICAgICAgICAgICAgJ3dpbl9hbW91bnQnOiBmYWtlLnJhbmRvbWl6ZV9uYl9lbGVtZW50cyhudW1iZXI9MjAwKX0KCgpkZWYgZ2VuX2V2ZW50X2RhdGUoaXNfY2h1cm4sIHByZXZfZXZlbnRfZGF0ZT1Ob25lKToKICAgIGlmIHByZXZfZXZlbnRfZGF0ZSBpcyBOb25lOgogICAgICAgIHJldHVybiBkYXRldGltZS5ub3coKSAtIHRpbWVkZWx0YShob3Vycz1yYW5kaW50KDQ4LCA5NikpCiAgICBlbHNlOgogICAgICAgIGlmIHByZXZfZXZlbnRfZGF0ZSArIHRpbWVkZWx0YShob3Vycz0zMCkgPCBkYXRldGltZS5ub3coKSBhbmQgbm90IGlzX2NodXJuIGFuZCByYW5kaW50KDEsIDEwMDApIDw9IDU6CiAgICAgICAgICAgIHJldHVybiBwcmV2X2V2ZW50X2RhdGUgKyB0aW1lZGVsdGEoaG91cnM9cmFuZGludCgxNSwgMjQpKQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIHJldHVybiBwcmV2X2V2ZW50X2RhdGUgKyB0aW1lZGVsdGEoc2Vjb25kcz1yYW5kaW50KDUsIDEwMCkpCgoKZGVmIGdlbmVyYXRlX2V2ZW50cyhmYWtlLCBudW1fdXNlcnMsIGV2ZW50c19kaXN0LCBudW1fZXZlbnRzLCBpc19jaHVybik6CiAgICB1c2VyX2lkcyA9IGdlbmVyYXRlX3VzZXJfaWRzKG51bV91c2VycykKICAgIGV2ZW50cyA9IFtdCiAgICBmb3IgdXNlcl9pZCBpbiB1c2VyX2lkczoKICAgICAgICBldmVudF90aW1lID0gZ2VuX2V2ZW50X2RhdGUoaXNfY2h1cm4pCiAgICAgICAgcmVnX2V2ZW50ID0gbmV3X3JlZ2lzdHJhdGlvbihmYWtlLCB1c2VyX2lkLCBldmVudF90aW1lLCBpc19jaHVybikKICAgICAgICByZWdfZXZlbnRbJ2xhYmVsJ10gPSBpbnQoaXNfY2h1cm4pCiAgICAgICAgZXZlbnRzLmFwcGVuZChyZWdfZXZlbnQpCiAgICAgICAgZm9yIF8gaW4gcmFuZ2UobnVtX2V2ZW50cyk6CiAgICAgICAgICAgIGFjY19wcm9iID0gMAogICAgICAgICAgICByYW5kID0gcmFuZG9tKCkKICAgICAgICAgICAgZm9yIGV2ZW50X2Rpc3QgaW4gZXZlbnRzX2Rpc3Q6CiAgICAgICAgICAgICAgICBpZiByYW5kIDw9IGV2ZW50X2Rpc3RbJ3Byb2JhYmlsaXR5J10gKyBhY2NfcHJvYjoKICAgICAgICAgICAgICAgICAgICBldmVudF90aW1lID0gZ2VuX2V2ZW50X2RhdGUoaXNfY2h1cm4sIGV2ZW50X3RpbWUpCiAgICAgICAgICAgICAgICAgICAgbmV3X2V2ZW50ID0gZXZlbnRfZGlzdFsnZ2VuZXJhdG9yJ10oZmFrZSwgdXNlcl9pZCwgZXZlbnRfdGltZSkKICAgICAgICAgICAgICAgICAgICBldmVudHMuYXBwZW5kKG5ld19ldmVudCkKICAgICAgICAgICAgICAgICAgICBicmVhawogICAgICAgICAgICAgICAgZWxzZToKICAgICAgICAgICAgICAgICAgICBhY2NfcHJvYiArPSBldmVudF9kaXN0Wydwcm9iYWJpbGl0eSddCiAgICByZXR1cm4gZXZlbnRzCgoKZGVmIGdlbmVyYXRlX3VzZXJfaWRzKG46IGludCk6CiAgICByZXR1cm4gKHN0cih1dWlkLnV1aWQ0KCkpIGZvciBfIGluIHJhbmdlKG4pKQoKCmRlZiBnZW5lcmF0ZV9ldmVudF9zdHJlYW0odjNpb19jbGllbnQsCiAgICAgICAgICAgICAgICAgICAgICAgICAgY29udGFpbmVyLAogICAgICAgICAgICAgICAgICAgICAgICAgIG91dHB1dF9zdHJlYW1fcGF0aCwKICAgICAgICAgICAgICAgICAgICAgICAgICBudW1fdXNlcnNfZ3JvdXAxLAogICAgICAgICAgICAgICAgICAgICAgICAgIG51bV91c2Vyc19ncm91cDIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgZXZlbnRzX3Blcl91c2VyKToKCiAgICBmYWtlID0gRmFrZXIoKQoKICAgIGdyb3VwMV9ldmVudHNfZGlzdCA9IFt7J3Byb2JhYmlsaXR5JzogMC4xLCAnZ2VuZXJhdG9yJzogbmV3X3B1cmNoYXNlfSwKICAgICAgICAgICAgICAgICAgICAgICAgICB7J3Byb2JhYmlsaXR5JzogMC44OSwgJ2dlbmVyYXRvcic6IG5ld19iZXR9LAogICAgICAgICAgICAgICAgICAgICAgICAgIHsncHJvYmFiaWxpdHknOiAwLjAxLCAnZ2VuZXJhdG9yJzogbmV3X3dpbn1dCgogICAgZ3JvdXAyX2V2ZW50c19kaXN0ID0gW3sncHJvYmFiaWxpdHknOiAwLjEsICdnZW5lcmF0b3InOiBuZXdfcHVyY2hhc2V9LAogICAgICAgICAgICAgICAgICAgICAgICAgIHsncHJvYmFiaWxpdHknOiAwLjg1LCAnZ2VuZXJhdG9yJzogbmV3X2JldH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgeydwcm9iYWJpbGl0eSc6IDAuMDUsICdnZW5lcmF0b3InOiBuZXdfd2lufV0KCiAgICBncm91cDFfZXZlbnRzID0gZ2VuZXJhdGVfZXZlbnRzKGZha2UsIG51bV91c2Vyc19ncm91cDEsIGdyb3VwMV9ldmVudHNfZGlzdCwgZXZlbnRzX3Blcl91c2VyLCBUcnVlKQogICAgZ3JvdXAyX2V2ZW50cyA9IGdlbmVyYXRlX2V2ZW50cyhmYWtlLCBudW1fdXNlcnNfZ3JvdXAyLCBncm91cDJfZXZlbnRzX2Rpc3QsIGV2ZW50c19wZXJfdXNlciwgRmFsc2UpCgogICAgZXZlbnRzID0gKGdyb3VwMV9ldmVudHMgKyBncm91cDJfZXZlbnRzKQogICAgZXZlbnRzLnNvcnQoa2V5PWxhbWJkYSBldmVudDogZXZlbnQuZ2V0KCdldmVudF90aW1lJykpCgogICAgYmF0Y2hfc2l6ZSA9IDEwMDAKICAgIGZvciBpIGluIHJhbmdlKDAsIGxlbihldmVudHMpLCBiYXRjaF9zaXplKToKICAgICAgICByZWNvcmRzID0gW3snZGF0YSc6IGpzb24uZHVtcHMoZXZlbnQsIGRlZmF1bHQ9c3RyKX0gZm9yIGV2ZW50IGluIGV2ZW50c1tpOmkrYmF0Y2hfc2l6ZV1dCiAgICAgICAgdjNpb19jbGllbnQuYmF0Y2guc3RyZWFtLnB1dF9yZWNvcmRzKGNvbnRhaW5lcj1jb250YWluZXIsIHN0cmVhbV9wYXRoPW91dHB1dF9zdHJlYW1fcGF0aCwgcmVjb3Jkcz1yZWNvcmRzKQoKICAgIHJldHVybiB2M2lvX2NsaWVudC5iYXRjaC53YWl0KCkKCgpkZWYgY3JlYXRlX2VucmljaG1lbnRfdGFibGUodjNpb19jbGllbnQsIGNvbnRhaW5lciwgZW5yaWNobWVudF90YWJsZV9wYXRoKToKICAgIGZvciBwb3N0Y29kZSBpbiByYW5nZSgxMDAwMCwgOTk5OTkpOgogICAgICAgIHJlbWFpbmRlciA9IHBvc3Rjb2RlICUgMwogICAgICAgIGlmIHJlbWFpbmRlciA9PSAwOgogICAgICAgICAgICBpZHggPSByYW5kaW50KDMsIDUpCiAgICAgICAgZWxpZiByZW1haW5kZXIgPT0gMToKICAgICAgICAgICAgaWR4ID0gcmFuZGludCgxLCAzKQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIGlkeCA9IHJhbmRpbnQoNSwgNykKCiAgICAgICAgYXR0ciA9IHsncG9zdGNvZGUnOiBwb3N0Y29kZSwgJ3NvY2lvZWNvbm9taWNfaWR4JzogaWR4fQogICAgICAgIHYzaW9fY2xpZW50LmJhdGNoLmt2LnB1dChjb250YWluZXI9Y29udGFpbmVyLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0YWJsZV9wYXRoPWVucmljaG1lbnRfdGFibGVfcGF0aCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2V5PXN0cihwb3N0Y29kZSksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJpYnV0ZXM9YXR0cikKICAgIHJldHVybiB2M2lvX2NsaWVudC5iYXRjaC53YWl0KCkKCmRlZiBtYWluKGNvbnRleHQ6IE1MQ2xpZW50Q3R4LAogICAgICAgICBjb250YWluZXI6IHN0ciwKICAgICAgICAgb3V0cHV0X3N0cmVhbV9wYXRoOiBzdHIsCiAgICAgICAgIGVucmljaG1lbnRfdGFibGVfcGF0aDogc3RyLAogICAgICAgICBudW1fdXNlcnNfZ3JvdXAxOiBpbnQgPSAxNDAwLAogICAgICAgICBudW1fdXNlcnNfZ3JvdXAyOiBpbnQgPSA2MDAsCiAgICAgICAgIGV2ZW50c19wZXJfdXNlcjogaW50ID0gMTAwMCkgLT4gTm9uZToKCiAgICB2M2lvX2NsaWVudCA9IHYzaW8uZGF0YXBsYW5lLkNsaWVudChlbmRwb2ludD1vcy5nZXRlbnYoJ1YzSU9fQVBJJyksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhY2Nlc3Nfa2V5PW9zLmdldGVudignVjNJT19BQ0NFU1NfS0VZJykpCiAgICAKICAgIHRhYmxlX3Jlc3BzID0gY3JlYXRlX2VucmljaG1lbnRfdGFibGUodjNpb19jbGllbnQsIGNvbnRhaW5lciwgZW5yaWNobWVudF90YWJsZV9wYXRoKQogICAgd3JpdHRlbl9pdGVtcyA9IHN1bShpbnQocmVzcC5zdGF0dXNfY29kZSA9PSAyMDApIGZvciByZXNwIGluIHRhYmxlX3Jlc3BzKQogICAgY29udGV4dC5sb2dnZXIuaW5mbyhmJ0NyZWF0ZWQgZW5yaWNobWVudCB0YWJsZSB3aXRoIHt3cml0dGVuX2l0ZW1zfSBpdGVtcycpCiAgICAKICAgIHN0cmVhbV9yZXNwcyA9IGdlbmVyYXRlX2V2ZW50X3N0cmVhbSh2M2lvX2NsaWVudCwgY29udGFpbmVyLCBvdXRwdXRfc3RyZWFtX3BhdGgsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbnVtX3VzZXJzX2dyb3VwMSwgbnVtX3VzZXJzX2dyb3VwMiwgZXZlbnRzX3Blcl91c2VyKQoKICAgIHJlY29yZHNfc2VudCA9IHN1bShsZW4oanNvbi5sb2FkcyhyZXNwLmJvZHkpWydSZWNvcmRzJ10pIGZvciByZXNwIGluIHN0cmVhbV9yZXNwcykKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidSZWNvcmRzIHNlbnQge3JlY29yZHNfc2VudH0nKQoKICAgIGZhaWxlZF9yZWNvcmRzID0gc3VtKGpzb24ubG9hZHMocmVzcC5ib2R5KVsnRmFpbGVkUmVjb3JkQ291bnQnXSBmb3IgcmVzcCBpbiBzdHJlYW1fcmVzcHMpCgogICAgaWYgZmFpbGVkX3JlY29yZHMgPiAwOgogICAgICAgIGNvbnRleHQubG9nZ2VyLndhcm4oZidGYWlsZWQgdG8gc3RyZWFtIHtmYWlsZWRfcmVjb3Jkc30nKQogICAgZWxzZToKICAgICAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdBbGwgZGF0YSBzdHJlYW1lZCBzdWNjZXNzZnVsbHkuJykKCiAgICBwYXNzCgo=",
           "image": ".mlrun/func-model-deployment-pipeline-admin-data-generator:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install faker"],
+          "commands": [
+            "python -m pip install faker"
+          ],
           "code_origin": "functions/data-generator.ipynb",
           "origin_filename": "functions/data-generator.ipynb"
         },
@@ -16698,7 +17167,9 @@
         "build": {
           "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKZnJvbSByYW5kb20gaW1wb3J0IHJhbmRpbnQsIHJhbmRvbQpmcm9tIGRhdGV0aW1lIGltcG9ydCBkYXRldGltZSwgdGltZWRlbHRhCmltcG9ydCBqc29uCmltcG9ydCB1dWlkCmZyb20gZmFrZXIgaW1wb3J0IEZha2VyCmltcG9ydCB2M2lvLmRhdGFwbGFuZQppbXBvcnQgb3MKZnJvbSBtbHJ1bi5leGVjdXRpb24gaW1wb3J0IE1MQ2xpZW50Q3R4CgpkZWYgZ2VuX3Bvc3Rjb2RlKGlzX2NodXJuKToKICAgIGJhc2VfcG9zdGNvZGUgPSAzICogcmFuZGludCgzMzM0LCAzMzMzMykKICAgIGdyb3VwID0gcmFuZGludCgwLCAxKQogICAgaWYgaXNfY2h1cm46CiAgICAgICAgcmV0dXJuIGJhc2VfcG9zdGNvZGUgKyBncm91cAogICAgZWxzZToKICAgICAgICByZXR1cm4gYmFzZV9wb3N0Y29kZSArIChncm91cCAqIDIpCgoKZGVmIG5ld19yZWdpc3RyYXRpb24oZmFrZSwgdXNlcl9pZCwgZXZlbnRfdGltZSwgaXNfY2h1cm4pOgogICAgcmV0dXJuIHsndXNlcl9pZCc6IHVzZXJfaWQsCiAgICAgICAgICAgICdldmVudF90eXBlJzogJ3JlZ2lzdHJhdGlvbicsCiAgICAgICAgICAgICdldmVudF90aW1lJzogZXZlbnRfdGltZSwKICAgICAgICAgICAgJ25hbWUnOiBmYWtlLm5hbWUoKSwKICAgICAgICAgICAgJ2RhdGVfb2ZfYmlydGgnOiBmYWtlLmRhdGUoKSwKICAgICAgICAgICAgJ3N0cmVldF9hZGRyZXNzJzogZmFrZS5zdHJlZXRfYWRkcmVzcygpLAogICAgICAgICAgICAnY2l0eSc6IGZha2UuY2l0eSgpLAogICAgICAgICAgICAnY291bnRyeSc6IGZha2UuY291bnRyeSgpLAogICAgICAgICAgICAncG9zdGNvZGUnOiBnZW5fcG9zdGNvZGUoaXNfY2h1cm4pLAogICAgICAgICAgICAnYWZmaWxpYXRlX3VybCc6IGZha2UuaW1hZ2VfdXJsKCksCiAgICAgICAgICAgICdjYW1wYWlnbic6IGZha2UuZWFuOCgpfQoKCmRlZiBuZXdfcHVyY2hhc2UoZmFrZSwgdXNlcl9pZCwgZXZlbnRfdGltZSk6CiAgICByZXR1cm4geyd1c2VyX2lkJzogdXNlcl9pZCwKICAgICAgICAgICAgJ2V2ZW50X3R5cGUnOiAncHVyY2hhc2UnLAogICAgICAgICAgICAnZXZlbnRfdGltZSc6IGV2ZW50X3RpbWUsCiAgICAgICAgICAgICdhbW91bnQnOiBmYWtlLnJhbmRvbWl6ZV9uYl9lbGVtZW50cyhudW1iZXI9NTApfQoKCmRlZiBuZXdfYmV0KGZha2UsIHVzZXJfaWQsIGV2ZW50X3RpbWUpOgogICAgcmV0dXJuIHsndXNlcl9pZCc6IHVzZXJfaWQsCiAgICAgICAgICAgICdldmVudF90eXBlJzogJ2JldCcsCiAgICAgICAgICAgICdldmVudF90aW1lJzogZXZlbnRfdGltZSwKICAgICAgICAgICAgJ2JldF9hbW91bnQnOiBmYWtlLnJhbmRvbWl6ZV9uYl9lbGVtZW50cyhudW1iZXI9MTApfQoKCmRlZiBuZXdfd2luKGZha2UsIHVzZXJfaWQsIGV2ZW50X3RpbWUpOgogICAgcmV0dXJuIHsndXNlcl9pZCc6IHVzZXJfaWQsCiAgICAgICAgICAgICdldmVudF90eXBlJzogJ3dpbicsCiAgICAgICAgICAgICdldmVudF90aW1lJzogZXZlbnRfdGltZSwKICAgICAgICAgICAgJ3dpbl9hbW91bnQnOiBmYWtlLnJhbmRvbWl6ZV9uYl9lbGVtZW50cyhudW1iZXI9MjAwKX0KCgpkZWYgZ2VuX2V2ZW50X2RhdGUoaXNfY2h1cm4sIHByZXZfZXZlbnRfZGF0ZT1Ob25lKToKICAgIGlmIHByZXZfZXZlbnRfZGF0ZSBpcyBOb25lOgogICAgICAgIHJldHVybiBkYXRldGltZS5ub3coKSAtIHRpbWVkZWx0YShob3Vycz1yYW5kaW50KDQ4LCA5NikpCiAgICBlbHNlOgogICAgICAgIGlmIHByZXZfZXZlbnRfZGF0ZSArIHRpbWVkZWx0YShob3Vycz0zMCkgPCBkYXRldGltZS5ub3coKSBhbmQgbm90IGlzX2NodXJuIGFuZCByYW5kaW50KDEsIDEwMDApIDw9IDU6CiAgICAgICAgICAgIHJldHVybiBwcmV2X2V2ZW50X2RhdGUgKyB0aW1lZGVsdGEoaG91cnM9cmFuZGludCgxNSwgMjQpKQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIHJldHVybiBwcmV2X2V2ZW50X2RhdGUgKyB0aW1lZGVsdGEoc2Vjb25kcz1yYW5kaW50KDUsIDEwMCkpCgoKZGVmIGdlbmVyYXRlX2V2ZW50cyhmYWtlLCBudW1fdXNlcnMsIGV2ZW50c19kaXN0LCBudW1fZXZlbnRzLCBpc19jaHVybik6CiAgICB1c2VyX2lkcyA9IGdlbmVyYXRlX3VzZXJfaWRzKG51bV91c2VycykKICAgIGV2ZW50cyA9IFtdCiAgICBmb3IgdXNlcl9pZCBpbiB1c2VyX2lkczoKICAgICAgICBldmVudF90aW1lID0gZ2VuX2V2ZW50X2RhdGUoaXNfY2h1cm4pCiAgICAgICAgcmVnX2V2ZW50ID0gbmV3X3JlZ2lzdHJhdGlvbihmYWtlLCB1c2VyX2lkLCBldmVudF90aW1lLCBpc19jaHVybikKICAgICAgICByZWdfZXZlbnRbJ2xhYmVsJ10gPSBpbnQoaXNfY2h1cm4pCiAgICAgICAgZXZlbnRzLmFwcGVuZChyZWdfZXZlbnQpCiAgICAgICAgZm9yIF8gaW4gcmFuZ2UobnVtX2V2ZW50cyk6CiAgICAgICAgICAgIGFjY19wcm9iID0gMAogICAgICAgICAgICByYW5kID0gcmFuZG9tKCkKICAgICAgICAgICAgZm9yIGV2ZW50X2Rpc3QgaW4gZXZlbnRzX2Rpc3Q6CiAgICAgICAgICAgICAgICBpZiByYW5kIDw9IGV2ZW50X2Rpc3RbJ3Byb2JhYmlsaXR5J10gKyBhY2NfcHJvYjoKICAgICAgICAgICAgICAgICAgICBldmVudF90aW1lID0gZ2VuX2V2ZW50X2RhdGUoaXNfY2h1cm4sIGV2ZW50X3RpbWUpCiAgICAgICAgICAgICAgICAgICAgbmV3X2V2ZW50ID0gZXZlbnRfZGlzdFsnZ2VuZXJhdG9yJ10oZmFrZSwgdXNlcl9pZCwgZXZlbnRfdGltZSkKICAgICAgICAgICAgICAgICAgICBldmVudHMuYXBwZW5kKG5ld19ldmVudCkKICAgICAgICAgICAgICAgICAgICBicmVhawogICAgICAgICAgICAgICAgZWxzZToKICAgICAgICAgICAgICAgICAgICBhY2NfcHJvYiArPSBldmVudF9kaXN0Wydwcm9iYWJpbGl0eSddCiAgICByZXR1cm4gZXZlbnRzCgoKZGVmIGdlbmVyYXRlX3VzZXJfaWRzKG46IGludCk6CiAgICByZXR1cm4gKHN0cih1dWlkLnV1aWQ0KCkpIGZvciBfIGluIHJhbmdlKG4pKQoKCmRlZiBnZW5lcmF0ZV9ldmVudF9zdHJlYW0odjNpb19jbGllbnQsCiAgICAgICAgICAgICAgICAgICAgICAgICAgY29udGFpbmVyLAogICAgICAgICAgICAgICAgICAgICAgICAgIG91dHB1dF9zdHJlYW1fcGF0aCwKICAgICAgICAgICAgICAgICAgICAgICAgICBudW1fdXNlcnNfZ3JvdXAxLAogICAgICAgICAgICAgICAgICAgICAgICAgIG51bV91c2Vyc19ncm91cDIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgZXZlbnRzX3Blcl91c2VyKToKCiAgICBmYWtlID0gRmFrZXIoKQoKICAgIGdyb3VwMV9ldmVudHNfZGlzdCA9IFt7J3Byb2JhYmlsaXR5JzogMC4xLCAnZ2VuZXJhdG9yJzogbmV3X3B1cmNoYXNlfSwKICAgICAgICAgICAgICAgICAgICAgICAgICB7J3Byb2JhYmlsaXR5JzogMC44OSwgJ2dlbmVyYXRvcic6IG5ld19iZXR9LAogICAgICAgICAgICAgICAgICAgICAgICAgIHsncHJvYmFiaWxpdHknOiAwLjAxLCAnZ2VuZXJhdG9yJzogbmV3X3dpbn1dCgogICAgZ3JvdXAyX2V2ZW50c19kaXN0ID0gW3sncHJvYmFiaWxpdHknOiAwLjEsICdnZW5lcmF0b3InOiBuZXdfcHVyY2hhc2V9LAogICAgICAgICAgICAgICAgICAgICAgICAgIHsncHJvYmFiaWxpdHknOiAwLjg1LCAnZ2VuZXJhdG9yJzogbmV3X2JldH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgeydwcm9iYWJpbGl0eSc6IDAuMDUsICdnZW5lcmF0b3InOiBuZXdfd2lufV0KCiAgICBncm91cDFfZXZlbnRzID0gZ2VuZXJhdGVfZXZlbnRzKGZha2UsIG51bV91c2Vyc19ncm91cDEsIGdyb3VwMV9ldmVudHNfZGlzdCwgZXZlbnRzX3Blcl91c2VyLCBUcnVlKQogICAgZ3JvdXAyX2V2ZW50cyA9IGdlbmVyYXRlX2V2ZW50cyhmYWtlLCBudW1fdXNlcnNfZ3JvdXAyLCBncm91cDJfZXZlbnRzX2Rpc3QsIGV2ZW50c19wZXJfdXNlciwgRmFsc2UpCgogICAgZXZlbnRzID0gKGdyb3VwMV9ldmVudHMgKyBncm91cDJfZXZlbnRzKQogICAgZXZlbnRzLnNvcnQoa2V5PWxhbWJkYSBldmVudDogZXZlbnQuZ2V0KCdldmVudF90aW1lJykpCgogICAgYmF0Y2hfc2l6ZSA9IDEwMDAKICAgIGZvciBpIGluIHJhbmdlKDAsIGxlbihldmVudHMpLCBiYXRjaF9zaXplKToKICAgICAgICByZWNvcmRzID0gW3snZGF0YSc6IGpzb24uZHVtcHMoZXZlbnQsIGRlZmF1bHQ9c3RyKX0gZm9yIGV2ZW50IGluIGV2ZW50c1tpOmkrYmF0Y2hfc2l6ZV1dCiAgICAgICAgdjNpb19jbGllbnQuYmF0Y2guc3RyZWFtLnB1dF9yZWNvcmRzKGNvbnRhaW5lcj1jb250YWluZXIsIHN0cmVhbV9wYXRoPW91dHB1dF9zdHJlYW1fcGF0aCwgcmVjb3Jkcz1yZWNvcmRzKQoKICAgIHJldHVybiB2M2lvX2NsaWVudC5iYXRjaC53YWl0KCkKCgpkZWYgY3JlYXRlX2VucmljaG1lbnRfdGFibGUodjNpb19jbGllbnQsIGNvbnRhaW5lciwgZW5yaWNobWVudF90YWJsZV9wYXRoKToKICAgIGZvciBwb3N0Y29kZSBpbiByYW5nZSgxMDAwMCwgOTk5OTkpOgogICAgICAgIHJlbWFpbmRlciA9IHBvc3Rjb2RlICUgMwogICAgICAgIGlmIHJlbWFpbmRlciA9PSAwOgogICAgICAgICAgICBpZHggPSByYW5kaW50KDMsIDUpCiAgICAgICAgZWxpZiByZW1haW5kZXIgPT0gMToKICAgICAgICAgICAgaWR4ID0gcmFuZGludCgxLCAzKQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIGlkeCA9IHJhbmRpbnQoNSwgNykKCiAgICAgICAgYXR0ciA9IHsncG9zdGNvZGUnOiBwb3N0Y29kZSwgJ3NvY2lvZWNvbm9taWNfaWR4JzogaWR4fQogICAgICAgIHYzaW9fY2xpZW50LmJhdGNoLmt2LnB1dChjb250YWluZXI9Y29udGFpbmVyLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0YWJsZV9wYXRoPWVucmljaG1lbnRfdGFibGVfcGF0aCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2V5PXN0cihwb3N0Y29kZSksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJpYnV0ZXM9YXR0cikKICAgIHJldHVybiB2M2lvX2NsaWVudC5iYXRjaC53YWl0KCkKCmRlZiBtYWluKGNvbnRleHQ6IE1MQ2xpZW50Q3R4LAogICAgICAgICBjb250YWluZXI6IHN0ciwKICAgICAgICAgb3V0cHV0X3N0cmVhbV9wYXRoOiBzdHIsCiAgICAgICAgIGVucmljaG1lbnRfdGFibGVfcGF0aDogc3RyLAogICAgICAgICBudW1fdXNlcnNfZ3JvdXAxOiBpbnQgPSAxNDAwLAogICAgICAgICBudW1fdXNlcnNfZ3JvdXAyOiBpbnQgPSA2MDAsCiAgICAgICAgIGV2ZW50c19wZXJfdXNlcjogaW50ID0gMTAwMCkgLT4gTm9uZToKCiAgICB2M2lvX2NsaWVudCA9IHYzaW8uZGF0YXBsYW5lLkNsaWVudChlbmRwb2ludD1vcy5nZXRlbnYoJ1YzSU9fQVBJJyksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhY2Nlc3Nfa2V5PW9zLmdldGVudignVjNJT19BQ0NFU1NfS0VZJykpCiAgICAKICAgIHRhYmxlX3Jlc3BzID0gY3JlYXRlX2VucmljaG1lbnRfdGFibGUodjNpb19jbGllbnQsIGNvbnRhaW5lciwgZW5yaWNobWVudF90YWJsZV9wYXRoKQogICAgd3JpdHRlbl9pdGVtcyA9IHN1bShpbnQocmVzcC5zdGF0dXNfY29kZSA9PSAyMDApIGZvciByZXNwIGluIHRhYmxlX3Jlc3BzKQogICAgY29udGV4dC5sb2dnZXIuaW5mbyhmJ0NyZWF0ZWQgZW5yaWNobWVudCB0YWJsZSB3aXRoIHt3cml0dGVuX2l0ZW1zfSBpdGVtcycpCiAgICAKICAgIHN0cmVhbV9yZXNwcyA9IGdlbmVyYXRlX2V2ZW50X3N0cmVhbSh2M2lvX2NsaWVudCwgY29udGFpbmVyLCBvdXRwdXRfc3RyZWFtX3BhdGgsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbnVtX3VzZXJzX2dyb3VwMSwgbnVtX3VzZXJzX2dyb3VwMiwgZXZlbnRzX3Blcl91c2VyKQoKICAgIHJlY29yZHNfc2VudCA9IHN1bShsZW4oanNvbi5sb2FkcyhyZXNwLmJvZHkpWydSZWNvcmRzJ10pIGZvciByZXNwIGluIHN0cmVhbV9yZXNwcykKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidSZWNvcmRzIHNlbnQge3JlY29yZHNfc2VudH0nKQoKICAgIGZhaWxlZF9yZWNvcmRzID0gc3VtKGpzb24ubG9hZHMocmVzcC5ib2R5KVsnRmFpbGVkUmVjb3JkQ291bnQnXSBmb3IgcmVzcCBpbiBzdHJlYW1fcmVzcHMpCgogICAgaWYgZmFpbGVkX3JlY29yZHMgPiAwOgogICAgICAgIGNvbnRleHQubG9nZ2VyLndhcm4oZidGYWlsZWQgdG8gc3RyZWFtIHtmYWlsZWRfcmVjb3Jkc30nKQogICAgZWxzZToKICAgICAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdBbGwgZGF0YSBzdHJlYW1lZCBzdWNjZXNzZnVsbHkuJykKCiAgICBwYXNzCgo=",
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install faker"],
+          "commands": [
+            "python -m pip install faker"
+          ],
           "code_origin": "functions/data-generator.ipynb",
           "origin_filename": "functions/data-generator.ipynb"
         },
@@ -17033,7 +17504,9 @@
         "build": {
           "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKZnJvbSByYW5kb20gaW1wb3J0IHJhbmRpbnQsIHJhbmRvbQpmcm9tIGRhdGV0aW1lIGltcG9ydCBkYXRldGltZSwgdGltZWRlbHRhCmltcG9ydCBqc29uCmltcG9ydCB1dWlkCmZyb20gZmFrZXIgaW1wb3J0IEZha2VyCmltcG9ydCB2M2lvLmRhdGFwbGFuZQppbXBvcnQgb3MKZnJvbSBtbHJ1bi5leGVjdXRpb24gaW1wb3J0IE1MQ2xpZW50Q3R4CgpkZWYgZ2VuX3Bvc3Rjb2RlKGlzX2NodXJuKToKICAgIGJhc2VfcG9zdGNvZGUgPSAzICogcmFuZGludCgzMzM0LCAzMzMzMykKICAgIGdyb3VwID0gcmFuZGludCgwLCAxKQogICAgaWYgaXNfY2h1cm46CiAgICAgICAgcmV0dXJuIGJhc2VfcG9zdGNvZGUgKyBncm91cAogICAgZWxzZToKICAgICAgICByZXR1cm4gYmFzZV9wb3N0Y29kZSArIChncm91cCAqIDIpCgoKZGVmIG5ld19yZWdpc3RyYXRpb24oZmFrZSwgdXNlcl9pZCwgZXZlbnRfdGltZSwgaXNfY2h1cm4pOgogICAgcmV0dXJuIHsndXNlcl9pZCc6IHVzZXJfaWQsCiAgICAgICAgICAgICdldmVudF90eXBlJzogJ3JlZ2lzdHJhdGlvbicsCiAgICAgICAgICAgICdldmVudF90aW1lJzogZXZlbnRfdGltZSwKICAgICAgICAgICAgJ25hbWUnOiBmYWtlLm5hbWUoKSwKICAgICAgICAgICAgJ2RhdGVfb2ZfYmlydGgnOiBmYWtlLmRhdGUoKSwKICAgICAgICAgICAgJ3N0cmVldF9hZGRyZXNzJzogZmFrZS5zdHJlZXRfYWRkcmVzcygpLAogICAgICAgICAgICAnY2l0eSc6IGZha2UuY2l0eSgpLAogICAgICAgICAgICAnY291bnRyeSc6IGZha2UuY291bnRyeSgpLAogICAgICAgICAgICAncG9zdGNvZGUnOiBnZW5fcG9zdGNvZGUoaXNfY2h1cm4pLAogICAgICAgICAgICAnYWZmaWxpYXRlX3VybCc6IGZha2UuaW1hZ2VfdXJsKCksCiAgICAgICAgICAgICdjYW1wYWlnbic6IGZha2UuZWFuOCgpfQoKCmRlZiBuZXdfcHVyY2hhc2UoZmFrZSwgdXNlcl9pZCwgZXZlbnRfdGltZSk6CiAgICByZXR1cm4geyd1c2VyX2lkJzogdXNlcl9pZCwKICAgICAgICAgICAgJ2V2ZW50X3R5cGUnOiAncHVyY2hhc2UnLAogICAgICAgICAgICAnZXZlbnRfdGltZSc6IGV2ZW50X3RpbWUsCiAgICAgICAgICAgICdhbW91bnQnOiBmYWtlLnJhbmRvbWl6ZV9uYl9lbGVtZW50cyhudW1iZXI9NTApfQoKCmRlZiBuZXdfYmV0KGZha2UsIHVzZXJfaWQsIGV2ZW50X3RpbWUpOgogICAgcmV0dXJuIHsndXNlcl9pZCc6IHVzZXJfaWQsCiAgICAgICAgICAgICdldmVudF90eXBlJzogJ2JldCcsCiAgICAgICAgICAgICdldmVudF90aW1lJzogZXZlbnRfdGltZSwKICAgICAgICAgICAgJ2JldF9hbW91bnQnOiBmYWtlLnJhbmRvbWl6ZV9uYl9lbGVtZW50cyhudW1iZXI9MTApfQoKCmRlZiBuZXdfd2luKGZha2UsIHVzZXJfaWQsIGV2ZW50X3RpbWUpOgogICAgcmV0dXJuIHsndXNlcl9pZCc6IHVzZXJfaWQsCiAgICAgICAgICAgICdldmVudF90eXBlJzogJ3dpbicsCiAgICAgICAgICAgICdldmVudF90aW1lJzogZXZlbnRfdGltZSwKICAgICAgICAgICAgJ3dpbl9hbW91bnQnOiBmYWtlLnJhbmRvbWl6ZV9uYl9lbGVtZW50cyhudW1iZXI9MjAwKX0KCgpkZWYgZ2VuX2V2ZW50X2RhdGUoaXNfY2h1cm4sIHByZXZfZXZlbnRfZGF0ZT1Ob25lKToKICAgIGlmIHByZXZfZXZlbnRfZGF0ZSBpcyBOb25lOgogICAgICAgIHJldHVybiBkYXRldGltZS5ub3coKSAtIHRpbWVkZWx0YShob3Vycz1yYW5kaW50KDQ4LCA5NikpCiAgICBlbHNlOgogICAgICAgIGlmIHByZXZfZXZlbnRfZGF0ZSArIHRpbWVkZWx0YShob3Vycz0zMCkgPCBkYXRldGltZS5ub3coKSBhbmQgbm90IGlzX2NodXJuIGFuZCByYW5kaW50KDEsIDEwMDApIDw9IDU6CiAgICAgICAgICAgIHJldHVybiBwcmV2X2V2ZW50X2RhdGUgKyB0aW1lZGVsdGEoaG91cnM9cmFuZGludCgxNSwgMjQpKQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIHJldHVybiBwcmV2X2V2ZW50X2RhdGUgKyB0aW1lZGVsdGEoc2Vjb25kcz1yYW5kaW50KDUsIDEwMCkpCgoKZGVmIGdlbmVyYXRlX2V2ZW50cyhmYWtlLCBudW1fdXNlcnMsIGV2ZW50c19kaXN0LCBudW1fZXZlbnRzLCBpc19jaHVybik6CiAgICB1c2VyX2lkcyA9IGdlbmVyYXRlX3VzZXJfaWRzKG51bV91c2VycykKICAgIGV2ZW50cyA9IFtdCiAgICBmb3IgdXNlcl9pZCBpbiB1c2VyX2lkczoKICAgICAgICBldmVudF90aW1lID0gZ2VuX2V2ZW50X2RhdGUoaXNfY2h1cm4pCiAgICAgICAgcmVnX2V2ZW50ID0gbmV3X3JlZ2lzdHJhdGlvbihmYWtlLCB1c2VyX2lkLCBldmVudF90aW1lLCBpc19jaHVybikKICAgICAgICByZWdfZXZlbnRbJ2xhYmVsJ10gPSBpbnQoaXNfY2h1cm4pCiAgICAgICAgZXZlbnRzLmFwcGVuZChyZWdfZXZlbnQpCiAgICAgICAgZm9yIF8gaW4gcmFuZ2UobnVtX2V2ZW50cyk6CiAgICAgICAgICAgIGFjY19wcm9iID0gMAogICAgICAgICAgICByYW5kID0gcmFuZG9tKCkKICAgICAgICAgICAgZm9yIGV2ZW50X2Rpc3QgaW4gZXZlbnRzX2Rpc3Q6CiAgICAgICAgICAgICAgICBpZiByYW5kIDw9IGV2ZW50X2Rpc3RbJ3Byb2JhYmlsaXR5J10gKyBhY2NfcHJvYjoKICAgICAgICAgICAgICAgICAgICBldmVudF90aW1lID0gZ2VuX2V2ZW50X2RhdGUoaXNfY2h1cm4sIGV2ZW50X3RpbWUpCiAgICAgICAgICAgICAgICAgICAgbmV3X2V2ZW50ID0gZXZlbnRfZGlzdFsnZ2VuZXJhdG9yJ10oZmFrZSwgdXNlcl9pZCwgZXZlbnRfdGltZSkKICAgICAgICAgICAgICAgICAgICBldmVudHMuYXBwZW5kKG5ld19ldmVudCkKICAgICAgICAgICAgICAgICAgICBicmVhawogICAgICAgICAgICAgICAgZWxzZToKICAgICAgICAgICAgICAgICAgICBhY2NfcHJvYiArPSBldmVudF9kaXN0Wydwcm9iYWJpbGl0eSddCiAgICByZXR1cm4gZXZlbnRzCgoKZGVmIGdlbmVyYXRlX3VzZXJfaWRzKG46IGludCk6CiAgICByZXR1cm4gKHN0cih1dWlkLnV1aWQ0KCkpIGZvciBfIGluIHJhbmdlKG4pKQoKCmRlZiBnZW5lcmF0ZV9ldmVudF9zdHJlYW0odjNpb19jbGllbnQsCiAgICAgICAgICAgICAgICAgICAgICAgICAgY29udGFpbmVyLAogICAgICAgICAgICAgICAgICAgICAgICAgIG91dHB1dF9zdHJlYW1fcGF0aCwKICAgICAgICAgICAgICAgICAgICAgICAgICBudW1fdXNlcnNfZ3JvdXAxLAogICAgICAgICAgICAgICAgICAgICAgICAgIG51bV91c2Vyc19ncm91cDIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgZXZlbnRzX3Blcl91c2VyKToKCiAgICBmYWtlID0gRmFrZXIoKQoKICAgIGdyb3VwMV9ldmVudHNfZGlzdCA9IFt7J3Byb2JhYmlsaXR5JzogMC4xLCAnZ2VuZXJhdG9yJzogbmV3X3B1cmNoYXNlfSwKICAgICAgICAgICAgICAgICAgICAgICAgICB7J3Byb2JhYmlsaXR5JzogMC44OSwgJ2dlbmVyYXRvcic6IG5ld19iZXR9LAogICAgICAgICAgICAgICAgICAgICAgICAgIHsncHJvYmFiaWxpdHknOiAwLjAxLCAnZ2VuZXJhdG9yJzogbmV3X3dpbn1dCgogICAgZ3JvdXAyX2V2ZW50c19kaXN0ID0gW3sncHJvYmFiaWxpdHknOiAwLjEsICdnZW5lcmF0b3InOiBuZXdfcHVyY2hhc2V9LAogICAgICAgICAgICAgICAgICAgICAgICAgIHsncHJvYmFiaWxpdHknOiAwLjg1LCAnZ2VuZXJhdG9yJzogbmV3X2JldH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgeydwcm9iYWJpbGl0eSc6IDAuMDUsICdnZW5lcmF0b3InOiBuZXdfd2lufV0KCiAgICBncm91cDFfZXZlbnRzID0gZ2VuZXJhdGVfZXZlbnRzKGZha2UsIG51bV91c2Vyc19ncm91cDEsIGdyb3VwMV9ldmVudHNfZGlzdCwgZXZlbnRzX3Blcl91c2VyLCBUcnVlKQogICAgZ3JvdXAyX2V2ZW50cyA9IGdlbmVyYXRlX2V2ZW50cyhmYWtlLCBudW1fdXNlcnNfZ3JvdXAyLCBncm91cDJfZXZlbnRzX2Rpc3QsIGV2ZW50c19wZXJfdXNlciwgRmFsc2UpCgogICAgZXZlbnRzID0gKGdyb3VwMV9ldmVudHMgKyBncm91cDJfZXZlbnRzKQogICAgZXZlbnRzLnNvcnQoa2V5PWxhbWJkYSBldmVudDogZXZlbnQuZ2V0KCdldmVudF90aW1lJykpCgogICAgYmF0Y2hfc2l6ZSA9IDEwMDAKICAgIGZvciBpIGluIHJhbmdlKDAsIGxlbihldmVudHMpLCBiYXRjaF9zaXplKToKICAgICAgICByZWNvcmRzID0gW3snZGF0YSc6IGpzb24uZHVtcHMoZXZlbnQsIGRlZmF1bHQ9c3RyKX0gZm9yIGV2ZW50IGluIGV2ZW50c1tpOmkrYmF0Y2hfc2l6ZV1dCiAgICAgICAgdjNpb19jbGllbnQuYmF0Y2guc3RyZWFtLnB1dF9yZWNvcmRzKGNvbnRhaW5lcj1jb250YWluZXIsIHN0cmVhbV9wYXRoPW91dHB1dF9zdHJlYW1fcGF0aCwgcmVjb3Jkcz1yZWNvcmRzKQoKICAgIHJldHVybiB2M2lvX2NsaWVudC5iYXRjaC53YWl0KCkKCgpkZWYgY3JlYXRlX2VucmljaG1lbnRfdGFibGUodjNpb19jbGllbnQsIGNvbnRhaW5lciwgZW5yaWNobWVudF90YWJsZV9wYXRoKToKICAgIGZvciBwb3N0Y29kZSBpbiByYW5nZSgxMDAwMCwgOTk5OTkpOgogICAgICAgIHJlbWFpbmRlciA9IHBvc3Rjb2RlICUgMwogICAgICAgIGlmIHJlbWFpbmRlciA9PSAwOgogICAgICAgICAgICBpZHggPSByYW5kaW50KDMsIDUpCiAgICAgICAgZWxpZiByZW1haW5kZXIgPT0gMToKICAgICAgICAgICAgaWR4ID0gcmFuZGludCgxLCAzKQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIGlkeCA9IHJhbmRpbnQoNSwgNykKCiAgICAgICAgYXR0ciA9IHsncG9zdGNvZGUnOiBwb3N0Y29kZSwgJ3NvY2lvZWNvbm9taWNfaWR4JzogaWR4fQogICAgICAgIHYzaW9fY2xpZW50LmJhdGNoLmt2LnB1dChjb250YWluZXI9Y29udGFpbmVyLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0YWJsZV9wYXRoPWVucmljaG1lbnRfdGFibGVfcGF0aCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2V5PXN0cihwb3N0Y29kZSksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJpYnV0ZXM9YXR0cikKICAgIHJldHVybiB2M2lvX2NsaWVudC5iYXRjaC53YWl0KCkKCmRlZiBtYWluKGNvbnRleHQ6IE1MQ2xpZW50Q3R4LAogICAgICAgICBjb250YWluZXI6IHN0ciwKICAgICAgICAgb3V0cHV0X3N0cmVhbV9wYXRoOiBzdHIsCiAgICAgICAgIGVucmljaG1lbnRfdGFibGVfcGF0aDogc3RyLAogICAgICAgICBudW1fdXNlcnNfZ3JvdXAxOiBpbnQgPSAxNDAwLAogICAgICAgICBudW1fdXNlcnNfZ3JvdXAyOiBpbnQgPSA2MDAsCiAgICAgICAgIGV2ZW50c19wZXJfdXNlcjogaW50ID0gMTAwMCkgLT4gTm9uZToKCiAgICB2M2lvX2NsaWVudCA9IHYzaW8uZGF0YXBsYW5lLkNsaWVudChlbmRwb2ludD1vcy5nZXRlbnYoJ1YzSU9fQVBJJyksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhY2Nlc3Nfa2V5PW9zLmdldGVudignVjNJT19BQ0NFU1NfS0VZJykpCiAgICAKICAgIHRhYmxlX3Jlc3BzID0gY3JlYXRlX2VucmljaG1lbnRfdGFibGUodjNpb19jbGllbnQsIGNvbnRhaW5lciwgZW5yaWNobWVudF90YWJsZV9wYXRoKQogICAgd3JpdHRlbl9pdGVtcyA9IHN1bShpbnQocmVzcC5zdGF0dXNfY29kZSA9PSAyMDApIGZvciByZXNwIGluIHRhYmxlX3Jlc3BzKQogICAgY29udGV4dC5sb2dnZXIuaW5mbyhmJ0NyZWF0ZWQgZW5yaWNobWVudCB0YWJsZSB3aXRoIHt3cml0dGVuX2l0ZW1zfSBpdGVtcycpCiAgICAKICAgIHN0cmVhbV9yZXNwcyA9IGdlbmVyYXRlX2V2ZW50X3N0cmVhbSh2M2lvX2NsaWVudCwgY29udGFpbmVyLCBvdXRwdXRfc3RyZWFtX3BhdGgsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbnVtX3VzZXJzX2dyb3VwMSwgbnVtX3VzZXJzX2dyb3VwMiwgZXZlbnRzX3Blcl91c2VyKQoKICAgIHJlY29yZHNfc2VudCA9IHN1bShsZW4oanNvbi5sb2FkcyhyZXNwLmJvZHkpWydSZWNvcmRzJ10pIGZvciByZXNwIGluIHN0cmVhbV9yZXNwcykKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidSZWNvcmRzIHNlbnQge3JlY29yZHNfc2VudH0nKQoKICAgIGZhaWxlZF9yZWNvcmRzID0gc3VtKGpzb24ubG9hZHMocmVzcC5ib2R5KVsnRmFpbGVkUmVjb3JkQ291bnQnXSBmb3IgcmVzcCBpbiBzdHJlYW1fcmVzcHMpCgogICAgaWYgZmFpbGVkX3JlY29yZHMgPiAwOgogICAgICAgIGNvbnRleHQubG9nZ2VyLndhcm4oZidGYWlsZWQgdG8gc3RyZWFtIHtmYWlsZWRfcmVjb3Jkc30nKQogICAgZWxzZToKICAgICAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdBbGwgZGF0YSBzdHJlYW1lZCBzdWNjZXNzZnVsbHkuJykKCiAgICBwYXNzCgo=",
           "base_image": "mlrun/mlrun",
-          "commands": ["python -m pip install faker"],
+          "commands": [
+            "python -m pip install faker"
+          ],
           "code_origin": "functions/data-generator.ipynb",
           "origin_filename": "functions/data-generator.ipynb"
         },
@@ -17192,7 +17665,9 @@
         "internal_invocation_urls": [
           "nuclio-model-deployment-pipeline-admin-event-handler.default-tenant.svc.cluster.local:8080"
         ],
-        "external_invocation_urls": ["default-tenant.app.vmdev36.lab.iguazeng.com:31666"]
+        "external_invocation_urls": [
+          "default-tenant.app.vmdev36.lab.iguazeng.com:31666"
+        ]
       },
       "verbose": false
     },
@@ -17579,7 +18054,9 @@
         "internal_invocation_urls": [
           "nuclio-model-deployment-pipeline-admin-stream-to-features.default-tenant.svc.cluster.local:8080"
         ],
-        "external_invocation_urls": ["default-tenant.app.vmdev36.lab.iguazeng.com:31071"]
+        "external_invocation_urls": [
+          "default-tenant.app.vmdev36.lab.iguazeng.com:31071"
+        ]
       },
       "verbose": false
     },
@@ -17785,7 +18262,10 @@
           "author": "yaronh",
           "framework": "sklearn"
         },
-        "categories": ["serving", "ml"],
+        "categories": [
+          "serving",
+          "ml"
+        ],
         "tag": "latest",
         "updated": "2021-08-29T20:08:10.407163+00:00"
       },
@@ -17907,7 +18387,9 @@
         "internal_invocation_urls": [
           "nuclio-model-deployment-pipeline-admin-model-server.default-tenant.svc.cluster.local:8080"
         ],
-        "external_invocation_urls": ["default-tenant.app.vmdev36.lab.iguazeng.com:30135"]
+        "external_invocation_urls": [
+          "default-tenant.app.vmdev36.lab.iguazeng.com:30135"
+        ]
       },
       "verbose": false
     },
@@ -17921,7 +18403,10 @@
           "author": "yaronh",
           "framework": "sklearn"
         },
-        "categories": ["serving", "ml"],
+        "categories": [
+          "serving",
+          "ml"
+        ],
         "tag": "",
         "updated": "2021-08-29T20:08:10.291721+00:00"
       },
@@ -18282,7 +18767,9 @@
         "internal_invocation_urls": [
           "nuclio-model-deployment-pipeline-admin-inference-logger.default-tenant.svc.cluster.local:8080"
         ],
-        "external_invocation_urls": ["default-tenant.app.vmdev36.lab.iguazeng.com:30243"]
+        "external_invocation_urls": [
+          "default-tenant.app.vmdev36.lab.iguazeng.com:30243"
+        ]
       },
       "verbose": false
     },
@@ -18564,7 +19051,9 @@
         "labels": {
           "author": "avia"
         },
-        "categories": ["data-preparation"],
+        "categories": [
+          "data-preparation"
+        ],
         "updated": "2021-09-03T11:09:10.666444+00:00"
       },
       "spec": {
@@ -18634,13 +19123,17 @@
                 "name": "metric_aggs",
                 "type": "list",
                 "doc": "Array containing a list of aggregation function names to run on {metrics}. (Ex: 'mean', 'std') (default='mean')",
-                "default": ["mean"]
+                "default": [
+                  "mean"
+                ]
               },
               {
                 "name": "label_aggs",
                 "type": "list",
                 "doc": "Array containing a list of aggregation function names to run on {metrics}. (Ex: 'max', 'min') (default='max') ",
-                "default": ["max"]
+                "default": [
+                  "max"
+                ]
               },
               {
                 "name": "suffix",
@@ -18850,7 +19343,10 @@
           "author": "yjb",
           "framework": "survival"
         },
-        "categories": ["model-training", "machine-learning"],
+        "categories": [
+          "model-training",
+          "machine-learning"
+        ],
         "updated": "2021-09-06T13:47:37.657072+00:00"
       },
       "spec": {
@@ -18987,7 +19483,9 @@
         "labels": {
           "author": "yaronh"
         },
-        "categories": ["data-preparation"],
+        "categories": [
+          "data-preparation"
+        ],
         "updated": "2021-09-06T15:18:17.241488+00:00"
       },
       "spec": {
@@ -19611,7 +20109,9 @@
         "labels": {
           "author": "Iguazio"
         },
-        "categories": ["data-analysis"],
+        "categories": [
+          "data-analysis"
+        ],
         "updated": "2021-08-29T20:07:44.811400+00:00"
       },
       "spec": {
@@ -19737,7 +20237,9 @@
         "labels": {
           "author": "Iguazio"
         },
-        "categories": ["data-analysis"],
+        "categories": [
+          "data-analysis"
+        ],
         "updated": "2021-08-29T20:07:44.987814+00:00"
       },
       "spec": {
@@ -19864,7 +20366,9 @@
         "labels": {
           "author": "avia"
         },
-        "categories": ["data-preparation"],
+        "categories": [
+          "data-preparation"
+        ],
         "updated": "2021-08-29T20:07:35.135083+00:00"
       },
       "spec": {
@@ -19956,13 +20460,17 @@
                 "name": "metric_aggs",
                 "type": "list",
                 "doc": "Array containing a list of aggregation function names to run on {metrics}. (Ex: 'mean', 'std') (default='mean')",
-                "default": ["mean"]
+                "default": [
+                  "mean"
+                ]
               },
               {
                 "name": "label_aggs",
                 "type": "list",
                 "doc": "Array containing a list of aggregation function names to run on {metrics}. (Ex: 'max', 'min') (default='max') ",
-                "default": ["max"]
+                "default": [
+                  "max"
+                ]
               },
               {
                 "name": "suffix",
@@ -20031,7 +20539,9 @@
         "labels": {
           "author": "avia"
         },
-        "categories": ["data-preparation"],
+        "categories": [
+          "data-preparation"
+        ],
         "updated": "2021-08-29T20:07:35.241761+00:00"
       },
       "spec": {
@@ -20123,13 +20633,17 @@
                 "name": "metric_aggs",
                 "type": "list",
                 "doc": "Array containing a list of aggregation function names to run on {metrics}. (Ex: 'mean', 'std') (default='mean')",
-                "default": ["mean"]
+                "default": [
+                  "mean"
+                ]
               },
               {
                 "name": "label_aggs",
                 "type": "list",
                 "doc": "Array containing a list of aggregation function names to run on {metrics}. (Ex: 'max', 'min') (default='max') ",
-                "default": ["max"]
+                "default": [
+                  "max"
+                ]
               },
               {
                 "name": "suffix",
@@ -20588,7 +21102,9 @@
           "spec": {
             "build": {
               "baseImage": "mlrun/ml-models",
-              "commands": ["python -m pip install v3io --upgrade"],
+              "commands": [
+                "python -m pip install v3io --upgrade"
+              ],
               "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKaW1wb3J0IG9zCmltcG9ydCBwYW5kYXMgYXMgcGQKaW1wb3J0IGpzb24KaW1wb3J0IHYzaW8KaW1wb3J0IHYzaW8uZGF0YXBsYW5lCmltcG9ydCBzb2NrZXQKCmRlZiBzcGxpdF9wYXRoKG1udHBhdGg9JycpOgogICAgaWYgbW50cGF0aFswXSA9PSAnLyc6CiAgICAgICAgbW50cGF0aCA9IG1udHBhdGhbMTpdCiAgICBwYXRocyA9IG1udHBhdGguc3BsaXQoJy8nKQogICAgY29udGFpbmVyID0gcGF0aHNbMF0KICAgIHN1YnBhdGggPSAnJwogICAgaWYgbGVuKHBhdGhzKSA+IDE6CiAgICAgICAgc3VicGF0aCA9IG1udHBhdGhbbGVuKGNvbnRhaW5lcik6XQogICAgcmV0dXJuIGNvbnRhaW5lciwgc3VicGF0aAoKZGVmIGNyZWF0ZV9zdHJlYW0oY29udGV4dCwgcGF0aCwgc2hhcmRzPTEpOgogICAgY29udGFpbmVyLCBzdHJlYW1fcGF0aCA9IHNwbGl0X3BhdGgocGF0aCkKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidDcmVhdGluZyBzdHJlYW0gaW4gQ29udGFpbmVyOiB7Y29udGFpbmVyfSAmIFBhdGgge3N0cmVhbV9wYXRofScpCiAgICByZXNwb25zZSA9IGNvbnRleHQudjNpb19jbGllbnQuc3RyZWFtLmNyZWF0ZShjb250YWluZXI9Y29udGFpbmVyLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RyZWFtX3BhdGg9c3RyZWFtX3BhdGgsIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2hhcmRfY291bnQ9c2hhcmRzLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmFpc2VfZm9yX3N0YXR1cz12M2lvLmRhdGFwbGFuZS5SYWlzZUZvclN0YXR1cy5uZXZlcikKICAgIHJlc3BvbnNlLnJhaXNlX2Zvcl9zdGF0dXMoWzQwOSwgMjA0XSkKCmRlZiBwdXNoX3RvX3N0cmVhbShjb250ZXh0LCBzdHJlYW1fcGF0aCwgZGF0YSk6CiAgICBkZWYgcmVzdHJ1Y3R1cmVfc3RyZWFtX2V2ZW50KGNvbnRleHQsIGV2ZW50KToKICAgICAgICBpbnN0YW5jZXMgPSBbZGljdCgpXQogICAgICAgIGZvciBrZXkgaW4gZGF0YS5rZXlzKCk6CiAgICAgICAgICAgIGlmIGtleSBub3QgaW4gWyd3aGVuJywgJ2NsYXNzJywgJ21vZGVsJywgJ3dvcmtlcicsICdob3N0bmFtZScsIGNvbnRleHQucHJlZGljdGlvbl9jb2xdOgogICAgICAgICAgICAgICAgaW5zdGFuY2VzWzBdLnVwZGF0ZSh7a2V5OiBldmVudC5wb3Aoa2V5KX0pCiAgICAgICAgZXZlbnRbJ3JlcXVlc3QnXSA9IHsnaW5zdGFuY2VzJzogaW5zdGFuY2VzfQogICAgICAgIGV2ZW50WydyZXNwJ10gPSBbaW50KGV2ZW50LnBvcChjb250ZXh0LnByZWRpY3Rpb25fY29sKSldCiAgICAgICAgcmV0dXJuIGV2ZW50CiAgICAKICAgIHJlY29yZHMgPSBqc29uLmxvYWRzKGRhdGEudG9fanNvbihvcmllbnQ9J3JlY29yZHMnKSkKICAgIHJlY29yZHMgPSBbeydkYXRhJzoganNvbi5kdW1wcyhyZXN0cnVjdHVyZV9zdHJlYW1fZXZlbnQoY29udGV4dCwgcmVjb3JkKSl9IGZvciByZWNvcmQgaW4gcmVjb3Jkc10KICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidMb2dnaW5nIHtsZW4ocmVjb3Jkcyl9IHJlY29yZHMsIFJlY29yZCBleGFtcGxlOiB7cmVjb3Jkc1swXX0nKQogICAgY29udGFpbmVyLCBzdHJlYW1fcGF0aCA9IHNwbGl0X3BhdGgoc3RyZWFtX3BhdGgpCiAgICBzdGVwID0gMTAKICAgIGZvciBpZHggaW4gcmFuZ2UoMCwgbGVuKHJlY29yZHMpLCBzdGVwKToKICAgICAgICByZXNwb25zZSA9IGNvbnRleHQudjNpb19jbGllbnQucHV0X3JlY29yZHMoY29udGFpbmVyPWNvbnRhaW5lciwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGF0aD1zdHJlYW1fcGF0aCwgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlY29yZHM9cmVjb3Jkc1tpZHg6aWR4K3N0ZXBdKQoKZGVmIGdldF9kYXRhX3BhcnF1ZXQoY29udGV4dCwgdGFibGUsIGZpbGVzX3RvX3NlbGVjdD0xKToKICAgIG1wYXRoID0gW29zLnBhdGguam9pbih0YWJsZSwgZmlsZSkgZm9yIGZpbGUgaW4gb3MubGlzdGRpcih0YWJsZSkgaWYgZmlsZS5lbmRzd2l0aCgoJ3BhcnF1ZXQnLCAncHEnKSldCiAgICBmaWxlc19ieV91cGRhdGVkID0gc29ydGVkKG1wYXRoLCBrZXk9b3MucGF0aC5nZXRtdGltZSwgcmV2ZXJzZT1GYWxzZSkKICAgIGNvbnRleHQubG9nZ2VyLmRlYnVnX3dpdGgoJ0lucHV0JywgaW5wdXRfZmlsZXM9ZmlsZXNfYnlfdXBkYXRlZFs6ZmlsZXNfdG9fc2VsZWN0XSkKICAgIGRmcyA9IHBkLmNvbmNhdChbcGQucmVhZF9wYXJxdWV0KGZpbGUpIGZvciBmaWxlIGluIGZpbGVzX2J5X3VwZGF0ZWRbOmZpbGVzX3RvX3NlbGVjdF1dKQogICAgcmV0dXJuIGRmcwoKZGVmIGluaXRfY29udGV4dChjb250ZXh0KToKICAgIAogICAgYmF0Y2hlc190b19nZW5lcmF0ZSA9IGludChvcy5nZXRlbnYoJ0JBVENIRVNfVE9fR0VORVJBVEUnLCAyMCkpCiAgICBzZXRhdHRyKGNvbnRleHQsICdiYXRjaGVzX3RvX2dlbmVyYXRlJywgYmF0Y2hlc190b19nZW5lcmF0ZSkKICAgIHNldGF0dHIoY29udGV4dCwgJ2JhdGNoZXNfZ2VuZXJhdGVkJywgMCkKICAgIAogICAgc2V0YXR0cihjb250ZXh0LCAnbWV0cmljc190YWJsZScsIG9zLmVudmlyb25bJ01FVFJJQ1NfVEFCTEUnXSkKICAgIHNldGF0dHIoY29udGV4dCwgJ3ByZWRpY3Rpb25zX3RhYmxlJywgb3MuZW52aXJvblsnUFJFRElDVElPTlNfVEFCTEUnXSkKICAgIHNldGF0dHIoY29udGV4dCwgJ291dHB1dF9zdHJlYW0nLCBvcy5lbnZpcm9uWydPVVRQVVRfU1RSRUFNJ10pCiAgICBzZXRhdHRyKGNvbnRleHQsICd0aW1lc3RhbXBfY29sJywgb3MuZ2V0ZW52KCd0aW1lc3RhbXBfY29sJywgJ3doZW4nKSkKICAgIHNldGF0dHIoY29udGV4dCwgJ29yaWdfdGltZXN0YW1wX2NvbCcsIG9zLmdldGVudignb3JpZ190aW1lc3RhbXBfY29sJywgJ3RpbWVzdGFtcCcpKQogICAgCiAgICB2M2lvX2NsaWVudCA9IHYzaW8uZGF0YXBsYW5lLkNsaWVudChsb2dnZXJfdmVyYm9zaXR5PSdERUJVRycsIHRyYW5zcG9ydF92ZXJib3NpdHk9J0RFQlVHJykKICAgIHNldGF0dHIoY29udGV4dCwgJ3YzaW9fY2xpZW50JywgdjNpb19jbGllbnQpCiAgICBjcmVhdGVfc3RyZWFtKGNvbnRleHQsIGNvbnRleHQub3V0cHV0X3N0cmVhbSkKICAgIAogICAgc2V0YXR0cihjb250ZXh0LCAnbGFiZWxfY29sJywgb3MuZW52aXJvblsnbGFiZWxfY29sJ10pCiAgICBzZXRhdHRyKGNvbnRleHQsICdwcmVkaWN0aW9uX2NvbCcsIG9zLmVudmlyb25bJ3ByZWRpY3Rpb25fY29sJ10pCgpkZWYgaGFuZGxlcihjb250ZXh0LCBldmVudCk6CiAgICAKICAgIGlmIChjb250ZXh0LmJhdGNoZXNfdG9fZ2VuZXJhdGUgPT0gLTEpIG9yIChjb250ZXh0LmJhdGNoZXNfZ2VuZXJhdGVkIDw9IGNvbnRleHQuYmF0Y2hlc190b19nZW5lcmF0ZSk6CiAgICAgICAgCiAgICAgICAgbWV0cmljcyA9IGdldF9kYXRhX3BhcnF1ZXQoY29udGV4dCwgY29udGV4dC5tZXRyaWNzX3RhYmxlLCAyKS5sb2NbOiwgY29udGV4dC5sYWJlbF9jb2xdLmFzdHlwZSgnaW50JykKICAgICAgICBtZXRyaWNzLmluZGV4Lm5hbWVzID0gbGlzdChbbmFtZSBpZiBuYW1lICE9IGNvbnRleHQub3JpZ190aW1lc3RhbXBfY29sIGVsc2UgY29udGV4dC50aW1lc3RhbXBfY29sIGZvciBuYW1lIGluIG1ldHJpY3MuaW5kZXgubmFtZXNdKQogICAgICAgIHByZWRpY3Rpb25zID0gZ2V0X2RhdGFfcGFycXVldChjb250ZXh0LCBjb250ZXh0LnByZWRpY3Rpb25zX3RhYmxlLCAyKQogICAgICAgIGNvbnRleHQubG9nZ2VyLmRlYnVnKGYnTGFiZWxpbmcgbWV0cmljcyAoe21ldHJpY3Muc2hhcGV9KSBhbmQgcHJlZGljdGlvbnMgKHtwcmVkaWN0aW9ucy5zaGFwZX0pJykKICAgICAgICBjb250ZXh0LmxvZ2dlci5kZWJ1Z193aXRoKCdJbmRleGVzJywgbWV0cmljc19pbmRleD1tZXRyaWNzLmluZGV4Lm5hbWVzLCBwcmVkaWN0aW9uc19pbmRleD1wcmVkaWN0aW9ucy5pbmRleC5uYW1lcykKCiAgICAgICAgcHJpbnQoJ21ldHJpY3MnKQogICAgICAgIHByaW50KG1ldHJpY3MuaGVhZCgpKQogICAgICAgIHByaW50KHR5cGUobWV0cmljcykpCiAgICAgICAgbWV0cmljcyA9IHBkLkRhdGFGcmFtZShtZXRyaWNzKQogICAgICAgIHByaW50KCdjaGFuZ2UnKQogICAgICAgIHByaW50KHR5cGUobWV0cmljcykpCiAgICAgICAgcHJpbnQobWV0cmljcy5oZWFkKCkpCiAgICAgICAgcHJpbnQobWV0cmljcy5pbmRleC5uYW1lcykKCiAgICAgICAgZnVsbF9kZiA9IHBkLm1lcmdlKGxlZnQ9cHJlZGljdGlvbnMsIHJpZ2h0PW1ldHJpY3MsIGxlZnRfb249bWV0cmljcy5pbmRleC5uYW1lcywgaG93PSdsZWZ0JywgbGVmdF9pbmRleD1UcnVlLCByaWdodF9pbmRleD1UcnVlKQogICAgICAgIGZ1bGxfZGYgPSBmdWxsX2RmLnJlc2V0X2luZGV4KCkKICAgICAgICBjb250ZXh0LmxvZ2dlci5pbmZvKGYnRnVsbHkgbGFiZWxlZCBiYXRjaCBzaXplIGlzIHtmdWxsX2RmLnNoYXBlfScpCiAgICAgICAgY29udGV4dC5sb2dnZXIuaW5mbyhmJ0luZGV4ZXM6IHtsaXN0KGZ1bGxfZGYuaW5kZXgubmFtZXMpfScpCiAgICAgICAgY29udGV4dC5sb2dnZXIuaW5mbyhmJ0NvbHVtbnM6IHtmdWxsX2RmLmNvbHVtbnN9JykKICAgICAgICBjb250ZXh0LmxvZ2dlci5pbmZvX3dpdGgoJ3NhbXBsZScsIGZ1bGxfZGY9ZnVsbF9kZi5oZWFkKDEpKSAgICAKICAgICAgICBwdXNoX3RvX3N0cmVhbShjb250ZXh0LCBjb250ZXh0Lm91dHB1dF9zdHJlYW0sIGZ1bGxfZGYpCiAgICAgICAgCiAgICAgICAgY29udGV4dC5iYXRjaGVzX2dlbmVyYXRlZCArPSAxCgo=",
               "noBaseImagesPull": true
             },
@@ -20785,7 +21301,10 @@
         "labels": {
           "author": "orz"
         },
-        "categories": ["machine-learning", "data-preparation"],
+        "categories": [
+          "machine-learning",
+          "data-preparation"
+        ],
         "updated": "2021-08-29T20:25:27.069612+00:00"
       },
       "spec": {
@@ -20850,7 +21369,9 @@
               "heartbeatInterval": "3s",
               "seekTo": "earliest",
               "readBatchSize": 64,
-              "partitions": [0],
+              "partitions": [
+                0
+              ],
               "pollingIntervalMs": 500
             },
             "name": "labeled_stream",
@@ -20903,7 +21424,9 @@
         "labels": {
           "author": "avia"
         },
-        "categories": ["data-preparation"],
+        "categories": [
+          "data-preparation"
+        ],
         "updated": "2021-08-29T20:25:34.216602+00:00"
       },
       "spec": {
@@ -20995,13 +21518,17 @@
                 "name": "metric_aggs",
                 "type": "list",
                 "doc": "Array containing a list of aggregation function names to run on {metrics}. (Ex: 'mean', 'std') (default='mean')",
-                "default": ["mean"]
+                "default": [
+                  "mean"
+                ]
               },
               {
                 "name": "label_aggs",
                 "type": "list",
                 "doc": "Array containing a list of aggregation function names to run on {metrics}. (Ex: 'max', 'min') (default='max') ",
-                "default": ["max"]
+                "default": [
+                  "max"
+                ]
               },
               {
                 "name": "suffix",
@@ -21070,7 +21597,9 @@
         "labels": {
           "author": "avia"
         },
-        "categories": ["data-preparation"],
+        "categories": [
+          "data-preparation"
+        ],
         "updated": "2021-08-29T20:25:34.358997+00:00"
       },
       "spec": {
@@ -21162,13 +21691,17 @@
                 "name": "metric_aggs",
                 "type": "list",
                 "doc": "Array containing a list of aggregation function names to run on {metrics}. (Ex: 'mean', 'std') (default='mean')",
-                "default": ["mean"]
+                "default": [
+                  "mean"
+                ]
               },
               {
                 "name": "label_aggs",
                 "type": "list",
                 "doc": "Array containing a list of aggregation function names to run on {metrics}. (Ex: 'max', 'min') (default='max') ",
-                "default": ["max"]
+                "default": [
+                  "max"
+                ]
               },
               {
                 "name": "suffix",
@@ -21238,7 +21771,9 @@
         "labels": {
           "author": "Iguazio"
         },
-        "categories": ["data-analysis"],
+        "categories": [
+          "data-analysis"
+        ],
         "updated": "2021-08-29T20:26:05.482411+00:00"
       },
       "spec": {
@@ -21364,7 +21899,9 @@
         "labels": {
           "author": "Iguazio"
         },
-        "categories": ["data-analysis"],
+        "categories": [
+          "data-analysis"
+        ],
         "updated": "2021-08-29T20:26:45.116926+00:00"
       },
       "spec": {
@@ -21621,7 +22158,12 @@
                 "name": "stat_filters",
                 "type": "list",
                 "doc": "statistical functions to apply to the features (from sklearn.feature_selection). ",
-                "default": ["f_classif", "mutual_info_classif", "chi2", "f_regression"]
+                "default": [
+                  "f_classif",
+                  "mutual_info_classif",
+                  "chi2",
+                  "f_regression"
+                ]
               },
               {
                 "name": "model_filters",
@@ -21825,7 +22367,12 @@
                 "name": "stat_filters",
                 "type": "list",
                 "doc": "statistical functions to apply to the features (from sklearn.feature_selection). ",
-                "default": ["f_classif", "mutual_info_classif", "chi2", "f_regression"]
+                "default": [
+                  "f_classif",
+                  "mutual_info_classif",
+                  "chi2",
+                  "f_regression"
+                ]
               },
               {
                 "name": "model_filters",
@@ -21901,7 +22448,10 @@
           "author": "yjb",
           "framework": "sklearn"
         },
-        "categories": ["machine-learning", "model-training"],
+        "categories": [
+          "machine-learning",
+          "model-training"
+        ],
         "updated": "2021-08-29T20:26:44.981639+00:00"
       },
       "spec": {
@@ -22075,7 +22625,10 @@
           "author": "yjb",
           "framework": "sklearn"
         },
-        "categories": ["machine-learning", "model-training"],
+        "categories": [
+          "machine-learning",
+          "model-training"
+        ],
         "updated": "2021-08-29T20:26:45.319243+00:00"
       },
       "spec": {
@@ -22250,7 +22803,10 @@
           "author": "yjb",
           "framework": "sklearn"
         },
-        "categories": ["machine-learning", "model-testing"],
+        "categories": [
+          "machine-learning",
+          "model-testing"
+        ],
         "updated": "2021-08-29T20:27:25.044324+00:00"
       },
       "spec": {
@@ -22392,7 +22948,10 @@
           "author": "yjb",
           "framework": "sklearn"
         },
-        "categories": ["machine-learning", "model-testing"],
+        "categories": [
+          "machine-learning",
+          "model-testing"
+        ],
         "updated": "2021-08-29T20:27:25.275004+00:00"
       },
       "spec": {
@@ -22706,7 +23265,9 @@
         "internal_invocation_urls": [
           "nuclio-network-operations-admin-serving-v1.default-tenant.svc.cluster.local:8080"
         ],
-        "external_invocation_urls": ["default-tenant.app.vmdev36.lab.iguazeng.com:31436"]
+        "external_invocation_urls": [
+          "default-tenant.app.vmdev36.lab.iguazeng.com:31436"
+        ]
       },
       "verbose": false
     },
@@ -22980,7 +23541,10 @@
         "labels": {
           "author": "yaronh"
         },
-        "categories": ["monitoring", "model-serving"],
+        "categories": [
+          "monitoring",
+          "model-serving"
+        ],
         "updated": "2021-08-29T20:28:22.922532+00:00"
       },
       "spec": {
@@ -23105,7 +23669,10 @@
         "labels": {
           "author": "yaronh"
         },
-        "categories": ["monitoring", "model-serving"],
+        "categories": [
+          "monitoring",
+          "model-serving"
+        ],
         "updated": "2021-08-29T20:28:23.097787+00:00"
       },
       "spec": {
@@ -23423,7 +23990,9 @@
         "internal_invocation_urls": [
           "nuclio-network-operations-admin-create-feature-vector.default-tenant.svc.cluster.local:8080"
         ],
-        "external_invocation_urls": ["default-tenant.app.vmdev36.lab.iguazeng.com:30027"]
+        "external_invocation_urls": [
+          "default-tenant.app.vmdev36.lab.iguazeng.com:30027"
+        ]
       },
       "verbose": false
     },
@@ -23530,7 +24099,9 @@
           "spec": {
             "build": {
               "baseImage": "mlrun/ml-models",
-              "commands": ["python -m pip install v3io --upgrade"],
+              "commands": [
+                "python -m pip install v3io --upgrade"
+              ],
               "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKaW1wb3J0IG9zCmltcG9ydCBwYW5kYXMgYXMgcGQKaW1wb3J0IGpzb24KaW1wb3J0IHYzaW8KaW1wb3J0IHYzaW8uZGF0YXBsYW5lCmltcG9ydCBzb2NrZXQKCmRlZiBzcGxpdF9wYXRoKG1udHBhdGg9JycpOgogICAgaWYgbW50cGF0aFswXSA9PSAnLyc6CiAgICAgICAgbW50cGF0aCA9IG1udHBhdGhbMTpdCiAgICBwYXRocyA9IG1udHBhdGguc3BsaXQoJy8nKQogICAgY29udGFpbmVyID0gcGF0aHNbMF0KICAgIHN1YnBhdGggPSAnJwogICAgaWYgbGVuKHBhdGhzKSA+IDE6CiAgICAgICAgc3VicGF0aCA9IG1udHBhdGhbbGVuKGNvbnRhaW5lcik6XQogICAgcmV0dXJuIGNvbnRhaW5lciwgc3VicGF0aAoKZGVmIGNyZWF0ZV9zdHJlYW0oY29udGV4dCwgcGF0aCwgc2hhcmRzPTEpOgogICAgY29udGFpbmVyLCBzdHJlYW1fcGF0aCA9IHNwbGl0X3BhdGgocGF0aCkKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidDcmVhdGluZyBzdHJlYW0gaW4gQ29udGFpbmVyOiB7Y29udGFpbmVyfSAmIFBhdGgge3N0cmVhbV9wYXRofScpCiAgICByZXNwb25zZSA9IGNvbnRleHQudjNpb19jbGllbnQuc3RyZWFtLmNyZWF0ZShjb250YWluZXI9Y29udGFpbmVyLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RyZWFtX3BhdGg9c3RyZWFtX3BhdGgsIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2hhcmRfY291bnQ9c2hhcmRzLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmFpc2VfZm9yX3N0YXR1cz12M2lvLmRhdGFwbGFuZS5SYWlzZUZvclN0YXR1cy5uZXZlcikKICAgIHJlc3BvbnNlLnJhaXNlX2Zvcl9zdGF0dXMoWzQwOSwgMjA0XSkKCmRlZiBwdXNoX3RvX3N0cmVhbShjb250ZXh0LCBzdHJlYW1fcGF0aCwgZGF0YSk6CiAgICBkZWYgcmVzdHJ1Y3R1cmVfc3RyZWFtX2V2ZW50KGNvbnRleHQsIGV2ZW50KToKICAgICAgICBpbnN0YW5jZXMgPSBbZGljdCgpXQogICAgICAgIGZvciBrZXkgaW4gZGF0YS5rZXlzKCk6CiAgICAgICAgICAgIGlmIGtleSBub3QgaW4gWyd3aGVuJywgJ2NsYXNzJywgJ21vZGVsJywgJ3dvcmtlcicsICdob3N0bmFtZScsIGNvbnRleHQucHJlZGljdGlvbl9jb2xdOgogICAgICAgICAgICAgICAgaW5zdGFuY2VzWzBdLnVwZGF0ZSh7a2V5OiBldmVudC5wb3Aoa2V5KX0pCiAgICAgICAgZXZlbnRbJ3JlcXVlc3QnXSA9IHsnaW5zdGFuY2VzJzogaW5zdGFuY2VzfQogICAgICAgIGV2ZW50WydyZXNwJ10gPSBbaW50KGV2ZW50LnBvcChjb250ZXh0LnByZWRpY3Rpb25fY29sKSldCiAgICAgICAgcmV0dXJuIGV2ZW50CiAgICAKICAgIHJlY29yZHMgPSBqc29uLmxvYWRzKGRhdGEudG9fanNvbihvcmllbnQ9J3JlY29yZHMnKSkKICAgIHJlY29yZHMgPSBbeydkYXRhJzoganNvbi5kdW1wcyhyZXN0cnVjdHVyZV9zdHJlYW1fZXZlbnQoY29udGV4dCwgcmVjb3JkKSl9IGZvciByZWNvcmQgaW4gcmVjb3Jkc10KICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidMb2dnaW5nIHtsZW4ocmVjb3Jkcyl9IHJlY29yZHMsIFJlY29yZCBleGFtcGxlOiB7cmVjb3Jkc1swXX0nKQogICAgY29udGFpbmVyLCBzdHJlYW1fcGF0aCA9IHNwbGl0X3BhdGgoc3RyZWFtX3BhdGgpCiAgICBzdGVwID0gMTAKICAgIGZvciBpZHggaW4gcmFuZ2UoMCwgbGVuKHJlY29yZHMpLCBzdGVwKToKICAgICAgICByZXNwb25zZSA9IGNvbnRleHQudjNpb19jbGllbnQucHV0X3JlY29yZHMoY29udGFpbmVyPWNvbnRhaW5lciwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGF0aD1zdHJlYW1fcGF0aCwgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlY29yZHM9cmVjb3Jkc1tpZHg6aWR4K3N0ZXBdKQoKZGVmIGdldF9kYXRhX3BhcnF1ZXQoY29udGV4dCwgdGFibGUsIGZpbGVzX3RvX3NlbGVjdD0xKToKICAgIG1wYXRoID0gW29zLnBhdGguam9pbih0YWJsZSwgZmlsZSkgZm9yIGZpbGUgaW4gb3MubGlzdGRpcih0YWJsZSkgaWYgZmlsZS5lbmRzd2l0aCgoJ3BhcnF1ZXQnLCAncHEnKSldCiAgICBmaWxlc19ieV91cGRhdGVkID0gc29ydGVkKG1wYXRoLCBrZXk9b3MucGF0aC5nZXRtdGltZSwgcmV2ZXJzZT1GYWxzZSkKICAgIGNvbnRleHQubG9nZ2VyLmRlYnVnX3dpdGgoJ0lucHV0JywgaW5wdXRfZmlsZXM9ZmlsZXNfYnlfdXBkYXRlZFs6ZmlsZXNfdG9fc2VsZWN0XSkKICAgIGRmcyA9IHBkLmNvbmNhdChbcGQucmVhZF9wYXJxdWV0KGZpbGUpIGZvciBmaWxlIGluIGZpbGVzX2J5X3VwZGF0ZWRbOmZpbGVzX3RvX3NlbGVjdF1dKQogICAgcmV0dXJuIGRmcwoKZGVmIGluaXRfY29udGV4dChjb250ZXh0KToKICAgIAogICAgYmF0Y2hlc190b19nZW5lcmF0ZSA9IGludChvcy5nZXRlbnYoJ0JBVENIRVNfVE9fR0VORVJBVEUnLCAyMCkpCiAgICBzZXRhdHRyKGNvbnRleHQsICdiYXRjaGVzX3RvX2dlbmVyYXRlJywgYmF0Y2hlc190b19nZW5lcmF0ZSkKICAgIHNldGF0dHIoY29udGV4dCwgJ2JhdGNoZXNfZ2VuZXJhdGVkJywgMCkKICAgIAogICAgc2V0YXR0cihjb250ZXh0LCAnbWV0cmljc190YWJsZScsIG9zLmVudmlyb25bJ01FVFJJQ1NfVEFCTEUnXSkKICAgIHNldGF0dHIoY29udGV4dCwgJ3ByZWRpY3Rpb25zX3RhYmxlJywgb3MuZW52aXJvblsnUFJFRElDVElPTlNfVEFCTEUnXSkKICAgIHNldGF0dHIoY29udGV4dCwgJ291dHB1dF9zdHJlYW0nLCBvcy5lbnZpcm9uWydPVVRQVVRfU1RSRUFNJ10pCiAgICBzZXRhdHRyKGNvbnRleHQsICd0aW1lc3RhbXBfY29sJywgb3MuZ2V0ZW52KCd0aW1lc3RhbXBfY29sJywgJ3doZW4nKSkKICAgIHNldGF0dHIoY29udGV4dCwgJ29yaWdfdGltZXN0YW1wX2NvbCcsIG9zLmdldGVudignb3JpZ190aW1lc3RhbXBfY29sJywgJ3RpbWVzdGFtcCcpKQogICAgCiAgICB2M2lvX2NsaWVudCA9IHYzaW8uZGF0YXBsYW5lLkNsaWVudChsb2dnZXJfdmVyYm9zaXR5PSdERUJVRycsIHRyYW5zcG9ydF92ZXJib3NpdHk9J0RFQlVHJykKICAgIHNldGF0dHIoY29udGV4dCwgJ3YzaW9fY2xpZW50JywgdjNpb19jbGllbnQpCiAgICBjcmVhdGVfc3RyZWFtKGNvbnRleHQsIGNvbnRleHQub3V0cHV0X3N0cmVhbSkKICAgIAogICAgc2V0YXR0cihjb250ZXh0LCAnbGFiZWxfY29sJywgb3MuZW52aXJvblsnbGFiZWxfY29sJ10pCiAgICBzZXRhdHRyKGNvbnRleHQsICdwcmVkaWN0aW9uX2NvbCcsIG9zLmVudmlyb25bJ3ByZWRpY3Rpb25fY29sJ10pCgpkZWYgaGFuZGxlcihjb250ZXh0LCBldmVudCk6CiAgICAKICAgIGlmIChjb250ZXh0LmJhdGNoZXNfdG9fZ2VuZXJhdGUgPT0gLTEpIG9yIChjb250ZXh0LmJhdGNoZXNfZ2VuZXJhdGVkIDw9IGNvbnRleHQuYmF0Y2hlc190b19nZW5lcmF0ZSk6CiAgICAgICAgCiAgICAgICAgbWV0cmljcyA9IGdldF9kYXRhX3BhcnF1ZXQoY29udGV4dCwgY29udGV4dC5tZXRyaWNzX3RhYmxlLCAyKS5sb2NbOiwgY29udGV4dC5sYWJlbF9jb2xdLmFzdHlwZSgnaW50JykKICAgICAgICBtZXRyaWNzLmluZGV4Lm5hbWVzID0gbGlzdChbbmFtZSBpZiBuYW1lICE9IGNvbnRleHQub3JpZ190aW1lc3RhbXBfY29sIGVsc2UgY29udGV4dC50aW1lc3RhbXBfY29sIGZvciBuYW1lIGluIG1ldHJpY3MuaW5kZXgubmFtZXNdKQogICAgICAgIHByZWRpY3Rpb25zID0gZ2V0X2RhdGFfcGFycXVldChjb250ZXh0LCBjb250ZXh0LnByZWRpY3Rpb25zX3RhYmxlLCAyKQogICAgICAgIGNvbnRleHQubG9nZ2VyLmRlYnVnKGYnTGFiZWxpbmcgbWV0cmljcyAoe21ldHJpY3Muc2hhcGV9KSBhbmQgcHJlZGljdGlvbnMgKHtwcmVkaWN0aW9ucy5zaGFwZX0pJykKICAgICAgICBjb250ZXh0LmxvZ2dlci5kZWJ1Z193aXRoKCdJbmRleGVzJywgbWV0cmljc19pbmRleD1tZXRyaWNzLmluZGV4Lm5hbWVzLCBwcmVkaWN0aW9uc19pbmRleD1wcmVkaWN0aW9ucy5pbmRleC5uYW1lcykKCiAgICAgICAgcHJpbnQoJ21ldHJpY3MnKQogICAgICAgIHByaW50KG1ldHJpY3MuaGVhZCgpKQogICAgICAgIHByaW50KHR5cGUobWV0cmljcykpCiAgICAgICAgbWV0cmljcyA9IHBkLkRhdGFGcmFtZShtZXRyaWNzKQogICAgICAgIHByaW50KCdjaGFuZ2UnKQogICAgICAgIHByaW50KHR5cGUobWV0cmljcykpCiAgICAgICAgcHJpbnQobWV0cmljcy5oZWFkKCkpCiAgICAgICAgcHJpbnQobWV0cmljcy5pbmRleC5uYW1lcykKCiAgICAgICAgZnVsbF9kZiA9IHBkLm1lcmdlKGxlZnQ9cHJlZGljdGlvbnMsIHJpZ2h0PW1ldHJpY3MsIGxlZnRfb249bWV0cmljcy5pbmRleC5uYW1lcywgaG93PSdsZWZ0JywgbGVmdF9pbmRleD1UcnVlLCByaWdodF9pbmRleD1UcnVlKQogICAgICAgIGZ1bGxfZGYgPSBmdWxsX2RmLnJlc2V0X2luZGV4KCkKICAgICAgICBjb250ZXh0LmxvZ2dlci5pbmZvKGYnRnVsbHkgbGFiZWxlZCBiYXRjaCBzaXplIGlzIHtmdWxsX2RmLnNoYXBlfScpCiAgICAgICAgY29udGV4dC5sb2dnZXIuaW5mbyhmJ0luZGV4ZXM6IHtsaXN0KGZ1bGxfZGYuaW5kZXgubmFtZXMpfScpCiAgICAgICAgY29udGV4dC5sb2dnZXIuaW5mbyhmJ0NvbHVtbnM6IHtmdWxsX2RmLmNvbHVtbnN9JykKICAgICAgICBjb250ZXh0LmxvZ2dlci5pbmZvX3dpdGgoJ3NhbXBsZScsIGZ1bGxfZGY9ZnVsbF9kZi5oZWFkKDEpKSAgICAKICAgICAgICBwdXNoX3RvX3N0cmVhbShjb250ZXh0LCBjb250ZXh0Lm91dHB1dF9zdHJlYW0sIGZ1bGxfZGYpCiAgICAgICAgCiAgICAgICAgY29udGV4dC5iYXRjaGVzX2dlbmVyYXRlZCArPSAxCgo=",
               "noBaseImagesPull": true
             },
@@ -23585,7 +24156,9 @@
         "internal_invocation_urls": [
           "nuclio-network-operations-admin-labeled-stream.default-tenant.svc.cluster.local:8080"
         ],
-        "external_invocation_urls": ["default-tenant.app.vmdev36.lab.iguazeng.com:31132"]
+        "external_invocation_urls": [
+          "default-tenant.app.vmdev36.lab.iguazeng.com:31132"
+        ]
       },
       "verbose": false
     },
@@ -23982,7 +24555,9 @@
           "spec": {
             "build": {
               "baseImage": "mlrun/ml-models:0.7.0-rc11",
-              "commands": ["python -m pip install v3io --upgrade"],
+              "commands": [
+                "python -m pip install v3io --upgrade"
+              ],
               "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKaW1wb3J0IG9zCmltcG9ydCBwYW5kYXMgYXMgcGQKaW1wb3J0IGpzb24KaW1wb3J0IHYzaW8KaW1wb3J0IHYzaW8uZGF0YXBsYW5lCmltcG9ydCBzb2NrZXQKCmRlZiBzcGxpdF9wYXRoKG1udHBhdGg9JycpOgogICAgaWYgbW50cGF0aFswXSA9PSAnLyc6CiAgICAgICAgbW50cGF0aCA9IG1udHBhdGhbMTpdCiAgICBwYXRocyA9IG1udHBhdGguc3BsaXQoJy8nKQogICAgY29udGFpbmVyID0gcGF0aHNbMF0KICAgIHN1YnBhdGggPSAnJwogICAgaWYgbGVuKHBhdGhzKSA+IDE6CiAgICAgICAgc3VicGF0aCA9IG1udHBhdGhbbGVuKGNvbnRhaW5lcik6XQogICAgcmV0dXJuIGNvbnRhaW5lciwgc3VicGF0aAoKZGVmIGNyZWF0ZV9zdHJlYW0oY29udGV4dCwgcGF0aCwgc2hhcmRzPTEpOgogICAgY29udGFpbmVyLCBzdHJlYW1fcGF0aCA9IHNwbGl0X3BhdGgocGF0aCkKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidDcmVhdGluZyBzdHJlYW0gaW4gQ29udGFpbmVyOiB7Y29udGFpbmVyfSAmIFBhdGgge3N0cmVhbV9wYXRofScpCiAgICByZXNwb25zZSA9IGNvbnRleHQudjNpb19jbGllbnQuc3RyZWFtLmNyZWF0ZShjb250YWluZXI9Y29udGFpbmVyLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RyZWFtX3BhdGg9c3RyZWFtX3BhdGgsIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2hhcmRfY291bnQ9c2hhcmRzLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmFpc2VfZm9yX3N0YXR1cz12M2lvLmRhdGFwbGFuZS5SYWlzZUZvclN0YXR1cy5uZXZlcikKICAgIHJlc3BvbnNlLnJhaXNlX2Zvcl9zdGF0dXMoWzQwOSwgMjA0XSkKCmRlZiBwdXNoX3RvX3N0cmVhbShjb250ZXh0LCBzdHJlYW1fcGF0aCwgZGF0YSk6CiAgICBkZWYgcmVzdHJ1Y3R1cmVfc3RyZWFtX2V2ZW50KGNvbnRleHQsIGV2ZW50KToKICAgICAgICBpbnN0YW5jZXMgPSBbZGljdCgpXQogICAgICAgIGZvciBrZXkgaW4gZGF0YS5rZXlzKCk6CiAgICAgICAgICAgIGlmIGtleSBub3QgaW4gWyd3aGVuJywgJ2NsYXNzJywgJ21vZGVsJywgJ3dvcmtlcicsICdob3N0bmFtZScsIGNvbnRleHQucHJlZGljdGlvbl9jb2xdOgogICAgICAgICAgICAgICAgaW5zdGFuY2VzWzBdLnVwZGF0ZSh7a2V5OiBldmVudC5wb3Aoa2V5KX0pCiAgICAgICAgZXZlbnRbJ3JlcXVlc3QnXSA9IHsnaW5zdGFuY2VzJzogaW5zdGFuY2VzfQogICAgICAgIGV2ZW50WydyZXNwJ10gPSBbaW50KGV2ZW50LnBvcChjb250ZXh0LnByZWRpY3Rpb25fY29sKSldCiAgICAgICAgcmV0dXJuIGV2ZW50CiAgICAKICAgIHJlY29yZHMgPSBqc29uLmxvYWRzKGRhdGEudG9fanNvbihvcmllbnQ9J3JlY29yZHMnKSkKICAgIHJlY29yZHMgPSBbeydkYXRhJzoganNvbi5kdW1wcyhyZXN0cnVjdHVyZV9zdHJlYW1fZXZlbnQoY29udGV4dCwgcmVjb3JkKSl9IGZvciByZWNvcmQgaW4gcmVjb3Jkc10KICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidMb2dnaW5nIHtsZW4ocmVjb3Jkcyl9IHJlY29yZHMsIFJlY29yZCBleGFtcGxlOiB7cmVjb3Jkc1swXX0nKQogICAgY29udGFpbmVyLCBzdHJlYW1fcGF0aCA9IHNwbGl0X3BhdGgoc3RyZWFtX3BhdGgpCiAgICBzdGVwID0gMTAKICAgIGZvciBpZHggaW4gcmFuZ2UoMCwgbGVuKHJlY29yZHMpLCBzdGVwKToKICAgICAgICByZXNwb25zZSA9IGNvbnRleHQudjNpb19jbGllbnQucHV0X3JlY29yZHMoY29udGFpbmVyPWNvbnRhaW5lciwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGF0aD1zdHJlYW1fcGF0aCwgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlY29yZHM9cmVjb3Jkc1tpZHg6aWR4K3N0ZXBdKQoKZGVmIGdldF9kYXRhX3BhcnF1ZXQoY29udGV4dCwgdGFibGUsIGZpbGVzX3RvX3NlbGVjdD0xKToKICAgIG1wYXRoID0gW29zLnBhdGguam9pbih0YWJsZSwgZmlsZSkgZm9yIGZpbGUgaW4gb3MubGlzdGRpcih0YWJsZSkgaWYgZmlsZS5lbmRzd2l0aCgoJ3BhcnF1ZXQnLCAncHEnKSldCiAgICBmaWxlc19ieV91cGRhdGVkID0gc29ydGVkKG1wYXRoLCBrZXk9b3MucGF0aC5nZXRtdGltZSwgcmV2ZXJzZT1GYWxzZSkKICAgIGNvbnRleHQubG9nZ2VyLmRlYnVnX3dpdGgoJ0lucHV0JywgaW5wdXRfZmlsZXM9ZmlsZXNfYnlfdXBkYXRlZFs6ZmlsZXNfdG9fc2VsZWN0XSkKICAgIGRmcyA9IHBkLmNvbmNhdChbcGQucmVhZF9wYXJxdWV0KGZpbGUpIGZvciBmaWxlIGluIGZpbGVzX2J5X3VwZGF0ZWRbOmZpbGVzX3RvX3NlbGVjdF1dKQogICAgcmV0dXJuIGRmcwoKZGVmIGluaXRfY29udGV4dChjb250ZXh0KToKICAgIAogICAgYmF0Y2hlc190b19nZW5lcmF0ZSA9IGludChvcy5nZXRlbnYoJ0JBVENIRVNfVE9fR0VORVJBVEUnLCAyMCkpCiAgICBzZXRhdHRyKGNvbnRleHQsICdiYXRjaGVzX3RvX2dlbmVyYXRlJywgYmF0Y2hlc190b19nZW5lcmF0ZSkKICAgIHNldGF0dHIoY29udGV4dCwgJ2JhdGNoZXNfZ2VuZXJhdGVkJywgMCkKICAgIAogICAgc2V0YXR0cihjb250ZXh0LCAnbWV0cmljc190YWJsZScsIG9zLmVudmlyb25bJ01FVFJJQ1NfVEFCTEUnXSkKICAgIHNldGF0dHIoY29udGV4dCwgJ3ByZWRpY3Rpb25zX3RhYmxlJywgb3MuZW52aXJvblsnUFJFRElDVElPTlNfVEFCTEUnXSkKICAgIHNldGF0dHIoY29udGV4dCwgJ291dHB1dF9zdHJlYW0nLCBvcy5lbnZpcm9uWydPVVRQVVRfU1RSRUFNJ10pCiAgICBzZXRhdHRyKGNvbnRleHQsICd0aW1lc3RhbXBfY29sJywgb3MuZ2V0ZW52KCd0aW1lc3RhbXBfY29sJywgJ3doZW4nKSkKICAgIHNldGF0dHIoY29udGV4dCwgJ29yaWdfdGltZXN0YW1wX2NvbCcsIG9zLmdldGVudignb3JpZ190aW1lc3RhbXBfY29sJywgJ3RpbWVzdGFtcCcpKQogICAgCiAgICB2M2lvX2NsaWVudCA9IHYzaW8uZGF0YXBsYW5lLkNsaWVudChsb2dnZXJfdmVyYm9zaXR5PSdERUJVRycsIHRyYW5zcG9ydF92ZXJib3NpdHk9J0RFQlVHJykKICAgIHNldGF0dHIoY29udGV4dCwgJ3YzaW9fY2xpZW50JywgdjNpb19jbGllbnQpCiAgICBjcmVhdGVfc3RyZWFtKGNvbnRleHQsIGNvbnRleHQub3V0cHV0X3N0cmVhbSkKICAgIAogICAgc2V0YXR0cihjb250ZXh0LCAnbGFiZWxfY29sJywgb3MuZW52aXJvblsnbGFiZWxfY29sJ10pCiAgICBzZXRhdHRyKGNvbnRleHQsICdwcmVkaWN0aW9uX2NvbCcsIG9zLmVudmlyb25bJ3ByZWRpY3Rpb25fY29sJ10pCgpkZWYgaGFuZGxlcihjb250ZXh0LCBldmVudCk6CiAgICAKICAgIGlmIChjb250ZXh0LmJhdGNoZXNfdG9fZ2VuZXJhdGUgPT0gLTEpIG9yIChjb250ZXh0LmJhdGNoZXNfZ2VuZXJhdGVkIDw9IGNvbnRleHQuYmF0Y2hlc190b19nZW5lcmF0ZSk6CiAgICAgICAgCiAgICAgICAgbWV0cmljcyA9IGdldF9kYXRhX3BhcnF1ZXQoY29udGV4dCwgY29udGV4dC5tZXRyaWNzX3RhYmxlLCAyKS5sb2NbOiwgY29udGV4dC5sYWJlbF9jb2xdLmFzdHlwZSgnaW50JykKICAgICAgICBtZXRyaWNzLmluZGV4Lm5hbWVzID0gbGlzdChbbmFtZSBpZiBuYW1lICE9IGNvbnRleHQub3JpZ190aW1lc3RhbXBfY29sIGVsc2UgY29udGV4dC50aW1lc3RhbXBfY29sIGZvciBuYW1lIGluIG1ldHJpY3MuaW5kZXgubmFtZXNdKQogICAgICAgIHByZWRpY3Rpb25zID0gZ2V0X2RhdGFfcGFycXVldChjb250ZXh0LCBjb250ZXh0LnByZWRpY3Rpb25zX3RhYmxlLCAyKQogICAgICAgIGNvbnRleHQubG9nZ2VyLmRlYnVnKGYnTGFiZWxpbmcgbWV0cmljcyAoe21ldHJpY3Muc2hhcGV9KSBhbmQgcHJlZGljdGlvbnMgKHtwcmVkaWN0aW9ucy5zaGFwZX0pJykKICAgICAgICBjb250ZXh0LmxvZ2dlci5kZWJ1Z193aXRoKCdJbmRleGVzJywgbWV0cmljc19pbmRleD1tZXRyaWNzLmluZGV4Lm5hbWVzLCBwcmVkaWN0aW9uc19pbmRleD1wcmVkaWN0aW9ucy5pbmRleC5uYW1lcykKCiAgICAgICAgcHJpbnQoJ21ldHJpY3MnKQogICAgICAgIHByaW50KG1ldHJpY3MuaGVhZCgpKQogICAgICAgIHByaW50KHR5cGUobWV0cmljcykpCiAgICAgICAgbWV0cmljcyA9IHBkLkRhdGFGcmFtZShtZXRyaWNzKQogICAgICAgIHByaW50KCdjaGFuZ2UnKQogICAgICAgIHByaW50KHR5cGUobWV0cmljcykpCiAgICAgICAgcHJpbnQobWV0cmljcy5oZWFkKCkpCiAgICAgICAgcHJpbnQobWV0cmljcy5pbmRleC5uYW1lcykKCiAgICAgICAgZnVsbF9kZiA9IHBkLm1lcmdlKGxlZnQ9cHJlZGljdGlvbnMsIHJpZ2h0PW1ldHJpY3MsIGxlZnRfb249bWV0cmljcy5pbmRleC5uYW1lcywgaG93PSdsZWZ0JywgbGVmdF9pbmRleD1UcnVlLCByaWdodF9pbmRleD1UcnVlKQogICAgICAgIGZ1bGxfZGYgPSBmdWxsX2RmLnJlc2V0X2luZGV4KCkKICAgICAgICBjb250ZXh0LmxvZ2dlci5pbmZvKGYnRnVsbHkgbGFiZWxlZCBiYXRjaCBzaXplIGlzIHtmdWxsX2RmLnNoYXBlfScpCiAgICAgICAgY29udGV4dC5sb2dnZXIuaW5mbyhmJ0luZGV4ZXM6IHtsaXN0KGZ1bGxfZGYuaW5kZXgubmFtZXMpfScpCiAgICAgICAgY29udGV4dC5sb2dnZXIuaW5mbyhmJ0NvbHVtbnM6IHtmdWxsX2RmLmNvbHVtbnN9JykKICAgICAgICBjb250ZXh0LmxvZ2dlci5pbmZvX3dpdGgoJ3NhbXBsZScsIGZ1bGxfZGY9ZnVsbF9kZi5oZWFkKDEpKSAgICAKICAgICAgICBwdXNoX3RvX3N0cmVhbShjb250ZXh0LCBjb250ZXh0Lm91dHB1dF9zdHJlYW0sIGZ1bGxfZGYpCiAgICAgICAgCiAgICAgICAgY29udGV4dC5iYXRjaGVzX2dlbmVyYXRlZCArPSAxCgo=",
               "noBaseImagesPull": true
             },
@@ -24264,7 +24839,9 @@
         "internal_invocation_urls": [
           "nuclio-network-operations-admin-generator.default-tenant.svc.cluster.local:8080"
         ],
-        "external_invocation_urls": ["default-tenant.app.vmdev36.lab.iguazeng.com:32164"]
+        "external_invocation_urls": [
+          "default-tenant.app.vmdev36.lab.iguazeng.com:32164"
+        ]
       },
       "verbose": false
     },
@@ -24617,7 +25194,9 @@
         "nuclio_name": "app-demo-vizro",
         "sidecar_name": "vizro-sidecar",
         "application_image": "mallonn/vizro-demo",
-        "external_invocation_urls": ["app-demo-vizro.default-tenant.app.vmdev17.lab.iguazeng.com/"],
+        "external_invocation_urls": [
+          "app-demo-vizro.default-tenant.app.vmdev17.lab.iguazeng.com/"
+        ],
         "address": "app-demo-vizro.default-tenant.app.vmdev17.lab.iguazeng.com/",
         "container_image": "docker-registry.default-tenant.app.vmdev17.lab.iguazeng.com:80/nuclio/app-demo-app-demo-vizro-processor:latest",
         "state": "ready",
@@ -24770,7 +25349,9 @@
           "code_origin": "/User/apps/iris_streamlit.py",
           "source": "https://github.com/mlrun/demos.git#refs/heads/main",
           "base_image": "python:3.9-slim",
-          "commands": ["pip install streamlit pandas scikit-learn"]
+          "commands": [
+            "pip install streamlit pandas scikit-learn"
+          ]
         },
         "max_replicas": 2,
         "description": "Interactive Iris classification dashboard built with Streamlit",
@@ -24866,7 +25447,10 @@
         "build": {
           "source": "https://github.com/mlrun/fraud-demo.git",
           "base_image": "python:3.9",
-          "commands": ["pip install flask pandas numpy", "pip install scikit-learn xgboost"]
+          "commands": [
+            "pip install flask pandas numpy",
+            "pip install scikit-learn xgboost"
+          ]
         },
         "max_replicas": 6,
         "description": "Real-time fraud detection dashboard with ML-powered transaction scoring and alerting system",
@@ -25034,15 +25618,23 @@
                   "protocol": "TCP"
                 }
               ],
-              "command": ["/bin/sh", "-c"],
-              "args": ["python app.py --workers 4 --model-cache-size 1024"]
+              "command": [
+                "/bin/sh",
+                "-c"
+              ],
+              "args": [
+                "python app.py --workers 4 --model-cache-size 1024"
+              ]
             }
           ]
         },
         "build": {
           "source": "https://github.com/mlrun/recommender-demo.git",
           "base_image": "python:3.9",
-          "commands": ["pip install fastapi uvicorn redis", "pip install scipy implicit"]
+          "commands": [
+            "pip install fastapi uvicorn redis",
+            "pip install scipy implicit"
+          ]
         },
         "max_replicas": 10,
         "description": "Real-time product recommendation engine using collaborative filtering with Redis-backed feature store and A/B testing support",
@@ -25343,7 +25935,9 @@
                   "protocol": "TCP"
                 }
               ],
-              "command": ["python"],
+              "command": [
+                "python"
+              ],
               "args": [
                 "-m",
                 "uvicorn",
@@ -25737,7 +26331,9 @@
                   "protocol": "TCP"
                 }
               ],
-              "command": ["gunicorn"],
+              "command": [
+                "gunicorn"
+              ],
               "args": [
                 "--bind",
                 "0.0.0.0:8080",
@@ -25954,7 +26550,10 @@
           "author": "orz",
           "framework": "sklearn"
         },
-        "categories": ["machine-learning", "model-serving"],
+        "categories": [
+          "machine-learning",
+          "model-serving"
+        ],
         "updated": "2021-08-29T20:29:25.099473+00:00"
       },
       "spec": {
@@ -26054,7 +26653,11 @@
                 "name": "models",
                 "type": "list",
                 "doc": "List of the detectors to deploy Defaults to ['ddm', 'eddm', 'pagehinkley'].",
-                "default": ["ddm", "eddm", "pagehinkley"]
+                "default": [
+                  "ddm",
+                  "eddm",
+                  "pagehinkley"
+                ]
               },
               {
                 "name": "models_dest",
@@ -26133,7 +26736,10 @@
         "labels": {
           "author": "orz"
         },
-        "categories": ["machine-learning", "data-preparation"],
+        "categories": [
+          "machine-learning",
+          "data-preparation"
+        ],
         "updated": "2021-08-29T20:29:36.371314+00:00"
       },
       "spec": {
@@ -26230,7 +26836,9 @@
               "heartbeatInterval": "3s",
               "seekTo": "earliest",
               "readBatchSize": 64,
-              "partitions": [0],
+              "partitions": [
+                0
+              ],
               "pollingIntervalMs": 500
             },
             "name": "labeled_stream",
@@ -26277,7 +26885,9 @@
         "internal_invocation_urls": [
           "nuclio-network-operations-admin-stream-to-parquet.default-tenant.svc.cluster.local:8080"
         ],
-        "external_invocation_urls": ["default-tenant.app.vmdev36.lab.iguazeng.com:30125"]
+        "external_invocation_urls": [
+          "default-tenant.app.vmdev36.lab.iguazeng.com:30125"
+        ]
       },
       "verbose": false
     },
@@ -26291,7 +26901,10 @@
         "labels": {
           "author": "orz"
         },
-        "categories": ["machine-learning", "data-preparation"],
+        "categories": [
+          "machine-learning",
+          "data-preparation"
+        ],
         "updated": "2021-08-29T20:29:36.195395+00:00"
       },
       "spec": {
@@ -26388,7 +27001,9 @@
               "heartbeatInterval": "3s",
               "seekTo": "earliest",
               "readBatchSize": 64,
-              "partitions": [0],
+              "partitions": [
+                0
+              ],
               "pollingIntervalMs": 500
             },
             "name": "labeled_stream",
@@ -26532,7 +27147,9 @@
                   "heartbeatInterval": "3s",
                   "seekTo": "earliest",
                   "readBatchSize": 64,
-                  "partitions": [0],
+                  "partitions": [
+                    0
+                  ],
                   "pollingIntervalMs": 500
                 },
                 "name": "labeled_stream",
@@ -26570,7 +27187,10 @@
           "author": "orz",
           "framework": "sklearn"
         },
-        "categories": ["machine-learning", "monitoring"],
+        "categories": [
+          "machine-learning",
+          "monitoring"
+        ],
         "updated": "2021-08-29T20:30:27.567844+00:00"
       },
       "spec": {
@@ -26699,7 +27319,9 @@
         "source": "",
         "function_kind": "mlrun",
         "build": {
-          "commands": ["python -m pip install scikit-multiflow==0.4.1 v3io_frames"],
+          "commands": [
+            "python -m pip install scikit-multiflow==0.4.1 v3io_frames"
+          ],
           "code_origin": "https://github.com/daniels290813/functions.git#55a79c32be5d233cc11efcf40cd3edbe309bfdef:/home/kali/functions/concept_drift_streaming/concept_drift_streaming.py"
         },
         "default_handler": "handler",
@@ -26713,7 +27335,9 @@
         "internal_invocation_urls": [
           "nuclio-network-operations-admin-concept-drift-streaming.default-tenant.svc.cluster.local:8080"
         ],
-        "external_invocation_urls": ["default-tenant.app.vmdev36.lab.iguazeng.com:30739"]
+        "external_invocation_urls": [
+          "default-tenant.app.vmdev36.lab.iguazeng.com:30739"
+        ]
       },
       "verbose": false
     },
@@ -26728,7 +27352,10 @@
           "author": "orz",
           "framework": "sklearn"
         },
-        "categories": ["machine-learning", "monitoring"],
+        "categories": [
+          "machine-learning",
+          "monitoring"
+        ],
         "updated": "2021-08-29T20:30:27.476705+00:00"
       },
       "spec": {
@@ -26957,7 +27584,9 @@
               }
             ],
             "build": {
-              "commands": ["python -m pip install scikit-multiflow==0.4.1 v3io_frames"],
+              "commands": [
+                "python -m pip install scikit-multiflow==0.4.1 v3io_frames"
+              ],
               "noBaseImagesPull": true,
               "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKaW1wb3J0IHNrbXVsdGlmbG93LmRyaWZ0X2RldGVjdGlvbgppbXBvcnQgbnVtcHkgYXMgbnAKaW1wb3J0IHBhbmRhcyBhcyBwZAppbXBvcnQgb3MKaW1wb3J0IGpzb24KaW1wb3J0IHYzaW8uZGF0YXBsYW5lCmltcG9ydCB2M2lvX2ZyYW1lcyBhcyB2M2YKaW1wb3J0IHJlcXVlc3RzCmZyb20gY2xvdWRwaWNrbGUgaW1wb3J0IGxvYWQKCmltcG9ydCByYW5kb20KCgpkZWYgc3BsaXRfcGF0aChtbnRwYXRoPSIiKToKICAgIGlmIG1udHBhdGhbMF0gPT0gIi8iOgogICAgICAgIG1udHBhdGggPSBtbnRwYXRoWzE6XQogICAgcGF0aHMgPSBtbnRwYXRoLnNwbGl0KCIvIikKICAgIGNvbnRhaW5lciA9IHBhdGhzWzBdCiAgICBzdWJwYXRoID0gIiIKICAgIGlmIGxlbihwYXRocykgPiAxOgogICAgICAgIHN1YnBhdGggPSBtbnRwYXRoW2xlbihjb250YWluZXIpIDpdCiAgICByZXR1cm4gY29udGFpbmVyLCBzdWJwYXRoCgoKZGVmIGNyZWF0ZV9zdHJlYW0oY29udGV4dCwgcGF0aCwgc2hhcmRzPTEpOgogICAgY29udGFpbmVyLCBzdHJlYW1fcGF0aCA9IHNwbGl0X3BhdGgocGF0aCkKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oCiAgICAgICAgZiJDcmVhdGluZyBzdHJlYW0gaW4gQ29udGFpbmVyOiB7Y29udGFpbmVyfSAmIFBhdGgge3N0cmVhbV9wYXRofSIKICAgICkKICAgIHJlc3BvbnNlID0gY29udGV4dC52M2lvX2NsaWVudC5jcmVhdGVfc3RyZWFtKAogICAgICAgIGNvbnRhaW5lcj1jb250YWluZXIsCiAgICAgICAgcGF0aD1zdHJlYW1fcGF0aCwKICAgICAgICBzaGFyZF9jb3VudD1zaGFyZHMsCiAgICAgICAgcmFpc2VfZm9yX3N0YXR1cz12M2lvLmRhdGFwbGFuZS5SYWlzZUZvclN0YXR1cy5uZXZlciwKICAgICkKICAgIHJlc3BvbnNlLnJhaXNlX2Zvcl9zdGF0dXMoWzQwOSwgMjA0XSkKCgpkZWYgcHVzaF90b19zdHJlYW0oY29udGV4dCwgc3RyZWFtX3BhdGgsIGRhdGEpOgogICAgcmVjb3JkcyA9IFt7ImRhdGEiOiBqc29uLmR1bXBzKHJlYyl9IGZvciByZWMgaW4gZGF0YV0KICAgIGNvbnRhaW5lciwgc3RyZWFtX3BhdGggPSBzcGxpdF9wYXRoKHN0cmVhbV9wYXRoKQogICAgcmVzcG9uc2UgPSBjb250ZXh0LnYzaW9fY2xpZW50LnB1dF9yZWNvcmRzKAogICAgICAgIGNvbnRhaW5lcj1jb250YWluZXIsIHBhdGg9c3RyZWFtX3BhdGgsIHJlY29yZHM9cmVjb3JkcwogICAgKQoKCmRlZiBjb25zdHJ1Y3RfcmVjb3JkKHJlY29yZCk6CiAgICBsYWJlbF9jb2wgPSBvcy5nZXRlbnYoImxhYmVsX2NvbCIsICJsYWJlbCIpCiAgICBwcmVkaWN0aW9uX2NvbCA9IG9zLmdldGVudigicHJlZGljdGlvbl9jb2wiLCAicHJlZGljdGlvbiIpCiAgICByZXMgPSBkaWN0KFsoaywgcmVjb3JkW2tdKSBmb3IgayBpbiBbIndoZW4iLCAiY2xhc3MiLCAibW9kZWwiLCAicmVzcCIsICJyZXF1ZXN0Il1dKQogICAgcmVzWyJmZWF0dXJlX3ZlY3RvciJdID0gcmVzLnBvcCgicmVxdWVzdCIpWyJpbnN0YW5jZXMiXVswXQogICAgcmVzWyJ0aW1lc3RhbXAiXSA9IHJlcy5wb3AoIndoZW4iKQogICAgcmVzWyJwcmVkaWN0aW9uIl0gPSByZXNbInJlc3AiXVswXQogICAgcmV0dXJuIHJlcwoKCmRlZiBpbml0X2NvbnRleHQoY29udGV4dCk6CiAgICB2M2lvX2NsaWVudCA9IHYzaW8uZGF0YXBsYW5lLkNsaWVudCgpCiAgICBzZXRhdHRyKGNvbnRleHQsICJ2M2lvX2NsaWVudCIsIHYzaW9fY2xpZW50KQoKICAgIHYzZl9jbGllbnQgPSB2M2YuQ2xpZW50KCJmcmFtZXNkOjgwODEiLCBjb250YWluZXI9ImJpZ2RhdGEiKQogICAgc2V0YXR0cihjb250ZXh0LCAidjNmIiwgdjNmX2NsaWVudCkKICAgIHdpbmRvdyA9IFtdCiAgICBzZXRhdHRyKGNvbnRleHQsICJ3aW5kb3ciLCB3aW5kb3cpCiAgICBzZXRhdHRyKGNvbnRleHQsICJ3aW5kb3dfc2l6ZSIsIGludChvcy5nZXRlbnYoIndpbmRvd19zaXplIiwgMTApKSkKICAgIHNldGF0dHIoY29udGV4dCwgInRzZGJfdGFibGUiLCBvcy5nZXRlbnYoInRzZGJfdGFibGUiLCAiY29uY2VwdF9kcmlmdF90c2RiXzEiKSkKICAgIHRyeToKICAgICAgICBjb250ZXh0LnYzZi5jcmVhdGUoInRzZGIiLCBjb250ZXh0LnRzZGJfdGFibGUsIHJhdGU9IjEvcyIsIGlmX2V4aXN0cz0xKQogICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZiJDcmVhdGluZyBjb250ZXh0IHdpdGggcmF0ZT0gZmFpbGUgZm9yIHtlfSIpCiAgICAgICAgY29udGV4dC52M2YuY3JlYXRlKAogICAgICAgICAgICAidHNkYiIsIGNvbnRleHQudHNkYl90YWJsZSwgYXR0cnM9eyJyYXRlIjogIjEvcyJ9LCBpZl9leGlzdHM9MQogICAgICAgICkKCiAgICBjYWxsYmFja3MgPSBbY2FsbGJhY2suc3RyaXAoKSBmb3IgY2FsbGJhY2sgaW4gb3MuZ2V0ZW52KCJjYWxsYmFja3MiLCAiIikuc3BsaXQoIiwiKV0KICAgIHNldGF0dHIoY29udGV4dCwgImNhbGxiYWNrcyIsIGNhbGxiYWNrcykKCiAgICBzZXRhdHRyKGNvbnRleHQsICJkcmlmdF9zdHJlYW0iLCBvcy5nZXRlbnYoImRyaWZ0X3N0cmVhbSIsICIvYmlnZGF0YS9kcmlmdF9zdHJlYW0iKSkKICAgIHRyeToKICAgICAgICBjcmVhdGVfc3RyZWFtKAogICAgICAgICAgICBjb250ZXh0LCBjb250ZXh0LmRyaWZ0X3N0cmVhbSwgaW50KG9zLmdldGVudigiZHJpZnRfc3RyZWFtX3NoYXJkcyIsIDEpKQogICAgICAgICkKICAgIGV4Y2VwdDoKICAgICAgICBjb250ZXh0LmxvZ2dlci5pbmZvKGYie2NvbnRleHQuZHJpZnRfc3RyZWFtfSBhbHJlYWR5IGV4aXN0cyIpCgogICAgbW9kZWxzID0ge30KICAgIG1vZGVsX3R5cGVzID0gWyJwYWdlaGlua2VseSIsICJkZG0iLCAiZWRkbSJdCiAgICBwYXRoX3N1ZmZpeCA9ICJfbW9kZWxfcGF0aCIKICAgIGZvciBtb2RlbCBpbiBtb2RlbF90eXBlczoKICAgICAgICBtb2RlbF9lbnYgPSBmInttb2RlbH17cGF0aF9zdWZmaXh9IgogICAgICAgIGlmIG1vZGVsX2VudiBpbiBvcy5lbnZpcm9uOgogICAgICAgICAgICB3aXRoIG9wZW4ob3MuZW52aXJvblttb2RlbF9lbnZdLCAicmIiKSBhcyBmOgogICAgICAgICAgICAgICAgbW9kZWxzW21vZGVsXSA9IGxvYWQoZikKICAgIHNldGF0dHIoY29udGV4dCwgIm1vZGVscyIsIG1vZGVscykKCiAgICBzZXRhdHRyKGNvbnRleHQsICJsYWJlbF9jb2wiLCBvcy5nZXRlbnYoImxhYmVsX2NvbCIsICJsYWJlbCIpKQogICAgc2V0YXR0cihjb250ZXh0LCAicHJlZGljdGlvbl9jb2wiLCBvcy5nZXRlbnYoInByZWRpY3Rpb25fY29sIiwgInByZWRpY3Rpb24iKSkKCgpkZWYgaGFuZGxlcihjb250ZXh0LCBldmVudCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKGYiZXZlbnQ6IHtldmVudC5ib2R5fSIpCiAgICBmdWxsX2V2ZW50ID0ganNvbi5sb2FkcyhldmVudC5ib2R5KQogICAgcmVjb3JkID0gY29uc3RydWN0X3JlY29yZChmdWxsX2V2ZW50KQoKICAgIGlzX2Vycm9yID0gcmVjb3JkW2NvbnRleHQubGFiZWxfY29sXSAhPSByZWNvcmRbY29udGV4dC5wcmVkaWN0aW9uX2NvbF0KICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZiJBZGRpbmcge2lzX2Vycm9yfSIpCgogICAgZm9yIG5hbWUsIG1vZGVsIGluIGNvbnRleHQubW9kZWxzLml0ZW1zKCk6CiAgICAgICAgcmVzdWx0cyA9IHsidGltZXN0YW1wIjogcmVjb3JkWyJ0aW1lc3RhbXAiXX0KICAgICAgICByZXN1bHRzWyJhbGdvcml0aG0iXSA9IG5hbWUKICAgICAgICBtb2RlbC5hZGRfZWxlbWVudChpc19lcnJvcikKCiAgICAgICAgaWYgaGFzYXR0cihtb2RlbCwgImRldGVjdGVkX3dhcm5pbmdfem9uZSIpIGFuZCBtb2RlbC5kZXRlY3RlZF93YXJuaW5nX3pvbmUoKToKICAgICAgICAgICAgY29udGV4dC5sb2dnZXIuaW5mbyhmIntuYW1lfVx0V2FybmluZyB6b25lIGRldGVjdGVkIikKICAgICAgICAgICAgcmVzdWx0c1sid2FybmluZ196b25lIl0gPSAxCiAgICAgICAgICAgIGZ1bGxfZXZlbnRbZiJ7bmFtZX1fd2FybmluZ196b25lIl0gPSAxCiAgICAgICAgZWxzZToKICAgICAgICAgICAgcmVzdWx0c1sid2FybmluZ196b25lIl0gPSAwCiAgICAgICAgICAgIGZ1bGxfZXZlbnRbZiJ7bmFtZX1fd2FybmluZ196b25lIl0gPSAwCgogICAgICAgIGlmIG1vZGVsLmRldGVjdGVkX2NoYW5nZSgpOgogICAgICAgICAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCJDaGFuZ2UgRGV0ZWN0ZWQiKQogICAgICAgICAgICByZXN1bHRzWyJjaGFuZ2VfZGV0ZWN0ZWQiXSA9IDEKICAgICAgICAgICAgZnVsbF9ldmVudFtmIntuYW1lfV9kcmlmdCJdID0gMQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIHJlc3VsdHNbImNoYW5nZV9kZXRlY3RlZCJdID0gMAogICAgICAgICAgICBmdWxsX2V2ZW50W2Yie25hbWV9X2RyaWZ0Il0gPSAwCiAgICAgICAgY29udGV4dC53aW5kb3cuYXBwZW5kKHJlc3VsdHMpCgogICAgcHVzaF90b19zdHJlYW0oY29udGV4dCwgY29udGV4dC5kcmlmdF9zdHJlYW0sIFtmdWxsX2V2ZW50XSkKCiAgICBpZiBjb250ZXh0LmNhbGxiYWNrcyAhPSBbIiJdOgogICAgICAgIGZvciBjYWxsYmFjayBpbiBjb250ZXh0LmNhbGxiYWNrczoKICAgICAgICAgICAgcmVxdWVzdHMucG9zdCh1cmw9Y2FsbGJhY2ssIGpzb249ZnVsbF9ldmVudCkKCiAgICBpZiAobGVuKGNvbnRleHQud2luZG93KSAvIGxlbihjb250ZXh0Lm1vZGVscykpID49IGNvbnRleHQud2luZG93X3NpemU6CiAgICAgICAgZGYgPSBwZC5EYXRhRnJhbWUoY29udGV4dC53aW5kb3cpCiAgICAgICAgZGZbInRpbWVzdGFtcCJdID0gcGQudG9fZGF0ZXRpbWUoZGZbInRpbWVzdGFtcCJdKQogICAgICAgIGRmID0gZGYuc2V0X2luZGV4KFsidGltZXN0YW1wIiwgImFsZ29yaXRobSJdKQogICAgICAgIGNvbnRleHQudjNmLndyaXRlKCJ0c2RiIiwgY29udGV4dC50c2RiX3RhYmxlLCBkZikKICAgICAgICBjb250ZXh0LndpbmRvdyA9IFtdCg==",
               "baseImage": "mlrun/ml-models:0.7.0-rc11"
@@ -26983,7 +27612,9 @@
         "source": "",
         "function_kind": "mlrun",
         "build": {
-          "commands": ["python -m pip install scikit-multiflow==0.4.1 v3io_frames"],
+          "commands": [
+            "python -m pip install scikit-multiflow==0.4.1 v3io_frames"
+          ],
           "code_origin": "https://github.com/daniels290813/functions.git#55a79c32be5d233cc11efcf40cd3edbe309bfdef:/home/kali/functions/concept_drift_streaming/concept_drift_streaming.py"
         },
         "default_handler": "handler",
@@ -27004,7 +27635,9 @@
         "labels": {
           "author": "Iguazio"
         },
-        "categories": ["data-analysis"],
+        "categories": [
+          "data-analysis"
+        ],
         "updated": "2021-08-30T05:20:02.954707+00:00"
       },
       "spec": {
@@ -27130,7 +27763,9 @@
         "labels": {
           "author": "Iguazio"
         },
-        "categories": ["data-analysis"],
+        "categories": [
+          "data-analysis"
+        ],
         "updated": "2021-08-30T05:20:03.048191+00:00"
       },
       "spec": {
@@ -27258,7 +27893,10 @@
           "author": "yaronh",
           "framework": "sklearn"
         },
-        "categories": ["model-serving", "machine-learning"],
+        "categories": [
+          "model-serving",
+          "machine-learning"
+        ],
         "updated": "2021-08-30T05:20:26.208079+00:00"
       },
       "spec": {
@@ -27503,7 +28141,10 @@
           "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKaW1wb3J0IG9zCmZyb20gc2tsZWFybi5kYXRhc2V0cyBpbXBvcnQgbG9hZF9pcmlzCmZyb20gc2tsZWFybi5tb2RlbF9zZWxlY3Rpb24gaW1wb3J0IHRyYWluX3Rlc3Rfc3BsaXQKaW1wb3J0IG51bXB5IGFzIG5wCmZyb20gc2tsZWFybi5tZXRyaWNzIGltcG9ydCBhY2N1cmFjeV9zY29yZQpmcm9tIG1scnVuLmFydGlmYWN0cyBpbXBvcnQgVGFibGVBcnRpZmFjdCwgUGxvdEFydGlmYWN0CmltcG9ydCBwYW5kYXMgYXMgcGQKCmRlZiBpcmlzX2dlbmVyYXRvcihjb250ZXh0LCBmb3JtYXQ9J2NzdicpOgogICAgaXJpcyA9IGxvYWRfaXJpcygpCiAgICBpcmlzX2RhdGFzZXQgPSBwZC5EYXRhRnJhbWUoZGF0YT1pcmlzLmRhdGEsIGNvbHVtbnM9aXJpcy5mZWF0dXJlX25hbWVzKQogICAgaXJpc19sYWJlbHMgPSBwZC5EYXRhRnJhbWUoZGF0YT1pcmlzLnRhcmdldCwgY29sdW1ucz1bJ2xhYmVsJ10pCiAgICBpcmlzX2RhdGFzZXQgPSBwZC5jb25jYXQoW2lyaXNfZGF0YXNldCwgaXJpc19sYWJlbHNdLCBheGlzPTEpCiAgICAKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oJ3NhdmluZyBpcmlzIGRhdGFmcmFtZSB0byB7fScuZm9ybWF0KGNvbnRleHQuYXJ0aWZhY3RfcGF0aCkpCiAgICBjb250ZXh0LmxvZ19kYXRhc2V0KCdpcmlzX2RhdGFzZXQnLCBkZj1pcmlzX2RhdGFzZXQsIGZvcm1hdD1mb3JtYXQsIGluZGV4PUZhbHNlKQoK",
           "image": ".mlrun/func-sk-project-admin-gen-iris:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["pip install sklearn", "pip install pyarrow"],
+          "commands": [
+            "pip install sklearn",
+            "pip install pyarrow"
+          ],
           "origin_filename": "gen-iris.ipynb"
         },
         "mount_applied": true,
@@ -27596,7 +28237,10 @@
           "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKaW1wb3J0IG9zCmZyb20gc2tsZWFybi5kYXRhc2V0cyBpbXBvcnQgbG9hZF9pcmlzCmZyb20gc2tsZWFybi5tb2RlbF9zZWxlY3Rpb24gaW1wb3J0IHRyYWluX3Rlc3Rfc3BsaXQKaW1wb3J0IG51bXB5IGFzIG5wCmZyb20gc2tsZWFybi5tZXRyaWNzIGltcG9ydCBhY2N1cmFjeV9zY29yZQpmcm9tIG1scnVuLmFydGlmYWN0cyBpbXBvcnQgVGFibGVBcnRpZmFjdCwgUGxvdEFydGlmYWN0CmltcG9ydCBwYW5kYXMgYXMgcGQKCmRlZiBpcmlzX2dlbmVyYXRvcihjb250ZXh0LCBmb3JtYXQ9J2NzdicpOgogICAgaXJpcyA9IGxvYWRfaXJpcygpCiAgICBpcmlzX2RhdGFzZXQgPSBwZC5EYXRhRnJhbWUoZGF0YT1pcmlzLmRhdGEsIGNvbHVtbnM9aXJpcy5mZWF0dXJlX25hbWVzKQogICAgaXJpc19sYWJlbHMgPSBwZC5EYXRhRnJhbWUoZGF0YT1pcmlzLnRhcmdldCwgY29sdW1ucz1bJ2xhYmVsJ10pCiAgICBpcmlzX2RhdGFzZXQgPSBwZC5jb25jYXQoW2lyaXNfZGF0YXNldCwgaXJpc19sYWJlbHNdLCBheGlzPTEpCiAgICAKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oJ3NhdmluZyBpcmlzIGRhdGFmcmFtZSB0byB7fScuZm9ybWF0KGNvbnRleHQuYXJ0aWZhY3RfcGF0aCkpCiAgICBjb250ZXh0LmxvZ19kYXRhc2V0KCdpcmlzX2RhdGFzZXQnLCBkZj1pcmlzX2RhdGFzZXQsIGZvcm1hdD1mb3JtYXQsIGluZGV4PUZhbHNlKQoK",
           "image": ".mlrun/func-sk-project-admin-gen-iris:latest",
           "base_image": "mlrun/mlrun",
-          "commands": ["pip install sklearn", "pip install pyarrow"],
+          "commands": [
+            "pip install sklearn",
+            "pip install pyarrow"
+          ],
           "origin_filename": "gen-iris.ipynb"
         },
         "mount_applied": true,
@@ -27617,7 +28261,10 @@
           "author": "yjb",
           "framework": "sklearn"
         },
-        "categories": ["machine-learning", "model-training"],
+        "categories": [
+          "machine-learning",
+          "model-training"
+        ],
         "updated": "2021-08-30T05:22:41.919087+00:00"
       },
       "spec": {
@@ -27789,7 +28436,9 @@
         "labels": {
           "author": "Iguazio"
         },
-        "categories": ["data-analysis"],
+        "categories": [
+          "data-analysis"
+        ],
         "updated": "2021-08-30T05:22:42.043779+00:00"
       },
       "spec": {
@@ -27915,7 +28564,10 @@
           "author": "yjb",
           "framework": "sklearn"
         },
-        "categories": ["machine-learning", "model-training"],
+        "categories": [
+          "machine-learning",
+          "model-training"
+        ],
         "updated": "2021-08-30T05:22:42.083239+00:00"
       },
       "spec": {
@@ -28088,7 +28740,9 @@
         "labels": {
           "author": "Iguazio"
         },
-        "categories": ["data-analysis"],
+        "categories": [
+          "data-analysis"
+        ],
         "updated": "2021-08-30T05:22:42.314316+00:00"
       },
       "spec": {
@@ -28215,7 +28869,10 @@
           "author": "yaronh",
           "framework": "sklearn"
         },
-        "categories": ["model-serving", "machine-learning"],
+        "categories": [
+          "model-serving",
+          "machine-learning"
+        ],
         "updated": "2021-08-30T05:23:26.141797+00:00"
       },
       "spec": {
@@ -28393,7 +29050,9 @@
         "internal_invocation_urls": [
           "nuclio-sk-project-admin-v2-model-server.default-tenant.svc.cluster.local:8080"
         ],
-        "external_invocation_urls": ["default-tenant.app.vmdev36.lab.iguazeng.com:30372"]
+        "external_invocation_urls": [
+          "default-tenant.app.vmdev36.lab.iguazeng.com:30372"
+        ]
       },
       "verbose": false
     },
@@ -28408,7 +29067,10 @@
           "author": "yjb",
           "framework": "sklearn"
         },
-        "categories": ["machine-learning", "model-testing"],
+        "categories": [
+          "machine-learning",
+          "model-testing"
+        ],
         "updated": "2021-08-30T05:23:10.740079+00:00"
       },
       "spec": {
@@ -28549,7 +29211,10 @@
           "author": "yjb",
           "framework": "sklearn"
         },
-        "categories": ["machine-learning", "model-testing"],
+        "categories": [
+          "machine-learning",
+          "model-testing"
+        ],
         "updated": "2021-08-30T05:23:10.835323+00:00"
       },
       "spec": {
@@ -28691,7 +29356,10 @@
           "author": "yaronh",
           "framework": "sklearn"
         },
-        "categories": ["model-serving", "machine-learning"],
+        "categories": [
+          "model-serving",
+          "machine-learning"
+        ],
         "updated": "2021-08-30T05:23:26.051948+00:00"
       },
       "spec": {
@@ -28954,7 +29622,10 @@
         "labels": {
           "author": "yaronh"
         },
-        "categories": ["model-testing", "machine-learning"],
+        "categories": [
+          "model-testing",
+          "machine-learning"
+        ],
         "updated": "2021-08-30T05:23:33.290388+00:00"
       },
       "spec": {
@@ -29078,7 +29749,10 @@
         "labels": {
           "author": "yaronh"
         },
-        "categories": ["model-testing", "machine-learning"],
+        "categories": [
+          "model-testing",
+          "machine-learning"
+        ],
         "updated": "2021-08-30T05:23:33.454459+00:00"
       },
       "spec": {
@@ -29203,7 +29877,9 @@
         "labels": {
           "author": "Iguazio"
         },
-        "categories": ["data-analysis"],
+        "categories": [
+          "data-analysis"
+        ],
         "updated": "2021-08-31T12:27:38.767949+00:00"
       },
       "spec": {
@@ -29324,7 +30000,10 @@
           "author": "yjb",
           "framework": "sklearn"
         },
-        "categories": ["machine-learning", "model-training"],
+        "categories": [
+          "machine-learning",
+          "model-training"
+        ],
         "updated": "2021-09-01T00:00:00.038092+00:00"
       },
       "spec": {
@@ -29492,7 +30171,10 @@
           "author": "yjb",
           "framework": "sklearn"
         },
-        "categories": ["machine-learning", "model-training"],
+        "categories": [
+          "machine-learning",
+          "model-training"
+        ],
         "updated": "2021-10-01T00:00:00.120657+00:00"
       },
       "spec": {
@@ -29952,7 +30634,9 @@
         "image_pull_policy": "Always",
         "build": {
           "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKaW1wb3J0IG9zCmltcG9ydCBwYW5kYXMgYXMgcGQKZnJvbSB0cmFuc2Zvcm1lcnMgaW1wb3J0IEJlcnRUb2tlbml6ZXIsIEFkYW1XLCBnZXRfbGluZWFyX3NjaGVkdWxlX3dpdGhfd2FybXVwLCBCZXJ0TW9kZWwKaW1wb3J0IHRvcmNoCmltcG9ydCB0b3JjaC5ubiBhcyBubgpmcm9tIHRvcmNoLnV0aWxzIGltcG9ydCBkYXRhCmltcG9ydCBtYXRwbG90bGliLnB5cGxvdCBhcyBwbHQKZnJvbSBza2xlYXJuLm1vZGVsX3NlbGVjdGlvbiBpbXBvcnQgdHJhaW5fdGVzdF9zcGxpdAppbXBvcnQgbnVtcHkgYXMgbnAKaW1wb3J0IHNlYWJvcm4gYXMgc25zCmZyb20gY29sbGVjdGlvbnMgaW1wb3J0IGRlZmF1bHRkaWN0CmZyb20gbWxydW4uYXJ0aWZhY3RzIGltcG9ydCBQbG90QXJ0aWZhY3QsIENoYXJ0QXJ0aWZhY3QsIFRhYmxlQXJ0aWZhY3QKZnJvbSBtbHJ1bi5kYXRhc3RvcmUgaW1wb3J0IERhdGFJdGVtCmZyb20gbWxydW4gaW1wb3J0IE1MQ2xpZW50Q3R4CgpjbGFzcyBCZXJ0U2VudGltZW50Q2xhc3NpZmllcihubi5Nb2R1bGUpOgogICAgZGVmIF9faW5pdF9fKHNlbGYsIHByZXRyYWluZWRfbW9kZWwsIG5fY2xhc3Nlcyk6CiAgICAgICAgc3VwZXIoQmVydFNlbnRpbWVudENsYXNzaWZpZXIsIHNlbGYpLl9faW5pdF9fKCkKICAgICAgICBzZWxmLmJlcnQgPSBCZXJ0TW9kZWwuZnJvbV9wcmV0cmFpbmVkKHByZXRyYWluZWRfbW9kZWwpCiAgICAgICAgc2VsZi5kcm9wb3V0ID0gbm4uRHJvcG91dChwPTAuMikKICAgICAgICBzZWxmLm91dF9saW5lYXIgPSBubi5MaW5lYXIoc2VsZi5iZXJ0LmNvbmZpZy5oaWRkZW5fc2l6ZSwgbl9jbGFzc2VzKQogICAgICAgIHNlbGYuc29mdG1heCA9IG5uLlNvZnRtYXgoZGltPTEpCgogICAgZGVmIGZvcndhcmQoc2VsZiwgaW5wdXRfaWRzLCBhdHRlbnRpb25fbWFzayk6CiAgICAgICAgXywgcG9vbGVkX291dCA9IHNlbGYuYmVydCgKICAgICAgICAgICAgaW5wdXRfaWRzPWlucHV0X2lkcywKICAgICAgICAgICAgYXR0ZW50aW9uX21hc2s9YXR0ZW50aW9uX21hc2sKICAgICAgICApCiAgICAgICAgb3V0ID0gc2VsZi5kcm9wb3V0KHBvb2xlZF9vdXQpCiAgICAgICAgb3V0ID0gc2VsZi5vdXRfbGluZWFyKG91dCkKICAgICAgICByZXR1cm4gc2VsZi5zb2Z0bWF4KG91dCkKCmNsYXNzIFJldmlld3NEYXRhc2V0KGRhdGEuRGF0YXNldCk6CiAgICBkZWYgX19pbml0X18oc2VsZiwgcmV2aWV3LCB0YXJnZXQsIHRva2VuaXplciwgbWF4X2xlbik6CiAgICAgICAgc2VsZi5yZXZpZXcgPSByZXZpZXcKICAgICAgICBzZWxmLnRhcmdldCA9IHRhcmdldAogICAgICAgIHNlbGYudG9rZW5pemVyID0gdG9rZW5pemVyCiAgICAgICAgc2VsZi5tYXhfbGVuID0gbWF4X2xlbgogICAgCiAgICBkZWYgX19sZW5fXyhzZWxmKToKICAgICAgICByZXR1cm4gbGVuKHNlbGYucmV2aWV3KQogICAgCiAgICBkZWYgX19nZXRpdGVtX18oc2VsZiwgaXRlbSk6CiAgICAgICAgcmV2aWV3ID0gc3RyKHNlbGYucmV2aWV3W2l0ZW1dKQogICAgICAgIGVuYyA9IHNlbGYudG9rZW5pemVyLmVuY29kZV9wbHVzKAogICAgICAgICAgICByZXZpZXcsCiAgICAgICAgICAgIG1heF9sZW5ndGg9c2VsZi5tYXhfbGVuLAogICAgICAgICAgICBhZGRfc3BlY2lhbF90b2tlbnM9VHJ1ZSwKICAgICAgICAgICAgcGFkX3RvX21heF9sZW5ndGg9VHJ1ZSwKICAgICAgICAgICAgcmV0dXJuX2F0dGVudGlvbl9tYXNrPVRydWUsCiAgICAgICAgICAgIHJldHVybl90b2tlbl90eXBlX2lkcz1GYWxzZSwKICAgICAgICAgICAgcmV0dXJuX3RlbnNvcnM9J3B0JywKICAgICAgICAgICAgdHJ1bmNhdGlvbj1UcnVlKQogICAgICAgIAogICAgICAgIHJldHVybiB7J2lucHV0X2lkcyc6IGVuY1snaW5wdXRfaWRzJ10uc3F1ZWV6ZSgwKSwgCiAgICAgICAgICAgICAgICAnYXR0ZW50aW9uX21hc2snOiBlbmNbJ2F0dGVudGlvbl9tYXNrJ10uc3F1ZWV6ZSgwKSwKICAgICAgICAgICAgICAgICd0YXJnZXRzJzogdG9yY2gudGVuc29yKHNlbGYudGFyZ2V0W2l0ZW1dLCBkdHlwZT10b3JjaC5sb25nKX0KCmRlZiBzY29yZV90b19zZW50cyhzY29yZSk6CiAgICBpZiBzY29yZSA8PSAyOgogICAgICAgIHJldHVybiAwCiAgICBpZiBzY29yZSA9PSAzOgogICAgICAgIHJldHVybiAxCiAgICByZXR1cm4gMgoKZGVmIGNyZWF0ZV9kYXRhX2xvYWRlcihkZiwgdG9rZW5pemVyLCBtYXhfbGVuLCBiYXRjaF9zaXplKToKICAgIGRhdGFzZXQgPSBSZXZpZXdzRGF0YXNldCgKICAgICAgICByZXZpZXc9ZGYuY29udGVudC50b19udW1weSgpLAogICAgICAgIHRhcmdldD1kZi5zZW50aW1lbnQudG9fbnVtcHkoKSwKICAgICAgICB0b2tlbml6ZXI9dG9rZW5pemVyLAogICAgICAgIG1heF9sZW49bWF4X2xlbikKICAgIAogICAgcmV0dXJuIGRhdGEuRGF0YUxvYWRlcihkYXRhc2V0LCBiYXRjaF9zaXplPWJhdGNoX3NpemUsIG51bV93b3JrZXJzPTQpCgpkZWYgdHJhaW5fZXBvY2goCiAgICBtb2RlbCwKICAgIGRhdGFfbG9hZGVyLAogICAgY3JpdGVyaW9uLAogICAgb3B0aW1pemVyLAogICAgc2NoZWR1bGVyLAogICAgbl9leGFtcGxlcywKICAgIGRldmljZQopOgogICAgbW9kZWwudHJhaW4oKQogICAgbG9zc2VzID0gW10KICAgIGNvcnJlY3RfcHJlZHMgPSAwCiAgICAKICAgIGZvciBpLCBkIGluIGVudW1lcmF0ZShkYXRhX2xvYWRlcik6CiAgICAgICAgaWYgaSAlIDUwID09IDA6CiAgICAgICAgICAgIHByaW50KGYnYmF0Y2gge2kgKyAxfS8ge2xlbihkYXRhX2xvYWRlcil9JykKICAgICAgICBpbnB1dF9pZHMgPSBkWydpbnB1dF9pZHMnXS50byhkZXZpY2UpCiAgICAgICAgYXR0ZW50aW9uX21hc2sgPSBkWydhdHRlbnRpb25fbWFzayddLnRvKGRldmljZSkKICAgICAgICB0YXJnZXRzID0gZFsndGFyZ2V0cyddLnRvKGRldmljZSkKICAgICAgICAKICAgICAgICBvdXRwdXRzID0gbW9kZWwoCiAgICAgICAgICAgIGlucHV0X2lkcz1pbnB1dF9pZHMsCiAgICAgICAgICAgIGF0dGVudGlvbl9tYXNrPWF0dGVudGlvbl9tYXNrCiAgICAgICAgKQogICAgICAgIAogICAgICAgIF8sIHByZWQgPSB0b3JjaC5tYXgob3V0cHV0cywgZGltPTEpCiAgICAgICAgCiAgICAgICAgbG9zcyA9IGNyaXRlcmlvbihvdXRwdXRzLCB0YXJnZXRzKQogICAgICAgIGNvcnJlY3RfcHJlZHMgKz0gdG9yY2guc3VtKHByZWQgPT0gdGFyZ2V0cykKICAgICAgICBsb3NzZXMuYXBwZW5kKGxvc3MuaXRlbSgpKQogICAgICAgIAogICAgICAgIGxvc3MuYmFja3dhcmQoKQogICAgICAgIG5uLnV0aWxzLmNsaXBfZ3JhZF9ub3JtXyhtb2RlbC5wYXJhbWV0ZXJzKCksIG1heF9ub3JtPTEuMCkKICAgICAgICBvcHRpbWl6ZXIuc3RlcCgpCiAgICAgICAgc2NoZWR1bGVyLnN0ZXAoKQogICAgICAgIG9wdGltaXplci56ZXJvX2dyYWQoKQogICAgcmV0dXJuIChjb3JyZWN0X3ByZWRzLmRvdWJsZSgpIC8gbl9leGFtcGxlcykuZGV0YWNoKCkuY3B1KCkubnVtcHkoKSwgbnAubWVhbihsb3NzZXMpCgpkZWYgZXZhbF9tb2RlbCgKICAgIG1vZGVsLAogICAgZGF0YV9sb2FkZXIsCiAgICBjcml0ZXJpb24sCiAgICBuX2V4YW1wbGVzLAogICAgZGV2aWNlCik6CiAgICBwcmludCgnZXZhbHVhdGlvbicpCiAgICBtb2RlbCA9IG1vZGVsLmV2YWwoKQogICAgY29ycmVjdF9wcmVkcyA9IDAKICAgIGxvc3NlcyA9IFtdCiAgICAKICAgIHdpdGggdG9yY2gubm9fZ3JhZCgpOgogICAgICAgIGZvciBpLCBkIGluIGVudW1lcmF0ZShkYXRhX2xvYWRlcik6CiAgICAgICAgICAgIGlmIGkgJSA1MCA9PSAwOgogICAgICAgICAgICAgICAgcHJpbnQoZidiYXRjaCB7aSArIDF9LyB7bGVuKGRhdGFfbG9hZGVyKX0nKQogICAgICAgICAgICBpbnB1dF9pZHMgPSBkWydpbnB1dF9pZHMnXS50byhkZXZpY2UpCiAgICAgICAgICAgIGF0dGVudGlvbl9tYXNrID0gZFsnYXR0ZW50aW9uX21hc2snXS50byhkZXZpY2UpCiAgICAgICAgICAgIHRhcmdldHMgPSBkWyd0YXJnZXRzJ10udG8oZGV2aWNlKQogICAgICAgICAgICAKICAgICAgICAgICAgb3V0cHV0cyA9IG1vZGVsKAogICAgICAgICAgICAgICAgaW5wdXRfaWRzPWlucHV0X2lkcywKICAgICAgICAgICAgICAgIGF0dGVudGlvbl9tYXNrPWF0dGVudGlvbl9tYXNrCiAgICAgICAgICAgICkKICAgICAgICAgICAgCiAgICAgICAgICAgIF8sIHByZWQgPSB0b3JjaC5tYXgob3V0cHV0cywgZGltPTEpCgogICAgICAgICAgICBsb3NzID0gY3JpdGVyaW9uKG91dHB1dHMsIHRhcmdldHMpCiAgICAgICAgICAgIGNvcnJlY3RfcHJlZHMgKz0gdG9yY2guc3VtKHByZWQgPT0gdGFyZ2V0cykKICAgICAgICAgICAgbG9zc2VzLmFwcGVuZChsb3NzLml0ZW0oKSkKICAgIHJldHVybiAoY29ycmVjdF9wcmVkcy5kb3VibGUoKSAvIG5fZXhhbXBsZXMpLmRldGFjaCgpLmNwdSgpLm51bXB5KCksIG5wLm1lYW4obG9zc2VzKQoKZGVmIGV2YWxfb25fdGVzdChtb2RlbF9wYXRoLCBkYXRhX2xvYWRlciwgZGV2aWNlLCBuX2V4YW1wbGVzLCBwcmV0cmFpbmVkX21vZGVsLCBuX2NsYXNzZXMpOgogICAgbW9kZWwgPSBCZXJ0U2VudGltZW50Q2xhc3NpZmllcihwcmV0cmFpbmVkX21vZGVsLCBuX2NsYXNzZXMpLnRvKGRldmljZSkKICAgIG1vZGVsLmxvYWRfc3RhdGVfZGljdCh0b3JjaC5sb2FkKG1vZGVsX3BhdGgpKQogICAgbW9kZWwuZXZhbCgpCgogICAgY29ycmVjdF9wcmVkcyA9IDAKCiAgICB3aXRoIHRvcmNoLm5vX2dyYWQoKToKICAgICAgICBmb3IgaSwgZCBpbiBlbnVtZXJhdGUoZGF0YV9sb2FkZXIpOgogICAgICAgICAgICBpZiBpICUgNTAgPT0gMDoKICAgICAgICAgICAgICAgIHByaW50KGYnYmF0Y2gge2kgKyAxfS8ge2xlbihkYXRhX2xvYWRlcil9JykKCiAgICAgICAgICAgIGlucHV0X2lkcyA9IGRbJ2lucHV0X2lkcyddLnRvKGRldmljZSkKICAgICAgICAgICAgYXR0ZW50aW9uX21hc2sgPSBkWydhdHRlbnRpb25fbWFzayddLnRvKGRldmljZSkKICAgICAgICAgICAgdGFyZ2V0cyA9IGRbJ3RhcmdldHMnXS50byhkZXZpY2UpCgogICAgICAgICAgICBvdXRwdXRzID0gbW9kZWwoCiAgICAgICAgICAgICAgICBpbnB1dF9pZHM9aW5wdXRfaWRzLAogICAgICAgICAgICAgICAgYXR0ZW50aW9uX21hc2s9YXR0ZW50aW9uX21hc2sKICAgICAgICAgICAgKQoKICAgICAgICAgICAgXywgcHJlZCA9IHRvcmNoLm1heChvdXRwdXRzLCBkaW09MSkKICAgICAgICAgICAgY29ycmVjdF9wcmVkcyArPSB0b3JjaC5zdW0ocHJlZCA9PSB0YXJnZXRzKQogICAgcmV0dXJuIGNvcnJlY3RfcHJlZHMuZG91YmxlKCkgLyBuX2V4YW1wbGVzCgpkZWYgdHJhaW5fc2VudGltZW50X2FuYWx5c2lzX21vZGVsKGNvbnRleHQ6IE1MQ2xpZW50Q3R4LCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXZpZXdzX2RhdGFzZXQ6IERhdGFJdGVtLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHByZXRyYWluZWRfbW9kZWw6IHN0ciA9ICdiZXJ0LWJhc2UtY2FzZWQnLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtb2RlbHNfZGlyOiBzdHIgPSAnbW9kZWxzJywKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtb2RlbF9maWxlbmFtZTogc3RyID0gJ2JlcnRfc2VudGltZW50X2FuYWx5c2lzX21vZGVsLnB0JywKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBuX2NsYXNzZXM6IGludCA9IDMsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgTUFYX0xFTjogaW50ID0gMTI4LAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEJBVENIX1NJWkU6IGludCA9IDE2LAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEVQT0NIUzogaW50ID0gNTAsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmFuZG9tX3N0YXRlOiBpbnQgPSA0Mik6CgogICAgZGV2aWNlID0gdG9yY2guZGV2aWNlKCdjdWRhOjAnKSBpZiB0b3JjaC5jdWRhLmlzX2F2YWlsYWJsZSgpIGVsc2UgdG9yY2guZGV2aWNlKCdjcHUnKQogICAgYmFzZV9wYXRoID0gb3MucGF0aC5hYnNwYXRoKGNvbnRleHQuYXJ0aWZhY3RfcGF0aCkKICAgIHBsb3RzX3BhdGggPSBvcy5wYXRoLmpvaW4oYmFzZV9wYXRoLCAncGxvdHMnKQogICAgZGF0YV9wYXRoID0gb3MucGF0aC5qb2luKGJhc2VfcGF0aCwgJ2RhdGEnKQogICAgY29udGV4dC5sb2dnZXIuaW5mbyhmJ1VzaW5nIHtkZXZpY2V9JykKICAgIAogICAgbW9kZWxzX2Jhc2VwYXRoID0gb3MucGF0aC5qb2luKGNvbnRleHQuYXJ0aWZhY3RfcGF0aCwgbW9kZWxzX2RpcikKICAgIG9zLm1ha2VkaXJzKG1vZGVsc19iYXNlcGF0aCwgZXhpc3Rfb2s9VHJ1ZSkKICAgIG1vZGVsX2ZpbGVwYXRoID0gb3MucGF0aC5qb2luKG1vZGVsc19iYXNlcGF0aCwgbW9kZWxfZmlsZW5hbWUpCiAgICAKICAgIGRmID0gcmV2aWV3c19kYXRhc2V0LmFzX2RmKCkKICAgIAogICAgZGYgPSBkZltbJ2NvbnRlbnQnLCAnc2NvcmUnXV0KICAgIHNucy5kaXN0cGxvdChkZi5zY29yZSkKICAgIHJldmlld3Nfc2NvcmVzX2FydGlmYWN0ID0gY29udGV4dC5sb2dfYXJ0aWZhY3QoUGxvdEFydGlmYWN0KGYicmV2aWV3cy1zY29yZXMiLCBib2R5PXBsdC5nY2YoKSksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHRhcmdldF9wYXRoPWYie3Bsb3RzX3BhdGh9L3Jldmlld3Mtc2NvcmVzLmh0bWwiKQogICAgCiAgICBkZlsnc2VudGltZW50J10gPSBkZlsnc2NvcmUnXS5hcHBseShzY29yZV90b19zZW50cykKICAgIAogICAgdG9rZW5pemVyID0gQmVydFRva2VuaXplci5mcm9tX3ByZXRyYWluZWQocHJldHJhaW5lZF9tb2RlbCkKICAgIAogICAgbGVucyA9IFtsZW4odG9rZW5pemVyLmVuY29kZShkZi5sb2NbcmV2aWV3XVsnY29udGVudCddKSkgZm9yIHJldmlldyBpbiBkZi5pbmRleF0KICAgIG1heF9sZW5ndGggPSBtYXgobGVucykKICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidsb25nZXN0IHJldmlldzoge21heF9sZW5ndGh9JykKICAgIHBsdC5jbGYoKQogICAgc25zLmRpc3RwbG90KGxlbnMpCiAgICByZXZpZXdzX2xlbmd0aHNfYXJ0aWZhY3QgPSBjb250ZXh0LmxvZ19hcnRpZmFjdChQbG90QXJ0aWZhY3QoZiJyZXZpZXdzLWxlbmd0aHMiLCBib2R5PXBsdC5nY2YoKSksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0YXJnZXRfcGF0aD1mIntwbG90c19wYXRofS9yZXZpZXdzLWxlbmd0aHMuaHRtbCIpCiAgICAKICAgIGRmX3RyYWluLCBkZl90ZXN0ID0gdHJhaW5fdGVzdF9zcGxpdChkZiwgdGVzdF9zaXplPTAuMiwgcmFuZG9tX3N0YXRlPXJhbmRvbV9zdGF0ZSkKICAgIGRmX2RldiwgZGZfdGVzdCA9IHRyYWluX3Rlc3Rfc3BsaXQoZGZfdGVzdCwgdGVzdF9zaXplID0gMC41LCByYW5kb21fc3RhdGU9cmFuZG9tX3N0YXRlKQogICAgCiAgICB0cmFpbl9sb2FkZXIgPSBjcmVhdGVfZGF0YV9sb2FkZXIoZGZfdHJhaW4sIHRva2VuaXplciwgTUFYX0xFTiwgQkFUQ0hfU0laRSkKICAgIGRldl9sb2FkZXIgPSBjcmVhdGVfZGF0YV9sb2FkZXIoZGZfZGV2LCB0b2tlbml6ZXIsIE1BWF9MRU4sIEJBVENIX1NJWkUpCiAgICB0ZXN0X2xvYWRlciA9IGNyZWF0ZV9kYXRhX2xvYWRlcihkZl90ZXN0LCB0b2tlbml6ZXIsIE1BWF9MRU4sIEJBVENIX1NJWkUpCiAgICAKICAgIG1vZGVsID0gQmVydFNlbnRpbWVudENsYXNzaWZpZXIocHJldHJhaW5lZF9tb2RlbCwgbl9jbGFzc2VzPW5fY2xhc3NlcykudG8oZGV2aWNlKQogICAgCiAgICBvcHRpbWl6ZXIgPSBBZGFtVyhtb2RlbC5wYXJhbWV0ZXJzKCksIGxyPTJlLTUsIGNvcnJlY3RfYmlhcz1GYWxzZSkKICAgIHRvdGFsX3N0ZXBzID0gbGVuKHRyYWluX2xvYWRlcikgKiBFUE9DSFMKICAgIHNjaGVkdWxlciA9IGdldF9saW5lYXJfc2NoZWR1bGVfd2l0aF93YXJtdXAob3B0aW1pemVyPW9wdGltaXplciwgbnVtX3dhcm11cF9zdGVwcz0wLCBudW1fdHJhaW5pbmdfc3RlcHM9dG90YWxfc3RlcHMpCiAgICBjcml0ZXJpb24gPSBubi5Dcm9zc0VudHJvcHlMb3NzKCkudG8oZGV2aWNlKQogICAgCiAgICBoaXN0b3J5ID0gZGVmYXVsdGRpY3QobGlzdCkKICAgIGJlc3RfYWNjID0gdHJhaW5fYWNjID0gdHJhaW5fbG9zcyA9IGRldl9hY2MgPSBkZXZfbG9zcyA9IDAKCiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdTdGFydGVkIHRyYWluaW5nIHRoZSBtb2RlbCcpCiAgICBmb3IgZXBvY2ggaW4gcmFuZ2UoRVBPQ0hTKToKICAgICAgICB0cmFpbl9hY2MsIHRyYWluX2xvc3MgPSB0cmFpbl9lcG9jaCgKICAgICAgICAgICAgbW9kZWwsCiAgICAgICAgICAgIHRyYWluX2xvYWRlciwKICAgICAgICAgICAgY3JpdGVyaW9uLAogICAgICAgICAgICBvcHRpbWl6ZXIsCiAgICAgICAgICAgIHNjaGVkdWxlciwKICAgICAgICAgICAgbGVuKGRmX3RyYWluKSwKICAgICAgICAgICAgZGV2aWNlCiAgICAgICAgKQogICAgICAgIAogICAgICAgIGRldl9hY2MsIGRldl9sb3NzID0gZXZhbF9tb2RlbCgKICAgICAgICAgICAgbW9kZWwsCiAgICAgICAgICAgIGRldl9sb2FkZXIsCiAgICAgICAgICAgIGNyaXRlcmlvbiwKICAgICAgICAgICAgbGVuKGRmX2RldiksCiAgICAgICAgICAgIGRldmljZQogICAgICAgICkKCiAgICAgICAgaGlzdG9yeVsndHJhaW5fYWNjJ10uYXBwZW5kKHRyYWluX2FjYykKICAgICAgICBoaXN0b3J5Wyd0cmFpbl9sb3NzJ10uYXBwZW5kKHRyYWluX2xvc3MpCiAgICAgICAgaGlzdG9yeVsnZGV2X2FjYyddLmFwcGVuZChkZXZfYWNjKQogICAgICAgIGhpc3RvcnlbJ2Rldl9sb3NzJ10uYXBwZW5kKGRldl9sb3NzKQogICAgICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidFcG9jaDoge2Vwb2NoICsgMX0ve0VQT0NIU306IFRyYWluIGxvc3M6IHt0cmFpbl9sb3NzfSwgYWNjdXJhY3k6IHt0cmFpbl9hY2N9IFZhbCBsb3NzOiB7ZGV2X2xvc3N9LCBhY2N1cmFjeToge2Rldl9hY2N9JykKCiAgICAgICAgaWYgZGV2X2FjYyA+IGJlc3RfYWNjOgogICAgICAgICAgICB0b3JjaC5zYXZlKG1vZGVsLnN0YXRlX2RpY3QoKSwgbW9kZWxfZmlsZXBhdGgpCiAgICAgICAgICAgIGNvbnRleHQubG9nZ2VyLmluZm8oZidVcGRhdGluZyBtb2RlbCwgQ3VycmVudCBtb2RlbHMgaXMgYmV0dGVyIHRoZW4gdGhlIHByZXZpb3VzIG9uZSAoe2Jlc3RfYWNjfSB2cy4ge2Rldl9hY2N9KS4nKQogICAgICAgICAgICBiZXN0X2FjYyA9IGRldl9hY2MKICAgIAogICAgY29udGV4dC5sb2dnZXIuaW5mbygnRmluaXNoZWQgdHJhaW5pbmcsIHRlc3RpbmcgYW5kIGxvZ2dpbmcgcmVzdWx0cycpCiAgICBjaGFydCA9IENoYXJ0QXJ0aWZhY3QoJ3N1bW1hcnknKQogICAgY2hhcnQuaGVhZGVyID0gWydlcG9jaCcsICdhY2N1cmFjeScsICd2YWxfYWNjdXJhY3knLCAnbG9zcycsICd2YWxfbG9zcyddCiAgICBmb3IgaSBpbiByYW5nZShsZW4oaGlzdG9yeVsndHJhaW5fYWNjJ10pKToKICAgICAgICBjaGFydC5hZGRfcm93KFtpICsgMSwgaGlzdG9yeVsndHJhaW5fYWNjJ11baV0sCiAgICAgICAgICAgICAgICAgICAgICAgaGlzdG9yeVsndHJhaW5fbG9zcyddW2ldLAogICAgICAgICAgICAgICAgICAgICAgIGhpc3RvcnlbJ2Rldl9hY2MnXVtpXSwKICAgICAgICAgICAgICAgICAgICAgICBoaXN0b3J5WydkZXZfbG9zcyddW2ldXSkKICAgIHN1bW1hcnkgPSBjb250ZXh0LmxvZ19hcnRpZmFjdChjaGFydCwgbG9jYWxfcGF0aD1vcy5wYXRoLmpvaW4oJ3Bsb3RzJywgJ3N1bW1hcnkuaHRtbCcpKQoKICAgIGhpc3RvcnlfZGYgPSBwZC5EYXRhRnJhbWUoaGlzdG9yeSkKICAgIGhpc3RvcnlfdGFibGUgPSBUYWJsZUFydGlmYWN0KCdoaXN0b3J5JywgZGY9aGlzdG9yeV9kZikKICAgIGhpc3RvcnlfYXJ0aWZhY3QgPSBjb250ZXh0LmxvZ19hcnRpZmFjdChoaXN0b3J5X3RhYmxlLCB0YXJnZXRfcGF0aD1vcy5wYXRoLmpvaW4oZGF0YV9wYXRoLCAnaGlzdG9yeS5jc3YnKSkKCiAgICB0ZXN0X2FjYyA9IGV2YWxfb25fdGVzdChtb2RlbF9maWxlcGF0aCwgdGVzdF9sb2FkZXIsIGRldmljZSwgbGVuKGRmX3Rlc3QpLCBwcmV0cmFpbmVkX21vZGVsLCBuX2NsYXNzZXMpCiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKGYnUmVjZWl2ZWQge3Rlc3RfYWNjfSBvbiB0ZXN0IGRhdGFzZXQnKQogICAgcmVzdWx0cyA9IHsndHJhaW5fYWNjdXJhY3knOiB0cmFpbl9hY2MsCiAgICAgICAgICAgICAgICd0cmFpbl9sb3NzJzogdHJhaW5fbG9zcywKICAgICAgICAgICAgICAgJ2Jlc3RfYWNjY3VyYWN5JzogYmVzdF9hY2MsCiAgICAgICAgICAgICAgICd2YWxpZGF0aW9uX2FjY3VyYWN5JzogZGV2X2FjYywKICAgICAgICAgICAgICAgJ3ZhbGlkYXRpb25fbG9zcyc6IGRldl9sb3NzfQogICAgY29udGV4dC5sb2dfcmVzdWx0cyhyZXN1bHRzKQogICAgY29udGV4dC5sb2dfbW9kZWwoa2V5PSdiZXJ0X3NlbnRpbWVudF9hbmFseXNpc19tb2RlbCcsCiAgICAgICAgICAgICAgICAgICAgICBtb2RlbF9maWxlPW1vZGVsX2ZpbGVuYW1lLAogICAgICAgICAgICAgICAgICAgICAgbW9kZWxfZGlyPW1vZGVsc19kaXIsCiAgICAgICAgICAgICAgICAgICAgICBhcnRpZmFjdF9wYXRoPWNvbnRleHQuYXJ0aWZhY3RfcGF0aCwKICAgICAgICAgICAgICAgICAgICAgIHVwbG9hZD1GYWxzZSwKICAgICAgICAgICAgICAgICAgICAgIGxhYmVscz17J2ZyYW1ld29yayc6ICdweXRvcmNoJywKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ2NhdGVnb3J5JzogJ25scCcsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICdhY3Rpb24nOiAnc2VudGltZW50X2FuYWx5c2lzJ30sCiAgICAgICAgICAgICAgICAgICAgICBtZXRyaWNzPWNvbnRleHQucmVzdWx0cywKICAgICAgICAgICAgICAgICAgICAgIHBhcmFtZXRlcnM9eydwcmV0cmFpbmVkX21vZGVsJzogcHJldHJhaW5lZF9tb2RlbCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICdNQVhfTEVOJzogTUFYX0xFTiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICdCQVRDSF9TSVpFJzogQkFUQ0hfU0laRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICdFUE9DSFMnOiBFUE9DSFMsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAncmFuZG9tX3N0YXRlJzogcmFuZG9tX3N0YXRlfSwKICAgICAgICAgICAgICAgICAgICAgIGV4dHJhX2RhdGE9eydyZXZpZXdzX3Njb3Jlcyc6IHJldmlld3Nfc2NvcmVzX2FydGlmYWN0LAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ3Jldmlld3NfbGVuZ3RoJzogcmV2aWV3c19sZW5ndGhzX2FydGlmYWN0LAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ3RyYWluaW5nX2hpc3RvcnknOiBoaXN0b3J5X2FydGlmYWN0fSkKICAgIAoK",
-          "commands": ["python -m pip install transformers==3.0.1 torch==1.6.0"],
+          "commands": [
+            "python -m pip install transformers==3.0.1 torch==1.6.0"
+          ],
           "origin_filename": "/User/demos/stock-analysis/code/00-train-sentiment-analysis-model.ipynb"
         },
         "mount_applied": true,
@@ -29972,7 +30656,10 @@
           "author": "avia",
           "framework": "pytorch"
         },
-        "categories": ["model-serving", "machine-learning"],
+        "categories": [
+          "model-serving",
+          "machine-learning"
+        ],
         "updated": "2021-08-30T05:36:34.649552+00:00"
       },
       "spec": {
@@ -30054,7 +30741,9 @@
         "function_kind": "serving_v2",
         "readiness_timeout": 500,
         "build": {
-          "commands": ["python -m pip install transformers==3.0.2"]
+          "commands": [
+            "python -m pip install transformers==3.0.2"
+          ]
         },
         "secret_sources": [],
         "mount_applied": true,
@@ -30374,7 +31063,9 @@
           "spec": {
             "build": {
               "baseImage": "mlrun/mlrun",
-              "commands": ["pip install v3io"],
+              "commands": [
+                "pip install v3io"
+              ],
               "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKaW1wb3J0IHYzaW8uZGF0YXBsYW5lCmltcG9ydCBqc29uCmltcG9ydCBvcwoKZGVmIGluaXRfY29udGV4dChjb250ZXh0KToKICAgIGFjY2Vzc19rZXkgPSBvcy5nZXRlbnYoJ1YzSU9fQUNDRVNTX0tFWScsIE5vbmUpCiAgICBzZXRhdHRyKGNvbnRleHQsICdjb250YWluZXInLCBvcy5nZXRlbnYoJ1YzSU9fQ09OVEFJTkVSJywgJ3VzZXJzJykpCiAgICBzZXRhdHRyKGNvbnRleHQsICdzdHJlYW1fcGF0aCcsIG9zLmdldGVudignU1RPQ0tTX1NUUkVBTScsb3MuZ2V0ZW52KCdWM0lPX1VTRVJOQU1FJykgKyAnL3N0b2Nrcy9zdG9ja3Nfc3RyZWFtJykpCiAgICAKICAgIHYzaW9fY2xpZW50ID0gdjNpby5kYXRhcGxhbmUuQ2xpZW50KGVuZHBvaW50PW9zLmdldGVudignVjNJT19BUEknLCBOb25lKSwgYWNjZXNzX2tleT1hY2Nlc3Nfa2V5KQogICAgc2V0YXR0cihjb250ZXh0LCAnZGF0YScsIFtdKQogICAgc2V0YXR0cihjb250ZXh0LCAndjNpb19jbGllbnQnLCB2M2lvX2NsaWVudCkgCiAgICBzZXRhdHRyKGNvbnRleHQsICdsaW1pdCcsIG9zLmdldGVudignTElNSVQnLCAxMCkpCiAgICAKCiAgICAKZGVmIGhhbmRsZXIoY29udGV4dCwgZXZlbnQpOgogICAgcmVzcCA9IGNvbnRleHQudjNpb19jbGllbnQuc2Vla19zaGFyZChjb250YWluZXI9Y29udGV4dC5jb250YWluZXIsIHBhdGg9Zid7Y29udGV4dC5zdHJlYW1fcGF0aH0vMCcsIHNlZWtfdHlwZT0nRUFSTElFU1QnKQogICAgc2V0YXR0cihjb250ZXh0LCAnbmV4dF9sb2NhdGlvbicsIHJlc3Aub3V0cHV0LmxvY2F0aW9uKQogICAgcmVzcCA9IGNvbnRleHQudjNpb19jbGllbnQuZ2V0X3JlY29yZHMoY29udGFpbmVyPWNvbnRleHQuY29udGFpbmVyLCBwYXRoPWYne2NvbnRleHQuc3RyZWFtX3BhdGh9LzAnLCBsb2NhdGlvbj1jb250ZXh0Lm5leHRfbG9jYXRpb24sIGxpbWl0PWNvbnRleHQubGltaXQpCiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdsb2NhdGlvbjogJXMnLCBjb250ZXh0Lm5leHRfbG9jYXRpb24pCgogICAgZm9yIHJlYyBpbiByZXNwLm91dHB1dC5yZWNvcmRzOgogICAgICAgIHJlY19kYXRhID0gcmVjLmRhdGEuZGVjb2RlKCd1dGYtOCcpCiAgICAgICAgcmVjX2pzb24gPSBqc29uLmxvYWRzKHJlY19kYXRhKQogICAgICAgIGNvbnRleHQuZGF0YS5hcHBlbmQoeydUaW1lJzogcmVjX2pzb25bJ3RpbWUnXSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAnU3ltYm9sJzogcmVjX2pzb25bJ3N5bWJvbCddLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICdTZW50aW1lbnQnOiByZWNfanNvblsnc2VudGltZW50J10sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ0xpbmsnOiByZWNfanNvblsnbGluayddLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICdDb250ZW50JzogcmVjX2pzb25bJ2NvbnRlbnQnXX0pCgogICAgY29udGV4dC5kYXRhID0gY29udGV4dC5kYXRhWy1jb250ZXh0LmxpbWl0Ol0KICAgIAogICAgY29sdW1ucyA9IFt7J3RleHQnOiBrZXksICd0eXBlJzogJ29iamVjdCd9IGZvciBrZXkgaW4gWydUaW1lJywgJ1N5bWJvbCcsICdTZW50aW1lbnQnLCAnTGluaycsICdDb250ZW50J11dCiAgICBkYXRhID0gW2xpc3QoaXRlbS52YWx1ZXMoKSkgZm9yIGl0ZW0gaW4gY29udGV4dC5kYXRhXQogICAgcmVzcG9uc2UgPSBbeydjb2x1bW5zJzogY29sdW1ucywKICAgICAgICAgICAgICAgICdyb3dzJzogZGF0YSwKICAgICAgICAgICAgICAgICd0eXBlJzogJ3RhYmxlJ31dCiAgICByZXR1cm4gcmVzcG9uc2UgICAgICAgICAgICAgIAoK",
               "noBaseImagesPull": true
             },
@@ -30672,7 +31363,9 @@
         "internal_invocation_urls": [
           "nuclio-stocks-admin-stocks-reader.default-tenant.svc.cluster.local:8080"
         ],
-        "external_invocation_urls": ["default-tenant.app.vmdev36.lab.iguazeng.com:31139"]
+        "external_invocation_urls": [
+          "default-tenant.app.vmdev36.lab.iguazeng.com:31139"
+        ]
       },
       "verbose": false
     },
@@ -31544,7 +32237,9 @@
         "labels": {
           "author": "adih"
         },
-        "categories": ["data-preparation"],
+        "categories": [
+          "data-preparation"
+        ],
         "credentials": {
           "access_key": "$generate"
         },
@@ -31867,7 +32562,9 @@
             ]
           },
           "track_models": false,
-          "model_endpoints_names": ["my-endpoint"],
+          "model_endpoints_names": [
+            "my-endpoint"
+          ],
           "steps": {
             "model-runner": {
               "class_args": {

@@ -44,6 +44,7 @@ import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import {
   COMPLETED_STATE,
+  IS_MF_MODE,
   PROJECTS_SETTINGS_MEMBERS_TAB,
   PROJECTS_SETTINGS_SECRETS_TAB
 } from '../../constants'
@@ -75,13 +76,35 @@ const ProjectSettings = () => {
   )
 
   const userIsProjectOwner = useMemo(() => {
+    if (IS_MF_MODE) {
+      const activeUsername = membersState?.activeUser?.data?.attributes?.username
+      const ownerUsername = membersState?.projectInfo?.owner?.username
+      return Boolean(activeUsername && activeUsername === ownerUsername)
+    }
     return membersState?.activeUser?.data?.id === membersState?.projectInfo?.owner.id
   }, [membersState])
+
+  const userIsSystemAdmin = useMemo(
+    () =>
+      membersState?.activeUser?.data?.attributes?.user_policies_collection?.has('System Admin') ??
+      false,
+    [membersState?.activeUser?.data?.attributes?.user_policies_collection]
+  )
 
   const projectMembersTabIsShown = useMemo(
     () => isProjectMembersTabShown(projectMembershipIsEnabled, userIsProjectOwner, membersState),
     [userIsProjectOwner, membersState, projectMembershipIsEnabled]
   )
+
+  const fetchProjectPolicies = useCallback(() => {
+    return projectsIguazioApi
+      .getProjectPolicies(params.projectName)
+      .then(policiesResponse => generateMembers(policiesResponse, membersDispatch))
+      .catch(error => {
+        showErrorNotification(dispatch, error, 'Failed to fetch project members')
+        throw error
+      })
+  }, [dispatch, params.projectName])
 
   const fetchProjectIdAndOwner = useCallback(() => {
     return projectsIguazioApi
@@ -120,6 +143,7 @@ const ProjectSettings = () => {
     },
     [dispatch]
   )
+
   const fetchProjectMembersVisibility = project => {
     projectsIguazioApi
       .getProjectMembersVisibility(project)
@@ -130,23 +154,58 @@ const ProjectSettings = () => {
         setProjectMembersIsShown(false)
       })
   }
+
   const fetchActiveUser = () => {
     projectsIguazioApi.getActiveUser().then(response => {
-      const activeUser = response.data
-      activeUser.data.attributes.user_policies_collection = new Set([
-        ...activeUser.data.attributes.assigned_policies,
-        ...(activeUser.included?.reduce?.(
-          (policies, group) => [...policies, ...group.attributes.assigned_policies],
-          []
-        ) || [])
-      ])
+      if (IS_MF_MODE) {
+        const activeUser = response.data
+        const relationships = activeUser.relationships || []
 
-      membersDispatch({
-        type: membersActions.SET_ACTIVE_USER,
-        payload: activeUser
-      })
+        const userGroupNames = new Set(
+          relationships
+            .filter(rel => rel['@type']?.includes('usergroup'))
+            .map(rel => rel.spec?.name)
+            .filter(Boolean)
+        )
+
+        const userPoliciesCollection = new Set(
+          relationships
+            .filter(rel => rel['@type']?.includes('policy.Policy'))
+            .map(rel => rel.spec?.displayName)
+            .filter(Boolean)
+        )
+
+        membersDispatch({
+          type: membersActions.SET_ACTIVE_USER,
+          payload: {
+            data: {
+              id: activeUser.metadata?.id,
+              attributes: {
+                username: activeUser.metadata?.username,
+                user_policies_collection: userPoliciesCollection,
+                user_group_names: userGroupNames
+              }
+            }
+          }
+        })
+      } else {
+        const activeUser = response.data
+        activeUser.data.attributes.user_policies_collection = new Set([
+          ...activeUser.data.attributes.assigned_policies,
+          ...(activeUser.included?.reduce?.(
+            (policies, group) => [...policies, ...group.attributes.assigned_policies],
+            []
+          ) || [])
+        ])
+
+        membersDispatch({
+          type: membersActions.SET_ACTIVE_USER,
+          payload: activeUser
+        })
+      }
     })
   }
+
   const fetchProjectOwnerVisibility = project => {
     projectsIguazioApi
       .getProjectOwnerVisibility(project)
@@ -160,49 +219,76 @@ const ProjectSettings = () => {
 
   const fetchProjectUsersData = useCallback(() => {
     if (projectMembershipIsEnabled) {
-      fetchProjectOwnerVisibility(params.projectName)
-      fetchProjectIdAndOwner()
-        .then(({ id: projectId, owner }) => {
-          fetchActiveUser()
-          fetchProjectMembersVisibility(params.projectName)
+      if (IS_MF_MODE) {
+        fetchActiveUser()
 
-          return fetchProjectMembers(projectId, owner)
-        })
-        .catch(() => {
-          setProjectMembersIsShown(false)
-        })
-        .finally(() =>
-          membersDispatch({
-            type: membersActions.GET_PROJECT_USERS_DATA_END
+        fetchProjectPolicies()
+          .catch(() => {
+            setProjectMembersIsShown(false)
+            setProjectOwnerIsShown(false)
           })
-        )
-    }
-  }, [fetchProjectIdAndOwner, fetchProjectMembers, params.projectName, projectMembershipIsEnabled])
+          .finally(() =>
+            membersDispatch({
+              type: membersActions.GET_PROJECT_USERS_DATA_END
+            })
+          )
+      } else {
+        fetchProjectOwnerVisibility(params.projectName)
+        fetchProjectIdAndOwner()
+          .then(({ id: projectId, owner }) => {
+            fetchActiveUser()
+            fetchProjectMembersVisibility(params.projectName)
 
-  const changeMembersCallback = (jobId, userIsValid) => {
-    const fetchJob = () => {
-      projectsIguazioApi
-        .getProjectJob(jobId)
-        .then(response => {
-          if (response.data.data.attributes.state !== COMPLETED_STATE) {
-            setTimeout(fetchJob, 1000)
-          } else {
-            if (userIsValid) {
-              fetchProjectMembers(membersState.projectInfo.id, membersState.projectInfo.owner).then(
-                () => {
-                  membersDispatch({
-                    type: membersActions.GET_PROJECT_USERS_DATA_END
-                  })
-                  dispatch(
-                    setNotification({
-                      status: 200,
-                      id: Math.random(),
-                      message: 'Members updated successfully'
-                    })
-                  )
-                }
-              )
-            } else {
+            return fetchProjectMembers(projectId, owner)
+          })
+          .catch(() => {
+            setProjectMembersIsShown(false)
+          })
+          .finally(() =>
+            membersDispatch({
+              type: membersActions.GET_PROJECT_USERS_DATA_END
+            })
+          )
+      }
+    }
+  }, [
+    fetchProjectIdAndOwner,
+    fetchProjectMembers,
+    fetchProjectPolicies,
+    params.projectName,
+    projectMembershipIsEnabled
+  ])
+
+  useEffect(() => {
+    if (!IS_MF_MODE) return
+
+    const activeUsername = membersState?.activeUser?.data?.attributes?.username
+    const projectId = membersState?.projectInfo?.id
+
+    if (activeUsername && projectId) {
+      setProjectOwnerIsShown(userIsProjectOwner || userIsSystemAdmin)
+      setProjectMembersIsShown(projectMembersTabIsShown)
+    }
+  }, [
+    membersState?.activeUser?.data?.attributes?.username,
+    membersState?.projectInfo?.id,
+    userIsProjectOwner,
+    userIsSystemAdmin,
+    projectMembersTabIsShown
+  ])
+
+  const changeMembersCallback = IS_MF_MODE
+    ? userIsStillMember => {
+        membersDispatch({
+          type: membersActions.GET_PROJECT_USERS_DATA_BEGIN
+        })
+
+        if (userIsStillMember) {
+          fetchProjectPolicies()
+            .then(() => {
+              membersDispatch({
+                type: membersActions.GET_PROJECT_USERS_DATA_END
+              })
               dispatch(
                 setNotification({
                   status: 200,
@@ -210,32 +296,91 @@ const ProjectSettings = () => {
                   message: 'Members updated successfully'
                 })
               )
-              navigate('/projects/')
-            }
-          }
-        })
-        .catch(() => {
-          membersDispatch({
-            type: membersActions.GET_PROJECT_USERS_DATA_END
-          })
-        })
-    }
+            })
+            .catch(() => {
+              membersDispatch({
+                type: membersActions.GET_PROJECT_USERS_DATA_END
+              })
+            })
+        } else {
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: 'Members updated successfully'
+            })
+          )
+          navigate('/projects/')
+        }
+      }
+    : (jobId, userIsValid) => {
+        const fetchJob = () => {
+          projectsIguazioApi
+            .getProjectJob(jobId)
+            .then(response => {
+              if (response.data.data.attributes.state !== COMPLETED_STATE) {
+                setTimeout(fetchJob, 1000)
+              } else {
+                if (userIsValid) {
+                  fetchProjectMembers(
+                    membersState.projectInfo.id,
+                    membersState.projectInfo.owner
+                  ).then(() => {
+                    membersDispatch({
+                      type: membersActions.GET_PROJECT_USERS_DATA_END
+                    })
+                    dispatch(
+                      setNotification({
+                        status: 200,
+                        id: Math.random(),
+                        message: 'Members updated successfully'
+                      })
+                    )
+                  })
+                } else {
+                  dispatch(
+                    setNotification({
+                      status: 200,
+                      id: Math.random(),
+                      message: 'Members updated successfully'
+                    })
+                  )
+                  navigate('/projects/')
+                }
+              }
+            })
+            .catch(() => {
+              membersDispatch({
+                type: membersActions.GET_PROJECT_USERS_DATA_END
+              })
+            })
+        }
 
-    membersDispatch({
-      type: membersActions.GET_PROJECT_USERS_DATA_BEGIN
-    })
+        membersDispatch({
+          type: membersActions.GET_PROJECT_USERS_DATA_BEGIN
+        })
 
-    fetchJob()
-  }
+        fetchJob()
+      }
 
   const changeOwnerCallback = () => {
-    const prevOwner = membersState.projectInfo.owner.id
+    if (IS_MF_MODE) {
+      const prevOwnerUsername = membersState.projectInfo.owner.username
 
-    return fetchProjectIdAndOwner().then(() => {
-      if (!membersState.users.some(member => member.id === prevOwner)) {
-        navigate('/projects/')
-      }
-    })
+      return fetchProjectPolicies().then(() => {
+        if (!membersState.members.some(member => member.id === prevOwnerUsername)) {
+          navigate('/projects/')
+        }
+      })
+    } else {
+      const prevOwner = membersState.projectInfo.owner.id
+
+      return fetchProjectIdAndOwner().then(() => {
+        if (!membersState.users.some(member => member.id === prevOwner)) {
+          navigate('/projects/')
+        }
+      })
+    }
   }
 
   const resetProjectData = useCallback(() => {
