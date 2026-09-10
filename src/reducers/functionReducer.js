@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { FUNCTION_TYPE_JOB, PANEL_DEFAULT_ACCESS_KEY } from '../constants'
+import { isRequestAborted } from '../utils/isRequestAborted'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import functionsApi from '../api/functions-api'
@@ -401,6 +402,7 @@ const functionsSlice = createSlice({
       state.functions = action.payload.funcs
     })
     builder.addCase(fetchFunctions.rejected, (state, action) => {
+      if (isRequestAborted(action.payload?.message)) return
       state.error = action.payload
       state.loading = false
       state.functions = []

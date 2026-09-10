@@ -787,7 +787,7 @@ const WorkflowsTable = React.forwardRef(
 
     return (
       <>
-        {(workflowsStore.workflows.loading || permissionsLoading) && <Loader />}
+        {(workflowsStore.workflows.loading || permissionsLoading) && <Loader overlay />}
         {workflowsStore.workflows.loading ? null : (!workflowsStore.workflows.loading &&
             !params.workflowId &&
             workflowsStore.workflows.data.length === 0) ||

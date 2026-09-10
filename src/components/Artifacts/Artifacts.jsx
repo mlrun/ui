@@ -48,6 +48,7 @@ import { getFeatureVectorData } from '../ModelsPage/Models/models.util'
 import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { getFiltersConfig } from './artifacts.util'
 import { getSavedSearchParams, transformSearchParams } from 'igz-controls/utils/filter.util'
+import { isRequestAborted } from '../../utils/isRequestAborted'
 import { openPopUp, getViewMode } from 'igz-controls/utils/common.util'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { toggleYaml } from '../../reducers/appReducer'
@@ -135,6 +136,7 @@ const Artifacts = ({
 
   const fetchData = useCallback(
     async filters => {
+      abortControllerRef.current.abort(REQUEST_CANCELED)
       abortControllerRef.current = new AbortController()
 
       const requestParams = {
@@ -200,11 +202,13 @@ const Artifacts = ({
 
           return response
         })
-        .catch(() => {
-          if (isAllVersions) {
-            setArtifactVersions([])
-          } else {
-            setArtifacts([])
+        .catch(error => {
+          if (!isRequestAborted(error?.message)) {
+            if (isAllVersions) {
+              setArtifactVersions([])
+            } else {
+              setArtifacts([])
+            }
           }
         })
     },
@@ -212,6 +216,7 @@ const Artifacts = ({
   )
 
   const fetchTags = useCallback(() => {
+    tagAbortControllerRef.current.abort(REQUEST_CANCELED)
     tagAbortControllerRef.current = new AbortController()
 
     return dispatch(

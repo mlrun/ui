@@ -60,7 +60,7 @@ const FeatureSetsPanelView = ({
   return (
     <div className="new-item-side-panel-container">
       <div className="feature-set-panel new-item-side-panel">
-        {loading && <Loader />}
+        {loading && <Loader overlay />}
         {confirmDialog && (
           <ConfirmDialog
             closePopUp={() => setConfirmDialog(null)}

@@ -17,22 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { DEFAULT_ABORT_MSG, LARGE_REQUEST_CANCELED, REQUEST_CANCELED } from '../constants'
-import { showErrorNotification } from 'igz-controls/utils/notification.util'
+import { DEFAULT_ABORT_MSG, REQUEST_CANCELED } from '../constants'
 
-export const largeResponseCatchHandler = (
-  error,
-  defaultError,
-  dispatch,
-  showNotificationCallback = () => {}
-) => {
-  const isRequestCanceled = [LARGE_REQUEST_CANCELED, REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(
-    error?.message
-  )
-
-  if (!isRequestCanceled && error && dispatch) {
-    showErrorNotification(dispatch, error, defaultError, null, null, showNotificationCallback)
-  }
-
-  return isRequestCanceled
-}
+export const isRequestAborted = message => [REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(message)

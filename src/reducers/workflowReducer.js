@@ -24,6 +24,7 @@ import { isNil } from 'lodash'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 import { parseWorkflows } from '../utils/parseWorkflows'
 import { JOBS_MONITORING_WORKFLOWS_TAB, MONITOR_WORKFLOWS_TAB } from '../constants'
+import { isRequestAborted } from '../utils/isRequestAborted'
 
 const initialState = {
   workflows: {
@@ -140,6 +141,7 @@ const workflowsSlice = createSlice({
       }
     })
     builder.addCase(fetchWorkflows.rejected, (state, action) => {
+      if (isRequestAborted(action.payload?.message)) return
       state.workflows = {
         data: [],
         loading: false,

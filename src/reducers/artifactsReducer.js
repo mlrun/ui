@@ -30,6 +30,7 @@ import {
   MODELS_PAGE
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
+import { isRequestAborted } from '../utils/isRequestAborted'
 import { generateArtifacts } from '../utils/generateArtifacts'
 import { parseModelEndpoints } from '../utils/parseModelEndpoints'
 import { parseArtifacts } from '../utils/parseArtifacts'
@@ -571,6 +572,7 @@ const artifactsSlice = createSlice({
       state.loading = false
     })
     builder.addCase(fetchArtifacts.rejected, (state, action) => {
+      if (isRequestAborted(action.payload?.message)) return
       state.artifacts = []
       state.error = action.payload
       state.loading = false
@@ -627,7 +629,8 @@ const artifactsSlice = createSlice({
       state.LLMPrompts.loading = false
       state.loading = state.models.loading || state.files.loading
     })
-    builder.addCase(fetchLLMPrompts.rejected, state => {
+    builder.addCase(fetchLLMPrompts.rejected, (state, action) => {
+      if (isRequestAborted(action.error?.message)) return
       state.LLMPrompts.loading = false
       state.loading = state.models.loading || state.files.loading
     })
@@ -650,7 +653,8 @@ const artifactsSlice = createSlice({
       state.documents.loading = false
       state.loading = false
     })
-    builder.addCase(fetchDocuments.rejected, state => {
+    builder.addCase(fetchDocuments.rejected, (state, action) => {
+      if (isRequestAborted(action.error?.message)) return
       state.documents.loading = false
       state.loading = false
     })
@@ -660,7 +664,8 @@ const artifactsSlice = createSlice({
       state.datasets.loading = false
       state.loading = state.models.loading || state.files.loading
     })
-    builder.addCase(fetchDataSets.rejected, state => {
+    builder.addCase(fetchDataSets.rejected, (state, action) => {
+      if (isRequestAborted(action.error?.message)) return
       state.datasets.loading = false
       state.loading = state.models.loading || state.files.loading
     })
@@ -683,7 +688,8 @@ const artifactsSlice = createSlice({
       state.files.loading = false
       state.loading = state.models.loading || state.datasets.loading
     })
-    builder.addCase(fetchFiles.rejected, state => {
+    builder.addCase(fetchFiles.rejected, (state, action) => {
+      if (isRequestAborted(action.error?.message)) return
       state.files.loading = false
       state.loading = state.models.loading || state.datasets.loading
     })
@@ -709,10 +715,12 @@ const artifactsSlice = createSlice({
       state.modelEndpoints.loading = true
     })
     builder.addCase(fetchModelEndpoints.fulfilled, (state, action) => {
+      if (action.payload === undefined) return
       state.error = null
       state.modelEndpoints = { allData: action.payload, loading: false }
     })
     builder.addCase(fetchModelEndpoints.rejected, (state, action) => {
+      if (isRequestAborted(action.payload?.message)) return
       state.error = action.payload
       state.modelEndpoints = { allData: [], loading: false }
     })
@@ -726,7 +734,8 @@ const artifactsSlice = createSlice({
       state.models.loading = false
       state.loading = state.files.loading || state.datasets.loading
     })
-    builder.addCase(fetchModels.rejected, state => {
+    builder.addCase(fetchModels.rejected, (state, action) => {
+      if (isRequestAborted(action.error?.message)) return
       state.models.loading = false
       state.loading = state.files.loading || state.datasets.loading
     })

@@ -32,13 +32,14 @@ import {
   fetchMonitoringApplications,
   fetchMonitoringApplicationsSummary
 } from '../../reducers/monitoringApplicationsReducer'
-import { MODEL_ENDPOINTS_TAB, MONITORING_APP_PAGE } from '../../constants'
+import { MODEL_ENDPOINTS_TAB, MONITORING_APP_PAGE, REQUEST_CANCELED } from '../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { fetchArtifacts } from '../../reducers/artifactsReducer'
 import { getFiltersConfig } from './MonitoringApplicationsPage.util'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { getSavedSearchParams } from 'igz-controls/utils/filter.util'
+import { isRequestAborted } from '../../utils/isRequestAborted'
 
 import PresentMetricsIcon from 'igz-controls/images/present-metrics-icon.svg?react'
 
@@ -52,24 +53,35 @@ const MonitoringApplicationsPage = () => {
   const filters = useFiltersFromSearchParams(filtersConfig, undefined, params.projectName)
   const [, setSearchParams] = useSearchParams()
   const contentRef = useRef(null)
+  const abortControllerRef = useRef(new AbortController())
 
   const refreshMonitoringApplications = useCallback(
     (filters, isFilterApplyAction) => {
       if (!isFilterApplyAction) {
-        dispatch(fetchMonitoringApplicationsSummary({ project: params.projectName }))
+        abortControllerRef.current.abort(REQUEST_CANCELED)
+        abortControllerRef.current = new AbortController()
+
+        const signal = abortControllerRef.current.signal
+
+        dispatch(fetchMonitoringApplicationsSummary({ project: params.projectName, signal }))
           .unwrap()
           .catch(error => {
+            if (isRequestAborted(error?.message)) return
+
             showErrorNotification(dispatch, error, '', 'Failed to fetch applications summary')
           })
-        dispatch(fetchMonitoringApplications({ project: params.projectName, filters }))
+        dispatch(fetchMonitoringApplications({ project: params.projectName, filters, signal }))
         dispatch(
           fetchMEPWithDetections({
             project: params.projectName,
-            filters: filters
+            filters: filters,
+            signal
           })
         )
           .unwrap()
           .catch(error => {
+            if (isRequestAborted(error?.message)) return
+
             showErrorNotification(
               dispatch,
               error,
@@ -85,6 +97,11 @@ const MonitoringApplicationsPage = () => {
   const refreshMonitoringApplication = useCallback(
     (filters, isFilterApplyAction) => {
       if (!isFilterApplyAction) {
+        abortControllerRef.current.abort(REQUEST_CANCELED)
+        abortControllerRef.current = new AbortController()
+
+        const signal = abortControllerRef.current.signal
+
         dispatch(
           fetchArtifacts({
             project: params.projectName,
@@ -92,11 +109,13 @@ const MonitoringApplicationsPage = () => {
               ...filters,
               labels: `mlrun/app-name=${params.name}`
             },
-            config: { params: { page: 1, 'page-size': 50, format: 'minimal' } } // limit to 50 artifacts the same as we have on Artifacts page per 1 FE page to avoid overload
+            config: { signal, params: { page: 1, 'page-size': 50, format: 'minimal' } } // limit to 50 artifacts the same as we have on Artifacts page per 1 FE page to avoid overload
           })
         )
           .unwrap()
           .catch(error => {
+            if (isRequestAborted(error?.message)) return
+
             showErrorNotification(dispatch, error, '', 'Failed to fetch artifacts')
           })
 
@@ -104,11 +123,14 @@ const MonitoringApplicationsPage = () => {
           fetchMonitoringApplication({
             project: params.projectName,
             functionName: params.name,
-            filters
+            filters,
+            signal
           })
         )
           .unwrap()
           .catch(error => {
+            if (isRequestAborted(error?.message)) return
+
             showErrorNotification(dispatch, error, '', 'Failed to fetch monitoring application')
             navigate(
               `/projects/${params.projectName}/${MONITORING_APP_PAGE}${window.location.search}`,
@@ -127,6 +149,12 @@ const MonitoringApplicationsPage = () => {
       refreshMonitoringApplications(filters)
     }
   }, [params.name, refreshMonitoringApplications, refreshMonitoringApplication, filters])
+
+  useEffect(() => {
+    return () => {
+      abortControllerRef.current?.abort(REQUEST_CANCELED)
+    }
+  }, [])
 
   useEffect(() => {
     if (contentRef.current) {

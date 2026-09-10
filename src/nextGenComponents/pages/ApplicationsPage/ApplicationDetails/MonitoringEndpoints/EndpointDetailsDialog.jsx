@@ -131,7 +131,7 @@ const EndpointDetailsDialog = ({
       <div className="absolute inset-[2.5vh_2.5vw] bg-white rounded-lg shadow-lg flex flex-col overflow-hidden">
         {isLoading ? (
           <div className="flex-1 flex items-center justify-center">
-            <Loader />
+            <Loader overlay />
           </div>
         ) : (
           <div className="function-popup h-full">

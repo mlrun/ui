@@ -281,7 +281,7 @@ const ScheduledJobsTable = ({
 
   return (
     <>
-      {jobsStore.loading && <Loader />}
+      {jobsStore.loading && <Loader overlay />}
       {jobsStore.loading ? null : jobs.length === 0 ? (
         <NoData
           message={getNoDataMessage(

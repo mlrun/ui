@@ -45,6 +45,7 @@ import {
   searchFunctionItem,
   setFullSelectedFunction
 } from './functionsOld.util'
+import { isRequestAborted } from '../../utils/isRequestAborted'
 import {
   datePickerPastOptions,
   getDatePickerFilterValue,
@@ -137,6 +138,7 @@ const Functions = () => {
   const fetchData = useCallback(
     (filters, filtersAreHandled = false) => {
       terminateDeleteTasksPolling()
+      abortControllerRef.current.abort(REQUEST_CANCELED)
       abortControllerRef.current = new AbortController()
       setFunctions([])
 
@@ -201,8 +203,10 @@ const Functions = () => {
             }
           }
         })
-        .catch(() => {
-          setFunctions([])
+        .catch(error => {
+          if (!isRequestAborted(error?.message)) {
+            setFunctions([])
+          }
         })
     },
     [
