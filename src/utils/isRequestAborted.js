@@ -19,5 +19,4 @@ such restriction.
 */
 import { DEFAULT_ABORT_MSG, REQUEST_CANCELED } from '../constants'
 
-export const isRequestAborted = message =>
-  [REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(message)
+export const isRequestAborted = message => [REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(message)

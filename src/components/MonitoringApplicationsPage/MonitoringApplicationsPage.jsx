@@ -32,11 +32,7 @@ import {
   fetchMonitoringApplications,
   fetchMonitoringApplicationsSummary
 } from '../../reducers/monitoringApplicationsReducer'
-import {
-  MODEL_ENDPOINTS_TAB,
-  MONITORING_APP_PAGE,
-  REQUEST_CANCELED
-} from '../../constants'
+import { MODEL_ENDPOINTS_TAB, MONITORING_APP_PAGE, REQUEST_CANCELED } from '../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { fetchArtifacts } from '../../reducers/artifactsReducer'
 import { getFiltersConfig } from './MonitoringApplicationsPage.util'

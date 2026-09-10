@@ -108,7 +108,9 @@ const FeatureSetsView = React.forwardRef(
           />
         ) : (
           <>
-            {(selectedRowData.loading || featureStore.featureSets.featureSetLoading) && <Loader overlay />}
+            {(selectedRowData.loading || featureStore.featureSets.featureSetLoading) && (
+              <Loader overlay />
+            )}
             <Table
               actionsMenu={actionsMenu}
               applyDetailsChanges={applyDetailsChanges}

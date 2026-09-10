@@ -73,7 +73,9 @@ const ProjectsView = ({
 
   return (
     <div className={projectsClassNames}>
-      {(projectStore.loading || projectStore.project.loading || tasksStore.loading) && <Loader overlay />}
+      {(projectStore.loading || projectStore.project.loading || tasksStore.loading) && (
+        <Loader overlay />
+      )}
       {projectStore.mlrunUnhealthy.isUnhealthy && (
         <PopUpDialog headerIsHidden>
           MLRun seems to be down. Try again in a few minutes.

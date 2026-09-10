@@ -22,11 +22,7 @@ import Download from '../common/Download/Download'
 
 import api from '../api/artifacts-api'
 import { createArtifactPreviewContent } from './createArtifactPreviewContent'
-import {
-  ARTIFACT_MAX_CHUNK_SIZE,
-  ERROR_STATE,
-  UNKNOWN_STATE
-} from '../constants'
+import { ARTIFACT_MAX_CHUNK_SIZE, ERROR_STATE, UNKNOWN_STATE } from '../constants'
 import { isRequestAborted } from './isRequestAborted'
 import { commonLanguages } from '../common/Editor/editor.util'
 

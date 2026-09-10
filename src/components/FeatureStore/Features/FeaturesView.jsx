@@ -84,8 +84,7 @@ const FeaturesView = React.forwardRef(
         </div>
         {featureStore.features.loading || featureStore.entities.loading ? (
           <Loader section secondary />
-        ) : features.length ===
-          0 ? (
+        ) : features.length === 0 ? (
           <NoData
             message={getNoDataMessage(
               filters,
