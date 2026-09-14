@@ -29,8 +29,7 @@ const SidebarItem = ({
   label,
   menuItemClassname,
   menuButtonClassName,
-  externalLink,
-  ignoreActiveState
+  externalLink
 }) => {
   const ref = useRef(null)
   const { open: sidebarOpen } = useSidebar()
@@ -45,7 +44,7 @@ const SidebarItem = ({
   }, [link])
 
   const match = useMatch(linkPath ? `${linkPath}/*` : null)
-  const isActive = Boolean(match) && !ignoreActiveState
+  const isActive = Boolean(match) && !externalLink
 
   useEffect(() => {
     if (isActive && sidebarOpen) {
@@ -97,8 +96,7 @@ SidebarItem.propTypes = {
   icon: PropTypes.node,
   externalLink: PropTypes.bool,
   menuItemClassname: PropTypes.string,
-  menuButtonClassName: PropTypes.string,
-  ignoreActiveState: PropTypes.bool
+  menuButtonClassName: PropTypes.string
 }
 
 export default SidebarItem
