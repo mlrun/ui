@@ -163,7 +163,7 @@ export const getLinks = projectName => {
           label: 'Real-time functions',
           link: generateNuclioLink(`${pathname}/${NUCLIO_FUNCTIONS_PATH}`),
           externalLink: !IS_MF_MODE,
-          ignoreActiveState: !IS_MF_MODE, // avoid false active state on ig3 since ml-functions and nuclio function ends with same path
+          ignoreActiveState: !IS_MF_MODE // avoid false active state on ig3 since ml-functions and nuclio function ends with same path
         },
         {
           id: API_GATEWAYS_PAGE,
