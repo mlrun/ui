@@ -32,7 +32,6 @@ import {
   find,
   forEach,
   get,
-  isArray,
   isEmpty,
   isFunction,
   isNil,
@@ -364,7 +363,7 @@ function deleteProjectHandler(req, res, omitResponse) {
 
 function filterByLabels(elementLabels, requestLabels) {
   if (requestLabels?.length > 0 && !isEmpty(elementLabels)) {
-    const requestLabelsList = (isArray(requestLabels) ? requestLabels : [requestLabels]).map(
+    const requestLabelsList = (Array.isArray(requestLabels) ? requestLabels : [requestLabels]).map(
       label => label.split('=')
     )
 
@@ -914,7 +913,7 @@ function sanitizeStatesQueryParam(states) {
     return states
   }
 
-  if (isArray(states) && states.every(isString)) {
+  if (Array.isArray(states) && states.every(isString)) {
     return states
   }
 
@@ -934,7 +933,7 @@ function getRuns(req, res) {
 
         if (!start_time_from || runStartTime >= new Date(start_time_from)) {
           if (states) {
-            if (isArray(states)) {
+            if (Array.isArray(states)) {
               return states.includes(run.status.state)
             } else {
               return run.status.state === states
@@ -968,7 +967,7 @@ function getRuns(req, res) {
 
     if (states) {
       collectedRuns = collectedRuns.filter(run => {
-        if (isArray(states)) {
+        if (Array.isArray(states)) {
           return states.includes(run.status.state)
         } else {
           return run.status.state === states
