@@ -149,7 +149,7 @@ const ProjectsView = ({
               </div>
               <RoundedIcon
                 disabled={projectStore.mlrunUnhealthy.retrying}
-                onClick={refreshProjects}
+                onClick={() => refreshProjects()}
                 className="panel-title__btn_close"
                 tooltipText="Refresh"
                 id="pop-up-close-btn"

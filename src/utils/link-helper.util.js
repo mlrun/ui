@@ -22,6 +22,7 @@ import { VIEW_SEARCH_PARAMETER } from 'igz-controls/constants'
 import { generateUrlFromRouterPath } from 'igz-controls/utils/common.util'
 import { getFilteredSearchParams } from 'igz-controls/utils/filter.util'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
+import { isProjectTransitioning } from './projectTransition.util'
 
 export const isPageTabValid = (pageTab, tabs, navigate, location) => {
   if (!tabs.includes(pageTab)) {
@@ -31,13 +32,17 @@ export const isPageTabValid = (pageTab, tabs, navigate, location) => {
 }
 
 export const isProjectValid = (navigate, projects, currentProjectName, dispatch) => {
-  if (
+  const currentProject =
     projects.length > 0 &&
     currentProjectName &&
-    !projects.some(project => project?.metadata?.name === currentProjectName)
-  ) {
+    projects.find(project => project?.metadata?.name === currentProjectName)
+
+  if (!currentProject) {
     navigate('/projects', { replace: true })
     showErrorNotification(dispatch, {}, '', 'This project does not exist')
+  } else if (isProjectTransitioning(currentProject)) {
+    navigate('/projects', { replace: true })
+    showErrorNotification(dispatch, {}, '', 'The project is in creation/deletion process')
   }
 }
 

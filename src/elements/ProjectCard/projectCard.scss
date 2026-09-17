@@ -20,6 +20,35 @@
 
   @include mixins.gradient('card');
 
+  &_disabled {
+    cursor: default;
+    filter: grayscale(1);
+    opacity: 0.6;
+
+    &:hover {
+      box-shadow: shadows.$previewBoxShadowInit;
+    }
+  }
+
+  // Sits over the whole card so a transitional project cannot be clicked through to.
+  &__transition-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+  }
+
+  // Portaled to #overlay_container, so `.tooltip` already supplies position: fixed, the max width
+  // and the stacking. The coordinates set from JS are the centre of the card's top edge, so the box
+  // is pulled left by half its own width and up by its own height to sit above and centred on it.
+  &__transition-tooltip {
+    pointer-events: none;
+    transform: translate(-50%, -100%);
+
+    &_below {
+      transform: translate(-50%, 0);
+    }
+  }
+
   &__general-info {
     position: relative;
     display: flex;

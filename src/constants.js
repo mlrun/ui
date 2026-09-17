@@ -17,6 +17,12 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import {
+  BAD_GATEWAY_ERROR_STATUS_CODE,
+  GATEWAY_TIMEOUT_STATUS_CODE,
+  SERVICE_UNAVAILABLE_ERROR_STATUS_CODE
+} from 'igz-controls/constants'
+
 /*=========== GENERAL =============*/
 
 // Detected at runtime rather than baked in at build time: the igz4-ui host sets
@@ -35,6 +41,12 @@ export const IS_MF_MODE =
 export const PUBLIC_URL = IS_MF_MODE ? '' : import.meta.env.VITE_PUBLIC_URL
 
 export const SET_LOADING = 'SET_LOADING'
+
+export const MLRUN_UNHEALTHY_ERRORS = [
+  BAD_GATEWAY_ERROR_STATUS_CODE,
+  SERVICE_UNAVAILABLE_ERROR_STATUS_CODE,
+  GATEWAY_TIMEOUT_STATUS_CODE
+]
 
 export const AZURE_STORAGE_INPUT_PATH_SCHEME = 'az://'
 export const DBFS_STORAGE_INPUT_PATH_SCHEME = 'dbfs://'
@@ -60,6 +72,12 @@ export const NAVBAR_WIDTH_OPENED = 245
 export const CANCEL_REQUEST_TIMEOUT = 120000
 
 export const PROJECT_ONLINE_STATUS = 'online'
+export const PROJECT_ARCHIVED_STATE = 'archived'
+export const PROJECT_CREATING_STATE = 'creating'
+export const PROJECT_DELETING_STATE = 'deleting'
+// Not a leader-reported state: covers archive/unarchive and settings edits, which have no
+// transitional state of their own but still run as tracked operations.
+export const PROJECT_UPDATING_STATE = 'updating'
 
 export const ABORTED_STATE = 'aborted'
 export const ABORTING_STATE = 'aborting'

@@ -662,6 +662,227 @@ function putProject(req, res) {
   res.send(projects.projects.find(project => project.metadata.name === req.params['project']))
 }
 
+/* ============================ ORIS project lifecycle (Orca) ============================
+ *
+ * In ORIS the leader (Orca) owns project mutations while reads stay on MLRun, so these handlers
+ * sit alongside the MLRun ones above rather than replacing them (ORIS-3384). They mirror the
+ * live leader's contract as verified against it:
+ *
+ *   - Every mutation answers 202 with the project body, whose `status.opId` identifies the
+ *     operation. The outcome is then polled from the trackable-actions endpoint (ML-12907).
+ *   - Bodies are flat, not MLRun's `{metadata, spec}`: the endpoints are a gRPC-gateway proxy
+ *     that rejects unknown fields. `desiredState` is a protobuf enum taken as an integer.
+ *   - PATCH and PUT require `owner`. Existing projects also need a compare-and-swap witness
+ *     `prevOpId` holding the leader's current op id; a stale witness is 409. PUT upserts when
+ *     the project is absent and ignores prevOpId; PATCH returns 404.
+ */
+
+const ORCA_ONLINE_STATE = 1
+const ORCA_ARCHIVED_STATE = 3
+
+// Keyed by op id, mirroring the real `sync-project` execution ({status: {state, lastError}}).
+const trackableActionExecutions = {}
+
+const nextOpId = () => crypto.randomBytes(18).toString('hex')
+
+// Names carrying "stuck" or "retry" simulate an operation whose execution keeps reporting
+// `failed`, which is how the UI's "issues detected, retrying" wording gets exercised.
+const isStuckProject = name => /stuck|retry/.test(name ?? '')
+
+function createSyncExecution(opId, { shouldFail = false, settleAfter = random(1000, 3000) } = {}) {
+  trackableActionExecutions[opId] = { status: { state: 'running' } }
+
+  setTimeout(() => {
+    trackableActionExecutions[opId] = shouldFail
+      ? { status: { state: 'failed', lastError: 'simulated sync failure, retrying' } }
+      : { status: { state: 'succeeded' } }
+  }, settleAfter)
+}
+
+const findProject = name => projects.projects.find(project => project.metadata.name === name)
+
+// Records an operation against a project. The leader's own copy is updated at once - what takes
+// time, and what the UI actually tracks, is the trackable-action execution that syncs the change
+// to MLRun. Keeping the record itself immediate is also what makes the e2e suite deterministic:
+// tests drive settling through the execution endpoint (see ui-browser-tests/lib/orcaMode.js), and
+// a project record that changed on a timer of its own would race that.
+function startOperation(project, { shouldFail = false } = {}) {
+  const opId = nextOpId()
+
+  project.status.opId = opId
+  project.status.phase = null
+
+  createSyncExecution(opId, { shouldFail })
+
+  return opId
+}
+
+function checkCasWitness(req, res, project) {
+  if (!req.body.owner) {
+    res.status(400).send({ status: { errorMessage: 'Project owner is required' } })
+    return false
+  }
+
+  if (!req.body.prevOpId) {
+    res.status(400).send({
+      status: { errorMessage: 'prevOpId is required (use the current op_id from GET)' }
+    })
+    return false
+  }
+
+  if (project.status.opId && req.body.prevOpId !== project.status.opId) {
+    res.status(409).send({
+      status: {
+        errorMessage: `CAS mismatch: stored op_id ${project.status.opId} does not match prev_op_id ${req.body.prevOpId}`
+      }
+    })
+    return false
+  }
+
+  return true
+}
+
+function applyDesiredState(project, body) {
+  if (body.desiredState === ORCA_ARCHIVED_STATE) {
+    project.spec.desired_state = 'archived'
+    project.status.state = 'archived'
+  } else if (body.desiredState === ORCA_ONLINE_STATE) {
+    project.spec.desired_state = 'online'
+    project.status.state = 'online'
+  }
+}
+
+function applyOrcaFields(project, body) {
+  if (body.description != null) project.spec.description = body.description
+  if (body.owner != null) project.spec.owner = body.owner
+  if (body.labels != null) project.metadata.labels = body.labels
+  if (body.annotations != null) project.metadata.annotations = body.annotations
+}
+
+function listOrcaProjects(req, res) {
+  res.send({ items: projects.projects })
+}
+
+function getOrcaProject(req, res) {
+  const project = findProject(req.params.name)
+
+  if (!project) {
+    res.status(404).send({ status: { errorMessage: `Project ${req.params.name} not found` } })
+    return
+  }
+
+  res.send(project)
+}
+
+function createOrcaProject(req, res) {
+  if (findProject(req.body.name)) {
+    res.status(409).send({ status: { errorMessage: `Project ${req.body.name} already exists` } })
+    return
+  }
+
+  const project = cloneDeep(projectTemplate)
+
+  project.metadata.name = req.body.name
+  project.metadata.created = new Date().toISOString()
+  // The leader assigns the requesting user as owner even when the body carries none, and every
+  // later write requires one.
+  project.spec.owner = req.body.owner ?? 'admin'
+  applyOrcaFields(project, req.body)
+  projects.projects.push(project)
+
+  const summary = cloneDeep(summuryTemplate)
+  summary.name = project.metadata.name
+  projectsSummary.project_summaries.push(summary)
+  secretKeys[project.metadata.name] = secretKeyTemplate
+
+  startOperation(project, { shouldFail: isStuckProject(project.metadata.name) })
+
+  res.status(202).send(project)
+}
+
+function patchOrcaProject(req, res) {
+  const project = findProject(req.params.name)
+
+  if (!project) {
+    res.status(404).send({ status: { errorMessage: `Project ${req.params.name} not found` } })
+    return
+  }
+
+  if (!checkCasWitness(req, res, project)) return
+
+  applyOrcaFields(project, req.body)
+  applyDesiredState(project, req.body)
+  startOperation(project, { shouldFail: isStuckProject(project.metadata.name) })
+
+  res.status(202).send(project)
+}
+
+function putOrcaProject(req, res) {
+  let project = findProject(req.params.name)
+
+  if (!project) {
+    project = cloneDeep(projectTemplate)
+    project.metadata.name = req.body.name ?? req.params.name
+    project.metadata.created = new Date().toISOString()
+    project.spec.owner = req.body.owner ?? 'admin'
+    applyOrcaFields(project, req.body)
+    applyDesiredState(project, req.body)
+    projects.projects.push(project)
+
+    const summary = cloneDeep(summuryTemplate)
+    summary.name = project.metadata.name
+    projectsSummary.project_summaries.push(summary)
+    secretKeys[project.metadata.name] = secretKeyTemplate
+
+    startOperation(project, { shouldFail: isStuckProject(project.metadata.name) })
+    res.status(202).send(project)
+    return
+  }
+
+  if (!checkCasWitness(req, res, project)) return
+
+  applyOrcaFields(project, req.body)
+  applyDesiredState(project, req.body)
+  startOperation(project, { shouldFail: isStuckProject(project.metadata.name) })
+
+  res.status(202).send(project)
+}
+
+function deleteOrcaProject(req, res) {
+  const project = findProject(req.params.name)
+
+  if (!project) {
+    res.status(404).send({ status: { errorMessage: `Project ${req.params.name} not found` } })
+    return
+  }
+
+  const shouldFail = isStuckProject(project.metadata.name)
+
+  project.status.state = 'deleting'
+  startOperation(project, { shouldFail })
+
+  const body = cloneDeep(project)
+
+  // A project whose sync keeps failing stays on the leader in its `deleting` state; otherwise it
+  // is gone, and the UI will see that on the read it does once the operation reports success.
+  if (!shouldFail) {
+    remove(projects.projects, ({ metadata }) => metadata.name === req.params.name)
+    remove(projectsSummary.project_summaries, ({ name }) => name === req.params.name)
+  }
+
+  res.status(202).send(body)
+}
+
+// An empty `items` array means the dispatch is not visible yet, which the UI treats as "still
+// running" rather than as an outcome.
+function getOrcaActionExecution(req, res) {
+  const execution = trackableActionExecutions[req.query.correlationId]
+
+  res.send({ items: execution ? [execution] : [] })
+}
+
+/* ====================== end ORIS project lifecycle (Orca) ====================== */
+
 function getSecretKeys(req, res) {
   res.send(secretKeys[req.params['project']])
 }
@@ -3081,6 +3302,17 @@ app.delete(`${mlrunAPIIngress}/projects/:project/feature-sets/:featureSet`, dele
 app.get(`${mlrunAPIIngress}/projects`, getProjects)
 app.post(`${mlrunAPIIngress}/projects`, createNewProject)
 app.get(`${mlrunAPIIngress}/projects/:project`, getProject)
+
+// ORIS-3384: in ORIS the leader owns project mutations, so they are served here instead of by
+// the MLRun routes above. The e2e suite forwards `iguazioHttpClient`'s `/oris-mlrun/api` base
+// onto this prefix (see ui-browser-tests/lib/orcaMode.js).
+app.get(`${iguazioApiUrl}/api/v1/projects/projects`, listOrcaProjects)
+app.get(`${iguazioApiUrl}/api/v1/projects/projects/:name`, getOrcaProject)
+app.post(`${iguazioApiUrl}/api/v1/projects/projects`, createOrcaProject)
+app.patch(`${iguazioApiUrl}/api/v1/projects/projects/:name`, patchOrcaProject)
+app.put(`${iguazioApiUrl}/api/v1/projects/projects/:name`, putOrcaProject)
+app.delete(`${iguazioApiUrl}/api/v1/projects/projects/:name`, deleteOrcaProject)
+app.get(`${iguazioApiUrl}/api/v1/trackable-actions/executions`, getOrcaActionExecution)
 app.delete(`${mlrunAPIIngress}/projects/:project`, deleteProject)
 app.delete(`${mlrunAPIIngressV2}/projects/:project`, deleteProjectV2)
 app.patch(`${mlrunAPIIngress}/projects/:project`, patchProject)
