@@ -56,6 +56,12 @@ export const MODEL_PATH_DATA_INPUT = 'model_path'
 export const CANCEL_REQUEST_TIMEOUT = 120000
 
 export const PROJECT_ONLINE_STATUS = 'online'
+export const PROJECT_ARCHIVED_STATE = 'archived'
+export const PROJECT_CREATING_STATE = 'creating'
+export const PROJECT_DELETING_STATE = 'deleting'
+// Not a leader-reported state: covers archive/unarchive and settings edits, which have no
+// transitional state of their own but still run as tracked operations.
+export const PROJECT_UPDATING_STATE = 'updating'
 
 export const ABORTED_STATE = 'aborted'
 export const ABORTING_STATE = 'aborting'
