@@ -25,11 +25,11 @@ import {
   CANCEL_REQUEST_TIMEOUT,
   IS_MF_MODE,
   LARGE_REQUEST_CANCELED,
+  MLRUN_UNHEALTHY_ERRORS,
   PROJECTS_PAGE_PATH,
   PUBLIC_URL
 } from './constants'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { mlrunUnhealthyErrors } from './components/ProjectsPage/projects.util'
 
 const headers = {
   'Cache-Control': 'no-cache'
@@ -221,7 +221,7 @@ const responseRejectInterceptor = error => {
 
   if (error.config?.method === 'get') {
     if (
-      mlrunUnhealthyErrors.includes(error.response?.status) &&
+      MLRUN_UNHEALTHY_ERRORS.includes(error.response?.status) &&
       consecutiveErrorsCount < MAX_CONSECUTIVE_ERRORS_COUNT
     ) {
       consecutiveErrorsCount++
