@@ -18,10 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { mainHttpClient, mainHttpClientV2 } from '../httpClient'
+import { orcaProjectMutations } from './projects-orca-api'
+import { IS_MF_MODE } from '../constants'
 
-const projectsApi = {
+const mlrunProjectsApi = {
   changeProjectState: (project, state) =>
-    mainHttpClient.patch(`/projects/${project}`, {
+    mainHttpClient.patch(`/projects/${project.metadata.name}`, {
       spec: { desired_state: state }
     }),
   createProject: postData => mainHttpClient.post('/projects', postData),
@@ -91,5 +93,7 @@ const projectsApi = {
   },
   updateProject: (project, data) => mainHttpClient.patch(`/projects/${project}`, data)
 }
+
+const projectsApi = { ...mlrunProjectsApi, ...(IS_MF_MODE ? orcaProjectMutations : {}) }
 
 export default projectsApi

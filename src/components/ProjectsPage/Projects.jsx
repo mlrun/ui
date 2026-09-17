@@ -36,7 +36,18 @@ import {
   projectsSortOptions
 } from './projects.util'
 import { BG_TASK_RUNNING } from '../../utils/poll.util'
-import { PROJECT_ONLINE_STATUS } from '../../constants'
+import {
+  handleProjectOperationConflict,
+  startProjectTransition,
+  trackProjectMutation,
+  withLatestOpId
+} from '../../utils/projectOperation.util'
+import {
+  IS_MF_MODE,
+  PROJECT_ARCHIVED_STATE,
+  PROJECT_CREATING_STATE,
+  PROJECT_ONLINE_STATUS
+} from '../../constants'
 import { ConfirmDialog } from 'igz-controls/components'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import {
@@ -58,9 +69,13 @@ import {
   fetchProjectsSummary,
   removeNewProjectError,
   removeProjects,
-  setDeletingProjects
+  setDeletingProjects,
+  upsertProject
 } from '../../reducers/projectReducer'
 import { fetchAllNuclioFunctions } from '../../reducers/nuclioReducer'
+import { parseProjects } from '../../utils/parseProjects'
+
+const PROJECTS_LIST_POLL_INTERVAL = 60 * 1000
 
 const Projects = () => {
   const [actionsMenu, setActionsMenu] = useState({})
@@ -91,14 +106,18 @@ const Projects = () => {
     deletingProjectsRef.current = projectStore.deletingProjects
   }, [projectStore.deletingProjects])
 
-  const fetchMinimalProjects = useCallback(() => {
-    dispatch(
-      fetchProjects({
-        params: { format: 'minimal' },
-        setRequestErrorMessage: setProjectsRequestErrorMessage
-      })
-    )
-  }, [dispatch])
+  const fetchMinimalProjects = useCallback(
+    (silent = false) => {
+      dispatch(
+        fetchProjects({
+          params: { format: 'minimal' },
+          setRequestErrorMessage: setProjectsRequestErrorMessage,
+          silent: silent === true
+        })
+      )
+    },
+    [dispatch]
+  )
 
   const isValidProjectState = useCallback(
     project => {
@@ -129,61 +148,94 @@ const Projects = () => {
     [isDescendingOrder, sortProjectId]
   )
 
-  const refreshProjects = useCallback(() => {
-    abortControllerRef.current = new AbortController()
+  const refreshProjects = useCallback(
+    (silent = false) => {
+      const isSilent = silent === true
+      abortControllerRef.current = new AbortController()
 
-    if (!isNuclioModeDisabled) {
-      dispatch(fetchAllNuclioFunctions())
-    }
+      if (!isNuclioModeDisabled) {
+        dispatch(fetchAllNuclioFunctions())
+      }
 
-    dispatch(removeProjects())
-    fetchMinimalProjects()
-    dispatch(
-      fetchProjectsSummary({ signal: abortControllerRef.current.signal, refresh: refreshProjects })
-    )
-      .unwrap()
-      .then(result => {
-        if (result) {
-          generateMonitoringCounters(result, dispatch)
-          generateAlerts(result, dispatch)
-        }
-      })
-      .catch(() => {})
+      // Clearing the list first makes the page flash empty behind a loader, which is right for a
+      // deliberate refresh but not for one that merely reports a finished lifecycle operation.
+      if (!isSilent) {
+        dispatch(removeProjects())
+      }
 
-    if (!isEmpty(deletingProjectsRef.current)) {
-      dispatch(fetchBackgroundTasks({}))
+      fetchMinimalProjects(isSilent)
+      dispatch(
+        fetchProjectsSummary({
+          signal: abortControllerRef.current.signal,
+          refresh: refreshProjects
+        })
+      )
         .unwrap()
-        .then(backgroundTasks => {
-          const wrapperIsUsed = backgroundTasks.some(backgroundTask =>
-            backgroundTask.metadata.kind.startsWith(projectDeletionWrapperKind)
-          )
-
-          const newDeletingProjects = backgroundTasks
-            .filter(
-              backgroundTask =>
-                backgroundTask.metadata.kind.startsWith(
-                  wrapperIsUsed ? projectDeletionWrapperKind : projectDeletionKind
-                ) &&
-                backgroundTask?.status?.state === BG_TASK_RUNNING &&
-                deletingProjectsRef.current[backgroundTask.metadata.name]
-            )
-            .reduce((acc, backgroundTask) => {
-              acc[backgroundTask.metadata.name] = last(backgroundTask.metadata.kind.split('.'))
-
-              return acc
-            }, {})
-
-          if (!isEmpty(newDeletingProjects)) {
-            pollDeletingProjects(terminatePollRef, newDeletingProjects, refreshProjects, dispatch)
-          } else {
-            dispatch(setDeletingProjects({}))
+        .then(result => {
+          if (result) {
+            generateMonitoringCounters(result, dispatch)
+            generateAlerts(result, dispatch)
           }
         })
-        .catch(error => {
-          showErrorNotification(dispatch, error, '')
+        .catch(() => {})
+
+      if (!isEmpty(deletingProjectsRef.current)) {
+        dispatch(fetchBackgroundTasks({}))
+          .unwrap()
+          .then(backgroundTasks => {
+            const wrapperIsUsed = backgroundTasks.some(backgroundTask =>
+              backgroundTask.metadata.kind.startsWith(projectDeletionWrapperKind)
+            )
+
+            const newDeletingProjects = backgroundTasks
+              .filter(
+                backgroundTask =>
+                  backgroundTask.metadata.kind.startsWith(
+                    wrapperIsUsed ? projectDeletionWrapperKind : projectDeletionKind
+                  ) &&
+                  backgroundTask?.status?.state === BG_TASK_RUNNING &&
+                  deletingProjectsRef.current[backgroundTask.metadata.name]
+              )
+              .reduce((acc, backgroundTask) => {
+                acc[backgroundTask.metadata.name] = last(backgroundTask.metadata.kind.split('.'))
+
+                return acc
+              }, {})
+
+            if (!isEmpty(newDeletingProjects)) {
+              pollDeletingProjects(terminatePollRef, newDeletingProjects, refreshProjects, dispatch)
+            } else {
+              dispatch(setDeletingProjects({}))
+            }
+          })
+          .catch(error => {
+            showErrorNotification(dispatch, error, '')
+          })
+      }
+    },
+    [isNuclioModeDisabled, dispatch, fetchMinimalProjects]
+  )
+
+  // Reports the outcome of a finished lifecycle operation without disturbing the list on screen.
+  const refreshProjectsInPlace = useCallback(() => refreshProjects(true), [refreshProjects])
+
+  // While this page is open, re-read the project list on a fixed interval so a create/delete that
+  // outlived its execution poll still undims (or disappears) once the leader reports it settled.
+  useEffect(() => {
+    if (!IS_MF_MODE) return
+
+    const intervalId = setInterval(() => {
+      dispatch(
+        fetchProjects({
+          params: { format: 'minimal' },
+          silent: true,
+          showNotification: false
         })
-    }
-  }, [isNuclioModeDisabled, dispatch, fetchMinimalProjects])
+      )
+    }, PROJECTS_LIST_POLL_INTERVAL)
+
+    return () => clearInterval(intervalId)
+  }, [dispatch])
 
   const handleSearchOnChange = useCallback(
     name => {
@@ -207,12 +259,20 @@ const Projects = () => {
 
   const handleArchiveProject = useCallback(
     project => {
-      dispatch(changeProjectState({ project: project.metadata.name, status: 'archived' }))
+      dispatch(changeProjectState({ project, status: PROJECT_ARCHIVED_STATE }))
         .unwrap()
         .then(() => {
           fetchMinimalProjects()
         })
         .catch(error => {
+          if (
+            handleProjectOperationConflict(error, project.metadata.name, dispatch, latest =>
+              handleArchiveProject(withLatestOpId(project, latest))
+            )
+          ) {
+            return
+          }
+
           const customErrorMsg =
             error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
               ? `You do not have permission to archive project ${project.metadata.name}`
@@ -229,14 +289,20 @@ const Projects = () => {
 
   const handleUnarchiveProject = useCallback(
     project => {
-      dispatch(
-        changeProjectState({ project: project.metadata.name, status: PROJECT_ONLINE_STATUS })
-      )
+      dispatch(changeProjectState({ project, status: PROJECT_ONLINE_STATUS }))
         .unwrap()
         .then(() => {
           fetchMinimalProjects()
         })
         .catch(error => {
+          if (
+            handleProjectOperationConflict(error, project.metadata.name, dispatch, latest =>
+              handleUnarchiveProject(withLatestOpId(project, latest))
+            )
+          ) {
+            return
+          }
+
           const customErrorMsg =
             error.response?.status === NOTFOUND_ERROR_STATUS_CODE
               ? `Failed to unarchive project ${project.metadata.name}. The project was not found.`
@@ -346,9 +412,9 @@ const Projects = () => {
         terminatePollRef,
         fetchMinimalProjects,
         null,
-        refreshProjects
+        refreshProjectsInPlace
       ),
-    [dispatch, fetchMinimalProjects, refreshProjects]
+    [dispatch, fetchMinimalProjects, refreshProjectsInPlace]
   )
 
   useEffect(() => {
@@ -356,6 +422,7 @@ const Projects = () => {
       generateProjectActionsMenu(
         projectStore.projects,
         projectStore.deletingProjects,
+        projectStore.projectsInTransition,
         exportYaml,
         viewYaml,
         onArchiveProject,
@@ -367,6 +434,7 @@ const Projects = () => {
     convertToYaml,
     handleOnDeleteProject,
     projectStore.deletingProjects,
+    projectStore.projectsInTransition,
     exportYaml,
     handleUnarchiveProject,
     isDemoMode,
@@ -424,14 +492,46 @@ const Projects = () => {
       .unwrap()
       .then(result => {
         if (result) {
+          const projectName = result.metadata?.name
+          const successMessage = `Project "${projectName}" was created successfully`
+
           setCreateProject(false)
-          refreshProjects()
-          dispatch(fetchProjectsNames())
+
+          if (IS_MF_MODE) {
+            const project = {
+              ...result,
+              status: { ...result.status, state: PROJECT_CREATING_STATE }
+            }
+
+            startProjectTransition(
+              dispatch,
+              projectName,
+              PROJECT_CREATING_STATE,
+              parseProjects([project])[0]
+            )
+            dispatch(upsertProject(project))
+
+            trackProjectMutation(result, {
+              projectName,
+              dispatch,
+              successMessage,
+              failureMessage: `Failed to create the project "${projectName}"`,
+              operation: PROJECT_CREATING_STATE,
+              onSettled: () => {
+                refreshProjectsInPlace()
+                dispatch(fetchProjectsNames())
+              }
+            })
+          } else {
+            refreshProjects()
+            dispatch(fetchProjectsNames())
+          }
+
           dispatch(
             setNotification({
               status: 200,
               id: Math.random(),
-              message: `Project "${result.metadata?.name}" was created successfully`
+              message: IS_MF_MODE ? `Project "${projectName}" is being created` : successMessage
             })
           )
         }

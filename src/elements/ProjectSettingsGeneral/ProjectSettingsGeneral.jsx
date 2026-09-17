@@ -66,6 +66,7 @@ import {
   getInternalLabelsValidationRule
 } from 'igz-controls/utils/validation.util'
 import { parseChipsData, convertChipsData } from '../../utils/convertChipsData'
+import { handleProjectOperationConflict, withLatestOpId } from '../../utils/projectOperation.util'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { areNodeSelectorsSupported } from './projectSettingsGeneral.utils'
@@ -180,6 +181,14 @@ const ProjectSettingsGeneral = ({
           )
         })
         .catch(error => {
+          if (
+            handleProjectOperationConflict(error, params.projectName, dispatch, latest =>
+              sendProjectSettingsData(withLatestOpId(projectData, latest))
+            )
+          ) {
+            return
+          }
+
           const customErrorMsg =
             error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
               ? 'Missing edit permission for the project'

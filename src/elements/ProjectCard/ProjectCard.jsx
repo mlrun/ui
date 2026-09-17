@@ -27,33 +27,37 @@ import { generateProjectStatistic } from './projectCard.util'
 
 const ProjectCard = ({ actionsMenu, alert, project, projectSummary }) => {
   const [fetchNuclioFunctionsFailure, setFetchNuclioFunctionsFailure] = useState(false)
-  const projectStore = useSelector(store => store.projectStore)
-  const nuclioStore = useSelector(store => store.nuclioStore)
+  const projectName = project.metadata.name
+
+  // Selected field by field rather than as whole slices: with the projects list on a background
+  // poll, subscribing to the entire store re-rendered every card in the grid on any change to it.
+  const summaryError = useSelector(store => store.projectStore.projectsSummary.error)
+  const summaryLoading = useSelector(store => store.projectStore.projectsSummary.loading)
+  const nuclioError = useSelector(store => store.nuclioStore.error)
+  const nuclioLoading = useSelector(store => store.nuclioStore.loading)
+  const nuclioFunctions = useSelector(store => store.nuclioStore.functions[projectName])
   const actionsMenuRef = useRef()
 
   useEffect(() => {
-    setFetchNuclioFunctionsFailure(
-      nuclioStore.error && !nuclioStore.functions[project.metadata.name]
-    )
-  }, [project.metadata.name, nuclioStore.functions, nuclioStore.error])
+    setFetchNuclioFunctionsFailure(nuclioError && !nuclioFunctions)
+  }, [nuclioError, nuclioFunctions])
 
   const statistics = useMemo(() => {
     return generateProjectStatistic(
       projectSummary,
-      projectStore.projectsSummary.error,
-      projectStore.projectsSummary.loading,
+      summaryError,
+      summaryLoading,
       fetchNuclioFunctionsFailure,
-      nuclioStore.functions[project.metadata.name],
-      nuclioStore.loading
+      nuclioFunctions,
+      nuclioLoading
     )
   }, [
     fetchNuclioFunctionsFailure,
-    nuclioStore.functions,
-    nuclioStore.loading,
-    project.metadata.name,
-    projectStore.projectsSummary.error,
-    projectStore.projectsSummary.loading,
-    projectSummary
+    nuclioFunctions,
+    nuclioLoading,
+    projectSummary,
+    summaryError,
+    summaryLoading
   ])
 
   return (
@@ -74,4 +78,4 @@ ProjectCard.propTypes = {
   projectSummary: PropTypes.object
 }
 
-export default ProjectCard
+export default React.memo(ProjectCard)

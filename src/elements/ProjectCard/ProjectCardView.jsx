@@ -20,9 +20,11 @@ such restriction.
 import React, { useRef } from 'react'
 import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 import { useNavigate } from 'react-router-dom'
 
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
+import ProjectCardTransitionOverlay from './ProjectCardTransitionOverlay'
 import {
   Tooltip,
   TextTooltipTemplate,
@@ -32,6 +34,10 @@ import {
 } from 'igz-controls/components'
 
 import { getTimeElapsedByDate } from 'igz-controls/utils/datetime.util'
+import {
+  getProjectTransition,
+  getProjectTransitionTooltip
+} from '../../utils/projectTransition.util'
 
 import Alerts from 'igz-controls/images/alerts.svg?react'
 import ClockIcon from 'igz-controls/images/clock.svg?react'
@@ -43,15 +49,34 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, alert, project, statist
   const chipRef = useRef()
   const navigate = useNavigate()
 
-  const { deletingProjects, projectsToDelete } = useSelector(state => state.projectStore)
+  const projectName = project.metadata.name
+
+  // Selected one value at a time, and as primitives, so that an unrelated change to the project
+  // store does not re-render every card in the grid.
+  const isDeleting = useSelector(
+    state =>
+      Object.values(state.projectStore.deletingProjects).includes(projectName) ||
+      state.projectStore.projectsToDelete.includes(projectName)
+  )
+  const projectTransition = useSelector(state =>
+    getProjectTransition(project, state.projectStore.projectsInTransition)
+  )
+  const hasSyncIssue = useSelector(state =>
+    Boolean(state.projectStore.projectsInTransition[projectName]?.hasSyncIssue)
+  )
 
   return (
-    <div className="project-card">
-      {(Object.values(deletingProjects).includes(project.metadata.name) ||
-        projectsToDelete.includes(project.metadata.name)) && <Loader section />}
+    <div className={classnames('project-card', projectTransition && 'project-card_disabled')}>
+      {projectTransition && (
+        <ProjectCardTransitionOverlay
+          tooltip={getProjectTransitionTooltip(projectTransition, hasSyncIssue)}
+        />
+      )}
+      {isDeleting && <Loader section />}
       <div
         onClick={event => {
           if (
+            !projectTransition &&
             event.target.tagName !== 'A' &&
             !ref.current.contains(event.target) &&
             !chipRef.current?.contains(event.target) &&
