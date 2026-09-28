@@ -98,6 +98,7 @@ const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject, isOpen
                   label="Labels"
                   name="labels"
                   shortChips
+                  visibleChipsMaxLength="all"
                   validationRules={{
                     key: getValidationRules(
                       'project.labels.key',
