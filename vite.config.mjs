@@ -28,7 +28,11 @@ export default defineConfig(async ({ mode }) => {
     },
     shared: {
       react: { requiredVersion: dependencies.react, singleton: true },
-      'react-dom': { requiredVersion: dependencies['react-dom'], singleton: true }
+      'react-dom': { requiredVersion: dependencies['react-dom'], singleton: true },
+      '@radix-ui/react-dismissable-layer': {
+        requiredVersion: dependencies['@radix-ui/react-dismissable-layer'],
+        singleton: true
+      }
     }
   })
 

@@ -7,6 +7,7 @@
     "@module-federation/runtime": "0.23.0",
     "@module-federation/vite": "1.11.0",
     "@monaco-editor/react": "^4.7.0",
+    "@radix-ui/react-dismissable-layer": "1.1.19",
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.18.0",
     "bfj": "^9.1.3",
