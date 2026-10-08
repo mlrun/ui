@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "@dagrejs/dagre": "^1.1.5",
-    "@module-federation/runtime": "0.23.0",
-    "@module-federation/vite": "1.11.0",
+    "@module-federation/runtime": "2.9.2",
+    "@module-federation/vite": "1.23.2",
     "@monaco-editor/react": "^4.7.0",
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.18.0",
@@ -47,7 +47,7 @@
     "react-redux": "^7.2.9",
     "react-refresh": "^0.11.0",
     "react-resizable-panels": "^4.5.3",
-    "react-router-dom": "6.30.6",
+    "react-router-dom": "7.18.4",
     "react-text-mask": "^5.4.3",
     "react-transition-group": "^4.4.5",
     "reactflow": "^11.11.1",
@@ -63,6 +63,7 @@
   },
   "overrides": {
     "uuid": "^14.0.0",
+    "basic-ftp": "^6.2.2",
     "cucumber-html-reporter": {
       "uuid": "^11.1.1"
     },
@@ -80,7 +81,8 @@
     "postcss": "^8.5.23",
     "qs": "^6.15.2",
     "serialize-javascript": "^7.0.3",
-    "tmp": "^0.2.6"
+    "tmp": "^0.2.6",
+    "adm-zip": "^0.6.1"
   },
   "scripts": {
     "start": "vite",
@@ -143,7 +145,7 @@
     "babel-runtime": "^6.26.0",
     "body-parser": "^1.19.0",
     "chai": "^4.3.4",
-    "chromedriver": "^152.0.3",
+    "chromedriver": "^154.0.1",
     "cross-env": "^7.0.3",
     "css-loader": "^6.5.1",
     "cucumber-html-reporter": "^5.3.0",
