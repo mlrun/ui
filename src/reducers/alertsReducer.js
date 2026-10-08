@@ -20,7 +20,8 @@ such restriction.
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 import alertsApi from '../api/alerts-api'
-import { defaultPendingHandler } from './redux.util'
+import { isRequestAborted } from '../utils/isRequestAborted'
+import { isStaleRequest, requestPending, requestSettled } from './redux.util'
 import { parseAlerts } from '../utils/parseAlert'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 import {
@@ -43,6 +44,8 @@ const initialState = {
   alerts: [],
   error: null,
   loading: false,
+  pendingRequestIds: [],
+  currentRequestId: null,
   alertLoading: false
 }
 
@@ -128,12 +131,14 @@ export const fetchAlert = createAsyncThunk(
         return parseAlerts(data.activations || [])
       })
       .catch(error => {
-        largeResponseCatchHandler(
+        const isRequestCanceled = largeResponseCatchHandler(
           error,
           'Failed to fetch alerts',
           thunkAPI.dispatch,
           config?.ui?.setRequestErrorMessage
         )
+
+        return thunkAPI.rejectWithValue(isRequestCanceled ? { aborted: true } : error)
       })
   }
 )
@@ -156,12 +161,14 @@ export const fetchAlerts = createAsyncThunk(
         return { ...data, activations: parseAlerts(data.activations || []) }
       })
       .catch(error => {
-        largeResponseCatchHandler(
+        const isRequestCanceled = largeResponseCatchHandler(
           error,
           'Failed to fetch alerts',
           thunkAPI.dispatch,
           config?.ui?.setRequestErrorMessage
         )
+
+        return thunkAPI.rejectWithValue(isRequestCanceled ? { aborted: true } : error)
       })
   }
 )
@@ -184,30 +191,38 @@ const alertsSlice = createSlice({
       state.alerts = initialState.alerts
       state.error = null
       state.loading = false
+      state.pendingRequestIds = []
+      state.currentRequestId = null
     }
   },
   extraReducers: builder => {
     builder
-      .addCase(fetchAlert.pending, defaultPendingHandler)
+      .addCase(fetchAlert.pending, requestPending)
       .addCase(fetchAlert.fulfilled, (state, action) => {
+        requestSettled(state, action)
+        if (isStaleRequest(state, action)) return
         state.alerts = action.payload
-        state.loading = false
       })
       .addCase(fetchAlert.rejected, (state, action) => {
+        requestSettled(state, action)
+        if (isStaleRequest(state, action)) return
+        if (isRequestAborted(action.payload)) return
         state.alerts = []
         state.error = action.payload
-        state.loading = false
       })
-      .addCase(fetchAlerts.pending, state => {
-        state.loading = true
+      .addCase(fetchAlerts.pending, (state, action) => {
+        requestPending(state, action)
         state.error = null
       })
       .addCase(fetchAlerts.fulfilled, (state, action) => {
-        state.loading = false
+        requestSettled(state, action)
+        if (isStaleRequest(state, action)) return
         state.alerts = action.payload
       })
       .addCase(fetchAlerts.rejected, (state, action) => {
-        state.loading = false
+        requestSettled(state, action)
+        if (isStaleRequest(state, action)) return
+        if (isRequestAborted(action.payload)) return
         state.error = action.payload
       })
       .addCase(fetchAlertById.pending, state => {

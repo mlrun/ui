@@ -46,6 +46,7 @@ import { removeModelEndpoints } from '../../../reducers/artifactsReducer'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { getScssVariableValue } from 'igz-controls/utils/common.util'
 import { isDetailsTabExists } from '../../../utils/link-helper.util'
+import { isRequestAborted } from '../../../utils/isRequestAborted'
 import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { clearMetricsOptions } from '../../../reducers/detailsReducer'
@@ -123,17 +124,18 @@ const ModelEndpointsTable = React.forwardRef(
 
     const fetchData = useCallback(
       filters => {
-        ref.current = new AbortController()
-
         fetchEndpoints(filters)
           .unwrap()
           .then(modelEndpoints => {
-            if (modelEndpoints) {
-              setModelEndpoints(modelEndpoints)
+            setModelEndpoints(modelEndpoints ?? [])
+          })
+          .catch(error => {
+            if (!isRequestAborted(error)) {
+              setModelEndpoints([])
             }
           })
       },
-      [fetchEndpoints, ref]
+      [fetchEndpoints]
     )
 
     const handleRefresh = useCallback(
@@ -275,8 +277,6 @@ const ModelEndpointsTable = React.forwardRef(
 
     return (
       <>
-        {(artifactsStore.modelEndpoints.modelEndpointLoading ||
-          artifactsStore.modelEndpoints.loading) && <Loader />}
         <div className="models" ref={modelEndpointsRef}>
           <div className="table-container">
             <div className="content__action-bar-wrapper">
@@ -295,7 +295,9 @@ const ModelEndpointsTable = React.forwardRef(
                 <ModelEndpointsFilters isDetails={isDetails} />
               </ActionBar>
             </div>
-            {artifactsStore.modelEndpoints.loading ? null : modelEndpoints.length === 0 ? (
+            {artifactsStore.modelEndpoints.loading ? (
+              <Loader section secondary />
+            ) : modelEndpoints.length === 0 ? (
               <NoData
                 message={getNoDataMessage(
                   filters,
@@ -308,6 +310,8 @@ const ModelEndpointsTable = React.forwardRef(
               />
             ) : (
               <>
+                {(artifactsStore.modelEndpoints.modelEndpointLoading ||
+                  artifactsStore.modelEndpoints.loading) && <Loader overlay />}
                 <Table
                   actionsMenu={actionsMenu}
                   pageData={pageData}

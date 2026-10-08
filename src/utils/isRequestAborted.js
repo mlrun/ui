@@ -18,21 +18,22 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { DEFAULT_ABORT_MSG, LARGE_REQUEST_CANCELED, REQUEST_CANCELED } from '../constants'
-import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
-export const largeResponseCatchHandler = (
-  error,
-  defaultError,
-  dispatch,
-  showNotificationCallback = () => {}
-) => {
-  const isRequestCanceled = [LARGE_REQUEST_CANCELED, REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(
-    error?.message
-  )
+const ABORT_MESSAGES = [REQUEST_CANCELED, DEFAULT_ABORT_MSG, LARGE_REQUEST_CANCELED]
 
-  if (!isRequestCanceled && error && dispatch) {
-    showErrorNotification(dispatch, error, defaultError, null, null, showNotificationCallback)
+// Accepts either a message string (legacy call sites) or an error/action.payload
+// object, so it can also recognize Axios' ERR_CANCELED code and the { aborted: true }
+// shape produced by thunks that go through rejectWithValue.
+export const isRequestAborted = errorOrMessage => {
+  if (!errorOrMessage) return false
+
+  if (typeof errorOrMessage === 'string') {
+    return ABORT_MESSAGES.includes(errorOrMessage)
   }
 
-  return isRequestCanceled
+  return (
+    errorOrMessage.aborted === true ||
+    errorOrMessage.code === 'ERR_CANCELED' ||
+    ABORT_MESSAGES.includes(errorOrMessage.message)
+  )
 }

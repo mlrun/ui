@@ -309,7 +309,7 @@ const Jobs = () => {
               </JobsContext.Provider>
               {(Boolean(jobsStore.jobLoadingCounter) ||
                 workflowsStore.activeWorkflow.loading ||
-                functionsStore.funcLoading) && <Loader />}
+                functionsStore.funcLoading) && <Loader overlay />}
             </div>
           </div>
         )}

@@ -371,9 +371,7 @@ export const getArtifacts = debounce((dispatch, project, storePathType, setDataI
         artifacts: generateArtifactsList(artifacts ?? [])
       }))
     })
-    .catch(error => {
-      showErrorNotification(dispatch, error, '', 'Failed to fetch artifacts')
-    })
+    .catch(() => {})
 }, 300)
 
 export const getFeatureVectors = debounce((dispatch, project, setDataInputState) => {

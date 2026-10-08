@@ -135,10 +135,24 @@ export const processActionAfterTagUniquesValidation = ({
   onErrorCallback,
   throwError = false
 }) => {
-  showLoader()
+  let isLoaderShown = false
+  const show = () => {
+    if (!isLoaderShown) {
+      isLoaderShown = true
+      showLoader()
+    }
+  }
+  const hide = () => {
+    if (isLoaderShown) {
+      isLoaderShown = false
+      hideLoader()
+    }
+  }
+
+  show()
 
   if (tag === '') {
-    return actionCallback().finally(hideLoader)
+    return actionCallback().finally(hide)
   }
 
   const messagesByKind = getArtifactMessagesByKind(artifact.kind)
@@ -148,22 +162,15 @@ export const processActionAfterTagUniquesValidation = ({
     .then(response => {
       if (response?.data) {
         if (!isEmpty(response.data.artifacts)) {
-          return new Promise((resolve, _reject) => {
-            const reject = (...args) => {
-              hideLoader()
-
-              return _reject(...args)
-            }
-
-            // hide and show loader again to avoid UI loader above confirmation dialog
-            hideLoader()
+          return new Promise((resolve, reject) => {
+            hide()
             openPopUp(ConfirmDialog, {
               confirmButton: {
                 label: 'Overwrite',
                 variant: PRIMARY_BUTTON,
                 handler: () => {
-                  showLoader()
-                  actionCallback().then(resolve).catch(reject).finally(hideLoader)
+                  show()
+                  actionCallback().then(resolve).catch(reject).finally(hide)
                 }
               },
               cancelButton: {
@@ -182,7 +189,7 @@ export const processActionAfterTagUniquesValidation = ({
             })
           })
         } else {
-          return actionCallback().finally(hideLoader)
+          return actionCallback().finally(hide)
         }
       }
     })
@@ -204,7 +211,7 @@ export const processActionAfterTagUniquesValidation = ({
         onErrorCallback?.()
       }
 
-      hideLoader()
+      hide()
 
       if (throwError) throw error
     })

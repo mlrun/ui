@@ -19,10 +19,10 @@ such restriction.
 */
 import React, { useCallback, useState } from 'react'
 import { Outlet } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import { ConfirmDialog, Loader } from 'igz-controls/components'
+import { ConfirmDialog } from 'igz-controls/components'
 
 import { TABLE_CONTAINER } from '../../constants'
 import { toggleYaml } from '../../reducers/appReducer'
@@ -37,7 +37,6 @@ const FeatureStore = () => {
   const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
   const [createVectorPopUpIsOpen, setCreateVectorPopUpIsOpen] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
-  const featureStore = useSelector(store => store.featureStore)
 
   const toggleConvertedYaml = useCallback(
     data => {
@@ -66,9 +65,6 @@ const FeatureStore = () => {
             >
               <Outlet />
             </FeatureStoreContext.Provider>
-            {(featureStore.loading ||
-              featureStore.entities.loading ||
-              featureStore.features.loading) && <Loader />}
           </div>
         </div>
       </div>

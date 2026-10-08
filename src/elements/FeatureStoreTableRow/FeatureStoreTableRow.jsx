@@ -108,7 +108,7 @@ const FeatureStoreTableRow = ({
           </td>
           {selectedRowData[rowItem.data.ui.identifier]?.loading ? (
             <td className="table-body__cell">
-              {createPortal(<Loader />, document.querySelector(`.${TABLE_CONTAINER}`))}
+              {createPortal(<Loader overlay />, document.querySelector(`.${TABLE_CONTAINER}`))}
             </td>
           ) : selectedRowData[rowItem.data.ui.identifier]?.error ? (
             <td className="table-body__cell">

@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
+import { Loader } from 'igz-controls/components'
 import PropTypes from 'prop-types'
 
 import ActionBar from '../../ActionBar/ActionBar'
@@ -86,7 +87,9 @@ const FeatureVectorsView = React.forwardRef(
             <FeatureStoreFilters content={featureVectors} />
           </ActionBar>
         </div>
-        {featureStore.loading ? null : featureVectors.length === 0 ? (
+        {featureStore.loading ? (
+          <Loader section secondary />
+        ) : featureVectors.length === 0 ? (
           <NoData
             message={getNoDataMessage(
               filters,

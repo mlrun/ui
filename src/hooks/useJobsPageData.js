@@ -33,9 +33,11 @@ import {
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_PAGE,
   MONITOR_JOBS_TAB,
+  REQUEST_CANCELED,
   SCHEDULE_TAB
 } from '../constants'
 import { usePagination } from './usePagination.hook'
+import { isRequestAborted } from '../utils/isRequestAborted'
 import { parseJob } from '../utils/parseJob'
 import { fetchAllJobRuns, fetchJobs, fetchScheduledJobs } from '../reducers/jobReducer'
 import { fetchWorkflows } from '../reducers/workflowReducer'
@@ -99,6 +101,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
         setJobs(null)
       }
 
+      abortControllerRef.current.abort(REQUEST_CANCELED)
       abortControllerRef.current = new AbortController()
 
       terminateAbortTasksPolling()
@@ -181,7 +184,9 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
 
           return response
         })
-        .catch(() => {
+        .catch(error => {
+          if (isRequestAborted(error)) return
+
           if (isJobRunsRequest) {
             setJobRuns([])
           } else {
@@ -195,6 +200,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
   const refreshScheduled = useCallback(
     filters => {
       setScheduledJobs([])
+      abortControllerRef.current.abort(REQUEST_CANCELED)
       abortControllerRef.current = new AbortController()
 
       return dispatch(
@@ -227,12 +233,18 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
             setScheduledJobs(parsedJobs)
           }
         })
+        .catch(error => {
+          if (!isRequestAborted(error)) {
+            setScheduledJobs([])
+          }
+        })
     },
     [dispatch, params.projectName]
   )
 
   const getWorkflows = useCallback(
     filters => {
+      abortControllerRef.current.abort(REQUEST_CANCELED)
       abortControllerRef.current = new AbortController()
       const projectName = filters.project?.toLowerCase?.() || params.projectName || '*'
 
