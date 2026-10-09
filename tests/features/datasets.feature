@@ -139,9 +139,9 @@ Feature: Datasets Page
   @passive
   @smoke
   #TODO:  Datasets Analysis tab - add the data to verify
-  @rerun
   Scenario: MLD005 - Check Details panel still active on page refresh
 #     * set tear-down property "dataset" created in "automation-test" project with "test-file" value
+    * set tear-down property "dataset" created in "default" project with "test-dataset" value
     * create "test-dataset" Dataset with "v1" tag in "default" project with code 200
     Given open url
     And wait load page
@@ -412,7 +412,7 @@ Feature: Datasets Page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Datasets_Info_Pane" wizard
 
   @MLD
-  @smoke @rerun
+  @smoke
   Scenario: MLD018 - Verify the Delete option state in Datasets table and Overview details action menu 
     Given open url
     And wait load page
@@ -495,7 +495,7 @@ Feature: Datasets Page
 
   @MLD
   @passive
-  @smoke @rerun
+  @smoke
   Scenario: MLD013 - Check components on Artifact Preview on Datasets page
     Given open url
     And wait load page
@@ -641,7 +641,7 @@ Feature: Datasets Page
     Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
 
   @MLD
-  @smoke @rerun
+  @smoke
   Scenario: MLD010 - Check that version tag dropdown shows all tags on filters wizard on Datasets page
     Given open url
     And wait load page
@@ -997,7 +997,7 @@ Feature: Datasets Page
             | name2edited |         v3io:///container-name/fileedited             |
 
   @MLD
-  @smoke @rerun
+  @smoke
   Scenario: MLD022 - Check Parameters components on Train Model wizard
     Given open url
     And wait load page
@@ -1072,7 +1072,7 @@ Feature: Datasets Page
             | name2edited           |                int                   |     1234     |
 
   @MLD
-  @smoke @rerun
+  @smoke
   Scenario: MLD023 - Check Resources components on Train Model wizard
     Given open url
     And wait load page
@@ -1380,7 +1380,7 @@ Feature: Datasets Page
     Then "Teardown_Checkbox" element should be checked on "Modal_Wizard_Form" wizard
 
   @MLD
-  @smoke @rerun
+  @smoke
   Scenario: MLD026 - Verify dataset elements visibility on Datasets Table with low number of rows
     Given open url
     And wait load page
@@ -1477,7 +1477,7 @@ Feature: Datasets Page
     Then verify "Datasets_Table" element visibility on "Datasets" wizard
 
   @MLD
-  @smoke @rerun
+  @smoke
   Scenario: MLD028 - Verify the Delete option in Datasets table, details panel, full view action menu 
     Given open url
     And wait load page

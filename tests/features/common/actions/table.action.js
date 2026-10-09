@@ -246,15 +246,9 @@ export const isDatetimeCelsValueInRange = async (
   ) => {
     const arr = await getColumnValues(driver, table, columnName)
 
-    const minDate = new Date(fromDateTime)
-    const maxDate = new Date(toDateTime)
-
-    const minStamp = Date.parse(
-      minDate.toString().slice(0, 11) + minDate.toString().slice(16, 24)
-    )
-    const maxStamp = Date.parse(
-      maxDate.toString().slice(0, 11) + maxDate.toString().slice(16, 24)
-    )
+    // the old slicing of Date.toString() dropped the year (parsed as 2001)
+    const minStamp = Date.parse(fromDateTime)
+    const maxStamp = Date.parse(toDateTime)
 
     const flag = arr.every(
       item => minStamp < Date.parse(item) && maxStamp > Date.parse(item)

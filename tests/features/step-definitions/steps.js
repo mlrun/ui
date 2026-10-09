@@ -107,7 +107,7 @@ import {
   isContainsSubstringInSuggestedOptions,
   typeSearchableValue
 } from '../common/actions/input-with-autocomplete.action'
-import { checkWorkflowGraphConnections } from '../common/actions/graph.action'
+import { checkWorkflowGraphConnections, panGraphToElement } from '../common/actions/graph.action'
 import {
   isRadioButtonSelected,
   isRadioButtonUnselected,
@@ -183,6 +183,11 @@ Then(
     const expectedUrl = `http://${test_url}:${test_port}/${expectedPath}`
 
     await navigateToPage(this.driver, invalidUrl)
+    // the redirection can depend on a request (e.g. the functions list), wait for it instead of a fixed delay
+    await this.driver
+      .wait(async () => (await this.driver.getCurrentUrl()) === expectedUrl, 10000)
+      .catch(() => {})
+    // make sure there is no further redirection
     await this.driver.sleep(1000)
     const afterURL = await this.driver.getCurrentUrl()
 
@@ -1688,6 +1693,15 @@ When(
       pageObjects[wizardName][accordionName][componentName],
       true
     )
+  }
+)
+
+When(
+  'pan {string} graph on {string} wizard to show {string} element',
+  async function (graphName, wizardName, componentName) {
+    const component = pageObjects[wizardName][componentName]
+
+    await panGraphToElement(this.driver, pageObjects[wizardName][graphName].root, component.root ?? component)
   }
 )
 

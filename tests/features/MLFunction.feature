@@ -6,7 +6,6 @@ Feature: ML Functions
     @passive
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    @rerun
     Scenario: MLF005 - Check all mandatory components on ML Functions Page
         Given open url
         And wait load page
@@ -69,7 +68,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLF006 - Verify filtering by function name on Functions page
         Given open url
         And wait load page
@@ -94,7 +93,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLF007 - Check all mandatory components in Item infopane on Overview tab table
         Given open url
         And wait load page
@@ -130,7 +129,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLF008 - Verify all mandatory components on Delete existing function
         Given open url
         And wait load page
@@ -155,7 +154,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLF009 - Verify all mandatory components on Delete existing function in Item infopane
         Given open url
         And wait load page
@@ -185,7 +184,6 @@ Feature: ML Functions
     @passive
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    @rerun
     Scenario: MLF003 - Check all mandatory components on Create ML Function Popup
         Given open url
         And wait load page
@@ -218,7 +216,6 @@ Feature: ML Functions
     @passive
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    @rerun
     Scenario: MLF010 - Check all mandatory components in General Accordion on create new function page
         Given open url
         And wait load page
@@ -264,7 +261,6 @@ Feature: ML Functions
     @passive
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    @rerun
     Scenario: MLF011 - Check all mandatory components in Code Accordion on create new function page
         Given open url
         And wait load page
@@ -310,7 +306,6 @@ Feature: ML Functions
     @passive
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    @rerun
     Scenario: MLF012 - Check all mandatory components in Resources Accordion on create new function page
         Given open url
         And wait load page
@@ -401,7 +396,6 @@ Feature: ML Functions
     @passive
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    @rerun
     Scenario: MLF013 - Verify behaviour of Volume Paths Table in Resources Accordion on create new function page
         Given open url
         And wait load page
@@ -507,7 +501,6 @@ Feature: ML Functions
     @passive
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    @rerun
     Scenario: MLF014 - Check all mandatory components in Resources Accordion on create new function page
         Given open url
         And wait load page
@@ -704,7 +697,6 @@ Feature: ML Functions
     @MLF
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    @rerun
     Scenario: MLF016 - Deploy new ml-function with build new image option
         Given open url
         And wait load page
@@ -1024,7 +1016,6 @@ Feature: ML Functions
     @passive
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    @rerun
     Scenario: MLF023 - Verify non-unique value input hint on Create New Serving Function page
         Given open url
         And wait load page
@@ -1085,7 +1076,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLF025 - Verify View YAML action
         Given open url
         And wait load page
@@ -1137,7 +1128,6 @@ Feature: ML Functions
     @passive
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    @rerun
     Scenario: MLF027 - Verify Edit action visibility in action menu
         Given open url
         And wait load page
@@ -1372,7 +1362,7 @@ Feature: ML Functions
         Then verify redirection from "projects/default/INVALID/model-monitoring-stream/latest/overview?dates=anyTime" to "projects"
 
     @MLF
-    @smoke @rerun
+    @smoke
     Scenario: MLF031 - Check active/highlited items with details panel on ML Function Info Pane
         Given open url
         And wait load page
@@ -1457,7 +1447,6 @@ Feature: ML Functions
     @passive
     @smoke
     #TODO: ML-5718 - move 'Deploy' button for "Serving" function to demo mode
-    @rerun
     Scenario: MLF034 - Verify Deploy option for serving kind functions
         Given open url
         And wait load page

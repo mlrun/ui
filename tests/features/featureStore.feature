@@ -204,7 +204,7 @@ Feature: Feature Store Page
     @MLFS
     @passive
     @inProgress
-    @smoke @rerun
+    @smoke
     Scenario: MLFS005 - Check all mandatory components in Item infopane on Overview tab table on Feature Vectors tab
         Given open url
         And wait load page
@@ -424,7 +424,7 @@ Feature: Feature Store Page
 
     @MLFS
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLFS013 - Check filtering by Label on Feature Store Feature Sets Tab
         Given open url
         And wait load page
@@ -515,7 +515,7 @@ Feature: Feature Store Page
 
     @MLFS
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLFS017 - Check filtering by Label on Feature Store Feature Vectors Tab
         Given open url
         And wait load page
@@ -1497,7 +1497,7 @@ Feature: Feature Store Page
 
     @MLFS
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLFS042 - Verify filtering by name and entity on Add to feature vector tab
         Given open url
         And wait load page
@@ -1532,7 +1532,7 @@ Feature: Feature Store Page
 
     @MLFS
     @inProgress
-    @smoke @rerun
+    @smoke
     Scenario: MLFS043 - Add to feature vector
         Given open url
         And wait load page
@@ -1719,7 +1719,7 @@ Feature: Feature Store Page
         Then "Apply_Changes_Button" element on "Feature_Vectors_Info_Pane" should contains "Apply Changes" value
 
     @MLFS
-    @smoke @rerun
+    @smoke
     Scenario: MLFS045 - Verify Feature Label icon on Requested Features tab on Feature Vectors tab
         And set tear-down property "featureVector" created in "fsdemo-admin" project with "test_vector" value
         Given open url
@@ -2280,7 +2280,6 @@ Feature: Feature Store Page
     @MLFS
     @smoke
     #TODO: check the loader after select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table
-    @rerun
     Scenario: MLFS061 - Check Feature vector deletion 
         Given open url
         And wait load page

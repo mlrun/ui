@@ -29,14 +29,29 @@ const isSidebarPinned = async driver => {
   return (await element.getAttribute('data-pinned')) === 'true'
 }
 
-const waitSidebarState = async (driver, state) => {
+// the sidebar expands/collapses on hover, a few seconds are enough (shorter than the step timeout, so it can be retried)
+const SIDEBAR_STATE_TIMEOUT = 5000
+const SIDEBAR_HOVER_ATTEMPTS = 3
+
+const waitSidebarState = async (driver, state, waitTimeout = timeout) => {
   await driver.wait(async () => {
     const element = await driver.findElement(sidebar.root)
 
     return (await element.getAttribute('data-state')) === state
-  }, timeout)
+  }, waitTimeout, `Sidebar is not ${state}`)
   // wait for the width transition to finish
   await driver.sleep(350)
+}
+
+const movePointerOutOfSidebar = async driver => {
+  const { width, height } = await driver.executeScript(
+    'return { width: window.innerWidth, height: window.innerHeight }'
+  )
+
+  await driver
+    .actions({ async: true })
+    .move({ origin: 'viewport', x: width - 5, y: Math.floor(height / 2) })
+    .perform()
 }
 
 export const openSidebar = async driver => {
@@ -44,9 +59,22 @@ export const openSidebar = async driver => {
   const element = await driver.findElement(sidebar.root)
 
   if ((await element.getAttribute('data-state')) !== 'expanded') {
-    const body = await driver.findElement(sidebar.body)
-    await driver.actions({ async: true }).move({ origin: body }).perform()
-    await waitSidebarState(driver, 'expanded')
+    // if the pointer is already over the sidebar, moving it there doesn't fire `mouseenter`,
+    // so move it out of the sidebar and back on retry
+    for (let attempt = 1; attempt <= SIDEBAR_HOVER_ATTEMPTS; attempt++) {
+      try {
+        const body = await driver.findElement(sidebar.body)
+        await driver.actions({ async: true }).move({ origin: body }).perform()
+        await waitSidebarState(driver, 'expanded', SIDEBAR_STATE_TIMEOUT)
+
+        return
+      } catch (error) {
+        if (attempt === SIDEBAR_HOVER_ATTEMPTS) throw error
+
+        await movePointerOutOfSidebar(driver)
+        await driver.sleep(500)
+      }
+    }
   }
 }
 
@@ -60,10 +88,10 @@ export const closeSidebar = async driver => {
       } catch {
         return false
       }
-    }, timeout)
+    }, timeout / 2, 'Page content (#main) is not displayed')
     const main = await driver.findElement({ css: '#main' })
     await driver.actions({ async: true }).move({ origin: main }).perform()
-    await waitSidebarState(driver, 'collapsed')
+    await waitSidebarState(driver, 'collapsed', timeout / 4)
   }
 }
 

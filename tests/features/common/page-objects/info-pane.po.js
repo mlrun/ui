@@ -545,7 +545,7 @@ const artifactsTable = {
 }
 
 const alertsTable = {
-  root: '.table__item .alerts-table',
+  root: '.alerts-table',
   header: {},
   body: {
     row: {

@@ -31,10 +31,10 @@ function refreshDates() {
     oneHourAgo = new Date(now.getTime() - (45 * 60 * 1000))
     // Date picker 'Past 24h' (get past 20h)
     oneDayAgo = new Date(now.getTime() - (20 * 60 * 60 * 1000))
-    // Date picker 'Next 24h'
-    next24Hours = new Date(now.getTime() + (24 * 60 * 60 * 1000))
-    // Date picker 'Next hour'
-    nextHour = new Date(now.getTime() + (60 * 60 * 1000))
+    // Date picker 'Next 24h' (get next 23h, the UI computes its range before the request arrives)
+    next24Hours = new Date(now.getTime() + (23 * 60 * 60 * 1000))
+    // Date picker 'Next hour' (get next 45 min)
+    nextHour = new Date(now.getTime() + (45 * 60 * 1000))
 }
 
 function updateRuns(runs) {  

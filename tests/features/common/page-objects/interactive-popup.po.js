@@ -1514,7 +1514,7 @@ export default {
     New_Member_Name_Input: inputWithAutocomplete({
       root: '.invite-new-members',
       elements: {
-        input: 'input',
+        input: 'input[name="chip-input"]',
         options: '.suggestion-list .suggestion-row',
         option_name: '.suggestion-row-label'
       }

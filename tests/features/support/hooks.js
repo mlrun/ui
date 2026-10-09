@@ -23,7 +23,11 @@ import { browser } from '../../config'
 import { clearBackendAfterTest, resetMockState, setRequestsFailureCondition } from '../common-tools/common-tools'
 import { buildDriver, quitActiveDriver, E2E_TIMEZONE } from './world'
 
-Before(async function () {
+// the first page load after the dev server start is slow: Vite pre-bundles the dependencies (`optimizeDeps.force`)
+// and may reload the page, so without waiting the first scenarios get a blank page
+let isAppWarmedUp = false
+
+Before({ timeout: 5 * 60 * 1000 }, async function () {
   await resetMockState()
   await quitActiveDriver()
   this.driver = buildDriver()
@@ -35,6 +39,10 @@ Before(async function () {
   this.createdItems = []
   this.testContext = {}
   await this.driver.get('http://localhost:3000')
+  if (!isAppWarmedUp) {
+    await this.driver.wait(wd.until.elementLocated(wd.By.css('.projects__wrapper')), 4 * 60 * 1000)
+    isAppWarmedUp = true
+  }
   await this.driver.executeScript(function() {
     localStorage.setItem('igzFullVersion', '3.5.5')
   })

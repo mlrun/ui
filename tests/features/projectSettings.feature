@@ -74,7 +74,7 @@ Feature: Project Settings page
             | labelKeyTest2 | labelValueTest2 |
 
     @MLPS
-    @smoke @rerun
+    @smoke
     Scenario: MLPS002 - Verify behaviour of editing labels on General tab
         Given open url
         And wait load page
@@ -121,6 +121,7 @@ Feature: Project Settings page
             | project_label_key | project_label_value |
             | a                 | b                   |
         Then type value "test" to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
+        And wait load page
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
         Then type value "cat-vs-dog-classification" to "Search_Projects_Input" field on "Projects" wizard
@@ -184,7 +185,15 @@ Feature: Project Settings page
         When click on "remove_btn" in "Parameters_Table_Verify" table on "Project_Settings_General_Tab" wizard
             | key  |
             | key1 |
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        When click on "remove_btn" in "Parameters_Table_Verify" table on "Project_Settings_General_Tab" wizard
+            | key  |
             | key4 |
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        When click on "remove_btn" in "Parameters_Table_Verify" table on "Project_Settings_General_Tab" wizard
+            | key  |
             | key8 |
         Then verify data in "Parameters_Table_Verify" table on "Project_Settings_General_Tab" wizard
             | key  | value  |

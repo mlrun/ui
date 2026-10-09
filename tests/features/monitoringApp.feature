@@ -3,7 +3,7 @@ Feature: Monitoring app Page
     Testcases that verifies functionality on Monitoring app Page
     
   @MLMA
-  @smoke @rerun
+  @smoke
   Scenario: MLMA001 - Check action bar components on Monitoring app page
     Given open url
     And wait load page
@@ -113,7 +113,7 @@ Feature: Monitoring app Page
     Then verify "Operating_Functions_Commited_Offset_Tip" element on "Monitoring_App" wizard should display hover hint "Label_Hint"."Commited_Offset"
 
   @MLMA
-  @smoke @rerun
+  @smoke
   Scenario: MLMA004 - Check All Applications section components on Monitoring app page
     Given open url
     And wait load page
@@ -306,7 +306,7 @@ Feature: Monitoring app Page
     Then verify "Results_Table" element visibility on "Application_Monitoring" wizard
 
   @MLMA
-  @smoke @rerun
+  @smoke
   Scenario: MLMA009 - Check Metrics section components on Application monitoring page
     Given open url
     And wait load page
@@ -360,7 +360,7 @@ Feature: Monitoring app Page
     Then verify "Partitions_Status_Commited_Offset_Tip" element on "Application_Monitoring" wizard should display hover hint "Label_Hint"."Commited_Offset"
 
   @MLMA
-  @smoke @rerun
+  @smoke
   Scenario: MLMA011 - Check action bar components on Applications metrics page
     Given open url
     And wait load page

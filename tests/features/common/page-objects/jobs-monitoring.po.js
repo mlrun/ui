@@ -191,7 +191,7 @@ const commonDatePickerFilter = dropdownComponent(
 const commonCustomRangeFilter = dropdownComponent(
   generateDropdownGroup(
     '[data-testid="date-picker-container"]',
-    '[data-testid="date-picker-input"] input',
+    '[data-testid="date-picker-input"] .input',
     '.date-picker__pop-up .select__item',
     '.data-ellipsis .data-ellipsis',
     false
@@ -332,7 +332,9 @@ export default {
     Action_Menu: commonActionMenu,
     Toggle_View_Button: By.css('.workflow-container .actions .toggle-view-btn'),
     Terminate_Button: By.css('.workflow-container .btn-danger'),
-    Workflow_List_View_Table: commonTable(overallTable)
+    Workflow_List_View_Table: commonTable(overallTable),
+    Time_Picker_Dropdown_From: timePickerDropdownFrom,
+    Time_Picker_Dropdown_To: timePickerDropdownTo
   },
   crossScheduledMonitorTab: {
     Cross_Jobs_Tab_Selector: commonTable(tabSelector),
@@ -343,6 +345,8 @@ export default {
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Refresh_Button: commonRefreshButton,
     Error_Message: commonErrorMessage,
-    Scheduled_Table: commonTable(scheduledTabTable)
+    Scheduled_Table: commonTable(scheduledTabTable),
+    Time_Picker_Dropdown_From: timePickerDropdownFrom,
+    Time_Picker_Dropdown_To: timePickerDropdownTo
   }
 }

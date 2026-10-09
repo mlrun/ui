@@ -4,7 +4,7 @@ Feature: Project Monitoring Page
 
     @MLPM
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLPM002 - Check components on the header details and the project monitoring container
         Given open url
         And wait load page
@@ -105,7 +105,7 @@ Feature: Project Monitoring Page
 
     @MLPM
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLPM023 - Check components on on the header details and the statistics section
         Given open url
         And wait load page
@@ -432,7 +432,7 @@ Feature: Project Monitoring Page
     
     @MLPM
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLPM007 - Check all mandatory components on Batch run
         Given open url
         And wait load page
@@ -527,7 +527,7 @@ Feature: Project Monitoring Page
 
     @MLPM
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLPM029 - Check the Secret name validation in the Resources step on the Batch run wizard
         Given open url
         And wait load page
@@ -592,7 +592,7 @@ Feature: Project Monitoring Page
 
     @MLPM
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLPM030 - Check the Secret name validation in the Advanced step on the Batch run wizard
         Given open url
         And wait load page
@@ -858,7 +858,6 @@ Feature: Project Monitoring Page
     @passive
     @smoke
     #TODO: Create Feature set from the Quick Actions dropdown menu
-    @rerun
     Scenario: MLPM012 - Check the redirection to Feature sets page during creating the Feature set
         Given open url
         And wait load page
@@ -923,7 +922,7 @@ Feature: Project Monitoring Page
     
     @MLPM
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLPM024 - Check the redirection from Datasets counter to Datasets page
         Given open url
         And wait load page
@@ -1151,7 +1150,7 @@ Feature: Project Monitoring Page
 
     @MLPM
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLPM027 - Check the redirection from Workflows counter to Monitor Workflows tab
         Given open url
         And wait load page
@@ -1263,7 +1262,7 @@ Feature: Project Monitoring Page
 
     @MLPM
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLPM016 - Check redirect to Jobs and workflows page using All jobs link
         Given open url
         And wait load page

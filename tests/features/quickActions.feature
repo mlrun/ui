@@ -270,7 +270,7 @@ Feature: Quick actions Page
         And type value "demo-function-02" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
 
     @MLPH
-    @passive @rerun
+    @passive
     Scenario: MLPH006 - Check all mandatory components on Batch run wizard
         Given open url
         And wait load page
@@ -290,11 +290,11 @@ Feature: Quick actions Page
         And click on row root with value "test" in "name" column in "Functions_Table" table on "Modal_Wizard_Form" wizard
         Then "Function_Title" element on "Modal_Wizard_Form" should contains "test" value
         Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
-        Then "Step_1_Button_text" element on "commonPagesHeader" should contains "Function Selection" value
+        Then "Step_1_Button_text" element on "commonPagesHeader" should contains "Function selection" value
         Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
         Then "Step_2_Button_text" element on "commonPagesHeader" should contains "Run details" value
         Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
-        Then "Step_3_Button_text" element on "commonPagesHeader" should contains "Data Inputs" value
+        Then "Step_3_Button_text" element on "commonPagesHeader" should contains "Data inputs" value
         Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
         Then "Step_4_Button_text" element on "commonPagesHeader" should contains "Parameters" value
         Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
@@ -322,7 +322,7 @@ Feature: Quick actions Page
         Then verify "Image_Name_Input_Run_Details" element visibility on "Modal_Wizard_Form" wizard
         Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
         And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-        Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data Inputs" value
+        Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data inputs" value
         Then verify "Data_Inputs_Headers" on "Modal_Wizard_Form" wizard should contains "Modal_Wizard_Form"."Data_Inputs_Table_Header"
         And click on "Next_Button" element on "Modal_Wizard_Form" wizard
         Then "Form_Header_Parameters" element on "commonPagesHeader" should contains "Parameters" value
@@ -457,7 +457,7 @@ Feature: Quick actions Page
         Then verify "Labels_Table" element visibility on "Create_Feature_Vector_Popup" wizard
 
     @MLPH
-    @passive @rerun
+    @passive
     Scenario: MLPH009 - Check all mandatory components on Feature Set tab on Project Home Page
         Given open url
         And wait load page
@@ -523,7 +523,7 @@ Feature: Quick actions Page
         Then "Register_File_Button" element on "Files" should contains "Register artifact" value
 
     @MLPH
-    @passive @rerun
+    @passive
     Scenario: MLPH011 - Check all mandatory components on Datasets tab on Project Home Page
         Given open url
         And wait load page
@@ -547,7 +547,7 @@ Feature: Quick actions Page
         Then verify "Table_Refresh_Button" element visibility on "Datasets" wizard
 
     @MLPH
-    @passive @rerun
+    @passive
     Scenario: MLPH012 - Check all mandatory components on Feature Vectors tab on Project Home Page
         Given open url
         And wait load page
@@ -732,7 +732,7 @@ Feature: Quick actions Page
         Then verify "Model_Endpoints_Table" element visibility on "Model_Endpoints" wizard
 
     @MLPH
-    @passive @rerun
+    @passive
     Scenario: MLPH018 - Check all mandatory components on Real-Time Piplines tab on Project Home Page
         Given open url
         And wait load page
@@ -774,7 +774,7 @@ Feature: Quick actions Page
         When hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
     
-    @MLPH @rerun
+    @MLPH
     Scenario: MLPH024 - Check Train model wizard opens up
         Given open url
         And wait load page

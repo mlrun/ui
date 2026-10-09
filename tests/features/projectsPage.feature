@@ -298,7 +298,6 @@ Feature: Projects Page
     @danger
     @smoke
 #   Run this test case only with mocked backend!!!
-    @rerun
     Scenario: MLPr012 - Check projects limit message
         Then create up to limit projects with code 201
         Given open url
@@ -641,7 +640,7 @@ Feature: Projects Page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
 
     @MLPr
-    @smoke @rerun
+    @smoke
     Scenario: MLPr021 - Check components numbers on Monitoring container
         Given open url
         And wait load page
@@ -701,7 +700,7 @@ Feature: Projects Page
     @MLPr
     @mlrunUnhealthyTest
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLPr019 - Check Mlrun unhealthy popup
         Given open url
         And wait load page

@@ -4,7 +4,7 @@ Feature: Artifacts Page
 
   @MLA
   @passive
-  @smoke @rerun
+  @smoke
   Scenario: MLA001 - Check all mandatory components on Artifacts tab
     Given open url
     And wait load page
@@ -416,7 +416,7 @@ Feature: Artifacts Page
   @MLA
   @passive
   @inProgress
-  @smoke @rerun
+  @smoke
   Scenario: MLA017 - Check expand sources Item infopane on Overview tab table
     Given open url
     And wait load page

@@ -91,7 +91,7 @@ Feature: Models Page
 
   @MLM
   @passive
-  @smoke @rerun
+  @smoke
   Scenario: MLM003 - Check all mandatory components on Real-Time Pipelines tab
     Given open url
     And wait load page
@@ -197,7 +197,7 @@ Feature: Models Page
 
   @MLM
   @passive
-  @smoke @rerun
+  @smoke
   Scenario: MLM006 - Verify filtering by name on Real-Time Pipelines tab
     Given open url
     And wait load page
@@ -486,7 +486,7 @@ Feature: Models Page
 
   @MLM
   @passive
-  @smoke @rerun
+  @smoke
   Scenario: MLM014 - Check all mandatory components in Item infopane on Overview tab table
     Given open url
     And wait load page
@@ -643,7 +643,6 @@ Feature: Models Page
   @passive
   @smoke
   #TODO: add tests for prompt, producer detail popups; prompts tag verification, prompts limitation message and redirection
-  @rerun
   Scenario: MLM042 - Check LLM prompts tab detail popups in main table on Model infopane
     Given open url
     And wait load page
@@ -877,7 +876,7 @@ Feature: Models Page
 
   @MLM
   @passive
-  @smoke @rerun
+  @smoke
   Scenario: MLM036 - Verify Deploy option, Deploy action
       Given open url
       And wait load page
@@ -887,8 +886,18 @@ Feature: Models Page
       And select "Model artifacts" item in sidebar menu
       And hover "MLRun_Logo" component on "commonPagesHeader" wizard
       And wait load page
+      # "default" has a router serving function ("test-pipeline"), so the model can be deployed there
       Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
       Then click on "deploy" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column with scroll "false"
+      Then verify if "Deploy_Model_Popup" popup dialog appears
+      Then "Title" element on "Deploy_Model_Popup" should contains "Deploy Model" value
+      Then click on "Cross_Cancel_Button" element on "Deploy_Model_Popup" wizard
+      # "llmdeploy332" has no router serving functions
+      And select "llmdeploy332" project in sidebar project dropdown
+      And wait load page
+      Then verify breadcrumbs "project" label should be equal "llmdeploy332" value
+      Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "model_art1" value in "name" column
+      Then click on "deploy" option on "Models" wizard in "Models_Table" table with "model_art1" value in "name" column with scroll "false"
       Then verify if "Common_Popup" popup dialog appears
       Then "Title" element on "Common_Popup" should contains "Model cannot be deployed" value
       Then "Message" component on "Common_Popup" should contains "Messages"."How_To_Create"
@@ -1117,7 +1126,7 @@ Feature: Models Page
 
   @MLM
   @passive
-  @smoke @rerun
+  @smoke
   Scenario: MLM029 - Check components on Deploy Model Popup
     * set tear-down property "function" created in "default" project with "automation-test-function-1" value
     * set tear-down property "function" created in "default" project with "automation-test-function-2" value
@@ -1196,7 +1205,7 @@ Feature: Models Page
     Then verify "Title" element not exists on "Deploy_Model_Popup" wizard
 
     @MLM
-    @smoke @rerun
+    @smoke
     Scenario: MLM030 - Verify behaviour of key-value table on Deploy Model Popup
      Given open url
      And wait load page
@@ -1277,7 +1286,8 @@ Feature: Models Page
     And select "Real-time pipelines" item in sidebar menu
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Real-time pipelines" value
-    Then save to context "name" column and "href" attribute on 2 row from "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    # "test-pipeline" (newest) is row 1, "function-with-llm" row 2, "model-monitoring-stream" row 3
+    Then save to context "name" column and "href" attribute on 3 row from "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     When click on cell with value "model-monitoring-stream" in "name_link" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     And wait load page
     And wait load page
@@ -1314,6 +1324,8 @@ Feature: Models Page
     Then verify "Pipeline_Back_Button" element visibility on "Real_Time_Pipelines" wizard
     Then verify "Pipeline_Link_Title" element visibility on "Real_Time_Pipelines" wizard
     Then "Pipeline_Link_Title" element on "Real_Time_Pipelines" should contains "function-with-llm" value
+    # the graph doesn't fit the view even at the minimal zoom, the "model-runner" node is outside of it
+    When pan "Real_Time_Pipelines_Graph" graph on "Real_Time_Pipelines" wizard to show "Model_Runner_Step_Icon" element
     Then verify "Model_Runner_Step_Icon" element visibility on "Real_Time_Pipelines" wizard
     Then verify "Model_Runner_Step_Label" element visibility on "Real_Time_Pipelines" wizard
     Then "Model_Runner_Step_Label" element on "Real_Time_Pipelines" should contains "model-runner" value
@@ -1577,7 +1589,7 @@ Feature: Models Page
     Then check "newTag" value in "tag" column in "Models_Table" table on "Models" wizard
 
   @MLM
-  @smoke @rerun
+  @smoke
   Scenario: MLM023 - Check that version tag has "Click to add" status when it's empty after edited
     Given open url
     And wait load page
@@ -1721,7 +1733,7 @@ Feature: Models Page
     Then "Version_Tag_Value" element on "FilterBy_Popup" should contains "latest123456" attribute value
 
   @MLM
-  @smoke @rerun
+  @smoke
   Scenario: MLM035 - Check components in Item infopane on Metrics tab table on Model Endpoints tab
     Given open url
     And wait load page
@@ -1813,7 +1825,6 @@ Feature: Models Page
   @MLM
   @smoke
   # !!! restart mock is required
-  @rerun
   Scenario: MLM037 - Verify the Delete option in Models table, details panel, full view action menu 
     Given open url
     And wait load page

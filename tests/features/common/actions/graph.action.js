@@ -132,3 +132,34 @@ export const checkWorkflowGraphConnections = async (driver, graphComponent) => {
   })
   console.log(`[GRAPH CHECK COMPLETED]: Verified connections for ${arrows.length} arrows using ${nodes.length} nodes.`)
 }
+
+// big graphs don't fit the view even at the minimal zoom, drag the pane until the target is in the middle of the view:
+// the graph corners are covered by overlays (e.g. "Default error handler" panel, minimap), so "displayed" isn't enough
+// (nodes aren't draggable, so dragging over a node pans the graph as well)
+export const panGraphToElement = async (driver, graphRoot, targetLocator) => {
+  const graphElement = await driver.findElement(graphRoot)
+  const target = await driver.findElement(targetLocator)
+
+  for (let attempt = 0; attempt < 10; attempt++) {
+    const graphRect = await graphElement.getRect()
+    const targetRect = await target.getRect()
+    const shiftX = graphRect.x + graphRect.width / 2 - (targetRect.x + targetRect.width / 2)
+    const shiftY = graphRect.y + graphRect.height / 2 - (targetRect.y + targetRect.height / 2)
+    const isInTheMiddle =
+      Math.abs(shiftX) <= graphRect.width / 4 && Math.abs(shiftY) <= graphRect.height / 4
+
+    if (isInTheMiddle && (await target.isDisplayed())) break
+
+    const maxShift = Math.min(graphRect.width, graphRect.height) / 2 - 20
+    const clamp = value => Math.round(Math.max(-maxShift, Math.min(maxShift, value)))
+
+    await driver
+      .actions({ async: true })
+      .move({ origin: graphElement })
+      .press()
+      .move({ origin: 'pointer', x: clamp(shiftX), y: clamp(shiftY), duration: 300 })
+      .release()
+      .perform()
+    await driver.sleep(300)
+  }
+}

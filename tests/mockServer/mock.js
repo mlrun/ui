@@ -115,8 +115,34 @@ generateArtifacts(artifacts)
 generateFunctions(funcs)
 generateRuns(runs)
 generateAlerts(alerts)
+keepEndpointAlertsRecent(alerts)
+
+// the model endpoint "Alerts" tab always uses the "Past month" range (no date filter), keep the seeded "default"
+// endpoint alerts in it (10 days ago - outside "Past 24 hours"/"Past week"), shifted together to keep their order
+function keepEndpointAlertsRecent(alertsData) {
+  const endpointAlerts = alertsData.activations.filter(
+    alert => alert.project === 'default' && alert.entity_kind === 'model-endpoint-result'
+  )
+
+  if (!endpointAlerts.length) return
+
+  const newestTime = Math.max(...endpointAlerts.map(alert => Date.parse(alert.activation_time)))
+  const shift = Date.now() - 10 * 24 * 60 * 60 * 1000 - newestTime
+
+  endpointAlerts.forEach(alert => {
+    alert.activation_time = new Date(Date.parse(alert.activation_time) + shift).toISOString()
+
+    if (alert.reset_time) {
+      alert.reset_time = new Date(Date.parse(alert.reset_time) + shift).toISOString()
+    }
+  })
+}
+
+// artifacts are mutated by tag add/edit/delete, register (overwrite) and delete scenarios
+const pristineArtifacts = cloneDeep(artifacts.artifacts)
 
 const resetMockState = () => {
+  artifacts.artifacts = cloneDeep(pristineArtifacts)
   runs.runs = cloneDeep(pristineRuns)
   Object.keys(pipelines).forEach(project => delete pipelines[project])
   Object.assign(pipelines, cloneDeep(pristinePipelines))

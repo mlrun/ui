@@ -4,7 +4,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLJW001 - Check all mandatory components on Jobs Monitor tab
         Given open url
         And wait load page
@@ -62,7 +62,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLJW002 - Check all mandatory components on Workflows Monitor tab
         Given open url
         And wait load page
@@ -217,7 +217,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLJW004 - Check date picker dropdown options on Jobs Monitor tab
         Given open url
         And wait load page
@@ -407,7 +407,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLJW011 - Verify filtering by job status on Jobs Monitor tab
         Given open url
         And wait load page
@@ -448,7 +448,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLJW062 - Verify filtering Jobs after opening Batch Re-run wizard
         Given open url
         And wait load page
@@ -495,7 +495,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLJW058 - Check all mandatory components in Item infopane on Overview tab table on Jobs Monitor Page
         Given open url
         And wait load page
@@ -796,7 +796,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLJW066 - Check all mandatory components in Item infopane on Overview tab table on Schedule Page
         Given open url
         And wait load page
@@ -946,7 +946,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLJW070 - Verify View YAML action on Schedule Monitor tab
         Given open url
         And wait load page
@@ -984,7 +984,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLJW071 - Check all mandatory components on Workflow List View
         Given open url
         And wait load page
@@ -1207,7 +1207,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLJW080 - Verify visibility of main components on Batch re-run Workflow wizard
         Given open url
         And wait load page
@@ -1325,7 +1325,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLJW057 - Check options in action menu on Jobs Monitor tab
         Given open url
         And wait load page
@@ -1438,7 +1438,7 @@ Feature: Jobs and workflows
         
     @MLJW
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLJW079 - Verify visibility of main components on Edit Scheduled Job wizard
         Given open url
         And wait load page
@@ -1501,7 +1501,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke @rerun
+    @smoke
     Scenario: MLJW081 - Check visibility of main components on Workflow graph View
         Given open url
         And wait load page
@@ -1531,7 +1531,7 @@ Feature: Jobs and workflows
     @MLJW
     @passive
     @links
-    @smoke @rerun
+    @smoke
     Scenario: MLJW030 - Check redirect to project`s Function Infopane from Job Overview
         Given open url
         And wait load page
@@ -1635,7 +1635,7 @@ Feature: Jobs and workflows
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
 
     @MLJW
-    @smoke @rerun
+    @smoke
     Scenario: MLJW083 - Check redirection to Last Run Drill-down from Schedules tab
         Given open url
         And wait load page
@@ -1709,7 +1709,7 @@ Feature: Jobs and workflows
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Pods_data"
 
     @MLJW
-    @smoke @rerun
+    @smoke
     Scenario: MLJW084 - Check redirection to Function details from Schedules tab
         Given open url
         And wait load page
@@ -1904,7 +1904,7 @@ Feature: Jobs and workflows
         And wait load page
 
     @MLJW
-    @smoke @rerun
+    @smoke
     Scenario: MLJW012 - Check all mandatory components on Batch Run wizard - Function selection
         Given open url
         And wait load page
@@ -1974,7 +1974,11 @@ Feature: Jobs and workflows
         Then value in "name" column with "text" in "Functions_Table" on "Modal_Wizard_Form" wizard should contains "test"
         And click on "Title" element on "Modal_Wizard_Form" wizard
         Then select "Functions" tab in "Function_Selection_Tabs" on "Modal_Wizard_Form" wizard
+        And wait load page
+        Then verify "Project_Selector_Dropdown" element visibility on "Modal_Wizard_Form" wizard
         Then select "churn-project-admin" option in "Project_Selector_Dropdown" filter dropdown on "Modal_Wizard_Form" wizard
+        And wait load page
+        Then value in "sub_name" column with "text" in "Functions_Table" on "Modal_Wizard_Form" wizard should contains "churn-project-admin"
         And click on row root with value "xgb-test" in "name" column in "Functions_Table" table on "Modal_Wizard_Form" wizard
         And wait load page
         Then "Function_Title" element on "Modal_Wizard_Form" should contains "xgb-test" value
@@ -2031,7 +2035,7 @@ Feature: Jobs and workflows
         Then value in "labels" column with "attribute" in "Functions_Table" on "Modal_Wizard_Form" wizard should contains "etl"
 
     @MLJW
-    @smoke @rerun
+    @smoke
     Scenario: MLJW042 - Check all mandatory components on Batch Run wizard - Run details without Method
         Given open url
         And wait load page
@@ -2093,7 +2097,7 @@ Feature: Jobs and workflows
             |    key2    |    value2    |
 
     @MLJW
-    @smoke @rerun
+    @smoke
     Scenario: MLJW044 - Check "Max Iterations", "Max errors" inputs field availability according to the strategy type in Hyperparameter strategy
         Given open url
         And wait load page
@@ -2125,7 +2129,7 @@ Feature: Jobs and workflows
         Then verify "Max_Errors" element in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard is enabled by class name
 
     @MLJW
-    @smoke @rerun
+    @smoke
     Scenario: MLJW051 - Check all mandatory components on Batch Run wizard - Run details with Method
         Given open url
         And wait load page
@@ -2221,7 +2225,7 @@ Feature: Jobs and workflows
         Then "Image_Name_Text_Run_Details" component on "Modal_Wizard_Form" should contains "Modal_Wizard_Form"."Image_Name_Text"
 
     @MLJW
-    @smoke @rerun
+    @smoke
     Scenario: MLJW039 - Check all mandatory components on Batch Run wizard - Data inputs
         Given open url
         And wait load page
@@ -2370,7 +2374,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @inProgress
-    @smoke @rerun
+    @smoke
     Scenario: MLJW037 - Check all mandatory components on Batch Run wizard - Step 5 (Resources)
         Given open url
         And wait load page
@@ -2508,7 +2512,7 @@ Feature: Jobs and workflows
         Then verify "Volumes_Subheader" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Label_Hint"."New_Job_Volumes"
 
     @MLJW
-    @smoke @rerun
+    @smoke
     Scenario: MLJW043 - Check Batch-Run running after edit GPU limit in Resources section
         Given open url
         And wait load page
@@ -2531,7 +2535,7 @@ Feature: Jobs and workflows
         Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
 
     @MLJW
-    @smoke @rerun
+    @smoke
     Scenario: MLJW025 - Check Minimum CPU value on Batch Run wizard - Resources
         Given open url
         And wait load page
@@ -2574,7 +2578,7 @@ Feature: Jobs and workflows
             |               V3IO               |            Volume_Name_2             |       /path/to/happines2      |         Container_Input_2          |           Access_Key_2              |            /resource/path_2            |         yes        |                       |
 
     @MLJW
-    @smoke @rerun
+    @smoke
     Scenario: MLJW026 - Check tip and warning messages in Volumes section on Batch Run wizard - Resources
         Given open url
         And wait load page
@@ -2632,7 +2636,7 @@ Feature: Jobs and workflows
         When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
 
     @MLJW
-    @smoke @rerun
+    @smoke
     Scenario: MLJW031 - Check mandatory of Container and Resource Path fields for V3IO volume - Batch Run - Resources
         Given open url
         And wait load page
@@ -2660,7 +2664,7 @@ Feature: Jobs and workflows
         Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
 
     @MLJW
-    @smoke @rerun
+    @smoke
     Scenario: MLJW033 - Check autocomplete without tags MLRun Store path for datasets, artifacts, models, feature vectors - Batch Run - Data input
         Given open url
         And wait load page
@@ -2700,7 +2704,7 @@ Feature: Jobs and workflows
             |     data_tag    |      store://datasets/default/test-i#0:latest        |
 
     @MLJW
-    @smoke @rerun
+    @smoke
     Scenario: MLJW034 - Check setting schedule for a job - Batch Run - Schedule for later 
         Given open url
         And wait load page
@@ -2732,7 +2736,7 @@ Feature: Jobs and workflows
         Then verify "Schedule_Button" not input element in "Schedule_For_Later" on "Schedule_PopUp" wizard is disabled
 
     @MLJW
-    @smoke @rerun
+    @smoke
     Scenario: MLJW035 - Check environment variables table types components on Batch Run in Advanced section
         Given open url
         And wait load page
@@ -2772,7 +2776,7 @@ Feature: Jobs and workflows
             |  V3IO_FRAMESD   |        value         |    http://framesd:8080   |
 
     @MLJW
-    @smoke @rerun
+    @smoke
     Scenario: MLJW036 - Check setting schedule for a job - Batch Run - Schedule for later 
         Given open url
         And wait load page
@@ -2848,7 +2852,7 @@ Feature: Jobs and workflows
         When select "01:30 AM" option at "At_time_Dropdown" dropdown options in "Schedule_For_Later" on "Schedule_PopUp" wizard
 
     @MLJW
-    @smoke @rerun
+    @smoke
     Scenario: MLJW045 - Check back navigation from Job overview to Jobs Monitor tab and forward to Job overview
         Given open url
         And wait load page

@@ -852,7 +852,7 @@ Feature: LLM prompts Page
     Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
 
   @MLLP
-  @smoke @rerun
+  @smoke
   Scenario: MLLP014 - Verify prompt filtering by model name and tag
     Given open url
     And wait load page
@@ -911,7 +911,7 @@ Feature: LLM prompts Page
     Then "No_Data_Message" element on "commonPagesHeader" should contains "No data matches the filter: \"LLM prompt version tag: latest, Show best iteration only: true, Model name: model_art1, Model version tag: v2\"" value
 
   @MLLP
-  @smoke @rerun
+  @smoke
   Scenario: MLLP015 - Verify model detail popup from the LLM promts table list
     Given open url
     And wait load page

@@ -51,7 +51,7 @@ Feature: Alerts Page
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         
     @MLAlert
-    @smoke @rerun
+    @smoke
     Scenario: MLAlert002 - Check filtering by Endpoint entity type on Alerts page
         Given open url
         And wait load page

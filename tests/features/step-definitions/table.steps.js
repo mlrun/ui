@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { When, Then } from '@cucumber/cucumber'
+import { panGraphToElement } from '../common/actions/graph.action'
 import pageObjects from '../common/page-objects'
 import {
   clickNearComponent,
@@ -1073,16 +1074,26 @@ When(
         rows[row_indx][0]
       )
       const indx = arr[0] - pageObjects[wizardName][tableName].offset
+      const table = pageObjects[wizardName][tableName]
+      const button = table['tableFields'][field](indx)
 
-      await hoverComponent(
-        this.driver,
-        pageObjects[wizardName][tableName]['tableFields'][field](indx),
-        false
-      )
-      await clickOnComponent(
-        this.driver,
-        pageObjects[wizardName][tableName]['tableFields'][field](indx)
-      )
+      // row action buttons are visible only on row hover: rows move up after a removal (`:hover` isn't
+      // recalculated under the unmoved pointer), and the row can be at the edge of a scrollable panel,
+      // so move the pointer away, center the row, hover it and wait for the button
+      await this.driver.actions({ async: true }).move({ x: 0, y: 0 }).perform()
+      if (table.rowRoot) {
+        const rowElement = await this.driver.findElement(table.rowRoot(indx))
+
+        await this.driver.executeScript('arguments[0].scrollIntoView({ block: "center" })', rowElement)
+        await this.driver.sleep(250)
+        await this.driver.actions({ async: true }).move({ origin: rowElement }).perform()
+      } else {
+        await hoverComponent(this.driver, button, false)
+      }
+      await this.driver
+        .wait(async () => (await this.driver.findElement(button)).isDisplayed(), 3000)
+        .catch(() => {})
+      await clickOnComponent(this.driver, button)
     }
   }
 )
@@ -2069,6 +2080,11 @@ Then(
 When(
   'click on node with index {int} in {string} graph on {string} wizard',
   async function (index, graphName, wizardName) {
+    await panGraphToElement(
+      this.driver,
+      pageObjects[wizardName][graphName].root,
+      pageObjects[wizardName][graphName].nodesTable.tableFields['name'](index)
+    )
     await clickOnComponent(
       this.driver,
       pageObjects[wizardName][graphName].nodesTable.tableFields['name'](index)

@@ -78,9 +78,18 @@ export const clickOnComponent = async (driver, component) => {
 export const clickNearComponent = async (driver, component) => {
     const element = await driver.findElement(component)
     // the element can be partly scrolled out of the viewport (e.g. inputs at the top of a side panel),
-    // then its corner is outside of the viewport and the move fails with MoveTargetOutOfBoundsError
-    await driver.executeScript('arguments[0].scrollIntoView({ block: "center", inline: "nearest" })', element)
-    await driver.sleep(250)
+    // then its corner is outside of the viewport and the move fails with MoveTargetOutOfBoundsError.
+    // Scroll only in that case: any scroll closes an open FormSelect / chip editor (capture-phase `scroll`
+    // listeners in dashboard-react-controls), and the click itself would then re-open the dropdown
+    const isCornerInViewport = await driver.executeScript(
+      'const rect = arguments[0].getBoundingClientRect(); ' +
+        'return rect.top >= 0 && rect.left >= 0 && rect.top + 1 < window.innerHeight && rect.left + 1 < window.innerWidth',
+      element
+    )
+    if (!isCornerInViewport) {
+      await driver.executeScript('arguments[0].scrollIntoView({ block: "center", inline: "nearest" })', element)
+      await driver.sleep(250)
+    }
     const coordinates = await element.getRect()
     const actions = driver.actions({ async: true })
     await actions
