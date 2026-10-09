@@ -222,7 +222,7 @@ const calendarTable = {
     }
   },
   body: {
-    offset: 3,
+    offset: 4,
     row: {
       root: '.date-picker__week',
       fields: {

@@ -2,7 +2,7 @@ Feature: Quick actions Page
 
     Testcases that verifies functionality on MLRun Quick actions Page
 
-    @MLPH
+    @MLPH @rerun
     Scenario: MLPH001 - Check all mandatory components on Project Home
         * set tear-down property "project" created with "automation-test-1002" value
         * create "automation-test-1002" MLRun Project with code 201
@@ -11,23 +11,20 @@ Feature: Quick actions Page
         And click on row root with value "automation-test-1002" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "automation-test-1002" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Quick actions" value
         Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "tab" with "Project monitoring" value in breadcrumbs menu
+        And select "Project monitoring" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Header_Name_Label" element visibility on "Demo_Project" wizard
@@ -89,15 +86,13 @@ Feature: Quick actions Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "tab" with "Project monitoring" value in breadcrumbs menu
+        And select "Project monitoring" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Actions_Table" table on "Demo_Project" wizard with offset "false"
@@ -127,7 +122,7 @@ Feature: Quick actions Page
         Then click on "Register_Button" element on "Register_Model_Popup" wizard
         And wait load page
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Models" value
+        Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
         Then click on cell with value "new-model" in "name" column in "Models_Table" table on "Models" wizard
         And wait load page
         Then "Header" element on "Models_Info_Pane" should contains "new-model" value
@@ -142,8 +137,7 @@ Feature: Quick actions Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Actions_Table" table on "Demo_Project" wizard with offset "false"
@@ -192,8 +186,7 @@ Feature: Quick actions Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Actions_Table" table on "Demo_Project" wizard with offset "false"
@@ -254,8 +247,7 @@ Feature: Quick actions Page
         And wait load page
         And click on row root with value "automation-test-1003" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Actions_Table" table on "Demo_Project" wizard with offset "false"
@@ -278,14 +270,13 @@ Feature: Quick actions Page
         And type value "demo-function-02" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
 
     @MLPH
-    @passive
+    @passive @rerun
     Scenario: MLPH006 - Check all mandatory components on Batch run wizard
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Actions_Table" table on "Demo_Project" wizard with offset "false"
@@ -301,7 +292,7 @@ Feature: Quick actions Page
         Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
         Then "Step_1_Button_text" element on "commonPagesHeader" should contains "Function Selection" value
         Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
-        Then "Step_2_Button_text" element on "commonPagesHeader" should contains "Run Details" value
+        Then "Step_2_Button_text" element on "commonPagesHeader" should contains "Run details" value
         Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
         Then "Step_3_Button_text" element on "commonPagesHeader" should contains "Data Inputs" value
         Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
@@ -322,7 +313,7 @@ Feature: Quick actions Page
         And wait load page
         Then verify "Filter_Button_Hub_Tab" element visibility on "Modal_Wizard_Form" wizard
         And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-        Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
+        Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
         Then "Hyperparameter_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
         Then verify "Run_Name_Input" element visibility on "Modal_Wizard_Form" wizard
         Then verify "Version_Tag_Dropdown" element visibility on "Modal_Wizard_Form" wizard
@@ -387,8 +378,7 @@ Feature: Quick actions Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Actions_Table" table on "Demo_Project" wizard with offset "false"
@@ -435,7 +425,7 @@ Feature: Quick actions Page
         Then verify "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard selected option value "Table"
         Then click on "Register_Button" element on "Register_File_Popup" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Artifacts" value
+        Then verify breadcrumbs "tab" label should be equal "Other artifacts" value
         Then click on cell with value "artifact" in "name" column in "Files_Table" table on "Files" wizard
         And wait load page
         Then "Header" element on "Files_Info_Pane" should contains "artifact" value
@@ -450,8 +440,7 @@ Feature: Quick actions Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Actions_Table" table on "Demo_Project" wizard with offset "false"
@@ -468,7 +457,7 @@ Feature: Quick actions Page
         Then verify "Labels_Table" element visibility on "Create_Feature_Vector_Popup" wizard
 
     @MLPH
-    @passive
+    @passive @rerun
     Scenario: MLPH009 - Check all mandatory components on Feature Set tab on Project Home Page
         Given open url
         And wait load page
@@ -476,15 +465,14 @@ Feature: Quick actions Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Links_Table" table on "Demo_Project" wizard with offset "false"
             |     name     |
             | Feature Sets |
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature store" value
+        Then verify breadcrumbs "tab" label should be equal "Feature sets" value
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
@@ -492,7 +480,7 @@ Feature: Quick actions Page
         Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
         Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
-        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options_Feature_Sets_Default"
         Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
@@ -516,15 +504,14 @@ Feature: Quick actions Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Links_Table" table on "Demo_Project" wizard with offset "false"
             |   name    |
             | Artifacts |
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Artifacts" value
+        Then verify breadcrumbs "tab" label should be equal "Other artifacts" value
         Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
         Then click on "Table_FilterBy_Button" element on "Files" wizard
         Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
@@ -536,14 +523,13 @@ Feature: Quick actions Page
         Then "Register_File_Button" element on "Files" should contains "Register artifact" value
 
     @MLPH
-    @passive
+    @passive @rerun
     Scenario: MLPH011 - Check all mandatory components on Datasets tab on Project Home Page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Links_Table" table on "Demo_Project" wizard with offset "false"
@@ -561,14 +547,13 @@ Feature: Quick actions Page
         Then verify "Table_Refresh_Button" element visibility on "Datasets" wizard
 
     @MLPH
-    @passive
+    @passive @rerun
     Scenario: MLPH012 - Check all mandatory components on Feature Vectors tab on Project Home Page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Links_Table" table on "Demo_Project" wizard with offset "false"
@@ -580,7 +565,7 @@ Feature: Quick actions Page
         Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
         Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
-        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options_Feature_Vectors_Default"
         Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
@@ -596,8 +581,7 @@ Feature: Quick actions Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Links_Table" table on "Demo_Project" wizard with offset "false"
@@ -631,16 +615,14 @@ Feature: Quick actions Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Links_Table" table on "Demo_Project" wizard with offset "false"
             | name |
             | Jobs |
         And wait load page
-        Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
-        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then verify "Table_Name_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
@@ -672,15 +654,13 @@ Feature: Quick actions Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Links_Table" table on "Demo_Project" wizard with offset "false"
             |  name  |
             | Models |
         And wait load page
-        Then verify "Models_Tab_Selector" on "Models" wizard should contains "Models"."Tab_List"
         Then verify "Table_Name_Filter_Input" element visibility on "Models" wizard
         Then click on "Table_FilterBy_Button" element on "Models" wizard
         Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
@@ -702,15 +682,14 @@ Feature: Quick actions Page
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Links_Table" table on "Demo_Project" wizard with offset "false"
             |    name   |
             | Workflows |
         And wait load page
-        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Workflows" value
         Then verify "Workflows_Monitor_Table" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Table_FilterBy_Button" element visibility on "Workflows_Monitor_Tab" wizard
@@ -724,15 +703,14 @@ Feature: Quick actions Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Deployment_Links_Table" table on "Demo_Project" wizard with offset "false"
             |      name       |
             | Model Endpoints |
         And wait load page
-        Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
+        Then verify breadcrumbs "tab" label should be equal "Model endpoints" value
         Then verify "Table_FilterBy_Button" element visibility on "Model_Endpoints" wizard
         Then verify "Table_FilterBy_Button" element on "Model_Endpoints" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
         Then click on "Table_FilterBy_Button" element on "Model_Endpoints" wizard
@@ -754,21 +732,20 @@ Feature: Quick actions Page
         Then verify "Model_Endpoints_Table" element visibility on "Model_Endpoints" wizard
 
     @MLPH
-    @passive
+    @passive @rerun
     Scenario: MLPH018 - Check all mandatory components on Real-Time Piplines tab on Project Home Page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Deployment_Links_Table" table on "Demo_Project" wizard with offset "false"
             |        name         |
             |     RT Pipelines    |
         And wait load page
-        Then verify "Real-Time Pipelines" tab is active in "Models_Tab_Selector" on "Models" wizard
+        Then verify breadcrumbs "tab" label should be equal "Real-time pipelines" value
         Then verify "Table_Name_Filter_Input" element visibility on "Real_Time_Pipelines" wizard
         Then verify "Table_Refresh_Button" element visibility on "Real_Time_Pipelines" wizard
         Then verify "Real_Time_Pipelines_Table" element visibility on "Real_Time_Pipelines" wizard
@@ -780,8 +757,7 @@ Feature: Quick actions Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And open "quick-actions" page of current project by url
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Deployment_Links_Table" table on "Demo_Project" wizard with offset "false"
@@ -789,24 +765,22 @@ Feature: Quick actions Page
             | Monitoring |
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
-        Then verify "Create_New" element visibility on "Project" wizard
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+        Then verify "Quick_Actions" element visibility on "Project" wizard
         Then verify "Refresh_Button" element visibility on "Project" wizard
-        Then verify "Dashboard_Realtime_Functions_Table" element visibility on "Project" wizard
-        Then verify "Jobs_And_Workflows" element visibility on "Project" wizard
+        Then verify "Realtime_Functions_Nuclio_Table" element visibility on "Project" wizard
+        Then verify "Runs_Statistic_Table" element visibility on "Project" wizard
         Then verify "Mono_Values_Cards" element visibility on "Project" wizard
-        Then verify "Jobs_Info_Card_Statistics" element visibility on "Project" wizard
-        Then verify "Real_Time_Functions_Card_Statistics" element visibility on "Project" wizard
         When hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
     
-    @MLPH
+    @MLPH @rerun
     Scenario: MLPH024 - Check Train model wizard opens up
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Quick_actions_Button" element on "commonPagesHeader" wizard
+        Then open "quick-actions" page of current project by url
         And wait load page
         Then verify "Development_Actions_Table" element visibility on "Demo_Project" wizard
         Then verify values in "Development_Actions_Table" table on "Demo_Project" wizard
@@ -821,7 +795,7 @@ Feature: Quick actions Page
         Then "Title" element on "Modal_Wizard_Form" should contains "Train Model" value
         Then verify "Cross_Close_Button" element visibility on "Modal_Wizard_Form" wizard
         Then "Function_Title" element on "Modal_Wizard_Form" should contains "auto-trainer" value
-        Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
+        Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
         Then "Hyperparameter_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
         Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
         Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled

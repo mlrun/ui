@@ -4,23 +4,21 @@ Feature: Artifacts Page
 
   @MLA
   @passive
-  @smoke
+  @smoke @rerun
   Scenario: MLA001 - Check all mandatory components on Artifacts tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    Then verify breadcrumbs "tab" label should be equal "Artifacts" value
+    Then verify breadcrumbs "tab" label should be equal "Other artifacts" value
     Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
@@ -44,18 +42,16 @@ Feature: Artifacts Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    And select "tab" with "Project monitoring" value in breadcrumbs menu
+    And select "Project monitoring" item in sidebar menu
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    Then verify breadcrumbs "tab" label should be equal "Artifacts" value
+    Then verify breadcrumbs "tab" label should be equal "Other artifacts" value
     Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
     Then type value "test" to "Table_Name_Filter_Input" field on "Files" wizard
     Then click on "Table_Refresh_Button" element on "Files" wizard
@@ -70,7 +66,7 @@ Feature: Artifacts Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And select "tab" with "Artifacts" value in breadcrumbs menu
+    And select "Other artifacts" item in sidebar menu
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     Then type value "owner" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
@@ -97,8 +93,7 @@ Feature: Artifacts Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
@@ -132,8 +127,7 @@ Feature: Artifacts Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then click on "Register_File_Button" element on "Files" wizard
@@ -213,8 +207,7 @@ Feature: Artifacts Page
     And wait load page
     And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And wait load page
     Then click on "Register_File_Button" element on "Files" wizard
     Then verify if "Register_File_Popup" popup dialog appears
@@ -263,11 +256,10 @@ Feature: Artifacts Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    When click on cell with value "training_iteration_results" in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
@@ -309,11 +301,10 @@ Feature: Artifacts Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 3 in "name" column in "Files_Table" table on "Files" wizard
+    When click on cell with value "download_content" in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     And wait load page
@@ -365,7 +356,7 @@ Feature: Artifacts Page
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And select "tab" with "Artifacts" value in breadcrumbs menu
+    And select "Other artifacts" item in sidebar menu
     And wait load page
     Then verify action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then verify that in action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column "Delete" option is enabled
@@ -425,14 +416,13 @@ Feature: Artifacts Page
   @MLA
   @passive
   @inProgress
-  @smoke
+  @smoke @rerun
   Scenario: MLA017 - Check expand sources Item infopane on Overview tab table
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
@@ -509,8 +499,7 @@ Feature: Artifacts Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     And click on "MLRun_Logo" element on "commonPagesHeader" wizard
@@ -527,8 +516,7 @@ Feature: Artifacts Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify action menu on "Files" wizard in "Files_Table" table with "training_iteration_results" value in "name" column should contains "Common_Lists"."Action_Menu_List"
@@ -565,8 +553,7 @@ Feature: Artifacts Page
       And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
       And wait load page
       Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-      And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-      And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+      And select "Other artifacts" item in sidebar menu
       And hover "MLRun_Logo" component on "commonPagesHeader" wizard
       And wait load page
       Then verify "preview" option is present on "Files" wizard in "Files_Table" table with "training_iteration_results" value in "name" column
@@ -596,8 +583,7 @@ Feature: Artifacts Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
@@ -615,10 +601,9 @@ Feature: Artifacts Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+    Then select "Project monitoring" item in sidebar menu
     And wait load page
-    And select "tab" with "Artifacts" value in breadcrumbs menu
+    And select "Other artifacts" item in sidebar menu
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
@@ -630,9 +615,9 @@ Feature: Artifacts Page
     And wait load page
     Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
     Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
-    And select "tab" with "Datasets" value in breadcrumbs menu
+    And select "Datasets" item in sidebar menu
     And wait load page
-    And select "tab" with "Artifacts" value in breadcrumbs menu
+    And select "Other artifacts" item in sidebar menu
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
@@ -660,8 +645,7 @@ Feature: Artifacts Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And wait load page
     Then click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
@@ -688,8 +672,7 @@ Feature: Artifacts Page
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
@@ -713,10 +696,9 @@ Feature: Artifacts Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And wait load page
-    When click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
+    When click on cell with value "test-i" in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
@@ -749,8 +731,7 @@ Feature: Artifacts Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And wait load page
     Then click on "show_all_versions" option on "Files" wizard in "Files_Table" table with "download_content" value in "name" column with scroll "false"
     And wait load page
@@ -778,8 +759,7 @@ Feature: Artifacts Page
     And wait load page
     And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And wait load page
     Then click on "show_all_versions" option on "Files" wizard in "Files_Table" table with "images" value in "name" column with scroll "false"
     And wait load page
@@ -839,8 +819,7 @@ Feature: Artifacts Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And wait load page
     Then select "Add a tag" option in action menu on "Files" wizard in "Files_Table" table at row with "training_iteration_results" value in "name" column
     And wait load page
@@ -933,8 +912,7 @@ Feature: Artifacts Page
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Other artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard

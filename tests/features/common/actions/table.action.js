@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { expect } from 'chai'
+import { By } from 'selenium-webdriver'
 import { difference  } from 'lodash'
 import {
   getOptionValues,
@@ -79,13 +80,30 @@ export const isNotContainsValueInColumn = async (driver, table, columnName, valu
     expect(arr.includes(value)).equal(false)
   }
 
+// visible chips are rendered as disabled inputs (DRC FormChipCell -> NewChipForm), `getText()` doesn't return input values
+const getCellTextWithChips = async cell => {
+  const text = await cell.getText()
+  const chips = await cell.findElements(By.css('.edit-chip-container'))
+  const chipsText = await Promise.all(
+    chips.map(async chip => {
+      const inputs = await chip.findElements(By.css('input'))
+      const values = await Promise.all(inputs.map(input => input.getAttribute('value')))
+
+      return values.join('\n:\n')
+    })
+  )
+
+  return [text, ...chipsText].join('\n')
+}
+
 export const isContainsSubstringInColumnCells = async (
     driver,
     table,
     columnName,
     value
   ) => {
-    const arr = await getColumnValues(driver, table, columnName)
+    const cells = await driver.findElements(table.tableColumns[columnName])
+    const arr = await Promise.all(cells.map(getCellTextWithChips))
     const subString = value.replace('=', '\n:\n')
     expect(arr.length > 0).equal(true)
     expect(arr.some(item => item.includes(subString))).equal(
@@ -189,6 +207,8 @@ export const isContainsSubstringInColumnTooltipCells = async (
     column,
     value
   ) => {
+    // the table is rendered after the data is fetched, `wait load page` can pass before the loader appears
+    await driver.wait(async () => (await getTableRows(driver, table)) > 0, 15000).catch(() => {})
     const rows = await getTableRows(driver, table)
 
     expect(rows).not.equal(0)
@@ -196,7 +216,16 @@ export const isContainsSubstringInColumnTooltipCells = async (
     const arr = []
 
     for (let i = rows; i >= 1; i--) {
-      await hoverComponent(driver, table.tableFields[column](i)['label'])
+      const label = await driver.findElement(table.tableFields[column](i)['label'])
+
+      // centered, so the cell isn't covered by the sticky table header
+      await driver.executeScript('arguments[0].scrollIntoView({ block: "center" })', label)
+      await driver.sleep(250)
+      await hoverComponent(driver, table.tableFields[column](i)['label'], false)
+      await driver.wait(
+        async () => (await driver.findElements(table.tableFields[column](i)['hint'])).length > 0,
+        3000
+      )
       const text = await getElementText(
         driver,
         table.tableFields[column](i)['hint']
@@ -253,6 +282,27 @@ export const findRowIndexesByColumnValue = async (
     return indexes
   }
 
+// tables/tabs are rendered asynchronously, wait until the value appears instead of failing with index `undefined`
+export const waitForRowIndexesByColumnValue = async (driver, table, columnName, value, waitTimeout = 10000) => {
+    let indexes = []
+
+    await driver
+      .wait(async () => {
+        try {
+          indexes = await findRowIndexesByColumnValue(driver, table, columnName, value)
+        } catch {
+          indexes = []
+        }
+
+        return indexes.length > 0
+      }, waitTimeout)
+      .catch(() => {})
+
+    expect(indexes.length > 0).equal(true, `Value "${value}" was not found in "${columnName}" column`)
+
+    return indexes
+  }
+
 export const findRowIndexesByColumnValueExpand = async (
     driver,
     table,
@@ -305,10 +355,18 @@ export const findRowIndexesByColumnTooltipsValue = async (
           indexes.push(row)
         }
       } else {
-        await hoverComponent(
-          driver,
-          table.tableFields[columnName](row)['label']
-        )
+        const label = await driver.findElement(table.tableFields[columnName](row)['label'])
+
+        // centered, so the cell isn't covered by the sticky table header
+        await driver.executeScript('arguments[0].scrollIntoView({ block: "center" })', label)
+        await driver.sleep(250)
+        await hoverComponent(driver, table.tableFields[columnName](row)['label'], false)
+        await driver
+          .wait(
+            async () => (await driver.findElements(table.tableFields[columnName](row)['hint'])).length > 0,
+            3000
+          )
+          .catch(() => {})
         const text = await getElementText(
           driver,
           table.tableFields[columnName](row)['hint']

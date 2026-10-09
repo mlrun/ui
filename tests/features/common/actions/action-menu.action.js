@@ -29,19 +29,21 @@ async function getOptionValues(driver, options) {
 export const openActionMenu =  async (driver, actionMenu) => {
     const element = await driver.findElement(actionMenu.open_button)
     if (element) {
-      element.click()
+      await element.click()
     }
   }
 
 export const selectOptionInActionMenu = async (driver, actionMenu, option) => {
     const elements = await driver.findElements(actionMenu.options)
     for (const element of elements) {
-      element.getText().then(txt => {
-        if (txt === option) {
-          element.click()
-        }
-      })
+      if ((await element.getText()) === option) {
+        await element.click()
+
+        return
+      }
     }
+
+    throw new Error(`"${option}" option is not found in the action menu`)
   }
 
 export const checkActionMenuOptions = async (driver, actionMenu, values) => {

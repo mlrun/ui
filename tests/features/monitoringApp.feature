@@ -3,7 +3,7 @@ Feature: Monitoring app Page
     Testcases that verifies functionality on Monitoring app Page
     
   @MLMA
-  @smoke
+  @smoke @rerun
   Scenario: MLMA001 - Check action bar components on Monitoring app page
     Given open url
     And wait load page
@@ -13,8 +13,7 @@ Feature: Monitoring app Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "default" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Monitoring app" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Monitoring app" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
@@ -23,7 +22,7 @@ Feature: Monitoring app Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "default" value
-    And select "tab" with "Monitoring app" value in breadcrumbs menu
+    And select "Monitoring app" item in sidebar menu
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
@@ -53,8 +52,7 @@ Feature: Monitoring app Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "default" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Monitoring app" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Monitoring app" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
@@ -95,7 +93,7 @@ Feature: Monitoring app Page
     And wait load page
     When turn on demo mode with query params "false"
     And wait load page
-    And select "tab" with "Monitoring app" value in breadcrumbs menu
+    And select "Monitoring app" item in sidebar menu
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
@@ -115,7 +113,7 @@ Feature: Monitoring app Page
     Then verify "Operating_Functions_Commited_Offset_Tip" element on "Monitoring_App" wizard should display hover hint "Label_Hint"."Commited_Offset"
 
   @MLMA
-  @smoke
+  @smoke @rerun
   Scenario: MLMA004 - Check All Applications section components on Monitoring app page
     Given open url
     And wait load page
@@ -123,13 +121,14 @@ Feature: Monitoring app Page
     And wait load page
     When turn on demo mode with query params "false"
     And wait load page
-    And select "tab" with "Monitoring app" value in breadcrumbs menu
+    And select "Monitoring app" item in sidebar menu
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
     Then verify "All_Applications_Title" element visibility on "Monitoring_App" wizard
     Then "All_Applications_Title" element on "Monitoring_App" should contains "All applications" value
     Then verify "All_Applications_Table" element visibility on "Monitoring_App" wizard
+    When scroll to the "All_Applications_Title" element on "Monitoring_App" wizard
     Then verify "All_Applications_Lag_Tip" element visibility on "Monitoring_App" wizard
     Then verify "All_Applications_Lag_Tip" element on "Monitoring_App" wizard should display hover hint "Label_Hint"."Lag"
     Then verify "All_Applications_Commited_Offset_Tip" element visibility on "Monitoring_App" wizard
@@ -156,8 +155,7 @@ Feature: Monitoring app Page
     And wait load page
     When turn on demo mode with query params "false"
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Monitoring app" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Monitoring app" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
@@ -218,8 +216,7 @@ Feature: Monitoring app Page
     And wait load page
     When turn on demo mode with query params "false"
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Monitoring app" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Monitoring app" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
@@ -264,8 +261,7 @@ Feature: Monitoring app Page
     And wait load page
     When turn on demo mode with query params "false"
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Monitoring app" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Monitoring app" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
@@ -280,7 +276,7 @@ Feature: Monitoring app Page
     Then verify "See_All_Link" element visibility on "Application_Monitoring" wizard
     Then click on "See_All_Link" element on "Application_Monitoring" wizard
     And wait load page
-    Then verify breadcrumbs "tab" label should be equal "Artifacts" value
+    Then verify breadcrumbs "tab" label should be equal "Other artifacts" value
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     And wait load page
@@ -296,8 +292,7 @@ Feature: Monitoring app Page
     And wait load page
     When turn on demo mode with query params "false"
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Monitoring app" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Monitoring app" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
@@ -311,7 +306,7 @@ Feature: Monitoring app Page
     Then verify "Results_Table" element visibility on "Application_Monitoring" wizard
 
   @MLMA
-  @smoke
+  @smoke @rerun
   Scenario: MLMA009 - Check Metrics section components on Application monitoring page
     Given open url
     And wait load page
@@ -319,8 +314,7 @@ Feature: Monitoring app Page
     And wait load page
     When turn on demo mode with query params "false"
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Monitoring app" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Monitoring app" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
@@ -331,6 +325,7 @@ Feature: Monitoring app Page
     And wait load page
     Then verify "Metrics_Title" element visibility on "Application_Monitoring" wizard
     Then "Metrics_Title" element on "Application_Monitoring" should contains "Metrics" value
+    When scroll to the "Metrics_Title" element on "Application_Monitoring" wizard
     Then verify "Metrics_Tip" element visibility on "Application_Monitoring" wizard
     Then verify "Metrics_Tip" element on "Application_Monitoring" wizard should display hover hint "Label_Hint"."Metrics_Tip"
     Then verify "Metrics_Table" element visibility on "Application_Monitoring" wizard
@@ -344,8 +339,7 @@ Feature: Monitoring app Page
     And wait load page
     When turn on demo mode with query params "false"
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Monitoring app" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Monitoring app" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
@@ -366,7 +360,7 @@ Feature: Monitoring app Page
     Then verify "Partitions_Status_Commited_Offset_Tip" element on "Application_Monitoring" wizard should display hover hint "Label_Hint"."Commited_Offset"
 
   @MLMA
-  @smoke
+  @smoke @rerun
   Scenario: MLMA011 - Check action bar components on Applications metrics page
     Given open url
     And wait load page
@@ -374,8 +368,7 @@ Feature: Monitoring app Page
     And wait load page
     When turn on demo mode with query params "false"
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Monitoring app" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Monitoring app" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
@@ -397,6 +390,7 @@ Feature: Monitoring app Page
     And wait load page
     Then verify "All_Applications_Title" element visibility on "Monitoring_App" wizard
     Then "All_Applications_Title" element on "Monitoring_App" should contains "All applications" value
+    When scroll to the "All_Applications_Title" element on "Monitoring_App" wizard
     Then verify "open_metrics" option is present on "Monitoring_App" wizard in "All_Applications_Table" table with "monitorAppV1" value in "name" column
     Then click on "open_metrics" option on "Monitoring_App" wizard in "All_Applications_Table" table with "monitorAppV1" value in "name" column with scroll "false"
     And wait load page
@@ -425,8 +419,7 @@ Feature: Monitoring app Page
     And wait load page
     When turn on demo mode with query params "false"
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Monitoring app" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Monitoring app" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
@@ -443,7 +436,7 @@ Feature: Monitoring app Page
     Then "Applications_Metrics_Title" element on "Application_Metrics" should contains "Applications metrics:" value
     Then verify "Endpoints_List_Section" element visibility on "Application_Metrics" wizard
     Then verify "Search_Endpoints_Counter" element visibility on "Application_Metrics" wizard
-    Then "Search_Endpoints_Counter" element on "Application_Metrics" should contains "5 endpoints found" value
+    Then "Search_Endpoints_Counter" element on "Application_Metrics" should contains "11 endpoints found" value
     Then verify "Endpoints_List_Table" element visibility on "Application_Metrics" wizard
     Then verify "Search_By_Endpoint_Filter_Input" element visibility on "Application_Metrics" wizard
     Then type value "boo" to "Search_By_Endpoint_Filter_Input" field on "Application_Metrics" wizard
@@ -467,8 +460,7 @@ Feature: Monitoring app Page
     And wait load page
     When turn on demo mode with query params "false"
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Monitoring app" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Monitoring app" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
@@ -487,9 +479,8 @@ Feature: Monitoring app Page
     Then click on "Endpoints_Batch_Counter" element on "Monitoring_App" wizard
     And wait load page
     Then verify redirection to "projects/default/models/model-endpoints?me-mode=batch"
-    Then verify breadcrumbs "tab" label should be equal "Models" value
-    Then verify "Models_Tab_Selector" on "Models" wizard should contains "Models"."Tab_List"
-    Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Model endpoints" value
+    Then verify breadcrumbs "tab" label should be equal "Model endpoints" value
     Then verify "Table_FilterBy_Button" element visibility on "Model_Endpoints" wizard
     Then verify "Table_FilterBy_Button" element on "Model_Endpoints" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
     Then click on "Table_FilterBy_Button" element on "Model_Endpoints" wizard
@@ -514,9 +505,8 @@ Feature: Monitoring app Page
     Then click on "Endpoints_RealTime_Counter" element on "Monitoring_App" wizard
     And wait load page
     Then verify redirection to "projects/default/models/model-endpoints?me-mode=realTime"
-    Then verify breadcrumbs "tab" label should be equal "Models" value
-    Then verify "Models_Tab_Selector" on "Models" wizard should contains "Models"."Tab_List"
-    Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Model endpoints" value
+    Then verify breadcrumbs "tab" label should be equal "Model endpoints" value
     Then verify "Table_FilterBy_Button" element visibility on "Model_Endpoints" wizard
     Then verify "Table_FilterBy_Button" element on "Model_Endpoints" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
     Then click on "Table_FilterBy_Button" element on "Model_Endpoints" wizard
@@ -533,15 +523,14 @@ Feature: Monitoring app Page
     And wait load page
     Then verify redirection to "projects/default/monitoring-app"
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    Then verify breadcrumbs "tab" label should be equal "Models" value
+    Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
     And wait load page
-    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    And select "Model endpoints" item in sidebar menu
     And wait load page
-    Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Model endpoints" value
     Then verify "Table_FilterBy_Button" element visibility on "Model_Endpoints" wizard
     Then verify "Table_FilterBy_Button" element on "Model_Endpoints" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
     Then click on "Table_FilterBy_Button" element on "Model_Endpoints" wizard

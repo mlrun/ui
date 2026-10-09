@@ -18,41 +18,13 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { By } from 'selenium-webdriver'
-import inputWithAutocomplete from './input-with-autocomplete.component'
 
+// breadcrumbs separators are not clickable anymore, navigation between
+// projects and screens is done via the sidebar (see sidebar.component.js)
 export default {
   root: By.css('nav.breadcrumbs'),
   projectsPageLabel: By.css('.breadcrumbs__item:nth-of-type(1)'),
   projectLabel: By.css('.breadcrumbs__item:nth-of-type(3)'),
   tabLabel: By.css('.breadcrumbs__item:nth-of-type(5)'),
-  crossLabel: By.css('.breadcrumbs__item:nth-of-type(3)'),
-  project: {
-    open_button: By.css('.breadcrumbs__item:nth-of-type(2) button'),
-    options: By.css('a.breadcrumbs__dropdown-item'),
-    option: function(index) {
-      return By.css(`a.breadcrumbs__dropdown-item:nth-of-type(${index})`)
-    }
-  },
-  searchInput: inputWithAutocomplete({
-    root: '.breadcrumbs__dropdown-search',
-    elements: {
-      input: 'input',
-      options: 'a.breadcrumbs__dropdown-item',
-      option_name: '.data-ellipsis'
-    }
-  }),
-  tab: {
-    open_button: By.css('.breadcrumbs__item:nth-of-type(4) button'),
-    options: By.css('a.breadcrumbs__dropdown-item'),
-    option: function(index) {
-      return By.css(`.breadcrumbs__dropdown-item:nth-of-type(${index})`)
-    }
-  },
-  crossTab: {
-    open_button: By.css('.breadcrumbs__item:nth-of-type(2) button'),
-    options: By.css('a.breadcrumbs__dropdown-item'),
-    option: function(index) {
-      return By.css(`.breadcrumbs__dropdown-item:nth-of-type(${index})`)
-    }
-  }
+  crossLabel: By.css('.breadcrumbs__item:nth-of-type(3)')
 }

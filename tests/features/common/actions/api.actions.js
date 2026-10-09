@@ -17,13 +17,22 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { mainHttpClient } from '../../../../src/httpClient'
+import axios from 'axios'
+import qs from 'qs'
 import { expect } from 'chai'
 import { v4 as uuidv4 } from 'uuid'
-import { TAG_LATEST } from '../../../../src/constants'
 
+// same as TAG_LATEST in src/constants.js, which can't be imported here: it uses `import.meta.env`
+const TAG_LATEST = 'latest'
 const REACT_APP_MLRUN_API_URL = 'http://localhost:3000/api/v1'
 const REACT_APP_MLRUN_API_URL_V2 = 'http://localhost:3000/api/v2'
+
+// same settings as `mainHttpClient` in src/httpClient.js, which can't be imported here:
+// it uses `import.meta.env` and UI components that don't load in Node
+const mainHttpClient = axios.create({
+  headers: { 'Cache-Control': 'no-cache' },
+  paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' })
+})
 
 const newJobTemplate = {
   task: {
@@ -74,7 +83,7 @@ export const deleteAPIMLProject =  async (
       })
       .catch(error => {
         if (error.response?.status === 412) {
-          deleteAPIMLProject(
+          return deleteAPIMLProject(
             driver,
             mlProjectName,
             expectedStatusCode,
@@ -147,7 +156,7 @@ export const deleteAPIArtifact = async (
   ) => {
     await mainHttpClient
       .delete(
-        `${REACT_APP_MLRUN_API_URL}/artifacts?project=${projectName}&name=${artifactName}`
+        `${REACT_APP_MLRUN_API_URL_V2}/projects/${projectName}/artifacts?name=${artifactName}`
       )
       .then(res => {
         expect(res.status).equal(expectedStatusCode)

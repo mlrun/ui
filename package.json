@@ -105,6 +105,9 @@
     "report": "node tests/report.js",
     "test:regression": "npm run test:ui && npm run report",
     "start:regression": "concurrently \"npm:mock-server\" \"npm:start\" \"npm:test:regression\"",
+    "build:regression": "vite build --mode development --base / --outDir build/regression",
+    "preview:regression": "vite preview --mode development --outDir build/regression --port 3000 --strictPort",
+    "start:regression:fast": "npm run build:regression && concurrently \"npm:mock-server\" \"npm:preview:regression\" \"npm:test:regression\"",
     "ui-steps": "cross-env BABEL_ENV=test; cross-env NODE_ENV=test; npx -p @babel/core -p @babel/node babel-node --presets @babel/preset-env scripts/collectUITestsSteps.js",
     "nli": "npm link iguazio.dashboard-react-controls",
     "nui": "npm unlink iguazio.dashboard-react-controls"
@@ -143,7 +146,7 @@
     "babel-runtime": "^6.26.0",
     "body-parser": "^1.19.0",
     "chai": "^4.3.4",
-    "chromedriver": "^154.0.1",
+    "chromedriver": "^155.0.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.5.1",
     "cucumber-html-reporter": "^5.3.0",

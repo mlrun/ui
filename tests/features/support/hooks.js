@@ -17,12 +17,20 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { Before, After, Status } from '@cucumber/cucumber'
+import { Before, After, AfterAll, Status } from '@cucumber/cucumber'
 import wd from 'selenium-webdriver'
 import { browser } from '../../config'
-import { clearBackendAfterTest, setRequestsFailureCondition } from '../common-tools/common-tools'
+import { clearBackendAfterTest, resetMockState, setRequestsFailureCondition } from '../common-tools/common-tools'
+import { buildDriver, quitActiveDriver, E2E_TIMEZONE } from './world'
 
 Before(async function () {
+  await resetMockState()
+  await quitActiveDriver()
+  this.driver = buildDriver()
+  if (browser === 'chrome') {
+    // TZ isn't honored by every Chrome build, override the timezone of the tab as well
+    await this.driver.sendDevToolsCommand('Emulation.setTimezoneOverride', { timezoneId: E2E_TIMEZONE })
+  }
   await this.driver.manage().window()
   this.createdItems = []
   this.testContext = {}
@@ -33,26 +41,29 @@ Before(async function () {
 })
 
 After(async function (testCase) {
-  if (testCase.result.status === Status.FAILED) {
-    var stream = await this.driver.takeScreenshot()
-    await this.attach(stream, 'base64:image/png')
-  }
   let logs = []
-  if (browser === 'chrome') {
-    await this.driver
-      .then(() => this.driver.manage().logs().get(wd.logging.Type.BROWSER))
-      .then(result => {
-        logs = result
-      })
-  }
-  await clearBackendAfterTest(this.driver, this.createdItems)
 
-  await this.driver.quit()
+  try {
+    if (testCase.result.status === Status.FAILED) {
+      var stream = await this.driver.takeScreenshot()
+      await this.attach(stream, 'base64:image/png')
+    }
+    if (browser === 'chrome') {
+      logs = await this.driver.manage().logs().get(wd.logging.Type.BROWSER)
+    }
+    await clearBackendAfterTest(this.driver, this.createdItems)
+  } finally {
+    await quitActiveDriver()
+  }
 
   if (logs.some(log => log.level.name_ === 'SEVERE')) {
     await logs.forEach(log => this.attach(`${log.level.name} ${log.message}`, 'text/plain'))
     // throw new Error('There are some errors in console')
   }
+})
+
+AfterAll(async function () {
+  await quitActiveDriver()
 })
 
 Before('@mlrunUnhealthyTest', async function () {

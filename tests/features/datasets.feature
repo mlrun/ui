@@ -12,8 +12,7 @@ Feature: Datasets Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "getting-started-tutorial-admin" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Datasets" value
@@ -22,8 +21,7 @@ Feature: Datasets Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "getting-started-tutorial-admin" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Datasets" value
@@ -53,14 +51,12 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And wait load page
-    And select "tab" with "Project monitoring" value in breadcrumbs menu
+    And select "Project monitoring" item in sidebar menu
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
@@ -94,8 +90,7 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And wait load page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
@@ -144,6 +139,7 @@ Feature: Datasets Page
   @passive
   @smoke
   #TODO:  Datasets Analysis tab - add the data to verify
+  @rerun
   Scenario: MLD005 - Check Details panel still active on page refresh
 #     * set tear-down property "dataset" created in "automation-test" project with "test-file" value
     * create "test-dataset" Dataset with "v1" tag in "default" project with code 200
@@ -151,8 +147,7 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And wait load page
     Then verify "show_all_versions" option is present on "Datasets" wizard in "Datasets_Table" table with "test-dataset" value in "name" column    
     Then verify "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-dataset" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions" with scroll "false"
@@ -205,7 +200,7 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And select "tab" with "Datasets" value in breadcrumbs menu
+    And select "Datasets" item in sidebar menu
     And wait load page
     Then "Register_Dataset_Button" element on "Datasets" should contains "Register dataset" value
     Then click on "Register_Dataset_Button" element on "Datasets" wizard
@@ -279,8 +274,7 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And wait load page
     Then click on "Register_Dataset_Button" element on "Datasets" wizard
     Then verify if "Register_Dataset" popup dialog appears
@@ -327,10 +321,9 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+    Then select "Project monitoring" item in sidebar menu
     And wait load page
-    And select "tab" with "Datasets" value in breadcrumbs menu
+    And select "Datasets" item in sidebar menu
     And wait load page
     Then type value "ea" to "Table_Name_Filter_Input" field on "Datasets" wizard
     Then click on "Table_Refresh_Button" element on "Datasets" wizard
@@ -345,10 +338,9 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+    Then select "Project monitoring" item in sidebar menu
     And wait load page
-    And select "tab" with "Datasets" value in breadcrumbs menu
+    And select "Datasets" item in sidebar menu
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then type value "owner" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
@@ -375,7 +367,7 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And select "tab" with "Datasets" value in breadcrumbs menu
+    And select "Datasets" item in sidebar menu
     And wait load page
     Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "survival-curves_km-timelines" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "survival-curves_km-timelines" value in "name" column
@@ -420,13 +412,13 @@ Feature: Datasets Page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Datasets_Info_Pane" wizard
 
   @MLD
-  @smoke
+  @smoke @rerun
   Scenario: MLD018 - Verify the Delete option state in Datasets table and Overview details action menu 
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And select "tab" with "Datasets" value in breadcrumbs menu
+    And select "Datasets" item in sidebar menu
     And wait load page
     Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then verify that in action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column "Delete" option is enabled
@@ -503,16 +495,15 @@ Feature: Datasets Page
 
   @MLD
   @passive
-  @smoke
+  @smoke @rerun
   Scenario: MLD013 - Check components on Artifact Preview on Datasets page
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And select "tab" with "Datasets" value in breadcrumbs menu
-    And wait load page    
-    Then hover on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
-    When click on cell with row index 2 in "artifact_preview_btn" column in "Datasets_Table" table on "Datasets" wizard
+    And select "Datasets" item in sidebar menu
+    And wait load page
+    When click on "artifact_preview_btn" option on "Datasets" wizard in "Datasets_Table" table with "test_new_structure" value in "name" column with scroll "false"
     And wait load page
     Then verify "Preview_Table" element visibility on "Preview_Popup" wizard
     Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
@@ -575,10 +566,9 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+    Then select "Project monitoring" item in sidebar menu
     And wait load page
-    And select "tab" with "Datasets" value in breadcrumbs menu
+    And select "Datasets" item in sidebar menu
     And wait load page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
@@ -604,8 +594,7 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And wait load page
     Then click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
@@ -634,8 +623,7 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And wait load page
     When click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
@@ -653,16 +641,15 @@ Feature: Datasets Page
     Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
 
   @MLD
-  @smoke
+  @smoke @rerun
   Scenario: MLD010 - Check that version tag dropdown shows all tags on filters wizard on Datasets page
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And wait load page
-    When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    When click on cell with value "auto-trainer-train_test_set" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
@@ -696,8 +683,7 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And wait load page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
@@ -733,8 +719,7 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And wait load page
     Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "cleaned_data" value in "name" column with scroll "false"
     And wait load page
@@ -789,8 +774,7 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And wait load page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
@@ -921,8 +905,7 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And wait load page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
@@ -965,8 +948,7 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And wait load page
     Then click on cell with value "test_new_structure2" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
@@ -1015,14 +997,13 @@ Feature: Datasets Page
             | name2edited |         v3io:///container-name/fileedited             |
 
   @MLD
-  @smoke
+  @smoke @rerun
   Scenario: MLD022 - Check Parameters components on Train Model wizard
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And wait load page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
@@ -1091,7 +1072,7 @@ Feature: Datasets Page
             | name2edited           |                int                   |     1234     |
 
   @MLD
-  @smoke
+  @smoke @rerun
   Scenario: MLD023 - Check Resources components on Train Model wizard
     Given open url
     And wait load page
@@ -1099,8 +1080,7 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And wait load page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
@@ -1280,8 +1260,7 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And wait load page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
@@ -1362,8 +1341,7 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And wait load page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
@@ -1402,17 +1380,16 @@ Feature: Datasets Page
     Then "Teardown_Checkbox" element should be checked on "Modal_Wizard_Form" wizard
 
   @MLD
-  @smoke
+  @smoke @rerun
   Scenario: MLD026 - Verify dataset elements visibility on Datasets Table with low number of rows
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Datasets" item in sidebar menu
     And wait load page
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
-    When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    When click on cell with value "test-regressor_cox-test-summary" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
@@ -1420,7 +1397,7 @@ Feature: Datasets Page
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then check "expand_btn" not presented in "Datasets_Table" on "Datasets" wizard
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
-    Then click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then click on cell with value "test-regressor_cox-test-summary" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then select "View YAML" option in action menu on "Datasets_Info_Pane" wizard
@@ -1428,13 +1405,13 @@ Feature: Datasets Page
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
-    Then click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then click on cell with value "survival-curves_coxhazard-summary" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
-    Then click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then click on cell with value "test-regressor_cox-test-summary" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
 
@@ -1445,7 +1422,7 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And select "tab" with "Datasets" value in breadcrumbs menu
+    And select "Datasets" item in sidebar menu
     And wait load page
     Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column with scroll "false"
     And wait load page
@@ -1500,13 +1477,13 @@ Feature: Datasets Page
     Then verify "Datasets_Table" element visibility on "Datasets" wizard
 
   @MLD
-  @smoke
+  @smoke @rerun
   Scenario: MLD028 - Verify the Delete option in Datasets table, details panel, full view action menu 
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And select "tab" with "Datasets" value in breadcrumbs menu
+    And select "Datasets" item in sidebar menu
     And wait load page
     Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then select "Delete" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "test-regressor_cox-test-summary" value in "name" column

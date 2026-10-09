@@ -11,16 +11,14 @@ Feature: Feature Store Page
         And click on row root with value "fraud-demo2-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "fraud-demo2-admin" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature store" value
+        Then verify breadcrumbs "tab" label should be equal "Feature sets" value
         Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
@@ -56,18 +54,16 @@ Feature: Feature Store Page
         And click on row root with value "fraud-demo2-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "fraud-demo2-admin" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "tab" with "Project monitoring" value in breadcrumbs menu
+        And select "Project monitoring" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature store" value
+        Then verify breadcrumbs "tab" label should be equal "Feature sets" value
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
         Then verify "Features" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -87,7 +83,7 @@ Feature: Feature Store Page
         Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
         Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Features_Table" element visibility on "Feature_Store_Features_Tab" wizard
-        Then select "project" with "test-test" value in breadcrumbs menu
+        Then select "test-test" project in sidebar project dropdown
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message_Feature"
         Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Tab" wizard
         Then select "All tags" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
@@ -104,13 +100,12 @@ Feature: Feature Store Page
         And click on row root with value "fraud-demo2-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "fraud-demo2-admin" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature store" value
+        Then verify breadcrumbs "tab" label should be equal "Feature vectors" value
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Create_Vector_Button" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
@@ -127,7 +122,7 @@ Feature: Feature Store Page
         Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
         Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
-        Then select "project" with "fsdemo-admin" value in breadcrumbs menu
+        Then select "fsdemo-admin" project in sidebar project dropdown
         And wait load page
         Then verify "Feature_Vectors_Table" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
 
@@ -140,8 +135,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -210,13 +204,13 @@ Feature: Feature Store Page
     @MLFS
     @passive
     @inProgress
-    @smoke
+    @smoke @rerun
     Scenario: MLFS005 - Check all mandatory components in Item infopane on Overview tab table on Feature Vectors tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -240,6 +234,7 @@ Feature: Feature Store Page
         When turn on demo mode with query params "false"
         And wait load page
         When click on cell with row index 1 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
+        And wait load page
         Then select "Analysis" tab in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
         Then verify "Analysis" tab is active in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -253,8 +248,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -283,7 +277,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -309,7 +303,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "fraud-demo2-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -337,7 +331,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -363,7 +357,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -391,7 +385,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -416,7 +410,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "ea" to "Table_Name_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
@@ -430,13 +424,13 @@ Feature: Feature Store Page
 
     @MLFS
     @passive
-    @smoke
+    @smoke @rerun
     Scenario: MLFS013 - Check filtering by Label on Feature Store Feature Sets Tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "my-key" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
@@ -462,7 +456,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -482,7 +476,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -510,7 +504,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -521,13 +515,13 @@ Feature: Feature Store Page
 
     @MLFS
     @passive
-    @smoke
+    @smoke @rerun
     Scenario: MLFS017 - Check filtering by Label on Feature Store Feature Vectors Tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard
         And wait load page
@@ -540,7 +534,7 @@ Feature: Feature Store Page
         Then type value "type=featureVector" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
-        Then value in "labels" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "type=featureVector" in "Overlay"
+        Then value in "labels" column with "dropdowns" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "type=featureVector" in "Overlay"
         Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
@@ -555,7 +549,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
@@ -572,7 +566,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -592,7 +586,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -623,7 +617,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
@@ -667,7 +661,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
@@ -711,7 +705,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -768,7 +762,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -796,7 +790,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -814,7 +808,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -839,7 +833,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -918,7 +912,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -984,7 +978,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1036,7 +1030,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1070,7 +1064,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "automation-test-name3" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1119,7 +1113,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1166,7 +1160,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
@@ -1181,7 +1175,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "fraud-demo2-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then select "View YAML" option in action menu on "Feature_Store_Feature_Sets_Tab" wizard in "Feature_Sets_Table" table at row with "transactions" value in "name" column
         Then verify if "View_YAML" popup dialog appears
@@ -1207,7 +1201,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -1226,7 +1220,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -1255,7 +1249,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1274,7 +1268,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -1299,7 +1293,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -1357,14 +1351,13 @@ Feature: Feature Store Page
         
     @MLFS
     @passive
-    @smoke
+    @smoke @rerun
     Scenario: MLFS039 - Check all mandatory components on Create feature vector popup
         Given open url
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1419,8 +1412,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1460,8 +1452,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1506,14 +1497,13 @@ Feature: Feature Store Page
 
     @MLFS
     @passive
-    @smoke
+    @smoke @rerun
     Scenario: MLFS042 - Verify filtering by name and entity on Add to feature vector tab
         Given open url
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1542,14 +1532,13 @@ Feature: Feature Store Page
 
     @MLFS
     @inProgress
-    @smoke
+    @smoke @rerun
     Scenario: MLFS043 - Add to feature vector
         Given open url
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1633,8 +1622,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1731,15 +1719,14 @@ Feature: Feature Store Page
         Then "Apply_Changes_Button" element on "Feature_Vectors_Info_Pane" should contains "Apply Changes" value
 
     @MLFS
-    @smoke
+    @smoke @rerun
     Scenario: MLFS045 - Verify Feature Label icon on Requested Features tab on Feature Vectors tab
-        And set tear-down property "featureVector" created in "default" project with "test_vector" value
+        And set tear-down property "featureVector" created in "fsdemo-admin" project with "test_vector" value
         Given open url
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1775,7 +1762,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "automation-test-name001" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message_Feature_Sets"
         * set tear-down property "featureSet" created in "automation-test-name001" project with "test_fs" value
@@ -1821,16 +1808,16 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "automation-test-010" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then verify redirection from "projects/automation-test-010/feature-store/INVALID" to "projects/automation-test-010/feature-store/feature-sets"
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify redirection from "projects/automation-test-010/feature-store/INVALID" to "projects/automation-test-010/feature-store/feature-sets"
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify redirection from "projects/automation-test-010/feature-store/feature-sets/INVALID/latest/overview" to "projects/automation-test-010/feature-store/feature-sets"
-        And select "tab" with "Datasets" value in breadcrumbs menu
+        And select "Datasets" item in sidebar menu
         And wait load page
-        And select "tab" with "Feature store" value in breadcrumbs menu
+        And select "Feature store" item in sidebar menu
         And wait load page
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify redirection from "projects/automation-test-010/feature-store/feature-sets/test_fs/latest/INVALID" to "projects/automation-test-010/feature-store/feature-sets/test_fs/latest/overview"
@@ -1879,8 +1866,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -1908,8 +1894,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1933,8 +1918,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1974,8 +1958,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -2016,8 +1999,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -2060,8 +2042,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -2151,8 +2132,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -2216,8 +2196,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -2235,7 +2214,7 @@ Feature: Feature Store Page
     @MLFS
     @FAILED_TODO
     #TODO: ingest isn't implemented on mock, ingest isn't implemented for scheduling - ML-3626
-    @inProgress
+    @inProgress @rerun
     Scenario: MLFS056 - Verify Labels creation on Feature Set new item wizard  with 'Save And Ingest' button
         Given open url
         And wait load page
@@ -2245,8 +2224,7 @@ Feature: Feature Store Page
         # Then click on "Create_Button" element on "Create_New_Project" wizard
         And click on row root with value "automation-test-name201" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -2267,8 +2245,7 @@ Feature: Feature Store Page
         Then click on "Confirm_Button" element on "Common_Popup" wizard
         And wait load page
         Then "Header" element on "Feature_Sets_Info_Pane" should contains "new-feature-set-1" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "new-feature-set-1-ingest"
         #///postcondition - DELETE PROJECT///
         # Then check "automation-test-name201" value in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2285,8 +2262,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -2304,13 +2280,13 @@ Feature: Feature Store Page
     @MLFS
     @smoke
     #TODO: check the loader after select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table
+    @rerun
     Scenario: MLFS061 - Check Feature vector deletion 
         Given open url
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -2347,6 +2323,7 @@ Feature: Feature Store Page
         When click on "Cancel_Button" element on "Confirm_Popup" wizard
         And wait load page
         Then click on cell with row index 2 in "expand_btn" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
+        And wait load page
         Then select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "latest" value in "name_expand_btn" column
         Then verify if "Confirm_Popup" popup dialog appears
         Then "Title" element on "Confirm_Popup" should contains "Delete feature vector?" value

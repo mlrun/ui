@@ -38,9 +38,14 @@ require('dotenv-expand')(require('dotenv').config({ path: '.env.test.local' }))
 require('dotenv-expand')(require('dotenv').config({ path: '.env.test' }))
 require('dotenv-expand')(require('dotenv').config({ path: '.env' }))
 
+const http = require('http')
 const execFileSync = require('child_process').execFileSync
 const path = require('path')
 const argv = process.argv.slice(2)
+
+// app and mock server must be up before the first scenario, `start:regression` starts all of them at once
+const REQUIRED_SERVERS = ['http://localhost:3000', 'http://localhost:30000']
+const SERVER_WAIT_TIMEOUT = 180000
 
 // Resolve the local binary directly so we don't need a shell to find it on any platform
 // (on Windows, the .bin shim is a .cmd/.ps1 file that a shell-less spawn can't launch).
@@ -50,17 +55,31 @@ const cucumberBin = path.join(
   process.platform === 'win32' ? 'cucumber-js.cmd' : 'cucumber-js'
 )
 
+// run all features in `tests` unless specific feature files are passed
+const hasFeaturePaths = argv.some(arg => /\.feature(:\d+)*$/.test(arg))
+// E2E_TAGS - cucumber tag expression, e.g. E2E_TAGS=@rerun to run only previously failed scenarios
+const tagsArgs = process.env.E2E_TAGS ? ['--tags', process.env.E2E_TAGS] : []
+
 // build cucumber executive command args
+// support code is passed via `--require` so it's loaded with `require()` through `@babel/register`,
+// otherwise cucumber loads it with `import()` and Node's ESM loader fails on extensionless imports
 const cucumberArgs = [
   '--require-module',
   '@babel/register',
   '--require-module',
   '@babel/polyfill',
+  '--require',
+  'tests/features/**/*.js',
+  '-f',
+  './tests/formatters/scenario-formatter.js',
+  '-f',
+  `rerun:${report}_rerun.txt`,
   '-f',
   `json:${report}.json`,
   '-f',
   `html:${report}_default.html`,
-  'tests',
+  ...tagsArgs,
+  ...(hasFeaturePaths ? [] : ['tests']),
   ...argv
 ]
 
@@ -69,6 +88,37 @@ const reportDir = report.split('/').slice(0, -1).join('/')
 console.log(reportDir)
 if (!fs.existsSync(reportDir)) {
   fs.mkdirSync(reportDir)
+}
+
+const isServerUp = url =>
+  new Promise(resolve => {
+    http
+      .get(url, res => {
+        res.resume()
+        resolve(true)
+      })
+      .on('error', () => resolve(false))
+  })
+
+async function waitForServers() {
+  const deadline = Date.now() + SERVER_WAIT_TIMEOUT
+  let pending = REQUIRED_SERVERS
+
+  while (pending.length) {
+    const statuses = await Promise.all(pending.map(isServerUp))
+
+    pending = pending.filter((url, index) => !statuses[index])
+
+    if (!pending.length) break
+    if (Date.now() > deadline) {
+      console.error(`Servers are not available after ${SERVER_WAIT_TIMEOUT / 1000}s: ${pending.join(', ')}`)
+      process.exit(1)
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 1000))
+  }
+
+  console.log(`Servers are up: ${REQUIRED_SERVERS.join(', ')}`)
 }
 
 function runCrossPlatform() {
@@ -81,4 +131,4 @@ function runCrossPlatform() {
 }
 
 // cucumber
-runCrossPlatform()
+waitForServers().then(runCrossPlatform)

@@ -3,7 +3,7 @@ Feature: Alerts Monitoring Page
     Testcases that verifies functionality on MLRun Alerts Monitoring Page
 
     @MLAM
-    @smoke
+    @smoke @rerun
     Scenario: MLAM001 - Check components on Alerts monitoring page
         Given open url
         And wait load page
@@ -44,17 +44,17 @@ Feature: Alerts Monitoring Page
         And wait load page
         Then verify "Event_Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
         Then verify "Event_Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
-        Then verify "Event_Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Event_Type_Filter_Options"
         Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
         Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
         Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+        Then verify "Event_Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Event_Type_Filter_Options"
         Then navigate back
         And wait load page
         Then verify "Monitoring_Alerts_Box_Title" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
         
     @MLAM
-    @smoke
+    @smoke @rerun
     Scenario: MLAM002 - Check redirection from Projects page by Endpoint alerts entity type
         Given open url
         And wait load page
@@ -102,7 +102,7 @@ Feature: Alerts Monitoring Page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
     
     @MLAM
-    @smoke
+    @smoke @rerun
     Scenario: MLAM003 - Check redirection from Projects page by Jobs alerts entity type
         Given open url
         And wait load page
@@ -198,7 +198,7 @@ Feature: Alerts Monitoring Page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
 
     @MLAM
-    @smoke
+    @smoke @rerun
     Scenario: MLAM005 - Check components on Job alert detail pane
         Given open url
         And wait load page
@@ -255,7 +255,7 @@ Feature: Alerts Monitoring Page
         Then verify "Header" element visibility on "Alerts_Jobs_Info_Pane" wizard
     
     @MLAM
-    @smoke
+    @smoke @rerun
     Scenario: MLAM006 - Check components in Job detail pop-up on Job alert detail pane
         Given open url
         And wait load page
@@ -356,7 +356,7 @@ Feature: Alerts Monitoring Page
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Pods_data_Completion"
 
     @MLAM
-    @smoke
+    @smoke @rerun
     Scenario: MLAM007 - Check components on Endpoints alert detail pane
         Given open url
         And wait load page

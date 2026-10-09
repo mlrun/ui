@@ -11,19 +11,17 @@ Feature: LLM prompts Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "llmdeploy332" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "LLM prompts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
     Then verify redirection to "projects/llmdeploy332/llm-prompts?bePage=1&fePage=1"
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Project monitoring" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Project monitoring" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     And wait load page
-    And select "tab" with "LLM prompts" value in breadcrumbs menu
+    And select "LLM prompts" item in sidebar menu
     And wait load page
     Then verify redirection to "projects/llmdeploy332/llm-prompts?bePage=1&fePage=1"
     Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
@@ -86,14 +84,12 @@ Feature: LLM prompts Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "auto-generated-data" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "LLM prompts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
     Then verify redirection to "projects/auto-generated-data/llm-prompts?bePage=1&fePage=1"
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Project monitoring" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Project monitoring" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
@@ -126,14 +122,12 @@ Feature: LLM prompts Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "auto-generated-data" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "LLM prompts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
     Then verify redirection to "projects/auto-generated-data/llm-prompts?bePage=1&fePage=1"
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Project monitoring" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Project monitoring" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
@@ -176,19 +170,17 @@ Feature: LLM prompts Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "llmdeploy332" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "LLM prompts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
     Then verify redirection to "projects/llmdeploy332/llm-prompts?bePage=1&fePage=1"
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Project monitoring" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Project monitoring" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     And wait load page
-    And select "tab" with "LLM prompts" value in breadcrumbs menu
+    And select "LLM prompts" item in sidebar menu
     And wait load page
     Then verify redirection to "projects/llmdeploy332/llm-prompts?bePage=1&fePage=1"
     Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
@@ -225,8 +217,7 @@ Feature: LLM prompts Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "llmdeploy332" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "LLM prompts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
@@ -274,8 +265,7 @@ Feature: LLM prompts Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "llmdeploy332" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "LLM prompts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
@@ -375,8 +365,7 @@ Feature: LLM prompts Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "llmdeploy332" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "LLM prompts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
@@ -418,8 +407,7 @@ Feature: LLM prompts Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "llmdeploy332" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "LLM prompts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
@@ -451,8 +439,7 @@ Feature: LLM prompts Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "llmdeploy332" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "LLM prompts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
@@ -492,8 +479,7 @@ Feature: LLM prompts Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "llmdeploy332" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "LLM prompts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
@@ -602,8 +588,7 @@ Feature: LLM prompts Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "llmdeploy332" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "LLM prompts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
@@ -726,8 +711,7 @@ Feature: LLM prompts Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "llmdeploy332" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "LLM prompts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
@@ -802,8 +786,7 @@ Feature: LLM prompts Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "llmdeploy332" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "LLM prompts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
@@ -869,7 +852,7 @@ Feature: LLM prompts Page
     Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
 
   @MLLP
-  @smoke
+  @smoke @rerun
   Scenario: MLLP014 - Verify prompt filtering by model name and tag
     Given open url
     And wait load page
@@ -877,8 +860,7 @@ Feature: LLM prompts Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "auto-generated-data" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "LLM prompts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
@@ -910,7 +892,7 @@ Feature: LLM prompts Page
     And wait load page
     Then verify "Table_FilterBy_Button" element on "LLM_Prompts" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
     And wait load page
-    And select "project" with "llmdeploy332" value in breadcrumbs menu
+    And select "llmdeploy332" project in sidebar project dropdown
     And wait load page
     Then click on "Table_FilterBy_Button" element on "LLM_Prompts" wizard
     Then type value "model_art1" to "Model_Name_Filter_Input" field on "FilterBy_Popup" wizard
@@ -926,10 +908,10 @@ Feature: LLM prompts Page
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-    Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_LLM_Prompt_Model_Name_Tag"
+    Then "No_Data_Message" element on "commonPagesHeader" should contains "No data matches the filter: \"LLM prompt version tag: latest, Show best iteration only: true, Model name: model_art1, Model version tag: v2\"" value
 
   @MLLP
-  @smoke
+  @smoke @rerun
   Scenario: MLLP015 - Verify model detail popup from the LLM promts table list
     Given open url
     And wait load page
@@ -937,8 +919,7 @@ Feature: LLM prompts Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "llmdeploy332" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "LLM prompts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "LLM prompts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "LLM prompts" value
@@ -984,7 +965,7 @@ Feature: LLM prompts Page
     Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
     Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then verify "Tab_Selector" element visibility on "Modal_Transition_Popup" wizard
-    Then verify "Tab_Selector" on "Modal_Transition_Popup" wizard should contains "Models_Info_Pane"."Tab_List_Two_Tabs"
+    Then verify "Tab_Selector" on "Modal_Transition_Popup" wizard should contains "Models_Info_Pane"."Tab_List_Prompt"
     Then verify "Overview" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
     Then verify "Overview_General_Headers" on "Modal_Transition_Popup" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
     Then verify "Overview_Producer_Headers" on "Modal_Transition_Popup" wizard should contains "Models_Info_Pane"."Overview_Producer_Headers_Kind_Project"

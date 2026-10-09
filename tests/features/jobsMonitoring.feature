@@ -3,7 +3,7 @@ Feature: Jobs Monitoring Page
     Testcases that verifies functionality on MLRun Jobs Monitoring Page
 
     @MLJM
-    @smoke
+    @smoke @rerun
     Scenario: MLJM001 - Check components on Jobs tab of Jobs monitoring page
         Given open url
         And wait load page
@@ -107,7 +107,6 @@ Feature: Jobs Monitoring Page
         Then "Status_Jobs_Error_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
         Then "Status_Jobs_Completed_Checkbox" element should be checked on "FilterBy_Popup" wizard
         Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
-        And select "crossTab" with "Jobs monitoring" value in breadcrumbs menu
         Then verify redirection to "projects/*/jobs-monitoring/jobs?state=completed&dates=past24hours&bePage=1&fePage=1"
         Then click on breadcrumbs "projectsPage" label on "commonPagesHeader" wizard
         And wait load page
@@ -122,7 +121,7 @@ Feature: Jobs Monitoring Page
         Then "Error_Message" component on "Jobs_Monitoring_Jobs_Tab" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring"
 
     @MLJM
-    @smoke
+    @smoke @rerun
     Scenario: MLJM004 - Check search by name, project name, filter by Date picker on Jobs tab of Jobs monitoring page
         Given open url
         And wait load page
@@ -314,7 +313,7 @@ Feature: Jobs Monitoring Page
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
     
     @MLJM
-    @smoke
+    @smoke @rerun
     Scenario: MLJM010 - Check filter by Types on Jobs tab of Jobs monitoring page
         Given open url
         And wait load page
@@ -379,7 +378,7 @@ Feature: Jobs Monitoring Page
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Handler"
 
     @MLJM
-    @smoke
+    @smoke @rerun
     Scenario: MLJM011 - Check filter by Labels on Jobs tab of Jobs monitoring page
         Given open url
         And wait load page
@@ -436,7 +435,7 @@ Feature: Jobs Monitoring Page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         And wait load page
-        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Jobs_Tab" wizard selected option value "Any time"
         Then type value "qwe" to "Search_By_Name_Filter_Input" field on "Jobs_Monitoring_Jobs_Tab" wizard
         Then click on "Refresh_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
         And wait load page
@@ -545,7 +544,7 @@ Feature: Jobs Monitoring Page
         Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Monitor_Jobs_Name"
  
     @MLJM
-    @smoke
+    @smoke @rerun
     Scenario: MLJM002 - Check components on Workflows tab of Jobs monitoring page
         Given open url
         And wait load page
@@ -649,7 +648,7 @@ Feature: Jobs Monitoring Page
         Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
     
     @MLJM
-    @smoke
+    @smoke @rerun
     Scenario: MLJM005 - Check search by name, project name, filter by Date picker on Workflows tab of Jobs monitoring page
         Given open url
         And wait load page
@@ -716,7 +715,7 @@ Feature: Jobs Monitoring Page
         And wait load page
 
     @MLJM
-    @smoke
+    @smoke @rerun
     Scenario: MLJM015 - Check the Terminate functionality on Workflows tab of Jobs monitoring page with running status on main table list
         Given open url
         And wait load page
@@ -759,7 +758,7 @@ Feature: Jobs Monitoring Page
         And wait load page
         
     @MLJM
-    @smoke
+    @smoke @rerun
     Scenario: MLJM018  - Check the Terminate functionality on Workflows tab of Jobs monitoring page with running status on workflow runs graph view   
         Given open url
         And wait load page
@@ -799,7 +798,7 @@ Feature: Jobs Monitoring Page
         Then verify "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard is enabled
 
     @MLJM
-    @smoke
+    @smoke @rerun
     Scenario: MLJM019  - Check the Terminate functionality on Workflows tab of Jobs monitoring page with running status on workflow runs list view
         Given open url
         And wait load page
@@ -846,7 +845,7 @@ Feature: Jobs Monitoring Page
         Then verify "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard is enabled
 
     @MLJM
-    @smoke
+    @smoke @rerun
     Scenario: MLJM020  - Check the Terminate functionality on Workflows tab of Jobs monitoring page with running status with run detail pane
         Given open url
         And wait load page
@@ -910,7 +909,7 @@ Feature: Jobs Monitoring Page
         And wait load page
 
     @MLJM
-    @smoke
+    @smoke @rerun
     Scenario: MLJM016 - Check the Terminate functionality on Workflows tab of Jobs monitoring page with compleated status
         Given open url
         And wait load page
@@ -955,7 +954,7 @@ Feature: Jobs Monitoring Page
         Then verify "Terminate_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard is disabled
     
     @MLJM
-    @smoke
+    @smoke @rerun
     Scenario: MLJM008 - Check filter by Statuses and View Yaml action on Workflows tab of Jobs monitoring page
         Given open url
         And wait load page
@@ -1016,7 +1015,7 @@ Feature: Jobs Monitoring Page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
 
     @MLJM
-    @smoke
+    @smoke @rerun
     Scenario: MLJM003 - Check components on Scheduled tab of Jobs monitoring page
         Given open url
         And wait load page
@@ -1173,7 +1172,7 @@ Feature: Jobs Monitoring Page
         Then "Error_Message" component on "Jobs_Monitoring_Scheduled_Tab" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Scheduled"
 
     @MLJM
-    @smoke
+    @smoke @rerun
     Scenario: MLJM006 - Check search by name, project name, filter by Date picker on Scheduled tab of Jobs monitoring page
         Given open url
         And wait load page
@@ -1366,6 +1365,7 @@ Feature: Jobs Monitoring Page
     @MLJM
     @smoke
     # TODO: Total wf counter = 4, 3 row elements are displayed - known bug (due to running not in 24h period), couldn't be fixed yet 
+    @rerun
     Scenario: MLJM012 - Check jobs/workflows/scheduled count consistency among counter data and Jobs monitoring Tabs
         Given open url
         And wait load page

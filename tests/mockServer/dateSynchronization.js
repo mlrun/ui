@@ -21,22 +21,24 @@ such restriction.
 function formatDate(date) {
     return date.toISOString()
 }
-// Current time
-const now = new Date()
+// relative dates are recalculated on every update call, so they stay valid during a long regression run
+let oneHourAgo, oneDayAgo, next24Hours, nextHour
 
-// Date picker 'Past hour' (get past 45 min)
-const oneHourAgo = new Date(now.getTime() - (45 * 60 * 1000))
+function refreshDates() {
+    const now = new Date()
 
-// Date picker 'Past 24h' (get past 20h)
-const oneDayAgo = new Date(now.getTime() - (20 * 60 * 60 * 1000))  
-
-// Date picker 'Next 24h' (get past 20h)
-const next24Hours = new Date(now.getTime() + (24 * 60 * 60 * 1000))
-
-// Date picker 'Next hour' (get past 20h)
-const nextHour = new Date(now.getTime() + (60 * 60 * 1000))
+    // Date picker 'Past hour' (get past 45 min)
+    oneHourAgo = new Date(now.getTime() - (45 * 60 * 1000))
+    // Date picker 'Past 24h' (get past 20h)
+    oneDayAgo = new Date(now.getTime() - (20 * 60 * 60 * 1000))
+    // Date picker 'Next 24h'
+    next24Hours = new Date(now.getTime() + (24 * 60 * 60 * 1000))
+    // Date picker 'Next hour'
+    nextHour = new Date(now.getTime() + (60 * 60 * 1000))
+}
 
 function updateRuns(runs) {  
+    refreshDates()
     // update start_time та last_update
     runs.runs = runs.runs.map(run => {
         if (['cf842616c89347c7bb7bca2c9e840a21', '76f48c8165da473bb4356ef7b196343f','f5751299ee21476e897dfd90d94c49c4', 'dad0fdf93bd949589f6b20f79fa47798', '9723e5a30b0e43b0b7cfda098445c446', '85c3a6bcc292462d89e4d65444d179b1']
@@ -55,6 +57,7 @@ function updateRuns(runs) {
 }
 
 function updatePipelines(pipelines) { 
+    refreshDates()
     // update finished_at
     for (const project in pipelines) {
         pipelines[project].runs = pipelines[project].runs.map(run => {
@@ -72,6 +75,7 @@ function updatePipelines(pipelines) {
 }
 
 function updatePipelineIDs(pipelineIDs) { 
+    refreshDates()
     // update created_at та finished_at
     pipelineIDs.forEach(pipeline => {
         if (['5a5db6e3-7cdd-4d33-971c-d2310b02387c', '1f8b29a5-cdab-4b84-aad7-7f9bc20daf0b'].includes(pipeline.run.id)) { 
@@ -86,6 +90,7 @@ function updatePipelineIDs(pipelineIDs) {
 }
 
 function updateSchedules(schedules) { 
+    refreshDates()
     // update next_run_time
     schedules.schedules = schedules.schedules.map(schedule => {
         if (['clean-data', 'clean-data-test', 'aggregate-test', 'erann-test', 'prep-data', 'sklearn-classifier'].includes(schedule.name)) {

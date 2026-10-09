@@ -77,6 +77,10 @@ export const clickOnComponent = async (driver, component) => {
 
 export const clickNearComponent = async (driver, component) => {
     const element = await driver.findElement(component)
+    // the element can be partly scrolled out of the viewport (e.g. inputs at the top of a side panel),
+    // then its corner is outside of the viewport and the move fails with MoveTargetOutOfBoundsError
+    await driver.executeScript('arguments[0].scrollIntoView({ block: "center", inline: "nearest" })', element)
+    await driver.sleep(250)
     const coordinates = await element.getRect()
     const actions = driver.actions({ async: true })
     await actions
@@ -89,12 +93,15 @@ export const hoverComponent = async (driver, component, scroll = true) => {
     const baseComponent = component.root ? component.root : component
     const element = await driver.findElement(baseComponent)
     if (scroll) {
-      await scrollToWebElement(driver, element)
+      // default `block: 'start'` puts the element under sticky table headers
+      await driver.executeScript("arguments[0].scrollIntoView({ block: 'center', inline: 'nearest' })", element)
+      await driver.sleep(250)
     }
     const coordinates = await element.getRect()
     const actions = driver.actions({ async: true })
+    // `parseInt` truncates fractional coordinates, so the pointer could land 1px outside the element
     await actions
-      .move({ x: parseInt(coordinates.x), y: parseInt(coordinates.y) })
+      .move({ x: Math.ceil(coordinates.x) + 1, y: Math.ceil(coordinates.y) + 1 })
       .perform()
     await driver.sleep(250)
   }
@@ -152,7 +159,10 @@ export const componentIsNotPresent = async (driver, component) => {
 export const componentIsVisible = async (driver, component) => {
     const _component = component.root ?? component
     const element = await driver.findElement(_component)
-    const displayed = await element.isDisplayed()
+    // element may still be in its enter transition (notifications have opacity: 0 for 500ms)
+    const displayed = await driver
+      .wait(until.elementIsVisible(element), 3000)
+      .then(() => true, () => false)
     expect(displayed).equal(true)
   }
 
@@ -292,6 +302,9 @@ export const scrollToElement = async (driver, component) => {
 
 export const checkComponentHintTextWithHover = async (driver, component, hintComponent, text) => {
     const hintButton = await driver.findElement(component)
+    // elements below the fold can't be hovered (MoveTargetOutOfBoundsError)
+    await driver.executeScript('arguments[0].scrollIntoView({ block: "center", inline: "nearest" })', hintButton)
+    await driver.sleep(250)
     const coordinates = await hintButton.getRect()
     const actions = driver.actions({ async: true })
     await actions

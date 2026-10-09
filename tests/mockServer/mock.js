@@ -97,6 +97,13 @@ import {
   generateAlerts
 } from './dataGenerators.js'
 
+// pristine copies of the collections scenarios mutate (abort run, terminate/retry workflow, delete schedule...),
+// restored by `POST /reset-mock-state` before every scenario (hooks.js), so scenarios don't depend on each other
+const pristineRuns = cloneDeep(runs.runs)
+const pristinePipelines = cloneDeep(pipelines)
+const pristinePipelineIDs = cloneDeep(pipelineIDs)
+const pristineSchedules = cloneDeep(schedules.schedules)
+
 // Updating values in files with synthetic data
 updateRuns(runs)
 updatePipelines(pipelines)
@@ -108,6 +115,21 @@ generateArtifacts(artifacts)
 generateFunctions(funcs)
 generateRuns(runs)
 generateAlerts(alerts)
+
+const resetMockState = () => {
+  runs.runs = cloneDeep(pristineRuns)
+  Object.keys(pipelines).forEach(project => delete pipelines[project])
+  Object.assign(pipelines, cloneDeep(pristinePipelines))
+  pipelineIDs.splice(0, pipelineIDs.length, ...cloneDeep(pristinePipelineIDs))
+  schedules.schedules = cloneDeep(pristineSchedules)
+
+  // re-calculate the time-relative data ("Past hour", "Next 24 hours"...) against the current time
+  updateRuns(runs)
+  updatePipelines(pipelines)
+  updatePipelineIDs(pipelineIDs)
+  updateSchedules(schedules)
+  generateRuns(runs)
+}
 
 // Here we are configuring express to use body-parser as middle-ware.
 const app = express()
@@ -342,7 +364,7 @@ function deleteProjectHandler(req, res, omitResponse) {
   )
   if (collectedProject.length) {
     remove(projects.projects, project => project.metadata.name === req.params['project'])
-    remove(projectsSummary.projects, project => project.name === req.params['project'])
+    remove(projectsSummary.project_summaries, summary => summary.name === req.params['project'])
     remove(
       featureSets.feature_sets,
       featureSet => featureSet.metadata.project === req.params['project']
@@ -353,7 +375,7 @@ function deleteProjectHandler(req, res, omitResponse) {
     delete secretKeys[req.params.project]
     res.statusCode = 204
   } else {
-    res.statusCode = 500
+    res.statusCode = 404
   }
 
   if (!omitResponse) {
@@ -522,7 +544,15 @@ function deleteFeatureSet(req, res) {
 }
 
 function getProject(req, res) {
-  res.send(projects.projects.find(project => project.metadata.name === req.params['project']))
+  const project = projects.projects.find(project => project.metadata.name === req.params['project'])
+
+  if (!project) {
+    res.statusCode = 404
+
+    return res.send({ detail: `MLRunNotFoundError('Project ${req.params.project} not found')` })
+  }
+
+  res.send(project)
 }
 
 function getProjects(req, res) {
@@ -597,7 +627,7 @@ function deleteProjectV2(req, res) {
       kind: `project.deletion.wrapper.${req.params.project}`
     })
 
-    res.status = 202
+    res.statusCode = 202
     res.send(task)
   }
 
@@ -921,6 +951,8 @@ function sanitizeStatesQueryParam(states) {
 }
 
 function getRuns(req, res) {
+  // keep time-relative mock data ("Past hour", "Past 24h"...) relative to the current time
+  updateRuns(runs)
   let collectedRuns = runs.runs
   //get runs for Projects Monitoring page
   if (req.params['project'] === '*') {
@@ -1032,9 +1064,10 @@ function getAlerts(req, res) {
     )
   }
   if (req.query['severity']) {
-    collectedAlerts = collectedAlerts.filter(schedule =>
-      schedule.severity.includes(req.query['severity'])
-    )
+    // several severities come as an array (?severity=low&severity=high)
+    const severities = [].concat(req.query['severity'])
+
+    collectedAlerts = collectedAlerts.filter(alert => severities.includes(alert.severity))
   }
   if (req.query['entity-kind']) {
     collectedAlerts = collectedAlerts.filter(schedule =>
@@ -1047,10 +1080,20 @@ function getAlerts(req, res) {
     )
   }
 
-  if (req.query['entity']) {
-    collectedAlerts = collectedAlerts.filter(schedule =>
-      schedule.entity_id.includes(req.query['entity'].slice(1, -1))
+  const alertEntity = req.query['entity']
+
+  if (alertEntity) {
+    // the UI sends wildcard patterns, e.g. `~*job-name*` or `~*id*.*app*.result.*metric*`
+    const entityRegExp = new RegExp(
+      String(alertEntity)
+        .replace(/^~/, '')
+        .split('*')
+        .map(part => part.replace(/[.+?^${}()|[\]\\]/g, '\\$&'))
+        .join('.*'),
+      'i'
     )
+
+    collectedAlerts = collectedAlerts.filter(alert => entityRegExp.test(alert.entity_id ?? ''))
   }
 
   if (req.query['since']) {
@@ -1109,13 +1152,21 @@ function patchRun(req, res) {
     .filter(run => run.metadata.project === req.params.project)
     .filter(run => run.metadata.uid === req.params.uid)
 
-  collectedRun[0].status.state = req.body['status.state']
+  if (collectedRun[0]) {
+    collectedRun[0].status.state = req.body['status.state']
+  }
 
   res.send()
 }
 
 function abortRun(req, res) {
   const currentRun = runs.runs.find(run => run.metadata.uid === req.params.uid)
+
+  if (!currentRun) {
+    res.statusCode = 404
+
+    return res.send({ detail: `MLRunNotFoundError('Run ${req.params.uid} not found')` })
+  }
 
   currentRun.status.state = 'aborting'
 
@@ -1144,7 +1195,7 @@ function abortRun(req, res) {
 
   const task = createTask(req.params['project'], { taskFunc })
 
-  res.status = 202
+  res.statusCode = 202
 
   res.send(task)
 }
@@ -1188,6 +1239,8 @@ function getFunctionTemplate(req, res) {
 }
 
 function getProjectsSchedules(req, res) {
+  // keep time-relative mock data ("Past hour", "Past 24h"...) relative to the current time
+  updateSchedules(schedules)
   let collectedSchedules = schedules.schedules
 
   if (req.params['project'] !== '*') {
@@ -1558,16 +1611,37 @@ function getArtifacts(req, res) {
     )
   }
 
-  if (req.query['parent']) {
-    if (req.query['parent'].includes(':')) {
-      const [key, tag] = req.query['parent'].split(':')
+  const artifactParent = req.query['parent']
+
+  if (artifactParent) {
+    const storeUriRegExp =
+      /^store:\/\/(?<kind>.+?)\/(?<project>.+?)\/(?<key>.+?)(#(?<iteration>.+?))?(:(?<tag>.+?))?(@(?<tree>[^^]+))?(\^(?<uid>.+))?$/
+
+    if (typeof artifactParent === 'string' && artifactParent.startsWith('store://')) {
+      // model "LLM Prompts" tab sends the full model store URI, e.g. store://models/<project>/<key>#0:latest
+      const parent = artifactParent.match(storeUriRegExp)?.groups
 
       collectedArtifacts = collectedArtifacts.filter(artifact => {
-        const match = artifact.spec.parent_uri.match(
+        const groups = artifact.spec?.parent_uri?.match(storeUriRegExp)?.groups
+
+        return (
+          Boolean(parent && groups) &&
+          groups.project === parent.project &&
+          groups.key === parent.key &&
+          (!parent.tag || groups.tag === parent.tag) &&
+          (!parent.tree || groups.tree === parent.tree) &&
+          (!parent.uid || groups.uid === parent.uid)
+        )
+      })
+    } else if (typeof artifactParent === 'string' && artifactParent.includes(':')) {
+      const [key, tag] = artifactParent.split(':')
+
+      collectedArtifacts = collectedArtifacts.filter(artifact => {
+        const match = artifact.spec?.parent_uri?.match(
           /^store:\/\/(?<kind>.+?)\/(?<project>.+?)\/(?<key>.+?)(#(?<iteration>.+?))?(:(?<tag>.+?))?(@(?<tree>[^^]+))?(\^(?<uid>.+))?$/
         )
 
-        return match && match.groups.key.includes(key) && match.groups.tag.includes(tag)
+        return match && match.groups.key.includes(key) && match.groups.tag?.includes(tag)
       })
     } else {
       collectedArtifacts = collectedArtifacts.filter(artifact =>
@@ -1743,17 +1817,20 @@ function deleteProjectsFeatureVectors(req, res) {
       item => item.metadata.project === req.params.project && item.metadata.name === req.params.name
     )
     res.statusCode = 204
+  } else {
+    res.statusCode = 404
   }
 
-  res.status = 204
   res.send('')
 }
 
 function getPipelines(req, res) {
+  // keep time-relative mock data ("Past hour", "Past 24h"...) relative to the current time
+  updatePipelines(pipelines)
   //get pipelines for Projects Monitoring page
   if (req.params['project'] === '*') {
     const pipelinesRun = pipelineIDs.map(pipeline => pipeline.run)
-    const filter = JSON.parse(req.query.filter)
+    const filter = JSON.parse(req.query.filter || '{"predicates":[]}')
     const nameFilter = req.query['name-contains']
     const predicates = filter.predicates
 
@@ -1832,6 +1909,8 @@ function getPipelines(req, res) {
 }
 
 function getPipeline(req, res) {
+  // keep time-relative mock data ("Past hour", "Past 24h"...) relative to the current time
+  updatePipelineIDs(pipelineIDs)
   const collectedPipeline = pipelineIDs.find(
     item => item.run.id === req.params.pipelineID && item.run.project === req.params.project
   )
@@ -2095,7 +2174,7 @@ function deleteFunc(req, res) {
 
     const task = createTask(req.params['project'], { taskFunc })
 
-    res.status = 204
+    res.statusCode = 202
 
     res.send(task)
   } else {
@@ -2198,6 +2277,12 @@ function deployMLFunction(req, res) {
     .filter(func => func.metadata.project === req.body.function.metadata.project)
     .filter(func => func.metadata.name === req.body.function.metadata.name)
 
+  if (!collectedFunc.length) {
+    res.statusCode = 404
+
+    return res.send({ detail: 'Function not found' })
+  }
+
   collectedFunc[0].metadata.tag = ''
 
   let baseFunc = cloneDeep(collectedFunc[0])
@@ -2241,6 +2326,13 @@ function getFile(req, res) {
 function getFileStats(req, res) {
   const dataRoot = mockHome + '/data/'
   const filePath = dataRoot + req.query['path'].split('://')[1]
+
+  if (!fs.existsSync(filePath)) {
+    res.statusCode = 404
+
+    return res.send({ detail: 'File not found' })
+  }
+
   const { size } = fs.statSync(filePath)
   const mimeType = mime.lookup(filePath)
 
@@ -2264,7 +2356,7 @@ function deleteSchedule(req, res) {
 
 function getLog(req, res) {
   const collectedLog = logs.find(log => log.uid === req.params['uid'])
-  res.send(collectedLog.log)
+  res.send(collectedLog?.log ?? '')
 }
 
 function getRuntimeResources(req, res) {
@@ -2365,10 +2457,13 @@ function postSubmitJob(req, res) {
       const filterPRJ = req.body.task.spec.function.split('/')[0]
       const filterFunc = req.body.task.spec.function.split('/')[1].split('@')[0]
       const filterFuncHash = req.body.task.spec.function.split('/')[1].split('@')[1]
-      funcObject = funcs.funcs
-        .filter(item => item.metadata.hash === filterFuncHash)
-        .filter(item => item.metadata.project === filterPRJ)
-        .filter(item => item.metadata.name === filterFunc)[0]
+      // copy: the original function version (and its hash) must stay available for the next re-runs
+      funcObject = cloneDeep(
+        funcs.funcs
+          .filter(item => item.metadata.hash === filterFuncHash)
+          .filter(item => item.metadata.project === filterPRJ)
+          .filter(item => item.metadata.name === filterFunc)[0]
+      )
     } else {
       const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
         6
@@ -3054,6 +3149,13 @@ function getIguazioJob(req, res) {
   })
 }
 
+// Helper request for AQA framework to restore runs/workflows/schedules to their initial state
+app.post('/reset-mock-state', (req, res) => {
+  resetMockState()
+
+  res.json({ message: 'Mock state is reset' })
+})
+
 // Helper request for AQA framework to fail all the requests
 app.post('/set-failure-condition', (req, res) => {
   failAllRequests = req.body.shouldFail
@@ -3095,7 +3197,6 @@ app.get(
   `${mlrunAPIIngress}/projects/:project/model-monitoring/function-summaries`,
   getMonitoringApplications
 )
-app.get(`${mlrunAPIIngress}/project-summaries/:project`, getMonitoringApplicationsSummary)
 app.get(
   `${mlrunAPIIngress}/projects/:project/model-monitoring/function-summaries/:func`,
   getMonitoringApplicationData
@@ -3111,7 +3212,7 @@ app.get(`${mlrunAPIIngress}/projects/:project/alert-activations`, getAlerts)
 app.get(`${mlrunAPIIngress}/projects/:project/alert-activations/:id`, getAlert)
 app.get(`${mlrunAPIIngress}/projects/:project/alerts/:name`, getAlertConfig)
 app.get(`${mlrunAPIIngress}/projects/:project/runs/:uid`, getRun)
-app.patch(`${mlrunAPIIngress}/projects//:project/runs/:uid`, patchRun)
+app.patch(`${mlrunAPIIngress}/projects/:project/runs/:uid`, patchRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs/:uid`, deleteRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs`, deleteRuns)
 app.post(`${mlrunAPIIngress}/projects/:project/runs/:uid/abort`, abortRun)

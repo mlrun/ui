@@ -24,7 +24,9 @@ import { rateLimit } from 'express-rate-limit'
 
 // Upper bound for mock collections that grow from incoming requests (e.g. funcs.funcs),
 // so their .length stays capped instead of growing indefinitely with request volume.
-const MAX_MOCK_COLLECTION_SIZE = 5000
+// must stay above the seeded + generated collection sizes (13k+ functions, 52k+ artifacts),
+// otherwise capping/bounding silently drops seeded data the tests rely on
+const MAX_MOCK_COLLECTION_SIZE = 100000
 
 export function capCollectionSize(collection) {
   if (collection.length > MAX_MOCK_COLLECTION_SIZE) {
@@ -59,10 +61,11 @@ export function resolveFunctionYAMLPath(rawName) {
 }
 
 // Throttles the routes that touch the filesystem, so repeated requests can't be used
-// to exhaust disk/CPU resources.
+// to exhaust disk/CPU resources. The limit is high because the UI polls these routes (logs, build status)
+// during the whole regression run, a low limit returns 429 to the app under test.
 export const fsAccessLimiter = rateLimit({
   windowMs: 60 * 1000,
-  limit: 100,
+  limit: 10000,
   standardHeaders: true,
   legacyHeaders: false
 })

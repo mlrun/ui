@@ -14,19 +14,16 @@ Feature: Models Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    Then verify breadcrumbs "tab" label should be equal "Models" value
+    Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
     Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    Then verify "Models_Tab_Selector" on "Models" wizard should contains "Models"."Tab_List"
     Then verify "Table_Name_Filter_Input" element visibility on "Models" wizard
     Then click on "Table_FilterBy_Button" element on "Models" wizard
     Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
@@ -55,21 +52,19 @@ Feature: Models Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    And select "tab" with "Project monitoring" value in breadcrumbs menu
+    And select "Project monitoring" item in sidebar menu
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    Then verify breadcrumbs "tab" label should be equal "Models" value
-    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
+    And select "Model endpoints" item in sidebar menu
     And wait load page
-    Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Model endpoints" value
     Then verify "Table_FilterBy_Button" element visibility on "Model_Endpoints" wizard
     Then verify "Table_FilterBy_Button" element on "Model_Endpoints" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
     Then click on "Table_FilterBy_Button" element on "Model_Endpoints" wizard
@@ -96,21 +91,20 @@ Feature: Models Page
 
   @MLM
   @passive
-  @smoke
+  @smoke @rerun
   Scenario: MLM003 - Check all mandatory components on Real-Time Pipelines tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    Then verify breadcrumbs "tab" label should be equal "Models" value
-    And select "Real-Time Pipelines" tab in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
+    And select "Real-time pipelines" item in sidebar menu
     And wait load page
-    Then verify "Real-Time Pipelines" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Real-time pipelines" value
     Then verify "Table_Name_Filter_Input" element visibility on "Real_Time_Pipelines" wizard
     Then verify "Table_Refresh_Button" element visibility on "Real_Time_Pipelines" wizard
     Then verify "Table_Refresh_Button" element on "Real_Time_Pipelines" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
@@ -124,8 +118,7 @@ Feature: Models Page
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify "Table_Name_Filter_Input" element visibility on "Models" wizard
@@ -142,8 +135,7 @@ Feature: Models Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
     Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
@@ -194,9 +186,9 @@ Feature: Models Page
     Then verify "Models_Table" element visibility on "Models" wizard
     Then verify "History_Back_Button" element not exists on "Models" wizard
     Then verify "Version_History_Title" element not exists on "Models" wizard
-    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    And select "Model endpoints" item in sidebar menu
     And wait load page
-    And select "Models" tab in "Models_Tab_Selector" on "Models" wizard
+    And select "Model artifacts" item in sidebar menu
     And wait load page
     Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
     Then click on "Table_FilterBy_Button" element on "Models" wizard
@@ -205,21 +197,20 @@ Feature: Models Page
 
   @MLM
   @passive
-  @smoke
+  @smoke @rerun
   Scenario: MLM006 - Verify filtering by name on Real-Time Pipelines tab
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    Then verify breadcrumbs "tab" label should be equal "Models" value
-    And select "Real-Time Pipelines" tab in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
+    And select "Real-time pipelines" item in sidebar menu
     And wait load page
-    Then verify "Real-Time Pipelines" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Real-time pipelines" value
     Then type value "  " to "Table_Name_Filter_Input" field on "Real_Time_Pipelines" wizard
     Then verify "Table_Name_Filter_Input" on "Real_Time_Pipelines" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
     Then type value "churn-server" to "Table_Name_Filter_Input" field on "Real_Time_Pipelines" wizard
@@ -228,9 +219,9 @@ Feature: Models Page
     Then value in "name" column with "text" in "Real_Time_Pipelines_Table" on "Real_Time_Pipelines" wizard should contains "churn-server"
     Then click on cell with row index 1 in "name" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     And wait load page
-    Then verify "Real_Time_Pipelines_Graph" element visibility on "Real_Time_Pipelines" wizard
-    When click on node with index 2 in "Real_Time_Pipelines_Graph" graph on "Real_Time_Pipelines" wizard
-    Then verify "Header" element visibility on "Real_Time_Pipeline_Pane" wizard
+    Then verify "Pipeline_Link_Title" element visibility on "Real_Time_Pipelines" wizard
+    Then "Pipeline_Link_Title" element on "Real_Time_Pipelines" should contains "churn-server" value
+    Then verify "Router_List" element visibility on "Real_Time_Pipelines" wizard
 
   @MLM
   @passive
@@ -240,8 +231,7 @@ Feature: Models Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
     Then type value "my-key" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
@@ -268,12 +258,11 @@ Feature: Models Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And wait load page
-    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    And select "Model endpoints" item in sidebar menu
     And wait load page
-    Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Model endpoints" value
     Then click on "Table_FilterBy_Button" element on "Model_Endpoints" wizard
     Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
     Then type value "my-key" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
@@ -303,8 +292,7 @@ Feature: Models Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify "Register_Model_Button" element visibility on "Models" wizard
@@ -391,15 +379,14 @@ Feature: Models Page
   @smoke
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
   Scenario: MLM010 - Verify behaviour on Register new Model
-    # * set tear-down property "model" created in "default" project with "automation-model" value
+    * set tear-down property "model" created in "default" project with "automation-model" value
     Given open url
     And wait load page
     When turn on demo mode with query params "false"
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And wait load page
     Then click on "Register_Model_Button" element on "Models" wizard
     Then verify if "Register_Model_Popup" popup dialog appears
@@ -425,8 +412,7 @@ Feature: Models Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     And click on "MLRun_Logo" element on "commonPagesHeader" wizard
@@ -441,8 +427,7 @@ Feature: Models Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify action menu on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column should contains "Common_Lists"."Action_Menu_List"
@@ -488,8 +473,7 @@ Feature: Models Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
@@ -502,17 +486,16 @@ Feature: Models Page
 
   @MLM
   @passive
-  @smoke
+  @smoke @rerun
   Scenario: MLM014 - Check all mandatory components in Item infopane on Overview tab table
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with value "transaction_fraud_xgboost" in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
@@ -542,14 +525,14 @@ Feature: Models Page
     Then verify "Overview_Sources_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_Sources_Headers"
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Preview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
-    Then verify "Models" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
     Then select "Features" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Features" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
-    Then verify "Models" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
     Then select "Statistics" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Statistics" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify cell with "Statistics" value in "key" column in "Info_Pane_Tab_Selector" table on "Models_Info_Pane" wizard should display "Label_Hint"."Models_Statistics"
-    Then verify "Models" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
     Then click on "Full_View_Button" element on "Models_Info_Pane" wizard
     Then verify "Cross_Close_Button" element not exists on "Models_Info_Pane" wizard
     Then click on "Tabel_View_Button" element on "Models_Info_Pane" wizard
@@ -595,7 +578,7 @@ Feature: Models Page
     Then check that "Delete all versions" option in action menu on "Models_Info_Pane" wizard is disabled
     Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
     Then verify "Full_View_Button" element visibility on "Models_Info_Pane" wizard
-    Then verify "Models" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
     Then click on "Full_View_Button" element on "Models_Info_Pane" wizard
     Then verify "Cross_Close_Button" element not exists on "Models_Info_Pane" wizard
     Then verify "LLM Prompts" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
@@ -647,7 +630,7 @@ Feature: Models Page
     Then check that "Delete" option in action menu on "Models_Info_Pane" wizard is disabled
     Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
     Then verify "Full_View_Button" element visibility on "Models_Info_Pane" wizard
-    Then verify "Models" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
     Then click on "Full_View_Button" element on "Models_Info_Pane" wizard
     Then verify "Cross_Close_Button" element not exists on "Models_Info_Pane" wizard
     Then verify "LLM Prompts" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
@@ -660,6 +643,7 @@ Feature: Models Page
   @passive
   @smoke
   #TODO: add tests for prompt, producer detail popups; prompts tag verification, prompts limitation message and redirection
+  @rerun
   Scenario: MLM042 - Check LLM prompts tab detail popups in main table on Model infopane
     Given open url
     And wait load page
@@ -750,7 +734,7 @@ Feature: Models Page
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And select "tab" with "Models" value in breadcrumbs menu
+    And select "Model artifacts" item in sidebar menu
     And wait load page
     Then verify action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then verify that in action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column "Delete" option is enabled
@@ -839,8 +823,7 @@ Feature: Models Page
       And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
       And wait load page
       Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-      And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-      And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+      And select "Model artifacts" item in sidebar menu
       And hover "MLRun_Logo" component on "commonPagesHeader" wizard
       And wait load page
       Then verify "preview" option is present on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
@@ -894,15 +877,14 @@ Feature: Models Page
 
   @MLM
   @passive
-  @smoke
+  @smoke @rerun
   Scenario: MLM036 - Verify Deploy option, Deploy action
       Given open url
       And wait load page
       And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
       And wait load page
       Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-      And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-      And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+      And select "Model artifacts" item in sidebar menu
       And hover "MLRun_Logo" component on "commonPagesHeader" wizard
       And wait load page
       Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
@@ -912,7 +894,7 @@ Feature: Models Page
       Then "Message" component on "Common_Popup" should contains "Messages"."How_To_Create"
       Then verify "Cross_Cancel_Button" element visibility on "Common_Popup" wizard
       Then click on "Cross_Cancel_Button" element on "Common_Popup" wizard
-      And select "project" with "churn-project-admin" value in breadcrumbs menu
+      And select "churn-project-admin" project in sidebar project dropdown
       And wait load page
       Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
       Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column
@@ -931,8 +913,7 @@ Feature: Models Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And wait load page
     When click on cell with value "test-model" in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
@@ -993,10 +974,9 @@ Feature: Models Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And wait load page
-    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    And select "Model endpoints" item in sidebar menu
     And wait load page
     Then save to context "name_href" column and "href" attribute on 1 row from "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     When click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
@@ -1015,14 +995,13 @@ Feature: Models Page
   @passive
   @smoke
   Scenario: MLM027 - Check Details panel still active on page refresh
-    # * set tear-down property "model" created in "default" project with "test-model" value
+    * set tear-down property "model" created in "default" project with "test-model" value
     * create "test-model" Model with "v1" tag in "default" project with code 200
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
     Then select "v1" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
@@ -1062,8 +1041,7 @@ Feature: Models Page
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with value "transaction_fraud_adaboost" in "name" column in "Models_Table" table on "Models" wizard
@@ -1139,7 +1117,7 @@ Feature: Models Page
 
   @MLM
   @passive
-  @smoke
+  @smoke @rerun
   Scenario: MLM029 - Check components on Deploy Model Popup
     * set tear-down property "function" created in "default" project with "automation-test-function-1" value
     * set tear-down property "function" created in "default" project with "automation-test-function-2" value
@@ -1151,8 +1129,7 @@ Feature: Models Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And wait load page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "automation-test-model" value in "name" column
@@ -1219,14 +1196,13 @@ Feature: Models Page
     Then verify "Title" element not exists on "Deploy_Model_Popup" wizard
 
     @MLM
-    @smoke
+    @smoke @rerun
     Scenario: MLM030 - Verify behaviour of key-value table on Deploy Model Popup
      Given open url
      And wait load page
      And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
      And wait load page
-     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+     And select "Model artifacts" item in sidebar menu
      And wait load page
      And hover "MLRun_Logo" component on "commonPagesHeader" wizard
      Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column
@@ -1285,25 +1261,23 @@ Feature: Models Page
 
   @MLM
   @passive
-  @smoke
+  @smoke @rerun
   Scenario: MLM031 - Verify behaviour of Real-Time Pipelines table
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+    Then select "Project monitoring" item in sidebar menu
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    Then verify breadcrumbs "tab" label should be equal "Models" value
-    And select "Real-Time Pipelines" tab in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
+    And select "Real-time pipelines" item in sidebar menu
     And wait load page
-    Then verify "Real-Time Pipelines" tab is active in "Models_Tab_Selector" on "Models" wizard
-    Then save to context "name" column and "href" attribute on 4 row from "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    Then verify breadcrumbs "tab" label should be equal "Real-time pipelines" value
+    Then save to context "name" column and "href" attribute on 2 row from "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     When click on cell with value "model-monitoring-stream" in "name_link" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     And wait load page
     And wait load page
@@ -1316,63 +1290,12 @@ Feature: Models Page
     Then verify "Overview_Headers" on "Real_Time_Pipeline_Pane" wizard should contains "Real_Time_Pipeline_Pane"."Overview_Headers"
     Then click on "Arrow_Back" element on "Real_Time_Pipeline_Pane" wizard
     And wait load page
-    Then click on cell with row index 4 in "function" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
-    And wait load page
-    Then verify if "Modal_Transition_Popup" popup dialog appears
-    Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
-    Then "Title" element on "Modal_Transition_Popup" should contains "model-monitoring-stream" value
-    Then verify "Data_Status" element visibility on "Modal_Transition_Popup" wizard
-    Then verify "State_Icon" element visibility on "Modal_Transition_Popup" wizard
-    Then verify "State_Icon" element on "Modal_Transition_Popup" wizard should display hover tooltip "ML_Function_Info_Pane"."Initialized_State"
-    Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
-    Then verify "Refresh_Button" element on "Modal_Transition_Popup" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
-    Then click on "Refresh_Button" element on "Modal_Transition_Popup" wizard
-    And wait load page
-    Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
-    Then verify "Action_Menu" element visibility on "Modal_Transition_Popup" wizard
-    Then verify "Action_Menu" dropdown element on "Modal_Transition_Popup" wizard should contains "Common_Lists"."Action_Menu_List_Function_Transition_Popup"
-    Then select "View YAML" option in action menu on "Modal_Transition_Popup" wizard
-    And wait load page
-    Then verify if "View_YAML" popup dialog appears
-    Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
-    Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
-    Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
-    And wait load page
-    Then verify "Cross_Close_Button" element visibility on "Modal_Transition_Popup" wizard
-    Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
-    And wait load page
-    Then click on cell with row index 4 in "function" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
-    And wait load page
-    Then verify if "Modal_Transition_Popup" popup dialog appears
-    Then verify "Tab_Selector" element visibility on "Modal_Transition_Popup" wizard
-    Then verify "Tab_Selector" on "Modal_Transition_Popup" wizard should contains "ML_Function_Info_Pane"."Tab_List"
-    Then verify "Overview" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
-    Then verify "Overview_General_Headers" on "Modal_Transition_Popup" wizard should contains "ML_Function_Info_Pane"."Overview_Headers"
-    Then select "Code" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
-    And wait load page
-    Then verify "Code" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
-    Then verify "Code_Content" element visibility on "Modal_Transition_Popup" wizard
-    Then select "Build Log" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
-    And wait load page
-    Then verify "Build Log" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
-    Then verify "Title_Application_Log_Info" element visibility on "Modal_Transition_Popup" wizard
-    Then "Title_Application_Log_Info" element on "Modal_Transition_Popup" should contains "Application" value
-    Then verify "Content_Application_Log_Info" element visibility on "Modal_Transition_Popup" wizard
-    Then verify "Title_Function_Log_Info" element visibility on "Modal_Transition_Popup" wizard
-    Then "Title_Function_Log_Info" element on "Modal_Transition_Popup" should contains "Function" value
-    Then verify "Content_Function_Log_Info" element visibility on "Modal_Transition_Popup" wizard
-    Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
-    And wait load page
     Then verify "Real_Time_Pipelines_Table" element visibility on "Real_Time_Pipelines" wizard
-    When click on cell with value "vizro" in "name_link" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
-    And wait load page
-    And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-    Then "No_Data_Message" element on "commonPagesHeader" should contains "The ingestion function has no steps and therefore no graph." value
-    And wait load page
+    Then check "model-monitoring-stream" value in "function" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
 
   @MLM
   @passive
-  @smoke
+  @smoke @rerun
   Scenario: MLM039 - Check the model runner step on the Real-Time Pipeline graph
     Given open url
     And wait load page
@@ -1381,10 +1304,10 @@ Feature: Models Page
     Then verify breadcrumbs "project" label should be equal "default" value
     When click on "Model_Stats_Counter" element in "Models_Stats_Container" on "Project" wizard
     And wait load page
-    Then verify breadcrumbs "tab" label should be equal "Models" value
-    And select "Real-Time Pipelines" tab in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
+    And select "Real-time pipelines" item in sidebar menu
     And wait load page
-    Then verify "Real-Time Pipelines" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Real-time pipelines" value
     When click on cell with value "function-with-llm" in "name_link" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     And wait load page
     Then verify "Real_Time_Pipelines_Graph" element visibility on "Real_Time_Pipelines" wizard
@@ -1395,7 +1318,7 @@ Feature: Models Page
     Then verify "Model_Runner_Step_Label" element visibility on "Real_Time_Pipelines" wizard
     Then "Model_Runner_Step_Label" element on "Real_Time_Pipelines" should contains "model-runner" value
     Then verify "Model_Runner_Step_Sub_Label" element visibility on "Real_Time_Pipelines" wizard
-    Then "Model_Runner_Step_Sub_Label" element on "Real_Time_Pipelines" should contains "Model runner step" value
+    Then "Model_Runner_Step_Sub_Label" element on "Real_Time_Pipelines" should contains "Model Runner Step" value
     Then verify "Model_Runner_Monitoring_Icon" element visibility on "Real_Time_Pipelines" wizard
     Then verify "Model_Runner_Monitoring_Icon" element on "Real_Time_Pipelines" wizard should display hover tooltip "Real_Time_Pipeline_Pane"."In_Monitoring_State"
     Then verify "Model_Runner_Chips_Title" element visibility on "Real_Time_Pipelines" wizard
@@ -1411,7 +1334,7 @@ Feature: Models Page
     Then "General_Section_Title" element on "Real_Time_Pipeline_Pane" should contains "General" value
     Then verify "Overview_Headers" on "Real_Time_Pipeline_Pane" wizard should contains "Real_Time_Pipeline_Pane"."Overview_Headers_Model_Runner"
     Then verify "Running_Models_Section_Title" element visibility on "Real_Time_Pipeline_Pane" wizard
-    Then "Running_Models_Section_Title" element on "Real_Time_Pipeline_Pane" should contains "Running models (1)" value
+    Then "Running_Models_Section_Title" element on "Real_Time_Pipeline_Pane" should contains "Running models (4)" value
     Then verify "Graph_Pane_Expand_Icon" element visibility on "Real_Time_Pipeline_Pane" wizard
     Then click on "Graph_Pane_Expand_Icon" element on "Real_Time_Pipeline_Pane" wizard
     And wait load page
@@ -1442,26 +1365,25 @@ Feature: Models Page
     When click on node with index 1 in "Real_Time_Pipelines_Graph" graph on "Real_Time_Pipelines" wizard
     Then verify "Header" element visibility on "Real_Time_Pipeline_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Real_Time_Pipeline_Pane" wizard
-    Then verify "Overview_Headers" on "Real_Time_Pipeline_Pane" wizard should contains "Real_Time_Pipeline_Pane"."Overview_Headers"
+    Then verify "Overview_Headers" on "Real_Time_Pipeline_Pane" wizard should contains "Real_Time_Pipeline_Pane"."Overview_Headers_Custom_Step"
     And wait load page
     Then verify "Graph_Pane_Expand_Icon" element not exists on "Real_Time_Pipeline_Pane" wizard
     Then click on "Arrow_Back" element on "Real_Time_Pipeline_Pane" wizard
     And wait load page
 
   @MLM
-  @smoke
+  @smoke @rerun
   Scenario: MLM032 - Check broken link redirection
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+    Then select "Project monitoring" item in sidebar menu
     And wait load page
-    And select "tab" with "Models" value in breadcrumbs menu
+    And select "Model artifacts" item in sidebar menu
     And wait load page
     Then verify redirection from "projects/default/models/INVALID" to "projects/default/models/models?bePage=1&fePage=1"
-    When click on cell with row index 3 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with value "model_default" in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then verify redirection from "projects/default/models/INVALID/model_default/:latest@188b0102-eff9-9a48-9a63-2bbd53e4102e/overview?bePage=1&fePage=1" to "projects/default/models/models?bePage=1&fePage=1"
     Then verify redirection from "projects/default/models/models/INVALID/:latest@188b0102-eff9-9a48-9a63-2bbd53e4102e/overview?bePage=1&fePage=1" to "projects/default/models/models?bePage=1&fePage=1"
@@ -1471,11 +1393,11 @@ Feature: Models Page
     Then "Notification_Pop_Up" element on "Notification_Popup" should contains "An error occurred while retrieving the model." value
     Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
     Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
-    And select "tab" with "Datasets" value in breadcrumbs menu
+    And select "Datasets" item in sidebar menu
     And wait load page
-    And select "tab" with "Models" value in breadcrumbs menu
+    And select "Model artifacts" item in sidebar menu
     And wait load page
-    When click on cell with row index 3 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with value "model_default" in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then verify redirection from "projects/default/models/models/model_default/:latest@188b0102-eff9-9a48-9a63-2bbd53e4102e/INVALID" to "projects/default/models/models/model_default/:latest@188b0102-eff9-9a48-9a63-2bbd53e4102e/overview?bePage=1&fePage=1"
     Then verify redirection from "projects/default/models/models/model_default/:INVALID@188b0102-eff9-9a48-9a63-2bbd53e4102e/overview?bePage=1&fePage=1" to "projects/default/models/models?bePage=1&fePage=1"
@@ -1485,15 +1407,15 @@ Feature: Models Page
     Then "Notification_Pop_Up" element on "Notification_Popup" should contains "An error occurred while retrieving the model." value
     Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
     Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
-    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with value "transaction_fraud_xgboost" in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     And wait load page
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     And wait load page
-    When select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    When select "Model endpoints" item in sidebar menu
     And wait load page
     Then verify redirection from "projects/default/models/INVALID" to "projects/default/models/models?bePage=1&fePage=1"
-    When select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    When select "Model endpoints" item in sidebar menu
     And wait load page
     Then click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     And wait load page
@@ -1503,14 +1425,14 @@ Feature: Models Page
     Then select "Metrics" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify redirection from "projects/default/models/model-endpoints/RandomForestClassifier/a7c95783e6a726a1a233e581ea898ba33fa7e342/INVALID" to "projects/default/models/model-endpoints/RandomForestClassifier/a7c95783e6a726a1a233e581ea898ba33fa7e342/overview"
     Then verify redirection from "projects/default/models/model-endpoints/RandomForestClassifier/INVALID/overview" to "projects/default/models/model-endpoints"
-    When select "Real-Time Pipelines" tab in "Models_Tab_Selector" on "Models" wizard
+    When select "Real-time pipelines" item in sidebar menu
     And wait load page
     Then verify redirection from "projects/default/models/INVALID" to "projects/default/models/models?bePage=1&fePage=1"
-    Then select "Real-Time Pipelines" tab in "Models_Tab_Selector" on "Models" wizard
+    Then select "Real-time pipelines" item in sidebar menu
     And wait load page
     Then click on cell with row index 1 in "name" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     And wait load page
-    Then verify redirection from "projects/default/models/real-time-pipelines/pipeline/INVALID" to "projects/default/models/real-time-pipelines"
+    Then verify redirection from "projects/default/models/real-time-pipelines/INVALID/realtime-pipeline" to "projects/default/models/real-time-pipelines"
     Then verify redirection from "projects/INVALID/models/real-time-pipelines" to "projects"
     And wait load page
     And wait load page
@@ -1527,12 +1449,11 @@ Feature: Models Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And wait load page
-    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    And select "Model endpoints" item in sidebar menu
     And wait load page
-    Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
+    Then verify breadcrumbs "tab" label should be equal "Model endpoints" value
     Then verify "Model_Endpoints_Table" element visibility on "Model_Endpoints" wizard
     Then click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     And wait load page
@@ -1560,8 +1481,7 @@ Feature: Models Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And wait load page
     Then click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
@@ -1589,8 +1509,7 @@ Feature: Models Page
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
@@ -1634,8 +1553,7 @@ Feature: Models Page
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And wait load page
     Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_adaboost" value in "name" column with scroll "false"
     And wait load page
@@ -1659,16 +1577,15 @@ Feature: Models Page
     Then check "newTag" value in "tag" column in "Models_Table" table on "Models" wizard
 
   @MLM
-  @smoke
+  @smoke @rerun
   Scenario: MLM023 - Check that version tag has "Click to add" status when it's empty after edited
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And wait load page
-    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with value "transaction_fraud_xgboost" in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
@@ -1717,8 +1634,7 @@ Feature: Models Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And wait load page
     Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
     And wait load page
@@ -1805,16 +1721,15 @@ Feature: Models Page
     Then "Version_Tag_Value" element on "FilterBy_Popup" should contains "latest123456" attribute value
 
   @MLM
-  @smoke
+  @smoke @rerun
   Scenario: MLM035 - Check components in Item infopane on Metrics tab table on Model Endpoints tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And wait load page
-    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    And select "Model endpoints" item in sidebar menu
     And wait load page
     When click on cell with value "GradientBoostingClassifier" in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     And wait load page
@@ -1834,7 +1749,7 @@ Feature: Models Page
     Then verify "Invocation_Title" element visibility on "Model_Endpoints_Info_Pane" wizard
     Then "Invocation_Title" element on "Model_Endpoints_Info_Pane" should contains "Endpoint call count" value
     Then verify "Invocation_Drift_Icon" element visibility on "Model_Endpoints_Info_Pane" wizard
-    Then verify "Invocation_Drift_Up" element visibility on "Model_Endpoints_Info_Pane" wizard
+    Then verify "Invocation_Drift_Value" element visibility on "Model_Endpoints_Info_Pane" wizard
     Then verify "Invocation_Selected_Date" element visibility on "Model_Endpoints_Info_Pane" wizard
     Then "Invocation_Selected_Date" element on "Model_Endpoints_Info_Pane" should contains "last 24 hours" value
     Then verify "Invocation_Total_Title" element visibility on "Model_Endpoints_Info_Pane" wizard
@@ -1868,10 +1783,9 @@ Feature: Models Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And wait load page
-    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    And select "Model endpoints" item in sidebar menu
     And wait load page
     When click on cell with value "GradientBoostingClassifier" in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     Then select "Metrics" tab in "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard
@@ -1899,12 +1813,13 @@ Feature: Models Page
   @MLM
   @smoke
   # !!! restart mock is required
+  @rerun
   Scenario: MLM037 - Verify the Delete option in Models table, details panel, full view action menu 
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And select "tab" with "Models" value in breadcrumbs menu
+    And select "Model artifacts" item in sidebar menu
     And wait load page
     Then verify action menu on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then select "Delete" option in action menu on "Models" wizard in "Models_Table" table at row with "transaction_fraud_xgboost" value in "name" column
@@ -1935,7 +1850,7 @@ Feature: Models Page
     Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
     Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     Then check "transaction_fraud_xgboost" value not in "name" column in "Models_Table" table on "Models" wizard
-    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with value "train_model" in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then "Header" element on "Models_Info_Pane" should contains "train_model" value
@@ -1968,7 +1883,7 @@ Feature: Models Page
     Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
     Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     Then check "train_model" value not in "name" column in "Models_Table" table on "Models" wizard
-    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with value "model_default" in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then "Header" element on "Models_Info_Pane" should contains "model_default" value
@@ -2009,16 +1924,15 @@ Feature: Models Page
     Then check "model_default" value not in "name" column in "Models_Table" table on "Models" wizard
 
   @MLM
-  @smoke
+  @smoke @rerun
   Scenario: MLM038 - Check components in Alerts tab on Model Endpoint info pane
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Model artifacts" item in sidebar menu
     And wait load page
-    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    And select "Model endpoints" item in sidebar menu
     And wait load page
     When click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     And wait load page

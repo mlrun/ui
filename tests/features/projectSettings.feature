@@ -12,14 +12,12 @@ Feature: Project Settings page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "cat-vs-dog-classification" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        Then select "Project settings" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        Then select "Project settings" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then verify "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard should contains "Project_Settings"."Tab_List"
         Then verify "General" tab is active in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
@@ -42,8 +40,7 @@ Feature: Project Settings page
         Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        Then select "Project settings" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then "Pull_At_Runtime_Checkbox" element should be checked on "Project_Settings_General_Tab" wizard
         Then uncheck "Pull_At_Runtime_Checkbox" element on "Project_Settings_General_Tab" wizard
@@ -77,7 +74,7 @@ Feature: Project Settings page
             | labelKeyTest2 | labelValueTest2 |
 
     @MLPS
-    @smoke
+    @smoke @rerun
     Scenario: MLPS002 - Verify behaviour of editing labels on General tab
         Given open url
         And wait load page
@@ -85,15 +82,12 @@ Feature: Project Settings page
         Then value in "description" column with "text" in "Projects_Table" on "Projects" wizard should contains "123"
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And wait load page
-        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        Then select "Project settings" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        And select "tab" with "Project monitoring" value in breadcrumbs menu
+        And select "Project monitoring" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        Then select "Project settings" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then type value "   " to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
         Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
@@ -111,8 +105,7 @@ Feature: Project Settings page
         Then value in "labels_value" column with "attribute_list" in "Projects_Table" on "Projects" wizard should contains "b,d,f"
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        Then select "Project settings" item in sidebar menu
         And wait load page
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When click on "remove_btn" in "Labels_Table" table on "Project_Settings_General_Tab" wizard with attribute
@@ -135,8 +128,7 @@ Feature: Project Settings page
         Then value in "labels_value" column with "attribute_list" in "Projects_Table" on "Projects" wizard should contains "b54321,project_label_value,b"
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        Then select "Project settings" item in sidebar menu
         And wait load page
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When click on "remove_btn" in "Labels_Table" table on "Project_Settings_General_Tab" wizard with attribute
@@ -154,14 +146,13 @@ Feature: Project Settings page
 
     @MLPS
     @inProgress
-    @smoke
+    @smoke @rerun
     Scenario: MLPS003 - Verify Parameters Table on General Tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        Then select "Project settings" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When add new rows to "Parameters_Table" table on "Project_Settings_General_Tab" wizard using nontable inputs
             | Parameters_Table_Key_Input | Parameters_Table_Value_Input | Parameters_Table_Add_Row_Button |
@@ -208,8 +199,7 @@ Feature: Project Settings page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        Then select "Project settings" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
@@ -223,8 +213,7 @@ Feature: Project Settings page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        Then select "Project settings" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
@@ -241,14 +230,13 @@ Feature: Project Settings page
 
     @MLPS
     @inProgress
-    @smoke
+    @smoke @rerun
     Scenario: MLPS008 - Verify Secrets table on Secrets tab
         Given open url
         And wait load page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        Then select "Project settings" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
@@ -293,8 +281,7 @@ Feature: Project Settings page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        Then select "Project settings" item in sidebar menu
         And wait load page
         Then verify "Discard_Button" element visibility on "Change_Project_Owner_Popup" wizard
         Then verify "Apply_Button" element visibility on "Change_Project_Owner_Popup" wizard
@@ -315,8 +302,7 @@ Feature: Project Settings page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        Then select "Project settings" item in sidebar menu
         And select "Members" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         And wait load page
         Then verify "Member_Overview_Labels_Table" element visibility on "Project_Members_Popup" wizard
@@ -334,13 +320,13 @@ Feature: Project Settings page
     @enabledProjectMembership
     @FAILED_TODO
     #TODO: owner igz_nobody, iguazioUsers, change getIguazioProjects implementation
+    @rerun
     Scenario: MLPS004 - Verify behaviour of Invite New Members on Members tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        Then select "Project settings" item in sidebar menu
         And wait load page
         And select "Members" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         And wait load page
@@ -419,9 +405,7 @@ Feature: Project Settings page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And wait load page
-        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        Then select "Project settings" item in sidebar menu
         And wait load page
         Then verify redirection from "projects/default/settings/INVALID" to "projects/default/settings/general"
         And select "Members" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard

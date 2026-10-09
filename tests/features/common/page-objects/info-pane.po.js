@@ -148,6 +148,22 @@ const infoPaneOverviewPromptTable = {
   }
 }
 
+// alerts "Trigger criteria" section only (first list in additional info),
+// "Reset policy" and "Notifications" lists follow it
+const infoPaneAlertsTriggerCriteriaHeaders = {
+  root: '.table__item .item-info__details-wrapper:nth-of-type(2)',
+  header: {},
+  body: {
+    row: {
+      root: '.item-info__details:nth-of-type(1)',
+      fields: {
+        key: '.details-item__header',
+        value: '.details-item__data'
+      }
+    }
+  }
+}
+
 const infoPaneOverviewProducerHeaders = {
   root: '.table__item .item-info__details-wrapper:nth-of-type(2)',
   header: {},
@@ -677,8 +693,9 @@ const modelsLLMPromptsTable = {
 }
 
 // common components
-const header = By.css('.table__item .item-header__data h3')
-const updated = By.css('.table__item .item-header__data span')
+// h3 title contains the name tooltip and (on artifact pages) a kind chip tooltip - take the name only
+const header = By.css('.table__item .item-header__data h3 > .tooltip-wrapper:first-of-type')
+const updated = By.css('.table__item .item-header__data .item-header__status span.updated')
 const cancelButton = By.css(
   '.table__item .item-header__buttons > .data-ellipsis:nth-of-type(1) button'
 )
@@ -771,8 +788,8 @@ export default {
     Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Full_View_Button: fullViewButton,
-    Header_Full_View: By.css('.table__item_big .item-header__data h3'),
-    Updated_Full_View: By.css('.table__item_big .item-header__data span'),
+    Header_Full_View: By.css('.table__item_big .item-header__data h3 > .tooltip-wrapper:first-of-type'),
+    Updated_Full_View: By.css('.table__item_big .item-header__data .item-header__status span.updated'),
     Refresh_Button_Full_View: By.css(
       '.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]'
     ),
@@ -823,8 +840,8 @@ export default {
     Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Full_View_Button: fullViewButton,
-    Header_Full_View: By.css('.table__item_big .item-header__data h3'),
-    Updated_Full_View: By.css('.table__item_big .item-header__data span'),
+    Header_Full_View: By.css('.table__item_big .item-header__data h3 > .tooltip-wrapper:first-of-type'),
+    Updated_Full_View: By.css('.table__item_big .item-header__data .item-header__status span.updated'),
     Refresh_Button_Full_View: By.css(
       '.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]'
     ),
@@ -963,8 +980,8 @@ export default {
     Apply_Button: applyButton,
     Cross_Close_Button: crossCloseButton,
     Full_View_Button: fullViewButton,
-    Header_Full_View: By.css('.table__item_big .item-header__data h3'),
-    Updated_Full_View: By.css('.table__item_big .item-header__data span'),
+    Header_Full_View: By.css('.table__item_big .item-header__data h3 > .tooltip-wrapper:first-of-type'),
+    Updated_Full_View: By.css('.table__item_big .item-header__data .item-header__status span.updated'),
     Refresh_Button_Full_View: By.css(
       '.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]'
     ),
@@ -1012,7 +1029,7 @@ export default {
     Cross_Close_Button: crossCloseButton,
     Full_View_Button: fullViewButton,
     Tabel_View_Button: tabelViewButton,
-    Header_Full_View: By.css('.table__item_big .item-header__data h3'),
+    Header_Full_View: By.css('.table__item_big .item-header__data h3 > .tooltip-wrapper:first-of-type'),
     Not_In_Filtered_List_Message: By.css('[data-testid="detailsPanel"] .item-header__status .info-banner'),
     Action_Menu_Full_View: commonActionMenuFullView,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
@@ -1064,7 +1081,8 @@ export default {
     Version_tag_Input: commonVersionTagInput
   },
   modelEndpointsInfoPane: {
-    Header: By.css('[data-testid="detailsPanel"] .item-header__title'),
+    // title also contains a kind chip ("model-endpoint") - take the name tooltip only
+    Header: By.css('[data-testid="detailsPanel"] .item-header__title > .tooltip-wrapper:first-of-type'),
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Choose_Metrics_Dropdown: By.css('[data-testid="metric-selector-field"]'),
     Date_Picker_Filter_Dropdown: dropdownComponent(
@@ -1085,6 +1103,10 @@ export default {
     Invocation_Drift_Icon: By.css('.stats-card .metrics__card-invocation-header__drift-icon-container'),
     Invocation_Drift_Down: By.css('.stats-card .metrics__card-invocation-header__drift_down'),
     Invocation_Drift_Up: By.css('.stats-card .metrics__card-invocation-header__drift_up'),
+    // mock invocation metrics are random, so the drift can go either way
+    Invocation_Drift_Value: By.css(
+      '.stats-card .metrics__card-invocation-header__drift_up, .stats-card .metrics__card-invocation-header__drift_down'
+    ),
     Invocation_Selected_Date: By.css('.stats-card .metrics__card-invocation-header__selected-date'),
     Invocation_Total_Title: By.css('.stats-card .metrics__card-invocation-header__total-title'),
     Invocation_Total_Score: By.css('.stats-card .metrics__card-invocation-header__total-score'),
@@ -1105,7 +1127,8 @@ export default {
     Metrics_Stats_Card: By.css('.alert-row__expanded-row .alerts-table .stats-card')
   },
   modelsRealTimePipelineInfoPane: {
-    Arrow_Back: commonArrowBack,
+    // pipeline is shown in the details screen now - "Go to list" back button in the details header
+    Arrow_Back: By.css('[data-testid="detailsPanel"] a.item-header__back-btn'),
     Header: By.css('.graph-pane__title .graph-pane__title-label'),
     Title_Icon: By.css('.graph-pane__title .graph-pane__title-icon'),
     Cross_Close_Button: By.css('.graph-pane__title .round-icon-cp .round-icon-cp__circle'),
@@ -1183,7 +1206,7 @@ export default {
     Cross_Close_Button: crossCloseButton,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Job_Detail_PopUp_Link: By.css('.details-item:nth-of-type(6) .details-item__link'),
-    Overview_Trigger_Criteria: commonTable(infoPaneOverviewProducerHeaders),
+    Overview_Trigger_Criteria: commonTable(infoPaneAlertsTriggerCriteriaHeaders),
     Notifications_Header: By.css('[data-testid="additional-info"] .item-info__header:nth-of-type(2)'),
     Notifications_Item: By.css('[data-testid="additional-info"] .notifications-item'),
     Logs_Text_container: By.css('.table__item .table__item-logs-content'),
@@ -1194,7 +1217,7 @@ export default {
     Header: header,
     Cross_Close_Button: crossCloseButton,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
-    Overview_Trigger_Criteria: commonTable(infoPaneOverviewProducerHeaders),
+    Overview_Trigger_Criteria: commonTable(infoPaneAlertsTriggerCriteriaHeaders),
     Notifications_Header: By.css('[data-testid="additional-info"] .item-info__header:nth-of-type(2)'),
     Notifications_Item: By.css('[data-testid="additional-info"] .notifications-item'),
     Date_Picker_Filter_Dropdown: dropdownComponent(
@@ -1217,7 +1240,7 @@ export default {
     Header: header,
     Cross_Close_Button: crossCloseButton,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
-    Overview_Trigger_Criteria: commonTable(infoPaneOverviewProducerHeaders),
+    Overview_Trigger_Criteria: commonTable(infoPaneAlertsTriggerCriteriaHeaders),
     Notifications_Header: By.css('[data-testid="additional-info"] .item-info__header:nth-of-type(2)'),
     Notifications_Item: By.css('[data-testid="additional-info"] .notifications-item')
   }

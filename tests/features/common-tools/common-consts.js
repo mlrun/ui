@@ -38,6 +38,8 @@ export default {
       'Create feature vector'
     ],
     Online_Status: 'online',
+    // "created" is shown in the browser's timezone
+    Created_Details_Default: /^Created: [A-Z][a-z]{2} \d{1,2}, 2021, \d{2}:\d{2}:\d{2}\s[AP]M$/,
     Data_Collection_Description:
       'Register, upload data directly, or define ' + 'features using the feature store.',
     Development_Description:
@@ -68,22 +70,28 @@ export default {
   Real_Time_Pipeline_Pane: {
     In_Monitoring_State: 'In monitoring',
     Chip_Tooltip: 'my-endpoint',
-    Overview_Headers: [
+    // built-in "Filter" step (storey.Filter)
+    Overview_Headers: ['Type:', 'Class name:', 'Kind:', 'Description:', 'Arguments:'],
+    // custom step (class not matched to a built-in step type) with extra "full_event" field
+    Overview_Headers_Custom_Step: [
       'Type:',
       'Class name:',
-      'Function name:',
+      'Kind:',
       'Arguments:',
-      'Handler:',
-      'Input path:',
-      'Result path:'
+      'Full event:'
     ],
     Overview_Headers_Model_Runner: [
       'Type:',
       'Class name:',
-      'Function name:',
+      'Kind:',
+      'Description:',
       'Arguments:',
-      'Input path:',
-      'Result path:'
+      'Maximum allowed iterations:',
+      'Responder:',
+      'Model endpoint creation strategy:',
+      'On error:',
+      'Raise exception:',
+      'shared proxy mapping:'
     ],
     Running_Models_Headers: [
       'Model endpoint:',
@@ -726,8 +734,9 @@ export default {
   },
   Error_Messages: {
     Project_Already_Exists: /A project named "[^"]+[$"] already exists/,
+    // the app shows the backend error detail when there is one (projectReducer createNewProject)
     Projects_Limit_Reached:
-      'The system already has the maximum number of projects. An existing project must be deleted before you can create another.',
+      "MLRunHTTPError(\"Failed creating project in Iguazio: [{'status': 405, 'detail': 'Resource limit reached. Cannot create more records'}]\")",
     MLRunAccessDeniedError:
       "MLRunAccessDeniedError('Not allowed to create/update internal secrets (key starts with mlrun.)')",
     Must_Select_One: 'Must select at least one',
@@ -738,8 +747,11 @@ export default {
   Dropdown_Options: {
     Tag_Filer_Options: ['All tags', 'latest'],
     Tag_Filer_Options_Main_Table: ['latest'],
+    // the tag filter lists the real tags of the project feature sets/vectors
+    Tag_Filer_Options_Feature_Sets_Default: ['All tags', 'latest', 'my-tag', 'with_analysis', 'pre-latest', 'not-latest', 'vers', 'best', 'qqq', 'aa', 'asd', 'wwvv', 'qwewqewqewqe', 'qqqqwwwww', 'wrere', 'test1', 'rr', 'tt', 'yy', 'ss', 'dsadsadsadsa', 'test22', 'test123', 'hhh', 'dd', 'yynnbb', '1', '2', '3', '4', '5', 'aaa'],
+    Tag_Filer_Options_Feature_Vectors_Default: ['All tags', 'latest', 'test-tag'],
     Status_Filter_Options: ['All', 'Completed', 'Running', 'Pending', 'Error', 'Aborted'],
-    Entity_Type_Filter_Options: ['All', 'Job', 'Endpoint', 'Application'],
+    Entity_Type_Filter_Options: ['All', 'Job', 'Endpoint', 'Application', 'Infra'],
     Severity_Filter_Options: ['All', 'High', 'Medium', 'Low'],
     Event_Type_Filter_Options: [
       'All',
@@ -754,7 +766,8 @@ export default {
       'System performance suspected',
       'MM app anomaly detected',
       'MM app anomaly suspected',
-      'MM app failed'
+      'MM app failed',
+      'MM lag detected'
     ],
     Event_Type_Endpoint_Filter_Options: [
       'All',
@@ -884,7 +897,7 @@ export default {
   },
   No_Data_Message: {
     Common_Message_Jobs_Monitoring:
-      /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
+      /No data matches the filter: "Start time: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M, Project: (.+?)"/,
     Common_Message_Monitor_Jobs_Name: /No data matches the filter: "Name: (.+?)"/,
     Common_Message_LLM_Prompt_Name:
       /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Show best iteration only: (.+?)"/,
@@ -897,18 +910,18 @@ export default {
     Common_Message_Artifact_Tag:
       /No data matches the filter: "Version tag: (.+?), Show best iteration only: (.+?)"/,
     Common_Message_Jobs_Monitoring_Workflow_Project:
-      /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
+      /No data matches the filter: "Created at: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M, Project: (.+?)"/,
     Common_Message_Jobs_Monitoring_Status:
-      /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Status: (.+?)"/,
+      /No data matches the filter: "Created at: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M, Status: (.+?)"/,
     Common_Message_Monitoring_Workflow:
-      /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}"/,
+      /No data matches the filter: "Created at: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M"/,
     Common_Message_Monitoring_Workflow_Status: /No data matches the filter: "Status: (.+?)"/,
     Common_Message_Jobs_Monitoring_Type:
-      /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Type: (.+?)"/,
+      /No data matches the filter: "Start time: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M, Type: (.+?)"/,
     Common_Message_Monitor_Jobs:
-      /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}"/,
+      /No data matches the filter: "Start time: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M"/,
     Common_Message_Jobs_Monitoring_Scheduled:
-      /No data matches the filter: "Scheduled at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: (.+?)"/,
+      /No data matches the filter: "Scheduled at: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M, Project: (.+?)"/,
     Common_Message_Scheduled_Type:
       /No data matches the filter: "Scheduled at: .*? - .*?, Type: (.+?)"/,
     Common_Message: 'No data matches the filter: "Version Tag: latest, Name: ccccc"',
@@ -918,7 +931,7 @@ export default {
     Common_Message_Feature_Vector: 'No data matches the filter: "Version Tag: latest"',
     Common_Message_Feature_Sets: 'No data matches the filter: "Version Tag: latest"',
     No_Data: 'No data to show',
-    No_Features_Yet: 'No features found.',
+    No_Features_Yet: 'No features found',
     No_Consumer_Group_Yet: 'You haven’t created any consumer group yet',
     No_Datasets_data:
       'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',

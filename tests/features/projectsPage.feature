@@ -298,6 +298,7 @@ Feature: Projects Page
     @danger
     @smoke
 #   Run this test case only with mocked backend!!!
+    @rerun
     Scenario: MLPr012 - Check projects limit message
         Then create up to limit projects with code 201
         Given open url
@@ -322,29 +323,29 @@ Feature: Projects Page
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then click on "Pin_Quick_Link_Button" element on "commonPagesHeader" wizard
-        And click on cell with value "Project monitoring" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Project monitoring" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Feature store" item in sidebar menu
         And wait load page
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature store" value
-        And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        Then verify breadcrumbs "tab" label should be equal "Feature sets" value
+        And select "Datasets" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Datasets" value
-        And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Other artifacts" item in sidebar menu
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Artifacts" value
-        And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        Then verify breadcrumbs "tab" label should be equal "Other artifacts" value
+        And select "Model artifacts" item in sidebar menu
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Models" value
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
+        And select "Jobs" item in sidebar menu
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Jobs and workflows" value
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
+        And select "ML functions" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "ML functions" value
-        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        Then select "Project settings" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Settings" value
 
@@ -607,7 +608,7 @@ Feature: Projects Page
         Then "Total_Application_Counter_Title" element in "Monitoring_Alerts_Box" on "Projects" should contains "Application" value
         Then verify "Total_Application_Counter_Number" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
         Then verify "Total_Alerts_Number" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
-        Then "Total_Alerts_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "39" value
+        Then "Total_Alerts_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "105" value
         When click on "Total_Alerts_Number" element in "Monitoring_Alerts_Box" on "Projects" wizard
         And wait load page
         Then verify redirection to "projects/*/alerts-monitoring?bePage=1&fePage=1"
@@ -640,7 +641,7 @@ Feature: Projects Page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
 
     @MLPr
-    @smoke
+    @smoke @rerun
     Scenario: MLPr021 - Check components numbers on Monitoring container
         Given open url
         And wait load page
@@ -691,16 +692,16 @@ Feature: Projects Page
         Then verify "Monitoring_Alerts_Box_Title" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
         Then "Monitoring_Alerts_Box_Title" element in "Monitoring_Alerts_Box" on "Projects" should contains "Alerts" value
         Then verify "Total_Endpoint_Counter_Number" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
-        Then "Total_Endpoint_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "12" value
+        Then "Total_Endpoint_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "28" value
         Then verify "Total_Jobs_Counter_Number" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
-        Then "Total_Jobs_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "12" value
+        Then "Total_Jobs_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "26" value
         Then verify "Total_Application_Counter_Number" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
-        Then "Total_Application_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "15" value
+        Then "Total_Application_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "39" value
 
     @MLPr
     @mlrunUnhealthyTest
     @passive
-    @smoke
+    @smoke @rerun
     Scenario: MLPr019 - Check Mlrun unhealthy popup
         Given open url
         And wait load page
@@ -715,7 +716,11 @@ Feature: Projects Page
         And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Failed to fetch projects" value
-        Then wait for 181 seconds
+        # the popup appears after 3 minutes of failed retries; a single step can't wait > 60 s (cucumber step timeout)
+        Then wait for 47 seconds
+        Then wait for 47 seconds
+        Then wait for 47 seconds
+        Then wait for 47 seconds
         Then verify "Message" element visibility on "MLRun_Unhealthy_PopUp" wizard
         Then "Message" element on "MLRun_Unhealthy_PopUp" should contains "MLRun seems to be down. Try again in a few minutes." value
         And wait load page
