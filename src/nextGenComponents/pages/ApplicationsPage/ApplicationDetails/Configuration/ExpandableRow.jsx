@@ -36,7 +36,7 @@ const ExpandableRow = ({ row, renderExpanded, defaultExpanded = false }) => {
         onClick={handleToggle}
         aria-expanded={isExpanded}
         aria-label={`Toggle ${row.name} details`}
-        className="flex items-center w-full py-2.5 pl-1 hover:bg-igz-accent-hover cursor-pointer text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="flex items-center w-full py-2.5 pl-1 hover:bg-igz-accent-hover cursor-pointer text-left focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
         data-testid={`expandable-row-${row.name}`}
       >
         <ChevronRight

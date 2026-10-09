@@ -21,13 +21,6 @@ such restriction.
 
 module.exports = {
   darkMode: ['class'],
-  content: [
-    './src/nextGenComponents/**/*.{js,jsx,ts,tsx}',
-    './node_modules/iguazio.dashboard-react-controls/dist/nextGenComponents/**/*.{js,mjs}'
-  ],
-  corePlugins: {
-    preflight: false
-  },
   theme: {
     extend: {
       fontFamily: {

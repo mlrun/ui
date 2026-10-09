@@ -75,6 +75,9 @@ import 'igz-controls/index.css'
 import './tailwind.css'
 import './scss/main.scss'
 import RemoteNuclioRouteWrapper from './components/RemoteNuclio/RemoteNuclioRouteWrapper'
+import { initPortalContainer } from './utils/initPortalContainer'
+
+initPortalContainer()
 
 const Page = lazyRetry(() => import('./layout/Page/Page'), 'Page')
 const Datasets = lazyRetry(() => import('./components/Datasets/Datasets'), 'Datasets')

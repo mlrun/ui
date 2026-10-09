@@ -264,7 +264,7 @@ const ApplicationsPage = () => {
                   </TooltipContent>
                 </Tooltip>
               </div>
-              <div className="flex-1 min-h-[200px] flex flex-col [&_thead_tr]:z-[1]">
+              <div className="flex-1 min-h-[200px] flex flex-col [&_thead_tr]:z-1">
                 {isLoading ? (
                   <Loader mode="fullscreen" />
                 ) : applications.length === 0 && !isDetailsOpen ? (
