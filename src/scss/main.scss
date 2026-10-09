@@ -1,10 +1,20 @@
+@use 'sass:meta';
 @use 'igz-controls/scss/fonts';
-@use 'igz-controls/scss/common';
+@use 'igz-controls/scss/common' with (
+  $include-element-resets: false
+);
 @use 'igz-controls/scss/variables';
 @use 'igz-controls/scss/shadows';
 @use 'igz-controls/scss/colors';
 @use 'igz-controls/scss/mixins';
 @use 'igz-controls/scss/borders';
+
+// DRC's global element resets (button, input, a, ...) go in a layer, so in
+// Module Federation mode they stay below the Tailwind utilities of the host
+// and of apps mounted in mlrun (e.g. Nuclio) instead of restyling them
+@layer base {
+  @include meta.load-css('igz-controls/scss/resets');
+}
 
 body {
   display: flex;
@@ -42,7 +52,9 @@ body {
 
 /* =========== MAIN ============= */
 
-main {
+// `:where` keeps the original specificity, it only stops matching other <main>
+// elements, e.g. DRC SidebarInset, which is styled with Tailwind
+main:where(#main) {
   position: relative;
   z-index: 1;
   display: flex;

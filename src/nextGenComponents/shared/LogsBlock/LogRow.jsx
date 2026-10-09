@@ -65,7 +65,7 @@ const LogRow = ({ log }) => {
 
   return (
     <div
-      className="font-mono text-xs rounded px-1 break-words leading-relaxed"
+      className="font-mono text-xs rounded px-1 wrap-break-word leading-relaxed"
       data-testid="log-row"
     >
       <span className="text-gray-500 mr-2 select-none">[{timeString}]</span>

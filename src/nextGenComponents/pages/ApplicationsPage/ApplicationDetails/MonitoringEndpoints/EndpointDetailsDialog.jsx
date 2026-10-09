@@ -126,7 +126,7 @@ const EndpointDetailsDialog = ({
   if (!isOpen || !portalTarget) return null
 
   return createPortal(
-    <div className="fixed inset-0 z-[9]" data-testid="endpoint-details-dialog">
+    <div className="fixed inset-0 z-9" data-testid="endpoint-details-dialog">
       <div className="absolute inset-0 bg-black opacity-50" onClick={onClose} role="presentation" />
       <div className="absolute inset-[2.5vh_2.5vw] bg-white rounded-lg shadow-lg flex flex-col overflow-hidden">
         {isLoading ? (

@@ -97,7 +97,7 @@ export const getApplicationsColumns = projectName => [
       return (
         <Link
           to={`/projects/${projectName}/${APPLICATIONS_PAGE_PATH}/${row.original.name}/${identifier}/${APPLICATION_DETAILS_TAB.MONITORING_ENDPOINTS}${window.location.search}`}
-          className="!text-igz-link text-body hover:underline"
+          className="text-igz-link! text-body hover:underline"
           data-testid="endpoints-count"
         >
           {count}

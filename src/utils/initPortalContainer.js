@@ -17,9 +17,20 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-module.exports = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
+import { setPortalContainer } from 'igz-controls/utils/portalContainer.util'
+
+// Next-gen (Radix) popups render in <body> by default, outside `.mlrun-tw-scope`, so
+// they miss mlrun's scoped Tailwind base styles (see tailwind.css). Rendering them
+// into an mlrun container keeps those styles scoped to mlrun, also in MF mode.
+export const initPortalContainer = () => {
+  let container = document.querySelector('[data-mlrun-portal-root]')
+
+  if (!container) {
+    container = document.createElement('div')
+    container.className = 'mlrun-tw-scope'
+    container.setAttribute('data-mlrun-portal-root', '')
+    document.body.appendChild(container)
+  }
+
+  setPortalContainer(container)
 }

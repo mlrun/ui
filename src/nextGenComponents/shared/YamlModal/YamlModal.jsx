@@ -64,7 +64,7 @@ const YamlModal = ({ open, onClose, data = null }) => {
               size="icon"
               aria-label="Close"
               tooltip="Close"
-              className="focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="focus:outline-hidden focus:ring-0 focus-visible:outline-hidden focus-visible:ring-0 focus-visible:ring-offset-0"
               data-testid="yaml-modal-close-button"
             >
               <CloseIcon className="w-6 h-6" />
@@ -79,7 +79,7 @@ const YamlModal = ({ open, onClose, data = null }) => {
               </p>
             ) : (
               <pre
-                className="m-0 text-sm font-mono leading-6 whitespace-pre-wrap break-words"
+                className="m-0 text-sm font-mono leading-6 whitespace-pre-wrap wrap-break-word"
                 data-testid="yaml-modal-code"
               >
                 <code dangerouslySetInnerHTML={{ __html: highlightedHtml }} />
