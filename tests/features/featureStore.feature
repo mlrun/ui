@@ -424,7 +424,7 @@ Feature: Feature Store Page
 
     @MLFS
     @passive
-    @smoke
+    @smoke @rerun
     Scenario: MLFS013 - Check filtering by Label on Feature Store Feature Sets Tab
         Given open url
         And wait load page
@@ -1797,6 +1797,7 @@ Feature: Feature Store Page
     @MLFS
     @smoke
     # Moved analyses tabs to Demo mode in `1.8.0` ML-9059
+    @rerun
     Scenario: MLFS047 - Check broken link redirection
         * set tear-down property "project" created with "automation-test-010" value
         * create "automation-test-010" MLRun Project with code 201

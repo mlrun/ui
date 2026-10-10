@@ -473,7 +473,7 @@ Feature: Jobs and workflows
     @MLJW
     @passive
     @inProgress
-    @smoke @rerun
+    @smoke
     Scenario: MLJW064 - Verify filtering by starttime on Jobs Monitor tab
         Given open url
         And wait load page
@@ -1141,7 +1141,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke
+    @smoke @rerun
     Scenario: MLJW074 - Check all mandatory components on Inputs tab Item infopane on Workflow List View Tab
         Given open url
         And wait load page
@@ -1159,11 +1159,12 @@ Feature: Jobs and workflows
         When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         And select "Inputs" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        And wait load page
         Then verify "Inputs_Table" element visibility on "Inputs_Info_Pane" wizard
 
     @MLJW
     @passive
-    @smoke
+    @smoke @rerun
     Scenario: MLJW075 - Check all mandatory components on Artifacts tab Item infopane on Workflow List View Tab
         Given open url
         And wait load page
@@ -1181,6 +1182,7 @@ Feature: Jobs and workflows
         When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         And select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        And wait load page
         Then verify "Artifacts_Table" element visibility on "Artifacts_Info_Pane" wizard
 
     @MLJW
@@ -1296,6 +1298,7 @@ Feature: Jobs and workflows
         When click on cell with row index 1 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         And select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        And wait load page
         Then click on cell with row index 1 in "name" column in "Artifacts_Table" table on "Artifacts_Info_Pane" wizard
         Then click on "Artifact_Preview_Button" element on "Artifacts_Info_Pane" wizard
         And wait load page
@@ -1792,6 +1795,7 @@ Feature: Jobs and workflows
     @MLJW
     @smoke
 #TODO: check the redirection from projects/default/jobs/monitor-jobs/INVALID/864f4da42773494eb94dce1c8834feb6/overview?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1
+    @rerun
     Scenario: MLJW085 - Check broken link redirection on Monitor Jobs and Schedules screens
         Given open url
         And wait load page
@@ -1845,7 +1849,7 @@ Feature: Jobs and workflows
         Then verify redirection from "projects/default/INVALID/monitor-jobs?bePage=1&fePage=1" to "projects"
 
     @MLJW
-    @smoke
+    @smoke @rerun
     Scenario: MLJW086 - Check broken link redirection on Monitor Workflows tab
         Given open url
         And wait load page
@@ -2921,7 +2925,7 @@ Feature: Jobs and workflows
         Then verify "Hyper_Toggle_Switch" element not exists in "Parameters_Accordion" on "Modal_Wizard_Form" wizard
     
     @MLJW
-    @smoke
+    @smoke @rerun
     Scenario: MLJW049 - Check Abort action on Monitor Jobs tab
         Given open url
         And wait load page

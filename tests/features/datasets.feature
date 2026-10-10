@@ -560,7 +560,7 @@ Feature: Datasets Page
     Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
   
   @MLD
-  @smoke 
+  @smoke @rerun
   Scenario: MLD016 - Check broken link redirection
     Given open url
     And wait load page

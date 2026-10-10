@@ -21,7 +21,7 @@ import { Before, After, AfterAll, Status } from '@cucumber/cucumber'
 import wd from 'selenium-webdriver'
 import { browser } from '../../config'
 import { clearBackendAfterTest, resetMockState, setRequestsFailureCondition } from '../common-tools/common-tools'
-import { buildDriver, quitActiveDriver, E2E_TIMEZONE } from './world'
+import { startDriver, quitActiveDriver, E2E_TIMEZONE } from './world'
 
 // the first page load after the dev server start is slow: Vite pre-bundles the dependencies (`optimizeDeps.force`)
 // and may reload the page, so without waiting the first scenarios get a blank page
@@ -30,7 +30,8 @@ let isAppWarmedUp = false
 Before({ timeout: 5 * 60 * 1000 }, async function () {
   await resetMockState()
   await quitActiveDriver()
-  this.driver = buildDriver()
+  const { driver } = await startDriver()
+  this.driver = driver
   if (browser === 'chrome') {
     // TZ isn't honored by every Chrome build, override the timezone of the tab as well
     await this.driver.sendDevToolsCommand('Emulation.setTimezoneOverride', { timezoneId: E2E_TIMEZONE })

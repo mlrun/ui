@@ -623,7 +623,8 @@ const modelsRealTimeinfoPaneRunningModelsHeaders = {
   root: '.table-container',
   header: {},
   body: {
-    root: '.graph-pane  .graph-pane__section:nth-of-type(3)',
+    // collapsed models keep their rows in the DOM (display: none -> empty text), take only the expanded model
+    root: '.graph-pane .graph-pane__section:nth-of-type(3) .graph-pane__expand-item.open',
     offset: 0,
     row: {
       root: '.graph-pane__row',

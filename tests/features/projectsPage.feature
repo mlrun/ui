@@ -4,7 +4,7 @@ Feature: Projects Page
 
     @MLPr
     @passive
-    @smoke
+    @smoke @rerun
     Scenario: MLPr001 - Check all mandatory components
         Given open url
         And wait load page
@@ -349,7 +349,7 @@ Feature: Projects Page
         Then verify breadcrumbs "tab" label should be equal "Settings" value
 
     @MLPr
-    @smoke
+    @smoke @rerun
     Scenario: MLPr015 - Check components on Monitoring container on Projects page
         Given open url
         And wait load page
@@ -378,6 +378,7 @@ Feature: Projects Page
         Then verify "Monitoring_Scheduled_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Alerts_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         Then verify breadcrumbs "project" label should be equal "default" value
         Then click on breadcrumbs "projectsPage" label on "commonPagesHeader" wizard

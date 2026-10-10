@@ -5,7 +5,7 @@ The scenarios below are left as they are: they fail until the bug is fixed in th
 
 ## Confirmed
 
-### 1. Broken links loop forever instead of redirecting (react-router 7)
+### 1. Broken links loop forever instead of redirecting (react-router 7) — FIXED in `src/App.jsx`
 
 - **Scenarios:** `models.feature` MLM032, `MLFunction.feature` MLF032 (last step)
 - **Steps:** open `/projects/default/models/INVALID` (or any unknown URL, e.g. `/projects/default/INVALID/x/latest/overview`).
@@ -18,7 +18,11 @@ The scenarios below are left as they are: they fail until the bug is fixed in th
   `:402` `<Navigate to={MODELS_TAB} replace />` (models/\*), `:375` `FEATURE_SETS_TAB` (feature-store/\*),
   `:315` `MONITOR_JOBS_TAB` (jobs/\*, also `replace` is set on `<Route>` instead of `<Navigate>`),
   `:244` `JOBS_MONITORING_JOBS_TAB` (projects/\*/jobs-monitoring/\*), `:470` `<Navigate replace to="projects" />` (top-level `*`).
-- **Fix:** `to={`../${MODELS_TAB}`}` (same for the other nested ones) and `to="/projects"` for the top-level one.
+- **Fix (applied):** the catch-all routes redirect in a route `loader` (`redirect()`, the data router way) to an
+  absolute path built from the route params — `src/utils/routeRedirects.js` (`redirectToProjectPageTab`, `redirectToPath`).
+  Absolute paths don't depend on the relative path resolution and are resolved within the router `basename`.
+  Regression test: `src/utils/routeRedirects.test.jsx` (with the old relative `<Navigate>` it loops until out of memory).
+- **Scenarios covering it:** MLPr001, MLPS005, MLD016, MLF032, MLFS047, MLJW085, MLJW086, MLM032.
 
 ### 2. Function resources: selecting a memory/CPU unit drops the other resources group (requests/limits)
 

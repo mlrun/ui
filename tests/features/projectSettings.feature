@@ -147,7 +147,7 @@ Feature: Project Settings page
 
     @MLPS
     @inProgress
-    @smoke @rerun
+    @smoke
     Scenario: MLPS003 - Verify Parameters Table on General Tab
         Given open url
         And wait load page
@@ -408,7 +408,7 @@ Feature: Project Settings page
         And remove "automation-test" MLRun Project with code 204
 
     @MLPS
-    @smoke
+    @smoke @rerun
     Scenario: MLPS005 - Check broken link redirection
         Given open url
         And wait load page

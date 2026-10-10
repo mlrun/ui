@@ -906,7 +906,7 @@ Feature: Artifacts Page
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
 
   @MLA
-  @smoke
+  @smoke @rerun
   Scenario: MLA023 - Check components on artifact Full view content
     Given open url
     And wait load page
@@ -995,8 +995,13 @@ Feature: Artifacts Page
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
+    # the details of the selected artifact are fetched asynchronously, an URL update from it can drop "?view=full"
+    # if the "Full view" button is clicked too early
+    And wait load page
+    Then "Header" element on "Files_Info_Pane" should contains "clean-data_preproc-numcat_map.json" value
     Then verify "Full_View_Button" element visibility on "Files_Info_Pane" wizard
     Then click on "Full_View_Button" element on "Files_Info_Pane" wizard
+    And wait load page
     And wait load page
     Then verify "Cross_Close_Button" element not exists on "Files_Info_Pane" wizard
     Then verify "Header_Full_View" element visibility on "Files_Info_Pane" wizard

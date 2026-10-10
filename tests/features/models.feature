@@ -1270,7 +1270,7 @@ Feature: Models Page
 
   @MLM
   @passive
-  @smoke @rerun
+  @smoke
   Scenario: MLM031 - Verify behaviour of Real-Time Pipelines table
     Given open url
     And wait load page
@@ -1559,13 +1559,31 @@ Feature: Models Page
     Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
 
   @MLM
-  @smoke
+  @smoke @rerun
   Scenario: MLM021 - Check that version tag dropdown shows all tags on filters wizard on Models page
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Model artifacts" item in sidebar menu
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
+    # the mock state is reset before every scenario, so the "modelTag" version (2nd row in the version history) is created here
+    When click on cell with value "transaction_fraud_adaboost" in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
+    Then select "Add a tag" option in action menu on "Models_Info_Pane" wizard
+    And wait load page
+    Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
+    Then type value "modelTag" to "Tag_Input" field on "Add_Tag_Popup" wizard
+    Then click on "Add_Button" element on "Add_Tag_Popup" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was added successfully" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then click on "Cross_Close_Button" element on "Models_Info_Pane" wizard
     And wait load page
     Then click on "show_all_versions" option on "Models" wizard in "Models_Table" table with "transaction_fraud_adaboost" value in "name" column with scroll "false"
     And wait load page
@@ -1950,7 +1968,9 @@ Feature: Models Page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Model_Endpoints_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Tab_List"
     Then select "Alerts" tab in "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard
-    Then verify "Alerts_Table" element visibility on "Model_Endpoints_Info_Pane" wizard       
+    And wait load page
+    And wait load page
+    Then verify "Alerts_Table" element visibility on "Model_Endpoints_Info_Pane" wizard
     Then click on cell with row index 1 in "expand_arrow" column in "Alerts_Table" table on "Model_Endpoints_Info_Pane" wizard
     And wait load page
     And wait load page

@@ -167,7 +167,8 @@ export const componentIsNotPresent = async (driver, component) => {
 
 export const componentIsVisible = async (driver, component) => {
     const _component = component.root ?? component
-    const element = await driver.findElement(_component)
+    // content may still be loading (tab switch, details fetch) - wait for it to be attached
+    const element = await driver.wait(until.elementLocated(_component), 5000)
     // element may still be in its enter transition (notifications have opacity: 0 for 500ms)
     const displayed = await driver
       .wait(until.elementIsVisible(element), 3000)

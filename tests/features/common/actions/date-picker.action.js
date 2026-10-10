@@ -19,7 +19,7 @@ such restriction.
 */
 import { expect } from 'chai'
 import { getAllCellsWithAttribute } from './table.action'
-import {  openDropdown, selectOptionInDropdownWithoutCheck } from './dropdown.action'
+import { openDropdown } from './dropdown.action'
 
 const currentMonthAttribute = {
   attribute: 'class',
@@ -91,11 +91,37 @@ async function selectCalendarDay(driver, dateTimePicker, datetimePoint) {
   }
 }
 
+// "MM/DD/YYYY HH:mm", "MM/DD/YYYY hh:mm AM", "hh:mm PM"... -> minutes since midnight
+const toMinutesOfDay = text => {
+  const match = /(\d{1,2}):(\d{2})(?:\s*([AaPp][Mm]))?\s*$/.exec(String(text).trim())
+
+  if (!match) return null
+
+  let hours = Number(match[1]) % (match[3] ? 12 : 24)
+
+  if (match[3]?.toUpperCase() === 'PM') hours += 12
+
+  return hours * 60 + Number(match[2])
+}
+
+// time options are "hh:mm AM/PM", the steps can use "HH:mm" as well - match the options by the time value
 export const setPickerTime = async (driver, dateTimePicker, datetimePoint) => {
-  const timeToSelect = datetimePoint.slice(-8)
-  
+  const minutesToSelect = toMinutesOfDay(datetimePoint)
+
   await openDropdown(driver, dateTimePicker)
-  await selectOptionInDropdownWithoutCheck(driver, dateTimePicker, timeToSelect)
+
+  const options = await driver.findElements(dateTimePicker.options)
+
+  for (const option of options) {
+    if (toMinutesOfDay(await option.getText()) === minutesToSelect) {
+      await option.click()
+      await driver.sleep(500)
+
+      return
+    }
+  }
+
+  throw new Error(`Time option for "${datetimePoint}" was not found in the time picker`)
 }
 
 export const verifyTimeFilterBand = async (driver, dropdown, diff) => {

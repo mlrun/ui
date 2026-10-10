@@ -99,6 +99,27 @@ export const buildDriver = () => {
   return driver
 }
 
+// starts the browser and waits for its session. chromedriver can exit right after the start
+// ("Server terminated early with status 1"), e.g. when the free port picked by selenium was taken in between,
+// then it's retried once with a new driver service (a new port).
+// The driver is returned wrapped: it's a thenable, `await` would unwrap it
+export const startDriver = async () => {
+  let driver = buildDriver()
+
+  try {
+    await driver.getSession()
+  } catch (error) {
+    if (!/Server terminated early/.test(error?.message ?? '')) throw error
+
+    await quitActiveDriver()
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    driver = buildDriver()
+    await driver.getSession()
+  }
+
+  return { driver }
+}
+
 const quitOnSignal = signal => {
   quitActiveDriver().finally(() => process.exit(signal === 'SIGINT' ? 130 : 143))
 }
