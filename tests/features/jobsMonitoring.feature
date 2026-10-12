@@ -378,7 +378,7 @@ Feature: Jobs Monitoring Page
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Handler"
 
     @MLJM
-    @smoke @rerun
+    @smoke @rerun @knownBug
     Scenario: MLJM011 - Check filter by Labels on Jobs tab of Jobs monitoring page
         Given open url
         And wait load page

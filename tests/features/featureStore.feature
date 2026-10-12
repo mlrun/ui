@@ -1351,7 +1351,7 @@ Feature: Feature Store Page
         
     @MLFS
     @passive
-    @smoke @rerun
+    @smoke @rerun @knownBug
     Scenario: MLFS039 - Check all mandatory components on Create feature vector popup
         Given open url
         And wait load page

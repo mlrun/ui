@@ -64,9 +64,6 @@
   "overrides": {
     "uuid": "^14.0.0",
     "basic-ftp": "^6.2.2",
-    "cucumber-html-reporter": {
-      "uuid": "^11.1.1"
-    },
     "@istanbuljs/load-nyc-config": {
       "js-yaml": "^3.15.1"
     },
@@ -102,7 +99,9 @@
     "test": "vitest",
     "test:ui": "node scripts/testui.js",
     "test:watch": "vitest --watch",
-    "report": "node tests/report.js",
+    "report": "allure generate tests/reports/allure-results",
+    "report:open": "allure open tests/reports/allure-report",
+    "report:watch": "allure watch --no-new-only --open tests/reports/allure-results",
     "test:regression": "npm run test:ui && npm run report",
     "start:regression": "concurrently \"npm:mock-server\" \"npm:start\" \"npm:test:regression\"",
     "build:regression": "vite build --mode development --base / --outDir build/regression",
@@ -134,6 +133,8 @@
     "@vitejs/plugin-react": "^4.3.4",
     "@vitejs/plugin-react-swc": "^3.8.0",
     "acorn": "^7.4.1",
+    "allure": "^3.20.1",
+    "allure-cucumberjs": "^3.13.0",
     "babel-jest": "^29.7.0",
     "babel-loader": "^8.2.3",
     "babel-node": "0.0.1-security",
@@ -149,7 +150,6 @@
     "chromedriver": "^155.0.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.5.1",
-    "cucumber-html-reporter": "^5.3.0",
     "eslint": "^9.13.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-babel": "^5.3.1",

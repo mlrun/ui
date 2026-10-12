@@ -2,7 +2,7 @@ Feature: Quick actions Page
 
     Testcases that verifies functionality on MLRun Quick actions Page
 
-    @MLPH @rerun
+    @MLPH @rerun @knownBug
     Scenario: MLPH001 - Check all mandatory components on Project Home
         * set tear-down property "project" created with "automation-test-1002" value
         * create "automation-test-1002" MLRun Project with code 201

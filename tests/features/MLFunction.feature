@@ -624,7 +624,7 @@ Feature: ML Functions
     @MLF
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    @rerun
+    @rerun @knownBug
     Scenario: MLF015 - Save new ml-function
         * set tear-down property "function" created in "default" project with "new-aqa-function-00" value
         Given open url
@@ -1265,7 +1265,7 @@ Feature: ML Functions
     @MLF
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    @rerun
+    @rerun @knownBug
     Scenario: MLF033 - Verify Resources values on Function Deploy and Run
         * set tear-down property "project" created with "automation-test" value
         * set tear-down property "function" created in "automation-test" project with "new-aqa-function-00" value

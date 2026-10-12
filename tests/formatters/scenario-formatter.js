@@ -63,6 +63,7 @@ class ScenarioFormatter extends Formatter {
     this.total = 0
     this.done = 0
     this.failed = 0
+    this.passed = 0
     this.runStartedAt = null
     this.startedAt = {}
 
@@ -94,6 +95,7 @@ class ScenarioFormatter extends Formatter {
 
     this.done++
     if (isFailure) this.failed++
+    if (status === Status.PASSED) this.passed++
 
     const { line } = formatterHelpers.PickleParser.getPickleLocation({ gherkinDocument, pickle })
     const counter = `[${String(this.done).padStart(String(this.total).length)}/${this.total}]`
@@ -137,9 +139,12 @@ class ScenarioFormatter extends Formatter {
   onTestRunFinished() {
     const elapsed = this.runStartedAt ? formatDuration(Date.now() - this.runStartedAt) : ''
 
+    const otherCount = this.done - this.passed - this.failed
+    const otherInfo = otherCount ? `, ${yellow(`${otherCount} skipped/pending`)}` : ''
+
     this.log(
-      `\n${bold(`${this.done} scenarios`)}: ${green(`${this.done - this.failed} passed`)}, ` +
-        `${this.failed ? red(`${this.failed} failed`) : '0 failed'} ${gray(`in ${elapsed}`)}\n`
+      `\n${bold(`${this.done} scenarios`)}: ${green(`${this.passed} passed`)}, ` +
+        `${this.failed ? red(`${this.failed} failed`) : '0 failed'}${otherInfo} ${gray(`in ${elapsed}`)}\n`
     )
   }
 }

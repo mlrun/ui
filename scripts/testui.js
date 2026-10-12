@@ -19,7 +19,7 @@ such restriction.
 */
 'use strict'
 
-const { report } = require('../tests/config')
+const { report, browser, headless, delay_factor } = require('../tests/config')
 const fs = require('fs')
 
 // Do this as the first thing so that any code reading it knows the right env.
@@ -60,6 +60,20 @@ const hasFeaturePaths = argv.some(arg => /\.feature(:\d+)*$/.test(arg))
 // E2E_TAGS - cucumber tag expression, e.g. E2E_TAGS=@rerun to run only previously failed scenarios
 const tagsArgs = process.env.E2E_TAGS ? ['--tags', process.env.E2E_TAGS] : []
 
+// Allure results of the current run (the previous ones are removed), the report keeps the history of runs
+const allureResultsDir = path.join(path.dirname(report), 'allure-results')
+const allureFormatOptions = {
+  resultsDir: allureResultsDir,
+  environmentInfo: {
+    browser,
+    headless: String(headless),
+    delay_factor: String(delay_factor),
+    timezone: process.env.E2E_TZ || 'UTC',
+    tags: process.env.E2E_TAGS || 'all',
+    node: process.version
+  }
+}
+
 // build cucumber executive command args
 // support code is passed via `--require` so it's loaded with `require()` through `@babel/register`,
 // otherwise cucumber loads it with `import()` and Node's ESM loader fails on extensionless imports
@@ -75,9 +89,13 @@ const cucumberArgs = [
   '-f',
   `rerun:${report}_rerun.txt`,
   '-f',
-  `json:${report}.json`,
+  // the formatter needs its own output target: only one formatter can write to the terminal
+  // (otherwise it replaces the progress output of the scenario formatter); Allure writes its results to `resultsDir`
+  `allure-cucumberjs/reporter:${path.join(path.dirname(report), 'allure-formatter.log')}`,
+  '--format-options',
+  JSON.stringify(allureFormatOptions),
   '-f',
-  `html:${report}_default.html`,
+  `json:${report}.json`,
   ...tagsArgs,
   ...(hasFeaturePaths ? [] : ['tests']),
   ...argv
@@ -89,6 +107,7 @@ console.log(reportDir)
 if (!fs.existsSync(reportDir)) {
   fs.mkdirSync(reportDir)
 }
+fs.rmSync(allureResultsDir, { recursive: true, force: true })
 
 const isServerUp = url =>
   new Promise(resolve => {

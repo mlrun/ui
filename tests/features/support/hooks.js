@@ -49,25 +49,49 @@ Before({ timeout: 5 * 60 * 1000 }, async function () {
   })
 })
 
-After(async function (testCase) {
-  let logs = []
-
+After(async function () {
   try {
-    if (testCase.result.status === Status.FAILED) {
-      var stream = await this.driver.takeScreenshot()
-      await this.attach(stream, 'base64:image/png')
-    }
-    if (browser === 'chrome') {
-      logs = await this.driver.manage().logs().get(wd.logging.Type.BROWSER)
-    }
     await clearBackendAfterTest(this.driver, this.createdItems)
   } finally {
     await quitActiveDriver()
   }
+})
 
-  if (logs.some(log => log.level.name_ === 'SEVERE')) {
-    await logs.forEach(log => this.attach(`${log.level.name} ${log.message}`, 'text/plain'))
-    // throw new Error('There are some errors in console')
+// Failure evidence: screenshot, page URL and browser console log (for passed scenarios - only console errors).
+// The hook name makes allure-cucumberjs attach them to the test itself instead of a "tear down" fixture.
+// After hooks run in the reverse order of definition, so this one runs before the browser is closed above
+After({ name: 'ALLURE_FIXTURE_IGNORE' }, async function (testCase) {
+  if (!this.driver) return
+
+  const isFailed = testCase.result.status === Status.FAILED
+
+  try {
+    if (isFailed) {
+      const screenshot = await this.driver.takeScreenshot()
+
+      await this.attach(Buffer.from(screenshot, 'base64'), {
+        mediaType: 'image/png',
+        fileName: 'Screenshot on failure.png'
+      })
+      await this.attach(await this.driver.getCurrentUrl(), {
+        mediaType: 'text/plain',
+        fileName: 'Page URL.txt'
+      })
+    }
+
+    if (browser === 'chrome') {
+      const logs = await this.driver.manage().logs().get(wd.logging.Type.BROWSER)
+
+      if (isFailed ? logs.length > 0 : logs.some(log => log.level.name === 'SEVERE')) {
+        await this.attach(logs.map(log => `${log.level.name} ${log.message}`).join('\n'), {
+          mediaType: 'text/plain',
+          fileName: 'Browser console.log'
+        })
+      }
+    }
+  } catch (error) {
+    // the browser session can already be broken, the evidence is optional
+    console.warn(`Failed to collect the failure evidence: ${error.message}`)
   }
 })
 

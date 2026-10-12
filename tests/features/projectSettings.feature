@@ -239,7 +239,7 @@ Feature: Project Settings page
 
     @MLPS
     @inProgress
-    @smoke @rerun
+    @smoke @rerun @knownBug
     Scenario: MLPS008 - Verify Secrets table on Secrets tab
         Given open url
         And wait load page
