@@ -310,8 +310,7 @@ const ModelEndpointsTable = React.forwardRef(
               />
             ) : (
               <>
-                {(artifactsStore.modelEndpoints.modelEndpointLoading ||
-                  artifactsStore.modelEndpoints.loading) && <Loader overlay />}
+                {artifactsStore.modelEndpoints.modelEndpointLoading && <Loader overlay />}
                 <Table
                   actionsMenu={actionsMenu}
                   pageData={pageData}

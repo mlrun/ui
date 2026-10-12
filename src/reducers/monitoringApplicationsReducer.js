@@ -139,7 +139,7 @@ export const fetchMonitoringApplications = createAsyncThunk(
     const splitApps = splitApplicationsContent(mlrunApiApps)
 
     const applications = splitApps.applications.map(mlrunApp => {
-      const match = nuclioApiApps[`${mlrunApp.project_name}-${mlrunApp.name}`]
+      const match = nuclioApiApps?.[`${mlrunApp.project_name}-${mlrunApp.name}`]
 
       return {
         ...mlrunApp,

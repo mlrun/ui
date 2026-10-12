@@ -17,12 +17,28 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { configureStore } from '@reduxjs/toolkit'
+
 import monitoringApplicationsReducer, {
   fetchMEPWithDetections,
   fetchMonitoringApplication,
   fetchMonitoringApplications,
   fetchMonitoringApplicationsSummary
 } from './monitoringApplicationsReducer'
+import monitoringApplicationsApi from '../api/monitoringApplications-api'
+import nuclioApi from '../api/nuclio'
+import { DATES_FILTER } from '../constants'
+
+vi.mock('../api/monitoringApplications-api', () => ({
+  default: {
+    getMonitoringApplications: vi.fn()
+  }
+}))
+vi.mock('../api/nuclio', () => ({
+  default: {
+    getFunctions: vi.fn()
+  }
+}))
 
 const arg = { project: 'p', filters: {}, signal: undefined }
 
@@ -120,5 +136,27 @@ describe('monitoringApplicationsReducer fetchMonitoringApplications', () => {
       fetchMonitoringApplications.fulfilled({ applications: [] }, 'requestA', arg)
     )
     expect(state.loading).toBe(false)
+  })
+
+  it('falls back to the mlrun status when the nuclio request is aborted but the mlrun one succeeded', async () => {
+    monitoringApplicationsApi.getMonitoringApplications.mockResolvedValueOnce({
+      data: [{ name: 'app', project_name: 'p', status: 'ready' }]
+    })
+    nuclioApi.getFunctions.mockRejectedValueOnce(new Error('canceled'))
+
+    const store = configureStore({
+      reducer: { monitoringApplicationsStore: monitoringApplicationsReducer }
+    })
+    const action = await store.dispatch(
+      fetchMonitoringApplications({
+        project: 'p',
+        filters: { [DATES_FILTER]: { value: [new Date()] } }
+      })
+    )
+
+    expect(action.type).toBe(fetchMonitoringApplications.fulfilled.type)
+    expect(
+      store.getState().monitoringApplicationsStore.monitoringApplications.applications
+    ).toEqual([{ name: 'app', project_name: 'p', status: 'ready' }])
   })
 })
