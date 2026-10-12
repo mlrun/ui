@@ -48,6 +48,7 @@ import { getFeatureVectorData } from '../ModelsPage/Models/models.util'
 import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { getFiltersConfig } from './artifacts.util'
 import { getSavedSearchParams, transformSearchParams } from 'igz-controls/utils/filter.util'
+import { isRequestAborted } from '../../utils/isRequestAborted'
 import { openPopUp, getViewMode } from 'igz-controls/utils/common.util'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { toggleYaml } from '../../reducers/appReducer'
@@ -93,6 +94,7 @@ const Artifacts = ({
   const paginationConfigArtifactVersionsRef = useRef({})
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
+  const deployAbortControllerRef = useRef(new AbortController())
   const artifactsRef = useRef(null)
   const lastCheckedArtifactIdRef = useRef(null)
 
@@ -135,6 +137,7 @@ const Artifacts = ({
 
   const fetchData = useCallback(
     async filters => {
+      abortControllerRef.current.abort(REQUEST_CANCELED)
       abortControllerRef.current = new AbortController()
 
       const requestParams = {
@@ -200,11 +203,13 @@ const Artifacts = ({
 
           return response
         })
-        .catch(() => {
-          if (isAllVersions) {
-            setArtifactVersions([])
-          } else {
-            setArtifacts([])
+        .catch(error => {
+          if (!isRequestAborted(error)) {
+            if (isAllVersions) {
+              setArtifactVersions([])
+            } else {
+              setArtifacts([])
+            }
           }
         })
     },
@@ -212,6 +217,7 @@ const Artifacts = ({
   )
 
   const fetchTags = useCallback(() => {
+    tagAbortControllerRef.current.abort(REQUEST_CANCELED)
     tagAbortControllerRef.current = new AbortController()
 
     return dispatch(
@@ -221,8 +227,8 @@ const Artifacts = ({
         project: params.projectName,
         category: artifactType,
         config: {
-          signal: tagAbortControllerRef.current.signal,
           ui: {
+            controller: tagAbortControllerRef.current,
             setRequestErrorMessage
           }
         }
@@ -262,14 +268,15 @@ const Artifacts = ({
 
   const handleDeployArtifact = useCallback(
     artifact => {
-      abortControllerRef.current = new AbortController()
+      deployAbortControllerRef.current.abort(REQUEST_CANCELED)
+      deployAbortControllerRef.current = new AbortController()
 
       dispatch(
         fetchArtifactsFunctions({
           project: artifact.project,
           filters: {},
           config: {
-            signal: abortControllerRef.current.signal,
+            signal: deployAbortControllerRef.current.signal,
             params: { format: 'minimal', kind: 'serving' }
           }
         })
@@ -294,6 +301,7 @@ const Artifacts = ({
             }
           }
         })
+        .catch(() => {})
     },
     [dispatch, handleDeployArtifactFailure, params.projectName]
   )
@@ -472,13 +480,12 @@ const Artifacts = ({
   useEffect(() => getAndSetSelectedArtifact(true), [getAndSetSelectedArtifact])
 
   useEffect(() => {
-    const tagAbortControllerCurrent = tagAbortControllerRef.current
-
     return () => {
       dispatch(removeArtifacts())
       setSelectedArtifact({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
-      tagAbortControllerCurrent.abort(REQUEST_CANCELED)
+      tagAbortControllerRef.current.abort(REQUEST_CANCELED)
+      deployAbortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [params.projectName, dispatch, tagAbortControllerRef, removeArtifacts])
 

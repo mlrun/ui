@@ -246,7 +246,7 @@ const ProjectSettingsGeneral = ({
 
   return (
     <>
-      {(projectStore.loading || projectStore.project.loading) && <Loader />}
+      {(projectStore.loading || projectStore.project.loading) && <Loader overlay />}
 
       <Form form={formRef.current} onSubmit={() => {}}>
         {formState => {
@@ -255,7 +255,7 @@ const ProjectSettingsGeneral = ({
           return (
             <div className="settings__card">
               {projectStore.project.loading ? (
-                <Loader />
+                <Loader overlay />
               ) : projectStore.project.error ? (
                 <div>
                   <h1>{projectStore.project.error.message}</h1>

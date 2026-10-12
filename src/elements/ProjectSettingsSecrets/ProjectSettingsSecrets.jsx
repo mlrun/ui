@@ -182,7 +182,7 @@ const ProjectSettingsSecrets = ({ setNotification }) => {
         return (
           <div className="settings__card">
             {projectStore.project.secrets?.loading ? (
-              <Loader />
+              <Loader overlay />
             ) : !isUserAllowed ? (
               <div>
                 <h1>You don't have access to this project's secrets</h1>

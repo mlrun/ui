@@ -75,7 +75,7 @@ const ProjectSettingsMembers = ({
   return (
     <div className="settings__card">
       {loading ? (
-        <Loader />
+        <Loader overlay />
       ) : (
         <div className="settings__card-content">
           <div className="settings__card-content-col">

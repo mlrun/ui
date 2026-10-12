@@ -34,3 +34,23 @@ export const defaultRejectedHandler = (state, action) => {
   state.loading = false
   state.error = action.error
 }
+
+export const requestPending = (slice, action) => {
+  slice.pendingRequestIds = [...(slice.pendingRequestIds ?? []), action.meta.requestId]
+  slice.currentRequestId = action.meta.requestId
+  slice.loading = true
+}
+
+export const requestPendingUntracked = (slice, action) => {
+  slice.pendingRequestIds = [...(slice.pendingRequestIds ?? []), action.meta.requestId]
+  slice.loading = true
+}
+
+export const requestSettled = (slice, action) => {
+  slice.pendingRequestIds = (slice.pendingRequestIds ?? []).filter(
+    id => id !== action.meta.requestId
+  )
+  slice.loading = slice.pendingRequestIds.length > 0
+}
+
+export const isStaleRequest = (slice, action) => action.meta.requestId !== slice.currentRequestId

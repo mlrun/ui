@@ -24,8 +24,9 @@ import nuclioApi from '../api/nuclio'
 import functionsApi from '../api/functions-api'
 import { parseV3ioStreams } from '../utils/parseV3ioStreams'
 import { parseV3ioStreamShardLags } from '../utils/parseV3ioStreamShardLags'
-import { DEFAULT_ABORT_MSG, REQUEST_CANCELED } from '../constants'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
+import { isRequestAborted } from '../utils/isRequestAborted'
+import { requestPending, requestSettled } from './redux.util'
 
 export const fetchApiGateways = createAsyncThunk(
   'fetchApiGateways',
@@ -117,10 +118,11 @@ export const fetchProjectApiGateways = createAsyncThunk(
         return []
       })
       .catch(error => {
-        if (![REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(error?.message)) {
+        if (!isRequestAborted(error)) {
           showErrorNotification(dispatch, error, 'Failed to load API gateways')
-          return rejectWithValue(error)
         }
+
+        return rejectWithValue(error)
       })
   }
 )
@@ -129,6 +131,8 @@ const initialState = {
   apiGateways: 0,
   projectApiGateways: [],
   projectApiGatewaysLoading: false,
+  projectApiGatewaysPendingIds: [],
+  projectApiGatewaysCurrentId: null,
   projectApiGatewaysError: null,
   functions: {},
   nuclioFunctionLoading: false,
@@ -146,6 +150,7 @@ const initialState = {
   },
   currentProjectFunctions: [],
   loading: false,
+  pendingRequestIds: [],
   error: null
 }
 
@@ -170,48 +175,46 @@ const nuclioSlice = createSlice({
     clearProjectApiGateways(state) {
       state.projectApiGateways = []
       state.projectApiGatewaysLoading = false
+      state.projectApiGatewaysPendingIds = []
+      state.projectApiGatewaysCurrentId = null
       state.projectApiGatewaysError = null
     }
   },
   extraReducers: builder => {
-    builder.addCase(fetchApiGateways.pending, state => {
-      state.loading = true
-    })
+    builder.addCase(fetchApiGateways.pending, requestPending)
     builder.addCase(fetchApiGateways.fulfilled, (state, action) => {
+      requestSettled(state, action)
       state.apiGateways = action.payload
-      state.loading = false
       state.error = null
     })
     builder.addCase(fetchApiGateways.rejected, (state, action) => {
+      requestSettled(state, action)
       state.apiGateways = 0
-      state.loading = false
-      state.error = action.error?.message
+      state.error = action.payload?.message
     })
-    builder.addCase(fetchNuclioFunctions.pending, state => {
-      state.loading = true
-    })
+    builder.addCase(fetchNuclioFunctions.pending, requestPending)
     builder.addCase(fetchNuclioFunctions.fulfilled, (state, action) => {
+      requestSettled(state, action)
       state.currentProjectFunctions = action.payload
-      state.loading = false
       state.error = null
     })
     builder.addCase(fetchNuclioFunctions.rejected, (state, action) => {
+      requestSettled(state, action)
+      if (isRequestAborted(action.payload)) return
       state.currentProjectFunctions = []
-      state.loading = false
-      state.error = action.error?.message
+      state.error = action.payload?.message
     })
-    builder.addCase(fetchAllNuclioFunctions.pending, state => {
-      state.loading = true
-    })
+    builder.addCase(fetchAllNuclioFunctions.pending, requestPending)
     builder.addCase(fetchAllNuclioFunctions.fulfilled, (state, action) => {
+      requestSettled(state, action)
       state.functions = action.payload
-      state.loading = false
       state.error = null
     })
     builder.addCase(fetchAllNuclioFunctions.rejected, (state, action) => {
+      requestSettled(state, action)
+      if (isRequestAborted(action.payload)) return
       state.functions = {}
-      state.loading = false
-      state.error = action.error?.message
+      state.error = action.payload?.message
     })
     builder.addCase(fetchNuclioFunction.pending, state => {
       state.nuclioFunctionLoading = true
@@ -272,19 +275,33 @@ const nuclioSlice = createSlice({
       }
     })
 
-    builder.addCase(fetchProjectApiGateways.pending, state => {
+    builder.addCase(fetchProjectApiGateways.pending, (state, action) => {
+      state.projectApiGatewaysPendingIds = [
+        ...state.projectApiGatewaysPendingIds,
+        action.meta.requestId
+      ]
+      state.projectApiGatewaysCurrentId = action.meta.requestId
       state.projectApiGatewaysLoading = true
       state.projectApiGatewaysError = null
     })
     builder.addCase(fetchProjectApiGateways.fulfilled, (state, action) => {
+      state.projectApiGatewaysPendingIds = state.projectApiGatewaysPendingIds.filter(
+        id => id !== action.meta.requestId
+      )
+      state.projectApiGatewaysLoading = state.projectApiGatewaysPendingIds.length > 0
+      if (action.meta.requestId !== state.projectApiGatewaysCurrentId) return
       state.projectApiGateways = action.payload
-      state.projectApiGatewaysLoading = false
       state.projectApiGatewaysError = null
     })
     builder.addCase(fetchProjectApiGateways.rejected, (state, action) => {
+      state.projectApiGatewaysPendingIds = state.projectApiGatewaysPendingIds.filter(
+        id => id !== action.meta.requestId
+      )
+      state.projectApiGatewaysLoading = state.projectApiGatewaysPendingIds.length > 0
+      if (action.meta.requestId !== state.projectApiGatewaysCurrentId) return
+      if (isRequestAborted(action.payload)) return
       state.projectApiGateways = []
-      state.projectApiGatewaysLoading = false
-      state.projectApiGatewaysError = action.error?.message
+      state.projectApiGatewaysError = action.payload?.message
     })
   }
 })

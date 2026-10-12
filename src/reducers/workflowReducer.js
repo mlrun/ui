@@ -24,11 +24,15 @@ import { isNil } from 'lodash'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 import { parseWorkflows } from '../utils/parseWorkflows'
 import { JOBS_MONITORING_WORKFLOWS_TAB, MONITOR_WORKFLOWS_TAB } from '../constants'
+import { isRequestAborted } from '../utils/isRequestAborted'
+import { isStaleRequest, requestPending, requestSettled } from './redux.util'
 
 const initialState = {
   workflows: {
     data: [],
     loading: false,
+    pendingRequestIds: [],
+    currentRequestId: null,
     error: null,
     rerunInProgress: false
   },
@@ -129,22 +133,21 @@ const workflowsSlice = createSlice({
         workflowJobsIds: []
       }
     })
-    builder.addCase(fetchWorkflows.pending, state => {
-      state.workflows.loading = true
+    builder.addCase(fetchWorkflows.pending, (state, action) => {
+      requestPending(state.workflows, action)
     })
     builder.addCase(fetchWorkflows.fulfilled, (state, action) => {
-      state.workflows = {
-        data: action.payload,
-        loading: false,
-        error: null
-      }
+      requestSettled(state.workflows, action)
+      if (isStaleRequest(state.workflows, action)) return
+      state.workflows.data = action.payload
+      state.workflows.error = null
     })
     builder.addCase(fetchWorkflows.rejected, (state, action) => {
-      state.workflows = {
-        data: [],
-        loading: false,
-        error: action.payload
-      }
+      requestSettled(state.workflows, action)
+      if (isStaleRequest(state.workflows, action)) return
+      if (isRequestAborted(action.payload)) return
+      state.workflows.data = []
+      state.workflows.error = action.payload
     })
     builder.addCase(rerunWorkflow.fulfilled, state => {
       state.workflows.rerunInProgress = true

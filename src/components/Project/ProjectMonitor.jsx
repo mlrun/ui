@@ -126,6 +126,9 @@ const ProjectMonitor = () => {
   }, [navigate, params, openRegisterArtifactModal, openRegisterModelModal, isDemoMode])
 
   const fetchProjectDataAndSummary = useCallback(() => {
+    projectAbortControllerRef.current.abort(REQUEST_CANCELED)
+    projectSummariesAbortControllerRef.current.abort(REQUEST_CANCELED)
+    nuclioFunctionsAbortControllerRef.current.abort(REQUEST_CANCELED)
     projectAbortControllerRef.current = new AbortController()
     projectSummariesAbortControllerRef.current = new AbortController()
     nuclioFunctionsAbortControllerRef.current = new AbortController()

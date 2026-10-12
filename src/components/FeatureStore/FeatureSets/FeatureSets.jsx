@@ -117,6 +117,7 @@ const FeatureSets = () => {
 
   const fetchData = useCallback(
     filters => {
+      abortControllerRef.current.abort(REQUEST_CANCELED)
       abortControllerRef.current = new AbortController()
 
       const config = {
@@ -145,6 +146,7 @@ const FeatureSets = () => {
   )
 
   const fetchTags = useCallback(() => {
+    tagAbortControllerRef.current.abort(REQUEST_CANCELED)
     tagAbortControllerRef.current = new AbortController()
 
     return dispatch(
@@ -420,8 +422,6 @@ const FeatureSets = () => {
   }, [openPanelByDefault, setFeatureSetsPanelIsOpen])
 
   useEffect(() => {
-    const tagAbortControllerCurrent = tagAbortControllerRef.current
-
     return () => {
       setFeatureSets([])
       dispatch(removeFeatureSets())
@@ -429,7 +429,7 @@ const FeatureSets = () => {
       setSelectedFeatureSetMin({})
       setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
-      tagAbortControllerCurrent.abort(REQUEST_CANCELED)
+      tagAbortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [params.projectName, tagAbortControllerRef, dispatch])
 
