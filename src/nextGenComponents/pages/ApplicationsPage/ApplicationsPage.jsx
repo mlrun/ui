@@ -266,7 +266,7 @@ const ApplicationsPage = () => {
               </div>
               <div className="flex-1 min-h-[200px] flex flex-col [&_thead_tr]:z-[1] relative">
                 {isLoading ? (
-                  <Loader overlay />
+                  <Loader />
                 ) : applications.length === 0 && !isDetailsOpen ? (
                   <NoData
                     message={getNoDataMessage(

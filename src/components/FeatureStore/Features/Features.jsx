@@ -315,8 +315,6 @@ const Features = () => {
   }, [filtersStore.groupBy, featuresFilters.tag, dispatch])
 
   useEffect(() => {
-    const tagAbortControllerCurrent = tagAbortControllerRef.current
-
     return () => {
       setFeatures([])
       dispatch(removeFeature())
@@ -325,7 +323,7 @@ const Features = () => {
       dispatch(removeEntities())
       setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
-      tagAbortControllerCurrent.abort(REQUEST_CANCELED)
+      tagAbortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [params.projectName, tagAbortControllerRef, dispatch])
 

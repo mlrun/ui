@@ -338,7 +338,7 @@ const RealTimePipelines = () => {
                 <Tip text="This data is relevant to the root function" />
               </div>
               {isLoading ? (
-                <Loader overlay />
+                <Loader section secondary />
               ) : pipelines.length === 0 ? (
                 <NoData
                   message={getNoDataMessage(

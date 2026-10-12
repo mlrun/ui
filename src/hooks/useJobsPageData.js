@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
@@ -296,6 +296,12 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
     resetPaginationTrigger: `${params.projectName}_${selectedTab}_${params.jobName}`,
     isAllVersions: Boolean(params.jobName)
   })
+
+  useEffect(() => {
+    return () => {
+      abortControllerRef.current.abort(REQUEST_CANCELED)
+    }
+  }, [])
 
   return {
     abortControllerRef,

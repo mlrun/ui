@@ -94,6 +94,7 @@ const Artifacts = ({
   const paginationConfigArtifactVersionsRef = useRef({})
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
+  const deployAbortControllerRef = useRef(new AbortController())
   const artifactsRef = useRef(null)
   const lastCheckedArtifactIdRef = useRef(null)
 
@@ -267,15 +268,15 @@ const Artifacts = ({
 
   const handleDeployArtifact = useCallback(
     artifact => {
-      abortControllerRef.current.abort(REQUEST_CANCELED)
-      abortControllerRef.current = new AbortController()
+      deployAbortControllerRef.current.abort(REQUEST_CANCELED)
+      deployAbortControllerRef.current = new AbortController()
 
       dispatch(
         fetchArtifactsFunctions({
           project: artifact.project,
           filters: {},
           config: {
-            signal: abortControllerRef.current.signal,
+            signal: deployAbortControllerRef.current.signal,
             params: { format: 'minimal', kind: 'serving' }
           }
         })
@@ -479,13 +480,12 @@ const Artifacts = ({
   useEffect(() => getAndSetSelectedArtifact(true), [getAndSetSelectedArtifact])
 
   useEffect(() => {
-    const tagAbortControllerCurrent = tagAbortControllerRef.current
-
     return () => {
       dispatch(removeArtifacts())
       setSelectedArtifact({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
-      tagAbortControllerCurrent.abort(REQUEST_CANCELED)
+      tagAbortControllerRef.current.abort(REQUEST_CANCELED)
+      deployAbortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [params.projectName, dispatch, tagAbortControllerRef, removeArtifacts])
 

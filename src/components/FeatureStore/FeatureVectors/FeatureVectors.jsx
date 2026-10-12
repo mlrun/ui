@@ -489,15 +489,13 @@ const FeatureVectors = () => {
   }, [openPanelByDefault, setCreateVectorPopUpIsOpen])
 
   useEffect(() => {
-    const tagAbortControllerCurrent = tagAbortControllerRef.current
-
     return () => {
       setFeatureVectors([])
       dispatch(removeFeatureVectors())
       setSelectedFeatureVector({})
       setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
-      tagAbortControllerCurrent.abort(REQUEST_CANCELED)
+      tagAbortControllerRef.current.abort(REQUEST_CANCELED)
       setCreateVectorPopUpIsOpen(false)
     }
   }, [setCreateVectorPopUpIsOpen, params.projectName, tagAbortControllerRef, dispatch])
