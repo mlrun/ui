@@ -60,9 +60,17 @@ const renderAt = (url, basename) => {
 describe('catch-all route redirects', () => {
   it.each([
     ['/projects/default/models/INVALID', '/projects/default/models/models', 'models page'],
-    ['/projects/default/models/INVALID/deeper/path', '/projects/default/models/models', 'models page'],
+    [
+      '/projects/default/models/INVALID/deeper/path',
+      '/projects/default/models/models',
+      'models page'
+    ],
     ['/projects/default/jobs/INVALID', '/projects/default/jobs/monitor-jobs', 'monitor jobs page'],
-    ['/projects/*/jobs-monitoring/INVALID', '/projects/*/jobs-monitoring/jobs', 'jobs monitoring page'],
+    [
+      '/projects/*/jobs-monitoring/INVALID',
+      '/projects/*/jobs-monitoring/jobs',
+      'jobs monitoring page'
+    ],
     ['/INVALID', '/projects', 'projects page'],
     ['/projects/default/INVALID/general', '/projects', 'projects page']
   ])('redirects "%s" to "%s"', async (url, expectedPathname, expectedPage) => {
