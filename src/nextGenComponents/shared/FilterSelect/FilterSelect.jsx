@@ -111,7 +111,7 @@ const FilterSelect = ({
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger
-        className={`inline-flex h-10 w-full border-solid border-igz-gray items-center justify-between gap-2 rounded border bg-background px-3 text-sm shadow-sm hover:bg-igz-hover-bg transition-colors cursor-pointer focus-visible:outline-none font-normal text-igz-primary ${className ?? ''}`}
+        className={`inline-flex h-10 w-full border-solid border-igz-gray items-center justify-between gap-2 rounded border bg-background px-3 text-sm shadow-xs hover:bg-igz-hover-bg transition-colors cursor-pointer focus-visible:outline-hidden font-normal text-igz-primary ${className ?? ''}`}
         data-testid={testId ? `${testId}-trigger` : 'filter-select-trigger'}
       >
         <span className="flex items-center gap-2 truncate min-w-0">
@@ -124,14 +124,14 @@ const FilterSelect = ({
       <DropdownMenuContent
         align="start"
         sideOffset={4}
-        className="min-w-[var(--radix-dropdown-menu-trigger-width)] text-igz-primary"
+        className="min-w-(--radix-dropdown-menu-trigger-width) text-igz-primary"
         onInteractOutside={e => {
           if (isMultiple) e.preventDefault()
         }}
       >
         {isMultiple && (
           <DropdownMenuItem
-            className="flex items-center gap-3 text-[15px] h-[50px] p-4 data-[highlighted]:bg-igz-accent-hover cursor-pointer"
+            className="flex items-center gap-3 text-[15px] h-[50px] p-4 data-highlighted:bg-igz-accent-hover cursor-pointer"
             onSelect={e => {
               e.preventDefault()
               handleToggleAll()
@@ -156,7 +156,7 @@ const FilterSelect = ({
           return (
             <DropdownMenuItem
               key={option.value || 'empty'}
-              className="flex items-center gap-3 text-[15px] h-[50px] p-4 data-[highlighted]:bg-igz-accent-hover cursor-pointer"
+              className="flex items-center gap-3 text-[15px] h-[50px] p-4 data-highlighted:bg-igz-accent-hover cursor-pointer"
               onSelect={e => {
                 if (isMultiple) {
                   e.preventDefault()

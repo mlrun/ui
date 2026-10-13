@@ -51,7 +51,7 @@ const DetailsInfoTable = ({ className = '', items }) => {
                 {item.label}
               </span>
               <div
-                className="flex-1 text-body text-igz-secondary break-words min-w-0"
+                className="flex-1 text-body text-igz-secondary wrap-break-word min-w-0"
                 data-testid={`info-value-${itemKey}`}
               >
                 {item.value ?? EMPTY_VALUE_PLACEHOLDER}

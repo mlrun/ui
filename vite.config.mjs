@@ -4,6 +4,7 @@ import { federation } from '@module-federation/vite'
 import path from 'node:path'
 import react from '@vitejs/plugin-react-swc'
 import svgr from 'vite-plugin-svgr'
+import tailwindcss from '@tailwindcss/vite'
 import { defineConfig, loadEnv } from 'vite'
 
 import { loadMlrunProxyConfig } from './config/loadDevProxyConfig.js'
@@ -62,6 +63,7 @@ export default defineConfig(async ({ mode }) => {
   return {
     plugins: [
       commonjs(),
+      tailwindcss(),
       react(),
       federationPlugin,
       svgr(),
@@ -104,6 +106,10 @@ export default defineConfig(async ({ mode }) => {
         'react-final-form',
         'react-final-form-arrays',
         'react-modal-promise',
+        'react-redux',
+        '@reduxjs/toolkit',
+        'react-router',
+        'react-router-dom',
         'react-transition-group'
       ]
     },

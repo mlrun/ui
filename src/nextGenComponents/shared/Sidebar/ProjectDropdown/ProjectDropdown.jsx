@@ -116,7 +116,7 @@ const ProjectDropdown = ({ projectName }) => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <span className="truncate max-w-[--sidebar-width]">{projectName}</span>
+                    <span className="truncate max-w-(--sidebar-width)">{projectName}</span>
                   </TooltipTrigger>
                   <TooltipContent className="mt-8 -ml-2" sideOffset={0} side="down">
                     {projectName}
@@ -128,7 +128,7 @@ const ProjectDropdown = ({ projectName }) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             data-testid="sidebar-project-dropdown-content"
-            className="w-[--radix-popper-anchor-width] max-h-[32rem] p-2 flex flex-col"
+            className="w-(--radix-popper-anchor-width) max-h-128 p-2 flex flex-col"
           >
             <div className="flex relative mb-2 shrink-0">
               <Input
