@@ -1,6 +1,7 @@
 import commonjs from 'vite-plugin-commonjs'
 import eslint from 'vite-plugin-eslint'
 import { federation } from '@module-federation/vite'
+import fs from 'node:fs'
 import path from 'node:path'
 import react from '@vitejs/plugin-react-swc'
 import svgr from 'vite-plugin-svgr'
@@ -8,6 +9,25 @@ import { defineConfig, loadEnv } from 'vite'
 
 import { loadMlrunProxyConfig } from './config/loadDevProxyConfig.js'
 import { dependencies } from './package.json'
+
+const shareSingletons = pattern => {
+  const { packages } = JSON.parse(
+    fs.readFileSync(path.resolve(__dirname, 'package-lock.json'), 'utf-8')
+  )
+
+  return Object.fromEntries(
+    Object.keys(packages)
+      .map(packagePath => packagePath.match(/^node_modules\/((?:@[^/]+\/)?[^/]+)$/)?.[1])
+      .filter(name => name && pattern.test(name))
+      .map(name => [name, { singleton: true }])
+  )
+}
+
+const shared = {
+  react: { requiredVersion: dependencies.react, singleton: true },
+  'react-dom': { requiredVersion: dependencies['react-dom'], singleton: true },
+  ...shareSingletons(/^@radix-ui\/|^react-remove-scroll$|^aria-hidden$/)
+}
 
 export default defineConfig(async ({ mode }) => {
   const env = loadEnv(mode, path.resolve(process.cwd()), '')
@@ -26,14 +46,7 @@ export default defineConfig(async ({ mode }) => {
       './loadRemoteConfig': './src/loadRemoteConfig.js',
       './app': './src/main.jsx'
     },
-    shared: {
-      react: { requiredVersion: dependencies.react, singleton: true },
-      'react-dom': { requiredVersion: dependencies['react-dom'], singleton: true },
-      '@radix-ui/react-dismissable-layer': {
-        requiredVersion: dependencies['@radix-ui/react-dismissable-layer'],
-        singleton: true
-      }
-    }
+    shared
   })
 
   // The federation plugin injects its hostInit script as the first child of
