@@ -54,7 +54,7 @@ const DetailsModelEndpoints = ({ selectedItem }) => {
             }
           },
           params: {
-            latest_only: 'True',
+            'latest-only': 'True',
             'function-tag': selectedItem.tag
           }
         })

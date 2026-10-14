@@ -113,7 +113,7 @@ export const useNuclioEnrichedFunctions = ({
   const fetchModelEndpointsList = useCallback(
     signal =>
       modelEndpointsApi
-        .getModelEndpoints(projectName, {}, { signal }, { latest_only: 'True' })
+        .getModelEndpoints(projectName, {}, { signal }, { 'latest-only': 'True' })
         .then(({ data }) => data?.endpoints ?? []),
     [projectName]
   )

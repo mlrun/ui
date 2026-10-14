@@ -1455,6 +1455,153 @@
         "drift_measures": {},
         "drift_status": "DRIFT_DETECTED"
       }
+    },
+    {
+      "kind": "model-endpoint",
+      "metadata": {
+        "name": "child-model",
+        "project": "default",
+        "tag": null,
+        "labels": {
+          "router": "test-pipeline",
+          "version": "v1"
+        },
+        "updated": "2025-10-06T12:00:00.000000",
+        "created": "2025-10-01T10:00:00.000000",
+        "uid": "4f1c2a9e8b7d4e6fa1b2c3d4e5f60718",
+        "endpoint_type": 1,
+        "mode": 0
+      },
+      "spec": {
+        "model_class": "ChildModel",
+        "function_name": "test-pipeline",
+        "function_tag": "latest",
+        "model_path": "store://models/default/child-model#0:latest",
+        "model_name": "child-model",
+        "model_tags": [
+          "latest"
+        ],
+        "feature_names": [],
+        "label_names": [],
+        "feature_stats": {},
+        "function_uri": "default/test-pipeline@unversioned-latest",
+        "model_uri": "store://models/default/child-model#0:latest",
+        "children": null,
+        "children_uids": null,
+        "monitoring_feature_set_uri": ""
+      },
+      "status": {
+        "state": "ready",
+        "first_request": null,
+        "monitoring_mode": "disabled",
+        "sampling_percentage": 100,
+        "last_request": null,
+        "result_status": -1,
+        "avg_latency": null,
+        "error_count": 0,
+        "current_stats": {},
+        "current_stats_timestamp": null,
+        "drift_measures": {},
+        "drift_measures_timestamp": null
+      }
+    },
+    {
+      "kind": "model-endpoint",
+      "metadata": {
+        "name": "child-model-v2",
+        "project": "default",
+        "tag": null,
+        "labels": {
+          "router": "test-pipeline",
+          "version": "v2"
+        },
+        "updated": "2025-10-06T12:00:00.000000",
+        "created": "2025-10-01T10:00:00.000000",
+        "uid": "5a2d3b0f9c8e4f7a8b1c2d3e4f506172",
+        "endpoint_type": 1,
+        "mode": 0
+      },
+      "spec": {
+        "model_class": "ChildModel",
+        "function_name": "test-pipeline",
+        "function_tag": "latest",
+        "model_path": "store://models/default/child-model-v2#0:latest",
+        "model_name": "child-model-v2",
+        "model_tags": [
+          "latest"
+        ],
+        "feature_names": [],
+        "label_names": [],
+        "feature_stats": {},
+        "function_uri": "default/test-pipeline@unversioned-latest",
+        "model_uri": "store://models/default/child-model-v2#0:latest",
+        "children": null,
+        "children_uids": null,
+        "monitoring_feature_set_uri": ""
+      },
+      "status": {
+        "state": "ready",
+        "first_request": null,
+        "monitoring_mode": "disabled",
+        "sampling_percentage": 100,
+        "last_request": null,
+        "result_status": -1,
+        "avg_latency": null,
+        "error_count": 0,
+        "current_stats": {},
+        "current_stats_timestamp": null,
+        "drift_measures": {},
+        "drift_measures_timestamp": null
+      }
+    },
+    {
+      "kind": "model-endpoint",
+      "metadata": {
+        "name": "child-model-canary",
+        "project": "default",
+        "tag": null,
+        "labels": {
+          "router": "test-pipeline",
+          "canary": "true"
+        },
+        "updated": "2025-10-06T12:00:00.000000",
+        "created": "2025-10-01T10:00:00.000000",
+        "uid": "6b3e4c1a0d9f4a8b9c2d3e4f50617283",
+        "endpoint_type": 1,
+        "mode": 0
+      },
+      "spec": {
+        "model_class": "ChildModelCanary",
+        "function_name": "test-pipeline",
+        "function_tag": "latest",
+        "model_path": "store://models/default/child-model-canary#0:latest",
+        "model_name": "child-model-canary",
+        "model_tags": [
+          "latest"
+        ],
+        "feature_names": [],
+        "label_names": [],
+        "feature_stats": {},
+        "function_uri": "default/test-pipeline@unversioned-latest",
+        "model_uri": "store://models/default/child-model-canary#0:latest",
+        "children": null,
+        "children_uids": null,
+        "monitoring_feature_set_uri": ""
+      },
+      "status": {
+        "state": "ready",
+        "first_request": null,
+        "monitoring_mode": "disabled",
+        "sampling_percentage": 100,
+        "last_request": null,
+        "result_status": -1,
+        "avg_latency": null,
+        "error_count": 0,
+        "current_stats": {},
+        "current_stats_timestamp": null,
+        "drift_measures": {},
+        "drift_measures_timestamp": null
+      }
     }
   ]
 }

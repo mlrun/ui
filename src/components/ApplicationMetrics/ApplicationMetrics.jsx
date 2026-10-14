@@ -134,7 +134,7 @@ const ApplicationMetrics = () => {
           }
         },
         params: {
-          latest_only: 'True'
+          'latest-only': 'True'
         }
       })
     )

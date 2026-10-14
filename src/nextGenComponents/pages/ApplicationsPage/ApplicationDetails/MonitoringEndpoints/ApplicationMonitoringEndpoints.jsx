@@ -95,7 +95,7 @@ const ApplicationMonitoringEndpoints = ({ application }) => {
           ui: { controller: abortControllerRef.current }
         },
         params: {
-          latest_only: 'True',
+          'latest-only': 'True',
           'function-tag': application.tag
         }
       })
