@@ -13,8 +13,7 @@ Feature: Alerts Page
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         Then verify breadcrumbs "project" label should be equal "auto-generated-data" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Alerts_Button" element on "commonPagesHeader" wizard
+        Then select "Alerts" item in sidebar menu
         And wait load page
         Then verify "Search_By_Name_Filter_Input" element visibility on "Alerts" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Alerts" wizard
@@ -58,7 +57,7 @@ Feature: Alerts Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Alerts" value in breadcrumbs menu
+        And select "Alerts" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Alerts" value
         Then verify "Search_By_Name_Filter_Input" element visibility on "Alerts" wizard
@@ -90,11 +89,11 @@ Feature: Alerts Page
         And wait load page
         Then verify "Event_Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
         Then verify "Event_Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
-        Then verify "Event_Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Event_Type_Endpoint_Filter_Options"
         Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
         Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
         Then verify "Clear_Button" element on "FilterBy_Popup" wizard is enabled
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+        Then verify "Event_Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Event_Type_Endpoint_Filter_Options"
     
     @MLAlert
     @smoke
@@ -105,8 +104,7 @@ Feature: Alerts Page
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         Then verify breadcrumbs "project" label should be equal "auto-generated-data" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Alerts_Button" element on "commonPagesHeader" wizard
+        Then select "Alerts" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Alerts" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
@@ -159,8 +157,7 @@ Feature: Alerts Page
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         Then verify breadcrumbs "project" label should be equal "default" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Alerts_Button" element on "commonPagesHeader" wizard
+        Then select "Alerts" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Alerts" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
@@ -206,7 +203,7 @@ Feature: Alerts Page
         And wait load page
         And click on row root with value "auto-generated-data" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Alerts" value in breadcrumbs menu
+        And select "Alerts" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Alerts" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
@@ -268,7 +265,7 @@ Feature: Alerts Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Alerts" value in breadcrumbs menu
+        And select "Alerts" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Alerts" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
@@ -364,7 +361,7 @@ Feature: Alerts Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Alerts" value in breadcrumbs menu
+        And select "Alerts" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Alerts" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
@@ -414,7 +411,7 @@ Feature: Alerts Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Alerts" value in breadcrumbs menu
+        And select "Alerts" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Alerts" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
@@ -459,7 +456,7 @@ Feature: Alerts Page
         And wait load page
         And click on row root with value "auto-generated-data" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Alerts" value in breadcrumbs menu
+        And select "Alerts" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Alerts" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
@@ -481,7 +478,7 @@ Feature: Alerts Page
         And wait load page
         And click on row root with value "auto-generated-data" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Alerts" value in breadcrumbs menu
+        And select "Alerts" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Alerts" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value

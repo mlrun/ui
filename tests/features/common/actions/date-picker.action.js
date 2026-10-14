@@ -19,71 +19,109 @@ such restriction.
 */
 import { expect } from 'chai'
 import { getAllCellsWithAttribute } from './table.action'
-import {  openDropdown, selectOptionInDropdownWithoutCheck } from './dropdown.action'
+import { openDropdown } from './dropdown.action'
 
 const currentMonthAttribute = {
   attribute: 'class',
   value: ' current-month'
 }
 
+const getPickerMonthIndex = async (driver, dateTimePicker) => {
+  const month = await driver.findElement(dateTimePicker.monthLabel).getText()
+  const year = await driver.findElement(dateTimePicker.yearLabel).getText()
+  const date = new Date(`01 ${month} ${year}`)
+
+  return date.getFullYear() * 12 + date.getMonth()
+}
+
 async function selectMonthYear(driver, dateTimePicker, datetimePoint) {
   const datetime = new Date(datetimePoint)
-  const prevMonthBtn = await driver.findElement(dateTimePicker.prevMonthBtn)
-  const nextMonthBtn = await driver.findElement(dateTimePicker.nextMonthBtn)
-  const monthLabel = await driver.findElement(dateTimePicker.monthLabel)
-  const yearLabel = await driver.findElement(dateTimePicker.yearLabel)
+  const targetMonthIndex = datetime.getFullYear() * 12 + datetime.getMonth()
+  let currentMonthIndex = await getPickerMonthIndex(driver, dateTimePicker)
 
-  let pickYear = await yearLabel.getText()
-  let pickMonth = await monthLabel.getText()
-  let iterDatetime = new Date(`01 ${pickMonth} ${pickYear}`)
+  while (currentMonthIndex !== targetMonthIndex) {
+    const button =
+      targetMonthIndex > currentMonthIndex ? dateTimePicker.nextMonthBtn : dateTimePicker.prevMonthBtn
+    const previousMonthIndex = currentMonthIndex
 
-  while (datetime.getFullYear() !== iterDatetime.getFullYear()) {
-    if (datetime.getFullYear() > iterDatetime.getFullYear()) {
-      nextMonthBtn.click()
-    } else {
-      prevMonthBtn.click()
-    }
-    pickYear = await yearLabel.getText()
-    pickMonth = await monthLabel.getText()
-    iterDatetime = new Date(`01 ${pickMonth} ${pickYear}`)
-  }
-
-  while (datetime.getMonth() !== iterDatetime.getMonth()) {
-    if (datetime.getMonth() > iterDatetime.getMonth()) {
-      nextMonthBtn.click()
-    } else {
-      prevMonthBtn.click()
-    }
-    pickMonth = await monthLabel.getText()
-    iterDatetime = new Date(`01 ${pickMonth} ${pickYear}`)
+    await driver.findElement(button).click()
+    // wait for the calendar to switch the month before the next click
+    await driver.wait(async () => {
+      try {
+        return (await getPickerMonthIndex(driver, dateTimePicker)) !== previousMonthIndex
+      } catch {
+        return false
+      }
+    }, 3000)
+    currentMonthIndex = await getPickerMonthIndex(driver, dateTimePicker)
   }
 }
 
 async function selectCalendarDay(driver, dateTimePicker, datetimePoint) {
   const datetime = new Date(datetimePoint)
-  const currentMonthDayIndexes = await getAllCellsWithAttribute(
-    driver,
-    dateTimePicker.calendar,
-    currentMonthAttribute
-  )
 
-  for (const item of currentMonthDayIndexes) {
-    const dayElement = await driver.findElement(
-      dateTimePicker.calendar.tableFields[item[0]](item[1])
-    )
-    const day = await dayElement.getText()
+  // day cells are re-rendered after switching month, retry on stale references
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const currentMonthDayIndexes = await getAllCellsWithAttribute(
+        driver,
+        dateTimePicker.calendar,
+        currentMonthAttribute
+      )
 
-    if (Number.parseInt(day) === datetime.getDate()) {
-      dayElement.click()
+      for (const item of currentMonthDayIndexes) {
+        const dayElement = await driver.findElement(
+          dateTimePicker.calendar.tableFields[item[0]](item[1])
+        )
+        const day = await dayElement.getText()
+
+        if (Number.parseInt(day) === datetime.getDate()) {
+          await dayElement.click()
+
+          return
+        }
+      }
+
+      throw new Error(`Day ${datetime.getDate()} was not found in the date picker calendar`)
+    } catch (error) {
+      if (error.name !== 'StaleElementReferenceError' || attempt === 2) throw error
+
+      await driver.sleep(250)
     }
   }
 }
 
+// "MM/DD/YYYY HH:mm", "MM/DD/YYYY hh:mm AM", "hh:mm PM"... -> minutes since midnight
+const toMinutesOfDay = text => {
+  const match = /(\d{1,2}):(\d{2})(?:\s*([AaPp][Mm]))?\s*$/.exec(String(text).trim())
+
+  if (!match) return null
+
+  let hours = Number(match[1]) % (match[3] ? 12 : 24)
+
+  if (match[3]?.toUpperCase() === 'PM') hours += 12
+
+  return hours * 60 + Number(match[2])
+}
+
+// time options are "hh:mm AM/PM", the steps can use "HH:mm" as well - match the options by the time value
 export const setPickerTime = async (driver, dateTimePicker, datetimePoint) => {
-  const timeToSelect = datetimePoint.slice(-8)
-  
+  const minutesToSelect = toMinutesOfDay(datetimePoint)
+
   await openDropdown(driver, dateTimePicker)
-  await selectOptionInDropdownWithoutCheck(driver, dateTimePicker, timeToSelect)
+
+  const options = await driver.findElements(dateTimePicker.options)
+
+  for (const option of options) {
+    if (toMinutesOfDay(await option.getText()) === minutesToSelect) {
+      await option.click()
+      await driver.sleep(500)
+
+      return
+    }
+  }
+
+  throw new Error(`Time option for "${datetimePoint}" was not found in the time picker`)
 }
 
 export const verifyTimeFilterBand = async (driver, dropdown, diff) => {

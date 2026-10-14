@@ -17,25 +17,18 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-const reporter = require('cucumber-html-reporter')
-const os = require('os')
-const { browser, report } = require('./config')
+import { redirect } from 'react-router-dom'
 
-const options = {
-  theme: 'bootstrap',
-  jsonFile: `${report}.json`,
-  output: `${report}.html`,
-  reportSuiteAsScenarios: true,
-  scenarioTimestamp: true,
-  launchReport: true,
-  metadata: {
-    node: process.versions.node,
-    Platform: os.platform(),
-    kernel: os.release(),
-    arch: os.arch(),
-    browser: browser,
-    'report generated': new Date().toISOString()
-  }
-}
+import { PROJECTS_PAGE_PATH } from '../constants'
 
-reporter.generate(options)
+// Loaders for the catch-all (`*`) routes, they redirect unknown paths before anything is rendered.
+// The targets are absolute: since react-router v7 relative paths in splat routes are resolved against the full URL,
+// so `<Navigate to="models" />` from `.../models/INVALID` would redirect to `.../models/INVALID/models` endlessly.
+// Absolute paths are resolved within the router `basename`.
+
+export const redirectToPath = path => () => redirect(path)
+
+export const redirectToProjectPageTab =
+  (pagePath, tab) =>
+  ({ params }) =>
+    redirect(`/${PROJECTS_PAGE_PATH}/${encodeURIComponent(params.projectName)}/${pagePath}/${tab}`)

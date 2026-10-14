@@ -34,20 +34,6 @@ import {
 } from '../../common-tools/common-tools'
 
 // Monitor tab
-const tabSelector = {
-  root: '.content .content-menu',
-  header: {},
-  body: {
-    root: '.content-menu__tabs',
-    row: {
-      root: '.content-menu__tab',
-      fields: {
-        key: ''
-      }
-    }
-  }
-}
-
 const resultsTable = {
   root: '.table-body__cell:nth-of-type(7)',
   header: {},
@@ -424,7 +410,6 @@ const functionsTemplates = {
 const pageHeaderButton = By.css(
   '.action-bar .action-bar__actions button'
 )
-const jobsTabSelector = commonTable(tabSelector)
 const tableRefreshButton = By.css(
   '.content .content__action-bar-wrapper [data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]'
 )
@@ -480,7 +465,6 @@ const commonActionMenu = actionMenu(actionMenuStructure)
 
 export default {
   JobsMonitorTab: {
-    Jobs_Tab_Selector: jobsTabSelector,
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,
     Table_FilterBy_Button: commonTableFilterByButton,
     Batch_Run_Button: pageHeaderButton,
@@ -528,7 +512,7 @@ export default {
     Workflow_List_View_Table: commonTable(jobsMonitorTable),
     Workflow_Graph: graph(monitorWorkflowGraph),
     Table_Refresh_Button: tableRefreshButton,
-    Monitor_Workflows_Subtitle: By.css('.table-container .monitor-workflows__subtitle'),
+    Monitor_Workflows_Subtitle: By.css('.content__action-bar-wrapper .monitor-workflows__subtitle'),
     Action_Menu: commonActionMenu,
   },
   ScheduleMonitorTab: {

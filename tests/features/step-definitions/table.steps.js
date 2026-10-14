@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { When, Then } from '@cucumber/cucumber'
+import { panGraphToElement } from '../common/actions/graph.action'
 import pageObjects from '../common/page-objects'
 import {
   clickNearComponent,
@@ -40,7 +41,7 @@ import {
 import {
   checkCellHintText,
   findRowIndexesByColumnTooltipsValue,
-  findRowIndexesByColumnValue,
+  waitForRowIndexesByColumnValue,
   findRowIndexesByColumnValueAttribute,
   findRowIndexesByColumnValueExpand,
   getCellByIndexColumn,
@@ -111,7 +112,7 @@ When(
 When(
   'scroll to the element with {string} value in {string} column in {string} table on {string} wizard',
   async function (value, columnName, table, wizard) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][table],
       columnName,
@@ -126,7 +127,7 @@ When(
 Then(
   'open action menu on {string} wizard in {string} table at row with {string} value in {string} column',
   async function (wizard, table, value, column) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][table],
       column,
@@ -175,7 +176,7 @@ Then(
 Then(
   'select {string} option in action menu on {string} wizard in {string} table at row with {string} value in {string} column',
   async function (option, wizard, table, value, column) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][table],
       column,
@@ -633,7 +634,7 @@ When(
     const rows = dataTable.rows()
 
     for (const row_indx in rows) {
-      const arr = await findRowIndexesByColumnValue(
+      const arr = await waitForRowIndexesByColumnValue(
         this.driver,
         pageObjects[wizardName][tableName],
         column,
@@ -678,7 +679,7 @@ When(
     const rows = dataTable.rows()
 
     for (const row_indx in rows) {
-      const arr = await findRowIndexesByColumnValue(
+      const arr = await waitForRowIndexesByColumnValue(
         this.driver,
         pageObjects[wizardName][tableName],
         column,
@@ -709,7 +710,7 @@ When(
     const rows = dataTable.rows()
 
     for (const row_indx in rows) {
-      const arr = await findRowIndexesByColumnValue(
+      const arr = await waitForRowIndexesByColumnValue(
         this.driver,
         pageObjects[wizardName][tableName],
         column,
@@ -943,6 +944,9 @@ When(
       this.driver,
       pageObjects[wizard][table]['tableFields']['edit_btn'](index + 1)
     )
+    // the row switches to edit mode asynchronously
+    const firstInput = pageObjects[wizard][table]['tableFields'][inputFields[0]](index + 1)
+    await waiteUntilComponent(this.driver, firstInput.root ?? firstInput)
 
     for (const i in inputFields) {
       await typeIntoInputField(
@@ -1033,7 +1037,7 @@ When(
     const rows = dataTable.rows()
 
     for (const row_indx in rows) {
-      const arr = await findRowIndexesByColumnValue(
+      const arr = await waitForRowIndexesByColumnValue(
         this.driver,
         pageObjects[wizardName][accordionName][tableName],
         column,
@@ -1041,6 +1045,9 @@ When(
       )
       const indx = arr[0] - pageObjects[wizardName][accordionName][tableName].offset
 
+      // after a row is removed the next one moves under the unmoved pointer and `:hover` isn't recalculated,
+      // move the pointer away so hover-only buttons (e.g. "remove") become visible
+      await this.driver.actions({ async: true }).move({ x: 0, y: 0 }).perform()
       await hoverComponent(
         this.driver,
         pageObjects[wizardName][accordionName][tableName]['tableFields'][field](indx)
@@ -1060,23 +1067,33 @@ When(
     const rows = dataTable.rows()
 
     for (const row_indx in rows) {
-      const arr = await findRowIndexesByColumnValue(
+      const arr = await waitForRowIndexesByColumnValue(
         this.driver,
         pageObjects[wizardName][tableName],
         column,
         rows[row_indx][0]
       )
       const indx = arr[0] - pageObjects[wizardName][tableName].offset
+      const table = pageObjects[wizardName][tableName]
+      const button = table['tableFields'][field](indx)
 
-      await hoverComponent(
-        this.driver,
-        pageObjects[wizardName][tableName]['tableFields'][field](indx),
-        false
-      )
-      await clickOnComponent(
-        this.driver,
-        pageObjects[wizardName][tableName]['tableFields'][field](indx)
-      )
+      // row action buttons are visible only on row hover: rows move up after a removal (`:hover` isn't
+      // recalculated under the unmoved pointer), and the row can be at the edge of a scrollable panel,
+      // so move the pointer away, center the row, hover it and wait for the button
+      await this.driver.actions({ async: true }).move({ x: 0, y: 0 }).perform()
+      if (table.rowRoot) {
+        const rowElement = await this.driver.findElement(table.rowRoot(indx))
+
+        await this.driver.executeScript('arguments[0].scrollIntoView({ block: "center" })', rowElement)
+        await this.driver.sleep(250)
+        await this.driver.actions({ async: true }).move({ origin: rowElement }).perform()
+      } else {
+        await hoverComponent(this.driver, button, false)
+      }
+      await this.driver
+        .wait(async () => (await this.driver.findElement(button)).isDisplayed(), 3000)
+        .catch(() => {})
+      await clickOnComponent(this.driver, button)
     }
   }
 )
@@ -1088,7 +1105,7 @@ When(
     const rows = dataTable.rows()
 
     for (const row_indx in rows) {
-      const arr = await findRowIndexesByColumnValue(
+      const arr = await waitForRowIndexesByColumnValue(
         this.driver,
         pageObjects[wizardName][accordion][tableName],
         column,
@@ -1116,7 +1133,7 @@ When(
     const rows = dataTable.rows()
 
     for (const row_indx in rows) {
-      const arr = await findRowIndexesByColumnValue(
+      const arr = await waitForRowIndexesByColumnValue(
         this.driver,
         pageObjects[wizardName][tableName],
         column,
@@ -1202,7 +1219,7 @@ When(
     const rows = dataTable.rows()
 
     for (const row_indx in rows) {
-      const arr = await findRowIndexesByColumnValue(
+      const arr = await waitForRowIndexesByColumnValue(
         this.driver,
         pageObjects[wizardName][accordionName][tableName],
         column,
@@ -1233,7 +1250,7 @@ When(
     const rows = dataTable.rows()
 
     for (const row_indx in rows) {
-      const arr = await findRowIndexesByColumnValue(
+      const arr = await waitForRowIndexesByColumnValue(
         this.driver,
         pageObjects[wizardName][accordionName][tableName],
         column,
@@ -1392,7 +1409,7 @@ Then(
 Then(
   'verify action menu on {string} wizard in {string} table with {string} value in {string} column should contains {string}.{string}',
   async function (wizard, table, value, column, constWizard, constValue) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][table],
       column,
@@ -1424,7 +1441,7 @@ Then(
 Then(
   'verify action menu on {string} wizard in {string} table with {string} value in {string} column should contains {string}.{string} without scroll',
   async function (wizard, table, value, column, constWizard, constValue) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][table],
       column,
@@ -1457,7 +1474,7 @@ Then(
 Then(
   'verify that in action menu on {string} wizard in {string} table with {string} value in {string} column {string} option is enabled',
   async function (wizard, table, value, column, option) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][table],
       column,
@@ -1485,7 +1502,7 @@ Then(
 Then(
   'verify that in action menu on {string} wizard in {string} table with {string} value in {string} column {string} option is disabled',
   async function (wizard, table, value, column, option) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][table],
       column,
@@ -1513,7 +1530,7 @@ Then(
 Then(
   'verify {string} option is present on {string} wizard in {string} table with {string} value in {string} column',
   async function (option, wizard, table, value, column) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][table],
       column,
@@ -1540,7 +1557,7 @@ Then(
 Then(
   'verify {string} option on {string} wizard in {string} table with {string} value in {string} column should display hover tooltip {string}.{string} with scroll {string}',
   async function (option, wizard, table, value, column, constStorage, constValue, scroll) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][table],
       column,
@@ -1572,7 +1589,7 @@ Then(
 Then(
   'verify that {string} type is displayed in {string} kind on {string} wizard in {string} table with {string} value in {string} column',
   async function (type, kind, wizard, table, value, column) {
-    const arr = await findRowIndexesByColumnValue (
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][table],
       column,
@@ -1594,7 +1611,7 @@ Then(
 Then(
   'click on {string} option on {string} wizard in {string} table with {string} value in {string} column with scroll {string}',
   async function (option, wizard, table, value, column, scroll) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][table],
       column,
@@ -1661,7 +1678,7 @@ When(
     // TODO: without creating link to the table component step works unstable
     await this.driver.sleep(500)
     const tableElement = pageObjects[wizard][accordion][table]
-    const arr = await findRowIndexesByColumnValue(this.driver, tableElement, column, value)
+    const arr = await waitForRowIndexesByColumnValue(this.driver, tableElement, column, value)
     const indx = arr[0]
     const expandBtn = await getCellByIndexColumn(this.driver, tableElement, indx, 'expand_btn')
 
@@ -1672,7 +1689,7 @@ When(
 When(
   'select {string} in subcolumn {string} at {string} column in {string} row by {string} at {string} in {string} on {string} wizard',
   async function (value, subColumn, subTable, rowValue, searchColumn, table, accordion, wizard) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][accordion][table],
       searchColumn,
@@ -1685,7 +1702,7 @@ When(
       indx,
       subTable
     )
-    const subArr = await findRowIndexesByColumnValue(this.driver, cellTable, searchColumn, value)
+    const subArr = await waitForRowIndexesByColumnValue(this.driver, cellTable, searchColumn, value)
     const subIndx = subArr[0]
     const option = await getCellByIndexColumn(this.driver, cellTable, subIndx, subColumn)
 
@@ -1709,7 +1726,7 @@ Then(
 When(
   'click on cell with value {string} in {string} column in {string} table on {string} wizard',
   async function (value, columnName, table, wizard) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][table],
       columnName,
@@ -1724,7 +1741,7 @@ When(
 When(
   'click on row root with value {string} in {string} column in {string} table on {string} wizard',
   async function (value, columnName, table, wizard) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][table],
       columnName,
@@ -1739,7 +1756,7 @@ When(
 When(
   'click on row root with value {string} in {string} column in {string} table in {string} on {string} wizard',
   async function (value, columnName, table, accordion, wizard) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][accordion][table],
       columnName,
@@ -1754,7 +1771,11 @@ When(
 When(
   'click on cell with row index {int} in {string} column in {string} table on {string} wizard',
   async function (indx, columnName, table, wizard) {
-    await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields'][columnName](indx))
+    const cell = pageObjects[wizard][table]['tableFields'][columnName](indx)
+
+    // the table is rendered after the data is fetched, `wait load page` can pass before the loader appears
+    await waiteUntilComponent(this.driver, cell)
+    await clickOnComponent(this.driver, cell)
   }
 )
 
@@ -1933,7 +1954,7 @@ When(
     const rows = dataTable.rows()
 
     for (const row_indx in rows) {
-      const arr = await findRowIndexesByColumnValue(
+      const arr = await waitForRowIndexesByColumnValue(
         this.driver,
         pageObjects[wizardName][accordionName][tableName],
         column,
@@ -1970,7 +1991,7 @@ When(
     const rows = dataTable.rows()
 
     for (const row_indx in rows) {
-      const arr = await findRowIndexesByColumnValue(
+      const arr = await waitForRowIndexesByColumnValue(
         this.driver,
         pageObjects[wizardName][accordionName][tableName],
         column,
@@ -2059,6 +2080,11 @@ Then(
 When(
   'click on node with index {int} in {string} graph on {string} wizard',
   async function (index, graphName, wizardName) {
+    await panGraphToElement(
+      this.driver,
+      pageObjects[wizardName][graphName].root,
+      pageObjects[wizardName][graphName].nodesTable.tableFields['name'](index)
+    )
     await clickOnComponent(
       this.driver,
       pageObjects[wizardName][graphName].nodesTable.tableFields['name'](index)
@@ -2115,7 +2141,7 @@ When(
 When(
   'save to context {string} column and {string} attributes row where header {string} is {string} from {string} table on {string} wizard',
   async function (valueColumnName, attributeName, keyName, keyValue, overviewTable, wizardName) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizardName][overviewTable],
       keyName,
@@ -2137,7 +2163,7 @@ When(
 When(
   'click on {string} value where option is {string} in {string} on {string} wizard',
   async function (fieldType, nameValue, overviewTable, wizardName) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizardName][overviewTable],
       'key',
@@ -2158,7 +2184,7 @@ Then(
     const keysArr = keys.split(',')
 
     for (let key of keysArr) {
-      const arr = await findRowIndexesByColumnValue(
+      const arr = await waitForRowIndexesByColumnValue(
         this.driver,
         pageObjects[wizardName][overviewTable],
         keyColumn,
@@ -2185,7 +2211,7 @@ Then(
     const keysArr = keys.split(',')
     
     for (let key of keysArr) {
-      const arr = await findRowIndexesByColumnValue(
+      const arr = await waitForRowIndexesByColumnValue(
         this.driver,
         pageObjects[wizardName][overviewTable],
         keyColumn,
@@ -2208,7 +2234,7 @@ Then(
 Then(
   'verify cell with {string} value in {string} column in {string} table on {string} wizard should display {string}.{string}',
   async function (fieldName, columnName, tableName, wizardName, constStorage, constValue) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizardName][tableName],
       columnName,

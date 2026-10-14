@@ -11,20 +11,17 @@ Feature: Jobs and workflows
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Jobs and workflows" value
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
-        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then verify "Table_Name_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
@@ -72,22 +69,19 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "tab" with "Project monitoring" value in breadcrumbs menu
+        And select "Project monitoring" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Jobs and workflows" value
-        Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
-        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
+        And select "Workflows" item in sidebar menu
         And wait load page
-        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Workflows" value
         Then verify "Table_Name_Filter_Input" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Workflows_Monitor_Tab" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
@@ -131,19 +125,16 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Project monitoring" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Project monitoring" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Jobs and workflows" value
-        Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
-        And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
+        And select "Schedule" item in sidebar menu
         And wait load page
-        Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Schedule" value
         Then verify "Table_Name_Filter_Input" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Schedule_Monitor_Tab" wizard should contains "Dropdown_Options"."Scheduled_Date_Picker_Filter_Options"
@@ -163,8 +154,6 @@ Feature: Jobs and workflows
         Then "Batch_Run_Button" element on "Schedule_Monitor_Tab" should contains "Batch run" value
         Then verify "Table_Refresh_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Schedule_Monitor_Table" element visibility on "Schedule_Monitor_Tab" wizard
-        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Schedule_Monitor_Tab" wizard
-        And wait load page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Any time"
         Then verify "Schedule_Monitor_Table" element visibility on "Schedule_Monitor_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Schedule_Monitor_Tab" wizard
@@ -181,7 +170,7 @@ Feature: Jobs and workflows
         And wait load page
         When click on "Scheduled_Stats_Counter" element in "Scheduled_Stats_Container" on "Project" wizard
         And wait load page
-        Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Schedule" value
         Then verify "Table_Name_Filter_Input" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Next 24 hours"
@@ -234,8 +223,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
@@ -277,8 +265,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When pick up "Custom range" from "03/31/2014 10:30 AM" to "03/21/2015 07:30 PM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitor_Tab" wizard
@@ -311,8 +298,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
@@ -329,13 +315,12 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Schedule" item in sidebar menu
         And wait load page
-        Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Schedule" value
         Then type value "test" to "Table_Name_Filter_Input" field on "Schedule_Monitor_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Schedule_Monitor_Tab" wizard
         And wait load page
@@ -349,13 +334,12 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Workflows" item in sidebar menu
         And wait load page
-        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Workflows" value
         Then type value "kfpipeline" to "Table_Name_Filter_Input" field on "Workflows_Monitor_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Workflows_Monitor_Tab" wizard
         And wait load page
@@ -373,8 +357,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
@@ -405,13 +388,12 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Schedule" item in sidebar menu
         And wait load page
-        Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Schedule" value
         Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
         Then type value "v3io_user" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
@@ -431,8 +413,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When pick up "Custom range" from "09/03/2021 12:00 AM" to "09/04/2021 12:00 AM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitor_Tab" wizard
@@ -473,8 +454,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
@@ -499,8 +479,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Auto_Refresh_Checkbox" element visibility on "Jobs_Monitor_Tab" wizard
@@ -522,11 +501,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -555,11 +533,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -587,11 +564,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then verify action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "test-m_ingest" value in "name" column should contains "Jobs_And_Workflows"."Job_List_Action_Menu_Options" without scroll
         Then select "Delete run" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "test-m_ingest" value in "name" column
@@ -661,11 +637,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
         Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
@@ -690,11 +665,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And wait load page
-        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
         Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
@@ -761,11 +735,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And wait load page
-        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
         Then verify "BE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
         Then verify "BE_Pagination_Navigate_Next" element visibility on "Pagination_Info_Pane" wizard
@@ -829,13 +802,12 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Schedule" item in sidebar menu
         And wait load page
-        Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Schedule" value
         When click on cell with row index 1 in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
         And wait load page
         Then verify if "Modal_Transition_Popup" popup dialog appears
@@ -891,13 +863,12 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Schedule" item in sidebar menu
         And wait load page
-        Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Schedule" value
         Then select "Delete" option in action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table at row with "clean-data" value in "name" column
         Then verify if "Common_Popup" popup dialog appears
         Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Scheduled_Job"
@@ -907,10 +878,10 @@ Feature: Jobs and workflows
         Then "Delete_Button" element on "Common_Popup" should contains "Delete" value
         Then click on "Cancel_Button" element on "Common_Popup" wizard
         And wait load page
-        Then select "project" with "cat-vs-dog-classification" value in breadcrumbs menu
+        Then select "cat-vs-dog-classification" project in sidebar project dropdown
         And wait load page
         Then verify breadcrumbs "project" label should be equal "cat-vs-dog-classification" value
-        Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Schedule" value
         Then select "Delete" option in action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table at row with "tf2-serving" value in "name" column
         Then verify if "Common_Popup" popup dialog appears
         Then click on "Delete_Button" element on "Common_Popup" wizard
@@ -927,26 +898,6 @@ Feature: Jobs and workflows
         And wait load page
 
     @MLJW
-    @smoke
-    Scenario: MLJW068 - Delete Scheduled Job
-        Given open url
-        And wait load page
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        And wait load page
-        And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        And wait load page
-        Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        Then select "Delete" option in action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table at row with "erann-test" value in "name" column
-        Then verify if "Common_Popup" popup dialog appears
-        Then click on "Delete_Button" element on "Common_Popup" wizard
-        And wait load page
-        Then check "erann-test" value not in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
-
-    @MLJW
     @passive
     @smoke
     Scenario: MLJW060 - Verify View YAML action on Jobs Monitor tab
@@ -954,11 +905,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then select "View YAML" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "test-m_ingest" value in "name" column
         Then verify if "View_YAML" popup dialog appears
@@ -967,8 +917,7 @@ Feature: Jobs and workflows
         When click on "Cross_Cancel_Button" element on "View_YAML" wizard
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Any time"
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then select "View YAML" option in action menu on "Jobs_Monitor_Tab_Info_Pane" wizard
@@ -984,13 +933,12 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Workflows" item in sidebar menu
         And wait load page
-        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Workflows" value
         Then select "View YAML" option in action menu on "Workflows_Monitor_Tab" wizard in "Workflows_Monitor_Table" table at row with "kfpipeline 2021-07-06 11-16-28" value in "name" column
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
@@ -1004,11 +952,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Schedule" item in sidebar menu
         And wait load page
         Then select "View YAML" option in action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table at row with "clean-data" value in "name" column
         Then verify if "View_YAML" popup dialog appears
@@ -1043,13 +990,12 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Workflows" item in sidebar menu
         And wait load page
-        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Workflows" value
         Then verify "Workflows_Monitor_Table" element visibility on "Workflows_Monitor_Tab" wizard
         When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
@@ -1074,7 +1020,7 @@ Feature: Jobs and workflows
         Then verify "Terminate_Button" element visibility on "Workflows_Monitor_Tab" wizard
         Then "Terminate_Button" element on "Workflows_Monitor_Tab" should contains "Terminate" value
         Then verify "Terminate_Button" element on "Workflows_Monitor_Tab" wizard is disabled
-        Then select "project" with "stocks-admin" value in breadcrumbs menu
+        Then select "stocks-admin" project in sidebar project dropdown
         And wait load page
         Then verify breadcrumbs "project" label should be equal "stocks-admin" value
         When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
@@ -1150,11 +1096,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Workflows" item in sidebar menu
         And wait load page
         When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
@@ -1179,11 +1124,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Workflows" item in sidebar menu
         And wait load page
         When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
@@ -1197,48 +1141,48 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke
+    @smoke @rerun
     Scenario: MLJW074 - Check all mandatory components on Inputs tab Item infopane on Workflow List View Tab
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Workflows" item in sidebar menu
         And wait load page
-        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Workflows" value
         When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         And select "Inputs" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        And wait load page
         Then verify "Inputs_Table" element visibility on "Inputs_Info_Pane" wizard
 
     @MLJW
     @passive
-    @smoke
+    @smoke @rerun
     Scenario: MLJW075 - Check all mandatory components on Artifacts tab Item infopane on Workflow List View Tab
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Workflows" item in sidebar menu
         And wait load page
-        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Workflows" value
         When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         And select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        And wait load page
         Then verify "Artifacts_Table" element visibility on "Artifacts_Info_Pane" wizard
 
     @MLJW
@@ -1249,13 +1193,12 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Workflows" item in sidebar menu
         And wait load page
-        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Workflows" value
         When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
@@ -1272,11 +1215,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Workflows" item in sidebar menu
         And wait load page
         When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
@@ -1344,19 +1286,19 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Workflows" item in sidebar menu
         And wait load page
-        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Workflows" value
         When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         When click on cell with row index 1 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         And select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        And wait load page
         Then click on cell with row index 1 in "name" column in "Artifacts_Table" table on "Artifacts_Info_Pane" wizard
         Then click on "Artifact_Preview_Button" element on "Artifacts_Info_Pane" wizard
         And wait load page
@@ -1392,11 +1334,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         When pick up "Custom range" from "09/01/2021 06:00 PM" to "09/03/2021 06:00 PM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         And wait load page
@@ -1442,16 +1383,15 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Workflows" item in sidebar menu
         And wait load page
-        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Workflows" value
         Then verify options in action menu on "Workflows_Monitor_Tab" wizard in "Workflows_Monitor_Table" table with "Completed" value in "status" column should contains "Jobs_And_Workflows"."Workflows_Action_Menu_Options"
         Then check that "Terminate" option in action menu on "Workflows_Monitor_Tab" wizard is disabled
-        Then select "project" with "stocks-admin" value in breadcrumbs menu
+        Then select "stocks-admin" project in sidebar project dropdown
         And wait load page
         Then verify breadcrumbs "project" label should be equal "stocks-admin" value
         Then verify options in action menu on "Workflows_Monitor_Tab" wizard in "Workflows_Monitor_Table" table with "Running" value in "status" column should contains "Jobs_And_Workflows"."Workflows_Running_Action_Menu_Options"
@@ -1491,13 +1431,12 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Schedule" item in sidebar menu
         And wait load page
-        Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Schedule" value
         Then verify action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table with "clean-data" value in "name" column should contains "Jobs_And_Workflows"."Schedule_Action_Menu_Options"
         
     @MLJW
@@ -1508,11 +1447,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Schedule" item in sidebar menu
         And wait load page
         Then select "Edit" option in action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table at row with "clean-data" value in "name" column
         And wait load page
@@ -1572,11 +1510,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Workflows" item in sidebar menu
         And wait load page
         When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
@@ -1603,8 +1540,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard       
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
@@ -1613,8 +1549,7 @@ Feature: Jobs and workflows
         Then "Function_Title" element on "Modal_Wizard_Form" should contains "test-m_ingest" value
         And click on "Run_Button" element on "Modal_Wizard_Form" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Project monitoring" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Project monitoring" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify if "Notification_Popup" popup dialog appears
@@ -1672,8 +1607,7 @@ Feature: Jobs and workflows
         Then verify "Content_Function_Log_Info" element visibility on "Modal_Transition_Popup" wizard
         Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And wait load page
         Then select "Delete" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-m_ingest" value in "name" column
         And wait load page
@@ -1691,8 +1625,7 @@ Feature: Jobs and workflows
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Function test-m_ingest is successfully deleted" value
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        Then select "Project monitoring" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When click on cell with value "test-m_ingest" in "name" column in "Runs_Statistic_Table" table on "Project" wizard
         And wait load page
@@ -1711,11 +1644,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And wait load page
-        And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Schedule" item in sidebar menu
         And wait load page
         Then select "Run now" option in action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table at row with "erann-test" value in "name" column
         And wait load page
@@ -1786,11 +1718,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And wait load page
-        And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Schedule" item in sidebar menu
         And wait load page
         Then click on cell with row index 2 in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
         And wait load page
@@ -1841,15 +1772,36 @@ Feature: Jobs and workflows
         And wait load page
         Then verify "Schedule_Monitor_Table" element visibility on "Schedule_Monitor_Tab" wizard
 
+    # MLJW068 is destructive (deletes "erann-test" schedule of "default" project), it must run after MLJW083/MLJW084 which use that schedule
+    @MLJW
+    @smoke
+    Scenario: MLJW068 - Delete Scheduled Job
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And select "Jobs" item in sidebar menu
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        And select "Schedule" item in sidebar menu
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Schedule" value
+        Then select "Delete" option in action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table at row with "erann-test" value in "name" column
+        Then verify if "Common_Popup" popup dialog appears
+        Then click on "Delete_Button" element on "Common_Popup" wizard
+        And wait load page
+        Then check "erann-test" value not in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
+
     @MLJW
     @smoke
 #TODO: check the redirection from projects/default/jobs/monitor-jobs/INVALID/864f4da42773494eb94dce1c8834feb6/overview?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1
+    @rerun
     Scenario: MLJW085 - Check broken link redirection on Monitor Jobs and Schedules screens
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Jobs and workflows" value in breadcrumbs menu
+        And select "Jobs" item in sidebar menu
         And wait load page
         Then verify redirection from "projects/default/jobs/INVALID" to "projects/default/jobs/monitor-jobs?bePage=1&fePage=1"
         Then select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
@@ -1891,24 +1843,24 @@ Feature: Jobs and workflows
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "This run either does not exist or was deleted" value
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
-        And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Schedule" item in sidebar menu
         And wait load page
         Then verify redirection from "projects/default/jobs/INVALID" to "projects/default/jobs/monitor-jobs?bePage=1&fePage=1"
         Then verify redirection from "projects/default/INVALID/monitor-jobs?bePage=1&fePage=1" to "projects"
 
     @MLJW
-    @smoke
+    @smoke @rerun
     Scenario: MLJW086 - Check broken link redirection on Monitor Workflows tab
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And select "tab" with "Jobs and workflows" value in breadcrumbs menu
+        And select "Jobs" item in sidebar menu
         And wait load page
-        Then select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then select "Workflows" item in sidebar menu
         And wait load page
         Then verify redirection from "projects/churn-project-admin/jobs/INVALID" to "projects/churn-project-admin/jobs/monitor-jobs?bePage=1&fePage=1"
-        Then select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then select "Workflows" item in sidebar menu
         And wait load page
         When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
@@ -1920,7 +1872,7 @@ Feature: Jobs and workflows
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/INVALID/eaae138e-439a-47fa-93c6-ba0fe1dc3b79" to "projects/churn-project-admin/jobs/monitor-jobs?bePage=1&fePage=1"
-        Then select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then select "Workflows" item in sidebar menu
         And wait load page
         When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
@@ -1962,8 +1914,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2027,7 +1978,11 @@ Feature: Jobs and workflows
         Then value in "name" column with "text" in "Functions_Table" on "Modal_Wizard_Form" wizard should contains "test"
         And click on "Title" element on "Modal_Wizard_Form" wizard
         Then select "Functions" tab in "Function_Selection_Tabs" on "Modal_Wizard_Form" wizard
+        And wait load page
+        Then verify "Project_Selector_Dropdown" element visibility on "Modal_Wizard_Form" wizard
         Then select "churn-project-admin" option in "Project_Selector_Dropdown" filter dropdown on "Modal_Wizard_Form" wizard
+        And wait load page
+        Then value in "sub_name" column with "text" in "Functions_Table" on "Modal_Wizard_Form" wizard should contains "churn-project-admin"
         And click on row root with value "xgb-test" in "name" column in "Functions_Table" table on "Modal_Wizard_Form" wizard
         And wait load page
         Then "Function_Title" element on "Modal_Wizard_Form" should contains "xgb-test" value
@@ -2050,8 +2005,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2091,8 +2045,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2154,8 +2107,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2187,8 +2139,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2238,8 +2189,7 @@ Feature: Jobs and workflows
 	    And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2263,8 +2213,7 @@ Feature: Jobs and workflows
 	    And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2286,8 +2235,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2295,6 +2243,7 @@ Feature: Jobs and workflows
         Then select "Hub" tab in "Function_Selection_Tabs" on "Modal_Wizard_Form" wizard
         And wait load page
         And click on row root with value "auto-trainer" in "name" column in "Functions_Table" table on "Modal_Wizard_Form" wizard
+        And wait load page
         Then "Function_Title" element on "Modal_Wizard_Form" should contains "auto-trainer" value
         Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
         And click on "Step_3_Button" element on "commonPagesHeader" wizard
@@ -2349,8 +2298,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2438,8 +2386,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2575,8 +2522,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2599,8 +2545,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2643,8 +2588,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2702,8 +2646,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2731,8 +2674,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2740,6 +2682,7 @@ Feature: Jobs and workflows
         Then select "Hub" tab in "Function_Selection_Tabs" on "Modal_Wizard_Form" wizard
         And wait load page
         And click on row root with value "auto-trainer" in "name" column in "Functions_Table" table on "Modal_Wizard_Form" wizard
+        And wait load page
         Then "Function_Title" element on "Modal_Wizard_Form" should contains "auto-trainer" value
         Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
         And click on "Next_Button" element on "Modal_Wizard_Form" wizard
@@ -2771,8 +2714,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2804,8 +2746,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2845,8 +2786,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2922,13 +2862,13 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify redirection to "projects/cat-vs-dog-classification/jobs/monitor-jobs/sef/cf842616c89347c7bb7bca2c9e840a21/overview?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1"
@@ -2956,8 +2896,7 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2986,17 +2925,16 @@ Feature: Jobs and workflows
         Then verify "Hyper_Toggle_Switch" element not exists in "Parameters_Accordion" on "Modal_Wizard_Form" wizard
     
     @MLJW
-    @smoke
+    @smoke @rerun
     Scenario: MLJW049 - Check Abort action on Monitor Jobs tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then select "Abort" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "erann-test" value in "name" column
         And wait load page
         Then verify if "Common_Popup" popup dialog appears
@@ -3057,13 +2995,12 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Workflows" item in sidebar menu
         And wait load page
-        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Workflows" value
         Then verify options in action menu on "Workflows_Monitor_Tab" wizard in "Workflows_Monitor_Table" table with "Completed" value in "status" column should contains "Jobs_And_Workflows"."Workflows_Action_Menu_Options"
         Then select "Retry" option in action menu on "Workflows_Monitor_Tab" wizard in "Workflows_Monitor_Table" table at row with "kfpipeline 2021-07-06 11-16-28" value in "name" column
         And wait load page
@@ -3081,11 +3018,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And select "Workflows" item in sidebar menu
         And wait load page
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -3112,11 +3048,10 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "getting-started-tutorial-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then type value "prep_data" to "Table_Name_Filter_Input" field on "Jobs_Monitor_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
@@ -3192,13 +3127,11 @@ Feature: Jobs and workflows
         And click on row root with value "auto-generated-data" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "auto-generated-data" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "Jobs" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Jobs and workflows" value
-        Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
-        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then verify "Auto_Refresh_Checkbox" element visibility on "Jobs_Monitor_Tab" wizard
         Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
         Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
