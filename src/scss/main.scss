@@ -20,7 +20,9 @@
   }
 }
 
-body {
+// Standalone only (index.html): as a remote, this stylesheet stays in the host document and
+// would restyle the host's <body> (e.g. its background). `:where()` keeps the specificity.
+body:where(.mlrun-standalone) {
   display: flex;
   flex: 1;
   height: 100vh;
