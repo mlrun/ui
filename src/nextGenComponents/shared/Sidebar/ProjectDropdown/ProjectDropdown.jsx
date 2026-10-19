@@ -89,7 +89,7 @@ const ProjectDropdown = ({ projectName }) => {
 
   return (
     <SidebarMenu>
-      <SidebarMenuItem className="items-center h-full hidden group-data-[collapsible=icon]:flex">
+      <SidebarMenuItem className="items-center h-full not-group-data-[collapsible=icon]:hidden group-data-[collapsible=icon]:flex">
         <SidebarMenuButton className="gap-2 px-3 py-2">
           <HomepageIcon />
         </SidebarMenuButton>
