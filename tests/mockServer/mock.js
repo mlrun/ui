@@ -65,7 +65,7 @@ import runs from './data/runs.json'
 import run from './data/run.json'
 import itemsCatalog from './data/itemsCatalog.json'
 import pipelines from './data/pipelines.json'
-import secretKeys from './data/secretKeys.json'
+import secretKeysData from './data/secretKeys.json'
 import pipelineIDs from './data/piplineIDs.json'
 import schedules from './data/schedules.json'
 import funcs from './data/funcs.json'
@@ -253,6 +253,8 @@ const secretKeyTemplate = {
 }
 
 // Mock constants
+// Map instead of a plain object: project names come from requests
+const secretKeys = new Map(Object.entries(secretKeysData))
 const mockHome = process.cwd() + '/tests/mockServer'
 const mlrunIngress = '/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
 const mlrunAPIIngress = `${mlrunIngress}/api/v1`
@@ -399,7 +401,7 @@ function deleteProjectHandler(req, res, omitResponse) {
     remove(artifacts.artifacts, artifact => artifact.project === req.params['project'])
     remove(run.data, artifact => artifact.metadata.project === req.params['project'])
     remove(run.data, artifact => artifact.metadata.project === req.params['project'])
-    if (req.params.project !== '__proto__') delete secretKeys[req.params.project]
+    secretKeys.delete(req.params.project)
     res.statusCode = 204
   } else {
     res.statusCode = 404
@@ -492,7 +494,7 @@ function getFeatureSet(req, res) {
 
   if (req.query['name']) {
     collectedFeatureSets = collectedFeatureSets.filter(featureSet => {
-      if (req.query['name'].startsWith?.('~')) {
+      if (String(req.query['name']).startsWith?.('~')) {
         return featureSet.metadata.name.includes(String(req.query['name']).slice(1))
       }
 
@@ -619,9 +621,7 @@ function createNewProject(req, res) {
     summary.name = req.body.metadata.name
     projectsSummary.project_summaries.push(summary)
     data = project
-    if (req.body.metadata.name !== '__proto__') {
-      secretKeys[req.body.metadata.name] = secretKeyTemplate
-    }
+    secretKeys.set(req.body.metadata.name, secretKeyTemplate)
     res.statusCode = 201
   } else {
     res.statusCode = 409
@@ -722,7 +722,7 @@ function putProject(req, res) {
 }
 
 function getSecretKeys(req, res) {
-  res.send(secretKeys[req.params['project']])
+  res.send(secretKeys.get(req.params['project']))
 }
 
 function postSecretKeys(req, res) {
@@ -734,21 +734,18 @@ function postSecretKeys(req, res) {
     respBody = {
       detail: `MLRunAccessDeniedError('Not allowed to create/update internal secrets (key starts with ${NOT_ALLOWED_SECRET_KEY})')`
     }
-  } else if (req.params['project'] === '__proto__') {
-    res.statusCode = 400
-    respBody = { detail: 'Invalid project name' }
   } else {
-    const projectSecrets = get(secretKeys, [req.params['project'], 'secret_keys'])
+    const projectSecrets = secretKeys.get(req.params['project'])?.secret_keys
 
     if (projectSecrets) {
       if (!projectSecrets.includes(newSecretKey)) {
         projectSecrets.push(newSecretKey)
       }
     } else {
-      secretKeys[req.params['project']] = {
+      secretKeys.set(req.params['project'], {
         provider: 'kubernetes',
         secret_keys: [newSecretKey]
-      }
+      })
     }
 
     res.statusCode = 201
@@ -758,15 +755,17 @@ function postSecretKeys(req, res) {
 }
 
 function deleteSecretKeys(req, res) {
-  if (req.params['project'] === '__proto__' || !secretKeys[req.params['project']]) {
+  const projectSecretKeys = secretKeys.get(req.params['project'])
+
+  if (!projectSecretKeys) {
     res.statusCode = 404
 
     return res.send('')
   }
 
-  secretKeys[req.params['project']].secret_keys = secretKeys[
-    req.params['project']
-  ].secret_keys.filter(item => item !== req.query.secret)
+  projectSecretKeys.secret_keys = projectSecretKeys.secret_keys.filter(
+    item => item !== req.query.secret
+  )
 
   res.statusCode = 204
   res.send('')
@@ -1064,8 +1063,10 @@ function getRuns(req, res) {
 
   if (req.query['name']) {
     collectedRuns = collectedRuns.filter(run => {
-      if (req.query['name'].includes('~')) {
-        return run.metadata.name ? run.metadata.name.includes(req.query['name'].slice(1)) : false
+      if (String(req.query['name']).includes('~')) {
+        return run.metadata.name
+          ? run.metadata.name.includes(String(req.query['name']).slice(1))
+          : false
       } else {
         return run.metadata.name === req.query['name']
       }
@@ -1098,7 +1099,7 @@ function getAlerts(req, res) {
 
   if (req.query['name']) {
     collectedAlerts = collectedAlerts.filter(schedule =>
-      schedule.name.includes(req.query['name'].slice(1))
+      schedule.name.includes(String(req.query['name']).slice(1))
     )
   }
   if (req.query['severity']) {
@@ -1289,7 +1290,7 @@ function getProjectsSchedules(req, res) {
 
   if (req.query['name']) {
     collectedSchedules = collectedSchedules.filter(schedule =>
-      schedule.name.includes(req.query['name'].slice(1))
+      schedule.name.includes(String(req.query['name']).slice(1))
     )
   }
 
@@ -1382,9 +1383,7 @@ function invokeSchedule(req, res) {
         item.metadata.name === functionName
     )
   } else {
-    const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
-      6
-    )}/${req.body.task.spec.function.slice(6)}.yaml`
+    const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(6)}/${req.body.task.spec.function.slice(6)}.yaml`
     funcObject = yaml.load(fs.readFileSync(funcYAMLPath, 'utf8'))
   }
   const funcUID = makeUID(32)
@@ -1495,15 +1494,15 @@ function getProjectsFeaturesEntities(req, res) {
 
     if (req.query['name']) {
       collectedArtifacts = collectedArtifacts.filter(feature => {
-        if (req.query['name'].includes('~')) {
+        if (String(req.query['name']).includes('~')) {
           if (artifact === 'feature-vectors') {
-            return feature.metadata.name.includes(req.query['name'].slice(1))
+            return feature.metadata.name.includes(String(req.query['name']).slice(1))
           } else if (artifact === 'features' || artifact === 'entities') {
-            return feature.name.includes(req.query['name'].slice(1))
+            return feature.name.includes(String(req.query['name']).slice(1))
           }
         } else {
           if (artifact === 'feature-vectors') {
-            return feature.metadata.name.includes(req.query['name'].slice(1))
+            return feature.metadata.name.includes(String(req.query['name']).slice(1))
           } else if (artifact === 'features' || artifact === 'entities') {
             return feature.name === req.query['name']
           }
@@ -1611,11 +1610,11 @@ function getArtifacts(req, res) {
 
   if (req.query['name']) {
     collectedArtifacts = collectedArtifacts.filter(artifact => {
-      if (req.query['name'].includes('~')) {
+      if (String(req.query['name']).includes('~')) {
         const value = artifact.spec?.db_key ?? artifact.db_key
 
-        if (req.query['name'].includes('~')) {
-          return value.includes(req.query['name'].slice(1))
+        if (String(req.query['name']).includes('~')) {
+          return value.includes(String(req.query['name']).slice(1))
         } else {
           return value.includes(req.query['name'])
         }
@@ -2075,8 +2074,8 @@ function getFuncs(req, res) {
 
   if (req.query['name']) {
     collectedFuncs = collectedFuncs.filter(func => {
-      if (req.query['name'].includes('~')) {
-        return func.metadata.name.includes(req.query['name'].slice(1))
+      if (String(req.query['name']).includes('~')) {
+        return func.metadata.name.includes(String(req.query['name']).slice(1))
       } else {
         return func.metadata.name === req.query['name']
       }
@@ -2515,9 +2514,7 @@ function postSubmitJob(req, res) {
           .filter(item => item.metadata.name === filterFunc)[0]
       )
     } else {
-      const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
-        6
-      )}/${req.body.task.spec.function.slice(6)}.yaml`
+      const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(6)}/${req.body.task.spec.function.slice(6)}.yaml`
       funcObject = yaml.load(fs.readFileSync(funcYAMLPath, 'utf8'))
     }
 
@@ -3025,7 +3022,7 @@ function getIguazioProject(req, res) {
   let filteredProject = iguazioProjects.data.find(item => item.id === req.params.id)
 
   let filteredAuthRoles = []
-  if (req.query.include.includes('project_authorization_roles')) {
+  if (String(req.query.include).includes('project_authorization_roles')) {
     filteredAuthRoles = cloneDeep(
       iguazioProjectAuthorizationRoles.data.filter(
         item => item.relationships.project.data.id === req.params.id
@@ -3038,7 +3035,7 @@ function getIguazioProject(req, res) {
   }
 
   let filteredPrincipalUsers = []
-  if (req.query.include.includes('project_authorization_roles.principal_users')) {
+  if (String(req.query.include).includes('project_authorization_roles.principal_users')) {
     let principalUserIDs = []
     for (let authID of authRolesIDs) {
       let tmp = iguazioProjectsRelations[req.params.id].find(
@@ -3059,7 +3056,7 @@ function getIguazioProject(req, res) {
   }
 
   let filteredPrincipalUserGroups = []
-  if (req.query.include.includes('project_authorization_roles.principal_user_groups')) {
+  if (String(req.query.include).includes('project_authorization_roles.principal_user_groups')) {
     let principalUserGroupIDs = []
     for (let authID of authRolesIDs) {
       let tmp = iguazioProjectsRelations[req.params.id].find(
