@@ -22,6 +22,7 @@ import bodyParser from 'body-parser'
 import rateLimit from 'express-rate-limit'
 import yaml from 'js-yaml'
 import fs from 'fs'
+import path from 'path'
 import crypto from 'node:crypto'
 import {
   chain,
@@ -398,7 +399,7 @@ function deleteProjectHandler(req, res, omitResponse) {
     remove(artifacts.artifacts, artifact => artifact.project === req.params['project'])
     remove(run.data, artifact => artifact.metadata.project === req.params['project'])
     remove(run.data, artifact => artifact.metadata.project === req.params['project'])
-    delete secretKeys[req.params.project]
+    if (req.params.project !== '__proto__') delete secretKeys[req.params.project]
     res.statusCode = 204
   } else {
     res.statusCode = 404
@@ -492,7 +493,7 @@ function getFeatureSet(req, res) {
   if (req.query['name']) {
     collectedFeatureSets = collectedFeatureSets.filter(featureSet => {
       if (req.query['name'].startsWith?.('~')) {
-        return featureSet.metadata.name.includes(req.query['name'].slice(1))
+        return featureSet.metadata.name.includes(String(req.query['name']).slice(1))
       }
 
       return featureSet.metadata.name === req.query['name']
@@ -618,7 +619,9 @@ function createNewProject(req, res) {
     summary.name = req.body.metadata.name
     projectsSummary.project_summaries.push(summary)
     data = project
-    secretKeys[req.body.metadata.name] = secretKeyTemplate
+    if (req.body.metadata.name !== '__proto__') {
+      secretKeys[req.body.metadata.name] = secretKeyTemplate
+    }
     res.statusCode = 201
   } else {
     res.statusCode = 409
@@ -731,6 +734,9 @@ function postSecretKeys(req, res) {
     respBody = {
       detail: `MLRunAccessDeniedError('Not allowed to create/update internal secrets (key starts with ${NOT_ALLOWED_SECRET_KEY})')`
     }
+  } else if (req.params['project'] === '__proto__') {
+    res.statusCode = 400
+    respBody = { detail: 'Invalid project name' }
   } else {
     const projectSecrets = get(secretKeys, [req.params['project'], 'secret_keys'])
 
@@ -752,6 +758,12 @@ function postSecretKeys(req, res) {
 }
 
 function deleteSecretKeys(req, res) {
+  if (req.params['project'] === '__proto__' || !secretKeys[req.params['project']]) {
+    res.statusCode = 404
+
+    return res.send('')
+  }
+
   secretKeys[req.params['project']].secret_keys = secretKeys[
     req.params['project']
   ].secret_keys.filter(item => item !== req.query.secret)
@@ -1641,7 +1653,7 @@ function getArtifacts(req, res) {
 
   if (artifactParent) {
     const storeUriRegExp =
-      /^store:\/\/(?<kind>.+?)\/(?<project>.+?)\/(?<key>.+?)(#(?<iteration>.+?))?(:(?<tag>.+?))?(@(?<tree>[^^]+))?(\^(?<uid>.+))?$/
+      /^store:\/\/(?<kind>[^/]+)\/(?<project>[^/]+)\/(?<key>[^#:@^]+)(#(?<iteration>[^:@^]+))?(:(?<tag>[^@^]+))?(@(?<tree>[^^]+))?(\^(?<uid>.+))?$/
 
     if (typeof artifactParent === 'string' && artifactParent.startsWith('store://')) {
       // model "LLM Prompts" tab sends the full model store URI, e.g. store://models/<project>/<key>#0:latest
@@ -2344,14 +2356,26 @@ function deployMLFunction(req, res) {
 
 function getFile(req, res) {
   const dataRoot = mockHome + '/data/'
-  const filePath = dataRoot + req.query['path'].split('://')[1]
+  const filePath = path.resolve(dataRoot, String(req.query['path']).split('://')[1])
+
+  if (!filePath.startsWith(dataRoot)) {
+    res.statusCode = 400
+
+    return res.send({ detail: 'Invalid path' })
+  }
 
   res.sendFile(filePath)
 }
 
 function getFileStats(req, res) {
   const dataRoot = mockHome + '/data/'
-  const filePath = dataRoot + req.query['path'].split('://')[1]
+  const filePath = path.resolve(dataRoot, String(req.query['path']).split('://')[1])
+
+  if (!filePath.startsWith(dataRoot)) {
+    res.statusCode = 400
+
+    return res.send({ detail: 'Invalid path' })
+  }
 
   if (!fs.existsSync(filePath)) {
     res.statusCode = 404
