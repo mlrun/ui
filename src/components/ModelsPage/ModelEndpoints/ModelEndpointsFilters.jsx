@@ -20,17 +20,28 @@ import { useForm } from 'react-final-form'
 import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
 
 import { modelEndpointsModesList } from '../../FilterMenu/filterMenu.settings'
-import { LABELS_FILTER, ME_MODE_FILTER } from '../../../constants'
+import { LABELS_FILTER, ME_MODE_FILTER, NAME_FILTER } from '../../../constants'
+
+import SearchIcon from 'igz-controls/images/search.svg?react'
 
 const ModelEndpointsFilters = () => {
   const form = useForm()
 
-  const handleLabelsChange = value => {
-    form.change(LABELS_FILTER, value || '')
+  const handleInputChange = (value, filterName) => {
+    form.change(filterName, value || '')
   }
 
   return (
     <div>
+      <div className="form-row">
+        <FormInput
+          label="Name"
+          inputIcon={<SearchIcon />}
+          name={NAME_FILTER}
+          placeholder="Search by name..."
+        />
+        <FormOnChange name={NAME_FILTER} handler={value => handleInputChange(value, NAME_FILTER)} />
+      </div>
       <div className="form-row">
         <FormSelect label="Mode" name={ME_MODE_FILTER} options={modelEndpointsModesList} />
       </div>
@@ -41,7 +52,10 @@ const ModelEndpointsFilters = () => {
           placeholder="key1,key2=value,..."
           tip="Add ~ before the filter value to return substring and case insensitive value."
         />
-        <FormOnChange name={LABELS_FILTER} handler={handleLabelsChange} />
+        <FormOnChange
+          name={LABELS_FILTER}
+          handler={value => handleInputChange(value, LABELS_FILTER)}
+        />
       </div>
     </div>
   )

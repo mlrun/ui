@@ -23,6 +23,7 @@ import {
   FILTER_ALL_ITEMS,
   FUNCTION_NAME_FILTER,
   ME_MODE_FILTER,
+  NAME_FILTER,
   REAL_TIME_FILTER
 } from '../constants'
 
@@ -31,14 +32,18 @@ const modelEndpointsApi = {
     mainHttpClient.get(
       `/projects/${project}/model-endpoints/${name}?endpoint-id=${uid}&feature-analysis=true`
     ),
-  getModelEndpoints: (project, filters, config = {}, params = {}) => {
+  getModelEndpoints: (project, filters = {}, config = {}, params = {}) => {
     const modesMap = {
       [REAL_TIME_FILTER]: 0,
       [BATCH_FILTER]: 1
     }
     const newConfig = {
       ...config,
-      params
+      params: { ...params }
+    }
+
+    if (filters[NAME_FILTER]?.trim()) {
+      newConfig.params.name = [filters[NAME_FILTER].trim()]
     }
 
     if (filters?.labels) {

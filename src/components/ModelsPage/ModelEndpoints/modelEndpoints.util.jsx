@@ -25,7 +25,8 @@ import {
   LABELS_FILTER,
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE,
-  ME_MODE_FILTER
+  ME_MODE_FILTER,
+  NAME_FILTER
 } from '../../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
@@ -37,6 +38,7 @@ import MonitorIcon from 'igz-controls/images/monitor-icon.svg?react'
 import Yaml from 'igz-controls/images/yaml.svg?react'
 
 export const filtersConfig = {
+  [NAME_FILTER]: { label: 'Name:', initialValue: '', isModal: true },
   [ME_MODE_FILTER]: { label: 'Mode:', initialValue: FILTER_ALL_ITEMS, isModal: true },
   [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
 }

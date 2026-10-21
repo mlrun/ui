@@ -17,9 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { FILTER_ALL_ITEMS, LABELS_FILTER, ME_MODE_FILTER } from '../../constants'
+import { FILTER_ALL_ITEMS, LABELS_FILTER, ME_MODE_FILTER, NAME_FILTER } from '../../constants'
 
 export const filtersConfig = {
+  [NAME_FILTER]: { label: 'Name:', initialValue: '', isModal: true },
   [ME_MODE_FILTER]: { label: 'Mode:', initialValue: FILTER_ALL_ITEMS, isModal: true },
   [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
 }

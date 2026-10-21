@@ -2817,15 +2817,27 @@ function getModelEndpoints(req, res) {
       }
     }))
 
-  if (req.query['name'] && req.query['function_name']) {
-    collectedEndpoints = collectedEndpoints.filter(
-      endpoint =>
-        endpoint.metadata.name === req.query['name'] &&
-        endpoint.spec.function_name === req.query['function_name']
+  if (req.query['name']) {
+    const names = Array.isArray(req.query['name']) ? req.query['name'] : [req.query['name']]
+
+    collectedEndpoints = collectedEndpoints.filter(endpoint =>
+      names.includes(endpoint.metadata.name)
     )
   }
 
-  if (req.query['latest_only']) {
+  if (req.query['function-name']) {
+    collectedEndpoints = collectedEndpoints.filter(
+      endpoint => endpoint.spec.function_name === req.query['function-name']
+    )
+  }
+
+  if (req.query['function-tag']) {
+    collectedEndpoints = collectedEndpoints.filter(
+      endpoint => endpoint.spec.function_tag === req.query['function-tag']
+    )
+  }
+
+  if (req.query['latest-only']) {
     collectedEndpoints = collectedEndpoints.filter(
       endpoint => endpoint.spec.function_tag === 'latest'
     )
