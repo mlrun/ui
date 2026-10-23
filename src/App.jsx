@@ -75,7 +75,7 @@ import {
   FEATURE_STORE_PAGE_PATH
 } from './constants'
 
-import 'reactflow/dist/style.css'
+import './scss/reactFlow.scss'
 import 'igz-controls/index.css'
 import './tailwind.css'
 import './scss/main.scss'
