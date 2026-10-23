@@ -168,13 +168,16 @@ const modelsEndpointTable = {
 }
 
 const realTimePipelinesTable = {
-  root: '.table-container .table__flex .table__content',
+  root: '.table-container .real-time-pipelines__section .table__flex .table__content',
   header: {
     root: '.table-head',
     sorters: {
       name: '.table-head__item:nth-of-type(1) .data-ellipsis',
-      type: '.table-head__item:nth-of-type(2) .data-ellipsis',
-      function: '.table-head__item:nth-of-type(3) .data-ellipsis'
+      function: '.table-head__item:nth-of-type(2) .data-ellipsis',
+      type: '.table-head__item:nth-of-type(3) .data-ellipsis',
+      model_endpoints: '.table-head__item:nth-of-type(4) .data-ellipsis',
+      replicas: '.table-head__item:nth-of-type(5) .data-ellipsis',
+      updated: '.table-head__item:nth-of-type(6) .data-ellipsis'
     }
   },
   body: {
@@ -182,20 +185,24 @@ const realTimePipelinesTable = {
     row: {
       root: '.table-row',
       fields: {
-        expand_btn: '.table-body__cell:nth-of-type(1) .expand-arrow',
+        // "Serving pipeline" column - link to the pipeline details screen
+        name: '.table-body__cell:nth-of-type(1) a.data-ellipsis',
+        name_link: '.table-body__cell:nth-of-type(1) a .link',
+        // "Root function" column - external link to the Nuclio function with status and tag
         status: {
           componentType: labelComponent,
           structure: generateLabelGroup(
-            '.table-body__cell:nth-of-type(1) .status',
+            '.table-body__cell:nth-of-type(2) .status',
             'i',
             true,
             '.tooltip .tooltip__text span'
           )
         },
-        name: '.table-body__cell:nth-of-type(1) a.data-ellipsis',
-        name_link: '.table-body__cell:nth-of-type(1) a .link',
-        type: '.table-body__cell:nth-of-type(2) .data-ellipsis',
-        function: '.table-body__cell:nth-of-type(3) .data-ellipsis',
+        function: '.table-body__cell:nth-of-type(2) a.link .item-name',
+        type: '.table-body__cell:nth-of-type(3) .table-body__cell_type',
+        model_endpoints: '.table-body__cell:nth-of-type(4)',
+        replicas: '.table-body__cell:nth-of-type(5)',
+        updated: '.table-body__cell:nth-of-type(6)',
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
@@ -218,9 +225,11 @@ const realTimePipelinesGraph = {
           row: {
             root: '.react-flow__node',
             fields: {
-              name: '.react-flow__node-label .data-ellipsis',
-              top_handler: '.data-ellipsis .react-flow__handle-top',
-              bottom_handler: '.data-ellipsis .react-flow__handle-bottom',
+              // label of common (MlCommonNode), sub-items (MlNodeWithSubItems) and queue (MlQueueNode) nodes
+              name: ':is(.react-flow__node-content-label .data-ellipsis, .react-flow__node-header-label .data-ellipsis, .pipe__label)',
+              // the graph is horizontal (LR): edges connect the right (source) and the left (target) handles
+              top_handler: '.react-flow__handle-left',
+              bottom_handler: '.react-flow__handle-right',
               node_title: '.react-flow__node-chips-title'
             }
           }
@@ -295,13 +304,18 @@ export default {
     Table_Refresh_Button: tableRefreshButton,
     Real_Time_Pipelines_Table: commonTable(realTimePipelinesTable),
     Real_Time_Pipelines_Graph: graph(realTimePipelinesGraph),
-    Pipeline_Back_Button: By.css('[data-testid="pipeline-back-btn-tooltip-wrapper"]'),
-    Pipeline_Link_Title: By.css('.pipeline-container .link-back__title'),
-    Model_Runner_Step_Icon: By.css('.react-flow__node-ml-model-runner-node .react-flow__node-header .react-flow__node-header-icon'),
-    Model_Runner_Step_Label: By.css('.react-flow__node-ml-model-runner-node .react-flow__node-header-title .react-flow__node-header-label'),
-    Model_Runner_Step_Sub_Label: By.css('.react-flow__node-ml-model-runner-node .react-flow__node-header-title .react-flow__node-header-sub-label'),
-    Model_Runner_Monitoring_Icon: By.css('.react-flow__node-ml-model-runner-node .react-flow__node-header .react-flow__node-header-monitoring-icon'),
-    Model_Runner_Chips_Title: By.css('.react-flow__node-ml-model-runner-node div.react-flow__node-chips-title'),
-    Model_Runner_Chip_Container: By.css('.react-flow__node-ml-model-runner-node [data-testid="runningModels-chips"] .chip-block .edit-chip-container'),
+    Pipeline_Back_Button: By.css(
+      '[data-testid="detailsPanel"] .item-header__back-btn [data-testid="go-back-tooltip-wrapper"]'
+    ),
+    Pipeline_Link_Title: By.css(
+      '[data-testid="detailsPanel"] .item-header__title > .tooltip-wrapper:first-of-type'
+    ),
+    Router_List: By.css('[data-testid="detailsPanel"] [data-testid="router-list"]'),
+    Model_Runner_Step_Icon: By.css('.react-flow__node-ml-node-with-sub-items .react-flow__node-header .react-flow__node-header-icon'),
+    Model_Runner_Step_Label: By.css('.react-flow__node-ml-node-with-sub-items .react-flow__node-header-title .react-flow__node-header-label'),
+    Model_Runner_Step_Sub_Label: By.css('.react-flow__node-ml-node-with-sub-items .react-flow__node-header-title .react-flow__node-header-sub-label'),
+    Model_Runner_Monitoring_Icon: By.css('.react-flow__node-ml-node-with-sub-items .react-flow__node-header .react-flow__node-header-monitoring-icon'),
+    Model_Runner_Chips_Title: By.css('.react-flow__node-ml-node-with-sub-items div.react-flow__node-chips-title'),
+    Model_Runner_Chip_Container: By.css('.react-flow__node-ml-node-with-sub-items [data-testid="subItems-chips"] .chip-block .edit-chip-container')
   }
 }

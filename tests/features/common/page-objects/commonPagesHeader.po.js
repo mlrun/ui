@@ -20,23 +20,10 @@ such restriction.
 import { By } from 'selenium-webdriver'
 
 import breadcrumbsComponent from '../components/breadcrumbs.component'
-import commonTable from '../components/table.component'
-
-const generalInfoQuickLinks = {
-  root: '.navbar .navbar__body .navbar-links',
-  header: {},
-  body: {
-    row: {
-      root: '.nav-link',
-      fields: {
-        link: '.nav-link__button span'
-      }
-    }
-  }
-}
+import sidebarComponent from '../components/sidebar.component'
 
 export default {
-  loader: By.css('.loader-wrapper .loader'),
+  loader: By.css('.loader-wrapper .loader-output'),
   See_On_Github: By.css('header.header a[alt="MLRUN on Gihub"]'),
   See_On_Slack: By.css('header.header a[alt="MLRUN on Slack"]'),
   Common_Hint: By.css('#overlay_container .tip'),
@@ -47,49 +34,36 @@ export default {
   MLRun_Logo: By.css('.header .header__logo'),
   No_Data_Message: By.css('.no-data-block h3'),
   Breadcrumbs: breadcrumbsComponent,
-  General_Info_Quick_Links: commonTable(generalInfoQuickLinks),
-  Project_Navigation_Toggler: By.css(
-    '.ml-app .navbar'
-  ),
-  Project_Settings_Button: By.css(
-    '[data-testid="nav-link-project-settings"] .nav-link__button .nav-link__label'
-  ),
-  Project_Settings_Icon: By.css(
-    '[data-testid="nav-link-project-settings"] .nav-link__button svg'
-  ),
-  Pin_Quick_Link_Button: By.css(
-    '.navbar .navbar__pin-icon [data-testid="navabr-pin-tooltip-wrapper"]'
-  ),
-  Navigation_Bar: By.css('.ml-app .navbar'),
-  Project_Monitoring_Button: By.css('#monitor > span'),
-  Project_Monitoring_Icon: By.css('#monitor > svg'),
-  Quick_actions_Button: By.css('#quick-actions > span'),
-  Quick_actions_Icon: By.css('#quick-actions > svg'),
-  Feature_Store_Button: By.css('#feature-store > span'),
-  Feature_Store_Icon: By.css('#feature-store > svg'),
-  Datasets_Button: By.css('#datasets > span'),
-  Datasets_Icon: By.css('#datasets > svg'),
-  Documents_Button: By.css('#documents > span'),
-  Documents_Icon: By.css('#documents > svg'),
-  LLM_Prompts_Button: By.css('#llm-prompts > span'),
-  LLM_Prompts_Icon: By.css('#llm-prompts > svg'),
-  Artifacts_Button: By.css('#files > span'),
-  Artifacts_Icon: By.css('#files > svg'),
-  Models_Button: By.css('#models > span'),
-  Models_Icon: By.css('#models > svg'),
-  Monitoring_App_Button: By.css('#monitoring-app > span'),
-  Monitoring_App_Icon: By.css('#monitoring-app > svg'),
-  Jobs_And_Workflows_Button: By.css('#jobs > span'),
-  Jobs_And_Workflows_Icon: By.css('#jobs > svg'),
-  ML_Functions_Button: By.css('#ml-functions > span'),
-  ML_Functions_Icon: By.css('#ml-functions > svg'),
-  Real_Time_Functions_Button: By.css('.ml-app .navbar .navbar-links [data-testid="nav-link-real-time-functions"] span'),
-  Real_Time_Functions_Icon: By.css('.ml-app .navbar .navbar-links [data-testid="nav-link-real-time-functions"] svg'),
-  API_Gateways_Button: By.css('.ml-app .navbar .navbar-links [data-testid="nav-link-api-gateways"] span'),
-  API_Gateways_Icon: By.css('.ml-app .navbar .navbar-links [data-testid="nav-link-api-gateways"] svg'),
-  Alerts_Button: By.css('[data-testid="nav-link-alerts"] .nav-link__label'),
-  Alerts_Icon: By.css('[data-testid="nav-link-alerts"] svg'),
-  General_Info_Quick_Panel: By.css('.ml-app .navbar .navbar__body'),
+  Sidebar: sidebarComponent,
+  General_Info_Quick_Links: sidebarComponent.content,
+  Project_Navigation_Toggler: sidebarComponent.body,
+  Project_Settings_Button: sidebarComponent.linkLabel('Project settings'),
+  Project_Settings_Icon: sidebarComponent.linkIcon('Project settings'),
+  Pin_Quick_Link_Button: sidebarComponent.pinButton,
+  Navigation_Bar: sidebarComponent.root,
+  Project_Monitoring_Button: sidebarComponent.linkLabel('Project monitoring'),
+  Project_Monitoring_Icon: sidebarComponent.linkIcon('Project monitoring'),
+  Data_And_Artifacts_Button: sidebarComponent.groupLabel('Data and artifacts'),
+  Data_And_Artifacts_Icon: sidebarComponent.groupIcon('Data and artifacts'),
+  Feature_Store_Button: sidebarComponent.linkLabel('Feature store'),
+  Datasets_Button: sidebarComponent.linkLabel('Datasets'),
+  Documents_Button: sidebarComponent.linkLabel('Documents'),
+  LLM_Prompts_Button: sidebarComponent.linkLabel('LLM prompts'),
+  Artifacts_Button: sidebarComponent.linkLabel('Other artifacts'),
+  Models_Button: sidebarComponent.groupLabel('Models'),
+  Models_Icon: sidebarComponent.groupIcon('Models'),
+  Monitoring_App_Button: sidebarComponent.linkLabel('Monitoring app'),
+  Jobs_And_Workflows_Button: sidebarComponent.groupLabel('Jobs and workflows'),
+  Jobs_And_Workflows_Icon: sidebarComponent.groupIcon('Jobs and workflows'),
+  ML_Functions_Button: sidebarComponent.linkLabel('ML functions'),
+  ML_Functions_Icon: sidebarComponent.linkIcon('ML functions'),
+  Nuclio_Button: sidebarComponent.groupLabel('Nuclio'),
+  Nuclio_Icon: sidebarComponent.groupIcon('Nuclio'),
+  Real_Time_Functions_Button: sidebarComponent.linkLabel('Real-time functions'),
+  API_Gateways_Button: sidebarComponent.linkLabel('API gateways'),
+  Alerts_Button: sidebarComponent.linkLabel('Alerts'),
+  Alerts_Icon: sidebarComponent.linkIcon('Alerts'),
+  General_Info_Quick_Panel: sidebarComponent.content,
   Step_1_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(1)'),
   Step_1_Button_text: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(1) .data-ellipsis span'),
   Step_2_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(2)'),

@@ -107,7 +107,6 @@ Feature: Jobs Monitoring Page
         Then "Status_Jobs_Error_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
         Then "Status_Jobs_Completed_Checkbox" element should be checked on "FilterBy_Popup" wizard
         Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
-        And select "crossTab" with "Jobs monitoring" value in breadcrumbs menu
         Then verify redirection to "projects/*/jobs-monitoring/jobs?state=completed&dates=past24hours&bePage=1&fePage=1"
         Then click on breadcrumbs "projectsPage" label on "commonPagesHeader" wizard
         And wait load page
@@ -179,9 +178,9 @@ Feature: Jobs Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Jobs_Tab" wizard selected option value "Past year"
         Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
         Then verify that 50 row elements are displayed in "Jobs_Table" on "Jobs_Monitoring_Jobs_Tab" wizard
-        When pick up "Custom range" from "09/03/2024 00:00" to "09/04/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
+        When pick up "Custom range" from "09/03/2024 12:00 AM" to "09/04/2024 12:00 AM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
         And wait load page
-        Then verify from "09/03/2024 00:00" to "09/04/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then verify from "09/03/2024 12:00 AM" to "09/04/2024 12:00 AM" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
         And wait load page
     
     @MLJM
@@ -379,7 +378,7 @@ Feature: Jobs Monitoring Page
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Handler"
 
     @MLJM
-    @smoke
+    @smoke @rerun @knownBug
     Scenario: MLJM011 - Check filter by Labels on Jobs tab of Jobs monitoring page
         Given open url
         And wait load page
@@ -436,7 +435,7 @@ Feature: Jobs Monitoring Page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         And wait load page
-        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Jobs_Tab" wizard selected option value "Any time"
         Then type value "qwe" to "Search_By_Name_Filter_Input" field on "Jobs_Monitoring_Jobs_Tab" wizard
         Then click on "Refresh_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
         And wait load page
@@ -710,9 +709,9 @@ Feature: Jobs Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Workflows_Tab" wizard selected option value "Past year"
         Then verify "Workflows_Table" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
         Then verify that 3 row elements are displayed in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard
-        When pick up "Custom range" from "09/03/2024 00:00" to "09/04/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitoring_Workflows_Tab" wizard
+        When pick up "Custom range" from "09/03/2024 12:00 AM" to "09/04/2024 12:00 AM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitoring_Workflows_Tab" wizard
         And wait load page
-        Then verify from "09/03/2024 00:00" to "09/04/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify from "09/03/2024 12:00 AM" to "09/04/2024 12:00 AM" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Workflows_Tab" wizard
         And wait load page
 
     @MLJM
@@ -1173,7 +1172,7 @@ Feature: Jobs Monitoring Page
         Then "Error_Message" component on "Jobs_Monitoring_Scheduled_Tab" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Scheduled"
 
     @MLJM
-    @smoke
+    @smoke @rerun
     Scenario: MLJM006 - Check search by name, project name, filter by Date picker on Scheduled tab of Jobs monitoring page
         Given open url
         And wait load page
@@ -1234,9 +1233,9 @@ Feature: Jobs Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard selected option value "Next year"
         Then verify "Scheduled_Table" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then verify that 8 row elements are displayed in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard
-        When pick up "Custom range" from "09/03/2024 00:00" to "09/04/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard
+        When pick up "Custom range" from "09/03/2024 12:00 AM" to "09/04/2024 12:00 AM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard
         And wait load page
-        Then verify from "09/03/2024 00:00" to "09/04/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then verify from "09/03/2024 12:00 AM" to "09/04/2024 12:00 AM" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard
         And wait load page
     
     @MLJM

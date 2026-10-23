@@ -15,7 +15,7 @@ Feature: Project Monitoring Page
         Then verify "Project_Name" element visibility on "Project" wizard
         Then "Project_Name" element on "Project" should contains "default" value
         Then verify "Created_Details" element visibility on "Project" wizard
-        Then "Created_Details" element on "Project" should contains "Created: 08/29/2021, 15:21:14 PM" value
+        Then "Created_Details" component on "Project" should be equal "Project"."Created_Details_Default"
         Then verify "Owner_Details" element visibility on "Project" wizard
         Then "Owner_Details" element on "Project" should contains "Owner: igz_nobody" value
         Then verify "Info_Baner_Icon" element visibility on "Project" wizard
@@ -116,7 +116,7 @@ Feature: Project Monitoring Page
         Then verify "Project_Name" element visibility on "Project" wizard
         Then "Project_Name" element on "Project" should contains "default" value
         Then verify "Created_Details" element visibility on "Project" wizard
-        Then "Created_Details" element on "Project" should contains "Created: 08/29/2021, 15:21:14 PM" value
+        Then "Created_Details" component on "Project" should be equal "Project"."Created_Details_Default"
         Then verify "Owner_Details" element visibility on "Project" wizard
         Then "Owner_Details" element on "Project" should contains "Owner: igz_nobody" value
         Then verify "Info_Baner_Icon" element visibility on "Project" wizard
@@ -171,7 +171,7 @@ Feature: Project Monitoring Page
         Then verify visibility of header column "consumer_groups_counter_number" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
         Then check "Consumer groups" header value in "consumer_groups_counter_subtitle" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
         Then "Recent_Text" element in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" should contains "Recent real-time functions" value
-        Then check "cat-vs-dog-classification-tf2-serving" value in "name" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then check "og-classification-tf2-serving" value in "name" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
         Then verify "All_Realtime_Functions_Link" element visibility in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" wizard
         Then "All_Realtime_Functions_Link" element in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" should contains "All real-time functions" value
         When hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -195,58 +195,58 @@ Feature: Project Monitoring Page
         Then verify "Pin_Quick_Link_Button" element visibility on "commonPagesHeader" wizard
         Then verify "General_Info_Quick_Panel" element visibility on "commonPagesHeader" wizard
         Then verify "Project_Monitoring_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Feature_Store_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Datasets_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Documents_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Artifacts_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Data_And_Artifacts_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Models_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Jobs_And_Workflows_Button" element visibility on "commonPagesHeader" wizard
         Then verify "ML_Functions_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Real_Time_Functions_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "API_Gateways_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Nuclio_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Alerts_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Project_Settings_Button" element visibility on "commonPagesHeader" wizard
+        Then click on "Data_And_Artifacts_Button" element on "commonPagesHeader" wizard
+        Then verify "Datasets_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Documents_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "LLM_Prompts_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Artifacts_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Feature_Store_Button" element visibility on "commonPagesHeader" wizard
+        Then click on "Models_Button" element on "commonPagesHeader" wizard
+        Then verify "Monitoring_App_Button" element visibility on "commonPagesHeader" wizard
+        Then click on "Nuclio_Button" element on "commonPagesHeader" wizard
+        Then verify "Real_Time_Functions_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "API_Gateways_Button" element visibility on "commonPagesHeader" wizard
         #check invisibility of menu buttons and visibility of menu icons with unpinned 'Navigation_Bar'
         Then click on "Pin_Quick_Link_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        Then verify "Pin_Quick_Link_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Pin_Quick_Link_Button" element not exists on "commonPagesHeader" wizard
         Then verify "General_Info_Quick_Panel" element visibility on "commonPagesHeader" wizard
         Then verify "Project_Monitoring_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Project_Monitoring_Icon" element visibility on "commonPagesHeader" wizard
-        Then verify "Feature_Store_Button" element invisibility on "commonPagesHeader" wizard
-        Then verify "Feature_Store_Icon" element visibility on "commonPagesHeader" wizard
-        Then verify "Datasets_Button" element invisibility on "commonPagesHeader" wizard
-        Then verify "Datasets_Icon" element visibility on "commonPagesHeader" wizard
-        Then verify "Documents_Button" element invisibility on "commonPagesHeader" wizard
-        Then verify "Documents_Icon" element visibility on "commonPagesHeader" wizard
-        Then verify "Artifacts_Button" element invisibility on "commonPagesHeader" wizard
-        Then verify "Artifacts_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Data_And_Artifacts_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Data_And_Artifacts_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Models_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Models_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Jobs_And_Workflows_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Jobs_And_Workflows_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "ML_Functions_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "ML_Functions_Icon" element visibility on "commonPagesHeader" wizard
-        Then verify "Real_Time_Functions_Button" element invisibility on "commonPagesHeader" wizard
-        Then verify "Real_Time_Functions_Icon" element visibility on "commonPagesHeader" wizard
-        Then verify "API_Gateways_Button" element invisibility on "commonPagesHeader" wizard
-        Then verify "API_Gateways_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Nuclio_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Nuclio_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Alerts_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Alerts_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Project_Settings_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Project_Settings_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Datasets_Button" element not exists on "commonPagesHeader" wizard
+        Then verify "Feature_Store_Button" element not exists on "commonPagesHeader" wizard
+        Then verify "Real_Time_Functions_Button" element not exists on "commonPagesHeader" wizard
         #check that 'Navigation_Bar' save the state through different pages
         Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
         Then click on "ML_Functions_Icon" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
-        Then click on "Jobs_And_Workflows_Icon" element on "commonPagesHeader" wizard
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        Then select "Jobs" item in sidebar menu
         And wait load page
         Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
-        Then click on "Feature_Store_Icon" element on "commonPagesHeader" wizard
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        Then select "Feature store" item in sidebar menu
         And wait load page
         Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -257,8 +257,7 @@ Feature: Project Monitoring Page
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
-        Then click on "Datasets_Button" element on "commonPagesHeader" wizard
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        Then select "Datasets" item in sidebar menu
         And wait load page
         Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
@@ -271,10 +270,10 @@ Feature: Project Monitoring Page
         When turn on demo mode with query params "false"
         And wait load page
         And wait load page
+        Then click on "Models_Button" element on "commonPagesHeader" wizard
         Then verify "Monitoring_App_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Monitoring_App_Icon" element visibility on "commonPagesHeader" wizard
+        Then click on "Data_And_Artifacts_Button" element on "commonPagesHeader" wizard
         Then verify "LLM_Prompts_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "LLM_Prompts_Icon" element visibility on "commonPagesHeader" wizard
 
     @MLPM
     @passive
@@ -868,7 +867,15 @@ Feature: Project Monitoring Page
         And wait load page
         Then select "Feature set" option in "Quick_Actions" dropdown on "Project" wizard
         And wait load page
+        # the "Feature set" quick action opens the "New feature set" panel in place, on the Project monitoring page
+        # (ProjectMonitor `createFeatureSetPanelIsOpen`), there is no redirection to the Feature sets page anymore
         Then verify "Cross_Close_Button" element visibility on "New_Feature_Set" wizard
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+        Then click on "Cross_Close_Button" element on "New_Feature_Set" wizard
+        And wait load page
+        And select "Feature store" item in sidebar menu
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Feature sets" value
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
@@ -876,7 +883,7 @@ Feature: Project Monitoring Page
         Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
         Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
-        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options_Feature_Sets_Default"
         Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
@@ -991,8 +998,7 @@ Feature: Project Monitoring Page
         And wait load page
         When click on "In_Process_Counter_Subtitle" element in "Runs_Statistic_Section_Container" on "Project" wizard
         And wait load page
-        Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
-        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then verify "Table_Name_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Any time"
@@ -1021,8 +1027,7 @@ Feature: Project Monitoring Page
         And wait load page
         When click on "Failed_Counter_Subtitle" element in "Runs_Statistic_Section_Container" on "Project" wizard
         And wait load page
-        Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
-        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then verify "Table_Name_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Past 24 hours"
@@ -1040,8 +1045,7 @@ Feature: Project Monitoring Page
         And wait load page
         When click on "Succeeded_Counter_Subtitle" element in "Runs_Statistic_Section_Container" on "Project" wizard
         And wait load page
-        Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
-        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then verify "Table_Name_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Past 24 hours"
@@ -1066,7 +1070,7 @@ Feature: Project Monitoring Page
         And wait load page
         When click on "Scheduled_Stats_Counter" element in "Scheduled_Stats_Container" on "Project" wizard
         And wait load page
-        Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Schedule" value
         Then verify "Table_Name_Filter_Input" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Next 24 hours"
@@ -1092,7 +1096,7 @@ Feature: Project Monitoring Page
         And wait load page
         When click on "Jobs_Counter_Number" element in "Scheduled_Stats_Container" on "Project" wizard
         And wait load page
-        Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Schedule" value
         Then verify "Table_Name_Filter_Input" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Next 24 hours"
@@ -1119,7 +1123,7 @@ Feature: Project Monitoring Page
         And wait load page
         When click on "Workflows_Counter_Number" element in "Scheduled_Stats_Container" on "Project" wizard
         And wait load page
-        Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Schedule" value
         Then verify "Table_Name_Filter_Input" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Next 24 hours"
@@ -1154,7 +1158,7 @@ Feature: Project Monitoring Page
         And wait load page
         When click on "Workflows_Stats_Counter" element in "Workflows_Stats_Container" on "Project" wizard
         And wait load page
-        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Workflows" value
         Then verify "Table_Name_Filter_Input" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Past 24 hours"
@@ -1168,7 +1172,7 @@ Feature: Project Monitoring Page
         And wait load page
         When click on "In_Process_Counter_Number" element in "Workflows_Stats_Container" on "Project" wizard
         And wait load page
-        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Workflows" value
         Then verify "Table_Name_Filter_Input" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Any time"
@@ -1182,7 +1186,7 @@ Feature: Project Monitoring Page
         And wait load page
         When click on "Failed_Counter_Number" element in "Workflows_Stats_Container" on "Project" wizard
         And wait load page
-        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Workflows" value
         Then verify "Table_Name_Filter_Input" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Past 24 hours"
@@ -1196,7 +1200,7 @@ Feature: Project Monitoring Page
         And wait load page
         When click on "Succeeded_Counter_Number" element in "Workflows_Stats_Container" on "Project" wizard
         And wait load page
-        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Workflows" value
         Then verify "Table_Name_Filter_Input" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Past 24 hours"
@@ -1242,19 +1246,18 @@ Feature: Project Monitoring Page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
-        Then select "project" with "default" value in breadcrumbs menu
+        Then select "default" project in sidebar project dropdown
         Then verify breadcrumbs "project" label should be equal "default" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        Then select "Model artifacts" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Models" value
+        Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
         Then verify "Models_Table" element visibility on "Models" wizard
-        Then select "tab" with "Feature store" value in breadcrumbs menu
+        Then select "Feature store" item in sidebar menu
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature store" value
+        Then verify breadcrumbs "tab" label should be equal "Feature sets" value
         Then verify "Feature_Sets_Table" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
-        Then select "tab" with "Artifacts" value in breadcrumbs menu
+        Then select "Other artifacts" item in sidebar menu
         And wait load page
 
     @MLPM
@@ -1289,9 +1292,7 @@ Feature: Project Monitoring Page
         Then verify "All_Jobs_Link" element visibility in "Runs_Statistic_Section_Container" on "Project" wizard
         When click on "All_Jobs_Link" element in "Runs_Statistic_Section_Container" on "Project" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Jobs and workflows" value
-        Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
-        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then verify "Batch_Run_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then "Batch_Run_Button" element on "Jobs_Monitor_Tab" should contains "Batch run" value
         Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab" wizard
@@ -1378,7 +1379,7 @@ Feature: Project Monitoring Page
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Consumer_Group_Yet"
-        Then select "project" with "default" value in breadcrumbs menu
+        Then select "default" project in sidebar project dropdown
         And wait load page
         When click on "ConsumerGroups_Stats_Counter" element in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" wizard
         And wait load page

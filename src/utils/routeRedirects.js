@@ -17,9 +17,18 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-module.exports = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
-}
+import { redirect } from 'react-router-dom'
+
+import { PROJECTS_PAGE_PATH } from '../constants'
+
+// Loaders for the catch-all (`*`) routes, they redirect unknown paths before anything is rendered.
+// The targets are absolute: since react-router v7 relative paths in splat routes are resolved against the full URL,
+// so `<Navigate to="models" />` from `.../models/INVALID` would redirect to `.../models/INVALID/models` endlessly.
+// Absolute paths are resolved within the router `basename`.
+
+export const redirectToPath = path => () => redirect(path)
+
+export const redirectToProjectPageTab =
+  (pagePath, tab) =>
+  ({ params }) =>
+    redirect(`/${PROJECTS_PAGE_PATH}/${encodeURIComponent(params.projectName)}/${pagePath}/${tab}`)

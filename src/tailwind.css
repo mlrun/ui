@@ -1,6 +1,22 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/*
+  Preflight is intentionally not imported, a scoped reset lives under
+  `.mlrun-tw-scope` below.
+  Utilities are in the standard `utilities` layer, like in the Module Federation
+  host and in Nuclio, otherwise they'd override Nuclio's own utilities (e.g. its
+  responsive variants) when Nuclio is mounted in mlrun.
+  `reference inline` bakes theme values into utilities instead of emitting
+  --spacing/--color-* etc. on :root, which would override the host's values.
+  Automatic source detection is disabled, otherwise it scans the whole repo.
+*/
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme) theme(reference inline);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+
+@config '../tailwind.config.js';
+
+@source './nextGenComponents';
+@source not './nextGenComponents/**/*.test.{js,jsx}';
+@source '../node_modules/iguazio.dashboard-react-controls/dist/nextGenComponents';
 
 @layer base {
   .ml-app,

@@ -44,7 +44,7 @@ const SidebarItem = ({
   }, [link])
 
   const match = useMatch(linkPath ? `${linkPath}/*` : null)
-  const isActive = Boolean(match)
+  const isActive = Boolean(match) && !externalLink
 
   useEffect(() => {
     if (isActive && sidebarOpen) {

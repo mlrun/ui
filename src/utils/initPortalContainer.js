@@ -17,25 +17,20 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-const reporter = require('cucumber-html-reporter')
-const os = require('os')
-const { browser, report } = require('./config')
+import { setPortalContainer } from 'igz-controls/utils/portalContainer.util'
 
-const options = {
-  theme: 'bootstrap',
-  jsonFile: `${report}.json`,
-  output: `${report}.html`,
-  reportSuiteAsScenarios: true,
-  scenarioTimestamp: true,
-  launchReport: true,
-  metadata: {
-    node: process.versions.node,
-    Platform: os.platform(),
-    kernel: os.release(),
-    arch: os.arch(),
-    browser: browser,
-    'report generated': new Date().toISOString()
+// Next-gen (Radix) popups render in <body> by default, outside `.mlrun-tw-scope`, so
+// they miss mlrun's scoped Tailwind base styles (see tailwind.css). Rendering them
+// into an mlrun container keeps those styles scoped to mlrun, also in MF mode.
+export const initPortalContainer = () => {
+  let container = document.querySelector('[data-mlrun-portal-root]')
+
+  if (!container) {
+    container = document.createElement('div')
+    container.className = 'mlrun-tw-scope'
+    container.setAttribute('data-mlrun-portal-root', '')
+    document.body.appendChild(container)
   }
-}
 
-reporter.generate(options)
+  setPortalContainer(container)
+}

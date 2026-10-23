@@ -141,7 +141,7 @@ const artifactsPreviewTable = {
 }
 
 const createFeatureVectorLabelsTable = {
-  root: '[data-testid="labels-chips"] .chips-cell',
+  root: '.pop-up-dialog [data-testid="labels-chips"] .chips-cell',
   header: {},
   body: {
     root: '.chips-wrapper',
@@ -791,7 +791,7 @@ export default {
     Metrics_Clear_Button: By.css('[data-testid="metrics-selector-buttons"] .btn-tertiary')
   },
   modalTransitionPopup: {
-    Title: By.css('.table__item-popup .item-header__title'),
+    Title: By.css('.table__item-popup .item-header__title > .tooltip-wrapper:first-of-type'),
     Data_Status: By.css('.table__item-popup .item-header__status-row .updated'),
     State_Icon: By.css('[data-testid="modal"] [data-testid="detailsPanel"] .state'),
     Refresh_Button: By.css('.table__item-popup .item-header__buttons [data-testid="refresh"]'),
@@ -1514,7 +1514,7 @@ export default {
     New_Member_Name_Input: inputWithAutocomplete({
       root: '.invite-new-members',
       elements: {
-        input: 'input',
+        input: 'input[name="chip-input"]',
         options: '.suggestion-list .suggestion-row',
         option_name: '.suggestion-row-label'
       }

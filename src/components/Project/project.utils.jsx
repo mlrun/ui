@@ -105,7 +105,7 @@ export const generateCreateNewOptions = (
         return navigate(`/projects/${params.projectName}/${NUCLIO_FUNCTIONS_PATH}/create-function`)
       }
 
-      const url = generateNuclioLink(`/projects/${params.projectName}}/create-function`)
+      const url = generateNuclioLink(`/projects/${params.projectName}/create-function`)
 
       if (window.top && window.top !== window.self) {
         window.top.location.assign(url)

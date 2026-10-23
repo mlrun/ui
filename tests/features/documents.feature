@@ -11,8 +11,7 @@ Feature: Documents Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "default" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Documents" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Documents" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Documents" value
@@ -21,8 +20,7 @@ Feature: Documents Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "default" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Documents" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Documents" item in sidebar menu
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Documents" value
@@ -71,14 +69,14 @@ Feature: Documents Page
     Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
     Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
     Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 8" value
-    Then select "project" with "cat-vs-dog-classification" value in breadcrumbs menu
+    Then select "cat-vs-dog-classification" project in sidebar project dropdown
     And wait load page
     Then verify breadcrumbs "project" label should be equal "cat-vs-dog-classification" value
     And wait load page
     Then verify breadcrumbs "project" label should be equal "cat-vs-dog-classification" value
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
     Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Documents_data"
-    Then select "project" with "default" value in breadcrumbs menu
+    Then select "default" project in sidebar project dropdown
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
     Then verify "Documents_Table" element visibility on "Documents" wizard
@@ -90,14 +88,12 @@ Feature: Documents Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Documents" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Documents" item in sidebar menu
     And wait load page
-    And select "tab" with "Project monitoring" value in breadcrumbs menu
+    And select "Project monitoring" item in sidebar menu
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Documents" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Documents" item in sidebar menu
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Documents" wizard
     Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
@@ -129,8 +125,7 @@ Feature: Documents Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    And click on cell with value "Documents" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And select "Documents" item in sidebar menu
     And wait load page
     When click on cell with row index 1 in "name" column in "Documents_Table" table on "Documents" wizard
     And wait load page
@@ -171,10 +166,9 @@ Feature: Documents Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+    Then select "Project monitoring" item in sidebar menu
     And wait load page
-    And select "tab" with "Documents" value in breadcrumbs menu
+    And select "Documents" item in sidebar menu
     And wait load page
     Then type value "doc" to "Table_Name_Filter_Input" field on "Documents" wizard
     Then click on "Table_Refresh_Button" element on "Documents" wizard
@@ -188,10 +182,9 @@ Feature: Documents Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+    Then select "Project monitoring" item in sidebar menu
     And wait load page
-    And select "tab" with "Documents" value in breadcrumbs menu
+    And select "Documents" item in sidebar menu
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Documents" wizard
     Then type value "kind" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
@@ -217,7 +210,7 @@ Feature: Documents Page
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And select "tab" with "Documents" value in breadcrumbs menu
+    And select "Documents" item in sidebar menu
     And wait load page
     Then verify action menu on "Documents" wizard in "Documents_Table" table with "anxujkpvfi" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Documents" wizard in "Documents_Table" table at row with "anxujkpvfi" value in "name" column

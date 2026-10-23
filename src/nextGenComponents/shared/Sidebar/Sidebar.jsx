@@ -65,9 +65,11 @@ function SidebarList({ projectName }) {
         </SidebarMenu>
       </SidebarContent>
       <SidebarSeparator />
+      {/* Single padding/gap classes replace the base `p-3 gap-2` instead of refining them,
+          so another MF app loading `.p-3` later can't override them */}
       <SidebarFooter
         data-testid="sidebar-footer"
-        className="pt-1 px-0 gap-y-1 group-data-[collapsible=icon]:gap-y-6"
+        className="p-[0.25rem_0_0.75rem] gap-1 group-data-[collapsible=icon]:gap-y-6"
       >
         <SidebarMenu>
           {footerLinks.map(link => (
