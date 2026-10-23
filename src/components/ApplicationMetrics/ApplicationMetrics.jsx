@@ -49,6 +49,7 @@ import {
   REQUEST_CANCELED
 } from '../../constants'
 import { getScssVariableValue } from 'igz-controls/utils/common.util'
+import { isRequestAborted } from '../../utils/isRequestAborted'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
 import { fetchMonitoringApplication } from '../../reducers/monitoringApplicationsReducer'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
@@ -79,7 +80,7 @@ const ApplicationMetrics = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const params = useParams()
-  const abortControllerRef = useRef()
+  const abortControllerRef = useRef(new AbortController())
 
   const filteredEndpoints = useMemo(() => {
     return modelEndpoints.filter(modelEndpoint => {
@@ -121,6 +122,7 @@ const ApplicationMetrics = () => {
   )
 
   const fetchModelEndpointsData = useCallback(() => {
+    abortControllerRef.current.abort(REQUEST_CANCELED)
     abortControllerRef.current = new AbortController()
 
     dispatch(
@@ -140,8 +142,11 @@ const ApplicationMetrics = () => {
     )
       .unwrap()
       .then(modelEndpoints => {
-        if (modelEndpoints) {
-          setModelEndpoints(modelEndpoints)
+        setModelEndpoints(modelEndpoints ?? [])
+      })
+      .catch(error => {
+        if (!isRequestAborted(error)) {
+          setModelEndpoints([])
         }
       })
   }, [dispatch, params.projectName])
@@ -271,7 +276,7 @@ const ApplicationMetrics = () => {
           <div className="list-view">
             {(artifactsStore.modelEndpoints.loading ||
               applicationsStore.loading ||
-              detailsStore.loadingCounter > 0) && <Loader />}
+              detailsStore.loadingCounter > 0) && <Loader overlay />}
             {artifactsStore.modelEndpoints.loading ||
             applicationsStore.loading ? null : modelEndpoints.length === 0 ? (
               <NoData message={requestErrorMessage || 'No model endpoints found'} />

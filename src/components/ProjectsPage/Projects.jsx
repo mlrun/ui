@@ -36,7 +36,7 @@ import {
   projectsSortOptions
 } from './projects.util'
 import { BG_TASK_RUNNING } from '../../utils/poll.util'
-import { PROJECT_ONLINE_STATUS } from '../../constants'
+import { PROJECT_ONLINE_STATUS, REQUEST_CANCELED } from '../../constants'
 import { ConfirmDialog } from 'igz-controls/components'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import {
@@ -130,6 +130,7 @@ const Projects = () => {
   )
 
   const refreshProjects = useCallback(() => {
+    abortControllerRef.current.abort(REQUEST_CANCELED)
     abortControllerRef.current = new AbortController()
 
     if (!isNuclioModeDisabled) {

@@ -26,7 +26,7 @@ import ModelEndpointsTable from '../ModelsPage/ModelEndpoints/ModelEndpointsTabl
 
 import { filtersConfig } from './detailsModelEndpoints.util'
 import { fetchModelEndpoints } from '../../reducers/artifactsReducer'
-import { FUNCTION_NAME_FILTER } from '../../constants'
+import { FUNCTION_NAME_FILTER, REQUEST_CANCELED } from '../../constants'
 import { getInitialFiltersByConfig } from '../../hooks/useFiltersFromSearchParams.hook'
 
 const DetailsModelEndpoints = ({ selectedItem }) => {
@@ -38,6 +38,7 @@ const DetailsModelEndpoints = ({ selectedItem }) => {
 
   const fetchEndpoints = useCallback(
     filters => {
+      abortControllerRef.current.abort(REQUEST_CANCELED)
       abortControllerRef.current = new AbortController()
 
       return dispatch(

@@ -24,9 +24,15 @@ import {
 } from '../utils/getUniqueIdentifier'
 import featureStoreApi from '../api/featureStore-api'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { isRequestAborted } from '../utils/isRequestAborted'
 import { REDISNOSQL } from '../components/FeatureSetsPanel/FeatureSetsPanelTargetStore/featureSetsPanelTargetStore.util'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { hideLoading, showLoading } from './redux.util'
+import {
+  isStaleRequest,
+  requestPending,
+  requestPendingUntracked,
+  requestSettled
+} from './redux.util'
 import { isCommunityEdition } from '../utils/helper'
 import { IS_MF_MODE, PANEL_DEFAULT_ACCESS_KEY } from '../constants'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
@@ -55,16 +61,20 @@ const initialState = {
     selectedRowData: {
       content: {}
     },
-    loading: false
+    loading: false,
+    pendingRequestIds: []
   },
   entities: {
     allData: [],
     selectedRowData: {
       content: {}
     },
-    loading: false
+    loading: false,
+    pendingRequestIds: [],
+    currentRequestId: null
   },
   loading: false,
+  pendingRequestIds: [],
   newFeatureSet: {
     credentials: {
       access_key: IS_MF_MODE ? 'default' : PANEL_DEFAULT_ACCESS_KEY
@@ -335,10 +345,7 @@ const featureStoreSlice = createSlice({
       }
     },
     removeEntities(state) {
-      state.entities = {
-        allData: [],
-        selectedRowData: { content: {} }
-      }
+      state.entities = initialState.entities
     },
     removeFeatureSet(state, action) {
       state.featureSets.selectedRowData = {
@@ -374,10 +381,7 @@ const featureStoreSlice = createSlice({
       }
     },
     removeFeatures(state) {
-      state.features = {
-        allData: [],
-        selectedRowData: { content: {} }
-      }
+      state.features = initialState.features
     },
     removeNewFeatureSet(state) {
       state.newFeatureSet = { ...initialState.newFeatureSet }
@@ -435,31 +439,35 @@ const featureStoreSlice = createSlice({
     }
   },
   extraReducers: builder => {
-    builder.addCase(createNewFeatureSet.pending, showLoading)
-    builder.addCase(createNewFeatureSet.fulfilled, hideLoading)
-    builder.addCase(createNewFeatureSet.rejected, hideLoading)
+    builder.addCase(createNewFeatureSet.pending, requestPendingUntracked)
+    builder.addCase(createNewFeatureSet.fulfilled, requestSettled)
+    builder.addCase(createNewFeatureSet.rejected, requestSettled)
     builder.addCase(fetchEntity.fulfilled, (state, action) => {
       state.entities.selectedRowData.content = action.payload
     })
-    builder.addCase(fetchEntities.pending, state => {
-      state.entities.loading = true
+    builder.addCase(fetchEntities.pending, (state, action) => {
+      requestPending(state.entities, action)
     })
     builder.addCase(fetchEntities.fulfilled, (state, action) => {
-      state.entities.loading = false
+      requestSettled(state.entities, action)
+      if (isStaleRequest(state.entities, action)) return
       state.entities.allData = action.payload
       state.error = false
     })
     builder.addCase(fetchEntities.rejected, (state, action) => {
-      state.entities.loading = false
+      requestSettled(state.entities, action)
+      if (isStaleRequest(state.entities, action)) return
+      if (isRequestAborted(action.payload)) return
       state.error = action.payload
     })
-    builder.addCase(fetchFeatureSets.pending, showLoading)
+    builder.addCase(fetchFeatureSets.pending, requestPending)
     builder.addCase(fetchFeatureSets.rejected, (state, action) => {
-      state.loading = false
+      requestSettled(state, action)
+      if (isRequestAborted(action.payload)) return
       state.error = action.payload
     })
     builder.addCase(fetchFeatureSets.fulfilled, (state, action) => {
-      state.loading = false
+      requestSettled(state, action)
       state.featureSets.allData = parseFeatureSets(action.payload)
       state.error = false
     })
@@ -486,13 +494,14 @@ const featureStoreSlice = createSlice({
         [getFeatureVectorIdentifier(generatedFeatureVectors[0])]: generatedFeatureVectors
       }
     })
-    builder.addCase(fetchFeatureVectors.pending, showLoading)
+    builder.addCase(fetchFeatureVectors.pending, requestPending)
     builder.addCase(fetchFeatureVectors.rejected, (state, action) => {
-      state.loading = false
+      requestSettled(state, action)
+      if (isRequestAborted(action.payload)) return
       state.error = action.payload
     })
     builder.addCase(fetchFeatureVectors.fulfilled, (state, action) => {
-      state.loading = false
+      requestSettled(state, action)
       state.error = false
       state.featureVectors.allData = parseFeatureVectors(action.payload)
     })
@@ -501,21 +510,22 @@ const featureStoreSlice = createSlice({
         [getFeatureIdentifier(action.payload[0])]: action.payload
       }
     })
-    builder.addCase(fetchFeatures.pending, state => {
-      state.features.loading = true
+    builder.addCase(fetchFeatures.pending, (state, action) => {
+      requestPending(state.features, action)
     })
     builder.addCase(fetchFeatures.rejected, (state, action) => {
-      state.features.loading = false
+      requestSettled(state.features, action)
+      if (isRequestAborted(action.payload)) return
       state.error = action.payload
     })
     builder.addCase(fetchFeatures.fulfilled, (state, action) => {
-      state.features.loading = false
+      requestSettled(state.features, action)
       state.error = false
       state.features.allData = action.payload
     })
-    builder.addCase(startFeatureSetIngest.pending, showLoading)
-    builder.addCase(startFeatureSetIngest.fulfilled, hideLoading)
-    builder.addCase(startFeatureSetIngest.rejected, hideLoading)
+    builder.addCase(startFeatureSetIngest.pending, requestPendingUntracked)
+    builder.addCase(startFeatureSetIngest.fulfilled, requestSettled)
+    builder.addCase(startFeatureSetIngest.rejected, requestSettled)
   }
 })
 

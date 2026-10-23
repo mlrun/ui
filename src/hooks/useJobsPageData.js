@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
@@ -33,9 +33,11 @@ import {
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_PAGE,
   MONITOR_JOBS_TAB,
+  REQUEST_CANCELED,
   SCHEDULE_TAB
 } from '../constants'
 import { usePagination } from './usePagination.hook'
+import { isRequestAborted } from '../utils/isRequestAborted'
 import { parseJob } from '../utils/parseJob'
 import { fetchAllJobRuns, fetchJobs, fetchScheduledJobs } from '../reducers/jobReducer'
 import { fetchWorkflows } from '../reducers/workflowReducer'
@@ -99,6 +101,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
         setJobs(null)
       }
 
+      abortControllerRef.current.abort(REQUEST_CANCELED)
       abortControllerRef.current = new AbortController()
 
       terminateAbortTasksPolling()
@@ -181,7 +184,9 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
 
           return response
         })
-        .catch(() => {
+        .catch(error => {
+          if (isRequestAborted(error)) return
+
           if (isJobRunsRequest) {
             setJobRuns([])
           } else {
@@ -195,6 +200,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
   const refreshScheduled = useCallback(
     filters => {
       setScheduledJobs([])
+      abortControllerRef.current.abort(REQUEST_CANCELED)
       abortControllerRef.current = new AbortController()
 
       return dispatch(
@@ -227,12 +233,18 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
             setScheduledJobs(parsedJobs)
           }
         })
+        .catch(error => {
+          if (!isRequestAborted(error)) {
+            setScheduledJobs([])
+          }
+        })
     },
     [dispatch, params.projectName]
   )
 
   const getWorkflows = useCallback(
     filters => {
+      abortControllerRef.current.abort(REQUEST_CANCELED)
       abortControllerRef.current = new AbortController()
       const projectName = filters.project?.toLowerCase?.() || params.projectName || '*'
 
@@ -284,6 +296,12 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
     resetPaginationTrigger: `${params.projectName}_${selectedTab}_${params.jobName}`,
     isAllVersions: Boolean(params.jobName)
   })
+
+  useEffect(() => {
+    return () => {
+      abortControllerRef.current.abort(REQUEST_CANCELED)
+    }
+  }, [])
 
   return {
     abortControllerRef,

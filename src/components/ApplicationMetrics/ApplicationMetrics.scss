@@ -23,6 +23,7 @@ $searchHeight: 75px;
   }
 
   .list-view {
+    position: relative;
     display: flex;
     gap: 20px;
     height: calc(100% - 60px);

@@ -18,10 +18,11 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { FUNCTION_TYPE_JOB, PANEL_DEFAULT_ACCESS_KEY } from '../constants'
+import { isRequestAborted } from '../utils/isRequestAborted'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import functionsApi from '../api/functions-api'
-import { hideLoading, showLoading } from './redux.util'
+import { requestPendingUntracked, requestSettled } from './redux.util'
 import mlrunNuclioApi from '../api/mlrun-nuclio-api'
 import yaml from 'js-yaml'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
@@ -43,6 +44,7 @@ const initialState = {
     error: null
   },
   loading: false,
+  pendingRequestIds: [],
   error: null,
   newFunction: {
     kind: FUNCTION_TYPE_JOB,
@@ -348,21 +350,21 @@ const functionsSlice = createSlice({
     }
   },
   extraReducers: builder => {
-    builder.addCase(createNewFunction.pending, showLoading)
-    builder.addCase(createNewFunction.fulfilled, state => {
-      state.loading = false
+    builder.addCase(createNewFunction.pending, requestPendingUntracked)
+    builder.addCase(createNewFunction.fulfilled, (state, action) => {
+      requestSettled(state, action)
       state.error = null
     })
     builder.addCase(createNewFunction.rejected, (state, action) => {
+      requestSettled(state, action)
       state.error = action.payload
-      state.loading = false
     })
-    builder.addCase(deployFunction.pending, showLoading)
-    builder.addCase(deployFunction.fulfilled, state => {
-      state.loading = false
+    builder.addCase(deployFunction.pending, requestPendingUntracked)
+    builder.addCase(deployFunction.fulfilled, (state, action) => {
+      requestSettled(state, action)
       state.error = null
     })
-    builder.addCase(deployFunction.rejected, hideLoading)
+    builder.addCase(deployFunction.rejected, requestSettled)
     builder.addCase(fetchFunctionLogs.pending, state => {
       state.logs.loading = true
     })
@@ -385,24 +387,25 @@ const functionsSlice = createSlice({
       state.nuclioLogs.error = action.payload
       state.nuclioLogs.loading = false
     })
-    builder.addCase(fetchFunctionTemplate.pending, showLoading)
+    builder.addCase(fetchFunctionTemplate.pending, requestPendingUntracked)
     builder.addCase(fetchFunctionTemplate.fulfilled, (state, action) => {
-      state.loading = false
+      requestSettled(state, action)
       state.template = action.payload
     })
     builder.addCase(fetchFunctionTemplate.rejected, (state, action) => {
+      requestSettled(state, action)
       state.error = action.payload
-      state.loading = false
       state.template = {}
     })
-    builder.addCase(fetchFunctions.pending, showLoading)
+    builder.addCase(fetchFunctions.pending, requestPendingUntracked)
     builder.addCase(fetchFunctions.fulfilled, (state, action) => {
-      state.loading = false
+      requestSettled(state, action)
       state.functions = action.payload.funcs
     })
     builder.addCase(fetchFunctions.rejected, (state, action) => {
+      requestSettled(state, action)
+      if (isRequestAborted(action.payload)) return
       state.error = action.payload
-      state.loading = false
       state.functions = []
     })
     builder.addCase(fetchFunctionsTemplates.rejected, (state, action) => {
@@ -411,22 +414,22 @@ const functionsSlice = createSlice({
       state.templates = []
       state.templatesCatalog = {}
     })
-    builder.addCase(fetchHubFunction.pending, showLoading)
-    builder.addCase(fetchHubFunction.fulfilled, hideLoading)
+    builder.addCase(fetchHubFunction.pending, requestPendingUntracked)
+    builder.addCase(fetchHubFunction.fulfilled, requestSettled)
     builder.addCase(fetchHubFunction.rejected, (state, action) => {
+      requestSettled(state, action)
       state.error = action.payload
-      state.loading = false
     })
-    builder.addCase(fetchHubFunctions.pending, showLoading)
+    builder.addCase(fetchHubFunctions.pending, requestPendingUntracked)
     builder.addCase(fetchHubFunctions.fulfilled, (state, action) => {
-      state.loading = false
+      requestSettled(state, action)
       state.hubFunctions = action.payload.hubFunctions
       state.hubFunctionsCatalog = action.payload.hubFunctionsCategories
       state.error = null
     })
     builder.addCase(fetchHubFunctions.rejected, (state, action) => {
+      requestSettled(state, action)
       state.error = action.payload
-      state.loading = false
       state.hubFunctions = []
       state.hubFunctionsCatalog = []
     })

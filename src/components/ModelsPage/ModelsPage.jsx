@@ -23,7 +23,6 @@ import { useSelector } from 'react-redux'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
-import { Loader } from 'igz-controls/components'
 
 import { ModelsPageProvider, useModelsPage } from './ModelsPage.context'
 
@@ -43,7 +42,6 @@ const ModelsPage = () => {
           />
         </div>
         <div className="content">
-          {artifactsStore.loading && <Loader />}
           <div className="table-container">
             <Outlet />
           </div>
