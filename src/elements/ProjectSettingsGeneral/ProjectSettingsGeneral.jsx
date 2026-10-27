@@ -24,6 +24,7 @@ import { Form } from 'react-final-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 import { cloneDeep, isEmpty } from 'lodash'
+import { getOrcaErrorMessage } from '../../utils/orcaError.util'
 import { useParams } from 'react-router-dom'
 
 import {
@@ -44,6 +45,7 @@ import {
   DEFAULT_IMAGE,
   DESCRIPTION,
   GOALS,
+  IS_MF_MODE,
   KEY_CODES,
   LABELS,
   LOAD_SOURCE_ON_RUN,
@@ -66,7 +68,11 @@ import {
   getInternalLabelsValidationRule
 } from 'igz-controls/utils/validation.util'
 import { parseChipsData, convertChipsData } from '../../utils/convertChipsData'
-import { handleProjectOperationConflict, withLatestOpId } from '../../utils/projectOperation.util'
+import {
+  getProjectOperationId,
+  handleProjectOperationConflict,
+  withLatestOpId
+} from '../../utils/projectOperation.util'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { areNodeSelectorsSupported } from './projectSettingsGeneral.utils'
@@ -95,6 +101,7 @@ const ProjectSettingsGeneral = ({
     })
   )
   const formStateRef = useRef(null)
+  const latestOperationRef = useRef(null)
   const params = useParams()
   const dispatch = useDispatch()
 
@@ -169,9 +176,21 @@ const ProjectSettingsGeneral = ({
 
   const sendProjectSettingsData = useCallback(
     projectData => {
+      // In ORIS every save starts a new operation, and the next one must carry its op id as the
+      // witness; the loaded project still holds the one it was read with.
+      const latestOperation = latestOperationRef.current
+      const dataToSend =
+        latestOperation?.projectName === params.projectName
+          ? withLatestOpId(projectData, latestOperation.response)
+          : projectData
+
       projectsApi
-        .editProject(params.projectName, projectData)
-        .then(() => {
+        .editProject(params.projectName, dataToSend)
+        .then(response => {
+          if (IS_MF_MODE && getProjectOperationId(response)) {
+            latestOperationRef.current = { projectName: params.projectName, response }
+          }
+
           dispatch(
             setNotification({
               status: 200,
@@ -182,9 +201,13 @@ const ProjectSettingsGeneral = ({
         })
         .catch(error => {
           if (
-            handleProjectOperationConflict(error, params.projectName, dispatch, latest =>
-              sendProjectSettingsData(withLatestOpId(projectData, latest))
-            )
+            handleProjectOperationConflict(error, params.projectName, dispatch, latest => {
+              if (getProjectOperationId(latest)) {
+                latestOperationRef.current = { projectName: params.projectName, response: latest }
+              }
+
+              sendProjectSettingsData(projectData)
+            })
           ) {
             return
           }
@@ -192,7 +215,7 @@ const ProjectSettingsGeneral = ({
           const customErrorMsg =
             error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
               ? 'Missing edit permission for the project'
-              : getErrorMsg(error, 'Failed to edit project data')
+              : getErrorMsg(error, getOrcaErrorMessage(error) || 'Failed to edit project data')
 
           showErrorNotification(dispatch, error, '', customErrorMsg, () =>
             sendProjectSettingsData(projectData)

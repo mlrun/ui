@@ -51,6 +51,21 @@ const EXECUTION_STATE_BY_CODE = {
   5: FAILED_STATE
 }
 
+export const PROJECT_OPERATION_IN_PROGRESS_MESSAGE =
+  'The operation is in progress. It might take a few moments.'
+
+/**
+ * Notification for an operation the leader accepted but has not finished, shown instead of raw
+ * internal errors.
+ * @returns {Object} the action to dispatch.
+ */
+export const showProjectOperationInProgress = () =>
+  setNotification({
+    status: 200,
+    id: Math.random(),
+    message: PROJECT_OPERATION_IN_PROGRESS_MESSAGE
+  })
+
 const readOpId = project => project?.status?.opId ?? project?.status?.op_id
 
 /**
@@ -86,6 +101,7 @@ export const startProjectTransition = (dispatch, projectName, operation, project
         projectName,
         operation,
         polling: true,
+        hasSyncIssue: false,
         ...(project && { project })
       })
     )
@@ -130,7 +146,6 @@ const executionHasRetrySignal = status =>
  * @param {string} options.projectName
  * @param {function} options.dispatch
  * @param {string} [options.successMessage] - notification shown once the execution succeeds.
- * @param {string} [options.failureMessage] - fallback notification when the execution fails.
  * @param {function} [options.onSettled] - invoked with the terminal state (`succeeded` / `failed`).
  * @param {boolean} [options.removeProjectOnSuccess] - drop the project from the list before
  *     undimming, so a deleted card cannot flash as online while the list refresh is still in flight.
@@ -141,15 +156,7 @@ const executionHasRetrySignal = status =>
  */
 const trackProjectOperation = (
   opId,
-  {
-    projectName,
-    dispatch,
-    successMessage,
-    failureMessage,
-    onSettled,
-    removeProjectOnSuccess,
-    operation
-  }
+  { projectName, dispatch, successMessage, onSettled, removeProjectOnSuccess, operation }
 ) => {
   const deadline =
     Date.now() +
@@ -165,21 +172,24 @@ const trackProjectOperation = (
 
   const stopPolling = () => dispatch(setProjectTransition({ projectName, polling: false }))
 
-  const settle = (state, response) => {
-    endProjectTransition(dispatch, projectName)
-
-    if (state === SUCCEEDED_STATE && removeProjectOnSuccess) {
-      dispatch(removeProject(projectName))
-    }
-
+  const settle = state => {
     if (state === SUCCEEDED_STATE) {
+      endProjectTransition(dispatch, projectName)
+
+      if (removeProjectOnSuccess) {
+        dispatch(removeProject(projectName))
+      }
+
       if (successMessage) {
         dispatch(setNotification({ status: 200, id: Math.random(), message: successMessage }))
       }
     } else {
-      const lastError = response?.data?.items?.[0]?.status?.lastError
-
-      showErrorNotification(dispatch, {}, '', lastError || failureMessage)
+      // The leader already accepted the request, so a failed background attempt is not a refusal:
+      // its raw text (`op_id mismatch`, `CAS mismatch`, ...) means nothing to the user and the
+      // system keeps converging on its own. Nothing is toasted; the card stays dimmed and its
+      // tooltip explains the issue, until a later list read reports that the project has settled.
+      markIssue()
+      stopPolling()
     }
 
     onSettled?.(state)
@@ -190,7 +200,7 @@ const trackProjectOperation = (
     const state = getExecutionState(status)
 
     if ([SUCCEEDED_STATE, FAILED_STATE].includes(state)) {
-      settle(state, response)
+      settle(state)
 
       return true
     }

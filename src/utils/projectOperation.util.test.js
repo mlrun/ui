@@ -18,10 +18,14 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import orcaProjectsApi from '../api/projects-orca-api'
+import { setNotification } from 'igz-controls/reducers/notificationReducer'
+import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import {
   endProjectTransition,
   getProjectOperationId,
   isProjectOperationConflict,
+  PROJECT_OPERATION_IN_PROGRESS_MESSAGE,
+  showProjectOperationInProgress,
   startProjectTransition,
   trackProjectMutation,
   withLatestOpId
@@ -59,6 +63,10 @@ vi.mock('../api/projects-orca-api', () => ({
     getActionExecutions: vi.fn(),
     getProject: vi.fn()
   }
+}))
+
+vi.mock('igz-controls/reducers/notificationReducer', () => ({
+  setNotification: vi.fn(payload => ({ type: 'setNotification', payload }))
 }))
 
 vi.mock('igz-controls/utils/notification.util', () => ({
@@ -152,6 +160,21 @@ describe('projectOperation.util', () => {
 
     it('returns false for an undefined error', () => {
       expect(isProjectOperationConflict(undefined)).toBe(false)
+    })
+  })
+
+  // ── showProjectOperationInProgress ──────────────────────────────────────────
+
+  describe('showProjectOperationInProgress', () => {
+    it('notifies that the operation is in progress, without error details', () => {
+      showProjectOperationInProgress()
+
+      expect(setNotification).toHaveBeenCalledWith(
+        expect.objectContaining({ status: 200, message: PROJECT_OPERATION_IN_PROGRESS_MESSAGE })
+      )
+      expect(PROJECT_OPERATION_IN_PROGRESS_MESSAGE).toBe(
+        'The operation is in progress. It might take a few moments.'
+      )
     })
   })
 
@@ -393,7 +416,12 @@ describe('projectOperation.util', () => {
 
       expect(dispatch).toHaveBeenCalledTimes(1)
       expect(dispatch).toHaveBeenCalledWith(
-        transitionAction({ projectName: 'my-project', operation: 'creating', polling: true })
+        transitionAction({
+          projectName: 'my-project',
+          operation: 'creating',
+          polling: true,
+          hasSyncIssue: false
+        })
       )
     })
 
@@ -408,6 +436,7 @@ describe('projectOperation.util', () => {
           projectName: 'my-project',
           operation: 'creating',
           polling: true,
+          hasSyncIssue: false,
           project
         })
       )
@@ -458,6 +487,35 @@ describe('projectOperation.util', () => {
   // ── trackProjectMutation ────────────────────────────────────────────────────
 
   describe('trackProjectMutation', () => {
+    it('keeps the card dimmed with an issue and shows no toast when the execution fails', async () => {
+      orcaProjectsApi.getActionExecutions.mockResolvedValue({
+        data: {
+          items: [{ status: { state: 'failed', lastError: 'op_id mismatch; requested:(a)' } }]
+        }
+      })
+      const dispatch = vi.fn()
+      const onSettled = vi.fn()
+
+      trackProjectMutation(
+        { data: { status: { opId: 'op-1' } } },
+        { dispatch, projectName: 'my-project', onSettled }
+      )
+
+      await vi.waitFor(() => expect(onSettled).toHaveBeenCalledWith('failed'))
+
+      expect(dispatch).toHaveBeenCalledWith(
+        transitionAction({ projectName: 'my-project', hasSyncIssue: true })
+      )
+      expect(dispatch).toHaveBeenCalledWith(
+        transitionAction({ projectName: 'my-project', polling: false })
+      )
+      expect(dispatch).not.toHaveBeenCalledWith(
+        transitionAction({ projectName: 'my-project', operation: null })
+      )
+      expect(setNotification).not.toHaveBeenCalled()
+      expect(showErrorNotification).not.toHaveBeenCalled()
+    })
+
     it('returns false and dispatches nothing in CE mode', () => {
       mfMode.enabled = false
       const dispatch = vi.fn()

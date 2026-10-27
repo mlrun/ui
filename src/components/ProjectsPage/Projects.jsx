@@ -42,6 +42,7 @@ import {
   trackProjectMutation,
   withLatestOpId
 } from '../../utils/projectOperation.util'
+import { getOrcaErrorMessage } from '../../utils/orcaError.util'
 import {
   IS_MF_MODE,
   PROJECT_ARCHIVED_STATE,
@@ -276,7 +277,7 @@ const Projects = () => {
           const customErrorMsg =
             error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
               ? `You do not have permission to archive project ${project.metadata.name}`
-              : `Failed to archive project ${project.metadata.name}`
+              : getOrcaErrorMessage(error) || `Failed to archive project ${project.metadata.name}`
 
           showErrorNotification(dispatch, error, '', customErrorMsg, () =>
             handleArchiveProject(project)
@@ -308,7 +309,8 @@ const Projects = () => {
               ? `Failed to unarchive project ${project.metadata.name}. The project was not found.`
               : error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
                 ? `You do not have permission to unarchive project ${project.metadata.name}`
-                : `Failed to unarchive project ${project.metadata.name}`
+                : getOrcaErrorMessage(error) ||
+                  `Failed to unarchive project ${project.metadata.name}`
 
           showErrorNotification(dispatch, error, '', customErrorMsg, () =>
             handleUnarchiveProject(project)
@@ -515,7 +517,6 @@ const Projects = () => {
               projectName,
               dispatch,
               successMessage,
-              failureMessage: `Failed to create the project "${projectName}"`,
               operation: PROJECT_CREATING_STATE,
               onSettled: () => {
                 refreshProjectsInPlace()
