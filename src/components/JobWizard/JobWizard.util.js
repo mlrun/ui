@@ -807,6 +807,10 @@ const parseEnvironmentVariables = envVariables => {
         env.secretName = secretName
         env.secretKey = secretKey
         env.type = ENV_VARIABLE_TYPE_SECRET
+
+        if (typeof envVariable.valueFrom.secretKeyRef.optional === 'boolean') {
+          env.optional = envVariable.valueFrom.secretKeyRef.optional
+        }
       } else {
         env.type = ENV_VARIABLE_TYPE_VALUE
         env.value = envVariable.value
@@ -924,6 +928,10 @@ const generateEnvironmentVariables = (envVarData = []) => {
           key: envVar.data.secretKey ?? '',
           name: envVar.data.secretName
         }
+      }
+
+      if (typeof envVar.data.optional === 'boolean') {
+        generatedEnvVar.valueFrom.secretKeyRef.optional = envVar.data.optional
       }
     } else {
       generatedEnvVar.value = envVar.data.value ?? ''
