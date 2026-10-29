@@ -85,6 +85,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "mock-server": "node scripts/mockServer.js",
+    "mock-server:orca": "ORCA_TEST_PROJECTS=true node scripts/mockServer.js",
     "mock-server:dev": "node --watch-path=tests/mockServer scripts/mockServer.js",
     "test": "vitest",
     "test:ui": "node scripts/testui.js",

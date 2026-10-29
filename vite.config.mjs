@@ -121,7 +121,13 @@ export default defineConfig(({ mode }) => {
         }),
         ...proxyEntry('/nuclio', env.VITE_NUCLIO_API_URL, { stripPrefix: true }),
         ...proxyEntry('/iguazio', env.VITE_IGUAZIO_API_URL, { stripPrefix: true }),
-        ...proxyEntry('/function-catalog', env.VITE_FUNCTION_CATALOG_URL, { stripPrefix: true })
+        ...proxyEntry('/function-catalog', env.VITE_FUNCTION_CATALOG_URL, { stripPrefix: true }),
+        // TEMP (local testing only, do not commit): orca-mlrun proxy
+        '/oris-mlrun': {
+          target: env.VITE_ORCA_API_URL || 'http://localhost:30000',
+          changeOrigin: true,
+          rewrite: p => p.replace(/^\/oris-mlrun/, '/oris')
+        }
       },
       fs: {
         strict: false

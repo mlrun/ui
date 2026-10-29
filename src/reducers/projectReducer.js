@@ -34,6 +34,7 @@ import {
   REQUEST_CANCELED
 } from '../constants'
 import { parseProjects } from '../utils/parseProjects'
+import { getOrcaErrorMessage } from '../utils/orcaError.util'
 import { getReportedTransition } from '../utils/projectTransition.util'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { parseSummaryData } from '../utils/parseSummaryData'
@@ -191,6 +192,23 @@ export const changeProjectState = createAsyncThunk(
       .catch(error => thunkAPI.rejectWithValue(error))
   }
 )
+const getCreateProjectErrorMessage = (error, projectName) => {
+  switch (error.response?.status) {
+    case CONFLICT_ERROR_STATUS_CODE:
+      return `A project named "${projectName}" already exists.`
+    case FORBIDDEN_ERROR_STATUS_CODE:
+      return 'Permission denied: Unable to create a project. Contact your system administrator to review user policy and data access permissions.'
+    case INTERNAL_SERVER_ERROR_STATUS_CODE:
+      return (
+        error.response.data?.detail ||
+        getOrcaErrorMessage(error) ||
+        'The system already has the maximum number of projects. An existing project must be deleted before you can create another.'
+      )
+    default:
+      return getOrcaErrorMessage(error) || error.message
+  }
+}
+
 export const createNewProject = createAsyncThunk('createNewProject', ({ postData }, thunkAPI) => {
   return projectsApi
     .createProject(postData)
@@ -198,17 +216,7 @@ export const createNewProject = createAsyncThunk('createNewProject', ({ postData
       return result.data
     })
     .catch(error => {
-      const message =
-        error.response?.status === CONFLICT_ERROR_STATUS_CODE
-          ? `A project named "${postData.metadata.name}" already exists.`
-          : error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'Permission denied: Unable to create a project. Contact your system administrator to review user policy and data access permissions.'
-            : error.response?.status === INTERNAL_SERVER_ERROR_STATUS_CODE
-              ? error.response.data?.detail ||
-                'The system already has the maximum number of projects. An existing project must be deleted before you can create another.'
-              : error.message
-
-      return thunkAPI.rejectWithValue(message)
+      return thunkAPI.rejectWithValue(getCreateProjectErrorMessage(error, postData.metadata.name))
     })
 })
 export const deleteProject = createAsyncThunk(

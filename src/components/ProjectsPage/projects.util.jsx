@@ -36,9 +36,12 @@ import tasksApi from '../../api/tasks-api'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import {
   endProjectTransition,
+  isProjectOperationConflict,
+  showProjectOperationInProgress,
   startProjectTransition,
   trackProjectMutation
 } from '../../utils/projectOperation.util'
+import { getOrcaErrorMessage } from '../../utils/orcaError.util'
 import { isProjectTransitioning } from '../../utils/projectTransition.util'
 import { PROJECT_DELETING_STATE, PROJECT_ONLINE_STATUS } from '../../constants'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
@@ -179,11 +182,14 @@ export const handleDeleteProjectError = (
         )
       }
     })
+  } else if (isProjectOperationConflict(error)) {
+    // Another operation on the project is still in flight (e.g. a second click on Delete).
+    dispatch(showProjectOperationInProgress())
   } else {
     const customErrorMsg =
       error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
         ? `You do not have permission to delete the project ${projectName} `
-        : `Failed to delete the project ${projectName}`
+        : getOrcaErrorMessage(error) || `Failed to delete the project ${projectName}`
 
     showErrorNotification(dispatch, error, '', customErrorMsg, () =>
       handleDeleteProject(
@@ -400,7 +406,6 @@ export const handleDeleteProject = (
         projectName,
         dispatch,
         successMessage: `Project "${projectName}" was deleted successfully`,
-        failureMessage: `Failed to delete the project "${projectName}"`,
         removeProjectOnSuccess: true,
         operation: PROJECT_DELETING_STATE,
         onSettled: refreshProjects ?? fetchMinimalProjects
@@ -456,7 +461,10 @@ export const handleDeleteProject = (
       }
     })
     .catch(({ error }) => {
-      endProjectTransition(dispatch, projectName)
+      // On a conflict another operation on this project is still tracked; leave its card state.
+      if (!isProjectOperationConflict(error)) {
+        endProjectTransition(dispatch, projectName)
+      }
 
       handleDeleteProjectError(
         error,

@@ -125,6 +125,23 @@ describe('orcaProjectPayload.util', () => {
       })
     })
 
+    it('drops MLRun-only fields the leader rejects as unknown', () => {
+      const payload = toOrcaUpdatePayload(
+        makeProject({
+          metadata: { labels: { env: 'dev' }, annotations: { a: 'b' } },
+          spec: { description: 'd', artifact_path: '', default_image: 'img', goals: 'g' }
+        })
+      )
+
+      expect(payload).toEqual({
+        name: 'my-project',
+        owner: 'alice',
+        labels: { env: 'dev' },
+        annotations: { a: 'b' },
+        description: 'd'
+      })
+    })
+
     it('includes prevOpId when status.opId is present', () => {
       const payload = toOrcaUpdatePayload(makeProject({ status: { opId: 'op-1' } }))
 
