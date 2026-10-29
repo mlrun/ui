@@ -34,7 +34,13 @@ such restriction.
  * Orca ticket here once it is filed.
  */
 
+import { pick } from 'lodash'
+
 import { PROJECT_ARCHIVED_STATE, PROJECT_ONLINE_STATUS } from '../constants'
+
+// The only fields the leader's update accepts besides the identity/CAS base. It rejects unknown
+// fields (e.g. MLRun-only `artifact_path`), so everything else must be left out of the body.
+const ORCA_UPDATABLE_FIELDS = ['description', 'labels', 'annotations']
 
 // 0: creating, 1: online, 2: deleting, 3: archived
 const ORCA_DESIRED_STATE_BY_MLRUN_STATE = {
@@ -88,10 +94,14 @@ export const toOrcaCreatePayload = project => toOrcaProjectFields(project)
  * @param {Object} project - MLRun-shaped `{ metadata, spec }` project.
  * @returns {Object}
  */
-export const toOrcaUpdatePayload = project => ({
-  ...toOrcaMutationBase(project),
-  ...toOrcaProjectFields(project)
-})
+export const toOrcaUpdatePayload = project => {
+  const fields = toOrcaProjectFields(project)
+
+  return {
+    ...toOrcaMutationBase(project),
+    ...pick(fields, ORCA_UPDATABLE_FIELDS)
+  }
+}
 
 /**
  * Body for archive/unarchive (`PATCH` with `desiredState`). Maps MLRun's `'online'`/`'archived'`

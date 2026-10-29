@@ -73,7 +73,13 @@ export default defineConfig(async ({ mode }) => {
     base: env.NODE_ENV === 'production' ? './' : '/',
     server: {
       proxy: {
-        ...mlrunProxyConfig(env)
+        ...mlrunProxyConfig(env),
+        // TEMP (local testing only, do not commit): orca-mlrun proxy
+        '/oris-mlrun': {
+          target: env.VITE_ORCA_API_URL || 'http://localhost:30000',
+          changeOrigin: true,
+          rewrite: p => p.replace(/^\/oris-mlrun/, '/oris')
+        }
       },
       fs: {
         strict: false
