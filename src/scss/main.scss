@@ -1,12 +1,28 @@
+@use 'sass:meta';
 @use 'igz-controls/scss/fonts';
-@use 'igz-controls/scss/common';
+@use 'igz-controls/scss/common' with (
+  $include-element-resets: false
+);
 @use 'igz-controls/scss/variables';
 @use 'igz-controls/scss/shadows';
 @use 'igz-controls/scss/colors';
 @use 'igz-controls/scss/mixins';
 @use 'igz-controls/scss/borders';
 
-body {
+// DRC's global element resets (button, input, a, ...) go in a layer, so in
+// Module Federation mode they stay below the Tailwind utilities of the host
+// and of apps mounted in mlrun (e.g. Nuclio) instead of restyling them.
+// They're also scoped to mlrun's roots, so they don't reset the host's own
+// elements (e.g. its header button borders); `:where()` keeps their specificity.
+@layer base {
+  :where(.ml-app, .mlrun-tw-scope, #overlay_container) {
+    @include meta.load-css('igz-controls/scss/resets');
+  }
+}
+
+// Standalone only (index.html): as a remote, this stylesheet stays in the host document and
+// would restyle the host's <body> (e.g. its background). `:where()` keeps the specificity.
+body:where(.mlrun-standalone) {
   display: flex;
   flex: 1;
   height: 100vh;
@@ -42,7 +58,9 @@ body {
 
 /* =========== MAIN ============= */
 
-main {
+// `:where` keeps the original specificity, it only stops matching other <main>
+// elements, e.g. DRC SidebarInset, which is styled with Tailwind
+main:where(#main) {
   position: relative;
   z-index: 1;
   display: flex;

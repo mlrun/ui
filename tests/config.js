@@ -20,7 +20,9 @@ such restriction.
 module.exports = {
   timeout: 60000,
   browser: 'chrome',
-  headless: false,
+  headless: process.env.E2E_HEADLESS === 'true',
+  // multiplier for every `driver.sleep()` in steps/actions: 1 - default delays, 0 - no delays
+  delay_factor: Number(process.env.E2E_DELAY_FACTOR ?? 1),
   screen_size: { width: 1600, height: 900 },
   report: 'tests/reports/cucumber_report',
   test_url: 'localhost',

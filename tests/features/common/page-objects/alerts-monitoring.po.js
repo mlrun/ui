@@ -83,7 +83,7 @@ const commonDatePickerFilter = dropdownComponent(
 const commonCustomRangeFilter = dropdownComponent(
   generateDropdownGroup(
     '[data-testid="date-picker-container"]',
-    '[data-testid="date-picker-input"] input',
+    '[data-testid="date-picker-input"] .input',
     '.date-picker__pop-up .select__item',
     '.data-ellipsis .data-ellipsis',
     false
@@ -114,7 +114,7 @@ const calendarTable = {
     }
   },
   body: {
-    offset: 3,
+    offset: 4,
     row: {
       root: '.date-picker__week',
       fields: {

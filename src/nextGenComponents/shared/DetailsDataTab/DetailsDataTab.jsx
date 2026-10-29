@@ -66,7 +66,7 @@ const DetailsDataTab = ({
         </ActionBar>
       )}
 
-      <div className="flex-1 min-h-[200px] flex flex-col [&_thead_tr]:z-[1]">
+      <div className="flex-1 min-h-[200px] flex flex-col [&_thead_tr]:z-1">
         {filteredData.length === 0 ? (
           <NoData message={noDataMessage} />
         ) : (

@@ -22,6 +22,7 @@ import bodyParser from 'body-parser'
 import rateLimit from 'express-rate-limit'
 import yaml from 'js-yaml'
 import fs from 'fs'
+import path from 'path'
 import crypto from 'node:crypto'
 import {
   chain,
@@ -64,7 +65,7 @@ import runs from './data/runs.json'
 import run from './data/run.json'
 import itemsCatalog from './data/itemsCatalog.json'
 import pipelines from './data/pipelines.json'
-import secretKeys from './data/secretKeys.json'
+import secretKeysData from './data/secretKeys.json'
 import pipelineIDs from './data/piplineIDs.json'
 import schedules from './data/schedules.json'
 import funcs from './data/funcs.json'
@@ -97,6 +98,13 @@ import {
   generateAlerts
 } from './dataGenerators.js'
 
+// pristine copies of the collections scenarios mutate (abort run, terminate/retry workflow, delete schedule...),
+// restored by `POST /reset-mock-state` before every scenario (hooks.js), so scenarios don't depend on each other
+const pristineRuns = cloneDeep(runs.runs)
+const pristinePipelines = cloneDeep(pipelines)
+const pristinePipelineIDs = cloneDeep(pipelineIDs)
+const pristineSchedules = cloneDeep(schedules.schedules)
+
 // Updating values in files with synthetic data
 updateRuns(runs)
 updatePipelines(pipelines)
@@ -108,6 +116,47 @@ generateArtifacts(artifacts)
 generateFunctions(funcs)
 generateRuns(runs)
 generateAlerts(alerts)
+keepEndpointAlertsRecent(alerts)
+
+// the model endpoint "Alerts" tab always uses the "Past month" range (no date filter), keep the seeded "default"
+// endpoint alerts in it (10 days ago - outside "Past 24 hours"/"Past week"), shifted together to keep their order
+function keepEndpointAlertsRecent(alertsData) {
+  const endpointAlerts = alertsData.activations.filter(
+    alert => alert.project === 'default' && alert.entity_kind === 'model-endpoint-result'
+  )
+
+  if (!endpointAlerts.length) return
+
+  const newestTime = Math.max(...endpointAlerts.map(alert => Date.parse(alert.activation_time)))
+  const shift = Date.now() - 10 * 24 * 60 * 60 * 1000 - newestTime
+
+  endpointAlerts.forEach(alert => {
+    alert.activation_time = new Date(Date.parse(alert.activation_time) + shift).toISOString()
+
+    if (alert.reset_time) {
+      alert.reset_time = new Date(Date.parse(alert.reset_time) + shift).toISOString()
+    }
+  })
+}
+
+// artifacts are mutated by tag add/edit/delete, register (overwrite) and delete scenarios
+const pristineArtifacts = cloneDeep(artifacts.artifacts)
+
+const resetMockState = () => {
+  artifacts.artifacts = cloneDeep(pristineArtifacts)
+  runs.runs = cloneDeep(pristineRuns)
+  Object.keys(pipelines).forEach(project => delete pipelines[project])
+  Object.assign(pipelines, cloneDeep(pristinePipelines))
+  pipelineIDs.splice(0, pipelineIDs.length, ...cloneDeep(pristinePipelineIDs))
+  schedules.schedules = cloneDeep(pristineSchedules)
+
+  // re-calculate the time-relative data ("Past hour", "Next 24 hours"...) against the current time
+  updateRuns(runs)
+  updatePipelines(pipelines)
+  updatePipelineIDs(pipelineIDs)
+  updateSchedules(schedules)
+  generateRuns(runs)
+}
 
 // Here we are configuring express to use body-parser as middle-ware.
 const app = express()
@@ -204,6 +253,8 @@ const secretKeyTemplate = {
 }
 
 // Mock constants
+// Map instead of a plain object: project names come from requests
+const secretKeys = new Map(Object.entries(secretKeysData))
 const mockHome = process.cwd() + '/tests/mockServer'
 const mlrunIngress = '/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
 const mlrunAPIIngress = `${mlrunIngress}/api/v1`
@@ -342,7 +393,7 @@ function deleteProjectHandler(req, res, omitResponse) {
   )
   if (collectedProject.length) {
     remove(projects.projects, project => project.metadata.name === req.params['project'])
-    remove(projectsSummary.projects, project => project.name === req.params['project'])
+    remove(projectsSummary.project_summaries, summary => summary.name === req.params['project'])
     remove(
       featureSets.feature_sets,
       featureSet => featureSet.metadata.project === req.params['project']
@@ -350,10 +401,10 @@ function deleteProjectHandler(req, res, omitResponse) {
     remove(artifacts.artifacts, artifact => artifact.project === req.params['project'])
     remove(run.data, artifact => artifact.metadata.project === req.params['project'])
     remove(run.data, artifact => artifact.metadata.project === req.params['project'])
-    delete secretKeys[req.params.project]
+    secretKeys.delete(req.params.project)
     res.statusCode = 204
   } else {
-    res.statusCode = 500
+    res.statusCode = 404
   }
 
   if (!omitResponse) {
@@ -443,8 +494,8 @@ function getFeatureSet(req, res) {
 
   if (req.query['name']) {
     collectedFeatureSets = collectedFeatureSets.filter(featureSet => {
-      if (req.query['name'].startsWith?.('~')) {
-        return featureSet.metadata.name.includes(req.query['name'].slice(1))
+      if (String(req.query['name']).startsWith?.('~')) {
+        return featureSet.metadata.name.includes(String(req.query['name']).slice(1))
       }
 
       return featureSet.metadata.name === req.query['name']
@@ -522,7 +573,15 @@ function deleteFeatureSet(req, res) {
 }
 
 function getProject(req, res) {
-  res.send(projects.projects.find(project => project.metadata.name === req.params['project']))
+  const project = projects.projects.find(project => project.metadata.name === req.params['project'])
+
+  if (!project) {
+    res.statusCode = 404
+
+    return res.send({ detail: `MLRunNotFoundError('Project ${req.params.project} not found')` })
+  }
+
+  res.send(project)
 }
 
 function getProjects(req, res) {
@@ -562,7 +621,7 @@ function createNewProject(req, res) {
     summary.name = req.body.metadata.name
     projectsSummary.project_summaries.push(summary)
     data = project
-    secretKeys[req.body.metadata.name] = secretKeyTemplate
+    secretKeys.set(req.body.metadata.name, secretKeyTemplate)
     res.statusCode = 201
   } else {
     res.statusCode = 409
@@ -597,7 +656,7 @@ function deleteProjectV2(req, res) {
       kind: `project.deletion.wrapper.${req.params.project}`
     })
 
-    res.status = 202
+    res.statusCode = 202
     res.send(task)
   }
 
@@ -884,7 +943,7 @@ function getOrcaActionExecution(req, res) {
 /* ====================== end ORIS project lifecycle (Orca) ====================== */
 
 function getSecretKeys(req, res) {
-  res.send(secretKeys[req.params['project']])
+  res.send(secretKeys.get(req.params['project']))
 }
 
 function postSecretKeys(req, res) {
@@ -897,17 +956,17 @@ function postSecretKeys(req, res) {
       detail: `MLRunAccessDeniedError('Not allowed to create/update internal secrets (key starts with ${NOT_ALLOWED_SECRET_KEY})')`
     }
   } else {
-    const projectSecrets = get(secretKeys, [req.params['project'], 'secret_keys'])
+    const projectSecrets = secretKeys.get(req.params['project'])?.secret_keys
 
     if (projectSecrets) {
       if (!projectSecrets.includes(newSecretKey)) {
         projectSecrets.push(newSecretKey)
       }
     } else {
-      secretKeys[req.params['project']] = {
+      secretKeys.set(req.params['project'], {
         provider: 'kubernetes',
         secret_keys: [newSecretKey]
-      }
+      })
     }
 
     res.statusCode = 201
@@ -917,9 +976,17 @@ function postSecretKeys(req, res) {
 }
 
 function deleteSecretKeys(req, res) {
-  secretKeys[req.params['project']].secret_keys = secretKeys[
-    req.params['project']
-  ].secret_keys.filter(item => item !== req.query.secret)
+  const projectSecretKeys = secretKeys.get(req.params['project'])
+
+  if (!projectSecretKeys) {
+    res.statusCode = 404
+
+    return res.send('')
+  }
+
+  projectSecretKeys.secret_keys = projectSecretKeys.secret_keys.filter(
+    item => item !== req.query.secret
+  )
 
   res.statusCode = 204
   res.send('')
@@ -1142,6 +1209,8 @@ function sanitizeStatesQueryParam(states) {
 }
 
 function getRuns(req, res) {
+  // keep time-relative mock data ("Past hour", "Past 24h"...) relative to the current time
+  updateRuns(runs)
   let collectedRuns = runs.runs
   //get runs for Projects Monitoring page
   if (req.params['project'] === '*') {
@@ -1215,8 +1284,10 @@ function getRuns(req, res) {
 
   if (req.query['name']) {
     collectedRuns = collectedRuns.filter(run => {
-      if (req.query['name'].includes('~')) {
-        return run.metadata.name ? run.metadata.name.includes(req.query['name'].slice(1)) : false
+      if (String(req.query['name']).includes('~')) {
+        return run.metadata.name
+          ? run.metadata.name.includes(String(req.query['name']).slice(1))
+          : false
       } else {
         return run.metadata.name === req.query['name']
       }
@@ -1249,13 +1320,14 @@ function getAlerts(req, res) {
 
   if (req.query['name']) {
     collectedAlerts = collectedAlerts.filter(schedule =>
-      schedule.name.includes(req.query['name'].slice(1))
+      schedule.name.includes(String(req.query['name']).slice(1))
     )
   }
   if (req.query['severity']) {
-    collectedAlerts = collectedAlerts.filter(schedule =>
-      schedule.severity.includes(req.query['severity'])
-    )
+    // several severities come as an array (?severity=low&severity=high)
+    const severities = [].concat(req.query['severity'])
+
+    collectedAlerts = collectedAlerts.filter(alert => severities.includes(alert.severity))
   }
   if (req.query['entity-kind']) {
     collectedAlerts = collectedAlerts.filter(schedule =>
@@ -1268,10 +1340,20 @@ function getAlerts(req, res) {
     )
   }
 
-  if (req.query['entity']) {
-    collectedAlerts = collectedAlerts.filter(schedule =>
-      schedule.entity_id.includes(req.query['entity'].slice(1, -1))
+  const alertEntity = req.query['entity']
+
+  if (alertEntity) {
+    // the UI sends wildcard patterns, e.g. `~*job-name*` or `~*id*.*app*.result.*metric*`
+    const entityRegExp = new RegExp(
+      String(alertEntity)
+        .replace(/^~/, '')
+        .split('*')
+        .map(part => part.replace(/[.+?^${}()|[\]\\]/g, '\\$&'))
+        .join('.*'),
+      'i'
     )
+
+    collectedAlerts = collectedAlerts.filter(alert => entityRegExp.test(alert.entity_id ?? ''))
   }
 
   if (req.query['since']) {
@@ -1330,13 +1412,21 @@ function patchRun(req, res) {
     .filter(run => run.metadata.project === req.params.project)
     .filter(run => run.metadata.uid === req.params.uid)
 
-  collectedRun[0].status.state = req.body['status.state']
+  if (collectedRun[0]) {
+    collectedRun[0].status.state = req.body['status.state']
+  }
 
   res.send()
 }
 
 function abortRun(req, res) {
   const currentRun = runs.runs.find(run => run.metadata.uid === req.params.uid)
+
+  if (!currentRun) {
+    res.statusCode = 404
+
+    return res.send({ detail: `MLRunNotFoundError('Run ${req.params.uid} not found')` })
+  }
 
   currentRun.status.state = 'aborting'
 
@@ -1365,7 +1455,7 @@ function abortRun(req, res) {
 
   const task = createTask(req.params['project'], { taskFunc })
 
-  res.status = 202
+  res.statusCode = 202
 
   res.send(task)
 }
@@ -1409,6 +1499,8 @@ function getFunctionTemplate(req, res) {
 }
 
 function getProjectsSchedules(req, res) {
+  // keep time-relative mock data ("Past hour", "Past 24h"...) relative to the current time
+  updateSchedules(schedules)
   let collectedSchedules = schedules.schedules
 
   if (req.params['project'] !== '*') {
@@ -1419,7 +1511,7 @@ function getProjectsSchedules(req, res) {
 
   if (req.query['name']) {
     collectedSchedules = collectedSchedules.filter(schedule =>
-      schedule.name.includes(req.query['name'].slice(1))
+      schedule.name.includes(String(req.query['name']).slice(1))
     )
   }
 
@@ -1512,9 +1604,7 @@ function invokeSchedule(req, res) {
         item.metadata.name === functionName
     )
   } else {
-    const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
-      6
-    )}/${req.body.task.spec.function.slice(6)}.yaml`
+    const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(6)}/${req.body.task.spec.function.slice(6)}.yaml`
     funcObject = yaml.load(fs.readFileSync(funcYAMLPath, 'utf8'))
   }
   const funcUID = makeUID(32)
@@ -1625,15 +1715,15 @@ function getProjectsFeaturesEntities(req, res) {
 
     if (req.query['name']) {
       collectedArtifacts = collectedArtifacts.filter(feature => {
-        if (req.query['name'].includes('~')) {
+        if (String(req.query['name']).includes('~')) {
           if (artifact === 'feature-vectors') {
-            return feature.metadata.name.includes(req.query['name'].slice(1))
+            return feature.metadata.name.includes(String(req.query['name']).slice(1))
           } else if (artifact === 'features' || artifact === 'entities') {
-            return feature.name.includes(req.query['name'].slice(1))
+            return feature.name.includes(String(req.query['name']).slice(1))
           }
         } else {
           if (artifact === 'feature-vectors') {
-            return feature.metadata.name.includes(req.query['name'].slice(1))
+            return feature.metadata.name.includes(String(req.query['name']).slice(1))
           } else if (artifact === 'features' || artifact === 'entities') {
             return feature.name === req.query['name']
           }
@@ -1741,11 +1831,11 @@ function getArtifacts(req, res) {
 
   if (req.query['name']) {
     collectedArtifacts = collectedArtifacts.filter(artifact => {
-      if (req.query['name'].includes('~')) {
+      if (String(req.query['name']).includes('~')) {
         const value = artifact.spec?.db_key ?? artifact.db_key
 
-        if (req.query['name'].includes('~')) {
-          return value.includes(req.query['name'].slice(1))
+        if (String(req.query['name']).includes('~')) {
+          return value.includes(String(req.query['name']).slice(1))
         } else {
           return value.includes(req.query['name'])
         }
@@ -1779,16 +1869,37 @@ function getArtifacts(req, res) {
     )
   }
 
-  if (req.query['parent']) {
-    if (req.query['parent'].includes(':')) {
-      const [key, tag] = req.query['parent'].split(':')
+  const artifactParent = req.query['parent']
+
+  if (artifactParent) {
+    const storeUriRegExp =
+      /^store:\/\/(?<kind>[^/]+)\/(?<project>[^/]+)\/(?<key>[^#:@^]+)(#(?<iteration>[^:@^]+))?(:(?<tag>[^@^]+))?(@(?<tree>[^^]+))?(\^(?<uid>.+))?$/
+
+    if (typeof artifactParent === 'string' && artifactParent.startsWith('store://')) {
+      // model "LLM Prompts" tab sends the full model store URI, e.g. store://models/<project>/<key>#0:latest
+      const parent = artifactParent.match(storeUriRegExp)?.groups
 
       collectedArtifacts = collectedArtifacts.filter(artifact => {
-        const match = artifact.spec.parent_uri.match(
+        const groups = artifact.spec?.parent_uri?.match(storeUriRegExp)?.groups
+
+        return (
+          Boolean(parent && groups) &&
+          groups.project === parent.project &&
+          groups.key === parent.key &&
+          (!parent.tag || groups.tag === parent.tag) &&
+          (!parent.tree || groups.tree === parent.tree) &&
+          (!parent.uid || groups.uid === parent.uid)
+        )
+      })
+    } else if (typeof artifactParent === 'string' && artifactParent.includes(':')) {
+      const [key, tag] = artifactParent.split(':')
+
+      collectedArtifacts = collectedArtifacts.filter(artifact => {
+        const match = artifact.spec?.parent_uri?.match(
           /^store:\/\/(?<kind>.+?)\/(?<project>.+?)\/(?<key>.+?)(#(?<iteration>.+?))?(:(?<tag>.+?))?(@(?<tree>[^^]+))?(\^(?<uid>.+))?$/
         )
 
-        return match && match.groups.key.includes(key) && match.groups.tag.includes(tag)
+        return match && match.groups.key.includes(key) && match.groups.tag?.includes(tag)
       })
     } else {
       collectedArtifacts = collectedArtifacts.filter(artifact =>
@@ -1964,17 +2075,20 @@ function deleteProjectsFeatureVectors(req, res) {
       item => item.metadata.project === req.params.project && item.metadata.name === req.params.name
     )
     res.statusCode = 204
+  } else {
+    res.statusCode = 404
   }
 
-  res.status = 204
   res.send('')
 }
 
 function getPipelines(req, res) {
+  // keep time-relative mock data ("Past hour", "Past 24h"...) relative to the current time
+  updatePipelines(pipelines)
   //get pipelines for Projects Monitoring page
   if (req.params['project'] === '*') {
     const pipelinesRun = pipelineIDs.map(pipeline => pipeline.run)
-    const filter = JSON.parse(req.query.filter)
+    const filter = JSON.parse(req.query.filter || '{"predicates":[]}')
     const nameFilter = req.query['name-contains']
     const predicates = filter.predicates
 
@@ -2053,6 +2167,8 @@ function getPipelines(req, res) {
 }
 
 function getPipeline(req, res) {
+  // keep time-relative mock data ("Past hour", "Past 24h"...) relative to the current time
+  updatePipelineIDs(pipelineIDs)
   const collectedPipeline = pipelineIDs.find(
     item => item.run.id === req.params.pipelineID && item.run.project === req.params.project
   )
@@ -2179,8 +2295,8 @@ function getFuncs(req, res) {
 
   if (req.query['name']) {
     collectedFuncs = collectedFuncs.filter(func => {
-      if (req.query['name'].includes('~')) {
-        return func.metadata.name.includes(req.query['name'].slice(1))
+      if (String(req.query['name']).includes('~')) {
+        return func.metadata.name.includes(String(req.query['name']).slice(1))
       } else {
         return func.metadata.name === req.query['name']
       }
@@ -2316,7 +2432,7 @@ function deleteFunc(req, res) {
 
     const task = createTask(req.params['project'], { taskFunc })
 
-    res.status = 204
+    res.statusCode = 202
 
     res.send(task)
   } else {
@@ -2419,6 +2535,12 @@ function deployMLFunction(req, res) {
     .filter(func => func.metadata.project === req.body.function.metadata.project)
     .filter(func => func.metadata.name === req.body.function.metadata.name)
 
+  if (!collectedFunc.length) {
+    res.statusCode = 404
+
+    return res.send({ detail: 'Function not found' })
+  }
+
   collectedFunc[0].metadata.tag = ''
 
   let baseFunc = cloneDeep(collectedFunc[0])
@@ -2454,14 +2576,33 @@ function deployMLFunction(req, res) {
 
 function getFile(req, res) {
   const dataRoot = mockHome + '/data/'
-  const filePath = dataRoot + req.query['path'].split('://')[1]
+  const filePath = path.resolve(dataRoot, String(req.query['path']).split('://')[1])
+
+  if (!filePath.startsWith(dataRoot)) {
+    res.statusCode = 400
+
+    return res.send({ detail: 'Invalid path' })
+  }
 
   res.sendFile(filePath)
 }
 
 function getFileStats(req, res) {
   const dataRoot = mockHome + '/data/'
-  const filePath = dataRoot + req.query['path'].split('://')[1]
+  const filePath = path.resolve(dataRoot, String(req.query['path']).split('://')[1])
+
+  if (!filePath.startsWith(dataRoot)) {
+    res.statusCode = 400
+
+    return res.send({ detail: 'Invalid path' })
+  }
+
+  if (!fs.existsSync(filePath)) {
+    res.statusCode = 404
+
+    return res.send({ detail: 'File not found' })
+  }
+
   const { size } = fs.statSync(filePath)
   const mimeType = mime.lookup(filePath)
 
@@ -2485,7 +2626,7 @@ function deleteSchedule(req, res) {
 
 function getLog(req, res) {
   const collectedLog = logs.find(log => log.uid === req.params['uid'])
-  res.send(collectedLog.log)
+  res.send(collectedLog?.log ?? '')
 }
 
 function getRuntimeResources(req, res) {
@@ -2586,14 +2727,15 @@ function postSubmitJob(req, res) {
       const filterPRJ = req.body.task.spec.function.split('/')[0]
       const filterFunc = req.body.task.spec.function.split('/')[1].split('@')[0]
       const filterFuncHash = req.body.task.spec.function.split('/')[1].split('@')[1]
-      funcObject = funcs.funcs
-        .filter(item => item.metadata.hash === filterFuncHash)
-        .filter(item => item.metadata.project === filterPRJ)
-        .filter(item => item.metadata.name === filterFunc)[0]
+      // copy: the original function version (and its hash) must stay available for the next re-runs
+      funcObject = cloneDeep(
+        funcs.funcs
+          .filter(item => item.metadata.hash === filterFuncHash)
+          .filter(item => item.metadata.project === filterPRJ)
+          .filter(item => item.metadata.name === filterFunc)[0]
+      )
     } else {
-      const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
-        6
-      )}/${req.body.task.spec.function.slice(6)}.yaml`
+      const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(6)}/${req.body.task.spec.function.slice(6)}.yaml`
       funcObject = yaml.load(fs.readFileSync(funcYAMLPath, 'utf8'))
     }
 
@@ -3101,7 +3243,7 @@ function getIguazioProject(req, res) {
   let filteredProject = iguazioProjects.data.find(item => item.id === req.params.id)
 
   let filteredAuthRoles = []
-  if (req.query.include.includes('project_authorization_roles')) {
+  if (String(req.query.include).includes('project_authorization_roles')) {
     filteredAuthRoles = cloneDeep(
       iguazioProjectAuthorizationRoles.data.filter(
         item => item.relationships.project.data.id === req.params.id
@@ -3114,7 +3256,7 @@ function getIguazioProject(req, res) {
   }
 
   let filteredPrincipalUsers = []
-  if (req.query.include.includes('project_authorization_roles.principal_users')) {
+  if (String(req.query.include).includes('project_authorization_roles.principal_users')) {
     let principalUserIDs = []
     for (let authID of authRolesIDs) {
       let tmp = iguazioProjectsRelations[req.params.id].find(
@@ -3135,7 +3277,7 @@ function getIguazioProject(req, res) {
   }
 
   let filteredPrincipalUserGroups = []
-  if (req.query.include.includes('project_authorization_roles.principal_user_groups')) {
+  if (String(req.query.include).includes('project_authorization_roles.principal_user_groups')) {
     let principalUserGroupIDs = []
     for (let authID of authRolesIDs) {
       let tmp = iguazioProjectsRelations[req.params.id].find(
@@ -3275,6 +3417,13 @@ function getIguazioJob(req, res) {
   })
 }
 
+// Helper request for AQA framework to restore runs/workflows/schedules to their initial state
+app.post('/reset-mock-state', (req, res) => {
+  resetMockState()
+
+  res.json({ message: 'Mock state is reset' })
+})
+
 // Helper request for AQA framework to fail all the requests
 app.post('/set-failure-condition', (req, res) => {
   failAllRequests = req.body.shouldFail
@@ -3327,7 +3476,6 @@ app.get(
   `${mlrunAPIIngress}/projects/:project/model-monitoring/function-summaries`,
   getMonitoringApplications
 )
-app.get(`${mlrunAPIIngress}/project-summaries/:project`, getMonitoringApplicationsSummary)
 app.get(
   `${mlrunAPIIngress}/projects/:project/model-monitoring/function-summaries/:func`,
   getMonitoringApplicationData
@@ -3343,7 +3491,7 @@ app.get(`${mlrunAPIIngress}/projects/:project/alert-activations`, getAlerts)
 app.get(`${mlrunAPIIngress}/projects/:project/alert-activations/:id`, getAlert)
 app.get(`${mlrunAPIIngress}/projects/:project/alerts/:name`, getAlertConfig)
 app.get(`${mlrunAPIIngress}/projects/:project/runs/:uid`, getRun)
-app.patch(`${mlrunAPIIngress}/projects//:project/runs/:uid`, patchRun)
+app.patch(`${mlrunAPIIngress}/projects/:project/runs/:uid`, patchRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs/:uid`, deleteRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs`, deleteRuns)
 app.post(`${mlrunAPIIngress}/projects/:project/runs/:uid/abort`, abortRun)

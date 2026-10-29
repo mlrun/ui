@@ -48,7 +48,7 @@ const UrlItem = ({
         <span
           className={classnames(
             'truncate text-[15px] leading-5',
-            isDark ? '!text-white/90' : 'text-igz-primary'
+            isDark ? 'text-white/90!' : 'text-igz-primary'
           )}
           data-testid="url-path"
         >
@@ -60,7 +60,7 @@ const UrlItem = ({
           {...(openInNewTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
           className={classnames(
             'truncate text-[15px] leading-5 hover:underline',
-            isDark ? '!text-white/90' : '!text-igz-link'
+            isDark ? 'text-white/90!' : 'text-igz-link!'
           )}
           data-testid="url-link"
         >
@@ -91,9 +91,9 @@ const UrlItem = ({
           data-testid="copy-button"
         >
           {isCopied ? (
-            <Check className="h-3.5 w-3.5 [&>*]:fill-current" data-testid="check-icon" />
+            <Check className="h-3.5 w-3.5 *:fill-current" data-testid="check-icon" />
           ) : (
-            <Copy className="h-3.5 w-3.5 [&>*]:fill-current" data-testid="copy-icon" />
+            <Copy className="h-3.5 w-3.5 *:fill-current" data-testid="copy-icon" />
           )}
         </button>
       )}

@@ -59,7 +59,7 @@ const SidebarCollapseItem = ({ icon, label, nestedLinks }) => {
       >
         <CollapsibleTrigger asChild>
           <SidebarMenuButton
-            className="flex gap-2 pl-3 py-3 text-sidebar-foreground cursor-pointer"
+            className="flex gap-2 p-[0.75rem_0.5rem_0.75rem_0.75rem] text-sidebar-foreground cursor-pointer"
             isActive={(!open && isAnyChildActive) || (!sidebarOpen && isAnyChildActive)}
           >
             {icon}
@@ -82,7 +82,7 @@ const SidebarCollapseItem = ({ icon, label, nestedLinks }) => {
                 key={nestedItem.id}
                 {...nestedItem}
                 menuItemClassname="p-0"
-                menuButtonClassName="pl-10"
+                menuButtonClassName="p-[0.75rem_0.75rem_0.75rem_2.5rem]"
               />
             ))}
           </SidebarMenuSub>

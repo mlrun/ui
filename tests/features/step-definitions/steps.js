@@ -56,7 +56,7 @@ import {
 } from '../common/actions/common.action'
 import {
   checkTableColumnValues,
-  findRowIndexesByColumnValue,
+  waitForRowIndexesByColumnValue,
   isTableColumnSorted
 } from '../common/actions/table.action'
 import {
@@ -107,7 +107,7 @@ import {
   isContainsSubstringInSuggestedOptions,
   typeSearchableValue
 } from '../common/actions/input-with-autocomplete.action'
-import { checkWorkflowGraphConnections } from '../common/actions/graph.action'
+import { checkWorkflowGraphConnections, panGraphToElement } from '../common/actions/graph.action'
 import {
   isRadioButtonSelected,
   isRadioButtonUnselected,
@@ -119,6 +119,7 @@ import {
   verifyOptionInActionMenuEnabled,
   verifyOptionInActionMenuDisabled 
 } from '../common/actions/action-menu.action'
+import { selectSidebarItem, selectSidebarProject } from '../common/actions/sidebar.action'
 import { expect } from 'chai'
 
 Given('open url', async function() {
@@ -182,6 +183,11 @@ Then(
     const expectedUrl = `http://${test_url}:${test_port}/${expectedPath}`
 
     await navigateToPage(this.driver, invalidUrl)
+    // the redirection can depend on a request (e.g. the functions list), wait for it instead of a fixed delay
+    await this.driver
+      .wait(async () => (await this.driver.getCurrentUrl()) === expectedUrl, 10000)
+      .catch(() => {})
+    // make sure there is no further redirection
     await this.driver.sleep(1000)
     const afterURL = await this.driver.getCurrentUrl()
 
@@ -210,7 +216,7 @@ Then('wait load page', async function() {
   await this.driver.sleep(500)
 })
 
-Then('wait for {int} seconds', async function(seconds) {
+Then('wait for {int} seconds', { timeout: 10 * 60 * 1000 }, async function(seconds) {
   const milliseconds = seconds * 1000
 
   await new Promise(resolve => setTimeout(resolve, milliseconds))
@@ -650,6 +656,7 @@ Then(
 Then(
   '{string} element on {string} should contains {string} value',
   async function(component, wizard, value) {
+    await waiteUntilComponent(this.driver, pageObjects[wizard][component])
     await verifyText(this.driver, pageObjects[wizard][component], value)
   }
 )
@@ -1044,7 +1051,7 @@ Then('sort projects in descending order', async function() {
 Then(
   'verify {string} tab is active in {string} on {string} wizard',
   async function(tabName, tabSelector, wizard) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][tabSelector],
       'key',
@@ -1075,7 +1082,7 @@ When('select {string} tab in {string} on {string} wizard', async function(
   tabSelector,
   wizard
 ) {
-  const arr = await findRowIndexesByColumnValue(
+  const arr = await waitForRowIndexesByColumnValue(
     this.driver,
     pageObjects[wizard][tabSelector],
     'key',
@@ -1627,19 +1634,22 @@ Then(
   }
 )
 
-Then('select {string} with {string} value in breadcrumbs menu', async function(
-  itemType,
-  name
-) {
-  await openDropdown(
-    this.driver,
-    pageObjects['commonPagesHeader']['Breadcrumbs'][itemType]
-  )
+Then('select {string} item in sidebar menu', async function(itemLabel) {
+  await selectSidebarItem(this.driver, itemLabel)
+})
 
-  await selectOptionInDropdown(
+Then('select {string} project in sidebar project dropdown', async function(projectName) {
+  await selectSidebarProject(this.driver, projectName)
+})
+
+// for project pages that are not available in the sidebar (e.g. "quick-actions")
+Then('open {string} page of current project by url', async function(page) {
+  const url = await this.driver.getCurrentUrl()
+  const [projectsPath, projectName] = new URL(url).pathname.split('/').slice(1, 3)
+
+  await navigateToPage(
     this.driver,
-    pageObjects['commonPagesHeader']['Breadcrumbs'][itemType],
-    name
+    `http://${test_url}:${test_port}/${projectsPath}/${projectName}/${page}`
   )
 })
 
@@ -1687,9 +1697,18 @@ When(
 )
 
 When(
+  'pan {string} graph on {string} wizard to show {string} element',
+  async function (graphName, wizardName, componentName) {
+    const component = pageObjects[wizardName][componentName]
+
+    await panGraphToElement(this.driver, pageObjects[wizardName][graphName].root, component.root ?? component)
+  }
+)
+
+When(
   'click on node with name {string} in {string} graph on {string} wizard',
   async function(nodeName, graphName, wizardName) {
-    const arr = await findRowIndexesByColumnValue(
+    const arr = await waitForRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizardName][graphName]['nodesTable'],
       'name',
@@ -1704,6 +1723,7 @@ When(
   }
 )
 
+// verifies the `data-{state}` attribute, e.g. `data-pinned="true"` of the sidebar
 Then('{string} on {string} wizard should be {string}', async function(
   componentName,
   wizardName,
@@ -1712,8 +1732,8 @@ Then('{string} on {string} wizard should be {string}', async function(
   await verifyComponentContainsAttributeValue(
     this.driver,
     pageObjects[wizardName][componentName],
-    'class',
-    state
+    `data-${state}`,
+    'true'
   )
 })
 
@@ -1725,8 +1745,8 @@ Then('{string} on {string} wizard should not be {string}', async function(
   await verifyComponentNotContainsAttributeValue(
     this.driver,
     pageObjects[wizardName][componentName],
-    'class',
-    state
+    `data-${state}`,
+    'true'
   )
 })
 

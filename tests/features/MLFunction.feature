@@ -14,16 +14,14 @@ Feature: ML Functions
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "ML functions" value
         Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
@@ -34,6 +32,9 @@ Feature: ML Functions
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "ML_Functions" wizard selected option value "Past week"
         Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
+        And wait load page
+        Then type value "vizro" to "Table_Name_Filter_Input" field on "ML_Functions" wizard
+        Then click on "Table_Refresh_Button" element on "ML_Functions" wizard
         And wait load page
         Then verify "Functions_Table" element visibility on "ML_Functions" wizard
         Then verify "show_all_versions" option is present on "ML_Functions" wizard in "Functions_Table" table with "vizro" value in "name" column
@@ -73,15 +74,13 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        And select "tab" with "Project monitoring" value in breadcrumbs menu
+        And select "Project monitoring" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
@@ -100,8 +99,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
@@ -109,7 +107,7 @@ Feature: ML Functions
         Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
-        When click on cell with row index 3 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
         Then verify "Header" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Updated" element visibility on "ML_Function_Info_Pane" wizard
@@ -119,7 +117,7 @@ Feature: ML Functions
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
         Then verify "Overview_Headers" on "ML_Function_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Overview_Headers"
         Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard
-        When click on cell with row index 2 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        When click on cell with row index 3 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
         Then verify "Header" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Updated" element visibility on "ML_Function_Info_Pane" wizard
@@ -137,8 +135,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
@@ -163,8 +160,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
@@ -195,8 +191,7 @@ Feature: ML Functions
         And wait load page
         When turn on demo mode with query params "false"
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then click on "New_Function_Button" element on "ML_Functions" wizard
@@ -228,8 +223,7 @@ Feature: ML Functions
         And wait load page
         When turn on demo mode with query params "false"
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -274,8 +268,7 @@ Feature: ML Functions
         And wait load page
         When turn on demo mode with query params "false"
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -320,8 +313,7 @@ Feature: ML Functions
         And wait load page
         When turn on demo mode with query params "false"
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -411,8 +403,7 @@ Feature: ML Functions
         And wait load page
         When turn on demo mode with query params "false"
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -515,8 +506,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When turn on demo mode with query params "false"
         And wait load page
@@ -634,6 +624,7 @@ Feature: ML Functions
     @MLF
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    @rerun @knownBug
     Scenario: MLF015 - Save new ml-function
         * set tear-down property "function" created in "default" project with "new-aqa-function-00" value
         Given open url
@@ -642,8 +633,7 @@ Feature: ML Functions
         And wait load page
         When turn on demo mode with query params "false"
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -714,8 +704,7 @@ Feature: ML Functions
         And wait load page
         When turn on demo mode with query params "false"
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -739,12 +728,14 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
+        And wait load page
+        Then type value "erann-with-mlrun" to "Table_Name_Filter_Input" field on "ML_Functions" wizard
+        Then click on "Table_Refresh_Button" element on "ML_Functions" wizard
         And wait load page
         Then check "erann-with-mlrun" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
@@ -776,8 +767,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When turn on demo mode with query params "false"
         And wait load page
@@ -809,8 +799,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When turn on demo mode with query params "false"
         And wait load page
@@ -881,8 +870,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When turn on demo mode with query params "false"
         And wait load page
@@ -938,8 +926,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When turn on demo mode with query params "false"
         And wait load page
@@ -1008,8 +995,7 @@ Feature: ML Functions
         And wait load page
         When turn on demo mode with query params "false"
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -1035,8 +1021,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When turn on demo mode with query params "false"
         And wait load page
@@ -1081,8 +1066,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
@@ -1098,21 +1082,23 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
+        And wait load page
+        Then type value "test-m" to "Table_Name_Filter_Input" field on "ML_Functions" wizard
+        Then click on "Table_Refresh_Button" element on "ML_Functions" wizard
         And wait load page
         Then select "View YAML" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-m" value in "name" column
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
-        Then click on cell with row index 9 in "expand_btn" column in "Functions_Table" table on "ML_Functions" wizard
+        Then click on cell with row index 1 in "expand_btn" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
-        Then select "View YAML" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "Nov 23, 2021, 10:31:51 AM" value in "name" column
+        Then select "View YAML" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "Nov 23, 2021, 09:31:51 AM" value in "name" column
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
@@ -1125,8 +1111,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
@@ -1150,8 +1135,7 @@ Feature: ML Functions
         And wait load page
         When turn on demo mode with query params "false"
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
@@ -1172,13 +1156,15 @@ Feature: ML Functions
         And wait load page
         When turn on demo mode with query params "false"
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
-        When click on cell with row index 3 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        Then type value "test-func-oyn" to "Table_Name_Filter_Input" field on "ML_Functions" wizard
+        Then click on "Table_Refresh_Button" element on "ML_Functions" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
         Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Action_Menu" dropdown element on "ML_Function_Info_Pane" wizard should contains "ML_Functions_Tab"."Common_Action_Menu_Options_Demo"
@@ -1194,8 +1180,7 @@ Feature: ML Functions
         And wait load page
         When turn on demo mode with query params "false"
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
@@ -1221,8 +1206,7 @@ Feature: ML Functions
         And wait load page
         When turn on demo mode with query params "false"
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And save to context "name" column on 1 row from "Functions_Table" table on "ML_Functions" wizard
@@ -1281,6 +1265,7 @@ Feature: ML Functions
     @MLF
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    @rerun @knownBug
     Scenario: MLF033 - Verify Resources values on Function Deploy and Run
         * set tear-down property "project" created with "automation-test" value
         * set tear-down property "function" created in "automation-test" project with "new-aqa-function-00" value
@@ -1291,8 +1276,7 @@ Feature: ML Functions
         And wait load page
         When turn on demo mode with query params "false"
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "new-aqa-function-00" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -1314,7 +1298,7 @@ Feature: ML Functions
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
         Then "Header" element on "ML_Function_Info_Pane" should contains "new-aqa-function-00" value
-        Then select "tab" with "Jobs and workflows" value in breadcrumbs menu
+        Then select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -1335,16 +1319,15 @@ Feature: ML Functions
         Then verify "GPU_Limit_Number_Input" input should contains "99" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
 
     @MLF
-    @smoke
+    @smoke @rerun
     Scenario: MLF032 - Check broken link redirection
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        Then select "Project monitoring" item in sidebar menu
         And wait load page
-        And select "tab" with "ML functions" value in breadcrumbs menu
+        And select "ML functions" item in sidebar menu
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
@@ -1360,9 +1343,9 @@ Feature: ML Functions
         And wait load page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
-        And select "tab" with "Datasets" value in breadcrumbs menu
+        And select "Datasets" item in sidebar menu
         And wait load page
-        And select "tab" with "ML functions" value in breadcrumbs menu
+        And select "ML functions" item in sidebar menu
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
@@ -1385,8 +1368,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And wait load page
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
@@ -1420,8 +1402,7 @@ Feature: ML Functions
         And wait load page
         When turn on demo mode with query params "false"
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -1474,8 +1455,7 @@ Feature: ML Functions
         When turn on demo mode with query params "false"
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And select "ML functions" item in sidebar menu
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard

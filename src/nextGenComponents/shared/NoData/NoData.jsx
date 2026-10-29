@@ -25,7 +25,7 @@ const NoData = ({ message }) => {
   return (
     <div
       data-testid="no-data"
-      className="flex flex-1 items-center justify-center w-full h-full min-h-[150px] text-center break-words"
+      className="flex flex-1 items-center justify-center w-full h-full min-h-[150px] text-center wrap-break-word"
     >
       <h3 className="text-lg font-bold text-igz-primary">{message || NO_DATA_DEFAULT_MESSAGE}</h3>
     </div>

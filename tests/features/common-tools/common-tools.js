@@ -180,27 +180,42 @@ export function parseString (string) {
     )
   }
 
-export function clearBackendAfterTest (driver, items) {
-    items.forEach(item => {
-      switch (item.type) {
-        case 'project':
-          return deleteAPIMLProject(driver, item.name, 204)
-        case 'featureSet':
-          return deleteAPIFeatureSet(item.project, item.name, 204)
-        case 'featureVector':
-          return deleteAPIFeatureVector(item.project, item.name, 204)
-        case 'function':
-          return deleteAPIFunction(item.project, item.name, 200)
-        case 'schedule':
-          return deleteAPISchedule(item.project, item.name, 204)
-        case 'dataset':
-        case 'file':
-        case 'model':
-          return deleteAPIArtifact(item.project, item.name, 200)
-        default:
-          return null
+// sequential and awaited, projects last: the next scenario must not race with the previous tear-down
+// (e.g. 409 "already exists" when it creates a project with the same name)
+export async function clearBackendAfterTest (driver, items) {
+    const orderedItems = [
+      ...items.filter(item => item.type !== 'project'),
+      ...items.filter(item => item.type === 'project')
+    ]
+
+    for (const item of orderedItems) {
+      try {
+        await deleteBackendItem(driver, item)
+      } catch (error) {
+        console.warn(`Tear-down of ${item.type} "${item.name}" failed: ${error.message}`)
       }
-    })
+    }
+  }
+
+function deleteBackendItem (driver, item) {
+    switch (item.type) {
+      case 'project':
+        return deleteAPIMLProject(driver, item.name, 204)
+      case 'featureSet':
+        return deleteAPIFeatureSet(item.project, item.name, 204)
+      case 'featureVector':
+        return deleteAPIFeatureVector(item.project, item.name, 204)
+      case 'function':
+        return deleteAPIFunction(item.project, item.name, 202)
+      case 'schedule':
+        return deleteAPISchedule(item.project, item.name, 204)
+      case 'dataset':
+      case 'file':
+      case 'model':
+        return deleteAPIArtifact(item.project, item.name, 200)
+      default:
+        return null
+    }
   }
 
 export async function setRequestsFailureCondition(shouldFail) {
@@ -211,5 +226,15 @@ export async function setRequestsFailureCondition(shouldFail) {
     console.log(response.data)
   } catch (error) {
     console.error(`Error setting failure condition: ${error}`)
+  }
+}
+
+// restores runs/workflows/schedules of the mock backend, so a scenario doesn't depend on the previous ones
+export async function resetMockState() {
+  try {
+    await axios.post('http://localhost:30000/reset-mock-state')
+  } catch (error) {
+    // not the mock backend - nothing to reset
+    console.error(`Error resetting mock state: ${error}`)
   }
 }

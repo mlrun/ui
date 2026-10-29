@@ -43,6 +43,7 @@ import { lazyRetry } from './lazyWithRetry'
 import { useMode } from './hooks/mode.hook'
 import { useNuclioMode } from './hooks/nuclioMode.hook'
 import wrapComponentForNavbarNavigationTracking from './utils/wrapComponentForNavbarNavigationTracking'
+import { redirectToPath, redirectToProjectPageTab } from './utils/routeRedirects'
 
 import {
   ALERTS_PAGE_PATH,
@@ -67,14 +68,21 @@ import {
   JOBS_MONITORING_SCHEDULED_TAB,
   INACTIVE_JOBS_TAB,
   IS_MF_MODE,
-  PUBLIC_URL
+  PUBLIC_URL,
+  PROJECTS_PAGE_PATH,
+  MODELS_PAGE,
+  JOBS_PAGE_PATH,
+  FEATURE_STORE_PAGE_PATH
 } from './constants'
 
-import 'reactflow/dist/style.css'
+import './scss/reactFlow.scss'
 import 'igz-controls/index.css'
 import './tailwind.css'
 import './scss/main.scss'
 import RemoteNuclioRouteWrapper from './components/RemoteNuclio/RemoteNuclioRouteWrapper'
+import { initPortalContainer } from './utils/initPortalContainer'
+
+initPortalContainer()
 
 const Page = lazyRetry(() => import('./layout/Page/Page'), 'Page')
 const Datasets = lazyRetry(() => import('./components/Datasets/Datasets'), 'Datasets')
@@ -241,7 +249,12 @@ const App = () => {
               </Fragment>
             ))}
             <Route path={JOBS_MONITORING_SCHEDULED_TAB} element={<ScheduledMonitoring />} />
-            <Route path="*" element={<Navigate to={JOBS_MONITORING_JOBS_TAB} replace />} />
+            <Route
+              path="*"
+              loader={redirectToPath(
+                `/${PROJECTS_PAGE_PATH}/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`
+              )}
+            />
           </Route>
           {!IS_MF_MODE && (
             <Route
@@ -312,7 +325,7 @@ const App = () => {
               </Fragment>
             ))}
             <Route path={`${SCHEDULE_TAB}`} element={<ScheduledJobs />} />
-            <Route path="*" element={<Navigate to={MONITOR_JOBS_TAB} />} replace />
+            <Route path="*" loader={redirectToProjectPageTab(JOBS_PAGE_PATH, MONITOR_JOBS_TAB)} />
           </Route>
           {isDemoMode
             ? [
@@ -372,7 +385,10 @@ const App = () => {
               )
             )}
             <Route path={`${FEATURES_TAB}`} element={<Features />} />
-            <Route path="*" element={<Navigate to={FEATURE_SETS_TAB} replace />} />
+            <Route
+              path="*"
+              loader={redirectToProjectPageTab(FEATURE_STORE_PAGE_PATH, FEATURE_SETS_TAB)}
+            />
           </Route>
           <Route path="projects/:projectName/models/*" element={<ModelsPage />}>
             {[
@@ -399,7 +415,7 @@ const App = () => {
                 </Fragment>
               )
             )}
-            <Route path="*" element={<Navigate to={MODELS_TAB} replace />} />
+            <Route path="*" loader={redirectToProjectPageTab(MODELS_PAGE, MODELS_TAB)} />
           </Route>
           {[
             'projects/:projectName/files',
@@ -467,8 +483,8 @@ const App = () => {
               />
             </Fragment>
           ))}
-          <Route path="*" element={<Navigate replace to="projects" />} />
-          <Route path="/" element={<Navigate replace to="projects" />} />
+          <Route path="*" loader={redirectToPath(`/${PROJECTS_PAGE_PATH}`)} />
+          <Route path="/" loader={redirectToPath(`/${PROJECTS_PAGE_PATH}`)} />
         </Route>
       </>
     ),
