@@ -17,7 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import projectsApi from '../api/projects-api'
 import projectReducer, {
+  createNewProject,
   fetchProjects,
   removeProject,
   setProjectTransition,
@@ -41,7 +43,7 @@ vi.mock('../constants', async importOriginal => {
   }
 })
 
-vi.mock('../api/projects-api', () => ({ default: {} }))
+vi.mock('../api/projects-api', () => ({ default: { createProject: vi.fn() } }))
 
 vi.mock('igz-controls/utils/notification.util', () => ({
   showErrorNotification: vi.fn()
@@ -464,6 +466,59 @@ describe('projectReducer', () => {
 
       expect(state.projectsInTransition['project-a']).toBeDefined()
       expect(state.projects).toHaveLength(1)
+    })
+  })
+
+  // ── createNewProject ────────────────────────────────────────────────────────
+
+  describe('createNewProject', () => {
+    const postData = { metadata: { name: 'my-project' } }
+
+    const runWithError = async error => {
+      projectsApi.createProject.mockRejectedValue(error)
+
+      const action = await createNewProject({ postData })(vi.fn(), vi.fn(), undefined)
+
+      return action.payload
+    }
+
+    const orcaError = (status, errorMessage) => ({
+      message: 'Request failed',
+      response: { status, data: { status: { errorMessage, statusCode: status } } }
+    })
+
+    it('reports a name conflict', async () => {
+      expect(await runWithError({ response: { status: 409 } })).toBe(
+        'A project named "my-project" already exists.'
+      )
+    })
+
+    it('reports a permission error', async () => {
+      expect(await runWithError({ response: { status: 403 } })).toMatch(/^Permission denied/)
+    })
+
+    it('prefers the MLRun detail on a 500', async () => {
+      expect(await runWithError({ response: { status: 500, data: { detail: 'db down' } } })).toBe(
+        'db down'
+      )
+    })
+
+    it('falls back to the maximum projects text on a 500 without a reason', async () => {
+      expect(await runWithError({ response: { status: 500, data: {} } })).toMatch(
+        /maximum number of projects/
+      )
+    })
+
+    it('shows the leader reason for other failures in MF mode, e.g. create while deleting', async () => {
+      expect(await runWithError(orcaError(412, 'project "my-project" is being deleted'))).toBe(
+        'project "my-project" is being deleted'
+      )
+    })
+
+    it('uses the generic error message outside MF mode', async () => {
+      mfMode.enabled = false
+
+      expect(await runWithError(orcaError(412, 'project is being deleted'))).toBe('Request failed')
     })
   })
 })
