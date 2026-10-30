@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize, isEmpty, isNil } from 'lodash'
+import { capitalize, isEmpty, isNil } from 'lodash-es'
 import classNames from 'classnames'
 
 import { aggregateApplicationStatuses } from '../../../../utils/applications.utils'

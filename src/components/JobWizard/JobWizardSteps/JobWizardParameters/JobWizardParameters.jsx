@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { get } from 'lodash'
+import { get } from 'lodash-es'
 
 import { FormInput, FormRadio } from 'igz-controls/components'
 import FormParametersTable from '../../../../elements/FormParametersTable/FormParametersTable'

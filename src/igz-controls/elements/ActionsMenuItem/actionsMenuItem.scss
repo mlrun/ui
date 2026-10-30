@@ -1,0 +1,66 @@
+@use '../../scss/shadows';
+@use '../../scss/colors';
+
+.actions-menu {
+  &__icon {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
+
+    svg {
+      path {
+        &:first-child {
+          fill: colors.$topaz;
+        }
+      }
+    }
+
+    &_visible {
+      display: flex;
+    }
+  }
+
+  &__option {
+    padding: 10px;
+    color: colors.$primary;
+    cursor: pointer;
+
+    &:hover {
+      background-color: colors.$alabaster;
+    }
+
+    &_danger {
+      color: colors.$amaranth;
+
+      svg {
+        path:first-child {
+          fill: colors.$amaranth;
+        }
+      }
+    }
+
+    &_disabled {
+      color: colors.$spunPearl;
+      cursor: not-allowed;
+
+      .actions-menu__icon {
+        svg {
+          path:first-child {
+            fill: rgba(colors.$black, 0.2);
+          }
+        }
+      }
+    }
+
+    & > * {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+    }
+  }
+}

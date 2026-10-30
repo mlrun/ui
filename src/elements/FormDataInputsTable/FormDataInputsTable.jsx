@@ -21,7 +21,7 @@ import React, { useState } from 'react'
 import { FieldArray } from 'react-final-form-arrays'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import FormActionButton from 'igz-controls/elements/FormActionButton/FormActionButton'

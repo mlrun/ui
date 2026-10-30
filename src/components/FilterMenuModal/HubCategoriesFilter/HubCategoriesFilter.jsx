@@ -19,11 +19,12 @@ such restriction.
 */
 import React, { useContext, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { isEqual, pickBy } from 'lodash'
+import { isEqual, pickBy } from 'lodash-es'
 import { useSelector } from 'react-redux'
 import { useForm } from 'react-final-form'
 
-import { FilterMenuWizardContext } from '../FilterMenuModal'
+import { FilterMenuWizardContext } from '../FilterMenuModal.context'
+
 import { FormCheckBox, FormOnChange } from 'igz-controls/components'
 
 import { FILTER_MENU_MODAL, HUB_CATEGORIES_FILTER } from '../../../constants'

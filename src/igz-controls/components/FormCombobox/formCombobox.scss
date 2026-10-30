@@ -1,0 +1,134 @@
+@use '../../scss/colors';
+@use '../../scss/borders';
+@use '../../scss/shadows';
+@use '../../scss/mixins';
+
+.form-field.form-field-combobox {
+  width: 100%;
+
+  .form-field {
+    @include mixins.inputSelectField;
+
+    &__icons {
+      .form-field-combobox__icon {
+        padding: 0;
+        cursor: pointer;
+        transition: transform 200ms linear;
+
+        &_open {
+          transform: rotate(90deg);
+          transform-origin: center center;
+        }
+      }
+    }
+
+    &-combobox {
+      &__placeholder {
+        color: colors.$topaz;
+        font-size: 15px;
+        text-align: left;
+        text-transform: capitalize;
+        background-color: transparent;
+
+        label {
+          cursor: inherit;
+        }
+      }
+
+      &__select {
+        padding: 0;
+        overflow: visible;
+
+        &-header {
+          display: flex;
+          flex: 1;
+          align-items: center;
+          height: 100%;
+          cursor: pointer;
+        }
+      }
+
+      &__input {
+        width: 100%;
+        padding: 0 8px 0 0;
+
+        &_hidden {
+          flex: 0;
+        }
+      }
+    }
+  }
+}
+
+.form-field-combobox {
+  &__search {
+    width: 100%;
+    padding: 12px 0;
+
+    &-wrapper {
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      margin: 0 9px;
+      background-color: colors.$white;
+      border-bottom: borders.$dividerBorder;
+    }
+  }
+
+  &__dropdown {
+    &-select {
+      max-width: 220px;
+    }
+
+    &-suggestions {
+      max-width: 350px;
+    }
+
+    &-list {
+      min-width: 140px;
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+
+      &-option {
+        padding: 8px 15px;
+        word-break: break-all;
+        cursor: pointer;
+
+        &:hover {
+          background-color: colors.$alabaster;
+        }
+      }
+    }
+
+    .pop-up-dialog {
+      width: 100%;
+      max-height: 250px;
+      padding: 0;
+    }
+  }
+
+  .path-type,
+  &__dropdown .path-type {
+    &-store {
+      color: colors.$amethyst;
+    }
+
+    &-v3io {
+      color: colors.$cornflowerBlueTwo;
+    }
+
+    &-az,
+    &-gs,
+    &-http,
+    &-https,
+    &-s3 {
+      color: colors.$sorbus;
+    }
+
+    &-dbfs {
+      color: colors.$chateauGreen;
+    }
+  }
+}

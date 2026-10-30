@@ -1,0 +1,16 @@
+@use './colors';
+
+$jobsShadow: 0 3px 4px rgba(colors.$black, 0.18);
+$headerShadow: inset 0 -1px 0 #edecef;
+$mainHeaderShadow:
+  0 2px 4px -1px rgba(colors.$black, 0.2),
+  0 4px 5px 0 rgba(colors.$black, 0.14),
+  0 1px 10px 0 rgba(colors.$black, 0.12);
+$filterShadow: 0 4px 8px rgba(colors.$black, 0.23);
+$tooltipShadow: 0 5px 11px rgba(colors.$black, 0.18);
+$hiddenChipsBlockShadow: 2px 2px 8px 2px rgba(colors.$black, 0.2);
+$previewBoxShadowInit: 0px 3px 10px rgb(0 0 0 / 7%);
+$previewBoxShadow: 0 2px 10px rgba(colors.$black, 0.2);
+$projectStatisticsShadow: 0 8px 30px rgba(colors.$topaz, 0.08);
+$dropdownShadow: 0 0 30px rgba(colors.$black, 0.15);
+$tablePanelShadow: -3px 0 10px -5px rgba(colors.$black, 0.2);

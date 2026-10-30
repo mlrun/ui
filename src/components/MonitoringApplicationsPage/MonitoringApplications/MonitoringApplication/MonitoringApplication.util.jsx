@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import prettyBytes from 'pretty-bytes'
-import { isNumber } from 'lodash'
+import { isNumber } from 'lodash-es'
 
 import { METRIC_TYPE, RESULT_TYPE } from '../../../../constants'
 import { formatDatetime } from 'igz-controls/utils/datetime.util'

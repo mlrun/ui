@@ -38,7 +38,7 @@ vi.mock('react-redux', () => ({
   useDispatch: () => mockDispatch
 }))
 
-vi.mock('react-router-dom', () => ({
+vi.mock('react-router', () => ({
   useParams: () => ({ projectName: 'my-project' })
 }))
 

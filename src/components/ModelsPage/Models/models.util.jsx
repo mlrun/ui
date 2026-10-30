@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { cloneDeep, isEmpty, omit } from 'lodash'
+import { cloneDeep, isEmpty, omit } from 'lodash-es'
 import Prism from 'prismjs'
 
 import { PopUpDialog } from 'igz-controls/components'

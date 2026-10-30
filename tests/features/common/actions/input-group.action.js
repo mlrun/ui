@@ -19,7 +19,8 @@ such restriction.
 */
 import { expect } from 'chai'
 import { Key } from 'selenium-webdriver'
-import { parseString } from '../../common-tools/common-tools'
+import { parseString } from '../../common-tools/common-tools.js'
+import { getHoverHintText, hoverElementCenter } from './common.action.js'
 
 async function verifyFormInputInvalid(driver, inputGroup) {
   const inputField = await driver.findElement(inputGroup.root)
@@ -104,14 +105,8 @@ export const checkHintText = async (driver, inputGroup, hintComponent, text) => 
 
 export const checkHintTextWithHover = async (driver, inputGroup, hintComponent, text) => {
     const hintButton = await driver.findElement(inputGroup.hintButton)
-    const coordinates = await hintButton.getRect()
-    const actions = driver.actions({ async: true })
-    await actions
-      .move({ x: parseInt(coordinates.x), y: parseInt(coordinates.y) })
-      .perform()
-    await driver.sleep(250)
-    const hint = await driver.findElement(hintComponent)
-    const hintText = await hint.getText()
+    await hoverElementCenter(driver, hintButton)
+    const hintText = await getHoverHintText(driver, hintComponent, text)
 
     expect(hintText).equal(text)
   }
@@ -180,15 +175,8 @@ export const checkWarningHintText = async (driver, inputGroup, hintComponent, te
 export const checkWarningHintTextWithHover = async (driver, inputGroup, hintComponent, text) => {
     const hintButton = await driver.findElement(inputGroup.warningHint)
     await driver.sleep(250)
-    const coordinates = await hintButton.getRect()
-    const actions = driver.actions({ async: true })
-    await actions
-      .move({ x: parseInt(coordinates.x), y: parseInt(coordinates.y) })
-      .perform()
-    await driver.sleep(500)
-    const hint = await driver.findElement(hintComponent)
-    await driver.sleep(250)
-    const hintText = await hint.getText()
+    await hoverElementCenter(driver, hintButton)
+    const hintText = await getHoverHintText(driver, hintComponent, text)
 
     expect(hintText).equal(text)
   }

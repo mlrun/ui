@@ -33,56 +33,60 @@ import EnlargeIcon from 'igz-controls/images/ml-enlarge.svg?react'
 
 import '../DetailsInfo/detailsInfo.scss'
 
-const DetailsDrillDownAlert = React.forwardRef(
-  ({ commonDetailsStore, formState, isDetailsPopUp, pageData, selectedItem }, applyChangesRef) => {
-    const openAlertsLogsModal = useCallback(() => {
-      openPopUp(AlertLogsModal, { selectedItem, pageData })
-    }, [pageData, selectedItem])
+function DetailsDrillDownAlert({
+  applyChangesRef,
+  commonDetailsStore,
+  formState,
+  isDetailsPopUp,
+  pageData,
+  selectedItem
+}) {
+  const openAlertsLogsModal = useCallback(() => {
+    openPopUp(AlertLogsModal, { selectedItem, pageData })
+  }, [pageData, selectedItem])
 
-    return (
-      <>
-        <DetailsInfo
-          commonDetailsStore={commonDetailsStore}
-          formState={formState}
-          isDetailsPopUp={isDetailsPopUp}
-          pageData={pageData}
-          ref={applyChangesRef}
-          selectedItem={selectedItem}
-        />
-        {pageData.details.entityType === JOB && (
-          <>
-            <div className="alert-row__details-alert-logs">
-              <h3 className="item-info__header">Job Logs</h3>
-              <div
-                className="details-close-btn"
-                data-testid="details-close-btn"
-                onClick={openAlertsLogsModal}
-              >
-                <RoundedIcon id="full-view" tooltipText="Full view">
-                  <EnlargeIcon />
-                </RoundedIcon>
-              </div>
+  return (
+    <>
+      <DetailsInfo
+        commonDetailsStore={commonDetailsStore}
+        formState={formState}
+        isDetailsPopUp={isDetailsPopUp}
+        pageData={pageData}
+        applyChangesRef={applyChangesRef}
+        selectedItem={selectedItem}
+      />
+      {pageData.details.entityType === JOB && (
+        <>
+          <div className="alert-row__details-alert-logs">
+            <h3 className="item-info__header">Job Logs</h3>
+            <div
+              className="details-close-btn"
+              data-testid="details-close-btn"
+              onClick={openAlertsLogsModal}
+            >
+              <RoundedIcon id="full-view" tooltipText="Full view">
+                <EnlargeIcon />
+              </RoundedIcon>
             </div>
-            <DetailsLogs
-              item={selectedItem}
-              noDataMessage={pageData.details.logsNoDataMessage}
-              refreshLogs={pageData.details.refreshLogs}
-              removeLogs={pageData.details.removeLogs}
-              withLogsRefreshBtn
-            />
-          </>
-        )}
-        {pageData.details.entityType === MODEL_ENDPOINT_RESULT && (
-          <DetailsAlertsMetrics selectedItem={selectedItem} />
-        )}
-      </>
-    )
-  }
-)
-
-DetailsDrillDownAlert.displayName = 'DetailsDrillDownAlert'
+          </div>
+          <DetailsLogs
+            item={selectedItem}
+            noDataMessage={pageData.details.logsNoDataMessage}
+            refreshLogs={pageData.details.refreshLogs}
+            removeLogs={pageData.details.removeLogs}
+            withLogsRefreshBtn
+          />
+        </>
+      )}
+      {pageData.details.entityType === MODEL_ENDPOINT_RESULT && (
+        <DetailsAlertsMetrics selectedItem={selectedItem} />
+      )}
+    </>
+  )
+}
 
 DetailsDrillDownAlert.propTypes = {
+  applyChangesRef: PropTypes.object.isRequired,
   commonDetailsStore: PropTypes.object.isRequired,
   formState: PropTypes.object.isRequired,
   isDetailsPopUp: PropTypes.bool.isRequired,

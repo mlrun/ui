@@ -18,14 +18,14 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { By } from 'selenium-webdriver'
-import commonTable from '../components/table.component'
-import dropdownComponent from '../components/dropdown.component'
+import commonTable from '../components/table.component.js'
+import dropdownComponent from '../components/dropdown.component.js'
 import {
   generateDropdownGroup,
   generateInputGroup
-} from '../../common-tools/common-tools'
-import datepicker from '../components/date-picker.component'
-import inputGroup from '../components/input-group.component'
+} from '../../common-tools/common-tools.js'
+import datepicker from '../components/date-picker.component.js'
+import inputGroup from '../components/input-group.component.js'
 
 const commonDatePickerFilter = dropdownComponent(
   generateDropdownGroup(

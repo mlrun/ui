@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 
@@ -31,43 +31,33 @@ import AddCircleQuestion from 'igz-controls/images/add-circle-question.svg?react
 import './addFeatureButton.scss'
 
 const AddFeatureButton = ({ feature }) => {
-  const [isFeatureInvalid, setIsFeatureInvalid] = useState(true)
-  const [isFeatureInList, setIsFeatureInList] = useState(true)
-  const [tooltip, setTooltip] = useState('')
   const tableStore = useSelector(store => store.tableStore)
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    setTooltip(
-      isFeatureInvalid
-        ? "This feature cannot be added because features from another tag of this feature's " +
-            'set are already in the vector. If you want to allow adding this feature you must first remove ' +
-            'all those features from the vector.'
-        : 'Add feature'
-    )
-  }, [isFeatureInvalid])
+  const currentFeatureInList = tableStore.features.groupedFeatures?.[
+    tableStore.features.currentProject
+  ]?.find(
+    featureInList =>
+      featureInList.feature === feature.name &&
+      featureInList.featureSet === feature.metadata.name &&
+      featureInList.tag === feature.metadata.tag
+  )
+  const isFeatureInList = Boolean(currentFeatureInList)
 
-  useEffect(() => {
-    const currentFeatureInList = tableStore.features.groupedFeatures?.[
-      tableStore.features.currentProject
-    ]?.find(
-      featureInList =>
-        featureInList.feature === feature.name &&
-        featureInList.featureSet === feature.metadata.name &&
-        featureInList.tag === feature.metadata.tag
-    )
+  const featureFromAnotherTag = tableStore.features.groupedFeatures?.[
+    tableStore.features.currentProject
+  ]?.find(
+    featureInList =>
+      featureInList.featureSet === feature.metadata.name &&
+      featureInList.tag !== feature.metadata.tag
+  )
+  const isFeatureInvalid = Boolean(featureFromAnotherTag)
 
-    const isFeatureInvalid = tableStore.features.groupedFeatures?.[
-      tableStore.features.currentProject
-    ]?.find(
-      featureInList =>
-        featureInList.featureSet === feature.metadata.name &&
-        featureInList.tag !== feature.metadata.tag
-    )
-
-    setIsFeatureInList(Boolean(currentFeatureInList))
-    setIsFeatureInvalid(Boolean(isFeatureInvalid))
-  }, [tableStore.features.groupedFeatures, tableStore.features.currentProject, feature])
+  const tooltip = isFeatureInvalid
+    ? "This feature cannot be added because features from another tag of this feature's " +
+      'set are already in the vector. If you want to allow adding this feature you must first remove ' +
+      'all those features from the vector.'
+    : 'Add feature'
 
   const addFeature = () => {
     const existingFeatures =

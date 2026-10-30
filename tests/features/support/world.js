@@ -18,10 +18,10 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import seleniumWebdriver from 'selenium-webdriver'
-import chrome from 'selenium-webdriver/chrome'
-import firefox from 'selenium-webdriver/firefox'
+import chrome from 'selenium-webdriver/chrome.js'
+import firefox from 'selenium-webdriver/firefox.js'
 import { setWorldConstructor, setDefaultTimeout } from '@cucumber/cucumber'
-import { timeout, browser, headless, screen_size, delay_factor } from '../../config'
+import { timeout, browser, headless, screen_size, delay_factor } from '../../config.js'
 
 import 'chromedriver'
 import 'geckodriver'
@@ -70,8 +70,10 @@ export const buildDriver = () => {
         .addArguments('no-sandbox')
         .addArguments('disable-gpu')
         .windowSize(screen_size)
-    } else browseConfigs = new chrome.Options()
-        .addArguments('start-maximized')
+    } else
+      browseConfigs = new chrome.Options()
+        // same viewport as headless, the scenarios depend on the layout
+        .windowSize(screen_size)
         .excludeSwitches('disable-popup-blocking', 'enable-automation')
   }
   if (browser === 'firefox') {

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isEmpty, mapValues, omit, capitalize } from 'lodash'
+import { isEmpty, mapValues, omit, capitalize } from 'lodash-es'
 
 import {
   ML_NODE_WITH_SUB_ITEMS,

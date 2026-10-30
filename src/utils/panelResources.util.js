@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { CONFIG_MAP, PVC, SECRET, V3IO } from '../elements/VolumesTable/volumesTable.util'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 
 export const REQUESTS = 'requests'
 export const LIMITS = 'limits'

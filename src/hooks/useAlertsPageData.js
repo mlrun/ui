@@ -32,19 +32,21 @@ export const useAlertsPageData = (filters, isAlertsPage) => {
     params
   } = useRefreshAlerts(filters, isAlertsPage)
 
-  const [handleRefreshAlerts, paginatedAlerts, searchParams, setSearchParams] = usePagination({
-    content: alerts ?? [],
-    filters,
-    refreshContent: refreshAlerts,
-    paginationConfigRef: paginationConfigAlertsRef,
-    resetPaginationTrigger: params.projectName
-  })
+  const [handleRefreshAlerts, paginatedAlerts, searchParams, setSearchParams, , paginationConfig] =
+    usePagination({
+      content: alerts ?? [],
+      filters,
+      refreshContent: refreshAlerts,
+      paginationConfigRef: paginationConfigAlertsRef,
+      resetPaginationTrigger: params.projectName
+    })
   return {
     abortControllerRef,
     alerts,
     handleRefreshAlerts,
     lastCheckedAlertIdRef,
     paginatedAlerts,
+    paginationConfig,
     paginationConfigAlertsRef,
     refreshAlerts,
     requestErrorMessage,

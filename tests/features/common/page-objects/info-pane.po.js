@@ -17,20 +17,20 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import actionMenu from '../components/action-menu.component'
-import commonTable from '../components/table.component'
+import actionMenu from '../components/action-menu.component.js'
+import commonTable from '../components/table.component.js'
 import {
   generateInputGroup,
   generateLabelGroup,
   generateTextAreaGroup,
   generateDropdownGroup
-} from '../../common-tools/common-tools'
-import labelComponent from '../components/label.component'
-import inputGroup from '../components/input-group.component'
-import graph from '../components/graph.component'
+} from '../../common-tools/common-tools.js'
+import labelComponent from '../components/label.component.js'
+import inputGroup from '../components/input-group.component.js'
+import graph from '../components/graph.component.js'
 import { By } from 'selenium-webdriver'
-import textAreaGroup from '../components/text-area.component'
-import dropdownComponent from '../components/dropdown.component'
+import textAreaGroup from '../components/text-area.component.js'
+import dropdownComponent from '../components/dropdown.component.js'
 
 // TO DO: that is duplicate from Feature Store PO. In feature that should be fixed
 const actionMenuStructure = {

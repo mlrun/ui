@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
-import { get, isEmpty, omit, set } from 'lodash'
+import { get, isEmpty, omit, set } from 'lodash-es'
 import { FieldArray } from 'react-final-form-arrays'
 
 import {

@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { get, omit, last } from 'lodash'
+import { get, omit, last } from 'lodash-es'
 
 import {
   BAD_GATEWAY_ERROR_STATUS_CODE,

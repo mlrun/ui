@@ -1,0 +1,123 @@
+@use '../../../scss/colors';
+@use '../../../scss/borders';
+
+.form-field-range {
+  align-self: stretch;
+
+  .range {
+    &__buttons {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 28px;
+      height: 100%;
+    }
+
+    &__button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: calc(50% + 1px);
+      padding: 0;
+      background-color: colors.$wildSand;
+      cursor: pointer;
+
+      svg {
+        path {
+          fill: colors.$topaz;
+        }
+      }
+
+      &:hover {
+        background-color: colors.$mercury;
+
+        svg {
+          path {
+            fill: colors.$primary;
+          }
+        }
+      }
+
+      &:focus {
+        border: borders.$focusBorder;
+      }
+
+      &:active {
+        background-color: rgba(colors.$black, 0.2);
+        border: borders.$focusBorder;
+
+        svg {
+          path {
+            fill: colors.$primary;
+          }
+        }
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+
+        svg {
+          path {
+            fill: colors.$spunPearl;
+          }
+        }
+
+        &:focus {
+          border: none;
+        }
+
+        &:hover {
+          background-color: colors.$wildSand;
+        }
+      }
+
+      &-increase {
+        border-bottom: borders.$transparentBorder;
+        border-left: borders.$transparentBorder;
+        border-top-right-radius: 4px;
+      }
+
+      &-decrease {
+        border-top: borders.$transparentBorder;
+        border-left: borders.$transparentBorder;
+        border-bottom-right-radius: 4px;
+      }
+
+      .decrease {
+        transform: rotate(180deg);
+      }
+    }
+
+    &-warning {
+      border: borders.$errorBorder;
+
+      &_asterisk {
+        position: absolute;
+        top: 50%;
+        right: 35px;
+        color: colors.$amaranth;
+        transform: translateY(-50%);
+      }
+
+      .range__button {
+        &-increase {
+          border-top: borders.$errorBorder;
+          border-right: borders.$errorBorder;
+        }
+
+        &-decrease {
+          border-right: borders.$errorBorder;
+          border-bottom: borders.$errorBorder;
+        }
+      }
+    }
+
+    &__warning-icon {
+      position: absolute;
+      top: 50%;
+      right: 30px;
+      transform: translateY(-50%);
+    }
+  }
+}

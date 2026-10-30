@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 
 import ApplicationMetricCard from '../DetailsMetrics/MetricsCards/ApplicationMetricCard/ApplicationMetricCard'
 import DatePicker from '../../common/DatePicker/DatePicker'

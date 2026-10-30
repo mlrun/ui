@@ -17,8 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import FunctionPanelTopologyModelTableView from './FunctionPanelTopologyModelTableView'
 
@@ -33,9 +34,26 @@ import { setNewFunctionGraph } from '../../reducers/functionReducer'
 import Edit from 'igz-controls/images/edit.svg?react'
 import Delete from 'igz-controls/images/delete.svg?react'
 
-/* eslint-disable */
+const mapDefaultRoutesToData = graph => {
+  const routes = graph?.routes ?? {}
+
+  if (isEveryObjectValueEmpty(routes)) {
+    return []
+  }
+
+  return Object.entries(routes).map(([key, value]) => ({
+    isDefault: true,
+    data: {
+      name: key,
+      class_name: value.class_name,
+      model_path: value.class_args.model_path
+    }
+  }))
+}
+
 const FunctionPanelTopologyModelTable = ({ defaultData }) => {
-  const [data, setData] = useState([])
+  const [data, setData] = useState(() => mapDefaultRoutesToData(defaultData.graph))
+  const [prevDefaultGraph, setPrevDefaultGraph] = useState(defaultData.graph)
   const [newRoute, setNewRoute] = useState(newRouteInitialState)
   const [showAddNewRouteRow, setShowAddNewRouteRow] = useState(false)
   const [selectedRoute, setSelectedRoute] = useState(null)
@@ -43,20 +61,10 @@ const FunctionPanelTopologyModelTable = ({ defaultData }) => {
   const dispatch = useDispatch()
   const functionsStore = useSelector(store => store.functionsStore)
 
-  useEffect(() => {
-    if (!isEveryObjectValueEmpty(defaultData.graph?.routes ?? {})) {
-      setData(
-        Object.entries(defaultData.graph.routes).map(([key, value]) => ({
-          isDefault: true,
-          data: {
-            name: key,
-            class_name: value.class_name,
-            model_path: value.class_args.model_path
-          }
-        }))
-      )
-    }
-  }, [defaultData.graph])
+  if (defaultData.graph !== prevDefaultGraph) {
+    setPrevDefaultGraph(defaultData.graph)
+    setData(mapDefaultRoutesToData(defaultData.graph))
+  }
 
   const addRoute = () => {
     const generatedRoutes = { ...functionsStore.newFunction.spec.graph?.routes }
@@ -220,6 +228,14 @@ const FunctionPanelTopologyModelTable = ({ defaultData }) => {
       validation={validation}
     />
   )
+}
+
+FunctionPanelTopologyModelTable.propTypes = {
+  defaultData: PropTypes.shape({
+    graph: PropTypes.shape({
+      routes: PropTypes.object
+    })
+  }).isRequired
 }
 
 export default FunctionPanelTopologyModelTable

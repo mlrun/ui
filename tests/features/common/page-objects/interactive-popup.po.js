@@ -17,16 +17,16 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import inputGroup from '../components/input-group.component'
-import dropdownComponent from '../components/dropdown.component'
-import commonTable from '../components/table.component'
-import labelComponent from '../components/label.component'
-import checkboxComponent from '../components/checkbox.component'
-import textAreaGroup from '../components/text-area.component'
-import comboBox from '../components/combo-box.component'
-import numberInputGroup from '../components/number-input-group.component'
-import actionMenu from '../components/action-menu.component'
-import radiobuttonComponent from '../components/radio-button.component'
+import inputGroup from '../components/input-group.component.js'
+import dropdownComponent from '../components/dropdown.component.js'
+import commonTable from '../components/table.component.js'
+import labelComponent from '../components/label.component.js'
+import checkboxComponent from '../components/checkbox.component.js'
+import textAreaGroup from '../components/text-area.component.js'
+import comboBox from '../components/combo-box.component.js'
+import numberInputGroup from '../components/number-input-group.component.js'
+import actionMenu from '../components/action-menu.component.js'
+import radiobuttonComponent from '../components/radio-button.component.js'
 
 import {
   generateLabelGroup,
@@ -35,8 +35,8 @@ import {
   generateDropdownGroup,
   generateTextAreaGroup,
   generateCheckboxGroup
-} from '../../common-tools/common-tools'
-import inputWithAutocomplete from '../components/input-with-autocomplete.component'
+} from '../../common-tools/common-tools.js'
+import inputWithAutocomplete from '../components/input-with-autocomplete.component.js'
 import { By } from 'selenium-webdriver'
 
 const memberOverviewLabelsTable = {

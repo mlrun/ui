@@ -19,7 +19,7 @@ import { useForm } from 'react-final-form'
 
 import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
 
-import { modelEndpointsModesList } from '../../FilterMenu/filterMenu.settings'
+import { modelEndpointsModesList } from '../../FilterMenuModal/filterMenuModal.settings.js'
 import { LABELS_FILTER, ME_MODE_FILTER } from '../../../constants'
 
 const ModelEndpointsFilters = () => {

@@ -18,8 +18,8 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { By } from 'selenium-webdriver'
-import dropdownComponent from './dropdown.component'
-import { generateDropdownGroup } from '../../common-tools/common-tools'
+import dropdownComponent from './dropdown.component.js'
+import { generateDropdownGroup } from '../../common-tools/common-tools.js'
 
 export default function(comboBoxRoot, newClassLocator = false) {
   const element = {}

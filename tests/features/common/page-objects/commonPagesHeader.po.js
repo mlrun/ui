@@ -19,8 +19,8 @@ such restriction.
 */
 import { By } from 'selenium-webdriver'
 
-import breadcrumbsComponent from '../components/breadcrumbs.component'
-import sidebarComponent from '../components/sidebar.component'
+import breadcrumbsComponent from '../components/breadcrumbs.component.js'
+import sidebarComponent from '../components/sidebar.component.js'
 
 export default {
   loader: By.css('.loader-wrapper .loader-output'),

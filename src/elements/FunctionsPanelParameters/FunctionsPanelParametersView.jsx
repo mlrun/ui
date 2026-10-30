@@ -20,7 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { map } from 'lodash'
+import { map } from 'lodash-es'
 
 import AddFunctionParameterRow from './AddFunctionParameterRow'
 import EditableFunctionParameterRow from './EditableFunctionParameterRow'

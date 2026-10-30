@@ -20,7 +20,7 @@ such restriction.
 import React, { useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash-es'
 
 import { ConfirmDialog } from 'igz-controls/components'
 import Select from '../../common/Select/Select'

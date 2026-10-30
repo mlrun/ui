@@ -1,0 +1,30 @@
+@use '../../scss/borders';
+@use '../../scss/colors';
+
+.error {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 14px;
+  color: colors.$amaranth;
+  background-color: rgba(colors.$amaranth, 0.1);
+  border: borders.$errorBorder;
+
+  &__data {
+    display: flex;
+    align-items: center;
+  }
+
+  &__message {
+    margin-right: 10px;
+    word-break: break-word;
+  }
+
+  &__icon {
+    width: 22px;
+    height: 22px;
+    margin-right: 10px;
+    padding: 5px;
+    background-color: colors.$burntSienna;
+    border-radius: 50%;
+  }
+}

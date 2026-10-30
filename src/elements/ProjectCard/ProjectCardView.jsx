@@ -20,7 +20,7 @@ such restriction.
 import React, { useRef } from 'react'
 import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
 import {
@@ -38,7 +38,7 @@ import ClockIcon from 'igz-controls/images/clock.svg?react'
 
 import './projectCard.scss'
 
-const ProjectCardView = React.forwardRef(({ actionsMenu, alert, project, statistics }, ref) => {
+function ProjectCardView({ actionsMenu, actionsMenuRef, alert, project, statistics }) {
   const cardRef = useRef()
   const chipRef = useRef()
   const navigate = useNavigate()
@@ -53,7 +53,7 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, alert, project, statist
         onClick={event => {
           if (
             event.target.tagName !== 'A' &&
-            !ref.current.contains(event.target) &&
+            !actionsMenuRef?.current?.contains(event.target) &&
             !chipRef.current?.contains(event.target) &&
             !event.target.closest('#overlay_container')
           ) {
@@ -117,18 +117,17 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, alert, project, statist
           )}
         </div>
 
-        <div className="project-card__actions-menu" ref={ref}>
+        <div className="project-card__actions-menu" ref={actionsMenuRef}>
           <ActionsMenu dataItem={project} menu={actionsMenu[project.metadata.name]} />
         </div>
       </div>
     </div>
   )
-})
-
-ProjectCardView.displayName = 'ProjectCardView'
+}
 
 ProjectCardView.propTypes = {
   actionsMenu: PropTypes.object.isRequired,
+  actionsMenuRef: PropTypes.object,
   alert: PropTypes.number.isRequired,
   project: PropTypes.object.isRequired,
   statistics: PropTypes.object.isRequired

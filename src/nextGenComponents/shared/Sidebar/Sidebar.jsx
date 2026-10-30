@@ -19,7 +19,6 @@ such restriction.
 */
 import React, { useMemo } from 'react'
 
-import '../../../tailwind.css'
 import {
   Sidebar,
   SidebarContent,

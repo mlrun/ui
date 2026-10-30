@@ -19,10 +19,10 @@ such restriction.
 */
 import React, { useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { has } from 'lodash'
+import { has } from 'lodash-es'
 
 import classnames from 'classnames'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
@@ -40,12 +40,12 @@ import { fetchApiGateways } from '../../reducers/nuclioReducer'
 import { generateNuclioLink } from '../../utils'
 import { groupByUniqName } from '../../utils/groupByUniqName'
 import { typesOfJob } from '../../utils/jobs.util'
-import { useNuclioMode } from '../../hooks/nuclioMode.hook'
+import { isNuclioModeDisabled as checkNuclioModeDisabled } from '../../utils/helper'
 import { getNuclioFuncState } from '../../utils/getNuclioFuncState'
 
 const ProjectFunctions = ({ nuclioStreamsAreEnabled, project }) => {
   const params = useParams()
-  const { isNuclioModeDisabled } = useNuclioMode()
+  const isNuclioModeDisabled = checkNuclioModeDisabled()
   const nuclioStore = useSelector(store => store.nuclioStore)
   const dispatch = useDispatch()
 

@@ -22,7 +22,7 @@ import React from 'react'
 import { FormSelect } from 'igz-controls/components'
 
 import { PIPELINE_TOPOLOGY_FILTER } from '../../../constants'
-import { pipelineTopologies } from '../../FilterMenu/filterMenu.settings'
+import { pipelineTopologies } from '../../FilterMenuModal/filterMenuModal.settings.js'
 
 const RealTimePipelinesFilters = () => {
   return (

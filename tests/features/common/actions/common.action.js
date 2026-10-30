@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { timeout } from '../../../config'
+import { timeout } from '../../../config.js'
 import { until } from 'selenium-webdriver'
 import { expect } from 'chai'
 import { access, constants } from 'fs'
@@ -91,9 +91,24 @@ export const clickNearComponent = async (driver, component) => {
       await driver.sleep(250)
     }
     const coordinates = await element.getRect()
+    const x = parseInt(coordinates.x) + 1
+    const y = parseInt(coordinates.y) + 1
+    // an open options list can be positioned over its own select header (when there is not enough space
+    // below it, e.g. on short headed windows), then the click would select the option under the pointer
+    const isCoveredByOptionsList = await driver.executeScript(
+      'const hit = document.elementFromPoint(arguments[1], arguments[2]); ' +
+        'return Boolean(hit && !arguments[0].contains(hit) && hit.closest(\'[data-testid="select-body"], .options-list__body\'))',
+      element,
+      x,
+      y
+    )
+    if (isCoveredByOptionsList) {
+      await driver.executeScript('arguments[0].click()', element)
+      return
+    }
     const actions = driver.actions({ async: true })
     await actions
-      .move({ x: parseInt(coordinates.x) + 1, y: parseInt(coordinates.y) + 1 })
+      .move({ x, y })
       .click()
       .perform()
   }
@@ -310,19 +325,48 @@ export const scrollToElement = async (driver, component) => {
     await driver.sleep(250)
   }
 
+// hover the center of the element: the top-left corner (with truncated fractional coordinates)
+// can land on the element border or outside it, so `mouseenter` doesn't fire in headed mode.
+// Viewport coordinates are used instead of `origin: element`: it fails on zero-size wrappers
+export const hoverElementCenter = async (driver, element) => {
+    const { x, y, width, height } = await element.getRect()
+
+    await driver
+      .actions({ async: true })
+      .move({ x: Math.floor(x + width / 2), y: Math.floor(y + height / 2) })
+      .perform()
+  }
+
+// several hints can be in the overlay at once while the previous one fades out,
+// so wait for the visible hint with the expected text instead of taking the first one found
+export const getHoverHintText = async (driver, hintComponent, expectedText) => {
+    let hintText = ''
+
+    await driver
+      .wait(async () => {
+        const hints = await driver.findElements(hintComponent)
+
+        for (const hint of hints) {
+          const text = await hint.getText().catch(() => '')
+
+          if (text) hintText = text
+          if (text === expectedText) return true
+        }
+
+        return false
+      }, 3000)
+      .catch(() => {})
+
+    return hintText
+  }
+
 export const checkComponentHintTextWithHover = async (driver, component, hintComponent, text) => {
     const hintButton = await driver.findElement(component)
     // elements below the fold can't be hovered (MoveTargetOutOfBoundsError)
     await driver.executeScript('arguments[0].scrollIntoView({ block: "center", inline: "nearest" })', hintButton)
     await driver.sleep(250)
-    const coordinates = await hintButton.getRect()
-    const actions = driver.actions({ async: true })
-    await actions
-      .move({ x: parseInt(coordinates.x), y: parseInt(coordinates.y) })
-      .perform()
-    await driver.sleep(250)
-    const hint = await driver.findElement(hintComponent)
-    const hintText = await hint.getText()
+    await hoverElementCenter(driver, hintButton)
+    const hintText = await getHoverHintText(driver, hintComponent, text)
 
     expect(hintText).equal(text)
   }

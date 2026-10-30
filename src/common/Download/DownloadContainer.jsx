@@ -20,7 +20,7 @@ such restriction.
 import React, { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Transition, TransitionGroup } from 'react-transition-group'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 
 import DownloadItem from './DownloadItem'
 

@@ -19,8 +19,8 @@ such restriction.
 */
 import express from 'express'
 import bodyParser from 'body-parser'
+import * as yaml from 'js-yaml'
 import rateLimit from 'express-rate-limit'
-import yaml from 'js-yaml'
 import fs from 'fs'
 import path from 'path'
 import crypto from 'node:crypto'
@@ -45,45 +45,45 @@ import {
   random,
   remove,
   set
-} from 'lodash'
+} from 'lodash-es'
 import mime from 'mime-types'
 import moment from 'moment'
 
-import alerts from './data/alerts.json'
-import alertConfigs from './data/alert-configs.json'
-import frontendSpec from './data/frontendSpec.json'
-import projects from './data/projects.json'
-import projectsSummary from './data/summary.json'
-import monitoringApplications from './data/monitoringApplications.json'
-import monitoringApplicationsSummary from './data/monitoringApplicationsSummary.json'
-import artifacts from './data/artifacts.json'
-import featureSets from './data/featureSets.json'
-import features from './data/features.json'
-import entities from './data/entities.json'
-import featureVectors from './data/featureVectors.json'
-import runs from './data/runs.json'
-import run from './data/run.json'
-import itemsCatalog from './data/itemsCatalog.json'
-import pipelines from './data/pipelines.json'
-import secretKeysData from './data/secretKeys.json'
-import pipelineIDs from './data/piplineIDs.json'
-import schedules from './data/schedules.json'
-import funcs from './data/funcs.json'
-import logs from './data/logs.json'
-import modelEndpoints from './data/modelEndpoints.json'
-import metricsData from './data/metrics.json'
+import alerts from './data/alerts.json' with { type: 'json' }
+import alertConfigs from './data/alert-configs.json' with { type: 'json' }
+import frontendSpec from './data/frontendSpec.json' with { type: 'json' }
+import projects from './data/projects.json' with { type: 'json' }
+import projectsSummary from './data/summary.json' with { type: 'json' }
+import monitoringApplications from './data/monitoringApplications.json' with { type: 'json' }
+import monitoringApplicationsSummary from './data/monitoringApplicationsSummary.json' with { type: 'json' }
+import artifacts from './data/artifacts.json' with { type: 'json' }
+import featureSets from './data/featureSets.json' with { type: 'json' }
+import features from './data/features.json' with { type: 'json' }
+import entities from './data/entities.json' with { type: 'json' }
+import featureVectors from './data/featureVectors.json' with { type: 'json' }
+import runs from './data/runs.json' with { type: 'json' }
+import run from './data/run.json' with { type: 'json' }
+import itemsCatalog from './data/itemsCatalog.json' with { type: 'json' }
+import pipelines from './data/pipelines.json' with { type: 'json' }
+import secretKeysData from './data/secretKeys.json' with { type: 'json' }
+import pipelineIDs from './data/piplineIDs.json' with { type: 'json' }
+import schedules from './data/schedules.json' with { type: 'json' }
+import funcs from './data/funcs.json' with { type: 'json' }
+import logs from './data/logs.json' with { type: 'json' }
+import modelEndpoints from './data/modelEndpoints.json' with { type: 'json' }
+import metricsData from './data/metrics.json' with { type: 'json' }
 
-import iguazioProjects from './data/iguazioProjects.json'
-import iguazioUserGrops from './data/iguazioUserGroups.json'
-import iguazioProjectAuthorizationRoles from './data/iguazioProjectAuthorizationRoles.json'
-import iguazioUsers from './data/iguazioUsers.json'
-import iguazioSelf from './data/iguazioSelf.json'
-import iguazioUserRelations from './data/iguazioUserRelations.json'
-import iguazioProjectsRelations from './data/iguazioProjectsRelations.json'
+import iguazioProjects from './data/iguazioProjects.json' with { type: 'json' }
+import iguazioUserGrops from './data/iguazioUserGroups.json' with { type: 'json' }
+import iguazioProjectAuthorizationRoles from './data/iguazioProjectAuthorizationRoles.json' with { type: 'json' }
+import iguazioUsers from './data/iguazioUsers.json' with { type: 'json' }
+import iguazioSelf from './data/iguazioSelf.json' with { type: 'json' }
+import iguazioUserRelations from './data/iguazioUserRelations.json' with { type: 'json' }
+import iguazioProjectsRelations from './data/iguazioProjectsRelations.json' with { type: 'json' }
 
-import nuclioFunctions from './data/nuclioFunctions.json'
-import nuclioAPIGateways from './data/nuclioAPIGateways.json'
-import nuclioStreams from './data/nuclioStreams.json'
+import nuclioFunctions from './data/nuclioFunctions.json' with { type: 'json' }
+import nuclioAPIGateways from './data/nuclioAPIGateways.json' with { type: 'json' }
+import nuclioStreams from './data/nuclioStreams.json' with { type: 'json' }
 import {
   updateRuns,
   updatePipelines,
@@ -2967,14 +2967,24 @@ function getNuclioAPIGateways(req, res) {
 }
 
 // Iguazio
+function getIguazioProjectFilterName(req) {
+  return req.query.filter?.name ?? req.query['filter[name]']
+}
+
 function getIguazioProjects(req, res) {
   let resultTemplate = cloneDeep(iguazioProjects)
 
+  const filterName = getIguazioProjectFilterName(req)
   let filteredProject = {}
-  if (req.query.filter.name) {
+  if (filterName) {
     filteredProject = cloneDeep(
-      iguazioProjects.data.find(item => item.attributes.name === req.query.filter.name)
+      iguazioProjects.data.find(item => item.attributes.name === filterName)
     )
+  }
+
+  if (!filteredProject?.id) {
+    res.status(404).send({ errors: [{ detail: 'Project not found' }] })
+    return
   }
 
   let owner
@@ -2991,6 +3001,11 @@ function getIguazioProjects(req, res) {
       }
     }
     owner = iguazioUsers.data.find(item => item.id === ownerID)
+  }
+
+  if (!owner) {
+    res.status(404).send({ errors: [{ detail: 'Project owner not found' }] })
+    return
   }
 
   filteredProject.attributes.owner_username = owner.attributes.username
@@ -3203,6 +3218,13 @@ app.post('/reset-mock-state', (req, res) => {
   res.json({ message: 'Mock state is reset' })
 })
 
+const submitJobRateLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 60,
+  standardHeaders: true,
+  legacyHeaders: false
+})
+
 // Helper request for AQA framework to fail all the requests
 app.post('/set-failure-condition', (req, res) => {
   failAllRequests = req.body.shouldFail
@@ -3254,7 +3276,6 @@ app.get(
 )
 
 app.get(`${mlrunAPIIngress}/projects/:project/runs`, getRuns)
-app.get(`${mlrunAPIIngress}/projects/*/runs`, getRuns)
 app.get(`${mlrunAPIIngress}/projects/:project/alert-activations`, getAlerts)
 app.get(`${mlrunAPIIngress}/projects/:project/alert-activations/:id`, getAlert)
 app.get(`${mlrunAPIIngress}/projects/:project/alerts/:name`, getAlertConfig)
@@ -3271,14 +3292,12 @@ app.get(`${mlrunAPIIngress}/hub/sources/:project/item-object`, getFunctionObject
 app.get(`${mlrunIngress}/:function/function.yaml`, getFunctionTemplate)
 
 app.get(`${mlrunAPIIngress}/projects/:project/schedules`, getProjectsSchedules)
-app.get(`${mlrunAPIIngress}/projects/*/schedules`, getProjectsSchedules)
 app.get(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, getProjectsSchedule)
 app.delete(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, deleteSchedule)
 app.post(`${mlrunAPIIngress}/projects/:project/schedules/:schedule/invoke`, invokeSchedule)
 app.put(`${mlrunAPIIngress}/projects/:project/schedules/:schedule/`, updateSchedule)
 
 app.get(`${mlrunAPIIngress}/projects/:project/pipelines`, getPipelines)
-app.get(`${mlrunAPIIngress}/projects/*/pipelines`, getPipelines)
 app.get(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID`, getPipeline)
 app.post(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID/retry`, pipelineRetry)
 app.post(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID/terminate`, pipelineTerminate)
@@ -3326,7 +3345,7 @@ app.get(`${mlrunAPIIngress}/projects/:project/functions/:func`, getFunc)
 app.post(`${mlrunAPIIngress}/projects/:project/functions/:func`, postFunc)
 
 app.get(
-  `${mlrunAPIIngress}/projects/:project/:featureArtifact/*/tags`,
+  `${mlrunAPIIngress}/projects/:project/:featureArtifact/:anyPath/tags`,
   getProjectsFeatureArtifactTags
 )
 
@@ -3353,13 +3372,6 @@ app.get(
 app.get(`${mlrunAPIIngressV2}/projects/:project/features`, getProjectsFeaturesEntities)
 app.get(`${mlrunAPIIngressV2}/projects/:project/entities`, getProjectsFeaturesEntities)
 app.get(`${mlrunAPIIngress}/projects/:project/feature-vectors`, getProjectsFeaturesEntities)
-
-const submitJobRateLimiter = rateLimit({
-  windowMs: 60 * 1000,
-  limit: 60,
-  standardHeaders: true,
-  legacyHeaders: false
-})
 
 app.post(`${mlrunAPIIngress}/submit_job`, submitJobRateLimiter, postSubmitJob)
 

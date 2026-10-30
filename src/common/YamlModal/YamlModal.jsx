@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useRef } from 'react'
 import Prism from 'prismjs'
 import PropTypes from 'prop-types'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 
 import { PopUpDialog } from 'igz-controls/components'
 

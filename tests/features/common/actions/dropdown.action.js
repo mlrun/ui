@@ -18,8 +18,8 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { expect } from 'chai'
-import { differenceWith, isEqual } from 'lodash'
-import { clickNearComponent, scrollToWebElement } from './common.action'
+import { differenceWith, isEqual } from 'lodash-es'
+import { clickNearComponent, scrollToWebElement } from './common.action.js'
 
 export const getOptionValues = async (driver, options) => {
     return await driver.findElements(options).then(function(elements) {

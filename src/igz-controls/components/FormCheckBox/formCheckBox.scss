@@ -1,0 +1,91 @@
+@use '../../scss/colors';
+@use '../../scss/mixins';
+
+.form-field-checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: colors.$primary;
+
+  &_readonly {
+    @include mixins.radioCheckReadonly;
+  }
+
+  input[type='checkbox'] {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    transition: background 0.2s ease-in-out;
+
+    @include mixins.radioCheckField;
+
+    &::before {
+      position: absolute;
+      top: 1px;
+      left: 5px;
+      display: block;
+      width: 6px;
+      height: 11px;
+      border-color: colors.$white;
+      border-style: solid;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      content: '';
+    }
+
+    &:checked {
+      background: currentcolor;
+
+      &:hover {
+        background: currentcolor;
+
+        &:disabled {
+          background: currentcolor;
+        }
+      }
+    }
+
+    &:disabled {
+      &:hover {
+        background: colors.$white;
+      }
+    }
+
+    &:not(:disabled):checked {
+      ~ label {
+        &.highlighted {
+          color: colors.$white;
+          background-color: colors.$malibu;
+        }
+      }
+
+      &:hover {
+        ~ label {
+          &.highlighted {
+            background-color: colors.$cornflowerBlue;
+          }
+        }
+      }
+    }
+
+    ~ label {
+      &.highlighted {
+        margin-left: 10px;
+        padding: 4px 8px;
+        font-weight: bold;
+        font-size: 12px;
+        background-color: colors.$mischka;
+        border-radius: 4px;
+      }
+    }
+
+    &:not(:disabled):hover {
+      ~ label {
+        &.highlighted {
+          background-color: colors.$iron;
+        }
+      }
+    }
+  }
+}

@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { isEmpty, maxBy } from 'lodash'
+import { isEmpty, maxBy } from 'lodash-es'
 import PropTypes from 'prop-types'
 
 import DetailsPopUp from '../DetailsPopUp'
@@ -141,8 +141,6 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
       tag: artifactData.tag
     }
 
-    setIsLoading(true)
-
     artifactContext
       .fetchArtifact(artifactData.project, artifactMin)
       .then(({ data }) => {
@@ -185,6 +183,11 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
     artifactData.project
   ])
 
+  const refreshArtifact = useCallback(() => {
+    setIsLoading(true)
+    return fetchArtifact()
+  }, [fetchArtifact])
+
   const actionsMenu = useMemo(
     () => fileMin =>
       artifactContext.generateActionsMenu(
@@ -194,7 +197,7 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
         toggleConvertedYaml,
         () => {},
         artifactData.project,
-        fetchArtifact,
+        refreshArtifact,
         () => {},
         {},
         selectedArtifact,
@@ -205,7 +208,7 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
     [
       artifactContext,
       dispatch,
-      fetchArtifact,
+      refreshArtifact,
       frontendSpec,
       selectedArtifact,
       artifactData.project,
@@ -223,7 +226,7 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
     <DetailsPopUp
       actionsMenu={actionsMenu}
       formInitialValues={detailsFormInitialValues}
-      handleRefresh={fetchArtifact}
+      handleRefresh={refreshArtifact}
       isLoading={isLoading}
       isOpen={isOpen}
       onResolve={onResolve}

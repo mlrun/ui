@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isNil } from 'lodash'
+import { isNil } from 'lodash-es'
 
 import { getInfoHeaders, getJobsDetailsMenu } from '../../components/Jobs/jobs.util'
 import { JOBS_PAGE } from '../../constants'

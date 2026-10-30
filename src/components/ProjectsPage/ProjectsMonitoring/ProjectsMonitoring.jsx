@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import classNames from 'classnames'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 import AlertsCounters from '../../../elements/ProjectsMonitoringCounters/AlertsCounters'
 import ApplicationCounter from '../../../elements/ProjectsMonitoringCounters/ApplicationCounters'

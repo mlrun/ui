@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { debounce, isNil } from 'lodash'
+import { debounce, isNil } from 'lodash-es'
 
 import {
   FUNCTIONS_PAGE,

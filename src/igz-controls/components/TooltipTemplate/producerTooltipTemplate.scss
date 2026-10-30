@@ -1,0 +1,23 @@
+@use '../../scss/shadows';
+@use '../../scss/colors';
+
+.tooltip-container {
+  display: flex;
+  flex-direction: column;
+  padding: 15px 10px;
+  background-color: colors.$white;
+  border-radius: 4px;
+  box-shadow: shadows.$tooltipShadow;
+
+  &__kind,
+  &__owner {
+    color: colors.$doveGray;
+
+    span {
+      color: colors.$doveGrayTwo;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 24px;
+    }
+  }
+}

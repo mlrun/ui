@@ -18,9 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { Given, When, Then } from '@cucumber/cucumber'
-import pageObjects from '../common/page-objects'
-import pageObjectsConsts from '../common-tools/common-consts'
-import { test_url, test_port } from '../../config'
+import pageObjects from '../common/page-objects.js'
+import pageObjectsConsts from '../common-tools/common-consts.js'
+import { test_url, test_port } from '../../config.js'
 import {
   clickNearComponent,
   clickOnComponent,
@@ -53,12 +53,12 @@ import {
   verifyClassEnabled,
   checkComponentHintTextWithHover,
   putToTestContextElementValue
-} from '../common/actions/common.action'
+} from '../common/actions/common.action.js'
 import {
   checkTableColumnValues,
   waitForRowIndexesByColumnValue,
   isTableColumnSorted
-} from '../common/actions/table.action'
+} from '../common/actions/table.action.js'
 import {
   checkDropdownContainsOptions,
   checkDropdownOptions,
@@ -67,8 +67,8 @@ import {
   openDropdown,
   selectOptionInDropdown,
   selectOptionInDropdownWithoutCheck
-} from '../common/actions/dropdown.action'
-import { isTabActive } from '../common/actions/tab-selector.action'
+} from '../common/actions/dropdown.action.js'
+import { isTabActive } from '../common/actions/tab-selector.action.js'
 import {
   checkHintText,
   checkHintTextWithHover,
@@ -87,8 +87,8 @@ import {
   verifyPlaceholder,
   verifyTypedValueWithoutInputgroup,
   verifyTextAreaCounter
-} from '../common/actions/input-group.action'
-import { incrementValue, decrementValue } from '../common/actions/number-input-group.action'
+} from '../common/actions/input-group.action.js'
+import { incrementValue, decrementValue } from '../common/actions/number-input-group.action.js'
 import {
   checkCheckbox,
   isCheckboxChecked,
@@ -96,30 +96,30 @@ import {
   uncheckCheckbox,
   verifyCheckboxEnabled,
   verifyCheckboxDisabled
-} from '../common/actions/checkbox.action'
+} from '../common/actions/checkbox.action.js'
 import {
   applyDatetimePickerRange,
   pickUpCustomDatetimeRange,
   verifyTimeFilterBand,
   setPickerTime
-} from '../common/actions/date-picker.action'
+} from '../common/actions/date-picker.action.js'
 import {
   isContainsSubstringInSuggestedOptions,
   typeSearchableValue
-} from '../common/actions/input-with-autocomplete.action'
-import { checkWorkflowGraphConnections, panGraphToElement } from '../common/actions/graph.action'
+} from '../common/actions/input-with-autocomplete.action.js'
+import { checkWorkflowGraphConnections, panGraphToElement } from '../common/actions/graph.action.js'
 import {
   isRadioButtonSelected,
   isRadioButtonUnselected,
   selectRadiobutton
-} from '../common/actions/radio-button.action'
+} from '../common/actions/radio-button.action.js'
 import { 
   openActionMenu, 
   selectOptionInActionMenu,
   verifyOptionInActionMenuEnabled,
   verifyOptionInActionMenuDisabled 
-} from '../common/actions/action-menu.action'
-import { selectSidebarItem, selectSidebarProject } from '../common/actions/sidebar.action'
+} from '../common/actions/action-menu.action.js'
+import { selectSidebarItem, selectSidebarProject } from '../common/actions/sidebar.action.js'
 import { expect } from 'chai'
 
 Given('open url', async function() {

@@ -18,12 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
-import { cloneDeep, isEmpty } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash-es'
 
 import FeatureSetsView from './FeatureSetsView'
-import { FeatureStoreContext } from '../FeatureStore'
+import { FeatureStoreContext } from '../FeatureStore.context'
 
 import {
   DETAILS_OVERVIEW_TAB,
@@ -96,6 +96,12 @@ const FeatureSets = () => {
     [frontendSpec.internal_labels, selectedFeatureSet.description, selectedFeatureSet.labels]
   )
   const featureSetsFilters = useFiltersFromSearchParams(filtersConfig)
+  const [prevFilterTag, setPrevFilterTag] = useState(featureSetsFilters.tag)
+
+  if (featureSetsFilters.tag !== prevFilterTag) {
+    setPrevFilterTag(featureSetsFilters.tag)
+    setSelectedRowData({})
+  }
 
   const { featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen, toggleConvertedYaml } =
     React.useContext(FeatureStoreContext)
@@ -340,10 +346,6 @@ const FeatureSets = () => {
     )
   }, [dispatch, navigate, params.projectName, selectedFeatureSetMin])
 
-  useEffect(() => {
-    setSelectedRowData({})
-  }, [featureSetsFilters.tag])
-
   useInitialTableFetch({
     fetchData,
     setExpandedRowsData: setSelectedRowData,
@@ -364,6 +366,35 @@ const FeatureSets = () => {
     }
   }, [filtersStore.groupBy, featureSetsFilters.tag, dispatch])
 
+  // Re-select on every list refresh (new allData reference), not only when the item differs: a fresh
+  // selectedFeatureSetMin is what re-fetches the full feature set after handleRefresh cleared it
+  const allFeatureSets = featureStore.featureSets?.allData
+  const [prevSelectionSource, setPrevSelectionSource] = useState(null)
+
+  if (
+    !prevSelectionSource ||
+    prevSelectionSource.allFeatureSets !== allFeatureSets ||
+    prevSelectionSource.name !== params.name ||
+    prevSelectionSource.tag !== params.tag
+  ) {
+    setPrevSelectionSource({ allFeatureSets, name: params.name, tag: params.tag })
+
+    if (params.name && allFeatureSets?.length > 0) {
+      const selectedItem = allFeatureSets.find(contentItem => {
+        return (
+          contentItem.name === params.name &&
+          (contentItem.tag === params.tag || contentItem.uid === params.tag)
+        )
+      })
+
+      if (selectedItem) {
+        setSelectedFeatureSetMin(cloneDeep(selectedItem))
+      }
+    } else {
+      setSelectedFeatureSetMin({})
+    }
+  }
+
   useEffect(() => {
     const content = cloneDeep(featureStore.featureSets?.allData)
 
@@ -382,11 +413,7 @@ const FeatureSets = () => {
             replace: true
           }
         )
-      } else {
-        setSelectedFeatureSetMin(selectedItem)
       }
-    } else {
-      setSelectedFeatureSetMin({})
     }
   }, [featureStore.featureSets.allData, navigate, params.name, params.projectName, params.tag])
 
@@ -461,7 +488,7 @@ const FeatureSets = () => {
       filters={featureSetsFilters}
       handleRefresh={handleRefresh}
       pageData={pageData}
-      ref={{ featureStoreRef }}
+      featureStoreRef={featureStoreRef}
       requestErrorMessage={requestErrorMessage}
       selectedFeatureSet={selectedFeatureSet}
       selectedRowData={selectedRowData}

@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 
 import ApplicationTableRow from '../../../elements/ApplicationTableRow/ApplicationTableRow'
 import MEPsWithDetections from './MEPsWithDetections'

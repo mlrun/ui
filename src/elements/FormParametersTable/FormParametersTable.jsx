@@ -21,7 +21,7 @@ import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { FieldArray } from 'react-final-form-arrays'
-import { get, isEmpty } from 'lodash'
+import { get, isEmpty } from 'lodash-es'
 
 import FormParametersRow from './FormParametersRow/FormParametersRow'
 import { FormActionButton } from 'igz-controls/elements'
