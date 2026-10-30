@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { By } from 'selenium-webdriver'
-import { locatorBuilder } from '../../common-tools/common-tools'
+import { locatorBuilder } from '../../common-tools/common-tools.js'
 
 export default function(graphStructure) {
   const options = locatorBuilder`${0} ${1}`

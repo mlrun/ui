@@ -34,15 +34,14 @@ const MEPsWithDetections = () => {
   const chartRef = useRef()
   const chartYAxisRef = useRef()
   const chartWrapperRef = useRef()
+  const savedCopyWidthRef = useRef(0)
+  const savedCopyHeightRef = useRef(0)
   const barConfig = useMemo(() => getMEPsWithDetectionChartConfig(), [])
   const {
     endpointsWithDetections: { data: endpointsWithDetectionsData, loading, error }
   } = useSelector(store => store.monitoringApplicationsStore)
 
   const renderPlugin = useMemo(() => {
-    let savedCopyWidth = 0
-    let savedCopyHeight = 0
-
     return {
       id: 'renderTracker',
       afterDatasetsDraw(chart) {
@@ -50,12 +49,12 @@ const MEPsWithDetections = () => {
         const copyHeight = chart.scales.y.height + 20
 
         if (
-          (copyWidth !== savedCopyWidth || copyHeight !== savedCopyHeight) &&
+          (copyWidth !== savedCopyWidthRef.current || copyHeight !== savedCopyHeightRef.current) &&
           chartYAxisRef.current &&
           chartWrapperRef.current
         ) {
-          savedCopyWidth = copyWidth
-          savedCopyHeight = copyHeight
+          savedCopyWidthRef.current = copyWidth
+          savedCopyHeightRef.current = copyHeight
           const sourceCanvas = chart.ctx.canvas
           const copyWidthWithRatio = copyWidth * chart.currentDevicePixelRatio
           const copyHeightWithRatio = copyHeight * chart.currentDevicePixelRatio

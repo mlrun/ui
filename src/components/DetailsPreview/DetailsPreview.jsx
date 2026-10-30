@@ -18,10 +18,10 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 import ArtifactsExtraData from '../../elements/ArtifactsExtraData/ArtifactsExtraData'

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize, chain, defaultsDeep, get, isEmpty } from 'lodash'
+import { capitalize, chain, defaultsDeep, get, isEmpty } from 'lodash-es'
 
 import tasksApi from '../../api/tasks-api'
 

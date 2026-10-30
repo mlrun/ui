@@ -20,11 +20,11 @@ such restriction.
 import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { chain, cloneDeep, keyBy, mapValues } from 'lodash'
+import { chain, cloneDeep, keyBy, mapValues } from 'lodash-es'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 
 import {
   Button,
@@ -56,24 +56,6 @@ const DeployModelPopUp = ({
   model,
   onResolve = () => {}
 }) => {
-  const [tagOptionList, setTagOptionList] = useState([])
-  const [initialValues, setInitialValues] = useState({
-    modelName: '',
-    className: '',
-    selectedTag: '',
-    selectedFunctionName: functionOptionList?.[0].id ?? '',
-    arguments: []
-  })
-  const dispatch = useDispatch()
-
-  const formRef = React.useRef(
-    createForm({
-      onSubmit: () => {}
-    })
-  )
-  const location = useLocation()
-  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
-
   const getTagOptions = useCallback((functionList, selectedFunctionName) => {
     return chain(functionList)
       .filter(func => func.name === selectedFunctionName && func.tag !== '')
@@ -85,37 +67,38 @@ const DeployModelPopUp = ({
       .value()
   }, [])
 
-  useEffect(() => {
-    setInitialValues(prev => ({ ...prev, modelName: model?.db_key }))
-  }, [model])
+  const [tagOptionList, setTagOptionList] = useState(() => {
+    const selectedFunctionName = functionOptionList?.[0].id ?? ''
 
-  useEffect(() => {
-    if (!initialValues.selectedTag && functionList.length > 0) {
-      const tags = getTagOptions(functionList, initialValues.selectedFunctionName)
+    return functionList.length > 0 ? getTagOptions(functionList, selectedFunctionName) : []
+  })
+  const [initialValues] = useState(() => {
+    const selectedFunctionName = functionOptionList?.[0]?.id ?? ''
+    const selectedTag =
+      functionList.length > 0 ? getTagOptions(functionList, selectedFunctionName)[0]?.id : ''
+    const selectedFunction = functionList.find(
+      func => func.name === selectedFunctionName && func.tag === selectedTag
+    )
 
-      setTagOptionList(tags)
-      setInitialValues(prev => ({ ...prev, selectedTag: tags[0]?.id }))
+    return {
+      modelName: model?.db_key,
+      className: selectedFunction ? selectedFunction.default_class : '',
+      selectedTag,
+      selectedFunctionName,
+      arguments: []
     }
-  }, [functionList, getTagOptions, initialValues.selectedFunctionName, initialValues.selectedTag])
+  })
+  const dispatch = useDispatch()
 
-  useEffect(() => {
-    if (!initialValues.className) {
-      const selectedFunction = functionList.find(
-        func =>
-          func.name === initialValues.selectedFunctionName && func.tag === initialValues.selectedTag
-      )
-
-      setInitialValues(prev => ({
-        ...prev,
-        className: selectedFunction ? selectedFunction.default_class : ''
-      }))
-    }
-  }, [
-    functionList,
-    initialValues.className,
-    initialValues.selectedFunctionName,
-    initialValues.selectedTag
-  ])
+  const [form] = useState(() =>
+    createForm({
+      initialValues,
+      mutators: { ...arrayMutators, setFieldState },
+      onSubmit: () => {}
+    })
+  )
+  const location = useLocation()
+  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, form)
 
   useEffect(() => {
     return () => {
@@ -198,22 +181,17 @@ const DeployModelPopUp = ({
   const onSelectedFunctionNameChange = currentValue => {
     const tags = getTagOptions(functionList, currentValue)
     const defaultClass = functionList.find(
-      func => func.name === currentValue && func.tag === tags[0].id
+      func => func.name === currentValue && func.tag === tags[0]?.id
     )?.default_class
 
     setTagOptionList(tags)
-    formRef.current.change('selectedTag', tags[0]?.id ?? '')
-    formRef.current.change('className', defaultClass ?? '')
+    form.change('selectedTag', tags[0]?.id ?? '')
+    form.change('className', defaultClass ?? '')
   }
 
   return (
     <>
-      <Form
-        form={formRef.current}
-        initialValues={initialValues}
-        mutators={{ ...arrayMutators, setFieldState }}
-        onSubmit={submitHandler}
-      >
+      <Form form={form} onSubmit={submitHandler}>
         {formState => {
           return (
             <Modal

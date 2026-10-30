@@ -1,8 +1,6 @@
 @use 'sass:meta';
 @use 'igz-controls/scss/fonts';
-@use 'igz-controls/scss/common' with (
-  $include-element-resets: false
-);
+@use 'igz-controls/scss/common';
 @use 'igz-controls/scss/variables';
 @use 'igz-controls/scss/shadows';
 @use 'igz-controls/scss/colors';

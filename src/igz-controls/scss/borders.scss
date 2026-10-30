@@ -1,0 +1,26 @@
+@use './colors';
+
+$activeJobTabBorder: 3px solid colors.$cornflowerBlue;
+$disabledBorder: 1px solid rgba(colors.$spunPearl, 0.3);
+$errorBorder: 1px solid colors.$amaranth;
+$labelBorder: 1px solid colors.$amethyst;
+$parametersBorder: 1px solid colors.$burntSiennaTwo;
+$primaryBorder: 1px solid rgba(colors.$black, 0.2);
+$resultsBorder: 1px solid colors.$chateauGreen;
+$secondaryBorder: 1px solid colors.$mulledWineThree;
+$tertiaryBorder: 1px solid colors.$mischka;
+$dividerBorder: 1px solid rgba(colors.$mulledWine, 0.12);
+$transparentBorder: 1px solid transparent;
+$uploadFileDragOverBorder: 2px dashed colors.$cornflowerBlue;
+$uploadFileDroppedBorder: 1px solid colors.$silver;
+$uploadFileIdleBorder: 1px dashed colors.$silver;
+$labelEditBorder: 1px solid rgba(colors.$amethyst, 0.34);
+$applyBtnBorder: 4px solid colors.$brightTurquoise;
+$focusBorder: 1px solid colors.$topaz;
+$tableRowBorder: 1px solid colors.$titanWhite;
+
+// stats borders
+$runningBorder: 2px solid colors.$pictonBlue;
+$totalBorder: 2px solid rgba(colors.$black, 0.2);
+$failedBorder: 2px solid colors.$amaranth;
+$completedBorder: 2px solid colors.$brightTurquoise;

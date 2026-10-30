@@ -13,7 +13,7 @@ implied. See the License for the specific language governing
 permissions and limitations under the License.
 */
 
-import { isEmpty, isEqual } from 'lodash'
+import { isEmpty, isEqual } from 'lodash-es'
 
 const CONFIG = {
   MAX_RETRIES: 3,

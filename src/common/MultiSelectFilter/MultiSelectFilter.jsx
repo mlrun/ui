@@ -17,7 +17,7 @@ such restriction.
 import React, { useMemo, memo } from 'react'
 import PropTypes from 'prop-types'
 import { useField, useForm } from 'react-final-form'
-import { isEmpty, capitalize } from 'lodash'
+import { isEmpty, capitalize } from 'lodash-es'
 
 import { FormOnChange, FormSelect } from 'igz-controls/components'
 import { FILTER_ALL_ITEMS } from '../../constants'

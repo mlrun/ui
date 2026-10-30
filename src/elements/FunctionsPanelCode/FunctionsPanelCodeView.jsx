@@ -19,7 +19,7 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { useDispatch } from 'react-redux'
 
 import CheckBox from '../../common/CheckBox/CheckBox'

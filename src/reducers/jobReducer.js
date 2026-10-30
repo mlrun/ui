@@ -20,7 +20,7 @@ such restriction.
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import jobsApi from '../api/jobs-api'
 import { defaultRejectedHandler, hideLoading, showLoading } from './redux.util'
-import { get } from 'lodash'
+import { get } from 'lodash-es'
 import {
   DATES_FILTER,
   FILTER_ALL_ITEMS,

@@ -17,12 +17,12 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import VolumesTableView from './VolumesTableView'
 import { CONFIG_MAP, PVC, SECRET, V3IO } from './volumesTable.util'
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash-es'
 import { isCommunityEdition } from '../../utils/helper'
 
 import Edit from 'igz-controls/images/edit.svg?react'
@@ -54,8 +54,10 @@ export const VolumesTable = ({
   })
   const [showAddNewVolumeRow, setShowAddNewVolumeRow] = useState(false)
   const [selectedVolume, setSelectedVolume] = useState(null)
+  const [prevVolumeType, setPrevVolumeType] = useState(newVolume.type)
 
-  useEffect(() => {
+  if (newVolume.type !== prevVolumeType) {
+    setPrevVolumeType(newVolume.type)
     setValidation({
       isNameValid: true,
       isTypeValid: true,
@@ -69,7 +71,7 @@ export const VolumesTable = ({
       accessKey: '',
       subPath: ''
     }))
-  }, [newVolume.type])
+  }
 
   const handleSetSelectedVolume = useCallback(
     selectedVolume => {

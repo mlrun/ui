@@ -76,6 +76,9 @@ Note: `npm install` should be run first.
 Builds and serves the **mlrun-ui** application in **Module Federation** mode at `http://localhost:5179/`.<br />
 Use this command when developing locally with **igz-ui**, allowing **mlrun-ui** to be consumed as a remote module.
 
+The remote exposes `./app` and `./loadRemoteConfig`. Their TypeScript types are generated on every build (and kept in sync
+while the dev server runs) into `build/@mf-types`, `build/@mf-types.d.ts` and `build/@mf-types.zip`, using the `tsconfig.json` in the repo root.
+
 ## Development
 
 ### Environment variables
@@ -90,6 +93,22 @@ VITE_NUCLIO_API_URL=http://localhost:8070
 VITE_NUCLIO_UI_URL=http://localhost:8070
 VITE_FUNCTION_CATALOG_URL=https://raw.githubusercontent.com/mlrun/functions/master
 ```
+
+### Dev server proxy
+
+`npm start` and `npm run preview:federation` proxy requests from the dev server to the backends configured in your `.env.development`
+(see `vite.config.mjs`). A proxy entry is created only when its variable is set; unset variables are skipped.
+
+| Request prefix      | Target variable             | Prefix stripped before forwarding |
+| ------------------- | --------------------------- | --------------------------------- |
+| `/api`              | `VITE_MLRUN_API_URL`        | No                                |
+| `/nuclio`           | `VITE_NUCLIO_API_URL`       | Yes                               |
+| `/iguazio`          | `VITE_IGUAZIO_API_URL`      | Yes                               |
+| `/function-catalog` | `VITE_FUNCTION_CATALOG_URL` | Yes                               |
+
+- All proxies use `changeOrigin: true` and `secure: false` (self-signed certificates are accepted).
+- `/api` also sends `x-remote-user: admin` and, when `VITE_MLRUN_V3IO_ACCESS_KEY` is set, `x-v3io-session-key`.
+- To add a backend, add one `...proxyEntry('/prefix', env.VITE_..._URL, { stripPrefix: true })` line to `server.proxy` in `vite.config.mjs`.
 
 ### `npm start`
 

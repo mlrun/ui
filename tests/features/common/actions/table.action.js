@@ -19,13 +19,13 @@ such restriction.
 */
 import { expect } from 'chai'
 import { By } from 'selenium-webdriver'
-import { difference  } from 'lodash'
+import { difference  } from 'lodash-es'
 import {
   getOptionValues,
   openDropdown,
   selectOptionInDropdownWithoutCheck
-} from './dropdown.action'
-import { getElementText, hoverComponent } from './common.action'
+} from './dropdown.action.js'
+import { getElementText, hoverComponent } from './common.action.js'
 
 async function getColumnValuesAttribute(driver, table, columnName) {
   return await driver

@@ -18,18 +18,18 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { By } from 'selenium-webdriver'
-import commonTable from '../components/table.component'
-import dropdownComponent from '../components/dropdown.component'
-import labelComponent from '../components/label.component'
+import commonTable from '../components/table.component.js'
+import dropdownComponent from '../components/dropdown.component.js'
+import labelComponent from '../components/label.component.js'
 import {
   generateDropdownGroup,
   generateInputGroup,
   generateLabelGroup
-} from '../../common-tools/common-tools'
-import inputGroup from '../components/input-group.component'
-import checkboxComponent from '../components/checkbox.component'
-import datepicker from '../components/date-picker.component'
-import actionMenu from '../components/action-menu.component'
+} from '../../common-tools/common-tools.js'
+import inputGroup from '../components/input-group.component.js'
+import checkboxComponent from '../components/checkbox.component.js'
+import datepicker from '../components/date-picker.component.js'
+import actionMenu from '../components/action-menu.component.js'
 
 const tabSelector = {
   root: '.content .content-menu',

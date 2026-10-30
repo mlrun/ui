@@ -19,9 +19,9 @@ such restriction.
 */
 import { memo, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router'
 import { useDispatch } from 'react-redux'
-import { isEqual, isNil } from 'lodash'
+import { isEqual, isNil } from 'lodash-es'
 
 import { RefreshButton } from 'igz-controls/nextGenComponents'
 import {

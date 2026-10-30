@@ -1,0 +1,60 @@
+@use '../../scss/colors';
+
+.actions-menu {
+  position: relative;
+
+  &__container {
+    position: relative;
+    display: none;
+
+    &_extended {
+      position: absolute;
+      right: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      background-color: colors.$ghostWhite;
+
+      &::before {
+        position: absolute;
+        left: -30px;
+        display: block;
+        width: 30px;
+        height: 100%;
+        background: linear-gradient(90deg, rgb(255 255 255 / 0%) 0%, rgb(245 247 255 / 100%) 100%);
+        content: '';
+      }
+
+      .actions-menu {
+        padding: 0 5px 0 0;
+      }
+    }
+
+    &-active {
+      display: flex;
+    }
+  }
+
+  &__main-actions-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__body {
+    min-width: 150px;
+    max-width: 250px;
+
+    .pop-up-dialog {
+      width: 100%;
+      padding: 0;
+    }
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+}

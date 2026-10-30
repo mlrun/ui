@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useState, Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { ensureNuclioRemote, loadNuclioApp } from '../../utils/nuclio.remotes.utils'
 import NuclioRemoteError from './NuclioRemoteError'
 import { Loader } from 'igz-controls/components'
@@ -37,6 +37,13 @@ const RemoteNuclioRouteWrapper = () => {
   const params = useParams()
   const [ready, setReady] = useState(false)
   const [error, setError] = useState(false)
+  const [prevProjectName, setPrevProjectName] = useState(params.projectName)
+
+  if (prevProjectName !== params.projectName) {
+    setPrevProjectName(params.projectName)
+    setReady(false)
+    setError(false)
+  }
 
   const nuclioItemName = params?.['*']?.split('/').filter(Boolean)[0] ?? ''
 
@@ -69,9 +76,6 @@ const RemoteNuclioRouteWrapper = () => {
   }, [])
 
   useEffect(() => {
-    setReady(false)
-    setError(false)
-
     const init = async () => {
       try {
         await ensureNuclioRemote()

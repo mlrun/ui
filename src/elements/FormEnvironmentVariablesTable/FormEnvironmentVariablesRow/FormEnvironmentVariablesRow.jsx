@@ -17,10 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 import {
   FormInput,
@@ -55,7 +55,7 @@ const FormEnvironmentVariablesRow = ({
   setFieldValue,
   uniquenessValidator
 }) => {
-  const [fieldData, setFieldData] = useState(fields.value[index])
+  const fieldData = fields.value[index]
   const { projectName } = useParams()
 
   const tableRowClassNames = classnames(
@@ -72,10 +72,6 @@ const FormEnvironmentVariablesRow = ({
         : fieldData.data.value,
     [fieldData.data.secretKey, fieldData.data.secretName, fieldData.data.type, fieldData.data.value]
   )
-
-  useEffect(() => {
-    setFieldData(fields.value[index])
-  }, [fields.value, index])
 
   const handleTypeChange = useCallback(
     type => {

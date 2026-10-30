@@ -17,20 +17,20 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useRef, useEffect } from 'react'
+import { useParams } from 'react-router'
 import { useDispatch } from 'react-redux'
 
 import ScheduledJobsTable from '../../../elements/ScheduledJobsTable/ScheduledJobsTable'
 
 import { GROUP_BY_NONE, REQUEST_CANCELED, SCHEDULE_TAB } from '../../../constants'
-import { JobsContext } from '../Jobs'
+import { JobsContext } from '../Jobs.context'
 import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 
 const ScheduledJobs = () => {
-  const [, setDataIsLoaded] = useState(false)
+  const dataIsLoadedRef = useRef(false)
   const {
     abortControllerRef,
     initialTabData,
@@ -48,14 +48,10 @@ const ScheduledJobs = () => {
   )
 
   useEffect(() => {
-    setDataIsLoaded(prevState => {
-      if (!prevState) {
-        refreshJobs(filters)
-        return true
-      } else {
-        return prevState
-      }
-    })
+    if (!dataIsLoadedRef.current) {
+      dataIsLoadedRef.current = true
+      refreshJobs(filters)
+    }
   }, [filters, refreshJobs])
 
   useEffect(() => {
@@ -63,7 +59,7 @@ const ScheduledJobs = () => {
 
     return () => {
       setJobs([])
-      setDataIsLoaded(false)
+      dataIsLoadedRef.current = false
       abortControllerRefCurrent.abort(REQUEST_CANCELED)
     }
   }, [abortControllerRef, params.projectName, setJobs])

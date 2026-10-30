@@ -19,9 +19,9 @@ such restriction.
 */
 import { Before, After, AfterAll, Status } from '@cucumber/cucumber'
 import wd from 'selenium-webdriver'
-import { browser } from '../../config'
-import { clearBackendAfterTest, resetMockState, setRequestsFailureCondition } from '../common-tools/common-tools'
-import { startDriver, quitActiveDriver, E2E_TIMEZONE } from './world'
+import { browser } from '../../config.js'
+import { clearBackendAfterTest, resetMockState, setRequestsFailureCondition } from '../common-tools/common-tools.js'
+import { startDriver, quitActiveDriver, E2E_TIMEZONE } from './world.js'
 
 // the first page load after the dev server start is slow: Vite pre-bundles the dependencies (`optimizeDeps.force`)
 // and may reload the page, so without waiting the first scenarios get a blank page

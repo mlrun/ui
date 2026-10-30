@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { cloneDeep, isNil } from 'lodash'
+import { cloneDeep, isNil } from 'lodash-es'
 import PropTypes from 'prop-types'
 
 import FeaturesTablePanelView from './FeaturesTablePanelView'

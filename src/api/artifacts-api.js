@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isEmpty, isNil } from 'lodash'
+import { isEmpty, isNil } from 'lodash-es'
 import { mainHttpClient, mainHttpClientV2 } from '../httpClient'
 import {
   ARTIFACT_OTHER_TYPE,

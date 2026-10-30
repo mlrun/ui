@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import PropTypes from 'prop-types'
 
 import DetailsPopUp from '../DetailsPopUp'
@@ -62,8 +62,6 @@ const FeatureSetPopUp = ({ featureSetData, isOpen, onResolve }) => {
   )
 
   const fetchFeatureSetData = useCallback(() => {
-    setIsLoading(true)
-
     dispatch(
       fetchFeatureSet({
         project: featureSetData.project,
@@ -89,6 +87,11 @@ const FeatureSetPopUp = ({ featureSetData, isOpen, onResolve }) => {
       })
   }, [dispatch, featureSetData.name, featureSetData.project, featureSetData.tag, onResolve])
 
+  const refreshFeatureSetData = useCallback(() => {
+    setIsLoading(true)
+    return fetchFeatureSetData()
+  }, [fetchFeatureSetData])
+
   useEffect(() => {
     if (isEmpty(selectedFeatureSet)) {
       fetchFeatureSetData()
@@ -99,7 +102,7 @@ const FeatureSetPopUp = ({ featureSetData, isOpen, onResolve }) => {
     <DetailsPopUp
       actionsMenu={actionsMenu}
       formInitialValues={detailsFormInitialValues}
-      handleRefresh={fetchFeatureSetData}
+      handleRefresh={refreshFeatureSetData}
       isLoading={isLoading}
       isOpen={isOpen}
       onResolve={onResolve}

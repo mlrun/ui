@@ -17,10 +17,14 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-const axios = require('axios')
-const fs = require('fs-extra')
-const yaml = require('js-yaml')
-const lodash = require('lodash')
+
+import axios from 'axios'
+import fs from 'fs-extra'
+import * as yaml from 'js-yaml'
+import lodash from 'lodash-es'
+
+// fs-extra exports are sometimes tricky in ESM, we destructure what we need
+const { emptyDir, writeJson, ensureDir, writeFile } = fs
 
 const baseMlRunUrl =
   'http://mlrun-api-ingress.dashboard.default-tenant.app.dev35.lab.iguazeng.com/api/'
@@ -29,11 +33,9 @@ const baseNuclioUrl =
   'http://nuclio-ingress.dashboard.default-tenant.app.dev35.lab.iguazeng.com/api/'
 
 const githubFunctionsUrl = 'https://github.com/mlrun/functions/tree/master'
-const githubYamlUrl =
-  'https://raw.githubusercontent.com/mlrun/functions/master/'
+const githubYamlUrl = 'https://raw.githubusercontent.com/mlrun/functions/master/'
 const saveFolder = 'data'
-const igzApiUrl =
-  'http://platform-api.dashboard.default-tenant.app.dev35.lab.iguazeng.com/api/'
+const igzApiUrl = 'http://platform-api.dashboard.default-tenant.app.dev35.lab.iguazeng.com/api/'
 
 const fetchData = async (host, endpoint = '') => {
   try {
@@ -57,17 +59,9 @@ const fetchJsons = async (list, host, endpointStart, endpointEnd = '') => {
   return await Promise.all(response)
 }
 
-const fetchJsonsPerProject = async (
-  projectsList,
-  host,
-  endpointStart,
-  endpointEnd = ''
-) => {
+const fetchJsonsPerProject = async (projectsList, host, endpointStart, endpointEnd = '') => {
   const promises = await projectsList.map(async project => {
-    const data = await fetchData(
-      host,
-      `${endpointStart}${project}${endpointEnd}`
-    )
+    const data = await fetchData(host, `${endpointStart}${project}${endpointEnd}`)
     return [project, data]
   })
   const response = await Promise.all(promises)
@@ -102,9 +96,7 @@ const fetchRuns = async (list, host, endpointStart, endpointEnd = '') => {
 
   const fetchChunk = async arr => {
     const response = await arr.map(async item => {
-      return await fetchData(
-        `${host}${endpointStart}${item.project}${endpointEnd}${item.uid}`
-      )
+      return await fetchData(`${host}${endpointStart}${item.project}${endpointEnd}${item.uid}`)
     })
     const data = await Promise.all(response)
     responseData = [...responseData, ...data]
@@ -139,27 +131,22 @@ const fetchArtifactsLogs = arr =>
 //   return result
 // }
 
-const clearDataFolder = async location => await fs.emptyDir(location)
+const clearDataFolder = async location => await emptyDir(location)
 
-const saveDataToJson = (location, data) =>
-  fs.writeJson(location, data, { spaces: 2 })
+const saveDataToJson = (location, data) => writeJson(location, data, { spaces: 2 })
 
 const fetchYamlFunctions = async (functions, startUrl, endUrl) => {
-  await fs.ensureDir('data/mlrun/functions')
+  await ensureDir('data/mlrun/functions')
 
   for (let func of functions) {
     if (func !== 'LICENSE') {
-      await fs.ensureDir(`data/mlrun/functions/${func}`)
+      await ensureDir(`data/mlrun/functions/${func}`)
       try {
         const data = await fetchData(startUrl, `${func}${endUrl}`)
 
         if (data) {
           const yamlStr = await yaml.safeDump(data)
-          await fs.writeFile(
-            `./data/mlrun/functions/${func}/${func}.yaml`,
-            yamlStr,
-            'utf8'
-          )
+          await writeFile(`./data/mlrun/functions/${func}/${func}.yaml`, yamlStr, 'utf8')
         }
       } catch (e) {
         console.log('Failed: ', e)
@@ -234,51 +221,23 @@ const synchronizeBackend = async () => {
   const { projects } = await fetchData(baseMlRunUrl, 'projects')
   const projectNames = projects.map(project => project.metadata.name)
 
-  const { project_summaries } = await fetchData(
-    baseMlRunUrl,
-    'project-summaries'
-  )
+  const { project_summaries } = await fetchData(baseMlRunUrl, 'project-summaries')
   const summaries = { project_summaries }
 
   const frontendSpec = await fetchData(baseMlRunUrl, 'frontend-spec')
-  const artifactsArr = await fetchJsons(
-    projectNames,
-    baseMlRunUrl,
-    'artifacts?project=',
-    '&tag=*'
-  )
+  const artifactsArr = await fetchJsons(projectNames, baseMlRunUrl, 'artifacts?project=', '&tag=*')
   const artifacts = convertFromArrayToJson(artifactsArr)
 
-  const featureSetsArr = await fetchJsons(
-    projectNames,
-    baseMlRunUrl,
-    'projects/',
-    '/feature-sets'
-  )
+  const featureSetsArr = await fetchJsons(projectNames, baseMlRunUrl, 'projects/', '/feature-sets')
   const featureSets = convertFromArrayToJson(featureSetsArr)
 
-  const schedulesArr = await fetchJsons(
-    projectNames,
-    baseMlRunUrl,
-    'projects/',
-    '/schedules'
-  )
+  const schedulesArr = await fetchJsons(projectNames, baseMlRunUrl, 'projects/', '/schedules')
   const schedules = convertFromArrayToJson(schedulesArr)
 
-  const featuresArr = await fetchJsons(
-    projectNames,
-    baseMlRunUrl,
-    'projects/',
-    '/features'
-  )
+  const featuresArr = await fetchJsons(projectNames, baseMlRunUrl, 'projects/', '/features')
   const features = convertFromArrayToJson(featuresArr)
 
-  const entitiesArr = await fetchJsons(
-    projectNames,
-    baseMlRunUrl,
-    'projects/',
-    '/entities'
-  )
+  const entitiesArr = await fetchJsons(projectNames, baseMlRunUrl, 'projects/', '/entities')
   const entities = convertFromArrayToJson(entitiesArr)
 
   const featureVectorsArr = await fetchJsons(
@@ -289,17 +248,8 @@ const synchronizeBackend = async () => {
   )
   const featureVectors = convertFromArrayToJson(featureVectorsArr)
 
-  const artifactTags = await fetchJsons(
-    projectNames,
-    baseMlRunUrl,
-    'projects/',
-    '/artifact-tags'
-  )
-  const functionsArr = await fetchJsons(
-    projectNames,
-    baseMlRunUrl,
-    'funcs?project='
-  )
+  const artifactTags = await fetchJsons(projectNames, baseMlRunUrl, 'projects/', '/artifact-tags')
+  const functionsArr = await fetchJsons(projectNames, baseMlRunUrl, 'funcs?project=')
   const functions = convertFromArrayToJson(functionsArr)
 
   const runsData = await fetchJsons(projectNames, baseMlRunUrl, 'runs?project=')
@@ -315,11 +265,7 @@ const synchronizeBackend = async () => {
     '/pipelines'
   )
   const pipelineIds = getPipelineIds(pipelines)
-  const pipelineIdsData = await fetchJsons(
-    pipelineIds,
-    baseMlRunUrl,
-    'pipelines/'
-  )
+  const pipelineIdsData = await fetchJsons(pipelineIds, baseMlRunUrl, 'pipelines/')
 
   const secretKeys = await fetchJsonsPerProject(
     projectNames,
@@ -374,10 +320,7 @@ const synchronizeBackend = async () => {
   // Iguazio API sync
   if (frontendSpec?.feature_flags?.project_membership === 'enabled') {
     const igzProjects = await fetchData(igzApiUrl, 'projects')
-    const igzProjectAuthRoles = await fetchData(
-      igzApiUrl,
-      'project_authorization_roles'
-    )
+    const igzProjectAuthRoles = await fetchData(igzApiUrl, 'project_authorization_roles')
     const igzUserGroups = await fetchData(igzApiUrl, 'user_groups')
     const igzUsers = await fetchData(igzApiUrl, 'users')
     const igzUserNames = igzUsers.data.map(item => item.attributes.username)
@@ -385,20 +328,12 @@ const synchronizeBackend = async () => {
     const igzUserGroupsEndpoints = igzUserNames.map(
       name => `?filter${name}=username&include=user_groups`
     )
-    const igzUsersWithGroups = await fetchJsons(
-      igzUserGroupsEndpoints,
-      igzApiUrl,
-      'users'
-    )
+    const igzUsersWithGroups = await fetchJsons(igzUserGroupsEndpoints, igzApiUrl, 'users')
 
     const igzProjectsEndpoints = igzUserNames.map(
       name => `?filter${name}=username&include=projects`
     )
-    const igzUsersWithProjects = await fetchJsons(
-      igzProjectsEndpoints,
-      igzApiUrl,
-      'users'
-    )
+    const igzUsersWithProjects = await fetchJsons(igzProjectsEndpoints, igzApiUrl, 'users')
 
     const relations = getIgzRelations(igzUsersWithProjects)
     const igzRelations = getIgzRelations(igzUsersWithGroups, relations)
@@ -413,10 +348,7 @@ const synchronizeBackend = async () => {
     const projectsRelations = getIgzRelations(projectsWithOtherRelations)
 
     saveDataToJson('./data/iguazioProjects.json', igzProjects)
-    saveDataToJson(
-      './data/iguazioProjectAuthorizationRoles.json',
-      igzProjectAuthRoles
-    )
+    saveDataToJson('./data/iguazioProjectAuthorizationRoles.json', igzProjectAuthRoles)
     saveDataToJson('./data/iguazioUserGroups.json', igzUserGroups)
     saveDataToJson('./data/iguazioUsers.json', igzUsers)
     saveDataToJson('./data/iguazioUserRelations.json', igzRelations)

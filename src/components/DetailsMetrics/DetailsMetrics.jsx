@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 
 import ApplicationMetricCard from './MetricsCards/ApplicationMetricCard/ApplicationMetricCard'
 import DatePicker from '../../common/DatePicker/DatePicker'
@@ -62,16 +62,20 @@ const DetailsMetrics = ({
   isDetailsPopUp = false
 }) => {
   const [metrics, setMetrics] = useState([])
-  const [selectedDate, setSelectedDate] = useState('')
   const [previousTotalInvocation, setPreviousTotalInvocation] = useState(0)
   const [isInvocationCardExpanded, setIsInvocationCardExpanded] = useState(false)
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const invocationBodyCardRef = useRef(null)
   const metricsContainerRef = useRef(null)
   const metricsValuesAbortController = useRef(new AbortController())
-  const prevSelectedEndPointNameRef = useRef('')
   const [metricOptionsAreLoaded, setMetricOptionsAreLoaded] = useState(false)
+  const [metricOptionsEndpointUid, setMetricOptionsEndpointUid] = useState(
+    selectedItem.metadata.uid
+  )
   const detailsStore = useSelector(store => store.detailsStore)
+  const [selectedDate, setSelectedDate] = useState(
+    () => timeRangeMapping[detailsStore.dates.selectedOptionId] ?? ''
+  )
   const dispatch = useDispatch()
   const generatedMetrics = useMemo(() => {
     return groupMetricByApplication(metrics, true)
@@ -121,6 +125,8 @@ const DetailsMetrics = ({
   }, [handleChangeDates])
 
   useEffect(() => {
+    let isStale = false
+
     dispatch(
       fetchModelEndpointMetrics({
         project: selectedItem.metadata.project,
@@ -129,15 +135,26 @@ const DetailsMetrics = ({
       })
     )
       .unwrap()
-      .then(() => setMetricOptionsAreLoaded(true))
+      .then(() => {
+        // Ignore a late response for an endpoint the user already switched away from
+        if (!isStale) setMetricOptionsAreLoaded(true)
+      })
+
+    return () => {
+      isStale = true
+    }
   }, [applicationNameProp, dispatch, selectedItem.metadata.project, selectedItem.metadata.uid])
 
-  useEffect(() => {
-    const selectedDate = detailsStore.dates.selectedOptionId
-    if (!selectedDate || !(selectedDate in timeRangeMapping)) return
+  const storeSelectedOptionId = detailsStore.dates.selectedOptionId
+  const [prevStoreSelectedOptionId, setPrevStoreSelectedOptionId] = useState(storeSelectedOptionId)
 
-    setSelectedDate(timeRangeMapping[selectedDate])
-  }, [detailsStore.dates.selectedOptionId])
+  if (storeSelectedOptionId !== prevStoreSelectedOptionId) {
+    setPrevStoreSelectedOptionId(storeSelectedOptionId)
+
+    if (storeSelectedOptionId && storeSelectedOptionId in timeRangeMapping) {
+      setSelectedDate(timeRangeMapping[storeSelectedOptionId])
+    }
+  }
 
   const fetchData = useCallback(
     (selectedMetricsParams, preInvocationMetricParams, selectedItemProject, selectedItemUid) => {
@@ -162,28 +179,42 @@ const DetailsMetrics = ({
             setRequestErrorMessage
           })
         ).unwrap()
-      ]).then(([metrics, previousInvocation]) => {
-        if (metrics) setMetrics(metrics)
+      ])
+        .then(([metrics, previousInvocation]) => {
+          if (metrics) setMetrics(metrics)
 
-        if (!!previousInvocation && previousInvocation.length !== 0) {
-          setPreviousTotalInvocation(previousInvocation[0][METRIC_RAW_TOTAL_POINTS])
-        }
-      })
+          if (!!previousInvocation && previousInvocation.length !== 0) {
+            setPreviousTotalInvocation(previousInvocation[0][METRIC_RAW_TOTAL_POINTS])
+          }
+        })
+        .catch(() => {
+          // Errors (including request cancellation on endpoint switch/unmount) are already
+          // surfaced via `setRequestErrorMessage`/notifications inside the thunk itself, so
+          // there is nothing left to do here besides preventing an unhandled rejection.
+        })
     },
     [dispatch, setMetrics, metricsValuesAbortController]
   )
 
+  // metricsOptions in the store belong to the previous endpoint until fetchModelEndpointMetrics
+  // for the new one resolves, so don't fetch metric values until then
+  if (selectedItem.metadata.uid !== metricOptionsEndpointUid) {
+    setMetricOptionsEndpointUid(selectedItem.metadata.uid)
+    setMetricOptionsAreLoaded(false)
+  }
+
+  const shouldFetchMetrics =
+    metricOptionsAreLoaded &&
+    selectedItem.metadata?.uid &&
+    detailsStore.metricsOptions.all.length > 0 &&
+    detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
+
+  if (!shouldFetchMetrics && metrics.length > 0) {
+    setMetrics([])
+  }
+
   useEffect(() => {
-    if (selectedItem.metadata.uid !== prevSelectedEndPointNameRef.current) {
-      prevSelectedEndPointNameRef.current = selectedItem.metadata.uid
-      return
-    }
-    if (
-      metricOptionsAreLoaded &&
-      selectedItem.metadata?.uid &&
-      detailsStore.metricsOptions.all.length > 0 &&
-      detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
-    ) {
+    if (shouldFetchMetrics) {
       const selectedMetrics =
         detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
       const invocationMetric = detailsStore.metricsOptions.all.find(
@@ -219,8 +250,6 @@ const DetailsMetrics = ({
         selectedItem.metadata.project,
         selectedItem.metadata.uid
       )
-    } else {
-      setMetrics([])
     }
 
     return () => {
@@ -228,7 +257,7 @@ const DetailsMetrics = ({
       setMetrics([])
     }
   }, [
-    metricOptionsAreLoaded,
+    shouldFetchMetrics,
     fetchData,
     selectedItem.metadata.uid,
     selectedItem.metadata.project,

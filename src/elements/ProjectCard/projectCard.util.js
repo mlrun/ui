@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 
 import { groupByUniqName } from '../../utils/groupByUniqName'
 import { ERROR_STATE, FAILED_STATE, FUNCTION_READY_STATE, RUNNING_STATE } from '../../constants'

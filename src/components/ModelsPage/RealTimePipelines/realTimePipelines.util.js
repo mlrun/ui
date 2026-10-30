@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { debounce, isEqual } from 'lodash'
+import { debounce, isEqual } from 'lodash-es'
 
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import {

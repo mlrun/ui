@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState, useCallback } from 'react'
+import React from 'react'
 import Prism from 'prismjs'
 import { Base64 } from 'js-base64'
 
@@ -25,15 +25,7 @@ import NoData from '../../common/NoData/NoData'
 import PropTypes from 'prop-types'
 
 const DetailsCode = ({ code = '' }) => {
-  const [decoded, setDecoded] = useState('')
-
-  const decodeCode = useCallback(() => {
-    setDecoded(Base64.decode(code ?? ''))
-  }, [code])
-
-  useEffect(() => {
-    decodeCode()
-  }, [decodeCode])
+  const decoded = Base64.decode(code ?? '')
 
   const html = Prism.highlight(decoded, Prism.languages.py, 'py')
 

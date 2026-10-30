@@ -17,10 +17,17 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-'use strict'
+import fs from 'node:fs'
+import http from 'node:http'
+import path from 'node:path'
+import { execFileSync } from 'node:child_process'
+import { fileURLToPath } from 'node:url'
+import dotenv from 'dotenv'
 
-const { report, browser, headless, delay_factor } = require('../tests/config')
-const fs = require('fs')
+import config from '../tests/config.js'
+
+const { report, browser, headless, delay_factor } = config
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // Do this as the first thing so that any code reading it knows the right env.
 process.env.BABEL_ENV = 'test'
@@ -34,13 +41,8 @@ process.on('unhandledRejection', err => {
 })
 
 // Load environment variables from .env* files.
-require('dotenv-expand')(require('dotenv').config({ path: '.env.test.local' }))
-require('dotenv-expand')(require('dotenv').config({ path: '.env.test' }))
-require('dotenv-expand')(require('dotenv').config({ path: '.env' }))
+dotenv.config({ path: ['.env.test.local', '.env.test', '.env'], quiet: true })
 
-const http = require('http')
-const execFileSync = require('child_process').execFileSync
-const path = require('path')
 const argv = process.argv.slice(2)
 
 // app and mock server must be up before the first scenario, `start:regression` starts all of them at once
@@ -75,14 +77,8 @@ const allureFormatOptions = {
 }
 
 // build cucumber executive command args
-// support code is passed via `--require` so it's loaded with `require()` through `@babel/register`,
-// otherwise cucumber loads it with `import()` and Node's ESM loader fails on extensionless imports
 const cucumberArgs = [
-  '--require-module',
-  '@babel/register',
-  '--require-module',
-  '@babel/polyfill',
-  '--require',
+  '--import',
   'tests/features/**/*.js',
   '-f',
   './tests/formatters/scenario-formatter.js',
@@ -130,7 +126,9 @@ async function waitForServers() {
 
     if (!pending.length) break
     if (Date.now() > deadline) {
-      console.error(`Servers are not available after ${SERVER_WAIT_TIMEOUT / 1000}s: ${pending.join(', ')}`)
+      console.error(
+        `Servers are not available after ${SERVER_WAIT_TIMEOUT / 1000}s: ${pending.join(', ')}`
+      )
       process.exit(1)
     }
 

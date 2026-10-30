@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isString } from 'lodash'
+import { isString } from 'lodash-es'
 import {
   JOB_KIND_JOB,
   JOB_KIND_PIPELINE,

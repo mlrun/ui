@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { groupBy, property } from 'lodash'
+import { groupBy, property } from 'lodash-es'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 import nuclioApi from '../api/nuclio'

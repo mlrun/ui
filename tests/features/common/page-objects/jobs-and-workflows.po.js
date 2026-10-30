@@ -18,20 +18,20 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { By } from 'selenium-webdriver'
-import checkboxComponent from '../components/checkbox.component'
-import commonTable from '../components/table.component'
-import dropdownComponent from '../components/dropdown.component'
-import actionMenu from '../components/action-menu.component'
-import datepicker from '../components/date-picker.component'
-import inputGroup from '../components/input-group.component'
-import inputWithAutocomplete from '../components/input-with-autocomplete.component'
-import labelComponent from '../components/label.component'
-import graph from '../components/graph.component'
+import checkboxComponent from '../components/checkbox.component.js'
+import commonTable from '../components/table.component.js'
+import dropdownComponent from '../components/dropdown.component.js'
+import actionMenu from '../components/action-menu.component.js'
+import datepicker from '../components/date-picker.component.js'
+import inputGroup from '../components/input-group.component.js'
+import inputWithAutocomplete from '../components/input-with-autocomplete.component.js'
+import labelComponent from '../components/label.component.js'
+import graph from '../components/graph.component.js'
 import {
   generateInputGroup,
   generateDropdownGroup,
   generateLabelGroup
-} from '../../common-tools/common-tools'
+} from '../../common-tools/common-tools.js'
 
 // Monitor tab
 const resultsTable = {

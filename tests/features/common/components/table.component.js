@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { By } from 'selenium-webdriver'
-import { locatorBuilder } from '../../common-tools/common-tools'
+import { locatorBuilder } from '../../common-tools/common-tools.js'
 
 /**
  * Componet for accessing to any periodical component on page like simple table

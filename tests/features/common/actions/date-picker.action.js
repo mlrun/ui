@@ -18,8 +18,8 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { expect } from 'chai'
-import { getAllCellsWithAttribute } from './table.action'
-import { openDropdown } from './dropdown.action'
+import { getAllCellsWithAttribute } from './table.action.js'
+import { openDropdown } from './dropdown.action.js'
 
 const currentMonthAttribute = {
   attribute: 'class',

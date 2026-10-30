@@ -20,7 +20,7 @@ such restriction.
 import React, { useState } from 'react'
 import { useForm } from 'react-final-form'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import PropTypes from 'prop-types'
 
 import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'

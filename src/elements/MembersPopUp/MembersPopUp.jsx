@@ -20,7 +20,7 @@ such restriction.
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { cloneDeep, debounce, groupBy } from 'lodash'
+import { cloneDeep, debounce, groupBy } from 'lodash-es'
 
 import CheckBox from '../../common/CheckBox/CheckBox'
 import SuggestionsChips from '../../common/SuggestionsChips/SuggestionsChips'

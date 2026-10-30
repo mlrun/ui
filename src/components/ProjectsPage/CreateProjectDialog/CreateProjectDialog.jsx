@@ -55,7 +55,7 @@ const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject, isOpen
     labels: []
   }
 
-  const formRef = React.useRef(
+  const [form] = React.useState(() =>
     createForm({
       initialValues,
       mutators: { ...arrayMutators, setFieldState },
@@ -63,7 +63,7 @@ const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject, isOpen
     })
   )
   const dispatch = useDispatch()
-  const { handleCloseModal } = useModalBlockHistory(closeNewProjectPopUp, formRef.current)
+  const { handleCloseModal } = useModalBlockHistory(closeNewProjectPopUp, form)
 
   return (
     <PopUpDialog
@@ -73,7 +73,7 @@ const CreateProjectDialog = ({ closeNewProjectPopUp, handleCreateProject, isOpen
       isOpen={isOpen}
     >
       {projectStore.loading && <Loader />}
-      <Form form={formRef.current} onSubmit={handleCreateProject}>
+      <Form form={form} onSubmit={handleCreateProject}>
         {formState => {
           return (
             <>

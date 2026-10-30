@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { get } from 'lodash'
+import { get } from 'lodash-es'
 import {
   ADD_TO_FEATURE_VECTOR_TAB,
   ALERTS_PAGE,

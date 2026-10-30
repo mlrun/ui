@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { redirect } from 'react-router-dom'
+import { redirect } from 'react-router'
 
 import { IS_MF_MODE, PROJECTS_PAGE_PATH } from '../constants'
 
@@ -28,17 +28,16 @@ import { IS_MF_MODE, PROJECTS_PAGE_PATH } from '../constants'
 
 export const redirectToPath = path => () => redirect(path)
 
-// Top-level catch-all. In MF mode the host owns every URL outside `/projects/...` (e.g. `/`, `/admin`),
-// and this router still sees them on the host's popstate before it unmounts, so leave them to the host.
-export const redirectToProjectsPage =
-  (isMfMode = IS_MF_MODE) =>
-  ({ request }) => {
-    const { pathname } = new URL(request.url)
-
-    if (isMfMode && !pathname.startsWith(`/${PROJECTS_PAGE_PATH}/`)) return null
-
-    return redirect(`/${PROJECTS_PAGE_PATH}`)
+// In MF mode the host owns every URL outside /projects (e.g. /airun, /admin, /). The host fires a
+// synthetic popstate after its own navigations, so this router briefly sees those URLs while it is
+// still mounted; redirecting there would rewrite the host URL back to /projects.
+export const redirectUnknownPathToProjects = ({ request }) => {
+  if (IS_MF_MODE && !new URL(request.url).pathname.startsWith(`/${PROJECTS_PAGE_PATH}`)) {
+    return null
   }
+
+  return redirect(`/${PROJECTS_PAGE_PATH}`)
+}
 
 export const redirectToProjectPageTab =
   (pagePath, tab) =>
