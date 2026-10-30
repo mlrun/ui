@@ -20,7 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 
 import ContentMenu from '../../../elements/ContentMenu/ContentMenu'
 import NoData from '../../../common/NoData/NoData'

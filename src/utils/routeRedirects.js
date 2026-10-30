@@ -17,9 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { redirect } from 'react-router-dom'
+import { redirect } from 'react-router'
 
-import { PROJECTS_PAGE_PATH } from '../constants'
+import { IS_MF_MODE, PROJECTS_PAGE_PATH } from '../constants'
 
 // Loaders for the catch-all (`*`) routes, they redirect unknown paths before anything is rendered.
 // The targets are absolute: since react-router v7 relative paths in splat routes are resolved against the full URL,
@@ -27,6 +27,17 @@ import { PROJECTS_PAGE_PATH } from '../constants'
 // Absolute paths are resolved within the router `basename`.
 
 export const redirectToPath = path => () => redirect(path)
+
+// In MF mode the host owns every URL outside /projects (e.g. /airun, /admin, /). The host fires a
+// synthetic popstate after its own navigations, so this router briefly sees those URLs while it is
+// still mounted; redirecting there would rewrite the host URL back to /projects.
+export const redirectUnknownPathToProjects = ({ request }) => {
+  if (IS_MF_MODE && !new URL(request.url).pathname.startsWith(`/${PROJECTS_PAGE_PATH}`)) {
+    return null
+  }
+
+  return redirect(`/${PROJECTS_PAGE_PATH}`)
+}
 
 export const redirectToProjectPageTab =
   (pagePath, tab) =>

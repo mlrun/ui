@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isNil, isObject } from 'lodash'
+import { isNil, isObject } from 'lodash-es'
 
 export const truncateUid = (value = '') => (value.length > 7 ? `...${value.slice(-7)}` : value)
 

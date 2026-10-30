@@ -20,7 +20,17 @@ such restriction.
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-import { includes, isEmpty, intersection, isBoolean, pickBy, keys, uniqBy, cloneDeep } from 'lodash'
+import {
+  includes,
+  isEmpty,
+  intersection,
+  isBoolean,
+  pickBy,
+  keys,
+  uniqBy,
+  cloneDeep,
+  set
+} from 'lodash-es'
 
 import ContentMenu from '../../../../elements/ContentMenu/ContentMenu'
 import FilterMenuModal from '../../../FilterMenuModal/FilterMenuModal'
@@ -63,8 +73,6 @@ const JobWizardFunctionSelection = ({
   activeTab,
   currentProject = null,
   defaultData,
-  filteredFunctions,
-  filteredTemplates,
   formState,
   frontendSpec,
   functions,
@@ -74,8 +82,6 @@ const JobWizardFunctionSelection = ({
   selectedFunctionData,
   selectedFunctionTab,
   setActiveTab,
-  setFilteredFunctions,
-  setFilteredTemplates,
   setFunctions,
   setJobAdditionalData,
   setSelectedFunctionData,
@@ -91,7 +97,6 @@ const JobWizardFunctionSelection = ({
 
   const [hubFiltersInitialValues] = useState({ [HUB_CATEGORIES_FILTER]: {} })
   const [filterByName, setFilterByName] = useState('')
-  const [filterMatches, setFilterMatches] = useState([])
   const [projects, setProjects] = useState(generateProjectsList(projectNames, params.projectName))
   const [functionsRequestErrorMessage, setFunctionsRequestErrorMessage] = useState('')
   const [hubFunctionsRequestErrorMessage, setHubFunctionsRequestErrorMessage] = useState('')
@@ -167,64 +172,34 @@ const JobWizardFunctionSelection = ({
     }
   }, [formState.form, formState.initialValues, params.projectName, projects.length])
 
-  useEffect(() => {
-    const filteredByCategory = !isEmpty(filtersStoreHubCategories)
+  const filteredByCategory = !isEmpty(filtersStoreHubCategories)
 
-    const filteredTemplates = getFilteredTemplates(templates, filteredByCategory)
-    setFilteredTemplates(filteredTemplates)
+  const filteredTemplates = useMemo(
+    () => getFilteredTemplates(templates, filteredByCategory),
+    [filteredByCategory, getFilteredTemplates, templates]
+  )
 
-    if (filterByName.length > 0 || filteredByCategory) {
-      const filteredFunctions = functions.filter(func => func.name.includes(filterByName))
-      setFilteredFunctions(filteredFunctions)
+  const filteredFunctions = useMemo(() => {
+    if (!filterByName) {
+      return []
+    }
 
-      const filterMatches =
+    return functions.filter(func => func.name.includes(filterByName))
+  }, [filterByName, functions])
+
+  const filterMatches = useMemo(() => {
+    if (filterByName.length === 0 && !filteredByCategory) {
+      return []
+    }
+
+    return [
+      ...new Set(
         activeTab === FUNCTIONS_SELECTION_FUNCTIONS_TAB
           ? filteredFunctions.map(func => func.name)
           : filteredTemplates.map(template => template.metadata.name)
-
-      setFilterMatches([...new Set(filterMatches)])
-    }
-  }, [
-    activeTab,
-    filterByName,
-    filtersStoreHubCategories,
-    functions,
-    getFilteredTemplates,
-    setFilteredFunctions,
-    setFilteredTemplates,
-    templates,
-    templatesCategories
-  ])
-
-  useEffect(() => {
-    if (
-      filterByName.length === 0 &&
-      isEmpty(filtersStoreHubCategories) &&
-      filterMatches.length > 0
-    ) {
-      setFilterMatches([])
-
-      if (filteredFunctions.length > 0) {
-        setFilteredFunctions([])
-      }
-
-      if (!isEmpty(filteredTemplates)) {
-        const filteredByCategory = !isEmpty(filtersStoreHubCategories)
-
-        setFilteredTemplates(getFilteredTemplates(templates, filteredByCategory))
-      }
-    }
-  }, [
-    filterByName.length,
-    filterMatches.length,
-    filteredFunctions.length,
-    filteredTemplates,
-    filtersStoreHubCategories,
-    getFilteredTemplates,
-    setFilteredFunctions,
-    setFilteredTemplates,
-    templates
-  ])
+      )
+    ]
+  }, [activeTab, filterByName, filteredByCategory, filteredFunctions, filteredTemplates])
 
   const generateData = functionData => {
     if (!isEmpty(functionData)) {
@@ -286,21 +261,13 @@ const JobWizardFunctionSelection = ({
           )
 
           setFunctions(groupedFunctions)
-
-          if (filterByName.length > 0) {
-            const filteredFunctions = groupedFunctions.filter(func => {
-              return func.name.includes(filterByName)
-            })
-
-            setFilteredFunctions(filteredFunctions)
-          }
         }
       })
       .catch(() => {
         setFunctions([])
       })
 
-    formState.initialValues[FUNCTION_SELECTION_STEP].projectName = currentValue
+    set(formState.initialValues, [FUNCTION_SELECTION_STEP, 'projectName'], currentValue)
   }
 
   useEffect(() => {
@@ -425,7 +392,6 @@ const JobWizardFunctionSelection = ({
               matches={filterMatches}
               onChange={value => handleSearchOnChange(value)}
               placeholder="Search functions..."
-              setMatches={setFilterMatches}
               value={filterByName}
             />
           </div>
@@ -475,7 +441,6 @@ const JobWizardFunctionSelection = ({
               onChange={value => handleSearchOnChange(value)}
               value={filterByName}
               placeholder="Search functions..."
-              setMatches={setFilterMatches}
             />
             {!isTrain && (
               <FilterMenuModal
@@ -490,7 +455,7 @@ const JobWizardFunctionSelection = ({
             )}
           </div>
           {!loading &&
-          ((filterByName.length > 0 &&
+          (((filterByName.length > 0 || filteredByCategory) &&
             (filterMatches.length === 0 || isEmpty(filteredTemplates))) ||
             isEmpty(templates)) ? (
             <NoData message={hubFunctionsRequestErrorMessage} />
@@ -536,8 +501,6 @@ JobWizardFunctionSelection.propTypes = {
   activeTab: PropTypes.string.isRequired,
   currentProject: PropTypes.object,
   defaultData: PropTypes.object.isRequired,
-  filteredFunctions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  filteredTemplates: PropTypes.arrayOf(PropTypes.object).isRequired,
   formState: PropTypes.object.isRequired,
   frontendSpec: PropTypes.object.isRequired,
   functions: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -547,8 +510,6 @@ JobWizardFunctionSelection.propTypes = {
   selectedFunctionData: PropTypes.object.isRequired,
   selectedFunctionTab: PropTypes.string.isRequired,
   setActiveTab: PropTypes.func.isRequired,
-  setFilteredFunctions: PropTypes.func.isRequired,
-  setFilteredTemplates: PropTypes.func.isRequired,
   setFunctions: PropTypes.func.isRequired,
   setJobAdditionalData: PropTypes.func.isRequired,
   setSelectedFunctionData: PropTypes.func.isRequired,

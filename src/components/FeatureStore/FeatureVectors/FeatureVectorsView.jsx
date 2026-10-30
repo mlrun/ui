@@ -36,115 +36,109 @@ import { filtersConfig } from './featureVectors.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered } from '../../../hooks/useVirtualization.hook'
 
-const FeatureVectorsView = React.forwardRef(
-  (
-    {
-      actionsMenu,
-      applyDetailsChanges,
-      createFeatureVector,
-      createVectorPopUpIsOpen,
-      detailsFormInitialValues,
-      featureStore,
-      featureVectors,
-      filters,
-      filtersStore,
-      handleRefresh,
-      pageData,
-      requestErrorMessage,
-      selectedFeatureVector,
-      selectedRowData,
-      setCreateVectorPopUpIsOpen,
-      setSearchParams,
-      setSelectedFeatureVector,
-      tableContent,
-      toggleRow,
-      virtualizationConfig
-    },
-    { featureStoreRef }
-  ) => {
-    return (
-      <div className="feature-store" ref={featureStoreRef}>
-        <div className="content__action-bar-wrapper">
-          <FeatureStorePageTabs />
-          <ActionBar
-            actionButtons={[
-              {
-                className: 'action-button',
-                label: createFeatureVectorTitle,
-                variant: PRIMARY_BUTTON,
-                onClick: () => setCreateVectorPopUpIsOpen(true)
-              }
-            ]}
-            closeParamName={FEATURE_VECTORS_TAB}
-            filters={filters}
-            filtersConfig={filtersConfig}
-            handleRefresh={handleRefresh}
-            setSearchParams={setSearchParams}
-            tab={FEATURE_VECTORS_TAB}
-            withoutExpandButton
-          >
-            <FeatureStoreFilters content={featureVectors} />
-          </ActionBar>
-        </div>
-        {featureStore.loading ? null : featureVectors.length === 0 ? (
-          <NoData
-            message={getNoDataMessage(
-              filters,
-              filtersConfig,
-              requestErrorMessage,
-              FEATURE_STORE_PAGE,
-              FEATURE_VECTORS_TAB,
-              FEATURE_VECTORS_TAB,
-              filtersStore
-            )}
-          />
-        ) : (
-          <>
-            <Table
-              actionsMenu={actionsMenu}
-              applyDetailsChanges={applyDetailsChanges}
-              detailsFormInitialValues={detailsFormInitialValues}
-              handleCancel={() => setSelectedFeatureVector({})}
-              pageData={pageData}
-              selectedItem={selectedFeatureVector}
-              tab={FEATURE_VECTORS_TAB}
-              tableClassName="feature-vectors-table"
-              tableHeaders={tableContent[0]?.content ?? []}
-              virtualizationConfig={virtualizationConfig}
-            >
-              {tableContent.map(
-                (tableItem, index) =>
-                  isRowRendered(virtualizationConfig, index) && (
-                    <FeatureStoreTableRow
-                      actionsMenu={actionsMenu}
-                      key={tableItem.data?.ui?.identifier ?? index}
-                      pageTab={FEATURE_VECTORS_TAB}
-                      rowIndex={index}
-                      rowItem={tableItem}
-                      selectedItem={selectedFeatureVector}
-                      selectedRowData={selectedRowData}
-                      toggleRow={toggleRow}
-                      withQuickActions={true}
-                    />
-                  )
-              )}
-            </Table>
-          </>
-        )}
-        {createVectorPopUpIsOpen && (
-          <CreateFeatureVectorPopUp
-            closePopUp={() => {
-              setCreateVectorPopUpIsOpen(false)
-            }}
-            createFeatureVector={createFeatureVector}
-          />
-        )}
+function FeatureVectorsView({
+  actionsMenu,
+  applyDetailsChanges,
+  createFeatureVector,
+  createVectorPopUpIsOpen,
+  detailsFormInitialValues,
+  featureStore,
+  featureStoreRef,
+  featureVectors,
+  filters,
+  filtersStore,
+  handleRefresh,
+  pageData,
+  requestErrorMessage,
+  selectedFeatureVector,
+  selectedRowData,
+  setCreateVectorPopUpIsOpen,
+  setSearchParams,
+  setSelectedFeatureVector,
+  tableContent,
+  toggleRow,
+  virtualizationConfig
+}) {
+  return (
+    <div className="feature-store" ref={featureStoreRef}>
+      <div className="content__action-bar-wrapper">
+        <FeatureStorePageTabs />
+        <ActionBar
+          actionButtons={[
+            {
+              className: 'action-button',
+              label: createFeatureVectorTitle,
+              variant: PRIMARY_BUTTON,
+              onClick: () => setCreateVectorPopUpIsOpen(true)
+            }
+          ]}
+          closeParamName={FEATURE_VECTORS_TAB}
+          filters={filters}
+          filtersConfig={filtersConfig}
+          handleRefresh={handleRefresh}
+          setSearchParams={setSearchParams}
+          tab={FEATURE_VECTORS_TAB}
+          withoutExpandButton
+        >
+          <FeatureStoreFilters content={featureVectors} />
+        </ActionBar>
       </div>
-    )
-  }
-)
-
-FeatureVectorsView.displayName = 'FeatureVectorsView'
+      {featureStore.loading ? null : featureVectors.length === 0 ? (
+        <NoData
+          message={getNoDataMessage(
+            filters,
+            filtersConfig,
+            requestErrorMessage,
+            FEATURE_STORE_PAGE,
+            FEATURE_VECTORS_TAB,
+            FEATURE_VECTORS_TAB,
+            filtersStore
+          )}
+        />
+      ) : (
+        <>
+          <Table
+            actionsMenu={actionsMenu}
+            applyDetailsChanges={applyDetailsChanges}
+            detailsFormInitialValues={detailsFormInitialValues}
+            handleCancel={() => setSelectedFeatureVector({})}
+            pageData={pageData}
+            selectedItem={selectedFeatureVector}
+            tab={FEATURE_VECTORS_TAB}
+            tableClassName="feature-vectors-table"
+            tableHeaders={tableContent[0]?.content ?? []}
+            virtualizationConfig={virtualizationConfig}
+          >
+            {tableContent.map(
+              (tableItem, index) =>
+                isRowRendered(virtualizationConfig, index) && (
+                  <FeatureStoreTableRow
+                    actionsMenu={actionsMenu}
+                    key={tableItem.data?.ui?.identifier ?? index}
+                    pageTab={FEATURE_VECTORS_TAB}
+                    rowIndex={index}
+                    rowItem={tableItem}
+                    selectedItem={selectedFeatureVector}
+                    selectedRowData={selectedRowData}
+                    toggleRow={toggleRow}
+                    withQuickActions={true}
+                  />
+                )
+            )}
+          </Table>
+        </>
+      )}
+      {createVectorPopUpIsOpen && (
+        <CreateFeatureVectorPopUp
+          closePopUp={() => {
+            setCreateVectorPopUpIsOpen(false)
+          }}
+          createFeatureVector={createFeatureVector}
+        />
+      )}
+    </div>
+  )
+}
 
 FeatureVectorsView.propTypes = {
   actionsMenu: PropTypes.array.isRequired,
@@ -153,6 +147,7 @@ FeatureVectorsView.propTypes = {
   createVectorPopUpIsOpen: PropTypes.bool.isRequired,
   detailsFormInitialValues: PropTypes.object.isRequired,
   featureStore: PropTypes.object.isRequired,
+  featureStoreRef: PropTypes.object.isRequired,
   featureVectors: PropTypes.arrayOf(PropTypes.object).isRequired,
   filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,

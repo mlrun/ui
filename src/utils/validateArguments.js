@@ -18,6 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
-import { every, isNil } from 'lodash'
+import { every, isNil } from 'lodash-es'
 
 export const validateArguments = (...args) => every(args, arg => !isNil(arg) && arg !== '')

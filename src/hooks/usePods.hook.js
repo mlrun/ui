@@ -18,8 +18,8 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useEffect } from 'react'
-import { isEmpty, get } from 'lodash'
-import { useParams } from 'react-router-dom'
+import { isEmpty, get } from 'lodash-es'
+import { useParams } from 'react-router'
 
 import { arePodsHidden } from '../components/Jobs/jobs.util'
 import { JOB_KIND_JOB } from '../constants'

@@ -1,5 +1,7 @@
 import React from 'react'
 
-const SvgMock = React.forwardRef((props, ref) => <svg ref={ref} {...props} />)
-SvgMock.displayName = 'SvgMock'
+function SvgMock({ ref, ...props }) {
+  return <svg ref={ref} {...props} />
+}
+
 export default SvgMock

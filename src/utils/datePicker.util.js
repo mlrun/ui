@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { trim } from 'lodash'
+import { trim } from 'lodash-es'
 
 import { ANY_TIME, DATE_FILTER_ANY_TIME } from '../constants'
 import { formatDatetime, getSupportedLocale } from 'igz-controls/utils/datetime.util'

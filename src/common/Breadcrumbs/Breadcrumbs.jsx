@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { useLocation, useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router'
 
 import BreadcrumbsStep from './BreadcrumbsStep/BreadcrumbsStep'
 

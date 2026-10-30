@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { set } from 'lodash'
+import { set } from 'lodash-es'
 
 import { FILTER_MENU_MODAL, GROUP_BY_NAME, SHOW_ITERATIONS } from '../constants'
 

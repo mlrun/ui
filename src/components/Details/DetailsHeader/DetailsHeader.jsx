@@ -20,8 +20,8 @@ such restriction.
 import React, { useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { isEmpty } from 'lodash'
+import { Link } from 'react-router'
+import { isEmpty } from 'lodash-es'
 
 import Select from '../../../common/Select/Select'
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'

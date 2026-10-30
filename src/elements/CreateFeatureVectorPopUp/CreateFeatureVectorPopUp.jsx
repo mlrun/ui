@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { useSelector } from 'react-redux'
 
 import {
@@ -75,7 +75,7 @@ const CreateFeatureVectorPopUp = ({
     })
   }
 
-  const formRef = React.useRef(
+  const [form] = React.useState(() =>
     createForm({
       initialValues,
       mutators: { ...arrayMutators, setFieldState },
@@ -89,7 +89,7 @@ const CreateFeatureVectorPopUp = ({
       headerText={`${!featureVectorData.name ? 'Create' : 'Edit'} feature vector`}
       closePopUp={closePopUp}
     >
-      <Form form={formRef.current} onSubmit={handleCreateFeatureVector}>
+      <Form form={form} onSubmit={handleCreateFeatureVector}>
         {formState => {
           return (
             <>

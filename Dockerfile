@@ -13,11 +13,13 @@
 # limitations under the License.
 #
 # build stage
-FROM quay.io/mlrun/node:20.19.2-slim AS build-stage
+FROM quay.io/mlrun/node:24.22.0-slim AS build-stage
 
 WORKDIR /app
 
 COPY package*.json ./
+# used by the postinstall script
+COPY scripts/patchPackages.mjs ./scripts/
 RUN npm install
 
 COPY . .

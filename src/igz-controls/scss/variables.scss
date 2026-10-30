@@ -1,0 +1,28 @@
+@use './colors';
+
+$heightRowTable: 55px;
+$leftRowOffset: 49px;
+$mainBorderRadius: 4px;
+$modalBorderRadius: 8px;
+
+$navbarTogglerWidth: 35px;
+
+$headerHeight: 64px;
+
+$primaryTextColor: colors.$primary;
+$secondaryTextColor: colors.$topaz;
+
+$actionsCellWidth: 82px;
+
+// Fields and button heights
+$fieldDense: 36px;
+$fieldNormal: 40px;
+$fieldMedium: 44px;
+$fieldChunky: 48px;
+
+// Table row heights
+$headerRowHeight: 40;
+$headerRowHeightBig: 50;
+$rowHeightSmall: 50;
+$rowHeight: 57;
+$rowHeightExtended: 82;

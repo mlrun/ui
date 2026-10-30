@@ -25,47 +25,50 @@ import NoData from '../../common/NoData/NoData'
 
 import RefreshIcon from 'igz-controls/images/refresh.svg?react'
 
-const Logs = React.forwardRef(
-  ({ detailsLogs, isLoading, noDataMessage = '', refreshLogs, withLogsRefreshBtn }, ref) => {
-    const handleScroll = event => {
-      if (
-        ref.current &&
-        event.target.scrollHeight - event.target.scrollTop - 1 < event.target.clientHeight
-      ) {
-        ref.current()
-      }
+function Logs({
+  detailsLogs,
+  isLoading,
+  noDataMessage = '',
+  ref,
+  refreshLogs,
+  withLogsRefreshBtn
+}) {
+  const handleScroll = event => {
+    if (
+      ref.current &&
+      event.target.scrollHeight - event.target.scrollTop - 1 < event.target.clientHeight
+    ) {
+      ref.current()
     }
-
-    return (
-      <div className="table__item-logs">
-        <div className="table__item-logs-content" onScroll={handleScroll}>
-          {!isLoading && !detailsLogs.length ? <NoData message={noDataMessage} /> : detailsLogs}
-        </div>
-        <div className="table__item-logs-panel">
-          {withLogsRefreshBtn && (
-            <div className="logs-refresh">
-              <Button
-                icon={<RefreshIcon />}
-                label=""
-                tooltip="Refresh"
-                onClick={() => {
-                  refreshLogs()
-                }}
-              />
-            </div>
-          )}
-          {isLoading && (
-            <div className="logs-loader">
-              <Loader section secondary small />
-            </div>
-          )}
-        </div>
-      </div>
-    )
   }
-)
 
-Logs.displayName = 'Logs'
+  return (
+    <div className="table__item-logs">
+      <div className="table__item-logs-content" onScroll={handleScroll}>
+        {!isLoading && !detailsLogs.length ? <NoData message={noDataMessage} /> : detailsLogs}
+      </div>
+      <div className="table__item-logs-panel">
+        {withLogsRefreshBtn && (
+          <div className="logs-refresh">
+            <Button
+              icon={<RefreshIcon />}
+              label=""
+              tooltip="Refresh"
+              onClick={() => {
+                refreshLogs()
+              }}
+            />
+          </div>
+        )}
+        {isLoading && (
+          <div className="logs-loader">
+            <Loader section secondary small />
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
 
 Logs.propTypes = {
   detailsLogs: PropTypes.string.isRequired,

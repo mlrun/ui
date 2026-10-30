@@ -27,7 +27,7 @@ import ActionBar from './ActionBar'
 // ── Mocks ────────────────────────────────────────────────────────────────────
 
 const mockSetSearchParams = vi.fn()
-vi.mock('react-router-dom', () => ({
+vi.mock('react-router', () => ({
   useSearchParams: () => [new URLSearchParams(), mockSetSearchParams]
 }))
 

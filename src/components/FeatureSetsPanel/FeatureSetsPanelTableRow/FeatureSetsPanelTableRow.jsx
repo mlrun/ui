@@ -19,7 +19,7 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { map } from 'lodash'
+import { map } from 'lodash-es'
 import classnames from 'classnames'
 
 import { Tooltip, TextTooltipTemplate, ActionsMenu } from 'igz-controls/components'

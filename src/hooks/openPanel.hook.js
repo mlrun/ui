@@ -17,18 +17,20 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useLocation } from 'react-router-dom'
-import { useLayoutEffect, useState } from 'react'
+import { useLocation } from 'react-router'
+import { useState } from 'react'
 
 import { isPanelOpened } from '../utils/helper'
 
 export const useOpenPanel = () => {
-  const [panelOpened, setPanelOpened] = useState(false)
   const location = useLocation()
+  const [panelOpened, setPanelOpened] = useState(() => isPanelOpened(location.search))
+  const [prevSearch, setPrevSearch] = useState(location.search)
 
-  useLayoutEffect(() => {
+  if (location.search !== prevSearch) {
+    setPrevSearch(location.search)
     setPanelOpened(isPanelOpened(location.search))
-  }, [location.search])
+  }
 
   return panelOpened
 }

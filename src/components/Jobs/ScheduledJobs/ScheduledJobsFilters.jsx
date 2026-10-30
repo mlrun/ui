@@ -24,7 +24,7 @@ import MultiSelectFilter from '../../../common/MultiSelectFilter/MultiSelectFilt
 import { FormInput, FormOnChange } from 'igz-controls/components'
 
 import { JOBS_MONITORING_SCHEDULED_TAB, LABELS_FILTER, TYPE_FILTER } from '../../../constants'
-import { generateTypeFilter } from '../../FilterMenu/filterMenu.settings'
+import { generateTypeFilter } from '../../FilterMenuModal/filterMenuModal.settings.js'
 
 const ScheduledJobsFilters = () => {
   const form = useForm()

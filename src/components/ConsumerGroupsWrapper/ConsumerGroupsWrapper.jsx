@@ -18,14 +18,15 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { useNavigate, useParams, Outlet } from 'react-router-dom'
+import { useNavigate, useParams, Outlet } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 
 import { Loader } from 'igz-controls/components'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 
 import { GROUP_BY_NONE } from '../../constants'
+import { useHasValueChanged } from '../../hooks/useHasValueChanged.hook'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
 import { fetchNuclioV3ioStreams, resetV3ioStreamsError } from '../../reducers/nuclioReducer'
 import { setFilters } from '../../reducers/filtersReducer'
@@ -74,11 +75,18 @@ const ConsumerGroupsWrapper = () => {
     }
   }, [frontendSpec, navigate, nuclioStreamsAreEnabled, params.projectName, refreshConsumerGroups])
 
+  // Reset the previous request's error whenever streams are (re)fetched: on enable and on project change
+  const streamsFetchKey = nuclioStreamsAreEnabled ? params.projectName : null
+
+  if (useHasValueChanged(streamsFetchKey) && streamsFetchKey) {
+    setRequestErrorMessage('')
+  }
+
   useEffect(() => {
     if (nuclioStreamsAreEnabled) {
-      refreshConsumerGroups()
+      dispatch(fetchNuclioV3ioStreams({ project: params.projectName }))
     }
-  }, [nuclioStreamsAreEnabled, refreshConsumerGroups])
+  }, [nuclioStreamsAreEnabled, dispatch, params.projectName])
 
   if (isEmpty(frontendSpec)) {
     return <Loader />

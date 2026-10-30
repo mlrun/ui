@@ -16,7 +16,7 @@ such restriction.
 */
 import React, { useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 
 import { Loader, PopUpDialog, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 

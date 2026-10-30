@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import PropTypes from 'prop-types'
 
 import AddToFeatureVectorPageHeader from '../../elements/AddToFeatureVectorPageHeader/AddToFeatureVectorPageHeader'
@@ -37,97 +37,91 @@ import AddToFeatureVectorFilters from './AddToFeatureVectorFilters'
 import './addToFeatureVector.scss'
 import '../FeatureStore/Features/features.scss'
 
-const AddToFeatureVectorView = React.forwardRef(
-  (
-    {
-      actionsMenu,
-      content,
-      featureStore,
-      fetchTags,
-      filters,
-      filtersConfig,
-      filtersStore,
-      handleRefresh,
-      pageData,
-      requestErrorMessage,
-      selectedRowData,
-      setSearchParams,
-      tableContent,
-      tableStore,
-      toggleRow,
-      virtualizationConfig
-    },
-    ref
-  ) => {
-    const params = useParams()
-    return (
-      <div ref={ref} className="add-to-feature-vector content-wrapper">
-        <div className="content">
-          <div className="content__action-bar-wrapper">
-            <AddToFeatureVectorPageHeader params={params} />
-            <ActionBar
-              filters={filters}
-              filtersConfig={filtersConfig}
-              handleRefresh={handleRefresh}
-              setSearchParams={setSearchParams}
-              tab={ADD_TO_FEATURE_VECTOR_TAB}
-              withoutExpandButton
-            >
-              <AddToFeatureVectorFilters content={content} fetchTags={fetchTags} />
-            </ActionBar>
-          </div>
-          {(featureStore.loading || featureStore.features.loading) && <Loader />}
-          <div className="table-container">
-            {featureStore.loading || featureStore.features.loading ? null : content.length === 0 ? (
-              <NoData
-                message={getNoDataMessage(
-                  filters,
-                  filtersConfig,
-                  requestErrorMessage,
-                  FEATURE_STORE_PAGE,
-                  ADD_TO_FEATURE_VECTOR_TAB,
-                  ADD_TO_FEATURE_VECTOR_TAB,
-                  filtersStore
+function AddToFeatureVectorView({
+  actionsMenu,
+  content,
+  featureStore,
+  fetchTags,
+  filters,
+  filtersConfig,
+  filtersStore,
+  handleRefresh,
+  pageData,
+  ref,
+  requestErrorMessage,
+  selectedRowData,
+  setSearchParams,
+  tableContent,
+  tableStore,
+  toggleRow,
+  virtualizationConfig
+}) {
+  const params = useParams()
+  return (
+    <div ref={ref} className="add-to-feature-vector content-wrapper">
+      <div className="content">
+        <div className="content__action-bar-wrapper">
+          <AddToFeatureVectorPageHeader params={params} />
+          <ActionBar
+            filters={filters}
+            filtersConfig={filtersConfig}
+            handleRefresh={handleRefresh}
+            setSearchParams={setSearchParams}
+            tab={ADD_TO_FEATURE_VECTOR_TAB}
+            withoutExpandButton
+          >
+            <AddToFeatureVectorFilters content={content} fetchTags={fetchTags} />
+          </ActionBar>
+        </div>
+        {(featureStore.loading || featureStore.features.loading) && <Loader />}
+        <div className="table-container">
+          {featureStore.loading || featureStore.features.loading ? null : content.length === 0 ? (
+            <NoData
+              message={getNoDataMessage(
+                filters,
+                filtersConfig,
+                requestErrorMessage,
+                FEATURE_STORE_PAGE,
+                ADD_TO_FEATURE_VECTOR_TAB,
+                ADD_TO_FEATURE_VECTOR_TAB,
+                filtersStore
+              )}
+            />
+          ) : (
+            <>
+              <Table
+                actionsMenu={actionsMenu}
+                hideActionsMenu={tableStore.isTablePanelOpen}
+                pageData={pageData}
+                tab={ADD_TO_FEATURE_VECTOR_TAB}
+                tableClassName="features-table"
+                tableHeaders={tableContent[0]?.content ?? []}
+                virtualizationConfig={virtualizationConfig}
+              >
+                {tableContent.map(
+                  (tableItem, index) =>
+                    isRowRendered(virtualizationConfig, index) && (
+                      <FeatureStoreTableRow
+                        actionsMenu={actionsMenu}
+                        hideActionsMenu={tableStore.isTablePanelOpen}
+                        key={index}
+                        mainRowItemsCount={2}
+                        pageTab={ADD_TO_FEATURE_VECTOR_TAB}
+                        rowIndex={index}
+                        rowItem={tableItem}
+                        selectedRowData={selectedRowData}
+                        toggleRow={toggleRow}
+                      />
+                    )
                 )}
-              />
-            ) : (
-              <>
-                <Table
-                  actionsMenu={actionsMenu}
-                  hideActionsMenu={tableStore.isTablePanelOpen}
-                  pageData={pageData}
-                  tab={ADD_TO_FEATURE_VECTOR_TAB}
-                  tableClassName="features-table"
-                  tableHeaders={tableContent[0]?.content ?? []}
-                  virtualizationConfig={virtualizationConfig}
-                >
-                  {tableContent.map(
-                    (tableItem, index) =>
-                      isRowRendered(virtualizationConfig, index) && (
-                        <FeatureStoreTableRow
-                          actionsMenu={actionsMenu}
-                          hideActionsMenu={tableStore.isTablePanelOpen}
-                          key={index}
-                          mainRowItemsCount={2}
-                          pageTab={ADD_TO_FEATURE_VECTOR_TAB}
-                          rowIndex={index}
-                          rowItem={tableItem}
-                          selectedRowData={selectedRowData}
-                          toggleRow={toggleRow}
-                        />
-                      )
-                  )}
-                </Table>
-              </>
-            )}
-          </div>
+              </Table>
+            </>
+          )}
         </div>
       </div>
-    )
-  }
-)
-
-AddToFeatureVectorView.displayName = 'AddToFeatureVectorView'
+    </div>
+  )
+}
 
 AddToFeatureVectorView.propTypes = {
   actionsMenu: PropTypes.array.isRequired,

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isNil, map } from 'lodash'
+import { isNil, map } from 'lodash-es'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { isCommunityEdition } from '../../utils/helper'
 import { getSecretNameValidator } from '../../utils/getSecretNameValidator'

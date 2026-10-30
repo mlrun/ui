@@ -17,30 +17,29 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback, useEffect, useState, useMemo } from 'react'
-import { isEmpty, isNumber, orderBy, isEqual } from 'lodash'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { isEmpty, isEqual, isNumber, orderBy } from 'lodash-es'
 
 import ArrowIcon from 'igz-controls/images/back-arrow.svg?react'
 
-export const useSortTable = ({ headers, content, sortConfig = {} }) => {
+const defaultSortConfig = {}
+
+export const useSortTable = ({ headers, content, sortConfig = defaultSortConfig }) => {
   const [direction, setDirection] = useState('')
   const [selectedColumnName, setSelectedColumnName] = useState('')
-  const [sortedTableContent, setSortedTableContent] = useState(content)
-  const [sortedTableHeaders, setSortedTableHeaders] = useState(headers)
   const [config, setConfig] = useState(sortConfig)
+
+  // As before: callers pass `sortConfig` inline, keep it stable while its values don't change
+  if (!isEqual(config, sortConfig)) {
+    setConfig(sortConfig)
+  }
 
   const {
     allowSortBy = null,
     excludeSortBy = null,
     defaultSortBy = null,
     defaultDirection = null
-  } = useMemo(() => config, [config])
-
-  useEffect(() => {
-    if (!isEqual(config, sortConfig)) {
-      setConfig(sortConfig)
-    }
-  }, [sortConfig, config])
+  } = config
 
   const isDateValid = date => {
     const dateString = String(date)
@@ -167,6 +166,59 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
     })
   }, [isSortableByIndex, headers, isSortable])
 
+  // Default sort while the user hasn't chosen one (`null` when there is none)
+  const defaultSort = useMemo(() => {
+    if (defaultSortBy === null || (direction && !defaultDirection) || content.length === 0) {
+      return null
+    }
+
+    const columnName = selectedColumnName
+      ? selectedColumnName
+      : isNumber(defaultSortBy)
+        ? headers[defaultSortBy]?.headerId
+        : defaultSortBy
+
+    return columnName ? { columnName, sortDirection: defaultDirection || 'asc' } : null
+  }, [content.length, defaultDirection, defaultSortBy, direction, headers, selectedColumnName])
+
+  const { columnName: activeColumnName, sortDirection: activeSortDirection } =
+    direction && selectedColumnName
+      ? { columnName: selectedColumnName, sortDirection: direction }
+      : (defaultSort ?? { columnName: '', sortDirection: '' })
+
+  // Store the default sort as the selected one, so the next click on its header toggles the direction
+  useEffect(() => {
+    if ((direction && selectedColumnName) || !defaultSort) {
+      return
+    }
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- keeps the header toggle in sync with the default sort
+    setSelectedColumnName(defaultSort.columnName)
+    setDirection(defaultSort.sortDirection)
+  }, [defaultSort, direction, selectedColumnName])
+
+  const sortedTableContent = useMemo(() => {
+    if (!activeColumnName || !activeSortDirection) {
+      return content
+    }
+
+    const columnIndex = headers?.findIndex(header => header.headerId === activeColumnName)
+
+    if (columnIndex === -1) {
+      return content
+    }
+
+    return orderBy(content, getValueByType(columnIndex), activeSortDirection)
+  }, [activeColumnName, activeSortDirection, content, getValueByType, headers])
+
+  const sortedTableHeaders = useMemo(() => {
+    if (headers?.length > 0 && (excludeSortBy || allowSortBy)) {
+      return getSortableHeaders()
+    }
+
+    return headers
+  }, [allowSortBy, excludeSortBy, getSortableHeaders, headers])
+
   const sortTable = useCallback(
     (columnName, existingDirection) => {
       const sortDirection = existingDirection
@@ -175,20 +227,10 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
           ? 'desc'
           : 'asc'
 
-      const columnIndex = headers && headers.findIndex(header => header.headerId === columnName)
-
-      if (columnName) {
-        const sorted = orderBy(content, getValueByType(columnIndex), sortDirection)
-
-        setSortedTableContent(prevState => {
-          return isEqual(prevState, sorted) ? prevState : sorted
-        })
-      }
-
       setSelectedColumnName(columnName)
       setDirection(sortDirection)
     },
-    [content, direction, headers, selectedColumnName, getValueByType]
+    [direction, selectedColumnName]
   )
 
   const getSortingIcon = headerId => {
@@ -200,31 +242,6 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
       />
     )
   }
-
-  useEffect(() => {
-    if (direction && selectedColumnName) {
-      sortTable(selectedColumnName, direction)
-    } else if (defaultSortBy !== null && (!direction || defaultDirection) && content.length > 0) {
-      sortTable(
-        selectedColumnName
-          ? selectedColumnName
-          : isNumber(defaultSortBy)
-            ? headers[defaultSortBy].headerId
-            : defaultSortBy,
-        defaultDirection
-      )
-    } else {
-      setSortedTableContent(content)
-    }
-  }, [content, defaultDirection, defaultSortBy, direction, headers, selectedColumnName, sortTable])
-
-  useEffect(() => {
-    if (headers && headers.length > 0 && (excludeSortBy || allowSortBy)) {
-      const header = getSortableHeaders()
-
-      setSortedTableHeaders(header)
-    }
-  }, [allowSortBy, excludeSortBy, getSortableHeaders, headers])
 
   return { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders }
 }

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { chain, isEmpty } from 'lodash'
+import { chain, isEmpty } from 'lodash-es'
 import { ML_RUN_INFRA } from '../../components/DetailsMetrics/detailsMetrics.util'
 import { METRIC_TYPE, RESULT_TYPE } from '../../constants'
 

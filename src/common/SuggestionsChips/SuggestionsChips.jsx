@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Form } from 'react-final-form'
@@ -61,8 +61,6 @@ const SuggestionsChips = ({
   const formStateRef = useRef(null)
 
   const [typedValue, setTypedValue] = useState('')
-  const [filteredSuggestionList, setFilteredSuggestionList] = useState([])
-  const [showSuggestionList, setShowSuggestionList] = useState(false)
 
   const inputContainerRef = useRef(null)
   const inputRef = useRef(null)
@@ -73,20 +71,14 @@ const SuggestionsChips = ({
     elements.length === 0 && 'full-width'
   )
 
-  useEffect(() => {
-    const filteredList = suggestionList.filter(suggestionItem => {
-      return (
-        suggestionItem.label.toLowerCase().includes(typedValue.toLowerCase()) &&
-        !elements.find(element => element.id === suggestionItem.id)
-      )
-    })
+  const filteredSuggestionList = suggestionList.filter(suggestionItem => {
+    return (
+      suggestionItem.label.toLowerCase().includes(typedValue.toLowerCase()) &&
+      !elements.find(element => element.id === suggestionItem.id)
+    )
+  })
 
-    setFilteredSuggestionList(filteredList)
-  }, [elements, suggestionList, typedValue])
-
-  useEffect(() => {
-    setShowSuggestionList(typedValue && filteredSuggestionList.length > 0)
-  }, [filteredSuggestionList.length, typedValue])
+  const showSuggestionList = typedValue && filteredSuggestionList.length > 0
 
   const handleAddChip = useCallback(
     suggestionItem => {

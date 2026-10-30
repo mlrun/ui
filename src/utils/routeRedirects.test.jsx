@@ -25,7 +25,7 @@ import {
   RouterProvider,
   createMemoryRouter,
   createRoutesFromElements
-} from 'react-router-dom'
+} from 'react-router'
 
 import { redirectToPath, redirectToProjectPageTab } from './routeRedirects'
 

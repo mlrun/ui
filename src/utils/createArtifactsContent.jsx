@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { isNumber } from 'lodash'
+import { isNumber } from 'lodash-es'
 
 import TableProducerCell from '../elements/TableProducerCell/TableProducerCell'
 import FunctionPopUp from '../elements/DetailsPopUp/FunctionPopUp/FunctionPopUp'

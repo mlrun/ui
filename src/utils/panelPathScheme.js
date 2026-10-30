@@ -25,7 +25,7 @@ import {
   S3_INPUT_PATH_SCHEME,
   V3IO_INPUT_PATH_SCHEME
 } from '../constants'
-import { uniqBy } from 'lodash'
+import { uniqBy } from 'lodash-es'
 
 export const generateProjectsList = (projectsList, currentProject) =>
   projectsList

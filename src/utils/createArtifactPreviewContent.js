@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { has, isString } from 'lodash'
+import { has, isString } from 'lodash-es'
 
 import { UNKNOWN_STATE } from '../constants'
 import { commonLanguages } from '../common/Editor/editor.util'

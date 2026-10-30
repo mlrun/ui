@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 
 import TagFilterDropdown from './TagFilterDropdown'
 
@@ -38,11 +38,9 @@ const TagFilter = ({ label, onChange, page, tagFilterOptions, value }) => {
   const navigate = useNavigate()
   const tagFilterRef = useRef()
 
-  useEffect(() => {
-    if (tagFilter !== value && !tagIsTyped) {
-      setTagFilter(value)
-    }
-  }, [setTagFilter, value, tagFilter, tagIsTyped])
+  if (tagFilter !== value && !tagIsTyped) {
+    setTagFilter(value)
+  }
 
   const handlerOverall = useCallback(
     event => {

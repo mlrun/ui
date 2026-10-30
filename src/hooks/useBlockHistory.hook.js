@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useContext, useRef, useCallback } from 'react'
-import { UNSAFE_NavigationContext as NavigationContext } from 'react-router-dom'
+import { UNSAFE_NavigationContext as NavigationContext } from 'react-router'
 
 export const useBlockHistory = () => {
   const unblockRef = useRef()

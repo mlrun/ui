@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { get, map } from 'lodash'
+import { get, map } from 'lodash-es'
 
 export const parseV3ioStreamShardLags = (shardLags, requestBody) => {
   const preparedShardLags = get(shardLags, [

@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 
@@ -113,8 +113,6 @@ const JobPopUp = ({ isOpen, jobData, onResolve }) => {
   ])
 
   const handleFetchJob = useCallback(() => {
-    setIsLoading(true)
-
     return dispatch(fetchJob({ project: jobData.project, jobId: jobData.uid, iter: jobData.iter }))
       .unwrap()
       .then(job => {
@@ -137,6 +135,11 @@ const JobPopUp = ({ isOpen, jobData, onResolve }) => {
       })
   }, [dispatch, jobData.iter, jobData.project, jobData.uid, onResolve])
 
+  const refreshJob = useCallback(() => {
+    setIsLoading(true)
+    return handleFetchJob()
+  }, [handleFetchJob])
+
   useEffect(() => {
     if (isEmpty(selectedJob)) {
       handleFetchJob()
@@ -147,7 +150,7 @@ const JobPopUp = ({ isOpen, jobData, onResolve }) => {
     <DetailsPopUp
       actionsMenu={actionsMenu}
       formInitialValues={detailsFormInitialValues}
-      handleRefresh={handleFetchJob}
+      handleRefresh={refreshJob}
       isLoading={isLoading}
       isOpen={isOpen}
       onResolve={onResolve}

@@ -19,13 +19,13 @@ such restriction.
 */
 import React, { useEffect, useState, useRef, useCallback, useId } from 'react'
 import PropTypes from 'prop-types'
-import MaskedInput from 'react-text-mask'
 import classNames from 'classnames'
-import { throttle } from 'lodash'
+import { throttle } from 'lodash-es'
 import moment from 'moment'
 
 import { DENSITY_OPTIONS } from 'igz-controls/types'
-import { PopUpDialog } from 'igz-controls/components'
+import { PopUpDialog, MaskedInput } from 'igz-controls/components'
+import { useElementWidth } from '../../hooks/useElementWidth.hook'
 import { is12HourFormat } from './TimePicker.utils'
 import TimePickerOptions from './TimePickerOptions'
 
@@ -46,11 +46,13 @@ const TimePicker = ({
   const [valueInput, setValueInput] = useState(
     value ? (is12HourFormat() ? moment(value, 'HH:mm').format('hh:mm A') : value) : ''
   )
+  const [prevValue, setPrevValue] = useState(value)
   const [isDropDownMenuOpen, setIsDropDownMenuOpen] = useState(false)
   const timePickerRef = useRef()
   const dropdownRef = useRef()
   const buttonRef = useRef()
   const selectKey = useId()
+  const pickerWidth = useElementWidth(timePickerRef)
 
   const wrapperClassNames = classNames('time-picker-container', className)
   const inputWrapperClassNames = classNames(
@@ -59,11 +61,12 @@ const TimePicker = ({
     'time-picker__control'
   )
 
-  useEffect(() => {
+  if (value !== prevValue) {
+    setPrevValue(value)
     setValueInput(
       value ? (is12HourFormat() ? moment(value, 'HH:mm').format('hh:mm A') : value) : ''
     )
-  }, [value])
+  }
 
   const timeMask = value => {
     const chars = value.split('')
@@ -153,7 +156,7 @@ const TimePicker = ({
               position: 'bottom-right'
             }}
             ref={dropdownRef}
-            style={{ width: `${timePickerRef.current?.clientWidth || 116}px` }}
+            style={{ width: `${pickerWidth || 116}px` }}
           >
             <TimePickerOptions key={selectKey} handleInputChange={handleInputChange} />
           </PopUpDialog>

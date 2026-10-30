@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import PropTypes from 'prop-types'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 
 import DetailsLogs from '../DetailsLogs/DetailsLogs'
 import { Modal } from 'igz-controls/components'

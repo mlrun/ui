@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router'
 
 import ProjectSettingsGeneral from '../../elements/ProjectSettingsGeneral/ProjectSettingsGeneral'
 import ProjectSettingsMembers from '../../elements/ProjectSettingsMembers/ProjectSettingsMembers'
@@ -84,12 +84,9 @@ const ProjectSettings = () => {
     return membersState?.activeUser?.data?.id === membersState?.projectInfo?.owner.id
   }, [membersState])
 
-  const userIsSystemAdmin = useMemo(
-    () =>
-      membersState?.activeUser?.data?.attributes?.user_policies_collection?.has('System Admin') ??
-      false,
-    [membersState?.activeUser?.data?.attributes?.user_policies_collection]
-  )
+  const userIsSystemAdmin =
+    membersState?.activeUser?.data?.attributes?.user_policies_collection?.has('System Admin') ??
+    false
 
   const projectMembersTabIsShown = useMemo(
     () => isProjectMembersTabShown(projectMembershipIsEnabled, userIsProjectOwner, membersState),
@@ -266,6 +263,7 @@ const ProjectSettings = () => {
     const projectId = membersState?.projectInfo?.id
 
     if (activeUsername && projectId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- MF mode syncs flags that are also set by the fetch callbacks above
       setProjectOwnerIsShown(userIsProjectOwner || userIsSystemAdmin)
       setProjectMembersIsShown(projectMembersTabIsShown)
     }

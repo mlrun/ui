@@ -18,11 +18,11 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { By } from 'selenium-webdriver'
-import commonTable from '../components/table.component'
-import inputGroup from '../components/input-group.component'
-import textAreaGroup from '../components/text-area.component'
-import { generateInputGroup, generateTextAreaGroup } from '../../common-tools/common-tools'
-import checkboxComponent from '../components/checkbox.component'
+import commonTable from '../components/table.component.js'
+import inputGroup from '../components/input-group.component.js'
+import textAreaGroup from '../components/text-area.component.js'
+import { generateInputGroup, generateTextAreaGroup } from '../../common-tools/common-tools.js'
+import checkboxComponent from '../components/checkbox.component.js'
 
 
 const tabSelector = {

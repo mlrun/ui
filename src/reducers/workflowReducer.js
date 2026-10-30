@@ -20,7 +20,7 @@ such restriction.
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import workflowApi from '../api/workflow-api'
 import { parseWorkflow } from '../components/Workflow/workflow.util'
-import { isNil } from 'lodash'
+import { isNil } from 'lodash-es'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 import { parseWorkflows } from '../utils/parseWorkflows'
 import { JOBS_MONITORING_WORKFLOWS_TAB, MONITOR_WORKFLOWS_TAB } from '../constants'

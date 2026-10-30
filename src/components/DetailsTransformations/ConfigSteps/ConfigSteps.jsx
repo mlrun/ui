@@ -19,7 +19,7 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { find, unset, cloneDeep } from 'lodash'
+import { find, unset, cloneDeep } from 'lodash-es'
 
 import CodeBlock from '../../../common/CodeBlock/CodeBlock'
 import Accordion from '../../../common/Accordion/Accordion'

@@ -18,16 +18,16 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { By } from 'selenium-webdriver'
-import inputGroup from '../components/input-group.component'
-import commonTable from '../components/table.component'
-import actionMenu from '../components/action-menu.component'
+import inputGroup from '../components/input-group.component.js'
+import commonTable from '../components/table.component.js'
+import actionMenu from '../components/action-menu.component.js'
 import {
   generateInputGroup,
   generateLabelGroup,
   generateDropdownGroup
-} from '../../common-tools/common-tools'
-import labelComponent from '../components/label.component'
-import dropdownComponent from '../components/dropdown.component'
+} from '../../common-tools/common-tools.js'
+import labelComponent from '../components/label.component.js'
+import dropdownComponent from '../components/dropdown.component.js'
 
 const actionMenuStructure = {
   root: '.actions-menu__container',

@@ -20,7 +20,7 @@ such restriction.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { FileCode2 } from 'lucide-react'
 
 import DetailsDataTab from '../../../../shared/DetailsDataTab/DetailsDataTab'
@@ -64,12 +64,14 @@ const ApplicationMonitoringEndpoints = ({ application }) => {
 
   const toggleConvertedYaml = useCallback(data => dispatch(toggleYaml(data)), [dispatch])
 
+  const monitoringDashboardUrl = frontendSpec?.model_monitoring_dashboard_url
+
   const handleMonitoring = useCallback(
     item => {
-      if (!frontendSpec?.model_monitoring_dashboard_url) return
-      monitorModelEndpoint(frontendSpec.model_monitoring_dashboard_url, item, projectName)
+      if (!monitoringDashboardUrl) return
+      monitorModelEndpoint(monitoringDashboardUrl, item, projectName)
     },
-    [frontendSpec?.model_monitoring_dashboard_url, projectName]
+    [monitoringDashboardUrl, projectName]
   )
 
   const labelOptions = useMemo(() => {

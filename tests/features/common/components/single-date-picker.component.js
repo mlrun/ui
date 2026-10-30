@@ -18,9 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { By } from 'selenium-webdriver'
-import { locatorBuilder } from '../../common-tools/common-tools'
+import { locatorBuilder } from '../../common-tools/common-tools.js'
 
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash-es'
 
 export default function(datepickerStructure) {
   const datepickerRoot = locatorBuilder`${0} ${1}`

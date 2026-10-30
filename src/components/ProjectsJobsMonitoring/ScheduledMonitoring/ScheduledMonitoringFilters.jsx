@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useMemo } from 'react'
 import { useForm } from 'react-final-form'
-import { upperFirst } from 'lodash'
+import { upperFirst } from 'lodash-es'
 import { useSelector } from 'react-redux'
 
 import MultiSelectFilter from '../../../common/MultiSelectFilter/MultiSelectFilter'
@@ -33,7 +33,7 @@ import {
   PROJECTS_FILTER_ALL_ITEMS,
   TYPE_FILTER
 } from '../../../constants'
-import { generateTypeFilter } from '../../FilterMenu/filterMenu.settings'
+import { generateTypeFilter } from '../../FilterMenuModal/filterMenuModal.settings.js'
 import { generateProjectsList } from '../../../utils/projects'
 
 const ScheduledMonitoringFilters = () => {

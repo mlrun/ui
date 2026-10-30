@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { isNumber } from 'lodash'
+import { isNumber } from 'lodash-es'
 import PropTypes from 'prop-types'
 
 import FunctionsPanelResourcesView from './FunctionsPanelResourcesView'

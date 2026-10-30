@@ -31,7 +31,7 @@ import { DataTable } from 'igz-controls/nextGenComponents'
 const mockNavigate = vi.fn()
 const mockDispatch = vi.fn(() => ({ unwrap: () => Promise.resolve(null) }))
 
-vi.mock('react-router-dom', () => ({
+vi.mock('react-router', () => ({
   Link: props => <a href={props.to}>{props.children}</a>,
   useParams: () => ({ projectName: 'my-project' }),
   useNavigate: () => mockNavigate

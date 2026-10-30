@@ -1,35 +1,60 @@
-import commonjs from 'vite-plugin-commonjs'
-import eslint from 'vite-plugin-eslint'
+import checker from 'vite-plugin-checker'
 import { federation } from '@module-federation/vite'
 import path from 'node:path'
-import react from '@vitejs/plugin-react-swc'
+import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig, loadEnv } from 'vite'
 
-import { loadMlrunProxyConfig } from './config/loadDevProxyConfig.js'
-import { dependencies } from './package.json'
+import packageJson from './package.json' with { type: 'json' }
 
-export default defineConfig(async ({ mode }) => {
-  const env = loadEnv(mode, path.resolve(process.cwd()), '')
-  const mlrunProxyConfig = await loadMlrunProxyConfig(mode)
+/**
+ * Builds a single dev-server proxy entry. Returns an empty object when `target`
+ * is not set, so it can be spread into `server.proxy` without extra checks.
+ *
+ * @param {string} prefix - request path prefix to proxy
+ * @param {string | undefined} target - upstream URL (usually from a VITE_* env var)
+ * @param {{ stripPrefix?: boolean, headers?: Record<string, string | undefined> }} [options]
+ * @returns {Record<string, import('vite').ProxyOptions>}
+ */
+const proxyEntry = (prefix, target, { stripPrefix = false, headers } = {}) => {
+  if (!target) return {}
+
+  const definedHeaders = headers
+    ? Object.fromEntries(Object.entries(headers).filter(([, value]) => value !== undefined))
+    : null
+
+  return {
+    [prefix]: {
+      target,
+      changeOrigin: true,
+      secure: false,
+      ...(definedHeaders && { headers: definedHeaders }),
+      ...(stripPrefix && {
+        rewrite: path => path.replace(new RegExp(`^${prefix}`), '')
+      })
+    }
+  }
+}
+
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, import.meta.dirname, '')
 
   // Always built so remoteEntry.js is present in every image - it's simply unused
   // when the app isn't loaded as a Module Federation remote (igz3/CE).
   const federationPlugin = federation({
     filename: 'remoteEntry.js',
     name: 'mlrun',
-    // No TypeScript in this codebase, so the plugin's cross-remote .d.ts
-    // sync (and its dev-only websocket) has nothing to do here.
-    // TODO remove dts when migrate to TS
-    dts: false,
+    dts: {
+      tsConfigPath: false
+    },
     exposes: {
       './loadRemoteConfig': './src/loadRemoteConfig.js',
       './app': './src/main.jsx'
     },
     shared: {
-      react: { requiredVersion: dependencies.react, singleton: true },
-      'react-dom': { requiredVersion: dependencies['react-dom'], singleton: true }
+      react: { requiredVersion: packageJson.dependencies.react, singleton: true },
+      'react-dom': { requiredVersion: packageJson.dependencies['react-dom'], singleton: true }
     }
   })
 
@@ -46,7 +71,7 @@ export default defineConfig(async ({ mode }) => {
     apply: 'build',
     async closeBundle() {
       const fs = await import('node:fs/promises')
-      const htmlPath = path.resolve(__dirname, 'build/index.html')
+      const htmlPath = path.resolve(import.meta.dirname, 'build/index.html')
       const html = await fs.readFile(htmlPath, 'utf-8')
       const baseTagMatch = html.match(/<base[^>]*\/?>\s*/)
       if (!baseTagMatch) {
@@ -62,18 +87,41 @@ export default defineConfig(async ({ mode }) => {
 
   return {
     plugins: [
-      commonjs(),
       tailwindcss(),
       react(),
       federationPlugin,
-      svgr(),
-      eslint({ failOnError: false }),
+      svgr({
+        svgrOptions: {
+          jsxRuntime: 'classic'
+        },
+        oxcOptions: {
+          jsx: {
+            runtime: 'classic'
+          }
+        }
+      }),
+      checker({
+        eslint: {
+          useFlatConfig: true,
+          lintCommand: 'eslint "./src/**/*.{js,jsx,ts,tsx}"'
+        },
+        enableBuild: false
+      }),
       baseHrefFirstPlugin
     ],
     base: env.NODE_ENV === 'production' ? './' : '/',
     server: {
       proxy: {
-        ...mlrunProxyConfig(env)
+        ...proxyEntry('/api', env.VITE_MLRUN_API_URL, {
+          headers: {
+            Connection: 'keep-alive',
+            'x-v3io-session-key': env.VITE_MLRUN_V3IO_ACCESS_KEY,
+            'x-remote-user': 'admin'
+          }
+        }),
+        ...proxyEntry('/nuclio', env.VITE_NUCLIO_API_URL, { stripPrefix: true }),
+        ...proxyEntry('/iguazio', env.VITE_IGUAZIO_API_URL, { stripPrefix: true }),
+        ...proxyEntry('/function-catalog', env.VITE_FUNCTION_CATALOG_URL, { stripPrefix: true })
       },
       fs: {
         strict: false
@@ -86,14 +134,12 @@ export default defineConfig(async ({ mode }) => {
     resolve: {
       alias: {
         'igz-controls/nextGenComponents': path.resolve(
-          __dirname,
-          'node_modules/iguazio.dashboard-react-controls/dist/nextGenComponents/index.mjs'
+          import.meta.dirname,
+          'src/igz-controls/nextGenComponents/index.ts'
         ),
-        'igz-controls': path.resolve(
-          __dirname,
-          'node_modules/iguazio.dashboard-react-controls/dist'
-        ),
-        '@': path.resolve(__dirname, './src/nextGenComponents')
+        'igz-controls/index.css': path.resolve(import.meta.dirname, 'src/igz-controls/index.scss'),
+        'igz-controls': path.resolve(import.meta.dirname, 'src/igz-controls'),
+        '@': path.resolve(import.meta.dirname, './src/nextGenComponents')
       },
       dedupe: [
         'react',
@@ -109,7 +155,6 @@ export default defineConfig(async ({ mode }) => {
         'react-redux',
         '@reduxjs/toolkit',
         'react-router',
-        'react-router-dom',
         'react-transition-group'
       ]
     },

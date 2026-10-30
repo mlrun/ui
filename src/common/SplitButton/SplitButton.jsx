@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useState, useRef } from 'react'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 
 import { Button } from 'igz-controls/components'
 import { OptionsMenu, SelectOption } from 'igz-controls/elements'
@@ -92,7 +92,7 @@ const SplitButton = ({
         </div>
       </div>
       {!isEmpty(options) && (
-        <OptionsMenu show={isBodyOpen} ref={{ refInputContainer: mainRef }}>
+        <OptionsMenu show={isBodyOpen} refInputContainer={mainRef}>
           {options.map(option => {
             return (
               <SelectOption

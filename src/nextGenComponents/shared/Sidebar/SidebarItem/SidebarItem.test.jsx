@@ -45,7 +45,7 @@ const { MockSidebarMenuItem } = vi.hoisted(() => {
 
 const mockMatch = vi.fn()
 
-vi.mock('react-router-dom', () => ({
+vi.mock('react-router', () => ({
   Link: ({ to, children, ...rest }) => (
     <a href={to} {...rest}>
       {children}

@@ -1,0 +1,30 @@
+@use '../../scss/colors';
+@use '../../scss/mixins';
+
+.form-field-textarea {
+  width: 100%;
+
+  textarea {
+    width: 100%;
+    height: inherit;
+    padding: 12px 16px;
+    white-space: normal;
+  }
+
+  .form-field {
+    @include mixins.inputSelectField;
+
+    &__wrapper {
+      .form-field__control {
+        padding: 0;
+      }
+    }
+
+    &__counter {
+      margin-top: 5px;
+      color: colors.$topaz;
+      font-size: 12px;
+      text-align: right;
+    }
+  }
+}
