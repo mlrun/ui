@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { Fragment, Suspense } from 'react'
+import React, { Fragment, Suspense, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import {
   Route,
@@ -43,7 +43,11 @@ import { lazyRetry } from './lazyWithRetry'
 import { useMode } from './hooks/mode.hook'
 import { useNuclioMode } from './hooks/nuclioMode.hook'
 import wrapComponentForNavbarNavigationTracking from './utils/wrapComponentForNavbarNavigationTracking'
-import { redirectToPath, redirectToProjectPageTab } from './utils/routeRedirects'
+import {
+  redirectToPath,
+  redirectToProjectPageTab,
+  redirectToProjectsPage
+} from './utils/routeRedirects'
 
 import {
   ALERTS_PAGE_PATH,
@@ -483,13 +487,17 @@ const App = () => {
               />
             </Fragment>
           ))}
-          <Route path="*" loader={redirectToPath(`/${PROJECTS_PAGE_PATH}`)} />
-          <Route path="/" loader={redirectToPath(`/${PROJECTS_PAGE_PATH}`)} />
+          <Route path="*" loader={redirectToProjectsPage()} />
+          <Route path="/" loader={redirectToProjectsPage()} />
         </Route>
       </>
     ),
     { basename: PUBLIC_URL }
   )
+
+  // Stop listening to `popstate` once replaced or unmounted. As a remote, mlrun is mounted again on
+  // every visit, and a leftover router would keep redirecting the host's later URLs to `/projects`.
+  useEffect(() => () => router.dispose(), [router])
 
   return (
     <div className="ml-app">
