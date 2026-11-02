@@ -27,7 +27,7 @@ import {
   createRoutesFromElements
 } from 'react-router-dom'
 
-import { redirectToPath, redirectToProjectPageTab } from './routeRedirects'
+import { redirectToPath, redirectToProjectPageTab, redirectToProjectsPage } from './routeRedirects'
 
 // the same nesting of splat routes as in App.jsx
 const routes = createRoutesFromElements(
@@ -45,7 +45,7 @@ const routes = createRoutesFromElements(
       <Route path="models" element={<div>models page</div>} />
       <Route path="*" loader={redirectToProjectPageTab('models', 'models')} />
     </Route>
-    <Route path="*" loader={redirectToPath('/projects')} />
+    <Route path="*" loader={redirectToProjectsPage(false)} />
   </Route>
 )
 
@@ -93,5 +93,24 @@ describe('catch-all route redirects', () => {
     expect(await screen.findByText('models page')).toBeInTheDocument()
     // the basename is applied once, the redirect stays within the app
     expect(router.state.location.pathname).toBe('/mlrun/projects/default/models/models')
+  })
+})
+
+describe('redirectToProjectsPage in MF mode', () => {
+  const load = pathname =>
+    redirectToProjectsPage(true)({ request: new Request(`http://localhost${pathname}`) })
+
+  it.each(['/', '/admin/users', '/airun/', '/projectsX'])(
+    'leaves host-owned "%s" to the host router',
+    pathname => {
+      expect(load(pathname)).toBeNull()
+    }
+  )
+
+  it('still redirects unknown paths under /projects', () => {
+    const response = load('/projects/default/INVALID')
+
+    expect(response.status).toBe(302)
+    expect(response.headers.get('Location')).toBe('/projects')
   })
 })

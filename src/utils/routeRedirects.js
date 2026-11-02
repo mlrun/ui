@@ -19,7 +19,7 @@ such restriction.
 */
 import { redirect } from 'react-router-dom'
 
-import { PROJECTS_PAGE_PATH } from '../constants'
+import { IS_MF_MODE, PROJECTS_PAGE_PATH } from '../constants'
 
 // Loaders for the catch-all (`*`) routes, they redirect unknown paths before anything is rendered.
 // The targets are absolute: since react-router v7 relative paths in splat routes are resolved against the full URL,
@@ -27,6 +27,18 @@ import { PROJECTS_PAGE_PATH } from '../constants'
 // Absolute paths are resolved within the router `basename`.
 
 export const redirectToPath = path => () => redirect(path)
+
+// Top-level catch-all. In MF mode the host owns every URL outside `/projects/...` (e.g. `/`, `/admin`),
+// and this router still sees them on the host's popstate before it unmounts, so leave them to the host.
+export const redirectToProjectsPage =
+  (isMfMode = IS_MF_MODE) =>
+  ({ request }) => {
+    const { pathname } = new URL(request.url)
+
+    if (isMfMode && !pathname.startsWith(`/${PROJECTS_PAGE_PATH}/`)) return null
+
+    return redirect(`/${PROJECTS_PAGE_PATH}`)
+  }
 
 export const redirectToProjectPageTab =
   (pagePath, tab) =>
