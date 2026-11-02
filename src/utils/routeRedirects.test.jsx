@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import {
   Outlet,
   Route,
@@ -27,7 +27,25 @@ import {
   createRoutesFromElements
 } from 'react-router'
 
-import { redirectToPath, redirectToProjectPageTab, redirectToProjectsPage } from './routeRedirects'
+import {
+  redirectToPath,
+  redirectToProjectPageTab,
+  redirectUnknownPathToProjects
+} from './routeRedirects'
+
+const mfMode = vi.hoisted(() => ({ value: false }))
+
+vi.mock('../constants', async importOriginal => {
+  const actual = await importOriginal()
+
+  return Object.create(actual, {
+    IS_MF_MODE: { get: () => mfMode.value, enumerable: true }
+  })
+})
+
+beforeEach(() => {
+  mfMode.value = false
+})
 
 // the same nesting of splat routes as in App.jsx
 const routes = createRoutesFromElements(
@@ -45,7 +63,7 @@ const routes = createRoutesFromElements(
       <Route path="models" element={<div>models page</div>} />
       <Route path="*" loader={redirectToProjectPageTab('models', 'models')} />
     </Route>
-    <Route path="*" loader={redirectToProjectsPage(false)} />
+    <Route path="*" loader={redirectUnknownPathToProjects} />
   </Route>
 )
 
@@ -96,9 +114,12 @@ describe('catch-all route redirects', () => {
   })
 })
 
-describe('redirectToProjectsPage in MF mode', () => {
-  const load = pathname =>
-    redirectToProjectsPage(true)({ request: new Request(`http://localhost${pathname}`) })
+describe('redirectUnknownPathToProjects in MF mode', () => {
+  const load = pathname => {
+    mfMode.value = true
+
+    return redirectUnknownPathToProjects({ request: new Request(`http://localhost${pathname}`) })
+  }
 
   it.each(['/', '/admin/users', '/airun/', '/projectsX'])(
     'leaves host-owned "%s" to the host router',

@@ -32,8 +32,13 @@ export const redirectToPath = path => () => redirect(path)
 // synthetic popstate after its own navigations, so this router briefly sees those URLs while it is
 // still mounted; redirecting there would rewrite the host URL back to /projects.
 export const redirectUnknownPathToProjects = ({ request }) => {
-  if (IS_MF_MODE && !new URL(request.url).pathname.startsWith(`/${PROJECTS_PAGE_PATH}`)) {
-    return null
+  if (IS_MF_MODE) {
+    const { pathname } = new URL(request.url)
+    const projectsPath = `/${PROJECTS_PAGE_PATH}`
+
+    if (pathname !== projectsPath && !pathname.startsWith(`${projectsPath}/`)) {
+      return null
+    }
   }
 
   return redirect(`/${PROJECTS_PAGE_PATH}`)
