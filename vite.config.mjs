@@ -9,23 +9,26 @@ import { defineConfig, loadEnv } from 'vite'
 
 import packageJson from './package.json' with { type: 'json' }
 
-const shareSingletons = pattern => {
-  const { packages } = JSON.parse(
-    fs.readFileSync(path.resolve(import.meta.dirname, 'package-lock.json'), 'utf-8')
-  )
+/**
+ * Shares every package installed under an npm scope (e.g. `@radix-ui`) as a
+ * Module Federation singleton, so host and remotes use one instance.
+ *
+ * @param {`@${string}`} scope - npm scope to share
+ * @returns {Record<string, { singleton: true }>}
+ */
+const shareScopeSingletons = scope => {
+  const scopeDir = path.resolve(import.meta.dirname, 'node_modules', scope)
+
+  if (!fs.existsSync(scopeDir)) {
+    throw new Error(`shareScopeSingletons: ${scopeDir} not found. Run "npm install".`)
+  }
 
   return Object.fromEntries(
-    Object.keys(packages)
-      .map(packagePath => packagePath.match(/^node_modules\/((?:@[^/]+\/)?[^/]+)$/)?.[1])
-      .filter(name => name && pattern.test(name))
-      .map(name => [name, { singleton: true }])
+    fs
+      .readdirSync(scopeDir, { withFileTypes: true })
+      .filter(entry => entry.isDirectory() || entry.isSymbolicLink())
+      .map(entry => [`${scope}/${entry.name}`, { singleton: true }])
   )
-}
-
-const shared = {
-  react: { requiredVersion: packageJson.dependencies.react, singleton: true },
-  'react-dom': { requiredVersion: packageJson.dependencies['react-dom'], singleton: true },
-  ...shareSingletons(/^@radix-ui\/|^react-remove-scroll$|^aria-hidden$/)
 }
 
 /**
@@ -72,7 +75,11 @@ export default defineConfig(({ mode }) => {
       './loadRemoteConfig': './src/loadRemoteConfig.js',
       './app': './src/main.jsx'
     },
-    shared
+    shared: {
+      react: { requiredVersion: packageJson.dependencies.react, singleton: true },
+      'react-dom': { requiredVersion: packageJson.dependencies['react-dom'], singleton: true },
+      ...shareScopeSingletons('@radix-ui')
+    }
   })
 
   // The federation plugin injects its hostInit script as the first child of
