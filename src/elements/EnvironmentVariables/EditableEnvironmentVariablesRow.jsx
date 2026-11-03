@@ -136,7 +136,9 @@ const EditableEnvironmentVariablesRow = ({
               invalid={!validation.isSecretNameValid}
               label="Secret name"
               onChange={secretName => setSelectedEnvVariable(state => ({ ...state, secretName }))}
-              pattern="^(?=[\S\s]{1,253}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?)*$"
+              pattern={
+                '^(?=[\\S\\s]{1,253}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?)*$'
+              }
               validationRules={getValidationRules('environmentVariables.secretName', [
                 getSecretNameValidator(projectName, envVariable?.value?.split?.(':')?.[0])
               ])}
@@ -150,7 +152,7 @@ const EditableEnvironmentVariablesRow = ({
               invalid={!validation.isSecretKeyValid}
               label="Secret key"
               onChange={secretKey => setSelectedEnvVariable(state => ({ ...state, secretKey }))}
-              pattern="^(?=[\S\s]{0,253}$)(?!\.$)(?!\.\.[\S\s]*$)[-._a-zA-Z0-9]*$"
+              pattern={'^(?=[\\S\\s]{0,253}$)(?!\\.$)(?!\\.\\.[\\S\\s]*$)[-._a-zA-Z0-9]*$'}
               setInvalid={value => setValidation(state => ({ ...state, isSecretKeyValid: value }))}
               tip={secretKeyValidationTip}
               value={secretKey}
