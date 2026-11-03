@@ -19,7 +19,7 @@ such restriction.
 */
 /** @type {import('tailwindcss').Config} */
 
-module.exports = {
+export default {
   darkMode: ['class'],
   theme: {
     extend: {
@@ -130,7 +130,6 @@ module.exports = {
     }
   },
   plugins: [
-    require('tailwindcss-animate'),
     function ({ addComponents }) {
       addComponents({
         '.status-dot': { '@apply inline-block w-2 h-2 rounded-full': {} }

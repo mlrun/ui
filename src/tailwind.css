@@ -13,6 +13,7 @@
 */
 @layer theme, base, components, utilities;
 @import 'tailwindcss/theme.css' layer(theme) theme(reference inline);
+@import 'tw-animate-css';
 @layer utilities {
   :where(.ml-app, .mlrun-tw-scope, #overlay_container) {
     @tailwind utilities source(none);
@@ -23,7 +24,7 @@
 
 @source './nextGenComponents';
 @source not './nextGenComponents/**/*.test.{js,jsx}';
-@source '../node_modules/iguazio.dashboard-react-controls/dist/nextGenComponents';
+@source './igz-controls/nextGenComponents';
 
 @layer base {
   .ml-app,

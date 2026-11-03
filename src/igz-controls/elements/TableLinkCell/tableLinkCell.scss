@@ -1,0 +1,77 @@
+@use '../../scss/colors';
+
+.table {
+  .table-body__cell {
+    line-height: 20px;
+
+    .name-wrapper {
+      display: flex;
+      flex: 1;
+      flex-wrap: wrap;
+      align-items: center;
+
+      .item {
+        &-name {
+          color: colors.$primary;
+          font-weight: bold;
+
+          &.function-name {
+            max-width: 120px;
+          }
+        }
+
+        &-tag {
+          max-width: 150px;
+
+          span {
+            display: inline;
+          }
+        }
+      }
+
+      .link {
+        display: flex;
+        width: 100%;
+        color: colors.$primary;
+      }
+    }
+
+    .link-subtext {
+      color: colors.$topaz;
+    }
+
+    .date-uid-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: max-content;
+      min-width: 100%;
+      margin-top: 5px;
+      font-weight: normal;
+      font-size: 12px;
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+
+      & > span {
+        &:not(:last-child) {
+          margin-right: 10px;
+        }
+      }
+
+      span {
+        width: auto;
+      }
+    }
+
+    &.link-blue {
+      .name-wrapper {
+        .link {
+          .item-name {
+            color: colors.$cornflowerBlue;
+            font-weight: 400;
+          }
+        }
+      }
+    }
+  }
+}

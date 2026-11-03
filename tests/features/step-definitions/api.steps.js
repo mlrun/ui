@@ -27,7 +27,7 @@ import {
   createAPISchedule,
   deleteAPIMLProject,
   getProjects
-} from '../common/actions/api.actions'
+} from '../common/actions/api.actions.js'
 
 Then(
   'set tear-down property {string} created with {string} value',

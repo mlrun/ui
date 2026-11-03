@@ -37,7 +37,7 @@ import MonitoringIcon from 'igz-controls/images/monitoring-icon.svg?react'
 import './MlNodeWithSubItems.scss'
 
 const MlNodeWithSubItems = ({ data, isConnectable, id = '' }) => {
-  const formRef = React.useRef(
+  const [formRef] = React.useState(() =>
     createForm({
       initialValues: {
         subItems:
@@ -55,7 +55,7 @@ const MlNodeWithSubItems = ({ data, isConnectable, id = '' }) => {
   )
 
   return (
-    <Form form={formRef.current} onSubmit={() => {}}>
+    <Form form={formRef} onSubmit={() => {}}>
       {formState => (
         <>
           <div className="react-flow__node-header">

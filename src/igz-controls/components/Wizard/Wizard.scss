@@ -1,0 +1,53 @@
+.wizard-form {
+  .modal__body {
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 0;
+    overflow: hidden;
+
+    @media screen and (min-width: 1200px) {
+      flex-flow: row nowrap;
+    }
+  }
+
+  .wizard-form__content-container {
+    width: 100%;
+    height: 100%;
+    padding: 0 2rem 1.5rem;
+    overflow-y: auto;
+
+    @media screen and (min-width: 1200px) {
+      padding: 1.5rem 2rem 1.5rem 1rem;
+    }
+  }
+
+  .wizard-form__content {
+    min-width: 350px;
+    height: 100%;
+
+    .wizard-form__hidden-content-item {
+      position: absolute;
+      height: 0;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .wizard-form__visible-content-item {
+      height: 100%;
+    }
+  }
+
+  &__back-button,
+  &__next-button {
+    svg {
+      width: 14px;
+    }
+  }
+
+  &__next-button {
+    svg {
+      rotate: 180deg;
+    }
+  }
+}

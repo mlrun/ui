@@ -27,123 +27,117 @@ import { Loader } from 'igz-controls/components'
 
 import './artifacts.scss'
 
-let ArtifactsView = React.forwardRef(
-  (
-    {
-      actionButtons = [],
-      actionsMenu,
-      applyDetailsChanges,
-      applyDetailsChangesCallback,
-      artifactName = '',
-      artifacts,
-      artifactsStore,
-      detailsFormInitialValues,
-      filters,
-      filtersConfig,
-      filtersStore,
-      getAndSetSelectedArtifact,
-      handleRefreshArtifacts,
-      historyBackLink,
-      isAllVersions,
-      isOnlyTabScreen,
-      page,
-      pageData,
-      paginationConfigArtifactsRef,
-      params,
-      requestErrorMessage = '',
-      selectedArtifact,
-      setSearchArtifactsParams,
-      setSelectedArtifact,
-      storeArtifactTypeLoading,
-      tab = '',
-      tableContent,
-      tableHeaders,
-      viewMode = ''
-    },
-    { artifactsRef }
-  ) => {
-    return isOnlyTabScreen ? (
-      <div className="models" ref={artifactsRef}>
-        <ArtifactsTable
-          actionButtons={actionButtons}
-          actionsMenu={actionsMenu}
-          applyDetailsChanges={applyDetailsChanges}
-          applyDetailsChangesCallback={applyDetailsChangesCallback}
-          artifactName={artifactName}
-          artifacts={artifacts}
-          artifactsStore={artifactsStore}
-          detailsFormInitialValues={detailsFormInitialValues}
-          filters={filters}
-          filtersConfig={filtersConfig}
-          filtersStore={filtersStore}
-          getAndSetSelectedArtifact={getAndSetSelectedArtifact}
-          handleRefreshArtifacts={handleRefreshArtifacts}
-          historyBackLink={historyBackLink}
-          isAllVersions={isAllVersions}
-          isOnlyTabScreen={isOnlyTabScreen}
-          page={page}
-          pageData={pageData}
-          paginationConfigArtifactsRef={paginationConfigArtifactsRef}
-          requestErrorMessage={requestErrorMessage}
-          selectedArtifact={selectedArtifact}
-          setSearchArtifactsParams={setSearchArtifactsParams}
-          setSelectedArtifact={setSelectedArtifact}
-          storeArtifactTypeLoading={storeArtifactTypeLoading}
-          tab={tab}
-          tableContent={tableContent}
-          tableHeaders={tableHeaders}
-          viewMode={viewMode}
-        />
-      </div>
-    ) : (
-      <>
-        <div className="content-wrapper" ref={artifactsRef}>
-          <div className="content__header">
-            <Breadcrumbs itemName={params.artifactName} />
-          </div>
-          <div className="content">
-            {artifactsStore.loading && <Loader />}
-            <ArtifactsTable
-              actionButtons={actionButtons}
-              actionsMenu={actionsMenu}
-              applyDetailsChanges={applyDetailsChanges}
-              applyDetailsChangesCallback={applyDetailsChangesCallback}
-              artifactName={artifactName}
-              artifacts={artifacts}
-              artifactsStore={artifactsStore}
-              detailsFormInitialValues={detailsFormInitialValues}
-              filters={filters}
-              filtersConfig={filtersConfig}
-              filtersStore={filtersStore}
-              getAndSetSelectedArtifact={getAndSetSelectedArtifact}
-              handleRefreshArtifacts={handleRefreshArtifacts}
-              historyBackLink={historyBackLink}
-              isAllVersions={isAllVersions}
-              isOnlyTabScreen={isOnlyTabScreen}
-              page={page}
-              pageData={pageData}
-              paginationConfigArtifactsRef={paginationConfigArtifactsRef}
-              requestErrorMessage={requestErrorMessage}
-              selectedArtifact={selectedArtifact}
-              setSearchArtifactsParams={setSearchArtifactsParams}
-              setSelectedArtifact={setSelectedArtifact}
-              storeArtifactTypeLoading={storeArtifactTypeLoading}
-              tab={tab}
-              tableContent={tableContent}
-              tableHeaders={tableHeaders}
-              viewMode={viewMode}
-            />
-          </div>
+function ArtifactsView({
+  actionButtons = [],
+  actionsMenu,
+  applyDetailsChanges,
+  applyDetailsChangesCallback,
+  artifactName = '',
+  artifacts,
+  artifactsRef,
+  artifactsStore,
+  detailsFormInitialValues,
+  filters,
+  filtersConfig,
+  filtersStore,
+  getAndSetSelectedArtifact,
+  handleRefreshArtifacts,
+  historyBackLink,
+  isAllVersions,
+  isOnlyTabScreen,
+  page,
+  pageData,
+  paginationConfig,
+  params,
+  requestErrorMessage = '',
+  selectedArtifact,
+  setSearchArtifactsParams,
+  setSelectedArtifact,
+  storeArtifactTypeLoading,
+  tab = '',
+  tableContent,
+  tableHeaders,
+  viewMode = ''
+}) {
+  return isOnlyTabScreen ? (
+    <div className="models" ref={artifactsRef}>
+      <ArtifactsTable
+        actionButtons={actionButtons}
+        actionsMenu={actionsMenu}
+        applyDetailsChanges={applyDetailsChanges}
+        applyDetailsChangesCallback={applyDetailsChangesCallback}
+        artifactName={artifactName}
+        artifacts={artifacts}
+        artifactsStore={artifactsStore}
+        detailsFormInitialValues={detailsFormInitialValues}
+        filters={filters}
+        filtersConfig={filtersConfig}
+        filtersStore={filtersStore}
+        getAndSetSelectedArtifact={getAndSetSelectedArtifact}
+        handleRefreshArtifacts={handleRefreshArtifacts}
+        historyBackLink={historyBackLink}
+        isAllVersions={isAllVersions}
+        isOnlyTabScreen={isOnlyTabScreen}
+        page={page}
+        pageData={pageData}
+        paginationConfig={paginationConfig}
+        requestErrorMessage={requestErrorMessage}
+        selectedArtifact={selectedArtifact}
+        setSearchArtifactsParams={setSearchArtifactsParams}
+        setSelectedArtifact={setSelectedArtifact}
+        storeArtifactTypeLoading={storeArtifactTypeLoading}
+        tab={tab}
+        tableContent={tableContent}
+        tableHeaders={tableHeaders}
+        viewMode={viewMode}
+      />
+    </div>
+  ) : (
+    <>
+      <div className="content-wrapper" ref={artifactsRef}>
+        <div className="content__header">
+          <Breadcrumbs itemName={params.artifactName} />
         </div>
-        {artifactsStore?.preview?.isPreview && (
-          <PreviewModal artifact={artifactsStore?.preview?.selectedItem} />
-        )}
-      </>
-    )
-  }
-)
-
-ArtifactsView.displayName = 'ArtifactsView'
+        <div className="content">
+          {artifactsStore.loading && <Loader />}
+          <ArtifactsTable
+            actionButtons={actionButtons}
+            actionsMenu={actionsMenu}
+            applyDetailsChanges={applyDetailsChanges}
+            applyDetailsChangesCallback={applyDetailsChangesCallback}
+            artifactName={artifactName}
+            artifacts={artifacts}
+            artifactsStore={artifactsStore}
+            detailsFormInitialValues={detailsFormInitialValues}
+            filters={filters}
+            filtersConfig={filtersConfig}
+            filtersStore={filtersStore}
+            getAndSetSelectedArtifact={getAndSetSelectedArtifact}
+            handleRefreshArtifacts={handleRefreshArtifacts}
+            historyBackLink={historyBackLink}
+            isAllVersions={isAllVersions}
+            isOnlyTabScreen={isOnlyTabScreen}
+            page={page}
+            pageData={pageData}
+            paginationConfig={paginationConfig}
+            requestErrorMessage={requestErrorMessage}
+            selectedArtifact={selectedArtifact}
+            setSearchArtifactsParams={setSearchArtifactsParams}
+            setSelectedArtifact={setSelectedArtifact}
+            storeArtifactTypeLoading={storeArtifactTypeLoading}
+            tab={tab}
+            tableContent={tableContent}
+            tableHeaders={tableHeaders}
+            viewMode={viewMode}
+          />
+        </div>
+      </div>
+      {artifactsStore?.preview?.isPreview && (
+        <PreviewModal artifact={artifactsStore?.preview?.selectedItem} />
+      )}
+    </>
+  )
+}
 
 ArtifactsView.propTypes = {
   actionButtons: PropTypes.array,
@@ -152,6 +146,7 @@ ArtifactsView.propTypes = {
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactName: PropTypes.string,
   artifacts: PropTypes.array.isRequired,
+  artifactsRef: PropTypes.object.isRequired,
   artifactsStore: PropTypes.object.isRequired,
   detailsFormInitialValues: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
@@ -164,7 +159,7 @@ ArtifactsView.propTypes = {
   isOnlyTabScreen: PropTypes.bool.isRequired,
   page: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
-  paginationConfigArtifactsRef: PropTypes.object.isRequired,
+  paginationConfig: PropTypes.object.isRequired,
   params: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string,
   selectedArtifact: PropTypes.object.isRequired,

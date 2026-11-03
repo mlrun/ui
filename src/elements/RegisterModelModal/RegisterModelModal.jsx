@@ -20,7 +20,7 @@ such restriction.
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { createForm } from 'final-form'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
@@ -71,7 +71,7 @@ function RegisterModelModal({ actions = null, isOpen, onResolve, params, refresh
       }
     }
   }
-  const formRef = React.useRef(
+  const [form] = useState(() =>
     createForm({
       initialValues,
       mutators: { ...arrayMutators, setFieldState },
@@ -79,7 +79,7 @@ function RegisterModelModal({ actions = null, isOpen, onResolve, params, refresh
     })
   )
   const location = useLocation()
-  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
+  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, form)
   const dispatch = useDispatch()
 
   const registerModel = values => {
@@ -161,7 +161,7 @@ function RegisterModelModal({ actions = null, isOpen, onResolve, params, refresh
   }
 
   return (
-    <Form form={formRef.current} onSubmit={registerModel}>
+    <Form form={form} onSubmit={registerModel}>
       {formState => {
         return (
           <>

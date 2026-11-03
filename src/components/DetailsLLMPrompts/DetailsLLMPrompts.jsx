@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 

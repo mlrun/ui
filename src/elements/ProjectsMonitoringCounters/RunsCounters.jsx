@@ -15,7 +15,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { useSelector } from 'react-redux'
 
 import StatsCard from '../../common/StatsCard/StatsCard'

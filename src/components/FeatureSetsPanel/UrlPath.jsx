@@ -20,8 +20,8 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
-import { isEmpty, isNil } from 'lodash'
+import { useParams } from 'react-router'
+import { isEmpty, isNil } from 'lodash-es'
 import classNames from 'classnames'
 
 import Combobox from '../../common/Combobox/Combobox'
@@ -75,7 +75,6 @@ const UrlPath = ({
     project: '',
     projectItemType: ''
   })
-  const [comboboxMatches, setComboboxMatches] = useState([])
   const [projects, setProjects] = useState([])
   const [artifacts, setArtifacts] = useState([])
   const [artifactsReferences, setArtifactsReferences] = useState([])
@@ -84,6 +83,7 @@ const UrlPath = ({
   const [urlArtifactPathEntered, setUrlArtifactPathEntered] = useState(false)
   const [urlArtifactReferencePathEntered, setUrlArtifactReferencePathEntered] = useState(false)
   const [inputDefaultValue, setInputDefaultValue] = useState('')
+  const [appliedDefaultPath, setAppliedDefaultPath] = useState(null)
   const [editMode, setEditMode] = useState({
     isActive: false,
     savedUrlData: {
@@ -100,28 +100,21 @@ const UrlPath = ({
   const dispatch = useDispatch()
   const { projectName: project } = useParams()
 
-  useEffect(() => {
-    if (
-      defaultPath?.path.length > 0 &&
-      urlData?.path.length === 0 &&
-      inputDefaultValue.length === 0 &&
-      !editMode.isActive
-    ) {
-      const { schema, path } = targetPath(defaultPath.path)
-      const selectDefaultValues =
-        comboboxSelectList.find(option => option.id === `${schema}://`) ?? comboboxSelectList[0]
+  if (
+    defaultPath?.path.length > 0 &&
+    defaultPath.path !== appliedDefaultPath &&
+    urlData?.path.length === 0 &&
+    inputDefaultValue.length === 0 &&
+    !editMode.isActive
+  ) {
+    const { schema, path } = targetPath(defaultPath.path)
+    const selectDefaultValues =
+      comboboxSelectList.find(option => option.id === `${schema}://`) ?? comboboxSelectList[0]
 
-      setUrlData(state => ({ ...state, pathType: selectDefaultValues.id, path }))
-      setInputDefaultValue(path)
-    }
-  }, [
-    comboboxSelectList,
-    defaultPath.path,
-    inputDefaultValue,
-    invalid,
-    urlData.path,
-    editMode.isActive
-  ])
+    setAppliedDefaultPath(defaultPath.path)
+    setUrlData(state => ({ ...state, pathType: selectDefaultValues.id, path }))
+    setInputDefaultValue(path)
+  }
 
   const handleGetProjectNames = useCallback(() => {
     getProjectsNames(dispatch, setProjects, project)
@@ -168,26 +161,25 @@ const UrlPath = ({
     urlProjectPathEntered
   ])
 
-  useEffect(() => {
-    if (urlData.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME) {
-      setComboboxMatches(
-        generateComboboxMatchesList(
-          urlData,
-          artifacts,
-          projects,
-          urlProjectPathEntered,
-          urlArtifactPathEntered,
-          urlArtifactReferencePathEntered,
-          artifactsReferences,
-          urlProjectItemTypeEntered
-        )
-      )
+  const comboboxMatches = useMemo(() => {
+    if (urlData.pathType !== MLRUN_STORAGE_INPUT_PATH_SCHEME) {
+      return []
     }
+
+    return generateComboboxMatchesList(
+      urlData,
+      artifacts,
+      projects,
+      urlProjectPathEntered,
+      urlArtifactPathEntered,
+      urlArtifactReferencePathEntered,
+      artifactsReferences,
+      urlProjectItemTypeEntered
+    )
   }, [
     artifacts,
     artifactsReferences,
     urlData,
-    project,
     projects,
     urlArtifactPathEntered,
     urlArtifactReferencePathEntered,
@@ -199,14 +191,12 @@ const UrlPath = ({
     withActionButtons && handleUrlOnEditModeChange(editMode.isActive)
   }, [editMode.isActive, withActionButtons, handleUrlOnEditModeChange])
 
-  useEffect(() => {
-    if (withActionButtons && invalid) {
-      setEditMode(prevState => ({
-        ...prevState,
-        isActive: true
-      }))
-    }
-  }, [invalid, withActionButtons, setEditMode])
+  if (withActionButtons && invalid && !editMode.isActive) {
+    setEditMode(prevState => ({
+      ...prevState,
+      isActive: true
+    }))
+  }
 
   const generatedPathTips = useMemo(() => {
     const pathTipsList = pathTips(urlData.projectItemType)

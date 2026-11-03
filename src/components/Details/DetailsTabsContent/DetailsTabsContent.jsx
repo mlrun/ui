@@ -20,7 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 import DetailsAlerts from '../../DetailsAlerts/DetailsAlerts'
 import DetailsAnalysis from '../../DetailsAnalysis/DetailsAnalysis'
@@ -101,7 +101,7 @@ const DetailsTabsContent = ({
           formState={formState}
           isDetailsPopUp={isDetailsPopUp}
           pageData={pageData}
-          ref={applyChangesRef}
+          applyChangesRef={applyChangesRef}
           selectedItem={selectedItem}
         />
       )
@@ -241,7 +241,7 @@ const DetailsTabsContent = ({
           formState={formState}
           isDetailsPopUp={isDetailsPopUp}
           pageData={pageData}
-          ref={applyChangesRef}
+          applyChangesRef={applyChangesRef}
           selectedItem={selectedItem}
         />
       )

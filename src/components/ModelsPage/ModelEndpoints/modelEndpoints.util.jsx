@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 
 import {
   FILTER_ALL_ITEMS,

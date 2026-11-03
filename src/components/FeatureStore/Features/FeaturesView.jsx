@@ -35,107 +35,102 @@ import { filtersConfig } from './features.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered } from '../../../hooks/useVirtualization.hook'
 
-const FeaturesView = React.forwardRef(
-  (
-    {
-      actionsMenu,
-      featureStore,
-      features,
-      filters,
-      filtersStore,
-      getPopUpTemplate,
-      handleRefresh,
-      pageData,
-      requestErrorMessage,
-      selectedRowData,
-      setSearchParams,
-      tableContent,
-      tableStore,
-      toggleRow,
-      virtualizationConfig
-    },
-    { featureStoreRef }
-  ) => {
-    return (
-      <div className="feature-store" ref={featureStoreRef}>
-        <div className="content__action-bar-wrapper">
-          <FeatureStorePageTabs />
-          <ActionBar
-            actionButtons={[
-              {
-                hidden: false,
-                template: getPopUpTemplate({
-                  className: 'action-button',
-                  label: addToFeatureVectorTitle,
-                  variant: PRIMARY_BUTTON
-                })
-              }
-            ]}
-            filters={filters}
-            filtersConfig={filtersConfig}
-            handleRefresh={handleRefresh}
-            setSearchParams={setSearchParams}
-            tab={FEATURES_TAB}
-            withoutExpandButton
-          >
-            <FeatureStoreFilters content={features} />
-          </ActionBar>
-        </div>
-        {featureStore.features.loading || featureStore.entities.loading ? null : features.length ===
-          0 ? (
-          <NoData
-            message={getNoDataMessage(
-              filters,
-              filtersConfig,
-              requestErrorMessage,
-              FEATURE_STORE_PAGE,
-              FEATURES_TAB,
-              FEATURES_TAB,
-              filtersStore
-            )}
-          />
-        ) : (
-          <>
-            <Table
-              actionsMenu={actionsMenu}
-              hideActionsMenu={tableStore.isTablePanelOpen}
-              pageData={pageData}
-              tab={FEATURES_TAB}
-              tableClassName="features-table"
-              tableHeaders={tableContent[0]?.content ?? []}
-              virtualizationConfig={virtualizationConfig}
-            >
-              <>
-                {tableContent.map(
-                  (tableItem, index) =>
-                    isRowRendered(virtualizationConfig, index) && (
-                      <FeatureStoreTableRow
-                        actionsMenu={actionsMenu}
-                        hideActionsMenu={tableStore.isTablePanelOpen}
-                        key={tableItem.data.ui.identifier}
-                        mainRowItemsCount={2}
-                        pageTab={FEATURES_TAB}
-                        rowIndex={index}
-                        rowItem={tableItem}
-                        selectedRowData={selectedRowData}
-                        toggleRow={toggleRow}
-                      />
-                    )
-                )}
-              </>
-            </Table>
-          </>
-        )}
+function FeaturesView({
+  actionsMenu,
+  featureStore,
+  featureStoreRef,
+  features,
+  filters,
+  filtersStore,
+  getPopUpTemplate,
+  handleRefresh,
+  pageData,
+  requestErrorMessage,
+  selectedRowData,
+  setSearchParams,
+  tableContent,
+  tableStore,
+  toggleRow,
+  virtualizationConfig
+}) {
+  return (
+    <div className="feature-store" ref={featureStoreRef}>
+      <div className="content__action-bar-wrapper">
+        <FeatureStorePageTabs />
+        <ActionBar
+          actionButtons={[
+            {
+              hidden: false,
+              template: getPopUpTemplate({
+                className: 'action-button',
+                label: addToFeatureVectorTitle,
+                variant: PRIMARY_BUTTON
+              })
+            }
+          ]}
+          filters={filters}
+          filtersConfig={filtersConfig}
+          handleRefresh={handleRefresh}
+          setSearchParams={setSearchParams}
+          tab={FEATURES_TAB}
+          withoutExpandButton
+        >
+          <FeatureStoreFilters content={features} />
+        </ActionBar>
       </div>
-    )
-  }
-)
-
-FeaturesView.displayName = 'FeaturesView'
+      {featureStore.features.loading || featureStore.entities.loading ? null : features.length ===
+        0 ? (
+        <NoData
+          message={getNoDataMessage(
+            filters,
+            filtersConfig,
+            requestErrorMessage,
+            FEATURE_STORE_PAGE,
+            FEATURES_TAB,
+            FEATURES_TAB,
+            filtersStore
+          )}
+        />
+      ) : (
+        <>
+          <Table
+            actionsMenu={actionsMenu}
+            hideActionsMenu={tableStore.isTablePanelOpen}
+            pageData={pageData}
+            tab={FEATURES_TAB}
+            tableClassName="features-table"
+            tableHeaders={tableContent[0]?.content ?? []}
+            virtualizationConfig={virtualizationConfig}
+          >
+            <>
+              {tableContent.map(
+                (tableItem, index) =>
+                  isRowRendered(virtualizationConfig, index) && (
+                    <FeatureStoreTableRow
+                      actionsMenu={actionsMenu}
+                      hideActionsMenu={tableStore.isTablePanelOpen}
+                      key={tableItem.data.ui.identifier}
+                      mainRowItemsCount={2}
+                      pageTab={FEATURES_TAB}
+                      rowIndex={index}
+                      rowItem={tableItem}
+                      selectedRowData={selectedRowData}
+                      toggleRow={toggleRow}
+                    />
+                  )
+              )}
+            </>
+          </Table>
+        </>
+      )}
+    </div>
+  )
+}
 
 FeaturesView.propTypes = {
   actionsMenu: PropTypes.array.isRequired,
   featureStore: PropTypes.object.isRequired,
+  featureStoreRef: PropTypes.object.isRequired,
   features: PropTypes.arrayOf(PropTypes.object).isRequired,
   filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,

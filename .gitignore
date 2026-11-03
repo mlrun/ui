@@ -30,3 +30,6 @@ yarn-error.log*
 /tests/reports
 .vscode/
 .cursor/
+
+# storybook
+/storybook-static

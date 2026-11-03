@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 import ArrowIcon from 'igz-controls/images/arrow.svg?react'
 

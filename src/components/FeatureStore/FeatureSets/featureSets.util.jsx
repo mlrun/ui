@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { debounce, isEmpty } from 'lodash'
+import { debounce, isEmpty } from 'lodash-es'
 
 import {
   FEATURE_SETS_TAB,

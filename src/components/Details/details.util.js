@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { get, isEmpty, isEqual, cloneDeep } from 'lodash'
+import { get, isEmpty, isEqual, cloneDeep } from 'lodash-es'
 
 import ArtifactPopUp from '../../elements/DetailsPopUp/ArtifactPopUp/ArtifactPopUp'
 import FunctionPopUp from '../../elements/DetailsPopUp/FunctionPopUp/FunctionPopUp'

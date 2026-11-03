@@ -27,6 +27,7 @@ import { SelectOption } from 'igz-controls/elements'
 import { SELECT_OPTIONS } from '../../types'
 import { DENSITY_OPTIONS } from 'igz-controls/types'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
+import { useElementWidth } from '../../hooks/useElementWidth.hook'
 
 import Caret from 'igz-controls/images/dropdown.svg?react'
 
@@ -56,7 +57,8 @@ const Select = ({
   const [isConfirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const [isOpen, setOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
-  const { width: dropdownWidth } = selectRef?.current?.getBoundingClientRect() || {}
+  const dropdownWidth = useElementWidth(selectRef)
+
   const selectClassName = classNames(
     'select',
     className,
@@ -77,6 +79,18 @@ const Select = ({
   )
   const selectedOption = options.find(option => option.id === selectedId)
 
+  const clickHandler = event => {
+    if (selectRef.current !== event.target.closest('.select')) {
+      setOpen(false)
+    }
+  }
+
+  const handleScroll = event => {
+    if (!event.target.closest('.select__body')) {
+      setOpen(false)
+    }
+  }
+
   useEffect(() => {
     if (isOpen) {
       window.addEventListener('scroll', handleScroll, true)
@@ -89,18 +103,6 @@ const Select = ({
       window.removeEventListener('scroll', handleScroll, true)
     }
   }, [isOpen])
-
-  const clickHandler = event => {
-    if (selectRef.current !== event.target.closest('.select')) {
-      setOpen(false)
-    }
-  }
-
-  const handleScroll = event => {
-    if (!event.target.closest('.select__body')) {
-      setOpen(false)
-    }
-  }
 
   const toggleOpen = () => {
     !disabled && setOpen(!isOpen)

@@ -21,7 +21,7 @@ such restriction.
 
 // prints one line per finished scenario: [done/total] status location name (duration) | failed count, ETA
 // failed scenarios also print the failed step and the first lines of its error right away
-const { Formatter, Status, formatterHelpers } = require('@cucumber/cucumber')
+import { Formatter, Status, formatterHelpers } from '@cucumber/cucumber'
 
 const useColors = !process.env.NO_COLOR
 const paint = code => text => (useColors ? `\x1b[${code}m${text}\x1b[0m` : text)
@@ -149,4 +149,4 @@ class ScenarioFormatter extends Formatter {
   }
 }
 
-module.exports = ScenarioFormatter
+export default ScenarioFormatter

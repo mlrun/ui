@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useEffect } from 'react'
-import { useBlocker } from 'react-router-dom'
+import { useBlocker } from 'react-router'
 
 import { defaultCloseModalHandler } from '../utils/defaultCloseModalHandler'
 import { areFormValuesChanged } from 'igz-controls/utils/form.util'

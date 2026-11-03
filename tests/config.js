@@ -17,14 +17,23 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-module.exports = {
-  timeout: 60000,
-  browser: 'chrome',
-  headless: process.env.E2E_HEADLESS === 'true',
-  // multiplier for every `driver.sleep()` in steps/actions: 1 - default delays, 0 - no delays
-  delay_factor: Number(process.env.E2E_DELAY_FACTOR ?? 1),
-  screen_size: { width: 1600, height: 900 },
-  report: 'tests/reports/cucumber_report',
-  test_url: 'localhost',
-  test_port: '3000'
+export const timeout = 60000
+export const browser = 'chrome'
+export const headless = process.env.E2E_HEADLESS === 'true'
+// multiplier for every `driver.sleep()` in steps/actions: 1 - default delays, 0 - no delays
+export const delay_factor = Number(process.env.E2E_DELAY_FACTOR ?? 1)
+export const screen_size = { width: 1600, height: 900 }
+export const report = 'tests/reports/cucumber_report'
+export const test_url = 'localhost'
+export const test_port = '3000'
+
+export default {
+  timeout,
+  browser,
+  headless,
+  delay_factor,
+  screen_size,
+  report,
+  test_url,
+  test_port
 }

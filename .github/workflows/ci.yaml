@@ -45,7 +45,7 @@ jobs:
       - name: Preparing Node Env
         uses: actions/setup-node@v3
         with:
-          node-version: 22
+          node-version: 24
 
       - name: Install dependencies
         run: npm install
@@ -101,7 +101,7 @@ jobs:
         run: |
           if grep -q "igz-controls/" build.log; then
             echo -e "\033[31mModule not found: Error: Can't resolve 'igz-controls....'.\033[0m"
-            echo -e "\033[33mPlease check for changes in the 'dashboard-react-controls' repository.\033[0m"
+            echo -e "\033[33mPlease check for missing files in 'ui/src/igz-controls/'.\033[0m"
             echo "::set-output name=igz-controls-import-error::failure"
             echo "::error::Module not found: Error: Can't resolve 'igz-controls"
           else

@@ -26,7 +26,7 @@ import {
   LLM_PROMPTS_PAGE,
   MODELS_PAGE
 } from '../constants'
-import { isNil } from 'lodash'
+import { isNil } from 'lodash-es'
 
 export const generateUri = (item, page, tab) => {
   let uri = `store://${page ?? tab}/${item.project}/`

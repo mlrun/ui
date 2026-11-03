@@ -20,7 +20,7 @@ such restriction.
 import React, { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { v4 as uuidv4 } from 'uuid'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
@@ -70,7 +70,7 @@ const RegisterArtifactModal = ({
       }
     }
   }
-  const formRef = React.useRef(
+  const [form] = React.useState(() =>
     createForm({
       initialValues,
       mutators: { ...arrayMutators, setFieldState },
@@ -79,7 +79,7 @@ const RegisterArtifactModal = ({
   )
   const location = useLocation()
   const dispatch = useDispatch()
-  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
+  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, form)
   const messagesByKind = useMemo(() => {
     return getArtifactMessagesByKind(artifactKind)
   }, [artifactKind])
@@ -160,7 +160,7 @@ const RegisterArtifactModal = ({
   }
 
   return (
-    <Form form={formRef.current} onSubmit={registerArtifact}>
+    <Form form={form} onSubmit={registerArtifact}>
       {formState => {
         return (
           <>

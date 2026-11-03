@@ -29,7 +29,7 @@ import {
   STATUS_FILTER_NAME,
   TYPE_FILTER
 } from '../../../constants'
-import { generateTypeFilter, jobsStatuses } from '../../FilterMenu/filterMenu.settings'
+import { generateTypeFilter, jobsStatuses } from '../../FilterMenuModal/filterMenuModal.settings.js'
 
 const JobsFilters = () => {
   const form = useForm()

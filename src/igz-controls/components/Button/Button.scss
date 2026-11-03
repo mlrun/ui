@@ -1,0 +1,171 @@
+@use '../../scss/variables';
+@use '../../scss/colors';
+@use '../../scss/borders';
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  height: variables.$fieldNormal;
+  padding: 0 16px;
+  color: colors.$white;
+  font-weight: 500;
+  font-size: 0.875rem;
+  font-style: normal;
+  border: borders.$transparentBorder;
+  border-radius: variables.$mainBorderRadius;
+
+  &-dense {
+    height: variables.$fieldDense;
+  }
+
+  &-normal {
+    height: variables.$fieldNormal;
+  }
+
+  &-medium {
+    height: variables.$fieldMedium;
+  }
+
+  &-chunky {
+    height: variables.$fieldChunky;
+  }
+
+  svg {
+    & > * {
+      fill: currentcolor;
+    }
+  }
+
+  &:focus {
+    border-color: rgba(colors.$black, 0.4);
+  }
+
+  &:active {
+    border-color: rgba(colors.$black, 0.4);
+  }
+
+  &:disabled {
+    color: colors.$spunPearl;
+    background: colors.$white;
+    cursor: not-allowed;
+
+    svg {
+      & > * {
+        fill: colors.$alto;
+      }
+    }
+  }
+
+  :not(:last-child) {
+    margin-right: 10px;
+  }
+
+  :last-child {
+    margin: 0;
+  }
+
+  &-secondary {
+    background: colors.$brightTurquoise;
+
+    &:hover:not(:disabled) {
+      background: colors.$javaLight;
+    }
+
+    &:active:not(:disabled) {
+      background: colors.$mountainMeadow;
+    }
+
+    &:disabled {
+      border: 1px solid colors.$brightTurquoise;
+    }
+  }
+
+  &-tertiary {
+    color: colors.$primary;
+    background: colors.$white;
+    border: borders.$primaryBorder;
+
+    svg {
+      & > * {
+        fill: colors.$primary;
+      }
+    }
+
+    &:hover:not(:disabled) {
+      background: colors.$alabaster;
+    }
+
+    &:active:not(:disabled) {
+      background: colors.$mercury;
+    }
+
+    &:disabled {
+      border: borders.$primaryBorder;
+    }
+  }
+
+  &-primary {
+    color: colors.$white;
+    background: colors.$malibu;
+
+    &:hover:not(:disabled) {
+      background: colors.$cornflowerBlue;
+    }
+
+    &:active:not(:disabled) {
+      background: colors.$indigo;
+    }
+
+    &:disabled {
+      border: 1px solid colors.$malibu;
+    }
+  }
+
+  &-danger {
+    color: colors.$white;
+    background: colors.$amaranth;
+
+    &:hover:not(:disabled) {
+      background: colors.$ceriseRed;
+    }
+
+    &:active:not(:disabled) {
+      background: colors.$maroonFlash;
+    }
+
+    &:disabled {
+      border: 1px solid colors.$amaranth;
+    }
+  }
+
+  &-label {
+    color: colors.$primary;
+    background: transparent;
+    border: 0;
+
+    svg {
+      & > * {
+        fill: colors.$primary;
+      }
+    }
+
+    &:focus:not(:disabled) {
+      border-color: transparent;
+    }
+
+    &:hover:not(:disabled) {
+      color: colors.$topaz;
+    }
+
+    &:active:not(:disabled) {
+      color: colors.$black;
+      border-color: transparent;
+    }
+
+    &:disabled {
+      border-color: transparent;
+    }
+  }
+}

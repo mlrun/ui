@@ -31,7 +31,7 @@ import {
   set,
   some,
   uniq
-} from 'lodash'
+} from 'lodash-es'
 
 import {
   ADVANCED_STEP,

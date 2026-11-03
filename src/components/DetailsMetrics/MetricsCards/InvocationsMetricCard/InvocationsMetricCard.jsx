@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { forwardRef, useMemo } from 'react'
+import { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
@@ -40,146 +40,135 @@ import MinimizeIcon from 'igz-controls/images/collapse.svg?react'
 import '../MetricsCards.scss'
 import './InvocationsMetricCard.scss'
 
-const InvocationsMetricCard = forwardRef(
-  (
-    {
-      isInvocationCardExpanded,
-      metric,
-      previousTotalInvocation,
-      selectedDate,
-      setIsInvocationCardExpanded
-    },
-    invocationBodyCardRef
-  ) => {
-    const invocationCardClassnames = classNames(
-      'metrics__card-invocation',
-      !isInvocationCardExpanded
-        ? 'metrics__card-invocation_collapsed'
-        : 'metrics__card-invocation_expanded'
-    )
-    const invocationCardHeaderClassnames = classNames(
-      'metrics__card-invocation-header',
-      isInvocationCardExpanded ? 'metrics__card-invocation-header_expanded' : ''
-    )
+function InvocationsMetricCard({
+  isInvocationCardExpanded,
+  metric,
+  previousTotalInvocation,
+  ref,
+  selectedDate,
+  setIsInvocationCardExpanded
+}) {
+  const invocationCardClassnames = classNames(
+    'metrics__card-invocation',
+    !isInvocationCardExpanded
+      ? 'metrics__card-invocation_collapsed'
+      : 'metrics__card-invocation_expanded'
+  )
+  const invocationCardHeaderClassnames = classNames(
+    'metrics__card-invocation-header',
+    isInvocationCardExpanded ? 'metrics__card-invocation-header_expanded' : ''
+  )
 
-    const cornflowerBlueTwoColor = useMemo(
-      () => getScssVariableValue('--cornflowerBlueTwoColor'),
-      []
-    )
-    const gradientConfig = useMemo(
-      () => getMetricChartConfig(CHART_TYPE_GRADIENT_LINE, metric),
-      [metric]
-    )
-    const resultPercentageDrift = calculatePercentageDrift(
-      previousTotalInvocation,
-      metric[METRIC_RAW_TOTAL_POINTS]
-    )
-    const chartConfig = useMemo(() => {
-      return {
-        gradient: true,
-        ...gradientConfig,
-        data: {
-          labels: metric.dates,
-          datasets: [
-            {
-              backgroundColor: cornflowerBlueTwoColor,
-              borderColor: cornflowerBlueTwoColor,
-              borderWidth: 1,
-              chartType: CHART_TYPE_LINE,
-              data: metric.points,
-              dates: metric.dates,
-              driftStatusList: [],
-              fill: true,
-              formatedDates: metric.formatedDates,
-              metricType: metric.type,
-              pointBackgroundColor: metric.totalDriftStatus?.chartColor || cornflowerBlueTwoColor,
-              pointBorderWidth: 0,
-              tension: 0.4
-            }
-          ]
-        }
+  const cornflowerBlueTwoColor = useMemo(() => getScssVariableValue('--cornflowerBlueTwoColor'), [])
+  const gradientConfig = useMemo(
+    () => getMetricChartConfig(CHART_TYPE_GRADIENT_LINE, metric),
+    [metric]
+  )
+  const resultPercentageDrift = calculatePercentageDrift(
+    previousTotalInvocation,
+    metric[METRIC_RAW_TOTAL_POINTS]
+  )
+  const chartConfig = useMemo(() => {
+    return {
+      gradient: true,
+      ...gradientConfig,
+      data: {
+        labels: metric.dates,
+        datasets: [
+          {
+            backgroundColor: cornflowerBlueTwoColor,
+            borderColor: cornflowerBlueTwoColor,
+            borderWidth: 1,
+            chartType: CHART_TYPE_LINE,
+            data: metric.points,
+            dates: metric.dates,
+            driftStatusList: [],
+            fill: true,
+            formatedDates: metric.formatedDates,
+            metricType: metric.type,
+            pointBackgroundColor: metric.totalDriftStatus?.chartColor || cornflowerBlueTwoColor,
+            pointBorderWidth: 0,
+            tension: 0.4
+          }
+        ]
       }
-    }, [cornflowerBlueTwoColor, gradientConfig, metric])
+    }
+  }, [cornflowerBlueTwoColor, gradientConfig, metric])
 
-    return (
-      <div className={invocationCardClassnames}>
-        <StatsCard key={metric.id} className="metrics__card metrics__card-invocation">
-          <RoundedIcon
-            className="metrics__card-invocation__toggle-icon"
-            id="invocation-card-toggle-icon"
-            onClick={() => setIsInvocationCardExpanded(!isInvocationCardExpanded)}
-            tooltipText={`${isInvocationCardExpanded ? 'Collapse' : 'Expand'} Invocation Card`}
+  return (
+    <div className={invocationCardClassnames}>
+      <StatsCard key={metric.id} className="metrics__card metrics__card-invocation">
+        <RoundedIcon
+          className="metrics__card-invocation__toggle-icon"
+          id="invocation-card-toggle-icon"
+          onClick={() => setIsInvocationCardExpanded(!isInvocationCardExpanded)}
+          tooltipText={`${isInvocationCardExpanded ? 'Collapse' : 'Expand'} Invocation Card`}
+        >
+          {isInvocationCardExpanded ? <MinimizeIcon /> : <EnlargeIcon />}
+        </RoundedIcon>
+        <StatsCard.Header
+          title="Endpoint call count"
+          tip="All values are approximate when using sampling to monitor this model endpoint"
+        >
+          <div className={invocationCardHeaderClassnames}>
+            <div className="metrics__card-invocation-header__drift-icon-container">
+              {resultPercentageDrift.icon}
+            </div>
+            <div className={`metrics__card-invocation-header__${resultPercentageDrift.className}`}>
+              {resultPercentageDrift.percentageChange}
+            </div>
+            <div className="metrics__card-invocation-header__selected-date">{selectedDate}</div>
+            <div className="metrics__card-invocation-header__total-title">Total</div>
+            <div className="metrics__card-invocation-header__total-score">
+              {metric[METRIC_COMPUTED_TOTAL_POINTS]}
+            </div>
+          </div>
+        </StatsCard.Header>
+        <div
+          ref={ref}
+          className={`metrics__card-body ${isInvocationCardExpanded ? 'metrics__card-body-expanded' : 'metrics__card-body-collapsed'}`}
+        >
+          <div
+            className={`metrics__card-invocation-content ${!isInvocationCardExpanded && 'metrics__card-invocation-content-visible'}`}
           >
-            {isInvocationCardExpanded ? <MinimizeIcon /> : <EnlargeIcon />}
-          </RoundedIcon>
-          <StatsCard.Header
-            title="Endpoint call count"
-            tip="All values are approximate when using sampling to monitor this model endpoint"
-          >
-            <div className={invocationCardHeaderClassnames}>
-              <div className="metrics__card-invocation-header__drift-icon-container">
+            <div className="metrics__card-invocation-content-title">
+              Endpoint call count
+              <Tip
+                className="stats-card__title-tip"
+                text="All values are approximate when using sampling to monitor this model endpoint"
+              />
+            </div>
+            <div className="metrics__card-invocation-content-container">
+              <div className="metrics__card-invocation-content-container__drift-icon">
                 {resultPercentageDrift.icon}
               </div>
               <div
-                className={`metrics__card-invocation-header__${resultPercentageDrift.className}`}
+                className={`metrics__card-invocation-content-container__${resultPercentageDrift.className}`}
               >
                 {resultPercentageDrift.percentageChange}
               </div>
-              <div className="metrics__card-invocation-header__selected-date">{selectedDate}</div>
-              <div className="metrics__card-invocation-header__total-title">Total</div>
-              <div className="metrics__card-invocation-header__total-score">
+              <div>{selectedDate}</div>
+            </div>
+            <div className="metrics__card-invocation-content-data">
+              <div className="metrics__card-invocation-content-data__total-title">Total</div>
+              <div className="metrics__card-invocation-content-data__total-score">
+                {' '}
                 {metric[METRIC_COMPUTED_TOTAL_POINTS]}
               </div>
             </div>
-          </StatsCard.Header>
-          <div
-            ref={invocationBodyCardRef}
-            className={`metrics__card-body ${isInvocationCardExpanded ? 'metrics__card-body-expanded' : 'metrics__card-body-collapsed'}`}
-          >
-            <div
-              className={`metrics__card-invocation-content ${!isInvocationCardExpanded && 'metrics__card-invocation-content-visible'}`}
-            >
-              <div className="metrics__card-invocation-content-title">
-                Endpoint call count
-                <Tip
-                  className="stats-card__title-tip"
-                  text="All values are approximate when using sampling to monitor this model endpoint"
-                />
-              </div>
-              <div className="metrics__card-invocation-content-container">
-                <div className="metrics__card-invocation-content-container__drift-icon">
-                  {resultPercentageDrift.icon}
-                </div>
-                <div
-                  className={`metrics__card-invocation-content-container__${resultPercentageDrift.className}`}
-                >
-                  {resultPercentageDrift.percentageChange}
-                </div>
-                <div>{selectedDate}</div>
-              </div>
-              <div className="metrics__card-invocation-content-data">
-                <div className="metrics__card-invocation-content-data__total-title">Total</div>
-                <div className="metrics__card-invocation-content-data__total-score">
-                  {' '}
-                  {metric[METRIC_COMPUTED_TOTAL_POINTS]}
-                </div>
-              </div>
-            </div>
-            <div className="metrics__card-body-invocation">
-              <MetricChart
-                config={chartConfig}
-                isInvocationCardExpanded={isInvocationCardExpanded}
-                isInvocationChart
-              />
-            </div>
           </div>
-        </StatsCard>
-      </div>
-    )
-  }
-)
-
-InvocationsMetricCard.displayName = 'InvocationsMetricCard'
+          <div className="metrics__card-body-invocation">
+            <MetricChart
+              config={chartConfig}
+              isInvocationCardExpanded={isInvocationCardExpanded}
+              isInvocationChart
+            />
+          </div>
+        </div>
+      </StatsCard>
+    </div>
+  )
+}
 
 InvocationsMetricCard.propTypes = {
   setIsInvocationCardExpanded: PropTypes.func.isRequired,

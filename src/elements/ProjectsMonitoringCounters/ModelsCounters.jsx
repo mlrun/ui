@@ -15,7 +15,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useMemo } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 import { useSelector } from 'react-redux'
 
 import { Loader } from 'igz-controls/components'

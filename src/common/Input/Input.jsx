@@ -17,10 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect, useRef, useMemo } from 'react'
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 
 import { INPUT_VALIDATION_RULES } from 'igz-controls/types'
 import { OptionsMenu, ValidationTemplate } from 'igz-controls/elements'
@@ -34,294 +34,308 @@ import WarningIcon from 'igz-controls/images/warning.svg?react'
 
 import './input.scss'
 
-const Input = React.forwardRef(
-  (
-    {
-      className = '',
-      density = 'normal',
-      disabled = false,
-      floatingLabel = false,
-      focused = false,
-      iconClass = '',
-      iconOnClick = () => {},
-      id = '',
-      infoLabel = false,
-      inputIcon = null,
-      invalid = false,
-      invalidText = 'This field is invalid',
-      label,
-      min = null,
-      maxLength = null,
-      onBlur = () => {},
-      onChange = () => {},
-      onFocus,
-      onKeyDown = () => {},
-      pattern,
-      placeholder = '',
-      required = false,
-      requiredText = 'This field is required',
-      setInvalid = () => {},
-      step = '',
-      suggestionList = [],
-      tip = '',
-      type = 'text',
-      validationRules: rules = [],
-      value = undefined,
-      withoutBorder = false,
-      wrapperClassName = ''
-    },
-    ref
-  ) => {
-    const [inputIsFocused, setInputIsFocused] = useState(false)
-    const [labelWidth, setLabelWidth] = useState(0)
-    const [isInvalid, setIsInvalid] = useState(false)
-    const [typedValue, setTypedValue] = useState('')
-    const [validationPattern] = useState(RegExp(pattern))
-    const [validationRules, setValidationRules] = useState(rules)
-    const [showValidationRules, setShowValidationRules] = useState(false)
-    const wrapperRef = useRef()
-    ref ??= wrapperRef
-    const inputRef = useRef()
-    const inputLabelRef = useRef(null)
-    useDetectOutsideClick(ref, () => setShowValidationRules(false))
+function Input({
+  className = '',
+  density = 'normal',
+  disabled = false,
+  floatingLabel = false,
+  focused = false,
+  iconClass = '',
+  iconOnClick = () => {},
+  id = '',
+  infoLabel = false,
+  inputIcon = null,
+  invalid = false,
+  invalidText = 'This field is invalid',
+  label,
+  min = null,
+  maxLength = null,
+  onBlur = () => {},
+  onChange = () => {},
+  onFocus,
+  onKeyDown = () => {},
+  pattern,
+  placeholder = '',
+  ref,
+  required = false,
+  requiredText = 'This field is required',
+  setInvalid = () => {},
+  step = '',
+  suggestionList = [],
+  tip = '',
+  type = 'text',
+  validationRules: rules = [],
+  value = undefined,
+  withoutBorder = false,
+  wrapperClassName = ''
+}) {
+  const [inputIsFocused, setInputIsFocused] = useState(focused)
+  const [prevFocused, setPrevFocused] = useState(focused)
+  const [labelWidth, setLabelWidth] = useState(0)
+  const [isInvalid, setIsInvalid] = useState(false)
+  const [typedValue, setTypedValue] = useState(String(value ?? ''))
+  const [prevValue, setPrevValue] = useState(value)
+  const [validationPattern] = useState(RegExp(pattern))
+  const [validationRules, setValidationRules] = useState(rules)
+  const [showValidationRules, setShowValidationRules] = useState(false)
+  const wrapperRef = useRef()
+  ref ??= wrapperRef
+  const inputRef = useRef()
+  const inputLabelRef = useRef(null)
+  useDetectOutsideClick(ref, () => setShowValidationRules(false))
 
-    const inputStyles = useMemo(() => {
-      return {
-        paddingLeft: `${labelWidth + 16}px`,
-        paddingRight: (tip ? 25 : 0) + (isInvalid ? 20 : 0) + 'px'
+  // Sync the displayed value from the `value` prop; local typing still updates it when the parent
+  // doesn't pass `value` (uncontrolled usage).
+  if (!Object.is(value, prevValue)) {
+    setPrevValue(value)
+    setTypedValue(String(value ?? ''))
+  }
+
+  // `focused` focuses the field once (like a user focus); blur still clears it afterwards
+  if (focused !== prevFocused) {
+    setPrevFocused(focused)
+
+    if (focused) {
+      setInputIsFocused(true)
+    }
+  }
+
+  const labelActive = inputIsFocused || placeholder || typedValue.length > 0
+
+  const inputStyles = useMemo(() => {
+    return {
+      paddingLeft: `${labelWidth + 16}px`,
+      paddingRight: (tip ? 25 : 0) + (isInvalid ? 20 : 0) + 'px'
+    }
+  }, [isInvalid, labelWidth, tip])
+
+  const inputClassNames = classnames(
+    'input',
+    className,
+    `input-${density}`,
+    labelActive && floatingLabel && 'active-input',
+    isInvalid && 'input_invalid',
+    tip && 'input-short',
+    !isEmpty(validationRules) && isInvalid && 'input_rules-invalid',
+    withoutBorder && 'without-border'
+  )
+  const labelClassNames = classnames(
+    'input__label',
+    disabled && 'input__label_disabled',
+    floatingLabel && 'input__label-floating',
+    labelActive && floatingLabel && 'active-label',
+    infoLabel && 'input__label_info'
+  )
+  const wrapperClassNames = classnames(wrapperClassName, 'input-wrapper')
+  const inputLabelMandatoryClassNames = classnames(
+    'input__label-mandatory',
+    disabled && 'input__label-mandatory_disabled'
+  )
+
+  const handleScroll = useCallback(event => {
+    if (!event.target.closest('.options-menu') && !event.target.classList.contains('input')) {
+      setShowValidationRules(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (showValidationRules) {
+      window.addEventListener('scroll', handleScroll, true)
+    }
+    return () => {
+      window.removeEventListener('scroll', handleScroll, true)
+    }
+  }, [showValidationRules, handleScroll])
+
+  useEffect(() => {
+    if (focused && inputRef.current) {
+      inputRef.current.focus()
+      // As before: show the beginning of a long value (previously the value was rendered after focusing).
+      // Otherwise the input stays scrolled to the caret and resets on blur, the scroll event closes open dropdowns
+      inputRef.current.scrollLeft = 0
+    }
+  }, [focused])
+
+  useEffect(() => {
+    if (isInvalid !== invalid) {
+      if (
+        (required && typedValue.trim().length === 0) ||
+        (pattern && !validationPattern.test(typedValue)) ||
+        typedValue.startsWith(' ')
+      ) {
+        // Sync local validity with controlled `invalid` prop; parent setInvalid must not run during render.
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional vs development; render-time sync loops on Feature Set forms.
+        setIsInvalid(true)
+        setInvalid(false)
+      } else {
+        setIsInvalid(invalid)
       }
-    }, [isInvalid, labelWidth, tip])
+    }
+  }, [invalid, isInvalid, pattern, required, setInvalid, typedValue, validationPattern])
 
-    const inputClassNames = classnames(
-      'input',
-      className,
-      `input-${density}`,
-      (inputIsFocused || placeholder || typedValue.length > 0) && floatingLabel && 'active-input',
-      isInvalid && 'input_invalid',
-      tip && 'input-short',
-      !isEmpty(validationRules) && isInvalid && 'input_rules-invalid',
-      withoutBorder && 'without-border'
-    )
-    const labelClassNames = classnames(
-      'input__label',
-      disabled && 'input__label_disabled',
-      floatingLabel && 'input__label-floating',
-      (inputIsFocused || placeholder || typedValue.length > 0) && floatingLabel && 'active-label',
-      infoLabel && 'input__label_info'
-    )
-    const wrapperClassNames = classnames(wrapperClassName, 'input-wrapper')
-    const inputLabelMandatoryClassNames = classnames(
-      'input__label-mandatory',
-      disabled && 'input__label-mandatory_disabled'
-    )
+  useEffect(() => {
+    if (inputLabelRef.current) {
+      setLabelWidth(inputLabelRef.current?.getBoundingClientRect().width)
+    }
+  }, [label])
 
-    useEffect(() => {
-      setTypedValue(String(value ?? '')) // convert from number to string
-    }, [value])
+  const handleSuggestionClick = item => {
+    setInputIsFocused(false)
 
-    useEffect(() => {
-      if (showValidationRules) {
-        window.addEventListener('scroll', handleScroll, true)
-      }
-      return () => {
-        window.removeEventListener('scroll', handleScroll, true)
-      }
-    }, [showValidationRules])
+    changeValue(item)
+  }
 
-    useEffect(() => {
-      if (isInvalid !== invalid) {
-        if (
-          (required && typedValue.trim().length === 0) ||
-          (pattern && !validationPattern.test(typedValue)) ||
-          typedValue.startsWith(' ')
-        ) {
-          setIsInvalid(true)
-          setInvalid && setInvalid(false)
-        } else {
-          setIsInvalid(invalid)
-        }
-      }
-    }, [invalid, isInvalid, pattern, required, setInvalid, typedValue, validationPattern])
-
-    useEffect(() => {
-      if (focused) {
-        inputRef.current.focus()
-        setInputIsFocused(true)
-      }
-    }, [inputRef, focused])
-
-    useEffect(() => {
-      if (inputLabelRef.current) {
-        setLabelWidth(inputLabelRef.current?.getBoundingClientRect().width)
-      }
-    }, [label])
-
-    const handleSuggestionClick = item => {
+  const handleInputBlur = event => {
+    if (!event.relatedTarget || !event.relatedTarget?.closest('.suggestion-list')) {
       setInputIsFocused(false)
 
-      changeValue(item)
+      onBlur(event)
     }
+  }
 
-    const handleScroll = event => {
-      if (!event.target.closest('.options-menu') && !event.target.classList.contains('input')) {
+  const validateField = value => {
+    let isFieldValidByPattern = true
+
+    if (!isEmpty(rules)) {
+      const [newRules, isValidField] = checkPatternsValidity(rules, value, required)
+      isFieldValidByPattern = isValidField
+      setValidationRules(newRules)
+
+      if ((isFieldValidByPattern && showValidationRules) || value.trim() === '') {
         setShowValidationRules(false)
       }
     }
 
-    const handleInputBlur = event => {
-      if (!event.relatedTarget || !event.relatedTarget?.closest('.suggestion-list')) {
-        setInputIsFocused(false)
+    const fieldInvalid =
+      (required && value.trim().length === 0) ||
+      (pattern && !validationPattern.test(value)) ||
+      value.startsWith(' ') ||
+      !isFieldValidByPattern
 
-        onBlur(event)
-      }
-    }
+    setIsInvalid(fieldInvalid)
+    setInvalid(!fieldInvalid)
+  }
 
-    const validateField = value => {
-      let isFieldValidByPattern = true
+  const changeValue = value => {
+    setTypedValue(value)
+    onChange(value)
+    validateField(value)
+  }
 
-      if (!isEmpty(rules)) {
-        const [newRules, isValidField] = checkPatternsValidity(rules, value, required)
-        isFieldValidByPattern = isValidField
-        setValidationRules(newRules)
+  const handleInputChange = event => {
+    changeValue(event.target.value)
+  }
 
-        if ((isFieldValidByPattern && showValidationRules) || value.trim() === '') {
-          setShowValidationRules(false)
-        }
-      }
+  const renderValidationRules = validationRules.map(({ isValid = false, label, name }) => {
+    return <ValidationTemplate valid={isValid} validationMessage={label} key={name} />
+  })
 
-      const fieldInvalid =
-        (required && value.trim().length === 0) ||
-        (pattern && !validationPattern.test(value)) ||
-        value.startsWith(' ') ||
-        !isFieldValidByPattern
+  const handleInputFocus = () => {
+    setInputIsFocused(true)
+    onFocus && onFocus()
+  }
 
-      setIsInvalid(fieldInvalid)
-      setInvalid(!fieldInvalid)
-    }
+  const toggleValidationRulesMenu = () => {
+    setShowValidationRules(!showValidationRules)
+    inputRef.current.focus()
+    setInputIsFocused(true)
+  }
 
-    const changeValue = value => {
-      setTypedValue(value)
-      onChange(value)
-      validateField(value)
-    }
-
-    const handleInputChange = event => {
-      changeValue(event.target.value)
-    }
-
-    const renderValidationRules = validationRules.map(({ isValid = false, label, name }) => {
-      return <ValidationTemplate valid={isValid} validationMessage={label} key={name} />
-    })
-
-    const handleInputFocus = () => {
-      setInputIsFocused(true)
-      onFocus && onFocus()
-    }
-
-    const toggleValidationRulesMenu = () => {
-      setShowValidationRules(!showValidationRules)
-      inputRef.current.focus()
-      setInputIsFocused(true)
-    }
-
-    return (
-      <div ref={ref} className={wrapperClassNames}>
-        <input
-          data-testid={id ? `${id}-input` : 'input'}
-          className={inputClassNames}
-          name={id}
-          onBlur={handleInputBlur}
-          onChange={handleInputChange}
-          onFocus={handleInputFocus}
-          ref={inputRef}
-          required={isInvalid}
-          {...{
-            disabled,
-            min,
-            maxLength,
-            onKeyDown,
-            pattern,
-            placeholder,
-            step,
-            type,
-            value: typedValue
-          }}
-          style={floatingLabel ? {} : inputStyles}
-        />
-        {label && (
-          <div className={labelClassNames}>
-            <label
-              data-testid="input-label"
-              ref={inputLabelRef}
-              style={
-                infoLabel
-                  ? {
-                      left: (value ? value.length + 2 : 2) * 10
-                    }
-                  : {}
-              }
-            >
-              {label}
-              {required && <span className={inputLabelMandatoryClassNames}> *</span>}
-            </label>
-          </div>
-        )}
-        {isInvalid && !isEmpty(validationRules) && (
-          <i className="input__warning" onClick={toggleValidationRulesMenu}>
-            <WarningIcon />
-          </i>
-        )}
-        {isInvalid && isEmpty(validationRules) && (
-          <Tooltip
-            className="input__warning"
-            template={
-              <TextTooltipTemplate
-                text={required && !typedValue ? requiredText : invalidText}
-                warning
-              />
+  return (
+    <div ref={ref} className={wrapperClassNames}>
+      <input
+        data-testid={id ? `${id}-input` : 'input'}
+        className={inputClassNames}
+        name={id}
+        onBlur={handleInputBlur}
+        onChange={handleInputChange}
+        onFocus={handleInputFocus}
+        ref={inputRef}
+        required={isInvalid}
+        {...{
+          disabled,
+          min,
+          maxLength,
+          onKeyDown,
+          pattern,
+          placeholder,
+          step,
+          type,
+          value: typedValue
+        }}
+        style={floatingLabel ? {} : inputStyles}
+      />
+      {label && (
+        <div className={labelClassNames}>
+          <label
+            data-testid="input-label"
+            ref={inputLabelRef}
+            style={
+              infoLabel
+                ? {
+                    left: (value ? value.length + 2 : 2) * 10
+                  }
+                : {}
             }
           >
-            <ExclamationMarkIcon />
-          </Tooltip>
-        )}
-        {tip && <Tip text={tip} className="input__tip" />}
-        {inputIcon && (
-          <span data-testid="input-icon" className={iconClass} onClick={iconOnClick}>
-            {inputIcon}
-          </span>
-        )}
-        {suggestionList?.length > 0 && inputIsFocused && (
-          <ul className="suggestion-list">
-            {suggestionList.map((item, index) => {
-              return (
-                <li
-                  className="suggestion-item"
-                  key={`${item}${index}`}
-                  onClick={() => {
-                    handleSuggestionClick(item)
-                  }}
-                  tabIndex={index}
-                  dangerouslySetInnerHTML={{
-                    __html: item.replace(new RegExp(typedValue, 'gi'), match =>
-                      match ? `<b>${match}</b>` : match
-                    )
-                  }}
-                />
-              )
-            })}
-          </ul>
-        )}
-        {isInvalid && !isEmpty(validationRules) && (
-          <OptionsMenu show={showValidationRules} ref={{ refInputContainer: ref }}>
-            {renderValidationRules}
-          </OptionsMenu>
-        )}
-      </div>
-    )
-  }
-)
-
-Input.displayName = 'Input'
+            {label}
+            {required && <span className={inputLabelMandatoryClassNames}> *</span>}
+          </label>
+        </div>
+      )}
+      {isInvalid && !isEmpty(validationRules) && (
+        <i className="input__warning" onClick={toggleValidationRulesMenu}>
+          <WarningIcon />
+        </i>
+      )}
+      {isInvalid && isEmpty(validationRules) && (
+        <Tooltip
+          className="input__warning"
+          template={
+            <TextTooltipTemplate
+              text={required && !typedValue ? requiredText : invalidText}
+              warning
+            />
+          }
+        >
+          <ExclamationMarkIcon />
+        </Tooltip>
+      )}
+      {tip && <Tip text={tip} className="input__tip" />}
+      {inputIcon && (
+        <span data-testid="input-icon" className={iconClass} onClick={iconOnClick}>
+          {inputIcon}
+        </span>
+      )}
+      {suggestionList?.length > 0 && inputIsFocused && (
+        <ul className="suggestion-list">
+          {suggestionList.map((item, index) => {
+            return (
+              <li
+                className="suggestion-item"
+                key={`${item}${index}`}
+                onClick={() => {
+                  handleSuggestionClick(item)
+                }}
+                tabIndex={index}
+                dangerouslySetInnerHTML={{
+                  __html: item.replace(new RegExp(typedValue, 'gi'), match =>
+                    match ? `<b>${match}</b>` : match
+                  )
+                }}
+              />
+            )
+          })}
+        </ul>
+      )}
+      {isInvalid && !isEmpty(validationRules) && (
+        <OptionsMenu show={showValidationRules} refInputContainer={ref}>
+          {renderValidationRules}
+        </OptionsMenu>
+      )}
+    </div>
+  )
+}
 
 Input.propTypes = {
   className: PropTypes.string,

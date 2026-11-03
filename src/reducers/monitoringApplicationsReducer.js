@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { get } from 'lodash'
+import { get } from 'lodash-es'
 
 import { defaultPendingHandler, defaultRejectedHandler } from './redux.util'
 import { splitApplicationsContent } from '../utils/applications.utils'

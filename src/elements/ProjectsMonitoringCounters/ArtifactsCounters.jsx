@@ -16,7 +16,7 @@ such restriction.
 */
 
 import React, { useMemo, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 import { useSelector } from 'react-redux'
 import classNames from 'classnames'
 

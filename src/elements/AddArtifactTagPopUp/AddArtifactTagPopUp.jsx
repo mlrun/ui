@@ -20,7 +20,7 @@ such restriction.
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 
@@ -43,14 +43,14 @@ const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag = () => {}, onResolve,
   })
   const [isLoading, setIsLoading] = useState(false)
 
-  const formRef = React.useRef(
+  const [form] = React.useState(() =>
     createForm({
       initialValues,
       onSubmit: () => {}
     })
   )
   const location = useLocation()
-  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
+  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, form)
 
   const addArtifactTag = values => {
     const identifier = {
@@ -126,7 +126,7 @@ const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag = () => {}, onResolve,
   }
 
   return (
-    <Form form={formRef.current} initialValues={initialValues} onSubmit={addArtifactTagHandler}>
+    <Form form={form} initialValues={initialValues} onSubmit={addArtifactTagHandler}>
       {formState => {
         return (
           <>

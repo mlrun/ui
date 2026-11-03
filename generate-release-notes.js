@@ -19,10 +19,10 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
-const { execSync, execFileSync } = require('child_process')
-const { mkdtempSync } = require('fs')
-const { tmpdir } = require('os')
-const path = require('path')
+import { execSync, execFileSync } from 'node:child_process'
+import { mkdtempSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
 
 // Parse command-line arguments
 const GA = 'GA'
