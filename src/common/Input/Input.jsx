@@ -23,7 +23,7 @@ import classnames from 'classnames'
 import { isEmpty } from 'lodash-es'
 
 import { INPUT_VALIDATION_RULES } from 'igz-controls/types'
-import { OptionsMenu, ValidationTemplate } from 'igz-controls/elements'
+import { HighlightedText, OptionsMenu, ValidationTemplate } from 'igz-controls/elements'
 import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import { checkPatternsValidity } from 'igz-controls/utils/validation.util'
 import { useDetectOutsideClick } from 'igz-controls/hooks'
@@ -318,12 +318,9 @@ function Input({
                   handleSuggestionClick(item)
                 }}
                 tabIndex={index}
-                dangerouslySetInnerHTML={{
-                  __html: item.replace(new RegExp(typedValue, 'gi'), match =>
-                    match ? `<b>${match}</b>` : match
-                  )
-                }}
-              />
+              >
+                <HighlightedText text={item} highlight={typedValue} />
+              </li>
             )
           })}
         </ul>

@@ -25,6 +25,7 @@ import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
 
 import { FormChipCell, FormOnChange } from 'igz-controls/components'
+import { HighlightedText } from 'igz-controls/elements'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { deleteUnsafeHtml } from 'igz-controls/utils/string.util'
 
@@ -169,14 +170,9 @@ const SuggestionsChips = ({
                   {suggestionItem.icon && (
                     <div className="suggestion-row-icon">{suggestionItem.icon}</div>
                   )}
-                  <div
-                    className="suggestion-row-label"
-                    dangerouslySetInnerHTML={{
-                      __html: suggestionItem.label.replace(new RegExp(typedValue, 'gi'), match =>
-                        match ? `<b>${match}</b>` : match
-                      )
-                    }}
-                  />
+                  <div className="suggestion-row-label">
+                    <HighlightedText text={suggestionItem.label} highlight={typedValue} />
+                  </div>
                 </div>
                 {suggestionItem.subLabel && (
                   <div className="suggestion-row-sub-label">{suggestionItem.subLabel}</div>

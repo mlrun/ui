@@ -19,6 +19,7 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import FormCheckBox from '../../components/FormCheckBox/FormCheckBox'
+import HighlightedText from '../HighlightedText/HighlightedText'
 import Tooltip from '../../components/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../components/TooltipTemplate/TextTooltipTemplate'
 
@@ -29,6 +30,7 @@ import Checkmark from '../../images/checkmark.svg?react'
 import './selectOption.scss'
 
 const SelectOption = ({
+  highlight = '',
   item,
   name,
   onClick = () => {},
@@ -76,11 +78,12 @@ const SelectOption = ({
               </span>
             )}
             {item.status && <span className={`state-${item.status}-job status`} />}
-            <Tooltip
-              renderChildAsHtml={item.labelHtml?.length > 0}
-              template={<TextTooltipTemplate text={item.label} />}
-            >
-              {item.labelHtml ? item.labelHtml : item.label}
+            <Tooltip template={<TextTooltipTemplate text={item.label} />}>
+              {typeof item.label === 'string' ? (
+                <HighlightedText text={item.label} highlight={highlight} />
+              ) : (
+                item.label
+              )}
             </Tooltip>
           </div>
           {item.subLabel && (
@@ -99,6 +102,7 @@ const SelectOption = ({
 }
 
 SelectOption.propTypes = {
+  highlight: PropTypes.string,
   name: PropTypes.string.isRequired,
   item: SELECT_OPTION.isRequired,
   onClick: PropTypes.func,
