@@ -31,7 +31,6 @@ let Tooltip = ({
   tooltipBodyClassName = '',
   hidden = false,
   id = '',
-  renderChildAsHtml = false,
   template,
   textShow = false
 }) => {
@@ -176,24 +175,14 @@ let Tooltip = ({
 
   return (
     <>
-      {renderChildAsHtml ? (
-        <div
-          data-testid={id ? `${id}-tooltip-wrapper` : 'tooltip-wrapper'}
-          ref={parentRef}
-          className={tooltipWrapperClassNames}
-          dangerouslySetInnerHTML={{ __html: children }}
-          onClick={handleMouseLeave}
-        />
-      ) : (
-        <div
-          data-testid={id ? `${id}-tooltip-wrapper` : 'tooltip-wrapper'}
-          ref={parentRef}
-          className={tooltipWrapperClassNames}
-          onClick={handleMouseLeave}
-        >
-          {children}
-        </div>
-      )}
+      <div
+        data-testid={id ? `${id}-tooltip-wrapper` : 'tooltip-wrapper'}
+        ref={parentRef}
+        className={tooltipWrapperClassNames}
+        onClick={handleMouseLeave}
+      >
+        {children}
+      </div>
       {!hidden &&
         createPortal(
           <CSSTransition
@@ -227,7 +216,6 @@ Tooltip.propTypes = {
   tooltipBodyClassName: PropTypes.string,
   hidden: PropTypes.bool,
   id: PropTypes.string,
-  renderChildAsHtml: PropTypes.bool,
   template: PropTypes.element.isRequired,
   textShow: PropTypes.bool
 }

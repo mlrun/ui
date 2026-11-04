@@ -18,6 +18,7 @@ such restriction.
 import ActionsMenuItem from './ActionsMenuItem/ActionsMenuItem'
 import FormActionButton from './FormActionButton/FormActionButton'
 import FormRowActions from './FormRowActions/FormRowActions'
+import HighlightedText from './HighlightedText/HighlightedText'
 import OptionsMenu from './OptionsMenu/OptionsMenu'
 import SelectOption from './SelectOption/SelectOption'
 import TableHead from './TableHead/TableHead'
@@ -29,6 +30,7 @@ export {
   ActionsMenuItem,
   FormActionButton,
   FormRowActions,
+  HighlightedText,
   OptionsMenu,
   SelectOption,
   TableHead,
