@@ -23,14 +23,7 @@ import { isNumber } from 'lodash-es'
 import TableProducerCell from '../elements/TableProducerCell/TableProducerCell'
 import FunctionPopUp from '../elements/DetailsPopUp/FunctionPopUp/FunctionPopUp'
 
-import {
-  ARTIFACTS_PAGE,
-  FILES_PAGE,
-  MODELS_PAGE,
-  MODELS_TAB,
-  MODEL_ENDPOINTS_TAB,
-  ALL_VERSIONS_PATH
-} from '../constants'
+import { MODELS_TAB, MODEL_ENDPOINTS_TAB, ALL_VERSIONS_PATH } from '../constants'
 import prettyBytes from 'pretty-bytes'
 import { parseUri } from './parseUri'
 import { generateLinkToDetailsPanel } from './link-helper.util'
@@ -46,24 +39,6 @@ import SeverityError from 'igz-controls/images/severity-error.svg?react'
 import TableModelCell from '../elements/TableModelCell/TableModelCell'
 import ModelEndpointPopUp from '../elements/DetailsPopUp/ModelEndpointPopUp/ModelEndpointPopUp'
 
-export const createArtifactsContent = (artifacts, page, pageTab, project, isAllVersions) => {
-  return (artifacts.filter(artifact => !artifact.link_iteration) ?? []).map(artifact => {
-    if (page === ARTIFACTS_PAGE) {
-      return createArtifactsRowData(artifact)
-    } else if (page === MODELS_PAGE) {
-      if (pageTab === MODELS_TAB) {
-        return createModelsRowData(artifact, project, isAllVersions, null)
-      } else if (pageTab === MODEL_ENDPOINTS_TAB) {
-        return createModelEndpointsRowData(artifact, project)
-      }
-    } else if (page === FILES_PAGE) {
-      return createFilesRowData(artifact, project, isAllVersions)
-    }
-
-    return createDatasetsRowData(artifact, project, isAllVersions)
-  })
-}
-
 export const getDefaultFirstHeader = isAllVersions => [
   {
     headerId: isAllVersions ? 'uid' : 'name',
@@ -76,49 +51,6 @@ const getArtifactsDetailsLink = (artifact, artifactPathFragment, tab, project, i
   validateArguments(artifact.db_key, tab, artifact.uid)
     ? `/projects/${project}/${artifactPathFragment}/${artifact.db_key}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/${artifact.tag ? `:${artifact.tag}` : ''}@${artifact.uid}${`/${tab}`}${window.location.search}`
     : ''
-
-const createArtifactsRowData = artifact => {
-  return {
-    key: {
-      value: artifact.db_key,
-      class: 'table-cell-name',
-      link: 'overview'
-    },
-    kind: {
-      value: artifact.kind,
-      class: 'table-cell-small'
-    },
-    labels: {
-      value: parseChipsData(artifact.labels),
-      class: 'table-cell-1',
-      type: 'labels'
-    },
-    producer: {
-      value: artifact.producer,
-      class: 'table-cell-1',
-      type: 'producer'
-    },
-    owner: {
-      value: artifact.producer?.owner,
-      class: 'table-cell-1',
-      type: 'owner'
-    },
-    updated: {
-      value: formatDatetime(artifact.updated, 'N/A'),
-      class: 'table-cell-1'
-    },
-    buttonPopout: {
-      value: '',
-      class: 'table-cell-icon',
-      type: 'buttonPopout'
-    },
-    buttonDownload: {
-      value: '',
-      class: 'table-cell-icon',
-      type: 'buttonDownload'
-    }
-  }
-}
 
 export const getIsTargetPathValid = (artifact, frontendSpec) =>
   frontendSpec?.allowed_artifact_path_prefixes_list
@@ -737,5 +669,3 @@ export const createLLMPromptsRowData = (artifact, project, isAllVersions) => {
     ]
   }
 }
-
-export default createArtifactsContent

@@ -56,6 +56,9 @@ jobs:
       - name: Verifying Formatting
         run: npm run format:check
 
+      - name: Verifying unused code and dependencies (Knip)
+        run: npm run knip
+
       - name: Build
         id: build
         run: npm run build

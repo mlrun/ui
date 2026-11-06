@@ -51,7 +51,7 @@ import { DETAILS_MENU, ACTIONS_MENU } from 'igz-controls/types'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { removeModelFeatureVector } from '../../reducers/detailsReducer'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
-import { useDetails } from 'igz-controls/hooks/useDetails.hook'
+import { useDetails } from 'igz-controls/hooks'
 
 import 'igz-controls/scss/details.scss'
 

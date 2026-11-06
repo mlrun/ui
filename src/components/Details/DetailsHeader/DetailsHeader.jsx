@@ -38,7 +38,7 @@ import { formatDatetime } from 'igz-controls/utils/datetime.util'
 import { generateUrlFromRouterPath } from 'igz-controls/utils/common.util'
 import { getDefaultCloseDetailsLink } from '../../../utils/link-helper.util'
 import { setIteration, setRunAttempt } from '../../../reducers/detailsReducer'
-import { useDetailsHeader } from 'igz-controls/hooks/useDetailsHeader.hook'
+import { useDetailsHeader } from 'igz-controls/hooks'
 
 import Back from 'igz-controls/images/back-arrow.svg?react'
 import InfoIcon from 'igz-controls/images/info-fill.svg?react'

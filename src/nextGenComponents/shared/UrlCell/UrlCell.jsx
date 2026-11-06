@@ -21,8 +21,7 @@ import { Fragment, useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Tooltip, TooltipContent, TooltipTrigger } from 'igz-controls/nextGenComponents'
 
-import UrlItem from '../UrlItem'
-import { URL_ITEM_VARIANT } from '../UrlItem/urlItem.constants'
+import UrlItem, { URL_ITEM_VARIANT } from '../UrlItem'
 import {
   COPY_BTN_WIDTH_PX,
   COPY_SUCCESS_DURATION_MS,

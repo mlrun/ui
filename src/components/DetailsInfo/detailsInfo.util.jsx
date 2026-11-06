@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize, isNil, isNumber, upperFirst } from 'lodash-es'
+import { capitalize, isNumber, upperFirst } from 'lodash-es'
 import classNames from 'classnames'
 
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
@@ -27,11 +27,7 @@ import JobPopUp from '../../elements/DetailsPopUp/JobPopUp/JobPopUp'
 
 import {
   ALERTS_PAGE,
-  FEATURE_STORE_PAGE,
-  FILES_PAGE,
   FUNCTION_TYPE_APPLICATION,
-  MODELS_PAGE,
-  MODEL_ENDPOINTS_TAB,
   MLRUN_STORAGE_INPUT_PATH_SCHEME
 } from '../../constants'
 import { parseUri } from '../../utils'
@@ -42,7 +38,6 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { roundFloats } from 'igz-controls/utils/common.util'
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { formatDatetime } from 'igz-controls/utils/datetime.util'
 
 export const generateTriggerInfoContent = criteria => {
   if (criteria) {
@@ -88,27 +83,6 @@ export const generateResetPolicyInfoContent = selectedItem => {
   }
 
   return []
-}
-
-export const generateArtifactsInfoContent = (page, pageTab, selectedItem) => {
-  if (pageTab === MODEL_ENDPOINTS_TAB) {
-    const { name, tag } =
-      (selectedItem?.metadata?.uid ?? '').match(/^(?<name>.*?):(?<tag>.*)$/)?.groups ?? {}
-    return [tag, name]
-  } else
-    return [
-      selectedItem.hash ?? '',
-      selectedItem.db_key,
-      selectedItem.iter || '0',
-      page !== FEATURE_STORE_PAGE && page !== FILES_PAGE ? selectedItem.kind || ' ' : null,
-      selectedItem.size ?? '',
-      selectedItem.target_path,
-      selectedItem.tree,
-      formatDatetime(selectedItem.updated, 'N/A'),
-      page === MODELS_PAGE ? (selectedItem.framework ?? '') : null,
-      selectedItem.labels ?? [],
-      selectedItem.sources
-    ].filter(content => !isNil(content))
 }
 
 const generateFunctionConfigurationContent = selectedFunction => {

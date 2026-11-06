@@ -19,13 +19,7 @@ such restriction.
 */
 import { buildNuclioOwner } from '../../../../../utils/nuclioEnrichment.util'
 
-export {
-  buildGatewayEndpoint,
-  buildGatewayUrl,
-  buildMatchNames,
-  filterGatewaysByFunction,
-  computeGatewayUrls
-} from '../../../../../utils/apiGateway.util'
+export { buildGatewayEndpoint } from '../../../../../utils/apiGateway.util'
 
 export const filterApiGatewaysBySearchFields = (gateways, filters) => {
   const nameFilter = filters.name?.toLowerCase() ?? ''

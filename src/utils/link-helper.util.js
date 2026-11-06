@@ -101,25 +101,6 @@ export const parseFunctionUri = functionUri => {
   return { project, name, hash, tag, nameWithHash, uid, nameWithUid }
 }
 
-export const generateFunctionDetailsLink = (uri = '') => {
-  // remove 'latest' when function_uri will contain hash or tag
-  //
-  // 'my_proj/func_name@func_hash' -> projects/my_proj/functions/func_hash/overview
-  // 'my_proj/func_name' -> projects/my_proj/functions/func_name/latest/overview
-  // 'my_proj/func_name:custom_tag' -> projects/my_proj/functions/func_name/custom_tag/overview
-  let generatedLink = ''
-
-  if (uri) {
-    const { project, name, nameWithHash, tag } = parseFunctionUri(uri)
-
-    if (project && (name || nameWithHash)) {
-      generatedLink = `/projects/${project}/functions/${nameWithHash ? nameWithHash : name}${nameWithHash ? '' : '/' + (tag ?? 'latest')}/overview`
-    }
-  }
-
-  return generatedLink
-}
-
 export const isDetailsTabExists = (tab, tabsList, navigate, location) => {
   if (!tabsList.find(el => el.id === tab && !el.hidden)) {
     const newUrlArray = location.pathname.split('/')

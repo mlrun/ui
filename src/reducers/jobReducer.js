@@ -279,18 +279,6 @@ export const fetchScheduledJobs = createAsyncThunk(
       })
   }
 )
-export const fetchSpecificJobs = createAsyncThunk(
-  'fetchSpecificJobs',
-  ({ project, filters, jobList }) => {
-    const params = {
-      ...generateRequestParams(filters)
-    }
-
-    return jobsApi.getSpecificJobs(project, params, jobList).then(({ data }) => {
-      return data.runs
-    })
-  }
-)
 export const handleRunScheduledJob = createAsyncThunk(
   'handleRunScheduledJob',
   ({ postData, project, job }, thunkAPI) => {

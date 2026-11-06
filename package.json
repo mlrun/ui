@@ -97,7 +97,8 @@
     "build:regression": "vite build --mode development --base / --outDir build/regression",
     "preview:regression": "vite preview --mode development --outDir build/regression --port 3000 --strictPort",
     "start:regression:fast": "npm run build:regression && concurrently \"npm:mock-server\" \"npm:preview:regression\" \"npm:test:regression\"",
-    "ui-steps": "node scripts/collectUITestsSteps.js"
+    "ui-steps": "node scripts/collectUITestsSteps.js",
+    "knip": "knip"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^13.3.0",
@@ -135,6 +136,7 @@
     "geckodriver": "^6.1.1",
     "globals": "^17.13.0",
     "jsdom": "^30.1.2",
+    "knip": "^6.44.1",
     "mime-types": "^3.0.2",
     "prettier": "^3.9.10",
     "randexp": "^0.5.3",
