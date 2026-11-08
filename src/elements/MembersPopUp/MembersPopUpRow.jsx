@@ -32,7 +32,7 @@ import { OWNER_ROLE } from '../../constants'
 
 import Delete from 'igz-controls/images/delete.svg?react'
 
-const MembersPopUpRow = ({ inviteNewMembers, member, membersData, setMembersData }) => {
+const MembersPopUpRow = ({ inviteNewMembers, member, membersData, roles, setMembersData }) => {
   const memberRef = useRef()
   const [deleteMemberId, setDeleteMemberId] = useState('')
 
@@ -78,7 +78,7 @@ const MembersPopUpRow = ({ inviteNewMembers, member, membersData, setMembersData
           disabled={member.role === OWNER_ROLE || inviteNewMembers}
           floatingLabel
           onClick={roleOption => changeMemberRole(roleOption, member)}
-          options={getRoleOptions(member.role)}
+          options={getRoleOptions(member.role, false, roles)}
           selectedId={member.role}
         />
       </div>
@@ -119,6 +119,7 @@ MembersPopUpRow.propTypes = {
   membersData: PropTypes.shape({
     members: PropTypes.arrayOf(MEMBER).isRequired
   }).isRequired,
+  roles: PropTypes.array,
   setMembersData: PropTypes.func.isRequired
 }
 

@@ -17,27 +17,46 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { ADMIN_ROLE, ALL_ROLES, EDITOR_ROLE, VIEWER_ROLE } from '../../constants'
+import { ADMIN_ROLE, ALL_ROLES, EDITOR_ROLE, OWNER_ROLE, VIEWER_ROLE } from '../../constants'
 
 export const DELETE_MODIFICATION = 'delete'
 export const initialNewMembersRole = VIEWER_ROLE
 
 const BASE_ROLES = [VIEWER_ROLE, EDITOR_ROLE, ADMIN_ROLE]
+// Builder is Orca's alias of Editor (same permissions), so only Editor is offered.
+const HIDDEN_POLICY_ROLES = ['oris-project-builder']
+
+// Assignable roles come from Orca's project policies; Owner is never assignable.
+// Falls back to BASE_ROLES when no policies are available (non-MF mode).
+const getAssignableRoles = (policies = []) => {
+  const names = policies
+    .filter(
+      policy =>
+        policy.spec?.displayName &&
+        policy.spec.displayName !== OWNER_ROLE &&
+        !HIDDEN_POLICY_ROLES.includes(policy.metadata?.name)
+    )
+    .map(policy => policy.spec.displayName)
+
+  return names.length > 0 ? names : BASE_ROLES
+}
 
 // Hidden so Select still resolves it for the closed-header label without offering it as a
 // pickable item in the open dropdown - a role outside BASE_ROLES must never be re-selectable.
-const getCurrentRoleOption = memberRole => {
-  if (!memberRole || BASE_ROLES.includes(memberRole)) {
+const getCurrentRoleOption = (memberRole, roles) => {
+  if (!memberRole || roles.includes(memberRole)) {
     return null
   }
 
   return { id: memberRole, label: memberRole, hidden: true }
 }
 
-export const getRoleOptions = (memberRole = '', allOption = false) => {
+export const getRoleOptions = (memberRole = '', allOption = false, policies = []) => {
+  const roles = getAssignableRoles(policies)
+
   return [
     { id: ALL_ROLES, label: ALL_ROLES, hidden: !allOption },
-    getCurrentRoleOption(memberRole),
-    ...BASE_ROLES.map(roleName => ({ id: roleName, label: roleName }))
+    getCurrentRoleOption(memberRole, roles),
+    ...roles.map(roleName => ({ id: roleName, label: roleName }))
   ].filter(Boolean)
 }

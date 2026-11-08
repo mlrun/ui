@@ -454,7 +454,7 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
               density="dense"
               floatingLabel
               onClick={newRole => setNewMembersRole(newRole)}
-              options={getRoleOptions()}
+              options={getRoleOptions('', false, membersState.projectAuthorizationRoles)}
               selectedId={newMembersRole}
             />
             <div className="new-member-btn">
@@ -499,7 +499,7 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
                   role: roleOption
                 })
               }}
-              options={getRoleOptions('', true)}
+              options={getRoleOptions('', true, membersState.projectAuthorizationRoles)}
               selectedId={filters.role}
             />
           </div>
@@ -520,6 +520,7 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
                 inviteNewMembers={inviteNewMembers}
                 member={member}
                 membersData={membersData}
+                roles={membersState.projectAuthorizationRoles}
                 setMembersData={setMembersData}
               />
             ))}
