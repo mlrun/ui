@@ -28,7 +28,7 @@ const HIDDEN_POLICY_ROLES = ['oris-project-builder']
 
 // Assignable roles come from Orca's project policies; Owner is never assignable.
 // Falls back to BASE_ROLES when no policies are available (non-MF mode).
-const getAssignableRoles = (policies = []) => {
+export const getAssignableRoles = (policies = []) => {
   const names = policies
     .filter(
       policy =>

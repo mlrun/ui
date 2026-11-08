@@ -33,7 +33,12 @@ import { TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
-import { getRoleOptions, initialNewMembersRole, DELETE_MODIFICATION } from './membersPopUp.util'
+import {
+  getAssignableRoles,
+  getRoleOptions,
+  initialNewMembersRole,
+  DELETE_MODIFICATION
+} from './membersPopUp.util'
 import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
 import { membersActions } from './membersReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
@@ -403,24 +408,17 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
     <div className="settings__members">
       <div className="info-row">
         <div className="members-overview">
-          <span className="member-overview">
-            <span className="member-count">
-              {membersData.groupedOriginalMembers.Editor?.length ?? 0}
-            </span>
-            &nbsp;editors,&nbsp;
-          </span>
-          <span className="member-overview">
-            <span className="member-count">
-              {membersData.groupedOriginalMembers.Viewer?.length ?? 0}
-            </span>
-            &nbsp;viewers,&nbsp;
-          </span>
-          <span className="member-overview">
-            <span className="member-count">
-              {membersData.groupedOriginalMembers.Admin?.length ?? 0}
-            </span>
-            &nbsp;admins&nbsp;
-          </span>
+          {getAssignableRoles(membersState.projectAuthorizationRoles).map(
+            (roleName, index, roleNames) => (
+              <span className="member-overview" key={roleName}>
+                <span className="member-count">
+                  {membersData.groupedOriginalMembers[roleName]?.length ?? 0}
+                </span>
+                &nbsp;{`${roleName.toLowerCase()}s`}
+                {index < roleNames.length - 1 && ','}&nbsp;
+              </span>
+            )
+          )}
           <Tip text="Some of the members might be user groups" />
         </div>
         <div className="invite-new-members-btn" onClick={() => setInviteNewMembers(true)}>
