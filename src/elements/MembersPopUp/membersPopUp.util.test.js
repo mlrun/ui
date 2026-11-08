@@ -19,7 +19,7 @@ such restriction.
 */
 import { describe, it, expect } from 'vitest'
 
-import { getRoleOptions } from './membersPopUp.util'
+import { getAssignableRoles, getRoleOptions } from './membersPopUp.util'
 
 const policy = (name, displayName) => ({
   metadata: { name: `oris-project-${name}` },
@@ -40,10 +40,10 @@ const visibleIds = options => options.filter(option => !option.hidden).map(optio
 describe('getRoleOptions', () => {
   it('builds options from policies, excluding Owner and Builder', () => {
     expect(visibleIds(getRoleOptions('', false, policies))).toEqual([
+      'Viewer',
       'Editor',
-      'Curator',
       'Admin',
-      'Viewer'
+      'Curator'
     ])
   })
 
@@ -61,5 +61,9 @@ describe('getRoleOptions', () => {
 
     expect(options).toContainEqual({ id: 'Builder', label: 'Builder', hidden: true })
     expect(visibleIds(options)).not.toContain('Builder')
+  })
+
+  it('orders assignable roles as the base roles, then the rest', () => {
+    expect(getAssignableRoles(policies)).toEqual(['Viewer', 'Editor', 'Admin', 'Curator'])
   })
 })

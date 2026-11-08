@@ -24,9 +24,10 @@ export const initialNewMembersRole = VIEWER_ROLE
 
 const BASE_ROLES = [VIEWER_ROLE, EDITOR_ROLE, ADMIN_ROLE]
 // Builder is Orca's alias of Editor (same permissions), so only Editor is offered.
-const HIDDEN_POLICY_ROLES = ['oris-project-builder']
+const HIDDEN_POLICY_ROLES = new Set(['oris-project-builder'])
 
 // Assignable roles come from Orca's project policies; Owner is never assignable.
+// Known roles keep the BASE_ROLES order, any other role follows in the order Orca returned it.
 // Falls back to BASE_ROLES when no policies are available (non-MF mode).
 export const getAssignableRoles = (policies = []) => {
   const names = policies
@@ -34,11 +35,18 @@ export const getAssignableRoles = (policies = []) => {
       policy =>
         policy.spec?.displayName &&
         policy.spec.displayName !== OWNER_ROLE &&
-        !HIDDEN_POLICY_ROLES.includes(policy.metadata?.name)
+        !HIDDEN_POLICY_ROLES.has(policy.metadata?.name)
     )
     .map(policy => policy.spec.displayName)
 
-  return names.length > 0 ? names : BASE_ROLES
+  if (names.length === 0) {
+    return BASE_ROLES
+  }
+
+  return [
+    ...BASE_ROLES.filter(roleName => names.includes(roleName)),
+    ...names.filter(roleName => !BASE_ROLES.includes(roleName))
+  ]
 }
 
 // Hidden so Select still resolves it for the closed-header label without offering it as a
