@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { forEach, groupBy } from 'lodash'
+import { forEach, groupBy } from 'lodash-es'
 
 import { membersActions } from '../../elements/MembersPopUp/membersReducer'
 

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { map } from 'lodash'
+import { map } from 'lodash-es'
 
 export const parseV3ioStreams = consumerGroups => {
   return map(consumerGroups, (consumerGroupData, functionStreamName) => {

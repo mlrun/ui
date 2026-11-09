@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import { Outlet, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { Outlet, useNavigate, useParams, useSearchParams } from 'react-router'
 import { useDispatch } from 'react-redux'
 
 import ActionBar from '../ActionBar/ActionBar'

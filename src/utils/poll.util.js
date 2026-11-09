@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { constant, chain, isNil, overSome, isNaN, isFinite } from 'lodash'
+import { constant, chain, isNil, overSome, isNaN, isFinite } from 'lodash-es'
 
 import { FAILED_STATE, RUNNING_STATE, SUCCEEDED_STATE } from '../constants'
 

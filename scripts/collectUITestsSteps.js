@@ -17,8 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-const fs = require('fs')
-const acorn = require('acorn')
+
+import fs from 'node:fs'
+import * as acorn from 'acorn'
 
 const testStepsFolder = './tests/features/step-definitions/'
 
@@ -44,9 +45,7 @@ for (let item of fileArr) {
 
           const action = item.expression.callee.name
           let statement = item.expression.arguments[0].value
-          let keyWords = item.expression.arguments[1].params.map(
-            name => name.name
-          )
+          let keyWords = item.expression.arguments[1].params.map(name => name.name)
 
           while ((match = regexp.exec(statement)) !== null) {
             indexes.push([match.index, regexp.lastIndex])

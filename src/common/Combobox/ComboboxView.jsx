@@ -29,151 +29,146 @@ import Arrow from 'igz-controls/images/arrow.svg?react'
 import SearchIcon from 'igz-controls/images/search.svg?react'
 import ExclamationMarkIcon from 'igz-controls/images/exclamation-mark.svg?react'
 
-const ComboboxView = React.forwardRef(
-  (
-    {
-      comboboxClassName,
-      disabled,
-      dropdownList,
-      dropdownStyle,
-      handleIconClick,
-      handleInputOnChange,
-      handleMatchesOptionClick,
-      handleSelectOptionOnClick,
-      hideSearchInput,
-      inputOnFocus,
-      inputPlaceholder,
-      inputValue,
-      invalidText,
-      isInvalid,
-      matchesSearchOnChange,
-      required,
-      requiredText,
-      searchIsFocused,
-      selectDropdownList,
-      selectPlaceholder,
-      selectValue,
-      setSearchIsFocused,
-      showMatchesDropdown,
-      showSelectDropdown
-    },
-    ref
-  ) => {
-    const comboboxClassNames = classnames(
-      comboboxClassName,
-      'combobox',
-      isInvalid && !disabled && 'combobox_invalid',
-      disabled && 'combobox_disabled'
-    )
-    const iconClassNames = classnames(showSelectDropdown && 'combobox-icon_open', 'combobox-icon')
-    const selectClassNames = classnames(
-      'combobox-select',
-      showSelectDropdown && 'combobox-select_open',
-      selectValue.id.length <= 5 && selectValue.id.length !== 0 && 'combobox-select_short'
-    )
-    const dropdownClassNames = classnames(
-      'combobox-dropdown',
-      showMatchesDropdown &&
-        (dropdownList.length > 0 || searchIsFocused) &&
-        'combobox-dropdown_visible'
-    )
-    const { comboboxRef, inputRef } = ref
+function ComboboxView({
+  comboboxClassName,
+  comboboxRef,
+  disabled,
+  dropdownList,
+  dropdownStyle,
+  handleIconClick,
+  handleInputOnChange,
+  handleMatchesOptionClick,
+  handleSelectOptionOnClick,
+  hideSearchInput,
+  inputOnFocus,
+  inputPlaceholder,
+  inputRef,
+  inputValue,
+  invalidText,
+  isInvalid,
+  matchesSearchOnChange,
+  required,
+  requiredText,
+  searchIsFocused,
+  selectDropdownList,
+  selectPlaceholder,
+  selectValue,
+  setSearchIsFocused,
+  showMatchesDropdown,
+  showSelectDropdown
+}) {
+  const comboboxClassNames = classnames(
+    comboboxClassName,
+    'combobox',
+    isInvalid && !disabled && 'combobox_invalid',
+    disabled && 'combobox_disabled'
+  )
+  const iconClassNames = classnames(showSelectDropdown && 'combobox-icon_open', 'combobox-icon')
+  const selectClassNames = classnames(
+    'combobox-select',
+    showSelectDropdown && 'combobox-select_open',
+    selectValue.id.length <= 5 && selectValue.id.length !== 0 && 'combobox-select_short'
+  )
+  const dropdownClassNames = classnames(
+    'combobox-dropdown',
+    showMatchesDropdown &&
+      (dropdownList.length > 0 || searchIsFocused) &&
+      'combobox-dropdown_visible'
+  )
 
-    return (
-      <div className={comboboxClassNames} ref={comboboxRef}>
-        <Arrow className={iconClassNames} onClick={handleIconClick} />
-        <div className={selectClassNames}>
-          <div className="combobox-select__header" onClick={handleIconClick}>
-            <span className={`${selectValue.className}`}>{selectValue.id}</span>
-            {selectValue.id.length === 0 && (
-              <span className="combobox-select__header-label">
-                {selectPlaceholder}
-                {required && <span className="combobox-select__header-label_mandatory">*</span>}
-              </span>
-            )}
-          </div>
-          <div className="combobox-select__body">
-            <ul className="combobox-select__body-list combobox-list">
-              {selectDropdownList.map(option => (
-                <li
-                  className={`combobox-list__option ${option.className}`}
-                  key={option.id}
-                  onClick={() => handleSelectOptionOnClick(option)}
-                >
-                  {option.label}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-        <input
-          className="combobox-input"
-          disabled={selectValue.id.length === 0 || disabled}
-          onChange={handleInputOnChange}
-          onFocus={inputOnFocus}
-          placeholder={inputPlaceholder}
-          ref={inputRef}
-          type="text"
-          value={inputValue}
-        />
-        <div
-          className={dropdownClassNames}
-          style={{
-            ...dropdownStyle
-          }}
-        >
-          {!hideSearchInput && (
-            <div className="combobox-dropdown__search">
-              <input
-                className="combobox-dropdown__search-input input border-none"
-                onChange={event => matchesSearchOnChange(event)}
-                onFocus={() => setSearchIsFocused(true)}
-                placeholder="Type to search"
-                type="text"
-              />
-              <SearchIcon />
-            </div>
+  return (
+    <div className={comboboxClassNames} ref={comboboxRef}>
+      <Arrow className={iconClassNames} onClick={handleIconClick} />
+      <div className={selectClassNames}>
+        <div className="combobox-select__header" onClick={handleIconClick}>
+          <span className={`${selectValue.className}`}>{selectValue.id}</span>
+          {selectValue.id.length === 0 && (
+            <span className="combobox-select__header-label">
+              {selectPlaceholder}
+              {required && <span className="combobox-select__header-label_mandatory">*</span>}
+            </span>
           )}
-          <ul className="combobox-dropdown__list combobox-list">
-            {searchIsFocused && dropdownList.length === 0 ? (
-              <li className="combobox-list__option" key="no data">
-                No data
+        </div>
+        <div className="combobox-select__body">
+          <ul className="combobox-select__body-list combobox-list">
+            {selectDropdownList.map(option => (
+              <li
+                className={`combobox-list__option ${option.className}`}
+                key={option.id}
+                onClick={() => handleSelectOptionOnClick(option)}
+              >
+                {option.label}
               </li>
-            ) : (
-              dropdownList.map(value => (
-                <li
-                  className="combobox-list__option"
-                  key={value.id}
-                  onClick={() => handleMatchesOptionClick(value)}
-                >
-                  {value.label}
-                </li>
-              ))
-            )}
+            ))}
           </ul>
         </div>
-        {isInvalid && !disabled && (
-          <Tooltip
-            className="combobox-warning"
-            template={
-              <TextTooltipTemplate
-                text={required && selectValue.id.length === 0 ? requiredText : invalidText}
-                warning
-              />
-            }
-          >
-            <ExclamationMarkIcon />
-          </Tooltip>
-        )}
       </div>
-    )
-  }
-)
-
-ComboboxView.displayName = 'ComboboxView'
+      <input
+        className="combobox-input"
+        disabled={selectValue.id.length === 0 || disabled}
+        onChange={handleInputOnChange}
+        onFocus={inputOnFocus}
+        placeholder={inputPlaceholder}
+        ref={inputRef}
+        type="text"
+        value={inputValue}
+      />
+      <div
+        className={dropdownClassNames}
+        style={{
+          ...dropdownStyle
+        }}
+      >
+        {!hideSearchInput && (
+          <div className="combobox-dropdown__search">
+            <input
+              className="combobox-dropdown__search-input input border-none"
+              onChange={event => matchesSearchOnChange(event)}
+              onFocus={() => setSearchIsFocused(true)}
+              placeholder="Type to search"
+              type="text"
+            />
+            <SearchIcon />
+          </div>
+        )}
+        <ul className="combobox-dropdown__list combobox-list">
+          {searchIsFocused && dropdownList.length === 0 ? (
+            <li className="combobox-list__option" key="no data">
+              No data
+            </li>
+          ) : (
+            dropdownList.map(value => (
+              <li
+                className="combobox-list__option"
+                key={value.id}
+                onClick={() => handleMatchesOptionClick(value)}
+              >
+                {value.label}
+              </li>
+            ))
+          )}
+        </ul>
+      </div>
+      {isInvalid && !disabled && (
+        <Tooltip
+          className="combobox-warning"
+          template={
+            <TextTooltipTemplate
+              text={required && selectValue.id.length === 0 ? requiredText : invalidText}
+              warning
+            />
+          }
+        >
+          <ExclamationMarkIcon />
+        </Tooltip>
+      )}
+    </div>
+  )
+}
 
 ComboboxView.propTypes = {
   comboboxClassName: PropTypes.string.isRequired,
+  comboboxRef: PropTypes.object.isRequired,
   disabled: PropTypes.bool,
   dropdownList: COMBOBOX_MATCHES.isRequired,
   dropdownStyle: PropTypes.object.isRequired,
@@ -184,6 +179,7 @@ ComboboxView.propTypes = {
   hideSearchInput: PropTypes.bool.isRequired,
   inputOnFocus: PropTypes.func.isRequired,
   inputPlaceholder: PropTypes.string.isRequired,
+  inputRef: PropTypes.object.isRequired,
   inputValue: PropTypes.string.isRequired,
   invalidText: PropTypes.string.isRequired,
   isInvalid: PropTypes.bool.isRequired,

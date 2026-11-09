@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize, set } from 'lodash'
+import { capitalize, set } from 'lodash-es'
 
 import { mainHttpClient } from '../httpClient'
 import { GROUP_BY_WORKFLOW, FILTER_ALL_ITEMS, COMPLETED_STATE } from '../constants'

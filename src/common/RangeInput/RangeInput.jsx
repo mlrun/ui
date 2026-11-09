@@ -17,10 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
-import { isNil } from 'lodash'
+import { isNil } from 'lodash-es'
 
 import Input from '../Input/Input'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
@@ -48,8 +48,15 @@ const RangeInput = ({
   requiredText = 'This field is required',
   value
 }) => {
-  const [inputValue, setInputValue] = useState(0)
+  const [inputValue, setInputValue] = useState(value)
   const [isRequired, setIsRequired] = useState(false)
+  const [prevValue, setPrevValue] = useState(value)
+
+  if (value !== prevValue) {
+    setPrevValue(value)
+    setInputValue(value)
+  }
+
   const rangeClassName = classNames(
     'range',
     `range-${density}`,
@@ -57,10 +64,6 @@ const RangeInput = ({
     tip && 'range__input-tip',
     (isRequired || invalid) && 'range-warning'
   )
-
-  useEffect(() => {
-    setInputValue(value)
-  }, [value])
 
   const handleIncrease = () => {
     if (inputValue >= max) return

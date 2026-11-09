@@ -20,7 +20,7 @@ such restriction.
 import { useCallback, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FileCode2 } from 'lucide-react'
-import { omit } from 'lodash'
+import { omit } from 'lodash-es'
 
 import DetailsDataTab from '../../../../shared/DetailsDataTab/DetailsDataTab'
 import YamlModal from '../../../../shared/YamlModal/YamlModal'

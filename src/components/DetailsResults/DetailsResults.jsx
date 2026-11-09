@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import classNames from 'classnames'
 
 import NoData from '../../common/NoData/NoData'

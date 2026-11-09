@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { isEmpty, isEqual, sum, throttle } from 'lodash'
+import { isEmpty, isEqual, sum, throttle } from 'lodash-es'
 import { MAIN_TABLE_ID, MAIN_TABLE_BODY_ID } from 'igz-controls/constants'
 
 const HIDDEN_RENDER_ITEMS_LENGTH = 5
@@ -245,6 +245,7 @@ export const useVirtualization = ({
 
   useLayoutEffect(() => {
     if (isEmpty(rowsData.content) && !isEqual(rowsSizes, rowsSizesLocal)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setRowsSizesLocal(rowsSizes)
     }
   }, [rowsSizesLocal, rowsData, rowsSizes])
@@ -260,6 +261,7 @@ export const useVirtualization = ({
       )
 
       if (!isEqual(rowsSizesLocal, newRowsSizes)) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setRowsSizesLocal(newRowsSizes)
       }
     }

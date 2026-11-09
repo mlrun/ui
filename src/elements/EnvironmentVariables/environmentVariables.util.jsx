@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { isNil } from 'lodash'
+import { isNil } from 'lodash-es'
 import { ENV_VARIABLE_TYPE_SECRET, ENV_VARIABLE_TYPE_VALUE } from '../../constants'
 
 export const SECRET_KEY = 'secretKey'

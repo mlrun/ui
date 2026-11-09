@@ -20,7 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { get } from 'lodash'
+import { get } from 'lodash-es'
 
 import { FormChipCell, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 

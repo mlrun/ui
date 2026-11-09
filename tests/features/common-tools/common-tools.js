@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import axios from 'axios'
-import { generateRegEx, getLength, getNotToBe, getRule } from './utils'
+import { generateRegEx, getLength, getNotToBe, getRule } from './utils.js'
 import {
   deleteAPIArtifact,
   deleteAPIFeatureSet,
@@ -26,7 +26,7 @@ import {
   deleteAPIFunction,
   deleteAPIMLProject,
   deleteAPISchedule
-} from '../common/actions/api.actions'
+} from '../common/actions/api.actions.js'
 
 export function locatorBuilder(strings, ...keys) {
   return function (...values) {

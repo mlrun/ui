@@ -17,11 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { timeout } from '../../../config'
+import { timeout } from '../../../config.js'
 import { until } from 'selenium-webdriver'
 import { expect } from 'chai'
-import sidebar from '../components/sidebar.component'
-import { scrollToWebElement } from './common.action'
+import sidebar from '../components/sidebar.component.js'
+import { scrollToWebElement } from './common.action.js'
 
 const isSidebarPinned = async driver => {
   const element = await driver.findElement(sidebar.root)

@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { map } from 'lodash'
+import { map } from 'lodash-es'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 

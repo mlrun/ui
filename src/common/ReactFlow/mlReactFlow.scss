@@ -124,8 +124,14 @@
   to { stroke-dashoffset: 0; }
 }
 
-.react-flow__renderer,
-.react-flow__default-error-panel {
+// Scoped to mlrun's roots: as a remote, this stylesheet stays in the host
+// document, where these generic `.react-flow__*` rules would also restyle other
+// apps' React Flow canvases (e.g. borders and padding on AIRun's workflow nodes).
+// `:where()` keeps their specificity.
+$scope: ':where(.ml-app, .mlrun-tw-scope, #overlay_container)';
+
+#{$scope} .react-flow__renderer,
+#{$scope} .react-flow__default-error-panel {
   z-index: 5;
 
   &:active {
@@ -298,7 +304,7 @@
   }
 }
 
-.react-flow__minimap {
+#{$scope} .react-flow__minimap {
   background-color: colors.$gallery;
 
   svg {
@@ -312,7 +318,7 @@
   }
 }
 
-.react-flow__minimap-node {
+#{$scope} .react-flow__minimap-node {
   fill: colors.$white;
 
   @include nodes();

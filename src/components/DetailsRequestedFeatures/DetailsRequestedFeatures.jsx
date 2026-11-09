@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { cloneDeep, isEqual, isNil } from 'lodash'
+import { cloneDeep, isEqual, isNil } from 'lodash-es'
 import { useDispatch } from 'react-redux'
 
 import DetailsRequestedFeaturesView from './DetailsRequestedFeaturesView'

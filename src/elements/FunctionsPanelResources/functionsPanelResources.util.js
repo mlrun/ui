@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { chain } from 'lodash'
+import { chain } from 'lodash-es'
 import { getVolumeType } from '../../utils/panelResources.util'
 import { PANEL_EDIT_MODE } from '../../constants'
 

@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import PropTypes from 'prop-types'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 
 import AlertsTableRow from '../../elements/AlertsTableRow/AlertsTableRow'
 import NoData from '../../common/NoData/NoData'

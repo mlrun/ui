@@ -5,8 +5,11 @@
       "@/*": [
         "src/nextGenComponents/*"
       ],
+      "@igz-controls/*": [
+        "src/igz-controls/nextGenComponents/*"
+      ],
       "igz-controls/*": [
-        "node_modules/iguazio.dashboard-react-controls/dist/*"
+        "src/igz-controls/*"
       ]
     }
   }

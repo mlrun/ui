@@ -1,0 +1,9 @@
+@use 'sass:meta';
+
+// React Flow's base styles, scoped to mlrun's roots: as a remote, this stylesheet
+// stays in the host document, where they would also restyle other apps' React Flow
+// canvases (e.g. the cursor and handle borders on AIRun's workflow nodes).
+// `:where()` keeps their specificity.
+:where(.ml-app, .mlrun-tw-scope, #overlay_container) {
+  @include meta.load-css('reactflow/dist/style.css');
+}

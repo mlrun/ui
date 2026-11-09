@@ -1,0 +1,52 @@
+@use '../../scss/colors';
+
+.loader-wrapper {
+  position: fixed;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: colors.$cornflowerBlue;
+  background-color: rgb(0 0 0 / 20%);
+  inset: 0;
+
+  &.overlay-loader {
+    position: absolute;
+    z-index: 10;
+    background-color: transparent;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  &.section-loader {
+    position: relative;
+    z-index: 10;
+    background-color: transparent;
+    inset: auto;
+    width: 100%;
+    height: 100%;
+  }
+
+  &.secondary-loader {
+    color: colors.$spunPearl;
+  }
+
+  .loader-output {
+    display: flex;
+  }
+
+  .loader-icon {
+    animation: loader-spin 1s linear infinite;
+  }
+}
+
+@keyframes loader-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

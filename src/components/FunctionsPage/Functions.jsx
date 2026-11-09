@@ -20,8 +20,8 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-import { isEmpty } from 'lodash'
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { isEmpty } from 'lodash-es'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router'
 
 import FunctionsView from './FunctionsView'
 import JobWizard from '../JobWizard/JobWizard'
@@ -85,7 +85,7 @@ const Functions = ({ isAllVersions = false }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
   const [editableItem, setEditableItem] = useState(null)
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
-  const [jobWizardIsOpened, setJobWizardIsOpened] = useState(false)
+  const jobWizardIsOpenedRef = useRef(false)
   const [jobWizardMode, setJobWizardMode] = useState(null)
   const filtersStore = useSelector(store => store.filtersStore)
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
@@ -155,7 +155,7 @@ const Functions = ({ isAllVersions = false }) => {
   )
 
   const fetchData = useCallback(
-    filters => {
+    function fetchDataCallback(filters) {
       terminateDeleteTasksPolling()
       abortControllerRef.current.abort(REQUEST_CANCELED)
       abortControllerRef.current = new AbortController()
@@ -224,7 +224,7 @@ const Functions = ({ isAllVersions = false }) => {
                   params.projectName,
                   terminatePollRef,
                   deletingFunctions,
-                  () => fetchData(filters),
+                  () => fetchDataCallback(filters),
                   dispatch
                 )
               }
@@ -336,7 +336,7 @@ const Functions = ({ isAllVersions = false }) => {
   )
 
   const buildAndRunFunc = useCallback(
-    func => {
+    function BuildAndRunFuncCallback(func) {
       const data = {
         function: {
           kind: func.type,
@@ -429,7 +429,7 @@ const Functions = ({ isAllVersions = false }) => {
         })
         .catch(error => {
           showErrorNotification(dispatch, error, 'Failed to build and run function.', '', () => {
-            buildAndRunFunc(func)
+            BuildAndRunFuncCallback(func)
           })
         })
     },
@@ -457,7 +457,17 @@ const Functions = ({ isAllVersions = false }) => {
         filtersStore,
         isAllVersions ? null : () => showAllVersions(selectedFunction.name)
       ),
-    [dispatch, fetchData, filtersStore, navigate, isAllVersions, selectedFunction, showAllVersions]
+    [
+      dispatch,
+      selectedFunction,
+      fetchFunctionLogsTimeout,
+      fetchFunctionNuclioLogsTimeout,
+      navigate,
+      fetchData,
+      filtersStore,
+      isAllVersions,
+      showAllVersions
+    ]
   )
 
   const actionsMenu = useMemo(
@@ -625,25 +635,27 @@ const Functions = ({ isAllVersions = false }) => {
   }
 
   useEffect(() => {
-    if (!jobWizardIsOpened && jobWizardMode) {
+    if (!jobWizardIsOpenedRef.current && jobWizardMode) {
+      jobWizardIsOpenedRef.current = true
+
       openPopUp(JobWizard, {
         params,
         onWizardClose: () => {
           setJobWizardMode(null)
-          setJobWizardIsOpened(false)
+          jobWizardIsOpenedRef.current = false
         },
         mode: jobWizardMode
       })
-
-      setJobWizardIsOpened(true)
     }
-  }, [editableItem, jobWizardIsOpened, jobWizardMode, params])
+  }, [editableItem, jobWizardMode, params])
 
   const [
     handleRefreshFunctions,
     paginatedFunctions,
     searchFunctionsParams,
-    setSearchFunctionsParams
+    setSearchFunctionsParams,
+    ,
+    paginationConfigFunctions
   ] = usePagination({
     hidden: isAllVersions,
     content: functions ?? [],
@@ -656,7 +668,9 @@ const Functions = ({ isAllVersions = false }) => {
     handleRefreshFunctionVersions,
     paginatedFunctionVersions,
     searchFunctionVersionsParams,
-    setSearchFunctionVersionsParams
+    setSearchFunctionVersionsParams,
+    ,
+    paginationConfigFunctionVersions
   ] = usePagination({
     hidden: !isAllVersions,
     content: functionVersions ?? [],
@@ -744,8 +758,8 @@ const Functions = ({ isAllVersions = false }) => {
       isAllVersions={isAllVersions}
       isDemoMode={isDemoMode}
       pageData={pageData}
-      paginationConfigFunctionsRef={
-        isAllVersions ? paginationConfigFunctionVersionsRef : paginationConfigFunctionsRef
+      paginationConfig={
+        isAllVersions ? paginationConfigFunctionVersions : paginationConfigFunctions
       }
       params={params}
       requestErrorMessage={requestErrorMessage}

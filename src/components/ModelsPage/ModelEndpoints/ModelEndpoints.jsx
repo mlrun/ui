@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useRef, useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router'
 
 import ModelEndpointsTable from './ModelEndpointsTable'
 

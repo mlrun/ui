@@ -24,7 +24,7 @@ import classnames from 'classnames'
 import { Tooltip, TextTooltipTemplate, Loader } from 'igz-controls/components'
 
 import Arrow from 'igz-controls/images/arrow.svg?react'
-import { isNil } from 'lodash'
+import { isNil } from 'lodash-es'
 
 const ProjectStatisticsCounter = ({ counterObject }) => {
   const MAX_VISIBLE_COUNTER = 999999
@@ -78,7 +78,7 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
     </Tooltip>
   ) : (
     [
-      <div key={counterObject.value + Math.random()} className={dataCardStatisticsValueClassNames}>
+      <div key={`${counterObject.label}-value`} className={dataCardStatisticsValueClassNames}>
         {counterObject.loading ? (
           <Loader section small secondary />
         ) : (
@@ -93,10 +93,7 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
           </>
         )}
       </div>,
-      <div
-        className="project-data-card__statistics-label"
-        key={counterObject.label + Math.random()}
-      >
+      <div className="project-data-card__statistics-label" key={`${counterObject.label}-label`}>
         <span>{counterObject.label ?? 'N/A'}</span>
         {counterObject.status && <i className={`state-${counterObject.status}`} />}
       </div>
