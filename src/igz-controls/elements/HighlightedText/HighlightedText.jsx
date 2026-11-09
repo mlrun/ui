@@ -21,7 +21,7 @@ import { escapeRegExp } from 'lodash-es'
 const HighlightedText = ({ text = '', highlight = '' }) => {
   if (!highlight) return text
 
-  return String(text)
+  return text
     .split(new RegExp(`(${escapeRegExp(highlight)})`, 'gi'))
     .map((part, index) => (index % 2 === 1 ? <b key={index}>{part}</b> : part))
 }

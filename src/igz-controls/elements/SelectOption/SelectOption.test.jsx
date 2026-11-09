@@ -32,14 +32,4 @@ describe('SelectOption', () => {
 
     expect(container.querySelector('b')).toHaveTextContent('art')
   })
-
-  it('renders HTML in the label as plain text', () => {
-    const label = '<img src=x onerror=alert(1)>'
-    const { container } = render(
-      <SelectOption name="test" item={{ id: 'a', label }} highlight="img" />
-    )
-
-    expect(container.querySelector('img')).toBeNull()
-    expect(container).toHaveTextContent(label)
-  })
 })

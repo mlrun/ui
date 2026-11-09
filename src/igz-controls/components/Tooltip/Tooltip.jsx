@@ -21,6 +21,8 @@ import { CSSTransition } from 'react-transition-group'
 import classnames from 'classnames'
 import { debounce } from 'lodash-es'
 
+import HighlightedText from '../../elements/HighlightedText/HighlightedText'
+
 import { isEveryObjectValueEmpty } from '../../utils/common.util'
 
 import './tooltip.scss'
@@ -30,6 +32,7 @@ let Tooltip = ({
   className = '',
   tooltipBodyClassName = '',
   hidden = false,
+  highlight = '',
   id = '',
   template,
   textShow = false
@@ -181,7 +184,11 @@ let Tooltip = ({
         className={tooltipWrapperClassNames}
         onClick={handleMouseLeave}
       >
-        {children}
+        {highlight && typeof children === 'string' ? (
+          <HighlightedText text={children} highlight={highlight} />
+        ) : (
+          children
+        )}
       </div>
       {!hidden &&
         createPortal(
@@ -215,6 +222,7 @@ Tooltip.propTypes = {
   className: PropTypes.string,
   tooltipBodyClassName: PropTypes.string,
   hidden: PropTypes.bool,
+  highlight: PropTypes.string,
   id: PropTypes.string,
   template: PropTypes.element.isRequired,
   textShow: PropTypes.bool
