@@ -89,7 +89,7 @@
     "test": "vitest",
     "test:ui": "node scripts/testui.js",
     "test:watch": "vitest --watch",
-    "report": "allure generate tests/reports/allure-results",
+    "report": "allure generate --clean tests/reports/allure-results",
     "report:open": "allure open tests/reports/allure-report",
     "report:watch": "allure watch --no-new-only --open tests/reports/allure-results",
     "test:regression": "npm run test:ui && npm run report",

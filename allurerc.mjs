@@ -27,6 +27,11 @@ export default defineConfig({
   output: './tests/reports/allure-report',
   // results of the previous runs: trends, new/fixed/flaky tests
   historyPath: './tests/reports/allure-history.jsonl',
+  historyLimit: 30,
+  plugins: {
+    // self-contained `allure-report/index.html`: opens from the file system, without `report:open`
+    awesome: { options: { singleFile: true } }
+  },
   // failures are classified by the first matching rule
   categories: {
     rules: [
