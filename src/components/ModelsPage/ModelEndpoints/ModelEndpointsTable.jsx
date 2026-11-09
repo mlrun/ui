@@ -171,6 +171,9 @@ function ModelEndpointsTable({
       setModelEndpoints([])
       dispatch(removeModelEndpoints())
       setSelectedModelEndpoint({})
+      // `ref` is an AbortController ref that the parent replaces on every request (not a DOM node),
+      // so the latest `ref.current` is needed here
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       ref.current.abort(REQUEST_CANCELED)
     }
   }, [dispatch, params.projectName, ref])
