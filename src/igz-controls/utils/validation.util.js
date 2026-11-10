@@ -59,19 +59,6 @@ const hasInvalidRule = newRules => {
 ////// PUBLIC METHODS ///////
 
 /**
- * validate required field value
- * @param {string} validationMsg Custom validationMsg. Defualt to "Required"
- * @returns {function}  Function that accepts a value and return an array [isFieldValid, validationMsg]
- */
-
-export const required =
-  (validationMsg = 'Required') =>
-  value => {
-    let isValid = value.trim() !== '' && typeof value === 'string'
-    return [isValid, validationMsg]
-  }
-
-/**
  * Checks whether there is at least one failed validation rule.
  * @function checkPatternsValidity
  * @param {Array} validationRules Array of Validation Rule Objects {name: "", lable: "", pattren: [Function || Regex]}

@@ -20,8 +20,6 @@ such restriction.
 
 import { REDISNOSQL } from './FeatureSetsPanelTargetStore/featureSetsPanelTargetStore.util'
 
-export const nameValidationPattern = /^(?=[\S\s]{1,56}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
-
 export const checkValidation = (
   newFeatureSet,
   setValidation,

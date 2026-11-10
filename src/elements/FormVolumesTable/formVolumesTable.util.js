@@ -43,12 +43,6 @@ const selectVolumeTypeOptions = [
   { label: 'PVC', id: PVC_VOLUME_TYPE }
 ]
 
-export const tableHeaders = [
-  { label: 'Type', id: 'type' },
-  { label: 'Volume name', id: 'name' },
-  { label: 'Path', id: 'path' }
-]
-
 export const generateVolumeInputsData = (
   selectedItem,
   fields,

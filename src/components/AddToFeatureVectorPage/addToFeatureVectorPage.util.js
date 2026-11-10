@@ -26,21 +26,6 @@ import {
   TAG_FILTER_LATEST
 } from '../../constants'
 
-export const page = 'FEATURE-STORE'
-
-export const pageDataInitialState = {
-  actionsMenu: [],
-  actionsMenuHeader: '',
-  details: {
-    menu: [],
-    infoHeaders: []
-  },
-  filters: [],
-  page: '',
-  selectedRowData: {},
-  tabs: []
-}
-
 export const getFiltersConfig = (currentProject = '') => {
   return {
     [NAME_FILTER]: { label: 'Name:', initialValue: '' },

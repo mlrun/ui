@@ -39,6 +39,7 @@ const isLocalhost = Boolean(
   window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
 )
 
+/** @public Opt-in: call instead of unregister() in index.jsx to enable offline support. */
 export function register(config) {
   if (import.meta.env.MODE === 'production' && 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.

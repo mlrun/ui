@@ -23,17 +23,12 @@ import artifactApi from '../api/artifacts-api'
 import {
   ARTIFACT_TYPE,
   BE_PAGE,
-  DATASET_TYPE,
   DATASETS_PAGE,
-  DOCUMENT_TYPE,
   DOCUMENTS_PAGE,
   FE_PAGE,
   FILES_PAGE,
   LLM_PROMPTS_PAGE,
-  MODEL_TYPE,
   MODELS_PAGE,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST,
   ALL_VERSIONS_PATH,
   LLM_PROMPT_TYPE,
   LLM_PROMPT_TITLE
@@ -49,10 +44,7 @@ import {
   fetchDocument,
   fetchLLMPrompt
 } from '../reducers/artifactsReducer'
-import { getArtifactIdentifier } from './getUniqueIdentifier'
-import { parseArtifacts } from './parseArtifacts'
 import { parseIdentifier } from './parseUri'
-import { setFilters, setModalFiltersValues } from '../reducers/filtersReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { getFilteredSearchParams } from 'igz-controls/utils/filter.util'
 import { generateObjectNotInTheListMessage } from './generateMessage.util'
@@ -208,99 +200,6 @@ export const processActionAfterTagUniquesValidation = ({
 
       if (throwError) throw error
     })
-}
-
-export const isArtifactTagUnique = (projectName, category, artifact) => async value => {
-  const artifactCategory = {
-    MODELS_TAB: MODEL_TYPE,
-    ARTIFACTS_PAGE: ARTIFACT_TYPE,
-    DATASETS_PAGE: DATASET_TYPE,
-    DOCUMENTS_PAGE: DOCUMENT_TYPE
-  }
-
-  if (!value) return
-
-  const {
-    data: { artifacts }
-  } = await artifactApi.getArtifacts(
-    projectName,
-    {},
-    {
-      params: {
-        category: artifactCategory[category],
-        format: 'full',
-        name: artifact.db_key,
-        tag: value
-      }
-    }
-  )
-
-  if (
-    artifacts.length === 1 &&
-    getArtifactIdentifier(parseArtifacts(artifacts)[0], true) ===
-      getArtifactIdentifier(artifact, true)
-  ) {
-    return true
-  }
-
-  return artifacts.length === 0
-}
-
-/**
- * Sets artifact tags for filtering and dispatches a filter update action
- *
- * @param {Array.<Object>} artifacts - Array of artifact objects
- * @param {Function} setArtifacts - Setter function for filtered artifacts
- * @param {Function} setAllArtifacts - Setter function for all artifacts
- * @param {Object} filters - Object containing current filter settings
- * @param {Function} dispatch - Redux dispatch function
- * @param {String} page - Current page value
- */
-export const setArtifactTags = (
-  artifacts,
-  setArtifacts,
-  setAllArtifacts,
-  filters,
-  dispatch,
-  page
-) => {
-  if (artifacts) {
-    const tagOptions = generateArtifactTags(artifacts)
-    const tag = !filters.tag ? TAG_FILTER_LATEST : filters.tag
-
-    if (tag && tag !== TAG_FILTER_ALL_ITEMS) {
-      const newArtifacts = artifacts.filter(
-        artifact => artifact.tree === tag || artifact.tag === tag
-      )
-
-      setArtifacts(newArtifacts)
-    } else {
-      setArtifacts(artifacts)
-    }
-
-    setAllArtifacts(artifacts)
-
-    dispatch(setFilters({ tagOptions }))
-    dispatch(
-      setModalFiltersValues({
-        name: page,
-        value: { tag }
-      })
-    )
-  }
-}
-
-/**
- * Generates an array of unique artifact tags from an array of artifacts.
- *
- * @param {Array.<Object>} artifacts - An array of artifacts, where each artifact is an object with a `tag` property.
- * @returns {Array.<string>} An array of unique tag strings, with any falsy values (e.g. empty strings or nulls) filtered out.
- */
-const generateArtifactTags = artifacts => {
-  const uniqueTags = new Set()
-  artifacts.forEach(artifact => uniqueTags.add(artifact.tag))
-
-  return Array.from(uniqueTags).filter(Boolean)
 }
 
 const getArtifactLabelByTabName = (page = FILES_PAGE) => {

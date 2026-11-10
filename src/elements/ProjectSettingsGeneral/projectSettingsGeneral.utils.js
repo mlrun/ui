@@ -21,29 +21,6 @@ import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
 
 const REQUIRED_IGZ_VERSION_FOR_NODE_SELECTORS = '3.5.5'
 
-export const initialEditProjectData = {
-  artifact_path: {
-    value: null,
-    isEdit: false
-  },
-  default_image: {
-    value: null,
-    isEdit: false
-  },
-  description: {
-    value: null,
-    isEdit: false
-  },
-  goals: {
-    value: null,
-    isEdit: false
-  },
-  source: {
-    value: null,
-    isEdit: true
-  }
-}
-
 export const areNodeSelectorsSupported = isIgzVersionCompatible(
   REQUIRED_IGZ_VERSION_FOR_NODE_SELECTORS
 )

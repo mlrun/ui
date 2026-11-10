@@ -56,9 +56,6 @@ export const mlrunUnhealthyErrors = [
 ]
 export const projectDeletionKind = 'project.deletion'
 export const projectDeletionWrapperKind = 'project.deletion.wrapper'
-export const pageData = {
-  page: 'PROJECTS'
-}
 export const generateProjectActionsMenu = (
   projects,
   deletingProjects,

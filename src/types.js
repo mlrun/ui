@@ -73,12 +73,6 @@ export const RADIO_BUTTONS_ELEMENT = PropTypes.shape({
 
 export const RADIO_BUTTONS_ELEMENTS = PropTypes.arrayOf(RADIO_BUTTONS_ELEMENT)
 
-export const CONFIRM_DIALOG_BUTTON = PropTypes.shape({
-  handler: PropTypes.func.isRequired,
-  label: PropTypes.string.isRequired,
-  variant: PropTypes.string.isRequired
-})
-
 export const MAIN_SPLIT_BUTTON = PropTypes.shape({
   className: PropTypes.string,
   icon: PropTypes.element,
@@ -154,9 +148,6 @@ export const JOB_WIZARD_MODE = PropTypes.oneOf([
   PANEL_EDIT_MODE,
   PANEL_RERUN_MODE
 ])
-
-export const SLIDER_STYLE_1 = 'style1'
-export const SLIDER_STYLE_2 = 'style2'
 
 export const METRICS_SELECTOR_OPTIONS = PropTypes.arrayOf(
   PropTypes.shape({

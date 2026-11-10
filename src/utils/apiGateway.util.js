@@ -82,6 +82,7 @@ export const filterGatewaysByFunction = (gateways, projectName, functionName, fu
   }, [])
 }
 
+/** @public Not wired up yet (Application runtime screen). */
 export const computeGatewayUrls = (gateways, projectName, functionName, functionTag) => {
   const matched = filterGatewaysByFunction(gateways, projectName, functionName, functionTag)
   const directUrls = []

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "src/main.jsx",
+    "src/loadRemoteConfig.js",
+    "tests/features/**/*.js",
+    "tests/formatters/scenario-formatter.js",
+    "tests/mockServer/mock.js",
+    "tests/mockServer/backendSynchronizator.js",
+    "allurerc.mjs"
+  ],
+  // igz-controls is internal code, not a published library: its barrels (index files) re-export only
+  // what the app imports through them, `utils` and `reducers` have no barrels and are imported by path.
+  // The only exception is the generated shadcn components, which keep their full API
+  "ignoreIssues": {
+    "src/igz-controls/nextGenComponents/components/ui/**": ["exports", "types"]
+  },
+  "ignore": [
+    "src/igz-controls/scss/resets.scss",
+    "tests/mockServer/data/**",
+    "tests/mockServer/security.js"
+  ],
+  "ignoreFiles": ["src/nextGenComponents/shared/DetailsPopup/DetailsPopup.jsx"],
+  "ignoreBinaries": ["pbcopy"],
+  "ignoreDependencies": ["allure-cucumberjs"],
+  "ignoreExportsUsedInFile": true
+}
