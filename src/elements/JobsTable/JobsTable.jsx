@@ -58,7 +58,7 @@ import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { toggleYaml } from '../../reducers/appReducer'
 import { usePods } from '../../hooks/usePods.hook'
 import { getInitialFiltersByConfig } from '../../hooks/useFiltersFromSearchParams.hook'
-import { useTableScroll } from 'igz-controls/hooks/useTable.hook'
+import { useTableScroll } from 'igz-controls/hooks'
 
 import './jobsTable.scss'
 

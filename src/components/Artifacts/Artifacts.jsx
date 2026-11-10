@@ -55,7 +55,7 @@ import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchPara
 import { useMode } from '../../hooks/mode.hook'
 import { usePagination } from '../../hooks/usePagination.hook'
 import { useRefreshAfterDelete } from '../../hooks/useRefreshAfterDelete.hook'
-import { useTableScroll } from 'igz-controls/hooks/useTable.hook'
+import { useTableScroll } from 'igz-controls/hooks'
 
 const Artifacts = ({
   actionButtons = [],
