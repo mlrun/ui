@@ -164,13 +164,10 @@ const Search = ({
               if (item?.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())) {
                 options.push(
                   <SelectOption
+                    highlight={searchValue}
                     item={{
                       id: item,
-                      label: item,
-                      labelHtml: item.replace(
-                        new RegExp(searchValue.toLocaleLowerCase(), 'gi'),
-                        match => (match ? `<b>${match}</b>` : match)
-                      )
+                      label: item
                     }}
                     name={item}
                     key={item + index}

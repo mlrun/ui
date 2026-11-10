@@ -22,6 +22,7 @@ import { Field, useField } from 'react-final-form'
 
 import InputNumberButtons from './InputNumberButtons/InputNumberButtons'
 import OptionsMenu from '../../elements/OptionsMenu/OptionsMenu'
+import HighlightedText from '../../elements/HighlightedText/HighlightedText'
 import ValidationTemplate from '../../elements/ValidationTemplate/ValidationTemplate'
 import { TextTooltipTemplate, Tip, Tooltip } from '../../components'
 
@@ -382,12 +383,9 @@ function FormInput({
                         handleSuggestionClick(item)
                       }}
                       tabIndex={index}
-                      dangerouslySetInnerHTML={{
-                        __html: item.replace(new RegExp(typedValue, 'gi'), match =>
-                          match ? `<b>${match}</b>` : match
-                        )
-                      }}
-                    />
+                    >
+                      <HighlightedText text={item} highlight={typedValue} />
+                    </li>
                   )
                 })}
               </ul>

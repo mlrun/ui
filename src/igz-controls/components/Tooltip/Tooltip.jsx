@@ -21,6 +21,8 @@ import { CSSTransition } from 'react-transition-group'
 import classnames from 'classnames'
 import { debounce } from 'lodash-es'
 
+import HighlightedText from '../../elements/HighlightedText/HighlightedText'
+
 import { isEveryObjectValueEmpty } from '../../utils/common.util'
 
 import './tooltip.scss'
@@ -30,8 +32,8 @@ let Tooltip = ({
   className = '',
   tooltipBodyClassName = '',
   hidden = false,
+  highlight = '',
   id = '',
-  renderChildAsHtml = false,
   template,
   textShow = false
 }) => {
@@ -176,24 +178,18 @@ let Tooltip = ({
 
   return (
     <>
-      {renderChildAsHtml ? (
-        <div
-          data-testid={id ? `${id}-tooltip-wrapper` : 'tooltip-wrapper'}
-          ref={parentRef}
-          className={tooltipWrapperClassNames}
-          dangerouslySetInnerHTML={{ __html: children }}
-          onClick={handleMouseLeave}
-        />
-      ) : (
-        <div
-          data-testid={id ? `${id}-tooltip-wrapper` : 'tooltip-wrapper'}
-          ref={parentRef}
-          className={tooltipWrapperClassNames}
-          onClick={handleMouseLeave}
-        >
-          {children}
-        </div>
-      )}
+      <div
+        data-testid={id ? `${id}-tooltip-wrapper` : 'tooltip-wrapper'}
+        ref={parentRef}
+        className={tooltipWrapperClassNames}
+        onClick={handleMouseLeave}
+      >
+        {highlight && typeof children === 'string' ? (
+          <HighlightedText text={children} highlight={highlight} />
+        ) : (
+          children
+        )}
+      </div>
       {!hidden &&
         createPortal(
           <CSSTransition
@@ -226,8 +222,8 @@ Tooltip.propTypes = {
   className: PropTypes.string,
   tooltipBodyClassName: PropTypes.string,
   hidden: PropTypes.bool,
+  highlight: PropTypes.string,
   id: PropTypes.string,
-  renderChildAsHtml: PropTypes.bool,
   template: PropTypes.element.isRequired,
   textShow: PropTypes.bool
 }
