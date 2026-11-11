@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 import { locatorBuilder } from '../../common-tools/common-tools.js'
 
 /**
@@ -51,7 +50,7 @@ import { locatorBuilder } from '../../common-tools/common-tools.js'
  * }
  * @returns - js object which allow access to table describle page components
  */
-export default function(tableStructure) {
+export default function (tableStructure) {
   const table = tableStructure
   const sortersBuilder = locatorBuilder`${0} ${1} ${2}`
   const columnBuilder = locatorBuilder`${0} ${1} ${2} ${3}`
@@ -62,22 +61,13 @@ export default function(tableStructure) {
   const fieldSelector = {}
   const offset = table.body.offset ? parseInt(table.body.offset) : 0
 
-  const root = By.css(table.root)
+  const root = table.root
   for (const key in table.header.sorters) {
-    sorters[key] = By.css(
-      sortersBuilder(table.root, table.header.root, table.header.sorters[key])
-    )
+    sorters[key] = sortersBuilder(table.root, table.header.root, table.header.sorters[key])
   }
 
   const row = index =>
-    By.css(
-      rowBuilder(
-        table.root,
-        table.body.root,
-        table.body.row.root,
-        offset + parseInt(index)
-      )
-    )
+    rowBuilder(table.root, table.body.root, table.body.row.root, offset + parseInt(index))
 
   for (const key in table.body.row.fields) {
     // TO DO: initialization of nested page components should be improoved in feature
@@ -88,7 +78,7 @@ export default function(tableStructure) {
         table.body.row.root,
         table.body.row.fields[key].structure.root
       )
-      columnSelector[key] = By.css(subRoot)
+      columnSelector[key] = subRoot
 
       const subComponent = { ...table.body.row.fields[key].structure }
       fieldSelector[key] = index => {
@@ -102,23 +92,19 @@ export default function(tableStructure) {
         return table.body.row.fields[key].componentType(subComponent)
       }
     } else {
-      columnSelector[key] = By.css(
-        columnBuilder(
+      columnSelector[key] = columnBuilder(
+        table.root,
+        table.body.root,
+        table.body.row.root,
+        table.body.row.fields[key]
+      )
+      fieldSelector[key] = index =>
+        fieldBuilder(
           table.root,
           table.body.root,
           table.body.row.root,
+          offset + parseInt(index),
           table.body.row.fields[key]
-        )
-      )
-      fieldSelector[key] = index =>
-        By.css(
-          fieldBuilder(
-            table.root,
-            table.body.root,
-            table.body.row.root,
-            offset + parseInt(index),
-            table.body.row.fields[key]
-          )
         )
     }
   }
@@ -134,13 +120,11 @@ export default function(tableStructure) {
   }
 
   if (table.body.add_row_btn) {
-    resultTable.add_row_btn = By.css(`${table.root} ${table.body.add_row_btn}`)
+    resultTable.add_row_btn = `${table.root} ${table.body.add_row_btn}`
   }
 
   if (table.body.save_row_btn) {
-    resultTable.save_row_btn = By.css(
-      `${table.root} ${table.body.save_row_btn}`
-    )
+    resultTable.save_row_btn = `${table.root} ${table.body.save_row_btn}`
   }
 
   return resultTable

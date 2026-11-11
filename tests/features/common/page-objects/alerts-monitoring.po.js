@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 import commonTable from '../components/table.component.js'
 import dropdownComponent from '../components/dropdown.component.js'
 import labelComponent from '../components/label.component.js'
@@ -91,11 +90,7 @@ const commonCustomRangeFilter = dropdownComponent(
 )
 
 const commonSearchByNameFilterInput = inputGroup(
-  generateInputGroup(
-    '[data-testid="name-form-field-input"]',
-    true,
-    false
-  )
+  generateInputGroup('[data-testid="name-form-field-input"]', true, false)
 )
 
 // date picker start
@@ -137,8 +132,7 @@ const dateTimePickerCalendars = {
   fromDatePicker: {
     root: '.date-picker__calendars .date-picker__calendar:nth-of-type(1)',
     elements: {
-      month_prev_btn:
-        '.date-picker__header svg.date-picker__header-previous-month',
+      month_prev_btn: '.date-picker__header svg.date-picker__header-previous-month',
       month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
       month_label: '.date-picker__header div .date-picker__header-month',
       year_label: '.date-picker__header div .date-picker__header-year',
@@ -151,8 +145,7 @@ const dateTimePickerCalendars = {
   toDatePicker: {
     root: '.date-picker__calendars .date-picker__calendar:nth-of-type(2)',
     elements: {
-      month_prev_btn:
-        '.date-picker__header svg.date-picker__header-previous-month',
+      month_prev_btn: '.date-picker__header svg.date-picker__header-previous-month',
       month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
       month_label: '.date-picker__header div .date-picker__header-month',
       year_label: '.date-picker__header div .date-picker__header-year',
@@ -183,12 +176,12 @@ const timePickerDropdownTo = dropdownComponent(
 )
 // datepicker end
 
-const commonErrorMessage = By.css('[data-testid="no-data"] h3')
+const commonErrorMessage = '[data-testid="no-data"] h3'
 
 export default {
   alertsMonitoring: {
-    Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
-    Refresh_Button: By.css('[data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]'),
+    Table_FilterBy_Button: '[data-testid="filter-menu-btn-tooltip-wrapper"]',
+    Refresh_Button: '[data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]',
     Error_Message: commonErrorMessage,
     Search_By_Name_Filter_Input: commonSearchByNameFilterInput,
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,

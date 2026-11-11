@@ -129,6 +129,17 @@ export default [
   },
   ...storybook.configs['flat/recommended'],
   {
+    // the E2E tests, the mock server and the scripts (Node): the JSON modules are imported with import attributes
+    // (`with { type: 'json' }`), top-level await, and the Playwright fixtures call `use()`, which is not a React hook
+    files: ['tests/**/*.{js,mjs}', 'scripts/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 'latest'
+    },
+    rules: {
+      'react-hooks/rules-of-hooks': 'off'
+    }
+  },
+  {
     files: ['**/*.test.js', '**/*.test.jsx'],
     rules: {
       'import/named': 'off',

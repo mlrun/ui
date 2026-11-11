@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { When, Then } from '@cucumber/cucumber'
+import { When, Then } from '../support/world.js'
 import {
   createAPIArtifact,
   createAPIFeatureSet,
@@ -29,36 +29,27 @@ import {
   getProjects
 } from '../common/actions/api.actions.js'
 
-Then(
-  'set tear-down property {string} created with {string} value',
-  async function(type, name) {
-    this.createdItems.push({ name, type })
-  }
-)
+Then('set tear-down property {string} created with {string} value', async function (type, name) {
+  this.createdItems.push({ name, type })
+})
 
 Then(
   'set tear-down property {string} created in {string} project with {string} value',
-  async function(type, project, name) {
+  async function (type, project, name) {
     this.createdItems.push({ project, name, type })
   }
 )
 
-When('create {string} MLRun Project with code {int}', async function(
-  nameProject,
-  status
-) {
+When('create {string} MLRun Project with code {int}', async function (nameProject, status) {
   await createAPIMLProject(nameProject, status)
-  await this.driver.sleep(1000)
+  await this.page.waitForTimeout(1000)
 })
 
-Then('remove {string} MLRun Project with code {int}', async function(
-  nameProject,
-  status
-) {
-  await deleteAPIMLProject(this.driver, nameProject, status)
+Then('remove {string} MLRun Project with code {int}', async function (nameProject, status) {
+  await deleteAPIMLProject(this.page, nameProject, status)
 })
 
-Then('create up to limit projects with code {int}', async function(status) {
+Then('create up to limit projects with code {int}', async function (status) {
   const projects = await getProjects()
   const projectsLimit = 50
 
@@ -78,42 +69,42 @@ Then(
 
 Then(
   'create {string} Schedule in {string} project with code {int}',
-  async function(nameSchedule, nameProject, status) {
+  async function (nameSchedule, nameProject, status) {
     await createAPISchedule(nameProject, nameSchedule, status)
   }
 )
 
 Then(
   'create {string} Feature Set in {string} project with code {int}',
-  async function(nameSchedule, nameProject, status) {
+  async function (nameSchedule, nameProject, status) {
     await createAPIFeatureSet(nameProject, nameSchedule, status)
   }
 )
 
 Then(
   'create {string} Feature Vector in {string} project with code {int}',
-  async function(nameSchedule, nameProject, status) {
+  async function (nameSchedule, nameProject, status) {
     await createAPIFeatureVector(nameProject, nameSchedule, status)
   }
 )
 
 Then(
   'create {string} Model with {string} tag in {string} project with code {int}',
-  async function(nameArtifact, tag, nameProject, status) {
+  async function (nameArtifact, tag, nameProject, status) {
     await createAPIArtifact(nameProject, nameArtifact, tag, 'model', status)
   }
 )
 
 Then(
   'create {string} File with {string} tag in {string} project with code {int}',
-  async function(nameArtifact, tag, nameProject, status) {
+  async function (nameArtifact, tag, nameProject, status) {
     await createAPIArtifact(nameProject, nameArtifact, tag, 'file', status)
   }
 )
 
 Then(
   'create {string} Dataset with {string} tag in {string} project with code {int}',
-  async function(nameArtifact, tag, nameProject, status) {
+  async function (nameArtifact, tag, nameProject, status) {
     await createAPIArtifact(nameProject, nameArtifact, tag, 'dataset', status)
   }
 )

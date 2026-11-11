@@ -119,3 +119,41 @@ The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
 
 Note: `npm install` should be run first.
+
+## E2E regression
+
+The Gherkin scenarios in `tests/features/*.feature` run in Chromium by [Playwright Test](https://playwright.dev) via
+[playwright-bdd](https://vitalets.github.io/playwright-bdd): `bddgen` generates the Playwright specs into `.features-gen`,
+the steps are in `tests/features/step-definitions`. The scenarios run against the app (`npm start`) backed by the mock server
+(`npm run mock-server`), Playwright starts both unless they are already running.
+
+Install the browser once: `npx playwright install chromium`.
+
+| Command                           | Description                                                                                               |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `npm run test:regression`         | Scenarios with a progress bar, then the Allure report is generated and served, e.g. `-- --grep MLPr001`   |
+| `npm run test:regression:failed`  | The same for the scenarios failed in the previous run (without `E2E_SHARDS`)                              |
+| `npm run test:regression:preview` | The same against the production-like build (`build:regression`)                                           |
+| `npm run test:regression:debug`   | Playwright UI mode: pick scenarios, watch them step by step, time-travel                                  |
+| `npm run report:open`             | Open the Allure report: every attempt of a scenario with its error, screenshot and trace, history of runs |
+
+| Environment variable | Description                                                                     | Default |
+| -------------------- | ------------------------------------------------------------------------------- | ------- |
+| `E2E_HEADLESS`       | `true` - run the browser headless                                               | `false` |
+| `E2E_TAGS`           | Tag expression, e.g. `@smoke and not @inProgress`                               | all     |
+| `E2E_TZ`             | Timezone of the browser and of the steps                                        | `UTC`   |
+| `E2E_LOCALE`         | Locale of the browser (number and date formats)                                 | `en-US` |
+| `E2E_DELAY_FACTOR`   | Multiplier of the fixed delays in the steps, `0` - no delays                    | `1`     |
+| `E2E_RETRIES`        | Retries of a failed scenario, a scenario passed on a retry is reported as flaky | `1`     |
+| `E2E_OPEN_REPORT`    | `false` - don't open the report after the run (it isn't opened on CI)           | `true`  |
+| `E2E_SHARDS`         | Number of parallel shards, each one runs its own app and mock server            | `1`     |
+| `E2E_PREVIEW`        | `true` - serve `build/regression` instead of `npm start`                        | `false` |
+| `E2E_APP_PORT`       | Port of the app, e.g. to run next to another app on the default port            | `3000`  |
+| `E2E_MOCK_PORT`      | Port of the mock server, the app proxies the API requests to it                 | `30000` |
+
+The scenarios run one at a time: they share the state of the mock server, which is reset before each scenario.
+
+The scenarios tagged `@knownBug` or `@FAILED_TODO` are expected to fail: their failure doesn't fail the run, the console
+shows them as known bugs (◆) and the report as failed and known ("accepted", in the "Known app bugs" and "Not implemented
+yet" categories). Such a scenario that passes fails the run: remove the tag.
+A scenario that passes only on a retry is reported as flaky, on CI it fails the run.

@@ -18,368 +18,366 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { timeout } from '../../../config.js'
-import { until } from 'selenium-webdriver'
-import { expect } from 'chai'
-import { access, constants } from 'fs'
+import { expect } from '@playwright/test'
+import { access, constants } from 'fs/promises'
 import path from 'path'
-import os from 'os'
+import {
+  click,
+  getAttribute,
+  getRect,
+  getText,
+  isDisplayed,
+  normalizeWhitespace,
+  retryAssertion,
+  scrollIntoView,
+  sendKeys,
+  waitUntil
+} from '../../common-tools/element.js'
 
-export const generatePath = async (file, downloadsFolder) => {
-    const homeDirectory = os.homedir()
+// the downloads of the scenario are saved to its output directory (`downloads` fixture), not to the user's folder
+export const generatePath = async (file, downloads) => {
+  await Promise.all(downloads.pending)
 
-    // Define the path to the Downloads folder
-    const downloadsFolderPath = path.join(homeDirectory, downloadsFolder)
-
-    // Specify the full path to the file
-    return path.join(downloadsFolderPath, file) 
-  }
-
-export const determineFileAccess = async (finalPath, file) => {
-    access(finalPath, constants.F_OK, (err) => {
-      const result = err ? `${file} doesn't exist` : true
-      expect(result).equal(true)
-    })
-  }
-
-export const navigateToPage = async (driver, baseURL) => {
-    await driver.get(baseURL)
-    await driver.sleep(1000)
-  }
-
-export const navigateForward = async (driver) => {
-    await driver.navigate().forward()
-  }
-
-export const navigateBack = async (driver) => {
-    await driver.navigate().back()
-  }
-
-export const refreshPage = async (driver) => {
-    await driver.navigate().refresh()
-  }
-
-export const waitPageLoad = async (driver, loader) => {
-    await driver.wait(async function(driver) {
-      const found = await driver.findElements(loader)
-      return found.length === 0
-    })
-  }
-
-export const waiteUntilComponent = async (driver, component) => {
-    await driver.wait(until.elementLocated(component), timeout)
-  }
-
-export const clickOnComponent = async (driver, component) => {
-    const element = await driver.findElement(component)
-    await driver.sleep(250)
-    await element.click()
-  }
-
-export const clickNearComponent = async (driver, component) => {
-    const element = await driver.findElement(component)
-    // the element can be partly scrolled out of the viewport (e.g. inputs at the top of a side panel),
-    // then its corner is outside of the viewport and the move fails with MoveTargetOutOfBoundsError.
-    // Scroll only in that case: any scroll closes an open FormSelect / chip editor (capture-phase `scroll`
-    // listeners in dashboard-react-controls), and the click itself would then re-open the dropdown
-    const isCornerInViewport = await driver.executeScript(
-      'const rect = arguments[0].getBoundingClientRect(); ' +
-        'return rect.top >= 0 && rect.left >= 0 && rect.top + 1 < window.innerHeight && rect.left + 1 < window.innerWidth',
-      element
-    )
-    if (!isCornerInViewport) {
-      await driver.executeScript('arguments[0].scrollIntoView({ block: "center", inline: "nearest" })', element)
-      await driver.sleep(250)
-    }
-    const coordinates = await element.getRect()
-    const x = parseInt(coordinates.x) + 1
-    const y = parseInt(coordinates.y) + 1
-    // an open options list can be positioned over its own select header (when there is not enough space
-    // below it, e.g. on short headed windows), then the click would select the option under the pointer
-    const isCoveredByOptionsList = await driver.executeScript(
-      'const hit = document.elementFromPoint(arguments[1], arguments[2]); ' +
-        'return Boolean(hit && !arguments[0].contains(hit) && hit.closest(\'[data-testid="select-body"], .options-list__body\'))',
-      element,
-      x,
-      y
-    )
-    if (isCoveredByOptionsList) {
-      await driver.executeScript('arguments[0].click()', element)
-      return
-    }
-    const actions = driver.actions({ async: true })
-    await actions
-      .move({ x, y })
-      .click()
-      .perform()
-  }
-
-export const hoverComponent = async (driver, component, scroll = true) => {
-    const baseComponent = component.root ? component.root : component
-    const element = await driver.findElement(baseComponent)
-    if (scroll) {
-      // default `block: 'start'` puts the element under sticky table headers
-      await driver.executeScript("arguments[0].scrollIntoView({ block: 'center', inline: 'nearest' })", element)
-      await driver.sleep(250)
-    }
-    const coordinates = await element.getRect()
-    const actions = driver.actions({ async: true })
-    // `parseInt` truncates fractional coordinates, so the pointer could land 1px outside the element
-    await actions
-      .move({ x: Math.ceil(coordinates.x) + 1, y: Math.ceil(coordinates.y) + 1 })
-      .perform()
-    await driver.sleep(250)
-  }
-
-export const verifyClassDisabled = async (driver, component) => {
-    const inputField = await driver.findElement(component)
-    const attributes = await inputField.getAttribute('class')
-    const flag = attributes.includes('form-field__wrapper-disabled')
-    expect(flag).equal(true)
-  }
-
-export const verifyClassEnabled = async (driver, component) => {
-  const inputField = await driver.findElement(component)
-  const attributes = await inputField.getAttribute('class')
-  const flag = attributes.includes('form-field__wrapper-disabled')
-  expect(flag).equal(false)
+  return path.join(downloads.dir, file)
 }
 
-export const verifyElementDisabled = async (driver, component) => {
-    const element = await driver.findElement(component)
-    const flag = await element.getAttribute('disabled')
-    expect(flag).equal('true')
-  }
+export const determineFileAccess = async (finalPath, file) => {
+  const result = await access(finalPath, constants.F_OK).then(
+    () => true,
+    () => `${file} doesn't exist`
+  )
 
-export const verifyElementEnabled = async (driver, component) => {
-    const element = await driver.findElement(component)
-    const flag = await element.getAttribute('disabled')
-    expect(flag).equal(null)
-  }
+  expect(result).toBe(true)
+}
 
-export const verifyElementActive = async (driver, component) => {
-    const element = await driver.findElement(component)
-    const flag = await element.getAttribute('class')
-    expect(flag.includes('active')).equal(true)
-  }
+export const navigateToPage = async (page, baseURL) => {
+  await page.goto(baseURL)
+  await page.waitForTimeout(1000)
+}
 
-export const verifyElementNotActive = async (driver, component) => {
-    const element = await driver.findElement(component)
-    const flag = await element.getAttribute('class')
-    expect(flag.includes('false')).equal(true)
-  }
+export const navigateForward = async page => {
+  await page.goForward()
+}
 
-export const componentIsPresent = async (driver, component) => {
+export const navigateBack = async page => {
+  await page.goBack()
+}
+
+export const refreshPage = async page => {
+  await page.reload()
+}
+
+export const waitPageLoad = async (page, loader) => {
+  await page.locator(loader).first().waitFor({ state: 'detached', timeout })
+}
+
+export const waiteUntilComponent = async (page, component) => {
+  await page.locator(component).first().waitFor({ state: 'attached', timeout })
+}
+
+export const clickOnComponent = async (page, component) => {
+  const element = page.locator(component).first()
+  await page.waitForTimeout(250)
+  await click(element)
+}
+
+export const clickNearComponent = async (page, component) => {
+  const element = page.locator(component).first()
+  // the element can be partly scrolled out of the viewport (e.g. inputs at the top of a side panel),
+  // then its corner is outside of the viewport and the click misses it.
+  // Scroll only in that case: any scroll closes an open FormSelect / chip editor (capture-phase `scroll`
+  // listeners in dashboard-react-controls), and the click itself would then re-open the dropdown
+  const isCornerInViewport = await element.evaluate(node => {
+    const rect = node.getBoundingClientRect()
+
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.top + 1 < window.innerHeight &&
+      rect.left + 1 < window.innerWidth
+    )
+  })
+  if (!isCornerInViewport) {
+    await scrollIntoView(element)
+    await page.waitForTimeout(250)
+  }
+  const coordinates = await getRect(element)
+  const x = parseInt(coordinates.x) + 1
+  const y = parseInt(coordinates.y) + 1
+  // an open options list can be positioned over its own select header (when there is not enough space
+  // below it, e.g. on short headed windows), then the click would select the option under the pointer
+  const isCoveredByOptionsList = await element.evaluate(
+    (node, { x, y }) => {
+      const hit = document.elementFromPoint(x, y)
+
+      return Boolean(
+        hit &&
+        !node.contains(hit) &&
+        hit.closest('[data-testid="select-body"], .options-list__body')
+      )
+    },
+    { x, y }
+  )
+  if (isCoveredByOptionsList) {
+    await element.evaluate(node => node.click())
+    return
+  }
+  await page.mouse.click(x, y)
+}
+
+export const hoverComponent = async (page, component, scroll = true) => {
+  const baseComponent = component.root ? component.root : component
+  const element = page.locator(baseComponent).first()
+  if (scroll) {
+    // default `block: 'start'` puts the element under sticky table headers
+    await scrollIntoView(element)
+    await page.waitForTimeout(250)
+  }
+  const coordinates = await getRect(element)
+  // `parseInt` truncates fractional coordinates, so the pointer could land 1px outside the element
+  await page.mouse.move(Math.ceil(coordinates.x) + 1, Math.ceil(coordinates.y) + 1)
+  await page.waitForTimeout(250)
+}
+
+export const verifyClassDisabled = async (page, component) =>
+  retryAssertion(async () => {
+    const inputField = page.locator(component).first()
+    const attributes = await getAttribute(inputField, 'class')
+    const flag = attributes.includes('form-field__wrapper-disabled')
+    expect(flag).toBe(true)
+  })
+
+export const verifyClassEnabled = async (page, component) =>
+  retryAssertion(async () => {
+    const inputField = page.locator(component).first()
+    const attributes = await getAttribute(inputField, 'class')
+    const flag = attributes.includes('form-field__wrapper-disabled')
+    expect(flag).toBe(false)
+  })
+
+export const verifyElementDisabled = async (page, component) =>
+  retryAssertion(async () => {
+    const element = page.locator(component).first()
+    const flag = await getAttribute(element, 'disabled')
+    expect(flag).toBe('true')
+  })
+
+export const verifyElementEnabled = async (page, component) =>
+  retryAssertion(async () => {
+    const element = page.locator(component).first()
+    const flag = await getAttribute(element, 'disabled')
+    expect(flag).toBe(null)
+  })
+
+export const verifyElementActive = async (page, component) =>
+  retryAssertion(async () => {
+    const element = page.locator(component).first()
+    const flag = await getAttribute(element, 'class')
+    expect(flag.includes('active')).toBe(true)
+  })
+
+export const verifyElementNotActive = async (page, component) =>
+  retryAssertion(async () => {
+    const element = page.locator(component).first()
+    const flag = await getAttribute(element, 'class')
+    expect(flag.includes('false')).toBe(true)
+  })
+
+export const componentIsPresent = async (page, component) => {
+  const _component = component.root ?? component
+  await expect(page.locator(_component).first()).toBeAttached()
+}
+
+export const componentIsNotPresent = async (page, component) => {
+  const _component = component.root ?? component
+  await expect(page.locator(_component)).toHaveCount(0)
+}
+
+export const componentIsVisible = async (page, component) => {
+  const _component = component.root ?? component
+  const element = page.locator(_component).first()
+  // content may still be loading (tab switch, details fetch) - wait for it to be attached
+  await element.waitFor({ state: 'attached', timeout: 5000 })
+  // element may still be in its enter transition (notifications have opacity: 0 for 500ms)
+  const displayed = await waitUntil(() => isDisplayed(element), 3000).then(
+    () => true,
+    () => false
+  )
+  expect(displayed).toBe(true)
+}
+
+export const componentIsNotVisible = async (page, component) =>
+  retryAssertion(async () => {
     const _component = component.root ?? component
-    const elements = await driver.findElements(_component)
-    expect(elements.length).above(0)
-  }
+    const element = page.locator(_component).first()
+    await page.waitForTimeout(250)
+    const displayed = await isDisplayed(element)
+    expect(displayed).toBe(false)
+  })
 
-export const componentIsNotPresent = async (driver, component) => {
-    const _component = component.root ?? component
-    const elements = await driver.findElements(_component)
-    expect(elements.length).equal(0)
-  }
+export const typeIntoInputField = async (page, component, value) => {
+  const element = page.locator(component).first()
+  return sendKeys(element, value)
+}
 
-export const componentIsVisible = async (driver, component) => {
-    const _component = component.root ?? component
-    // content may still be loading (tab switch, details fetch) - wait for it to be attached
-    const element = await driver.wait(until.elementLocated(_component), 5000)
-    // element may still be in its enter transition (notifications have opacity: 0 for 500ms)
-    const displayed = await driver
-      .wait(until.elementIsVisible(element), 3000)
-      .then(() => true, () => false)
-    expect(displayed).equal(true)
-  }
+export const verifyTypedText = async (page, component, value) =>
+  retryAssertion(async () => {
+    const element = page.locator(component).first()
+    const txt = await getAttribute(element, 'value')
+    expect(txt).toBe(value)
+  })
 
-export const componentIsNotVisible = async (driver, component) => {
-    const _component = component.root ?? component
-    const element = await driver.findElement(_component)
-    await driver.sleep(250)
-    const displayed = await element.isDisplayed()
-    expect(displayed).equal(false)
-  }
-
-export const typeIntoInputField = async (driver, component, value) => {
-    const element = await driver.findElement(component)
-    return element.sendKeys(value) 
-  }
-
-export const verifyTypedText = async (driver, component, value) => {
-    const element = await driver.findElement(component)
-    const txt = await element.getAttribute('value')
-    expect(txt).equal(value)
-  }
-
-export const verifyText = async (driver, component, value) => {
-    const element = await driver.findElement(component)
-    const txt = await element.getText('value')
+export const verifyText = async (page, component, value) =>
+  retryAssertion(async () => {
+    const element = page.locator(component).first()
+    const txt = await getText(element)
     const arr = txt.split()
     if (arr.length > 1) {
-      expect(arr.some(item => item.includes(value))).equal(
-        true,
+      expect(
+        arr.some(item => item.includes(value)),
         `should be expected "${value}" but actual value [${arr}]`
-      )
+      ).toBe(true)
+    } else {
+      expect(txt, `should be expected "${value}" but actual value "${txt}"`).toBe(value)
     }
-    else {
-      expect(txt).equal(
-        value,
-        `should be expected "${value}" but actual value "${txt}"`
-      )
-    }  
-  }
+  })
 
-export const verifyTextRegExp = async (driver, component, regexp) => {
-    const element = await driver.findElement(component)
-    const txt = await element.getText('value')
-    expect(true).equal(regexp.test(txt))
-  }
+export const verifyTextRegExp = async (page, component, regexp) =>
+  retryAssertion(async () => {
+    const element = page.locator(component).first()
+    const txt = await getText(element)
+    expect(true).toBe(regexp.test(txt))
+  })
 
-export const isComponentContainsAttributeValue = async (
-    driver,
-    component,
-    attribute,
-    value
-  ) => {
-    const element = await driver.findElement(component)
-    return (await element.getAttribute(attribute)) === value
-  }
+export const isComponentContainsAttributeValue = async (page, component, attribute, value) => {
+  const element = page.locator(component).first()
+  return (await getAttribute(element, attribute)) === value
+}
 
-export const isComponentContainsClass = async (
-    driver,
-    component,
-    className
-  ) => {
-    const element = await driver.findElement(component)
-    const classes = await element.getAttribute('class')
-    expect(classes.includes(className)).equal(true)
-  }
+export const isComponentContainsClass = async (page, component, className) =>
+  retryAssertion(async () => {
+    const element = page.locator(component).first()
+    const classes = await getAttribute(element, 'class')
+    expect(classes.includes(className)).toBe(true)
+  })
 
-export const verifyComponentContainsAttributeValue = async (
-    driver,
-    component,
-    attribute,
-    value
-  ) => {
-    const element = await driver.findElement(component)
-    const attributes = await element.getAttribute(attribute)
-    expect(attributes.includes(value)).equal(
-      true,
+export const verifyComponentContainsAttributeValue = async (page, component, attribute, value) =>
+  retryAssertion(async () => {
+    const element = page.locator(component).first()
+    const attributes = await getAttribute(element, attribute)
+    expect(
+      attributes.includes(value),
       `Attribute "${value}" does not present in "${attribute}" values list "${attributes}"`
-    )
-  }
+    ).toBe(true)
+  })
 
-export const verifyComponentNotContainsAttributeValue = async (
-    driver,
-    component,
-    attribute,
-    value
-  ) => {
-    const element = await driver.findElement(component)
-    const attributes = await element.getAttribute(attribute)
-    expect(attributes.includes(value)).equal(
-      false,
+export const verifyComponentNotContainsAttributeValue = async (page, component, attribute, value) =>
+  retryAssertion(async () => {
+    const element = page.locator(component).first()
+    const attributes = await getAttribute(element, attribute)
+    expect(
+      attributes.includes(value),
       `Attribute "${value}" does present in "${attribute}" values list "${attributes}"`
-    )
-  }
+    ).toBe(false)
+  })
 
-export const collapseAccordionSection = async (driver, collapseComponent) => {
-    const element = await driver.findElement(collapseComponent)
-    const attributes = await element.getAttribute('class')
+export const collapseAccordionSection = async (page, collapseComponent) => {
+  const element = page.locator(collapseComponent).first()
+  const attributes = await getAttribute(element, 'class')
+  const flag = attributes.includes('open')
+  if (flag) {
+    await click(element)
+  }
+}
+
+export const expandAccordionSection = async (page, collapseComponent) => {
+  const element = page.locator(collapseComponent).first()
+  const attributes = await getAttribute(element, 'class')
+  const flag = attributes.includes('open')
+  if (!flag) {
+    await click(element)
+  }
+}
+
+export const isAccordionSectionExpanded = async (page, collapseComponent) =>
+  retryAssertion(async () => {
+    const element = page.locator(collapseComponent).first()
+    const attributes = await getAttribute(element, 'class')
     const flag = attributes.includes('open')
-    if (flag) {
-      await element.click()
-    }
-  }
+    expect(flag).toBe(true)
+  })
 
-export const expandAccordionSection = async (driver, collapseComponent) => {
-    const element = await driver.findElement(collapseComponent)
-    const attributes = await element.getAttribute('class')
+export const isAccordionSectionCollapsed = async (page, collapseComponent) =>
+  retryAssertion(async () => {
+    const element = page.locator(collapseComponent).first()
+    const attributes = await getAttribute(element, 'class')
     const flag = attributes.includes('open')
-    if (!flag) {
-      await element.click()
-    }
-  }
+    expect(flag).toBe(false)
+  })
 
-export const isAccordionSectionExpanded = async (driver, collapseComponent) => {
-    const element = await driver.findElement(collapseComponent)
-    const attributes = await element.getAttribute('class')
-    const flag = attributes.includes('open')
-    expect(flag).equal(true)
-  }
+export const getElementText = async (page, component) => {
+  const element = page.locator(component).first()
+  return await getText(element)
+}
 
-export const isAccordionSectionCollapsed = async (driver, collapseComponent) => {
-    const element = await driver.findElement(collapseComponent)
-    const attributes = await element.getAttribute('class')
-    const flag = attributes.includes('open')
-    expect(flag).equal(false)
-  }
+export const scrollToElement = async (page, component) => {
+  const element = page.locator(component).first()
+  await scrollIntoView(element, {})
+  await page.waitForTimeout(250)
+}
 
-export const getElementText = async (driver, component) => {
-    const element = await driver.findElement(component)
-    return await element.getText('value')
-  }
-
-export const scrollToElement = async (driver, component) => {
-    const element = await driver.findElement(component)
-    await driver.executeScript('arguments[0].scrollIntoView()', element)
-    await driver.sleep(250)
-  }
-
-// hover the center of the element: the top-left corner (with truncated fractional coordinates)
+// hover the center of the element's part in the viewport: the top-left corner (with truncated fractional coordinates)
 // can land on the element border or outside it, so `mouseenter` doesn't fire in headed mode.
-// Viewport coordinates are used instead of `origin: element`: it fails on zero-size wrappers
-export const hoverElementCenter = async (driver, element) => {
-    const { x, y, width, height } = await driver.executeScript(
-      'const { x, y, width, height } = arguments[0].getBoundingClientRect(); return { x, y, width, height }',
-      element
-    )
+// The mouse is moved by coordinates instead of `locator.hover()`: zero-size wrappers can't be hovered
+export const hoverElementCenter = async (page, element) => {
+  const { x, y, width, height } = await getRect(element)
+  const viewport = page.viewportSize()
+  const left = Math.max(x, 0)
+  const top = Math.max(y, 0)
+  const right = Math.min(x + width, viewport.width)
+  const bottom = Math.min(y + height, viewport.height)
 
-    await driver
-      .actions({ async: true })
-      .move({ x: Math.floor(x + width / 2), y: Math.floor(y + height / 2) })
-      .perform()
-  }
+  await page.mouse.move(Math.floor((left + right) / 2), Math.floor((top + bottom) / 2))
+}
 
 // several hints can be in the overlay at once while the previous one fades out,
 // so wait for the visible hint with the expected text instead of taking the first one found
-export const getHoverHintText = async (driver, hintComponent, expectedText) => {
-    let hintText = ''
+export const getHoverHintText = async (page, hintComponent, expectedText) => {
+  let hintText = ''
 
-    await driver
-      .wait(async () => {
-        const hints = await driver.findElements(hintComponent)
+  await waitUntil(async () => {
+    const hints = await page.locator(hintComponent).all()
 
-        for (const hint of hints) {
-          const text = await hint.getText().catch(() => '')
+    for (const hint of hints) {
+      const text = await getText(hint, { timeout: 500 }).catch(() => '')
 
-          if (text) hintText = text
-          if (text === expectedText) return true
-        }
+      if (text) hintText = text
+      if (normalizeWhitespace(text) === normalizeWhitespace(expectedText)) return true
+    }
 
-        return false
-      }, 3000)
-      .catch(() => {})
+    return false
+  }, 3000).catch(() => {})
 
-    return hintText
-  }
+  return hintText
+}
 
-export const checkComponentHintTextWithHover = async (driver, component, hintComponent, text) => {
-    const hintButton = await driver.findElement(component)
-    // elements below the fold can't be hovered (MoveTargetOutOfBoundsError)
-    await driver.executeScript('arguments[0].scrollIntoView({ block: "center", inline: "nearest" })', hintButton)
-    await driver.sleep(250)
-    await hoverElementCenter(driver, hintButton)
-    const hintText = await getHoverHintText(driver, hintComponent, text)
+export const checkComponentHintTextWithHover = async (page, component, hintComponent, text) => {
+  const hintButton = page.locator(component).first()
+  // elements below the fold can't be hovered
+  await scrollIntoView(hintButton)
+  await page.waitForTimeout(250)
+  await hoverElementCenter(page, hintButton)
+  const hintText = await getHoverHintText(page, hintComponent, text)
 
-    expect(hintText).equal(text)
-  }
+  expect(normalizeWhitespace(hintText)).toBe(normalizeWhitespace(text))
+}
 
-export const putToTestContextElementValue = async (driver, testContext, element, pageValue) => {
-    const pageElement = await driver.findElement(element)
-    testContext[pageValue] = await pageElement.getText()  
-  }
-  
-export const scrollToWebElement = async (driver, element) => {
-    await driver.executeScript('arguments[0].scrollIntoView()', element)
-    await driver.sleep(250)
-  }
+export const putToTestContextElementValue = async (page, testContext, element, pageValue) => {
+  const pageElement = page.locator(element).first()
+  testContext[pageValue] = await getText(pageElement)
+}
+
+export const scrollToWebElement = async (page, element) => {
+  await scrollIntoView(element, {})
+  await page.waitForTimeout(250)
+}

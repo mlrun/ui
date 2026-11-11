@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 import checkboxComponent from '../components/checkbox.component.js'
 import commonTable from '../components/table.component.js'
 import dropdownComponent from '../components/dropdown.component.js'
@@ -249,7 +248,7 @@ const scheduleMonitorTable = {
             '.chip-block span.chips_button',
             '.chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
             false,
-            false          
+            false
           )
         },
         lastRun: '.table-body__cell:nth-of-type(6) .data-ellipsis',
@@ -302,8 +301,7 @@ const dateTimePickerCalendars = {
   fromDatePicker: {
     root: '.date-picker__calendars .date-picker__calendar:nth-of-type(1)',
     elements: {
-      month_prev_btn:
-        '.date-picker__header svg.date-picker__header-previous-month',
+      month_prev_btn: '.date-picker__header svg.date-picker__header-previous-month',
       month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
       month_label: '.date-picker__header div .date-picker__header-month',
       year_label: '.date-picker__header div .date-picker__header-year',
@@ -316,8 +314,7 @@ const dateTimePickerCalendars = {
   toDatePicker: {
     root: '.date-picker__calendars .date-picker__calendar:nth-of-type(2)',
     elements: {
-      month_prev_btn:
-        '.date-picker__header svg.date-picker__header-previous-month',
+      month_prev_btn: '.date-picker__header svg.date-picker__header-previous-month',
       month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
       month_label: '.date-picker__header div .date-picker__header-month',
       year_label: '.date-picker__header div .date-picker__header-year',
@@ -350,8 +347,7 @@ const timePickerDropdownTo = dropdownComponent(
 
 // Create job
 const selectFunctionFromDropdown = {
-  root:
-    '.create-container .create-container__data  .accordion__container.functions-wrapper .data-header__select',
+  root: '.create-container .create-container__data  .accordion__container.functions-wrapper .data-header__select',
   dropdownElements: {
     open_button: '.select__header .select__value',
     options: '.select__body .select__item',
@@ -360,8 +356,7 @@ const selectFunctionFromDropdown = {
 }
 
 const selectedFunctionsTemplates = {
-  root:
-    '.create-container .create-container__data  .accordion__container.functions-wrapper .create-container__data-list',
+  root: '.create-container .create-container__data  .accordion__container.functions-wrapper .create-container__data-list',
   header: {},
   body: {
     row: {
@@ -388,8 +383,7 @@ const predefinedFunctionsTemplates = {
 }
 
 const functionsTemplates = {
-  root:
-    '.create-container .create-container__data > .accordion__container:nth-of-type(3) .accordion__body .data-wrapper .templates-container',
+  root: '.create-container .create-container__data > .accordion__container:nth-of-type(3) .accordion__body .data-wrapper .templates-container',
   header: {},
   body: {
     row: {
@@ -407,12 +401,9 @@ const functionsTemplates = {
 }
 
 // Common components
-const pageHeaderButton = By.css(
-  '.action-bar .action-bar__actions button'
-)
-const tableRefreshButton = By.css(
+const pageHeaderButton = '.action-bar .action-bar__actions button'
+const tableRefreshButton =
   '.content .content__action-bar-wrapper [data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]'
-)
 const commonStatusFilter = dropdownComponent(
   generateDropdownGroup(
     '.content__action-bar-wrapper .filters [data-testid="select"]',
@@ -441,15 +432,11 @@ const commonDatePickerFilter = dropdownComponent(
 )
 
 const commonTableNameFilter = inputGroup(
-  generateInputGroup(
-    '[data-testid="name-form-field-input"]',
-    true,
-    false
-  )
+  generateInputGroup('[data-testid="name-form-field-input"]', true, false)
 )
 
-const commonTableFilterByButton = By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]')
-const commonErrorMessage = By.css('[data-testid="no-data"] h3')
+const commonTableFilterByButton = '[data-testid="filter-menu-btn-tooltip-wrapper"]'
+const commonErrorMessage = '[data-testid="no-data"] h3'
 
 const commonCustomRangeFilter = dropdownComponent(
   generateDropdownGroup(
@@ -470,17 +457,17 @@ export default {
     Batch_Run_Button: pageHeaderButton,
     Error_Message: commonErrorMessage,
     Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
-    Arrow_Back: By.css('a.link-back__icon'),
-    Resource_Monitoring_Button: By.css('.action-bar .action-bar__actions button:nth-of-type(2)'),
+    Arrow_Back: 'a.link-back__icon',
+    Resource_Monitoring_Button: '.action-bar .action-bar__actions button:nth-of-type(2)',
     Auto_Refresh_Checkbox: checkboxComponent({
       root: '[data-testid="form-field-checkbox"]',
       elements: {
-        checkbox: 'input', 
+        checkbox: 'input',
         name: '',
         icon: ''
       }
     }),
-    Auto_Refresh_Checkbox_Element: By.css('[data-testid="form-field-checkbox"] input'),
+    Auto_Refresh_Checkbox_Element: '[data-testid="form-field-checkbox"] input',
     Table_Refresh_Button: tableRefreshButton,
     Status_Filter_Dropdown: commonStatusFilter,
     Table_Name_Filter_Input: commonTableNameFilter,
@@ -507,13 +494,13 @@ export default {
     Start_Time_Filter_Dropdown: commonStartTimeFilter,
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Workflows_Monitor_Table: commonTable(workflowsMonitorTable),
-    Toggle_View_Button: By.css('.workflow-container .actions .toggle-view-btn'),
-    Terminate_Button: By.css('.workflow-container .btn-danger'),
+    Toggle_View_Button: '.workflow-container .actions .toggle-view-btn',
+    Terminate_Button: '.workflow-container .btn-danger',
     Workflow_List_View_Table: commonTable(jobsMonitorTable),
     Workflow_Graph: graph(monitorWorkflowGraph),
     Table_Refresh_Button: tableRefreshButton,
-    Monitor_Workflows_Subtitle: By.css('.content__action-bar-wrapper .monitor-workflows__subtitle'),
-    Action_Menu: commonActionMenu,
+    Monitor_Workflows_Subtitle: '.content__action-bar-wrapper .monitor-workflows__subtitle',
+    Action_Menu: commonActionMenu
   },
   ScheduleMonitorTab: {
     Table_Name_Filter_Input: commonTableNameFilter,
@@ -533,12 +520,10 @@ export default {
     Schedule_Monitor_Table: commonTable(scheduleMonitorTable)
   },
   CreateJob: {
-    Back_Arrow_Button: By.css(
-      '.create-container .create-container__header .header-link a.header-link__icon'
-    ),
-    Create_Job_Header: By.css(
-      '.create-container .create-container__header .header-link h3.header-link__title'
-    ),
+    Back_Arrow_Button:
+      '.create-container .create-container__header .header-link a.header-link__icon',
+    Create_Job_Header:
+      '.create-container .create-container__header .header-link h3.header-link__title',
     Search_Input: inputWithAutocomplete({
       root: '.create-container .create-container__data .search-container',
       elements: {
@@ -548,24 +533,18 @@ export default {
       }
     }),
     Select_Functions_From_Accordion: {
-      Accordion_Header: By.css(
-        '.create-container .create-container__data .accordion__container.functions-wrapper h5.data-header__title span'
-      ),
-      Collapse_Button: By.css(
-        '.create-container .create-container__data .accordion__container.functions-wrapper .accordion__icon'
-      ),
-      Select_Function_From_Dropdown: dropdownComponent(
-        selectFunctionFromDropdown
-      ),
+      Accordion_Header:
+        '.create-container .create-container__data .accordion__container.functions-wrapper h5.data-header__title span',
+      Collapse_Button:
+        '.create-container .create-container__data .accordion__container.functions-wrapper .accordion__icon',
+      Select_Function_From_Dropdown: dropdownComponent(selectFunctionFromDropdown),
       Selected_Functions_Templates: commonTable(selectedFunctionsTemplates)
     },
     Function_Templates_Accordion: {
-      Accordion_Header: By.css(
-        '.create-container .create-container__data > .accordion__container:nth-of-type(3) h5.data-header__title'
-      ),
-      Collapse_Button: By.css(
-        '.create-container .create-container__data > .accordion__container:nth-of-type(3) > .accordion__icon'
-      ),
+      Accordion_Header:
+        '.create-container .create-container__data > .accordion__container:nth-of-type(3) h5.data-header__title',
+      Collapse_Button:
+        '.create-container .create-container__data > .accordion__container:nth-of-type(3) > .accordion__icon',
       Functions_Templates_Table: commonTable(functionsTemplates)
     }
   }

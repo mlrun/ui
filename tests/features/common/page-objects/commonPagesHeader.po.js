@@ -17,22 +17,19 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 
 import breadcrumbsComponent from '../components/breadcrumbs.component.js'
 import sidebarComponent from '../components/sidebar.component.js'
 
 export default {
-  loader: By.css('.loader-wrapper .loader-output'),
-  See_On_Github: By.css('header.header a[alt="MLRUN on Gihub"]'),
-  See_On_Slack: By.css('header.header a[alt="MLRUN on Slack"]'),
-  Common_Hint: By.css('#overlay_container .tip'),
-  Common_Tolltip: By.css('#overlay_container .tooltip'),
-  Common_Options: By.css(
-    '#overlay_container .options-menu .options-menu__body'
-  ),
-  MLRun_Logo: By.css('.header .header__logo'),
-  No_Data_Message: By.css('.no-data-block h3'),
+  loader: '.loader-wrapper .loader-output',
+  See_On_Github: 'header.header a[alt="MLRUN on Gihub"]',
+  See_On_Slack: 'header.header a[alt="MLRUN on Slack"]',
+  Common_Hint: '#overlay_container .tip',
+  Common_Tolltip: '#overlay_container .tooltip',
+  Common_Options: '#overlay_container .options-menu .options-menu__body',
+  MLRun_Logo: '.header .header__logo',
+  No_Data_Message: '.no-data-block h3',
   Breadcrumbs: breadcrumbsComponent,
   Sidebar: sidebarComponent,
   General_Info_Quick_Links: sidebarComponent.content,
@@ -64,25 +61,33 @@ export default {
   Alerts_Button: sidebarComponent.linkLabel('Alerts'),
   Alerts_Icon: sidebarComponent.linkIcon('Alerts'),
   General_Info_Quick_Panel: sidebarComponent.content,
-  Step_1_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(1)'),
-  Step_1_Button_text: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(1) .data-ellipsis span'),
-  Step_2_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(2)'),
-  Step_2_Button_text: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(2) .data-ellipsis span'),
-  Step_3_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(3)'),
-  Step_3_Button_text: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(3) .data-ellipsis span'),
-  Step_4_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(4)'),
-  Step_4_Button_text: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(4) .data-ellipsis span'),
-  Step_5_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(5)'),
-  Step_5_Button_text: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(5) .data-ellipsis span'),
-  Step_6_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(6)'),
-  Step_6_Button_text: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(6) .data-ellipsis span'),
-  Step_7_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(7)'),
-  Step_7_Button_text: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(7) .data-ellipsis span'),
-  Form_Header_Function_Selection: By.css('.job-wizard__function-selection .form-row .form-step-title'),
-  Form_Header_Run_Details: By.css('.job-wizard__run-details .form-row .form-step-title'),
-  Form_Header_Data_Inputs: By.css('.job-wizard__data-inputs .form-row .form-step-title'),
-  Form_Header_Parameters: By.css('.job-wizard__parameters .form-row .form-step-title'),
-  Form_Header_Resources: By.css('.job-wizard__resources .form-row .form-step-title'),
-  Form_Header_Advanced: By.css('.job-wizard__advanced .form-row .form-step-title'),
-  Form_Header_Hyperparameter_Strategy: By.css('.job-wizard__hyperparameter-strategy .form-row .form-step-title'),
+  Step_1_Button: '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(1)',
+  Step_1_Button_text:
+    '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(1) .data-ellipsis span',
+  Step_2_Button: '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(2)',
+  Step_2_Button_text:
+    '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(2) .data-ellipsis span',
+  Step_3_Button: '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(3)',
+  Step_3_Button_text:
+    '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(3) .data-ellipsis span',
+  Step_4_Button: '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(4)',
+  Step_4_Button_text:
+    '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(4) .data-ellipsis span',
+  Step_5_Button: '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(5)',
+  Step_5_Button_text:
+    '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(5) .data-ellipsis span',
+  Step_6_Button: '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(6)',
+  Step_6_Button_text:
+    '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(6) .data-ellipsis span',
+  Step_7_Button: '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(7)',
+  Step_7_Button_text:
+    '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(7) .data-ellipsis span',
+  Form_Header_Function_Selection: '.job-wizard__function-selection .form-row .form-step-title',
+  Form_Header_Run_Details: '.job-wizard__run-details .form-row .form-step-title',
+  Form_Header_Data_Inputs: '.job-wizard__data-inputs .form-row .form-step-title',
+  Form_Header_Parameters: '.job-wizard__parameters .form-row .form-step-title',
+  Form_Header_Resources: '.job-wizard__resources .form-row .form-step-title',
+  Form_Header_Advanced: '.job-wizard__advanced .form-row .form-step-title',
+  Form_Header_Hyperparameter_Strategy:
+    '.job-wizard__hyperparameter-strategy .form-row .form-step-title'
 }

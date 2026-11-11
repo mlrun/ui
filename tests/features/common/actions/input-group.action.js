@@ -17,232 +17,250 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { expect } from 'chai'
-import { Key } from 'selenium-webdriver'
+import { expect } from '@playwright/test'
 import { parseString } from '../../common-tools/common-tools.js'
 import { getHoverHintText, hoverElementCenter } from './common.action.js'
+import {
+  click,
+  getAttribute,
+  getText,
+  normalizeWhitespace,
+  retryAssertion,
+  sendKeys
+} from '../../common-tools/element.js'
 
-async function verifyFormInputInvalid(driver, inputGroup) {
-  const inputField = await driver.findElement(inputGroup.root)
-  await driver.sleep(500)
-  const flag = await inputField.getAttribute('class')
+async function verifyFormInputInvalid(page, inputGroup) {
+  const inputField = page.locator(inputGroup.root).first()
+  await page.waitForTimeout(500)
+  const flag = await getAttribute(inputField, 'class')
 
-  expect(flag.includes('form-field__wrapper-invalid')).equal(true)
+  expect(flag.includes('form-field__wrapper-invalid')).toBe(true)
 }
 
-async function verifyFormInputValid(driver, inputGroup) {
-  const inputField = await driver.findElement(inputGroup.root)
-  const flag = await inputField.getAttribute('class')
+async function verifyFormInputValid(page, inputGroup) {
+  const inputField = page.locator(inputGroup.root).first()
+  const flag = await getAttribute(inputField, 'class')
 
-  expect(flag.includes('form-field__wrapper-invalid')).equal(false)
+  expect(flag.includes('form-field__wrapper-invalid')).toBe(false)
 }
 
-async function getInputPlaceholder(driver, inputGroup) {
-  const inputField = await driver.findElement(inputGroup.inputField)
+async function getInputPlaceholder(page, inputGroup) {
+  const inputField = page.locator(inputGroup.inputField).first()
 
-  return inputField.getAttribute('placeholder')
+  return getAttribute(inputField, 'placeholder')
 }
 
+export const verifyInputInvalid = async (page, inputGroup) =>
+  retryAssertion(async () => {
+    const inputField = page.locator(inputGroup.inputField).first()
+    const flag = await getAttribute(inputField, 'class')
 
-export const verifyInputInvalid = async (driver, inputGroup) => {
-  const inputField = await driver.findElement(inputGroup.inputField)
-  const flag = await inputField.getAttribute('class')
+    await page.waitForTimeout(500)
+    expect(flag.includes('invalid')).toBe(true)
+  })
 
-  await driver.sleep(500)
-  expect(flag.includes('invalid')).equal(true)
-}
+export const verifyInputValid = async (page, inputGroup) =>
+  retryAssertion(async () => {
+    const inputField = page.locator(inputGroup.inputField).first()
+    const flag = await getAttribute(inputField, 'class')
 
-export const verifyInputValid = async (driver, inputGroup) => {
-  const inputField = await driver.findElement(inputGroup.inputField)
-  const flag = await inputField.getAttribute('class')
+    expect(flag.includes('invalid')).toBe(false)
+  })
 
-  expect(flag.includes('invalid')).equal(false)
-}
-
-export const clearManually = async (inputField) => {
-  const existValue = await inputField.getAttribute('value')
+export const clearManually = async inputField => {
+  const existValue = await getAttribute(inputField, 'value')
 
   for (let i = 0; i <= existValue.length; i++) {
-    await inputField.sendKeys(Key.BACK_SPACE, Key.DELETE)
+    await inputField.press('Backspace')
+    await inputField.press('Delete')
   }
 }
 
-export const getInputValue = async (driver, inputGroup) => {
-  const inputField = await driver.findElement(inputGroup.inputField)
+export const getInputValue = async (page, inputGroup) => {
+  const inputField = page.locator(inputGroup.inputField).first()
 
-  return inputField.getAttribute('value')
+  return getAttribute(inputField, 'value')
 }
 
-export const getInputValueWithoutInputgroup = async (driver, input) => {
-  const inputField = await driver.findElement(input)
+export const getInputValueWithoutInputgroup = async (page, input) => {
+  const inputField = page.locator(input).first()
 
-  return inputField.getAttribute('value')
+  return getAttribute(inputField, 'value')
 }
 
-export const typeValue = async (driver, inputGroup, value) => {
-  const inputField = await driver.findElement(inputGroup.inputField)
+export const typeValue = async (page, inputGroup, value) => {
+  const inputField = page.locator(inputGroup.inputField).first()
   await clearManually(inputField)
 
-  return inputField.sendKeys(value)
+  return sendKeys(inputField, value)
 }
 
-export const typeValueWithoutInputgroup = async (driver, input, value) => {
-  const inputField = await driver.findElement(input)
+export const typeValueWithoutInputgroup = async (page, input, value) => {
+  const inputField = page.locator(input).first()
   await clearManually(inputField)
-  
-  return inputField.sendKeys(value)
+
+  return sendKeys(inputField, value)
 }
 
-export const checkHintText = async (driver, inputGroup, hintComponent, text) => {
-    const hintButton = await driver.findElement(inputGroup.hintButton)
-    await hintButton.click()
-    await driver.sleep(250)
-    const hint = await driver.findElement(hintComponent)
-    const hintText = await hint.getText()
+export const checkHintText = async (page, inputGroup, hintComponent, text) => {
+  const hintButton = page.locator(inputGroup.hintButton).first()
+  await click(hintButton)
+  await page.waitForTimeout(250)
+  const hint = page.locator(hintComponent).first()
+  const hintText = await getText(hint)
 
-    expect(hintText).equal(text)
-  }
+  expect(normalizeWhitespace(hintText)).toBe(normalizeWhitespace(text))
+}
 
-export const checkHintTextWithHover = async (driver, inputGroup, hintComponent, text) => {
-    const hintButton = await driver.findElement(inputGroup.hintButton)
-    await hoverElementCenter(driver, hintButton)
-    const hintText = await getHoverHintText(driver, hintComponent, text)
+export const checkHintTextWithHover = async (page, inputGroup, hintComponent, text) => {
+  const hintButton = page.locator(inputGroup.hintButton).first()
+  await hoverElementCenter(page, hintButton)
+  const hintText = await getHoverHintText(page, hintComponent, text)
 
-    expect(hintText).equal(text)
-  }
+  expect(normalizeWhitespace(hintText)).toBe(normalizeWhitespace(text))
+}
 
 export const checkInputAccordingHintText = async (
-    driver,
-    attach,
-    inputGroup,
-    hintComponent,
-    isForm = false,
-    isLabel = false
-  ) => {
+  page,
+  attach,
+  inputGroup,
+  hintComponent,
+  isForm = false,
+  isLabel = false
+) => {
+  if (!isLabel) {
+    const hintButton = page.locator(inputGroup.hintButton).first()
+    await click(hintButton)
+    await page.waitForTimeout(500)
+  }
+  const hint = page.locator(hintComponent).first()
+  await page.waitForTimeout(500)
+  const hintText = await getText(hint)
+  await page.waitForTimeout(500)
+  const { validStrings, invalidStrings } = parseString(hintText)
+  const input = page.locator(inputGroup.inputField).first()
 
-    if (!isLabel){
-      const hintButton = await driver.findElement(inputGroup.hintButton)
-      await hintButton.click()
-      await driver.sleep(500)
-    }
-    const hint = await driver.findElement(hintComponent)
-    await driver.sleep(500)
-    const hintText = await hint.getText()
-    await driver.sleep(500)
-    const { validStrings, invalidStrings } = parseString(hintText)
-    const input = await driver.findElement(inputGroup.inputField)
+  await attach(JSON.stringify({ validStrings, invalidStrings }))
 
-    await attach(JSON.stringify({ validStrings, invalidStrings }))
+  for (let string of validStrings) {
+    await typeValue(page, inputGroup, string)
 
-    for (let string of validStrings) {
-      await typeValue(driver, inputGroup, string)
-
-      if (isForm) {
-        await verifyFormInputValid(driver, inputGroup)
-      } else {
-        await verifyInputValid(driver, inputGroup)
-      }
-
-      await clearManually(input)
+    if (isForm) {
+      await verifyFormInputValid(page, inputGroup)
+    } else {
+      await verifyInputValid(page, inputGroup)
     }
 
-    for (let string of invalidStrings) {
-      await typeValue(driver, inputGroup, string)
-      await driver.sleep(250)
+    await clearManually(input)
+  }
 
-      if (isForm) {
-        await verifyFormInputInvalid(driver, inputGroup)
-      } else {
-        await verifyInputInvalid(driver, inputGroup)
-      }
+  for (let string of invalidStrings) {
+    await typeValue(page, inputGroup, string)
+    await page.waitForTimeout(250)
 
-      await clearManually(input)
+    if (isForm) {
+      await verifyFormInputInvalid(page, inputGroup)
+    } else {
+      await verifyInputInvalid(page, inputGroup)
     }
+
+    await clearManually(input)
   }
+}
 
-export const checkWarningHintText = async (driver, inputGroup, hintComponent, text) => {
-    const hintButton = await driver.findElement(inputGroup.warningHint)
-    await driver.sleep(250)
-    await hintButton.click()
-    await driver.sleep(250)
-    const hint = await driver.findElement(hintComponent)
-    await driver.sleep(250)
-    const hintText = await hint.getText()
+export const checkWarningHintText = async (page, inputGroup, hintComponent, text) => {
+  const hintButton = page.locator(inputGroup.warningHint).first()
+  await page.waitForTimeout(250)
+  await click(hintButton)
+  await page.waitForTimeout(250)
+  const hint = page.locator(hintComponent).first()
+  await page.waitForTimeout(250)
+  const hintText = await getText(hint)
 
-    expect(hintText).equal(text)
-  }
+  expect(normalizeWhitespace(hintText)).toBe(normalizeWhitespace(text))
+}
 
-export const checkWarningHintTextWithHover = async (driver, inputGroup, hintComponent, text) => {
-    const hintButton = await driver.findElement(inputGroup.warningHint)
-    await driver.sleep(250)
-    await hoverElementCenter(driver, hintButton)
-    const hintText = await getHoverHintText(driver, hintComponent, text)
+export const checkWarningHintTextWithHover = async (page, inputGroup, hintComponent, text) => {
+  const hintButton = page.locator(inputGroup.warningHint).first()
+  await page.waitForTimeout(250)
+  await hoverElementCenter(page, hintButton)
+  const hintText = await getHoverHintText(page, hintComponent, text)
 
-    expect(hintText).equal(text)
-  }
+  expect(normalizeWhitespace(hintText)).toBe(normalizeWhitespace(text))
+}
 
-export const checkWarningText = async (driver, hintComponent, text) => {
-    const hint = await driver.findElement(hintComponent)
-    await driver.sleep(250)
-    const hintText = await hint.getText()
+export const checkWarningText = async (page, hintComponent, text) =>
+  retryAssertion(async () => {
+    const hint = page.locator(hintComponent).first()
+    await page.waitForTimeout(250)
+    const hintText = await getText(hint)
 
-    expect(hintText).equal(text)
-  }
+    expect(normalizeWhitespace(hintText)).toBe(normalizeWhitespace(text))
+  })
 
-export const verifyTypedValue = async (driver, inputGroup, value) => {
-    const txt = await getInputValue(driver, inputGroup)
+export const verifyTypedValue = async (page, inputGroup, value) =>
+  retryAssertion(async () => {
+    const txt = await getInputValue(page, inputGroup)
 
-    expect(txt).equal(value)
-  }
+    expect(txt).toBe(value)
+  })
 
-export const verifyPlaceholder = async (driver, inputGroup, value) => {
-    const txt = await getInputPlaceholder(driver, inputGroup)
+export const verifyPlaceholder = async (page, inputGroup, value) =>
+  retryAssertion(async () => {
+    const txt = await getInputPlaceholder(page, inputGroup)
 
-    expect(txt).equal(value)
-  }
+    expect(txt).toBe(value)
+  })
 
-export const verifyTypedValueWithoutInputgroup = async (driver, input, value) => {
-    const txt = await getInputValueWithoutInputgroup(driver, input)
+export const verifyTypedValueWithoutInputgroup = async (page, input, value) =>
+  retryAssertion(async () => {
+    const txt = await getInputValueWithoutInputgroup(page, input)
 
-    expect(txt).equal(value)
-  }
+    expect(txt).toBe(value)
+  })
 
-export const verifyInputDisabled = async (driver, inputGroup) => {
-    const inputField = await driver.findElement(inputGroup.inputField)
-    const flag = await inputField.getAttribute('disabled')
+export const verifyInputDisabled = async (page, inputGroup) =>
+  retryAssertion(async () => {
+    const inputField = page.locator(inputGroup.inputField).first()
+    const flag = await getAttribute(inputField, 'disabled')
 
-    expect(flag).equal('true')
-  }
+    expect(flag).toBe('true')
+  })
 
-export const verifyInputClassDisabled = async (driver, inputGroup) => {
-    const inputField = await driver.findElement(inputGroup.root)
-    const attributes = await inputField.getAttribute('class')
+export const verifyInputClassDisabled = async (page, inputGroup) =>
+  retryAssertion(async () => {
+    const inputField = page.locator(inputGroup.root).first()
+    const attributes = await getAttribute(inputField, 'class')
     const flag = attributes.includes('form-field__wrapper-disabled')
 
-    expect(flag).equal(true)
-  }
+    expect(flag).toBe(true)
+  })
 
-export const verifyInputClassEnabled = async (driver, inputGroup) => {
-    const inputField = await driver.findElement(inputGroup.inputField)
-    const attributes = await inputField.getAttribute('class')
+// the class is set on the wrapper (`inputGroup.root`), as in `verifyInputClassDisabled`: the <input> never has it
+export const verifyInputClassEnabled = async (page, inputGroup) =>
+  retryAssertion(async () => {
+    const inputField = page.locator(inputGroup.root).first()
+    const attributes = await getAttribute(inputField, 'class')
     const flag = attributes.includes('form-field__wrapper-disabled')
 
-    expect(flag).equal(false)
-  }
+    expect(flag).toBe(false)
+  })
 
-export const verifyInputEnabled = async (driver, inputGroup) => {
-    const inputField = await driver.findElement(inputGroup.inputField)
-    const flag = await inputField.getAttribute('disabled')
-    
-    expect(flag).equal(null)
-  }
+export const verifyInputEnabled = async (page, inputGroup) =>
+  retryAssertion(async () => {
+    const inputField = page.locator(inputGroup.inputField).first()
+    const flag = await getAttribute(inputField, 'disabled')
 
-export const verifyTextAreaCounter = async (driver, textAreaGroup) => {
-    const textAreaField = await driver.findElement(textAreaGroup.inputField)
-    const textAreaText = await textAreaField.getText()
-    const textAreaCounter = await driver.findElement(textAreaGroup.counter)
-    const counterValue = await textAreaCounter.getText()
-    const maxLength = await textAreaField.getAttribute('maxlength')
+    expect(flag).toBe(null)
+  })
 
-    expect(+counterValue.split(' ')[0]).equal(maxLength - textAreaText.length)
-  }
+export const verifyTextAreaCounter = async (page, textAreaGroup) =>
+  retryAssertion(async () => {
+    const textAreaField = page.locator(textAreaGroup.inputField).first()
+    const textAreaText = await getText(textAreaField)
+    const textAreaCounter = page.locator(textAreaGroup.counter).first()
+    const counterValue = await getText(textAreaCounter)
+    const maxLength = await getAttribute(textAreaField, 'maxlength')
+
+    expect(+counterValue.split(' ')[0]).toBe(maxLength - textAreaText.length)
+  })

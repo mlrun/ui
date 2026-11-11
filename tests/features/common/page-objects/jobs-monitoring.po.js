@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 import commonTable from '../components/table.component.js'
 import dropdownComponent from '../components/dropdown.component.js'
 import labelComponent from '../components/label.component.js'
@@ -84,8 +83,7 @@ const overallTable = {
         name: '[data-testid="name"] a .link',
         uid: '[data-testid="uid"] a .link',
         project_name: '[data-testid="projectName"] .data-ellipsis',
-        datetime:
-          '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(1)',
+        datetime: '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(1)',
         duration: '.table-body__cell:nth-of-type(3) .data-ellipsis',
         owner: '.table-body__cell:nth-of-type(4) .data-ellipsis',
         action_menu: {
@@ -138,8 +136,7 @@ const scheduledTabTable = {
         name: '.table-cell-name.link',
         uid: '[data-testid="uid"] a .link',
         project_name: '[data-testid="projectName"] .data-ellipsis',
-        datetime:
-          '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(1)',
+        datetime: '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(1)',
         duration: '.table-body__cell:nth-of-type(3) .data-ellipsis',
         owner: '.table-body__cell:nth-of-type(4) .data-ellipsis',
         action_menu: {
@@ -199,11 +196,7 @@ const commonCustomRangeFilter = dropdownComponent(
 )
 
 const commonSearchByNameFilterInput = inputGroup(
-  generateInputGroup(
-    '[data-testid="name-form-field-input"]',
-    true,
-    false
-  )
+  generateInputGroup('[data-testid="name-form-field-input"]', true, false)
 )
 
 // date picker start
@@ -245,8 +238,7 @@ const dateTimePickerCalendars = {
   fromDatePicker: {
     root: '.date-picker__calendars .date-picker__calendar:nth-of-type(1)',
     elements: {
-      month_prev_btn:
-        '.date-picker__header svg.date-picker__header-previous-month',
+      month_prev_btn: '.date-picker__header svg.date-picker__header-previous-month',
       month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
       month_label: '.date-picker__header div .date-picker__header-month',
       year_label: '.date-picker__header div .date-picker__header-year',
@@ -259,8 +251,7 @@ const dateTimePickerCalendars = {
   toDatePicker: {
     root: '.date-picker__calendars .date-picker__calendar:nth-of-type(2)',
     elements: {
-      month_prev_btn:
-        '.date-picker__header svg.date-picker__header-previous-month',
+      month_prev_btn: '.date-picker__header svg.date-picker__header-previous-month',
       month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
       month_label: '.date-picker__header div .date-picker__header-month',
       year_label: '.date-picker__header div .date-picker__header-year',
@@ -291,37 +282,37 @@ const timePickerDropdownTo = dropdownComponent(
 )
 // datepicker end
 
-const commonRefreshButton = By.css('[data-testid="refresh"]')
-const commonErrorMessage = By.css('[data-testid="no-data"] h3')
+const commonRefreshButton = '[data-testid="refresh"]'
+const commonErrorMessage = '[data-testid="no-data"] h3'
 const commonActionMenu = actionMenu(actionMenuStructure)
 
 export default {
   crossJobsMonitorTab: {
     Cross_Jobs_Tab_Selector: commonTable(tabSelector),
-    Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
+    Table_FilterBy_Button: '[data-testid="filter-menu-btn-tooltip-wrapper"]',
     Refresh_Button: commonRefreshButton,
     Error_Message: commonErrorMessage,
     Auto_Refresh_Checkbox: checkboxComponent({
       root: '[data-testid="form-field-checkbox"]',
       elements: {
-        checkbox: 'input', 
+        checkbox: 'input',
         name: '',
         icon: ''
       }
     }),
-    Auto_Refresh_Checkbox_Element: By.css('[data-testid="form-field-checkbox"] input'),
+    Auto_Refresh_Checkbox_Element: '[data-testid="form-field-checkbox"] input',
     Search_By_Name_Filter_Input: commonSearchByNameFilterInput,
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,
     Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Jobs_Table: commonTable(overallTable),
-    Arrow_Back: By.css('a.link-back__icon'),
+    Arrow_Back: 'a.link-back__icon',
     Time_Picker_Dropdown_From: timePickerDropdownFrom,
     Time_Picker_Dropdown_To: timePickerDropdownTo
   },
   crossWorkflowsMonitorTab: {
     Cross_Jobs_Tab_Selector: commonTable(tabSelector),
-    Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
+    Table_FilterBy_Button: '[data-testid="filter-menu-btn-tooltip-wrapper"]',
     Search_By_Name_Filter_Input: commonSearchByNameFilterInput,
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,
     Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
@@ -330,15 +321,15 @@ export default {
     Error_Message: commonErrorMessage,
     Workflows_Table: commonTable(overallTable),
     Action_Menu: commonActionMenu,
-    Toggle_View_Button: By.css('.workflow-container .actions .toggle-view-btn'),
-    Terminate_Button: By.css('.workflow-container .btn-danger'),
+    Toggle_View_Button: '.workflow-container .actions .toggle-view-btn',
+    Terminate_Button: '.workflow-container .btn-danger',
     Workflow_List_View_Table: commonTable(overallTable),
     Time_Picker_Dropdown_From: timePickerDropdownFrom,
     Time_Picker_Dropdown_To: timePickerDropdownTo
   },
   crossScheduledMonitorTab: {
     Cross_Jobs_Tab_Selector: commonTable(tabSelector),
-    Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
+    Table_FilterBy_Button: '[data-testid="filter-menu-btn-tooltip-wrapper"]',
     Search_By_Name_Filter_Input: commonSearchByNameFilterInput,
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,
     Custom_Range_Filter_Dropdown: commonCustomRangeFilter,

@@ -67,7 +67,7 @@ export const generateArtifacts = existingArtifacts => {
     },
     status: {}
   })
-  
+
   // unique model with unique prompt
   const getModelWithPrompt = i => {
     const modelKey = `model_${i}_${makeUID(6)}`
@@ -124,7 +124,6 @@ export const generateArtifacts = existingArtifacts => {
       { type: 'instruction-following', language: 'german' }
     ]
     const randomLabels = promptLabels[Math.floor(Math.random() * promptLabels.length)]
-
 
     const prompt = {
       kind: 'llm-prompt',
@@ -221,14 +220,14 @@ export const generateArtifacts = existingArtifacts => {
       project: 'auto-generated-data'
     }
 
-    const prompts =  new Array(Math.floor(Math.random() * 3) + 1).fill().map((_, promptIndex) => {
+    const prompts = new Array(Math.floor(Math.random() * 3) + 1).fill().map((_, promptIndex) => {
       let prompt
 
       if (existingPromptsPool.length && Math.random() < 0.5) {
         const oldPrompt = existingPromptsPool[crypto.randomInt(existingPromptsPool.length)]
         existingPromptsPool
           .filter(p => p.metadata.key === oldPrompt.metadata.key)
-          .forEach(p => p.metadata.tag = '')
+          .forEach(p => (p.metadata.tag = ''))
         prompt = {
           ...oldPrompt,
           metadata: {
@@ -459,11 +458,17 @@ export const generateRuns = existingRuns => {
   existingRuns.runs = [...existingRuns.runs, ...newRuns, ...newJobs]
 }
 
+// the scenarios search the generated alerts by these name prefixes (MLAlert003, MLAlert009): with random names only,
+// there was no matching alert in ~9% of the mock starts ((1 - 1/16^3)^10000)
+const SEARCHED_ALERT_NAME_PREFIXES = ['alertd04', 'alertda3']
+
 export const generateAlerts = existingAlerts => {
   const alerts = new Array(10000).fill().map((_, i) => {
+    const namePrefix = SEARCHED_ALERT_NAME_PREFIXES[i]
+
     return {
       id: 1000 + i,
-      name: 'alert' + makeUID(10),
+      name: namePrefix ? namePrefix + makeUID(15 - namePrefix.length) : 'alert' + makeUID(10),
       project: 'auto-generated-data',
       severity: 'low',
       activation_time: new Date(Date.now() - Math.random() * 600000 - 170000).toISOString(),

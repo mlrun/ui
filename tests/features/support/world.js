@@ -17,124 +17,91 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import seleniumWebdriver from 'selenium-webdriver'
-import chrome from 'selenium-webdriver/chrome.js'
-import firefox from 'selenium-webdriver/firefox.js'
-import { setWorldConstructor, setDefaultTimeout } from '@cucumber/cucumber'
-import { timeout, browser, headless, screen_size, delay_factor } from '../../config.js'
+import path from 'node:path'
+import { test as base, createBdd } from 'playwright-bdd'
+import { delay_factor } from '../../config.js'
 
-import 'chromedriver'
-import 'geckodriver'
+// `this` of the steps and hooks (Cucumber style)
+export class World {
+  constructor(page, testInfo, downloads) {
+    this.page = page
+    this.testInfo = testInfo
+    this.downloads = downloads
+    this.createdItems = []
+    this.testContext = {}
+    // the steps pass it to the actions unbound
+    this.attach = this.attach.bind(this)
+  }
 
-// expected dates in the feature files are in UTC, the browser spawned by the driver takes the timezone from TZ
-export const E2E_TIMEZONE = process.env.E2E_TZ || 'UTC'
-process.env.TZ = E2E_TIMEZONE
-export const E2E_LOCALE = process.env.E2E_LOCALE || 'en-US'
+  // same signature as Cucumber `attach`: a media type or `{ mediaType, fileName }`
+  async attach(data, options = 'text/plain') {
+    const { mediaType = 'text/plain', fileName = 'attachment' } =
+      typeof options === 'string' ? { mediaType: options } : options
 
-class World {
-  constructor({ attach, log, parameters }) {
-    this.attach = attach
-    this.log = log
-    this.parameters = parameters
+    await this.testInfo.attach(fileName, { body: data, contentType: mediaType })
   }
 }
 
-// only one browser may be open at a time: the previous one is always quit before a new one is built
-let activeDriver = null
+// including the expected failures (@knownBug)
+const isFailed = testInfo => !['passed', 'skipped'].includes(testInfo.status)
 
-export const quitActiveDriver = async () => {
-  const driver = activeDriver
+export const test = base.extend({
+  page: async ({ page }, use, testInfo) => {
+    const consoleLogs = []
 
-  activeDriver = null
+    page.on('console', message =>
+      consoleLogs.push(`${message.type().toUpperCase()} ${message.text()}`)
+    )
+    page.on('pageerror', error => consoleLogs.push(`PAGEERROR ${error.message}`))
 
-  if (driver) {
-    try {
-      await driver.quit()
-    } catch {
-      // the session is already gone, nothing to close
+    if (delay_factor !== 1) {
+      const waitForTimeout = page.waitForTimeout.bind(page)
+
+      page.waitForTimeout = ms => waitForTimeout(Math.round(ms * delay_factor))
     }
+
+    await use(page)
+
+    // failure evidence (the screenshot and the trace are attached by Playwright), for passed scenarios - only errors
+    const failed = isFailed(testInfo)
+    const logs = failed ? consoleLogs : consoleLogs.filter(log => /^(ERROR|PAGEERROR) /.test(log))
+
+    if (failed) {
+      await testInfo.attach('Page URL.txt', { body: page.url(), contentType: 'text/plain' })
+    }
+
+    // `screenshot: 'only-on-failure'` skips the expected failures
+    if (failed && testInfo.expectedStatus === 'failed' && !page.isClosed()) {
+      await testInfo.attach('screenshot', {
+        body: await page.screenshot(),
+        contentType: 'image/png'
+      })
+    }
+
+    if (logs.length > 0) {
+      await testInfo.attach('Browser console.log', {
+        body: logs.join('\n'),
+        contentType: 'text/plain'
+      })
+    }
+  },
+  // the saved files of the scenario: `{ dir, pending }`, `pending` - saving in progress
+  downloads: async ({ page }, use, testInfo) => {
+    const downloads = { dir: path.join(testInfo.outputDir, 'downloads'), pending: [] }
+
+    page.on('download', download => {
+      downloads.pending.push(
+        download.saveAs(path.join(downloads.dir, download.suggestedFilename()))
+      )
+    })
+
+    await use(downloads)
+  },
+  world: async ({ page, downloads }, use, testInfo) => {
+    await use(new World(page, testInfo, downloads))
   }
-}
+})
 
-export const buildDriver = () => {
-  if (activeDriver) {
-    throw new Error('A browser is already open, call quitActiveDriver() first')
-  }
-
-  let browseConfigs
-
-  //browseConfigs = new chrome.Options().windowSize(screen_size) - can be used to define a specific screen size
-  if (browser === 'chrome') {
-    if (headless) {
-      browseConfigs = new chrome.Options()
-        .addArguments('headless=new')
-        .addArguments('no-sandbox')
-        .addArguments('disable-gpu')
-        .windowSize(screen_size)
-    } else
-      browseConfigs = new chrome.Options()
-        // same viewport as headless, the scenarios depend on the layout
-        .windowSize(screen_size)
-        .excludeSwitches('disable-popup-blocking', 'enable-automation')
-
-    browseConfigs
-      .addArguments(`lang=${E2E_LOCALE}`)
-      .setUserPreferences({ 'intl.accept_languages': E2E_LOCALE })
-  }
-  if (browser === 'firefox') {
-    if (headless) {
-      browseConfigs = new firefox.Options().headless().windowSize(screen_size)
-    } else browseConfigs = new firefox.Options().windowSize(screen_size)
-  }
-
-  const driver = new seleniumWebdriver.Builder()
-    .forBrowser(browser)
-    .setChromeOptions(browseConfigs)
-    .setFirefoxOptions(browseConfigs)
-    .build()
-
-  // a failed session start is reported by the first command (`Before` hook), don't crash the process on it
-  driver.catch(() => {})
-  activeDriver = driver
-
-  if (delay_factor !== 1) {
-    const sleep = driver.sleep.bind(driver)
-
-    driver.sleep = ms => sleep(Math.round(ms * delay_factor))
-  }
-
-  return driver
-}
-
-// starts the browser and waits for its session. chromedriver can exit right after the start
-// ("Server terminated early with status 1"), e.g. when the free port picked by selenium was taken in between,
-// then it's retried once with a new driver service (a new port).
-// The driver is returned wrapped: it's a thenable, `await` would unwrap it
-export const startDriver = async () => {
-  let driver = buildDriver()
-
-  try {
-    await driver.getSession()
-  } catch (error) {
-    if (!/Server terminated early/.test(error?.message ?? '')) throw error
-
-    await quitActiveDriver()
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    driver = buildDriver()
-    await driver.getSession()
-  }
-
-  return { driver }
-}
-
-const quitOnSignal = signal => {
-  quitActiveDriver().finally(() => process.exit(signal === 'SIGINT' ? 130 : 143))
-}
-
-process.once('SIGINT', quitOnSignal)
-process.once('SIGTERM', quitOnSignal)
-
-class CustomWorld extends World {}
-
-setDefaultTimeout(timeout)
-setWorldConstructor(CustomWorld)
+export const { Given, When, Then, Before, After, BeforeAll, AfterAll } = createBdd(test, {
+  worldFixture: 'world'
+})

@@ -637,7 +637,9 @@ Feature: Feature Store Page
         Then verify "URL_Combobox" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display hover warning "Input_Hint"."MLRun_Store_Path_Hint"
         When type value "artifacts/stocks" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then searchable fragment "stocks" should be in every suggested option into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        When type value "artifacts/churn-project-admin/raw-data" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
+        # not the whole "raw-data" name: once the artifacts of the project are fetched, a typed whole name switches the suggestions to its tags,
+        # so the suggestions depended on whether the fetch ended before the last typed character
+        When type value "artifacts/churn-project-admin/raw-dat" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then searchable fragment "raw-data" should be in every suggested option into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         Then type value "  " to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -1351,7 +1353,7 @@ Feature: Feature Store Page
         
     @MLFS
     @passive
-    @smoke @rerun @knownBug
+    @smoke @rerun
     Scenario: MLFS039 - Check all mandatory components on Create feature vector popup
         Given open url
         And wait load page

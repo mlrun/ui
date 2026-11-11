@@ -427,8 +427,8 @@ Feature: LLM prompts Page
     Then verify "Cross_Close_Button" element visibility on "LLM_Prompts_Info_Pane" wizard
     Then verify "Generation_Configuration_Counter" element visibility on "LLM_Prompts_Info_Pane" wizard
     Then "Generation_Configuration_Counter" element on "LLM_Prompts_Info_Pane" should contains "1 modifications made to the default configuration:" value
-    Then value in "key" column with "text" in "Generation_Configuration_Tab_Table" on "LLM_Prompts_Info_Pane" wizard should contains "temperature"
-    Then value in "value" column with "text" in "Generation_Configuration_Tab_Table" on "LLM_Prompts_Info_Pane" wizard should contains "0.5"
+    Then at least one value in "key" column with "text" in "Generation_Configuration_Tab_Table" on "LLM_Prompts_Info_Pane" wizard should contains "temperature"
+    Then at least one value in "value" column with "text" in "Generation_Configuration_Tab_Table" on "LLM_Prompts_Info_Pane" wizard should contains "0.5"
 
   @MLLP
   @smoke

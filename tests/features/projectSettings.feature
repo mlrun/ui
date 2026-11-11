@@ -97,7 +97,10 @@ Feature: Project Settings page
             | c         | d           |
             | e         | f           |
         Then type value "test" to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
-        And wait load page
+        # the fields are saved on blur, and the logo reloads the page, which cancels a save that is still in progress
+        When click on "Project_Title" element on "Project_Settings_General_Tab" wizard
+        Then verify if "Notification_Popup" popup dialog appears
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Data was edited successfully" value
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
         Then type value "cat-vs-dog-classification" to "Search_Projects_Input" field on "Projects" wizard
@@ -121,17 +124,30 @@ Feature: Project Settings page
             | project_label_key | project_label_value |
             | a                 | b                   |
         Then type value "test" to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
-        And wait load page
+        # the fields are saved on blur, and the logo reloads the page, which cancels a save that is still in progress
+        When click on "Project_Title" element on "Project_Settings_General_Tab" wizard
+        Then verify if "Notification_Popup" popup dialog appears
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Data was edited successfully" value
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
-        Then type value "cat-vs-dog-classification" to "Search_Projects_Input" field on "Projects" wizard
-        Then value in "labels_key" column with "attribute_list" in "Projects_Table" on "Projects" wizard should contains "a12345,project_label_key,a"
-        Then value in "labels_value" column with "attribute_list" in "Projects_Table" on "Projects" wizard should contains "b54321,project_label_value,b"
+        # not the whole name: a search value longer than the input is scrolled, and the scroll on the blur (the click on "+ 2")
+        # closes the hidden labels right after they are opened (app bug, the same scroll handling as in the chips editing)
+        Then type value "cat-vs-dog" to "Search_Projects_Input" field on "Projects" wizard
+        # the card shows the first label, the other ones are hidden under "+ 2" (all the labels are verified in the settings below)
+        Then value in "labels_key" column with "attribute_list" in "Projects_Table" on "Projects" wizard should contains "a12345"
+        Then value in "labels_value" column with "attribute_list" in "Projects_Table" on "Projects" wizard should contains "b54321"
+        Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "project_label_key=project_label_value" in "Overlay"
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then select "Project settings" item in sidebar menu
         And wait load page
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        Then verify values in "Labels_Table" table on "Project_Settings_General_Tab" wizard with attribute
+            | key_verify        | value_verify        |
+            | a12345            | b54321              |
+            | project_label_key | project_label_value |
+            | a                 | b                   |
+        Then verify that 3 row elements are displayed in "Labels_Table" on "Project_Settings_General_Tab" wizard
         When click on "remove_btn" in "Labels_Table" table on "Project_Settings_General_Tab" wizard with attribute
             | key_verify        |
             | a                 |
@@ -327,8 +343,6 @@ Feature: Project Settings page
 
     @MLPS
     @enabledProjectMembership
-    @FAILED_TODO
-    #TODO: owner igz_nobody, iguazioUsers, change getIguazioProjects implementation
     @rerun
     Scenario: MLPS004 - Verify behaviour of Invite New Members on Members tab
         Given open url
@@ -353,18 +367,21 @@ Feature: Project Settings page
         Then type value "adm" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
         Then searchable case "insensitive" fragment "adm" should be in every suggested option into "New_Member_Name_Input" on "Project_Members_Popup" wizard
         Then select "admin" option in "New_Member_Name_Dropdown" dropdown on "Project_Members_Popup" wizard
-        Then verify values in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard
+        # the chips are disabled inputs: the names are their values
+        Then verify values in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard with attribute
             |  label    |
             | all_users |
             | iguazio   |
             | admin     |
-        When click on "remove_btn" in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard
+        Then verify that 3 row elements are displayed in "Invite_New_Members_Labels_Table" on "Project_Members_Popup" wizard
+        When click on "remove_btn" in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard with attribute
             |  label    |
             | iguazio   |
             | all_users |
-        Then verify values in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard
+        Then verify values in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard with attribute
             |  label    |
             | admin     |
+        Then verify that 1 row elements are displayed in "Invite_New_Members_Labels_Table" on "Project_Members_Popup" wizard
         Then select "Admin" option in "New_Member_Role_Dropdown" dropdown on "Project_Members_Popup" wizard
         Then click on "New_Member_Add_Button" element on "Project_Members_Popup" wizard
         Then verify "Discard_Button" element on "Project_Members_Popup" wizard is enabled
@@ -374,13 +391,16 @@ Feature: Project Settings page
         Then select "all_users" option in "New_Member_Name_Dropdown" dropdown on "Project_Members_Popup" wizard
         Then select "Viewer" option in "New_Member_Role_Dropdown" dropdown on "Project_Members_Popup" wizard
         Then click on "New_Member_Add_Button" element on "Project_Members_Popup" wizard
+        # the owner of the project is the first member
         Then verify values in "Members_Table" table on "Project_Members_Popup" wizard
-            | name      | role   |
-            | admin     | Admin  |
-            | all_users | Viewer |
+            | name       | role   |
+            | igz_nobody | Owner  |
+            | admin      | Admin  |
+            | all_users  | Viewer |
+        Then verify that 3 row elements are displayed in "Members_Table" on "Project_Members_Popup" wizard
         Then click on "Apply_Button" element on "Project_Members_Popup" wizard
         And wait load page
-        Then "Members_Summary" element on "Project_Members_Popup" should contains "2members have access to this project" value
+        Then "Members_Summary" element on "Project_Members_Popup" should contains "One owner and 2 members have access to this project" value
         When click on "delete_btn" in "Members_Table" table on "Project_Members_Popup" wizard with offset "false"
             | name  |
             | admin |
@@ -389,11 +409,13 @@ Feature: Project Settings page
         Then "Remove_Member_Button" element on "Remove_Member_Popup" should contains "Remove member" value
         Then click on "Remove_Member_Button" element on "Remove_Member_Popup" wizard
         Then verify values in "Members_Table" table on "Project_Members_Popup" wizard
-            | name      | role   |
-            | all_users | Viewer |
+            | name       | role   |
+            | igz_nobody | Owner  |
+            | all_users  | Viewer |
+        Then verify that 2 row elements are displayed in "Members_Table" on "Project_Members_Popup" wizard
         Then click on "Apply_Button" element on "Project_Members_Popup" wizard
         And wait load page
-        Then "Members_Summary" element on "Project_Members_Popup" should contains "1member has access to this project" value
+        Then "Members_Summary" element on "Project_Members_Popup" should contains "One owner and one member have access to this project" value
         When click on "delete_btn" in "Members_Table" table on "Project_Members_Popup" wizard with offset "false"
             | name      |
             | all_users |
@@ -405,7 +427,6 @@ Feature: Project Settings page
         Then click on "Discard_Button" element on "Discard_Changes_Popup" wizard
         Then verify "Discard_Button" element on "Project_Members_Popup" wizard is disabled
         Then verify "Apply_Button" element on "Project_Members_Popup" wizard is disabled
-        And remove "automation-test" MLRun Project with code 204
 
     @MLPS
     @smoke @rerun

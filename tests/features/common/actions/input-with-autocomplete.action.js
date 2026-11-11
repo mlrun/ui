@@ -17,41 +17,43 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { expect } from 'chai'
-import { Key } from 'selenium-webdriver'
+import { expect } from '@playwright/test'
+import { getAttribute, getTexts, retryAssertion, sendKeys } from '../../common-tools/element.js'
 
-export const clearManually = async (inputField) => {
-  const existValue = await inputField.getAttribute('value')
+export const clearManually = async inputField => {
+  const existValue = await getAttribute(inputField, 'value')
   for (let i = 0; i <= existValue.length; i++) {
-    await inputField.sendKeys(Key.BACK_SPACE, Key.DELETE)
+    await inputField.press('Backspace')
+    await inputField.press('Delete')
   }
 }
 
-export const getOptionValues = async (driver, options) => {
-  return await driver.findElements(options).then(function(elements) {
-    return Promise.all(elements.map(element => element.getText()))
-  })
+export const getOptionValues = async (page, options) => {
+  return getTexts(page.locator(options))
 }
 
-export const typeSearchableValue = async (driver, inputGroup, value) => {
-    const inputField = await driver.findElement(inputGroup.inputField)
-    await clearManually(inputField)
-    return await inputField.sendKeys(value)
-  }
+export const typeSearchableValue = async (page, inputGroup, value) => {
+  const inputField = page.locator(inputGroup.inputField).first()
+  await clearManually(inputField)
+  return await sendKeys(inputField, value)
+}
 
-export const verifyTypedValue = async (driver, inputGroup, value) => {
-    const inputField = await driver.findElement(inputGroup.inputField)
-    const txt = await inputField.getAttribute('value')
-    expect(txt).equal(value)
-  }
+export const verifyTypedValue = async (page, inputGroup, value) => {
+  const inputField = page.locator(inputGroup.inputField).first()
+  const txt = await getAttribute(inputField, 'value')
+  expect(txt).toBe(value)
+}
 
+// retried: the suggestions are rendered after the typed value is handled and they can be fetched (e.g. the artifacts
+// of the typed project)
 export const isContainsSubstringInSuggestedOptions = async (
-    driver,
-    inputGroup,
-    value,
-    caseSensitive = false
-  ) => {
-    let arr = await getOptionValues(driver, inputGroup.options)
+  page,
+  inputGroup,
+  value,
+  caseSensitive = false
+) =>
+  retryAssertion(async () => {
+    let arr = await getOptionValues(page, inputGroup.options)
     let tmpValue = value
 
     if (caseSensitive) {
@@ -59,9 +61,9 @@ export const isContainsSubstringInSuggestedOptions = async (
       tmpValue = value.toLowerCase()
     }
 
-    expect(arr.length > 0).equal(true, `Elements not found: [${arr}]`)
-    expect(arr.some(item => item.includes(tmpValue))).equal(
-      true,
+    expect(arr.length > 0, `Elements not found: [${arr}]`).toBe(true)
+    expect(
+      arr.some(item => item.includes(tmpValue)),
       `Searcheble string "${tmpValue}" do not find in all values of: [${arr}]`
-    )
-  }
+    ).toBe(true)
+  })

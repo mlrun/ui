@@ -17,23 +17,16 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 
-export default function(checkboxStructure) {
+export default function (checkboxStructure) {
   const element = {}
-  element.root = By.css(checkboxStructure.root)
-  element.checkbox = By.css(
-    `${checkboxStructure.root} ${checkboxStructure.elements.checkbox}`
-  )
+  element.root = checkboxStructure.root
+  element.checkbox = `${checkboxStructure.root} ${checkboxStructure.elements.checkbox}`
   if (checkboxStructure.elements.name) {
-    element.inputLabel = By.css(
-      `${checkboxStructure.root} ${checkboxStructure.elements.name}`
-    )
+    element.inputLabel = `${checkboxStructure.root} ${checkboxStructure.elements.name}`
   }
   if (checkboxStructure.elements.icon) {
-    element.hintButton = By.css(
-      `${checkboxStructure.root} ${checkboxStructure.elements.icon}`
-    )
+    element.hintButton = `${checkboxStructure.root} ${checkboxStructure.elements.icon}`
   }
   return element
 }

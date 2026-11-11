@@ -17,23 +17,19 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+// default timeout of the explicit waits in steps/actions
 export const timeout = 60000
-export const browser = 'chrome'
 export const headless = process.env.E2E_HEADLESS === 'true'
-// multiplier for every `driver.sleep()` in steps/actions: 1 - default delays, 0 - no delays
+// multiplier for every `page.waitForTimeout()` in steps/actions: 1 - default delays, 0 - no delays
 export const delay_factor = Number(process.env.E2E_DELAY_FACTOR ?? 1)
+// expected dates in the feature files are in UTC
+export const timezone = process.env.E2E_TZ || 'UTC'
+// the expected numbers and dates in the feature files are formatted in this locale
+export const locale = process.env.E2E_LOCALE || 'en-US'
 export const screen_size = { width: 1600, height: 900 }
-export const report = 'tests/reports/cucumber_report'
+export const reports_dir = 'tests/reports'
 export const test_url = 'localhost'
-export const test_port = '3000'
-
-export default {
-  timeout,
-  browser,
-  headless,
-  delay_factor,
-  screen_size,
-  report,
-  test_url,
-  test_port
-}
+// E2E_APP_PORT, E2E_MOCK_PORT - e.g. to run next to another app/mock server that uses the default ports
+export const test_port = process.env.E2E_APP_PORT || '3000'
+export const mock_server_port = process.env.E2E_MOCK_PORT || '30000'
+export const mock_server_url = `http://localhost:${mock_server_port}`

@@ -1966,7 +1966,7 @@ Feature: Jobs and workflows
         Then verify "Title" element visibility in "Filter_Dropdown" on "Modal_Wizard_Form" wizard
         Then "Title" element in "Filter_Dropdown" on "Modal_Wizard_Form" should contains "Filter by category" value
         And click on "Title" element on "Modal_Wizard_Form" wizard
-        Then select "ETL" option in "Category_Selector_Dropdown" filter dropdown on "Modal_Wizard_Form" wizard
+        Then select "etl" option in "Category_Selector_Dropdown" filter dropdown on "Modal_Wizard_Form" wizard
         When click on "Apply_Button" element in "Filter_Dropdown" on "Modal_Wizard_Form" wizard
         And wait load page
         And click on "Title" element on "Modal_Wizard_Form" wizard
@@ -2074,7 +2074,7 @@ Feature: Jobs and workflows
         Then type value "test" to "Run_Name_Input" field on "Modal_Wizard_Form" wizard
         Then "Function_Title" element on "Modal_Wizard_Form" should contains "test" value
         Then verify "Version_Dropdown" element visibility on "Modal_Wizard_Form" wizard
-        And select "$latest" option in "Version_Dropdown" dropdown on "Modal_Wizard_Form" wizard
+        And select "latest" option in "Version_Dropdown" dropdown on "Modal_Wizard_Form" wizard
         Then verify "Run_Details_Labels_Table" element visibility on "Modal_Wizard_Form" wizard
         When add rows to "Run_Details_Labels_Table" table on "Modal_Wizard_Form" wizard
             | key_input | value_input |
@@ -2160,7 +2160,7 @@ Feature: Jobs and workflows
         Then type value "test" to "Run_Name_Input" field on "Modal_Wizard_Form" wizard
         Then "Function_Title" element on "Modal_Wizard_Form" should contains "test" value
         Then verify "Version_Dropdown" element visibility on "Modal_Wizard_Form" wizard
-        And select "$latest" option in "Version_Dropdown" dropdown on "Modal_Wizard_Form" wizard
+        And select "latest" option in "Version_Dropdown" dropdown on "Modal_Wizard_Form" wizard
         Then verify "Method_Dropdown" element visibility on "Modal_Wizard_Form" wizard 
         Then "Method_Dropdown_Label_Select" element on "Modal_Wizard_Form" should contains "Handler" value
         And select "data_clean" option in "Method_Dropdown" dropdown on "Modal_Wizard_Form" wizard 
@@ -3025,14 +3025,14 @@ Feature: Jobs and workflows
         And wait load page
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then value in "status" column with "tooltip" in "Workflows_Monitor_Table" on "Workflows_Monitor_Tab" wizard should contains "Completed"
-        Then value in "status" column with "tooltip" in "Workflows_Monitor_Table" on "Workflows_Monitor_Tab" wizard should contains "Failed"
+        Then at least one value in "status" column with "tooltip" in "Workflows_Monitor_Table" on "Workflows_Monitor_Tab" wizard should contains "Completed"
+        Then at least one value in "status" column with "tooltip" in "Workflows_Monitor_Table" on "Workflows_Monitor_Tab" wizard should contains "Failed"
         When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         And wait load page
-        Then value in "status" column with "tooltip" in "Workflow_List_View_Table" on "Workflows_Monitor_Tab" wizard should contains "Error"
-        Then value in "status" column with "tooltip" in "Workflow_List_View_Table" on "Workflows_Monitor_Tab" wizard should contains "Completed"
+        Then at least one value in "status" column with "tooltip" in "Workflow_List_View_Table" on "Workflows_Monitor_Tab" wizard should contains "Error"
+        Then at least one value in "status" column with "tooltip" in "Workflow_List_View_Table" on "Workflows_Monitor_Tab" wizard should contains "Completed"
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard

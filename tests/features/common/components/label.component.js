@@ -17,24 +17,16 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 
-export default function(labelStructure) {
+export default function (labelStructure) {
   const element = {}
-  element.root = By.css(labelStructure.root)
-  element.label = By.css(
-    `${labelStructure.root} ${labelStructure.elements.label}`
-  )
+  element.root = labelStructure.root
+  element.label = `${labelStructure.root} ${labelStructure.elements.label}`
   if (labelStructure.elements.hintButton) {
-    element.hintButton = By.css(
-      `${labelStructure.root} ${labelStructure.elements.hintButton}`
-    )
+    element.hintButton = `${labelStructure.root} ${labelStructure.elements.hintButton}`
   }
   if (labelStructure.elements.hint) {
-    element.hint = By.css(
-      // `${labelStructure.root} ${labelStructure.elements.hint}`
-      `${labelStructure.elements.hint}`
-    )
+    element.hint = `${labelStructure.elements.hint}`
   }
   return element
 }

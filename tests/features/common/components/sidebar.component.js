@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 
 // same transformation as src/utils/toTestId.js
 export const toTestId = label => label.replace(/\s+/g, '-').toLowerCase()
@@ -29,23 +28,21 @@ const sidebarGroupButton = label =>
   `[data-testid="sidebar-collapsible-menu-item-${toTestId(label)}"] [data-sidebar="menu-button"]`
 
 export default {
-  root: By.css('nav:has(> [data-testid="sidebar"])'),
-  body: By.css('[data-testid="sidebar"]'),
-  content: By.css('[data-testid="sidebar"] [data-sidebar="content"]'),
-  pinButton: By.css('[data-testid="pin-sidebar-button"]'),
-  groupButtons: By.css('[data-testid^="sidebar-collapsible-menu-item-"] [data-sidebar="menu-button"]'),
-  link: label => By.css(sidebarLink(label)),
-  linkLabel: label => By.css(`[data-testid="sidebar-menu-item-${toTestId(label)}"] a > span`),
-  linkIcon: label => By.css(`[data-testid="sidebar-menu-item-${toTestId(label)}"] a > svg`),
-  groupButton: label => By.css(sidebarGroupButton(label)),
-  groupLabel: label => By.css(`${sidebarGroupButton(label)} > span`),
-  groupIcon: label => By.css(`${sidebarGroupButton(label)} > svg`),
+  root: 'nav:has(> [data-testid="sidebar"])',
+  body: '[data-testid="sidebar"]',
+  content: '[data-testid="sidebar"] [data-sidebar="content"]',
+  pinButton: '[data-testid="pin-sidebar-button"]',
+  groupButtons: '[data-testid^="sidebar-collapsible-menu-item-"] [data-sidebar="menu-button"]',
+  link: label => sidebarLink(label),
+  linkLabel: label => `[data-testid="sidebar-menu-item-${toTestId(label)}"] a > span`,
+  linkIcon: label => `[data-testid="sidebar-menu-item-${toTestId(label)}"] a > svg`,
+  groupButton: label => sidebarGroupButton(label),
+  groupLabel: label => `${sidebarGroupButton(label)} > span`,
+  groupIcon: label => `${sidebarGroupButton(label)} > svg`,
   projectDropdown: {
-    open_button: By.css('[data-testid="sidebar-project-dropdown-trigger"]'),
-    content: By.css('[data-testid="sidebar-project-dropdown-content"]'),
+    open_button: '[data-testid="sidebar-project-dropdown-trigger"]',
+    content: '[data-testid="sidebar-project-dropdown-content"]',
     option: name =>
-      By.xpath(
-        `//*[@data-testid="sidebar-project-dropdown-content"]//a[normalize-space(.)="${name}"]`
-      )
+      `xpath=//*[@data-testid="sidebar-project-dropdown-content"]//a[normalize-space(.)="${name}"]`
   }
 }

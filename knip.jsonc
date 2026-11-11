@@ -4,7 +4,6 @@
     "src/main.jsx",
     "src/loadRemoteConfig.js",
     "tests/features/**/*.js",
-    "tests/formatters/scenario-formatter.js",
     "tests/mockServer/mock.js",
     "tests/mockServer/backendSynchronizator.js",
     "allurerc.mjs"
@@ -22,6 +21,5 @@
   ],
   "ignoreFiles": ["src/nextGenComponents/shared/DetailsPopup/DetailsPopup.jsx"],
   "ignoreBinaries": ["pbcopy"],
-  "ignoreDependencies": ["allure-cucumberjs"],
   "ignoreExportsUsedInFile": true
 }

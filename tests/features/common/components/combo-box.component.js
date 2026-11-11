@@ -17,15 +17,14 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 import dropdownComponent from './dropdown.component.js'
 import { generateDropdownGroup } from '../../common-tools/common-tools.js'
 
-export default function(comboBoxRoot, newClassLocator = false) {
+export default function (comboBoxRoot, newClassLocator = false) {
   const element = {}
-  element.root = By.css(comboBoxRoot)
+  element.root = comboBoxRoot
 
-  if (newClassLocator){
+  if (newClassLocator) {
     element.dropdown = dropdownComponent(
       generateDropdownGroup(
         `${comboBoxRoot} .form-field-combobox__select`,
@@ -45,15 +44,12 @@ export default function(comboBoxRoot, newClassLocator = false) {
         true
       )
     )
-    element.comboDropdown.inputField = By.css(
-      `${comboBoxRoot} .combobox-dropdown__search-input`
-    )
+    element.comboDropdown.inputField = `${comboBoxRoot} .combobox-dropdown__search-input`
 
-    element.inputField = By.css(`${comboBoxRoot} .form-field-combobox__input`)
-    element.warningHint = By.css(`${comboBoxRoot} .form-field__warning`)
-    element.warningText = By.css('.tooltip__warning')
-  }
-  else{
+    element.inputField = `${comboBoxRoot} .form-field-combobox__input`
+    element.warningHint = `${comboBoxRoot} .form-field__warning`
+    element.warningText = '.tooltip__warning'
+  } else {
     element.dropdown = dropdownComponent(
       generateDropdownGroup(
         `${comboBoxRoot} .combobox-select`,
@@ -63,7 +59,7 @@ export default function(comboBoxRoot, newClassLocator = false) {
         false
       )
     )
-  
+
     element.comboDropdown = dropdownComponent(
       generateDropdownGroup(
         `${comboBoxRoot} .combobox-dropdown`,
@@ -73,13 +69,11 @@ export default function(comboBoxRoot, newClassLocator = false) {
         true
       )
     )
-    element.comboDropdown.inputField = By.css(
-      `${comboBoxRoot} .combobox-dropdown__search-input`
-    )
-  
-    element.inputField = By.css(`${comboBoxRoot} .combobox-input`)
-    element.warningHint = By.css(`${comboBoxRoot} .combobox-warning`)
-    element.warningText = By.css('.tooltip__warning')
+    element.comboDropdown.inputField = `${comboBoxRoot} .combobox-dropdown__search-input`
+
+    element.inputField = `${comboBoxRoot} .combobox-input`
+    element.warningHint = `${comboBoxRoot} .combobox-warning`
+    element.warningText = '.tooltip__warning'
   }
 
   return element

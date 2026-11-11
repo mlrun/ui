@@ -17,25 +17,26 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { expect } from 'chai'
+import { expect } from '@playwright/test'
+import { click, isSelected } from '../../common-tools/element.js'
 
-export const isRadioButtonSelected = async (driver, radiobutton) => {
-    const element = await driver.findElement(radiobutton['radiobutton'])
-    const selected = await element.isSelected()
-    expect(selected).equal(true)
-  }
+export const isRadioButtonSelected = async (page, radiobutton) => {
+  const element = page.locator(radiobutton['radiobutton']).first()
+  const selected = await isSelected(element)
+  expect(selected).toBe(true)
+}
 
-export const isRadioButtonUnselected = async (driver, radiobutton) => {
-    const element = await driver.findElement(radiobutton['radiobutton'])
-    const selected = await element.isSelected()
-    expect(selected).equal(false)
-  }
+export const isRadioButtonUnselected = async (page, radiobutton) => {
+  const element = page.locator(radiobutton['radiobutton']).first()
+  const selected = await isSelected(element)
+  expect(selected).toBe(false)
+}
 
-export const selectRadiobutton = async (driver, radiobutton) => {
-    const element = await driver.findElement(radiobutton['radiobutton'])
-    const elementName = await driver.findElement(radiobutton['name'])
-    const selected = await element.isSelected()
-    if (!selected) {
-      await elementName.click()
-    }
+export const selectRadiobutton = async (page, radiobutton) => {
+  const element = page.locator(radiobutton['radiobutton']).first()
+  const elementName = page.locator(radiobutton['name']).first()
+  const selected = await isSelected(element)
+  if (!selected) {
+    await click(elementName)
   }
+}

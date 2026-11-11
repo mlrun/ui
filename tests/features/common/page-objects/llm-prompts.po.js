@@ -17,22 +17,14 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 import commonTable from '../components/table.component.js'
 import dropdownComponent from '../components/dropdown.component.js'
-import {
-  generateInputGroup,
-  generateDropdownGroup
-} from '../../common-tools/common-tools.js'
+import { generateInputGroup, generateDropdownGroup } from '../../common-tools/common-tools.js'
 import inputGroup from '../components/input-group.component.js'
 import actionMenu from '../components/action-menu.component.js'
 
 const commonSearchByNameFilterInput = inputGroup(
-  generateInputGroup(
-    '[data-testid="name-form-field-input"]',
-    true,
-    false
-  )
+  generateInputGroup('[data-testid="name-form-field-input"]', true, false)
 )
 
 const actionMenuStructure = {
@@ -62,17 +54,17 @@ const overallTable = {
       root: '.table-row',
       fields: {
         name: '[data-testid="name"] a .link',
-        uid:  '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
+        uid: '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
         labels: {
-                  componentType: dropdownComponent,
-                  structure: generateDropdownGroup(
-                    '.table-body__cell:nth-of-type(3) input',
-                    '.chip-block span.chips_button',
-                    '.chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
-                    false,
-                    false
-                  )
-                },
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.table-body__cell:nth-of-type(3) input',
+            '.chip-block span.chips_button',
+            '.chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            false,
+            false
+          )
+        },
         producer: '[data-testid="producer"] .data-ellipsis',
         owner: '[data-testid="owner"] .data-ellipsis',
         updated: '[data-testid="updated"] .data-ellipsis',
@@ -93,16 +85,14 @@ const overallTable = {
 export default {
   llmPrompts: {
     Search_By_Name_Filter_Input: commonSearchByNameFilterInput,
-    Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
-    Refresh_Button: By.css('[data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]'),
+    Table_FilterBy_Button: '[data-testid="filter-menu-btn-tooltip-wrapper"]',
+    Refresh_Button: '[data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]',
     LLMPrompts_Table: commonTable(overallTable),
-    Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
-    History_Back_Button: By.css('.history-back-link .history-back-link__icon'),
-    Version_History_Title: By.css(
-      '.history-back-link .history-back-link__title [data-testid="version-history"]'
-    ),
-    Version_History_Prompt_Name: By.css(
+    Overlay: '#overlay_container .chip-block-hidden_visible',
+    History_Back_Button: '.history-back-link .history-back-link__icon',
+    Version_History_Title:
+      '.history-back-link .history-back-link__title [data-testid="version-history"]',
+    Version_History_Prompt_Name:
       '.history-back-link .history-back-link__title .data-ellipsis.tooltip-wrapper'
-    )
   }
 }

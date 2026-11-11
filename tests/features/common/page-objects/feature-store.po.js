@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 import commonTable from '../components/table.component.js'
 import dropdownComponent from '../components/dropdown.component.js'
 import actionMenu from '../components/action-menu.component.js'
@@ -254,7 +253,9 @@ const addToFeatureVectorTable = {
 }
 
 const featuresPanelTable = {
-  root: '.table__panel-container .features-panel__expand-content',
+  // the features of the selected project only (the accordion after the first divider): the rows of the other projects'
+  // accordions ("Features by projects") matched the row selectors as well
+  root: '.table__panel-container .features-panel__divider + .accordion__container .features-panel__expand-content',
   header: {},
   body: {
     row: {
@@ -298,7 +299,7 @@ const datasetsTable = {
       root: '.table-row',
       fields: {
         name: '.table-body__cell:nth-of-type(1) a .link',
-        uid:  '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
+        uid: '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
         tag: '.table-body__cell:nth-of-type(1) a .item-tag',
         name_expand_btn: '.table-body__cell:nth-of-type(1) a .name-wrapper .item-tag',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
@@ -316,7 +317,8 @@ const datasetsTable = {
         owner: '.table-body__cell:nth-of-type(4) .data-ellipsis',
         uploaded: '.table-body__cell:nth-of-type(5) .data-ellipsis',
         size: '.table-body__cell:nth-of-type(6) .data-ellipsis',
-        artifact_preview_btn: '.table-body__cell:nth-of-type(7) [data-testid="quick-link-dataset-preview-tooltip-wrapper"]',
+        artifact_preview_btn:
+          '.table-body__cell:nth-of-type(7) [data-testid="quick-link-dataset-preview-tooltip-wrapper"]',
         download_btn: '.table-body__cell:nth-of-type(8) .download-container',
         copy_uri: '.table-body__cell:nth-of-type(9) > button',
         action_menu: {
@@ -341,9 +343,9 @@ const datasetsTable = {
 
 // Common components
 const featureStoreTabSelector = commonTable(tabSelector)
-const tableRefreshButton = By.css('.content__action-bar-wrapper [data-testid="refresh"]')
-const tableFilterByButton = By.css('[data-testid="filter-menu-btn"]')
-const pageHeaderButton = By.css('[data-testid="btn"]')
+const tableRefreshButton = '.content__action-bar-wrapper [data-testid="refresh"]'
+const tableFilterByButton = '[data-testid="filter-menu-btn"]'
+const pageHeaderButton = '[data-testid="btn"]'
 const commonNameFilterInput = inputGroup(
   generateInputGroup(
     '[data-testid="name-form-field-input"]',
@@ -383,22 +385,20 @@ export default {
     Table_FilterBy_Button: tableFilterByButton,
     Table_Refresh_Button: tableRefreshButton,
     Create_Set_Button: pageHeaderButton,
-    Table_Expand_Rows_Button: By.css(
-      '.feature-store-container .content__action-bar .data-ellipsis:nth-of-type(2) button'
-    ),
+    Table_Expand_Rows_Button:
+      '.feature-store-container .content__action-bar .data-ellipsis:nth-of-type(2) button',
     Table_Tag_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_Name_Filter_Input: commonNameFilterInput,
     Table_Label_Filter_Input: commonLabelFilterInput,
     Feature_Sets_Table: commonTable(featureSetsTable),
     Feature_Store_Tab_Selector: featureStoreTabSelector,
-    Overlay: By.css('#overlay_container .chip-block-hidden_visible')
+    Overlay: '#overlay_container .chip-block-hidden_visible'
   },
   featuresTab: {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
     Table_FilterBy_Button: tableFilterByButton,
-    Add_To_Feature_Vector_Button: By.css(
-      '.content .content__action-bar-wrapper .action-bar__actions [data-testid="btn"]'
-    ),
+    Add_To_Feature_Vector_Button:
+      '.content .content__action-bar-wrapper .action-bar__actions [data-testid="btn"]',
     Table_Name_Filter_Input: commonNameFilterInput,
     Table_Label_Filter_Input: commonLabelFilterInput,
     Table_Tag_Filter_Dropdown: commonTableTreeFilterDropdown,
@@ -414,23 +414,21 @@ export default {
     Table_Tag_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_Refresh_Button: tableRefreshButton,
     Feature_Vectors_Table: commonTable(featureVectorTable),
-    Overlay: By.css('#overlay_container .chip-block-hidden_visible')
+    Overlay: '#overlay_container .chip-block-hidden_visible'
   },
   datasets: {
-    Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
+    Delete_Artifact_Popup: '[data-testid="pop-up-dialog"]',
     Feature_Store_Tab_Selector: featureStoreTabSelector,
-    Register_Dataset_Button: By.css('.content__action-bar-wrapper .action-bar__actions .action-button'),
+    Register_Dataset_Button: '.content__action-bar-wrapper .action-bar__actions .action-button',
     Table_Name_Filter_Input: commonNameFilterInputDataset,
     Table_FilterBy_Button: tableFilterByButton,
     Table_Refresh_Button: tableRefreshButton,
     Datasets_Table: commonTable(datasetsTable),
-    History_Back_Button: By.css('.history-back-link .history-back-link__icon'),
-    Version_History_Title: By.css(
-      '.history-back-link .history-back-link__title [data-testid="version-history"]'
-    ),
-    Version_History_Model_Name: By.css(
+    History_Back_Button: '.history-back-link .history-back-link__icon',
+    Version_History_Title:
+      '.history-back-link .history-back-link__title [data-testid="version-history"]',
+    Version_History_Model_Name:
       '.history-back-link .history-back-link__title .data-ellipsis.tooltip-wrapper'
-    )
   },
   addToFeatureVector: {
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
@@ -462,26 +460,22 @@ export default {
     ),
     Table_Refresh_Button: tableRefreshButton,
     Add_To_Feature_Vector_Table: commonTable(addToFeatureVectorTable),
-    Add_Button: By.css('.features-panel__buttons .btn-primary'),
-    Cancel_Button: By.css('.features-panel__buttons .btn-tertiary'),
+    Add_Button: '.features-panel__buttons .btn-primary',
+    Cancel_Button: '.features-panel__buttons .btn-tertiary',
     Features_Panel_Title: labelComponent(
       generateLabelGroup('.add-to-feature-vector .features-panel__header', false, true)
     ),
-    Edit_Feature_Vector_Button: By.css(
-      '.add-to-feature-vector .features-panel__header-vector-actions button'
-    ),
+    Edit_Feature_Vector_Button:
+      '.add-to-feature-vector .features-panel__header-vector-actions button',
     Selected_Project_Accordion: {
       Features_Panel_Table: commonTable(featuresPanelTable)
     },
     Features_By_Projects_Accordion: {
-      Collapse_Button: By.css(
-        '.table__panel-container .features-panel__content .accordion__container:nth-of-type(6) .round-icon-cp__circle'
-      ),
+      Collapse_Button:
+        '.table__panel-container .features-panel__content .accordion__container:nth-of-type(6) .round-icon-cp__circle',
       Features_By_Projects_Table: commonTable(featuresByProjectsTable)
     },
-    Feature_Vector_Name: By.css(
-      '.features-panel__header-vector .features-panel__header-vector-name'
-    ),
-    Feature_Vector_Tag: By.css('.features-panel__header-vector .features-panel__header-vector-tag')
+    Feature_Vector_Name: '.features-panel__header-vector .features-panel__header-vector-name',
+    Feature_Vector_Tag: '.features-panel__header-vector .features-panel__header-vector-tag'
   }
 }

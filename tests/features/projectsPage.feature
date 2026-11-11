@@ -716,7 +716,7 @@ Feature: Projects Page
         And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Failed to fetch projects" value
-        # the popup appears after 3 minutes of failed retries; a single step can't wait > 60 s (cucumber step timeout)
+        # the popup appears after 3 minutes of failed retries; a single step can't wait > 60 s (the step timeout)
         Then wait for 47 seconds
         Then wait for 47 seconds
         Then wait for 47 seconds

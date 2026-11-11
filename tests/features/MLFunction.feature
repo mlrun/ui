@@ -581,6 +581,7 @@ Feature: ML Functions
             | name5 | value  | value5      |
             | name3 | secret | value3:key3 |
             | name6 | secret | value6:key6 |
+            | name7 | secret | value7:key7 |
         When click on "Edit" in action menu in "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard with offset "false"
             | name  |
             | name5 |
@@ -602,6 +603,7 @@ Feature: ML Functions
             | Edited_Name_5 | secret | secret:123    |
             | name3         | secret | value3:key3   |
             | Edited_Name_6 | value  | Edited_Value6 |
+            | name7         | secret | value7:key7   |
         When collapse "Environment_Variables_Accordion" on "New_Function" wizard
         Then verify "Access_Key_Checkbox" element visibility on "New_Function" wizard
         Then uncheck "Access_Key_Checkbox" element on "New_Function" wizard
@@ -1461,7 +1463,7 @@ Feature: ML Functions
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
-        Then value in "kind" column with "tooltip" in "Functions_Table" on "ML_Functions" wizard should contains "Serving"
+        Then at least one value in "kind" column with "tooltip" in "Functions_Table" on "ML_Functions" wizard should contains "Serving"
         And wait load page
         Then verify that "Serving" type is displayed in "kind" kind on "ML_Functions" wizard in "Functions_Table" table with "churn-server" value in "name" column
         Then verify "deploy" option is present on "ML_Functions" wizard in "Functions_Table" table with "churn-server" value in "name" column

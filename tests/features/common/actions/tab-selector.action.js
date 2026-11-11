@@ -17,32 +17,33 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { expect } from 'chai'
+import { expect } from '@playwright/test'
+import { getAttribute, retryAssertion } from '../../common-tools/element.js'
 
-export const isTabActive = async (driver, component, indx) => {
-    const element1 = await driver.findElement(component.rowRoot(indx))
-    const element2 = await driver.findElement(
-      component.tableFields['key'](indx)
-    )
-    const attributes1 = await element1.getAttribute('class')
-    const attributes2 = await element2.getAttribute('class')
+export const isTabActive = async (page, component, indx) =>
+  retryAssertion(async () => {
+    const element1 = page.locator(component.rowRoot(indx)).first()
+    const element2 = page.locator(component.tableFields['key'](indx)).first()
+    const attributes1 = await getAttribute(element1, 'class')
+    const attributes2 = await getAttribute(element2, 'class')
     const flag =
       attributes1.includes('content-menu__item_active') ||
       attributes2.includes('details-menu__tab_active') ||
-      attributes2.includes('active-tab')||
-      attributes2.includes('tabs-slider__tab_active')||
+      attributes2.includes('active-tab') ||
+      attributes2.includes('tabs-slider__tab_active') ||
       attributes2.includes('content-menu__tab_active')
-    expect(flag).equal(true)
-  }
+    expect(flag).toBe(true)
+  })
 
-export const isRowActive = async (driver, component, indx) => {
-    const element = await driver.findElement(component.rowRoot(indx))
-    const attributes = await element.getAttribute('class')
-    const flag = attributes.includes('row_active')
-    if(flag){
-      expect(flag).equal(true)
-    }
-    else{
-      expect(flag).equal(false)
-    }
-  }
+// `isActive` - the expected state: the "is active" and "is NOT active" steps check the opposite states
+// (the previous version accepted both states, so both steps passed for any row)
+export const isRowActive = async (page, component, indx, isActive = true) =>
+  retryAssertion(async () => {
+    const element = page.locator(component.rowRoot(indx)).first()
+    const attributes = await getAttribute(element, 'class')
+
+    expect(
+      attributes.includes('row_active'),
+      `Row ${indx} is expected to be ${isActive ? 'active' : 'NOT active'}, its classes: "${attributes}"`
+    ).toBe(isActive)
+  })

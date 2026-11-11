@@ -87,19 +87,16 @@ export const getRule = (array, substring) => {
 const getRuleValue = (array, substring) => {
   let stringWithValue = array.find(el => el.toLowerCase().includes(substring))
 
-  if(stringWithValue){
+  if (stringWithValue) {
     //TODO: Add checks for Prefix, unique, spaces rules (labels, parameters)
     if (stringWithValue.includes('[Prefix]')) {
       stringWithValue = false
-    }
-    else if (stringWithValue.includes(':')) {
+    } else if (stringWithValue.includes(':')) {
       stringWithValue = stringWithValue.slice(stringWithValue.lastIndexOf(':') + 1).trim()
-    }
-    else if (stringWithValue.includes('-')) {
+    } else if (stringWithValue.includes('-')) {
       stringWithValue = parseInt(stringWithValue.slice(stringWithValue.lastIndexOf('-') + 1).trim())
     }
-  }
-  else {
+  } else {
     stringWithValue = false
   }
 
@@ -160,26 +157,17 @@ export const generateRegEx = (
     allSymbolsValid = `${allSymbolsValid.charAt(0)}.`
 
     if (
-      (validCharactersRule.includes('.') &&
-        validCharactersRule.includes(allSymbolsValid)) ||
+      (validCharactersRule.includes('.') && validCharactersRule.includes(allSymbolsValid)) ||
       !validCharactersRule.includes('.')
     ) {
-      setInvalidCharacters(
-        symbols,
-        validCharactersRule,
-        invalidStringBodySymbols
-      )
+      setInvalidCharacters(symbols, validCharactersRule, invalidStringBodySymbols)
     }
   }
 
   if (lengthRule) {
     lengthRegular = `{1,${lengthRule}}`
     validStrings.push('a')
-    validStrings.push(
-      Array(Number(lengthRule))
-        .fill('a')
-        .join('')
-    )
+    validStrings.push(Array(Number(lengthRule)).fill('a').join(''))
     // TODO: needs to implement paste functionality
     // invalidStrings.push(
     //   Array(Number(lengthRule) + 1)
@@ -199,15 +187,11 @@ export const generateRegEx = (
 
   if (notStartWith) {
     notStartWithRegular = `(?!${notStartWith})`
-    invalidStrings.push(
-      new RandExp(new RegExp(`^(${notStartWith})[a-z]+`)).gen()
-    )
+    invalidStrings.push(new RandExp(new RegExp(`^(${notStartWith})[a-z]+`)).gen())
   }
 
   if (notConsecutiveCharacters) {
-    notConsecutiveCharactersRegular = notConsecutiveCharacters.map(
-      el => `(?!${el})`
-    )
+    notConsecutiveCharactersRegular = notConsecutiveCharacters.map(el => `(?!${el})`)
   }
 
   const regular = new RegExp(

@@ -17,85 +17,97 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { expect } from 'chai'
-import { differenceWith, isEqual } from 'lodash-es'
+import { expect } from '@playwright/test'
 import { clickNearComponent, scrollToWebElement } from './common.action.js'
+import {
+  click,
+  getAttribute,
+  getText,
+  getTexts,
+  retryAssertion
+} from '../../common-tools/element.js'
 
-export const getOptionValues = async (driver, options) => {
-    return await driver.findElements(options).then(function(elements) {
-    return Promise.all(elements.map(element => element.getText()))
-    })
+export const getOptionValues = async (page, options) => {
+  return getTexts(page.locator(options))
+}
+
+export const openDropdown = async (page, dropdown, scroll = true) => {
+  const element = page.locator(dropdown.open_button).first()
+  if (scroll) {
+    await scrollToWebElement(page, element)
   }
-
-export const openDropdown = async (driver, dropdown, scroll = true) => {
-    const element = await driver.findElement(dropdown.open_button)
-    if (scroll) {
-      await scrollToWebElement(driver, element)
-    }
-    if (element) {
-      await element.click()
-    }
-    await driver.sleep(1500)
+  if (element) {
+    await click(element)
   }
+  await page.waitForTimeout(1500)
+}
 
-export const collapseDropdown = async (driver, dropdown) => {
-    // const element = await driver.findElement(dropdown.root)
-    await clickNearComponent(dropdown.root)
-    await driver.sleep(100)
-  }
+export const collapseDropdown = async (page, dropdown) => {
+  await clickNearComponent(page, dropdown.root)
+  await page.waitForTimeout(100)
+}
 
-export const selectOptionInDropdown = async (driver, dropdown, option) => {
-    const selectedElement = await driver.findElement(dropdown.open_button)
-    const selectedText = await selectedElement.getText()
-    if (selectedText !== option) {
-      const elements = await driver.findElements(dropdown.options)
-      for (const element of elements) {
-        await scrollToWebElement(driver, element)
-        const txt = await element.getText()
-        if (txt === option) {
-          await element.click()
-          await driver.sleep(250)
-          break
-        }
-      }
-    } else {
-      selectedElement.click()
-      await driver.sleep(500)
-    }
-  }
-
-export const selectOptionInDropdownWithoutCheck = async (driver, dropdown, option) => {
-    const elements = await driver.findElements(dropdown.options)
+export const selectOptionInDropdown = async (page, dropdown, option) => {
+  const selectedElement = page.locator(dropdown.open_button).first()
+  const selectedText = await getText(selectedElement)
+  if (selectedText !== option) {
+    const elements = await page.locator(dropdown.options).all()
     for (const element of elements) {
-      const txt = await element.getText()
+      await scrollToWebElement(page, element)
+      const txt = await getText(element)
       if (txt === option) {
-        await element.click()
-        await driver.sleep(500)
-        break
+        await click(element)
+        await page.waitForTimeout(250)
+        return
       }
     }
+    // nothing was selected: the scenario must not go on as if it was (e.g. an outdated options locator)
+    throw new Error(
+      `"${option}" option is not found in the dropdown, options: [${await getOptionValues(page, dropdown.options)}]`
+    )
+  } else {
+    await click(selectedElement)
+    await page.waitForTimeout(500)
   }
+}
 
-export const checkDropdownSelectedOption = async (driver, dropdown, option) => {
-    const element = await driver.findElement(dropdown.open_button)
-    const txt = await element.getText()
-    expect(txt).equal(option)
+export const selectOptionInDropdownWithoutCheck = async (page, dropdown, option) => {
+  const elements = await page.locator(dropdown.options).all()
+  for (const element of elements) {
+    const txt = await getText(element)
+    if (txt === option) {
+      await click(element)
+      await page.waitForTimeout(500)
+      return
+    }
   }
+  throw new Error(
+    `"${option}" option is not found in the dropdown, options: [${await getOptionValues(page, dropdown.options)}]`
+  )
+}
 
-export const checkDropdownSelectedOptionWithAttribute = async (driver, dropdown, option) => {
-    const element = await driver.findElement(dropdown.open_button)
-    const attributeTxt = await element.getAttribute('value')
-    expect(attributeTxt).equal(option)
-  }
+export const checkDropdownSelectedOption = async (page, dropdown, option) =>
+  retryAssertion(async () => {
+    const element = page.locator(dropdown.open_button).first()
+    const txt = await getText(element)
+    expect(txt).toBe(option)
+  })
 
-export const checkDropdownOptions = async (driver, dropdown, values) => {
-    const options = await getOptionValues(driver, dropdown.options)
-    const diff = differenceWith(options, values, isEqual)
-    expect(diff.length).equal(0, `Options difference: "${diff}"`)
-  }
+export const checkDropdownSelectedOptionWithAttribute = async (page, dropdown, option) =>
+  retryAssertion(async () => {
+    const element = page.locator(dropdown.open_button).first()
+    const attributeTxt = await getAttribute(element, 'value')
+    expect(attributeTxt).toBe(option)
+  })
 
-export const checkDropdownContainsOptions = async (driver, dropdown, values) => {
-    const options = await getOptionValues(driver, dropdown.options)
+// the options must be exactly the expected ones: the previous check (actual options minus expected ones is empty)
+// passed when the dropdown didn't open (no options) and when expected options were missing
+export const checkDropdownOptions = (page, dropdown, values) =>
+  checkDropdownContainsOptions(page, dropdown, values)
+
+export const checkDropdownContainsOptions = async (page, dropdown, values) =>
+  retryAssertion(async () => {
+    const options = await getOptionValues(page, dropdown.options)
     let notPresent = []
     for (let option of values) {
       if (options.every(item => item !== option)) {
@@ -110,8 +122,8 @@ export const checkDropdownContainsOptions = async (driver, dropdown, values) => 
       }
     }
 
-    expect(notPresent.length).equal(
-      0,
+    expect(
+      notPresent.length,
       '\nOptions not present: ' +
         notPresent +
         '\noptions: ' +
@@ -119,10 +131,10 @@ export const checkDropdownContainsOptions = async (driver, dropdown, values) => 
         '\nexpected: ' +
         values +
         '\n'
-    )
+    ).toBe(0)
 
-    expect(extraPresent.length).equal(
-      0,
+    expect(
+      extraPresent.length,
       '\nExtra unexpected options: ' +
         extraPresent +
         '\noptions: ' +
@@ -130,5 +142,5 @@ export const checkDropdownContainsOptions = async (driver, dropdown, values) => 
         '\nexpected: ' +
         values +
         '\n'
-    )
-  }
+    ).toBe(0)
+  })

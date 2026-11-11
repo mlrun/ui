@@ -19,6 +19,9 @@ such restriction.
 */
 // Allure report of the E2E regression run (`npm run report`, `npm run report:open`)
 import { defineConfig } from 'allure'
+import { escapeRegExp } from 'lodash-es'
+
+import { KNOWN_FAILURE_FIXED_MESSAGE } from './tests/allure-results.js'
 
 const FAILED = ['failed', 'broken']
 
@@ -28,49 +31,71 @@ export default defineConfig({
   // results of the previous runs: trends, new/fixed/flaky tests
   historyPath: './tests/reports/allure-history.jsonl',
   historyLimit: 30,
+  hideLabels: ['_fallbackTestCaseId', 'titlePath', 'package', 'language', 'framework'],
   plugins: {
-    // self-contained `allure-report/index.html`: opens from the file system, without `report:open`
-    awesome: { options: { singleFile: true } }
+    awesome: {
+      options: {
+        reportName: 'MLRun UI E2E regression',
+        groupBy: ['suite']
+        // not `singleFile`: every failed attempt has a Playwright trace (10-40MB), a single file with them embedded
+        // is too heavy for the browser, the separate files are loaded on demand (the report is served, `report:open`)
+      }
+    }
   },
-  // failures are classified by the first matching rule
+  // failures are classified by the first matching rule, the tags are without "@"
   categories: {
     rules: [
       {
+        id: 'known-bug-fixed',
+        name: 'Known bug is not reproduced anymore (remove the tag)',
+        matchers: {
+          statuses: FAILED,
+          message: new RegExp(escapeRegExp(KNOWN_FAILURE_FIXED_MESSAGE))
+        }
+      },
+      {
         id: 'known-app-bugs',
-        name: 'Known app bugs (tests/FOUND_BUGS.md)',
-        matchers: { statuses: FAILED, labels: { tag: /^@knownBug$/ } }
+        name: 'Known app bugs (@knownBug)',
+        matchers: { statuses: ['failed'], labels: { tag: /^@?knownBug$/ } }
       },
       {
         id: 'not-implemented',
         name: 'Not implemented yet (@FAILED_TODO, @inProgress)',
-        matchers: { statuses: FAILED, labels: { tag: /^@(FAILED_TODO|inProgress)$/ } }
+        matchers: { statuses: FAILED, labels: { tag: /^@?(FAILED_TODO|inProgress)$/ } }
       },
       {
         id: 'infrastructure',
-        name: 'Infrastructure (app/mock server, browser driver)',
+        name: 'Infrastructure (app/mock server, browser)',
         matchers: {
           statuses: FAILED,
-          message: /ERR_CONNECTION_REFUSED|Server terminated early|session not created|Servers are not available/
+          message:
+            /ERR_CONNECTION_REFUSED|browserType\.launch|Target page, context or browser has been closed|Process from config\.webServer/
         }
-      },
-      {
-        id: 'timeouts',
-        name: 'Timeouts',
-        matchers: { statuses: FAILED, message: /timed out|TimeoutError/ }
       },
       {
         id: 'ui-elements',
         name: 'UI element not found / not interactable',
         matchers: {
           statuses: FAILED,
-          trace:
-            /NoSuchElementError|ElementNotInteractableError|ElementClickInterceptedError|StaleElementReferenceError|MoveTargetOutOfBoundsError|InvalidSelectorError/
+          message:
+            /waiting for locator|strict mode violation|element is not (attached|visible|enabled|stable)|intercepts pointer events|Element is not displayed/
+        }
+      },
+      {
+        id: 'timeouts',
+        name: 'Timeouts',
+        matchers: {
+          statuses: FAILED,
+          message: /Timeout \d+ms exceeded|timed out|TimeoutError|\(waited \d+ms\)/
         }
       },
       {
         id: 'assertions',
         name: 'Assertion failures (unexpected value)',
-        matchers: { statuses: FAILED, trace: /AssertionError|Arrays not equal/ }
+        matchers: {
+          statuses: FAILED,
+          trace: /AssertionError|Arrays not equal|expect\(.+\)\.\w+\(.*\) failed/
+        }
       }
     ]
   }

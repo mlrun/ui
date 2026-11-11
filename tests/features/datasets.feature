@@ -897,6 +897,13 @@ Feature: Datasets Page
     Then verify data in "Parameters_Table" table on "Modal_Wizard_Form" wizard
             | name_verify           |         type_dropdown_verify         | value_verify |
             | model_class           |                str                   |              |
+            | label_columns         |  Optional[Union[str, List[str]]]     |              |
+            | drop_columns          |              List[str]               |              |
+            | model_name            |                str                   |     model    |
+            | tag                   |                str                   |              |
+            | train_test_split_size |                float                 |              |
+            | random_state          |                int                   |              |
+            | labels                |                dict                  |              |
 
   @MLD
   @smoke

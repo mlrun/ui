@@ -723,8 +723,8 @@ Feature: Models Page
     Then verify "Invocation Configuration" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
     Then verify "Generation_Configuration_Counter" element visibility on "LLM_Prompts_Info_Pane" wizard
     Then "Generation_Configuration_Counter" element on "LLM_Prompts_Info_Pane" should contains "5 modifications made to the default configuration:" value
-    Then value in "key" column with "text" in "Generation_Configuration_Tab_Table" on "LLM_Prompts_Info_Pane" wizard should contains "temperature"
-    Then value in "value" column with "text" in "Generation_Configuration_Tab_Table" on "LLM_Prompts_Info_Pane" wizard should contains "0.5"
+    Then at least one value in "key" column with "text" in "Generation_Configuration_Tab_Table" on "LLM_Prompts_Info_Pane" wizard should contains "temperature"
+    Then at least one value in "value" column with "text" in "Generation_Configuration_Tab_Table" on "LLM_Prompts_Info_Pane" wizard should contains "0.5"
 
   @MLM
   @smoke

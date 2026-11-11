@@ -17,13 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 import commonTable from '../components/table.component.js'
 import inputGroup from '../components/input-group.component.js'
 import textAreaGroup from '../components/text-area.component.js'
 import { generateInputGroup, generateTextAreaGroup } from '../../common-tools/common-tools.js'
 import checkboxComponent from '../components/checkbox.component.js'
-
 
 const tabSelector = {
   root: '.content-menu',
@@ -125,6 +123,8 @@ const secretsTable = {
 
 export default {
   generalTab: {
+    // "Project: <name>", a click on it blurs the focused field (the fields are saved on blur)
+    Project_Title: '.settings__card-title span',
     Project_Settings_Tab_Selector: commonTable(tabSelector),
     Source_URL_Input: inputGroup(
       generateInputGroup(
@@ -142,7 +142,9 @@ export default {
         '.form-field__warning svg'
       )
     ),
-    Project_Description: textAreaGroup(generateTextAreaGroup('.settings__description .text-area-wrapper')),
+    Project_Description: textAreaGroup(
+      generateTextAreaGroup('.settings__description .text-area-wrapper')
+    ),
     Labels_Table: commonTable(labelsTable),
     Parameters_Table: commonTable(parametersTable),
     Parameters_Table_Verify: commonTable(parametersTableVerify),
@@ -162,13 +164,11 @@ export default {
         '.form-field__warning svg'
       )
     ),
-    Parameters_Table_Add_Row_Button: By.css(
-      '.form-key-value-table .form-table__row_active .form-table__actions-cell [data-testid="apply-btn"]'
-    ),
-    Parameters_Table_Discard_Row_Button: By.css(
-      '.form-key-value-table .form-table__row_active .form-table__actions-cell [data-testid="delete-discard-btn"]'
-    ),
-    Add_Label_Button: By.css('.settings__labels .chips__wrapper .chips-wrapper button'),
+    Parameters_Table_Add_Row_Button:
+      '.form-key-value-table .form-table__row_active .form-table__actions-cell [data-testid="apply-btn"]',
+    Parameters_Table_Discard_Row_Button:
+      '.form-key-value-table .form-table__row_active .form-table__actions-cell [data-testid="delete-discard-btn"]',
+    Add_Label_Button: '.settings__labels .chips__wrapper .chips-wrapper button',
     Labels_Key: inputGroup(
       generateInputGroup(
         '.settings__labels .chips-wrapper .chip-block .edit-chip-container',
@@ -189,7 +189,7 @@ export default {
     Pull_At_Runtime_Checkbox: checkboxComponent({
       root: '.settings__source [data-testid="form-field-checkbox"]',
       elements: {
-        checkbox: 'input', 
+        checkbox: 'input',
         name: '',
         icon: ''
       }
@@ -197,8 +197,8 @@ export default {
   },
   secretsTab: {
     Secrets_Table: commonTable(secretsTable),
-    Add_Secret_Button: By.css('[data-testid="secrets-add-btn"]'),
-    Secrets_Hint: By.css('.settings__card-subtitle'),
-    Error_Message: By.css('#overlay_container .notification__body')
+    Add_Secret_Button: '[data-testid="secrets-add-btn"]',
+    Secrets_Hint: '.settings__card-subtitle',
+    Error_Message: '#overlay_container .notification__body'
   }
 }

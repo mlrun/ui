@@ -592,6 +592,10 @@ Feature: Quick actions Page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "ML_Functions" wizard selected option value "Past week"
         Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        # the functions of the project were updated more than a week ago: the rows (and their expand buttons) were in "Past week"
+        # only when the previous scenarios had created functions in the project
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
+        And wait load page
         Then verify "Table_FilterBy_Button" element visibility on "ML_Functions" wizard
         Then verify "Table_FilterBy_Button" element on "ML_Functions" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
         Then click on "Table_FilterBy_Button" element on "ML_Functions" wizard
@@ -603,7 +607,8 @@ Feature: Quick actions Page
         Then verify "Expand_All_Button" element visibility on "ML_Functions" wizard
         Then verify "Expand_All_Button" element on "ML_Functions" wizard should display hover tooltip "Common_Tooltips"."Expand_All_Button"
         Then verify "Table_Expand_Rows_Button" element visibility on "ML_Functions" wizard
-        When turn on demo mode with query params "false"
+        # "true": the URL has the query params of the "Any time" filter (`?dates=anyTime`)
+        When turn on demo mode with query params "true"
         And wait load page
         Then verify "New_Function_Button" element visibility on "ML_Functions" wizard
         Then "New_Function_Button" element on "ML_Functions" should contains "New" value

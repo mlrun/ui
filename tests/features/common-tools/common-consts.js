@@ -73,13 +73,7 @@ export default {
     // built-in "Filter" step (storey.Filter)
     Overview_Headers: ['Type:', 'Class name:', 'Kind:', 'Description:', 'Arguments:'],
     // custom step (class not matched to a built-in step type) with extra "full_event" field
-    Overview_Headers_Custom_Step: [
-      'Type:',
-      'Class name:',
-      'Kind:',
-      'Arguments:',
-      'Full event:'
-    ],
+    Overview_Headers_Custom_Step: ['Type:', 'Class name:', 'Kind:', 'Arguments:', 'Full event:'],
     Overview_Headers_Model_Runner: [
       'Type:',
       'Class name:',
@@ -360,17 +354,18 @@ export default {
     Overview_Drift_Headers: ['Mean TVD:', 'Mean hellinger:', 'Mean KLD:', 'Drift actual value:']
   },
   New_Feature_Store: {
-    Kind_Options: ['HTTP', 'CSV', 'PARQUET'],
+    // HTTP was removed from the app in #639 (the old subset check of the options did not detect it)
+    Kind_Options: ['CSV', 'PARQUET'],
     Combobox_Options: [
       'MLRun store',
       'V3IO',
       'S3',
       'Azure storage',
-      'Go-ogle storage',
       'Google storage',
       'Databricks filesystem'
     ],
-    Target_Store_File_Type: ['CSV', 'TSDB', 'Parquet', 'NoSql', 'Dataframe', 'Custom'],
+    // the external offline kinds of the app (`externalOfflineKindOptions`), the others were removed in #639
+    Target_Store_File_Type: ['CSV', 'Parquet'],
     Target_Store_Path_Annotation:
       'Note that in order to keep the feature set versioning you need to keep the {run-id} as part of the path.'
   },
@@ -748,7 +743,40 @@ export default {
     Tag_Filer_Options: ['All tags', 'latest'],
     Tag_Filer_Options_Main_Table: ['latest'],
     // the tag filter lists the real tags of the project feature sets/vectors
-    Tag_Filer_Options_Feature_Sets_Default: ['All tags', 'latest', 'my-tag', 'with_analysis', 'pre-latest', 'not-latest', 'vers', 'best', 'qqq', 'aa', 'asd', 'wwvv', 'qwewqewqewqe', 'qqqqwwwww', 'wrere', 'test1', 'rr', 'tt', 'yy', 'ss', 'dsadsadsadsa', 'test22', 'test123', 'hhh', 'dd', 'yynnbb', '1', '2', '3', '4', '5', 'aaa'],
+    Tag_Filer_Options_Feature_Sets_Default: [
+      'All tags',
+      'latest',
+      'my-tag',
+      'with_analysis',
+      'pre-latest',
+      'not-latest',
+      'vers',
+      'best',
+      'qqq',
+      'aa',
+      'asd',
+      'wwvv',
+      'qwewqewqewqe',
+      'qqqqwwwww',
+      'wrere',
+      'test1',
+      'rr',
+      'tt',
+      'yy',
+      'ss',
+      'dsadsadsadsa',
+      'test22',
+      'test123',
+      'hhh',
+      'dd',
+      'yynnbb',
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      'aaa'
+    ],
     Tag_Filer_Options_Feature_Vectors_Default: ['All tags', 'latest', 'test-tag'],
     Status_Filter_Options: ['All', 'Completed', 'Running', 'Pending', 'Error', 'Aborted'],
     Entity_Type_Filter_Options: ['All', 'Job', 'Endpoint', 'Application', 'Infra'],

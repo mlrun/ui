@@ -17,14 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 
 // breadcrumbs separators are not clickable anymore, navigation between
 // projects and screens is done via the sidebar (see sidebar.component.js)
 export default {
-  root: By.css('nav.breadcrumbs'),
-  projectsPageLabel: By.css('.breadcrumbs__item:nth-of-type(1)'),
-  projectLabel: By.css('.breadcrumbs__item:nth-of-type(3)'),
-  tabLabel: By.css('.breadcrumbs__item:nth-of-type(5)'),
-  crossLabel: By.css('.breadcrumbs__item:nth-of-type(3)')
+  root: 'nav.breadcrumbs',
+  projectsPageLabel: '.breadcrumbs__item:nth-of-type(1)',
+  projectLabel: '.breadcrumbs__item:nth-of-type(3)',
+  tabLabel: '.breadcrumbs__item:nth-of-type(5)',
+  crossLabel: '.breadcrumbs__item:nth-of-type(3)'
 }

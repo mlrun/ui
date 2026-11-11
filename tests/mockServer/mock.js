@@ -141,9 +141,49 @@ function keepEndpointAlertsRecent(alertsData) {
 
 // artifacts are mutated by tag add/edit/delete, register (overwrite) and delete scenarios
 const pristineArtifacts = cloneDeep(artifacts.artifacts)
+// project settings (parameters, labels, source...) are edited by the scenarios as well, e.g. MLPS003 adds parameters
+// and fails on the next run when they are still there
+const pristineProjects = cloneDeep(projects.projects)
+// functions are deleted (MLF017 deletes "erann-with-mlrun") and created/deployed by the scenarios
+const pristineFuncs = cloneDeep(funcs.funcs)
+// the project members (Members tab, MLPS004 applies new members) and owners (change owner) of the Iguazio projects
+const pristineIguazioProjectsRelations = cloneDeep(iguazioProjectsRelations)
+const pristineIguazioUserRelations = cloneDeep(iguazioUserRelations)
+// feature sets/vectors (create, edit, delete - MLFS061 deletes vectors), project summaries (create/delete project),
+// run details (delete project), job logs (submit job) and project secrets (MLPS007 adds and removes secrets)
+const pristineFeatureSets = cloneDeep(featureSets.feature_sets)
+const pristineFeatureVectors = cloneDeep(featureVectors.feature_vectors)
+const pristineProjectSummaries = cloneDeep(projectsSummary.project_summaries)
+const pristineRunData = cloneDeep(run.data)
+const pristineLogs = cloneDeep(logs)
+// the secrets Map holds the objects of the imported JSON (mutated in place by postSecretKeys/deleteSecretKeys)
+const pristineSecretKeys = cloneDeep(secretKeysData)
+// incremented by every reset: a deferred deletion (background task) started before the reset must not change
+// the restored state of the next scenario
+let mockStateGeneration = 0
 
 const resetMockState = () => {
   artifacts.artifacts = cloneDeep(pristineArtifacts)
+  projects.projects = cloneDeep(pristineProjects)
+  funcs.funcs = cloneDeep(pristineFuncs)
+  // the handlers keep references to these objects (imported JSON), so they are refilled, not reassigned
+  for (const [relations, pristine] of [
+    [iguazioProjectsRelations, pristineIguazioProjectsRelations],
+    [iguazioUserRelations, pristineIguazioUserRelations]
+  ]) {
+    Object.keys(relations).forEach(key => delete relations[key])
+    Object.assign(relations, cloneDeep(pristine))
+  }
+  featureSets.feature_sets = cloneDeep(pristineFeatureSets)
+  featureVectors.feature_vectors = cloneDeep(pristineFeatureVectors)
+  projectsSummary.project_summaries = cloneDeep(pristineProjectSummaries)
+  run.data = cloneDeep(pristineRunData)
+  logs.splice(0, logs.length, ...cloneDeep(pristineLogs))
+  secretKeys.clear()
+  Object.entries(cloneDeep(pristineSecretKeys)).forEach(([project, secrets]) =>
+    secretKeys.set(project, secrets)
+  )
+  mockStateGeneration++
   runs.runs = cloneDeep(pristineRuns)
   Object.keys(pipelines).forEach(project => delete pipelines[project])
   Object.assign(pipelines, cloneDeep(pristinePipelines))
@@ -261,8 +301,14 @@ const mlrunAPIIngress = `${mlrunIngress}/api/v1`
 const mlrunAPIIngressV2 = `${mlrunIngress}/api/v2`
 const nuclioApiUrl = '/nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
 const iguazioApiUrl = '/platform-api.default-tenant.app.vmdev36.lab.iguazeng.com'
-const port = 30000
+const port = Number(process.env.E2E_MOCK_PORT || 30000)
 const NOT_ALLOWED_SECRET_KEY = 'mlrun.'
+// ms, the background task adds `metadata.timeout` (600 ms) and the UI polls the task every 2 seconds
+const PROJECT_DELETION_DURATION = 3000
+// ms, fixed: the UI stops polling the abort task on every table refresh and restarts it only for the runs still
+// "aborting", so with a random duration the "was aborted" notification was lost when the abort ended between the last
+// poll and a refresh (MLJW049). 5 s ends the abort after the "Aborting" status check and before the next refresh
+const RUN_ABORT_DURATION = 5000
 const artifactsCategories = {
   dataset: ['dataset'],
   document: ['document'],
@@ -639,15 +685,16 @@ function deleteProjectV2(req, res) {
   const isCascade = req.headers['x-mlrun-deletion-strategy'] === 'cascade'
 
   const handleDeletion = () => {
+    // fixed duration: the UI shows "Project deletion in progress" for 10 seconds (auto-hide) and then
+    // "... was deleted successfully" when the task is done, the scenarios check and close both notifications,
+    // so with a random duration the first one can expire right before the check (or the close of it)
+    const generation = mockStateGeneration
     const taskFunc = () => {
       return new Promise(resolve => {
-        setTimeout(
-          () => {
-            deleteProjectHandler(req, res, true)
-            resolve()
-          },
-          random(5000, 10000)
-        )
+        setTimeout(() => {
+          if (generation === mockStateGeneration) deleteProjectHandler(req, res, true)
+          resolve()
+        }, PROJECT_DELETION_DURATION)
       })
     }
 
@@ -1211,24 +1258,25 @@ function abortRun(req, res) {
 
   const taskFunc = id => {
     currentRun.status.abort_task_id = id
+    const generation = mockStateGeneration
 
     return new Promise(resolve => {
-      setTimeout(
-        () => {
-          const collectedPipeline = getGraphById(req.params.uid)
+      setTimeout(() => {
+        // the state was reset meanwhile (the next scenario): don't change its pipelines
+        if (generation !== mockStateGeneration) return resolve()
 
-          currentRun.status.state = 'aborted'
+        const collectedPipeline = getGraphById(req.params.uid)
 
-          if (collectedPipeline) {
-            collectedPipeline.phase = 'Error'
-          }
+        currentRun.status.state = 'aborted'
 
-          delete currentRun.status.abort_task_id
+        if (collectedPipeline) {
+          collectedPipeline.phase = 'Error'
+        }
 
-          resolve()
-        },
-        random(3000, 10000)
-      )
+        delete currentRun.status.abort_task_id
+
+        resolve()
+      }, RUN_ABORT_DURATION)
     })
   }
 
@@ -2184,6 +2232,7 @@ function deleteFunc(req, res) {
     .filter(func => func.metadata.name === req.params.func)
 
   if (collectedFunc.length) {
+    const generation = mockStateGeneration
     const taskFunc = id => {
       forEach(collectedFunc, func => {
         set(func, 'status.deletion_task_id', id)
@@ -2192,6 +2241,9 @@ function deleteFunc(req, res) {
       return new Promise(resolve => {
         setTimeout(
           () => {
+            // the mock state was reset (the next scenario started): the restored functions must stay
+            if (generation !== mockStateGeneration) return resolve()
+
             forEach(collectedFunc, func => {
               delete func.status.deletion_task_id
             })
@@ -3026,7 +3078,7 @@ function getIguazioProjects(req, res) {
 }
 
 function getIguazioAuthorization(req, res) {
-  res.send({ data: [], meta: { ctx: 11661436569072727632 } })
+  res.send({ data: [], meta: { ctx: 11661436569072728000 } })
 }
 
 function getIguazioSelf(req, res) {

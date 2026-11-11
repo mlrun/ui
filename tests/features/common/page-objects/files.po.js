@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 import inputGroup from '../components/input-group.component.js'
 import { generateInputGroup, generateDropdownGroup } from '../../common-tools/common-tools.js'
 import dropdownComponent from '../components/dropdown.component.js'
@@ -59,7 +58,7 @@ const filesTable = {
       root: '.table-row',
       fields: {
         name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
-        uid:  '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
+        uid: '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
         tag: '.table-body__cell:nth-of-type(1) a .item-tag',
         type: '.table-body__cell:nth-of-type(2) .data-ellipsis',
         labels: {
@@ -102,16 +101,15 @@ export default {
         true
       )
     ),
-    Table_Refresh_Button: By.css('.content .content__action-bar-wrapper [data-testid="refresh-tooltip-wrapper"]'),
+    Table_Refresh_Button:
+      '.content .content__action-bar-wrapper [data-testid="refresh-tooltip-wrapper"]',
     Files_Table: commonTable(filesTable),
-    Register_File_Button: By.css('.content__action-bar-wrapper .action-bar__actions .action-button'),
-    Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn"]'),
-    History_Back_Button: By.css('.history-back-link .history-back-link__icon'),
-    Version_History_Title: By.css(
-      '.history-back-link .history-back-link__title [data-testid="version-history"]'
-    ),
-    Version_History_Model_Name: By.css(
+    Register_File_Button: '.content__action-bar-wrapper .action-bar__actions .action-button',
+    Table_FilterBy_Button: '[data-testid="filter-menu-btn"]',
+    History_Back_Button: '.history-back-link .history-back-link__icon',
+    Version_History_Title:
+      '.history-back-link .history-back-link__title [data-testid="version-history"]',
+    Version_History_Model_Name:
       '.history-back-link .history-back-link__title .data-ellipsis.tooltip-wrapper'
-    )
   }
 }

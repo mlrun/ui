@@ -17,44 +17,49 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { expect } from 'chai'
+import { expect } from '@playwright/test'
+import { click, getAttribute, retryAssertion } from '../../common-tools/element.js'
 
-export const isCheckboxChecked = async (driver, checkbox) => {
-    const checkboxElement = await driver.findElement(checkbox['checkbox'])
-    const classes = await checkboxElement.getAttribute('class')
-    expect(classes.includes('unchecked')).equal(false)
-  }
+export const isCheckboxChecked = async (page, checkbox) =>
+  retryAssertion(async () => {
+    const checkboxElement = page.locator(checkbox['checkbox']).first()
+    const classes = await getAttribute(checkboxElement, 'class')
+    expect(classes.includes('unchecked')).toBe(false)
+  })
 
-export const isCheckboxUnchecked = async (driver, checkbox) => {
-    const checkboxElement = await driver.findElement(checkbox['checkbox'])
-    const classes = await checkboxElement.getAttribute('class')
-    expect(classes.includes('unchecked')).equal(true)
-  }
+export const isCheckboxUnchecked = async (page, checkbox) =>
+  retryAssertion(async () => {
+    const checkboxElement = page.locator(checkbox['checkbox']).first()
+    const classes = await getAttribute(checkboxElement, 'class')
+    expect(classes.includes('unchecked')).toBe(true)
+  })
 
-export const  checkCheckbox = async (driver, checkbox) => {
-    const checkboxElement = await driver.findElement(checkbox['checkbox'])
-    const classes = await checkboxElement.getAttribute('class')
-    if (classes.includes('unchecked')) {
-      await checkboxElement.click()
-    }
+export const checkCheckbox = async (page, checkbox) => {
+  const checkboxElement = page.locator(checkbox['checkbox']).first()
+  const classes = await getAttribute(checkboxElement, 'class')
+  if (classes.includes('unchecked')) {
+    await click(checkboxElement)
   }
+}
 
-export const uncheckCheckbox = async (driver, checkbox) => {
-    const checkboxElement = await driver.findElement(checkbox['checkbox'])
-    const classes = await checkboxElement.getAttribute('class')
-    if (!classes.includes('unchecked')) {
-      await checkboxElement.click()
-    }
+export const uncheckCheckbox = async (page, checkbox) => {
+  const checkboxElement = page.locator(checkbox['checkbox']).first()
+  const classes = await getAttribute(checkboxElement, 'class')
+  if (!classes.includes('unchecked')) {
+    await click(checkboxElement)
   }
+}
 
-export const verifyCheckboxEnabled = async (driver, component) => {
-    const element = await driver.findElement(component)
-    const flag = await element.getAttribute('class')
-    expect(flag).equal('checkbox')
-  }
+export const verifyCheckboxEnabled = async (page, component) =>
+  retryAssertion(async () => {
+    const element = page.locator(component).first()
+    const flag = await getAttribute(element, 'class')
+    expect(flag).toBe('checkbox')
+  })
 
-export const verifyCheckboxDisabled = async (driver, component) => {
-    const element = await driver.findElement(component)
-    const flag = await element.getAttribute('class') 
-    expect(flag).equal('checkbox checkbox_disabled')
-  }
+export const verifyCheckboxDisabled = async (page, component) =>
+  retryAssertion(async () => {
+    const element = page.locator(component).first()
+    const flag = await getAttribute(element, 'class')
+    expect(flag).toBe('checkbox checkbox_disabled')
+  })
