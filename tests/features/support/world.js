@@ -29,6 +29,7 @@ import 'geckodriver'
 // expected dates in the feature files are in UTC, the browser spawned by the driver takes the timezone from TZ
 export const E2E_TIMEZONE = process.env.E2E_TZ || 'UTC'
 process.env.TZ = E2E_TIMEZONE
+export const E2E_LOCALE = process.env.E2E_LOCALE || 'en-US'
 
 class World {
   constructor({ attach, log, parameters }) {
@@ -75,6 +76,10 @@ export const buildDriver = () => {
         // same viewport as headless, the scenarios depend on the layout
         .windowSize(screen_size)
         .excludeSwitches('disable-popup-blocking', 'enable-automation')
+
+    browseConfigs
+      .addArguments(`lang=${E2E_LOCALE}`)
+      .setUserPreferences({ 'intl.accept_languages': E2E_LOCALE })
   }
   if (browser === 'firefox') {
     if (headless) {

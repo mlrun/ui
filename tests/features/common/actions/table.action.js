@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { expect } from 'chai'
-import { By } from 'selenium-webdriver'
+import { By, error as webdriverError } from 'selenium-webdriver'
 import { difference  } from 'lodash-es'
 import {
   getOptionValues,
@@ -37,12 +37,21 @@ async function getColumnValuesAttribute(driver, table, columnName) {
 }
 
 export const getColumnValues = async (driver, table, columnName) => {
-  return await driver
-    .findElements(table.tableColumns[columnName])
-    .then(function(elements) {
+  const MAX_ATTEMPTS = 3
 
-      return Promise.all(elements.map(element => element.getText()))
-    })
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const elements = await driver.findElements(table.tableColumns[columnName])
+
+      return await Promise.all(elements.map(element => element.getText()))
+    } catch (err) {
+      if (!(err instanceof webdriverError.StaleElementReferenceError) || attempt >= MAX_ATTEMPTS) {
+        throw err
+      }
+
+      await driver.sleep(200)
+    }
+  }
 }
 
 export const getHeaderColumnValue = async (driver, table, columnName) => {

@@ -329,7 +329,10 @@ export const scrollToElement = async (driver, component) => {
 // can land on the element border or outside it, so `mouseenter` doesn't fire in headed mode.
 // Viewport coordinates are used instead of `origin: element`: it fails on zero-size wrappers
 export const hoverElementCenter = async (driver, element) => {
-    const { x, y, width, height } = await element.getRect()
+    const { x, y, width, height } = await driver.executeScript(
+      'const { x, y, width, height } = arguments[0].getBoundingClientRect(); return { x, y, width, height }',
+      element
+    )
 
     await driver
       .actions({ async: true })

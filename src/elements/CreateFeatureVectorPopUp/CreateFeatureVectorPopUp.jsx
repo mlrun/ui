@@ -143,6 +143,7 @@ const CreateFeatureVectorPopUp = ({
                     ),
                     value: getValidationRules('common.tag')
                   }}
+                  visibleChipsMaxLength="all"
                 />
               </div>
               <div className="pop-up-dialog__footer-container">
