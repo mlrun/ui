@@ -85,14 +85,13 @@ const TargetPath = ({
       return
     }
 
-    let nextDataInputState = dataInputState
-
-    if (selectValue === MLRUN_STORAGE_INPUT_PATH_SCHEME) {
-      nextDataInputState = {
-        ...dataInputState,
-        ...handleStoreInputPathChange(dataInputState, setDataInputState, inputValue)
-      }
-    }
+    const nextDataInputState =
+      selectValue === MLRUN_STORAGE_INPUT_PATH_SCHEME
+        ? {
+            ...dataInputState,
+            ...handleStoreInputPathChange(dataInputState, setDataInputState, inputValue)
+          }
+        : dataInputState
 
     // Typed input is applied in the change event. Applying it from the FormOnChange effect
     // schedules a render per keystroke, and at machine speed (e.g. Selenium) React 19 counts those
