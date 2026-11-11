@@ -123,6 +123,7 @@ const Features = () => {
 
   const fetchData = useCallback(
     filters => {
+      abortControllerRef.current.abort(REQUEST_CANCELED)
       abortControllerRef.current = new AbortController()
 
       const cancelRequestTimeout = setTimeout(() => {
@@ -166,6 +167,7 @@ const Features = () => {
   )
 
   const fetchTags = useCallback(() => {
+    tagAbortControllerRef.current.abort(REQUEST_CANCELED)
     tagAbortControllerRef.current = new AbortController()
 
     return dispatch(
@@ -316,8 +318,6 @@ const Features = () => {
   }, [filtersStore.groupBy, featuresFilters.tag, dispatch])
 
   useEffect(() => {
-    const tagAbortControllerCurrent = tagAbortControllerRef.current
-
     return () => {
       setFeatures([])
       dispatch(removeFeature())
@@ -326,7 +326,7 @@ const Features = () => {
       dispatch(removeEntities())
       setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
-      tagAbortControllerCurrent.abort(REQUEST_CANCELED)
+      tagAbortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [params.projectName, tagAbortControllerRef, dispatch])
 

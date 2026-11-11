@@ -29,6 +29,7 @@ $pipelinesRowHeightExtended: variables.$rowHeight;
   }
 
   .real-time-pipelines__section-item {
+    position: relative;
     display: flex;
     flex-direction: column;
     padding: 20px;

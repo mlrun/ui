@@ -27,9 +27,11 @@ import {
   BE_PAGE_SIZE,
   MODEL_ENDPOINT_ID,
   PROJECT_FILTER,
-  PROJECTS_FILTER_ALL_ITEMS
+  PROJECTS_FILTER_ALL_ITEMS,
+  REQUEST_CANCELED
 } from '../constants'
 import { fetchAlerts } from '../reducers/alertsReducer'
+import { isRequestAborted } from '../utils/isRequestAborted'
 
 export const useRefreshAlerts = (filters, isAlertsPage) => {
   const [alerts, setAlerts] = useState(null)
@@ -83,8 +85,10 @@ export const useRefreshAlerts = (filters, isAlertsPage) => {
             setAlerts([])
           }
         })
-        .catch(() => {
-          setAlerts([])
+        .catch(error => {
+          if (!isRequestAborted(error)) {
+            setAlerts([])
+          }
         })
     },
     [dispatch, isAlertsPage, params.id, params.projectName, params.tag]
@@ -94,6 +98,7 @@ export const useRefreshAlerts = (filters, isAlertsPage) => {
     filters => {
       setAlerts(null)
       lastCheckedAlertIdRef.current = null
+      abortControllerRef.current.abort(REQUEST_CANCELED)
       abortControllerRef.current = new AbortController()
       dispatchAlertsFetch(filters)
     },

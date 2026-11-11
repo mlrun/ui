@@ -180,7 +180,9 @@ const ConsumerGroup = () => {
             )}
           />
         )}
-      {(nuclioStore.v3ioStreams.loading || nuclioStore.v3ioStreamShardLags.loading) && <Loader />}
+      {(nuclioStore.v3ioStreams.loading || nuclioStore.v3ioStreamShardLags.loading) && (
+        <Loader overlay />
+      )}
     </>
   )
 }

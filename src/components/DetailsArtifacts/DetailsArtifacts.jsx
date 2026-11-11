@@ -162,6 +162,7 @@ const DetailsArtifacts = ({
               )
             }
           })
+          .catch(() => {})
       } else {
         if (iteration) {
           config.params.iter = iteration
@@ -181,6 +182,7 @@ const DetailsArtifacts = ({
               setArtifactsPreviewContent(generateArtifactsPreviewContent(job, result))
             }
           })
+          .catch(() => {})
       }
     },
     [dispatch, params.jobId, params.projectName]

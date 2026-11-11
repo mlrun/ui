@@ -22,13 +22,8 @@ import Download from '../common/Download/Download'
 
 import api from '../api/artifacts-api'
 import { createArtifactPreviewContent } from './createArtifactPreviewContent'
-import {
-  ARTIFACT_MAX_CHUNK_SIZE,
-  DEFAULT_ABORT_MSG,
-  ERROR_STATE,
-  REQUEST_CANCELED,
-  UNKNOWN_STATE
-} from '../constants'
+import { ARTIFACT_MAX_CHUNK_SIZE, ERROR_STATE, UNKNOWN_STATE } from '../constants'
+import { isRequestAborted } from './isRequestAborted'
 import { commonLanguages } from '../common/Editor/editor.util'
 
 const fileSizes = {
@@ -220,7 +215,7 @@ export const fetchArtifactPreviewFromPath = async (
       return setPreview([createArtifactPreviewContent(null, null, path, artifact.db_key)])
     }
   } catch (err) {
-    if (![REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(err.message)) {
+    if (!isRequestAborted(err.message)) {
       setPreview([
         {
           error: {

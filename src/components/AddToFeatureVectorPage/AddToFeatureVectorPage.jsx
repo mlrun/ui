@@ -179,6 +179,7 @@ const AddToFeatureVectorPage = () => {
 
   const fetchData = useCallback(
     async filters => {
+      abortControllerRef.current.abort(REQUEST_CANCELED)
       abortControllerRef.current = new AbortController()
 
       const cancelRequestTimeout = setTimeout(() => {

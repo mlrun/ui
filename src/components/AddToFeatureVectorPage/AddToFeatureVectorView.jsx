@@ -73,9 +73,10 @@ function AddToFeatureVectorView({
             <AddToFeatureVectorFilters content={content} fetchTags={fetchTags} />
           </ActionBar>
         </div>
-        {(featureStore.loading || featureStore.features.loading) && <Loader />}
         <div className="table-container">
-          {featureStore.loading || featureStore.features.loading ? null : content.length === 0 ? (
+          {featureStore.loading || featureStore.features.loading ? (
+            <Loader section secondary />
+          ) : content.length === 0 ? (
             <NoData
               message={getNoDataMessage(
                 filters,
