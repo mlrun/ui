@@ -7,7 +7,7 @@ Builds a production Docker image.
 You can pass the following environment variables to control the resulting image name:
 
 | Name                    | Description                | Default     | Example             |
-|-------------------------|----------------------------|-------------|---------------------|
+| ----------------------- | -------------------------- | ----------- | ------------------- |
 | `MLRUN_DOCKER_REGISTRY` | sets the Docker registy    | (Dockerhub) | `quay.io/`          |
 | `MLRUN_DOCKER_REPO`     | sets the Docker repository | `mlrun`     | `iguazio`           |
 | `MLRUN_DOCKER_TAG`      | sets the Docker image tag  | `latest`    | `0.4.9`, `unstable` |
@@ -17,7 +17,7 @@ Note: the trailing forward-slash `/` in `MLRUN_DOCKER_REGISTRY`'s value is signi
 Examples:
 
 | Command                                                                                          | Resulting Docker image name      |
-|--------------------------------------------------------------------------------------------------|----------------------------------|
+| ------------------------------------------------------------------------------------------------ | -------------------------------- |
 | `npm run docker`                                                                                 | `mlrun/mlrun-ui:latest`          |
 | `MLRUN_DOCKER_REGISTRY=quay.io/ MLRUN_DOCKER_REPO=iguazio MLRUN_DOCKER_TAG=0.4.9 npm run docker` | `quay.io/iguazio/mlrun-ui:0.4.9` |
 
@@ -28,7 +28,7 @@ The Docker container runs a Nginx server, which listens on exposed port number 8
 You can pass the following environment variables to the `docker run` command to configure it:
 
 | Name                          | Description                                                                                                            |
-|-------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | `MLRUN_API_PROXY_URL`         | Sets the base URL of the backend API<br />Default: `http://localhost:8090`<br />Example: `http://17.220.101.245:30080` |
 | `MLRUN_NUCLIO_MODE`           | Sets the MLRun Nuclio integration mode<br />Default: `disabled`<br />Example: `enabled`                                |
 | `MLRUN_NUCLIO_API_URL`        | Sets the base URL of the Nuclio API<br />Default: `http://localhost:8070`<br />Example: `http://17.220.101.245:30070`  |
@@ -124,34 +124,63 @@ Note: `npm install` should be run first.
 
 The Gherkin scenarios in `tests/features/*.feature` run in Chromium by [Playwright Test](https://playwright.dev) via
 [playwright-bdd](https://vitalets.github.io/playwright-bdd): `bddgen` generates the Playwright specs into `.features-gen`,
-the steps are in `tests/features/step-definitions`. The scenarios run against the app (`npm start`) backed by the mock server
-(`npm run mock-server`), Playwright starts both unless they are already running.
+the steps are in `tests/features/step-definitions`.
 
-Install the browser once: `npx playwright install chromium`.
+Install the browser once: `npx playwright install chromium` (on CI: `npx playwright install --with-deps chromium`).
 
-| Command                           | Description                                                                                               |
-| --------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `npm run test:regression`         | Scenarios with a progress bar, then the Allure report is generated and served, e.g. `-- --grep MLPr001`   |
-| `npm run test:regression:failed`  | The same for the scenarios failed in the previous run (without `E2E_SHARDS`)                              |
-| `npm run test:regression:preview` | The same against the production-like build (`build:regression`)                                           |
-| `npm run test:regression:debug`   | Playwright UI mode: pick scenarios, watch them step by step, time-travel                                  |
-| `npm run report:open`             | Open the Allure report: every attempt of a scenario with its error, screenshot and trace, history of runs |
+One command runs the regression, locally and on CI. It builds the app (`build:regression`, a few seconds), generates
+the specs, runs the scenarios headless against the app and the mock server (Playwright starts both) and generates the
+Allure report. The settings are environment variables, the arguments after `--` are passed to Playwright:
 
-| Environment variable | Description                                                                     | Default |
-| -------------------- | ------------------------------------------------------------------------------- | ------- |
-| `E2E_HEADLESS`       | `true` - run the browser headless                                               | `false` |
-| `E2E_TAGS`           | Tag expression, e.g. `@smoke and not @inProgress`                               | all     |
-| `E2E_TZ`             | Timezone of the browser and of the steps                                        | `UTC`   |
-| `E2E_LOCALE`         | Locale of the browser (number and date formats)                                 | `en-US` |
-| `E2E_DELAY_FACTOR`   | Multiplier of the fixed delays in the steps, `0` - no delays                    | `1`     |
-| `E2E_RETRIES`        | Retries of a failed scenario, a scenario passed on a retry is reported as flaky | `1`     |
-| `E2E_OPEN_REPORT`    | `false` - don't open the report after the run (it isn't opened on CI)           | `true`  |
-| `E2E_SHARDS`         | Number of parallel shards, each one runs its own app and mock server            | `1`     |
-| `E2E_PREVIEW`        | `true` - serve `build/regression` instead of `npm start`                        | `false` |
-| `E2E_APP_PORT`       | Port of the app, e.g. to run next to another app on the default port            | `3000`  |
-| `E2E_MOCK_PORT`      | Port of the mock server, the app proxies the API requests to it                 | `30000` |
+```bash
+npm run test:regression
+E2E_WORKERS=3 E2E_RETRIES=2 npm run test:regression -- --grep "MLPr001 |MLA016 " --repeat-each 3
+npm run test:regression:ci
+```
 
-The scenarios run one at a time: they share the state of the mock server, which is reset before each scenario.
+| Command                          | Description                                                                                                                                                                                |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `npm run test:regression`        | The regression with a progress bar, then the Allure report is generated and served (`E2E_OPEN_REPORT=false` - not served)                                                                  |
+| `npm run test:regression:ci`     | The same for CI (`CI=true`): `.only` and flaky scenarios fail the run, no servers are reused, the report isn't served, the workers default to half of the CPUs, GitHub Actions annotations |
+| `npm run test:regression:failed` | The scenarios failed in the previous run (one worker)                                                                                                                                      |
+| `npm run test:regression:debug`  | Playwright UI mode against the dev server: pick scenarios, watch them step by step, time-travel                                                                                            |
+| `npm run report:open`            | Open the Allure report: every attempt of a scenario with its error, screenshot and trace, history of runs                                                                                  |
+
+| Environment variable  | Description                                                                                                                                                                                            | Default                     |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------- |
+| `E2E_WORKERS`         | Scenarios run in parallel: N processes, each with its own mock server and app (one build), on `E2E_APP_PORT`/`E2E_MOCK_PORT` + 1..N                                                                    | `1`, on CI half of the CPUs |
+| `E2E_FULL_PER_WORKER` | `true` - every worker runs the whole regression, not a share of it (e.g. `E2E_WORKERS=3` runs it 3 times at once to find the flaky scenarios); the report shows the runs of a scenario as its attempts | `false`                     |
+| `E2E_MAX_WORKERS`     | Upper limit of `E2E_WORKERS` (every worker is a mock server, an app server and a browser)                                                                                                              | `4`                         |
+| `E2E_RETRIES`         | Retries of a failed scenario (0..5), a scenario passed on a retry is reported as flaky                                                                                                                 | `1`                         |
+| `E2E_TRACE`           | Playwright trace: `on-first-retry` (only the retry of a failed scenario, a passing one records nothing), `retain-on-failure` (every attempt), `on`, `off`...                                           | `on-first-retry`            |
+| `E2E_APP`             | `build` - the prebuilt app (~190 MB, ~60 requests per page load), `dev` - the dev server (~2 GB, ~530 requests)                                                                                        | `build`                     |
+| `E2E_BUILD`           | `false` - don't rebuild the app, run against the existing `build/regression`                                                                                                                           | `true`                      |
+| `E2E_HEADLESS`        | `false` - show the browser                                                                                                                                                                             | `true`                      |
+| `E2E_TAGS`            | Tag expression, e.g. `@smoke and not @inProgress`                                                                                                                                                      | all                         |
+| `E2E_TZ`              | Timezone of the browser and of the steps                                                                                                                                                               | `UTC`                       |
+| `E2E_LOCALE`          | Locale of the browser (number and date formats)                                                                                                                                                        | `en-US`                     |
+| `E2E_OPEN_REPORT`     | `false` - don't serve the report after the run (it isn't served on CI)                                                                                                                                 | `true`                      |
+| `E2E_APP_PORT`        | Port of the app, e.g. to run next to another app on the default port                                                                                                                                   | `3000`                      |
+| `E2E_MOCK_PORT`       | Port of the mock server, the app proxies the API requests to it                                                                                                                                        | `30000`                     |
+
+A wrong value fails the run before anything is started. An app or a mock server already running on the ports of the run
+is reused (not on CI), the run warns about it: the scenarios run against it, not against the build of the run.
+
+Only one E2E run is active at a time (the lock file `tests/reports/.e2e-run.lock`): every run starts an app, a mock server
+and a browser, so runs in parallel exhaust the memory. Parallel runs (`E2E_WORKERS` > 1) can be started only by a person
+from an interactive terminal (or on CI), a start from a script or an agent is refused. If another run is in progress, a
+person is asked whether to stop it (with its servers and browsers) and start the new one; a non-interactive start is
+refused until the running one ends. A lock of a dead process is taken over.
+
+### Mock server
+
+The scenarios of a worker run one at a time: they share the mock server. Before every scenario its process is
+restarted (`npm run mock-server` supervises it, `POST /reset-mock-state`), so a scenario starts on a clean state and
+the memory doesn't grow over the run (~110 MB, ~0.25 s per restart).
+
+The big `auto-generated-data` project (`tests/mockServer/dataGenerators.js`: 2700 runs, 1200 alerts, models with LLM
+prompts) is generated only for the scenarios tagged `@generatedData` (paging, search over many items). Tag a scenario that
+needs it. To start the mock server with it manually: `MOCK_GENERATED_DATA=true npm run mock-server`.
 
 The scenarios tagged `@knownBug` or `@FAILED_TODO` are expected to fail: their failure doesn't fail the run, the console
 shows them as known bugs (◆) and the report as failed and known ("accepted", in the "Known app bugs" and "Not implemented

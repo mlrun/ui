@@ -18,6 +18,8 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 // Allure results of the E2E regression (written by allure-playwright, playwright.config.js)
+import { KNOWN_BUG_MESSAGE_PREFIX } from './features/common-tools/known-bugs.js'
+
 // scenarios that are expected to fail (`test.fail()` in tests/features/support/hooks.js)
 const KNOWN_FAILURE_TAGS = ['knownBug', 'FAILED_TODO']
 export const KNOWN_FAILURE_FIXED_MESSAGE =
@@ -26,11 +28,34 @@ export const KNOWN_FAILURE_FIXED_MESSAGE =
 const getTags = result =>
   result.labels.filter(label => label.name === 'tag').map(label => label.value.replace(/^@/, ''))
 
-const isKnownFailure = result => getTags(result).some(tag => KNOWN_FAILURE_TAGS.includes(tag))
+// tagged, or recognized when it happened (`failAsKnownBug` in tests/features/common-tools/known-bugs.js: a known bug
+// that a scenario hits only sometimes)
+const isKnownFailure = result =>
+  getTags(result).some(tag => KNOWN_FAILURE_TAGS.includes(tag)) ||
+  new RegExp(`^(Error: )?${KNOWN_BUG_MESSAGE_PREFIX} `).test(result.statusDetails?.message ?? '')
+
+// a retried check (`expect.poll`, `retryAssertion`) records its failed attempts as failed steps, a step that passed in
+// the end looked broken in the report ("Values of "name" column" failed 3 times inside a passed step). The attempts of a
+// passed step are dropped, a failed step keeps all of them
+const dropFailedAttemptsOfPassedSteps = steps =>
+  (steps ?? []).map(step => ({
+    ...step,
+    steps:
+      step.status === 'passed'
+        ? dropFailedAttempts(step.steps)
+        : dropFailedAttemptsOfPassedSteps(step.steps)
+  }))
+
+const dropFailedAttempts = steps =>
+  (steps ?? [])
+    .filter(step => !['failed', 'broken'].includes(step.status))
+    .map(step => ({ ...step, steps: dropFailedAttempts(step.steps) }))
 
 // allure-playwright reports the result of a test relative to its expected status, the report shows the actual one
 export const allureResultsListener = {
   beforeTestResultWrite(result) {
+    result.steps = dropFailedAttemptsOfPassedSteps(result.steps)
+
     const hasError = Boolean(result.statusDetails?.message)
 
     if (isKnownFailure(result)) {

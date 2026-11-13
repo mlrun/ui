@@ -73,19 +73,24 @@ export const getNotToBe = (array, substring) => {
   })
 }
 
-export const getRule = (array, substring) => {
-  const value = getRuleValue(array, substring)
+// the characters of a rule as a RegExp character class: "a-z, A-Z, 0-9, -, _, ." -> "a-zA-Z0-9\\-_\\." (a lone "-" is
+// escaped, it is not a range)
+export const getRule = (array, rule) => {
+  const value = getRuleValue(array, rule)
 
   if (!value) return false
 
   return value
     .split(', ')
-    .map(el => el.replace(/\\/g, '\\\\').replace(/\./g, '\\.'))
+    .map(el => (el === '-' ? '\\-' : el.replace(/\\/g, '\\\\').replace(/\./g, '\\.')))
     .join('')
 }
 
-const getRuleValue = (array, substring) => {
-  let stringWithValue = array.find(el => el.toLowerCase().includes(substring))
+// `rule` - a RegExp of the rule line (the label, e.g. "Must begin with" but not "Must not begin with") or a substring
+const getRuleValue = (array, rule) => {
+  let stringWithValue = array.find(el =>
+    rule instanceof RegExp ? rule.test(el) : el.toLowerCase().includes(rule)
+  )
 
   if (stringWithValue) {
     //TODO: Add checks for Prefix, unique, spaces rules (labels, parameters)
@@ -140,14 +145,32 @@ export const generateRegEx = (
   const invalidStringBodySymbols = []
   const invalidStringEndSymbols = []
 
+  // the invalid first/last character breaks the begin/end rule only: a character valid inside the value (e.g. "-", "_",
+  // ".") that is not allowed at the begin/end. A random symbol (e.g. "$") broke the valid characters rule as well, so a
+  // broken begin/end check of the app was not noticed: the field was invalid anyway
+  const validInsideOnly = (edgeRule, invalidCharacters) => {
+    const candidates = ['-', '_', '.'].filter(
+      character =>
+        validCharactersRule &&
+        new RegExp(`[${validCharactersRule}]`).test(character) &&
+        !new RegExp(`[${edgeRule}]`).test(character)
+    )
+
+    if (candidates.length) {
+      invalidCharacters.push(candidates[Math.floor(Math.random() * candidates.length)])
+    } else {
+      setInvalidCharacters(symbols, edgeRule, invalidCharacters)
+    }
+  }
+
   if (beginRule) {
     beginRegular = `^[${beginRule}]`
-    setInvalidCharacters(symbols, beginRule, invalidStringBeginSymbols)
+    validInsideOnly(beginRule, invalidStringBeginSymbols)
   }
 
   if (endRule) {
     endRegular = `[${endRule}]$`
-    setInvalidCharacters(symbols, endRule, invalidStringEndSymbols)
+    validInsideOnly(endRule, invalidStringEndSymbols)
   }
 
   if (validCharactersRule) {
@@ -191,24 +214,62 @@ export const generateRegEx = (
   }
 
   if (notConsecutiveCharacters) {
-    notConsecutiveCharactersRegular = notConsecutiveCharacters.map(el => `(?!${el})`)
+    notConsecutiveCharactersRegular = notConsecutiveCharacters.map(el => `(?!${el})`).join('')
   }
 
   const regular = new RegExp(
     `${beginRegular}${notStartWithRegular}(${validRegular}${lengthRegular})${notConsecutiveCharactersRegular}${notToBeRegular}${endRegular}`
   )
 
-  validStrings.push(new RandExp(regular).gen())
+  // RandExp ignores the lookaheads (not start with, not consecutive, not to be), so a generated string can break the
+  // rules, e.g. a "valid" string with two dots in a row is rejected by the app: such strings are generated again
+  // the length rule limits the whole string, but the generated one is the body plus the begin and the end characters
+  const breaksRules = value =>
+    Boolean(lengthRule && value.length > Number(lengthRule)) ||
+    Boolean(notStartWith && new RegExp(`^(${notStartWith})`).test(value)) ||
+    (Array.isArray(notConsecutiveCharacters) &&
+      notConsecutiveCharacters.some(el => new RegExp(el).test(value))) ||
+    (Array.isArray(notToBe) && notToBe.some(el => new RegExp(`^${el}$`).test(value)))
+  const generateValidString = () => {
+    let value = new RandExp(regular).gen()
+
+    for (let attempt = 0; attempt < 200 && breaksRules(value); attempt++) {
+      value = new RandExp(regular).gen()
+    }
+
+    return value
+  }
+
+  // the longest valid value is made of the widest character the field allows: the value of the max length of narrow
+  // characters ("a") fit in the input, its text never scrolled, so BUG-001 (tests/KNOWN_BUGS.md: the label chip editing
+  // ends on the scroll of its text, the rest is lost) was hit only when a random string happened to be wide enough
+  if (lengthRule) {
+    const widest = ['W', 'M', 'm', 'w', 'a']
+      .map(character => character.repeat(Number(lengthRule)))
+      .find(value => regular.test(value) && !breaksRules(value))
+
+    if (widest) validStrings.splice(1, 1, widest)
+  }
+
+  validStrings.push(generateValidString())
 
   if (invalidStringEndSymbols) {
     invalidStringBeginSymbols.forEach(symbol => {
-      invalidStrings.push(`${symbol}${new RandExp(regular).gen()}`)
+      invalidStrings.push(`${symbol}${generateValidString()}`)
     })
+    // the field cuts the typed value at the max length (`maxlength`): the end symbol typed after a valid string of the
+    // max length was cut off and the field had a valid value (MLPH005: 64 characters typed, 63 kept, "...00{" -> "...00"),
+    // so the valid part leaves room for the symbol
     invalidStringEndSymbols.forEach(symbol => {
-      invalidStrings.push(`${new RandExp(regular).gen()}${symbol}`)
+      const string = generateValidString()
+      const maxBodyLength = lengthRule
+        ? Math.max(1, Number(lengthRule) - symbol.length)
+        : string.length
+
+      invalidStrings.push(`${string.slice(0, maxBodyLength)}${symbol}`)
     })
     invalidStringBodySymbols.forEach(symbol => {
-      const string = `${new RandExp(regular).gen()}`
+      const string = generateValidString()
 
       invalidStrings.push(`${string.slice(0, 1)}${symbol}${string.slice(1)}`)
     })
@@ -221,5 +282,10 @@ export const generateRegEx = (
     })
   }
 
-  return { validStrings, invalidStrings }
+  // one character more than the max length: the field must reject it (or not take it, `maxlength`)
+  const tooLongString = lengthRule
+    ? `${validStrings[1] ?? Array(Number(lengthRule)).fill('a').join('')}${validStrings[1]?.slice(-1) ?? 'a'}`
+    : null
+
+  return { validStrings, invalidStrings, tooLongString }
 }

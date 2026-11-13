@@ -20,7 +20,7 @@ such restriction.
 import { Given, When, Then } from '../support/world.js'
 import pageObjects from '../common/page-objects.js'
 import pageObjectsConsts from '../common-tools/common-consts.js'
-import { test_url, test_port } from '../../config.js'
+import { expectTimeout, test_url, test_port } from '../../config.js'
 import {
   clickNearComponent,
   clickOnComponent,
@@ -63,6 +63,7 @@ import {
   checkDropdownOptions,
   checkDropdownSelectedOption,
   checkDropdownSelectedOptionWithAttribute,
+  getOptionValues,
   openDropdown,
   selectOptionInDropdown,
   selectOptionInDropdownWithoutCheck
@@ -121,7 +122,14 @@ import {
 } from '../common/actions/action-menu.action.js'
 import { selectSidebarItem, selectSidebarProject } from '../common/actions/sidebar.action.js'
 import { expect } from '@playwright/test'
-import { getAttribute, getText, retryAssertion, waitUntil } from '../common-tools/element.js'
+import {
+  getAttribute,
+  getText,
+  pollOptions,
+  retryAssertion,
+  waitForPageQuiet,
+  waitUntilStable
+} from '../common-tools/element.js'
 import { getProjects } from '../common/actions/api.actions.js'
 
 Given('open url', async function () {
@@ -170,9 +178,9 @@ Then('additionally redirect by INVALID-TAB', async function () {
   const afterURL = this.page.url()
 
   expect(
-    beforeURL,
+    afterURL,
     `Redirection from "${beforeURL}/INVALID-TAB"\nshould be "${beforeURL}"\nbut is "${afterURL}"`
-  ).toBe(afterURL)
+  ).toBe(beforeURL)
 })
 
 Then('verify redirection from {string} to {string}', async function (invalidPath, expectedPath) {
@@ -181,27 +189,28 @@ Then('verify redirection from {string} to {string}', async function (invalidPath
 
   await navigateToPage(this.page, invalidUrl)
   // the redirection can depend on a request (e.g. the functions list), wait for it instead of a fixed delay
-  await waitUntil(() => this.page.url() === expectedUrl, 10000).catch(() => {})
-  // make sure there is no further redirection
-  await this.page.waitForTimeout(1000)
+  await expect(this.page)
+    .toHaveURL(expectedUrl)
+    .catch(() => {})
+  // make sure there is no further redirection: the URL stays the same for a while
+  await waitUntilStable(() => this.page.url(), { timeout: 3000, interval: 500 })
   const afterURL = this.page.url()
 
   expect(
-    expectedUrl,
+    afterURL,
     `Redirection from "${invalidUrl}"\nshould be "${expectedUrl}"\nbut is "${afterURL}"`
-  ).toBe(afterURL)
+  ).toBe(expectedUrl)
 })
 
 Then('verify redirection to {string}', async function (expectedPath) {
   const expectedUrl = `http://${test_url}:${test_port}/${expectedPath}`
-  const afterURL = this.page.url()
 
-  expect(expectedUrl, `Redirection should be "${expectedUrl}"\nbut is "${afterURL}"`).toBe(afterURL)
+  // the app completes the URL (e.g. the pagination params) after the page is loaded
+  await expect(this.page, `Redirection should be "${expectedUrl}"`).toHaveURL(expectedUrl)
 })
 
 Then('wait load page', async function () {
   await waitPageLoad(this.page, pageObjects['commonPagesHeader']['loader'])
-  await this.page.waitForTimeout(500)
 })
 
 Then('wait for {int} seconds', { timeout: 10 * 60 * 1000 }, async function (seconds) {
@@ -213,38 +222,33 @@ Then('wait for {int} seconds', { timeout: 10 * 60 * 1000 }, async function (seco
 Then('navigate forward', async function () {
   await navigateForward(this.page)
   await waitPageLoad(this.page, pageObjects['commonPagesHeader']['loader'])
-  await this.page.waitForTimeout(500)
 })
 
 Then('navigate back', async function () {
   await navigateBack(this.page)
   await waitPageLoad(this.page, pageObjects['commonPagesHeader']['loader'])
-  await this.page.waitForTimeout(500)
 })
 
 Then('refresh a page', async function () {
   await refreshPage(this.page)
   await waitPageLoad(this.page, pageObjects['commonPagesHeader']['loader'])
-  await this.page.waitForTimeout(250)
 })
 
 Then('click on {string} element on {string} wizard', async function (component, wizard) {
   await waiteUntilComponent(this.page, pageObjects[wizard][component])
   await clickOnComponent(this.page, pageObjects[wizard][component])
-  await this.page.waitForTimeout(250)
+  await waitForPageQuiet(this.page)
 })
 
 Then('click on breadcrumbs {string} label on {string} wizard', async function (labelType, wizard) {
   await waiteUntilComponent(this.page, pageObjects[wizard]['Breadcrumbs'][`${labelType}Label`])
   await clickOnComponent(this.page, pageObjects[wizard]['Breadcrumbs'][`${labelType}Label`])
-  await this.page.waitForTimeout(250)
+  await waitForPageQuiet(this.page)
 })
 
 Then('verify if {string} popup dialog appears', async function (popup) {
   await waiteUntilComponent(this.page, pageObjects[popup]['Title'])
-  await this.page.waitForTimeout(500)
   await componentIsPresent(this.page, pageObjects[popup]['Title'])
-  await this.page.waitForTimeout(500)
   await componentIsVisible(this.page, pageObjects[popup]['Title'])
 })
 
@@ -260,9 +264,8 @@ Then(
   'type value {string} to {string} field on {string} wizard',
   async function (value, inputField, wizard) {
     await typeValue(this.page, pageObjects[wizard][inputField], value)
-    await this.page.waitForTimeout(250)
     await verifyTypedValue(this.page, pageObjects[wizard][inputField], value)
-    await this.page.waitForTimeout(250)
+    await waitForPageQuiet(this.page)
   }
 )
 
@@ -270,9 +273,8 @@ Then(
   'type value {string} to {string} field on {string} wizard without inputgroup',
   async function (value, inputField, wizard) {
     await typeValueWithoutInputgroup(this.page, pageObjects[wizard][inputField], value)
-    await this.page.waitForTimeout(250)
     await verifyTypedValueWithoutInputgroup(this.page, pageObjects[wizard][inputField], value)
-    await this.page.waitForTimeout(250)
+    await waitForPageQuiet(this.page)
   }
 )
 
@@ -426,7 +428,6 @@ When(
 Then(
   'searchable case {string} fragment {string} should be in every suggested option into {string} on {string} wizard',
   async function (textCase, subName, inputGroup, wizard) {
-    await this.page.waitForTimeout(1000)
     await isContainsSubstringInSuggestedOptions(
       this.page,
       pageObjects[wizard][inputGroup],
@@ -436,10 +437,26 @@ Then(
   }
 )
 
+// an option is offered: one of the suggestions is exactly it (the "every suggested option" step needs a typed fragment)
+Then(
+  'verify {string} is in suggested options of {string} combobox input in {string} on {string} wizard',
+  async function (option, combobox, accordion, wizard) {
+    await expect
+      .poll(
+        () =>
+          getOptionValues(
+            this.page,
+            pageObjects[wizard][accordion][combobox]['comboDropdown'].options
+          ),
+        pollOptions(`Suggestions of "${combobox}"`)
+      )
+      .toContain(option)
+  }
+)
+
 Then(
   'searchable fragment {string} should be in every suggested option into {string} combobox input in {string} on {string} wizard',
   async function (subName, combobox, accordion, wizard) {
-    await this.page.waitForTimeout(200)
     await isContainsSubstringInSuggestedOptions(
       this.page,
       pageObjects[wizard][accordion][combobox]['comboDropdown'],
@@ -643,7 +660,7 @@ When(
   async function (optionValue, dropdownName, wizardName) {
     await openDropdown(this.page, pageObjects[wizardName][dropdownName])
     await selectOptionInDropdown(this.page, pageObjects[wizardName][dropdownName], optionValue)
-    await this.page.waitForTimeout(500)
+    await waitForPageQuiet(this.page)
   }
 )
 
@@ -656,7 +673,6 @@ When(
       pageObjects[wizardName][accordionName][dropdownName],
       optionValue
     )
-    await this.page.waitForTimeout(500)
     await checkDropdownSelectedOption(
       this.page,
       pageObjects[wizardName][accordionName][dropdownName],
@@ -747,18 +763,16 @@ When(
       pageObjects[wizardName][dropdownName],
       optionValue
     )
-    await this.page.waitForTimeout(1000)
+    await waitForPageQuiet(this.page)
     await pickUpCustomDatetimeRange(
       this.page,
       pageObjects[wizardName][datetimePicker],
       fromDatetime,
       toDatetime
     )
-    await this.page.waitForTimeout(2500)
     await setPickerTime(this.page, pageObjects[wizardName][fromTimeDropdown], fromDatetime)
-    await this.page.waitForTimeout(500)
     await setPickerTime(this.page, pageObjects[wizardName][toTimeDropdown], toDatetime)
-    await this.page.waitForTimeout(500)
+    await waitForPageQuiet(this.page)
     await applyDatetimePickerRange(this.page, pageObjects[wizardName][datetimePicker])
   }
 )
@@ -766,11 +780,10 @@ When(
 Then(
   'verify from {string} to {string} filter band in {string} filter dropdown on {string} wizard',
   async function (fromDatetime, toDatetime, dropdownName, wizardName) {
-    await verifyTimeFilterBand(
-      this.page,
-      pageObjects[wizardName][dropdownName],
-      Date.parse(toDatetime) - Date.parse(fromDatetime)
-    )
+    await verifyTimeFilterBand(this.page, pageObjects[wizardName][dropdownName], {
+      from: fromDatetime,
+      to: toDatetime
+    })
   }
 )
 
@@ -848,12 +861,12 @@ Then(
 
 When('collapse {string} on {string} wizard', async function (accordion, wizard) {
   await collapseAccordionSection(this.page, pageObjects[wizard][accordion]['Collapse_Button'])
-  await this.page.waitForTimeout(100)
+  await waitForPageQuiet(this.page)
 })
 
 When('expand {string} on {string} wizard', async function (accordion, wizard) {
   await expandAccordionSection(this.page, pageObjects[wizard][accordion]['Collapse_Button'])
-  await this.page.waitForTimeout(100)
+  await waitForPageQuiet(this.page)
 })
 
 Then('verify {string} is collapsed on {string} wizard', async function (accordion, wizard) {
@@ -873,7 +886,12 @@ const sortProjects = async (page, order) => {
     await clickOnComponent(page, sorter)
   }
 
-  await waitUntil(isOrderSet, 5000, `The "${iconClass}" sort icon is not displayed`)
+  await expect
+    .poll(isOrderSet, {
+      timeout: expectTimeout,
+      message: `The "${iconClass}" sort icon is not displayed`
+    })
+    .toBeTruthy()
 
   const sortOption = await getText(page.locator(sorter).first())
   let sortKey = name => name
@@ -1082,7 +1100,6 @@ Then(
   'verify {string} on {string} wizard should display warning {string}.{string}',
   async function (input, wizard, constStorage, constValue) {
     await clickOnComponent(this.page, pageObjects[wizard][input]['inputField'])
-    await this.page.waitForTimeout(100)
     await hoverComponent(this.page, pageObjects[wizard][input]['inputField'], false)
     await checkWarningHintText(
       this.page,
@@ -1096,7 +1113,6 @@ Then(
   'verify {string} on {string} wizard should display hover warning {string}.{string}',
   async function (input, wizard, constStorage, constValue) {
     await clickOnComponent(this.page, pageObjects[wizard][input]['inputField'])
-    await this.page.waitForTimeout(100)
     await clickNearComponent(this.page, pageObjects[wizard][input]['inputField'])
     await checkWarningHintTextWithHover(
       this.page,
@@ -1111,7 +1127,6 @@ Then(
   'verify {string} element in {string} on {string} wizard should display warning {string}.{string}',
   async function (input, accordion, wizard, constStorage, constValue) {
     await clickOnComponent(this.page, pageObjects[wizard][accordion][input]['inputField'])
-    await this.page.waitForTimeout(100)
     await clickNearComponent(this.page, pageObjects[wizard][accordion][input]['inputField'])
     await checkWarningHintText(
       this.page,
@@ -1126,7 +1141,6 @@ Then(
   'verify {string} element in {string} on {string} wizard should display hover warning {string}.{string}',
   async function (input, accordion, wizard, constStorage, constValue) {
     await clickOnComponent(this.page, pageObjects[wizard][accordion][input]['inputField'])
-    await this.page.waitForTimeout(100)
     await clickNearComponent(this.page, pageObjects[wizard][accordion][input]['inputField'])
     await checkWarningHintTextWithHover(
       this.page,
@@ -1186,7 +1200,7 @@ When(
   async function (component, accordion, wizardName) {
     await waiteUntilComponent(this.page, pageObjects[wizardName][accordion][component])
     await clickOnComponent(this.page, pageObjects[wizardName][accordion][component])
-    await this.page.waitForTimeout(250)
+    await waitForPageQuiet(this.page)
   }
 )
 
@@ -1247,7 +1261,7 @@ When(
       pageObjects[wizard][accordion][comboBox]['comboDropdown'],
       option
     )
-    await this.page.waitForTimeout(200)
+    await waitForPageQuiet(this.page)
   }
 )
 
@@ -1255,7 +1269,7 @@ Then(
   'select {string} option in {string} suggestions dropdown on {string} wizard',
   async function (option, dropdown, wizard) {
     await selectOptionInDropdownWithoutCheck(this.page, pageObjects[wizard][dropdown], option)
-    await this.page.waitForTimeout(200)
+    await waitForPageQuiet(this.page)
   }
 )
 
@@ -1263,7 +1277,6 @@ Then('select {string} option in action menu on {string} wizard', async function 
   const actionMenu = pageObjects[wizard]['Action_Menu']
 
   await openActionMenu(this.page, actionMenu)
-  await this.page.waitForTimeout(500)
   await selectOptionInActionMenu(this.page, actionMenu, option)
 })
 
@@ -1273,7 +1286,6 @@ Then(
     const actionMenu = pageObjects[wizard]['Action_Menu_Full_View']
 
     await openActionMenu(this.page, actionMenu)
-    await this.page.waitForTimeout(500)
     await selectOptionInActionMenu(this.page, actionMenu, option)
   }
 )
@@ -1284,7 +1296,6 @@ Then(
     const actionMenu = pageObjects[wizard]['Action_Menu']
 
     await openActionMenuIfClosed(this.page, actionMenu)
-    await this.page.waitForTimeout(500)
     await verifyOptionInActionMenuEnabled(this.page, actionMenu, option)
   }
 )
@@ -1295,7 +1306,6 @@ Then(
     const actionMenu = pageObjects[wizard]['Action_Menu']
 
     await openActionMenuIfClosed(this.page, actionMenu)
-    await this.page.waitForTimeout(500)
     await verifyOptionInActionMenuDisabled(this.page, actionMenu, option)
   }
 )
@@ -1350,7 +1360,8 @@ Then(
       pageObjects[wizardName][inputField],
       pageObjects['commonPagesHeader']['Common_Options'],
       false,
-      true
+      true,
+      this.testInfo
     )
   }
 )
@@ -1522,8 +1533,9 @@ Then(
   }
 )
 
+// retried: the single read could get the URL before the app completed it
 Then('compare current browser URL with test {string} context value', async function (savedValue) {
-  expect(this.page.url()).toBe(this.testContext[savedValue])
+  await expect(this.page).toHaveURL(this.testContext[savedValue])
 })
 
 Then(

@@ -76,7 +76,7 @@ Feature: LLM prompts Page
     Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 1" value
 
   @MLLP
-  @smoke
+  @smoke @generatedData
   Scenario: MLLP002 - Verify searching by llm prompt name on LLM prompts page
     Given open url
     And wait load page
@@ -113,7 +113,7 @@ Feature: LLM prompts Page
     Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_LLM_Prompt_Name"
 
   @MLLP
-  @smoke
+  @smoke @generatedData
   #TODO:Then value in "labels" column with "dropdowns" - update logic for dropdowns
   Scenario: MLLP003 - Verify filtering by llm prompt label on LLM prompts page
     Given open url
@@ -852,7 +852,7 @@ Feature: LLM prompts Page
     Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
 
   @MLLP
-  @smoke
+  @smoke @generatedData
   Scenario: MLLP014 - Verify prompt filtering by model name and tag
     Given open url
     And wait load page

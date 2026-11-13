@@ -17,11 +17,26 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-// default timeout of the explicit waits in steps/actions
+// Timeouts - the maximum time to wait, not a pause: Playwright waits for the elements by itself (the actions wait for the
+// element to be actionable, the web-first assertions and `expect.poll` retry) and fails after the timeout.
+// Set once here, a step/action passes its own timeout only when it needs a different one (see below)
+// - every action (click, hover, waitFor, evaluate...): `use.actionTimeout` in playwright.config.js
+export const actionTimeout = 15000
+// - `page.goto`, `goBack`...: `use.navigationTimeout`
+export const navigationTimeout = 60000
+// - every assertion that retries (`expect(locator)...`, `expect.poll`, `retryAssertion`): `expect.timeout`.
+//   The same as the action timeout: the assertion includes waiting for the element to appear, as the read inside the
+//   previous retry loop did (it waited for the element up to the action timeout). Only a failing check waits that long
+export const expectTimeout = actionTimeout
+// - the app finishes loading (the loader is gone, the sidebar is rendered): the slowest screens
 export const timeout = 60000
-export const headless = process.env.E2E_HEADLESS === 'true'
-// multiplier for every `page.waitForTimeout()` in steps/actions: 1 - default delays, 0 - no delays
-export const delay_factor = Number(process.env.E2E_DELAY_FACTOR ?? 1)
+// local timeouts, shorter on purpose:
+// - a best-effort wait for the page to settle, the step goes on after it (the check after it reports a failure)
+export const settleTimeout = 3000
+// - one attempt to read an element inside a retry: a missing element fails fast and the retry reads the page again
+export const readTimeout = 1000
+// E2E_HEADLESS=false - show the browser (headless by default)
+export const headless = process.env.E2E_HEADLESS !== 'false'
 // expected dates in the feature files are in UTC
 export const timezone = process.env.E2E_TZ || 'UTC'
 // the expected numbers and dates in the feature files are formatted in this locale

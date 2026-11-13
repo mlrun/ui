@@ -624,7 +624,8 @@ Feature: Feature Store Page
         When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify options in "URL_Combobox" combobox in "Data_Source_Accordion" on "New_Feature_Set" wizard should contains "New_Feature_Store"."Combobox_Options"
         When select "MLRun store" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
-        Then searchable fragment "Artifacts" should be in every suggested option into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        # nothing is typed yet: "Artifacts" is one of the offered options (not a filter of them)
+        Then verify "Artifacts" is in suggested options of "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
         When select "Artifacts" option in "URL_Combobox" combobox suggestion on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type searchable fragment "m" into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then searchable fragment "m" should be in every suggested option into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard

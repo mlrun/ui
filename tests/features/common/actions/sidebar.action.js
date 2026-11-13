@@ -17,11 +17,17 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { timeout } from '../../../config.js'
+import { expectTimeout, readTimeout, timeout } from '../../../config.js'
 import { expect } from '@playwright/test'
 import sidebar from '../components/sidebar.component.js'
 import { hoverElementCenter, scrollToWebElement } from './common.action.js'
-import { click, getAttribute, isDisplayed, waitUntil } from '../../common-tools/element.js'
+import {
+  click,
+  getAttribute,
+  getRect,
+  isDisplayed,
+  waitForPageQuiet
+} from '../../common-tools/element.js'
 
 const isSidebarPinned = async page => {
   const element = page.locator(sidebar.root).first()
@@ -33,18 +39,15 @@ const isSidebarPinned = async page => {
 const SIDEBAR_STATE_TIMEOUT = 5000
 const SIDEBAR_HOVER_ATTEMPTS = 3
 
-const waitSidebarState = async (page, state, waitTimeout = timeout) => {
-  await waitUntil(
-    async () => {
-      const element = page.locator(sidebar.root).first()
-
-      return (await getAttribute(element, 'data-state')) === state
-    },
-    waitTimeout,
-    `Sidebar is not ${state}`
-  )
-  // wait for the width transition to finish
-  await page.waitForTimeout(350)
+const waitSidebarState = async (page, state, waitTimeout = expectTimeout) => {
+  await expect
+    .poll(() => getAttribute(page.locator(sidebar.root).first(), 'data-state'), {
+      timeout: waitTimeout,
+      message: `Sidebar is not ${state}`
+    })
+    .toBe(state)
+  // wait for the width transition to finish: the box of the sidebar stops changing
+  await getRect(page.locator(sidebar.root).first())
 }
 
 const movePointerOutOfSidebar = async page => {
@@ -71,7 +74,7 @@ export const openSidebar = async page => {
         if (attempt === SIDEBAR_HOVER_ATTEMPTS) throw error
 
         await movePointerOutOfSidebar(page)
-        await page.waitForTimeout(500)
+        await waitForPageQuiet(page)
       }
     }
   }
@@ -81,30 +84,31 @@ export const closeSidebar = async page => {
   if (!(await isSidebarPinned(page))) {
     // <Suspense> hides #main (display: none) while a lazy route chunk is loading,
     // an element without size has no point to move the pointer to
-    await waitUntil(
-      async () => {
-        try {
-          return await isDisplayed(page.locator('#main').first(), { timeout: 1000 })
-        } catch {
-          return false
-        }
-      },
-      timeout / 2,
-      'Page content (#main) is not displayed'
-    )
+    await expect
+      .poll(
+        async () => {
+          try {
+            return await isDisplayed(page.locator('#main').first(), { timeout: readTimeout })
+          } catch {
+            return false
+          }
+        },
+        { timeout: expectTimeout, message: 'Page content (#main) is not displayed' }
+      )
+      .toBeTruthy()
     const main = page.locator('#main').first()
     await hoverElementCenter(page, main)
-    await waitSidebarState(page, 'collapsed', timeout / 4)
+    await waitSidebarState(page, 'collapsed')
   }
 }
 
 export const selectSidebarItem = async (page, label) => {
   await openSidebar(page)
 
-  let links = await page.locator(sidebar.link(label)).all()
+  const links = page.locator(sidebar.link(label))
 
   // nested items are rendered only when their collapsible group is expanded
-  if (links.length === 0) {
+  if ((await links.count()) === 0) {
     // the nested items are menu buttons as well, so `groupButtons` matches them once a group is expanded:
     // the groups are taken by their test ids, not by their (shifting) positions in `groupButtons`
     const groupTestIds = await page
@@ -123,19 +127,17 @@ export const selectSidebarItem = async (page, label) => {
       if ((await getAttribute(groupButton, 'data-state')) !== 'open') {
         await scrollToWebElement(page, groupButton)
         await click(groupButton)
-        await page.waitForTimeout(250)
-        links = await page.locator(sidebar.link(label)).all()
-
-        if (links.length > 0) break
+        await waitForPageQuiet(page)
+        if ((await links.count()) > 0) break
       }
     }
   }
 
-  expect(links.length, `Sidebar item "${label}" was not found`).toBe(1)
+  expect(await links.count(), `Sidebar item "${label}" was not found`).toBe(1)
 
-  await scrollToWebElement(page, links[0])
-  await click(links[0])
-  await page.waitForTimeout(250)
+  await scrollToWebElement(page, links.first())
+  await click(links.first())
+  await waitForPageQuiet(page)
   await closeSidebar(page)
 }
 
@@ -148,11 +150,11 @@ export const selectSidebarProject = async (page, projectName) => {
     .locator(sidebar.projectDropdown.content)
     .first()
     .waitFor({ state: 'attached', timeout })
-  await page.waitForTimeout(250)
+  await waitForPageQuiet(page)
 
   const option = page.locator(sidebar.projectDropdown.option(projectName)).first()
   await scrollToWebElement(page, option)
   await click(option)
-  await page.waitForTimeout(250)
+  await waitForPageQuiet(page)
   await closeSidebar(page)
 }

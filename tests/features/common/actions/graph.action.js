@@ -17,9 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { expectTimeout } from '../../../config.js'
 import { getNamedRowsGeometry, getNamedFieldsGeometry, getTableRows } from './table.action.js'
 import { expect } from '@playwright/test'
-import { getRect, isDisplayed, waitUntil } from '../../common-tools/element.js'
+import { getRect, isDisplayed, waitUntilStable } from '../../common-tools/element.js'
 
 const isNear = (val1, val2, tolerance) => Math.abs(val1 - val2) <= tolerance
 
@@ -51,22 +52,33 @@ const safeGet = (geo, column) => {
 export const checkWorkflowGraphConnections = async (page, graphComponent) => {
   // the graph is rendered asynchronously: the check used to be skipped (and the step passed) when the nodes or the
   // arrows were not found, e.g. a graph that wasn't rendered yet or an empty one. A graph of several nodes must have arrows
-  const nodesCount = await waitUntil(
-    () => getTableRows(page, graphComponent.nodesTable),
-    10000,
-    'The graph has no nodes'
-  )
+  await expect
+    .poll(() => getTableRows(page, graphComponent.nodesTable), {
+      timeout: expectTimeout,
+      message: 'The graph has no nodes'
+    })
+    .toBeGreaterThan(0)
 
+  const nodesCount = await getTableRows(page, graphComponent.nodesTable)
+
+  // a workflow is a connected graph: N steps are joined by at least N - 1 arrows (one arrow was enough for any number of
+  // nodes, so a graph that lost its edges passed)
   if (nodesCount > 1) {
-    await waitUntil(
-      () => getTableRows(page, graphComponent.graphConnections),
-      10000,
-      `The graph has ${nodesCount} nodes and no arrows`
-    )
+    await expect
+      .poll(() => getTableRows(page, graphComponent.graphConnections), {
+        timeout: expectTimeout,
+        message: `The graph has ${nodesCount} nodes and less than ${nodesCount - 1} arrows`
+      })
+      .toBeGreaterThanOrEqual(nodesCount - 1)
   }
 
-  const nodesGeo = await getNamedRowsGeometry(page, graphComponent.nodesTable)
-  const arrowsGeo = await getNamedRowsGeometry(page, graphComponent.graphConnections, 'path')
+  // the graph is laid out with a transition: measure it once it stopped moving
+  const nodesGeo = await waitUntilStable(() =>
+    getNamedRowsGeometry(page, graphComponent.nodesTable)
+  )
+  const arrowsGeo = await waitUntilStable(() =>
+    getNamedRowsGeometry(page, graphComponent.graphConnections, 'path')
+  )
   const topHandlers = await getNamedFieldsGeometry(page, graphComponent.nodesTable, 'top_handler')
   const bottomHandlers = await getNamedFieldsGeometry(
     page,
@@ -86,10 +98,12 @@ export const checkWorkflowGraphConnections = async (page, graphComponent) => {
   const arrowWidths = safeGet(arrowsGeo, 'width')
   const arrowHeights = safeGet(arrowsGeo, 'height')
 
-  // a single node graph has no arrows to verify
-  if (arrowXPositions.length === 0) {
+  // a single node graph has no arrows to verify; a graph of several nodes whose arrows can't be measured fails (it passed)
+  if (nodesCount === 1) {
     return
   }
+
+  expect(arrowXPositions.length, 'The arrows of the graph are not measured').toBeGreaterThan(0)
 
   //  establish dynamic thresholds for сalculation average graph dimensions (proximity between graph nodes, connection handlers, arrow endpoints)
   const avgNodeHeight = nodeHeights.reduce((a, b) => a + b, 0) / nodeHeights.length
@@ -208,6 +222,5 @@ export const panGraphToElement = async (page, graphRoot, targetLocator) => {
     await page.mouse.down()
     await page.mouse.move(startX + clamp(shiftX), startY + clamp(shiftY), { steps: 10 })
     await page.mouse.up()
-    await page.waitForTimeout(300)
   }
 }

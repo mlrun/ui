@@ -18,21 +18,23 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { expect } from '@playwright/test'
-import { click, getAttribute, retryAssertion } from '../../common-tools/element.js'
+import {
+  classContaining,
+  click,
+  getAttribute,
+  waitForPageQuiet
+} from '../../common-tools/element.js'
 
-export const isCheckboxChecked = async (page, checkbox) =>
-  retryAssertion(async () => {
-    const checkboxElement = page.locator(checkbox['checkbox']).first()
-    const classes = await getAttribute(checkboxElement, 'class')
-    expect(classes.includes('unchecked')).toBe(false)
-  })
+// a negative check: first let the page finish what the previous action started (see verifyClassEnabled)
+export const isCheckboxChecked = async (page, checkbox) => {
+  await waitForPageQuiet(page)
+  await expect(page.locator(checkbox['checkbox']).first()).not.toHaveClass(
+    classContaining('unchecked')
+  )
+}
 
 export const isCheckboxUnchecked = async (page, checkbox) =>
-  retryAssertion(async () => {
-    const checkboxElement = page.locator(checkbox['checkbox']).first()
-    const classes = await getAttribute(checkboxElement, 'class')
-    expect(classes.includes('unchecked')).toBe(true)
-  })
+  expect(page.locator(checkbox['checkbox']).first()).toHaveClass(classContaining('unchecked'))
 
 export const checkCheckbox = async (page, checkbox) => {
   const checkboxElement = page.locator(checkbox['checkbox']).first()
@@ -50,16 +52,9 @@ export const uncheckCheckbox = async (page, checkbox) => {
   }
 }
 
+// a string - the whole class attribute, as the previous check
 export const verifyCheckboxEnabled = async (page, component) =>
-  retryAssertion(async () => {
-    const element = page.locator(component).first()
-    const flag = await getAttribute(element, 'class')
-    expect(flag).toBe('checkbox')
-  })
+  expect(page.locator(component).first()).toHaveClass('checkbox')
 
 export const verifyCheckboxDisabled = async (page, component) =>
-  retryAssertion(async () => {
-    const element = page.locator(component).first()
-    const flag = await getAttribute(element, 'class')
-    expect(flag).toBe('checkbox checkbox_disabled')
-  })
+  expect(page.locator(component).first()).toHaveClass('checkbox checkbox_disabled')

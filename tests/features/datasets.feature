@@ -117,7 +117,7 @@ Feature: Datasets Page
     Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
     Then verify "Overview_Producer_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_Producer_Headers"
     Then verify "Overview_Sources_Headers" element visibility on "Datasets_Info_Pane" wizard
-    Then verify "Overview_Sources_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_Sources_Headers"
+    Then verify "Overview_Sources_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_Sources_Headers_Two_Sources"
     Then "Label_column" element on "Datasets_Info_Pane" should contains "radius" value 
     Then verify "Train_Button" element visibility on "Datasets_Info_Pane" wizard
     Then "Train_Button" element on "Datasets_Info_Pane" should contains "Train" value

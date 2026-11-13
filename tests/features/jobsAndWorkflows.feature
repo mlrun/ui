@@ -3120,7 +3120,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke
+    @smoke @generatedData
     Scenario: MLJW091 - Check the auto refresh checkbox on Jobs Monitor tab
         Given open url
         And wait load page

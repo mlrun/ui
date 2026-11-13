@@ -18,19 +18,25 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { expect } from '@playwright/test'
-import { click, isSelected } from '../../common-tools/element.js'
+import { readTimeout } from '../../../config.js'
+import { click, isSelected, pollOptions, readOrNull } from '../../common-tools/element.js'
 
-export const isRadioButtonSelected = async (page, radiobutton) => {
+// retried: the single read right after the click could get the previous state. `isSelected` (`checked` or
+// `selected`), not `toBeChecked`: it fails on an element that is not a checkbox or a radio input
+const pollSelected = (page, radiobutton) => {
   const element = page.locator(radiobutton['radiobutton']).first()
-  const selected = await isSelected(element)
-  expect(selected).toBe(true)
+
+  return expect.poll(
+    readOrNull(() => isSelected(element, { timeout: readTimeout })),
+    pollOptions('Radio button is selected')
+  )
 }
 
-export const isRadioButtonUnselected = async (page, radiobutton) => {
-  const element = page.locator(radiobutton['radiobutton']).first()
-  const selected = await isSelected(element)
-  expect(selected).toBe(false)
-}
+export const isRadioButtonSelected = async (page, radiobutton) =>
+  pollSelected(page, radiobutton).toBe(true)
+
+export const isRadioButtonUnselected = async (page, radiobutton) =>
+  pollSelected(page, radiobutton).toBe(false)
 
 export const selectRadiobutton = async (page, radiobutton) => {
   const element = page.locator(radiobutton['radiobutton']).first()

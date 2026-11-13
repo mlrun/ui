@@ -90,20 +90,15 @@ import {
   updatePipelineIDs,
   updateSchedules
 } from './dateSynchronization.js'
-import {
-  generateArtifacts,
-  generateFunctions,
-  makeUID,
-  generateRuns,
-  generateAlerts
-} from './dataGenerators.js'
+import { generateArtifacts, makeUID, generateRuns, generateAlerts } from './dataGenerators.js'
 
-// pristine copies of the collections scenarios mutate (abort run, terminate/retry workflow, delete schedule...),
-// restored by `POST /reset-mock-state` before every scenario (hooks.js), so scenarios don't depend on each other
-const pristineRuns = cloneDeep(runs.runs)
-const pristinePipelines = cloneDeep(pipelines)
-const pristinePipelineIDs = cloneDeep(pipelineIDs)
-const pristineSchedules = cloneDeep(schedules.schedules)
+// Every scenario starts on a fresh mock server process: `POST /reset-mock-state` (hooks.js) restarts it
+// (scripts/mockServer.js), so the data below is loaded and computed again and nothing is left from the previous scenario
+// (mutated collections, background tasks, timers, the failure condition) - and the memory doesn't grow over the run
+const MOCK_INSTANCE = crypto.randomUUID()
+// MOCK_GENERATED_DATA=true - the big "auto-generated-data" project (dataGenerators.js): only for the scenarios tagged
+// `@generatedData`, the others start faster without it
+const withGeneratedData = process.env.MOCK_GENERATED_DATA === 'true'
 
 // Updating values in files with synthetic data
 updateRuns(runs)
@@ -111,11 +106,12 @@ updatePipelines(pipelines)
 updatePipelineIDs(pipelineIDs)
 updateSchedules(schedules)
 
-// generate a lot of data for auto-generated-data project
-generateArtifacts(artifacts)
-generateFunctions(funcs)
-generateRuns(runs)
-generateAlerts(alerts)
+if (withGeneratedData) {
+  generateArtifacts(artifacts)
+  generateRuns(runs)
+  generateAlerts(alerts)
+}
+
 keepEndpointAlertsRecent(alerts)
 
 // the model endpoint "Alerts" tab always uses the "Past month" range (no date filter), keep the seeded "default"
@@ -137,65 +133,6 @@ function keepEndpointAlertsRecent(alertsData) {
       alert.reset_time = new Date(Date.parse(alert.reset_time) + shift).toISOString()
     }
   })
-}
-
-// artifacts are mutated by tag add/edit/delete, register (overwrite) and delete scenarios
-const pristineArtifacts = cloneDeep(artifacts.artifacts)
-// project settings (parameters, labels, source...) are edited by the scenarios as well, e.g. MLPS003 adds parameters
-// and fails on the next run when they are still there
-const pristineProjects = cloneDeep(projects.projects)
-// functions are deleted (MLF017 deletes "erann-with-mlrun") and created/deployed by the scenarios
-const pristineFuncs = cloneDeep(funcs.funcs)
-// the project members (Members tab, MLPS004 applies new members) and owners (change owner) of the Iguazio projects
-const pristineIguazioProjectsRelations = cloneDeep(iguazioProjectsRelations)
-const pristineIguazioUserRelations = cloneDeep(iguazioUserRelations)
-// feature sets/vectors (create, edit, delete - MLFS061 deletes vectors), project summaries (create/delete project),
-// run details (delete project), job logs (submit job) and project secrets (MLPS007 adds and removes secrets)
-const pristineFeatureSets = cloneDeep(featureSets.feature_sets)
-const pristineFeatureVectors = cloneDeep(featureVectors.feature_vectors)
-const pristineProjectSummaries = cloneDeep(projectsSummary.project_summaries)
-const pristineRunData = cloneDeep(run.data)
-const pristineLogs = cloneDeep(logs)
-// the secrets Map holds the objects of the imported JSON (mutated in place by postSecretKeys/deleteSecretKeys)
-const pristineSecretKeys = cloneDeep(secretKeysData)
-// incremented by every reset: a deferred deletion (background task) started before the reset must not change
-// the restored state of the next scenario
-let mockStateGeneration = 0
-
-const resetMockState = () => {
-  artifacts.artifacts = cloneDeep(pristineArtifacts)
-  projects.projects = cloneDeep(pristineProjects)
-  funcs.funcs = cloneDeep(pristineFuncs)
-  // the handlers keep references to these objects (imported JSON), so they are refilled, not reassigned
-  for (const [relations, pristine] of [
-    [iguazioProjectsRelations, pristineIguazioProjectsRelations],
-    [iguazioUserRelations, pristineIguazioUserRelations]
-  ]) {
-    Object.keys(relations).forEach(key => delete relations[key])
-    Object.assign(relations, cloneDeep(pristine))
-  }
-  featureSets.feature_sets = cloneDeep(pristineFeatureSets)
-  featureVectors.feature_vectors = cloneDeep(pristineFeatureVectors)
-  projectsSummary.project_summaries = cloneDeep(pristineProjectSummaries)
-  run.data = cloneDeep(pristineRunData)
-  logs.splice(0, logs.length, ...cloneDeep(pristineLogs))
-  secretKeys.clear()
-  Object.entries(cloneDeep(pristineSecretKeys)).forEach(([project, secrets]) =>
-    secretKeys.set(project, secrets)
-  )
-  mockStateGeneration++
-  runs.runs = cloneDeep(pristineRuns)
-  Object.keys(pipelines).forEach(project => delete pipelines[project])
-  Object.assign(pipelines, cloneDeep(pristinePipelines))
-  pipelineIDs.splice(0, pipelineIDs.length, ...cloneDeep(pristinePipelineIDs))
-  schedules.schedules = cloneDeep(pristineSchedules)
-
-  // re-calculate the time-relative data ("Past hour", "Next 24 hours"...) against the current time
-  updateRuns(runs)
-  updatePipelines(pipelines)
-  updatePipelineIDs(pipelineIDs)
-  updateSchedules(schedules)
-  generateRuns(runs)
 }
 
 // Here we are configuring express to use body-parser as middle-ware.
@@ -306,9 +243,12 @@ const NOT_ALLOWED_SECRET_KEY = 'mlrun.'
 // ms, the background task adds `metadata.timeout` (600 ms) and the UI polls the task every 2 seconds
 const PROJECT_DELETION_DURATION = 3000
 // ms, fixed: the UI stops polling the abort task on every table refresh and restarts it only for the runs still
-// "aborting", so with a random duration the "was aborted" notification was lost when the abort ended between the last
-// poll and a refresh (MLJW049). 5 s ends the abort after the "Aborting" status check and before the next refresh
-const RUN_ABORT_DURATION = 5000
+// "aborting", so the "was aborted" notification is lost when the abort ends between the last poll and a refresh.
+// MLJW049: abort, refresh (R1, ~1 s), the "Aborting" status check (done by R1 + ~0.5 s), wait 5 s, refresh (R1 + ~5.7 s).
+// The UI polls every 2 s from R1. The abort ends 4 s after the request (this + the task's 600 ms `metadata.timeout`):
+// after the status check, and the first poll after it (at most R1 + 4 s) is before the second refresh. It was 5 s
+// (+ 600 ms): ended right after the R1 + 4 s poll, the next one (R1 + 6 s) came after the refresh - never notified
+const RUN_ABORT_DURATION = 3400
 const artifactsCategories = {
   dataset: ['dataset'],
   document: ['document'],
@@ -688,11 +628,10 @@ function deleteProjectV2(req, res) {
     // fixed duration: the UI shows "Project deletion in progress" for 10 seconds (auto-hide) and then
     // "... was deleted successfully" when the task is done, the scenarios check and close both notifications,
     // so with a random duration the first one can expire right before the check (or the close of it)
-    const generation = mockStateGeneration
     const taskFunc = () => {
       return new Promise(resolve => {
         setTimeout(() => {
-          if (generation === mockStateGeneration) deleteProjectHandler(req, res, true)
+          deleteProjectHandler(req, res, true)
           resolve()
         }, PROJECT_DELETION_DURATION)
       })
@@ -1258,13 +1197,9 @@ function abortRun(req, res) {
 
   const taskFunc = id => {
     currentRun.status.abort_task_id = id
-    const generation = mockStateGeneration
 
     return new Promise(resolve => {
       setTimeout(() => {
-        // the state was reset meanwhile (the next scenario): don't change its pipelines
-        if (generation !== mockStateGeneration) return resolve()
-
         const collectedPipeline = getGraphById(req.params.uid)
 
         currentRun.status.state = 'aborted'
@@ -2232,7 +2167,6 @@ function deleteFunc(req, res) {
     .filter(func => func.metadata.name === req.params.func)
 
   if (collectedFunc.length) {
-    const generation = mockStateGeneration
     const taskFunc = id => {
       forEach(collectedFunc, func => {
         set(func, 'status.deletion_task_id', id)
@@ -2241,9 +2175,6 @@ function deleteFunc(req, res) {
       return new Promise(resolve => {
         setTimeout(
           () => {
-            // the mock state was reset (the next scenario started): the restored functions must stay
-            if (generation !== mockStateGeneration) return resolve()
-
             forEach(collectedFunc, func => {
               delete func.status.deletion_task_id
             })
@@ -3263,11 +3194,24 @@ function getIguazioJob(req, res) {
   })
 }
 
-// Helper request for AQA framework to restore runs/workflows/schedules to their initial state
+// Helper requests for AQA framework: a fresh mock server for the next scenario. The response tells the current
+// instance, the caller waits for another one (`/mock-instance`): the supervisor (scripts/mockServer.js) starts it once
+// this one exits. `generatedData` - the next instance has the "auto-generated-data" project
 app.post('/reset-mock-state', (req, res) => {
-  resetMockState()
+  if (!process.send) {
+    return res.status(409).json({
+      message: 'The mock server restarts on reset only when started by `npm run mock-server`'
+    })
+  }
 
-  res.json({ message: 'Mock state is reset' })
+  const generatedData = req.body?.generatedData === true
+
+  res.on('finish', () => process.send({ type: 'restart', generatedData }, () => process.exit(0)))
+  res.json({ restarting: true, instance: MOCK_INSTANCE })
+})
+
+app.get('/mock-instance', (req, res) => {
+  res.json({ instance: MOCK_INSTANCE, generatedData: withGeneratedData })
 })
 
 const submitJobRateLimiter = rateLimit({

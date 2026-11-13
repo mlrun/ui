@@ -59,8 +59,10 @@ const visibleLength = text => stripVTControlCharacters(text).length
 const truncate = (text, width) => (text.length > width ? `${text.slice(0, width - 1)}…` : text)
 
 export class ConsoleRenderer {
-  constructor({ shards = 1 } = {}) {
+  // `fullPerWorker` - every shard runs all the scenarios (E2E_FULL_PER_WORKER): the same scenario runs in several of them
+  constructor({ shards = 1, fullPerWorker = false } = {}) {
     this.shards = shards
+    this.fullPerWorker = fullPerWorker
     this.total = 0
     this.done = 0
     this.counts = Object.fromEntries(Object.keys(KINDS).map(kind => [kind, 0]))
@@ -81,11 +83,12 @@ export class ConsoleRenderer {
         if (!this.headerPrinted) this.printHeader(event)
         break
       case 'testBegin':
-        this.running.set(event.id, { name: event.name, start: Date.now() })
+        // the same scenario can run in several shards at once (E2E_FULL_PER_WORKER)
+        this.running.set(`${event.shard}:${event.id}`, { name: event.name, start: Date.now() })
         this.drawBar()
         break
       case 'testEnd':
-        this.running.delete(event.id)
+        this.running.delete(`${event.shard}:${event.id}`)
         this.testEnd(event)
         break
       case 'error':
@@ -104,7 +107,9 @@ export class ConsoleRenderer {
     // the header is printed when the first shard starts, the total of all the shards is not known yet
     const details = [
       ...(this.shards > 1
-        ? [`${this.shards} shards`]
+        ? [
+            `${this.shards} ${this.fullPerWorker ? 'workers, each runs all the scenarios' : 'shards'}`
+          ]
         : [
             `${this.total} scenario${this.total === 1 ? '' : 's'}`,
             `${workers} worker${workers === 1 ? '' : 's'}`

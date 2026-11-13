@@ -1421,7 +1421,7 @@ Feature: Project Monitoring Page
         Then check "shard-id-0" value not in "shard_name" column in "Shard_Lags_Table" table on "Consumer_Groups" wizard
 
     @MLPM
-    @smoke
+    @smoke @generatedData
     Scenario: MLPM023 - Check all mandatory components on Alerts page
         Given open url
         And wait load page

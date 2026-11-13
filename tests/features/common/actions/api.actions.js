@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { waitForPageQuiet } from '../../common-tools/element.js'
 import axios from 'axios'
 import { test_port, test_url } from '../../../config.js'
 import qs from 'qs'
@@ -69,7 +70,7 @@ export const deleteAPIMLProject = async (
   expectedStatusCode,
   deleteNonEmpty = false
 ) => {
-  await page.waitForTimeout(1000)
+  await waitForPageQuiet(page)
   await mainHttpClient
     .delete(
       `${REACT_APP_MLRUN_API_URL}/projects/${mlProjectName}`,

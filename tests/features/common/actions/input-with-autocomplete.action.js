@@ -18,7 +18,14 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { expect } from '@playwright/test'
-import { getAttribute, getTexts, retryAssertion, sendKeys } from '../../common-tools/element.js'
+import {
+  getAttribute,
+  getTexts,
+  pollAttribute,
+  retryAssertion,
+  sendKeys,
+  waitForPageQuiet
+} from '../../common-tools/element.js'
 
 export const clearManually = async inputField => {
   const existValue = await getAttribute(inputField, 'value')
@@ -29,41 +36,47 @@ export const clearManually = async inputField => {
 }
 
 export const getOptionValues = async (page, options) => {
-  return getTexts(page.locator(options))
+  // an option is read once, also when the locator matches its label and the nested tooltip wrapper
+  return getTexts(page.locator(options), { outermost: true })
 }
 
 export const typeSearchableValue = async (page, inputGroup, value) => {
   const inputField = page.locator(inputGroup.inputField).first()
+  // the previous suggestion is being handled (e.g. its data is fetched), the typed value would be lost
+  await waitForPageQuiet(page)
   await clearManually(inputField)
   return await sendKeys(inputField, value)
 }
 
-export const verifyTypedValue = async (page, inputGroup, value) => {
-  const inputField = page.locator(inputGroup.inputField).first()
-  const txt = await getAttribute(inputField, 'value')
-  expect(txt).toBe(value)
-}
+// retried: the single read right after typing could get the value before the typed one was handled
+export const verifyTypedValue = async (page, inputGroup, value) =>
+  pollAttribute(page.locator(inputGroup.inputField).first(), 'value', {
+    message: 'Input value'
+  }).toBe(value)
 
 // retried: the suggestions are rendered after the typed value is handled and they can be fetched (e.g. the artifacts
-// of the typed project)
+// of the typed project). EVERY suggestion must contain the fragment (the steps say "every"): one was enough before, so a
+// list that was not filtered at all passed
 export const isContainsSubstringInSuggestedOptions = async (
   page,
   inputGroup,
   value,
-  caseSensitive = false
+  ignoreCase = false
 ) =>
   retryAssertion(async () => {
     let arr = await getOptionValues(page, inputGroup.options)
     let tmpValue = value
 
-    if (caseSensitive) {
+    if (ignoreCase) {
       arr = arr.map(item => item.toLowerCase())
       tmpValue = value.toLowerCase()
     }
 
-    expect(arr.length > 0, `Elements not found: [${arr}]`).toBe(true)
+    const notMatching = arr.filter(item => !item.includes(tmpValue))
+
+    expect(arr.length > 0, `No suggestions are shown for "${value}"`).toBe(true)
     expect(
-      arr.some(item => item.includes(tmpValue)),
-      `Searcheble string "${tmpValue}" do not find in all values of: [${arr}]`
-    ).toBe(true)
+      notMatching,
+      `Suggestions without "${tmpValue}": [${notMatching}], all suggestions: [${arr}]`
+    ).toEqual([])
   })

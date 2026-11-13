@@ -23,7 +23,6 @@ export const incrementValue = async (page, inputGroup, value) => {
   const inc_btn = page.locator(inputGroup.inc_btn).first()
   for (let i = 0; i < value; i++) {
     await click(inc_btn)
-    await page.waitForTimeout(100)
   }
 }
 
@@ -31,6 +30,5 @@ export const decrementValue = async (page, inputGroup, value) => {
   const dec_btn = page.locator(inputGroup.dec_btn).first()
   for (let i = 0; i < value; i++) {
     await click(dec_btn)
-    await page.waitForTimeout(100)
   }
 }

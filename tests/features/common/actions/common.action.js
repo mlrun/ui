@@ -17,21 +17,31 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { timeout } from '../../../config.js'
+import { expectTimeout, readTimeout, timeout } from '../../../config.js'
 import { expect } from '@playwright/test'
 import { access, constants } from 'fs/promises'
 import path from 'path'
 import {
+  classContaining,
   click,
+  expectText,
   getAttribute,
   getRect,
   getText,
+  getTexts,
   isDisplayed,
   normalizeWhitespace,
+  pollAttribute,
+  pollOptions,
+  pollText,
+  readOrNull,
   retryAssertion,
   scrollIntoView,
   sendKeys,
-  waitUntil
+  waitForPageActivityQuiet,
+  waitForDomQuiet,
+  waitForPageQuiet,
+  waitForUrlQuiet
 } from '../../common-tools/element.js'
 
 // the downloads of the scenario are saved to its output directory (`downloads` fixture), not to the user's folder
@@ -52,7 +62,8 @@ export const determineFileAccess = async (finalPath, file) => {
 
 export const navigateToPage = async (page, baseURL) => {
   await page.goto(baseURL)
-  await page.waitForTimeout(1000)
+  // the app can redirect and complete the URL after the load
+  await waitForUrlQuiet(page, { quiet: 300, timeout: 3000 })
 }
 
 export const navigateForward = async page => {
@@ -60,6 +71,12 @@ export const navigateForward = async page => {
 }
 
 export const navigateBack = async page => {
+  // the previous click can push the history entry (e.g. opens a modal) a moment later
+  await waitForUrlQuiet(page, { quiet: 200, timeout: 1500 })
+  // the previous click can open a modal a moment later, with nothing on the page meanwhile (the app handles the click
+  // asynchronously, ~0.25 s): gone back before it was rendered, the modal opened over the previous page and stayed
+  // there (MLM009). A longer quiet period than before the other actions: the opened modal (and its transition) resets it
+  await waitForDomQuiet(page, { quiet: 500, timeout: 3000 })
   await page.goBack()
 }
 
@@ -67,7 +84,15 @@ export const refreshPage = async page => {
   await page.reload()
 }
 
+// the page is loaded when the loader is gone and the app stopped changing the URL: after the first load the app
+// completes the URL (e.g. the pagination params) and re-renders the page, which closes the popups and the menus
+// opened in the meantime and drops the typed values
 export const waitPageLoad = async (page, loader) => {
+  await page.locator(loader).first().waitFor({ state: 'detached', timeout })
+  // the app completes the URL (and re-renders) a moment after the loader disappears: the quiet period is counted
+  // from the last URL change and from the moment the loader disappeared, so nothing is waited when they are long ago
+  await waitForPageActivityQuiet(page, { kinds: ['url', 'loaderGone'], quiet: 250, timeout: 3000 })
+  await waitForPageQuiet(page)
   await page.locator(loader).first().waitFor({ state: 'detached', timeout })
 }
 
@@ -77,7 +102,8 @@ export const waiteUntilComponent = async (page, component) => {
 
 export const clickOnComponent = async (page, component) => {
   const element = page.locator(component).first()
-  await page.waitForTimeout(250)
+  // the page can be re-rendering after the previous action
+  await waitForPageQuiet(page)
   await click(element)
 }
 
@@ -99,7 +125,6 @@ export const clickNearComponent = async (page, component) => {
   })
   if (!isCornerInViewport) {
     await scrollIntoView(element)
-    await page.waitForTimeout(250)
   }
   const coordinates = await getRect(element)
   const x = parseInt(coordinates.x) + 1
@@ -131,65 +156,54 @@ export const hoverComponent = async (page, component, scroll = true) => {
   if (scroll) {
     // default `block: 'start'` puts the element under sticky table headers
     await scrollIntoView(element)
-    await page.waitForTimeout(250)
   }
+  // the box is read once the scroll is over
   const coordinates = await getRect(element)
   // `parseInt` truncates fractional coordinates, so the pointer could land 1px outside the element
   await page.mouse.move(Math.ceil(coordinates.x) + 1, Math.ceil(coordinates.y) + 1)
-  await page.waitForTimeout(250)
+  await waitForPageQuiet(page)
 }
 
 export const verifyClassDisabled = async (page, component) =>
-  retryAssertion(async () => {
-    const inputField = page.locator(component).first()
-    const attributes = await getAttribute(inputField, 'class')
-    const flag = attributes.includes('form-field__wrapper-disabled')
-    expect(flag).toBe(true)
-  })
+  expect(page.locator(component).first()).toHaveClass(
+    classContaining('form-field__wrapper-disabled')
+  )
 
-export const verifyClassEnabled = async (page, component) =>
-  retryAssertion(async () => {
-    const inputField = page.locator(component).first()
-    const attributes = await getAttribute(inputField, 'class')
-    const flag = attributes.includes('form-field__wrapper-disabled')
-    expect(flag).toBe(false)
-  })
+// the negative checks (enabled, valid, collapsed, checked = "not ...") first let the page finish what the previous action
+// started: they passed at once, on the state before an async validation or request disabled the element
+export const verifyClassEnabled = async (page, component) => {
+  await waitForPageQuiet(page)
+  await expect(page.locator(component).first()).not.toHaveClass(
+    classContaining('form-field__wrapper-disabled')
+  )
+}
 
+// the `disabled` attribute, as the previous read: `toBeDisabled` doesn't count it on a non-form element (e.g. a <div>)
 export const verifyElementDisabled = async (page, component) =>
-  retryAssertion(async () => {
-    const element = page.locator(component).first()
-    const flag = await getAttribute(element, 'disabled')
-    expect(flag).toBe('true')
-  })
+  expect(page.locator(component).first()).toHaveAttribute('disabled')
 
-export const verifyElementEnabled = async (page, component) =>
-  retryAssertion(async () => {
-    const element = page.locator(component).first()
-    const flag = await getAttribute(element, 'disabled')
-    expect(flag).toBe(null)
-  })
+export const verifyElementEnabled = async (page, component) => {
+  await waitForPageQuiet(page)
+  await expect(page.locator(component).first()).not.toHaveAttribute('disabled')
+}
 
 export const verifyElementActive = async (page, component) =>
-  retryAssertion(async () => {
-    const element = page.locator(component).first()
-    const flag = await getAttribute(element, 'class')
-    expect(flag.includes('active')).toBe(true)
-  })
+  expect(page.locator(component).first()).toHaveClass(classContaining('active'))
 
 export const verifyElementNotActive = async (page, component) =>
-  retryAssertion(async () => {
-    const element = page.locator(component).first()
-    const flag = await getAttribute(element, 'class')
-    expect(flag.includes('false')).toBe(true)
-  })
+  expect(page.locator(component).first()).toHaveClass(classContaining('false'))
 
 export const componentIsPresent = async (page, component) => {
   const _component = component.root ?? component
   await expect(page.locator(_component).first()).toBeAttached()
 }
 
+// the page first finishes rendering what the previous action requested: a negative check passed at once, before an
+// element that is rendered a moment later (e.g. a popup or an error opened by the previous click) was there
 export const componentIsNotPresent = async (page, component) => {
   const _component = component.root ?? component
+
+  await waitForPageQuiet(page)
   await expect(page.locator(_component)).toHaveCount(0)
 }
 
@@ -197,23 +211,33 @@ export const componentIsVisible = async (page, component) => {
   const _component = component.root ?? component
   const element = page.locator(_component).first()
   // content may still be loading (tab switch, details fetch) - wait for it to be attached
-  await element.waitFor({ state: 'attached', timeout: 5000 })
+  await element.waitFor({ state: 'attached', timeout: expectTimeout })
   // element may still be in its enter transition (notifications have opacity: 0 for 500ms)
-  const displayed = await waitUntil(() => isDisplayed(element), 3000).then(
-    () => true,
-    () => false
-  )
-  expect(displayed).toBe(true)
+  await expect
+    .poll(() => isDisplayed(element), {
+      timeout: expectTimeout,
+      message: `Element is not displayed: ${_component}`
+    })
+    .toBe(true)
 }
 
-export const componentIsNotVisible = async (page, component) =>
-  retryAssertion(async () => {
-    const _component = component.root ?? component
-    const element = page.locator(_component).first()
-    await page.waitForTimeout(250)
-    const displayed = await isDisplayed(element)
-    expect(displayed).toBe(false)
-  })
+// `isDisplayed`, not `toBeHidden`: an element with `opacity: 0` is hidden here, visible for Playwright. A missing
+// element fails the check (`null`), as before
+export const componentIsNotVisible = async (page, component) => {
+  const _component = component.root ?? component
+  const element = page.locator(_component).first()
+
+  await expect
+    .poll(
+      readOrNull(async () => {
+        await waitForPageQuiet(page)
+
+        return isDisplayed(element, { timeout: readTimeout })
+      }),
+      pollOptions(`Element is displayed (or not found): ${_component}`)
+    )
+    .toBe(false)
+}
 
 export const typeIntoInputField = async (page, component, value) => {
   const element = page.locator(component).first()
@@ -221,33 +245,18 @@ export const typeIntoInputField = async (page, component, value) => {
 }
 
 export const verifyTypedText = async (page, component, value) =>
-  retryAssertion(async () => {
-    const element = page.locator(component).first()
-    const txt = await getAttribute(element, 'value')
-    expect(txt).toBe(value)
-  })
+  pollAttribute(page.locator(component).first(), 'value').toBe(value)
 
+// `txt.split()` (no separator) of the previous check was always one item: the text was always compared as a whole
 export const verifyText = async (page, component, value) =>
-  retryAssertion(async () => {
-    const element = page.locator(component).first()
-    const txt = await getText(element)
-    const arr = txt.split()
-    if (arr.length > 1) {
-      expect(
-        arr.some(item => item.includes(value)),
-        `should be expected "${value}" but actual value [${arr}]`
-      ).toBe(true)
-    } else {
-      expect(txt, `should be expected "${value}" but actual value "${txt}"`).toBe(value)
-    }
-  })
+  expectText(page.locator(component).first(), value, { message: `Text of ${component}` })
 
+// the whole text must match ("should be equal"): the patterns are not anchored, so a message with extra text around it, or
+// with more filters than expected ("Name: x, Status: y" for "Name: (.+?)"), matched
 export const verifyTextRegExp = async (page, component, regexp) =>
-  retryAssertion(async () => {
-    const element = page.locator(component).first()
-    const txt = await getText(element)
-    expect(true).toBe(regexp.test(txt))
-  })
+  pollText(page.locator(component).first(), { message: `Text of ${component}` }).toMatch(
+    new RegExp(`^(?:${regexp.source})$`, regexp.flags)
+  )
 
 export const isComponentContainsAttributeValue = async (page, component, attribute, value) => {
   const element = page.locator(component).first()
@@ -255,31 +264,19 @@ export const isComponentContainsAttributeValue = async (page, component, attribu
 }
 
 export const isComponentContainsClass = async (page, component, className) =>
-  retryAssertion(async () => {
-    const element = page.locator(component).first()
-    const classes = await getAttribute(element, 'class')
-    expect(classes.includes(className)).toBe(true)
-  })
+  expect(page.locator(component).first()).toHaveClass(classContaining(className))
 
+// any attribute (`style`, `value`... with the semantics of `getAttribute`), the value as a substring
 export const verifyComponentContainsAttributeValue = async (page, component, attribute, value) =>
-  retryAssertion(async () => {
-    const element = page.locator(component).first()
-    const attributes = await getAttribute(element, attribute)
-    expect(
-      attributes.includes(value),
-      `Attribute "${value}" does not present in "${attribute}" values list "${attributes}"`
-    ).toBe(true)
-  })
+  pollAttribute(page.locator(component).first(), attribute, {
+    message: `"${attribute}" attribute of ${component} should contain "${value}"`
+  }).toContain(value)
 
+// a missing element or attribute fails the check (`null` is rejected by `toContain`, also with `.not`), as before
 export const verifyComponentNotContainsAttributeValue = async (page, component, attribute, value) =>
-  retryAssertion(async () => {
-    const element = page.locator(component).first()
-    const attributes = await getAttribute(element, attribute)
-    expect(
-      attributes.includes(value),
-      `Attribute "${value}" does present in "${attribute}" values list "${attributes}"`
-    ).toBe(false)
-  })
+  pollAttribute(page.locator(component).first(), attribute, {
+    message: `"${attribute}" attribute of ${component} should not contain "${value}"`
+  }).not.toContain(value)
 
 export const collapseAccordionSection = async (page, collapseComponent) => {
   const element = page.locator(collapseComponent).first()
@@ -300,20 +297,12 @@ export const expandAccordionSection = async (page, collapseComponent) => {
 }
 
 export const isAccordionSectionExpanded = async (page, collapseComponent) =>
-  retryAssertion(async () => {
-    const element = page.locator(collapseComponent).first()
-    const attributes = await getAttribute(element, 'class')
-    const flag = attributes.includes('open')
-    expect(flag).toBe(true)
-  })
+  expect(page.locator(collapseComponent).first()).toHaveClass(classContaining('open'))
 
-export const isAccordionSectionCollapsed = async (page, collapseComponent) =>
-  retryAssertion(async () => {
-    const element = page.locator(collapseComponent).first()
-    const attributes = await getAttribute(element, 'class')
-    const flag = attributes.includes('open')
-    expect(flag).toBe(false)
-  })
+export const isAccordionSectionCollapsed = async (page, collapseComponent) => {
+  await waitForPageQuiet(page)
+  await expect(page.locator(collapseComponent).first()).not.toHaveClass(classContaining('open'))
+}
 
 export const getElementText = async (page, component) => {
   const element = page.locator(component).first()
@@ -323,7 +312,7 @@ export const getElementText = async (page, component) => {
 export const scrollToElement = async (page, component) => {
   const element = page.locator(component).first()
   await scrollIntoView(element, {})
-  await page.waitForTimeout(250)
+  await waitForPageQuiet(page)
 }
 
 // hover the center of the element's part in the viewport: the top-left corner (with truncated fractional coordinates)
@@ -345,39 +334,76 @@ export const hoverElementCenter = async (page, element) => {
 export const getHoverHintText = async (page, hintComponent, expectedText) => {
   let hintText = ''
 
-  await waitUntil(async () => {
-    const hints = await page.locator(hintComponent).all()
+  await expect
+    .poll(
+      async () => {
+        const texts = await getTexts(page.locator(hintComponent))
 
-    for (const hint of hints) {
-      const text = await getText(hint, { timeout: 500 }).catch(() => '')
+        hintText = texts.filter(Boolean).at(-1) ?? hintText
 
-      if (text) hintText = text
-      if (normalizeWhitespace(text) === normalizeWhitespace(expectedText)) return true
-    }
-
-    return false
-  }, 3000).catch(() => {})
+        return texts.some(text => normalizeWhitespace(text) === normalizeWhitespace(expectedText))
+      },
+      { timeout: 3000 }
+    )
+    .toBe(true)
+    .catch(() => {})
 
   return hintText
 }
 
-export const checkComponentHintTextWithHover = async (page, component, hintComponent, text) => {
-  const hintButton = page.locator(component).first()
+// hovers an element and reads its tooltip (the expected one is waited for, see `getHoverHintText`). The tooltip of the
+// previously hovered element can cover this one (e.g. the status counters next to each other): the pointer stays on
+// that tooltip, keeps it open, and the expected one never shows (MLPM002). Then the pointer is moved away, the open
+// tooltips are given time to close and the element is hovered again. Not moved away first: an element shown only
+// while its row is hovered (e.g. the quick links of a table row) would be hidden
+export const hoverAndReadHint = async (page, element, hintComponent, expectedText) => {
   // elements below the fold can't be hovered
-  await scrollIntoView(hintButton)
-  await page.waitForTimeout(250)
-  await hoverElementCenter(page, hintButton)
-  const hintText = await getHoverHintText(page, hintComponent, text)
+  await scrollIntoView(element)
+  await hoverElementCenter(page, element)
+
+  const hintText = await getHoverHintText(page, hintComponent, expectedText)
+
+  if (normalizeWhitespace(hintText) === normalizeWhitespace(expectedText)) return hintText
+
+  await page.mouse.move(0, 0)
+  await expect
+    .poll(async () => (await getTexts(page.locator(hintComponent))).filter(Boolean).length, {
+      timeout: 1500
+    })
+    .toBe(0)
+    .catch(() => {})
+  await scrollIntoView(element)
+  await hoverElementCenter(page, element)
+
+  return getHoverHintText(page, hintComponent, expectedText)
+}
+
+export const checkComponentHintTextWithHover = async (page, component, hintComponent, text) => {
+  const hintText = await hoverAndReadHint(
+    page,
+    page.locator(component).first(),
+    hintComponent,
+    text
+  )
 
   expect(normalizeWhitespace(hintText)).toBe(normalizeWhitespace(text))
 }
 
+// a saved value must not be empty: '' (a hidden or not yet rendered element) compared with another empty one passed
+export const readNonEmptyText = (locator, what) =>
+  retryAssertion(async () => {
+    const text = await getText(locator, { timeout: readTimeout })
+
+    expect(text, `${what} is empty, there is nothing to save`).not.toBe('')
+
+    return text
+  })
+
 export const putToTestContextElementValue = async (page, testContext, element, pageValue) => {
-  const pageElement = page.locator(element).first()
-  testContext[pageValue] = await getText(pageElement)
+  testContext[pageValue] = await readNonEmptyText(page.locator(element).first(), element)
 }
 
 export const scrollToWebElement = async (page, element) => {
   await scrollIntoView(element, {})
-  await page.waitForTimeout(250)
+  await waitForPageQuiet(page)
 }

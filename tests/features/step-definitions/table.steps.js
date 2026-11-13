@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { When, Then } from '../support/world.js'
+import { readTimeout } from '../../config.js'
 import { panGraphToElement } from '../common/actions/graph.action.js'
 import pageObjects from '../common/page-objects.js'
 import {
@@ -80,9 +81,10 @@ import { isRowActive } from '../common/actions/tab-selector.action.js'
 import {
   getText,
   isDisplayed,
+  pollOptions,
   retryAssertion,
   scrollIntoView,
-  waitUntil
+  waitForPageQuiet
 } from '../common-tools/element.js'
 
 Then(
@@ -174,7 +176,6 @@ Then(
       false // scroll ?
     )
     await openActionMenu(this.page, actionMenuSel)
-    await this.page.waitForTimeout(500)
     await selectOptionInActionMenu(this.page, actionMenuSel, option)
   }
 )
@@ -203,7 +204,6 @@ Then(
       false // scroll ?
     )
     await openActionMenu(this.page, actionMenuSel)
-    await this.page.waitForTimeout(500)
     await selectOptionInActionMenu(this.page, actionMenuSel, option)
   }
 )
@@ -214,7 +214,7 @@ When('add rows to {string} table on {string} wizard', async function (table, wiz
 
   for (const row_indx in rows) {
     await clickOnComponent(this.page, pageObjects[wizard][table]['add_row_btn'])
-    await this.page.waitForTimeout(100)
+    await waitForPageQuiet(this.page)
     for (const i in inputFields) {
       await clickOnComponent(
         this.page,
@@ -227,7 +227,6 @@ When('add rows to {string} table on {string} wizard', async function (table, wiz
       )
     }
     await clickNearComponent(this.page, pageObjects[wizard][table]['root'])
-    await this.page.waitForTimeout(250)
   }
 })
 
@@ -237,18 +236,15 @@ When('add data to {string} table on {string} wizard', async function (table, wiz
 
   for (const row_indx in rows) {
     await clickOnComponent(this.page, pageObjects[wizard][table]['add_row_btn'])
-    await this.page.waitForTimeout(100)
     await clickOnComponent(
       this.page,
       pageObjects[wizard][table]['tableFields'][inputFields[0]](parseInt(row_indx) + 2)
     )
-    await this.page.waitForTimeout(250)
     await typeIntoInputField(
       this.page,
       pageObjects[wizard][table]['tableFields'][inputFields[0]](parseInt(row_indx) + 2),
       rows[row_indx][0]
     )
-    await this.page.waitForTimeout(100)
     await openDropdown(
       this.page,
       pageObjects[wizard][table]['tableFields'][inputFields[1]](parseInt(row_indx) + 2)
@@ -258,23 +254,19 @@ When('add data to {string} table on {string} wizard', async function (table, wiz
       pageObjects[wizard][table]['tableFields'][inputFields[1]](parseInt(row_indx) + 2),
       rows[row_indx][1]
     )
-    await this.page.waitForTimeout(100)
     await typeIntoInputField(
       this.page,
       pageObjects[wizard][table]['tableFields'][inputFields[2]](parseInt(row_indx) + 2),
       rows[row_indx][2]
     )
-    await this.page.waitForTimeout(100)
     await hoverComponent(
       this.page,
       pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 2)
     )
-    await this.page.waitForTimeout(100)
     await clickOnComponent(
       this.page,
       pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 2)
     )
-    await this.page.waitForTimeout(100)
   }
 })
 
@@ -288,18 +280,15 @@ When(
       let rowsNumber = await getTableRows(this.page, pageObjects[wizard][table])
 
       await clickOnComponent(this.page, pageObjects[wizard][table]['add_row_btn'])
-      await this.page.waitForTimeout(100)
       await clickOnComponent(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[0]](rowsNumber + 2)
       )
-      await this.page.waitForTimeout(250)
       await typeIntoInputField(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[0]](rowsNumber + 2),
         rows[row_indx][0]
       )
-      await this.page.waitForTimeout(100)
       await openDropdown(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[1]](rowsNumber + 2)
@@ -309,23 +298,19 @@ When(
         pageObjects[wizard][table]['tableFields'][inputFields[1]](rowsNumber + 2),
         rows[row_indx][1]
       )
-      await this.page.waitForTimeout(100)
       await typeIntoInputField(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[2]](rowsNumber + 2),
         rows[row_indx][2]
       )
-      await this.page.waitForTimeout(100)
       await hoverComponent(
         this.page,
         pageObjects[wizard][table]['tableFields']['apply_btn'](rowsNumber + 2)
       )
-      await this.page.waitForTimeout(100)
       await clickOnComponent(
         this.page,
         pageObjects[wizard][table]['tableFields']['apply_btn'](rowsNumber + 2)
       )
-      await this.page.waitForTimeout(100)
     }
   }
 )
@@ -340,18 +325,15 @@ When(
       let rowsNumber = await getTableRows(this.page, pageObjects[wizard][table])
 
       await clickOnComponent(this.page, pageObjects[wizard][table]['add_row_btn'])
-      await this.page.waitForTimeout(100)
       await clickOnComponent(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[0]](rowsNumber + 1)
       )
-      await this.page.waitForTimeout(250)
       await typeIntoInputField(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[0]](rowsNumber + 1),
         rows[row_indx][0]
       )
-      await this.page.waitForTimeout(100)
       await openDropdown(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[1]](rowsNumber + 1)
@@ -361,23 +343,19 @@ When(
         pageObjects[wizard][table]['tableFields'][inputFields[1]](rowsNumber + 1),
         rows[row_indx][1]
       )
-      await this.page.waitForTimeout(100)
       await typeIntoInputField(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[2]](rowsNumber + 1),
         rows[row_indx][2]
       )
-      await this.page.waitForTimeout(100)
       await hoverComponent(
         this.page,
         pageObjects[wizard][table]['tableFields']['apply_btn'](rowsNumber + 1)
       )
-      await this.page.waitForTimeout(100)
       await clickOnComponent(
         this.page,
         pageObjects[wizard][table]['tableFields']['apply_btn'](rowsNumber + 1)
       )
-      await this.page.waitForTimeout(100)
     }
   }
 )
@@ -392,18 +370,15 @@ When(
       let rowsNumber = await getTableRows(this.page, pageObjects[wizard][table])
 
       await clickOnComponent(this.page, pageObjects[wizard][table]['add_row_btn'])
-      await this.page.waitForTimeout(100)
       await clickOnComponent(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[0]](rowsNumber + 2)
       )
-      await this.page.waitForTimeout(250)
       await typeIntoInputField(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[0]](rowsNumber + 2),
         rows[row_indx][0]
       )
-      await this.page.waitForTimeout(100)
       await openDropdown(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[1]](rowsNumber + 2)
@@ -413,41 +388,34 @@ When(
         pageObjects[wizard][table]['tableFields'][inputFields[1]](rowsNumber + 2),
         rows[row_indx][1]
       )
-      await this.page.waitForTimeout(100)
       await selectOptionInDropdownWithoutCheck(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[2]](rowsNumber + 2),
         rows[row_indx][2]
       )
-      await this.page.waitForTimeout(100)
       await selectOptionInDropdownWithoutCheck(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[3]](rowsNumber + 2),
         rows[row_indx][3]
       )
-      await this.page.waitForTimeout(100)
       await selectOptionInDropdownWithoutCheck(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[4]](rowsNumber + 2),
         rows[row_indx][4]
       )
-      await this.page.waitForTimeout(100)
       await selectOptionInDropdownWithoutCheck(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[4]](rowsNumber + 2),
         rows[row_indx][5]
       )
-      await this.page.waitForTimeout(100)
       await hoverComponent(
         this.page,
         pageObjects[wizard][table]['tableFields']['apply_btn'](rowsNumber + 2)
       )
-      await this.page.waitForTimeout(100)
       await clickOnComponent(
         this.page,
         pageObjects[wizard][table]['tableFields']['apply_btn'](rowsNumber + 2)
       )
-      await this.page.waitForTimeout(100)
     }
   }
 )
@@ -460,18 +428,15 @@ When(
 
     for (const row_indx in rows) {
       await clickOnComponent(this.page, pageObjects[wizard][table]['add_row_btn'])
-      await this.page.waitForTimeout(100)
       await clickOnComponent(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[0]](parseInt(row_indx) + 2)
       )
-      await this.page.waitForTimeout(250)
       await typeIntoInputField(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[0]](parseInt(row_indx) + 2),
         rows[row_indx][0]
       )
-      await this.page.waitForTimeout(100)
       await openDropdown(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[1]](parseInt(row_indx) + 2)
@@ -481,13 +446,12 @@ When(
         pageObjects[wizard][table]['tableFields'][inputFields[1]](parseInt(row_indx) + 2),
         rows[row_indx][1]
       )
-      await this.page.waitForTimeout(100)
       await typeIntoInputField(
         this.page,
         pageObjects[wizard][table]['tableFields'][inputFields[2]](parseInt(row_indx) + 2),
         rows[row_indx][2]
       )
-      await this.page.waitForTimeout(100)
+      await waitForPageQuiet(this.page)
 
       if (rows[row_indx][3].length !== 0) {
         await typeIntoInputField(
@@ -495,18 +459,15 @@ When(
           pageObjects[wizard][table]['tableFields'][inputFields[3]](parseInt(row_indx) + 2),
           rows[row_indx][3]
         )
-        await this.page.waitForTimeout(100)
       }
       await hoverComponent(
         this.page,
         pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 2)
       )
-      await this.page.waitForTimeout(100)
       await clickOnComponent(
         this.page,
         pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 2)
       )
-      await this.page.waitForTimeout(100)
     }
   }
 )
@@ -517,18 +478,15 @@ When('fill data to {string} table on {string} wizard', async function (table, wi
 
   for (const row_indx in rows) {
     await clickOnComponent(this.page, pageObjects[wizard][table]['add_row_btn'])
-    await this.page.waitForTimeout(100)
     await clickOnComponent(
       this.page,
       pageObjects[wizard][table]['tableFields'][inputFields[0]](parseInt(row_indx) + 3)
     )
-    await this.page.waitForTimeout(250)
     await typeIntoInputField(
       this.page,
       pageObjects[wizard][table]['tableFields'][inputFields[0]](parseInt(row_indx) + 3),
       rows[row_indx][0]
     )
-    await this.page.waitForTimeout(100)
     await openDropdown(
       this.page,
       pageObjects[wizard][table]['tableFields'][inputFields[1]](parseInt(row_indx) + 3)
@@ -538,23 +496,19 @@ When('fill data to {string} table on {string} wizard', async function (table, wi
       pageObjects[wizard][table]['tableFields'][inputFields[1]](parseInt(row_indx) + 3),
       rows[row_indx][1]
     )
-    await this.page.waitForTimeout(100)
     await typeIntoInputField(
       this.page,
       pageObjects[wizard][table]['tableFields'][inputFields[2]](parseInt(row_indx) + 3),
       rows[row_indx][2]
     )
-    await this.page.waitForTimeout(250)
     await hoverComponent(
       this.page,
       pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 3)
     )
-    await this.page.waitForTimeout(100)
     await clickOnComponent(
       this.page,
       pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 3)
     )
-    await this.page.waitForTimeout(100)
   }
 })
 
@@ -566,7 +520,7 @@ When(
 
     for (const row_indx in rows) {
       await clickOnComponent(this.page, pageObjects[wizard][table]['add_row_btn'])
-      await this.page.waitForTimeout(500)
+      await waitForPageQuiet(this.page)
       for (const i in inputFields) {
         await typeIntoInputField(
           this.page,
@@ -576,7 +530,6 @@ When(
       }
       await clickOnComponent(this.page, pageObjects[wizard][table]['save_row_btn'])
       await clickNearComponent(this.page, pageObjects[wizard][table]['root'])
-      await this.page.waitForTimeout(500)
     }
   }
 )
@@ -589,7 +542,7 @@ When(
 
     for (const row_indx in rows) {
       await clickOnComponent(this.page, pageObjects[wizard][table]['add_row_btn'])
-      await this.page.waitForTimeout(500)
+      await waitForPageQuiet(this.page)
       for (const i in inputFields) {
         await typeIntoInputField(
           this.page,
@@ -598,24 +551,21 @@ When(
         )
       }
       await clickOnComponent(this.page, pageObjects[wizard][table]['save_row_btn'])
-      await this.page.waitForTimeout(500)
     }
   }
 )
 
 // the positional checks ("verify values/data in ... table") verified only the listed rows: a leftover (e.g. not removed)
 // or an extra row passed. The row after the listed ones must not exist (`index` - its index in the step's indexing)
-const expectNoRowAfter = (page, table, column, index) =>
-  retryAssertion(async () => {
-    const field = table['tableFields'][column](index)
-    const selector = typeof field === 'string' ? field : field.root
-    const extraRows = await page.locator(selector).count()
+const expectNoRowAfter = (page, table, column, index) => {
+  const field = table['tableFields'][column](index)
+  const selector = typeof field === 'string' ? field : field.root
 
-    expect(
-      extraRows,
-      `The table has more rows than the expected ones: row ${index} exists (${selector})`
-    ).toBe(0)
-  })
+  return expect(
+    page.locator(selector),
+    `The table has more rows than the expected ones: row ${index} exists (${selector})`
+  ).toHaveCount(0)
+}
 
 Then(
   'verify values in {string} table on {string} wizard',
@@ -761,7 +711,7 @@ When(
       this.page,
       pageObjects[wizardName][tableName]['headerSorters'][fieldName]
     )
-    await this.page.waitForTimeout(250)
+    await waitForPageQuiet(this.page)
   }
 )
 
@@ -835,7 +785,7 @@ When(
 
     for (const row_indx in rows) {
       await clickOnComponent(this.page, pageObjects[wizard][accordion][table]['add_row_btn'])
-      await this.page.waitForTimeout(100)
+      await waitForPageQuiet(this.page)
       for (const i in inputFields) {
         const component = pageObjects[wizard][accordion][table]['tableFields'][inputFields[i]](
           parseInt(row_indx) + 1
@@ -855,8 +805,6 @@ When(
       } else {
         await clickNearComponent(this.page, pageObjects[wizard][accordion][table]['root'])
       }
-
-      await this.page.waitForTimeout(100)
     }
   }
 )
@@ -869,7 +817,7 @@ When(
 
     for (const row_indx in rows) {
       await clickOnComponent(this.page, pageObjects[wizard][accordion][table]['add_row_btn'])
-      await this.page.waitForTimeout(100)
+      await waitForPageQuiet(this.page)
       for (const i in inputFields) {
         const component = pageObjects[wizard][accordion][table]['tableFields'][inputFields[i]](3)
         // const component = pageObjects[wizard][accordion][table]['tableFields'][inputFields[i]]
@@ -882,8 +830,6 @@ When(
       } else {
         await clickNearComponent(this.page, pageObjects[wizard][accordion][table]['root'])
       }
-
-      await this.page.waitForTimeout(100)
     }
   }
 )
@@ -896,7 +842,7 @@ When(
 
     for (const row_indx in rows) {
       await clickOnComponent(this.page, pageObjects[wizard][accordion][table]['add_row_btn'])
-      await this.page.waitForTimeout(100)
+      await waitForPageQuiet(this.page)
       for (const i in inputFields) {
         const component = pageObjects[wizard][accordion][table]['tableFields'][inputFields[i]](
           parseInt(row_indx) + 2
@@ -914,17 +860,13 @@ When(
             parseInt(row_indx) + 2
           )
         )
-        await this.page.waitForTimeout(100)
         await clickOnComponent(
           this.page,
           pageObjects[wizard][accordion][table]['tableFields']['apply_edit_btn'](
             parseInt(row_indx) + 2
           )
         )
-        await this.page.waitForTimeout(100)
       }
-
-      await this.page.waitForTimeout(100)
     }
   }
 )
@@ -937,7 +879,7 @@ When(
 
     for (const row_indx in rows) {
       await clickOnComponent(this.page, pageObjects[wizard][table]['add_row_btn'])
-      await this.page.waitForTimeout(100)
+      await waitForPageQuiet(this.page)
       for (const i in inputFields) {
         const component = pageObjects[wizard][table]['tableFields'][inputFields[i]](
           parseInt(row_indx) + 2
@@ -953,15 +895,11 @@ When(
           this.page,
           pageObjects[wizard][table]['tableFields']['apply_edit_btn'](parseInt(row_indx) + 2)
         )
-        await this.page.waitForTimeout(100)
         await clickOnComponent(
           this.page,
           pageObjects[wizard][table]['tableFields']['apply_edit_btn'](parseInt(row_indx) + 2)
         )
-        await this.page.waitForTimeout(100)
       }
-
-      await this.page.waitForTimeout(100)
     }
   }
 )
@@ -989,19 +927,16 @@ When(
       pageObjects[wizard][table]['tableFields'][inputFields[0]](index + 1),
       row[0]
     )
-    await this.page.waitForTimeout(100)
     await typeIntoInputField(
       this.page,
       pageObjects[wizard][table]['tableFields'][inputFields[1]](index + 1),
       row[1]
     )
-    await this.page.waitForTimeout(100)
     await typeIntoInputField(
       this.page,
       pageObjects[wizard][table]['tableFields'][inputFields[2]](index + 1),
       row[2]
     )
-    await this.page.waitForTimeout(100)
     await hoverComponent(
       this.page,
       pageObjects[wizard][table]['tableFields']['apply_btn'](index + 1)
@@ -1010,7 +945,7 @@ When(
       this.page,
       pageObjects[wizard][table]['tableFields']['apply_btn'](index + 1)
     )
-    await this.page.waitForTimeout(100)
+    await waitForPageQuiet(this.page)
   }
 )
 
@@ -1039,7 +974,7 @@ When(
       this.page,
       pageObjects[wizard][accordion][table]['tableFields']['apply_edit_btn'](index)
     )
-    await this.page.waitForTimeout(100)
+    await waitForPageQuiet(this.page)
   }
 )
 
@@ -1067,13 +1002,12 @@ When(
         pageObjects[wizard][table]['tableFields'][inputFields[i]](index + 1),
         row[i]
       )
-      await this.page.waitForTimeout(100)
     }
     await clickOnComponent(
       this.page,
       pageObjects[wizard][table]['tableFields']['apply_btn'](index + 1)
     )
-    await this.page.waitForTimeout(100)
+    await waitForPageQuiet(this.page)
   }
 )
 
@@ -1098,13 +1032,12 @@ When(
         pageObjects[wizard][table]['tableFields'][inputFields[i]](index + 2),
         row[i]
       )
-      await this.page.waitForTimeout(100)
     }
     await clickOnComponent(
       this.page,
       pageObjects[wizard][table]['tableFields']['apply_btn'](index + 2)
     )
-    await this.page.waitForTimeout(100)
+    await waitForPageQuiet(this.page)
   }
 )
 
@@ -1212,15 +1145,16 @@ When(
         const rowElement = this.page.locator(table.rowRoot(indx)).first()
 
         await scrollIntoView(rowElement, { block: 'center' })
-        await this.page.waitForTimeout(250)
         await hoverElementCenter(this.page, rowElement)
       } else {
         await hoverComponent(this.page, button, false)
       }
-      await waitUntil(
-        () => isDisplayed(this.page.locator(button).first(), { timeout: 1000 }),
-        3000
-      ).catch(() => {})
+      await expect
+        .poll(() => isDisplayed(this.page.locator(button).first(), { timeout: 1000 }), {
+          timeout: 3000
+        })
+        .toBeTruthy()
+        .catch(() => {})
       await clickOnComponent(this.page, button)
     }
   }
@@ -1302,7 +1236,6 @@ When(
         pageObjects[wizardName][tableName]['tableFields'][field](indx),
         true
       )
-      await this.page.waitForTimeout(500)
       await clickOnComponent(
         this.page,
         pageObjects[wizardName][tableName]['tableFields'][field](indx)
@@ -1331,7 +1264,6 @@ When(
         pageObjects[wizardName][accordion][tableName]['tableFields'][field](indx),
         true
       )
-      await this.page.waitForTimeout(500)
       await clickOnComponent(
         this.page,
         pageObjects[wizardName][accordion][tableName]['tableFields'][field](indx)
@@ -1405,6 +1337,9 @@ When(
 Then(
   'value in {string} column with {string} in {string} on {string} wizard should contains {string} in {string}',
   async function (column, type, table, wizard, substring, overlay) {
+    // an unsupported type checked nothing: the step passed
+    expect(['dropdowns'], `"${type}" type is not supported: dropdowns`).toContain(type)
+
     if (type === 'dropdowns') {
       await isContainsSubstringInColumnDropdownCellsOverlay(
         this.page,
@@ -1449,6 +1384,12 @@ Then(
 Then(
   'value in {string} column with {string} in {string} on {string} wizard should contains {string}',
   async function (column, type, table, wizard, substring) {
+    // an unsupported type checked nothing: the step passed
+    expect(
+      ['attribute', 'attribute_list', 'text', 'dropdowns', 'tooltip'],
+      `"${type}" type is not supported: attribute, attribute_list, text, dropdowns, tooltip`
+    ).toContain(type)
+
     if (type === 'attribute') {
       await isContainsSubstringInColumnAttributeCells(
         this.page,
@@ -1499,6 +1440,11 @@ Then(
 Then(
   'value in {string} column with {string} in {string} in {string} on {string} wizard should contains {string}',
   async function (column, type, table, accordion, wizard, substring) {
+    // an unsupported type checked nothing: the step passed
+    expect(['text', 'dropdowns'], `"${type}" type is not supported: text, dropdowns`).toContain(
+      type
+    )
+
     if (type === 'text') {
       await isContainsSubstringInColumnCells(
         this.page,
@@ -1540,9 +1486,7 @@ Then(
       this.page,
       pageObjects[wizard][table]['tableFields'][columnName](indx)['label']
     )
-    await this.page.waitForTimeout(500)
     await openActionMenu(this.page, actionMenuSel)
-    await this.page.waitForTimeout(500)
     await checkActionMenuOptions(
       this.page,
       pageObjects[wizard][table]['tableFields']['action_menu'](indx),
@@ -1569,9 +1513,7 @@ Then(
     )
 
     await hoverComponent(this.page, pageObjects[wizard][table]['tableFields'][column](indx))
-    await this.page.waitForTimeout(500)
     await openActionMenu(this.page, actionMenuSel)
-    await this.page.waitForTimeout(500)
     await checkActionMenuOptions(
       this.page,
       pageObjects[wizard][table]['tableFields']['action_menu'](indx),
@@ -1598,9 +1540,7 @@ Then(
     )
 
     await hoverComponent(this.page, pageObjects[wizard][table]['tableFields'][column](indx), false)
-    await this.page.waitForTimeout(500)
     await openActionMenu(this.page, actionMenuSel)
-    await this.page.waitForTimeout(500)
     await checkActionMenuOptions(
       this.page,
       pageObjects[wizard][table]['tableFields']['action_menu'](indx),
@@ -1627,9 +1567,7 @@ Then(
     )
 
     await hoverComponent(this.page, pageObjects[wizard][table]['tableFields'][column](indx))
-    await this.page.waitForTimeout(500)
     await openActionMenu(this.page, actionMenuSel)
-    await this.page.waitForTimeout(500)
     await verifyOptionInActionMenuEnabled(this.page, actionMenuSel, option)
   }
 )
@@ -1652,9 +1590,7 @@ Then(
     )
 
     await hoverComponent(this.page, pageObjects[wizard][table]['tableFields'][column](indx))
-    await this.page.waitForTimeout(500)
     await openActionMenu(this.page, actionMenuSel)
-    await this.page.waitForTimeout(500)
     await verifyOptionInActionMenuDisabled(this.page, actionMenuSel, option)
   }
 )
@@ -1677,7 +1613,6 @@ Then(
     )
 
     await hoverComponent(this.page, pageObjects[wizard][table]['tableFields'][column](indx), false)
-    await this.page.waitForTimeout(500)
     await componentIsPresent(this.page, actionMenuSel)
   }
 )
@@ -1704,7 +1639,7 @@ Then(
       pageObjects[wizard][table]['tableFields'][column](indx),
       ...(scroll === 'false' ? [false] : [])
     )
-    await this.page.waitForTimeout(500)
+    await waitForPageQuiet(this.page)
     await checkComponentHintTextWithHover(
       this.page,
       actionMenuSel,
@@ -1753,16 +1688,16 @@ Then(
       pageObjects[wizard][table]['tableFields'][column](indx),
       ...(scroll === 'false' ? [false] : [])
     )
-    await this.page.waitForTimeout(250)
     await clickOnComponent(this.page, actionMenuSel)
-    await this.page.waitForTimeout(500)
+    await waitForPageQuiet(this.page)
   }
 )
 
 Then(
   'subtable column {string} in {string} in {string} on {string} wizard should contains {string} in {string} column',
   async function (subTable, table, accordion, wizard, subString, subColumn) {
-    const numOfRows = await getTableRows(this.page, pageObjects[wizard][accordion][table])
+    // the table must have rows: counted before it was rendered (0), the check passed without checking anything
+    const numOfRows = await waitForTableRows(this.page, pageObjects[wizard][accordion][table])
 
     for (let i = 1; i <= numOfRows; i++) {
       const cellTable = await getCellByIndexColumn(
@@ -1799,7 +1734,7 @@ When(
   'expand row with {string} at {string} in {string} in {string} on {string} wizard',
   async function (value, column, table, accordion, wizard) {
     // TODO: without creating link to the table component step works unstable
-    await this.page.waitForTimeout(500)
+    await waitForPageQuiet(this.page)
     const tableElement = pageObjects[wizard][accordion][table]
     const arr = await waitForRowIndexesByColumnValue(this.page, tableElement, column, value)
     const indx = arr[0]
@@ -1871,8 +1806,16 @@ When(
       value
     )
     const indx = arr[0]
+    const tableObject = pageObjects[wizard][table]
 
-    await clickOnComponent(this.page, pageObjects[wizard][table]['rowRoot'](indx))
+    // the center of a project card can be a statistics link, a label chip or the actions menu (they are not opening
+    // the project and their position depends on the loaded data), so a project is opened by its title
+    await clickOnComponent(
+      this.page,
+      table === 'Projects_Table'
+        ? tableObject['tableFields']['name'](indx)
+        : tableObject['rowRoot'](indx)
+    )
   }
 )
 
@@ -1954,7 +1897,6 @@ When(
             pageObjects[wizardName][accordionName][pageComponents[indx]],
             row[indx]
           )
-          await this.page.waitForTimeout(500)
           await checkDropdownSelectedOption(
             this.page,
             pageObjects[wizardName][accordionName][pageComponents[indx]],
@@ -2004,7 +1946,6 @@ When(
             pageObjects[wizardName][pageComponents[indx]],
             row[indx]
           )
-          await this.page.waitForTimeout(500)
           await checkDropdownSelectedOption(
             this.page,
             pageObjects[wizardName][pageComponents[indx]],
@@ -2014,13 +1955,11 @@ When(
 
         if (pageComponents[indx].includes('Input')) {
           await typeValue(this.page, pageObjects[wizardName][pageComponents[indx]], row[indx])
-          await this.page.waitForTimeout(250)
         }
 
         if (pageComponents[indx].includes('Button')) {
           if (row[indx] === 'yes') {
             await clickOnComponent(this.page, pageObjects[wizardName][pageComponents[indx]])
-            await this.page.waitForTimeout(250)
           }
         }
       }
@@ -2044,7 +1983,6 @@ When(
             pageObjects[wizardName][pageComponents[indx]],
             row[indx]
           )
-          await this.page.waitForTimeout(500)
           await checkDropdownSelectedOption(
             this.page,
             pageObjects[wizardName][pageComponents[indx]],
@@ -2054,19 +1992,16 @@ When(
 
         if (pageComponents[indx].includes('Input')) {
           await typeValue(this.page, pageObjects[wizardName][pageComponents[indx]], row[indx])
-          await this.page.waitForTimeout(500)
         }
 
         if (pageComponents[indx].includes('Button')) {
           if (row[indx] === 'yes') {
             await clickOnComponent(this.page, pageObjects[wizardName][pageComponents[indx]])
-            await this.page.waitForTimeout(500)
           }
         }
 
         if (pageComponents[indx].includes('Add')) {
           if (row[indx] === 'yes') {
-            await this.page.waitForTimeout(500)
             await waiteUntilComponent(
               this.page,
               pageObjects['Notification_Popup']['Notification_Pop_Up_Cross_Close_Button']
@@ -2075,7 +2010,6 @@ When(
               this.page,
               pageObjects['Notification_Popup']['Notification_Pop_Up_Cross_Close_Button']
             )
-            await this.page.waitForTimeout(500)
           }
         }
       }
@@ -2111,11 +2045,8 @@ When(
       )
 
       await hoverComponent(this.page, cell)
-      await this.page.waitForTimeout(500)
       await openActionMenu(this.page, actionMenuSel)
-      await this.page.waitForTimeout(500)
       await selectOptionInActionMenu(this.page, actionMenuSel, option)
-      await this.page.waitForTimeout(500)
     }
   }
 )
@@ -2153,11 +2084,8 @@ When(
       )
 
       await hoverComponent(this.page, cell)
-      await this.page.waitForTimeout(500)
       await openActionMenu(this.page, actionMenuSel)
-      await this.page.waitForTimeout(500)
       await selectOptionInActionMenu(this.page, actionMenuSel, option)
-      await this.page.waitForTimeout(500)
     }
   }
 )
@@ -2165,15 +2093,25 @@ When(
 Then(
   'verify that {int} row elements are displayed in {string} on {string} wizard',
   async function (rowElement, tableName, wizardName) {
-    // retried: the table can still be re-rendering (filtering, scrolling) when the step starts
-    await retryAssertion(async () => {
-      const rowsNumber = await getTableRows(this.page, pageObjects[wizardName][tableName])
+    // retried: the table can still be re-rendering (filtering, scrolling) when the step starts.
+    // The rows are counted by the first column, as `getTableRows`, and only the displayed ones ("are displayed"): the
+    // count of the rows in the DOM passed with hidden rows
+    const table = pageObjects[wizardName][tableName]
 
-      expect(
-        rowsNumber,
-        `${rowsNumber} row elements are not equal expected ${rowElement} row elements`
-      ).toBe(rowElement)
-    })
+    await expect
+      .poll(
+        () =>
+          this.page
+            .locator(table.tableColumns[table.tableCulumnNames[0]])
+            .evaluateAll(
+              cells =>
+                cells.filter(cell =>
+                  cell.checkVisibility({ opacityProperty: true, visibilityProperty: true })
+                ).length
+            ),
+        pollOptions(`The number of displayed row elements in "${tableName}"`)
+      )
+      .toBe(rowElement)
   }
 )
 
@@ -2231,7 +2169,6 @@ When(
       this.page,
       pageObjects[wizardName][graphName].nodesTable.tableFields['name'](index)
     )
-    await this.page.waitForTimeout(350)
     await isComponentContainsClass(
       this.page,
       pageObjects[wizardName][graphName].nodesTable.rowRoot(index),
@@ -2247,7 +2184,6 @@ When(
       this.page,
       pageObjects[wizard][graphName].nodesTable.tableFields[column](index)
     )
-    await this.page.waitForTimeout(250)
     await isComponentContainsClass(
       this.page,
       pageObjects[wizard][graphName].nodesTable.rowRoot(index),
@@ -2338,14 +2274,17 @@ Then(
       const cellComponent = this.page
         .locator(pageObjects[wizardName][overviewTable].tableFields['value'](arr[0]))
         .first()
-      const cellValue = await getText(cellComponent)
 
-      expect(
-        this.testContext[contextContainer].includes(cellValue),
-        `"${key}" value "${cellValue}" is not in link "${this.testContext[
-          contextContainer
-        ].includes(cellValue)}"`
-      ).toBe(true)
+      // retried: the single read could get the cell before its value was rendered. An empty value is a failure:
+      // the link includes "" (the previous check passed on an empty or hidden cell)
+      await retryAssertion(async () => {
+        const cellValue = await getText(cellComponent, { timeout: readTimeout })
+
+        expect(
+          cellValue !== '' && this.testContext[contextContainer].includes(cellValue),
+          `"${key}" value "${cellValue}" is not in link "${this.testContext[contextContainer]}"`
+        ).toBe(true)
+      })
     }
   }
 )
@@ -2365,13 +2304,17 @@ Then(
       const cellComponent = this.page
         .locator(pageObjects[wizardName][overviewTable].tableFields['value'](arr[0]))
         .first()
-      const cellValue = await getText(cellComponent)
       const contextSplit = this.testContext[contextContainer].split(/[/@]/)
 
-      expect(
-        contextSplit.includes(cellValue),
-        `"${key}" value "${cellValue}" is not in link "${contextSplit}"`
-      ).toBe(true)
+      // retried: the single read could get the cell before its value was rendered
+      await retryAssertion(async () => {
+        const cellValue = await getText(cellComponent, { timeout: readTimeout })
+
+        expect(
+          cellValue !== '' && contextSplit.includes(cellValue),
+          `"${key}" value "${cellValue}" is not in link "${contextSplit}"`
+        ).toBe(true)
+      })
     }
   }
 )

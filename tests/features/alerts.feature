@@ -3,7 +3,7 @@ Feature: Alerts Page
     Testcases that verifies functionality on MLRun Alerts Page
 
     @MLAlert
-    @smoke
+    @smoke @generatedData
     Scenario: MLAlert001 - Check components on Alerts page
         Given open url
         And wait load page
@@ -96,7 +96,7 @@ Feature: Alerts Page
         Then verify "Event_Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Event_Type_Endpoint_Filter_Options"
     
     @MLAlert
-    @smoke
+    @smoke @generatedData
     Scenario: MLAlert003 - Check filtering by Job entity type on Alerts page
         Given open url
         And wait load page
@@ -197,7 +197,7 @@ Feature: Alerts Page
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
 
     @MLAlert
-    @smoke
+    @smoke @generatedData
     Scenario: MLAlert005 - Check components of Job alert detail pane on Alerts page
         Given open url
         And wait load page
@@ -450,7 +450,7 @@ Feature: Alerts Page
         Then verify "Header" element visibility on "Alerts_Application_Info_Pane" wizard
         
     @MLAlert
-    @smoke
+    @smoke @generatedData
     Scenario: MLAlert009 - Check search by name on Alerts page
         Given open url
         And wait load page
@@ -472,7 +472,7 @@ Feature: Alerts Page
         And wait load page
     
     @MLAlert
-    @smoke
+    @smoke @generatedData
     Scenario: MLAM010 - Check Pagination info pane on Alerts page
         Given open url
         And wait load page

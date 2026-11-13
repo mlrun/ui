@@ -486,7 +486,7 @@ Feature: Alerts Monitoring Page
         And wait load page
     
     @MLAM
-    @smoke
+    @smoke @generatedData
     Scenario: MLAM010 - Check Pagination info pane on Alerts monitoring page
         Given open url
         And wait load page

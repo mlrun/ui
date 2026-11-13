@@ -298,6 +298,7 @@ Feature: Models Page
     Then verify "Register_Model_Button" element visibility on "Models" wizard
     Then "Register_Model_Button" element on "Models" should contains "Register model" value
     Then click on "Register_Model_Button" element on "Models" wizard
+    Then verify if "Register_Model_Popup" popup dialog appears
     Then navigate back
     Then verify "Title" element not exists on "Register_Model_Popup" wizard
     Then navigate forward

@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { When, Then } from '../support/world.js'
+import { waitForPageQuiet } from '../common-tools/element.js'
 import {
   createAPIArtifact,
   createAPIFeatureSet,
@@ -42,7 +43,7 @@ Then(
 
 When('create {string} MLRun Project with code {int}', async function (nameProject, status) {
   await createAPIMLProject(nameProject, status)
-  await this.page.waitForTimeout(1000)
+  await waitForPageQuiet(this.page)
 })
 
 Then('remove {string} MLRun Project with code {int}', async function (nameProject, status) {

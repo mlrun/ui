@@ -1,10 +1,10 @@
 {
   "latestErrorEvent": {
     "code": "TYPE-001",
-    "message": "Failed to generate type declaration. Execute the below cmd to reproduce and fix the error. #TYPE-001\nargs: {\"cmd\":\"/Users/Taras_Bohdanovych_Hlukhovetskyi/.nvm/versions/node/v24.22.2/bin/node /Users/Taras_Bohdanovych_Hlukhovetskyi/Projects/mlrun-ui-cp/node_modules/typescript/bin/tsc --project /Users/Taras_Bohdanovych_Hlukhovetskyi/Projects/mlrun-ui-cp/node_modules/.federation/tsconfig.ac3ca413e28100c656f8684dc4ecc0bd.json\"}\nView the docs to see how to solve: https://module-federation.io/guide/troubleshooting/type#type-001",
+    "message": "Failed to generate type declaration. Execute the below cmd to reproduce and fix the error. #TYPE-001\nargs: {\"cmd\":\"/Users/Taras_Bohdanovych_Hlukhovetskyi/.nvm/versions/node/v24.22.2/bin/node /Users/Taras_Bohdanovych_Hlukhovetskyi/Projects/mlrun-ui-cp/node_modules/typescript/bin/tsc --project /Users/Taras_Bohdanovych_Hlukhovetskyi/Projects/mlrun-ui-cp/node_modules/.federation/tsconfig.1e7342855c0356c25fc02964bf101569.json\"}\nView the docs to see how to solve: https://module-federation.io/guide/troubleshooting/type#type-001",
     "args": {
-      "cmd": "/Users/Taras_Bohdanovych_Hlukhovetskyi/.nvm/versions/node/v24.22.2/bin/node /Users/Taras_Bohdanovych_Hlukhovetskyi/Projects/mlrun-ui-cp/node_modules/typescript/bin/tsc --project /Users/Taras_Bohdanovych_Hlukhovetskyi/Projects/mlrun-ui-cp/node_modules/.federation/tsconfig.ac3ca413e28100c656f8684dc4ecc0bd.json"
+      "cmd": "/Users/Taras_Bohdanovych_Hlukhovetskyi/.nvm/versions/node/v24.22.2/bin/node /Users/Taras_Bohdanovych_Hlukhovetskyi/Projects/mlrun-ui-cp/node_modules/typescript/bin/tsc --project /Users/Taras_Bohdanovych_Hlukhovetskyi/Projects/mlrun-ui-cp/node_modules/.federation/tsconfig.1e7342855c0356c25fc02964bf101569.json"
     },
-    "timestamp": 1794339218151
+    "timestamp": 1794560462919
   }
 }

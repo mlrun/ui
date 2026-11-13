@@ -171,7 +171,9 @@ export default {
       'Labels:'
     ],
     Overview_Producer_Headers: ['Name:', 'Kind:', 'URI:', 'Owner:', 'Workflow:', 'UID:'],
-    Overview_Sources_Headers: ['Name:', 'Path:']
+    Overview_Sources_Headers: ['Name:', 'Path:'],
+    // a "Name:"/"Path:" pair per source: test-regressor_cox-test-summary has two (models_path, test_set)
+    Overview_Sources_Headers_Two_Sources: ['Name:', 'Path:', 'Name:', 'Path:']
   },
   Documents_Info_Pane: {
     Tab_List: ['Overview', 'Collections'],
@@ -728,7 +730,8 @@ export default {
     Error_Message: '“To” must be later than “From”'
   },
   Error_Messages: {
-    Project_Already_Exists: /A project named "[^"]+[$"] already exists/,
+    // the whole message (the checks are anchored): it ends with a period
+    Project_Already_Exists: /A project named "[^"]+" already exists\./,
     // the app shows the backend error detail when there is one (projectReducer createNewProject)
     Projects_Limit_Reached:
       "MLRunHTTPError(\"Failed creating project in Iguazio: [{'status': 405, 'detail': 'Resource limit reached. Cannot create more records'}]\")",

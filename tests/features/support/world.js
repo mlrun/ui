@@ -19,7 +19,7 @@ such restriction.
 */
 import path from 'node:path'
 import { test as base, createBdd } from 'playwright-bdd'
-import { delay_factor } from '../../config.js'
+import { trackPageActivity, trackRequests } from '../common-tools/element.js'
 
 // `this` of the steps and hooks (Cucumber style)
 export class World {
@@ -53,12 +53,8 @@ export const test = base.extend({
       consoleLogs.push(`${message.type().toUpperCase()} ${message.text()}`)
     )
     page.on('pageerror', error => consoleLogs.push(`PAGEERROR ${error.message}`))
-
-    if (delay_factor !== 1) {
-      const waitForTimeout = page.waitForTimeout.bind(page)
-
-      page.waitForTimeout = ms => waitForTimeout(Math.round(ms * delay_factor))
-    }
+    trackRequests(page)
+    await trackPageActivity(page)
 
     await use(page)
 

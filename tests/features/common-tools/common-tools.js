@@ -160,12 +160,15 @@ export function generateTextAreaGroup(root, counter = '.form-field__counter') {
   }
 }
 
+// the rules of the app's validation hint. The app writes the ranges with en dashes ("a–z", convertToLabel in
+// src/igz-controls/utils/validation.util.js): taken as they are, "[a–z]" was the 3 characters a, –, z, so the generated
+// values used only a, z, A, Z, 0, 9, _, . and the other valid characters were never checked
 export function parseString(string) {
-  const rulesArray = string.split('\n')
+  const rulesArray = string.replace(/\u2013/g, '-').split('\n')
   const lengthRule = getLength(rulesArray)
   const validCharactersRule = getRule(rulesArray, 'valid characters')
-  const beginRule = getRule(rulesArray, 'begin')
-  const endRule = getRule(rulesArray, 'end')
+  const beginRule = getRule(rulesArray, /\bmust begin (and end )?with\b/i)
+  const endRule = getRule(rulesArray, /\bmust (begin and )?end with\b/i)
   const notToBe = getNotToBe(rulesArray, 'not be')
   const notStartWith = getRule(rulesArray, 'not start')
   const notConsecutiveCharacters = getNotToBe(rulesArray, 'consecutive characters')
@@ -230,9 +233,37 @@ export async function setRequestsFailureCondition(shouldFail) {
   }
 }
 
-// restores the mutable collections of the mock backend, so a scenario doesn't depend on the previous ones. A failure
-// fails the scenario: it was only logged, so e.g. a reused (older) mock server without the endpoint silently ran the
-// scenarios on the state left by the previous ones
-export async function resetMockState() {
-  await axios.post(`${mock_server_url}/reset-mock-state`)
+// a fresh mock backend for the scenario: the mock server process is restarted (scripts/mockServer.js), so a scenario
+// doesn't depend on the previous ones. Resolves once the new instance answers. `generatedData` - with the big
+// "auto-generated-data" project (the scenarios tagged `@generatedData`).
+// A failure fails the scenario, e.g. a reused (older) mock server that doesn't restart: it would run the scenario on
+// the state left by the previous ones
+const MOCK_RESTART_TIMEOUT = 30000
+
+export async function resetMockState({ generatedData = false } = {}) {
+  const { data: reset } = await axios.post(`${mock_server_url}/reset-mock-state`, { generatedData })
+  const deadline = Date.now() + MOCK_RESTART_TIMEOUT
+  let lastError = null
+
+  for (;;) {
+    try {
+      const { data: current } = await axios.get(`${mock_server_url}/mock-instance`, {
+        timeout: 2000
+      })
+
+      if (current.instance !== reset.instance && current.generatedData === generatedData) return
+    } catch (error) {
+      // the previous instance is exiting or the new one isn't listening yet
+      lastError = error
+    }
+
+    if (Date.now() >= deadline) {
+      throw new Error(
+        `The mock server didn't restart in ${MOCK_RESTART_TIMEOUT / 1000} s (is it started by \`npm run mock-server\`?)` +
+          (lastError ? `: ${lastError.message}` : '')
+      )
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 25))
+  }
 }

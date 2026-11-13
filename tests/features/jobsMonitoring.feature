@@ -121,7 +121,7 @@ Feature: Jobs Monitoring Page
         Then "Error_Message" component on "Jobs_Monitoring_Jobs_Tab" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring"
 
     @MLJM
-    @smoke
+    @smoke @generatedData
     Scenario: MLJM004 - Check search by name, project name, filter by Date picker on Jobs tab of Jobs monitoring page
         Given open url
         And wait load page
@@ -184,7 +184,7 @@ Feature: Jobs Monitoring Page
         And wait load page
     
     @MLJM
-    @smoke
+    @smoke @generatedData
     Scenario: MLJM013 - Check Pagination info pane on Jobs tab of Jobs monitoring page
         Given open url
         And wait load page
@@ -547,7 +547,7 @@ Feature: Jobs Monitoring Page
         Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Monitor_Jobs_Name"
  
     @MLJM
-    @smoke
+    @smoke @generatedData
     Scenario: MLJM002 - Check components on Workflows tab of Jobs monitoring page
         Given open url
         And wait load page
@@ -1018,7 +1018,7 @@ Feature: Jobs Monitoring Page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
 
     @MLJM
-    @smoke
+    @smoke @generatedData
     Scenario: MLJM003 - Check components on Scheduled tab of Jobs monitoring page
         Given open url
         And wait load page
@@ -1366,7 +1366,7 @@ Feature: Jobs Monitoring Page
         Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Scheduled_Type"
         
     @MLJM
-    @smoke
+    @smoke @generatedData
     # TODO: Total wf counter = 4, 3 row elements are displayed - known bug (due to running not in 24h period), couldn't be fixed yet 
     Scenario: MLJM012 - Check jobs/workflows/scheduled count consistency among counter data and Jobs monitoring Tabs
         Given open url
@@ -1461,7 +1461,7 @@ Feature: Jobs Monitoring Page
         Then verify redirection to "projects"
 
     @MLJM
-    @smoke
+    @smoke @generatedData
     Scenario: MLJM014 - Check the auto refresh checkbox on Jobs tab of Jobs monitoring page
         Given open url
         And wait load page

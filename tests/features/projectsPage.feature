@@ -168,6 +168,7 @@ Feature: Projects Page
     @sanity
     @smoke
     #TODO: update "Labels_Value" options rules
+    # BUG-001 (tests/KNOWN_BUGS.md) shows up only sometimes: it is recognized when it happens, the scenario is then reported as the known bug
     Scenario: MLPr007 - Create new ML Project with description
         Given open url
         And wait load page

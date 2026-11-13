@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { expect } from '@playwright/test'
-import { getAttribute, retryAssertion } from '../../common-tools/element.js'
+import { classContaining, getAttribute, retryAssertion } from '../../common-tools/element.js'
 
 export const isTabActive = async (page, component, indx) =>
   retryAssertion(async () => {
@@ -37,13 +37,11 @@ export const isTabActive = async (page, component, indx) =>
 
 // `isActive` - the expected state: the "is active" and "is NOT active" steps check the opposite states
 // (the previous version accepted both states, so both steps passed for any row)
-export const isRowActive = async (page, component, indx, isActive = true) =>
-  retryAssertion(async () => {
-    const element = page.locator(component.rowRoot(indx)).first()
-    const attributes = await getAttribute(element, 'class')
+export const isRowActive = async (page, component, indx, isActive = true) => {
+  const row = expect(
+    page.locator(component.rowRoot(indx)).first(),
+    `Row ${indx} is expected to be ${isActive ? 'active' : 'NOT active'}`
+  )
 
-    expect(
-      attributes.includes('row_active'),
-      `Row ${indx} is expected to be ${isActive ? 'active' : 'NOT active'}, its classes: "${attributes}"`
-    ).toBe(isActive)
-  })
+  await (isActive ? row : row.not).toHaveClass(classContaining('row_active'))
+}

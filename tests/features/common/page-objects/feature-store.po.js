@@ -346,9 +346,11 @@ const featureStoreTabSelector = commonTable(tabSelector)
 const tableRefreshButton = '.content__action-bar-wrapper [data-testid="refresh"]'
 const tableFilterByButton = '[data-testid="filter-menu-btn"]'
 const pageHeaderButton = '[data-testid="btn"]'
+// the name filter of the page: a popup has a name field with the same test id (MLFS042: the name typed right after the
+// "Create feature vector" popup was confirmed went into the field of the closing popup, the page was not filtered)
 const commonNameFilterInput = inputGroup(
   generateInputGroup(
-    '[data-testid="name-form-field-input"]',
+    '.content__action-bar-wrapper [data-testid="name-form-field-input"]',
     true,
     false,
     '.form-field__warning svg'
@@ -433,7 +435,16 @@ export default {
   addToFeatureVector: {
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_FilterBy_Button: tableFilterByButton,
-    Table_Name_Filter_Input: commonNameFilterInput,
+    // the page opened by the "Create" button of the "Create feature vector" popup: its root, not the action bar only - the
+    // previous page (Feature Vectors tab) has the same action bar, the name typed right after the click went there (MLFS042)
+    Table_Name_Filter_Input: inputGroup(
+      generateInputGroup(
+        '.add-to-feature-vector .content__action-bar-wrapper [data-testid="name-form-field-input"]',
+        true,
+        false,
+        '.form-field__warning svg'
+      )
+    ),
     Table_Entity_Filter_Input: inputGroup(
       generateInputGroup(
         '.content .content__action-bar-wrapper .filter-column:nth-of-type(3) .input-wrapper',

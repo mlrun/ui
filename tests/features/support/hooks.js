@@ -29,7 +29,8 @@ import {
 let isAppWarmedUp = false
 
 Before({ timeout: 5 * 60 * 1000 }, async function () {
-  await resetMockState()
+  // a fresh mock server, with the big "auto-generated-data" project only for the scenarios that need it
+  await resetMockState({ generatedData: this.testInfo.tags.includes('@generatedData') })
   await this.page.goto('/')
   if (!isAppWarmedUp) {
     await this.page

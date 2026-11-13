@@ -34,40 +34,19 @@ export function makeUID(length) {
 
 export const makeHash = () => Math.random().toString(16).substring(2, 42)
 
-export const generateArtifacts = existingArtifacts => {
-  const artifactKinds = ['dataset', 'model', 'document', 'artifact']
-  const getArtifactTemplate = i => ({
-    kind: artifactKinds[i % 4],
-    metadata: {
-      project: 'auto-generated-data',
-      uid: makeUID(40),
-      key: 'test',
-      iter: 0,
-      tree: makeUID(32),
-      updated: new Date(Date.now() - Math.random() * 600000 - 100000).toISOString(),
-      created: new Date(Date.now() - Math.random() * 600000 - 700000).toISOString(),
-      tag: 'latest'
-    },
-    spec: {
-      target_path: 'v3io://artifacts/image_mock_data.png',
-      size: 20480,
-      db_key: 'test',
-      producer: {
-        name: 'download',
-        kind: 'run',
-        uri: 'cat-vs-dog-classification/9723e5a30b0e43b0b7cfda098445c446',
-        owner: 'admin'
-      },
-      sources: [
-        {
-          name: 'archive_url',
-          path: 'https://s3.wasabisys.com/iguazio/data/image-classification/catsndogs.zip'
-        }
-      ]
-    },
-    status: {}
-  })
+// The "auto-generated-data" project: only as much data as the scenarios need. The mock is restarted before every
+// scenario (`/reset-mock-state`), so everything here is generated again and its size is the start time of every scenario.
+// The app requests 1000 items per BE page (`bePageSize`) and shows 50 per FE page:
+// - jobs: MLJW091 (Jobs tab of the project) and MLJM014 (Jobs monitoring, all projects, "Past 24 hours") click the BE
+//   "next page" twice, so more than 2000 rows are needed, whether the runs are listed one by one or grouped by name
+// - alerts: MLAM010 (Alerts of the project and Alerts monitoring) checks that the BE "next page" is enabled: > 1000
+// - models with LLM prompts: MLLP002, MLLP003, MLLP014 search them by the index in the name ("59", "model_8")
+// The generic artifacts (52000) and functions (13000) of the project were used by no scenario
+const GENERATED_JOBS_COUNT = 2400
+const GENERATED_RUNS_OF_ONE_JOB_COUNT = 300
+const GENERATED_ALERTS_COUNT = 1200
 
+export const generateArtifacts = existingArtifacts => {
   // unique model with unique prompt
   const getModelWithPrompt = i => {
     const modelKey = `model_${i}_${makeUID(6)}`
@@ -303,27 +282,6 @@ export const generateArtifacts = existingArtifacts => {
     return [model, ...prompts]
   }
 
-  const newArtifactsWithDiffKeys = new Array(40000).fill().map((_, i) => {
-    const artifact = getArtifactTemplate(i)
-
-    artifact.metadata.key = artifact.kind + artifact.metadata.uid
-    artifact.spec.db_key = artifact.metadata.key
-
-    return artifact
-  })
-
-  const newArtifactsWithSameKey = new Array(12000).fill().map((_, i) => {
-    const artifact = getArtifactTemplate(i)
-
-    artifact.metadata.key = artifact.kind + '-many-tags'
-    artifact.spec.db_key = artifact.metadata.key
-    artifact.metadata.tag = [0, 1, 2, 3].includes(i) ? 'latest' : makeUID(40)
-    artifact.metadata.updated = new Date().toISOString()
-    artifact.metadata.created = new Date().toISOString()
-
-    return artifact
-  })
-
   // generate models and mix-prompts
   const modelArtifacts = []
   const mixModelArtifacts = []
@@ -339,66 +297,8 @@ export const generateArtifacts = existingArtifacts => {
 
   existingArtifacts.artifacts = [
     ...existingArtifacts.artifacts,
-    ...newArtifactsWithDiffKeys,
-    ...newArtifactsWithSameKey,
     ...modelArtifacts,
     ...mixModelArtifacts
-  ]
-}
-
-export const generateFunctions = existingFunctions => {
-  const getFunctionTemplate = () => ({
-    kind: 'job',
-    metadata: {
-      labels: {},
-      name: 'function' + makeUID(40),
-      tag: 'latest',
-      project: 'auto-generated-data',
-      hash: makeUID(40),
-      updated: new Date(Date.now() - Math.random() * 600000 - 10000).toISOString()
-    },
-    spec: {
-      args: [],
-      build: {
-        base_image: '',
-        commands: [],
-        functionSourceCode:
-          'ZGVmIGhhbmRsZXIoY29udGV4dCk6CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKCdIZWxsbyB3b3JsZCcp',
-        image: ''
-      },
-      default_handler: 'dg',
-      description: '',
-      env: [],
-      image: 'mlrun/mlrun',
-      volume_mounts: [],
-      volumes: [],
-      resources: {
-        limits: {},
-        requests: {}
-      },
-      secret_sources: []
-    },
-    status: null
-  })
-
-  const newFunctionsWithDiffNames = new Array(10000).fill().map(() => {
-    return getFunctionTemplate()
-  })
-
-  const newArtifactsWithSameKey = new Array(3000).fill().map((_, i) => {
-    const newFunction = getFunctionTemplate()
-
-    newFunction.metadata.name = 'function-many-tags'
-    newFunction.metadata.tag = i === 0 ? 'latest' : makeUID(40)
-    newFunction.metadata.updated = new Date().toISOString()
-
-    return newFunction
-  })
-
-  existingFunctions.funcs = [
-    ...existingFunctions.funcs,
-    ...newFunctionsWithDiffNames,
-    ...newArtifactsWithSameKey
   ]
 }
 
@@ -441,11 +341,11 @@ export const generateRuns = existingRuns => {
     }
   })
 
-  const newJobs = new Array(10000).fill().map(() => {
+  const newJobs = new Array(GENERATED_JOBS_COUNT).fill().map(() => {
     return getRunTemplate()
   })
 
-  const newRuns = new Array(3000).fill().map(() => {
+  const newRuns = new Array(GENERATED_RUNS_OF_ONE_JOB_COUNT).fill().map(() => {
     const run = getRunTemplate()
 
     run.metadata.name = 'job-many-runs'
@@ -458,12 +358,12 @@ export const generateRuns = existingRuns => {
   existingRuns.runs = [...existingRuns.runs, ...newRuns, ...newJobs]
 }
 
-// the scenarios search the generated alerts by these name prefixes (MLAlert003, MLAlert009): with random names only,
-// there was no matching alert in ~9% of the mock starts ((1 - 1/16^3)^10000)
+// the scenarios search the generated alerts by these name prefixes (MLAlert003, MLAlert005, MLAlert009, MLPM023): the
+// first alerts get them, a random name matches a 3-character prefix too rarely
 const SEARCHED_ALERT_NAME_PREFIXES = ['alertd04', 'alertda3']
 
 export const generateAlerts = existingAlerts => {
-  const alerts = new Array(10000).fill().map((_, i) => {
+  const alerts = new Array(GENERATED_ALERTS_COUNT).fill().map((_, i) => {
     const namePrefix = SEARCHED_ALERT_NAME_PREFIXES[i]
 
     return {
