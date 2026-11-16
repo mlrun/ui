@@ -226,7 +226,7 @@ export const isProjectMembersTabShown = (
             member.role === ADMIN_ROLE &&
             (member.id === activeUsername ||
               (member.type === USER_GROUP_ROLE &&
-                activeUser.data?.attributes?.user_group_names?.has(member.id)))
+                activeUser.data?.attributes?.user_group_ids?.has(member.id)))
         )
       })()
     : members.some(
