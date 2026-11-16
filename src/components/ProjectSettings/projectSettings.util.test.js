@@ -19,7 +19,7 @@ such restriction.
 */
 import { describe, it, expect, vi } from 'vitest'
 
-import { isProjectMembersTabShown } from './projectSettings.util'
+import { getMemberDisplayName, isProjectMembersTabShown } from './projectSettings.util'
 
 vi.mock('../../constants', async importOriginal => ({
   ...(await importOriginal()),
@@ -68,5 +68,34 @@ describe('isProjectMembersTabShown (MF mode)', () => {
     })
 
     expect(isProjectMembersTabShown(true, false, state)).toBe(false)
+  })
+})
+
+describe('getMemberDisplayName', () => {
+  it('drops the leading slash of a top-level group path', () => {
+    expect(getMemberDisplayName({ id: 'uuid', name: '/test-1' })).toBe('test-1')
+  })
+
+  it('formats a nested group path', () => {
+    expect(getMemberDisplayName({ id: 'uuid', name: '/g1/g2' })).toBe('g1 / g2')
+  })
+
+  it('falls back to the id when name is empty or missing', () => {
+    expect(getMemberDisplayName({ id: 'uuid', name: '' })).toBe('uuid')
+    expect(getMemberDisplayName({ id: 'uuid' })).toBe('uuid')
+  })
+
+  it('falls back to the id when name is whitespace only or empty after formatting', () => {
+    expect(getMemberDisplayName({ id: 'uuid', name: '   ' })).toBe('uuid')
+    expect(getMemberDisplayName({ id: 'uuid', name: '/' })).toBe('uuid')
+    expect(getMemberDisplayName({ id: 'uuid', name: null })).toBe('uuid')
+  })
+
+  it('returns an empty string when both name and id are missing', () => {
+    expect(getMemberDisplayName({})).toBe('')
+  })
+
+  it('returns the username for a user', () => {
+    expect(getMemberDisplayName({ id: 'admin', name: 'admin' })).toBe('admin')
   })
 })
