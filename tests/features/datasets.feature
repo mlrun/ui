@@ -102,7 +102,6 @@ Feature: Datasets Page
     Then verify "Action_Menu" dropdown element on "Datasets_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Datasets_Info_Pane" wizard
     And wait load page
-    And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
     Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
@@ -181,7 +180,6 @@ Feature: Datasets Page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
     Then "Header" element on "Datasets_Info_Pane" should contains "test-dataset" value
     Then refresh a page
-    And wait load page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
     Then "Header" element on "Datasets_Info_Pane" should contains "test-dataset" value
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
@@ -306,7 +304,7 @@ Feature: Datasets Page
     Then "Title" element on "Confirm_Popup" should contains "Overwrite dataset?" value
     Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
     Then verify "Confirm_Dialog_Message" element visibility on "Confirm_Popup" wizard
-    Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Register_Artifact"."Register_Error_Message"
+    Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Register_Artifact"."Register_Error_Message" with "dataset"
     Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
     Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
     Then verify "Overwrite_Button" element visibility on "Confirm_Popup" wizard
@@ -371,7 +369,6 @@ Feature: Datasets Page
     And wait load page
     Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "survival-curves_km-timelines" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "survival-curves_km-timelines" value in "name" column
-    And wait load page
     And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
@@ -507,18 +504,17 @@ Feature: Datasets Page
     And wait load page
     Then verify "Preview_Table" element visibility on "Preview_Popup" wizard
     Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Name" exact header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Path" exact header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Size" exact header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Updated" exact header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
     Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contains "test_new_structure"
     Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
     Then verify "Download_Button" element visibility on "Preview_Popup" wizard
     Then click on "Download_Button" element on "Preview_Popup" wizard
-    And wait load page
     And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
@@ -537,18 +533,17 @@ Feature: Datasets Page
     And wait load page
     Then verify "Preview_Table" element visibility on "Preview_Popup" wizard
     Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Name" exact header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Path" exact header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Size" exact header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Updated" exact header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
     Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contains "auto-trainer-train_test_set"
     Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
     Then verify "Download_Button" element visibility on "Preview_Popup" wizard
     Then click on "Download_Button" element on "Preview_Popup" wizard
-    And wait load page
     And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
@@ -1083,8 +1078,6 @@ Feature: Datasets Page
   Scenario: MLD023 - Check Resources components on Train Model wizard
     Given open url
     And wait load page
-    Then turn Off MLRun CE mode
-    And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Datasets" item in sidebar menu
@@ -1514,7 +1507,6 @@ Feature: Datasets Page
     And wait load page
     Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
     And wait load page
-    And wait load page
     Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Dataset is successfully deleted" value
     And wait load page
     Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
@@ -1545,7 +1537,6 @@ Feature: Datasets Page
     Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
     And wait load page
     Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-    And wait load page
     And wait load page
     Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Dataset is successfully deleted" value
     And wait load page
@@ -1581,9 +1572,7 @@ Feature: Datasets Page
     Then select "Delete" option in full view action menu on "Datasets_Info_Pane" wizard
     And wait load page
     Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
-    Then wait for 4 seconds
     Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-    And wait load page
     And wait load page
     Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Dataset is successfully deleted" value
     And wait load page

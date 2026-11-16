@@ -96,7 +96,9 @@ export const waitPageLoad = async (page, loader) => {
   await page.locator(loader).first().waitFor({ state: 'detached', timeout })
 }
 
-export const waiteUntilComponent = async (page, component) => {
+// waits up to the page load `timeout` (60 s), not the action timeout (15 s) of the click or check that follows it: the
+// element can be rendered only after slow data is fetched (a popup, a table cell)
+export const waitForComponentAttached = async (page, component) => {
   await page.locator(component).first().waitFor({ state: 'attached', timeout })
 }
 
@@ -221,18 +223,30 @@ export const componentIsVisible = async (page, component) => {
     .toBe(true)
 }
 
-// `isDisplayed`, not `toBeHidden`: an element with `opacity: 0` is hidden here, visible for Playwright. A missing
-// element fails the check (`null`), as before
+// `isDisplayed`, not `toBeHidden`: an element with `opacity: 0` is hidden here, visible for Playwright. None of the
+// matched elements may be displayed (only the first one was checked, another displayed one passed). A missing element
+// fails the check (`null`), as before
 export const componentIsNotVisible = async (page, component) => {
   const _component = component.root ?? component
-  const element = page.locator(_component).first()
+  const elements = page.locator(_component)
 
   await expect
     .poll(
       readOrNull(async () => {
         await waitForPageQuiet(page)
 
-        return isDisplayed(element, { timeout: readTimeout })
+        const count = await elements.count()
+
+        if (count === 0) return null
+
+        // an element gone meanwhile fails the read (`null`), the poll reads again
+        const displayed = await Promise.all(
+          Array.from({ length: count }, (_, index) =>
+            isDisplayed(elements.nth(index), { timeout: readTimeout })
+          )
+        )
+
+        return displayed.some(Boolean)
       }),
       pollOptions(`Element is displayed (or not found): ${_component}`)
     )
@@ -251,6 +265,51 @@ export const verifyTypedText = async (page, component, value) =>
 export const verifyText = async (page, component, value) =>
   expectText(page.locator(component).first(), value, { message: `Text of ${component}` })
 
+// The notifications are stacked (the newest last) and each stays shown for a few seconds. The text check of the first
+// matched one read the oldest notification shown: an earlier notification with the same text passed the check of a new
+// one that wasn't shown. Reading the newest one instead fails a check of a notification that is followed by another
+// one at once ("Project deletion in progress", then "... was deleted successfully", MLPr006). So a notification with
+// the text is looked for among all the shown ones, except the ones matched by the previous checks: the matched one is
+// marked in the DOM (the app doesn't render this attribute, a re-render keeps it)
+const CHECKED_NOTIFICATION = 'data-e2e-checked'
+
+// `mark` - false for a wait for the notification that is followed by its check (the check matches the same one)
+export const verifyNotificationText = async (
+  page,
+  component,
+  value,
+  { timeout, mark = true } = {}
+) =>
+  expect
+    .poll(
+      readOrNull(() =>
+        page.locator(component).evaluateAll(
+          (elements, { value, attribute, mark }) => {
+            const texts = elements.map(element =>
+              element.checkVisibility({ opacityProperty: true, visibilityProperty: true })
+                ? element.innerText.replace(/\u00a0/g, ' ').trim()
+                : ''
+            )
+            const index = elements.findIndex(
+              (element, index) => !element.hasAttribute(attribute) && texts[index] === value
+            )
+
+            if (index === -1) return texts
+
+            if (mark) elements[index].setAttribute(attribute, '')
+
+            return value
+          },
+          { value, attribute: CHECKED_NOTIFICATION, mark }
+        )
+      ),
+      pollOptions(
+        `A shown notification (not matched by an earlier check) with the text: ${component}`,
+        timeout
+      )
+    )
+    .toBe(value)
+
 // the whole text must match ("should be equal"): the patterns are not anchored, so a message with extra text around it, or
 // with more filters than expected ("Name: x, Status: y" for "Name: (.+?)"), matched
 export const verifyTextRegExp = async (page, component, regexp) =>
@@ -258,9 +317,57 @@ export const verifyTextRegExp = async (page, component, regexp) =>
     new RegExp(`^(?:${regexp.source})$`, regexp.flags)
   )
 
-export const isComponentContainsAttributeValue = async (page, component, attribute, value) => {
-  const element = page.locator(component).first()
-  return (await getAttribute(element, attribute)) === value
+const escapeRegExp = text => String(text).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+// the capturing groups of the pattern (`(...)`, not `(?:...)`, lookarounds or named groups), in order: the start and
+// the end (exclusive) of each in `source`. The escaped characters and the character classes are skipped
+const findCapturingGroups = source => {
+  const groups = []
+  const open = []
+  let inClass = false
+
+  for (let index = 0; index < source.length; index++) {
+    const char = source[index]
+
+    if (char === '\\') index++
+    else if (inClass) inClass = char !== ']'
+    else if (char === '[') inClass = true
+    else if (char === '(') open.push({ start: index, capturing: source[index + 1] !== '?' })
+    else if (char === ')') {
+      const group = open.pop()
+
+      if (group.capturing) groups.push({ start: group.start, end: index + 1 })
+    }
+  }
+
+  return groups.sort((a, b) => a.start - b.start)
+}
+
+// the pattern with its capturing groups replaced by the expected values (the scenario knows them, e.g. the name of the
+// deleted job): the wildcards of the patterns passed any value. Each value stays a capturing group, so a backreference
+// to it (`\1`) keeps working
+export const fillPatternGroups = (regexp, values) => {
+  const groups = findCapturingGroups(regexp.source)
+
+  // sorted by the start: a group inside another one starts before the previous one ends
+  if (groups.some((group, index) => index > 0 && group.start < groups[index - 1].end)) {
+    throw new Error(`Nested capturing groups are not supported: ${regexp}`)
+  }
+
+  if (groups.length !== values.length) {
+    throw new Error(
+      `${regexp} has ${groups.length} capturing groups, ${values.length} values are given: [${values}]`
+    )
+  }
+
+  // from the end, so the positions of the earlier groups stay valid
+  const source = groups.reduceRight(
+    (result, { start, end }, index) =>
+      `${result.slice(0, start)}(${escapeRegExp(values[index])})${result.slice(end)}`,
+    regexp.source
+  )
+
+  return new RegExp(source, regexp.flags)
 }
 
 export const isComponentContainsClass = async (page, component, className) =>
@@ -271,6 +378,12 @@ export const verifyComponentContainsAttributeValue = async (page, component, att
   pollAttribute(page.locator(component).first(), attribute, {
     message: `"${attribute}" attribute of ${component} should contain "${value}"`
   }).toContain(value)
+
+// the whole value: "latest" must not pass on "latest123456"
+export const verifyComponentAttributeValue = async (page, component, attribute, value) =>
+  pollAttribute(page.locator(component).first(), attribute, {
+    message: `"${attribute}" attribute of ${component} should be "${value}"`
+  }).toBe(value)
 
 // a missing element or attribute fails the check (`null` is rejected by `toContain`, also with `.not`), as before
 export const verifyComponentNotContainsAttributeValue = async (page, component, attribute, value) =>
@@ -296,12 +409,35 @@ export const expandAccordionSection = async (page, collapseComponent) => {
   }
 }
 
-export const isAccordionSectionExpanded = async (page, collapseComponent) =>
-  expect(page.locator(collapseComponent).first()).toHaveClass(classContaining('open'))
-
+// the icon class is only the state of the button: the section itself must be collapsed too, its content cut off (the
+// collapsed accordion container has the height of its header, `accordion.scss`)
 export const isAccordionSectionCollapsed = async (page, collapseComponent) => {
+  const button = page.locator(collapseComponent).first()
+
   await waitForPageQuiet(page)
-  await expect(page.locator(collapseComponent).first()).not.toHaveClass(classContaining('open'))
+  await expect(button).not.toHaveClass(classContaining('open'))
+  await expect
+    .poll(
+      readOrNull(() =>
+        button.evaluate(
+          element => {
+            const container = element.closest('.accordion__container')
+            const body = container?.querySelector('.accordion__body')
+
+            if (!body) return 'not in an accordion'
+            if (container.classList.contains('open')) return 'the section is open'
+
+            const isCut = node => node.scrollHeight > node.clientHeight
+
+            return isCut(container) || isCut(body) ? 'collapsed' : 'the content is shown whole'
+          },
+          undefined,
+          { timeout: readTimeout }
+        )
+      ),
+      pollOptions(`The section is not collapsed: ${collapseComponent}`)
+    )
+    .toBe('collapsed')
 }
 
 export const getElementText = async (page, component) => {
@@ -309,8 +445,10 @@ export const getElementText = async (page, component) => {
   return await getText(element)
 }
 
-export const scrollToElement = async (page, component) => {
-  const element = page.locator(component).first()
+// `target` - a selector (its first match) or a locator. `{}`: the browser's default alignment (to the top of the
+// scrollable area), not the centering of `scrollIntoView`
+export const scrollToElement = async (page, target) => {
+  const element = typeof target === 'string' ? page.locator(target).first() : target
   await scrollIntoView(element, {})
   await waitForPageQuiet(page)
 }
@@ -401,9 +539,4 @@ export const readNonEmptyText = (locator, what) =>
 
 export const putToTestContextElementValue = async (page, testContext, element, pageValue) => {
   testContext[pageValue] = await readNonEmptyText(page.locator(element).first(), element)
-}
-
-export const scrollToWebElement = async (page, element) => {
-  await scrollIntoView(element, {})
-  await waitForPageQuiet(page)
 }

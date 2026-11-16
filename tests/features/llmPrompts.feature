@@ -110,7 +110,7 @@ Feature: LLM prompts Page
     Then click on "Refresh_Button" element on "LLM_Prompts" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-    Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_LLM_Prompt_Name"
+    Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_LLM_Prompt_Name" with "yyyy" and "latest"
 
   @MLLP
   @smoke @generatedData
@@ -159,7 +159,7 @@ Feature: LLM prompts Page
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-    Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_LLM_Prompt_Label"
+    Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_LLM_Prompt_Label" with "5", "latest" and "v3io_user=123"
 
   @MLLP
   @smoke
@@ -235,7 +235,6 @@ Feature: LLM prompts Page
     Then verify "Action_Menu" dropdown element on "LLM_Prompts_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List_LLM_Prompt"
     Then select "Download" option in action menu on "LLM_Prompts_Info_Pane" wizard
     And wait load page
-    And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
     Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
@@ -306,7 +305,6 @@ Feature: LLM prompts Page
     Then verify "Header" element visibility on "LLM_Prompts_Info_Pane" wizard
     Then "Header" element on "LLM_Prompts_Info_Pane" should contains "my_llm" value
     Then refresh a page
-    And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "LLM_Prompts_Info_Pane" wizard
     Then verify "Not_In_Filtered_List_Message" element visibility on "LLM_Prompts_Info_Pane" wizard
     Then "Not_In_Filtered_List_Message" component on "LLM_Prompts_Info_Pane" should be equal "LLM_Prompts_Info_Pane"."Info_Banner_Message"
@@ -331,7 +329,7 @@ Feature: LLM prompts Page
     Then verify "Header" element not exists on "LLM_Prompts_Info_Pane" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-    Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_LLM_Prompt_Tag"
+    Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_LLM_Prompt_Tag" with "test"
     Then click on "Table_FilterBy_Button" element on "LLM_Prompts" wizard
     Then click on "Clear_Button" element on "FilterBy_Popup" wizard
     And wait load page
@@ -488,7 +486,6 @@ Feature: LLM prompts Page
     Then verify action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table with "my_llm" value in "name" column should contains "Common_Lists"."Action_Menu_List_LLM_Prompt"
     Then select "Download" option in action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table at row with "my_llm" value in "name" column
     And wait load page
-    And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
     Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
@@ -515,7 +512,6 @@ Feature: LLM prompts Page
     Then verify "Info_Pane_Tab_Selector" element visibility on "LLM_Prompts_Info_Pane" wizard
     Then verify "Action_Menu" dropdown element on "LLM_Prompts_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List_LLM_Prompt"
     Then select "Download" option in action menu on "LLM_Prompts_Info_Pane" wizard
-    And wait load page
     And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
@@ -608,7 +604,6 @@ Feature: LLM prompts Page
     Then verify action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table with "1d459c52a1102adcbbe242e6bb36e99129f2a8b9" value in "uid" column should contains "Common_Lists"."Action_Menu_List_LLM_Prompt"
     Then select "Download" option in action menu on "LLM_Prompts" wizard in "LLMPrompts_Table" table at row with "1d459c52a1102adcbbe242e6bb36e99129f2a8b9" value in "uid" column
     And wait load page
-    And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
     Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
@@ -636,7 +631,6 @@ Feature: LLM prompts Page
     Then verify "Info_Pane_Tab_Selector" element visibility on "LLM_Prompts_Info_Pane" wizard
     Then verify "Action_Menu" dropdown element on "LLM_Prompts_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List_LLM_Prompt"
     Then select "Download" option in action menu on "LLM_Prompts_Info_Pane" wizard
-    And wait load page
     And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
@@ -743,7 +737,7 @@ Feature: LLM prompts Page
     Then "Title" element on "Confirm_Popup" should contains "Overwrite LLM prompt?" value
     Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
     Then verify "Confirm_Dialog_Message" element visibility on "Confirm_Popup" wizard
-    Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Descriptions"."Add_A_Tag_Overwrite_Message"
+    Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Descriptions"."Add_A_Tag_Overwrite_Message" with "LLM prompt"
     Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
     Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
     Then verify "Overwrite_Button" element visibility on "Confirm_Popup" wizard
@@ -763,7 +757,7 @@ Feature: LLM prompts Page
     Then "Title" element on "Confirm_Popup" should contains "Overwrite LLM prompt?" value
     Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
     Then verify "Confirm_Dialog_Message" element visibility on "Confirm_Popup" wizard
-    Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Descriptions"."Add_A_Tag_Overwrite_Message"
+    Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Descriptions"."Add_A_Tag_Overwrite_Message" with "LLM prompt"
     Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
     Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
     Then verify "Overwrite_Button" element visibility on "Confirm_Popup" wizard
@@ -801,7 +795,6 @@ Feature: LLM prompts Page
     Then verify "Download_Button" element visibility on "Preview_Popup" wizard
     Then click on "Download_Button" element on "Preview_Popup" wizard
     And wait load page
-    And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
     Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
@@ -810,13 +803,13 @@ Feature: LLM prompts Page
     Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
     Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Name" exact header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Path" exact header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Size" exact header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Updated" exact header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
     Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
     Then verify "show_all_versions" option is present on "LLM_Prompts" wizard in "LLMPrompts_Table" table with "my_llm" value in "name" column
     Then click on "show_all_versions" option on "LLM_Prompts" wizard in "LLMPrompts_Table" table with "my_llm" value in "name" column with scroll "false"
@@ -832,7 +825,6 @@ Feature: LLM prompts Page
     Then verify "Download_Button" element visibility on "Preview_Popup" wizard
     Then click on "Download_Button" element on "Preview_Popup" wizard
     And wait load page
-    And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
     Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
@@ -841,13 +833,13 @@ Feature: LLM prompts Page
     Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
     Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Name" exact header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Path" exact header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Size" exact header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Updated" exact header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
     Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
     Then verify "LLMPrompts_Table" element visibility on "LLM_Prompts" wizard
 
@@ -954,7 +946,6 @@ Feature: LLM prompts Page
     Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     Then select "Download" option in action menu on "Modal_Transition_Popup" wizard
     And wait load page
-    And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
     Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
@@ -976,18 +967,17 @@ Feature: LLM prompts Page
     And wait load page
     Then verify "Preview_Table" element visibility on "Preview_Popup" wizard
     Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Name" exact header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Path" exact header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Size" exact header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Updated" exact header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
     Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contains "model_art1"
     Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
     Then verify "Download_Button" element visibility on "Preview_Popup" wizard
     Then click on "Download_Button" element on "Preview_Popup" wizard
-    And wait load page
     And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page

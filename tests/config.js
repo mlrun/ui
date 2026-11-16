@@ -31,8 +31,6 @@ export const expectTimeout = actionTimeout
 // - the app finishes loading (the loader is gone, the sidebar is rendered): the slowest screens
 export const timeout = 60000
 // local timeouts, shorter on purpose:
-// - a best-effort wait for the page to settle, the step goes on after it (the check after it reports a failure)
-export const settleTimeout = 3000
 // - one attempt to read an element inside a retry: a missing element fails fast and the retry reads the page again
 export const readTimeout = 1000
 // E2E_HEADLESS=false - show the browser (headless by default)

@@ -240,7 +240,7 @@ Feature: Artifacts Page
     Then "Title" element on "Confirm_Popup" should contains "Overwrite artifact?" value
     Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
     Then verify "Confirm_Dialog_Message" element visibility on "Confirm_Popup" wizard
-    Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Register_Artifact"."Register_Error_Message"
+    Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Register_Artifact"."Register_Error_Message" with "table"
     Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
     Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
     Then verify "Overwrite_Button" element visibility on "Confirm_Popup" wizard
@@ -269,7 +269,6 @@ Feature: Artifacts Page
     Then verify "Action_Menu" element visibility on "Files_Info_Pane" wizard
     Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Files_Info_Pane" wizard
-    And wait load page
     And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
@@ -326,18 +325,17 @@ Feature: Artifacts Page
     And wait load page
     Then verify "Preview_Table" element visibility on "Preview_Popup" wizard
     Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Name" exact header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Path" exact header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Size" exact header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Updated" exact header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
     Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contains "download_content"
     Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
     Then verify "Download_Button" element visibility on "Preview_Popup" wizard
     Then click on "Download_Button" element on "Preview_Popup" wizard
-    And wait load page
     And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
@@ -454,7 +452,6 @@ Feature: Artifacts Page
     And wait load page
     Then select "Download" option in action menu on "Modal_Transition_Popup" wizard
     And wait load page
-    And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
     Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
@@ -504,7 +501,6 @@ Feature: Artifacts Page
     And wait load page
     And click on "MLRun_Logo" element on "commonPagesHeader" wizard
     And wait load page
-    And wait load page
     Then verify "Projects_Table" element visibility on "Projects" wizard
 
   @MLA
@@ -521,7 +517,6 @@ Feature: Artifacts Page
     And wait load page
     Then verify action menu on "Files" wizard in "Files_Table" table with "training_iteration_results" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Files" wizard in "Files_Table" table at row with "training_iteration_results" value in "name" column
-    And wait load page
     And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
@@ -564,7 +559,6 @@ Feature: Artifacts Page
       Then verify "Preview_Modal_Container" element visibility on "Preview_Popup" wizard
       Then verify "Download_Button" element visibility on "Preview_Popup" wizard
       Then click on "Download_Button" element on "Preview_Popup" wizard
-      And wait load page
       And wait load page
       Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
       And wait load page
@@ -856,7 +850,6 @@ Feature: Artifacts Page
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
     Then "Header" element on "Files_Info_Pane" should contains "training_iteration_results" value
     Then refresh a page
-    And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
     Then verify "Not_In_Filtered_List_Message" element visibility on "Files_Info_Pane" wizard
     Then "Not_In_Filtered_List_Message" component on "Files_Info_Pane" should be equal "Files_Info_Pane"."Info_Banner_Message"
@@ -880,7 +873,7 @@ Feature: Artifacts Page
     And wait load page
     Then verify "Header" element not exists on "Files_Info_Pane" wizard
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-    Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Artifact_Tag"
+    Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Artifact_Tag" with "test"
     Then click on "Table_FilterBy_Button" element on "LLM_Prompts" wizard
     Then click on "Clear_Button" element on "FilterBy_Popup" wizard
     And wait load page
@@ -934,10 +927,8 @@ Feature: Artifacts Page
     Then click on "Header_Full_View" element on "Files_Info_Pane" wizard
     Then select "Download" option in full view action menu on "Files_Info_Pane" wizard
     And wait load page
-    And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     Then select "Add a tag" option in full view action menu on "Files_Info_Pane" wizard
-    And wait load page
     And wait load page
     Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
     Then verify "Close_Button" element visibility on "Add_Tag_Popup" wizard
@@ -997,17 +988,14 @@ Feature: Artifacts Page
     And wait load page
     # the details of the selected artifact are fetched asynchronously, an URL update from it can drop "?view=full"
     # if the "Full view" button is clicked too early
-    And wait load page
     Then "Header" element on "Files_Info_Pane" should contains "clean-data_preproc-numcat_map.json" value
     Then verify "Full_View_Button" element visibility on "Files_Info_Pane" wizard
     Then click on "Full_View_Button" element on "Files_Info_Pane" wizard
-    And wait load page
     And wait load page
     Then verify "Cross_Close_Button" element not exists on "Files_Info_Pane" wizard
     Then verify "Header_Full_View" element visibility on "Files_Info_Pane" wizard
     Then "Header_Full_View" element on "Files_Info_Pane" should contains "clean-data_preproc-numcat_map.json" value
     Then select "Add a tag" option in full view action menu on "Files_Info_Pane" wizard
-    And wait load page
     And wait load page
     Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
     Then verify "Title" element visibility on "Add_Tag_Popup" wizard

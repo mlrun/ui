@@ -3,7 +3,8 @@
   "entry": [
     "src/main.jsx",
     "src/loadRemoteConfig.js",
-    "tests/features/**/*.js",
+    "tests/features/step-definitions/*.js",
+    "tests/features/support/*.js",
     "tests/mockServer/mock.js",
     "tests/mockServer/backendSynchronizator.js",
     "allurerc.mjs"
@@ -12,7 +13,10 @@
   // what the app imports through them, `utils` and `reducers` have no barrels and are imported by path.
   // The only exception is the generated shadcn components, which keep their full API
   "ignoreIssues": {
-    "src/igz-controls/nextGenComponents/components/ui/**": ["exports", "types"]
+    "src/igz-controls/nextGenComponents/components/ui/**": ["exports", "types"],
+    // `expectTimeout` is the same value as `actionTimeout` on purpose, under its own name: the two Playwright settings
+    // are set from it and can be told apart (see the comments in the file)
+    "tests/config.js": ["duplicates"]
   },
   "ignore": [
     "src/igz-controls/scss/resets.scss",

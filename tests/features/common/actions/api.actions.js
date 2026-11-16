@@ -36,34 +36,6 @@ const mainHttpClient = axios.create({
   paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' })
 })
 
-const newJobTemplate = {
-  task: {
-    spec: {
-      parameters: {},
-      inputs: {},
-      hyperparams: {},
-      secret_sources: [],
-      param_file: '',
-      tuning_strategy: 'list',
-      function: 'hub://aggregate',
-      handler: 'aggregate',
-      input_path: '',
-      output_path: 'v3io:///projects/{{run.project}}/artifacts/{{run.uid}}'
-    },
-    metadata: {
-      labels: {}
-    }
-  },
-  function: {
-    metadata: {
-      credentials: {
-        access_key: '$generate'
-      }
-    },
-    spec: { preemption_mode: '', priority_class_name: '' }
-  }
-}
-
 export const deleteAPIMLProject = async (
   page,
   mlProjectName,
@@ -129,14 +101,6 @@ export const deleteAPIFunction = async (projectName, functionName, expectedStatu
     })
 }
 
-export const deleteAPISchedule = async (projectName, scheduleName, expectedStatusCode) => {
-  await mainHttpClient
-    .delete(`${REACT_APP_MLRUN_API_URL}/projects/${projectName}/schedules/${scheduleName}`)
-    .then(res => {
-      expect(res.status).toBe(expectedStatusCode)
-    })
-}
-
 export const deleteAPIArtifact = async (projectName, artifactName, expectedStatusCode) => {
   await mainHttpClient
     .delete(`${REACT_APP_MLRUN_API_URL_V2}/projects/${projectName}/artifacts?name=${artifactName}`)
@@ -156,16 +120,6 @@ export const createAPIMLProject = async (mlProjectName, expectedStatusCode) => {
   }
 
   await mainHttpClient.post(`${REACT_APP_MLRUN_API_URL}/projects`, project_data).then(res => {
-    expect(res.status).toBe(expectedStatusCode)
-  })
-}
-
-export const createAPISchedule = async (mlProjectName, mlScheduleName, expectedStatusCode) => {
-  const data = newJobTemplate
-  data.task.metadata.name = mlScheduleName
-  data.task.metadata.project = mlProjectName
-  data.schedule = '0 0 1 * *'
-  await mainHttpClient.post(`${REACT_APP_MLRUN_API_URL}/submit_job`, data).then(res => {
     expect(res.status).toBe(expectedStatusCode)
   })
 }
@@ -263,7 +217,7 @@ export const createAPIArtifact = async (
   const uid = uuidv4()
 
   const data = {
-    kind: mlArtifactType === 'file' ? '' : mlArtifactType,
+    kind: mlArtifactType,
     metadata: {
       labels: {},
       key: mlArtifactName,

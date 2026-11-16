@@ -116,33 +116,21 @@ export const setPickerTime = async (page, dateTimePicker, datetimePoint) => {
 }
 
 // retried: the band shows the previous range for a moment after the range is applied (a single read got it).
-// `expected` - the length of the range (ms, or `{ min, max }`) for a relative range ("Past hour": its ends depend on
-// the time), or its ends `{ from, to }` for a custom range: the length only passed a range shifted by a day or a month
-export const verifyTimeFilterBand = async (page, dropdown, expected) =>
+// The ends of the range are compared, not its length: the length only passed a range shifted by a day or a month
+export const verifyTimeFilterBand = async (
+  page,
+  dropdown,
+  { from: expectedFrom, to: expectedTo }
+) =>
   retryAssertion(async () => {
     const selectedBand = page.locator(dropdown.open_button).first()
     const datetimePointsText = await getText(selectedBand, { timeout: readTimeout })
     const [from, to] = datetimePointsText.split('-').map(point => Date.parse(point))
 
-    if (expected.from !== undefined) {
-      expect(
-        [from, to],
-        `The filter band "${datetimePointsText}", expected from "${expected.from}" to "${expected.to}"`
-      ).toEqual([Date.parse(expected.from), Date.parse(expected.to)])
-
-      return
-    }
-
-    const datetimeDiff = to - from
-    const result =
-      typeof expected === 'object'
-        ? datetimeDiff >= expected.min && datetimeDiff <= expected.max
-        : datetimeDiff === expected
-
     expect(
-      result,
-      `The filter band "${datetimePointsText}" is ${datetimeDiff} ms, expected ${typeof expected === 'object' ? `${expected.min}..${expected.max}` : expected} ms`
-    ).toBe(true)
+      [from, to],
+      `The filter band "${datetimePointsText}", expected from "${expectedFrom}" to "${expectedTo}"`
+    ).toEqual([Date.parse(expectedFrom), Date.parse(expectedTo)])
   })
 
 export const pickUpCustomDatetimeRange = async (page, datetimePicker, fromDatetime, toDatetime) => {

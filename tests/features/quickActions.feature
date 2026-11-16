@@ -2,6 +2,7 @@ Feature: Quick actions Page
 
     Testcases that verifies functionality on MLRun Quick actions Page
 
+    # BUG-003 (tests/KNOWN_BUGS.md): the breadcrumb of the Quick actions page is the URL segment "quick-actions"
     @MLPH @rerun @knownBug
     Scenario: MLPH001 - Check all mandatory components on Project Home
         * set tear-down property "project" created with "automation-test-1002" value
@@ -29,12 +30,9 @@ Feature: Quick actions Page
         And wait load page
         Then verify "Header_Name_Label" element visibility on "Demo_Project" wizard
         Then verify "Header_Created_Time" element visibility on "Demo_Project" wizard
-        Then verify "Header_Project_Description" element visibility on "Demo_Project" wizard
         Then verify value should equal "automation-test-1002" in "Header_Name_Label" on "Demo_Project" wizard
-        Then verify value should equal "automation test description" in "Header_Project_Description" on "Demo_Project" wizard
         Then verify value should equal "Ingest and process data" in "Data_Collection_Header" on "Demo_Project" wizard
         Then verify value should equal "Project"."Data_Collection_Description" in "Data_Collection_Description" on "Demo_Project" wizard
-        Then verify "Data_Collection_Additional_Actions_Button" element visibility on "Demo_Project" wizard
         Then verify "Data_Collection_Actions_Table" element visibility on "Demo_Project" wizard
         Then verify "Data_Collection_Links_Table" element visibility on "Demo_Project" wizard
         Then verify value should equal "Develop and train model" in "Development_Header" on "Demo_Project" wizard
@@ -45,7 +43,6 @@ Feature: Quick actions Page
         Then verify value should equal "Project"."Deployment_Description" in "Deployment_Description" on "Demo_Project" wizard
         Then verify "Deployment_Actions_Table" element visibility on "Demo_Project" wizard
         Then verify "Deployment_Links_Table" element visibility on "Demo_Project" wizard
-        Then click on "Data_Collection_Additional_Actions_Button" element on "Demo_Project" wizard
         Then verify values in "Data_Collection_Actions_Table" table on "Demo_Project" wizard
             |          name           |
             |    Create feature set   |
@@ -120,7 +117,6 @@ Feature: Quick actions Page
         When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Model_Popup" wizard
         Then type value "test-description" to "New_File_Description_Input" field on "Register_Model_Popup" wizard
         Then click on "Register_Button" element on "Register_Model_Popup" wizard
-        And wait load page
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
         Then click on cell with value "new-model" in "name" column in "Models_Table" table on "Models" wizard

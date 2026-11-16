@@ -91,11 +91,11 @@
     "test:regression": "node scripts/testRegression.js",
     "test:regression:ci": "cross-env CI=true node scripts/testRegression.js",
     "test:regression:failed": "node scripts/testRegression.js --last-failed",
+    "test:defects": "node scripts/testDefects.js",
     "test:regression:debug": "bddgen && cross-env E2E_APP=dev playwright test --ui",
     "build:regression": "cross-env MF_DTS=false vite build --mode development --base / --outDir build/regression",
     "report": "allure generate --clean tests/reports/allure-results",
     "report:open": "allure open tests/reports/allure-report",
-    "ui-steps": "node scripts/collectUITestsSteps.js",
     "knip": "knip"
   },
   "devDependencies": {
@@ -110,7 +110,6 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@vitejs/plugin-react": "^6.1.2",
-    "acorn": "^8.19.0",
     "allure": "^3.20.1",
     "allure-playwright": "^3.14.0",
     "body-parser": "^2.3.0",

@@ -53,7 +53,6 @@ export default {
   Common_Popup: interactivePopup['commonPopup'],
   Consumer_Groups: project['consumerGroups'],
   Create_Feature_Vector_Popup: interactivePopup['createFeatureVectorPopup'],
-  Create_Job: jobsAndWorkflows['CreateJob'],
   Create_ML_Function_Popup: interactivePopup['createMLFunctionPopup'],
   Create_New_Project: interactivePopup['createNewProject'],
   Create_New_Secret_Popup: interactivePopup['createNewSecretPopup'],

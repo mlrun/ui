@@ -21,7 +21,6 @@ import { expect } from '@playwright/test'
 import {
   getAttribute,
   getTexts,
-  pollAttribute,
   retryAssertion,
   sendKeys,
   waitForPageQuiet
@@ -47,12 +46,6 @@ export const typeSearchableValue = async (page, inputGroup, value) => {
   await clearManually(inputField)
   return await sendKeys(inputField, value)
 }
-
-// retried: the single read right after typing could get the value before the typed one was handled
-export const verifyTypedValue = async (page, inputGroup, value) =>
-  pollAttribute(page.locator(inputGroup.inputField).first(), 'value', {
-    message: 'Input value'
-  }).toBe(value)
 
 // retried: the suggestions are rendered after the typed value is handled and they can be fetched (e.g. the artifacts
 // of the typed project). EVERY suggestion must contain the fragment (the steps say "every"): one was enough before, so a

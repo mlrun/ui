@@ -137,7 +137,6 @@ Feature: Documents Page
     Then verify "Action_Menu" dropdown element on "Documents_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Documents_Info_Pane" wizard
     And wait load page
-    And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
     Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
@@ -214,7 +213,6 @@ Feature: Documents Page
     And wait load page
     Then verify action menu on "Documents" wizard in "Documents_Table" table with "anxujkpvfi" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Documents" wizard in "Documents_Table" table at row with "anxujkpvfi" value in "name" column
-    And wait load page
     And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page

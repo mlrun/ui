@@ -1652,9 +1652,7 @@ Feature: Feature Store Page
             | last_updated |
         Then click on "Add_Button" element on "Add_To_Feature_Vector_Tab" wizard
         And wait load page
-        And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-        And wait load page
         And wait load page
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Feature vector created successfully" value
         And wait load page
@@ -2216,16 +2214,13 @@ Feature: Feature Store Page
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
 
     @MLFS
-    @FAILED_TODO
-    #TODO: ingest isn't implemented on mock, ingest isn't implemented for scheduling - ML-3626
+    # the ingestion is mocked: the mock starts the run "<feature set>-ingest" (startFeatureSetIngest, tests/mockServer/mock.js)
     @inProgress @rerun
-    Scenario: MLFS056 - Verify Labels creation on Feature Set new item wizard  with 'Save And Ingest' button
+    Scenario: MLFS056 - Verify new Feature Set creation with 'Save And Ingest' button
+        * set tear-down property "project" created with "automation-test-name201" value
+        * create "automation-test-name201" MLRun Project with code 201
         Given open url
         And wait load page
-        #/// precondition - CREATE PROJECT///
-        # Then click on "New_Project_Button" element on "Projects" wizard
-        # Then type into "Name_Input" on "Create_New_Project" popup dialog "automation-test-name201" value
-        # Then click on "Create_Button" element on "Create_New_Project" wizard
         And click on row root with value "automation-test-name201" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Feature store" item in sidebar menu
@@ -2234,14 +2229,17 @@ Feature: Feature Store Page
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "new-feature-set-1" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then select "MLRun store" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
-        Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        When type value "artifacts/automation-test-name201/artifact" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then check "Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Save_Button" element on "New_Feature_Set" wizard
         Then verify "Save_Button" element on "New_Feature_Set" wizard is disabled
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
-        Then verify "Timestamp_Input" element in "Schema_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Timestamp_Key_Warning"
+        Then verify "Timestamp_Input" element in "Schema_Accordion" on "New_Feature_Set" wizard should display hover warning "Input_Hint"."Timestamp_Key_Warning"
         Then type value "text" to "Timestamp_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then verify "Save_Button" element on "New_Feature_Set" wizard is enabled
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is enabled
@@ -2250,13 +2248,8 @@ Feature: Feature Store Page
         And wait load page
         Then "Header" element on "Feature_Sets_Info_Pane" should contains "new-feature-set-1" value
         And select "Jobs" item in sidebar menu
+        And wait load page
         Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "new-feature-set-1-ingest"
-        #///postcondition - DELETE PROJECT///
-        # Then check "automation-test-name201" value in "name" column in "Projects_Table" table on "Projects" wizard
-        # Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "automation-test-name201" value in "name" column
-        # Then verify if "Common_Popup" popup dialog appears
-        # Then click on "Delete_Button" element on "Common_Popup" wizard
-        # Then check "automation-test-name201" value not in "name" column in "Projects_Table" table on "Projects" wizard
 
     @MLFS
     @smoke
@@ -2300,7 +2293,7 @@ Feature: Feature Store Page
         Then "Title" element on "Confirm_Popup" should contains "Delete feature vector?" value
         Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
         Then verify "Confirm_Dialog_Message" element visibility on "Confirm_Popup" wizard
-        Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Feature_Store"."Delete_Feature_Vector_Message"
+        Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Feature_Store"."Delete_Feature_Vector_Message" with "patient-deterioration"
         Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
         Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
         Then verify "Delete_Button" element on "Confirm_Popup" wizard is enabled

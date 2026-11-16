@@ -45,20 +45,6 @@ const actionMenuStructureExpand = {
   }
 }
 
-const tabSelector = {
-  root: '.content .content-menu',
-  header: {},
-  body: {
-    root: '.content-menu__tabs',
-    row: {
-      root: '.content-menu__tab',
-      fields: {
-        key: ''
-      }
-    }
-  }
-}
-
 const modelsTable = {
   root: '.table-container .table__content',
   header: {
@@ -270,7 +256,6 @@ const tableNameFilterInput = inputGroup(
 export default {
   modelsTab: {
     Delete_Artifact_Popup: '[data-testid="pop-up-dialog"]',
-    Models_Tab_Selector: commonTable(tabSelector),
     Table_Name_Filter_Input: tableNameFilterInput,
     Table_Refresh_Button:
       '.content__action-bar-wrapper .action-bar__actions [data-testid="refresh"]',

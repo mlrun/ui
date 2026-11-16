@@ -255,6 +255,7 @@ Feature: Project Settings page
 
     @MLPS
     @inProgress
+    # BUG-002 (tests/KNOWN_BUGS.md): the reason of a 403 is replaced by "You do not have a permission to view this data"
     @smoke @rerun @knownBug
     Scenario: MLPS008 - Verify Secrets table on Secrets tab
         Given open url

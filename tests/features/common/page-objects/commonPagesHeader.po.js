@@ -31,7 +31,6 @@ export default {
   MLRun_Logo: '.header .header__logo',
   No_Data_Message: '.no-data-block h3',
   Breadcrumbs: breadcrumbsComponent,
-  Sidebar: sidebarComponent,
   General_Info_Quick_Links: sidebarComponent.content,
   Project_Navigation_Toggler: sidebarComponent.body,
   Project_Settings_Button: sidebarComponent.linkLabel('Project settings'),
@@ -79,9 +78,6 @@ export default {
   Step_6_Button: '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(6)',
   Step_6_Button_text:
     '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(6) .data-ellipsis span',
-  Step_7_Button: '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(7)',
-  Step_7_Button_text:
-    '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(7) .data-ellipsis span',
   Form_Header_Function_Selection: '.job-wizard__function-selection .form-row .form-step-title',
   Form_Header_Run_Details: '.job-wizard__run-details .form-row .form-step-title',
   Form_Header_Data_Inputs: '.job-wizard__data-inputs .form-row .form-step-title',

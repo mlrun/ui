@@ -25,7 +25,6 @@ import {
   createAPIFeatureVector,
   createAPIFunction,
   createAPIMLProject,
-  createAPISchedule,
   deleteAPIMLProject,
   getProjects
 } from '../common/actions/api.actions.js'
@@ -69,13 +68,6 @@ Then(
 )
 
 Then(
-  'create {string} Schedule in {string} project with code {int}',
-  async function (nameSchedule, nameProject, status) {
-    await createAPISchedule(nameProject, nameSchedule, status)
-  }
-)
-
-Then(
   'create {string} Feature Set in {string} project with code {int}',
   async function (nameSchedule, nameProject, status) {
     await createAPIFeatureSet(nameProject, nameSchedule, status)
@@ -93,13 +85,6 @@ Then(
   'create {string} Model with {string} tag in {string} project with code {int}',
   async function (nameArtifact, tag, nameProject, status) {
     await createAPIArtifact(nameProject, nameArtifact, tag, 'model', status)
-  }
-)
-
-Then(
-  'create {string} File with {string} tag in {string} project with code {int}',
-  async function (nameArtifact, tag, nameProject, status) {
-    await createAPIArtifact(nameProject, nameArtifact, tag, 'file', status)
   }
 )
 

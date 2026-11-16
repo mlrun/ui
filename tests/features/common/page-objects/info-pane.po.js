@@ -806,7 +806,6 @@ export default {
         true
       )
     ),
-    Expand_Sources: '.details-item .info-sources',
     Info_Sources_Table: commonTable(filesInfoSourcesTable),
     Overview_Table: commonTable(datasetOverviewTable),
     Edit_btn_table_view: commonEditBtnTableView,
@@ -927,7 +926,6 @@ export default {
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_Headers: commonTable(infoPaneOverviewHeaders),
     Resource_Monitoring_Button: '.item-header__buttons .btn-tertiary',
-    Info_Pane_Refresh_Button: '.item-header__buttons [data-testid="refresh"]',
 
     // Logs tab.
     Logs_Text_container: '.table__item .table__item-logs-content',
@@ -1055,7 +1053,6 @@ export default {
         true
       )
     ),
-    Expand_Sources: '.details-item .info-sources',
     Overview_Table: commonTable(modelsOverviewTable),
     LLMPrompts_Table: commonTable(modelsLLMPromptsTable),
     Info_Sources_Table: commonTable(filesInfoSourcesTable),
@@ -1091,8 +1088,6 @@ export default {
     Invocation_Title: '.stats-card .stats-card__title',
     Invocation_Collapse_Title: '.stats-card .metrics__card-invocation-content-title',
     Invocation_Drift_Icon: '.stats-card .metrics__card-invocation-header__drift-icon-container',
-    Invocation_Drift_Down: '.stats-card .metrics__card-invocation-header__drift_down',
-    Invocation_Drift_Up: '.stats-card .metrics__card-invocation-header__drift_up',
     // mock invocation metrics are random, so the drift can go either way
     Invocation_Drift_Value:
       '.stats-card .metrics__card-invocation-header__drift_up, .stats-card .metrics__card-invocation-header__drift_down',
@@ -1106,9 +1101,6 @@ export default {
     Search_By_Name_Filter_Input: inputGroup(
       generateInputGroup('[data-testid="name-form-input"]', true, false)
     ),
-    Alerts_FilterBy_Button:
-      '[data-testid="detailsPanel"] [data-testid="filter-menu-btn-tooltip-wrapper"]',
-    Alerts_Refresh_Button: '[data-testid="detailsPanel"] [data-testid="refresh-tooltip-wrapper"]',
     Alerts_Table: commonTable(alertsTable),
     Metrics_Stats_Card: '.alert-row__expanded-row .alerts-table .stats-card'
   },

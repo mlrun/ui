@@ -17,6 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { unordered } from './element.js'
+
+// The lists are compared in order (the tabs, the headers, the options as the app shows them), the ones marked
+// `unordered` - without it: their order is not fixed by the app (e.g. the API response order).
+// The patterns of the messages ("should be equal") match the whole text. Their capturing groups are the variable parts
+// that a scenario can give ("should be equal ... with "my-name""): a group is replaced by the value. Anything else that
+// varies is narrowed to what it can be (a name has no quotes, a UID is 32 hex digits), `(.+?)` passed any value
 export default {
   Project: {
     Quick_Actions_Options: [
@@ -37,7 +44,6 @@ export default {
       'Feature set',
       'Create feature vector'
     ],
-    Online_Status: 'online',
     // "created" is shown in the browser's timezone
     Created_Details_Default: /^Created: [A-Z][a-z]{2} \d{1,2}, 2021, \d{2}:\d{2}:\d{2}\s[AP]M$/,
     Data_Collection_Description:
@@ -53,10 +59,9 @@ export default {
   Feature_Store: {
     Tab_List: ['Feature Sets', 'Features', 'Feature Vectors'],
     Delete_Feature_Vector_Message:
-      /Are you sure you want to delete the feature vector "(.+?)"\?. You cannot restore a feature vector after deleting it./
+      /Are you sure you want to delete the feature vector "([^"]+)"\?. You cannot restore a feature vector after deleting it./
   },
   Models: {
-    Tab_List: ['Models', 'Model Endpoints', 'Real-Time Pipelines'],
     Combobox_Options: [
       'V3IO',
       'S3',
@@ -145,13 +150,13 @@ export default {
     ],
     Action_Menu_List_LLM_Prompt: ['Add a tag', 'Download', 'Copy URI', 'View YAML'],
     Action_Menu_List_Version_History: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete'],
-    Action_Menu_List_Expanded: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete all'],
     Action_Menu_List_Artifacts_Transition_Popup: ['Download', 'Copy URI', 'View YAML'],
     Action_Menu_List_Function_Transition_Popup: ['View YAML'],
     Action_Menu_List_Run_Transition_Popup: ["Run's resource monitoring", 'View YAML'],
     Action_Menu_List_Feature_Set_Transition_Popup: ['View YAML'],
     Handler_List: ['train'],
-    Pods_Priority_List: ['Low', 'Medium', 'High'],
+    // the priority classes of the backend in its order, see `Dropdown_Options.Pods_Priority`
+    Pods_Priority_List: unordered(['Low', 'Medium', 'High']),
     Ranking_Criteria_List: ['Min', 'Max']
   },
   Datasets_Info_Pane: {
@@ -170,7 +175,8 @@ export default {
       'Updated:',
       'Labels:'
     ],
-    Overview_Producer_Headers: ['Name:', 'Kind:', 'URI:', 'Owner:', 'Workflow:', 'UID:'],
+    // sorted by the app (`producerListOrder` of DetailsInfo): "UID" before "Workflow"
+    Overview_Producer_Headers: ['Name:', 'Kind:', 'URI:', 'Owner:', 'UID:', 'Workflow:'],
     Overview_Sources_Headers: ['Name:', 'Path:'],
     // a "Name:"/"Path:" pair per source: test-regressor_cox-test-summary has two (models_path, test_set)
     Overview_Sources_Headers_Two_Sources: ['Name:', 'Path:', 'Name:', 'Path:']
@@ -241,8 +247,7 @@ export default {
       'Type:',
       'Timestamp:',
       'Severity:'
-    ],
-    Overview_Trigger_Criteria_Headers: ['Trigger criteria count:', 'Trigger criteria time period:']
+    ]
   },
   Alerts_Application_Info_Pane: {
     Overview_General_Headers: [
@@ -252,18 +257,14 @@ export default {
       'Timestamp:',
       'Severity:'
     ],
-    Overview_General_Headers_Per_Project: ['Application name:', 'Type:', 'Timestamp:', 'Severity:'],
-    Overview_Trigger_Criteria_Headers: ['Trigger criteria count:', 'Trigger criteria time period:']
+    Overview_General_Headers_Per_Project: ['Application name:', 'Type:', 'Timestamp:', 'Severity:']
   },
   ML_Functions_Tab: {
-    Common_Action_Menu_Options: ['Edit', 'View YAML', 'Delete'],
     Common_Action_Menu_Options_Demo: ['Edit', 'View YAML', 'Delete all versions'],
-    Serving_Action_Menu_Options: ['Edit', 'View YAML', 'Delete'],
     Serving_Action_Menu_Options_Demo: ['Edit', 'View YAML', 'Delete all versions']
   },
   ML_Function_Info_Pane: {
     Initialized_State: 'Initialized',
-    Ready_State: 'Ready',
     Tab_List: ['Overview', 'Code', 'Build Log'],
     Tab_List_Application_type: ['Overview', 'Build Log'],
     Overview_Headers: [
@@ -296,8 +297,9 @@ export default {
   },
   Files_Info_Pane: {
     Tab_List: ['Overview', 'Preview'],
+    // the kind is the one of the page (`getArtifactLabelByTabName`)
     Info_Banner_Message:
-      /The (.+?) is not in the filtered list\. Closing the details panel will return you to the current list\./,
+      /The artifact is not in the filtered list\. Closing the details panel will return you to the current list\./,
     Overview_General_Headers: [
       'Hash:',
       'Key:',
@@ -314,11 +316,11 @@ export default {
   },
   Models_Info_Pane: {
     Tab_List: ['Overview'],
-    Tab_List_Two_Tabs: ['Overview', 'Preview'],
     Tab_List_Extended: ['Overview', 'Preview', 'Features', 'Statistics'],
     Tab_List_Prompt: ['Overview', 'Preview', 'LLM Prompts'],
+    // the kind is the one of the page (`getArtifactLabelByTabName`)
     Info_Banner_Message:
-      /The (.+?) is not in the filtered list\. Closing the details panel will return you to the current list\./,
+      /The model is not in the filtered list\. Closing the details panel will return you to the current list\./,
     Overview_General_Headers: [
       'Hash:',
       'Key:',
@@ -336,7 +338,8 @@ export default {
       'Labels:',
       'Metrics:'
     ],
-    Overview_Producer_Headers: ['Name:', 'Kind:', 'URI:', 'Owner:', 'Workflow:', 'UID:'],
+    // sorted by the app (`producerListOrder` of DetailsInfo): "UID" before "Workflow"
+    Overview_Producer_Headers: ['Name:', 'Kind:', 'URI:', 'Owner:', 'UID:', 'Workflow:'],
     Overview_Producer_Headers_Kind_Project: ['Name:', 'Kind:', 'Tag:', 'Owner:', 'UID:'],
     Overview_Sources_Headers: ['Name:', 'Path:']
   },
@@ -367,20 +370,7 @@ export default {
       'Databricks filesystem'
     ],
     // the external offline kinds of the app (`externalOfflineKindOptions`), the others were removed in #639
-    Target_Store_File_Type: ['CSV', 'Parquet'],
-    Target_Store_Path_Annotation:
-      'Note that in order to keep the feature set versioning you need to keep the {run-id} as part of the path.'
-  },
-  Create_New_Job: {
-    Combobox_Options: [
-      'MLRun store',
-      'V3IO',
-      'S3',
-      'HTTP',
-      'HTTPS',
-      'Azure storage',
-      'Google storage'
-    ]
+    Target_Store_File_Type: ['CSV', 'Parquet']
   },
   Modal_Wizard_Form: {
     Tab_List: ['Functions', 'Hub'],
@@ -418,11 +408,11 @@ export default {
       'Google storage',
       'Databricks filesystem'
     ],
+    // the same kind twice (`\1`), the scenario gives it
     Register_Error_Message:
-      /That combination of name and tag is already in use in an existing (artifact|dataset|plotly|table)\. If you proceed, the existing (artifact|dataset|plotly|table) will be overwritten/
+      /That combination of name and tag is already in use in an existing (artifact|dataset|plotly|table)\. If you proceed, the existing \1 will be overwritten/
   },
   Register_Dataset: {
-    Type_Options: ['General', 'Chart', 'Plot', 'Table'],
     Form_Text:
       'Register a dataset as an artifact in MLRun so it can be used, for example, by functions, jobs, and pipelines.',
     Form_Subtext:
@@ -464,13 +454,10 @@ export default {
       'Statistics reflect the data for the latest ingestion. \n Note that some values may be empty due to the use of different engines for calculating statistics',
     Monitoring_Jobs_Box_Title_Tip:
       'Number of Job runs, clicking on the counters navigates to jobs screen.',
-    Error_Content: 'Error. Columns must be same length as key',
     Error_Content_Workflow:
       "Error. 2021-08-29 20:01:36.582972: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library 'libcudart.so.11.0'; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/lib:/usr/local/lib: 2021-08-29 20:01:36.583019: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine. 2021-08-29 20:01:46.470042: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set 2021-08-29 20:01:46.470263: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/lib:/usr/local/lib: 2021-08-29 20:01:46.470283: W tensorflow/stream_executor/cuda/cuda_driver.cc:326] failed call to cuInit: UNKNOWN ERROR (303) 2021-08-29 20:01:46.470306: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (train-1193bacd-worker-0): /proc/driver/nvidia/version does not exist 2021-08-29 20:01:46.518782: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations: AVX2 FMA To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags. 2021-08-29 20:01:46.518927: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set Some callbacks may not have access to the averaged metrics, see https://github.com/horovod/horovod/issues/2440 Traceback (most recent call last): File \"/User/demos/image-classification-with-distributed-training/src-tfv2/horovod-training.py\", line 116, in <module> hvd.callbacks.LearningRateWarmupCallback(warmup_epochs=5, verbose=1), TypeError: __init__() missing 1 required positional argument: 'initial_lr'"
   },
   Input_Hint: {
-    Artifact_Names_Unique: 'Artifact names in the same project must be unique',
-    Dataset_Names_Unique: 'Dataset names in the same project must be unique',
     Artifact_Name_Hint_Deploy_Model:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 253\n' +
       'This field is required',
@@ -483,9 +470,6 @@ export default {
     Run_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 63\n' +
       'This field is required',
-    Labels_Warning_Key:
-      'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75\n' +
-      'Key must be unique',
     Labels_Warning_Key_Modal_Wizard_Form:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75\n' +
       'System-defined labels cannot be modified.\nKey must be unique',
@@ -495,20 +479,14 @@ export default {
       "[Prefix] Must not start with 'kubernetes.io', 'k8s.io'\nSystem-defined labels cannot be modified.\nKey must be unique",
     Projects_Labels_Warning_Value:
       '[Value] Must begin and end with: a–z, A–Z, 0–9\n[Value] Length – max: 63\n[Value] Valid characters: a–z, A–Z, 0–9, –, _, .',
-    Labels_Warning_Value:
-      'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',
     Feature_Set_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
       'This field is required',
     Feature_Set_Version_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',
-    Jobs_Name_Hint:
-      'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 63\n' +
-      'This field is required',
     Input_Field_Require: 'This field is required',
     Input_Field_Invalid: 'This field is invalid',
     Input_Field_Unique: 'Name must be unique',
-    URL_Field_Require: 'URL is required',
     Key_Bucketing_Number_Hint:
       'If you partition by key and the number of unique keys is very high it is recommended to use buckets for ' +
       'better performance. In this case the path would be path/bucket-num/year=/month=/day= etc.. In case the ' +
@@ -526,11 +504,7 @@ export default {
       "The name of a base container image from which to build the function's processor image",
     Limit_Number_Warning: 'Limit must be bigger than or equal to Request and not be less than 1',
     Minimum_Value_Warning: 'The minimum value must be 1',
-    CPU_Limit_Number_Warning:
-      'Limit must be bigger than or equal to Request and not be less than 0.001',
     Request_Number_Warning: 'Request must be less than or equal to Limit and not be less than 1',
-    CPU_Request_Number_Warning:
-      'Request must be less than or equal to Limit and not be less than 0.001',
     GPU_Minimum_Value_Warning: 'The minimum value must be 1',
     Mount_Path_Hint: 'A mount path for referencing the data from the function',
     Data_Container_Hint: 'The name of the data container that contains the data',
@@ -547,8 +521,6 @@ export default {
       'After the function is deployed, it will have a URL for calling the model that is based upon this name.',
     MLRun_Store_Path_Hint:
       'Field must be in "<artifact type>/<project>/<artifact name>:<artifact tag>" or "<artifact type>/<project>/<artifact name>@<artifact uid>" format',
-    Jobs_MLRun_Store_Path_Hint:
-      'Field must be in "artifacts/my-project/my-artifact:my-tag" or "artifacts/my-project/my-artifact@my-uid" format',
     V3IO_Path_Hint: 'Invalid URL. Field must be in "container-name/file" format',
     V3IO_Path_Hint_Feature_Store: 'Field must be in "container-name/file" format',
     S3_Path_Hint: 'Field must be in "bucket/path" format',
@@ -561,7 +533,6 @@ export default {
       'Store the feature set as a Parquet file or a partitioned Parquet directory',
     Target_Store_External_Offline:
       'Store the feature set in a remote object store (e.g. AWS S3 Google or Azure storage)',
-    Distinct_Keys: 'The partition is based on key.',
     Source_URL_Input:
       'Source URL is the Git Repo that is associated with the project. When the user pulls the project it will use the source URL to pull from',
     Secret_Name_Rule_Options:
@@ -589,7 +560,6 @@ export default {
       'Volumes that define data paths and the required information for accessing the data from the function',
     Members_Hint: 'Some of the members might be user groups',
     Metric_Type_Result: 'Result',
-    Metric_Type_Metric: 'Metric',
     Overview_Hash: 'Represents hash of the data. when the data changes the hash would change',
     Overview_UID:
       'Unique identifier representing the job or the workflow that generated the artifact',
@@ -600,16 +570,7 @@ export default {
     Models_Statistics:
       'Note that some values may be empty due to the use of different engines for calculating statistics',
     Models_LLM_Prompts: 'All LLM prompt artifacts linked to this model',
-    Model_Stats_Tip:
-      'Each model can have multiple versions, produced by multiple runs and given multiple tags.\n' +
-      ' You can browse them in the Models page.',
-    FeatureSets_Stats_Tip:
-      'Each feature set can have multiple versions, produced by multiple runs and given multiple tags.\n' +
-      ' You can browse them in the Feature store page.',
     Model_Version_Tag: 'Enter a model name to enable field.',
-    Artifacts_Stats_Tip:
-      'Each artifact can have multiple versions, produced by multiple runs and given multiple tags.\n' +
-      ' You can browse them in the Artifacts page.',
     Model_Endpoint_With_Detections:
       'This chart displays the number of model endpoints that had at least one detected issue, in any monitoring application, in the relevant time period',
     Project_Monitoring_Counters: 'Counters use a caching mechanism, and are not auto-refreshed.',
@@ -627,17 +588,18 @@ export default {
     Archive_Project:
       'Archived projects continue to consume resources.To stop the project from consuming resources, delete its scheduled jobs and suspend its Nuclio functions.',
     Delete_Project_Confirm_Message:
-      /You are trying to delete the project "[^"]+[$"]\. Deleted projects cannot be restored/,
+      /You are trying to delete the project "([^"]+)"\. Deleted projects cannot be restored/,
     Delete_Project:
-      /You are trying to delete the non-empty project "[^"]+[$"]\. Deleting it will also delete all of its resources, such as jobs, artifacts, and features\./,
+      /You are trying to delete the non-empty project "([^"]+)"\. Deleting it will also delete all of its resources, such as jobs, artifacts, and features\./,
     Delete_Function:
-      /You try to delete function "[^"]+[$"]\. Deleted functions cannot be restored\./,
+      /You try to delete function "([^"]+)"\. Deleted functions cannot be restored\./,
     Delete_Scheduled_Job:
-      /Are you sure you want to delete the scheduled job "[^"]+[$"]\? Deleted scheduled jobs can not be restored\./,
+      /Are you sure you want to delete the scheduled job "([^"]+)"\? Deleted scheduled jobs can not be restored\./,
     Delete_Feature:
-      /You try to delete feature "[^"]+[$"] from vector "[^"]+[$"]\. The feature could be added back later./,
+      /You try to delete feature "([^"]+)" from vector "([^"]+)"\. The feature could be added back later\./,
+    // the same kind twice (`\1`), the scenario gives it
     Add_A_Tag_Overwrite_Message:
-      /That combination of name and tag is already in use in an existing (artifact|dataset|plotly|LLM prompt)\. If you proceed, the existing (artifact|dataset|plotly|LLM prompt) will be overwritten/
+      /That combination of name and tag is already in use in an existing (artifact|dataset|plotly|LLM prompt)\. If you proceed, the existing \1 will be overwritten/
   },
   Messages: {
     How_To_Create:
@@ -648,7 +610,6 @@ export default {
     Tab_List: ['Jobs', 'Workflows', 'Scheduled']
   },
   Jobs_And_Workflows: {
-    Tab_List: ['Monitor Jobs', 'Monitor Workflows', 'Schedule'],
     Job_Action_Menu_Options: [
       'Batch re-run',
       "Run's resource monitoring",
@@ -663,18 +624,19 @@ export default {
       'Delete all runs'
     ],
     Job_Overview_Action_Menu_Options: [
-      'View YAML',
-      "Run's resource monitoring",
       'Batch re-run',
+      "Run's resource monitoring",
+      'View YAML',
       'Delete run'
     ],
     Running_Job_Action_Menu_Options: ["Run's resource monitoring", 'Abort', 'View YAML'],
+    // the job name is given by the scenario, the UID (32 hex digits) mostly isn't known there
     Delete_Run_Message:
-      /Are you sure you want to delete the run with the UID "(.+?)" of the job "(.+?)"\? Deleted runs can not be restored./,
+      /Are you sure you want to delete the run with the UID "[0-9a-f]{32}" of the job "([^"]+)"\? Deleted runs can not be restored\./,
     Delete_All_Runs_Message:
-      /Are you sure you want to delete all runs of the job "(.+?)"\? Deleted runs can not be restored./,
+      /Are you sure you want to delete all runs of the job "([^"]+)"\? Deleted runs can not be restored\./,
     Terminate_Workflow_Message:
-      /Are you sure you want to terminate the workflow "(.+?)" \(stop its execution\)\? Workflows termination cannot be undone\./,
+      /Are you sure you want to terminate the workflow "([^"]+)" \(stop its execution\)\? Workflows termination cannot be undone\./,
     Workflows_Action_Menu_Options: ['View YAML', 'Retry', 'Terminate'],
     Workflows_Running_Action_Menu_Options: ['View YAML', 'Terminate'],
     Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
@@ -685,16 +647,12 @@ export default {
       'View YAML'
     ],
     Schedule_Action_Menu_Options: ['Run now', 'Edit', 'Delete', 'View YAML'],
-    Workflows_Unsuccessful_Run_Message: 'Workflow did not run successfully\nRETRY',
     Workflows_Successful_Run_Message: 'Workflow run successfully.',
-    Workflows_Unsuccessful_Terminate_Message:
-      'Workflow "stocks-admin-main 2021-08-30 05-36-35 failed to terminate',
     Workflows_Trigger_Termination_Message:
       'A request to terminate workflow "stocks-admin-main 2021-08-30 05-36-35" was issued'
   },
   Jobs_Monitor_Tab_Info_Pane: {
     Pending_State: 'Pending',
-    Error_State: 'Error',
     Error_State_With_Message: 'Error. This function intentionally fails',
     Tab_List: ['Overview', 'Inputs', 'Artifacts', 'Results', 'Logs', 'Pods'],
     Overview_Headers: [
@@ -717,21 +675,12 @@ export default {
       'Maximum attempts:'
     ]
   },
-  Jobs_Monitor_Tab: {
-    'Any time': 'Any time',
-    'Past hour': 3600000,
-    'Past 24 hours': 86400000,
-    'Past week': 604800000,
-    'Past month': { min: 2419200000, max: 2678400000 },
-    'Past non-leap year': 31536000000,
-    'Past leap year': 31622400000
-  },
   Date_Time_Picker: {
     Error_Message: '“To” must be later than “From”'
   },
   Error_Messages: {
     // the whole message (the checks are anchored): it ends with a period
-    Project_Already_Exists: /A project named "[^"]+" already exists\./,
+    Project_Already_Exists: /A project named "([^"]+)" already exists\./,
     // the app shows the backend error detail when there is one (projectReducer createNewProject)
     Projects_Limit_Reached:
       "MLRunHTTPError(\"Failed creating project in Iguazio: [{'status': 405, 'detail': 'Resource limit reached. Cannot create more records'}]\")",
@@ -739,16 +688,18 @@ export default {
       "MLRunAccessDeniedError('Not allowed to create/update internal secrets (key starts with mlrun.)')",
     Must_Select_One: 'Must select at least one',
     Must_Select_One_Partition: 'Must select at least one partitioning option',
-    Already_Scheduled: 'This job is already scheduled',
     One_Day_Option: 'Must select at least one day option'
   },
   Dropdown_Options: {
-    Tag_Filer_Options: ['All tags', 'latest'],
+    // "latest" first (`getTagFilterOptions`), the tags of the project follow it (none here)
+    Tag_Filer_Options: ['latest', 'All tags'],
     Tag_Filer_Options_Main_Table: ['latest'],
-    // the tag filter lists the real tags of the project feature sets/vectors
-    Tag_Filer_Options_Feature_Sets_Default: [
-      'All tags',
+    // the tag filter lists the real tags of the project feature sets/vectors after "latest" and "All tags": the tags of
+    // the shown rows first, then the other ones, each group in the order of the API response (FormTagFilter, no sort),
+    // so the order isn't fixed by the app
+    Tag_Filer_Options_Feature_Sets_Default: unordered([
       'latest',
+      'All tags',
       'my-tag',
       'with_analysis',
       'pre-latest',
@@ -779,9 +730,8 @@ export default {
       '4',
       '5',
       'aaa'
-    ],
-    Tag_Filer_Options_Feature_Vectors_Default: ['All tags', 'latest', 'test-tag'],
-    Status_Filter_Options: ['All', 'Completed', 'Running', 'Pending', 'Error', 'Aborted'],
+    ]),
+    Tag_Filer_Options_Feature_Vectors_Default: unordered(['latest', 'All tags', 'test-tag']),
     Entity_Type_Filter_Options: ['All', 'Job', 'Endpoint', 'Application', 'Infra'],
     Severity_Filter_Options: ['All', 'High', 'Medium', 'Low'],
     Event_Type_Filter_Options: [
@@ -853,16 +803,6 @@ export default {
       'Dask',
       'Databricks'
     ],
-    Group_By_Filter_Options: ['None', 'Name'],
-    Start_Time_Filter_Options: [
-      'Any time',
-      'Past hour',
-      'Past 24 hours',
-      'Past week',
-      'Past month',
-      'Past year',
-      'Custom range'
-    ],
     Date_Picker_Filter_Options: [
       'Any time',
       'Past hour',
@@ -902,12 +842,8 @@ export default {
       'Past month',
       'Custom range'
     ],
-    Parameters_Table_Type_Options: ['str', 'int', 'float', 'bool', 'list', 'map'],
-    Parameter_Table_Simple_Hyper_Options: ['Simple', 'Hyper'],
-    Turning_Strategy_Options: ['List', 'Grid', 'Random'],
-    Criteria_Dropdown_Options: ['Max', 'Min'],
     Volume_Mount_Options: ['Auto', 'Manual', 'None'],
-    Hyperparameter_Strategy_Options: ['List', 'Grid', 'Random'],
+    Hyperparameter_Strategy_Options: ['Grid', 'Random', 'List'],
     Memory_Unit_Options: ['Bytes', 'KB', 'KiB', 'MB', 'MiB', 'GB', 'GiB', 'TB', 'TiB'],
     CPU_Unit_Options: ['cpu', 'millicpu'],
     Time_Unit_Options: ['Minute', 'Hourly', 'Daily', 'Weekly', 'Monthly'],
@@ -921,40 +857,40 @@ export default {
       'Every 12'
     ],
     Partition_Granularity_Options: ['Second', 'Minute', 'Hour', 'Day', 'Month', 'Year'],
-    Pods_Priority: ['Low', 'Medium', 'High'],
+    // the priority classes of the backend (`valid_function_priority_class_names` of the frontend spec) in its order, the
+    // app doesn't sort them
+    Pods_Priority: unordered(['Low', 'Medium', 'High']),
     Schedule_Variants: ['Minute', 'Hourly', 'Daily', 'Weekly', 'Monthly'],
     Schedule_Minutes_Variants: ['10', '15', '20', '30'],
     Schedule_Hours_Variants: ['1', '2', '3', '4', '6', '12']
   },
   No_Data_Message: {
+    // the values of the filters are given by the scenario ("should be equal ... with ..."), "Show best iteration only" is
+    // always "true" (getNoDataMessage)
     Common_Message_Jobs_Monitoring:
-      /No data matches the filter: "Start time: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M, Project: (.+?)"/,
-    Common_Message_Monitor_Jobs_Name: /No data matches the filter: "Name: (.+?)"/,
+      /No data matches the filter: "Start time: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M, Project: ([^"]+)"/,
+    Common_Message_Monitor_Jobs_Name: /No data matches the filter: "Name: ([^"]+)"/,
     Common_Message_LLM_Prompt_Name:
-      /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Show best iteration only: (.+?)"/,
+      /No data matches the filter: "Name: ([^"]+), LLM prompt version tag: ([^"]+), Show best iteration only: true"/,
     Common_Message_LLM_Prompt_Label:
-      /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Labels: (.+?), Show best iteration only: (.+?)"/,
+      /No data matches the filter: "Name: ([^"]+), LLM prompt version tag: ([^"]+), Labels: ([^"]+), Show best iteration only: true"/,
     Common_Message_LLM_Prompt_Tag:
-      /No data matches the filter: "LLM prompt version tag: (.+?), Show best iteration only: (.+?)"/,
-    Common_Message_LLM_Prompt_Model_Name_Tag:
-      /No data matches the filter: "Name: (.+?), LLM prompt version tag: (.+?), Labels: (.+?), Show best iteration only: (.+?), Model name: (.+?), Model version tag: (.+?)"/,
+      /No data matches the filter: "LLM prompt version tag: ([^"]+), Show best iteration only: true"/,
     Common_Message_Artifact_Tag:
-      /No data matches the filter: "Version tag: (.+?), Show best iteration only: (.+?)"/,
+      /No data matches the filter: "Version tag: ([^"]+), Show best iteration only: true"/,
     Common_Message_Jobs_Monitoring_Workflow_Project:
-      /No data matches the filter: "Created at: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M, Project: (.+?)"/,
+      /No data matches the filter: "Created at: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M, Project: ([^"]+)"/,
     Common_Message_Jobs_Monitoring_Status:
-      /No data matches the filter: "Created at: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M, Status: (.+?)"/,
+      /No data matches the filter: "Created at: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M, Status: ([^"]+)"/,
     Common_Message_Monitoring_Workflow:
       /No data matches the filter: "Created at: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M"/,
-    Common_Message_Monitoring_Workflow_Status: /No data matches the filter: "Status: (.+?)"/,
+    Common_Message_Monitoring_Workflow_Status: /No data matches the filter: "Status: ([^"]+)"/,
     Common_Message_Jobs_Monitoring_Type:
-      /No data matches the filter: "Start time: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M, Type: (.+?)"/,
-    Common_Message_Monitor_Jobs:
-      /No data matches the filter: "Start time: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M"/,
+      /No data matches the filter: "Start time: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M, Type: ([^"]+)"/,
     Common_Message_Jobs_Monitoring_Scheduled:
-      /No data matches the filter: "Scheduled at: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M, Project: (.+?)"/,
+      /No data matches the filter: "Scheduled at: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M, Project: ([^"]+)"/,
     Common_Message_Scheduled_Type:
-      /No data matches the filter: "Scheduled at: .*? - .*?, Type: (.+?)"/,
+      /No data matches the filter: "Scheduled at: [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M - [A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}:\d{2}\s[AP]M, Type: ([^"]+)"/,
     Common_Message: 'No data matches the filter: "Version Tag: latest, Name: ccccc"',
     Common_Message_Feature: 'No data matches the filter: "Version Tag: latest"',
     Common_Message_Feature_Vector_Tab:

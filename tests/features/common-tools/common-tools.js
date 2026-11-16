@@ -25,8 +25,7 @@ import {
   deleteAPIFeatureSet,
   deleteAPIFeatureVector,
   deleteAPIFunction,
-  deleteAPIMLProject,
-  deleteAPISchedule
+  deleteAPIMLProject
 } from '../common/actions/api.actions.js'
 
 export function locatorBuilder(strings, ...keys) {
@@ -211,10 +210,7 @@ function deleteBackendItem(page, item) {
       return deleteAPIFeatureVector(item.project, item.name, 204)
     case 'function':
       return deleteAPIFunction(item.project, item.name, 202)
-    case 'schedule':
-      return deleteAPISchedule(item.project, item.name, 204)
     case 'dataset':
-    case 'file':
     case 'model':
       return deleteAPIArtifact(item.project, item.name, 200)
     default:

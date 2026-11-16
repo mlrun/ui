@@ -389,7 +389,6 @@ export default {
     Create_Set_Button: pageHeaderButton,
     Table_Expand_Rows_Button:
       '.feature-store-container .content__action-bar .data-ellipsis:nth-of-type(2) button',
-    Table_Tag_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_Name_Filter_Input: commonNameFilterInput,
     Table_Label_Filter_Input: commonLabelFilterInput,
     Feature_Sets_Table: commonTable(featureSetsTable),
@@ -403,7 +402,6 @@ export default {
       '.content .content__action-bar-wrapper .action-bar__actions [data-testid="btn"]',
     Table_Name_Filter_Input: commonNameFilterInput,
     Table_Label_Filter_Input: commonLabelFilterInput,
-    Table_Tag_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_Refresh_Button: tableRefreshButton,
     Features_Table: commonTable(featuresTable)
   },
@@ -413,7 +411,6 @@ export default {
     Table_FilterBy_Button: tableFilterByButton,
     Table_Name_Filter_Input: commonNameFilterInput,
     Table_Label_Filter_Input: commonLabelFilterInput,
-    Table_Tag_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_Refresh_Button: tableRefreshButton,
     Feature_Vectors_Table: commonTable(featureVectorTable),
     Overlay: '#overlay_container .chip-block-hidden_visible'

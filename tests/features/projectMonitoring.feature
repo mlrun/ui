@@ -127,24 +127,24 @@ Feature: Project Monitoring Page
         Then verify "Refresh_Button" element on "Project" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
         Then verify "Runs_Statistic_Table" element visibility on "Project" wizard
         Then verify visibility of header column "title" in "Runs_Statistic_Table" table on "Project" wizard
-        Then check "Runs" header value in "title" column in "Runs_Statistic_Table" table on "Project" wizard
+        Then check "Runs" exact header value in "title" column in "Runs_Statistic_Table" table on "Project" wizard
         Then verify "Runs_Statistic_Section_Title_Tip" element visibility in "Runs_Statistic_Section_Container" on "Project" wizard
         Then verify "Runs_Statistic_Section_Title_Tip" element in "Runs_Statistic_Section_Container" on "Project" wizard should display hover hint "Label_Hint"."Runs_Statistic_Section_Title_Tip"
         Then verify visibility of header column "time_period" in "Runs_Statistic_Table" table on "Project" wizard
-        Then check "Last 24 hrs" header value in "time_period" column in "Runs_Statistic_Table" table on "Project" wizard
+        Then check "Last 24 hrs" exact header value in "time_period" column in "Runs_Statistic_Table" table on "Project" wizard
         Then verify visibility of header column "in_process_counter_number" in "Runs_Statistic_Table" table on "Project" wizard
         Then verify visibility of header column "in_process_counter_subtitle" in "Runs_Statistic_Table" table on "Project" wizard
-        Then check "In Process" header value in "in_process_counter_subtitle" column in "Runs_Statistic_Table" table on "Project" wizard
+        Then check "In Process" exact header value in "in_process_counter_subtitle" column in "Runs_Statistic_Table" table on "Project" wizard
         Then verify visibility of header column "in_process_counter_icon" in "Runs_Statistic_Table" table on "Project" wizard
         Then verify "In_Process_Counter_Subtitle" element in "Runs_Statistic_Section_Container" on "Project" wizard should display hover tooltip "Common_Tooltips"."In_Process_Jobs"
         Then verify visibility of header column "failed_counter_number" in "Runs_Statistic_Table" table on "Project" wizard
         Then verify visibility of header column "failed_counter_subtitle" in "Runs_Statistic_Table" table on "Project" wizard
-        Then check "Failed" header value in "failed_counter_subtitle" column in "Runs_Statistic_Table" table on "Project" wizard
+        Then check "Failed" exact header value in "failed_counter_subtitle" column in "Runs_Statistic_Table" table on "Project" wizard
         Then verify visibility of header column "failed_counter_icon" in "Runs_Statistic_Table" table on "Project" wizard
         Then verify "Failed_Counter_Subtitle" element in "Runs_Statistic_Section_Container" on "Project" wizard should display hover tooltip "Common_Tooltips"."Failed_Jobs"
         Then verify visibility of header column "succeeded_counter_number" in "Runs_Statistic_Table" table on "Project" wizard
         Then verify visibility of header column "succeeded_counter_subtitle" in "Runs_Statistic_Table" table on "Project" wizard
-        Then check "Succeeded" header value in "succeeded_counter_subtitle" column in "Runs_Statistic_Table" table on "Project" wizard
+        Then check "Succeeded" exact header value in "succeeded_counter_subtitle" column in "Runs_Statistic_Table" table on "Project" wizard
         Then verify visibility of header column "succeeded_counter_icon" in "Runs_Statistic_Table" table on "Project" wizard
         Then verify "Succeeded_Counter_Subtitle" element in "Runs_Statistic_Section_Container" on "Project" wizard should display hover tooltip "Common_Tooltips"."Succeeded"
         Then verify "Recent_Text" element visibility in "Runs_Statistic_Section_Container" on "Project" wizard
@@ -157,19 +157,19 @@ Feature: Project Monitoring Page
         Then "All_Jobs_Link" element in "Runs_Statistic_Section_Container" on "Project" should contains "All jobs" value
         Then verify "Realtime_Functions_Nuclio_Table" element visibility on "Project" wizard
         Then verify visibility of header column "title" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
-        Then check "Real-time functions (Nuclio)" header value in "title" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then check "Real-time functions (Nuclio)" exact header value in "title" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
         Then verify visibility of header column "running_counter_number" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
-        Then check "Running" header value in "running_counter_subtitle" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then check "Running" exact header value in "running_counter_subtitle" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
         Then verify visibility of header column "running_counter_icon" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
         Then verify visibility of header column "failed_counter_number" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
-        Then check "Failed" header value in "failed_counter_subtitle" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then check "Failed" exact header value in "failed_counter_subtitle" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
         Then verify visibility of header column "failed_counter_icon" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
         Then verify "Running_Counter_Subtitle" element in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" wizard should display hover tooltip "Common_Tooltips"."Running"
         Then verify "Failed_Counter_Subtitle" element in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" wizard should display hover tooltip "Common_Tooltips"."Failed_Tip"
         Then verify visibility of header column "api_gateways_counter_number" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
-        Then check "API gateways" header value in "api_gateways_counter_subtitle" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then check "API gateways" exact header value in "api_gateways_counter_subtitle" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
         Then verify visibility of header column "consumer_groups_counter_number" in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
-        Then check "Consumer groups" header value in "consumer_groups_counter_subtitle" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
+        Then check "Consumer groups" exact header value in "consumer_groups_counter_subtitle" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
         Then "Recent_Text" element in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" should contains "Recent real-time functions" value
         Then check "og-classification-tf2-serving" value in "name" column in "Realtime_Functions_Nuclio_Table" table on "Project" wizard
         Then verify "All_Realtime_Functions_Link" element visibility in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" wizard
@@ -269,7 +269,6 @@ Feature: Project Monitoring Page
         #check visibility of menu buttons in demo mode
         When turn on demo mode with query params "false"
         And wait load page
-        And wait load page
         Then click on "Models_Button" element on "commonPagesHeader" wizard
         Then verify "Monitoring_App_Button" element visibility on "commonPagesHeader" wizard
         Then click on "Data_And_Artifacts_Button" element on "commonPagesHeader" wizard
@@ -284,7 +283,6 @@ Feature: Project Monitoring Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
-        And wait load page
         And wait load page
         Then verify "Projects_Table" element visibility on "Projects" wizard
 
@@ -1024,7 +1022,6 @@ Feature: Project Monitoring Page
         Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
         Then navigate back
-        And wait load page
         When click on "Failed_Counter_Subtitle" element in "Runs_Statistic_Section_Container" on "Project" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
@@ -1042,7 +1039,6 @@ Feature: Project Monitoring Page
         Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then navigate back
-        And wait load page
         When click on "Succeeded_Counter_Subtitle" element in "Runs_Statistic_Section_Container" on "Project" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
@@ -1093,7 +1089,6 @@ Feature: Project Monitoring Page
         Then verify "Table_Refresh_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Schedule_Monitor_Table" element visibility on "Schedule_Monitor_Tab" wizard
         Then navigate back
-        And wait load page
         When click on "Jobs_Counter_Number" element in "Scheduled_Stats_Container" on "Project" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Schedule" value
@@ -1146,7 +1141,7 @@ Feature: Project Monitoring Page
         Then "Batch_Run_Button" element on "Schedule_Monitor_Tab" should contains "Batch run" value
         Then verify "Table_Refresh_Button" element visibility on "Schedule_Monitor_Tab" wizard
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Scheduled_Type"
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Scheduled_Type" with "workflow"
 
     @MLPM
     @passive
@@ -1169,7 +1164,6 @@ Feature: Project Monitoring Page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
         Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Monitoring_Workflow"
         Then navigate back
-        And wait load page
         When click on "In_Process_Counter_Number" element in "Workflows_Stats_Container" on "Project" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Workflows" value
@@ -1181,7 +1175,7 @@ Feature: Project Monitoring Page
         Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Running, Terminating"
         Then verify "Table_Refresh_Button" element visibility on "Workflows_Monitor_Tab" wizard
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Monitoring_Workflow_Status"
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Monitoring_Workflow_Status" with "running, terminating"
         Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
         And wait load page
         When click on "Failed_Counter_Number" element in "Workflows_Stats_Container" on "Project" wizard
@@ -1195,9 +1189,8 @@ Feature: Project Monitoring Page
         Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Error, Failed"
         Then verify "Table_Refresh_Button" element visibility on "Workflows_Monitor_Tab" wizard
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Status"
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Status" with "error, failed"
         Then navigate back
-        And wait load page
         When click on "Succeeded_Counter_Number" element in "Workflows_Stats_Container" on "Project" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Workflows" value
@@ -1209,7 +1202,7 @@ Feature: Project Monitoring Page
         Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Completed"
         Then verify "Table_Refresh_Button" element visibility on "Workflows_Monitor_Tab" wizard
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Status"
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Status" with "completed"
 
     @MLPM
     @passive
@@ -1228,7 +1221,6 @@ Feature: Project Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Monitoring_App" wizard selected option value "Past 24 hours"
         Then verify "Refresh_Button" element visibility on "Monitoring_App" wizard
         Then navigate back
-        And wait load page
         When click on "Monitoring_App_Failed_Stats_Counter" element in "Monitoring_App_Stats_Container" on "Project" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
@@ -1382,7 +1374,6 @@ Feature: Project Monitoring Page
         Then select "default" project in sidebar project dropdown
         And wait load page
         When click on "ConsumerGroups_Stats_Counter" element in "Realtime_Functions_Nuclio_Statistic_Section" on "Project" wizard
-        And wait load page
         And wait load page
         And save to context "consumer_group_name" column and "href" attribute on 1 row from "Consumer_Groups_Table" table on "Consumer_Groups" wizard
         And click on cell with row index 1 in "consumer_group_name" column in "Consumer_Groups_Table" table on "Consumer_Groups" wizard

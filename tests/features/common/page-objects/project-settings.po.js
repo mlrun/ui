@@ -19,8 +19,7 @@ such restriction.
 */
 import commonTable from '../components/table.component.js'
 import inputGroup from '../components/input-group.component.js'
-import textAreaGroup from '../components/text-area.component.js'
-import { generateInputGroup, generateTextAreaGroup } from '../../common-tools/common-tools.js'
+import { generateInputGroup } from '../../common-tools/common-tools.js'
 import checkboxComponent from '../components/checkbox.component.js'
 
 const tabSelector = {
@@ -141,9 +140,6 @@ export default {
         false,
         '.form-field__warning svg'
       )
-    ),
-    Project_Description: textAreaGroup(
-      generateTextAreaGroup('.settings__description .text-area-wrapper')
     ),
     Labels_Table: commonTable(labelsTable),
     Parameters_Table: commonTable(parametersTable),

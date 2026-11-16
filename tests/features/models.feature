@@ -434,7 +434,6 @@ Feature: Models Page
     Then verify action menu on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Models" wizard in "Models_Table" table at row with "model_default" value in "name" column
     And wait load page
-    And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
     Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
@@ -507,7 +506,6 @@ Feature: Models Page
     Then verify "Action_Menu" dropdown element on "Models_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Models_Info_Pane" wizard
     And wait load page
-    And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
     Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
@@ -565,7 +563,6 @@ Feature: Models Page
     Then verify "Action_Menu" dropdown element on "Models_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Models_Info_Pane" wizard
     And wait load page
-    And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
     Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
@@ -617,7 +614,6 @@ Feature: Models Page
     Then verify "Action_Menu" element visibility on "Models_Info_Pane" wizard
     Then verify "Action_Menu" dropdown element on "Models_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List_Version_History"
     Then select "Download" option in action menu on "Models_Info_Pane" wizard
-    And wait load page
     And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
@@ -682,7 +678,6 @@ Feature: Models Page
     Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
     And wait load page
     Then select "Download" option in action menu on "Modal_Transition_Popup" wizard
-    And wait load page
     And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
@@ -835,7 +830,6 @@ Feature: Models Page
       Then verify "Download_Button" element visibility on "Preview_Popup" wizard
       Then click on "Download_Button" element on "Preview_Popup" wizard
       And wait load page
-      And wait load page
       Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
       And wait load page
       Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
@@ -853,18 +847,17 @@ Feature: Models Page
       And wait load page
       Then verify "Preview_Table" element visibility on "Preview_Popup" wizard
       Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
-      Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+      Then check "Name" exact header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
       Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
-      Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+      Then check "Path" exact header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
       Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
-      Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+      Then check "Size" exact header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
       Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
-      Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+      Then check "Updated" exact header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
       Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contains "transaction_fraud_xgboost"
       Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
       Then verify "Download_Button" element visibility on "Preview_Popup" wizard
       Then click on "Download_Button" element on "Preview_Popup" wizard
-      And wait load page
       And wait load page
       Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
       And wait load page
@@ -1025,7 +1018,6 @@ Feature: Models Page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then "Header" element on "Models_Info_Pane" should contains "test-model" value
     Then refresh a page
-    And wait load page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then "Header" element on "Models_Info_Pane" should contains "test-model" value
     Then click on "Table_FilterBy_Button" element on "Models" wizard
@@ -1115,7 +1107,6 @@ Feature: Models Page
     Then check "dataset" value in "name_value" column in "Info_Sources_Table" table on "Models_Info_Pane" wizard
     Then check "/User/demos/customer-churn-prediction/data/pipeline/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/encoded-data.csv" value in "path_value" column in "Info_Sources_Table" table on "Models_Info_Pane" wizard
     When click on cell with value "/User/demos/customer-churn-prediction/data/pipeline/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/encoded-data.csv" in "path_value" column in "Info_Sources_Table" table on "Models_Info_Pane" wizard
-    And wait load page
     And wait load page
     Then verify if "Notification_Popup" popup dialog appears
     Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
@@ -1291,7 +1282,6 @@ Feature: Models Page
     Then save to context "name" column and "href" attribute on 3 row from "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     When click on cell with value "model-monitoring-stream" in "name_link" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     And wait load page
-    And wait load page
     Then compare current browser URL with test "href" context value
     Then verify "Real_Time_Pipelines_Graph" element visibility on "Real_Time_Pipelines" wizard
     Then verify workflow graph nodes and arrows connections on "Real_Time_Pipelines_Graph" on "Real_Time_Pipelines" wizard
@@ -1422,7 +1412,6 @@ Feature: Models Page
     Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
     When click on cell with value "transaction_fraud_xgboost" in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
-    And wait load page
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     And wait load page
     When select "Model endpoints" item in sidebar menu
@@ -1447,7 +1436,6 @@ Feature: Models Page
     And wait load page
     Then verify redirection from "projects/default/models/real-time-pipelines/INVALID/realtime-pipeline" to "projects/default/models/real-time-pipelines"
     Then verify redirection from "projects/INVALID/models/real-time-pipelines" to "projects"
-    And wait load page
     And wait load page
     Then verify if "Notification_Popup" popup dialog appears
     Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
@@ -1551,11 +1539,11 @@ Feature: Models Page
     When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then click on "Edit_btn_table_view" element on "Models_Info_Pane" wizard    
-    Then verify "Version_tag_Input_table_view" on "Models_Info_Pane" wizard should contains "modelTag" value
+    Then verify "Version_tag_Input_table_view" on "Models_Info_Pane" wizard should be equal "modelTag" value
     Then click on "Full_View_Button" element on "Models_Info_Pane" wizard
     Then verify "Cross_Close_Button" element not exists on "Models_Info_Pane" wizard
     Then click on "Edit_btn_full_view" element on "Models_Info_Pane" wizard
-    Then verify "Version_tag_Input_full_view" on "Models_Info_Pane" wizard should contains "modelTag" value   
+    Then verify "Version_tag_Input_full_view" on "Models_Info_Pane" wizard should be equal "modelTag" value   
     Then click on "Tabel_View_Button" element on "Models_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
 
@@ -1671,7 +1659,7 @@ Feature: Models Page
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
     And wait load page
-    Then "Version_Tag_Value" element on "FilterBy_Popup" should contains "latest" attribute value
+    Then "Version_Tag_Value" element on "FilterBy_Popup" should be equal "latest" attribute value
     Then click on "Table_FilterBy_Button" element on "Models" wizard
     And wait load page
     Then select "Add a tag" option in action menu on "Models" wizard in "Models_Table" table at row with "transaction_fraud_xgboost" value in "name" column
@@ -1679,7 +1667,6 @@ Feature: Models Page
     Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
     Then type value "nextModelTag" to "Tag_Input" field on "Add_Tag_Popup" wizard
     Then click on "Add_Button" element on "Add_Tag_Popup" wizard
-    And wait load page
     And wait load page
     Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
     And wait load page
@@ -1728,13 +1715,13 @@ Feature: Models Page
     When save to context "versionHistoryName" page value from "Version_History_Model_Name" element on "Models" wizard
     Then compare "Header" element value on "Models_Info_Pane" wizard with test "versionHistoryName" context value
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then "Version_Tag_Value" element on "FilterBy_Popup" should contains "All tags" attribute value
+    Then "Version_Tag_Value" element on "FilterBy_Popup" should be equal "All tags" attribute value
     Then click on "History_Back_Button" element on "Models" wizard
     And wait load page
     Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then "Version_Tag_Value" element on "FilterBy_Popup" should contains "latest" attribute value
+    Then "Version_Tag_Value" element on "FilterBy_Popup" should be equal "latest" attribute value
     Then select "latest123456" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
@@ -1749,7 +1736,7 @@ Feature: Models Page
     Then verify "Table_FilterBy_Button" element on "Models" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then "Version_Tag_Value" element on "FilterBy_Popup" should contains "latest123456" attribute value
+    Then "Version_Tag_Value" element on "FilterBy_Popup" should be equal "latest123456" attribute value
 
   @MLM
   @smoke
@@ -1871,9 +1858,7 @@ Feature: Models Page
     And wait load page
     Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
     And wait load page
-    And wait load page
     Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-    And wait load page
     And wait load page
     Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Model is successfully deleted" value
     And wait load page
@@ -1904,9 +1889,7 @@ Feature: Models Page
     And wait load page
     Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
     And wait load page
-    And wait load page
     Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-    And wait load page
     And wait load page
     Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Model is successfully deleted" value
     And wait load page
@@ -1943,9 +1926,7 @@ Feature: Models Page
     And wait load page
     Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
     And wait load page
-    And wait load page
     Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-    And wait load page
     And wait load page
     Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Model is successfully deleted" value
     And wait load page
@@ -1970,10 +1951,8 @@ Feature: Models Page
     Then verify "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Tab_List"
     Then select "Alerts" tab in "Info_Pane_Tab_Selector" on "Model_Endpoints_Info_Pane" wizard
     And wait load page
-    And wait load page
     Then verify "Alerts_Table" element visibility on "Model_Endpoints_Info_Pane" wizard
     Then click on cell with row index 1 in "expand_arrow" column in "Alerts_Table" table on "Model_Endpoints_Info_Pane" wizard
-    And wait load page
     And wait load page
     Then verify "Metrics_Stats_Card" element visibility on "Model_Endpoints_Info_Pane" wizard
     Then click on cell with row index 1 in "expand_arrow" column in "Alerts_Table" table on "Model_Endpoints_Info_Pane" wizard

@@ -147,19 +147,6 @@ const DataCollectionActionsTable = {
   }
 }
 
-const DataCollectionAdditionalActionsTable = {
-  root: '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-actions:nth-of-type(2)',
-  header: {},
-  body: {
-    row: {
-      root: '.project-overview-actions__item',
-      fields: {
-        name: '.link'
-      }
-    }
-  }
-}
-
 const DevelopmentActionsTable = {
   root: '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__actions',
   header: {},
@@ -425,23 +412,15 @@ export default {
         '.d-flex:nth-of-type(2) .project-data-card__statistics .project-data-card__statistics-item:nth-of-type(2) span'
     }
   },
+  // the Quick actions page: since the header redesign (#3318) the header has the project name as a page title and the
+  // "Created:" label only (no project description), all the actions of a card are shown (no "more actions" button)
   demoProject: {
     Header_Name_Label: labelComponent(
-      generateLabelGroup(
-        '.project-overview .project-overview__header .project-details__title',
-        ' ',
-        ' '
-      )
+      generateLabelGroup('.project-overview .project-overview__header .page-header__title', ' ')
     ),
     Header_Created_Time: labelComponent(
       generateLabelGroup(
-        '.project-overview .project-overview__header .project-details__title',
-        'div:nth-of-type(1)'
-      )
-    ),
-    Header_Project_Description: labelComponent(
-      generateLabelGroup(
-        '.project-overview .project-overview__header .project-details__description',
+        '.project-overview .project-overview__header .project-details__details-label',
         ' '
       )
     ),
@@ -458,10 +437,7 @@ export default {
       )
     ),
     Data_Collection_Actions_Table: commonTable(DataCollectionActionsTable),
-    Data_Collection_Additional_Actions_Table: commonTable(DataCollectionAdditionalActionsTable),
     Data_Collection_Links_Table: commonTable(DataCollectionLinksTable),
-    Data_Collection_Additional_Actions_Button:
-      '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-card__actions',
     Development_Header: labelComponent(
       generateLabelGroup(
         '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__header',

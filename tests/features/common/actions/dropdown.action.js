@@ -18,10 +18,10 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { expect } from '@playwright/test'
-import { clickNearComponent, scrollToWebElement } from './common.action.js'
+import { scrollToElement } from './common.action.js'
 import {
   click,
-  expectSameItems,
+  expectListItems,
   expectText,
   getText,
   getTexts,
@@ -43,7 +43,7 @@ export const openDropdown = async (page, dropdown, scroll = true) => {
   // the page can be re-rendering after the previous action
   await waitForPageQuiet(page)
   if (scroll) {
-    await scrollToWebElement(page, element)
+    await scrollToElement(page, element)
   }
   // the button toggles the list: a list that is still open after the previous step (e.g. the click away didn't close
   // it) must not be closed by the click
@@ -73,11 +73,6 @@ export const openDropdown = async (page, dropdown, scroll = true) => {
     )
     await waitForScrollQuiet(page)
   }
-}
-
-export const collapseDropdown = async (page, dropdown) => {
-  await clickNearComponent(page, dropdown.root)
-  await waitForPageQuiet(page)
 }
 
 // the options can be still rendered (or loaded), so the search is retried. The click scrolls the option into view and
@@ -122,8 +117,9 @@ export const checkDropdownSelectedOptionWithAttribute = async (page, dropdown, o
     message: 'Selected dropdown option'
   }).toBe(option)
 
-// the options must be exactly the expected ones: the previous check (actual options minus expected ones is empty)
-// passed when the dropdown didn't open (no options) and when expected options were missing
+// the options must be exactly the expected ones, in the same order (unless the expected list is `unordered`): the
+// previous check (actual options minus expected ones is empty) passed when the dropdown didn't open (no options) and
+// when expected options were missing
 export const checkDropdownOptions = (page, dropdown, values) =>
   checkDropdownContainsOptions(page, dropdown, values)
 
@@ -131,5 +127,5 @@ export const checkDropdownContainsOptions = async (page, dropdown, values) =>
   retryAssertion(async () => {
     const options = await getOptionValues(page, dropdown.options)
 
-    expectSameItems(options, values, 'Options of the dropdown')
+    expectListItems(options, values, 'Options of the dropdown')
   })

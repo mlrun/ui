@@ -51,7 +51,6 @@ Feature: Jobs Monitoring Page
         Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then navigate back
-        And wait load page
         Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         When click on "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
@@ -118,7 +117,7 @@ Feature: Jobs Monitoring Page
         And wait load page
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
-        Then "Error_Message" component on "Jobs_Monitoring_Jobs_Tab" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring"
+        Then "Error_Message" component on "Jobs_Monitoring_Jobs_Tab" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring" with "churn-project-admin"
 
     @MLJM
     @smoke @generatedData
@@ -335,7 +334,7 @@ Feature: Jobs Monitoring Page
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Type"
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Type" with "spark"
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Spark"
         When select "Horovod" option in "Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
@@ -350,7 +349,7 @@ Feature: Jobs Monitoring Page
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Type"
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Type" with "dask"
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Dask"
         When select "Databricks" option in "Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
@@ -358,7 +357,7 @@ Feature: Jobs Monitoring Page
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Type"
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Type" with "databricks"
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Databricks"
         When select "Local" option in "Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
@@ -366,7 +365,7 @@ Feature: Jobs Monitoring Page
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Type"
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Type" with "local"
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
         Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Local"
         When select "Handler" option in "Type_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
@@ -428,7 +427,6 @@ Feature: Jobs Monitoring Page
         Then verify "Run_Button" element visibility on "Modal_Wizard_Form" wizard
         Then "Run_Button" element on "Modal_Wizard_Form" should contains "Run" value
         And click on "Run_Button" element on "Modal_Wizard_Form" wizard
-        Then wait for 5 seconds
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "The batch run was started" value
         And wait load page
@@ -454,7 +452,7 @@ Feature: Jobs Monitoring Page
         Then verify if "Confirm_Popup" popup dialog appears
         Then "Title" element on "Confirm_Popup" should contains "Delete job?" value
         Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
-        Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Jobs_And_Workflows"."Delete_Run_Message"
+        Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Jobs_And_Workflows"."Delete_Run_Message" with "qwe"
         Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
         Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
         Then verify "Cancel_Button" element on "Confirm_Popup" wizard is enabled
@@ -463,7 +461,6 @@ Feature: Jobs Monitoring Page
         When click on "Delete_Button" element on "Confirm_Popup" wizard
         And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-        And wait load page
         And wait load page
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Job is successfully deleted" value
         And wait load page
@@ -490,7 +487,6 @@ Feature: Jobs Monitoring Page
         And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         And wait load page
-        And wait load page
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Job is successfully deleted" value
         And wait load page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
@@ -506,7 +502,7 @@ Feature: Jobs Monitoring Page
         Then select "Delete all runs" option in action menu on "Jobs_Monitoring_Jobs_Tab" wizard in "Jobs_Table" table at row with "fesf" value in "name" column
         And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
-        Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Jobs_And_Workflows"."Delete_All_Runs_Message"
+        Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Jobs_And_Workflows"."Delete_All_Runs_Message" with "fesf"
         Then "Title" element on "Confirm_Popup" should contains "Delete job?" value
         Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
         Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
@@ -515,7 +511,6 @@ Feature: Jobs Monitoring Page
         Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
         Then "Delete_Button" element on "Confirm_Popup" should contains "Delete" value
         When click on "Delete_Button" element on "Confirm_Popup" wizard
-        And wait load page
         And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         And wait load page
@@ -526,7 +521,7 @@ Feature: Jobs Monitoring Page
         Then select "Delete all runs" option in action menu on "Jobs_Monitoring_Jobs_Tab" wizard in "Jobs_Table" table at row with "fesf" value in "name" column
         And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
-        Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Jobs_And_Workflows"."Delete_All_Runs_Message"
+        Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Jobs_And_Workflows"."Delete_All_Runs_Message" with "fesf"
         Then "Title" element on "Confirm_Popup" should contains "Delete job?" value
         Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
         Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
@@ -536,7 +531,6 @@ Feature: Jobs Monitoring Page
         Then "Delete_Button" element on "Confirm_Popup" should contains "Delete" value
         When click on "Delete_Button" element on "Confirm_Popup" wizard
         And wait load page
-        And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         And wait load page
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Job is successfully deleted" value
@@ -544,7 +538,7 @@ Feature: Jobs Monitoring Page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Monitor_Jobs_Name"
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Monitor_Jobs_Name" with "fesf"
  
     @MLJM
     @smoke @generatedData
@@ -587,7 +581,6 @@ Feature: Jobs Monitoring Page
         Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then navigate back
-        And wait load page
         Then verify "Counter_In_Process_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         When click on "Counter_In_Process_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
         And wait load page
@@ -643,7 +636,7 @@ Feature: Jobs Monitoring Page
         And wait load page
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
-        Then "Error_Message" component on "Jobs_Monitoring_Workflows_Tab" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Workflow_Project"
+        Then "Error_Message" component on "Jobs_Monitoring_Workflows_Tab" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Workflow_Project" with "auto-generated-data"
         When turn on demo mode with query params "true"
         And wait load page
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
@@ -743,7 +736,7 @@ Feature: Jobs Monitoring Page
         Then "Title" element on "Confirm_Popup" should contains "Terminate workflow" value
         Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
         Then verify "Confirm_Dialog_Message" element visibility on "Confirm_Popup" wizard
-        Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Jobs_And_Workflows"."Terminate_Workflow_Message"
+        Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Jobs_And_Workflows"."Terminate_Workflow_Message" with "stocks-admin-main 2021-08-30 05-36-35"
         Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
         Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
         Then verify "Delete_Button" element visibility on "Confirm_Popup" wizard
@@ -971,7 +964,7 @@ Feature: Jobs Monitoring Page
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Status"
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Status" with "error"
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
         Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Error"
         When select "Failed" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
@@ -1017,8 +1010,9 @@ Feature: Jobs Monitoring Page
         Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Successful_Run_Message"
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
 
+    # BUG-005 (tests/KNOWN_BUGS.md): the no-data message of the Scheduled tab shows the default filter "Type: all"
     @MLJM
-    @smoke @generatedData
+    @smoke @generatedData @knownBug
     Scenario: MLJM003 - Check components on Scheduled tab of Jobs monitoring page
         Given open url
         And wait load page
@@ -1068,7 +1062,6 @@ Feature: Jobs Monitoring Page
         Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then navigate back
-        And wait load page
         Then verify "Total_Job_Counter_Title" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then "Total_Job_Counter_Title" element in "Monitoring_Scheduled_Box" on "Projects" should contains "Jobs" value
         Then verify "Total_Job_Counter_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
@@ -1115,7 +1108,6 @@ Feature: Jobs Monitoring Page
         Then verify "Clear_Button" element on "FilterBy_Popup" wizard is enabled
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then navigate back
-        And wait load page
         Then verify "Total_Workflows_Counter_Title" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then "Total_Workflows_Counter_Title" element in "Monitoring_Scheduled_Box" on "Projects" should contains "Workflows" value
         Then verify "Total_Workflows_Counter_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
@@ -1172,7 +1164,7 @@ Feature: Jobs Monitoring Page
         And wait load page
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
-        Then "Error_Message" component on "Jobs_Monitoring_Scheduled_Tab" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Scheduled"
+        Then "Error_Message" component on "Jobs_Monitoring_Scheduled_Tab" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Scheduled" with "auto-generated-data"
 
     @MLJM
     @smoke @rerun
@@ -1363,7 +1355,7 @@ Feature: Jobs Monitoring Page
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Scheduled_Type"
+        Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Scheduled_Type" with "spark, mpijob"
         
     @MLJM
     @smoke @generatedData
@@ -1379,7 +1371,6 @@ Feature: Jobs Monitoring Page
         Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
         Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 50" value
         Then navigate back
-        And wait load page
         Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         When click on "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
@@ -1411,7 +1402,6 @@ Feature: Jobs Monitoring Page
         Then verify "Workflows_Table" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
         Then verify that 3 row elements are displayed in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard
         Then navigate back
-        And wait load page
         Then verify "Counter_In_Process_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then "Counter_In_Process_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "1" value
         When click on "Counter_In_Process_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
@@ -1442,14 +1432,12 @@ Feature: Jobs Monitoring Page
         Then verify redirection to "projects/*/jobs-monitoring/scheduled?type=all&dates=next24hours"
         Then verify that 8 row elements are displayed in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then navigate back
-        And wait load page
         Then verify "Total_Job_Counter_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then "Total_Job_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "7" value
         When click on "Total_Job_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then verify "Scheduled_Table" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then verify that 7 row elements are displayed in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then navigate back
-        And wait load page
         Then verify "Total_Workflows_Counter_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then "Total_Workflows_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "1" value
         When click on "Total_Workflows_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" wizard

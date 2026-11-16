@@ -4,64 +4,97 @@ To discuss and decide. Each item says what was found, why it matters and the opt
 
 ## Decisions about the accuracy of the checks
 
-### 1. Should the lists be compared in order?
+### 1. The lists are compared in order
 
-The tab, header and option lists (`verify "X" on "Y" wizard should contains "Consts"."List"`, ~200 uses, and
-`dropdown ... should contains`, ~150 uses) now must have exactly the expected items, each as many times as expected
-(`expectSameItems` in `tests/features/common-tools/element.js`). The order is not checked: the steps say "contains".
+Done: the tab, header and option lists (`verify "X" on "Y" wizard should contains "Consts"."List"`, the dropdown and
+combobox `... should contains "Consts"."List"`) must have exactly the expected items in the expected order
+(`expectListItems` in `tests/features/common-tools/element.js`). A mismatch prints the actual list in the app's order
+as a JS array literal, ready to be pasted into `common-consts.js`.
 
-- If the order is a requirement (the tabs, the overview headers), a wrong order passes now.
-- Option: check the order, everywhere or only for the tabs/headers. The lists in `common-consts.js` would have to be in
-  the order the app shows them (a full run shows where they differ).
+- Exempt (`unordered(...)` in `common-consts.js`, compared as before, with a comment why): the order isn't fixed by the
+  app - `Tag_Filer_Options_Feature_Sets_Default`, `Tag_Filer_Options_Feature_Vectors_Default` (the tags of the shown
+  rows, then the other ones, each in the API order, FormTagFilter), `Pods_Priority`, `Pods_Priority_List` (the
+  backend's `valid_function_priority_class_names` in its order).
+- Fixed to the app's order (checked in `src/`, the ones in a run confirmed by it): `Overview_Producer_Headers` of
+  datasets and models (`producerListOrder`: "UID" before "Workflow"), `Job_Overview_Action_Menu_Options`,
+  `Hyperparameter_Strategy_Options`, `Tag_Filer_Options` ("latest" first).
+- Kept ordered, though partly data-driven: the pipeline step headers (`Real_Time_Pipeline_Pane.Overview_Headers_*`: the
+  tail is the key order of the step in the API response, the mock fixes it).
 
-### 2. Replace the wildcards of the expected messages with the expected values?
+Open: the next full run shows the lists whose order still differs (most were compared with `src/` only).
 
-The "should be equal" message checks (`{string} component on {string} should be equal {string}.{string}`, 66 uses) now
-match the whole text. Many patterns in `tests/features/common-tools/common-consts.js` have `(.+?)` for the variable part,
-e.g. `No data matches the filter: "Name: (.+?)"`, `Delete_Run_Message`, `Info_Banner_Message` (`/The (.+?) is not .../`).
+### 2. The variable parts of the expected messages
 
-- They pass with any value there: a wrong name, a wrong UID, "dataset" instead of "model".
-- Option: a step that takes the expected value from the scenario (e.g. `... should be equal "X" with "my-name"`), or
-  narrow `(.+?)` to `[^,"]+` at least.
+Done: the "should be equal" patterns of `common-consts.js` have no `(.+?)` anymore. Their capturing groups are the
+variable parts, filled from the scenario by the new variants `... should be equal "C"."M" with "v1"` (`with "v1" and
+"v2"`, `with "v1", "v2" and "v3"`; `fillPatternGroups` in `common.action.js`): 41 of the 66 uses give the values (job,
+workflow, function, project, feature vector names, the filter values, the artifact kind). The rest is narrowed: a name
+`[^"]+`, a run UID `[0-9a-f]{32}`, the dates to the date format, "Show best iteration only: true"; the
+`Info_Banner_Message` of files and models is the exact text ("artifact", "model"); the kind repeated in
+`Register_Error_Message`/`Add_A_Tag_Overwrite_Message` is a backreference.
+
+Open: the uses without values (the item opened by a row index: MLF009, MLFS044, MLFS061 2nd/3rd, MLJW061 info pane,
+MLJW089 info pane, the workflow panes of MLJW*, the info banners) check only the narrowed pattern.
 
 ### 3. "contains" steps that are used as "equals"
 
-A few scenarios use a substring check where the exact value is meant:
+Done: exact variants, the listed lines are switched to them:
 
-- `... should contains {string} attribute value` (7 uses): `models.feature:1674`, `:1737` expect the Version_Tag filter
-  to show "latest" - a filter that kept "latest123456" passes.
-- `verify {string} on {string} wizard should contains {string} value` (3 uses: `jobsAndWorkflows.feature:2152`,
-  `models.feature:1554`, `:1558`) - "clean-data" passes on "clean-data-copy".
-- `check {string} header value in {string} column ...` (46 uses) - "Runs" passes on "Runs (old)".
-- Option: add exact variants and switch these lines to them.
+- `... should be equal {string} attribute value` (the 4 Version_Tag checks of MLM024);
+- `verify {string} on {string} wizard should be equal {string} value` (`models.feature` MLM020 x2,
+  `jobsAndWorkflows.feature` MLJW051);
+- `check {string} exact header value in {string} column ...` (all 46 uses of the header check).
 
-### 4. Low-confidence findings, not changed
+Open: `... should contains ... attribute value` is still used for `Table_Label_Filter_Input` (monitoringApp) and
+`Default_Artifact_Path_Input` (projectMonitoring, quickActions), probably meant as equality too - not run.
 
-Found by the review of the step definitions and the helpers, each can hide a defect only in a rare case:
+### 4. Low-confidence findings
 
-- the notification text is read with `.first()` (the oldest notification, `steps.js` "... should contains {string}
-  value", 80 uses): an earlier notification with the same text can satisfy a check of a new one that wasn't shown;
-- `componentIsNotVisible` checks only the first matched element;
-- "collapsed" (`isAccordionSectionCollapsed`) checks only the icon class, not that the section body is hidden;
-- the action menu checks (`verify options in action menu ...`, 53 uses) read the row index once: a table that re-sorts
-  meanwhile (running jobs) shows the menu of another row;
-- the invalid strings of the rules check are not checked to be typed exactly (a leftover of the previous value could
-  make the field invalid for another reason);
-- the rules parser: the prefix rules (`[Prefix] ...`, "Must not start with 'kubernetes.io'") and "This field is
-  required" are not checked; "Max length between two periods" can be taken for the length rule (no current field has it).
+Done:
+
+- the notification text (`"Notification_Pop_Up" element on "Notification_Popup" should contains ...`, also the
+  `within N seconds` variant): any shown notification with the text, except the ones matched by the previous checks (marked in the DOM,
+  `verifyNotificationText`). Not the newest one: a notification followed by another one at once is checked too
+  (MLPr006: "Project deletion in progress", then "... was deleted successfully"). The `within N seconds` variant is a
+  wait, it doesn't mark (the scenarios check the same notification right after it);
+- `componentIsNotVisible`: none of the matched elements may be displayed;
+- "collapsed": also the accordion container is not `open` and its content is cut off;
+- the action menu checks (`verify options in action menu ...`, `verify action menu ...`): the row is checked to be
+  still at its index after the options are read, otherwise it is found again;
+- the rules check: the field must have the typed invalid string (cut only by its `maxlength`).
+
+Open: the rules parser (the prefix rules, "This field is required", "Max length between two periods" taken for the
+length rule) - not changed.
 
 ## Next steps
 
 ### 5. Defect injection: prove that the checks catch a broken app
 
-Break the mock data behind a sample of scenarios on purpose (e.g. a wrong run status, a missing label, a duplicated tab,
-a changed name) and check that each of them fails. It shows the checks that still pass on a broken app (a false pass)
-better than any review. To do once the full regression is green.
+Done: `npm run test:defects` (`scripts/testDefects.js`, the defects in `tests/mockServer/defects.js`, README). 8
+defects, 9 scenarios, all caught: a missing dataset source (MLD003), wrong datasets/alerts counters (MLPr021, MLPr020), a
+wrong schedule label (MLJW010), the functions name filter and the runs status filter ignored (MLF006, MLJW011), a failed
+function deletion (MLF017, MLJW030), an abort that never ends (MLJW049).
+
+Open:
+
+- more defects, a few per feature file (models, feature store, alerts, the wizards: the submitted request body);
+- run it on CI (nightly)? ~3 minutes now.
+- the mock filters the schedules by `labels`, the UI shows `scheduled_object.task.metadata.labels`: the two differ for
+  no reason, a label filter scenario can pass on a schedule whose shown labels don't match.
 
 ### 6. The fixed waits in the feature files
 
-13 `wait for N seconds` steps, 4 x 47 s in projectsPage (MLRun unhealthy): replace them with waits for the expected
-state, e.g. `verify "X" element visibility within N seconds`. Saves ~4-5 minutes per run.
+Done: the 13 `wait for N seconds` steps are replaced (~4 minutes less per run):
+
+- MLPr019 (4 x 47 s, the "MLRun seems to be down" popup after 3 minutes of failed retries): the browser clock is fake
+  (`page.clock`, the `@mlrunUnhealthyTest` hook), `move the browser time forward by N seconds`. It checks now that the
+  popup isn't shown before the 3 minutes too. ~3 s instead of ~190 s;
+- MLF017, MLJW030 (the function deletion, 3.6-10.6 s in the mock):
+  `... should contains "..." value within 20 seconds`;
+- MLJW049 (abort): waits for the "was aborted" notification instead of 5 s;
+- the rest (a notification, a refreshed table) are covered by the waits of the next steps (15 s).
+
+`wait for {int} seconds` is not used anymore, it is left for the debugging.
 
 ### 7. One mock server and one app for all the workers
 
@@ -71,13 +104,55 @@ Playwright's own (`--workers N`, one reporter, one report).
 
 ### 8. The known bugs without an entry in KNOWN_BUGS.md
 
-MLPS008, MLPH001, MLF015, MLF033 and MLFS056 are tagged `@knownBug` with no description. A tag is right only for a bug
-that the scenario hits every time: check that each of them still fails because of its bug (not because of something
-else), describe them in `tests/KNOWN_BUGS.md`, or handle them as recognized bugs (`failAsKnownBug`) if they show up only
-sometimes.
+Done (2026-11-16). Each of them was run 3+ times, it failed at the same step every time:
+
+- MLPS008 - BUG-002 (a 403 shows "You do not have a permission to view this data" instead of the reason), `@knownBug`;
+- MLPH001 - BUG-003 (the breadcrumb of the Quick actions page is "quick-actions"), `@knownBug`. It hid a second, test
+  side problem: the page objects of the page were outdated since the header redesign (#3318) - no project description,
+  no "more actions" button, the name is the page title. Updated (`demoProject`, `project.po.js`), the rest passes;
+- MLF015, MLF033 - BUG-004 (a unit select in the function Resources drops the requests or the limits), `@knownBug`;
+- MLFS056 (`@FAILED_TODO`, not `@knownBug`) - not an app bug: its project was never created (the precondition was
+  commented out), the data source wasn't set (no Edit/Apply), a wrong warning step, and the mock had no ingest endpoint.
+  Fixed (the mock starts the `<feature set>-ingest` run), the tag removed, the title fixed (it didn't check labels).
+
+For each kept tag it was checked that the scenario passes to the end with the bug worked around, so the bug is the only
+reason it fails.
+
+Done: a text check of a notification that hides itself reported `Received: null` instead of the wrong text (MLPS008).
+`pollText` (`tests/features/common-tools/element.js`) keeps the last text read and adds it to the error:
+`(the last text read before the element was gone: "...")`.
 
 ### 9. The Selenium leftovers cleanup
 
-Planned after the tests are stable. Includes the unused step definitions found by the review: `verify filled data in`,
-the subtable "should contains", `check ... not visible in`, `expand each row`, and the context value step without
-`split` (0 uses each).
+Done in the JS (2026-11-16), no change in what a scenario checks. Each batch was verified with its scenarios:
+
+- dead step definitions: the 35 with 0 matching feature lines (the Cucumber expressions matched as regexes against
+  every step line, not as substrings), e.g. `verify filled data in`, the subtable "should contains",
+  `check ... not visible in`, `expand each row`, both context value steps (`values from`, with and without `split`),
+  `create ... Schedule`/`File`. Then the 14 helpers only they used (e.g. `settleTimeout`, `createAPISchedule`,
+  `deleteAPISchedule`, `openActionMenuByIndex`, `get*Geometry`), the relative range branch of `verifyTimeFilterBand`,
+  the `schedule`/`file` tear-down kinds and the imports. Kept: `wait for {int} seconds` (debugging, item 6);
+- Knip: the entries are `tests/features/step-definitions/*.js` and `tests/features/support/*.js` (it was
+  `tests/features/**/*.js`, which hid every dead export). `npm run knip` is clean; `expectTimeout`, the same value as
+  `actionTimeout` under its own name, is ignored as a duplicate export;
+- dead page objects and consts: the `Create_Job` wizard (`CreateJob` and its tables), 76 entries whose name is in no
+  feature file and no JS (the HEAD version of the features included), the selectors only they used, and 42 consts
+  (the `Create_New_Job` and `Jobs_Monitor_Tab` groups and 40 entries, by `"Group"."Entry"`: every consts read goes
+  through it);
+- `waiteUntilComponent` renamed `waitForComponentAttached` (12 calls). All are kept: it waits up to 60 s, the check
+  after it 15 s, also the one followed by `componentIsPresent` (`verify if ... popup dialog appears`);
+- `scrollToWebElement` merged into `scrollToElement` (a selector or a locator); the broken `npm run ui-steps`
+  (`scripts/collectUITestsSteps.js`) and the `acorn` devDependency removed; the comments that described the semantics
+  as "WebDriver"/"Cucumber" reworded; the stale "Changes Log ... demo=true" comment removed.
+
+Left:
+
+- batch 4: the removal of the logo hover;
+- batch 7: the naming pass;
+- decide about the unused tags and the double page load;
+- `{string} element on {string} should contains {string} attribute value` has 0 uses now (MLMA007 moved to
+  `should be equal`): kept while the feature files are being changed, remove it if it stays unused;
+- the page object entries are dead by their name across all the wizards: an entry whose name is used with another
+  wizard only is still there (a check per wizard would find more).
+
+Done in the feature files: removed 120 redundant `wait load page` lines (78 after another `wait load page`, 42 after `navigate back`/`navigate forward`/`refresh a page`, which wait themselves) and the no-op `turn Off MLRun CE mode` step (2 uses + its definition; the Before hook sets `igzFullVersion`), and MLMA007 checks the whole label filter value (`should be equal ... attribute value`). Left: the `Default_Artifact_Path_Input` substring checks (projectMonitoring, quickActions): there is no exact variant of the `element in {string} on {string}` step, and with the mock data the field likely holds `JOB_DEFAULT_OUTPUT_PATH` (`.../artifacts/{{run.uid}}`), so the expected value is a prefix, not the whole value.

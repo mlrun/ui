@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { When, Then } from '../support/world.js'
-import { readTimeout } from '../../config.js'
 import { panGraphToElement } from '../common/actions/graph.action.js'
 import pageObjects from '../common/page-objects.js'
 import {
@@ -26,7 +25,6 @@ import {
   clickOnComponent,
   componentIsNotPresent,
   componentIsPresent,
-  componentIsNotVisible,
   componentIsVisible,
   hoverComponent,
   hoverElementCenter,
@@ -34,18 +32,19 @@ import {
   scrollToElement,
   typeIntoInputField,
   verifyText,
-  verifyComponentContainsAttributeValue,
+  verifyComponentAttributeValue,
   verifyTypedText,
   waitPageLoad,
-  waiteUntilComponent,
+  waitForComponentAttached,
   checkComponentHintTextWithHover
 } from '../common/actions/common.action.js'
 import {
   checkCellHintText,
   findRowIndexesByColumnTooltipsValue,
+  findRowIndexesByColumnValue,
+  getCellLabelOrTooltip,
   waitForRowIndexesByColumnValue,
   waitForRowIndexesByColumnValueAttribute,
-  findRowIndexesByColumnValueExpand,
   getCellByIndexColumn,
   getTableRows,
   waitForTableRows,
@@ -56,7 +55,7 @@ import {
   isContainsSubstringInColumnDropdownCellsOverlay,
   isContainsSubstringInColumnTooltipCells,
   isContainsValueInColumn,
-  isContainsValueInHeaderColumn,
+  isValueInHeaderColumn,
   isDatetimeCelsValueInRange,
   isNotContainsValueInColumn,
   putToTestContextCellParameters
@@ -79,7 +78,6 @@ import pageObjectsConsts from '../common-tools/common-consts.js'
 import { expect } from '@playwright/test'
 import { isRowActive } from '../common/actions/tab-selector.action.js'
 import {
-  getText,
   isDisplayed,
   pollOptions,
   retryAssertion,
@@ -95,12 +93,13 @@ Then(
   }
 )
 
+// the whole text of the header (the step above checks a substring)
 Then(
-  'check {string} header value in {string} column in {string} table on {string} wizard',
+  'check {string} exact header value in {string} column in {string} table on {string} wizard',
   async function (value, column, table, wizard) {
     await waitPageLoad(this.page, pageObjects['commonPagesHeader']['loader'])
 
-    await isContainsValueInHeaderColumn(this.page, pageObjects[wizard][table], column, value)
+    await isValueInHeaderColumn(this.page, pageObjects[wizard][table], column, value)
   }
 )
 
@@ -113,7 +112,7 @@ Then(
 )
 
 When('scroll to the {string} element on {string} wizard', async function (component, wizard) {
-  await waiteUntilComponent(this.page, pageObjects[wizard][component])
+  await waitForComponentAttached(this.page, pageObjects[wizard][component])
   await scrollToElement(this.page, pageObjects[wizard][component])
 })
 
@@ -129,54 +128,6 @@ When(
     const indx = arr[0]
 
     await scrollToElement(this.page, pageObjects[wizard][table]['rowRoot'](indx))
-  }
-)
-
-Then(
-  'open action menu on {string} wizard in {string} table at row with {string} value in {string} column',
-  async function (wizard, table, value, column) {
-    const arr = await waitForRowIndexesByColumnValue(
-      this.page,
-      pageObjects[wizard][table],
-      column,
-      value
-    )
-    const indx = arr[0]
-    const actionMenuSel = await getCellByIndexColumn(
-      this.page,
-      pageObjects[wizard][table],
-      indx,
-      'action_menu'
-    )
-
-    await openActionMenu(this.page, actionMenuSel)
-  }
-)
-
-Then(
-  'select {string} option in action menu on {string} wizard in {string} table at row with {string} value in {string} column with expand btn {string}',
-  async function (option, wizard, table, value, column, expand_name) {
-    const arr = await findRowIndexesByColumnValueExpand(
-      this.page,
-      pageObjects[wizard][table],
-      column,
-      value
-    )
-    const indx = arr[0]
-    const actionMenuSel = await getCellByIndexColumn(
-      this.page,
-      pageObjects[wizard][table],
-      indx,
-      'action_menu'
-    )
-
-    await hoverComponent(
-      this.page,
-      pageObjects[wizard][table]['tableFields'][expand_name](indx),
-      false // scroll ?
-    )
-    await openActionMenu(this.page, actionMenuSel)
-    await selectOptionInActionMenu(this.page, actionMenuSel, option)
   }
 )
 
@@ -472,46 +423,6 @@ When(
   }
 )
 
-When('fill data to {string} table on {string} wizard', async function (table, wizard, dataTable) {
-  const inputFields = dataTable.raw()[0]
-  const rows = dataTable.rows()
-
-  for (const row_indx in rows) {
-    await clickOnComponent(this.page, pageObjects[wizard][table]['add_row_btn'])
-    await clickOnComponent(
-      this.page,
-      pageObjects[wizard][table]['tableFields'][inputFields[0]](parseInt(row_indx) + 3)
-    )
-    await typeIntoInputField(
-      this.page,
-      pageObjects[wizard][table]['tableFields'][inputFields[0]](parseInt(row_indx) + 3),
-      rows[row_indx][0]
-    )
-    await openDropdown(
-      this.page,
-      pageObjects[wizard][table]['tableFields'][inputFields[1]](parseInt(row_indx) + 3)
-    )
-    await selectOptionInDropdownWithoutCheck(
-      this.page,
-      pageObjects[wizard][table]['tableFields'][inputFields[1]](parseInt(row_indx) + 3),
-      rows[row_indx][1]
-    )
-    await typeIntoInputField(
-      this.page,
-      pageObjects[wizard][table]['tableFields'][inputFields[2]](parseInt(row_indx) + 3),
-      rows[row_indx][2]
-    )
-    await hoverComponent(
-      this.page,
-      pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 3)
-    )
-    await clickOnComponent(
-      this.page,
-      pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 3)
-    )
-  }
-})
-
 When(
   'add rows to {string} key-value table on {string} wizard',
   async function (table, wizard, dataTable) {
@@ -605,26 +516,6 @@ Then('verify data in {string} table on {string} wizard', async function (table, 
 })
 
 Then(
-  'verify filled data in {string} table on {string} wizard',
-  async function (table, wizard, dataTable) {
-    const columns = dataTable.raw()[0]
-    const rows = dataTable.rows()
-
-    for (const row_indx in rows) {
-      for (const i in columns) {
-        await verifyText(
-          this.page,
-          pageObjects[wizard][table]['tableFields'][columns[i]](parseInt(row_indx) + 3),
-          rows[row_indx][i]
-        )
-      }
-    }
-
-    await expectNoRowAfter(this.page, pageObjects[wizard][table], columns[0], rows.length + 3)
-  }
-)
-
-Then(
   'verify values in {string} table on {string} wizard with attribute',
   async function (table, wizard, dataTable) {
     const columns = dataTable.raw()[0]
@@ -703,7 +594,7 @@ When(
 When(
   'click on {string} in {string} table on {string} wizard with sorters',
   async function (fieldName, tableName, wizardName) {
-    await waiteUntilComponent(
+    await waitForComponentAttached(
       this.page,
       pageObjects[wizardName][tableName]['headerSorters'][fieldName]
     )
@@ -747,37 +638,6 @@ When(
 )
 
 When(
-  'click on {string} with filled data in {string} table on {string} wizard with offset {string}',
-  async function (fieldName, tableName, wizardName, offsetFlag, dataTable) {
-    const column = dataTable.raw()[0][0]
-    const rows = dataTable.rows()
-
-    for (const row_indx in rows) {
-      const arr = await waitForRowIndexesByColumnValue(
-        this.page,
-        pageObjects[wizardName][tableName],
-        column,
-        rows[row_indx][0]
-      )
-      let indx = arr[0]
-
-      if (offsetFlag === 'true') {
-        indx -= pageObjects[wizardName][tableName].offset
-      }
-
-      await hoverComponent(
-        this.page,
-        pageObjects[wizardName][tableName]['tableFields'][fieldName](indx + 2)
-      )
-      await clickOnComponent(
-        this.page,
-        pageObjects[wizardName][tableName]['tableFields'][fieldName](indx + 2)
-      )
-    }
-  }
-)
-
-When(
   'add rows to {string} table in {string} on {string} wizard',
   async function (table, accordion, wizard, dataTable) {
     const inputFields = dataTable.raw()[0]
@@ -802,31 +662,6 @@ When(
             parseInt(row_indx) + 1
           )
         )
-      } else {
-        await clickNearComponent(this.page, pageObjects[wizard][accordion][table]['root'])
-      }
-    }
-  }
-)
-
-When(
-  'add rows to {string} key-value table in {string} on {string} wizard',
-  async function (table, accordion, wizard, dataTable) {
-    const inputFields = dataTable.raw()[0]
-    const rows = dataTable.rows()
-
-    for (const row_indx in rows) {
-      await clickOnComponent(this.page, pageObjects[wizard][accordion][table]['add_row_btn'])
-      await waitForPageQuiet(this.page)
-      for (const i in inputFields) {
-        const component = pageObjects[wizard][accordion][table]['tableFields'][inputFields[i]](3)
-        // const component = pageObjects[wizard][accordion][table]['tableFields'][inputFields[i]]
-        const inputField = component.inputField ?? component
-        await typeIntoInputField(this.page, inputField, rows[row_indx][i])
-      }
-
-      if (pageObjects[wizard][accordion][table]['save_row_btn']) {
-        await clickOnComponent(this.page, pageObjects[wizard][accordion][table]['save_row_btn'])
       } else {
         await clickNearComponent(this.page, pageObjects[wizard][accordion][table]['root'])
       }
@@ -865,39 +700,6 @@ When(
           pageObjects[wizard][accordion][table]['tableFields']['apply_edit_btn'](
             parseInt(row_indx) + 2
           )
-        )
-      }
-    }
-  }
-)
-
-When(
-  'add data rows to {string} key-value table on {string} wizard',
-  async function (table, wizard, dataTable) {
-    const inputFields = dataTable.raw()[0]
-    const rows = dataTable.rows()
-
-    for (const row_indx in rows) {
-      await clickOnComponent(this.page, pageObjects[wizard][table]['add_row_btn'])
-      await waitForPageQuiet(this.page)
-      for (const i in inputFields) {
-        const component = pageObjects[wizard][table]['tableFields'][inputFields[i]](
-          parseInt(row_indx) + 2
-        )
-        const inputField = component.inputField ?? component
-        await typeIntoInputField(this.page, inputField, rows[row_indx][i])
-      }
-
-      if (pageObjects[wizard][table]['save_row_btn']) {
-        await clickOnComponent(this.page, pageObjects[wizard][table]['save_row_btn'])
-      } else {
-        await hoverComponent(
-          this.page,
-          pageObjects[wizard][table]['tableFields']['apply_edit_btn'](parseInt(row_indx) + 2)
-        )
-        await clickOnComponent(
-          this.page,
-          pageObjects[wizard][table]['tableFields']['apply_edit_btn'](parseInt(row_indx) + 2)
         )
       }
     }
@@ -994,7 +796,7 @@ When(
     )
     // the row switches to edit mode asynchronously
     const firstInput = pageObjects[wizard][table]['tableFields'][inputFields[0]](index + 1)
-    await waiteUntilComponent(this.page, firstInput.root ?? firstInput)
+    await waitForComponentAttached(this.page, firstInput.root ?? firstInput)
 
     for (const i in inputFields) {
       await typeIntoInputField(
@@ -1006,36 +808,6 @@ When(
     await clickOnComponent(
       this.page,
       pageObjects[wizard][table]['tableFields']['apply_btn'](index + 1)
-    )
-    await waitForPageQuiet(this.page)
-  }
-)
-
-When(
-  'edit {int} filled row in {string} key-value table on {string} wizard',
-  async function (index, table, wizard, dataTable) {
-    const inputFields = dataTable.raw()[0]
-    const row = dataTable.rows()[0]
-
-    await hoverComponent(
-      this.page,
-      pageObjects[wizard][table]['tableFields']['edit_btn'](index + 2)
-    )
-    await clickOnComponent(
-      this.page,
-      pageObjects[wizard][table]['tableFields']['edit_btn'](index + 2)
-    )
-
-    for (const i in inputFields) {
-      await typeIntoInputField(
-        this.page,
-        pageObjects[wizard][table]['tableFields'][inputFields[i]](index + 2),
-        row[i]
-      )
-    }
-    await clickOnComponent(
-      this.page,
-      pageObjects[wizard][table]['tableFields']['apply_btn'](index + 2)
     )
     await waitForPageQuiet(this.page)
   }
@@ -1352,10 +1124,11 @@ Then(
   }
 )
 
+// the whole value (the step above checks a substring: "clean-data" passed on "clean-data-copy")
 Then(
-  'verify {string} on {string} wizard should contains {string} value',
+  'verify {string} on {string} wizard should be equal {string} value',
   async function (componentName, wizardName, value) {
-    await verifyComponentContainsAttributeValue(
+    await verifyComponentAttributeValue(
       this.page,
       pageObjects[wizardName][componentName],
       'value',
@@ -1437,87 +1210,84 @@ Then(
   }
 )
 
-Then(
-  'value in {string} column with {string} in {string} in {string} on {string} wizard should contains {string}',
-  async function (column, type, table, accordion, wizard, substring) {
-    // an unsupported type checked nothing: the step passed
-    expect(['text', 'dropdowns'], `"${type}" type is not supported: text, dropdowns`).toContain(
-      type
+// the row is found by its value, its menu is opened and read, then the row is checked to be still at that index: the
+// index was read once, so a table that re-sorts meanwhile (e.g. running jobs) showed the menu of another row. A row
+// that moved is found again. `getIndex` - the index of the row (fails when not found), `isRowAt(index)` - the row
+// is still there, `hoverTarget(index)` - the element hovered to show the menu button
+const verifyRowActionMenuOptions = (
+  page,
+  table,
+  { getIndex, isRowAt, hoverTarget, scroll },
+  values
+) =>
+  retryAssertion(async () => {
+    const indx = await getIndex()
+    const actionMenu = table['tableFields']['action_menu'](indx)
+
+    await hoverComponent(page, hoverTarget(indx), scroll)
+    await openActionMenu(page, actionMenu)
+    // shorter than the whole check: the menu of a row that moved is never right, the row is found again instead
+    await checkActionMenuOptions(page, actionMenu, values, 5000)
+    expect(await isRowAt(indx), `The row moved while its action menu was read (row ${indx})`).toBe(
+      true
     )
-
-    if (type === 'text') {
-      await isContainsSubstringInColumnCells(
-        this.page,
-        pageObjects[wizard][accordion][table],
-        column,
-        substring
-      )
-    }
-
-    if (type === 'dropdowns') {
-      await isContainsSubstringInColumnDropdownCells(
-        this.page,
-        pageObjects[wizard][accordion][table],
-        column,
-        substring
-      )
-    }
-  }
-)
+  })
 
 Then(
   'verify options in action menu on {string} wizard in {string} table with {string} value in {string} column should contains {string}.{string}',
   async function (wizard, table, kindName, columnName, constWizard, constValue) {
-    const arr = await findRowIndexesByColumnTooltipsValue(
-      this.page,
-      pageObjects[wizard][table],
-      columnName,
-      kindName
-    )
-    const indx = arr[0]
-    const actionMenuSel = await getCellByIndexColumn(
-      this.page,
-      pageObjects[wizard][table],
-      indx,
-      'action_menu'
-    )
+    const tableObject = pageObjects[wizard][table]
 
-    await hoverComponent(
+    await verifyRowActionMenuOptions(
       this.page,
-      pageObjects[wizard][table]['tableFields'][columnName](indx)['label']
-    )
-    await openActionMenu(this.page, actionMenuSel)
-    await checkActionMenuOptions(
-      this.page,
-      pageObjects[wizard][table]['tableFields']['action_menu'](indx),
+      tableObject,
+      {
+        getIndex: async () => {
+          const [indx] = await findRowIndexesByColumnTooltipsValue(
+            this.page,
+            tableObject,
+            columnName,
+            kindName
+          )
+
+          expect(indx, `"${kindName}" was not found in "${columnName}" column`).toBeDefined()
+
+          return indx
+        },
+        isRowAt: async indx =>
+          (await getCellLabelOrTooltip(this.page, tableObject, columnName, indx)) === kindName,
+        hoverTarget: indx => tableObject['tableFields'][columnName](indx)['label'],
+        scroll: true
+      },
       pageObjectsConsts[constWizard][constValue]
     )
   }
 )
 
+const verifyActionMenuOptionsByValue = (page, table, value, column, values, scroll) =>
+  verifyRowActionMenuOptions(
+    page,
+    table,
+    {
+      getIndex: async () => (await waitForRowIndexesByColumnValue(page, table, column, value))[0],
+      isRowAt: async indx =>
+        (await findRowIndexesByColumnValue(page, table, column, value)).includes(indx),
+      hoverTarget: indx => table['tableFields'][column](indx),
+      scroll
+    },
+    values
+  )
+
 Then(
   'verify action menu on {string} wizard in {string} table with {string} value in {string} column should contains {string}.{string}',
   async function (wizard, table, value, column, constWizard, constValue) {
-    const arr = await waitForRowIndexesByColumnValue(
+    await verifyActionMenuOptionsByValue(
       this.page,
       pageObjects[wizard][table],
+      value,
       column,
-      value
-    )
-    const indx = arr[0]
-    const actionMenuSel = await getCellByIndexColumn(
-      this.page,
-      pageObjects[wizard][table],
-      indx,
-      'action_menu'
-    )
-
-    await hoverComponent(this.page, pageObjects[wizard][table]['tableFields'][column](indx))
-    await openActionMenu(this.page, actionMenuSel)
-    await checkActionMenuOptions(
-      this.page,
-      pageObjects[wizard][table]['tableFields']['action_menu'](indx),
-      pageObjectsConsts[constWizard][constValue]
+      pageObjectsConsts[constWizard][constValue],
+      true
     )
   }
 )
@@ -1525,26 +1295,13 @@ Then(
 Then(
   'verify action menu on {string} wizard in {string} table with {string} value in {string} column should contains {string}.{string} without scroll',
   async function (wizard, table, value, column, constWizard, constValue) {
-    const arr = await waitForRowIndexesByColumnValue(
+    await verifyActionMenuOptionsByValue(
       this.page,
       pageObjects[wizard][table],
+      value,
       column,
-      value
-    )
-    const indx = arr[0]
-    const actionMenuSel = await getCellByIndexColumn(
-      this.page,
-      pageObjects[wizard][table],
-      indx,
-      'action_menu'
-    )
-
-    await hoverComponent(this.page, pageObjects[wizard][table]['tableFields'][column](indx), false)
-    await openActionMenu(this.page, actionMenuSel)
-    await checkActionMenuOptions(
-      this.page,
-      pageObjects[wizard][table]['tableFields']['action_menu'](indx),
-      pageObjectsConsts[constWizard][constValue]
+      pageObjectsConsts[constWizard][constValue],
+      false
     )
   }
 )
@@ -1694,81 +1451,6 @@ Then(
 )
 
 Then(
-  'subtable column {string} in {string} in {string} on {string} wizard should contains {string} in {string} column',
-  async function (subTable, table, accordion, wizard, subString, subColumn) {
-    // the table must have rows: counted before it was rendered (0), the check passed without checking anything
-    const numOfRows = await waitForTableRows(this.page, pageObjects[wizard][accordion][table])
-
-    for (let i = 1; i <= numOfRows; i++) {
-      const cellTable = await getCellByIndexColumn(
-        this.page,
-        pageObjects[wizard][accordion][table],
-        i,
-        subTable
-      )
-
-      await isContainsSubstringInColumnCells(this.page, cellTable, subColumn, subString)
-    }
-  }
-)
-
-When(
-  'expand each row in {string} in {string} on {string} wizard',
-  async function (table, accordion, wizard) {
-    const numOfRows = await getTableRows(this.page, pageObjects[wizard][accordion][table])
-
-    for (let i = 1; i <= numOfRows; i++) {
-      const expandBtn = await getCellByIndexColumn(
-        this.page,
-        pageObjects[wizard][accordion][table],
-        i,
-        'expand_btn'
-      )
-
-      await clickOnComponent(this.page, expandBtn)
-    }
-  }
-)
-
-When(
-  'expand row with {string} at {string} in {string} in {string} on {string} wizard',
-  async function (value, column, table, accordion, wizard) {
-    // TODO: without creating link to the table component step works unstable
-    await waitForPageQuiet(this.page)
-    const tableElement = pageObjects[wizard][accordion][table]
-    const arr = await waitForRowIndexesByColumnValue(this.page, tableElement, column, value)
-    const indx = arr[0]
-    const expandBtn = await getCellByIndexColumn(this.page, tableElement, indx, 'expand_btn')
-
-    await clickOnComponent(this.page, expandBtn)
-  }
-)
-
-When(
-  'select {string} in subcolumn {string} at {string} column in {string} row by {string} at {string} in {string} on {string} wizard',
-  async function (value, subColumn, subTable, rowValue, searchColumn, table, accordion, wizard) {
-    const arr = await waitForRowIndexesByColumnValue(
-      this.page,
-      pageObjects[wizard][accordion][table],
-      searchColumn,
-      rowValue
-    )
-    const indx = arr[0]
-    const cellTable = await getCellByIndexColumn(
-      this.page,
-      pageObjects[wizard][accordion][table],
-      indx,
-      subTable
-    )
-    const subArr = await waitForRowIndexesByColumnValue(this.page, cellTable, searchColumn, value)
-    const subIndx = subArr[0]
-    const option = await getCellByIndexColumn(this.page, cellTable, subIndx, subColumn)
-
-    await clickOnComponent(this.page, option)
-  }
-)
-
-Then(
   'value in {string} column in {string} on {string} wizard should be from {string} to {string}',
   async function (column, table, wizard, fromDateTime, toDateTime) {
     await isDatetimeCelsValueInRange(
@@ -1820,39 +1502,13 @@ When(
 )
 
 When(
-  'click on row root with value {string} in {string} column in {string} table in {string} on {string} wizard',
-  async function (value, columnName, table, accordion, wizard) {
-    const arr = await waitForRowIndexesByColumnValue(
-      this.page,
-      pageObjects[wizard][accordion][table],
-      columnName,
-      value
-    )
-    const indx = arr[0]
-
-    await clickOnComponent(this.page, pageObjects[wizard][accordion][table]['rowRoot'](indx))
-  }
-)
-
-When(
   'click on cell with row index {int} in {string} column in {string} table on {string} wizard',
   async function (indx, columnName, table, wizard) {
     const cell = pageObjects[wizard][table]['tableFields'][columnName](indx)
 
     // the table is rendered after the data is fetched, `wait load page` can pass before the loader appears
-    await waiteUntilComponent(this.page, cell)
+    await waitForComponentAttached(this.page, cell)
     await clickOnComponent(this.page, cell)
-  }
-)
-
-Then(
-  'hover on cell with row index {int} in {string} column in {string} table on {string} wizard',
-  async function (indx, columnName, table, wizard) {
-    await hoverComponent(
-      this.page,
-      pageObjects[wizard][table]['tableFields'][columnName](indx),
-      false
-    )
   }
 )
 
@@ -2002,7 +1658,7 @@ When(
 
         if (pageComponents[indx].includes('Add')) {
           if (row[indx] === 'yes') {
-            await waiteUntilComponent(
+            await waitForComponentAttached(
               this.page,
               pageObjects['Notification_Popup']['Notification_Pop_Up_Cross_Close_Button']
             )
@@ -2143,20 +1799,6 @@ Then(
   }
 )
 
-Then(
-  'check {string} not visible in {string} on {string} wizard',
-  async function (cellName, tableName, wizardName) {
-    const rowsNumber = await waitForTableRows(this.page, pageObjects[wizardName][tableName])
-
-    for (let i = 0; i < rowsNumber; i++) {
-      await componentIsNotVisible(
-        this.page,
-        pageObjects[wizardName][tableName].tableFields[cellName](i + 1)
-      )
-    }
-  }
-)
-
 When(
   'click on node with index {int} in {string} graph on {string} wizard',
   async function (index, graphName, wizardName) {
@@ -2220,28 +1862,6 @@ When(
 )
 
 When(
-  'save to context {string} column and {string} attributes row where header {string} is {string} from {string} table on {string} wizard',
-  async function (valueColumnName, attributeName, keyName, keyValue, overviewTable, wizardName) {
-    const arr = await waitForRowIndexesByColumnValue(
-      this.page,
-      pageObjects[wizardName][overviewTable],
-      keyName,
-      keyValue
-    )
-    const index = arr[0]
-
-    await putToTestContextCellParameters(
-      this.page,
-      this.testContext,
-      pageObjects[wizardName][overviewTable],
-      index,
-      valueColumnName,
-      attributeName
-    )
-  }
-)
-
-When(
   'click on {string} value where option is {string} in {string} on {string} wizard',
   async function (fieldType, nameValue, overviewTable, wizardName) {
     const arr = await waitForRowIndexesByColumnValue(
@@ -2256,66 +1876,6 @@ When(
       this.page,
       pageObjects[wizardName][overviewTable].tableFields[fieldType](index)
     )
-  }
-)
-
-Then(
-  'verify {string} values {string} values from {string} on {string} with {string} context value',
-  async function (keyColumn, keys, overviewTable, wizardName, contextContainer) {
-    const keysArr = keys.split(',')
-
-    for (let key of keysArr) {
-      const arr = await waitForRowIndexesByColumnValue(
-        this.page,
-        pageObjects[wizardName][overviewTable],
-        keyColumn,
-        key
-      )
-      const cellComponent = this.page
-        .locator(pageObjects[wizardName][overviewTable].tableFields['value'](arr[0]))
-        .first()
-
-      // retried: the single read could get the cell before its value was rendered. An empty value is a failure:
-      // the link includes "" (the previous check passed on an empty or hidden cell)
-      await retryAssertion(async () => {
-        const cellValue = await getText(cellComponent, { timeout: readTimeout })
-
-        expect(
-          cellValue !== '' && this.testContext[contextContainer].includes(cellValue),
-          `"${key}" value "${cellValue}" is not in link "${this.testContext[contextContainer]}"`
-        ).toBe(true)
-      })
-    }
-  }
-)
-
-Then(
-  'verify {string} values {string} values from {string} on {string} with {string} context value with split',
-  async function (keyColumn, keys, overviewTable, wizardName, contextContainer) {
-    const keysArr = keys.split(',')
-
-    for (let key of keysArr) {
-      const arr = await waitForRowIndexesByColumnValue(
-        this.page,
-        pageObjects[wizardName][overviewTable],
-        keyColumn,
-        key
-      )
-      const cellComponent = this.page
-        .locator(pageObjects[wizardName][overviewTable].tableFields['value'](arr[0]))
-        .first()
-      const contextSplit = this.testContext[contextContainer].split(/[/@]/)
-
-      // retried: the single read could get the cell before its value was rendered
-      await retryAssertion(async () => {
-        const cellValue = await getText(cellComponent, { timeout: readTimeout })
-
-        expect(
-          cellValue !== '' && contextSplit.includes(cellValue),
-          `"${key}" value "${cellValue}" is not in link "${contextSplit}"`
-        ).toBe(true)
-      })
-    }
   }
 )
 

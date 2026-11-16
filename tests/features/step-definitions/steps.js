@@ -36,14 +36,17 @@ import {
   navigateForward,
   navigateToPage,
   refreshPage,
+  verifyComponentAttributeValue,
   verifyComponentContainsAttributeValue,
   verifyComponentNotContainsAttributeValue,
   verifyElementDisabled,
   verifyElementEnabled,
   verifyText,
+  fillPatternGroups,
+  verifyNotificationText,
   verifyTextRegExp,
   waitPageLoad,
-  waiteUntilComponent,
+  waitForComponentAttached,
   verifyElementActive,
   verifyElementNotActive,
   generatePath,
@@ -123,6 +126,7 @@ import {
 import { selectSidebarItem, selectSidebarProject } from '../common/actions/sidebar.action.js'
 import { expect } from '@playwright/test'
 import {
+  expectText,
   getAttribute,
   getText,
   pollOptions,
@@ -136,21 +140,6 @@ Given('open url', async function () {
   await navigateToPage(this.page, `http://${test_url}:${test_port}`)
 })
 
-/*
-   Changes Log:
-  turning on demo mode by URL param check of `demo=true` has been deprecated.
-
-  Now: `demo` flag replaced with `mode` flag that can be set with either 2 modes
-  - `mode=demo` = Not ready for production or testing (Missing UI or BE). shows all the code for staging + demo
-  - `mode=staging` = When ready for testing but not for production. Specific for staging
-  once `mode` flag (URL param) is passed, it is saved to localStorage and check is done NOW by localStorage `mode` value
-
-  ** TODO **
-  1. Change `demo=true` to `mode=demo` in 'turn on demo mode' test case and adjust test cases
-  2. Create another test cases for "turn on staging mode" with `mode=staging`
-
-*/
-
 When('turn on demo mode with query params {string}', async function (state) {
   const url = this.page.url()
 
@@ -161,26 +150,6 @@ When('turn on staging mode with query params {string}', async function (state) {
   const url = this.page.url()
 
   await navigateToPage(this.page, `${url}${state === 'true' ? '&' : '?'}mode=staging`)
-})
-
-Then('turn Off MLRun CE mode', async function () {
-  await this.page.evaluate(() => {
-    localStorage.setItem('igzFullVersion', '3.5.5')
-  })
-})
-
-Then('additionally redirect by INVALID-TAB', async function () {
-  const beforeURL = this.page.url()
-  const urlNodesArr = beforeURL.split('/')
-  const invalidTab = beforeURL.replace(urlNodesArr[urlNodesArr.length - 1], 'INVALID-TAB')
-
-  await navigateToPage(this.page, `${invalidTab}`)
-  const afterURL = this.page.url()
-
-  expect(
-    afterURL,
-    `Redirection from "${beforeURL}/INVALID-TAB"\nshould be "${beforeURL}"\nbut is "${afterURL}"`
-  ).toBe(beforeURL)
 })
 
 Then('verify redirection from {string} to {string}', async function (invalidPath, expectedPath) {
@@ -213,6 +182,12 @@ Then('wait load page', async function () {
   await waitPageLoad(this.page, pageObjects['commonPagesHeader']['loader'])
 })
 
+// the browser clock must be fake (`page.clock.install()`, e.g. the `@mlrunUnhealthyTest` hook): the timers due by then
+// fire, the app sees the time passed
+Then('move the browser time forward by {int} seconds', async function (seconds) {
+  await this.page.clock.fastForward(seconds * 1000)
+})
+
 Then('wait for {int} seconds', { timeout: 10 * 60 * 1000 }, async function (seconds) {
   const milliseconds = seconds * 1000
 
@@ -235,19 +210,19 @@ Then('refresh a page', async function () {
 })
 
 Then('click on {string} element on {string} wizard', async function (component, wizard) {
-  await waiteUntilComponent(this.page, pageObjects[wizard][component])
+  await waitForComponentAttached(this.page, pageObjects[wizard][component])
   await clickOnComponent(this.page, pageObjects[wizard][component])
   await waitForPageQuiet(this.page)
 })
 
 Then('click on breadcrumbs {string} label on {string} wizard', async function (labelType, wizard) {
-  await waiteUntilComponent(this.page, pageObjects[wizard]['Breadcrumbs'][`${labelType}Label`])
+  await waitForComponentAttached(this.page, pageObjects[wizard]['Breadcrumbs'][`${labelType}Label`])
   await clickOnComponent(this.page, pageObjects[wizard]['Breadcrumbs'][`${labelType}Label`])
   await waitForPageQuiet(this.page)
 })
 
 Then('verify if {string} popup dialog appears', async function (popup) {
-  await waiteUntilComponent(this.page, pageObjects[popup]['Title'])
+  await waitForComponentAttached(this.page, pageObjects[popup]['Title'])
   await componentIsPresent(this.page, pageObjects[popup]['Title'])
   await componentIsVisible(this.page, pageObjects[popup]['Title'])
 })
@@ -289,20 +264,6 @@ Then(
   'verify {string} not input element in {string} on {string} wizard is enabled',
   async function (elementName, accordionName, wizardName) {
     await verifyElementEnabled(this.page, pageObjects[wizardName][accordionName][elementName])
-  }
-)
-
-Then(
-  'verify {string} not input element on {string} wizard is active',
-  async function (elementName, wizardName) {
-    await verifyElementActive(this.page, pageObjects[wizardName][elementName])
-  }
-)
-
-Then(
-  'verify {string} not input element on {string} wizard is NOT active',
-  async function (elementName, wizardName) {
-    await verifyElementNotActive(this.page, pageObjects[wizardName][elementName])
   }
 )
 
@@ -572,7 +533,7 @@ Then(
 Then(
   '{string} component on {string} should contains {string}.{string}',
   async function (component, wizard, constStorage, constValue) {
-    await waiteUntilComponent(this.page, pageObjects[wizard][component])
+    await waitForComponentAttached(this.page, pageObjects[wizard][component])
     await verifyText(
       this.page,
       pageObjects[wizard][component],
@@ -581,11 +542,39 @@ Then(
   }
 )
 
+// the notifications are looked for among all the shown ones, see `verifyNotificationText`
+const isNotification = selector =>
+  selector === pageObjects['Notification_Popup']['Notification_Pop_Up']
+
 Then(
   '{string} element on {string} should contains {string} value',
   async function (component, wizard, value) {
-    await waiteUntilComponent(this.page, pageObjects[wizard][component])
-    await verifyText(this.page, pageObjects[wizard][component], value)
+    await waitForComponentAttached(this.page, pageObjects[wizard][component])
+
+    if (isNotification(pageObjects[wizard][component])) {
+      await verifyNotificationText(this.page, pageObjects[wizard][component], value)
+    } else {
+      await verifyText(this.page, pageObjects[wizard][component], value)
+    }
+  }
+)
+
+// for a text that comes later than the default timeout allows (e.g. a background task that ends after a random time)
+Then(
+  '{string} element on {string} should contains {string} value within {int} seconds',
+  async function (component, wizard, value, seconds) {
+    if (isNotification(pageObjects[wizard][component])) {
+      // a wait: the scenarios check the notification after it (`mark: false`)
+      await verifyNotificationText(this.page, pageObjects[wizard][component], value, {
+        timeout: seconds * 1000,
+        mark: false
+      })
+    } else {
+      await expectText(this.page.locator(pageObjects[wizard][component]).first(), value, {
+        message: `Text of ${pageObjects[wizard][component]} within ${seconds} s`,
+        timeout: seconds * 1000
+      })
+    }
   }
 )
 
@@ -620,6 +609,19 @@ Then(
   }
 )
 
+// the whole value (the step above checks a substring: a filter that kept "latest123456" passed for "latest")
+Then(
+  '{string} element on {string} should be equal {string} attribute value',
+  async function (component, wizard, value) {
+    await verifyComponentAttributeValue(
+      this.page,
+      pageObjects[wizard][component]['inputField'],
+      'value',
+      value
+    )
+  }
+)
+
 When(
   'save to context {string} page value from {string} element on {string} wizard',
   async function (pageValue, elementName, wizardName) {
@@ -643,10 +645,51 @@ Then(
   }
 )
 
+// the variable parts of the message (the capturing groups of the pattern, in order) are the values of the scenario
+// (e.g. the name of the deleted job): the pattern alone passes any value there
+const verifyTextWithValues = (page, component, pattern, values) =>
+  verifyTextRegExp(page, component, fillPatternGroups(pattern, values))
+
+Then(
+  '{string} component on {string} should be equal {string}.{string} with {string}',
+  async function (component, wizard, constStorage, constValue, value) {
+    await verifyTextWithValues(
+      this.page,
+      pageObjects[wizard][component],
+      pageObjectsConsts[constStorage][constValue],
+      [value]
+    )
+  }
+)
+
+Then(
+  '{string} component on {string} should be equal {string}.{string} with {string} and {string}',
+  async function (component, wizard, constStorage, constValue, value1, value2) {
+    await verifyTextWithValues(
+      this.page,
+      pageObjects[wizard][component],
+      pageObjectsConsts[constStorage][constValue],
+      [value1, value2]
+    )
+  }
+)
+
+Then(
+  '{string} component on {string} should be equal {string}.{string} with {string}, {string} and {string}',
+  async function (component, wizard, constStorage, constValue, value1, value2, value3) {
+    await verifyTextWithValues(
+      this.page,
+      pageObjects[wizard][component],
+      pageObjectsConsts[constStorage][constValue],
+      [value1, value2, value3]
+    )
+  }
+)
+
 Then(
   '{string} component in {string} on {string} should contains {string}.{string}',
   async function (component, accordion, wizard, constStorage, constValue) {
-    await waiteUntilComponent(this.page, pageObjects[wizard][accordion][component])
+    await waitForComponentAttached(this.page, pageObjects[wizard][accordion][component])
     await verifyText(
       this.page,
       pageObjects[wizard][accordion][component],
@@ -730,17 +773,6 @@ When(
       this.page,
       pageObjects[wizardName][accordionName][dropdownName],
       optionValue
-    )
-  }
-)
-
-Then(
-  'verify {string} filter band in {string} filter dropdown on {string} wizard',
-  async function (optionValue, dropdownName, wizardName) {
-    await verifyTimeFilterBand(
-      this.page,
-      pageObjects[wizardName][dropdownName],
-      pageObjectsConsts[wizardName][optionValue]
     )
   }
 )
@@ -1038,18 +1070,6 @@ Then(
 )
 
 Then(
-  'verify {string} on {string} wizard should display {string}.{string} in {string}',
-  async function (inputField, wizard, constStorage, constValue, commonTipType) {
-    await checkHintText(
-      this.page,
-      pageObjects[wizard][inputField],
-      pageObjects['commonPagesHeader'][commonTipType],
-      pageObjectsConsts[constStorage][constValue]
-    )
-  }
-)
-
-Then(
   'verify {string} on {string} wizard should display options {string}.{string}',
   async function (inputField, wizard, constStorage, constValue) {
     await checkWarningHintText(
@@ -1097,19 +1117,6 @@ Then(
 )
 
 Then(
-  'verify {string} on {string} wizard should display warning {string}.{string}',
-  async function (input, wizard, constStorage, constValue) {
-    await clickOnComponent(this.page, pageObjects[wizard][input]['inputField'])
-    await hoverComponent(this.page, pageObjects[wizard][input]['inputField'], false)
-    await checkWarningHintText(
-      this.page,
-      pageObjects[wizard][input],
-      pageObjects[wizard][input]['warningText'],
-      pageObjectsConsts[constStorage][constValue]
-    )
-  }
-)
-Then(
   'verify {string} on {string} wizard should display hover warning {string}.{string}',
   async function (input, wizard, constStorage, constValue) {
     await clickOnComponent(this.page, pageObjects[wizard][input]['inputField'])
@@ -1118,20 +1125,6 @@ Then(
       this.page,
       pageObjects[wizard][input],
       pageObjects[wizard][input]['warningText'],
-      pageObjectsConsts[constStorage][constValue]
-    )
-  }
-)
-
-Then(
-  'verify {string} element in {string} on {string} wizard should display warning {string}.{string}',
-  async function (input, accordion, wizard, constStorage, constValue) {
-    await clickOnComponent(this.page, pageObjects[wizard][accordion][input]['inputField'])
-    await clickNearComponent(this.page, pageObjects[wizard][accordion][input]['inputField'])
-    await checkWarningHintText(
-      this.page,
-      pageObjects[wizard][accordion][input],
-      pageObjects[wizard][accordion][input]['warningText'],
       pageObjectsConsts[constStorage][constValue]
     )
   }
@@ -1198,15 +1191,11 @@ Then(
 When(
   'click on {string} element in {string} on {string} wizard',
   async function (component, accordion, wizardName) {
-    await waiteUntilComponent(this.page, pageObjects[wizardName][accordion][component])
+    await waitForComponentAttached(this.page, pageObjects[wizardName][accordion][component])
     await clickOnComponent(this.page, pageObjects[wizardName][accordion][component])
     await waitForPageQuiet(this.page)
   }
 )
-
-Then('is {string} on {string} selected', async function (radiobutton, wizard) {
-  await isRadioButtonSelected(this.page, pageObjects[wizard][radiobutton])
-})
 
 Then(
   'is {string} in {string} on {string} selected',
@@ -1265,14 +1254,6 @@ When(
   }
 )
 
-Then(
-  'select {string} option in {string} suggestions dropdown on {string} wizard',
-  async function (option, dropdown, wizard) {
-    await selectOptionInDropdownWithoutCheck(this.page, pageObjects[wizard][dropdown], option)
-    await waitForPageQuiet(this.page)
-  }
-)
-
 Then('select {string} option in action menu on {string} wizard', async function (option, wizard) {
   const actionMenu = pageObjects[wizard]['Action_Menu']
 
@@ -1316,18 +1297,6 @@ Then('check that {string} file is existed on {string} directory', async function
 
   await determineFileAccess(path, file)
 })
-
-Then(
-  'verify {string} according hint rules on {string} wizard',
-  async function (inputField, wizardName) {
-    await checkInputAccordingHintText(
-      this.page,
-      this.attach,
-      pageObjects[wizardName][inputField],
-      pageObjects['commonPagesHeader']['Common_Hint']
-    )
-  }
-)
 
 Then('verify {string} options rules on {string} wizard', async function (inputField, wizardName) {
   await checkInputAccordingHintText(
@@ -1444,20 +1413,6 @@ Then(
 When('hover {string} component on {string} wizard', async function (componentName, wizardName) {
   await hoverComponent(this.page, pageObjects[wizardName][componentName], true)
 })
-
-When(
-  'scroll and hover {string} component on {string} wizard',
-  async function (componentName, wizardName) {
-    await hoverComponent(this.page, pageObjects[wizardName][componentName], true)
-  }
-)
-
-When(
-  'scroll and hover {string} component in {string} on {string} wizard',
-  async function (componentName, accordionName, wizardName) {
-    await hoverComponent(this.page, pageObjects[wizardName][accordionName][componentName], true)
-  }
-)
 
 When(
   'pan {string} graph on {string} wizard to show {string} element',

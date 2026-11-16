@@ -74,12 +74,6 @@ export const getInputValue = async (page, inputGroup) => {
   return getAttribute(inputField, 'value')
 }
 
-export const getInputValueWithoutInputgroup = async (page, input) => {
-  const inputField = page.locator(input).first()
-
-  return getAttribute(inputField, 'value')
-}
-
 // the page can be re-rendering after the previous action, the typed value would be lost
 const typeIntoField = async (page, inputField, value) => {
   await waitForPageQuiet(page)
@@ -200,11 +194,17 @@ export const checkInputAccordingHintText = async (
     await clearManually(input)
   }
 
+  const maxLength = await getAttribute(input, 'maxlength')
+
   // an invalid value must make the field invalid. In a label field the editing can end by itself meanwhile (BUG-001):
-  // the field is cut or gone, that is recognized as the known bug
+  // the field is cut or gone, that is recognized as the known bug. The field must have the typed value (only its
+  // `maxlength` can cut it): a leftover of the previous value made the field invalid for another reason, and passed
   const expectInvalid = async string => {
     try {
       await typeValue(page, inputGroup, string)
+      await pollAttribute(input, 'value', {
+        message: 'The field keeps the typed invalid value'
+      }).toBe(maxLength ? string.slice(0, Number(maxLength)) : string)
       await waitForPageQuiet(page)
       await withTypedValueDetails(input, string, async () => {
         if (isForm) {
@@ -229,8 +229,6 @@ export const checkInputAccordingHintText = async (
   // the length rule: a field with `maxlength` doesn't take more (its limit must be the rule's one), a field without it
   // must reject the value one character longer. It was not checked at all
   if (tooLongString) {
-    const maxLength = await getAttribute(input, 'maxlength')
-
     if (maxLength !== null && maxLength !== '') {
       expect(
         Number(maxLength),

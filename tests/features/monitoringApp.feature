@@ -140,7 +140,6 @@ Feature: Monitoring app Page
     Then verify "Application_Monitoring_Button" element visibility on "Application_Metrics" wizard
     Then "Application_Monitoring_Button" element on "Application_Metrics" should contains "Application monitoring" value
     Then navigate back
-    And wait load page
     Then click on cell with value "monitorAppV1" in "name" column in "All_Applications_Table" table on "Monitoring_App" wizard
     And wait load page
     Then verify "Application_Metrics_Button" element visibility on "Application_Monitoring" wizard
@@ -280,7 +279,7 @@ Feature: Monitoring app Page
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     And wait load page
-    Then "Table_Label_Filter_Input" element on "FilterBy_Popup" should contains "mlrun/app-name=monitorAppV1" attribute value
+    Then "Table_Label_Filter_Input" element on "FilterBy_Popup" should be equal "mlrun/app-name=monitorAppV1" attribute value
     And wait load page
 
   @MLMA
@@ -494,7 +493,6 @@ Feature: Monitoring app Page
     Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
     Then verify "Clear_Button" element on "FilterBy_Popup" wizard is enabled
     Then navigate back
-    And wait load page
     Then verify redirection to "projects/default/monitoring-app"
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     Then verify "Endpoints_Stats_Title" element visibility on "Monitoring_App" wizard
@@ -520,7 +518,6 @@ Feature: Monitoring app Page
     Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
     Then verify "Clear_Button" element on "FilterBy_Popup" wizard is enabled
     Then navigate back
-    And wait load page
     Then verify redirection to "projects/default/monitoring-app"
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And select "Model artifacts" item in sidebar menu

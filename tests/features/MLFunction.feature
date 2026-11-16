@@ -146,7 +146,7 @@ Feature: ML Functions
         Then select "Delete" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-m" value in "name" column
         And wait load page
         Then "Title" element on "Common_Popup" should contains "Delete function?" value
-        Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Function"
+        Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Function" with "test-m"
         Then verify "Cancel_Button" element visibility on "Common_Popup" wizard
         Then "Cancel_Button" element on "Common_Popup" should contains "Cancel" value
         Then verify "Delete_Button" element visibility on "Common_Popup" wizard
@@ -626,6 +626,7 @@ Feature: ML Functions
     @MLF
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    # BUG-004 (tests/KNOWN_BUGS.md): the CPU limit unit select drops the requests, the edited function has the defaults
     @rerun @knownBug
     Scenario: MLF015 - Save new ml-function
         * set tear-down property "function" created in "default" project with "new-aqa-function-00" value
@@ -744,14 +745,14 @@ Feature: ML Functions
         And select "Delete" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "erann-with-mlrun" value in "name" column
         And click on "Delete_Button" element on "Common_Popup" wizard
         And wait load page
-        And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         And wait load page
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Function deletion in progress" value
         And wait load page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
-        Then wait for 10 seconds
+        # the deletion task ends after 3.6-10.6 s (the mock), the UI polls it every 2 s
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Function erann-with-mlrun is successfully deleted" value within 20 seconds
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Function erann-with-mlrun is successfully deleted" value
         And wait load page
@@ -1073,7 +1074,6 @@ Feature: ML Functions
         And wait load page
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
-        And wait load page
         Then verify "Projects_Table" element visibility on "Projects" wizard
 
     @MLF
@@ -1267,6 +1267,7 @@ Feature: ML Functions
     @MLF
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    # BUG-004 (tests/KNOWN_BUGS.md): the CPU limit unit select drops the requests, the Batch Run shows the defaults
     @rerun @knownBug
     Scenario: MLF033 - Verify Resources values on Function Deploy and Run
         * set tear-down property "project" created with "automation-test" value
@@ -1337,7 +1338,6 @@ Feature: ML Functions
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
         Then verify redirection from "projects/default/functions/INVALID/latest/overview?dates=anyTime" to "projects/default/functions?dates=anyTime"
-        And wait load page
         And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         And wait load page
@@ -1437,7 +1437,6 @@ Feature: ML Functions
         Then verify "Show_Untagged" element visibility on "FilterBy_Popup" wizard
         Then check "Show_Untagged" element on "FilterBy_Popup" wizard
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
-        And wait load page
         And wait load page
         Then check "demo-function-02" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
         When click on cell with value "demo-function-02" in "name" column in "Functions_Table" table on "ML_Functions" wizard

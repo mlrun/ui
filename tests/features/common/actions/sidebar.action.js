@@ -20,7 +20,7 @@ such restriction.
 import { expectTimeout, readTimeout, timeout } from '../../../config.js'
 import { expect } from '@playwright/test'
 import sidebar from '../components/sidebar.component.js'
-import { hoverElementCenter, scrollToWebElement } from './common.action.js'
+import { hoverElementCenter, scrollToElement } from './common.action.js'
 import {
   click,
   getAttribute,
@@ -125,7 +125,7 @@ export const selectSidebarItem = async (page, label) => {
         .first()
 
       if ((await getAttribute(groupButton, 'data-state')) !== 'open') {
-        await scrollToWebElement(page, groupButton)
+        await scrollToElement(page, groupButton)
         await click(groupButton)
         await waitForPageQuiet(page)
         if ((await links.count()) > 0) break
@@ -135,7 +135,7 @@ export const selectSidebarItem = async (page, label) => {
 
   expect(await links.count(), `Sidebar item "${label}" was not found`).toBe(1)
 
-  await scrollToWebElement(page, links.first())
+  await scrollToElement(page, links.first())
   await click(links.first())
   await waitForPageQuiet(page)
   await closeSidebar(page)
@@ -153,7 +153,7 @@ export const selectSidebarProject = async (page, projectName) => {
   await waitForPageQuiet(page)
 
   const option = page.locator(sidebar.projectDropdown.option(projectName)).first()
-  await scrollToWebElement(page, option)
+  await scrollToElement(page, option)
   await click(option)
   await waitForPageQuiet(page)
   await closeSidebar(page)

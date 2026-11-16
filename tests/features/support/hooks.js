@@ -54,7 +54,11 @@ After(async function () {
 Before({ tags: '@knownBug or @FAILED_TODO' }, async function () {
   this.testInfo.fail(true, 'known bug (@knownBug/@FAILED_TODO): expected to fail')
 })
+// the browser clock is fake (it runs on, `move the browser time forward by N seconds` jumps it): the "MLRun seems to be
+// down" popup is shown after 3 minutes of failed retries (`fetchProjectsSummary`, src/reducers/projectReducer.js), the
+// scenario doesn't wait them in real time. The scenario opens the page after it, the clock is installed by then
 Before('@mlrunUnhealthyTest', async function () {
+  await this.page.clock.install()
   await setRequestsFailureCondition(true)
 })
 

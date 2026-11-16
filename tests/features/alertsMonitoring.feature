@@ -50,7 +50,6 @@ Feature: Alerts Monitoring Page
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then verify "Event_Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Event_Type_Filter_Options"
         Then navigate back
-        And wait load page
         Then verify "Monitoring_Alerts_Box_Title" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
         
     @MLAM

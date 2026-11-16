@@ -23,7 +23,6 @@ import dropdownComponent from '../components/dropdown.component.js'
 import actionMenu from '../components/action-menu.component.js'
 import datepicker from '../components/date-picker.component.js'
 import inputGroup from '../components/input-group.component.js'
-import inputWithAutocomplete from '../components/input-with-autocomplete.component.js'
 import labelComponent from '../components/label.component.js'
 import graph from '../components/graph.component.js'
 import {
@@ -345,61 +344,6 @@ const timePickerDropdownTo = dropdownComponent(
 )
 // datepicker end
 
-// Create job
-const selectFunctionFromDropdown = {
-  root: '.create-container .create-container__data  .accordion__container.functions-wrapper .data-header__select',
-  dropdownElements: {
-    open_button: '.select__header .select__value',
-    options: '.select__body .select__item',
-    option_name: '.data-ellipsis .data-ellipsis'
-  }
-}
-
-const selectedFunctionsTemplates = {
-  root: '.create-container .create-container__data  .accordion__container.functions-wrapper .create-container__data-list',
-  header: {},
-  body: {
-    row: {
-      root: '.card-template',
-      fields: {
-        name: '.card-template__header'
-      }
-    }
-  }
-}
-
-const predefinedFunctionsTemplates = {
-  root: '.create-container__data-list',
-  header: {},
-  body: {
-    row: {
-      root: '.card-template',
-      fields: {
-        name: '.card-template__header',
-        description: '.card-template__description'
-      }
-    }
-  }
-}
-
-const functionsTemplates = {
-  root: '.create-container .create-container__data > .accordion__container:nth-of-type(3) .accordion__body .data-wrapper .templates-container',
-  header: {},
-  body: {
-    row: {
-      root: '.accordion__container',
-      fields: {
-        expand_btn: 'button',
-        name: '.accordion__body > h6',
-        templates_list: {
-          componentType: commonTable,
-          structure: predefinedFunctionsTemplates
-        }
-      }
-    }
-  }
-}
-
 // Common components
 const pageHeaderButton = '.action-bar .action-bar__actions button'
 const tableRefreshButton =
@@ -410,15 +354,6 @@ const commonStatusFilter = dropdownComponent(
     '.select__header', // Open Component
     '.select__body .select__item', // Options
     '.data-ellipsis .data-ellipsis' // Option value
-  )
-)
-const commonStartTimeFilter = dropdownComponent(
-  generateDropdownGroup(
-    '.content__action-bar-wrapper .filters .date-picker-container',
-    'input.date-picker__input',
-    '.date-picker__pop-up .select__item',
-    '.data-ellipsis .data-ellipsis',
-    false // options_in_root ?
   )
 )
 const commonDatePickerFilter = dropdownComponent(
@@ -471,14 +406,6 @@ export default {
     Table_Refresh_Button: tableRefreshButton,
     Status_Filter_Dropdown: commonStatusFilter,
     Table_Name_Filter_Input: commonTableNameFilter,
-    Table_Labels_Filter_Input: inputGroup(
-      generateInputGroup(
-        '.content__action-bar-wrapper .filter-column:nth-of-type(3) .input-wrapper',
-        true,
-        false
-      )
-    ),
-    Start_Time_Filter_Dropdown: commonStartTimeFilter,
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Time_Picker_Dropdown_From: timePickerDropdownFrom,
     Time_Picker_Dropdown_To: timePickerDropdownTo,
@@ -491,7 +418,6 @@ export default {
     Table_FilterBy_Button: commonTableFilterByButton,
     Error_Message: commonErrorMessage,
     Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
-    Start_Time_Filter_Dropdown: commonStartTimeFilter,
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Workflows_Monitor_Table: commonTable(workflowsMonitorTable),
     Toggle_View_Button: '.workflow-container .actions .toggle-view-btn',
@@ -509,43 +435,7 @@ export default {
     Batch_Run_Button: pageHeaderButton,
     Error_Message: commonErrorMessage,
     Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
-    Table_Labels_Filter_Input: inputGroup(
-      generateInputGroup(
-        '.content__action-bar-wrapper .filter-column:nth-of-type(2) .input-wrapper',
-        true,
-        false
-      )
-    ),
     Table_Refresh_Button: tableRefreshButton,
     Schedule_Monitor_Table: commonTable(scheduleMonitorTable)
-  },
-  CreateJob: {
-    Back_Arrow_Button:
-      '.create-container .create-container__header .header-link a.header-link__icon',
-    Create_Job_Header:
-      '.create-container .create-container__header .header-link h3.header-link__title',
-    Search_Input: inputWithAutocomplete({
-      root: '.create-container .create-container__data .search-container',
-      elements: {
-        input: 'input',
-        options: '.search-matches .search-matches__item',
-        option_name: ''
-      }
-    }),
-    Select_Functions_From_Accordion: {
-      Accordion_Header:
-        '.create-container .create-container__data .accordion__container.functions-wrapper h5.data-header__title span',
-      Collapse_Button:
-        '.create-container .create-container__data .accordion__container.functions-wrapper .accordion__icon',
-      Select_Function_From_Dropdown: dropdownComponent(selectFunctionFromDropdown),
-      Selected_Functions_Templates: commonTable(selectedFunctionsTemplates)
-    },
-    Function_Templates_Accordion: {
-      Accordion_Header:
-        '.create-container .create-container__data > .accordion__container:nth-of-type(3) h5.data-header__title',
-      Collapse_Button:
-        '.create-container .create-container__data > .accordion__container:nth-of-type(3) > .accordion__icon',
-      Functions_Templates_Table: commonTable(functionsTemplates)
-    }
   }
 }

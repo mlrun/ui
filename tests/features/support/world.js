@@ -21,7 +21,7 @@ import path from 'node:path'
 import { test as base, createBdd } from 'playwright-bdd'
 import { trackPageActivity, trackRequests } from '../common-tools/element.js'
 
-// `this` of the steps and hooks (Cucumber style)
+// `this` of the steps and hooks: one per scenario, the steps share the page and the data in it
 export class World {
   constructor(page, testInfo, downloads) {
     this.page = page
@@ -33,7 +33,7 @@ export class World {
     this.attach = this.attach.bind(this)
   }
 
-  // same signature as Cucumber `attach`: a media type or `{ mediaType, fileName }`
+  // the actions call it with the data and a media type or `{ mediaType, fileName }`: a Playwright test attachment
   async attach(data, options = 'text/plain') {
     const { mediaType = 'text/plain', fileName = 'attachment' } =
       typeof options === 'string' ? { mediaType: options } : options

@@ -21,9 +21,9 @@ import { expect } from '@playwright/test'
 
 import { expectTimeout, readTimeout } from '../../config.js'
 
-// Element reads with the semantics the scenarios were written for (WebDriver), where they differ from Playwright:
-// the text is the rendered text of a displayed element only, attributes are read from DOM properties first,
-// and an element with `opacity: 0` (e.g. a notification in its enter transition) is not displayed
+// Element reads with the semantics the scenarios check, where they differ from Playwright's defaults: the text is the
+// rendered text of a displayed element only, attributes are read from DOM properties first, and an element with
+// `opacity: 0` (e.g. a notification in its enter transition) is not displayed
 
 const BOOLEAN_ATTRIBUTES = [
   'async',
@@ -353,7 +353,7 @@ export const getRect = locator =>
 export const scrollIntoView = (locator, options = { block: 'center', inline: 'nearest' }) =>
   locator.evaluate((element, options) => element.scrollIntoView(options), options)
 
-// types at the end of the current value, as WebDriver does when the element isn't focused yet
+// types at the end of the current value when the element isn't focused yet: the scenarios append to the value
 // (Playwright types at the caret, which is at the start after focusing)
 export const sendKeys = async (locator, value) => {
   await locator.evaluate(element => {
@@ -370,7 +370,7 @@ export const sendKeys = async (locator, value) => {
   await locator.pressSequentially(String(value))
 }
 
-// a disabled element is clicked as well, as WebDriver does (the browser ignores the click):
+// a disabled element is clicked as well (the browser ignores the click), Playwright would wait for it to be enabled:
 // the scenarios click disabled buttons to check that nothing happens
 // `options.timeout` - for all the waits of the click, not only for the click itself: a caller that retries the click
 // (e.g. an option of a menu that a re-render closes, MLF021) passes a short one, an element gone after it became
@@ -417,8 +417,8 @@ export const retryAssertion = async (assertion, timeout = expectTimeout) => {
   }
 }
 
-// Web-first assertions. A native locator assertion is used where its semantics are the same as the ones the scenarios
-// were written for (class, attribute presence, count, URL). A read that keeps the WebDriver semantics (the rendered
+// Web-first assertions. A native locator assertion is used where its semantics are the ones the scenarios check
+// (class, attribute presence, count, URL). A read with the semantics described at the top of this file (the rendered
 // text of a displayed element, a textarea value, the property-first attribute, `opacity: 0` is not displayed) is
 // retried with `expect.poll`: Playwright's `toHaveText` reads the text of a hidden element, the default text of a
 // textarea and normalizes the whitespace, `toBeVisible` treats `opacity: 0` as visible - each would pass a check the
@@ -444,17 +444,52 @@ export const pollOptions = (message, timeout = expectTimeout) => ({
 // `.not.toBe(...)` with it: `null` passes that
 export const readOrNull = read => () => read().catch(() => null)
 
-// the rendered text of a displayed element ("" when it is not displayed), `normalize` - compare with the whitespace
-// collapsed (the tooltips keep the line breaks of the text)
-export const pollText = (locator, { message, normalize = false, timeout } = {}) =>
-  expect.poll(
-    readOrNull(async () => {
-      const text = await getText(locator, { timeout: readTimeout })
+// the matchers of `expect.poll` (also after `.not`), a failure gets `note()` appended to its message
+const withFailureNote = (matchers, note) =>
+  new Proxy(matchers, {
+    get(target, property) {
+      const value = Reflect.get(target, property)
 
-      return normalize ? normalizeWhitespace(text) : text
-    }),
+      if (property === 'not') return withFailureNote(value, note)
+      if (typeof value !== 'function') return value
+
+      return (...args) =>
+        value.apply(target, args).catch(error => {
+          error.message += note()
+          throw error
+        })
+    }
+  })
+
+// the rendered text of a displayed element ("" when it is not displayed), `normalize` - compare with the whitespace
+// collapsed (the tooltips keep the line breaks of the text).
+// When the element is gone by the end of the poll (e.g. a notification hid itself while its wrong text was being
+// re-checked), the failure shows only `Received: null`: the last text read before is added to the message, it is the
+// actual reason of the failure (as in `retryAssertion`)
+export const pollText = (locator, { message, normalize = false, timeout } = {}) => {
+  let received = null
+  let lastText = null
+  const read = readOrNull(async () => {
+    const text = await getText(locator, { timeout: readTimeout })
+
+    return normalize ? normalizeWhitespace(text) : text
+  })
+  const matchers = expect.poll(
+    async () => {
+      received = await read()
+      if (received !== null) lastText = received
+
+      return received
+    },
     pollOptions(message, timeout)
   )
+
+  return withFailureNote(matchers, () =>
+    received === null && lastText !== null
+      ? `\n(the last text read before the element was gone: "${lastText}")`
+      : ''
+  )
+}
 
 export const expectText = (locator, expected, options = {}) =>
   pollText(locator, options).toBe(options.normalize ? normalizeWhitespace(expected) : expected)
@@ -465,6 +500,15 @@ export const pollAttribute = (locator, name, { message, timeout } = {}) =>
     readOrNull(() => getAttribute(locator, name, { timeout: readTimeout })),
     pollOptions(message, timeout)
   )
+
+// a list as a JS array literal, to paste into common-consts.js when the expected list is outdated
+const formatList = items =>
+  `[${items.map(item => (String(item).includes("'") ? JSON.stringify(item) : `'${item}'`)).join(', ')}]`
+
+// marks an expected list (in common-consts.js) whose order the app doesn't fix, e.g. the items come from the API in
+// the order of its response: it is compared by `expectListItems` without the order. Not enumerable: `toEqual` and the
+// spreading ignore it
+export const unordered = items => Object.defineProperty([...items], 'unordered', { value: true })
 
 // the same items, each as many times as expected (the order is not checked): the missing, extra and duplicated ones are
 // listed. A set comparison (every/difference) passed an item rendered twice
@@ -481,6 +525,21 @@ export const expectSameItems = (actual, expected, what) => {
 
   expect(
     { missing, extra: remaining },
-    `${what} differ from the expected ones: [${actual}], expected: [${expected}]`
+    `${what} differ from the expected ones, actual: ${formatList(actual)}, expected: ${formatList(expected)}`
   ).toEqual({ missing: [], extra: [] })
 }
+
+// the same items in the same order: a tab, a header or an option in a wrong place passed the check without the order.
+// The actual items are printed in the app's order, ready to be pasted into common-consts.js
+export const expectSameList = (actual, expected, what) =>
+  expect(
+    actual,
+    `${what} differ from the expected ones, actual (in the app's order): ${formatList(actual)}, ` +
+      `expected: ${formatList(expected)}`
+  ).toEqual([...expected])
+
+// in order, unless the expected list is marked `unordered`
+export const expectListItems = (actual, expected, what) =>
+  expected.unordered
+    ? expectSameItems(actual, expected, what)
+    : expectSameList(actual, expected, what)

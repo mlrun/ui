@@ -137,7 +137,6 @@ export default {
       '.select__item-main-label' // Option value
     )
   ),
-  No_Archived_Projects_Label: '.projects .projects__wrapper .projects-content .no-filtered-data',
   Search_Projects_Input: inputGroup(
     generateInputGroup('.projects__wrapper .projects-content-header .search-container')
   ),

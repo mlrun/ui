@@ -144,6 +144,7 @@ npm run test:regression:ci
 | `npm run test:regression:ci`     | The same for CI (`CI=true`): `.only` and flaky scenarios fail the run, no servers are reused, the report isn't served, the workers default to half of the CPUs, GitHub Actions annotations |
 | `npm run test:regression:failed` | The scenarios failed in the previous run (one worker)                                                                                                                                      |
 | `npm run test:regression:debug`  | Playwright UI mode against the dev server: pick scenarios, watch them step by step, time-travel                                                                                            |
+| `npm run test:defects`           | Defect injection: breaks the mock server on purpose (`tests/mockServer/defects.js`) and checks that the scenarios of each defect fail; `E2E_DEFECTS=name,...` - some of them               |
 | `npm run report:open`            | Open the Allure report: every attempt of a scenario with its error, screenshot and trace, history of runs                                                                                  |
 
 | Environment variable  | Description                                                                                                                                                                                            | Default                     |
@@ -171,6 +172,13 @@ and a browser, so runs in parallel exhaust the memory. Parallel runs (`E2E_WORKE
 from an interactive terminal (or on CI), a start from a script or an agent is refused. If another run is in progress, a
 person is asked whether to stop it (with its servers and browsers) and start the new one; a non-interactive start is
 refused until the running one ends. A lock of a dead process is taken over.
+
+Defect injection (`npm run test:defects`) proves that the scenarios catch a broken app: every defect of
+`tests/mockServer/defects.js` (a wrong counter, a missing source, a filter that is ignored, a failed deletion...) is
+injected into the mock server (`MOCK_DEFECT`) and its scenarios run against it, one at a time. Each must fail, a scenario
+that passes on the broken mock is a false pass ("MISSED", the run fails). The result is in `tests/reports/defects.json`.
+A defect must be visible in the UI: check that the UI shows the broken field (e.g. the UI keeps the sources of an artifact
+by name, a duplicated source isn't shown). Stop a running mock server first: the run starts its own, with the defect.
 
 ### Mock server
 

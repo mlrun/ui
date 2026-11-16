@@ -92,11 +92,11 @@ const selectOption = (page, actionMenu, option) =>
   }, 10000)
 
 // the same options in the same order (the previous check: the same length and every option equal by index)
-export const checkActionMenuOptions = async (page, actionMenu, values) =>
+export const checkActionMenuOptions = async (page, actionMenu, values, timeout) =>
   expect
     .poll(
       readOrNull(() => getOptionValues(page, actionMenu.options)),
-      pollOptions('Options of the action menu')
+      pollOptions('Options of the action menu', timeout)
     )
     .toEqual(values)
 

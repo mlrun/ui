@@ -27,7 +27,7 @@ import {
 import { getElementText, hoverComponent, readNonEmptyText } from './common.action.js'
 import {
   click,
-  expectSameItems,
+  expectListItems,
   expectText,
   getAttribute,
   getAttributes,
@@ -35,7 +35,6 @@ import {
   getText,
   getTexts,
   pollOptions,
-  pollText,
   readOrNull,
   retryAssertion,
   scrollIntoView,
@@ -76,10 +75,11 @@ const pollColumnValues = (page, table, columnName) =>
 export const isContainsValueInColumn = async (page, table, columnName, value) =>
   pollColumnValues(page, table, columnName).toContain(value)
 
-export const isContainsValueInHeaderColumn = async (page, table, columnName, value) =>
-  pollText(page.locator(table.headerSorters[columnName]).first(), {
+// the whole text of the header: "Runs" must not pass on "Runs (old)"
+export const isValueInHeaderColumn = async (page, table, columnName, value) =>
+  expectText(page.locator(table.headerSorters[columnName]).first(), value, {
     message: `Header of "${columnName}" column`
-  }).toContain(value)
+  })
 
 // a negative check passes on a table that isn't rendered yet, so the table must be loaded: it has rows, none of them with
 // the value, or there are no rows and the page shows that there is no data (the NoData block). One read, after the page
@@ -410,18 +410,6 @@ export const waitForRowIndexesByColumnValue = async (
   return indexes
 }
 
-export const findRowIndexesByColumnValueExpand = async (page, table, columnName, value) => {
-  const columnValues = await getColumnValues(page, table, columnName)
-
-  return columnValues.reduce((acc, currentValue, index) => {
-    if (currentValue === value) {
-      acc.push(index)
-    }
-
-    return acc
-  }, [])
-}
-
 export const findRowIndexesByColumnValueAttribute = async (page, table, columnName, value) => {
   const arr = await getColumnValuesAttribute(page, table, columnName)
   const indexes = []
@@ -476,33 +464,18 @@ export const findRowIndexesByColumnTooltipsValue = async (page, table, columnNam
 
   const rowsNumber = await getTableRows(page, table)
   for (let row = rowsNumber; row >= 1; row--) {
-    const temp = await getElementText(page, table.tableFields[columnName](row)['label'])
-    if (temp) {
-      if (temp === value) {
-        indexes.push(row)
-      }
-    } else {
-      const text = await readCellTooltip(page, table.tableFields[columnName](row))
-      if (text === value) {
-        indexes.push(row)
-      }
+    if ((await getCellLabelOrTooltip(page, table, columnName, row)) === value) {
+      indexes.push(row)
     }
   }
 
   return indexes.reverse()
 }
 
-export const openActionMenuByIndex = async (page, table, index) => {
-  if ((await page.locator(table.tableFields['action_menu'](index)).count()) === 0) {
-    const element = page.locator(table.tableFields['action_menu_button'](index)).first()
-
-    if (element) {
-      await click(element)
-
-      return table.tableFields['action_menu'](index)
-    }
-  }
-}
+// the label of the cell, or its tooltip when the label has no text (e.g. an icon)
+export const getCellLabelOrTooltip = async (page, table, columnName, row) =>
+  (await getElementText(page, table.tableFields[columnName](row)['label'])) ||
+  readCellTooltip(page, table.tableFields[columnName](row))
 
 export const getCellByIndexColumn = async (page, table, index, column) => {
   return await table.tableFields[column](index)
@@ -538,42 +511,16 @@ export const isTableColumnSorted = async (
     ).toBe(-1)
   })
 
+// the values in the order of the rows (the tabs, the headers), unless the expected list is `unordered`
 export const checkTableColumnValues = async (page, table, columnName, values) =>
   retryAssertion(async () => {
     const arr = await getColumnValues(page, table, columnName)
 
     expect(arr.length > 0, `"${columnName}" column has no values`).toBe(true)
-    expectSameItems(arr, values, `Values of "${columnName}" column`)
+    expectListItems(arr, values, `Values of "${columnName}" column`)
 
     return true
   })
-
-export const getRowsGeometry = async (page, table) => {
-  const rowsNumber = await getTableRows(page, table)
-  const result = []
-
-  for (let i = 1; i <= rowsNumber; i++) {
-    const rowRoot = page.locator(table.rowRoot(i)).first()
-    const position = await getRect(rowRoot)
-
-    result.push(position)
-  }
-
-  return result
-}
-
-export const getFieldsGeometry = async (page, table, column, attribute) => {
-  const rowsNumber = await getTableRows(page, table)
-  const result = []
-
-  for (let i = 1; i <= rowsNumber; i++) {
-    const rowRoot = page.locator(table.tableFields[column](i)).first()
-    const coord = await getRect(rowRoot)
-    result.push(coord)
-  }
-
-  return result
-}
 
 export const getNamedRowsGeometry = async (page, table, name = 'name') => {
   const rowsNumber = await getTableRows(page, table)

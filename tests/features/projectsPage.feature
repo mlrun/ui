@@ -82,7 +82,7 @@ Feature: Projects Page
         Then "Create_Button" element on "Create_New_Project" should contains "Create" value
         Then type into "Name_Input" on "Create_New_Project" popup dialog "default" value
         Then click on "Create_Button" element on "Create_New_Project" wizard
-        Then "Error_Message" component on "Create_New_Project" should be equal "Error_Messages"."Project_Already_Exists"
+        Then "Error_Message" component on "Create_New_Project" should be equal "Error_Messages"."Project_Already_Exists" with "default"
 
     @MLPr
     @passive
@@ -111,7 +111,7 @@ Feature: Projects Page
         Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "churn-project-admin" value in "name" column
         And wait load page
         Then verify if "Common_Popup" popup dialog appears
-        Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Project_Confirm_Message"
+        Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Project_Confirm_Message" with "churn-project-admin"
         Then verify "Cancel_Button" element visibility on "Common_Popup" wizard
         Then "Cancel_Button" element on "Common_Popup" should contains "Cancel" value
         Then verify "Delete_Button" element visibility on "Common_Popup" wizard
@@ -119,7 +119,7 @@ Feature: Projects Page
         Then click on "Delete_Button" element on "Common_Popup" wizard
         And wait load page
         Then verify if "Common_Popup" popup dialog appears
-        Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Project"
+        Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Project" with "churn-project-admin"
         Then click on "Cancel_Button" element on "Common_Popup" wizard
         And wait load page
         Then click on "New_Project_Button" element on "Projects" wizard
@@ -132,7 +132,6 @@ Feature: Projects Page
         When click on "Title" element on "Create_New_Project" wizard
         And wait load page
         Then click on "Create_Button" element on "Create_New_Project" wizard
-        Then wait for 4 seconds
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Project \"empty-project\" was created successfully" value
         And wait load page
@@ -144,7 +143,7 @@ Feature: Projects Page
         Then value in "name" column with "text" in "Projects_Table" on "Projects" wizard should contains "empty"
         Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "empty-project" value in "name" column
         Then verify if "Common_Popup" popup dialog appears
-        Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Project_Confirm_Message"
+        Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Project_Confirm_Message" with "empty-project"
         Then click on "Delete_Button" element on "Common_Popup" wizard
         And wait load page
         And select "Archived" tab in "Projects_Tab_Selector" on "Projects" wizard
@@ -328,7 +327,6 @@ Feature: Projects Page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         And select "Feature store" item in sidebar menu
         And wait load page
-        And wait load page
         Then verify breadcrumbs "tab" label should be equal "Feature sets" value
         And select "Datasets" item in sidebar menu
         And wait load page
@@ -370,7 +368,6 @@ Feature: Projects Page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         Then verify breadcrumbs "project" label should be equal "default" value
         Then navigate back
-        And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Artifacts_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Jobs_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
@@ -458,28 +455,24 @@ Feature: Projects Page
         And wait load page
         Then verify redirection to "projects/*/jobs-monitoring/jobs?state=running%2Cpending%2CpendingRetry%2Caborting&dates=anyTime&bePage=1&fePage=1"
         Then navigate back
-        And wait load page
         When click on "Counter_Failed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
         Then verify redirection to "projects/*/jobs-monitoring/jobs?state=error%2Caborted&dates=past24hours&bePage=1&fePage=1"
         Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then navigate back
-        And wait load page
         When click on "Counter_Completed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
         Then verify redirection to "projects/*/jobs-monitoring/jobs?state=completed&dates=past24hours&bePage=1&fePage=1"
         Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then navigate back
-        And wait load page
         When click on "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
         Then verify redirection to "projects/*/jobs-monitoring/jobs?state=all&dates=past24hours&bePage=1&fePage=1"
         Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then navigate back
-        And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
 
     @MLPr
@@ -518,27 +511,23 @@ Feature: Projects Page
         Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then navigate back
-        And wait load page
         When click on "Counter_Failed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
         And wait load page
         Then verify redirection to "projects/*/jobs-monitoring/workflows?state=error%2Cfailed&dates=past24hours"
         Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then navigate back
-        And wait load page
         When click on "Counter_Completed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
         And wait load page
         Then verify redirection to "projects/*/jobs-monitoring/workflows?state=completed&dates=past24hours"
         Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then navigate back
-        And wait load page
         When click on "Total_Counter_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
         Then verify redirection to "projects/*/jobs-monitoring/workflows?state=all&dates=past24hours"
         Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then navigate back
-        And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
 
     @MLPr
@@ -568,21 +557,18 @@ Feature: Projects Page
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         And wait load page
         Then navigate back
-        And wait load page
         When click on "Total_Workflows_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then verify redirection to "projects/*/jobs-monitoring/scheduled?type=workflow&dates=next24hours"
         Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         And wait load page
         Then navigate back
-        And wait load page
         When click on "Total_Job_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then verify redirection to "projects/*/jobs-monitoring/scheduled?type=job%2Cspark%2Cmpijob%2Cdask%2Cdatabricks&dates=next24hours"
         Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         And wait load page
         Then navigate back
-        And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
 
     @MLPr
@@ -617,28 +603,24 @@ Feature: Projects Page
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         And wait load page
         Then navigate back
-        And wait load page
         When click on "Total_Endpoint_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" wizard
         Then verify redirection to "projects/*/alerts-monitoring?entity-type=model-endpoint-result&bePage=1&fePage=1"
         Then verify breadcrumbs "cross" label should be equal "Alerts monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         And wait load page
         Then navigate back
-        And wait load page
         When click on "Total_Jobs_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" wizard
         Then verify redirection to "projects/*/alerts-monitoring?entity-type=job&bePage=1&fePage=1"
         Then verify breadcrumbs "cross" label should be equal "Alerts monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         And wait load page
         Then navigate back
-        And wait load page
         When click on "Total_Application_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" wizard
         Then verify redirection to "projects/*/alerts-monitoring?entity-type=model-monitoring-application&bePage=1&fePage=1"
         Then verify breadcrumbs "cross" label should be equal "Alerts monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         And wait load page
         Then navigate back
-        And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
 
     @MLPr
@@ -717,11 +699,12 @@ Feature: Projects Page
         And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Failed to fetch projects" value
-        # the popup appears after 3 minutes of failed retries; a single step can't wait > 60 s (the step timeout)
-        Then wait for 47 seconds
-        Then wait for 47 seconds
-        Then wait for 47 seconds
-        Then wait for 47 seconds
+        # the popup is shown after 3 minutes of failed retries, not before: the browser time is moved forward (the clock is
+        # fake, the @mlrunUnhealthyTest hook)
+        Then move the browser time forward by 170 seconds
+        And wait load page
+        Then verify "Message" element not exists on "MLRun_Unhealthy_PopUp" wizard
+        Then move the browser time forward by 15 seconds
         Then verify "Message" element visibility on "MLRun_Unhealthy_PopUp" wizard
         Then "Message" element on "MLRun_Unhealthy_PopUp" should contains "MLRun seems to be down. Try again in a few minutes." value
         And wait load page

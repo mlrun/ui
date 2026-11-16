@@ -321,32 +321,6 @@ const volumePathsTable = {
   }
 }
 
-const dataInputsInferenceTable = {
-  root: '.wizard-form__content [data-testid="dataInputs.dataInputsTable"]',
-  header: {},
-  body: {
-    row: {
-      root: '.form-table__row_excluded',
-      fields: {
-        checkbox: '[data-testid="form-field-checkbox"]',
-        name_verify: '.form-table__name-cell',
-        edit_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
-        apply_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
-        delete_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
-        discard_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
-        name_input: '.form-field-input input',
-        path_dropdown: {
-          componentType: dropdownComponent,
-          structure: generateDropdownGroup(
-            '.form-table__row_active .form-field-combobox',
-            '.form-field-combobox__select',
-            '.form-field-combobox__dropdown-list-option'
-          )
-        }
-      }
-    }
-  }
-}
 const dataInputsTable = {
   root: '.wizard-form__content [data-testid="dataInputs.dataInputsTable"]',
   header: {},
@@ -573,20 +547,6 @@ const runDetailsLabelsTable = {
   }
 }
 
-const checkboxCategorySelector = {
-  root: '.hub-filter .categories-list',
-  header: {},
-  body: {
-    row: {
-      root: '.category',
-      fields: {
-        name: '.form-field-checkbox label',
-        checkbox: '.form-field-checkbox input'
-      }
-    }
-  }
-}
-
 // Common components
 
 const commonCancelButton = '.pop-up-dialog button.pop-up-dialog__btn_cancel'
@@ -628,10 +588,6 @@ const commonFormText = '.form-text span'
 const commonFormSubtext = '.form-text div p'
 const commonScheduleButton = '.modal__content [data-testid="schedule-btn"]'
 const commonRunSaveButton = '.modal__content [data-testid="run-btn"]'
-
-const commonProjectFilterInput = inputGroup(
-  generateInputGroup('[data-testid="project-form-field-input"]', true, false, true)
-)
 
 const commonTableTreeFilterDropdown = dropdownComponent(
   generateDropdownGroup(
@@ -781,9 +737,7 @@ export default {
         )
       )
     },
-    Metrics_Selector_Counter: '[data-testid="metrics-selector-counter"]',
-    Metrics_Apply_Button: '[data-testid="metrics-selector-buttons"] .btn-primary',
-    Metrics_Clear_Button: '[data-testid="metrics-selector-buttons"] .btn-tertiary'
+    Metrics_Apply_Button: '[data-testid="metrics-selector-buttons"] .btn-primary'
   },
   modalTransitionPopup: {
     Title: '.table__item-popup .item-header__title > .tooltip-wrapper:first-of-type',
@@ -813,7 +767,6 @@ export default {
   modalWizardForm: {
     Title: '.modal .modal__header-title',
     Cross_Close_Button: '.modal .modal__header-button',
-    Preview_text: '.modal .modal__content .modal__header-preview-text',
     Wizard_Steps_Content: commonTable(wizardStepsContent),
     Function_Title: '.modal .modal__content h6.modal__header-sub-title',
     Function_Selection_Tabs: commonTable(functionSelectionTabs),
@@ -835,7 +788,6 @@ export default {
       Apply_Button: '.hub-filter .filters-wizard__modal-buttons .btn-primary'
     },
     Category_Selector_Dropdown: categorySelect,
-    Checkbox_Category_Selector: commonTable(checkboxCategorySelector),
     Overlay: '#overlay_container .chip-block-hidden .chip-block-hidden__scrollable-container',
     Hyperparameter_Checkbox: checkboxComponent({
       root: '#overlay_container .form-field-checkbox',
@@ -852,8 +804,6 @@ export default {
     Schedule_For_Later_Button: commonScheduleButton,
     Save_Button: commonRunSaveButton,
     Run_Button: commonRunSaveButton,
-    Infer_Now_Button: commonRunSaveButton,
-    Schedule_Infer_Button: commonScheduleButton,
     Run_Name_Input: inputGroup(
       generateInputGroup(
         '.form-row .form-field-input .form-field__wrapper',
@@ -920,11 +870,9 @@ export default {
     ),
     Method_Dropdown_Option:
       '.form-col-1:nth-of-type(3) .form-field-select .form-field__select span',
-    Method_Dropdown_Label: '[data-testid="runDetails.handler-form-label"]',
     Method_Dropdown_Label_Select: '[data-testid="runDetails.handler-form-select-label"]',
     Run_Details_Labels_Table: commonTable(runDetailsLabelsTable),
     Data_Inputs_Table: commonTable(dataInputsTable),
-    Data_Inputs_Inference_Table: commonTable(dataInputsInferenceTable),
     Parameters_Headers: commonTable(parametersHeaders),
     Parameters_Table: commonTable(parametersTable),
     Add_Custom_Parameter_Button:
@@ -1321,7 +1269,6 @@ export default {
     Form_Text: commonFormText,
     Form_Subtext: commonFormSubtext,
     Cross_Cancel_Button: commonCloseButton,
-    New_File_Info: '.form-text',
     New_File_Name_Input: inputGroup(commonNameInput),
     Tag_Input: inputGroup(commonTagInput),
     Register_Error_Message: commonRegisterErrorMessage,
@@ -1451,15 +1398,6 @@ export default {
   changeProjectOwnerPopup: {
     Cross_Cancel_Button: commonCrossCancelButton,
     Title: commonTitle,
-    Owner_Name: '.settings__owner .row-name',
-    Search_Input_Dropdown: dropdownComponent(
-      generateDropdownGroup(
-        '.pop-up-dialog .members-list',
-        '.input-wrapper .input', //open component subLocator
-        '.member-row', // options sublocator
-        '.member-name' // option name subLocator
-      )
-    ),
     Search_Input: inputWithAutocomplete({
       root: '.owner-table .search-input',
       elements: {
@@ -1628,7 +1566,6 @@ export default {
     Table_Label_Filter_Input: inputGroup(
       generateInputGroup('[data-testid="labels-form-field-input"]', true, false, 'svg')
     ),
-    Table_Project_Filter_Input: commonProjectFilterInput,
     Project_Name_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
         '#overlay_container [data-testid="pop-up-dialog"] [data-testid="project-form-field-select"]',
@@ -1929,8 +1866,7 @@ export default {
   notificationPopUp: {
     Title: '#overlay_container .notification__body',
     Notification_Pop_Up: '#overlay_container .notification__body',
-    Notification_Pop_Up_Cross_Close_Button: '#overlay_container .notification__button-close',
-    Retry_Button: '#overlay_container .notification__body .notification__body__button-retry'
+    Notification_Pop_Up_Cross_Close_Button: '#overlay_container .notification__button-close'
   },
   addTagPopup: {
     Add_Tag_Popup: '[data-testid="modal"]',
