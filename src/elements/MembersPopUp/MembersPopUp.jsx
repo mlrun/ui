@@ -133,7 +133,7 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
             member.modification !== DELETE_MODIFICATION &&
             (member.id === activeUsername ||
               (member.type === USER_GROUP_ROLE &&
-                membersData.activeUser.data?.attributes?.user_group_names?.has(member.id)))
+                membersData.activeUser.data?.attributes?.user_group_ids?.has(member.id)))
         )
 
         changeMembersCallback(userIsStillMember)

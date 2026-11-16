@@ -22,23 +22,33 @@ import { IS_MF_MODE } from '../constants'
 
 const WRITE_ROLES = ['Owner', 'Admin', 'Editor']
 
-export const getActiveUsername = async () => {
+const getActiveUserIdentities = async () => {
   const response = await projectsIguazioApi.getActiveUser()
-  return response.data.metadata?.username
+  const user = response.data
+  const identities = new Set([user.metadata?.username])
+
+  if (user.relationships) {
+    user.relationships.forEach(relationship => {
+      if (relationship['@type']?.includes('usergroup') && relationship.metadata?.id) {
+        identities.add(relationship.metadata.id)
+      }
+    })
+  }
+
+  return identities
 }
 
-export const checkProjectWriteAccess = async (projectName, activeUsername = null) => {
+export const checkProjectWriteAccess = async projectName => {
   if (IS_MF_MODE) {
-    if (!activeUsername) {
-      activeUsername = await getActiveUsername()
-    }
-
-    const policiesResponse = await projectsIguazioApi.getProjectPolicies(projectName)
+    const [identities, policiesResponse] = await Promise.all([
+      getActiveUserIdentities(),
+      projectsIguazioApi.getProjectPolicies(projectName)
+    ])
     const policies = policiesResponse.data.items || []
     return policies.some(
       policy =>
         WRITE_ROLES.includes(policy.spec.displayName) &&
-        policy.status?.assignedMembers?.some(member => member.id === activeUsername)
+        policy.status?.assignedMembers?.some(member => identities.has(member.id))
     )
   } else {
     return projectsIguazioApi
