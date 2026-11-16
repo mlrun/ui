@@ -49,7 +49,7 @@ export const getColumnValues = async (page, table, columnName) => {
 }
 
 export const getTableRows = async (page, table) => {
-  return page.locator(table.tableColumns[table.tableCulumnNames[0]]).count()
+  return page.locator(table.tableColumns[table.tableColumnNames[0]]).count()
 }
 
 // the number of rows once the table has at least one row: the per-row checks ("in every row ...") would check
@@ -58,7 +58,7 @@ export const waitForTableRows = async (page, table, timeout = expectTimeout) => 
   await expect
     .poll(() => getTableRows(page, table), {
       timeout,
-      message: `The table has no rows: ${table.tableColumns[table.tableCulumnNames[0]]}`
+      message: `The table has no rows: ${table.tableColumns[table.tableColumnNames[0]]}`
     })
     .toBeGreaterThan(0)
 
@@ -127,7 +127,7 @@ const getCellsTextWithChips = locator =>
     })
   )
 
-// "should contains" checks: by default EVERY value of the column must contain the substring (the column must have values),
+// "should contain" checks: by default EVERY value of the column must contain the substring (the column must have values),
 // as the steps verify the filtered tables. The previous check passed when a single row matched, so a filter that did
 // nothing passed as well. `atLeastOne` - for the tables whose rows differ by design (e.g. the status of one job)
 export const expectColumnValuesContain = (values, subString, columnName, atLeastOne = false) => {
@@ -215,7 +215,7 @@ export const isContainsSubstringInColumnDropdownCells = async (page, table, colu
       const options = await getOptionValues(page, table.tableFields[column](i).options)
       const chips = await getCellsTextWithChips(page.locator(table.tableFields[column](i).options))
 
-      // TODO: that is a workarround for collapsing labels dropdown
+      // TODO: that is a workaround for collapsing labels dropdown
       await selectOptionInDropdownWithoutCheck(page, table.tableFields[column](i), options[0])
       expect(
         chips.some(item => item.includes(subString)),

@@ -1107,7 +1107,7 @@ When(
 )
 
 Then(
-  'value in {string} column with {string} in {string} on {string} wizard should contains {string} in {string}',
+  'value in {string} column with {string} in {string} on {string} wizard should contain {string} in {string}',
   async function (column, type, table, wizard, substring, overlay) {
     // an unsupported type checked nothing: the step passed
     expect(['dropdowns'], `"${type}" type is not supported: dropdowns`).toContain(type)
@@ -1137,10 +1137,10 @@ Then(
   }
 )
 
-// "value in ... should contains" requires every value of the column to contain the substring; this one - at least one
+// "value in ... should contain" requires every value of the column to contain the substring; this one - at least one
 // value, for the tables whose rows differ by design (e.g. the status of the only aborted job among the other ones)
 Then(
-  'at least one value in {string} column with {string} in {string} on {string} wizard should contains {string}',
+  'at least one value in {string} column with {string} in {string} on {string} wizard should contain {string}',
   async function (column, type, table, wizard, substring) {
     const checks = {
       text: isContainsSubstringInColumnCells,
@@ -1155,7 +1155,7 @@ Then(
 )
 
 Then(
-  'value in {string} column with {string} in {string} on {string} wizard should contains {string}',
+  'value in {string} column with {string} in {string} on {string} wizard should contain {string}',
   async function (column, type, table, wizard, substring) {
     // an unsupported type checked nothing: the step passed
     expect(
@@ -1234,7 +1234,7 @@ const verifyRowActionMenuOptions = (
   })
 
 Then(
-  'verify options in action menu on {string} wizard in {string} table with {string} value in {string} column should contains {string}.{string}',
+  'verify options in action menu on {string} wizard in {string} table with {string} value in {string} column should contain {string}.{string}',
   async function (wizard, table, kindName, columnName, constWizard, constValue) {
     const tableObject = pageObjects[wizard][table]
 
@@ -1279,7 +1279,7 @@ const verifyActionMenuOptionsByValue = (page, table, value, column, values, scro
   )
 
 Then(
-  'verify action menu on {string} wizard in {string} table with {string} value in {string} column should contains {string}.{string}',
+  'verify action menu on {string} wizard in {string} table with {string} value in {string} column should contain {string}.{string}',
   async function (wizard, table, value, column, constWizard, constValue) {
     await verifyActionMenuOptionsByValue(
       this.page,
@@ -1293,7 +1293,7 @@ Then(
 )
 
 Then(
-  'verify action menu on {string} wizard in {string} table with {string} value in {string} column should contains {string}.{string} without scroll',
+  'verify action menu on {string} wizard in {string} table with {string} value in {string} column should contain {string}.{string} without scroll',
   async function (wizard, table, value, column, constWizard, constValue) {
     await verifyActionMenuOptionsByValue(
       this.page,
@@ -1400,7 +1400,7 @@ Then(
     await checkComponentHintTextWithHover(
       this.page,
       actionMenuSel,
-      pageObjects['commonPagesHeader']['Common_Tolltip'],
+      pageObjects['commonPagesHeader']['Common_Tooltip'],
       pageObjectsConsts[constStorage][constValue]
     )
   }
@@ -1416,10 +1416,10 @@ Then(
       value
     )
     const indx = arr[0]
-    const tabelCell = await getCellByIndexColumn(this.page, pageObjects[wizard][table], indx, kind)
+    const tableCell = await getCellByIndexColumn(this.page, pageObjects[wizard][table], indx, kind)
 
-    await hoverComponent(this.page, tabelCell['label'])
-    await verifyText(this.page, tabelCell['hint'], type)
+    await hoverComponent(this.page, tableCell['label'])
+    await verifyText(this.page, tableCell['hint'], type)
   }
 )
 
@@ -1624,7 +1624,7 @@ When(
 )
 
 When(
-  'add new rows to {string} table on {string} wizard using nontable inputs with notification pop-up',
+  'add new rows to {string} table on {string} wizard using nontable inputs with notification popup',
   async function (tableName, wizardName, dataTable) {
     const pageComponents = dataTable.raw()[0]
     const rows = dataTable.rows()
@@ -1660,11 +1660,11 @@ When(
           if (row[indx] === 'yes') {
             await waitForComponentAttached(
               this.page,
-              pageObjects['Notification_Popup']['Notification_Pop_Up_Cross_Close_Button']
+              pageObjects['Notification_Popup']['Notification_Popup_Cross_Close_Button']
             )
             await clickOnComponent(
               this.page,
-              pageObjects['Notification_Popup']['Notification_Pop_Up_Cross_Close_Button']
+              pageObjects['Notification_Popup']['Notification_Popup_Cross_Close_Button']
             )
           }
         }
@@ -1758,7 +1758,7 @@ Then(
       .poll(
         () =>
           this.page
-            .locator(table.tableColumns[table.tableCulumnNames[0]])
+            .locator(table.tableColumns[table.tableColumnNames[0]])
             .evaluateAll(
               cells =>
                 cells.filter(cell =>
@@ -1786,7 +1786,7 @@ Then(
 )
 
 Then(
-  'check {string} not presented in {string} on {string} wizard',
+  'check {string} not present in {string} on {string} wizard',
   async function (cellName, tableName, wizardName) {
     const rowsNumber = await waitForTableRows(this.page, pageObjects[wizardName][tableName])
 

@@ -124,13 +124,13 @@ to "Fixed".
 
 ### BUG-002 - The reason of a 403 is replaced by "You do not have a permission to view this data"
 
-|           |                                                                                                                                                                                                                          |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Scenario  | `MLPS008 - Verify Secrets table on Secrets tab` (`tests/features/projectSettings.feature`), step `"Error_Message" component on "Projects_Settings_Secret_Tab" should contains "Error_Messages"."MLRunAccessDeniedError"` |
-| Where     | Project settings -> Secrets -> add a secret whose key starts with `mlrun.` (and every other error notification of a 403 that shows the reason from the response)                                                         |
-| Component | `src/igz-controls/utils/common.util.js:124-126` (`getErrorMsg`, `commonErrorMessagesMap`, line 85-87)                                                                                                                    |
-| Found     | 2026-11-16, MLPS008 fails at this step on every run (3 of 3)                                                                                                                                                             |
-| Handled   | `@knownBug` (it shows up every time)                                                                                                                                                                                     |
+|           |                                                                                                                                                                                                                         |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Scenario  | `MLPS008 - Verify Secrets table on Secrets tab` (`tests/features/projectSettings.feature`), step `"Error_Message" component on "Projects_Settings_Secret_Tab" should contain "Error_Messages"."MLRunAccessDeniedError"` |
+| Where     | Project settings -> Secrets -> add a secret whose key starts with `mlrun.` (and every other error notification of a 403 that shows the reason from the response)                                                        |
+| Component | `src/igz-controls/utils/common.util.js:124-126` (`getErrorMsg`, `commonErrorMessagesMap`, line 85-87)                                                                                                                   |
+| Found     | 2026-11-16, MLPS008 fails at this step on every run (3 of 3)                                                                                                                                                            |
+| Handled   | `@knownBug` (it shows up every time)                                                                                                                                                                                    |
 
 #### What happens
 

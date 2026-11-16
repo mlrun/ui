@@ -26,7 +26,7 @@ export default {
   See_On_Github: 'header.header a[alt="MLRUN on Gihub"]',
   See_On_Slack: 'header.header a[alt="MLRUN on Slack"]',
   Common_Hint: '#overlay_container .tip',
-  Common_Tolltip: '#overlay_container .tooltip',
+  Common_Tooltip: '#overlay_container .tooltip',
   Common_Options: '#overlay_container .options-menu .options-menu__body',
   MLRun_Logo: '.header .header__logo',
   No_Data_Message: '.no-data-block h3',

@@ -448,7 +448,7 @@ export default {
     Running: 'Running',
     Failed_Tip: 'Error, Unhealthy',
     Failed_Jobs: 'Aborted, Error',
-    Failed_Worflows: 'Error, Failed',
+    Failed_Workflows: 'Error, Failed',
     Succeeded: 'Completed',
     Statistics_Tab_Tip:
       'Statistics reflect the data for the latest ingestion. \n Note that some values may be empty due to the use of different engines for calculating statistics',
@@ -692,12 +692,12 @@ export default {
   },
   Dropdown_Options: {
     // "latest" first (`getTagFilterOptions`), the tags of the project follow it (none here)
-    Tag_Filer_Options: ['latest', 'All tags'],
-    Tag_Filer_Options_Main_Table: ['latest'],
+    Tag_Filter_Options: ['latest', 'All tags'],
+    Tag_Filter_Options_Main_Table: ['latest'],
     // the tag filter lists the real tags of the project feature sets/vectors after "latest" and "All tags": the tags of
     // the shown rows first, then the other ones, each group in the order of the API response (FormTagFilter, no sort),
     // so the order isn't fixed by the app
-    Tag_Filer_Options_Feature_Sets_Default: unordered([
+    Tag_Filter_Options_Feature_Sets_Default: unordered([
       'latest',
       'All tags',
       'my-tag',
@@ -731,7 +731,7 @@ export default {
       '5',
       'aaa'
     ]),
-    Tag_Filer_Options_Feature_Vectors_Default: unordered(['latest', 'All tags', 'test-tag']),
+    Tag_Filter_Options_Feature_Vectors_Default: unordered(['latest', 'All tags', 'test-tag']),
     Entity_Type_Filter_Options: ['All', 'Job', 'Endpoint', 'Application', 'Infra'],
     Severity_Filter_Options: ['All', 'High', 'Medium', 'Low'],
     Event_Type_Filter_Options: [

@@ -53,7 +53,7 @@ export const openActionMenu = async (page, actionMenu) => {
 }
 
 // opens the menu unless it is open already: the open button toggles the menu, so a step that clicks it after a
-// previous step opened the menu (e.g. "dropdown element should contains" + "option is enabled") closes it
+// previous step opened the menu (e.g. "dropdown element should contain" + "option is enabled") closes it
 export const openActionMenuIfClosed = async (page, actionMenu) => {
   const isOpen = () => isActionMenuOpen(page, actionMenu)
 

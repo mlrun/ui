@@ -245,7 +245,7 @@ Then(
 )
 
 Then(
-  'type value {string} to {string} field on {string} wizard without inputgroup',
+  'type value {string} to {string} field on {string} wizard without input group',
   async function (value, inputField, wizard) {
     await typeValueWithoutInputgroup(this.page, pageObjects[wizard][inputField], value)
     await verifyTypedValueWithoutInputgroup(this.page, pageObjects[wizard][inputField], value)
@@ -427,7 +427,7 @@ Then(
 )
 
 Then(
-  'increase value on {int} points in {string} field on {string} on {string} wizard',
+  'increase value by {int} points in {string} field on {string} on {string} wizard',
   async function (value, inputField, accordion, wizard) {
     const txt = await getInputValue(this.page, pageObjects[wizard][accordion][inputField])
     const result = Number.parseInt(txt) + value
@@ -438,7 +438,7 @@ Then(
 )
 
 Then(
-  'increase value on {int} points in {string} field on {string} wizard',
+  'increase value by {int} points in {string} field on {string} wizard',
   async function (value, inputField, wizard) {
     const txt = await getInputValue(this.page, pageObjects[wizard][inputField])
     const result = Number.parseInt(txt) + value
@@ -464,7 +464,7 @@ const verifyNumberInputValue = (page, inputGroup, expected, unit) =>
   })
 
 Then(
-  'increase value on {int} points in {string} field with {string} on {string} on {string} wizard',
+  'increase value by {int} points in {string} field with {string} on {string} on {string} wizard',
   async function (value, inputField, unit, accordion, wizard) {
     const txt = await getInputValue(this.page, pageObjects[wizard][accordion][inputField])
     const unitValue = unit === 'cpu' ? value / 1000 : unit === 'millicpu' ? value * 100 : value
@@ -481,7 +481,7 @@ Then(
 )
 
 Then(
-  'decrease value on {int} points in {string} field on {string} on {string} wizard',
+  'decrease value by {int} points in {string} field on {string} on {string} wizard',
   async function (value, inputField, accordion, wizard) {
     const txt = await getInputValue(this.page, pageObjects[wizard][accordion][inputField])
     const result = Number.parseInt(txt) - value
@@ -492,7 +492,7 @@ Then(
 )
 
 Then(
-  'decrease value on {int} points in {string} field on {string} wizard',
+  'decrease value by {int} points in {string} field on {string} wizard',
   async function (value, inputField, wizard) {
     const txt = await getInputValue(this.page, pageObjects[wizard][inputField])
     const result = Number.parseInt(txt) - value
@@ -503,7 +503,7 @@ Then(
 )
 
 Then(
-  'decrease value on {int} points in {string} field with {string} on {string} on {string} wizard',
+  'decrease value by {int} points in {string} field with {string} on {string} on {string} wizard',
   async function (value, inputField, unit, accordion, wizard) {
     const txt = await getInputValue(this.page, pageObjects[wizard][accordion][inputField])
     const unitValue = unit === 'cpu' ? value / 1000 : unit === 'millicpu' ? value * 100 : value
@@ -531,7 +531,7 @@ Then(
 )
 
 Then(
-  '{string} component on {string} should contains {string}.{string}',
+  '{string} component on {string} should contain {string}.{string}',
   async function (component, wizard, constStorage, constValue) {
     await waitForComponentAttached(this.page, pageObjects[wizard][component])
     await verifyText(
@@ -544,10 +544,10 @@ Then(
 
 // the notifications are looked for among all the shown ones, see `verifyNotificationText`
 const isNotification = selector =>
-  selector === pageObjects['Notification_Popup']['Notification_Pop_Up']
+  selector === pageObjects['Notification_Popup']['Notification_Popup']
 
 Then(
-  '{string} element on {string} should contains {string} value',
+  '{string} element on {string} should contain {string} value',
   async function (component, wizard, value) {
     await waitForComponentAttached(this.page, pageObjects[wizard][component])
 
@@ -561,7 +561,7 @@ Then(
 
 // for a text that comes later than the default timeout allows (e.g. a background task that ends after a random time)
 Then(
-  '{string} element on {string} should contains {string} value within {int} seconds',
+  '{string} element on {string} should contain {string} value within {int} seconds',
   async function (component, wizard, value, seconds) {
     if (isNotification(pageObjects[wizard][component])) {
       // a wait: the scenarios check the notification after it (`mark: false`)
@@ -579,14 +579,14 @@ Then(
 )
 
 Then(
-  '{string} element in {string} on {string} should contains {string} value',
+  '{string} element in {string} on {string} should contain {string} value',
   async function (component, accordion, wizard, value) {
     await verifyText(this.page, pageObjects[wizard][accordion][component], value)
   }
 )
 
 Then(
-  '{string} element in {string} on {string} should contains {string} attribute value',
+  '{string} element in {string} on {string} should contain {string} attribute value',
   async function (component, accordion, wizard, value) {
     await verifyComponentContainsAttributeValue(
       this.page,
@@ -598,7 +598,7 @@ Then(
 )
 
 Then(
-  '{string} element on {string} should contains {string} attribute value',
+  '{string} element on {string} should contain {string} attribute value',
   async function (component, wizard, value) {
     await verifyComponentContainsAttributeValue(
       this.page,
@@ -687,7 +687,7 @@ Then(
 )
 
 Then(
-  '{string} component in {string} on {string} should contains {string}.{string}',
+  '{string} component in {string} on {string} should contain {string}.{string}',
   async function (component, accordion, wizard, constStorage, constValue) {
     await waitForComponentAttached(this.page, pageObjects[wizard][accordion][component])
     await verifyText(
@@ -831,7 +831,7 @@ Then(
 )
 
 Then(
-  'verify {string} element in {string} on {string} wizard should contains {string}.{string}',
+  'verify {string} element in {string} on {string} wizard should contain {string}.{string}',
   async function (dropdown, accordion, wizard, constStorage, constValue) {
     await openDropdown(this.page, pageObjects[wizard][accordion][dropdown])
     await checkDropdownOptions(
@@ -845,7 +845,7 @@ Then(
 )
 
 Then(
-  'verify {string} dropdown element on {string} wizard should contains {string}.{string}',
+  'verify {string} dropdown element on {string} wizard should contain {string}.{string}',
   async function (dropdownName, wizardName, constStorage, constValue) {
     await openDropdown(this.page, pageObjects[wizardName][dropdownName])
     await checkDropdownContainsOptions(
@@ -880,12 +880,15 @@ Then(
   }
 )
 
-Then('verify {string} element not exists on {string} wizard', async function (component, wizard) {
-  await componentIsNotPresent(this.page, pageObjects[wizard][component])
-})
+Then(
+  'verify {string} element does not exist on {string} wizard',
+  async function (component, wizard) {
+    await componentIsNotPresent(this.page, pageObjects[wizard][component])
+  }
+)
 
 Then(
-  'verify {string} element not exists in {string} on {string} wizard',
+  'verify {string} element does not exist in {string} on {string} wizard',
   async function (component, accordion, wizard) {
     await componentIsNotPresent(this.page, pageObjects[wizard][accordion][component])
   }
@@ -969,7 +972,7 @@ Then(
 )
 
 Then(
-  'verify {string} on {string} wizard should contains {string}.{string}',
+  'verify {string} on {string} wizard should contain {string}.{string}',
   async function (tabSelector, wizard, constWizard, constValue) {
     const compareResult = await checkTableColumnValues(
       this.page,
@@ -1015,7 +1018,7 @@ Then(
     await checkHintTextWithHover(
       this.page,
       pageObjects[wizard][accordion][inputField],
-      pageObjects['commonPagesHeader']['Common_Tolltip'],
+      pageObjects['commonPagesHeader']['Common_Tooltip'],
       pageObjectsConsts[constStorage][constValue]
     )
   }
@@ -1027,7 +1030,7 @@ Then(
     await checkComponentHintTextWithHover(
       this.page,
       pageObjects[wizard][inputField],
-      pageObjects['commonPagesHeader']['Common_Tolltip'],
+      pageObjects['commonPagesHeader']['Common_Tooltip'],
       pageObjectsConsts[constStorage][constValue]
     )
   }
@@ -1051,7 +1054,7 @@ Then(
     await checkComponentHintTextWithHover(
       this.page,
       pageObjects[wizard][accordion][inputField],
-      pageObjects['commonPagesHeader']['Common_Tolltip'],
+      pageObjects['commonPagesHeader']['Common_Tooltip'],
       pageObjectsConsts[constStorage][constValue]
     )
   }
@@ -1216,7 +1219,7 @@ When('select {string} in {string} on {string}', async function (radiobutton, acc
 })
 
 Then(
-  'verify options in {string} combobox in {string} on {string} wizard should contains {string}.{string}',
+  'verify options in {string} combobox in {string} on {string} wizard should contain {string}.{string}',
   async function (combobox, accordion, wizard, constStorage, constValue) {
     await openDropdown(this.page, pageObjects[wizard][accordion][combobox]['dropdown'])
     await checkDropdownOptions(
@@ -1291,7 +1294,7 @@ Then(
   }
 )
 
-Then('check that {string} file is existed on {string} directory', async function (file, filePath) {
+Then('check that {string} file exists on {string} directory', async function (file, filePath) {
   // `filePath` is the browser's downloads folder: the downloads of the scenario are saved to its output directory
   const path = await generatePath(file, this.downloads)
 
@@ -1354,20 +1357,20 @@ Then(
 )
 
 Then(
-  'verify {string} input should contains {string} value on {string} wizard',
+  'verify {string} input should contain {string} value on {string} wizard',
   async function (component, value, wizard) {
     await verifyTypedValue(this.page, pageObjects[wizard][component], value)
   }
 )
 Then(
-  'verify {string} input should contains {string} placeholder value on {string} wizard',
+  'verify {string} input should contain {string} placeholder value on {string} wizard',
   async function (component, value, wizard) {
     await verifyPlaceholder(this.page, pageObjects[wizard][component], value)
   }
 )
 
 Then(
-  'verify {string} input should contains {string} value in {string} on {string} wizard',
+  'verify {string} input should contain {string} value in {string} on {string} wizard',
   async function (component, value, accordion, wizard) {
     await verifyTypedValue(this.page, pageObjects[wizard][accordion][component], value)
   }

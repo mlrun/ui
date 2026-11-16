@@ -513,8 +513,8 @@ export default {
       generateCheckboxGroup('.feature-set-panel .panel-title .checkbox', true, false, true)
     ),
     Passthrough_Checkbox_State: '.feature-set-panel .panel-title .checkbox',
-    Passthrough_PopUp_Dialog: {
-      Dialog_PopUp: '#overlay_container .pop-up-dialog',
+    Passthrough_Popup_Dialog: {
+      Dialog_Popup: '#overlay_container .pop-up-dialog',
       Close_Button: '.pop-up-dialog .pop-up-dialog__header .pop-up-dialog__btn_close',
       Dialog_Message: '.pop-up-dialog .confirm-dialog__message',
       Unset_Online_Target_Button: '.pop-up-dialog .confirm-dialog__btn-container .btn-primary'
@@ -928,7 +928,7 @@ export default {
       Volume_Paths_Table_Container_Input: inputGroup(resourcesTableCommonInput(3, 2, 1)),
       Volume_Paths_Table_Config_Map_Input: inputGroup(resourcesTableCommonInput(3, 2, 1)),
       Volume_Paths_Table_Secret_Name_Input: inputGroup(resourcesTableCommonInput(3, 2, 1)),
-      Volume_Paths_Table_Claime_Name_Input: inputGroup(resourcesTableCommonInput(3, 2, 1)),
+      Volume_Paths_Table_Claim_Name_Input: inputGroup(resourcesTableCommonInput(3, 2, 1)),
       Volume_Paths_Table_Access_Key_Input: inputGroup(resourcesTableCommonInput(3, 2, 2)),
       Volume_Paths_Table_Resource_Path_Input: inputGroup(resourcesTableCommonInput(3, 3, 1)),
       Edit_Volume_Name_Input: inputGroup(
@@ -1188,7 +1188,7 @@ export default {
       Volume_Paths_Table_Container_Input: inputGroup(resourcesTableCommonInput(3, 2, 1)),
       Volume_Paths_Table_Config_Map_Input: inputGroup(resourcesTableCommonInput(3, 2, 1)),
       Volume_Paths_Table_Secret_Name_Input: inputGroup(resourcesTableCommonInput(3, 2, 1)),
-      Volume_Paths_Table_Claime_Name_Input: inputGroup(resourcesTableCommonInput(3, 2, 1)),
+      Volume_Paths_Table_Claim_Name_Input: inputGroup(resourcesTableCommonInput(3, 2, 1)),
       Volume_Paths_Table_Access_Key_Input: inputGroup(resourcesTableCommonInput(3, 2, 2)),
       Volume_Paths_Table_Resource_Path_Input: inputGroup(resourcesTableCommonInput(3, 3, 1)),
       Edit_Volume_Name_Input: inputGroup(

@@ -29,13 +29,13 @@ Feature: Documents Page
     Then verify "Table_FilterBy_Button" element visibility on "Documents" wizard
     Then verify "Table_FilterBy_Button" element on "Documents" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
     Then click on "Table_FilterBy_Button" element on "Documents" wizard
-    Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+    Then "Title" element on "FilterBy_Popup" should contain "Filter by" value
     Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
     Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
-    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options_Main_Table"
+    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contain "Dropdown_Options"."Tag_Filter_Options_Main_Table"
     Then click on "Title" element on "FilterBy_Popup" wizard
     Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
-    Then "Checkbox_Label" element on "FilterBy_Popup" should contains "Show best iteration only" value
+    Then "Checkbox_Label" element on "FilterBy_Popup" should contain "Show best iteration only" value
     Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
     Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
     Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
@@ -52,9 +52,9 @@ Feature: Documents Page
     Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
     Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
     Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
-    Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
+    Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contain "1" value
     Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
-    Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 8" value
+    Then "Pagination_Count" element on "Pagination_Info_Pane" should contain "Showing 1 - 8" value
     When click on cell with row index 1 in "name" column in "Documents_Table" table on "Documents" wizard
     And wait load page
     Then verify "BE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
@@ -66,16 +66,16 @@ Feature: Documents Page
     Then verify "FE_Pagination_Navigate_Prev" element visibility on "Pagination_Info_Pane" wizard
     Then verify "FE_Pagination_Navigate_Prev" element on "Pagination_Info_Pane" wizard is disabled
     Then verify "Pagination_Page_Number" element visibility on "Pagination_Info_Pane" wizard
-    Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contains "1" value
+    Then "Pagination_Page_Number" element on "Pagination_Info_Pane" should contain "1" value
     Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
-    Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 8" value
+    Then "Pagination_Count" element on "Pagination_Info_Pane" should contain "Showing 1 - 8" value
     Then select "cat-vs-dog-classification" project in sidebar project dropdown
     And wait load page
     Then verify breadcrumbs "project" label should be equal "cat-vs-dog-classification" value
     And wait load page
     Then verify breadcrumbs "project" label should be equal "cat-vs-dog-classification" value
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-    Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Documents_data"
+    Then "No_Data_Message" component on "commonPagesHeader" should contain "No_Data_Message"."No_Documents_data"
     Then select "default" project in sidebar project dropdown
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
@@ -98,7 +98,7 @@ Feature: Documents Page
     Then click on "Table_FilterBy_Button" element on "Documents" wizard
     Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
     Then "Show_Iterations_Checkbox" element should be checked on "FilterBy_Popup" wizard
-    Then check "expand_btn" not presented in "Datasets_Table" on "Datasets" wizard
+    Then check "expand_btn" not present in "Datasets_Table" on "Datasets" wizard
     Then uncheck "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
@@ -114,7 +114,7 @@ Feature: Documents Page
     Then check "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then verify "Header" element not exists on "Documents_Info_Pane" wizard
+    Then verify "Header" element does not exist on "Documents_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "Documents" wizard
     Then "Show_Iterations_Checkbox" element should be checked on "FilterBy_Popup" wizard
 
@@ -129,33 +129,33 @@ Feature: Documents Page
     And wait load page
     When click on cell with row index 1 in "name" column in "Documents_Table" table on "Documents" wizard
     And wait load page
-    Then verify "Info_Pane_Tab_Selector" on "Documents_Info_Pane" wizard should contains "Documents_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Documents_Info_Pane" wizard should contain "Documents_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Documents_Info_Pane" wizard
     Then verify "Header" element visibility on "Documents_Info_Pane" wizard
     Then verify "Updated" element visibility on "Documents_Info_Pane" wizard
     Then verify "Action_Menu" element visibility on "Documents_Info_Pane" wizard
-    Then verify "Action_Menu" dropdown element on "Documents_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
+    Then verify "Action_Menu" dropdown element on "Documents_Info_Pane" wizard should contain "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Documents_Info_Pane" wizard
     And wait load page
-    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
-    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
-    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then verify "Header_Download_Popup" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Popup" element on "Downloads_Popup" should contain "Downloads" value
+    Then click on "Download_Popup_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then verify "Full_View_Button" element visibility on "Documents_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Documents_Info_Pane" wizard
-    Then verify "Overview_General_Headers" on "Documents_Info_Pane" wizard should contains "Documents_Info_Pane"."Overview_General_Headers"
-    Then verify "Overview_Producer_Headers" on "Documents_Info_Pane" wizard should contains "Documents_Info_Pane"."Overview_Producer_Headers"
+    Then verify "Overview_General_Headers" on "Documents_Info_Pane" wizard should contain "Documents_Info_Pane"."Overview_General_Headers"
+    Then verify "Overview_Producer_Headers" on "Documents_Info_Pane" wizard should contain "Documents_Info_Pane"."Overview_Producer_Headers"
     And hover "Overview_Hash_Header" component on "Documents_Info_Pane" wizard
     Then verify "Overview_Hash_Header" on "Documents_Info_Pane" wizard should display "Label_Hint"."Overview_Hash"
     Then verify "Overview_UID_Header" on "Documents_Info_Pane" wizard should display "Label_Hint"."Overview_UID"
     Then click on "Full_View_Button" element on "Documents_Info_Pane" wizard
-    Then verify "Cross_Close_Button" element not exists on "Documents_Info_Pane" wizard
-    Then click on "Tabel_View_Button" element on "Documents_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element does not exist on "Documents_Info_Pane" wizard
+    Then click on "Table_View_Button" element on "Documents_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Documents_Info_Pane" wizard
   
   @MLDoc
@@ -172,7 +172,7 @@ Feature: Documents Page
     Then type value "doc" to "Table_Name_Filter_Input" field on "Documents" wizard
     Then click on "Table_Refresh_Button" element on "Documents" wizard
     And wait load page
-    Then value in "name" column with "text" in "Documents_Table" on "Documents" wizard should contains "doc"
+    Then value in "name" column with "text" in "Documents_Table" on "Documents" wizard should contain "doc"
   
   @MLDoc
   @smoke
@@ -189,18 +189,18 @@ Feature: Documents Page
     Then type value "kind" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then at least one value in "labels" column with "attribute" in "Documents_Table" on "Documents" wizard should contains "kind"
+    Then at least one value in "labels" column with "attribute" in "Documents_Table" on "Documents" wizard should contain "kind"
     Then click on "Table_FilterBy_Button" element on "Documents" wizard
     Then type value "kind=milvus" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then value in "labels" column with "attribute_list" in "Documents_Table" on "Documents" wizard should contains "kind,milvus"
+    Then value in "labels" column with "attribute_list" in "Documents_Table" on "Documents" wizard should contain "kind,milvus"
     Then click on "Table_FilterBy_Button" element on "Documents" wizard
     Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-    Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Datasets_data"
+    Then "No_Data_Message" component on "commonPagesHeader" should contain "No_Data_Message"."No_Datasets_data"
   
   @MLDoc
   @smoke
@@ -211,18 +211,18 @@ Feature: Documents Page
     And wait load page
     And select "Documents" item in sidebar menu
     And wait load page
-    Then verify action menu on "Documents" wizard in "Documents_Table" table with "anxujkpvfi" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then verify action menu on "Documents" wizard in "Documents_Table" table with "anxujkpvfi" value in "name" column should contain "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Documents" wizard in "Documents_Table" table at row with "anxujkpvfi" value in "name" column
     And wait load page
-    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
-    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
-    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then verify "Header_Download_Popup" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Popup" element on "Downloads_Popup" should contain "Downloads" value
+    Then click on "Download_Popup_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then select "View YAML" option in action menu on "Documents" wizard in "Documents_Table" table at row with "anxujkpvfi" value in "name" column
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard

@@ -977,7 +977,7 @@ export default {
           '.form-field__warning svg'
         )
       ),
-      Volume_Paths_Table_Claime_Name_Input: inputGroup(
+      Volume_Paths_Table_Claim_Name_Input: inputGroup(
         generateInputGroup(
           '.form-table__volume-row .form-table__volume-cell:nth-of-type(4) .form-field__wrapper',
           true,
@@ -1216,7 +1216,7 @@ export default {
       }
     })
   },
-  mLRunUnhealthyPopUp: {
+  mLRunUnhealthyPopup: {
     Message: '[data-testid="pop-up-dialog"]'
   },
   registerDataset: {
@@ -1857,16 +1857,16 @@ export default {
     Clear_Button: '[data-testid="filter-clear-btn"]',
     Apply_Button: '[data-testid="filter-apply-btn"]'
   },
-  downloadsPopUp: {
-    Download_Pop_Up: '[data-testid="download-container"]',
-    Download_Pop_Up_Cross_Cancel_Button:
+  downloadsPopup: {
+    Download_Popup: '[data-testid="download-container"]',
+    Download_Popup_Cross_Cancel_Button:
       '[data-testid="download-container"] .notification__button-close',
-    Header_Download_Pop_Up: '[data-testid="download-container"] .download-container__header'
+    Header_Download_Popup: '[data-testid="download-container"] .download-container__header'
   },
-  notificationPopUp: {
+  notificationPopup: {
     Title: '#overlay_container .notification__body',
-    Notification_Pop_Up: '#overlay_container .notification__body',
-    Notification_Pop_Up_Cross_Close_Button: '#overlay_container .notification__button-close'
+    Notification_Popup: '#overlay_container .notification__body',
+    Notification_Popup_Cross_Close_Button: '#overlay_container .notification__button-close'
   },
   addTagPopup: {
     Add_Tag_Popup: '[data-testid="modal"]',
@@ -1901,7 +1901,7 @@ export default {
     Cancel_Button:
       '[data-testid="pop-up-dialog"] .confirm-dialog__btn-container .pop-up-dialog__btn_cancel'
   },
-  schedulePopUp: {
+  schedulePopup: {
     Schedule_For_Later: {
       Schedule_Button: '.schedule-wizard .modal__footer-actions .btn-primary',
       Time_unit_Dropdown: dropdownComponent(

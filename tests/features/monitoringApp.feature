@@ -28,7 +28,7 @@ Feature: Monitoring app Page
     And wait load page
     Then verify "Date_Picker_Filter_Dropdown" element visibility on "Monitoring_App" wizard
     Then verify "Date_Picker_Filter_Dropdown" dropdown on "Monitoring_App" wizard selected option value "Past 24 hours"
-    Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Monitoring_App" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options_Monitoring_App"
+    Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Monitoring_App" wizard should contain "Dropdown_Options"."Date_Picker_Filter_Options_Monitoring_App"
     Then verify "Refresh_Button" element visibility on "Monitoring_App" wizard
     Then verify "Refresh_Button" element on "Monitoring_App" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
     When select "Past hour" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Monitoring_App" wizard
@@ -57,32 +57,32 @@ Feature: Monitoring app Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     Then verify "Applications_Stats_Title" element visibility on "Monitoring_App" wizard
-    Then "Applications_Stats_Title" element on "Monitoring_App" should contains "Applications" value
+    Then "Applications_Stats_Title" element on "Monitoring_App" should contain "Applications" value
     Then verify "Applications_Stats_Counter" element visibility on "Monitoring_App" wizard
     Then verify "Apps_Status_Title" element visibility on "Monitoring_App" wizard
-    Then "Apps_Status_Title" element on "Monitoring_App" should contains "Apps status" value
+    Then "Apps_Status_Title" element on "Monitoring_App" should contain "Apps status" value
     Then verify "Apps_Status_Running_SubTitle" element visibility on "Monitoring_App" wizard
-    Then "Apps_Status_Running_SubTitle" element on "Monitoring_App" should contains "Running" value
+    Then "Apps_Status_Running_SubTitle" element on "Monitoring_App" should contain "Running" value
     Then verify "Apps_Status_Running_Counter" element visibility on "Monitoring_App" wizard
     Then verify "Apps_Status_Running_Tip" element visibility on "Monitoring_App" wizard
     Then verify "Apps_Status_Running_Tip" element on "Monitoring_App" wizard should display hover tooltip "Common_Tooltips"."Running"
     Then verify "Apps_Status_Failed_SubTitle" element visibility on "Monitoring_App" wizard
-    Then "Apps_Status_Failed_SubTitle" element on "Monitoring_App" should contains "Failed" value
+    Then "Apps_Status_Failed_SubTitle" element on "Monitoring_App" should contain "Failed" value
     Then verify "Apps_Status_Failed_Counter" element visibility on "Monitoring_App" wizard
     Then verify "Apps_Status_Failed_Tip" element visibility on "Monitoring_App" wizard
     Then verify "Apps_Status_Failed_Tip" element on "Monitoring_App" wizard should display hover tooltip "Common_Tooltips"."Failed_Tip"
     Then verify "Endpoints_Stats_Title" element visibility on "Monitoring_App" wizard
-    Then "Endpoints_Stats_Title" element on "Monitoring_App" should contains "Endpoints" value
+    Then "Endpoints_Stats_Title" element on "Monitoring_App" should contain "Endpoints" value
     Then verify "Endpoints_Batch_SubTitle" element visibility on "Monitoring_App" wizard
-    Then "Endpoints_Batch_SubTitle" element on "Monitoring_App" should contains "Batch" value
+    Then "Endpoints_Batch_SubTitle" element on "Monitoring_App" should contain "Batch" value
     Then verify "Endpoints_Batch_Counter" element visibility on "Monitoring_App" wizard
     Then verify "Endpoints_RealTime_SubTitle" element visibility on "Monitoring_App" wizard
-    Then "Endpoints_RealTime_SubTitle" element on "Monitoring_App" should contains "Real-time" value
+    Then "Endpoints_RealTime_SubTitle" element on "Monitoring_App" should contain "Real-time" value
     Then verify "Endpoints_RealTime_Counter" element visibility on "Monitoring_App" wizard
     Then verify "RunningFrequency_Stats_Title" element visibility on "Monitoring_App" wizard
-    Then "RunningFrequency_Stats_Title" element on "Monitoring_App" should contains "Running interval" value
+    Then "RunningFrequency_Stats_Title" element on "Monitoring_App" should contain "Running interval" value
     Then verify "RunningFrequency_Value_Title" element visibility on "Monitoring_App" wizard
-    Then "RunningFrequency_Value_Title" element on "Monitoring_App" should contains "Every 10 minutes" value
+    Then "RunningFrequency_Value_Title" element on "Monitoring_App" should contain "Every 10 minutes" value
 
   @MLMA
   @smoke
@@ -98,12 +98,12 @@ Feature: Monitoring app Page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
     Then verify "Model_Endpoint_Detections_Title" element visibility on "Monitoring_App" wizard
-    Then "Model_Endpoint_Detections_Title" element on "Monitoring_App" should contains "Model endpoints with suspected/detected issue" value
+    Then "Model_Endpoint_Detections_Title" element on "Monitoring_App" should contain "Model endpoints with suspected/detected issue" value
     Then verify "Model_Endpoint_Detections_Tip" element visibility on "Monitoring_App" wizard
     Then verify "Model_Endpoint_Detections_Tip" element on "Monitoring_App" wizard should display hover hint "Label_Hint"."Model_Endpoint_With_Detections"
     Then verify "Model_Endpoint_Detections_Chart" element visibility on "Monitoring_App" wizard
     Then verify "Operating_Functions_Title" element visibility on "Monitoring_App" wizard
-    Then "Operating_Functions_Title" element on "Monitoring_App" should contains "System functions" value
+    Then "Operating_Functions_Title" element on "Monitoring_App" should contain "System functions" value
     Then verify "Operating_Functions_Tip" element visibility on "Monitoring_App" wizard
     Then verify "Operating_Functions_Tip" element on "Monitoring_App" wizard should display hover hint "Label_Hint"."Operating_Functions"
     Then verify "Operating_Functions_Table" element visibility on "Monitoring_App" wizard
@@ -126,7 +126,7 @@ Feature: Monitoring app Page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
     Then verify "All_Applications_Title" element visibility on "Monitoring_App" wizard
-    Then "All_Applications_Title" element on "Monitoring_App" should contains "All applications" value
+    Then "All_Applications_Title" element on "Monitoring_App" should contain "All applications" value
     Then verify "All_Applications_Table" element visibility on "Monitoring_App" wizard
     When scroll to the "All_Applications_Title" element on "Monitoring_App" wizard
     Then verify "All_Applications_Lag_Tip" element visibility on "Monitoring_App" wizard
@@ -138,12 +138,12 @@ Feature: Monitoring app Page
     Then click on "open_metrics" option on "Monitoring_App" wizard in "All_Applications_Table" table with "monitorAppV1" value in "name" column with scroll "false"
     And wait load page
     Then verify "Application_Monitoring_Button" element visibility on "Application_Metrics" wizard
-    Then "Application_Monitoring_Button" element on "Application_Metrics" should contains "Application monitoring" value
+    Then "Application_Monitoring_Button" element on "Application_Metrics" should contain "Application monitoring" value
     Then navigate back
     Then click on cell with value "monitorAppV1" in "name" column in "All_Applications_Table" table on "Monitoring_App" wizard
     And wait load page
     Then verify "Application_Metrics_Button" element visibility on "Application_Monitoring" wizard
-    Then "Application_Metrics_Button" element on "Application_Monitoring" should contains "Application metrics" value
+    Then "Application_Metrics_Button" element on "Application_Monitoring" should contain "Application metrics" value
 
   @MLMA
   @smoke
@@ -160,7 +160,7 @@ Feature: Monitoring app Page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
     Then verify "All_Applications_Title" element visibility on "Monitoring_App" wizard
-    Then "All_Applications_Title" element on "Monitoring_App" should contains "All applications" value
+    Then "All_Applications_Title" element on "Monitoring_App" should contain "All applications" value
     Then click on cell with value "monitorAppV2" in "name" column in "All_Applications_Table" table on "Monitoring_App" wizard
     And wait load page
     Then verify "Back_Button" element visibility on "Application_Monitoring" wizard
@@ -168,14 +168,14 @@ Feature: Monitoring app Page
     Then click on "Back_Button" element on "Application_Monitoring" wizard
     And wait load page
     Then verify "All_Applications_Title" element visibility on "Monitoring_App" wizard
-    Then "All_Applications_Title" element on "Monitoring_App" should contains "All applications" value
+    Then "All_Applications_Title" element on "Monitoring_App" should contain "All applications" value
     Then click on cell with value "monitorAppV2" in "name" column in "All_Applications_Table" table on "Monitoring_App" wizard
     And wait load page
     Then verify "Application_Name" element visibility on "Application_Monitoring" wizard
-    Then "Application_Name" element on "Application_Monitoring" should contains "monitorAppV2" value
+    Then "Application_Name" element on "Application_Monitoring" should contain "monitorAppV2" value
     Then verify "Date_Picker_Filter_Dropdown" element visibility on "Application_Monitoring" wizard
     Then verify "Date_Picker_Filter_Dropdown" dropdown on "Application_Monitoring" wizard selected option value "Past 24 hours"
-    Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Application_Monitoring" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options_Monitoring_App"
+    Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Application_Monitoring" wizard should contain "Dropdown_Options"."Date_Picker_Filter_Options_Monitoring_App"
     When select "Past hour" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Application_Monitoring" wizard
     And wait load page
     Then verify "Date_Picker_Filter_Dropdown" dropdown on "Application_Monitoring" wizard selected option value "Past hour"
@@ -186,15 +186,15 @@ Feature: Monitoring app Page
     And wait load page
     Then verify "Date_Picker_Filter_Dropdown" dropdown on "Application_Monitoring" wizard selected option value "Past month"
     Then verify "Application_Metrics_Button" element visibility on "Application_Monitoring" wizard
-    Then "Application_Metrics_Button" element on "Application_Monitoring" should contains "Application metrics" value
+    Then "Application_Metrics_Button" element on "Application_Monitoring" should contain "Application metrics" value
     Then click on "Application_Metrics_Button" element on "Application_Monitoring" wizard
     And wait load page
     Then verify "Application_Monitoring_Button" element visibility on "Application_Metrics" wizard
-    Then "Application_Monitoring_Button" element on "Application_Metrics" should contains "Application monitoring" value
+    Then "Application_Monitoring_Button" element on "Application_Metrics" should contain "Application monitoring" value
     Then click on "Application_Monitoring_Button" element on "Application_Metrics" wizard
     And wait load page
     Then verify "Application_Name" element visibility on "Application_Monitoring" wizard
-    Then "Application_Name" element on "Application_Monitoring" should contains "monitorAppV2" value
+    Then "Application_Name" element on "Application_Monitoring" should contain "monitorAppV2" value
     And wait load page
     Then verify "Refresh_Button" element visibility on "Application_Monitoring" wizard
     Then verify "Refresh_Button" element on "Application_Monitoring" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
@@ -203,8 +203,8 @@ Feature: Monitoring app Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     Then verify "Back_Button" element visibility on "Application_Monitoring" wizard
-    Then "Application_Name" element on "Application_Monitoring" should contains "monitorAppV2" value
-    Then "Application_Metrics_Button" element on "Application_Monitoring" should contains "Application metrics" value
+    Then "Application_Name" element on "Application_Monitoring" should contain "monitorAppV2" value
+    Then "Application_Metrics_Button" element on "Application_Monitoring" should contain "Application metrics" value
 
   @MLMA
   @smoke
@@ -221,32 +221,32 @@ Feature: Monitoring app Page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
     Then verify "All_Applications_Title" element visibility on "Monitoring_App" wizard
-    Then "All_Applications_Title" element on "Monitoring_App" should contains "All applications" value
+    Then "All_Applications_Title" element on "Monitoring_App" should contain "All applications" value
     Then click on cell with value "monitorAppV1" in "name" column in "All_Applications_Table" table on "Monitoring_App" wizard
     And wait load page
     Then verify "Back_Button" element visibility on "Application_Monitoring" wizard
     Then verify "App_Status_Title" element visibility on "Application_Monitoring" wizard
-    Then "App_Status_Title" element on "Application_Monitoring" should contains "App status" value
+    Then "App_Status_Title" element on "Application_Monitoring" should contain "App status" value
     Then verify "App_Status_SubTitle" element visibility on "Application_Monitoring" wizard
-    Then "App_Status_SubTitle" element on "Application_Monitoring" should contains "Ready" value
+    Then "App_Status_SubTitle" element on "Application_Monitoring" should contain "Ready" value
     Then verify "Endpoints_Title" element visibility on "Application_Monitoring" wizard
-    Then "Endpoints_Title" element on "Application_Monitoring" should contains "Endpoints" value
+    Then "Endpoints_Title" element on "Application_Monitoring" should contain "Endpoints" value
     Then verify "Endpoints_Tip" element visibility on "Application_Monitoring" wizard
     Then verify "Endpoints_Tip" element on "Application_Monitoring" wizard should display hover hint "Label_Hint"."Endpoints_Tip"
     Then verify "Endpoints_Counter" element visibility on "Application_Monitoring" wizard
     Then verify "Detections_Title" element visibility on "Application_Monitoring" wizard
-    Then "Detections_Title" element on "Application_Monitoring" should contains "Detections" value
+    Then "Detections_Title" element on "Application_Monitoring" should contain "Detections" value
     Then verify "Detections_Counter" element visibility on "Application_Monitoring" wizard
     Then verify "Possible_Detections_Title" element visibility on "Application_Monitoring" wizard
-    Then "Possible_Detections_Title" element on "Application_Monitoring" should contains "Possible detections" value
+    Then "Possible_Detections_Title" element on "Application_Monitoring" should contain "Possible detections" value
     Then verify "Possible_Detections_Counter" element visibility on "Application_Monitoring" wizard
     Then verify "Lag_Title" element visibility on "Application_Monitoring" wizard
-    Then "Lag_Title" element on "Application_Monitoring" should contains "Lag" value
+    Then "Lag_Title" element on "Application_Monitoring" should contain "Lag" value
     Then verify "Lag_Tip" element visibility on "Application_Monitoring" wizard
     Then verify "Lag_Tip" element on "Application_Monitoring" wizard should display hover hint "Label_Hint"."Lag"
     Then verify "Lag_Counter" element visibility on "Application_Monitoring" wizard
     Then verify "Commited_Offset_Title" element visibility on "Application_Monitoring" wizard
-    Then "Commited_Offset_Title" element on "Application_Monitoring" should contains "Commited offset" value
+    Then "Commited_Offset_Title" element on "Application_Monitoring" should contain "Commited offset" value
     Then verify "Commited_Offset_Tip" element visibility on "Application_Monitoring" wizard
     Then verify "Commited_Offset_Tip" element on "Application_Monitoring" wizard should display hover hint "Label_Hint"."Commited_Offset"
     Then verify "Commited_Offset_Counter" element visibility on "Application_Monitoring" wizard
@@ -266,11 +266,11 @@ Feature: Monitoring app Page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
     Then verify "All_Applications_Title" element visibility on "Monitoring_App" wizard
-    Then "All_Applications_Title" element on "Monitoring_App" should contains "All applications" value
+    Then "All_Applications_Title" element on "Monitoring_App" should contain "All applications" value
     Then click on cell with value "monitorAppV1" in "name" column in "All_Applications_Table" table on "Monitoring_App" wizard
     And wait load page
     Then verify "Artifacts_Title" element visibility on "Application_Monitoring" wizard
-    Then "Artifacts_Title" element on "Application_Monitoring" should contains "Artifacts" value
+    Then "Artifacts_Title" element on "Application_Monitoring" should contain "Artifacts" value
     Then verify "Artifacts_Table" element visibility on "Application_Monitoring" wizard    
     Then verify "See_All_Link" element visibility on "Application_Monitoring" wizard
     Then click on "See_All_Link" element on "Application_Monitoring" wizard
@@ -297,11 +297,11 @@ Feature: Monitoring app Page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
     Then verify "All_Applications_Title" element visibility on "Monitoring_App" wizard
-    Then "All_Applications_Title" element on "Monitoring_App" should contains "All applications" value
+    Then "All_Applications_Title" element on "Monitoring_App" should contain "All applications" value
     Then click on cell with value "monitorAppV1" in "name" column in "All_Applications_Table" table on "Monitoring_App" wizard
     And wait load page
     Then verify "Results_Title" element visibility on "Application_Monitoring" wizard
-    Then "Results_Title" element on "Application_Monitoring" should contains "Results" value
+    Then "Results_Title" element on "Application_Monitoring" should contain "Results" value
     Then verify "Results_Table" element visibility on "Application_Monitoring" wizard
 
   @MLMA
@@ -319,11 +319,11 @@ Feature: Monitoring app Page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
     Then verify "All_Applications_Title" element visibility on "Monitoring_App" wizard
-    Then "All_Applications_Title" element on "Monitoring_App" should contains "All applications" value
+    Then "All_Applications_Title" element on "Monitoring_App" should contain "All applications" value
     Then click on cell with value "monitorAppV1" in "name" column in "All_Applications_Table" table on "Monitoring_App" wizard
     And wait load page
     Then verify "Metrics_Title" element visibility on "Application_Monitoring" wizard
-    Then "Metrics_Title" element on "Application_Monitoring" should contains "Metrics" value
+    Then "Metrics_Title" element on "Application_Monitoring" should contain "Metrics" value
     When scroll to the "Metrics_Title" element on "Application_Monitoring" wizard
     Then verify "Metrics_Tip" element visibility on "Application_Monitoring" wizard
     Then verify "Metrics_Tip" element on "Application_Monitoring" wizard should display hover hint "Label_Hint"."Metrics_Tip"
@@ -344,12 +344,12 @@ Feature: Monitoring app Page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
     Then verify "All_Applications_Title" element visibility on "Monitoring_App" wizard
-    Then "All_Applications_Title" element on "Monitoring_App" should contains "All applications" value
+    Then "All_Applications_Title" element on "Monitoring_App" should contain "All applications" value
     Then click on cell with value "monitorAppV1" in "name" column in "All_Applications_Table" table on "Monitoring_App" wizard
     And wait load page
     When scroll to the "Shards_Partitions_Status_Title" element on "Application_Monitoring" wizard
     Then verify "Shards_Partitions_Status_Title" element visibility on "Application_Monitoring" wizard
-    Then "Shards_Partitions_Status_Title" element on "Application_Monitoring" should contains "Shards/partitions status" value
+    Then "Shards_Partitions_Status_Title" element on "Application_Monitoring" should contain "Shards/partitions status" value
     Then verify "Shards_Partitions_Status_Tip" element visibility on "Application_Monitoring" wizard
     Then verify "Shards_Partitions_Status_Tip" element on "Application_Monitoring" wizard should display hover hint "Label_Hint"."Shards_Partitions_Status_Tip"
     Then verify "Shards_Partitions_Status_Table" element visibility on "Application_Monitoring" wizard
@@ -373,11 +373,11 @@ Feature: Monitoring app Page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
     Then verify "All_Applications_Title" element visibility on "Monitoring_App" wizard
-    Then "All_Applications_Title" element on "Monitoring_App" should contains "All applications" value
+    Then "All_Applications_Title" element on "Monitoring_App" should contain "All applications" value
     Then click on cell with value "monitorAppV1" in "name" column in "All_Applications_Table" table on "Monitoring_App" wizard
     And wait load page
     Then verify "Application_Metrics_Button" element visibility on "Application_Monitoring" wizard
-    Then "Application_Metrics_Button" element on "Application_Monitoring" should contains "Application metrics" value
+    Then "Application_Metrics_Button" element on "Application_Monitoring" should contain "Application metrics" value
     Then click on "Application_Metrics_Button" element on "Application_Monitoring" wizard
     And wait load page
     Then verify "Back_Button" element visibility on "Application_Metrics" wizard
@@ -388,17 +388,17 @@ Feature: Monitoring app Page
     Then click on "Back_Button" element on "Application_Monitoring" wizard
     And wait load page
     Then verify "All_Applications_Title" element visibility on "Monitoring_App" wizard
-    Then "All_Applications_Title" element on "Monitoring_App" should contains "All applications" value
+    Then "All_Applications_Title" element on "Monitoring_App" should contain "All applications" value
     When scroll to the "All_Applications_Title" element on "Monitoring_App" wizard
     Then verify "open_metrics" option is present on "Monitoring_App" wizard in "All_Applications_Table" table with "monitorAppV1" value in "name" column
     Then click on "open_metrics" option on "Monitoring_App" wizard in "All_Applications_Table" table with "monitorAppV1" value in "name" column with scroll "false"
     And wait load page
     Then verify "Applications_Metrics_Title" element visibility on "Application_Metrics" wizard
-    Then "Applications_Metrics_Title" element on "Application_Metrics" should contains "Applications metrics:" value
+    Then "Applications_Metrics_Title" element on "Application_Metrics" should contain "Applications metrics:" value
     Then verify "Application_Name" element visibility on "Application_Metrics" wizard
-    Then "Application_Name" element on "Application_Metrics" should contains "monitorAppV1" value
+    Then "Application_Name" element on "Application_Metrics" should contain "monitorAppV1" value
     Then verify "Application_Monitoring_Button" element visibility on "Application_Metrics" wizard
-    Then "Application_Monitoring_Button" element on "Application_Metrics" should contains "Application monitoring" value
+    Then "Application_Monitoring_Button" element on "Application_Metrics" should contain "Application monitoring" value
     Then verify "Refresh_Button" element visibility on "Application_Metrics" wizard
     Then verify "Refresh_Button" element on "Application_Metrics" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
     And wait load page
@@ -406,8 +406,8 @@ Feature: Monitoring app Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     Then verify "Back_Button" element visibility on "Application_Metrics" wizard
-    Then "Application_Name" element on "Application_Metrics" should contains "monitorAppV1" value
-    Then "Application_Monitoring_Button" element on "Application_Metrics" should contains "Application monitoring" value
+    Then "Application_Name" element on "Application_Metrics" should contain "monitorAppV1" value
+    Then "Application_Monitoring_Button" element on "Application_Metrics" should contain "Application monitoring" value
 
   @MLMA
   @smoke
@@ -424,31 +424,31 @@ Feature: Monitoring app Page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
     Then verify "All_Applications_Title" element visibility on "Monitoring_App" wizard
-    Then "All_Applications_Title" element on "Monitoring_App" should contains "All applications" value
+    Then "All_Applications_Title" element on "Monitoring_App" should contain "All applications" value
     Then click on cell with value "monitorAppV1" in "name" column in "All_Applications_Table" table on "Monitoring_App" wizard
     And wait load page
     Then verify "Application_Metrics_Button" element visibility on "Application_Monitoring" wizard
-    Then "Application_Metrics_Button" element on "Application_Monitoring" should contains "Application metrics" value
+    Then "Application_Metrics_Button" element on "Application_Monitoring" should contain "Application metrics" value
     Then click on "Application_Metrics_Button" element on "Application_Monitoring" wizard
     And wait load page
     Then verify "Applications_Metrics_Title" element visibility on "Application_Metrics" wizard
-    Then "Applications_Metrics_Title" element on "Application_Metrics" should contains "Applications metrics:" value
+    Then "Applications_Metrics_Title" element on "Application_Metrics" should contain "Applications metrics:" value
     Then verify "Endpoints_List_Section" element visibility on "Application_Metrics" wizard
     Then verify "Search_Endpoints_Counter" element visibility on "Application_Metrics" wizard
-    Then "Search_Endpoints_Counter" element on "Application_Metrics" should contains "11 endpoints found" value
+    Then "Search_Endpoints_Counter" element on "Application_Metrics" should contain "11 endpoints found" value
     Then verify "Endpoints_List_Table" element visibility on "Application_Metrics" wizard
     Then verify "Search_By_Endpoint_Filter_Input" element visibility on "Application_Metrics" wizard
     Then type value "boo" to "Search_By_Endpoint_Filter_Input" field on "Application_Metrics" wizard
     And wait load page
-    Then value in "name" column with "text" in "Endpoints_List_Table" on "Application_Metrics" wizard should contains "GradientBoostingClassifier"
-    Then "Search_Endpoints_Counter" element on "Application_Metrics" should contains "2 endpoints found" value
+    Then value in "name" column with "text" in "Endpoints_List_Table" on "Application_Metrics" wizard should contain "GradientBoostingClassifier"
+    Then "Search_Endpoints_Counter" element on "Application_Metrics" should contain "2 endpoints found" value
     Then type value "RandomForestClassifier2" to "Search_By_Endpoint_Filter_Input" field on "Application_Metrics" wizard
     And wait load page
-    Then value in "name" column with "text" in "Endpoints_List_Table" on "Application_Metrics" wizard should contains "RandomForestClassifier"
-    Then "Search_Endpoints_Counter" element on "Application_Metrics" should contains "1 endpoint found" value
+    Then value in "name" column with "text" in "Endpoints_List_Table" on "Application_Metrics" wizard should contain "RandomForestClassifier"
+    Then "Search_Endpoints_Counter" element on "Application_Metrics" should contain "1 endpoint found" value
     Then type value "qwe" to "Search_By_Endpoint_Filter_Input" field on "Application_Metrics" wizard
     And wait load page
-    Then "Search_Endpoints_Counter" element on "Application_Metrics" should contains "0 endpoints found" value
+    Then "Search_Endpoints_Counter" element on "Application_Metrics" should contain "0 endpoints found" value
 
   @MLMA
   @smoke
@@ -465,14 +465,14 @@ Feature: Monitoring app Page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
     Then verify "All_Applications_Title" element visibility on "Monitoring_App" wizard
-    Then "All_Applications_Title" element on "Monitoring_App" should contains "All applications" value
+    Then "All_Applications_Title" element on "Monitoring_App" should contain "All applications" value
     Then verify "Endpoints_Stats_Title" element visibility on "Monitoring_App" wizard
-    Then "Endpoints_Stats_Title" element on "Monitoring_App" should contains "Endpoints" value
+    Then "Endpoints_Stats_Title" element on "Monitoring_App" should contain "Endpoints" value
     Then verify "Endpoints_Batch_SubTitle" element visibility on "Monitoring_App" wizard
-    Then "Endpoints_Batch_SubTitle" element on "Monitoring_App" should contains "Batch" value
+    Then "Endpoints_Batch_SubTitle" element on "Monitoring_App" should contain "Batch" value
     Then verify "Endpoints_Batch_Counter" element visibility on "Monitoring_App" wizard
     Then verify "Endpoints_RealTime_SubTitle" element visibility on "Monitoring_App" wizard
-    Then "Endpoints_RealTime_SubTitle" element on "Monitoring_App" should contains "Real-time" value
+    Then "Endpoints_RealTime_SubTitle" element on "Monitoring_App" should contain "Real-time" value
     Then verify "Endpoints_RealTime_Counter" element visibility on "Monitoring_App" wizard
     And wait load page
     Then click on "Endpoints_Batch_Counter" element on "Monitoring_App" wizard
@@ -486,7 +486,7 @@ Feature: Monitoring app Page
     Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
     Then verify "Mode_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
     Then verify "Mode_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Batch"
-    Then verify "Mode_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Endpoint_Mode_Filter_Options"
+    Then verify "Mode_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contain "Dropdown_Options"."Endpoint_Mode_Filter_Options"
     And wait load page
     Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
     Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
@@ -497,7 +497,7 @@ Feature: Monitoring app Page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     Then verify "Endpoints_Stats_Title" element visibility on "Monitoring_App" wizard
     Then verify "Endpoints_RealTime_SubTitle" element visibility on "Monitoring_App" wizard
-    Then "Endpoints_RealTime_SubTitle" element on "Monitoring_App" should contains "Real-time" value
+    Then "Endpoints_RealTime_SubTitle" element on "Monitoring_App" should contain "Real-time" value
     Then verify "Endpoints_RealTime_Counter" element visibility on "Monitoring_App" wizard
     And wait load page
     Then click on "Endpoints_RealTime_Counter" element on "Monitoring_App" wizard
@@ -511,7 +511,7 @@ Feature: Monitoring app Page
     Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
     Then verify "Mode_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
     Then verify "Mode_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "Real-time"
-    Then verify "Mode_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Endpoint_Mode_Filter_Options"
+    Then verify "Mode_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contain "Dropdown_Options"."Endpoint_Mode_Filter_Options"
     And wait load page
     Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
     Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
@@ -534,7 +534,7 @@ Feature: Monitoring app Page
     Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
     Then verify "Mode_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
     Then verify "Mode_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
-    Then verify "Mode_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Endpoint_Mode_Filter_Options"
+    Then verify "Mode_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contain "Dropdown_Options"."Endpoint_Mode_Filter_Options"
     And wait load page
     Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
     Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled

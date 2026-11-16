@@ -20,12 +20,12 @@ such restriction.
 import { locatorBuilder } from '../../common-tools/common-tools.js'
 
 /**
- * Componet for accessing to any periodical component on page like simple table
+ * Component for accessing to any periodical component on page like simple table
  * @param {object} tableStructure - js object that should contain page locators for
- *    buildin table object:
- * js object sctucture:
+ *    built-in table object:
+ * js object structure:
  * {
- *    root: <string>, - root locator to perioddical part in DOM
+ *    root: <string>, - root locator to periodical part in DOM
  *    header: {
  *        root: <string> - subroot locator to header of table
  *        sorters: {
@@ -35,11 +35,11 @@ import { locatorBuilder } from '../../common-tools/common-tools.js'
  *        }
  *    },
  *    body{
- *        ofsset: <int>, - index of real dataline start
+ *        offset: <int>, - index of real dataline start
  *        add_row_btn: <string>, - button for creating new row
  *        root: <string>, - subroot locator to body of table
  *        row: {
- *            root: <string> - subroot locator to row of table which used with idex
+ *            root: <string> - subroot locator to row of table which used with index
  *            fields: {
  *                name1: <string> - sublocator for access to table column cell
  *                ...
@@ -48,7 +48,7 @@ import { locatorBuilder } from '../../common-tools/common-tools.js'
  *        },
  *    }
  * }
- * @returns - js object which allow access to table describle page components
+ * @returns - js object which allow access to table described page components
  */
 export default function (tableStructure) {
   const table = tableStructure
@@ -70,7 +70,7 @@ export default function (tableStructure) {
     rowBuilder(table.root, table.body.root, table.body.row.root, offset + parseInt(index))
 
   for (const key in table.body.row.fields) {
-    // TO DO: initialization of nested page components should be improoved in feature
+    // TO DO: initialization of nested page components should be improved in future
     if (typeof table.body.row.fields[key] !== 'string') {
       const subRoot = columnBuilder(
         table.root,
@@ -116,7 +116,7 @@ export default function (tableStructure) {
     rowRoot: row,
     tableColumns: columnSelector,
     tableFields: fieldSelector,
-    tableCulumnNames: Object.keys(table.body.row.fields)
+    tableColumnNames: Object.keys(table.body.row.fields)
   }
 
   if (table.body.add_row_btn) {

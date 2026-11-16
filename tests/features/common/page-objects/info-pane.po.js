@@ -602,7 +602,7 @@ const featureSetsInfoPaneLabelsTable = {
   }
 }
 
-// Models real time piplines infopane headers
+// Models real time pipelines info pane headers
 const modelsRealTimeinfoPaneOverviewHeaders = {
   root: '.table-container',
   header: {},
@@ -704,7 +704,7 @@ const commonActionMenu = actionMenu(actionMenuStructure)
 const commonActionMenuFullView = actionMenu(actionMenuStructureFullView)
 const fullViewButton =
   '.table__item .item-header__buttons .item-header__navigation-buttons > div > div'
-const tabelViewButton = '#main-wrapper .table__item_big .item-header__navigation-buttons'
+const tableViewButton = '#main-wrapper .table__item_big .item-header__navigation-buttons'
 const crossCloseButton = '.table__item .item-header__buttons a .data-ellipsis'
 const commonDownloadButton = '.table__item .item-header__buttons .download-container'
 const commonArrowBack = 'a.link-back__icon'
@@ -783,7 +783,7 @@ export default {
     Refresh_Button_Full_View:
       '.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]',
     Action_Menu_Full_View: commonActionMenuFullView,
-    Tabel_View_Button: tabelViewButton,
+    Table_View_Button: tableViewButton,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Pop_Out_Button: '[data-testid="details-preview-tooltip-wrapper"]',
@@ -835,7 +835,7 @@ export default {
     Refresh_Button_Full_View:
       '.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]',
     Action_Menu_Full_View: commonActionMenuFullView,
-    Tabel_View_Button: tabelViewButton,
+    Table_View_Button: tableViewButton,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Pop_Out_Button: '[data-testid="details-preview-tooltip-wrapper"]',
@@ -973,7 +973,7 @@ export default {
     Refresh_Button_Full_View:
       '.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]',
     Action_Menu_Full_View: commonActionMenuFullView,
-    Tabel_View_Button: tabelViewButton,
+    Table_View_Button: tableViewButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Pop_Out_Button: '[data-testid="details-preview-tooltip-wrapper"]',
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
@@ -1017,7 +1017,7 @@ export default {
     Labels_Apply_Button: commonLabelsApplyButton,
     Cross_Close_Button: crossCloseButton,
     Full_View_Button: fullViewButton,
-    Tabel_View_Button: tabelViewButton,
+    Table_View_Button: tableViewButton,
     Header_Full_View: '.table__item_big .item-header__data h3 > .tooltip-wrapper:first-of-type',
     Not_In_Filtered_List_Message: '[data-testid="detailsPanel"] .item-header__status .info-banner',
     Action_Menu_Full_View: commonActionMenuFullView,
@@ -1128,7 +1128,7 @@ export default {
     Apply_Button: applyButton,
     Cross_Close_Button: crossCloseButton,
     Full_View_Button: fullViewButton,
-    Tabel_View_Button: tabelViewButton,
+    Table_View_Button: tableViewButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Prompt_Template_Tab_Selector: commonTable(promptTemplateTabSelector),
     Prompt_Arguments_Tab_Selector: commonTable(promptArgumentsTabSelector),
@@ -1176,7 +1176,7 @@ export default {
     Header: header,
     Cross_Close_Button: crossCloseButton,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
-    Job_Detail_PopUp_Link: '.details-item:nth-of-type(6) .details-item__link',
+    Job_Detail_Popup_Link: '.details-item:nth-of-type(6) .details-item__link',
     Overview_Trigger_Criteria: commonTable(infoPaneAlertsTriggerCriteriaHeaders),
     Notifications_Header: '[data-testid="additional-info"] .item-info__header:nth-of-type(2)',
     Notifications_Item: '[data-testid="additional-info"] .notifications-item',

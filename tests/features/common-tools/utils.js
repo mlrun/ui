@@ -24,7 +24,9 @@ import RandExp from 'randexp'
 //                // • No consecutive characters: .., .–, –.\n
 //                // • Must not start with: ..\n
 //                // • Must not be: ., ..\n
-//                // • Max length between two periods: 63\n - TODO: no one knows what the rule means
+//                // • Max length between two periods: 63\n - in the app (maxLengthBetweenDelimiters,
+//                //   src/igz-controls/utils/validation.util.js) the value is split by '.', '-' and '_', every part
+//                //   must be 1..63 characters long
 //                • Length - max: 63`
 
 const symbols = [

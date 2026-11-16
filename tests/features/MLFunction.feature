@@ -26,11 +26,11 @@ Feature: ML Functions
         And wait load page
         Then verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
         Then verify "New_Function_Button" element visibility on "ML_Functions" wizard
-        Then "New_Function_Button" element on "ML_Functions" should contains "New" value
+        Then "New_Function_Button" element on "ML_Functions" should contain "New" value
         Then verify "Table_Refresh_Button" element visibility on "ML_Functions" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "ML_Functions" wizard selected option value "Past week"
-        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contain "Dropdown_Options"."Date_Picker_Filter_Options"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
         Then type value "vizro" to "Table_Name_Filter_Input" field on "ML_Functions" wizard
@@ -43,16 +43,16 @@ Feature: ML Functions
         And wait load page
         Then verify "History_Back_Button" element visibility on "ML_Functions" wizard
         Then verify "Version_History_Title" element visibility on "ML_Functions" wizard
-        Then "Version_History_Title" element on "ML_Functions" should contains "Version history:" value
+        Then "Version_History_Title" element on "ML_Functions" should contain "Version history:" value
         Then verify "Version_History_Model_Name" element visibility on "ML_Functions" wizard
-        Then "Version_History_Model_Name" element on "ML_Functions" should contains "vizro" value
+        Then "Version_History_Model_Name" element on "ML_Functions" should contain "vizro" value
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "ML_Functions" wizard selected option value "Any time"
-        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contain "Dropdown_Options"."Date_Picker_Filter_Options"
         Then verify "Table_Refresh_Button" element visibility on "ML_Functions" wizard
         Then verify "Table_FilterBy_Button" element visibility on "ML_Functions" wizard
         Then click on "Table_FilterBy_Button" element on "ML_Functions" wizard
-        Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+        Then "Title" element on "FilterBy_Popup" should contain "Filter by" value
         Then verify "Show_Untagged" element visibility on "FilterBy_Popup" wizard
         Then "Show_Untagged" element should be checked on "FilterBy_Popup" wizard
         Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
@@ -89,7 +89,7 @@ Feature: ML Functions
         Then type value "test" to "Table_Name_Filter_Input" field on "ML_Functions" wizard
         Then click on "Table_Refresh_Button" element on "ML_Functions" wizard
         And wait load page
-        Then value in "name" column with "text" in "Functions_Table" on "ML_Functions" wizard should contains "test"
+        Then value in "name" column with "text" in "Functions_Table" on "ML_Functions" wizard should contain "test"
 
     @MLF
     @passive
@@ -104,7 +104,7 @@ Feature: ML Functions
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "ML_Functions" wizard selected option value "Past week"
-        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contain "Dropdown_Options"."Date_Picker_Filter_Options"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
@@ -113,9 +113,9 @@ Feature: ML Functions
         Then verify "Updated" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" element visibility on "ML_Function_Info_Pane" wizard
-        Then verify "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Tab_List"
+        Then verify "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard should contain "ML_Function_Info_Pane"."Tab_List"
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
-        Then verify "Overview_Headers" on "ML_Function_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Overview_Headers"
+        Then verify "Overview_Headers" on "ML_Function_Info_Pane" wizard should contain "ML_Function_Info_Pane"."Overview_Headers"
         Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard
         When click on cell with row index 3 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
@@ -123,9 +123,9 @@ Feature: ML Functions
         Then verify "Updated" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" element visibility on "ML_Function_Info_Pane" wizard
-        Then verify "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Tab_List_Application_type"
+        Then verify "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard should contain "ML_Function_Info_Pane"."Tab_List_Application_type"
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
-        Then verify "Overview_Headers" on "ML_Function_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Overview_Headers_Application_type"
+        Then verify "Overview_Headers" on "ML_Function_Info_Pane" wizard should contain "ML_Function_Info_Pane"."Overview_Headers_Application_type"
 
     @MLF
     @passive
@@ -140,17 +140,17 @@ Feature: ML Functions
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "ML_Functions" wizard selected option value "Past week"
-        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contain "Dropdown_Options"."Date_Picker_Filter_Options"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
         Then select "Delete" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-m" value in "name" column
         And wait load page
-        Then "Title" element on "Common_Popup" should contains "Delete function?" value
+        Then "Title" element on "Common_Popup" should contain "Delete function?" value
         Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Function" with "test-m"
         Then verify "Cancel_Button" element visibility on "Common_Popup" wizard
-        Then "Cancel_Button" element on "Common_Popup" should contains "Cancel" value
+        Then "Cancel_Button" element on "Common_Popup" should contain "Cancel" value
         Then verify "Delete_Button" element visibility on "Common_Popup" wizard
-        Then "Delete_Button" element on "Common_Popup" should contains "Delete" value
+        Then "Delete_Button" element on "Common_Popup" should contain "Delete" value
 
     @MLF
     @passive
@@ -165,7 +165,7 @@ Feature: ML Functions
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "ML_Functions" wizard selected option value "Past week"
-        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contain "Dropdown_Options"."Date_Picker_Filter_Options"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
@@ -173,12 +173,12 @@ Feature: ML Functions
         Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
         Then select "Delete" option in action menu on "ML_Function_Info_Pane" wizard
         And wait load page
-        Then "Title" element on "Common_Popup" should contains "Delete function?" value
+        Then "Title" element on "Common_Popup" should contain "Delete function?" value
         Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Function"
         Then verify "Cancel_Button" element visibility on "Common_Popup" wizard
-        Then "Cancel_Button" element on "Common_Popup" should contains "Cancel" value
+        Then "Cancel_Button" element on "Common_Popup" should contain "Cancel" value
         Then verify "Delete_Button" element visibility on "Common_Popup" wizard
-        Then "Delete_Button" element on "Common_Popup" should contains "Delete" value
+        Then "Delete_Button" element on "Common_Popup" should contain "Delete" value
 
     @MLF
     @passive
@@ -195,7 +195,7 @@ Feature: ML Functions
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then click on "New_Function_Button" element on "ML_Functions" wizard
-        Then "Title" element on "Create_ML_Function_Popup" should contains "Create new function" value
+        Then "Title" element on "Create_ML_Function_Popup" should contain "Create new function" value
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -208,9 +208,9 @@ Feature: ML Functions
         Then verify "New_Function_Tag_Input" options rules on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Runtime_Dropdown" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
-        Then "Cancel_Button" element on "Create_ML_Function_Popup" should contains "Cancel" value
+        Then "Cancel_Button" element on "Create_ML_Function_Popup" should contain "Cancel" value
         Then verify "Continue_Button" element visibility on "Create_ML_Function_Popup" wizard
-        Then "Continue_Button" element on "Create_ML_Function_Popup" should contains "Continue" value
+        Then "Continue_Button" element on "Create_ML_Function_Popup" should contain "Continue" value
 
     @MLF
     @passive
@@ -232,11 +232,11 @@ Feature: ML Functions
         And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
         Then verify "Cross_Close_Button" element visibility on "New_Function" wizard
         Then verify "Function_Name" element visibility in "General_Accordion" on "New_Function" wizard
-        Then "Function_Name" element in "General_Accordion" on "New_Function" should contains "demo-function-00" value
+        Then "Function_Name" element in "General_Accordion" on "New_Function" should contain "demo-function-00" value
         Then verify "Function_Tag" element visibility in "General_Accordion" on "New_Function" wizard
-        Then "Function_Tag" element in "General_Accordion" on "New_Function" should contains "latest" value
+        Then "Function_Tag" element in "General_Accordion" on "New_Function" should contain "latest" value
         Then verify "Function_Runtime" element visibility in "General_Accordion" on "New_Function" wizard
-        Then "Function_Runtime" element in "General_Accordion" on "New_Function" should contains "job" value
+        Then "Function_Runtime" element in "General_Accordion" on "New_Function" should contain "job" value
         Then verify "Function_Description_Input" element visibility in "General_Accordion" on "New_Function" wizard
         Then verify "Labels_Table" element visibility in "General_Accordion" on "New_Function" wizard
         When add rows to "Labels_Table" table in "General_Accordion" on "New_Function" wizard
@@ -324,7 +324,7 @@ Feature: ML Functions
         When collapse "Code_Accordion" on "New_Function" wizard
         Then verify "Volumes_Subheader" element in "Resources_Accordion" on "New_Function" wizard should display hint "Label_Hint"."New_Job_Volumes"
         Then verify "New_Function_Volume_Mount_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
-        Then verify "New_Function_Volume_Mount_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Volume_Mount_Options"
+        Then verify "New_Function_Volume_Mount_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contain "Dropdown_Options"."Volume_Mount_Options"
         Then type value "0" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Limit_Number_Warning"
         Then type value "1" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
@@ -343,8 +343,8 @@ Feature: ML Functions
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Limit_Number_Warning"
         Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Request_Number_Warning"
         Then select "cpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
-        Then increase value on 2 points in "CPU_Request_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
-        Then increase value on 1 points in "CPU_Limit_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
+        Then increase value by 2 points in "CPU_Request_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
+        Then increase value by 1 points in "CPU_Limit_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
         Then select "millicpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then select "millicpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then type value "0" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
@@ -356,41 +356,41 @@ Feature: ML Functions
         Then type value "0" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "GPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."GPU_Minimum_Value_Warning"
         Then verify "Memory_Request_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
-        Then verify "Memory_Request_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
+        Then verify "Memory_Request_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contain "Dropdown_Options"."Memory_Unit_Options"
         Then verify "Memory_Request_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then type value "1" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then increase value on 15 points in "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then decrease value on 15 points in "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then increase value by 15 points in "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then decrease value by 15 points in "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Limit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
-        Then verify "Memory_Limit_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
+        Then verify "Memory_Limit_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contain "Dropdown_Options"."Memory_Unit_Options"
         Then verify "Memory_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then increase value on 15 points in "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then decrease value on 15 points in "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then increase value by 15 points in "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then decrease value by 15 points in "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "CPU_Request_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
-        Then verify "CPU_Request_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
+        Then verify "CPU_Request_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contain "Dropdown_Options"."CPU_Unit_Options"
         Then verify "CPU_Request_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then type value "3" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then increase value on 15 points in "CPU_Request_Number_Input" field with "millicpu" on "Resources_Accordion" on "New_Function" wizard
-        Then decrease value on 15 points in "CPU_Request_Number_Input" field with "millicpu" on "Resources_Accordion" on "New_Function" wizard
+        Then increase value by 15 points in "CPU_Request_Number_Input" field with "millicpu" on "Resources_Accordion" on "New_Function" wizard
+        Then decrease value by 15 points in "CPU_Request_Number_Input" field with "millicpu" on "Resources_Accordion" on "New_Function" wizard
         Then select "cpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
-        Then verify "CPU_Request_Number_Input" input should contains "0.003" value in "Resources_Accordion" on "New_Function" wizard
-        Then increase value on 8 points in "CPU_Request_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
-        Then decrease value on 8 points in "CPU_Request_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Request_Number_Input" input should contain "0.003" value in "Resources_Accordion" on "New_Function" wizard
+        Then increase value by 8 points in "CPU_Request_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
+        Then decrease value by 8 points in "CPU_Request_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
         Then verify "CPU_Limit_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
-        Then verify "CPU_Limit_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
+        Then verify "CPU_Limit_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contain "Dropdown_Options"."CPU_Unit_Options"
         Then verify "CPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then type value "4" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then increase value on 15 points in "CPU_Limit_Number_Input" field with "millicpu" on "Resources_Accordion" on "New_Function" wizard
-        Then decrease value on 15 points in "CPU_Limit_Number_Input" field with "millicpu" on "Resources_Accordion" on "New_Function" wizard
+        Then increase value by 15 points in "CPU_Limit_Number_Input" field with "millicpu" on "Resources_Accordion" on "New_Function" wizard
+        Then decrease value by 15 points in "CPU_Limit_Number_Input" field with "millicpu" on "Resources_Accordion" on "New_Function" wizard
         Then select "cpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
-        Then verify "CPU_Limit_Number_Input" input should contains "0.004" value in "Resources_Accordion" on "New_Function" wizard
-        Then increase value on 8 points in "CPU_Request_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
-        Then decrease value on 8 points in "CPU_Request_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Limit_Number_Input" input should contain "0.004" value in "Resources_Accordion" on "New_Function" wizard
+        Then increase value by 8 points in "CPU_Request_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
+        Then decrease value by 8 points in "CPU_Request_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
         Then verify "GPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then type value "5" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then increase value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then decrease value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then increase value by 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
+        Then decrease value by 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
 
     @MLF
     @passive
@@ -413,7 +413,7 @@ Feature: ML Functions
         When collapse "General_Accordion" on "New_Function" wizard
         When collapse "Code_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
-        Then verify "Pods_Priority_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Pods_Priority"
+        Then verify "Pods_Priority_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contain "Dropdown_Options"."Pods_Priority"
         When select "Manual" option in "New_Function_Volume_Mount_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         When collapse "Environment_Variables_Accordion" on "New_Function" wizard
         When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard using nontable inputs
@@ -444,11 +444,11 @@ Feature: ML Functions
         Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_Function" wizard should display hint "Input_Hint"."Mount_Path_Hint"
         When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "New_Function" wizard
         When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard using nontable inputs
-            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Claime_Name_Input | Add_New_Row_Button |
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Claim_Name_Input | Add_New_Row_Button |
             |               PVC                |                                      |                               |                                      |         yes        |
         Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Claime_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Claim_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_Function" wizard should display hint "Input_Hint"."Mount_Path_Hint"
         When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "New_Function" wizard
         When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard using nontable inputs
@@ -613,11 +613,11 @@ Feature: ML Functions
         Then type value "" to "Access_Key_Input" field on "New_Function" wizard
         Then verify "Access_Key_Input" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "Cancel_Button" element visibility on "New_Function" wizard
-        Then "Cancel_Button" element on "New_Function" should contains "Cancel" value
+        Then "Cancel_Button" element on "New_Function" should contain "Cancel" value
         Then verify "Save_Button" element visibility on "New_Function" wizard
-        Then "Save_Button" element on "New_Function" should contains "Save" value
+        Then "Save_Button" element on "New_Function" should contain "Save" value
         Then verify "Deploy_Button" element visibility on "New_Function" wizard
-        Then "Deploy_Button" element on "New_Function" should contains "Create" value 
+        Then "Deploy_Button" element on "New_Function" should contain "Create" value 
         And click on "Save_Button" element on "New_Function" wizard
         Then verify "Cancel_Button" element on "New_Function" wizard is enabled
         Then verify "Save_Button" element on "New_Function" wizard is disabled
@@ -643,9 +643,9 @@ Feature: ML Functions
         And type value "new-aqa-function-00" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
         And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
         And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
-        Then "Function_Name" element in "General_Accordion" on "New_Function" should contains "new-aqa-function-00" value
-        Then "Function_Tag" element in "General_Accordion" on "New_Function" should contains "latest" value
-        Then "Function_Runtime" element in "General_Accordion" on "New_Function" should contains "job" value
+        Then "Function_Name" element in "General_Accordion" on "New_Function" should contain "new-aqa-function-00" value
+        Then "Function_Tag" element in "General_Accordion" on "New_Function" should contain "latest" value
+        Then "Function_Runtime" element in "General_Accordion" on "New_Function" should contain "job" value
         Then check "Function_Description_Input" textarea counter in "General_Accordion" on "New_Function" wizard
         Then type value "Some function description" to "Function_Description_Input" field on "General_Accordion" on "New_Function" wizard
         Then check "Function_Description_Input" textarea counter in "General_Accordion" on "New_Function" wizard
@@ -668,7 +668,7 @@ Feature: ML Functions
         And wait load page
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
-        Then "Header" element on "ML_Function_Info_Pane" should contains "new-aqa-function-00" value
+        Then "Header" element on "ML_Function_Info_Pane" should contain "new-aqa-function-00" value
         Then check "new-aqa-function-00" value in "name" column in "Overview_Table" table on "ML_Function_Info_Pane" wizard
         Then check "job" value in "kind" column in "Overview_Table" table on "ML_Function_Info_Pane" wizard
         Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard
@@ -676,26 +676,26 @@ Feature: ML Functions
         Then select "Edit" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "new-aqa-function-00" value in "name" column
         And wait load page
         When collapse "General_Accordion" on "New_Function" wizard
-        Then verify "New_Function_Handler_Input" input should contains "demo" value in "Code_Accordion" on "New_Function" wizard
+        Then verify "New_Function_Handler_Input" input should contain "demo" value in "Code_Accordion" on "New_Function" wizard
         When collapse "Code_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Low"
-        Then verify "Memory_Request_Number_Input" input should contains "1" value in "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Request_Number_Input" input should contain "1" value in "Resources_Accordion" on "New_Function" wizard
         Then type value "" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "Memory_Request_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "MB"
-        Then verify "Memory_Limit_Number_Input" input should contains "1000" value in "Resources_Accordion" on "New_Function" wizard
+        Then verify "Memory_Limit_Number_Input" input should contain "1000" value in "Resources_Accordion" on "New_Function" wizard
         Then type value "" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "Memory_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "KB"
-        Then verify "CPU_Request_Number_Input" input should contains "10" value in "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Request_Number_Input" input should contain "10" value in "Resources_Accordion" on "New_Function" wizard
         Then type value "" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "CPU_Request_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "millicpu"
-        Then verify "CPU_Limit_Number_Input" input should contains "50" value in "Resources_Accordion" on "New_Function" wizard
+        Then verify "CPU_Limit_Number_Input" input should contain "50" value in "Resources_Accordion" on "New_Function" wizard
         Then type value "" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "CPU_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "millicpu"
-        Then verify "GPU_Limit_Number_Input" input should contains "15" value in "Resources_Accordion" on "New_Function" wizard
+        Then verify "GPU_Limit_Number_Input" input should contain "15" value in "Resources_Accordion" on "New_Function" wizard
 
     @MLF
     @smoke
@@ -719,7 +719,7 @@ Feature: ML Functions
         When select "Build_A_New_Image_Radiobutton" in "Code_Accordion" on "New_Function"
         When collapse "General_Accordion" on "New_Function" wizard
         When collapse "Resources_Accordion" on "New_Function" wizard
-        Then "Deploy_Button" element on "New_Function" should contains "Create" value
+        Then "Deploy_Button" element on "New_Function" should contain "Create" value
         Then click on "Deploy_Button" element on "New_Function" wizard
         And wait load page
         Then check "new-aqa-function-01" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
@@ -745,19 +745,19 @@ Feature: ML Functions
         And select "Delete" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "erann-with-mlrun" value in "name" column
         And click on "Delete_Button" element on "Common_Popup" wizard
         And wait load page
-        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
         And wait load page
-        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Function deletion in progress" value
+        Then "Notification_Popup" element on "Notification_Popup" should contain "Function deletion in progress" value
         And wait load page
-        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
         # the deletion task ends after 3.6-10.6 s (the mock), the UI polls it every 2 s
-        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Function erann-with-mlrun is successfully deleted" value within 20 seconds
-        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Function erann-with-mlrun is successfully deleted" value
+        Then "Notification_Popup" element on "Notification_Popup" should contain "Function erann-with-mlrun is successfully deleted" value within 20 seconds
+        Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
+        Then "Notification_Popup" element on "Notification_Popup" should contain "Function erann-with-mlrun is successfully deleted" value
         And wait load page
-        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
         And wait load page
         Then check "erann-with-mlrun" value not in "name" column in "Functions_Table" table on "ML_Functions" wizard
 
@@ -780,7 +780,7 @@ Feature: ML Functions
         And select "Serving" option in "New_Function_Runtime_Dropdown" dropdown on "Create_ML_Function_Popup" wizard
         And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
         Then verify "Function_Runtime" element visibility in "General_Accordion" on "New_Function" wizard
-        Then "Function_Runtime" element in "General_Accordion" on "New_Function" should contains "serving" value
+        Then "Function_Runtime" element in "General_Accordion" on "New_Function" should contain "serving" value
         When collapse "General_Accordion" on "New_Function" wizard
         When collapse "Code_Accordion" on "New_Function" wizard
         When collapse "Resources_Accordion" on "New_Function" wizard
@@ -1143,8 +1143,8 @@ Feature: ML Functions
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
-        Then verify options in action menu on "ML_Functions" wizard in "Functions_Table" table with "Job" value in "kind" column should contains "ML_Functions_Tab"."Common_Action_Menu_Options_Demo"
-        Then verify options in action menu on "ML_Functions" wizard in "Functions_Table" table with "Serving" value in "kind" column should contains "ML_Functions_Tab"."Serving_Action_Menu_Options_Demo"
+        Then verify options in action menu on "ML_Functions" wizard in "Functions_Table" table with "Job" value in "kind" column should contain "ML_Functions_Tab"."Common_Action_Menu_Options_Demo"
+        Then verify options in action menu on "ML_Functions" wizard in "Functions_Table" table with "Serving" value in "kind" column should contain "ML_Functions_Tab"."Serving_Action_Menu_Options_Demo"
         #TODO: check if serving function can be edited
 
     @MLF
@@ -1169,7 +1169,7 @@ Feature: ML Functions
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
         Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
-        Then verify "Action_Menu" dropdown element on "ML_Function_Info_Pane" wizard should contains "ML_Functions_Tab"."Common_Action_Menu_Options_Demo"
+        Then verify "Action_Menu" dropdown element on "ML_Function_Info_Pane" wizard should contain "ML_Functions_Tab"."Common_Action_Menu_Options_Demo"
 
     @MLF
     @passive
@@ -1191,7 +1191,7 @@ Feature: ML Functions
         When click on cell with row index 9 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
         Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
-        Then verify "Action_Menu" dropdown element on "ML_Function_Info_Pane" wizard should contains "ML_Functions_Tab"."Serving_Action_Menu_Options_Demo"
+        Then verify "Action_Menu" dropdown element on "ML_Function_Info_Pane" wizard should contain "ML_Functions_Tab"."Serving_Action_Menu_Options_Demo"
         #TODO: check if serving function can be edited
 
     @MLF
@@ -1232,7 +1232,7 @@ Feature: ML Functions
         When collapse "Code_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Medium"
-        Then verify "Pods_Priority_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Pods_Priority"
+        Then verify "Pods_Priority_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contain "Dropdown_Options"."Pods_Priority"
         Then select "Low" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Low"
         Then select "High" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
@@ -1258,11 +1258,11 @@ Feature: ML Functions
         Then type value "" to "Access_Key_Input" field on "New_Function" wizard
         Then verify "Access_Key_Input" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "Cancel_Button" element visibility on "New_Function" wizard
-        Then "Cancel_Button" element on "New_Function" should contains "Cancel" value
+        Then "Cancel_Button" element on "New_Function" should contain "Cancel" value
         Then verify "Save_Button" element visibility on "New_Function" wizard
-        Then "Save_Button" element on "New_Function" should contains "Save" value
+        Then "Save_Button" element on "New_Function" should contain "Save" value
         Then verify "Deploy_Button" element visibility on "New_Function" wizard
-        Then "Deploy_Button" element on "New_Function" should contains "Create" value
+        Then "Deploy_Button" element on "New_Function" should contain "Create" value
 
     @MLF
     @smoke
@@ -1300,26 +1300,26 @@ Feature: ML Functions
         And wait load page
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
-        Then "Header" element on "ML_Function_Info_Pane" should contains "new-aqa-function-00" value
+        Then "Header" element on "ML_Function_Info_Pane" should contain "new-aqa-function-00" value
         Then select "Jobs" item in sidebar menu
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then "Title" element on "Modal_Wizard_Form" should contains "Batch Run" value
+        Then "Title" element on "Modal_Wizard_Form" should contain "Batch Run" value
         And click on row root with value "new-aqa-function-00" in "name" column in "Functions_Table" table on "Modal_Wizard_Form" wizard
-        Then "Function_Title" element on "Modal_Wizard_Form" should contains "new-aqa-function-00" value
+        Then "Function_Title" element on "Modal_Wizard_Form" should contain "new-aqa-function-00" value
         And click on "Step_5_Button" element on "commonPagesHeader" wizard
-        Then "Form_Header_Resources" element on "commonPagesHeader" should contains "Resources" value
+        Then "Form_Header_Resources" element on "commonPagesHeader" should contain "Resources" value
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "Modal_Wizard_Form" wizard selected option value "High"
-        Then verify "Memory_Request_Number_Input" input should contains "1" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Memory_Request_Number_Input" input should contain "1" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
         Then verify "Memory_Request_Dropdown" dropdown in "Resources_Accordion" on "Modal_Wizard_Form" wizard selected option value "MB"
-        Then verify "Memory_Limit_Number_Input" input should contains "1000" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Memory_Limit_Number_Input" input should contain "1000" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
         Then verify "Memory_Limit_Dropdown" dropdown in "Resources_Accordion" on "Modal_Wizard_Form" wizard selected option value "KB"
-        Then verify "CPU_Request_Number_Input" input should contains "6" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "CPU_Request_Number_Input" input should contain "6" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
         Then verify "CPU_Request_Dropdown" dropdown in "Resources_Accordion" on "Modal_Wizard_Form" wizard selected option value "millicpu"
-        Then verify "CPU_Limit_Number_Input" input should contains "7" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "CPU_Limit_Number_Input" input should contain "7" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
         Then verify "CPU_Limit_Dropdown" dropdown in "Resources_Accordion" on "Modal_Wizard_Form" wizard selected option value "millicpu"
-        Then verify "GPU_Limit_Number_Input" input should contains "99" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "GPU_Limit_Number_Input" input should contain "99" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
 
     @MLF
     @smoke @rerun
@@ -1339,12 +1339,12 @@ Feature: ML Functions
         And wait load page
         Then verify redirection from "projects/default/functions/INVALID/latest/overview?dates=anyTime" to "projects/default/functions?dates=anyTime"
         And wait load page
-        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
         And wait load page
-        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "This function either does not exist or was deleted" value
+        Then "Notification_Popup" element on "Notification_Popup" should contain "This function either does not exist or was deleted" value
         And wait load page
-        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
         And select "Datasets" item in sidebar menu
         And wait load page
         And select "ML functions" item in sidebar menu
@@ -1433,7 +1433,7 @@ Feature: ML Functions
         Then check "demo-function-02" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
         Then verify "Table_FilterBy_Button" element visibility on "ML_Functions" wizard
         Then click on "Table_FilterBy_Button" element on "ML_Functions" wizard
-        Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+        Then "Title" element on "FilterBy_Popup" should contain "Filter by" value
         Then verify "Show_Untagged" element visibility on "FilterBy_Popup" wizard
         Then check "Show_Untagged" element on "FilterBy_Popup" wizard
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
@@ -1442,7 +1442,7 @@ Feature: ML Functions
         When click on cell with value "demo-function-02" in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
         Then check "demo-function-02" value in "name" column in "Overview_Table" table on "ML_Function_Info_Pane" wizard
-        Then "Header" element on "ML_Function_Info_Pane" should contains "demo-function-02" value
+        Then "Header" element on "ML_Function_Info_Pane" should contain "demo-function-02" value
 
     @MLF
     @passive
@@ -1462,14 +1462,14 @@ Feature: ML Functions
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
-        Then at least one value in "kind" column with "tooltip" in "Functions_Table" on "ML_Functions" wizard should contains "Serving"
+        Then at least one value in "kind" column with "tooltip" in "Functions_Table" on "ML_Functions" wizard should contain "Serving"
         And wait load page
         Then verify that "Serving" type is displayed in "kind" kind on "ML_Functions" wizard in "Functions_Table" table with "churn-server" value in "name" column
         Then verify "deploy" option is present on "ML_Functions" wizard in "Functions_Table" table with "churn-server" value in "name" column
         Then click on "deploy" option on "ML_Functions" wizard in "Functions_Table" table with "churn-server" value in "name" column with scroll "false"
         And wait load page
         Then verify "Function_Name" element visibility in "General_Accordion" on "New_Function" wizard
-        Then "Function_Name" element in "General_Accordion" on "New_Function" should contains "churn-server" value
+        Then "Function_Name" element in "General_Accordion" on "New_Function" should contain "churn-server" value
         Then verify "Deploy_Button" element visibility on "New_Function" wizard
-        Then "Deploy_Button" element on "New_Function" should contains "Deploy" value
+        Then "Deploy_Button" element on "New_Function" should contain "Deploy" value
         

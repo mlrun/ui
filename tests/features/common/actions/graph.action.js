@@ -105,7 +105,7 @@ export const checkWorkflowGraphConnections = async (page, graphComponent) => {
 
   expect(arrowXPositions.length, 'The arrows of the graph are not measured').toBeGreaterThan(0)
 
-  //  establish dynamic thresholds for сalculation average graph dimensions (proximity between graph nodes, connection handlers, arrow endpoints)
+  //  establish dynamic thresholds for calculation of average graph dimensions (proximity between graph nodes, connection handlers, arrow endpoints)
   const avgNodeHeight = nodeHeights.reduce((a, b) => a + b, 0) / nodeHeights.length
   const avgHandlerSize = safeGet(topHandlers, 'height')[0] || 10
 

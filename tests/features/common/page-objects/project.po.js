@@ -161,7 +161,7 @@ const DevelopmentActionsTable = {
   }
 }
 
-const DeploymetActionsTable = {
+const DeploymentActionsTable = {
   root: '.project-overview .project-overview__content .project-overview-card:nth-of-type(3) .project-overview-card__actions',
   header: {},
   body: {
@@ -203,7 +203,7 @@ const DevelopmentLinksTable = {
   }
 }
 
-const DeploymetLinksTable = {
+const DeploymentLinksTable = {
   root: '.project-overview .project-overview__content .project-overview-card:nth-of-type(3) .project-overview-card__bottom',
   header: {},
   body: {
@@ -464,8 +464,8 @@ export default {
         '.project-overview-card__header-subtitle'
       )
     ),
-    Deployment_Actions_Table: commonTable(DeploymetActionsTable),
-    Deployment_Links_Table: commonTable(DeploymetLinksTable)
+    Deployment_Actions_Table: commonTable(DeploymentActionsTable),
+    Deployment_Links_Table: commonTable(DeploymentLinksTable)
   },
   consumerGroups: {
     Arrow_Back: 'button > .page-header__back-btn',

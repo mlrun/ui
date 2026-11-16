@@ -6,18 +6,18 @@ To discuss and decide. Each item says what was found, why it matters and the opt
 
 ### 1. The lists are compared in order
 
-Done: the tab, header and option lists (`verify "X" on "Y" wizard should contains "Consts"."List"`, the dropdown and
-combobox `... should contains "Consts"."List"`) must have exactly the expected items in the expected order
+Done: the tab, header and option lists (`verify "X" on "Y" wizard should contain "Consts"."List"`, the dropdown and
+combobox `... should contain "Consts"."List"`) must have exactly the expected items in the expected order
 (`expectListItems` in `tests/features/common-tools/element.js`). A mismatch prints the actual list in the app's order
 as a JS array literal, ready to be pasted into `common-consts.js`.
 
 - Exempt (`unordered(...)` in `common-consts.js`, compared as before, with a comment why): the order isn't fixed by the
-  app - `Tag_Filer_Options_Feature_Sets_Default`, `Tag_Filer_Options_Feature_Vectors_Default` (the tags of the shown
+  app - `Tag_Filter_Options_Feature_Sets_Default`, `Tag_Filter_Options_Feature_Vectors_Default` (the tags of the shown
   rows, then the other ones, each in the API order, FormTagFilter), `Pods_Priority`, `Pods_Priority_List` (the
   backend's `valid_function_priority_class_names` in its order).
 - Fixed to the app's order (checked in `src/`, the ones in a run confirmed by it): `Overview_Producer_Headers` of
   datasets and models (`producerListOrder`: "UID" before "Workflow"), `Job_Overview_Action_Menu_Options`,
-  `Hyperparameter_Strategy_Options`, `Tag_Filer_Options` ("latest" first).
+  `Hyperparameter_Strategy_Options`, `Tag_Filter_Options` ("latest" first).
 - Kept ordered, though partly data-driven: the pipeline step headers (`Real_Time_Pipeline_Pane.Overview_Headers_*`: the
   tail is the key order of the step in the API response, the mock fixes it).
 
@@ -45,14 +45,14 @@ Done: exact variants, the listed lines are switched to them:
   `jobsAndWorkflows.feature` MLJW051);
 - `check {string} exact header value in {string} column ...` (all 46 uses of the header check).
 
-Open: `... should contains ... attribute value` is still used for `Table_Label_Filter_Input` (monitoringApp) and
+Open: `... should contain ... attribute value` is still used for `Table_Label_Filter_Input` (monitoringApp) and
 `Default_Artifact_Path_Input` (projectMonitoring, quickActions), probably meant as equality too - not run.
 
 ### 4. Low-confidence findings
 
 Done:
 
-- the notification text (`"Notification_Pop_Up" element on "Notification_Popup" should contains ...`, also the
+- the notification text (`"Notification_Popup" element on "Notification_Popup" should contain ...`, also the
   `within N seconds` variant): any shown notification with the text, except the ones matched by the previous checks (marked in the DOM,
   `verifyNotificationText`). Not the newest one: a notification followed by another one at once is checked too
   (MLPr006: "Project deletion in progress", then "... was deleted successfully"). The `within N seconds` variant is a
@@ -90,7 +90,7 @@ Done: the 13 `wait for N seconds` steps are replaced (~4 minutes less per run):
   (`page.clock`, the `@mlrunUnhealthyTest` hook), `move the browser time forward by N seconds`. It checks now that the
   popup isn't shown before the 3 minutes too. ~3 s instead of ~190 s;
 - MLF017, MLJW030 (the function deletion, 3.6-10.6 s in the mock):
-  `... should contains "..." value within 20 seconds`;
+  `... should contain "..." value within 20 seconds`;
 - MLJW049 (abort): waits for the "was aborted" notification instead of 5 s;
 - the rest (a notification, a refreshed table) are covered by the waits of the next steps (15 s).
 
@@ -148,11 +148,37 @@ Done in the JS (2026-11-16), no change in what a scenario checks. Each batch was
 Left:
 
 - batch 4: the removal of the logo hover;
-- batch 7: the naming pass;
 - decide about the unused tags and the double page load;
-- `{string} element on {string} should contains {string} attribute value` has 0 uses now (MLMA007 moved to
+- `{string} element on {string} should contain {string} attribute value` has 0 uses now (MLMA007 moved to
   `should be equal`): kept while the feature files are being changed, remove it if it stays unused;
 - the page object entries are dead by their name across all the wizards: an entry whose name is used with another
   wizard only is still there (a check per wizard would find more).
+
+The naming pass (batch 7, done 2026-11-16): renames only, every feature step line matches the same definition as
+before (the Cucumber expressions as anchored regexes, the step line count per feature file unchanged), 39 scenarios of
+the 16 feature files passed (MLPS008 failed as its known bug):
+
+- step texts (32 definitions, ~1830 feature lines): `should contains` -> `should contain` (20 definitions, 1649 lines),
+  `element not exists` -> `element does not exist` (2, 117), `increase/decrease value on N points` -> `by N points`
+  (6, 48), `check ... not presented in` -> `not present in` (13), `file is existed on` -> `file exists on`,
+  `without inputgroup` -> `without input group`, `with notification pop-up` -> `with notification popup`;
+- "Popup": the wizards `Schedule_PopUp`, `MLRun_Unhealthy_PopUp`, the page object entries `Notification_Pop_Up`
+  (`Notification_Popup` now, the same name as its wizard, as `Add_Tag_Popup` and `Delete_Artifact_Popup` already
+  are), `Notification_Pop_Up_Cross_Close_Button`, `Download_Pop_Up*`, `Header_Download_Pop_Up`,
+  `Job_Detail_PopUp_Link`, `Dialog_PopUp`, `Passthrough_PopUp_Dialog` and the JS keys `notificationPopUp`,
+  `downloadsPopUp`, `mLRunUnhealthyPopUp`, `schedulePopUp`;
+- misspelled identifiers: `Tag_Filer_Options*` -> `Tag_Filter_Options*`, `Tabel_View_Button`/`tabelViewButton`/
+  `tabelCell`, `Common_Tolltip`, `Failed_Worflows`, `Volume_Paths_Table_Claime_Name_Input`, `tableCulumnNames`,
+  `DeploymetActionsTable`/`DeploymetLinksTable`; typos in comments (`table.component.js`, a Cyrillic "с" in
+  `graph.action.js`);
+- `commonPagesHeader.po.js` -> `common-pages-header.po.js` (the wizard keeps its name `commonPagesHeader`);
+- `utils.js`: the "no one knows what the rule means" note replaced by what the app does (`maxLengthBetweenDelimiters`:
+  split by `.`, `-` and `_`, every part 1..63 characters).
+
+Not renamed: the scenario titles (Allure history: "highlited", "Piplines", "pop-up"), the CSS selectors and app texts
+(`pop-up-dialog`, `datepicker__pop-up`, `alt="MLRUN on Gihub"`, `'wrere'` - a typed test value), the typed data
+(`sectretKey1`, `happines`, `obryv`...), `check` vs `verify` and `component` vs `element` in the step texts (not worth
+the churn), `should be equal {string}` (no "to"), `nontable inputs`, `into` in the searchable-fragment steps, `indx`,
+the casing of `mLRunUnhealthyPopup` and of the wizard `commonPagesHeader`.
 
 Done in the feature files: removed 120 redundant `wait load page` lines (78 after another `wait load page`, 42 after `navigate back`/`navigate forward`/`refresh a page`, which wait themselves) and the no-op `turn Off MLRun CE mode` step (2 uses + its definition; the Before hook sets `igzFullVersion`), and MLMA007 checks the whole label filter value (`should be equal ... attribute value`). Left: the `Default_Artifact_Path_Input` substring checks (projectMonitoring, quickActions): there is no exact variant of the `element in {string} on {string}` step, and with the mock data the field likely holds `JOB_DEFAULT_OUTPUT_PATH` (`.../artifacts/{{run.uid}}`), so the expected value is a prefix, not the whole value.
