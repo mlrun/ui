@@ -17,10 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-// one E2E run at a time, see `e2e-lock.js`
+// one E2E run at a time, see `e2e-lock.js`. Run once per Playwright run (not per worker): a direct
+// `playwright test --workers N` is a parallel run as well, it's refused when not started by a person
 import { acquireRunLock } from './e2e-lock.js'
 
-export default async function globalSetup() {
+export default async function globalSetup(config) {
   // the returned function is the global teardown
-  return acquireRunLock()
+  return acquireRunLock({ parallel: config.workers > 1 })
 }

@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import axios from 'axios'
-import { mock_server_url } from '../../config.js'
+import { mock_server_url, workerHeaders } from '../../config.js'
 import { generateRegEx, getLength, getNotToBe, getRule } from './utils.js'
 import {
   deleteAPIArtifact,
@@ -218,48 +218,46 @@ function deleteBackendItem(page, item) {
   }
 }
 
+// of the mock server instance of this worker only: the other workers' scenarios go on
 export async function setRequestsFailureCondition(shouldFail) {
   try {
-    const response = await axios.post(`${mock_server_url}/set-failure-condition`, {
-      shouldFail
-    })
+    const response = await axios.post(
+      `${mock_server_url}/set-failure-condition`,
+      { shouldFail },
+      { headers: workerHeaders() }
+    )
     console.log(response.data)
   } catch (error) {
     console.error(`Error setting failure condition: ${error}`)
   }
 }
 
-// a fresh mock backend for the scenario: the mock server process is restarted (scripts/mockServer.js), so a scenario
-// doesn't depend on the previous ones. Resolves once the new instance answers. `generatedData` - with the big
-// "auto-generated-data" project (the scenarios tagged `@generatedData`).
-// A failure fails the scenario, e.g. a reused (older) mock server that doesn't restart: it would run the scenario on
-// the state left by the previous ones
-const MOCK_RESTART_TIMEOUT = 30000
-
+// a fresh mock backend for the scenario: the mock server instance of this worker is replaced by a new one
+// (scripts/mockServer.js), so a scenario doesn't depend on the previous ones, and the other workers' instances are not
+// touched. The answer comes once the new instance listens. `generatedData` - with the big "auto-generated-data" project
+// (the scenarios tagged `@generatedData`).
+// A failure fails the scenario, e.g. a reused older mock server without the instances per worker: it would run the
+// scenario on the state left by the previous ones (of every worker)
 export async function resetMockState({ generatedData = false } = {}) {
-  const { data: reset } = await axios.post(`${mock_server_url}/reset-mock-state`, { generatedData })
-  const deadline = Date.now() + MOCK_RESTART_TIMEOUT
-  let lastError = null
+  const headers = workerHeaders()
+  const { data: reset } = await axios.post(
+    `${mock_server_url}/reset-mock-state`,
+    { generatedData },
+    { headers }
+  )
+  // the new instance answers for this worker
+  const { data: current } = await axios.get(`${mock_server_url}/mock-instance`, { headers })
 
-  for (;;) {
-    try {
-      const { data: current } = await axios.get(`${mock_server_url}/mock-instance`, {
-        timeout: 2000
-      })
-
-      if (current.instance !== reset.instance && current.generatedData === generatedData) return
-    } catch (error) {
-      // the previous instance is exiting or the new one isn't listening yet
-      lastError = error
-    }
-
-    if (Date.now() >= deadline) {
-      throw new Error(
-        `The mock server didn't restart in ${MOCK_RESTART_TIMEOUT / 1000} s (is it started by \`npm run mock-server\`?)` +
-          (lastError ? `: ${lastError.message}` : '')
-      )
-    }
-
-    await new Promise(resolve => setTimeout(resolve, 25))
+  if (
+    String(reset.worker) !== Object.values(headers)[0] ||
+    !reset.instance ||
+    reset.instance === reset.previous ||
+    current.instance !== reset.instance ||
+    current.generatedData !== generatedData
+  ) {
+    throw new Error(
+      `The mock server didn't give this worker a fresh instance (is it started by \`npm run mock-server\` of this ` +
+        `version?): reset ${JSON.stringify(reset)}, current ${JSON.stringify(current)}`
+    )
   }
 }

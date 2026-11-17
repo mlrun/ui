@@ -17,13 +17,14 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-// Guard against several E2E runs at once: every run starts its own dev server, mock server and browser, so runs in
+// Guard against several E2E runs at once: every run starts its own app server, mock server and browsers, so runs in
 // parallel grow the memory usage until the machine freezes.
 //  - one run at a time: the lock file holds the pid of the running one (a lock of a dead process is taken over);
 //  - a parallel run, `E2E_WORKERS` > 1, can be started only by a person: from an interactive terminal (or CI);
 //  - when another run is in progress, a person is asked whether to stop it and start the new one, a non-interactive
 //    start (e.g. an agent) is refused and must wait for the running one.
-// A sharded run is one run: its parent holds the lock and passes it to the shards (`E2E_LOCK_OWNER`).
+// `npm run test:regression` takes the lock itself and passes it to its Playwright run (`E2E_LOCK_OWNER`), a direct
+// `playwright test` takes it in the global setup (tests/global-setup.js).
 import fs from 'node:fs'
 import path from 'node:path'
 import readline from 'node:readline'
@@ -32,7 +33,7 @@ import { execFileSync, spawnSync } from 'node:child_process'
 import { reports_dir } from './config.js'
 
 // E2E_MAX_WORKERS (or the previous name E2E_MAX_SHARDS) - the upper limit of E2E_WORKERS
-export const MAX_SHARDS = Number(process.env.E2E_MAX_WORKERS || process.env.E2E_MAX_SHARDS || 4)
+export const MAX_WORKERS = Number(process.env.E2E_MAX_WORKERS || process.env.E2E_MAX_SHARDS || 4)
 
 const lockFile = path.join(reports_dir, '.e2e-run.lock')
 const isWindows = process.platform === 'win32'
@@ -80,7 +81,7 @@ const getDescendants = pid => {
   return descendants
 }
 
-// stops the run with everything it started (shards, servers, browsers)
+// stops the run with everything it started (Playwright workers, servers, browsers)
 const stopRun = async pid => {
   if (isWindows) {
     spawnSync('taskkill', ['/pid', String(pid), '/T', '/F'])
@@ -119,9 +120,9 @@ const confirm = async question => {
 }
 
 // throws when the run must not be started, returns the release function.
-// `parallel` - the run is sharded
+// `parallel` - the run has more than one worker
 export const acquireRunLock = async ({ parallel = false } = {}) => {
-  // a shard started by the sharded run that holds the lock
+  // the Playwright run started by `npm run test:regression` (or `test:defects`), which holds the lock
   if (process.env.E2E_LOCK_OWNER && isAlive(Number(process.env.E2E_LOCK_OWNER))) return () => {}
 
   if (parallel && !isInteractive() && !process.env.CI) {

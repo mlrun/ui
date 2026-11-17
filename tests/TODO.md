@@ -98,9 +98,35 @@ Done: the 13 `wait for N seconds` steps are replaced (~4 minutes less per run):
 
 ### 7. One mock server and one app for all the workers
 
-Now every worker runs its own mock server and app (~300 MB together). The mock server could keep the state per worker
-(a header with the worker index), then one mock server and one app serve all the workers and the parallel run is
-Playwright's own (`--workers N`, one reporter, one report).
+Done (2026-11-16): `E2E_WORKERS=N` is one `playwright test --workers N` (`fullyParallel`: the scenarios, not the
+feature files, are spread over the workers), one app server, one mock server, one console reporter
+(`tests/reporters/console-reporter.js`, the worker label `wN` on every line), one Allure report.
+`E2E_FULL_PER_WORKER=true` is `--repeat-each N`. The shard processes, their port pairs and the event merging are gone.
+
+- the mock server (`scripts/mockServer.js`) is a front: every request carries `x-e2e-worker` (the Playwright
+  `parallelIndex`: the browser through `extraHTTPHeaders`, `world.js`; the API steps and the mock control requests
+  through `workerHeaders()`, `tests/config.js`), the front passes it to the instance of that worker. An instance is
+  `mock.js` in its own worker thread (its own module graph: the data, timers, background tasks, `failAllRequests`),
+  listening on a free port of 127.0.0.1. The reset terminates the thread of the worker and starts a new one, the answer
+  comes once it listens. A crash of an instance fails only its worker's requests (502) until its next reset;
+- `MOCK_STRICT_WORKERS=true` (playwright.config.js, `test:defects`): a request without the header is refused (400). A
+  mock server started by hand serves it from the instance of worker 0;
+- `npm run test:mock-isolation` (`scripts/testMockIsolation.js`): two workers at once, no browser - a project, a reset,
+  the failure condition and the generated data of one worker are not seen by the other, a request without the header is
+  refused, the memory stays flat over the resets;
+- a direct `playwright test --workers N` takes the lock as a parallel run too (`global-setup.js`).
+
+Memory (measured on a busy machine, single-worker runs): before, per worker a mock server ~160 MB (the supervisor 48 MB
+and the instance process ~111 MB) and an app server ~180 MB (+ the npm/npx wrappers ~165 MB); now one mock server ~65
+MB + ~65 MB per instance (~195 MB with 2) and one app server for all the workers. The rest per worker (a Playwright
+worker process ~450 MB, a browser ~300-600 MB) is unchanged.
+
+Open:
+
+- the first parallel run (not run here: the parallel runs are started by a person) - a scenario that depends on
+  another one shows up as a failure only with the scenarios spread over the workers;
+- the start of an instance is mostly the loading of `mock.js`'s modules, `lodash-es` above all (its whole barrel, ~650
+  files): seconds on a busy machine. The imports per function would cut it by about two thirds.
 
 ### 8. The known bugs without an entry in KNOWN_BUGS.md
 

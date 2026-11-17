@@ -46,3 +46,18 @@ export const test_url = 'localhost'
 export const test_port = process.env.E2E_APP_PORT || '3000'
 export const mock_server_port = process.env.E2E_MOCK_PORT || '30000'
 export const mock_server_url = `http://localhost:${mock_server_port}`
+// the mock server keeps a separate instance per Playwright worker (scripts/mockServer.js): every request of a scenario
+// to it (the browser, the API steps, the mock control requests) says its worker in this header
+export const WORKER_HEADER = 'x-e2e-worker'
+// the header of the current Playwright worker (`TEST_PARALLEL_INDEX`, set by Playwright in its worker processes)
+export const workerHeaders = () => {
+  const index = process.env.TEST_PARALLEL_INDEX
+
+  if (index === undefined) {
+    throw new Error(
+      `Not in a Playwright worker: no TEST_PARALLEL_INDEX for the "${WORKER_HEADER}" header of the mock server`
+    )
+  }
+
+  return { [WORKER_HEADER]: index }
+}

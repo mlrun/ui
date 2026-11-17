@@ -25,11 +25,13 @@ import {
 } from '../common-tools/common-tools.js'
 
 // the first page load after the dev server start is slow: Vite pre-bundles the dependencies (`optimizeDeps.force`)
-// and may reload the page, so without waiting the first scenarios get a blank page
+// and may reload the page, so without waiting the first scenarios get a blank page. Per worker process: the first
+// scenario of every worker waits, the app server is shared, so only the very first one waits long
 let isAppWarmedUp = false
 
 Before({ timeout: 5 * 60 * 1000 }, async function () {
-  // a fresh mock server, with the big "auto-generated-data" project only for the scenarios that need it
+  // a fresh mock server instance of this worker, with the big "auto-generated-data" project only for the scenarios
+  // that need it
   await resetMockState({ generatedData: this.testInfo.tags.includes('@generatedData') })
   await this.page.goto('/')
   if (!isAppWarmedUp) {
@@ -56,7 +58,8 @@ Before({ tags: '@knownBug or @FAILED_TODO' }, async function () {
 })
 // the browser clock is fake (it runs on, `move the browser time forward by N seconds` jumps it): the "MLRun seems to be
 // down" popup is shown after 3 minutes of failed retries (`fetchProjectsSummary`, src/reducers/projectReducer.js), the
-// scenario doesn't wait them in real time. The scenario opens the page after it, the clock is installed by then
+// scenario doesn't wait them in real time. The scenario opens the page after it, the clock is installed by then.
+// The failure condition is of this worker's mock server instance only, the next reset drops it too
 Before('@mlrunUnhealthyTest', async function () {
   await this.page.clock.install()
   await setRequestsFailureCondition(true)

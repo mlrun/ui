@@ -19,7 +19,7 @@ such restriction.
 */
 import { waitForPageQuiet } from '../../common-tools/element.js'
 import axios from 'axios'
-import { test_port, test_url } from '../../../config.js'
+import { test_port, test_url, workerHeaders } from '../../../config.js'
 import qs from 'qs'
 import { expect } from '@playwright/test'
 import { v4 as uuidv4 } from 'uuid'
@@ -34,6 +34,13 @@ const REACT_APP_MLRUN_API_URL_V2 = `http://${test_url}:${test_port}/api/v2`
 const mainHttpClient = axios.create({
   headers: { 'Cache-Control': 'no-cache' },
   paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' })
+})
+
+// the requests go through the app to the mock server instance of this Playwright worker (scripts/mockServer.js)
+mainHttpClient.interceptors.request.use(config => {
+  config.headers.set(workerHeaders())
+
+  return config
 })
 
 export const deleteAPIMLProject = async (

@@ -31,7 +31,7 @@ import net from 'node:net'
 import path from 'node:path'
 import { spawn, spawnSync } from 'node:child_process'
 
-import { mock_server_port, mock_server_url, reports_dir } from '../tests/config.js'
+import { mock_server_port, mock_server_url, reports_dir, WORKER_HEADER } from '../tests/config.js'
 import { acquireRunLock } from '../tests/e2e-lock.js'
 import { DEFECTS } from '../tests/mockServer/defects.js'
 
@@ -62,10 +62,16 @@ const isPortBusy = port =>
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-// the mock server with the defect, once it answers with it
+// the mock server with the defect, once it answers with it. In the E2E mode, as the regression runs it
+// (playwright.config.js): every request must say its worker
 const startMock = async defect => {
   const mock = spawn('node', ['scripts/mockServer.js'], {
-    env: { ...process.env, MOCK_DEFECT: defect, MOCK_GENERATED_DATA: 'false' },
+    env: {
+      ...process.env,
+      MOCK_DEFECT: defect,
+      MOCK_GENERATED_DATA: 'false',
+      MOCK_STRICT_WORKERS: 'true'
+    },
     stdio: ['ignore', 'ignore', 'inherit']
   })
   const deadline = Date.now() + 60000
@@ -73,7 +79,10 @@ const startMock = async defect => {
   while (Date.now() < deadline) {
     if (mock.exitCode !== null) throw new Error(`the mock server exited (${mock.exitCode})`)
 
-    const answer = await fetch(`${mock_server_url}/mock-instance`)
+    // an instance is started on the first request of a worker: the data defects are applied by then
+    const answer = await fetch(`${mock_server_url}/mock-instance`, {
+      headers: { [WORKER_HEADER]: '0' }
+    })
       .then(response => response.json())
       .catch(() => null)
 

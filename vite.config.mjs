@@ -166,9 +166,6 @@ export default defineConfig(({ mode }) => {
     optimizeDeps: {
       force: true
     },
-    // VITE_CACHE_DIR - a separate cache for each dev server started in parallel (E2E_SHARDS, scripts/testRegression.js):
-    // the forced pre-bundling of one server would clear the dependencies of another one
-    ...(process.env.VITE_CACHE_DIR && { cacheDir: process.env.VITE_CACHE_DIR }),
     build: {
       target: 'esnext',
       sourcemap: true,

@@ -25,19 +25,17 @@ such restriction.
 // The exit code is the one of the tests. The settings are environment variables (validated here, see README.md), extra
 // arguments are passed to Playwright, e.g. `npm run test:regression -- --grep MLPr001 --repeat-each 3`
 //
-// E2E_WORKERS=N - run the scenarios in N parallel processes (E2E_FULL_PER_WORKER=true - each of them runs all the scenarios). The scenarios share the state of the mock server, so every
-// one of them runs its own mock server and app (one build is shared): on E2E_APP_PORT + i and E2E_MOCK_PORT + i
-// (i = 1..N). They write their results to the same Allure results directory, their console output is combined
+// E2E_WORKERS=N - Playwright runs the scenarios in N parallel workers (`--workers`), one app and one mock server serve
+// them all: the mock server keeps a separate instance per worker (scripts/mockServer.js, the `x-e2e-worker` header).
+// E2E_FULL_PER_WORKER=true - every scenario runs N times (`--repeat-each N`), e.g. to find the flaky ones
 import fs from 'node:fs'
 import net from 'node:net'
 import os from 'node:os'
 import path from 'node:path'
-import readline from 'node:readline'
-import { spawn, spawnSync } from 'node:child_process'
+import { spawnSync } from 'node:child_process'
 
 import { reports_dir } from '../tests/config.js'
-import { acquireRunLock, MAX_SHARDS } from '../tests/e2e-lock.js'
-import { ConsoleRenderer, EVENT_PREFIX } from '../tests/reporters/console-renderer.js'
+import { acquireRunLock, MAX_WORKERS } from '../tests/e2e-lock.js'
 
 const isWindows = process.platform === 'win32'
 const isCI = Boolean(process.env.CI)
@@ -70,14 +68,14 @@ const readChoice = (name, fallback, choices) => {
   return value
 }
 
-// on CI the half of the CPUs: every worker is a mock server, an app server and a browser
+// on CI the half of the CPUs: every worker is a Playwright worker process, a browser and a mock instance
 const defaultWorkers = isCI
-  ? Math.max(1, Math.min(MAX_SHARDS, Math.floor(os.availableParallelism() / 2)))
+  ? Math.max(1, Math.min(MAX_WORKERS, Math.floor(os.availableParallelism() / 2)))
   : 1
 // E2E_SHARDS - the previous name of E2E_WORKERS
 const workersVariable = process.env.E2E_WORKERS === undefined ? 'E2E_SHARDS' : 'E2E_WORKERS'
 const settings = {
-  workers: readInteger(workersVariable, defaultWorkers, 1, MAX_SHARDS),
+  workers: readInteger(workersVariable, defaultWorkers, 1, MAX_WORKERS),
   retries: readInteger('E2E_RETRIES', 1, 0, 5),
   app: readChoice('E2E_APP', 'build', ['build', 'dev']),
   build: readChoice('E2E_BUILD', 'true', ['true', 'false']) === 'true',
@@ -90,15 +88,15 @@ const settings = {
     'off'
   ]),
   headless: readChoice('E2E_HEADLESS', 'true', ['true', 'false']) === 'true',
-  // E2E_FULL_PER_WORKER=true - every parallel worker runs the whole regression (not a share of it), e.g. to repeat it
-  // N times at once to find the flaky scenarios
+  // E2E_FULL_PER_WORKER=true - the whole regression N times at once (N = E2E_WORKERS), not shared between the
+  // workers, e.g. to find the flaky scenarios
   fullPerWorker: readChoice('E2E_FULL_PER_WORKER', 'false', ['true', 'false']) === 'true'
 }
 const appPort = Number(process.env.E2E_APP_PORT || 3000)
 const mockPort = Number(process.env.E2E_MOCK_PORT || 30000)
 const buildDir = path.join('build', 'regression')
 
-// one E2E run at a time: checked before anything is cleaned up, the parallel processes inherit the lock
+// one E2E run at a time: checked before anything is cleaned up, the Playwright run inherits the lock
 let releaseRunLock
 
 try {
@@ -135,16 +133,7 @@ const isPortBusy = port =>
     socket.once('error', () => resolve(false))
   })
 
-// the ports of the run: one app and one mock server, or a pair per parallel process (E2E_APP_PORT + i, ...)
-const portPairs =
-  settings.workers > 1
-    ? Array.from({ length: settings.workers }, (_, index) => [
-        appPort + index + 1,
-        mockPort + index + 1
-      ])
-    : [[appPort, mockPort]]
-
-// what listens on a busy port of the run: our mock server (it answers `/mock-instance`) or app (the MLRun page) is reused
+// what listens on a busy port of the run: our mock server (it answers `/mock-front`) or app (the MLRun page) is reused
 // by Playwright (not on CI), e.g. `npm start` in another terminal. Another program (e.g. an IDE's embedded browser
 // took 127.0.0.1:30000) is not: Playwright starts the server next to it on the other address (::1), a request to
 // 127.0.0.1 would reach that program - it is named, the run goes on
@@ -178,22 +167,27 @@ if (!isCI) {
   const reused = []
   const foreign = []
 
-  for (const [app, mock] of portPairs) {
-    if (await isPortBusy(mock)) {
-      const isMock = await probe(`http://localhost:${mock}/mock-instance`, body =>
-        body.includes('"instance"')
+  if (await isPortBusy(mockPort)) {
+    if (await probe(`http://localhost:${mockPort}/mock-front`, body => body.includes('"front"'))) {
+      reused.push(`mock server :${mockPort}`)
+    } else if (
+      await probe(`http://localhost:${mockPort}/mock-instance`, body => body.includes('"instance"'))
+    ) {
+      // a mock server of an older version: one state for every request, the workers would share it
+      fail(
+        `An older mock server runs on :${mockPort} (${describeListener(mockPort)}): it keeps one state for all the ` +
+          'workers. Stop it, the run starts the current one'
       )
-
-      if (isMock) reused.push(`mock server :${mock}`)
-      else foreign.push(`:${mock} (mock server) is used by ${describeListener(mock)}`)
+    } else {
+      foreign.push(`:${mockPort} (mock server) is used by ${describeListener(mockPort)}`)
     }
+  }
 
-    if (await isPortBusy(app)) {
-      const isApp = await probe(`http://localhost:${app}/`, body => /mlrun/i.test(body))
+  if (await isPortBusy(appPort)) {
+    const isApp = await probe(`http://localhost:${appPort}/`, body => /mlrun/i.test(body))
 
-      if (isApp) reused.push(`app :${app}`)
-      else foreign.push(`:${app} (app) is used by ${describeListener(app)}`)
-    }
+    if (isApp) reused.push(`app :${appPort}`)
+    else foreign.push(`:${appPort} (app) is used by ${describeListener(appPort)}`)
   }
 
   if (reused.length) {
@@ -213,14 +207,16 @@ if (!isCI) {
 
 console.log(
   `E2E regression: app=${settings.app}, workers=${settings.workers}` +
-    (settings.fullPerWorker && settings.workers > 1 ? ' (each runs the whole regression)' : '') +
+    (settings.fullPerWorker && settings.workers > 1
+      ? ` (the whole regression ${settings.workers} times)`
+      : '') +
     `, retries=${settings.retries}, ` +
     `trace=${settings.trace}, ${settings.headless ? 'headless' : 'headed'}, ` +
     `tags=${process.env.E2E_TAGS || 'all'}${isCI ? ', CI' : ''}` +
     (playwrightArgs.length ? `, Playwright arguments: ${playwrightArgs.join(' ')}` : '')
 )
 
-// the settings resolved here are the ones of playwright.config.js and of the parallel processes
+// the settings resolved here are the ones of playwright.config.js
 const runEnv = {
   ...process.env,
   E2E_APP: settings.app,
@@ -264,67 +260,22 @@ if (settings.app === 'build') {
 // only the results of the current run, the report keeps the history of runs
 fs.rmSync(allureResultsDir, { recursive: true, force: true })
 
-const runParallelProcess = (index, renderer) =>
-  new Promise(resolve => {
-    const [processAppPort, processMockPort] = portPairs[index - 1]
-    const child = spawn(
-      'npx',
-      [
-        'playwright',
-        'test',
-        // a share of the scenarios, or all of them in every worker (E2E_FULL_PER_WORKER)
-        ...(settings.fullPerWorker ? [] : [`--shard=${index}/${settings.workers}`]),
-        // the scenarios (not the feature files) are distributed between the processes, a feature file is too big a unit
-        '--fully-parallel',
-        `--output=${path.join(reports_dir, 'shards', String(index), 'test-results')}`,
-        ...playwrightArgs
-      ],
-      {
-        shell: isWindows,
-        env: {
-          ...runEnv,
-          E2E_APP_PORT: String(processAppPort),
-          E2E_MOCK_PORT: String(processMockPort),
-          E2E_REPORTER_EVENTS: 'true',
-          // the dev servers (E2E_APP=dev) pre-bundle the dependencies at the start (`optimizeDeps.force`), they can't
-          // share the Vite cache directory
-          VITE_CACHE_DIR: path.join('node_modules', '.vite', `e2e-shard-${index}`)
-        }
-      }
-    )
-
-    for (const stream of [child.stdout, child.stderr]) {
-      readline.createInterface({ input: stream }).on('line', line => {
-        if (line.startsWith(EVENT_PREFIX)) {
-          renderer.handle({ ...JSON.parse(line.slice(EVENT_PREFIX.length)), shard: index })
-        } else if (line.trim() && !line.startsWith('[WebServer]')) {
-          renderer.handle({ type: 'log', text: `[worker ${index}] ${line}` })
-        }
-      })
-    }
-
-    child.on('close', status => resolve(status ?? 1))
-  })
-
 let status = npx(['bddgen'], runEnv)
 
 if (status === 0) {
-  if (settings.workers > 1) {
-    const renderer = new ConsoleRenderer({
-      shards: settings.workers,
-      fullPerWorker: settings.fullPerWorker
-    })
-    const statuses = await Promise.all(
-      Array.from({ length: settings.workers }, (_, index) =>
-        runParallelProcess(index + 1, renderer)
-      )
-    )
-
-    renderer.printSummary()
-    status = statuses.find(processStatus => processStatus !== 0) ?? 0
-  } else {
-    status = npx(['playwright', 'test', ...playwrightArgs], runEnv)
-  }
+  status = npx(
+    [
+      'playwright',
+      'test',
+      `--workers=${settings.workers}`,
+      // every scenario N times, the runs are shared between the workers: the whole regression N times at once
+      ...(settings.fullPerWorker && settings.workers > 1
+        ? [`--repeat-each=${settings.workers}`]
+        : []),
+      ...playwrightArgs
+    ],
+    runEnv
+  )
 }
 
 // the tests are over: the next run can start while the report is generated and served (it can be open for long)

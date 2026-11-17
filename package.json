@@ -92,6 +92,7 @@
     "test:regression:ci": "cross-env CI=true node scripts/testRegression.js",
     "test:regression:failed": "node scripts/testRegression.js --last-failed",
     "test:defects": "node scripts/testDefects.js",
+    "test:mock-isolation": "node scripts/testMockIsolation.js",
     "test:regression:debug": "bddgen && cross-env E2E_APP=dev playwright test --ui",
     "build:regression": "cross-env MF_DTS=false vite build --mode development --base / --outDir build/regression",
     "report": "allure generate --clean tests/reports/allure-results",

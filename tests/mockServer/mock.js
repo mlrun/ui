@@ -24,6 +24,7 @@ import rateLimit from 'express-rate-limit'
 import fs from 'fs'
 import path from 'path'
 import crypto from 'node:crypto'
+import { isMainThread, parentPort, workerData } from 'node:worker_threads'
 import {
   chain,
   chunk,
@@ -93,13 +94,19 @@ import {
 import { generateArtifacts, makeUID, generateRuns, generateAlerts } from './dataGenerators.js'
 import { applyDataDefect, hasDefect, mockDefect } from './defects.js'
 
-// Every scenario starts on a fresh mock server process: `POST /reset-mock-state` (hooks.js) restarts it
-// (scripts/mockServer.js), so the data below is loaded and computed again and nothing is left from the previous scenario
-// (mutated collections, background tasks, timers, the failure condition) - and the memory doesn't grow over the run
+// An instance of the mock server: it runs in a worker thread of the mock server process (scripts/mockServer.js), one
+// per Playwright worker. A thread has its own module graph, so everything below (the imported JSON mutated by the
+// handlers, background tasks, timers, the failure condition) belongs to this instance only. Every scenario starts on a
+// fresh instance: `POST /reset-mock-state` (hooks.js) terminates the thread of its worker and starts a new one, so the
+// data below is loaded and computed again and nothing is left from the previous scenario - and the memory doesn't grow
+// over the run
 const MOCK_INSTANCE = crypto.randomUUID()
-// MOCK_GENERATED_DATA=true - the big "auto-generated-data" project (dataGenerators.js): only for the scenarios tagged
-// `@generatedData`, the others start faster without it
-const withGeneratedData = process.env.MOCK_GENERATED_DATA === 'true'
+// the big "auto-generated-data" project (dataGenerators.js): only for the scenarios tagged `@generatedData` (the reset
+// tells it), the others start faster without it. Started directly (`node tests/mockServer/mock.js`):
+// MOCK_GENERATED_DATA=true
+const withGeneratedData = isMainThread
+  ? process.env.MOCK_GENERATED_DATA === 'true'
+  : workerData?.generatedData === true
 
 // Updating values in files with synthetic data
 updateRuns(runs)
@@ -241,7 +248,9 @@ const mlrunAPIIngress = `${mlrunIngress}/api/v1`
 const mlrunAPIIngressV2 = `${mlrunIngress}/api/v2`
 const nuclioApiUrl = '/nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
 const iguazioApiUrl = '/platform-api.default-tenant.app.vmdev36.lab.iguazeng.com'
-const port = Number(process.env.E2E_MOCK_PORT || 30000)
+// started directly: the port of the mock server. In a thread: a free port on 127.0.0.1, only the front of
+// scripts/mockServer.js talks to it
+const port = isMainThread ? Number(process.env.E2E_MOCK_PORT || 30000) : 0
 const NOT_ALLOWED_SECRET_KEY = 'mlrun.'
 // ms, the background task adds `metadata.timeout` (600 ms) and the UI polls the task every 2 seconds
 const PROJECT_DELETION_DURATION = 3000
@@ -3260,20 +3269,12 @@ function getIguazioJob(req, res) {
   })
 }
 
-// Helper requests for AQA framework: a fresh mock server for the next scenario. The response tells the current
-// instance, the caller waits for another one (`/mock-instance`): the supervisor (scripts/mockServer.js) starts it once
-// this one exits. `generatedData` - the next instance has the "auto-generated-data" project
+// Helper requests for AQA framework. The reset (a fresh instance for the next scenario) is done by the front
+// (scripts/mockServer.js), it never reaches an instance: only a mock server started directly gets here
 app.post('/reset-mock-state', (req, res) => {
-  if (!process.send) {
-    return res.status(409).json({
-      message: 'The mock server restarts on reset only when started by `npm run mock-server`'
-    })
-  }
-
-  const generatedData = req.body?.generatedData === true
-
-  res.on('finish', () => process.send({ type: 'restart', generatedData }, () => process.exit(0)))
-  res.json({ restarting: true, instance: MOCK_INSTANCE })
+  res.status(409).json({
+    message: 'The mock server restarts on reset only when started by `npm run mock-server`'
+  })
 })
 
 app.get('/mock-instance', (req, res) => {
@@ -3474,6 +3475,18 @@ app.get(`${iguazioApiUrl}/api/scrubbed_users`, getIguazioUsers)
 
 app.get(`${iguazioApiUrl}/api/jobs/:id`, getIguazioJob)
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+if (isMainThread) {
+  app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`)
+  })
+} else {
+  const server = app.listen(port, '127.0.0.1', () => {
+    // the front passes the requests of this instance's worker here from now on
+    parentPort.postMessage({ type: 'ready', port: server.address().port, instance: MOCK_INSTANCE })
+  })
+
+  // the front reuses its sockets to this instance (a keep-alive agent): an idle socket closed here after the default
+  // 5 s, at the moment the front sends the next request on it, would fail that request (ECONNRESET, a 502). The
+  // instance never closes them, they go away with the thread on the reset
+  server.keepAliveTimeout = 0
+}

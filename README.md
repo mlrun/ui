@@ -145,24 +145,25 @@ npm run test:regression:ci
 | `npm run test:regression:failed` | The scenarios failed in the previous run (one worker)                                                                                                                                      |
 | `npm run test:regression:debug`  | Playwright UI mode against the dev server: pick scenarios, watch them step by step, time-travel                                                                                            |
 | `npm run test:defects`           | Defect injection: breaks the mock server on purpose (`tests/mockServer/defects.js`) and checks that the scenarios of each defect fail; `E2E_DEFECTS=name,...` - some of them               |
+| `npm run test:mock-isolation`    | Checks that the workers' mock server instances are isolated and that the memory stays flat over the resets (no browser, ~1 minute)                                                         |
 | `npm run report:open`            | Open the Allure report: every attempt of a scenario with its error, screenshot and trace, history of runs                                                                                  |
 
-| Environment variable  | Description                                                                                                                                                                                            | Default                     |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------- |
-| `E2E_WORKERS`         | Scenarios run in parallel: N processes, each with its own mock server and app (one build), on `E2E_APP_PORT`/`E2E_MOCK_PORT` + 1..N                                                                    | `1`, on CI half of the CPUs |
-| `E2E_FULL_PER_WORKER` | `true` - every worker runs the whole regression, not a share of it (e.g. `E2E_WORKERS=3` runs it 3 times at once to find the flaky scenarios); the report shows the runs of a scenario as its attempts | `false`                     |
-| `E2E_MAX_WORKERS`     | Upper limit of `E2E_WORKERS` (every worker is a mock server, an app server and a browser)                                                                                                              | `4`                         |
-| `E2E_RETRIES`         | Retries of a failed scenario (0..5), a scenario passed on a retry is reported as flaky                                                                                                                 | `1`                         |
-| `E2E_TRACE`           | Playwright trace: `on-first-retry` (only the retry of a failed scenario, a passing one records nothing), `retain-on-failure` (every attempt), `on`, `off`...                                           | `on-first-retry`            |
-| `E2E_APP`             | `build` - the prebuilt app (~190 MB, ~60 requests per page load), `dev` - the dev server (~2 GB, ~530 requests)                                                                                        | `build`                     |
-| `E2E_BUILD`           | `false` - don't rebuild the app, run against the existing `build/regression`                                                                                                                           | `true`                      |
-| `E2E_HEADLESS`        | `false` - show the browser                                                                                                                                                                             | `true`                      |
-| `E2E_TAGS`            | Tag expression, e.g. `@smoke and not @inProgress`                                                                                                                                                      | all                         |
-| `E2E_TZ`              | Timezone of the browser and of the steps                                                                                                                                                               | `UTC`                       |
-| `E2E_LOCALE`          | Locale of the browser (number and date formats)                                                                                                                                                        | `en-US`                     |
-| `E2E_OPEN_REPORT`     | `false` - don't serve the report after the run (it isn't served on CI)                                                                                                                                 | `true`                      |
-| `E2E_APP_PORT`        | Port of the app, e.g. to run next to another app on the default port                                                                                                                                   | `3000`                      |
-| `E2E_MOCK_PORT`       | Port of the mock server, the app proxies the API requests to it                                                                                                                                        | `30000`                     |
+| Environment variable  | Description                                                                                                                                                                                     | Default                     |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| `E2E_WORKERS`         | Scenarios run in parallel in N Playwright workers (`--workers N`), one app and one mock server (an instance per worker) serve them all, see [Parallel run](#parallel-run)                       | `1`, on CI half of the CPUs |
+| `E2E_FULL_PER_WORKER` | `true` - the whole regression N times at once (`--repeat-each N`, N = `E2E_WORKERS`), e.g. `E2E_WORKERS=3` to find the flaky scenarios; the report shows the runs of a scenario as its attempts | `false`                     |
+| `E2E_MAX_WORKERS`     | Upper limit of `E2E_WORKERS` (every worker is a Playwright worker process, a browser and a mock server instance)                                                                                | `4`                         |
+| `E2E_RETRIES`         | Retries of a failed scenario (0..5), a scenario passed on a retry is reported as flaky                                                                                                          | `1`                         |
+| `E2E_TRACE`           | Playwright trace: `on-first-retry` (only the retry of a failed scenario, a passing one records nothing), `retain-on-failure` (every attempt), `on`, `off`...                                    | `on-first-retry`            |
+| `E2E_APP`             | `build` - the prebuilt app (~190 MB, ~60 requests per page load), `dev` - the dev server (~2 GB, ~530 requests)                                                                                 | `build`                     |
+| `E2E_BUILD`           | `false` - don't rebuild the app, run against the existing `build/regression`                                                                                                                    | `true`                      |
+| `E2E_HEADLESS`        | `false` - show the browser                                                                                                                                                                      | `true`                      |
+| `E2E_TAGS`            | Tag expression, e.g. `@smoke and not @inProgress`                                                                                                                                               | all                         |
+| `E2E_TZ`              | Timezone of the browser and of the steps                                                                                                                                                        | `UTC`                       |
+| `E2E_LOCALE`          | Locale of the browser (number and date formats)                                                                                                                                                 | `en-US`                     |
+| `E2E_OPEN_REPORT`     | `false` - don't serve the report after the run (it isn't served on CI)                                                                                                                          | `true`                      |
+| `E2E_APP_PORT`        | Port of the app, e.g. to run next to another app on the default port                                                                                                                            | `3000`                      |
+| `E2E_MOCK_PORT`       | Port of the mock server, the app proxies the API requests to it                                                                                                                                 | `30000`                     |
 
 A wrong value fails the run before anything is started. An app or a mock server already running on the ports of the run
 is reused (not on CI), the run warns about it: the scenarios run against it, not against the build of the run.
@@ -180,11 +181,29 @@ that passes on the broken mock is a false pass ("MISSED", the run fails). The re
 A defect must be visible in the UI: check that the UI shows the broken field (e.g. the UI keeps the sources of an artifact
 by name, a duplicated source isn't shown). Stop a running mock server first: the run starts its own, with the defect.
 
-### Mock server
+### Parallel run
 
-The scenarios of a worker run one at a time: they share the mock server. Before every scenario its process is
-restarted (`npm run mock-server` supervises it, `POST /reset-mock-state`), so a scenario starts on a clean state and
-the memory doesn't grow over the run (~110 MB, ~0.25 s per restart).
+`E2E_WORKERS=N` is Playwright's own parallel run: one `playwright test --workers N`, one console reporter, one Allure
+report. The scenarios (not the feature files, `fullyParallel`) are spread over the workers, every worker has its own
+browser. One app server and one mock server serve all the workers.
+
+The mock server (`npm run mock-server`, `scripts/mockServer.js`) keeps a separate instance per worker: every request of
+a scenario carries the `x-e2e-worker` header (the Playwright `parallelIndex`: the browser through `extraHTTPHeaders`,
+the app passes it on to the mock server, the API steps and the mock control requests set it themselves), and the mock
+server passes it to the instance of that worker. An instance is `tests/mockServer/mock.js` in its own worker thread,
+with its own copy of the data, timers and background tasks. Before every scenario its worker's instance is replaced by
+a fresh one (`POST /reset-mock-state`), the other instances are not touched: a scenario starts on a clean state, the
+workers never see each other's data (a project, a failure condition, the generated data), and the memory doesn't grow
+over the run. In a run (`MOCK_STRICT_WORKERS=true`, playwright.config.js) a request without the header is refused (400):
+it can't silently share another worker's state. A mock server started by hand (`npm run mock-server` next to
+`npm start`) serves such requests from the instance of worker 0. `npm run test:mock-isolation` checks all this without
+a browser.
+
+The memory: the mock server is ~65 MB plus ~55-65 MB per worker (an instance), the app server (`vite preview`) ~180 MB
+for all the workers, every worker adds a Playwright worker process (~450 MB) and a browser (~300 MB, up to ~600 MB on
+the heavy pages). Before, every worker had its own mock server (~160 MB: a supervisor and the mock process) and app
+server (~180 MB) as well. A new instance starts about as fast as the mock server process restarted before (~0.25 s on
+an idle machine, seconds on a busy one: it's mostly the loading of the modules of `mock.js`, `lodash-es` above all).
 
 The big `auto-generated-data` project (`tests/mockServer/dataGenerators.js`: 2700 runs, 1200 alerts, models with LLM
 prompts) is generated only for the scenarios tagged `@generatedData` (paging, search over many items). Tag a scenario that

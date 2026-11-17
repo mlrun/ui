@@ -20,6 +20,7 @@ such restriction.
 import path from 'node:path'
 import { test as base, createBdd } from 'playwright-bdd'
 import { trackPageActivity, trackRequests } from '../common-tools/element.js'
+import { WORKER_HEADER } from '../../config.js'
 
 // `this` of the steps and hooks: one per scenario, the steps share the page and the data in it
 export class World {
@@ -46,6 +47,11 @@ export class World {
 const isFailed = testInfo => !['passed', 'skipped'].includes(testInfo.status)
 
 export const test = base.extend({
+  // every request of the browser says its worker: the app passes the header on with the API requests it proxies to the
+  // mock server (vite.config.mjs), which keeps a separate instance per worker (scripts/mockServer.js)
+  extraHTTPHeaders: async ({ extraHTTPHeaders }, use, testInfo) => {
+    await use({ ...extraHTTPHeaders, [WORKER_HEADER]: String(testInfo.parallelIndex) })
+  },
   page: async ({ page }, use, testInfo) => {
     const consoleLogs = []
 

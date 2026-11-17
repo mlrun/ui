@@ -86,13 +86,15 @@ const testDir = defineBddConfig({
 
 export default defineConfig({
   testDir,
-  // one E2E run at a time (the memory), a sharded run holds the lock in `scripts/testRegression.js`
+  // one E2E run at a time (the memory), `npm run test:regression` holds the lock in `scripts/testRegression.js`
   globalSetup: './tests/global-setup.js',
   outputDir: path.join(reports_dir, 'test-results'),
-  // the scenarios share one stateful mock backend (restarted before each scenario), so they can't run in parallel in one
-  // Playwright process: the parallel run (E2E_WORKERS) is N processes, each with its own mock server and app
+  // the parallel run is `--workers N` (E2E_WORKERS, scripts/testRegression.js): one app and one mock server serve all the
+  // workers, the mock server keeps a separate instance per worker (the `x-e2e-worker` header, scripts/mockServer.js).
+  // The scenarios (not the feature files) are spread over the workers: each scenario starts on a fresh instance and
+  // doesn't depend on the others
   workers: 1,
-  fullyParallel: false,
+  fullyParallel: true,
   retries: Number(process.env.E2E_RETRIES ?? 1),
   // a scenario that passes only on the retry is reported as flaky, in CI it fails the run (an intermittent issue)
   failOnFlakyTests: isCI,
@@ -100,8 +102,7 @@ export default defineConfig({
   // a scenario is a whole user flow with dozens of steps
   timeout: 10 * 60 * 1000,
   expect: { timeout: expectTimeout },
-  // the report is Allure (`npm run report`), the shards of a parallel run (scripts/testRegression.js) write their
-  // results to the same directory
+  // the report is Allure (`npm run report`)
   reporter: [
     ['./tests/reporters/console-reporter.js'],
     // the failures as annotations of the GitHub Actions job
@@ -148,11 +149,17 @@ export default defineConfig({
   // already running servers are reused, e.g. `npm run mock-server` and `npm start` in other terminals
   webServer: [
     {
-      // restarted before every scenario (scripts/mockServer.js), the "auto-generated-data" project only for the
-      // scenarios tagged `@generatedData`
+      // an instance per worker, restarted before every scenario (scripts/mockServer.js), the "auto-generated-data"
+      // project only for the scenarios tagged `@generatedData`. MOCK_STRICT_WORKERS: a request that doesn't say its
+      // worker is refused, it can't reach another worker's state. `/mock-front` answers without the header, the
+      // instances are started on the first request of their worker
       command: 'npm run mock-server',
-      url: `${mockIngress('mlrun-api-ingress')}/api/v1/frontend-spec`,
-      env: { E2E_MOCK_PORT: mock_server_port, MOCK_GENERATED_DATA: 'false' },
+      url: `${mock_server_url}/mock-front`,
+      env: {
+        E2E_MOCK_PORT: mock_server_port,
+        MOCK_GENERATED_DATA: 'false',
+        MOCK_STRICT_WORKERS: 'true'
+      },
       reuseExistingServer: !isCI,
       timeout: 60000
     },
