@@ -348,7 +348,7 @@ Feature: Projects Page
         Then verify breadcrumbs "tab" label should be equal "Settings" value
 
     @MLPr
-    @smoke @rerun
+    @smoke @rerun @demoMode
     Scenario: MLPr015 - Check components on Monitoring container on Projects page
         Given open url
         And wait load page

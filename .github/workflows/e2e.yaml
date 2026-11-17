@@ -1,0 +1,164 @@
+# Copyright 2019 Iguazio
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# The E2E regression (README.md, "E2E regression" > "CI"): every PR, after a maintainer approves the run (the `e2e`
+# environment with required reviewers), and manually (Actions > E2E regression > Run workflow).
+name: E2E regression
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    branches:
+      - development
+      - 'feature/**'                   # Matches branches like 'feature/***'
+      - '[0-9]+.[0-9]+.x'              # Matches branches like '1.3.x'
+      - '[0-9]+.[0-9]+.[0-9]+'         # Matches branches like '1.2.3'
+      - '[0-9]+.[0-9]+.[0-9]+_.*'      # Matches branches like '1.7.0_cpj_mm'
+      - '[0-9]+.[0-9]+.[0-9]+-.*'      # Matches branches like '1.2.3-feature'
+  workflow_dispatch:
+    inputs:
+      workers:
+        description: 'Parallel workers (E2E_WORKERS), e.g. 4 to compare the run and the resources with the default 3'
+        type: choice
+        options: ['1', '2', '3', '4']
+        default: '3'
+      tags:
+        description: 'Tag expression of the scenarios (E2E_TAGS), `all` - every scenario'
+        type: string
+        default: 'not @demoMode and not @MLPH'
+
+# one run per PR: a new push cancels the running one or the one waiting for the approval. The manual runs are not
+# cancelled (e.g. a run with 4 workers next to one with 3)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    name: E2E regression
+    runs-on: ubuntu-latest
+    # the run waits until a maintainer approves it: the required reviewers of the environment (Settings > Environments).
+    # The environment must exist with its reviewers before this file is merged: GitHub creates a missing one on the
+    # first run, without any protection
+    environment: e2e
+    timeout-minutes: 60
+    env:
+      # The CI selection leaves out the UI that isn't shown to the users: the demo mode (`@demoMode`, the scenarios that
+      # turn it on with `?mode=demo`; the step fails in an untagged scenario) and the Quick actions page
+      # (`@MLPH`, quickActions.feature). Local runs run all the scenarios
+      E2E_TAGS: ${{ inputs.tags || 'not @demoMode and not @MLPH' }}
+      # 3 workers by default (a worker is a Playwright worker process, a browser and a mock instance), the summary
+      # says whether the runner kept up; `workers=4` in a manual run to compare
+      E2E_WORKERS: ${{ inputs.workers || '3' }}
+      E2E_RESOURCES_LOG: tests/reports/e2e-resources.log
+      E2E_CONSOLE_LOG: tests/reports/e2e-console.log
+    steps:
+      - name: Checking Out
+        uses: actions/checkout@v5
+
+      - name: Preparing Node Env
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('./node_modules/@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache the Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}-chromium
+
+      - name: Install Chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      # the browser is cached, its system libraries are not
+      - name: Install the system dependencies of Chromium
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      # the resource sampler runs in the background for the whole step: the summary says whether the runner kept up
+      # with the workers
+      - name: Run the E2E regression
+        id: e2e
+        shell: bash
+        run: |
+          if [ "$E2E_TAGS" = all ]; then export E2E_TAGS=; fi
+          mkdir -p tests/reports
+          echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+          bash scripts/e2eResources.sh "$E2E_RESOURCES_LOG" 5 &
+          sampler=$!
+          set +e
+          npm run test:regression:ci 2>&1 | tee "$E2E_CONSOLE_LOG"
+          status=${PIPESTATUS[0]}
+          set -e
+          kill "$sampler" 2>/dev/null || true
+          wait "$sampler" 2>/dev/null || true
+          echo "finished_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+
+      - name: Summary and resource verdict
+        if: always()
+        env:
+          E2E_STARTED_AT: ${{ steps.e2e.outputs.started_at }}
+          E2E_FINISHED_AT: ${{ steps.e2e.outputs.finished_at }}
+          E2E_EXIT_CODE: ${{ steps.e2e.outputs.exit_code }}
+        run: node scripts/e2eCiSummary.js
+
+      # served by `npx allure open <the unpacked folder>` (the report loads its files on demand)
+      - name: Upload the Allure report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: tests/reports/allure-report
+          retention-days: 14
+          if-no-files-found: warn
+
+      - name: Upload the resource log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-resources
+          path: tests/reports/e2e-resources.log
+          retention-days: 14
+          if-no-files-found: warn
+
+      # the traces (`npx playwright show-trace <trace.zip>`), screenshots, the console output and the build log
+      - name: Upload the test results and the logs
+        if: failure() || cancelled()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-results
+          path: |
+            tests/reports/test-results
+            tests/reports/e2e-console.log
+            tests/reports/build.log
+          retention-days: 14
+          if-no-files-found: warn

@@ -198,7 +198,7 @@ Feature: Feature Store Page
     @MLFS
     @passive
     @inProgress
-    @smoke
+    @smoke @demoMode
     Scenario: MLFS005 - Check all mandatory components in Item infopane on Overview tab table on Feature Vectors tab
         Given open url
         And wait load page
@@ -371,7 +371,7 @@ Feature: Feature Store Page
     @MLFS
     @passive
     @inProgress
-    @smoke
+    @smoke @demoMode
     Scenario: MLFS011 - Check all mandatory components in Item infopane on Analysis tab table
         Given open url
         And wait load page
@@ -1739,7 +1739,7 @@ Feature: Feature Store Page
         Then value in "labelIcon" column with "tooltip" in "Requested_Features_Table" on "Requested_Features_Info_Pane" wizard should contain "Label column"
 
     @MLFS
-    @smoke
+    @smoke @demoMode
     # Moved analyses tabs to Demo mode in `1.8.0` ML-9059
     Scenario: MLFS046 - Verify No Data message on Feature Store tabs
         * set tear-down property "project" created with "automation-test-name001" value
@@ -1785,7 +1785,7 @@ Feature: Feature Store Page
     @MLFS
     @smoke
     # Moved analyses tabs to Demo mode in `1.8.0` ML-9059
-    @rerun
+    @rerun @demoMode
     Scenario: MLFS047 - Check broken link redirection
         * set tear-down property "project" created with "automation-test-010" value
         * create "automation-test-010" MLRun Project with code 201

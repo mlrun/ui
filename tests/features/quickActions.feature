@@ -72,7 +72,7 @@ Feature: Quick actions Page
             |  Nuclio Functions   |
             |     Monitoring      |
     
-    @MLPH
+    @MLPH @demoMode
     Scenario: MLPH002 - Verify behaviour on Register Model Popup on Project Home Page
         Given open url
         And wait load page
@@ -226,7 +226,7 @@ Feature: Quick actions Page
         Then check "v3io:///target/path" value in "path" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     
     @MLPH 
-    @passive
+    @passive @demoMode
     Scenario: MLPH005 - Check all mandatory components on Create ML Function on Project Home Page
         * set tear-down property "project" created with "automation-test-1003" value
         * create "automation-test-1003" MLRun Project with code 201
@@ -442,7 +442,7 @@ Feature: Quick actions Page
         Then verify "Labels_Table" element visibility on "Create_Feature_Vector_Popup" wizard
 
     @MLPH
-    @passive
+    @passive @demoMode
     Scenario: MLPH009 - Check all mandatory components on Feature Set tab on Project Home Page
         Given open url
         And wait load page
@@ -556,7 +556,7 @@ Feature: Quick actions Page
         Then verify "Feature_Vectors_Table" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
 
     @MLPH
-    @passive
+    @passive @demoMode
     Scenario: MLPH013 - Check all mandatory components on ML Functions tab on Project Home Page
         Given open url
         And wait load page
@@ -632,7 +632,7 @@ Feature: Quick actions Page
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
 
     @MLPH
-    @passive
+    @passive @demoMode
     Scenario: MLPH015 - Check all mandatory components on Models tab on Project Home Page
         Given open url
         And wait load page

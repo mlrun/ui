@@ -4,7 +4,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF005 - Check all mandatory components on ML Functions Page
         Given open url
@@ -175,7 +175,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF003 - Check all mandatory components on Create ML Function Popup
         Given open url
@@ -206,7 +206,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF010 - Check all mandatory components in General Accordion on create new function page
         Given open url
@@ -250,7 +250,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF011 - Check all mandatory components in Code Accordion on create new function page
         Given open url
@@ -294,7 +294,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF012 - Check all mandatory components in Resources Accordion on create new function page
         Given open url
@@ -383,7 +383,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF013 - Verify behaviour of Volume Paths Table in Resources Accordion on create new function page
         Given open url
@@ -487,7 +487,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF014 - Check all mandatory components in Resources Accordion on create new function page
         Given open url
@@ -614,7 +614,7 @@ Feature: ML Functions
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     # BUG-004 (tests/KNOWN_BUGS.md): the CPU limit unit select drops the requests, the edited function has the defaults
-    @rerun @knownBug
+    @rerun @knownBug @demoMode
     Scenario: MLF015 - Save new ml-function
         * set tear-down property "function" created in "default" project with "new-aqa-function-00" value
         Given open url
@@ -684,7 +684,7 @@ Feature: ML Functions
         Then verify "GPU_Limit_Number_Input" input should contain "15" value in "Resources_Accordion" on "New_Function" wizard
 
     @MLF
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF016 - Deploy new ml-function with build new image option
         Given open url
@@ -747,7 +747,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF018 - Check all mandatory components in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
@@ -778,7 +778,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF019 - Check Model Table in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
@@ -848,7 +848,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF020 - Check Secret Table in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
@@ -903,7 +903,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF021 - Check Parameters Table in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
@@ -969,7 +969,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF022 - Verify non-unique value input hint on Create new function page
         Given open url
@@ -996,7 +996,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF023 - Verify non-unique value input hint on Create New Serving Function page
         Given open url
@@ -1103,7 +1103,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF027 - Verify Edit action visibility in action menu
         Given open url
@@ -1123,7 +1123,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF028 - Verify Edit action visibility in Item infopane for Job function
         Given open url
@@ -1146,7 +1146,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF029 - Verify Edit action visibility in Item infopane for Serving function
         Given open url
@@ -1168,7 +1168,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF030 - Verify all mandatory component on Edit Function sidebar
         * set tear-down property "project" created with "automation-test" value
@@ -1239,7 +1239,7 @@ Feature: ML Functions
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     # BUG-004 (tests/KNOWN_BUGS.md): the CPU limit unit select drops the requests, the Batch Run shows the defaults
-    @rerun @knownBug
+    @rerun @knownBug @demoMode
     Scenario: MLF033 - Verify Resources values on Function Deploy and Run
         * set tear-down property "project" created with "automation-test" value
         * set tear-down property "function" created in "automation-test" project with "new-aqa-function-00" value
@@ -1365,7 +1365,7 @@ Feature: ML Functions
         Then compare "Header" element value on "ML_Function_Info_Pane" wizard with test "name" context value
 
     @MLF
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF002 - Check requirements field in Code Accordion on Create new function page
         Given open url
@@ -1415,7 +1415,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: ML-5718 - move 'Deploy' button for "Serving" function to demo mode
     Scenario: MLF034 - Verify Deploy option for serving kind functions
         Given open url

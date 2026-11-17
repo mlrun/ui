@@ -60,7 +60,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke
+    @smoke @demoMode
     Scenario: MLJW002 - Check all mandatory components on Workflows Monitor tab
         Given open url
         And wait load page

@@ -25,7 +25,10 @@ import { defineBddConfig } from 'playwright-bdd'
 
 import {
   actionTimeout,
+  appEnv,
   appMode,
+  buildDir,
+  buildMarker,
   expectTimeout,
   headless,
   navigationTimeout,
@@ -46,15 +49,24 @@ process.env.TZ = timezone
 const baseURL = `http://${test_url}:${test_port}`
 const isCI = Boolean(process.env.CI)
 // the app the scenarios run against: `appMode` (E2E_APP) in tests/config.js
-const buildDir = path.join('build', 'regression')
-
 if (!['build', 'dev'].includes(appMode)) {
   throw new Error(`E2E_APP=${appMode} is not supported: build, dev`)
 }
 
-if (appMode === 'build' && !fs.existsSync(path.join(buildDir, 'index.html'))) {
+// a `playwright test` run (not `bddgen` or knip, which only read this file): only the E2E build (its marker,
+// tests/config.js), never a production build in the same folder
+const isTestRun = /playwright/.test(process.argv[1] ?? '') && process.argv.includes('test')
+
+if (isTestRun && appMode === 'build' && !fs.existsSync(path.join(buildDir, 'index.html'))) {
   throw new Error(
-    `The app is not built (${buildDir}): run \`npm run test:regression\` (it builds the app), \`npm run build:regression\` or use E2E_APP=dev`
+    `The app is not built (${buildDir}): run \`npm run test:regression\` once (it builds the app) or use E2E_APP=dev`
+  )
+}
+
+if (isTestRun && appMode === 'build' && !fs.existsSync(buildMarker)) {
+  throw new Error(
+    `${buildDir} is not the E2E build (no ${buildMarker}), e.g. a production \`npm run build\`: run ` +
+      '`npm run test:regression` once (it builds the app) or use E2E_APP=dev'
   )
 }
 
@@ -62,15 +74,6 @@ const appCommand =
   appMode === 'build'
     ? `npx vite preview --mode development --outDir ${buildDir} --port ${test_port} --strictPort`
     : `npm start -- --port ${test_port} --strictPort`
-// the app proxies the API requests to the mock server (`server.proxy` in vite.config.mjs, used by `vite preview` as well)
-const mockIngress = host => `${mock_server_url}/${host}.default-tenant.app.vmdev36.lab.iguazeng.com`
-const appEnv = {
-  // no Module Federation type generation worker (~1 GB per dev server), see vite.config.mjs
-  MF_DTS: 'false',
-  VITE_MLRUN_API_URL: mockIngress('mlrun-api-ingress'),
-  VITE_NUCLIO_API_URL: mockIngress('nuclio-ingress'),
-  VITE_IGUAZIO_API_URL: mockIngress('platform-api')
-}
 
 const testDir = defineBddConfig({
   features: 'tests/features/*.feature',
@@ -163,6 +166,7 @@ export default defineConfig({
     {
       command: appCommand,
       url: baseURL,
+      // every variable of the app, the local `.env*` files are not used (tests/config.js)
       env: appEnv,
       reuseExistingServer: !isCI,
       timeout: 3 * 60 * 1000

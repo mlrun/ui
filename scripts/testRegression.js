@@ -18,7 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 // E2E regression, the one command for local and CI runs (`npm run test:regression`, `npm run test:regression:ci`):
-//  1. builds the app (`build:regression`, a few seconds), unless E2E_APP=dev or E2E_BUILD=false
+//  1. builds the app (`build:regression`, a few seconds, into `build`) and marks it as the E2E build (`build/.e2e-build`),
+//     unless E2E_APP=dev or E2E_BUILD=false. A production `npm run build` uses the same folder and removes the marker:
+//     E2E_BUILD=false refuses a build without it
 //  2. generates the specs from the feature files (`bddgen`)
 //  3. runs the scenarios headless: Playwright starts the mock server and the app (`webServer` in playwright.config.js)
 //  4. generates the Allure report (for failed runs as well) and opens it (not on CI, not with E2E_OPEN_REPORT=false)
@@ -34,7 +36,7 @@ import os from 'node:os'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 
-import { reports_dir } from '../tests/config.js'
+import { appEnv, buildDir, buildMarker, reports_dir } from '../tests/config.js'
 import { acquireRunLock, MAX_WORKERS } from '../tests/e2e-lock.js'
 
 const isWindows = process.platform === 'win32'
@@ -94,7 +96,6 @@ const settings = {
 }
 const appPort = Number(process.env.E2E_APP_PORT || 3000)
 const mockPort = Number(process.env.E2E_MOCK_PORT || 30000)
-const buildDir = path.join('build', 'regression')
 
 // one E2E run at a time: checked before anything is cleaned up, the Playwright run inherits the lock
 let releaseRunLock
@@ -232,11 +233,14 @@ if (settings.app === 'build') {
 
     fs.mkdirSync(reports_dir, { recursive: true })
     process.stdout.write('Building the app... ')
+    // a failed build leaves no marker, even if Vite didn't empty the folder
+    fs.rmSync(buildMarker, { force: true })
 
+    // every variable of the app is set (tests/config.js), the local `.env*` files are not used
     const build = spawnSync('npm', ['run', 'build:regression'], {
       encoding: 'utf8',
       shell: isWindows,
-      env: process.env
+      env: { ...process.env, ...appEnv }
     })
 
     fs.writeFileSync(buildLog, `${build.stdout ?? ''}${build.stderr ?? ''}`)
@@ -249,9 +253,20 @@ if (settings.app === 'build') {
       )
     }
 
+    fs.writeFileSync(
+      buildMarker,
+      `The E2E build (npm run build:regression by scripts/testRegression.js), built at ${new Date().toISOString()}\n`
+    )
     console.log(`done in ${((Date.now() - startedAt) / 1000).toFixed(1)}s`)
   } else if (!fs.existsSync(path.join(buildDir, 'index.html'))) {
-    fail(`E2E_BUILD=false, but there is no build in ${buildDir}: run without E2E_BUILD=false`)
+    fail(
+      `E2E_BUILD=false, but there is no build in ${buildDir}: run without E2E_BUILD=false (or \`npm run test:regression\` once)`
+    )
+  } else if (!fs.existsSync(buildMarker)) {
+    fail(
+      `E2E_BUILD=false, but ${buildDir} is not the E2E build (no ${buildMarker}), e.g. a production \`npm run build\`: ` +
+        'run without E2E_BUILD=false (or `npm run test:regression` once)'
+    )
   } else {
     console.log(`The app is not rebuilt (E2E_BUILD=false), the build in ${buildDir} is used`)
   }

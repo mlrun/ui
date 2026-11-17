@@ -226,3 +226,34 @@ the churn), `should be equal {string}` (no "to"), `nontable inputs`, `into` in t
 the casing of `mLRunUnhealthyPopup` and of the wizard `commonPagesHeader`.
 
 Done in the feature files: removed 120 redundant `wait load page` lines (78 after another `wait load page`, 42 after `navigate back`/`navigate forward`/`refresh a page`, which wait themselves) and the no-op `turn Off MLRun CE mode` step (2 uses + its definition; the Before hook sets `igzFullVersion`), and MLMA007 checks the whole label filter value (`should be equal ... attribute value`). Left: the `Default_Artifact_Path_Input` substring checks (projectMonitoring, quickActions): there is no exact variant of the `element in {string} on {string}` step, and with the mock data the field likely holds `JOB_DEFAULT_OUTPUT_PATH` (`.../artifacts/{{run.uid}}`), so the expected value is a prefix, not the whole value.
+
+### 10. The regression on GitHub Actions
+
+Done (2026-11-17): `.github/workflows/e2e.yaml` (README.md, "CI"): every PR after a maintainer's approval (the `e2e`
+environment with required reviewers), one job on `ubuntu-latest` with 3 workers, manual runs with `workers` and `tags`.
+The selection is `not @demoMode and not @MLPH` (333 of 405): the 57 scenarios that turn the demo mode on are tagged
+`@demoMode` (the diff only adds the tag), the demo mode step fails in an untagged scenario. A resource sampler
+(`scripts/e2eResources.sh`) runs during the tests, the job summary (`scripts/e2eCiSummary.js`) has the result, the
+resource verdict and the slowest scenarios.
+
+The E2E build in a fresh checkout: `build:regression` wrote to `build/regression`, but the `base-href-first` plugin of
+`vite.config.mjs` rewrites the hardcoded `build/index.html`, so the build failed without a stale production build there
+(ENOENT). `vite.config.mjs` is left as is: the E2E build goes to `build` (no `--outDir`), and
+`npm run test:regression` marks it with `build/.e2e-build`; `E2E_BUILD=false` and a direct `playwright test` refuse a
+`build` without the marker (a production `npm run build` empties the folder and removes it). Checked in a copy of the
+checkout (`git ls-files -co --exclude-standard`, no `.env*`, no `build`) with `test:regression:ci`.
+
+Not run on CI here: the sampler and the summary were checked on macOS against a short local run with a fabricated
+`/proc` and a fabricated overloaded sample.
+
+Open:
+
+- the `e2e` environment must be created with its required reviewers before the workflow is merged (GitHub creates a
+  missing one unprotected);
+- the first real CI run: the duration, flaky scenarios on the runner, the resource verdict;
+- the app loads the Monaco editor from `cdn.jsdelivr.net` (`monaco-editor@0.55.1`, the default of `@monaco-editor/react`)
+  in every scenario: the only request of a run to an external host. Serve it locally (a Playwright route to
+  `node_modules/monaco-editor/min/vs`, installed is 0.57.0, or pin 0.55.1) or keep the CDN;
+- 3 or 4 workers: a manual run with `workers=4`, compare the two summaries (duration, load p95 per CPU, MemAvailable);
+- the non-demo checks of MLFS005, MLJW002, MLJM002, MLPM001, MLPM011 (and MLPH013, MLPH015) come before the demo mode
+  is turned on and don't run on CI: split those scenarios?

@@ -541,7 +541,7 @@ Feature: Jobs Monitoring Page
         Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Monitor_Jobs_Name" with "fesf"
  
     @MLJM
-    @smoke @generatedData
+    @smoke @generatedData @demoMode
     Scenario: MLJM002 - Check components on Workflows tab of Jobs monitoring page
         Given open url
         And wait load page

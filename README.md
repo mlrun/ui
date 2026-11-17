@@ -138,6 +138,12 @@ E2E_WORKERS=3 E2E_RETRIES=2 npm run test:regression -- --grep "MLPr001 |MLA016 "
 npm run test:regression:ci
 ```
 
+The E2E build goes to `build`, the output folder of the production `npm run build` as well (the `base-href-first`
+plugin of `vite.config.mjs` patches `build/index.html`). After a successful build the run marks it with `build/.e2e-build` (the time of the build). A run without a rebuild (`E2E_BUILD=false`, or a
+direct `npx playwright test`) refuses a `build` without the marker, so it never tests a production build: run
+`npm run test:regression` once. Vite empties `build` on every build, so a production build removes the marker; the
+Docker image is built from its own `npm run build` (`build` is in `.dockerignore`).
+
 | Command                          | Description                                                                                                                                                                                |
 | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `npm run test:regression`        | The regression with a progress bar, then the Allure report is generated and served (`E2E_OPEN_REPORT=false` - not served)                                                                  |
@@ -156,7 +162,7 @@ npm run test:regression:ci
 | `E2E_RETRIES`         | Retries of a failed scenario (0..5), a scenario passed on a retry is reported as flaky                                                                                                          | `1`                         |
 | `E2E_TRACE`           | Playwright trace: `on-first-retry` (only the retry of a failed scenario, a passing one records nothing), `retain-on-failure` (every attempt), `on`, `off`...                                    | `on-first-retry`            |
 | `E2E_APP`             | `build` - the prebuilt app (~190 MB, ~60 requests per page load), `dev` - the dev server (~2 GB, ~530 requests)                                                                                 | `build`                     |
-| `E2E_BUILD`           | `false` - don't rebuild the app, run against the existing `build/regression`                                                                                                                    | `true`                      |
+| `E2E_BUILD`           | `false` - don't rebuild the app, run against the existing E2E build in `build`, refused without its marker `build/.e2e-build` (e.g. after a production `npm run build`)                         | `true`                      |
 | `E2E_HEADLESS`        | `false` - show the browser                                                                                                                                                                      | `true`                      |
 | `E2E_TAGS`            | Tag expression, e.g. `@smoke and not @inProgress`                                                                                                                                               | all                         |
 | `E2E_TZ`              | Timezone of the browser and of the steps                                                                                                                                                        | `UTC`                       |
@@ -213,3 +219,70 @@ The scenarios tagged `@knownBug` or `@FAILED_TODO` are expected to fail: their f
 shows them as known bugs (◆) and the report as failed and known ("accepted", in the "Known app bugs" and "Not implemented
 yet" categories). Such a scenario that passes fails the run: remove the tag.
 A scenario that passes only on a retry is reported as flaky, on CI it fails the run.
+
+### CI
+
+`.github/workflows/e2e.yaml` runs the regression (`npm run test:regression:ci`) on GitHub Actions in one job on
+`ubuntu-latest`, with 3 workers by default.
+
+**Trigger.** Every PR into `development`, `feature/**` and the release branches (the same as `ci.yaml`: opened,
+reopened, a new push), after a maintainer approves the run. A new push to the PR cancels its running run, or the one
+waiting for the approval (`concurrency`). Manual runs: Actions → E2E regression → Run workflow, with the inputs
+`workers` (1-4, default 3) and `tags` (the tag expression, default the CI selection, `all` - every scenario). The
+manual runs don't cancel each other.
+
+**Approval.** The job uses the GitHub environment `e2e`; its required reviewers approve every run ("Review deployments"
+→ "Approve and deploy" on the run page). A repository admin sets it up **before the workflow is merged**: GitHub creates
+a missing environment on the first run that uses it, _without any protection_, and that run starts at once.
+
+1. Settings → Environments → New environment, the name `e2e` → Configure environment.
+2. Required reviewers: check it and add the maintainers (people or teams, up to 6) who may start the runs.
+3. Optional: "Prevent self-review" - the one who pushed can't approve their own run (another maintainer must).
+4. Optional: Deployment branches and tags - leave "No restriction": the runs come from the PR branches, a rule such as
+   "Protected branches only" would reject them.
+5. Save protection rules. The environment needs no secrets or variables.
+
+**Selection.** CI runs `E2E_TAGS='not @demoMode and not @MLPH'` (set in the workflow): the UI that isn't shown to the
+users is left out. `@demoMode` is every scenario that turns the demo mode on (`turn on demo mode with query params ...`,
+`?mode=demo`; the step fails in a scenario without the tag, so a new demo scenario can't slip into the CI selection),
+`@MLPH` is the Quick actions page (`quickActions.feature`). 333 of the 405 scenarios. Some scenarios turn the demo mode
+on only after checking the regular UI (MLFS005, MLJW002, MLJM002, MLPM001, MLPM011): those checks don't run on CI
+either. Local runs run all the scenarios.
+
+**No local `.env*` files.** The run doesn't use them (they are gitignored, a CI checkout has none): every variable
+that the app (`import.meta.env`) and `vite.config.mjs` read is set by the run (`appEnv` in `tests/config.js`, for the
+build in `scripts/testRegression.js` and for the app server in `playwright.config.js`; Vite gives the variables already
+in the environment priority over the files). All the proxied requests (`/api`, `/nuclio`, `/iguazio`,
+`/function-catalog`) go to the mock server. One external request is left: the code editor (Monaco) is loaded by the app
+from `cdn.jsdelivr.net` (the default of `@monaco-editor/react`), so the runner needs the internet for it.
+
+**Artifacts** (kept 14 days):
+
+| Artifact           | When             | Contents                                                                                                                               |
+| ------------------ | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `allure-report`    | always           | The Allure report: unpack it and serve it with `npx allure open <folder>` (it loads its files on demand, it can't be opened as a file) |
+| `e2e-resources`    | always           | The raw resource log of the run (`scripts/e2eResources.sh`)                                                                            |
+| `e2e-test-results` | failed/cancelled | `test-results` (the traces: `npx playwright show-trace <trace.zip>`, the screenshots), the console output and the build log            |
+
+The failures are also annotations of the job (Playwright's `github` reporter).
+
+**Resource verdict.** A sampler (`scripts/e2eResources.sh`, Linux) reads `/proc/loadavg`, `/proc/stat` and
+`/proc/meminfo` every 5 s in the background of the test step. After the run, also a failed one,
+`scripts/e2eCiSummary.js` writes the job summary: the result line, the selection, the workers, the duration, and the
+verdict - the CPU count, the load average (median, p95, against the CPUs), the CPU idle, iowait and steal, the minimum
+MemAvailable, the maximum swap used and the slowest scenarios. It warns ("Looks overloaded", also as a job warning) when
+the load p95 is above 2× the CPUs, the CPU idle median is below 10%, the iowait p95 is above 20%, MemAvailable went below
+1 GB or the swap use grew by more than 64 MB.
+
+**Runner sizes and the memory estimate.** `ubuntu-latest` has 4 vCPU and 16 GB in public repositories; private
+repositories get a smaller standard runner (2 vCPU, 7-8 GB): there 3 workers are likely too many, use `workers=1` or
+`2`, or a larger runner. The estimate from the local measurements: the runner itself ~640 MB, the mock server and the
+app ~250 MB, every worker (a Playwright worker process, its browser, a mock instance) ~0.8-1.1 GB: ~3.3-4.2 GB with 3
+workers, ~4.1-5.3 GB with 4, well within 16 GB; on 4 vCPU the CPU is the likelier limit.
+
+**3 or 4 workers.** Run the workflow manually with `workers=4` on the same branch and compare the two job summaries:
+the duration, the load p95 per CPU, the CPU idle and the minimum MemAvailable. 4 workers are worth it if the run is
+clearly shorter, nothing is flaky and the verdict shows no overload signs.
+
+**Rerun.** "Re-run jobs" on the run page (it waits for the approval again), or a manual run with other inputs, e.g.
+`tags` `@MLPr` for a part of the scenarios.

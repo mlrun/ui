@@ -24,8 +24,9 @@ such restriction.
 //   npm run test:defects                                  all the defects
 //   E2E_DEFECTS=function-deletion-fails npm run test:defects   some of them (comma separated)
 //
-// One scenario at a time (one worker), the prebuilt app (`npm run build:regression` first) or a running one. The mock
-// server is started here (with the defect), a running one is not reused: stop it first
+// One scenario at a time (one worker), the prebuilt app (the E2E build with its marker: `npm run test:regression` once,
+// tests/config.js) or a running one. The mock server is started here (with the defect), a running one is not reused:
+// stop it first
 import fs from 'node:fs'
 import net from 'node:net'
 import path from 'node:path'

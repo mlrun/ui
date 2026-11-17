@@ -3,7 +3,7 @@ Feature: Monitoring app Page
     Testcases that verifies functionality on Monitoring app Page
     
   @MLMA
-  @smoke
+  @smoke @demoMode
   Scenario: MLMA001 - Check action bar components on Monitoring app page
     Given open url
     And wait load page
@@ -41,7 +41,7 @@ Feature: Monitoring app Page
     Then verify "Date_Picker_Filter_Dropdown" dropdown on "Monitoring_App" wizard selected option value "Past month"
 
   @MLMA
-  @smoke
+  @smoke @demoMode
   Scenario: MLMA002 - Check statistics section components on Monitoring app page
     Given open url
     And wait load page
@@ -83,7 +83,7 @@ Feature: Monitoring app Page
     Then "RunningFrequency_Value_Title" element on "Monitoring_App" should contain "Every 10 minutes" value
 
   @MLMA
-  @smoke
+  @smoke @demoMode
   Scenario: MLMA003 - Check monitoring-app section components on Monitoring app page
     Given open url
     And wait load page
@@ -111,7 +111,7 @@ Feature: Monitoring app Page
     Then verify "Operating_Functions_Commited_Offset_Tip" element on "Monitoring_App" wizard should display hover hint "Label_Hint"."Commited_Offset"
 
   @MLMA
-  @smoke
+  @smoke @demoMode
   Scenario: MLMA004 - Check All Applications section components on Monitoring app page
     Given open url
     And wait load page
@@ -144,7 +144,7 @@ Feature: Monitoring app Page
     Then "Application_Metrics_Button" element on "Application_Monitoring" should contain "Application metrics" value
 
   @MLMA
-  @smoke
+  @smoke @demoMode
   Scenario: MLMA005 - Check action bar components on Application monitoring page
     Given open url
     And wait load page
@@ -204,7 +204,7 @@ Feature: Monitoring app Page
     Then "Application_Metrics_Button" element on "Application_Monitoring" should contain "Application metrics" value
 
   @MLMA
-  @smoke
+  @smoke @demoMode
   Scenario: MLMA006 - Check statistics section components on Application monitoring page
     Given open url
     And wait load page
@@ -248,7 +248,7 @@ Feature: Monitoring app Page
     Then verify "Commited_Offset_Counter" element visibility on "Application_Monitoring" wizard
 
   @MLMA
-  @smoke
+  @smoke @demoMode
   Scenario: MLMA007 - Check Artifacts section components on Application monitoring page
     Given open url
     And wait load page
@@ -278,7 +278,7 @@ Feature: Monitoring app Page
     And wait load page
 
   @MLMA
-  @smoke
+  @smoke @demoMode
   Scenario: MLMA008 - Check Results section components on Application monitoring page
     Given open url
     And wait load page
@@ -299,7 +299,7 @@ Feature: Monitoring app Page
     Then verify "Results_Table" element visibility on "Application_Monitoring" wizard
 
   @MLMA
-  @smoke
+  @smoke @demoMode
   Scenario: MLMA009 - Check Metrics section components on Application monitoring page
     Given open url
     And wait load page
@@ -323,7 +323,7 @@ Feature: Monitoring app Page
     Then verify "Metrics_Table" element visibility on "Application_Monitoring" wizard
 
   @MLMA
-  @smoke
+  @smoke @demoMode
   Scenario: MLMA010 - Check Shards/partitions status section components on Application monitoring page
     Given open url
     And wait load page
@@ -351,7 +351,7 @@ Feature: Monitoring app Page
     Then verify "Partitions_Status_Commited_Offset_Tip" element on "Application_Monitoring" wizard should display hover hint "Label_Hint"."Commited_Offset"
 
   @MLMA
-  @smoke
+  @smoke @demoMode
   Scenario: MLMA011 - Check action bar components on Applications metrics page
     Given open url
     And wait load page
@@ -401,7 +401,7 @@ Feature: Monitoring app Page
     Then "Application_Monitoring_Button" element on "Application_Metrics" should contain "Application monitoring" value
 
   @MLMA
-  @smoke
+  @smoke @demoMode
   Scenario: MLMA012 - Check Endpoints list section components on Applications metrics page
     Given open url
     And wait load page
@@ -441,7 +441,7 @@ Feature: Monitoring app Page
     Then "Search_Endpoints_Counter" element on "Application_Metrics" should contain "0 endpoints found" value
 
   @MLMA
-  @smoke
+  @smoke @demoMode
   Scenario: MLMA013 - Check redirection to Model Endpoints filtering by mode list 
     Given open url
     And wait load page

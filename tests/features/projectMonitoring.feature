@@ -179,7 +179,7 @@ Feature: Project Monitoring Page
     
     @MLPM
     @passive
-    @smoke
+    @smoke @demoMode
     Scenario: MLPM001 - Check all mandatory components on Navigation Bar
         Given open url
         And wait load page
@@ -334,7 +334,7 @@ Feature: Project Monitoring Page
 
     @MLPM
     @passive
-    @smoke
+    @smoke @demoMode
     Scenario: MLPM005 - Check all mandatory components on Register Model Popup
         Given open url
         And wait load page
@@ -644,7 +644,7 @@ Feature: Project Monitoring Page
 
     @MLPM
     @passive
-    @smoke
+    @smoke @demoMode
     Scenario: MLPM008 - Check all mandatory components on Create ML Function - Job runtime
         Given open url
         And wait load page
@@ -707,7 +707,7 @@ Feature: Project Monitoring Page
 
     @MLPM
     @passive
-    @smoke
+    @smoke @demoMode
     Scenario: MLPM009 - Check all mandatory components on Create ML Function - Serving runtime
         Given open url
         And wait load page
@@ -779,7 +779,7 @@ Feature: Project Monitoring Page
 
     @MLPM
     @passive
-    @smoke
+    @smoke @demoMode
     Scenario: MLPM010 - Check all mandatory components on Create New Feature Set
         Given open url
         And wait load page
@@ -827,7 +827,7 @@ Feature: Project Monitoring Page
 
     @MLPM
     @passive
-    @smoke
+    @smoke @demoMode
     Scenario: MLPM011 - Check the redirection from Models counter to Models page
         Given open url
         And wait load page
@@ -849,7 +849,7 @@ Feature: Project Monitoring Page
 
     @MLPM
     @passive
-    @smoke
+    @smoke @demoMode
     #TODO: Create Feature set from the Quick Actions dropdown menu
     Scenario: MLPM012 - Check the redirection to Feature sets page during creating the Feature set
         Given open url

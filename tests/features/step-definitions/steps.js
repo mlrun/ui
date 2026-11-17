@@ -140,7 +140,17 @@ Given('open url', async function () {
   await navigateToPage(this.page, `http://${test_url}:${test_port}`)
 })
 
+// the argument says whether the URL already has a query string, the step always turns the demo mode on
 When('turn on demo mode with query params {string}', async function (state) {
+  // the demo mode UI isn't shown to the users: CI leaves the `@demoMode` scenarios out (E2E_TAGS in
+  // .github/workflows/e2e.yaml), an untagged one would run there
+  if (!this.testInfo.tags.includes('@demoMode')) {
+    throw new Error(
+      'The scenario turns the demo mode on, but it is not tagged @demoMode: add the tag to the scenario ' +
+        '(CI leaves the demo mode scenarios out by this tag)'
+    )
+  }
+
   const url = this.page.url()
 
   await navigateToPage(this.page, `${url}${state === 'true' ? '&' : '?'}mode=demo`)

@@ -5,7 +5,7 @@ Feature: Models Page
   @MLM
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
   @passive
-  @smoke
+  @smoke @demoMode
   Scenario: MLM001 - Check all mandatory components on Models tab
     Given open url
     And wait load page
@@ -276,7 +276,7 @@ Feature: Models Page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
   @MLM
-  @smoke
+  @smoke @demoMode
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
   Scenario: MLM009 - Check all mandatory components on Register Model Popup
     Given open url
@@ -369,7 +369,7 @@ Feature: Models Page
     Then verify "Title" element does not exist on "Register_Model_Popup" wizard
 
   @MLM
-  @smoke
+  @smoke @demoMode
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
   Scenario: MLM010 - Verify behaviour on Register new Model
     * set tear-down property "model" created in "default" project with "automation-model" value
