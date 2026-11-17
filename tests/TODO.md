@@ -173,12 +173,30 @@ Done in the JS (2026-11-16), no change in what a scenario checks. Each batch was
 
 Left:
 
-- batch 4: the removal of the logo hover;
-- decide about the unused tags and the double page load;
-- `{string} element on {string} should contain {string} attribute value` has 0 uses now (MLMA007 moved to
-  `should be equal`): kept while the feature files are being changed, remove it if it stays unused;
-- the page object entries are dead by their name across all the wizards: an entry whose name is used with another
-  wizard only is still there (a check per wizard would find more).
+- batch 4: the removal of the logo hover (done 2026-11-17): 202 of the 205 `hover "MLRun_Logo" component on
+"commonPagesHeader" wizard` lines removed, whole lines only (12 feature files, the diff only removes lines). 175
+  follow `select "X" item in sidebar menu` (5 of them with `wait load page` in between): `closeSidebar` already moves
+  the pointer to `#main` and waits for the collapse, and a pinned sidebar is expanded whatever the pointer does. 27
+  others: the 22 after `open "quick-actions" page of current project by url` (the pointer stays in the content or the
+  header, every next step clicks, selects or reads text) and 5 after a click in MLPM001 (pinned sidebar, or followed by
+  a sidebar select). Kept (3), the step definition stays: MLPM001 after unpinning (the pointer is still on the sidebar,
+  the next steps check that the buttons are hidden), MLPM016 after the `Project_Monitoring_Button` click (the
+  hover-expanded sidebar could cover the link clicked next) and MLJW088 after the status tooltip checks (an open
+  tooltip could cover the cell clicked next). 53 scenarios run with `--workers=1` (all 20 with a non-sidebar removal,
+  33 with sidebar ones): 51 passed, MLPH001 (BUG-003) and MLPS002 (BUG-001) failed as their known bugs;
+- decide about the unused tags. The double page load is gone (done 2026-11-17): the Before hook doesn't load the app
+  any more, `igzFullVersion` is set by an init script of the browser context before the app's code runs, the warm-up
+  load stays for the dev server only (`E2E_APP=dev`, the first scenario of a worker). Every scenario's first
+  navigation is `open url`, the steps before it only call the API. ~0.1 s less per scenario: the first load was cut
+  short by `open url` right after it;
+- done 2026-11-17: `{string} element on {string} should contain {string} attribute value` had 0 uses (MLMA007 moved to
+  `should be equal`); its definition is removed. Every feature line keeps the same matching definitions (checked with
+  a script over all step lines). `wait for {int} seconds` also has 0 uses, kept for debugging (item 6);
+- done 2026-11-17: the page object check per wizard removed 86 top-level entries (35 wizard objects, 11 `.po.js`
+  files) that no feature line uses with their wizard and no JS references (incl. dynamic names), plus the 14 consts and
+  2 imports they left unused; no wizard object became unused. Data-table cells name entries too (the header row of
+  `add new rows to ... using nontable inputs` in projectSettings.feature): `Parameters_Table_Add_Row_Button` was
+  restored for that reason. 24 sample scenarios on the changed files passed (before the restore; rerun MLPS003 as well).
 
 The naming pass (batch 7, done 2026-11-16): renames only, every feature step line matches the same definition as
 before (the Cucumber expressions as anchored regexes, the step line count per feature file unchanged), 39 scenarios of

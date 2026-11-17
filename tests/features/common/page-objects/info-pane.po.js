@@ -696,7 +696,6 @@ const modelsLLMPromptsTable = {
 // h3 title contains the name tooltip and (on artifact pages) a kind chip tooltip - take the name only
 const header = '.table__item .item-header__data h3 > .tooltip-wrapper:first-of-type'
 const updated = '.table__item .item-header__data .item-header__status span.updated'
-const cancelButton = '.table__item .item-header__buttons > .data-ellipsis:nth-of-type(1) button'
 const applyChangesButton =
   '.table__item .item-header__buttons > .data-ellipsis:nth-of-type(1) button'
 const applyButton = '.item-info__details .round-icon-cp:nth-of-type(2) button'
@@ -706,7 +705,6 @@ const fullViewButton =
   '.table__item .item-header__buttons .item-header__navigation-buttons > div > div'
 const tableViewButton = '#main-wrapper .table__item_big .item-header__navigation-buttons'
 const crossCloseButton = '.table__item .item-header__buttons a .data-ellipsis'
-const commonDownloadButton = '.table__item .item-header__buttons .download-container'
 const commonArrowBack = 'a.link-back__icon'
 const commonInfoPaneTabSelector = commonTable(infoPaneTabSelector)
 const commonEditBtnTableView = '[data-testid="detailsPanel"] .details-item__data-btn-edit'
@@ -741,7 +739,6 @@ export default {
         '.item-info__details-wrapper .details-item:nth-of-type(1) .form-field-textarea'
       )
     ),
-    Labels_Field: '.item-info__details .details-item:nth-of-type(2) .button-add-density_dense',
     Labels_Table: commonTable(featureSetsInfoPaneLabelsTable),
     Apply_Button:
       '.item-info__details-wrapper .details-item__input-wrapper .round-icon-cp:nth-of-type(2)',
@@ -751,8 +748,6 @@ export default {
   featuresInfoPane: {
     Header: header,
     Updated: updated,
-    Cancel_Button: cancelButton,
-    Apply_Changes_Button: applyChangesButton,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
@@ -772,14 +767,11 @@ export default {
     Delete_Artifact_Popup: '[data-testid="pop-up-dialog"]',
     Header: header,
     Updated: updated,
-    Cancel_Button: cancelButton,
     Apply_Changes_Button: applyChangesButton,
     Apply_Button: applyButton,
-    Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Full_View_Button: fullViewButton,
     Header_Full_View: '.table__item_big .item-header__data h3 > .tooltip-wrapper:first-of-type',
-    Updated_Full_View: '.table__item_big .item-header__data .item-header__status span.updated',
     Refresh_Button_Full_View:
       '.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]',
     Action_Menu_Full_View: commonActionMenuFullView,
@@ -806,12 +798,8 @@ export default {
         true
       )
     ),
-    Info_Sources_Table: commonTable(filesInfoSourcesTable),
     Overview_Table: commonTable(datasetOverviewTable),
     Edit_btn_table_view: commonEditBtnTableView,
-    Edit_btn_full_view: commonEditBtnFullView,
-    Version_tag_Input_table_view: commonVersionTagInputTableView,
-    Version_tag_Input_full_view: commonVersionTagInputFullView,
     Version_tag_Value_full_view:
       '.table__item_big .item-info__details-wrapper:nth-of-type(1) .details-item:nth-of-type(3) .details-item__data .data-ellipsis',
     Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
@@ -821,24 +809,14 @@ export default {
     Not_In_Filtered_List_Message: '[data-testid="detailsPanel"] .item-header__status .info-banner'
   },
   documentsInfoPane: {
-    Delete_Artifact_Popup: '[data-testid="pop-up-dialog"]',
     Header: header,
     Updated: updated,
-    Cancel_Button: cancelButton,
-    Apply_Changes_Button: applyChangesButton,
-    Apply_Button: applyButton,
-    Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Full_View_Button: fullViewButton,
-    Header_Full_View: '.table__item_big .item-header__data h3 > .tooltip-wrapper:first-of-type',
-    Updated_Full_View: '.table__item_big .item-header__data .item-header__status span.updated',
-    Refresh_Button_Full_View:
-      '.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]',
     Action_Menu_Full_View: commonActionMenuFullView,
     Table_View_Button: tableViewButton,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
-    Pop_Out_Button: '[data-testid="details-preview-tooltip-wrapper"]',
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeadersDoc),
     Overview_Hash_Header: labelComponent(
@@ -855,19 +833,10 @@ export default {
         true
       )
     ),
-    Overview_Table: commonTable(datasetOverviewTable),
-    Edit_btn_table_view: commonEditBtnTableView,
-    Edit_btn_full_view: commonEditBtnFullView,
-    Version_tag_Input_table_view: commonVersionTagInputTableView,
-    Version_tag_Input_full_view: commonVersionTagInputFullView,
-    Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
-    Version_tag_Input: commonVersionTagInput
   },
   transformationsInfoPane: {
     Header: header,
     Updated: updated,
-    Cancel_Button: cancelButton,
-    Apply_Changes_Button: applyChangesButton,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
@@ -876,8 +845,6 @@ export default {
   previewInfoPane: {
     Header: header,
     Updated: updated,
-    Cancel_Button: cancelButton,
-    Apply_Changes_Button: applyChangesButton,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
@@ -886,8 +853,6 @@ export default {
   statisticsInfoPane: {
     Header: header,
     Updated: updated,
-    Cancel_Button: cancelButton,
-    Apply_Changes_Button: applyChangesButton,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
@@ -896,8 +861,6 @@ export default {
   analysisInfoPane: {
     Header: header,
     Updated: updated,
-    Cancel_Button: cancelButton,
-    Apply_Changes_Button: applyChangesButton,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector
@@ -920,12 +883,10 @@ export default {
     Header: header,
     Updated: updated,
     State_Icon: '.item-header .item-header__status .state',
-    Error_Content: '.item-header .item-header__status .error-container',
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_Headers: commonTable(infoPaneOverviewHeaders),
-    Resource_Monitoring_Button: '.item-header__buttons .btn-tertiary',
 
     // Logs tab.
     Logs_Text_container: '.table__item .table__item-logs-content',
@@ -962,7 +923,6 @@ export default {
     Header: header,
     Updated: updated,
     Not_In_Filtered_List_Message: '[data-testid="detailsPanel"] .item-header__status .info-banner',
-    Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Apply_Changes_Button: applyChangesButton,
     Apply_Button: applyButton,
@@ -999,8 +959,6 @@ export default {
     Edit_btn_full_view: commonEditBtnFullView,
     Click_To_Add_Button:
       '[data-testid="detailsPanel"] .item-info__details-wrapper:nth-of-type(1) .details-item:nth-of-type(3)  .details-item__data-add-placeholder',
-    Version_tag_Input_table_view: commonVersionTagInputTableView,
-    Version_tag_Input_full_view: commonVersionTagInputFullView,
     Version_tag_Value_full_view:
       '.table__item_big .item-info__details-wrapper:nth-of-type(1) .details-item:nth-of-type(3) .details-item__data .data-ellipsis',
     Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
@@ -1011,7 +969,6 @@ export default {
     Delete_Artifact_Popup: '[data-testid="pop-up-dialog"]',
     Header: header,
     Updated: updated,
-    Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Apply_Changes_Button: applyChangesButton,
     Labels_Apply_Button: commonLabelsApplyButton,
@@ -1024,7 +981,6 @@ export default {
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Pop_Out_Button: '[data-testid="details-preview-tooltip-wrapper"]',
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
-    Overview_Drift_Headers: commonTable(infoPaneDriftHeaders),
     Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
     Overview_Sources_Headers: commonTable({
       root: '.table-container [data-testid="detailsPanel"]',
@@ -1064,7 +1020,6 @@ export default {
     Edit_btn_full_view: commonEditBtnFullView,
     Version_tag_Input_table_view: commonVersionTagInputTableView,
     Version_tag_Input_full_view: commonVersionTagInputFullView,
-    Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
     Version_tag_Input: commonVersionTagInput
   },
   modelEndpointsInfoPane: {
@@ -1098,9 +1053,6 @@ export default {
     Metrics_Empty_Select_Message: '.metrics .metrics__empty-select',
     Metric_App_Name: '.metrics .metrics__app-name:nth-of-type(3)',
     Metrics_Card: '.metrics .metrics__card:nth-of-type(4)',
-    Search_By_Name_Filter_Input: inputGroup(
-      generateInputGroup('[data-testid="name-form-input"]', true, false)
-    ),
     Alerts_Table: commonTable(alertsTable),
     Metrics_Stats_Card: '.alert-row__expanded-row .alerts-table .stats-card'
   },

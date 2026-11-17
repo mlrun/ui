@@ -15,14 +15,12 @@ Feature: Models Page
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
     And select "Model artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
     Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     And select "Model artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify "Table_Name_Filter_Input" element visibility on "Models" wizard
     Then click on "Table_FilterBy_Button" element on "Models" wizard
@@ -53,13 +51,11 @@ Feature: Models Page
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
     And select "Model artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     And select "Project monitoring" item in sidebar menu
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     And select "Model artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
     And select "Model endpoints" item in sidebar menu
@@ -99,7 +95,6 @@ Feature: Models Page
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
     And select "Model artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
     And select "Real-time pipelines" item in sidebar menu
@@ -119,7 +114,6 @@ Feature: Models Page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Model artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify "Table_Name_Filter_Input" element visibility on "Models" wizard
     Then type value "survival" to "Table_Name_Filter_Input" field on "Models" wizard
@@ -205,7 +199,6 @@ Feature: Models Page
     And wait load page
     Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
     And select "Model artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
     And select "Real-time pipelines" item in sidebar menu
@@ -293,7 +286,6 @@ Feature: Models Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Model artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify "Register_Model_Button" element visibility on "Models" wizard
     Then "Register_Model_Button" element on "Models" should contain "Register model" value
@@ -414,7 +406,6 @@ Feature: Models Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Model artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     And click on "MLRun_Logo" element on "commonPagesHeader" wizard
     And wait load page
@@ -429,7 +420,6 @@ Feature: Models Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Model artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify action menu on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column should contain "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Models" wizard in "Models_Table" table at row with "model_default" value in "name" column
@@ -474,7 +464,6 @@ Feature: Models Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Model artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
@@ -493,7 +482,6 @@ Feature: Models Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Model artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with value "transaction_fraud_xgboost" in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
@@ -819,7 +807,6 @@ Feature: Models Page
       And wait load page
       Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
       And select "Model artifacts" item in sidebar menu
-      And hover "MLRun_Logo" component on "commonPagesHeader" wizard
       And wait load page
       Then verify "preview" option is present on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
       Then click on "preview" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column with scroll "false"
@@ -878,7 +865,6 @@ Feature: Models Page
       And wait load page
       Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
       And select "Model artifacts" item in sidebar menu
-      And hover "MLRun_Logo" component on "commonPagesHeader" wizard
       And wait load page
       # "default" has a router serving function ("test-pipeline"), so the model can be deployed there
       Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
@@ -1044,7 +1030,6 @@ Feature: Models Page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Model artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with value "transaction_fraud_adaboost" in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
@@ -1132,7 +1117,6 @@ Feature: Models Page
     And wait load page
     And select "Model artifacts" item in sidebar menu
     And wait load page
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "automation-test-model" value in "name" column
     Then click on "deploy" option on "Models" wizard in "Models_Table" table with "automation-test-model" value in "name" column with scroll "false"
     Then verify if "Deploy_Model_Popup" popup dialog appears
@@ -1205,7 +1189,6 @@ Feature: Models Page
      And wait load page
      And select "Model artifacts" item in sidebar menu
      And wait load page
-     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
      Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column
      Then click on "deploy" option on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column with scroll "false"
      Then verify if "Deploy_Model_Popup" popup dialog appears
@@ -1272,7 +1255,6 @@ Feature: Models Page
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
     And select "Model artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
     And select "Real-time pipelines" item in sidebar menu
@@ -1511,7 +1493,6 @@ Feature: Models Page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Model artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
@@ -1555,7 +1536,6 @@ Feature: Models Page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Model artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     # the mock state is reset before every scenario, so the "modelTag" version (2nd row in the version history) is created here
     When click on cell with value "transaction_fraud_adaboost" in "name" column in "Models_Table" table on "Models" wizard

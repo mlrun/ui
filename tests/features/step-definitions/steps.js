@@ -597,19 +597,7 @@ Then(
   }
 )
 
-Then(
-  '{string} element on {string} should contain {string} attribute value',
-  async function (component, wizard, value) {
-    await verifyComponentContainsAttributeValue(
-      this.page,
-      pageObjects[wizard][component]['inputField'],
-      'value',
-      value
-    )
-  }
-)
-
-// the whole value (the step above checks a substring: a filter that kept "latest123456" passed for "latest")
+// the whole value (the contains-attribute step above checks a substring: a filter that kept "latest123456" passed for "latest")
 Then(
   '{string} element on {string} should be equal {string} attribute value',
   async function (component, wizard, value) {

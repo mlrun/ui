@@ -198,38 +198,6 @@ const resourcesNodeSelectorTable = {
   }
 }
 
-const advancedEnvironmentVariablesTable_old = {
-  root: '.new-item-side-panel__body .accordion__container:nth-of-type(4) .panel-section',
-  header: {
-    root: '.table__header',
-    sorters: {
-      name: '.table__cell:nth-of-type(1)',
-      value: '.table__cell:nth-of-type(2)'
-    }
-  },
-  body: {
-    add_row_btn: '.table-row .add-new-item-btn',
-    row: {
-      root: 'div[class^=table-row]',
-      fields: {
-        name: '.table-cell:nth-of-type(1) .data-ellipsis',
-        value: '.table-cell:nth-of-type(2) .data-ellipsis',
-        edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
-        apply_edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
-        delete_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(2)',
-        name_input: {
-          componentType: inputGroup,
-          structure: generateInputGroup('.table-cell__key', true, false, false)
-        },
-        value_input: {
-          componentType: inputGroup,
-          structure: generateInputGroup('.table-cell__value', true, false, false)
-        }
-      }
-    }
-  }
-}
-
 // New Function Complex elements descriptions
 const newFunctionLabelsTable = {
   root: '.new-item-side-panel .accordion__container:nth-of-type(1) .accordion__body .panel-section__body .general__labels-container',
@@ -866,49 +834,6 @@ export default {
       '.feature-set-panel .new-item-side-panel__buttons-container .btn_start-ingestion'
   },
   newJobTemplateEdit: {
-    Cross_Close_Button: commonCrossCloseButton,
-    Parameters_Accordion: {
-      Accordion_Header: '.new-item-side-panel__body .accordion__container:nth-of-type(2) h5',
-      Collapse_Button:
-        '.new-item-side-panel__body .accordion__container:nth-of-type(2) .new-item-side-panel__expand-icon',
-      Parameters_Table_Name_Input: inputGroup(
-        generateInputGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(2) .panel-section__body .input-row-wrapper .input-wrapper:nth-of-type(1)',
-          true,
-          false,
-          true
-        )
-      ),
-      Edit_Parameters_Table_Name_Input: inputGroup(
-        generateInputGroup(
-          '.job-panel__parameters-table .edit-row .table__cell_edit:nth-of-type(1)'
-        )
-      ),
-      Parameters_Table_Type_Dropdown: dropdownComponent(
-        generateDropdownGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(2) .panel-section__body .input-row-wrapper .select:nth-of-type(2)',
-          '.select__label',
-          false,
-          '.data-ellipsis'
-        )
-      ),
-      Parameters_Table_Value_Input: inputGroup(
-        generateInputGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(2) .panel-section__body .input-row-wrapper .input-wrapper:nth-of-type(4)',
-          true,
-          false,
-          true
-        )
-      ),
-      Edit_Parameters_Table_Value_Input: inputGroup(
-        generateInputGroup(
-          '.job-panel__parameters-table .edit-row .table__cell_edit:nth-of-type(4)'
-        )
-      ),
-      Add_New_Row_Button:
-        '.new-item-side-panel .accordion__container:nth-of-type(2) .panel-section .panel-section__body button.add-input',
-      Apply_Edit_Button: '.job-panel__parameters-table .apply-edit-btn'
-    },
     Resources_Accordion: {
       Accordion_Header: '.new-item-side-panel__body .accordion__container:nth-of-type(3) h5',
       Collapse_Button:
@@ -1027,25 +952,6 @@ export default {
       ),
       Resources_Node_Selector_Table: commonTable(resourcesNodeSelectorTable)
     },
-    Advanced_Accordion: {
-      Accordion_Header: '.new-item-side-panel__body .accordion__container:nth-of-type(4) h5',
-      Collapse_Button:
-        '.new-item-side-panel__body .accordion__container:nth-of-type(4) .new-item-side-panel__expand-icon',
-      Advanced_Environment_Variables_Table: commonTable(advancedEnvironmentVariablesTable_old),
-      Add_Row_Button:
-        '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .btn-add:nth-of-type(1)',
-      Discard_Row_Button:
-        '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .btn-add:nth-of-type(2)',
-      Apply_Edit_Button: '.env-variables-table .apply-edit-btn'
-    },
-    Schedule_For_Later: {
-      Schedule_Button: '.jobs-panel__schedule .btn__schedule'
-    },
-    Access_Key_Checkbox: commonAccessKeyCheckbox,
-    Access_Key_Input: commonAccessKeyInput,
-    Schedule_For_Later_Button:
-      '.new-item-side-panel__body .new-item-side-panel__buttons-container .btn-tertiary .data-ellipsis:nth-of-type(1)',
-    Error_Message: '.new-item-side-panel__buttons-container .error'
   },
   newFunction: {
     Cross_Close_Button: '.new-item-side-panel .panel-title__btn_close',

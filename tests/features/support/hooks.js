@@ -23,27 +23,44 @@ import {
   resetMockState,
   setRequestsFailureCondition
 } from '../common-tools/common-tools.js'
+import { appMode, test_port, test_url } from '../../config.js'
 
-// the first page load after the dev server start is slow: Vite pre-bundles the dependencies (`optimizeDeps.force`)
-// and may reload the page, so without waiting the first scenarios get a blank page. Per worker process: the first
-// scenario of every worker waits, the app server is shared, so only the very first one waits long
+// the scenarios run against the Iguazio platform, not the Community Edition: the app reads `igzFullVersion` from the
+// localStorage (`isCommunityEdition`, `isIgzVersionCompatible`), partly at the module load, so it must be there before
+// the app's code runs on the first load. A script of the browser context, added before anything loads a page (the
+// dev warm-up below, the steps): it runs before the app's code on every load, also in the tabs the app opens, as the
+// localStorage of the origin is shared by them. Neither the app nor the steps write or remove the value, so setting it
+// on every load is the same as setting it once and keeping it. Only on the app origin: the localStorage of about:blank
+// (the page before the first navigation) is not accessible
+const appOrigin = `http://${test_url}:${test_port}`
+const igzFullVersion = '3.5.5'
+
+// the dev server only (E2E_APP=dev): the first page load after its start is slow, Vite pre-bundles the dependencies
+// (`optimizeDeps.force`) and may reload the page, so without waiting the first scenarios get a blank page. Per worker
+// process: the first scenario of every worker loads the app once more and waits, the app server is shared, so only the
+// very first one waits long. The prebuilt app (`vite preview`) needs no warm-up, the hook doesn't load a page: every
+// scenario loads the app by its first navigation (`open url`), the steps before it only call the API
 let isAppWarmedUp = false
 
 Before({ timeout: 5 * 60 * 1000 }, async function () {
   // a fresh mock server instance of this worker, with the big "auto-generated-data" project only for the scenarios
   // that need it
   await resetMockState({ generatedData: this.testInfo.tags.includes('@generatedData') })
-  await this.page.goto('/')
-  if (!isAppWarmedUp) {
+  await this.page.context().addInitScript(
+    ({ origin, version }) => {
+      if (location.origin === origin) localStorage.setItem('igzFullVersion', version)
+    },
+    { origin: appOrigin, version: igzFullVersion }
+  )
+
+  if (appMode === 'dev' && !isAppWarmedUp) {
+    await this.page.goto('/')
     await this.page
       .locator('.projects__wrapper')
       .first()
       .waitFor({ state: 'attached', timeout: 4 * 60 * 1000 })
     isAppWarmedUp = true
   }
-  await this.page.evaluate(() => {
-    localStorage.setItem('igzFullVersion', '3.5.5')
-  })
 })
 
 After(async function () {

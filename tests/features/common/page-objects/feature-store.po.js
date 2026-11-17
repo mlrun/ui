@@ -364,33 +364,13 @@ const commonNameFilterInputDataset = inputGroup(
     true
   )
 )
-const commonLabelFilterInput = inputGroup(
-  generateInputGroup(
-    '.content .content__action-bar-wrapper .filters .filter-column:nth-of-type(3) .input-wrapper',
-    true,
-    false,
-    '.form-field__warning svg'
-  )
-)
-const commonTableTreeFilterDropdown = dropdownComponent(
-  generateDropdownGroup(
-    '.content .content__action-bar-wrapper .filters .tag-filter',
-    'input',
-    '.tag-filter__dropdown .tag-filter__dropdown-item',
-    '',
-    true // options_in_root ?
-  )
-)
 
 export default {
   featureSetsTab: {
     Table_FilterBy_Button: tableFilterByButton,
     Table_Refresh_Button: tableRefreshButton,
     Create_Set_Button: pageHeaderButton,
-    Table_Expand_Rows_Button:
-      '.feature-store-container .content__action-bar .data-ellipsis:nth-of-type(2) button',
     Table_Name_Filter_Input: commonNameFilterInput,
-    Table_Label_Filter_Input: commonLabelFilterInput,
     Feature_Sets_Table: commonTable(featureSetsTable),
     Feature_Store_Tab_Selector: featureStoreTabSelector,
     Overlay: '#overlay_container .chip-block-hidden_visible'
@@ -401,7 +381,6 @@ export default {
     Add_To_Feature_Vector_Button:
       '.content .content__action-bar-wrapper .action-bar__actions [data-testid="btn"]',
     Table_Name_Filter_Input: commonNameFilterInput,
-    Table_Label_Filter_Input: commonLabelFilterInput,
     Table_Refresh_Button: tableRefreshButton,
     Features_Table: commonTable(featuresTable)
   },
@@ -410,14 +389,12 @@ export default {
     Create_Vector_Button: pageHeaderButton,
     Table_FilterBy_Button: tableFilterByButton,
     Table_Name_Filter_Input: commonNameFilterInput,
-    Table_Label_Filter_Input: commonLabelFilterInput,
     Table_Refresh_Button: tableRefreshButton,
     Feature_Vectors_Table: commonTable(featureVectorTable),
     Overlay: '#overlay_container .chip-block-hidden_visible'
   },
   datasets: {
     Delete_Artifact_Popup: '[data-testid="pop-up-dialog"]',
-    Feature_Store_Tab_Selector: featureStoreTabSelector,
     Register_Dataset_Button: '.content__action-bar-wrapper .action-bar__actions .action-button',
     Table_Name_Filter_Input: commonNameFilterInputDataset,
     Table_FilterBy_Button: tableFilterByButton,
@@ -430,7 +407,6 @@ export default {
       '.history-back-link .history-back-link__title .data-ellipsis.tooltip-wrapper'
   },
   addToFeatureVector: {
-    Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_FilterBy_Button: tableFilterByButton,
     // the page opened by the "Create" button of the "Create feature vector" popup: its root, not the action bar only - the
     // previous page (Feature Vectors tab) has the same action bar, the name typed right after the click went there (MLFS042)
@@ -440,30 +416,6 @@ export default {
         true,
         false,
         '.form-field__warning svg'
-      )
-    ),
-    Table_Entity_Filter_Input: inputGroup(
-      generateInputGroup(
-        '.content .content__action-bar-wrapper .filter-column:nth-of-type(3) .input-wrapper',
-        true,
-        false,
-        true
-      )
-    ),
-    Table_Label_Filter_Input: inputGroup(
-      generateInputGroup(
-        '.content .content__action-bar-wrapper .filters .filter-column:nth-of-type(3) .input-wrapper',
-        true,
-        false,
-        true
-      )
-    ),
-    Table_Projects_Filter_Dropdown: dropdownComponent(
-      generateDropdownGroup(
-        '.content .content__action-bar-wrapper .filters .select',
-        'svg',
-        '.select__options-list .select__item',
-        ''
       )
     ),
     Table_Refresh_Button: tableRefreshButton,

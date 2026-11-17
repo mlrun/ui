@@ -14,7 +14,6 @@ Feature: Monitoring app Page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "default" value
     And select "Monitoring app" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
@@ -53,7 +52,6 @@ Feature: Monitoring app Page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "default" value
     And select "Monitoring app" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     Then verify "Applications_Stats_Title" element visibility on "Monitoring_App" wizard
@@ -155,7 +153,6 @@ Feature: Monitoring app Page
     When turn on demo mode with query params "false"
     And wait load page
     And select "Monitoring app" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
@@ -216,7 +213,6 @@ Feature: Monitoring app Page
     When turn on demo mode with query params "false"
     And wait load page
     And select "Monitoring app" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
@@ -261,7 +257,6 @@ Feature: Monitoring app Page
     When turn on demo mode with query params "false"
     And wait load page
     And select "Monitoring app" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
@@ -292,7 +287,6 @@ Feature: Monitoring app Page
     When turn on demo mode with query params "false"
     And wait load page
     And select "Monitoring app" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
@@ -314,7 +308,6 @@ Feature: Monitoring app Page
     When turn on demo mode with query params "false"
     And wait load page
     And select "Monitoring app" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
@@ -339,7 +332,6 @@ Feature: Monitoring app Page
     When turn on demo mode with query params "false"
     And wait load page
     And select "Monitoring app" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
@@ -368,7 +360,6 @@ Feature: Monitoring app Page
     When turn on demo mode with query params "false"
     And wait load page
     And select "Monitoring app" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
@@ -419,7 +410,6 @@ Feature: Monitoring app Page
     When turn on demo mode with query params "false"
     And wait load page
     And select "Monitoring app" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
@@ -460,7 +450,6 @@ Feature: Monitoring app Page
     When turn on demo mode with query params "false"
     And wait load page
     And select "Monitoring app" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And wait load page
@@ -521,7 +510,6 @@ Feature: Monitoring app Page
     Then verify redirection to "projects/default/monitoring-app"
     Then verify breadcrumbs "tab" label should be equal "Monitoring app" value
     And select "Model artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
     And wait load page

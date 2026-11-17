@@ -25,6 +25,7 @@ import { defineBddConfig } from 'playwright-bdd'
 
 import {
   actionTimeout,
+  appMode,
   expectTimeout,
   headless,
   navigationTimeout,
@@ -44,11 +45,7 @@ process.env.TZ = timezone
 
 const baseURL = `http://${test_url}:${test_port}`
 const isCI = Boolean(process.env.CI)
-// E2E_APP - the app the scenarios run against:
-// - `build` (default): the prebuilt app (`build:regression`, built by `npm run test:regression`) served by `vite preview`:
-//   ~190 MB and ~60 requests per page load (every scenario starts with an empty browser cache)
-// - `dev`: the dev server (`npm start`), e.g. to debug with the app sources: ~2 GB and ~530 requests per page load
-const appMode = process.env.E2E_APP || 'build'
+// the app the scenarios run against: `appMode` (E2E_APP) in tests/config.js
 const buildDir = path.join('build', 'regression')
 
 if (!['build', 'dev'].includes(appMode)) {

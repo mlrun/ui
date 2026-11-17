@@ -306,7 +306,6 @@ export default {
     Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Jobs_Table: commonTable(overallTable),
-    Arrow_Back: 'a.link-back__icon',
     Time_Picker_Dropdown_From: timePickerDropdownFrom,
     Time_Picker_Dropdown_To: timePickerDropdownTo
   },

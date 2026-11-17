@@ -190,7 +190,6 @@ Feature: Project Monitoring Page
         Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
         #check visibility of menu buttons with pinned 'Navigation_Bar'
         Then click on "Pin_Quick_Link_Button" element on "commonPagesHeader" wizard
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
         Then verify "Pin_Quick_Link_Button" element visibility on "commonPagesHeader" wizard
         Then verify "General_Info_Quick_Panel" element visibility on "commonPagesHeader" wizard
@@ -240,7 +239,6 @@ Feature: Project Monitoring Page
         #check that 'Navigation_Bar' save the state through different pages
         Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
         Then click on "ML_Functions_Icon" element on "commonPagesHeader" wizard
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
         Then select "Jobs" item in sidebar menu
@@ -251,17 +249,14 @@ Feature: Project Monitoring Page
         Then "Navigation_Bar" on "commonPagesHeader" wizard should not be "pinned"
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then click on "Pin_Quick_Link_Button" element on "commonPagesHeader" wizard
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
         Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
         Then select "Datasets" item in sidebar menu
         And wait load page
         Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         And wait load page
@@ -1241,7 +1236,6 @@ Feature: Project Monitoring Page
         Then select "default" project in sidebar project dropdown
         Then verify breadcrumbs "project" label should be equal "default" value
         Then select "Model artifacts" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
         Then verify "Models_Table" element visibility on "Models" wizard

@@ -88,7 +88,6 @@ export default {
     Table_FilterBy_Button: '[data-testid="filter-menu-btn-tooltip-wrapper"]',
     Refresh_Button: '[data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]',
     LLMPrompts_Table: commonTable(overallTable),
-    Overlay: '#overlay_container .chip-block-hidden_visible',
     History_Back_Button: '.history-back-link .history-back-link__icon',
     Version_History_Title:
       '.history-back-link .history-back-link__title [data-testid="version-history"]',

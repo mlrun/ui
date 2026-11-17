@@ -13,7 +13,6 @@ Feature: Datasets Page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "getting-started-tutorial-admin" value
     And select "Datasets" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Datasets" value
     And wait load page
@@ -22,7 +21,6 @@ Feature: Datasets Page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "getting-started-tutorial-admin" value
     And select "Datasets" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Datasets" value
     And wait load page

@@ -583,7 +583,6 @@ const commonPopupTitle = '.modal__header-title'
 const commonCloseButton = '.modal__header-button button'
 const commonFormCancelButton = '.modal__footer-actions .btn-tertiary'
 const commonFormConfirmButton = '.modal__footer-actions .btn-primary'
-const commonRegisterErrorMessage = '[data-testid="error-message"] .error__message'
 const commonFormText = '.form-text span'
 const commonFormSubtext = '.form-text div p'
 const commonScheduleButton = '.modal__content [data-testid="schedule-btn"]'
@@ -677,7 +676,6 @@ export default {
     Description_Input: textAreaGroup(
       generateTextAreaGroup('.pop-up-dialog .form-row:nth-of-type(3) .form-field-textarea')
     ),
-    Cross_Cancel_Button: commonCrossCancelButton,
     Cancel_Button: commonCancelButton,
     Create_Button: '.pop-up-dialog .btn-primary',
     Error_Message: '.pop-up-dialog .error__message',
@@ -788,7 +786,6 @@ export default {
       Apply_Button: '.hub-filter .filters-wizard__modal-buttons .btn-primary'
     },
     Category_Selector_Dropdown: categorySelect,
-    Overlay: '#overlay_container .chip-block-hidden .chip-block-hidden__scrollable-container',
     Hyperparameter_Checkbox: checkboxComponent({
       root: '#overlay_container .form-field-checkbox',
       elements: {
@@ -1236,8 +1233,7 @@ export default {
       )
     ),
     Cancel_Button: commonFormCancelButton,
-    Register_Button: commonFormConfirmButton,
-    Register_Error_Message: commonRegisterErrorMessage
+    Register_Button: commonFormConfirmButton
   },
   createMLFunctionPopup: {
     Cross_Cancel_Button: commonCrossCancelButton,
@@ -1271,7 +1267,6 @@ export default {
     Cross_Cancel_Button: commonCloseButton,
     New_File_Name_Input: inputGroup(commonNameInput),
     Tag_Input: inputGroup(commonTagInput),
-    Register_Error_Message: commonRegisterErrorMessage,
     Target_Path: {
       Path_Scheme_Combobox: comboBox('.form .form-row:nth-of-type(4) .form-field__wrapper', true)
     },
@@ -1396,7 +1391,6 @@ export default {
     Download_Button: '.pop-up-dialog .preview-item:nth-of-type(2) .preview-body__download'
   },
   changeProjectOwnerPopup: {
-    Cross_Cancel_Button: commonCrossCancelButton,
     Title: commonTitle,
     Search_Input: inputWithAutocomplete({
       root: '.owner-table .search-input',
@@ -1410,7 +1404,6 @@ export default {
     Apply_Button: '.apply-discard-buttons .btn-primary'
   },
   projectMembersPopup: {
-    Cross_Cancel_Button: commonCrossCancelButton,
     Title: commonTitle,
     Member_Overview_Labels_Table: commonTable(memberOverviewLabelsTable),
     Member_Overview_Tooltip: labelComponent(
@@ -1475,7 +1468,6 @@ export default {
   },
   createNewSecretPopup: {
     Title: commonTitle,
-    Cross_Cancel_Button: commonCrossCancelButton,
     New_Secret_Key_Input: inputGroup(
       generateInputGroup(
         '[data-testid="secrets"] .form-table__row_active .form-table__cell_1:nth-of-type(1)',
@@ -1492,8 +1484,6 @@ export default {
         '.form-field__warning svg'
       )
     ),
-    Cancel_Button: '.pop-up-dialog .btn-label',
-    Save_Button: '.pop-up-dialog .secrets__footer-container .btn.btn-primary'
   },
   addToFeatureVectorPopup: {
     Title: commonTitle,

@@ -176,13 +176,10 @@ const timePickerDropdownTo = dropdownComponent(
 )
 // datepicker end
 
-const commonErrorMessage = '[data-testid="no-data"] h3'
-
 export default {
   alertsMonitoring: {
     Table_FilterBy_Button: '[data-testid="filter-menu-btn-tooltip-wrapper"]',
     Refresh_Button: '[data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]',
-    Error_Message: commonErrorMessage,
     Search_By_Name_Filter_Input: commonSearchByNameFilterInput,
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,
     Custom_Range_Filter_Dropdown: commonCustomRangeFilter,

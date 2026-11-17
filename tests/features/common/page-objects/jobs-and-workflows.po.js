@@ -348,14 +348,6 @@ const timePickerDropdownTo = dropdownComponent(
 const pageHeaderButton = '.action-bar .action-bar__actions button'
 const tableRefreshButton =
   '.content .content__action-bar-wrapper [data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]'
-const commonStatusFilter = dropdownComponent(
-  generateDropdownGroup(
-    '.content__action-bar-wrapper .filters [data-testid="select"]',
-    '.select__header', // Open Component
-    '.select__body .select__item', // Options
-    '.data-ellipsis .data-ellipsis' // Option value
-  )
-)
 const commonDatePickerFilter = dropdownComponent(
   generateDropdownGroup(
     '[data-testid="date-picker-container"]',
@@ -404,7 +396,6 @@ export default {
     }),
     Auto_Refresh_Checkbox_Element: '[data-testid="form-field-checkbox"] input',
     Table_Refresh_Button: tableRefreshButton,
-    Status_Filter_Dropdown: commonStatusFilter,
     Table_Name_Filter_Input: commonTableNameFilter,
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Time_Picker_Dropdown_From: timePickerDropdownFrom,
@@ -412,13 +403,9 @@ export default {
     Jobs_Monitor_Table: commonTable(jobsMonitorTable)
   },
   WorkflowsMonitorTab: {
-    Status_Filter_Dropdown: commonStatusFilter,
     Table_Name_Filter_Input: commonTableNameFilter,
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,
     Table_FilterBy_Button: commonTableFilterByButton,
-    Error_Message: commonErrorMessage,
-    Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
-    Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Workflows_Monitor_Table: commonTable(workflowsMonitorTable),
     Toggle_View_Button: '.workflow-container .actions .toggle-view-btn',
     Terminate_Button: '.workflow-container .btn-danger',
@@ -433,8 +420,6 @@ export default {
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,
     Table_FilterBy_Button: commonTableFilterByButton,
     Batch_Run_Button: pageHeaderButton,
-    Error_Message: commonErrorMessage,
-    Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
     Table_Refresh_Button: tableRefreshButton,
     Schedule_Monitor_Table: commonTable(scheduleMonitorTable)
   }

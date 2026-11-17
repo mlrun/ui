@@ -15,14 +15,12 @@ Feature: ML Functions
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "ML functions" value
         Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
         Then verify "New_Function_Button" element visibility on "ML_Functions" wizard
@@ -75,13 +73,11 @@ Feature: ML Functions
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Project monitoring" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
@@ -100,7 +96,6 @@ Feature: ML Functions
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "ML_Functions" wizard selected option value "Past week"
@@ -136,7 +131,6 @@ Feature: ML Functions
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "ML_Functions" wizard selected option value "Past week"
@@ -161,7 +155,6 @@ Feature: ML Functions
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "ML_Functions" wizard selected option value "Past week"
@@ -192,7 +185,6 @@ Feature: ML Functions
         When turn on demo mode with query params "false"
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then click on "New_Function_Button" element on "ML_Functions" wizard
         Then "Title" element on "Create_ML_Function_Popup" should contain "Create new function" value
@@ -224,7 +216,6 @@ Feature: ML Functions
         When turn on demo mode with query params "false"
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-00" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -269,7 +260,6 @@ Feature: ML Functions
         When turn on demo mode with query params "false"
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-01" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -314,7 +304,6 @@ Feature: ML Functions
         When turn on demo mode with query params "false"
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-02" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -404,7 +393,6 @@ Feature: ML Functions
         When turn on demo mode with query params "false"
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-03" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -507,7 +495,6 @@ Feature: ML Functions
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When turn on demo mode with query params "false"
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -637,7 +624,6 @@ Feature: ML Functions
         When turn on demo mode with query params "false"
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "new-aqa-function-00" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -708,7 +694,6 @@ Feature: ML Functions
         When turn on demo mode with query params "false"
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "new-aqa-function-01" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -732,7 +717,6 @@ Feature: ML Functions
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
@@ -771,7 +755,6 @@ Feature: ML Functions
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When turn on demo mode with query params "false"
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -803,7 +786,6 @@ Feature: ML Functions
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When turn on demo mode with query params "false"
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -874,7 +856,6 @@ Feature: ML Functions
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When turn on demo mode with query params "false"
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -930,7 +911,6 @@ Feature: ML Functions
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When turn on demo mode with query params "false"
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -999,7 +979,6 @@ Feature: ML Functions
         When turn on demo mode with query params "false"
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-5" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -1025,7 +1004,6 @@ Feature: ML Functions
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When turn on demo mode with query params "false"
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
@@ -1070,7 +1048,6 @@ Feature: ML Functions
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
@@ -1085,7 +1062,6 @@ Feature: ML Functions
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
@@ -1114,7 +1090,6 @@ Feature: ML Functions
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
@@ -1138,7 +1113,6 @@ Feature: ML Functions
         When turn on demo mode with query params "false"
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
@@ -1159,7 +1133,6 @@ Feature: ML Functions
         When turn on demo mode with query params "false"
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
@@ -1183,7 +1156,6 @@ Feature: ML Functions
         When turn on demo mode with query params "false"
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
@@ -1209,7 +1181,6 @@ Feature: ML Functions
         When turn on demo mode with query params "false"
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And save to context "name" column on 1 row from "Functions_Table" table on "ML_Functions" wizard
         And save to context "tag" column on 1 row from "Functions_Table" table on "ML_Functions" wizard
@@ -1372,7 +1343,6 @@ Feature: ML Functions
         And wait load page
         And select "ML functions" item in sidebar menu
         And wait load page
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
@@ -1405,7 +1375,6 @@ Feature: ML Functions
         When turn on demo mode with query params "false"
         And wait load page
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-02" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -1457,7 +1426,6 @@ Feature: ML Functions
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         And select "ML functions" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard

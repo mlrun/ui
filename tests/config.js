@@ -41,6 +41,11 @@ export const timezone = process.env.E2E_TZ || 'UTC'
 export const locale = process.env.E2E_LOCALE || 'en-US'
 export const screen_size = { width: 1600, height: 900 }
 export const reports_dir = 'tests/reports'
+// E2E_APP - the app the scenarios run against (playwright.config.js):
+// - `build` (default): the prebuilt app (`build:regression`, built by `npm run test:regression`) served by `vite preview`:
+//   ~190 MB and ~60 requests per page load (every scenario starts with an empty browser cache)
+// - `dev`: the dev server (`npm start`), e.g. to debug with the app sources: ~2 GB and ~530 requests per page load
+export const appMode = process.env.E2E_APP || 'build'
 export const test_url = 'localhost'
 // E2E_APP_PORT, E2E_MOCK_PORT - e.g. to run next to another app/mock server that uses the default ports
 export const test_port = process.env.E2E_APP_PORT || '3000'

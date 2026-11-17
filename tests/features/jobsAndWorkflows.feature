@@ -12,14 +12,12 @@ Feature: Jobs and workflows
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then verify "Table_Name_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
@@ -70,13 +68,11 @@ Feature: Jobs and workflows
         And wait load page
         Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Project monitoring" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
         And select "Workflows" item in sidebar menu
@@ -126,10 +122,8 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Project monitoring" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
         And select "Schedule" item in sidebar menu
@@ -224,7 +218,6 @@ Feature: Jobs and workflows
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contain "Dropdown_Options"."Date_Picker_Filter_Options"
@@ -265,7 +258,6 @@ Feature: Jobs and workflows
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When pick up "Custom range" from "03/31/2014 10:30 AM" to "03/21/2015 07:30 PM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -298,7 +290,6 @@ Feature: Jobs and workflows
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then type value "test" to "Table_Name_Filter_Input" field on "Jobs_Monitor_Tab" wizard
@@ -315,7 +306,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Schedule" item in sidebar menu
         And wait load page
@@ -334,7 +324,6 @@ Feature: Jobs and workflows
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Workflows" item in sidebar menu
         And wait load page
@@ -357,7 +346,6 @@ Feature: Jobs and workflows
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
@@ -388,7 +376,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Schedule" item in sidebar menu
         And wait load page
@@ -413,7 +400,6 @@ Feature: Jobs and workflows
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When pick up "Custom range" from "09/03/2021 12:00 AM" to "09/04/2021 12:00 AM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -454,7 +440,6 @@ Feature: Jobs and workflows
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then type value "seff" to "Table_Name_Filter_Input" field on "Jobs_Monitor_Tab" wizard
@@ -479,7 +464,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Auto_Refresh_Checkbox" element visibility on "Jobs_Monitor_Tab" wizard
         Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
@@ -500,7 +484,6 @@ Feature: Jobs and workflows
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
@@ -532,7 +515,6 @@ Feature: Jobs and workflows
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
@@ -563,7 +545,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
@@ -636,7 +617,6 @@ Feature: Jobs and workflows
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
@@ -798,7 +778,6 @@ Feature: Jobs and workflows
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Schedule" item in sidebar menu
         And wait load page
@@ -859,7 +838,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Schedule" item in sidebar menu
         And wait load page
@@ -900,7 +878,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
@@ -928,7 +905,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Workflows" item in sidebar menu
         And wait load page
@@ -947,7 +923,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Schedule" item in sidebar menu
         And wait load page
@@ -985,7 +960,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Workflows" item in sidebar menu
         And wait load page
@@ -1091,7 +1065,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Workflows" item in sidebar menu
         And wait load page
@@ -1119,7 +1092,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Workflows" item in sidebar menu
         And wait load page
@@ -1142,7 +1114,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Workflows" item in sidebar menu
         And wait load page
@@ -1165,7 +1136,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Workflows" item in sidebar menu
         And wait load page
@@ -1188,7 +1158,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Workflows" item in sidebar menu
         And wait load page
@@ -1210,7 +1179,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Workflows" item in sidebar menu
         And wait load page
@@ -1281,7 +1249,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Workflows" item in sidebar menu
         And wait load page
@@ -1328,7 +1295,6 @@ Feature: Jobs and workflows
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
         When pick up "Custom range" from "09/01/2021 06:00 PM" to "09/03/2021 06:00 PM" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" with from "Time_Picker_Dropdown_From" to "Time_Picker_Dropdown_To" time dropdown on "Jobs_Monitor_Tab" wizard
@@ -1376,7 +1342,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Workflows" item in sidebar menu
         And wait load page
@@ -1423,7 +1388,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Schedule" item in sidebar menu
         And wait load page
@@ -1439,7 +1403,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Schedule" item in sidebar menu
         And wait load page
@@ -1502,7 +1465,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Workflows" item in sidebar menu
         And wait load page
@@ -1532,7 +1494,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -1541,7 +1502,6 @@ Feature: Jobs and workflows
         And click on "Run_Button" element on "Modal_Wizard_Form" wizard
         And wait load page
         And select "Project monitoring" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify if "Notification_Popup" popup dialog appears
         Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
@@ -1618,7 +1578,6 @@ Feature: Jobs and workflows
         Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
         Then select "Project monitoring" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When click on cell with value "test-m_ingest" in "name" column in "Runs_Statistic_Table" table on "Project" wizard
         And wait load page
         When click on "link" value where option is "Function:" in "Overview_Headers" on "Jobs_Monitor_Tab_Info_Pane" wizard
@@ -1771,7 +1730,6 @@ Feature: Jobs and workflows
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Schedule" item in sidebar menu
         And wait load page
@@ -2851,7 +2809,6 @@ Feature: Jobs and workflows
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -2916,7 +2873,6 @@ Feature: Jobs and workflows
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then select "Abort" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "erann-test" value in "name" column
@@ -2981,7 +2937,6 @@ Feature: Jobs and workflows
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Workflows" item in sidebar menu
         And wait load page
@@ -3004,7 +2959,6 @@ Feature: Jobs and workflows
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Workflows" item in sidebar menu
         And wait load page
@@ -3034,7 +2988,6 @@ Feature: Jobs and workflows
         And click on row root with value "getting-started-tutorial-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
@@ -3110,7 +3063,6 @@ Feature: Jobs and workflows
         And wait load page
         Then verify breadcrumbs "project" label should be equal "auto-generated-data" value
         And select "Jobs" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then verify breadcrumbs "tab" label should be equal "Jobs" value

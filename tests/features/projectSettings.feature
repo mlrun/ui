@@ -13,12 +13,10 @@ Feature: Project Settings page
         And wait load page
         Then verify breadcrumbs "project" label should be equal "cat-vs-dog-classification" value
         Then select "Project settings" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         Then select "Project settings" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then verify "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard should contain "Project_Settings"."Tab_List"
         Then verify "General" tab is active in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display "Input_Hint"."Source_URL_Input"
@@ -41,7 +39,6 @@ Feature: Project Settings page
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         Then select "Project settings" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then "Pull_At_Runtime_Checkbox" element should be checked on "Project_Settings_General_Tab" wizard
         Then uncheck "Pull_At_Runtime_Checkbox" element on "Project_Settings_General_Tab" wizard
         And wait load page
@@ -83,12 +80,10 @@ Feature: Project Settings page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then select "Project settings" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And select "Project monitoring" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         Then select "Project settings" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then type value "   " to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
         Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         When add rows to "Labels_Table" table on "Project_Settings_General_Tab" wizard
@@ -110,7 +105,6 @@ Feature: Project Settings page
         And wait load page
         Then select "Project settings" item in sidebar menu
         And wait load page
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When click on "remove_btn" in "Labels_Table" table on "Project_Settings_General_Tab" wizard with attribute
             | key_verify |
             |     a      |
@@ -141,7 +135,6 @@ Feature: Project Settings page
         And wait load page
         Then select "Project settings" item in sidebar menu
         And wait load page
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then verify values in "Labels_Table" table on "Project_Settings_General_Tab" wizard with attribute
             | key_verify        | value_verify        |
             | a12345            | b54321              |
@@ -170,7 +163,6 @@ Feature: Project Settings page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then select "Project settings" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When add new rows to "Parameters_Table" table on "Project_Settings_General_Tab" wizard using nontable inputs
             | Parameters_Table_Key_Input | Parameters_Table_Value_Input | Parameters_Table_Add_Row_Button |
             |                            |                              |               yes               |
@@ -225,7 +217,6 @@ Feature: Project Settings page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then select "Project settings" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
         Then verify "Projects_Table" element visibility on "Projects" wizard
@@ -239,7 +230,6 @@ Feature: Project Settings page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then select "Project settings" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         And wait load page
@@ -263,7 +253,6 @@ Feature: Project Settings page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then select "Project settings" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         And wait load page

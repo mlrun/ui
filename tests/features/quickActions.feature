@@ -13,20 +13,17 @@ Feature: Quick actions Page
         And wait load page
         Then verify breadcrumbs "project" label should be equal "automation-test-1002" value
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Quick actions" value
         Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Project monitoring" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Header_Name_Label" element visibility on "Demo_Project" wizard
         Then verify "Header_Created_Time" element visibility on "Demo_Project" wizard
@@ -84,13 +81,11 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Project monitoring" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Actions_Table" table on "Demo_Project" wizard with offset "false"
             |          name           |
@@ -134,7 +129,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Actions_Table" table on "Demo_Project" wizard with offset "false"
             |          name           |
@@ -183,7 +177,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Actions_Table" table on "Demo_Project" wizard with offset "false"
             |          name           |
@@ -244,7 +237,6 @@ Feature: Quick actions Page
         And click on row root with value "automation-test-1003" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Actions_Table" table on "Demo_Project" wizard with offset "false"
             |            name           |
@@ -273,7 +265,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Actions_Table" table on "Demo_Project" wizard with offset "false"
             |          name           |
@@ -375,7 +366,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Actions_Table" table on "Demo_Project" wizard with offset "false"
             |          name           |
@@ -437,7 +427,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Actions_Table" table on "Demo_Project" wizard with offset "false"
             |          name           |
@@ -462,7 +451,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Links_Table" table on "Demo_Project" wizard with offset "false"
             |     name     |
@@ -501,7 +489,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Links_Table" table on "Demo_Project" wizard with offset "false"
             |   name    |
@@ -526,7 +513,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Links_Table" table on "Demo_Project" wizard with offset "false"
             |   name   |
@@ -550,7 +536,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Links_Table" table on "Demo_Project" wizard with offset "false"
             |       name      |
@@ -578,7 +563,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Links_Table" table on "Demo_Project" wizard with offset "false"
             |     name     |
@@ -617,7 +601,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Links_Table" table on "Demo_Project" wizard with offset "false"
             | name |
@@ -656,7 +639,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Links_Table" table on "Demo_Project" wizard with offset "false"
             |  name  |
@@ -684,7 +666,6 @@ Feature: Quick actions Page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Links_Table" table on "Demo_Project" wizard with offset "false"
             |    name   |
@@ -705,7 +686,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Deployment_Links_Table" table on "Demo_Project" wizard with offset "false"
             |      name       |
@@ -740,7 +720,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Deployment_Links_Table" table on "Demo_Project" wizard with offset "false"
             |        name         |
@@ -759,7 +738,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Deployment_Links_Table" table on "Demo_Project" wizard with offset "false"
             |    name    |
