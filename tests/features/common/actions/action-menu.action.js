@@ -49,7 +49,10 @@ export const openActionMenu = async (page, actionMenu) => {
 
     await click(page.locator(actionMenu.open_button).first())
     await expect.poll(() => isActionMenuOpen(page, actionMenu), { timeout: 1500 }).toBe(true)
-  }, 8000).catch(() => {})
+  }, 8000).catch(error => {
+    // the menu never opened: the selecting helper would fail on a missing option instead
+    throw new Error(`The action menu (${actionMenu.open_button}) did not open: ${error.message}`)
+  })
 }
 
 // opens the menu unless it is open already: the open button toggles the menu, so a step that clicks it after a

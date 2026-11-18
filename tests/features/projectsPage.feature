@@ -194,14 +194,12 @@ Feature: Projects Page
         When click on "Title" element on "Create_New_Project" wizard
         And click on "Close_Label_Button" element on "Create_New_Project" wizard
         Then click on "Create_Button" element on "Create_New_Project" wizard
-        And set tear-down property "project" created with "automation-test-name" value
         Then check "automation-test-name" value in "name" column in "Projects_Table" table on "Projects" wizard
 
     @MLPr
     @passive
     @smoke
     Scenario: MLPr008 - Archive ML Project
-        * set tear-down property "project" created with "automation-test-name1" value
         * create "automation-test-name1" MLRun Project with code 201
         Given open url
         And wait load page
@@ -217,7 +215,6 @@ Feature: Projects Page
     @passive
     @smoke
     Scenario: MLPr009 - Delete existing ML Project
-        * set tear-down property "project" created with "automation-test-name2" value
         * create "automation-test-name2" MLRun Project with code 201
         Given open url
         And wait load page
@@ -249,7 +246,6 @@ Feature: Projects Page
     @passive
     @smoke
     Scenario: MLPr010 - Unarchive ML Project
-        * set tear-down property "project" created with "automation-test-name7" value
         * create "automation-test-name7" MLRun Project with code 201
         Given open url
         And wait load page

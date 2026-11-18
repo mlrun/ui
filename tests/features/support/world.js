@@ -28,7 +28,6 @@ export class World {
     this.page = page
     this.testInfo = testInfo
     this.downloads = downloads
-    this.createdItems = []
     this.testContext = {}
     // the steps pass it to the actions unbound
     this.attach = this.attach.bind(this)

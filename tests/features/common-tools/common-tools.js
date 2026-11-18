@@ -20,13 +20,6 @@ such restriction.
 import axios from 'axios'
 import { mock_server_url, workerHeaders } from '../../config.js'
 import { generateRegEx, getLength, getNotToBe, getRule } from './utils.js'
-import {
-  deleteAPIArtifact,
-  deleteAPIFeatureSet,
-  deleteAPIFeatureVector,
-  deleteAPIFunction,
-  deleteAPIMLProject
-} from '../common/actions/api.actions.js'
 
 export function locatorBuilder(strings, ...keys) {
   return function (...values) {
@@ -183,52 +176,20 @@ export function parseString(string) {
   )
 }
 
-// sequential and awaited, projects last: the next scenario must not race with the previous tear-down
-// (e.g. 409 "already exists" when it creates a project with the same name)
-export async function clearBackendAfterTest(page, items) {
-  const orderedItems = [
-    ...items.filter(item => item.type !== 'project'),
-    ...items.filter(item => item.type === 'project')
-  ]
-
-  for (const item of orderedItems) {
-    try {
-      await deleteBackendItem(page, item)
-    } catch (error) {
-      console.warn(`Tear-down of ${item.type} "${item.name}" failed: ${error.message}`)
-    }
-  }
-}
-
-function deleteBackendItem(page, item) {
-  switch (item.type) {
-    case 'project':
-      return deleteAPIMLProject(page, item.name, 204)
-    case 'featureSet':
-      return deleteAPIFeatureSet(item.project, item.name, 204)
-    case 'featureVector':
-      return deleteAPIFeatureVector(item.project, item.name, 204)
-    case 'function':
-      return deleteAPIFunction(item.project, item.name, 202)
-    case 'dataset':
-    case 'model':
-      return deleteAPIArtifact(item.project, item.name, 200)
-    default:
-      return null
-  }
-}
-
-// of the mock server instance of this worker only: the other workers' scenarios go on
+// of the mock server instance of this worker only: the other workers' scenarios go on. A failure fails the scenario:
+// without the failure condition it would run against a healthy mock and fail later for an unrelated-looking reason
 export async function setRequestsFailureCondition(shouldFail) {
   try {
-    const response = await axios.post(
+    await axios.post(
       `${mock_server_url}/set-failure-condition`,
       { shouldFail },
       { headers: workerHeaders() }
     )
-    console.log(response.data)
   } catch (error) {
-    console.error(`Error setting failure condition: ${error}`)
+    throw new Error(
+      `The mock server didn't set the failure condition (shouldFail: ${shouldFail}): ${error.response?.status ?? ''} ` +
+        `${JSON.stringify(error.response?.data ?? error.message)}`
+    )
   }
 }
 

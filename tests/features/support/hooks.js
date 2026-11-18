@@ -18,11 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { Before, After } from './world.js'
-import {
-  clearBackendAfterTest,
-  resetMockState,
-  setRequestsFailureCondition
-} from '../common-tools/common-tools.js'
+import { resetMockState, setRequestsFailureCondition } from '../common-tools/common-tools.js'
 import { appMode, test_port, test_url } from '../../config.js'
 
 // the scenarios run against the Iguazio platform, not the Community Edition: the app reads `igzFullVersion` from the
@@ -61,10 +57,6 @@ Before({ timeout: 5 * 60 * 1000 }, async function () {
       .waitFor({ state: 'attached', timeout: 4 * 60 * 1000 })
     isAppWarmedUp = true
   }
-})
-
-After(async function () {
-  await clearBackendAfterTest(this.page, this.createdItems)
 })
 
 // the known bugs are expected to fail: they don't make the run red, and a known bug scenario that passes fails the run

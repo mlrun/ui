@@ -5,7 +5,6 @@ Feature: Quick actions Page
     # BUG-003 (tests/KNOWN_BUGS.md): the breadcrumb of the Quick actions page is the URL segment "quick-actions"
     @MLPH @rerun @knownBug
     Scenario: MLPH001 - Check all mandatory components on Project Home
-        * set tear-down property "project" created with "automation-test-1002" value
         * create "automation-test-1002" MLRun Project with code 201
         Given open url
         And wait load page
@@ -228,7 +227,6 @@ Feature: Quick actions Page
     @MLPH 
     @passive @demoMode
     Scenario: MLPH005 - Check all mandatory components on Create ML Function on Project Home Page
-        * set tear-down property "project" created with "automation-test-1003" value
         * create "automation-test-1003" MLRun Project with code 201
         Given open url
         And wait load page

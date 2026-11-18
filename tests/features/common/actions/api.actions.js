@@ -78,44 +78,6 @@ export const deleteAPIMLProject = async (
     })
 }
 
-export const deleteAPIFeatureSet = async (projectName, featureSetName, expectedStatusCode) => {
-  await mainHttpClient
-    .delete(`${REACT_APP_MLRUN_API_URL}/projects/${projectName}/feature-sets/${featureSetName}`)
-    .then(res => {
-      expect(res.status).toBe(expectedStatusCode)
-    })
-}
-
-export const deleteAPIFeatureVector = async (
-  projectName,
-  featureVectorName,
-  expectedStatusCode
-) => {
-  await mainHttpClient
-    .delete(
-      `${REACT_APP_MLRUN_API_URL}/projects/${projectName}/feature-vectors/${featureVectorName}`
-    )
-    .then(res => {
-      expect(res.status).toBe(expectedStatusCode)
-    })
-}
-
-export const deleteAPIFunction = async (projectName, functionName, expectedStatusCode) => {
-  await mainHttpClient
-    .delete(`${REACT_APP_MLRUN_API_URL_V2}/projects/${projectName}/functions/${functionName}`)
-    .then(res => {
-      expect(res.status).toBe(expectedStatusCode)
-    })
-}
-
-export const deleteAPIArtifact = async (projectName, artifactName, expectedStatusCode) => {
-  await mainHttpClient
-    .delete(`${REACT_APP_MLRUN_API_URL_V2}/projects/${projectName}/artifacts?name=${artifactName}`)
-    .then(res => {
-      expect(res.status).toBe(expectedStatusCode)
-    })
-}
-
 export const createAPIMLProject = async (mlProjectName, expectedStatusCode) => {
   const project_data = {
     metadata: {

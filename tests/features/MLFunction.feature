@@ -616,7 +616,6 @@ Feature: ML Functions
     # BUG-004 (tests/KNOWN_BUGS.md): the CPU limit unit select drops the requests, the edited function has the defaults
     @rerun @knownBug @demoMode
     Scenario: MLF015 - Save new ml-function
-        * set tear-down property "function" created in "default" project with "new-aqa-function-00" value
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -649,7 +648,6 @@ Feature: ML Functions
         Then type value "50" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then type value "15" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         When collapse "Resources_Accordion" on "New_Function" wizard
-        And set tear-down property "function" created in "default" project with "new-aqa-function-00" value
         Then click on "Save_Button" element on "New_Function" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
@@ -1171,7 +1169,6 @@ Feature: ML Functions
     @smoke @demoMode
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF030 - Verify all mandatory component on Edit Function sidebar
-        * set tear-down property "project" created with "automation-test" value
         * create "automation-test" MLRun Project with code 201
         * create "test-function" Function with "job" kind and "latest" tag in "automation-test" project with code 200
         Given open url
@@ -1241,8 +1238,6 @@ Feature: ML Functions
     # BUG-004 (tests/KNOWN_BUGS.md): the CPU limit unit select drops the requests, the Batch Run shows the defaults
     @rerun @knownBug @demoMode
     Scenario: MLF033 - Verify Resources values on Function Deploy and Run
-        * set tear-down property "project" created with "automation-test" value
-        * set tear-down property "function" created in "automation-test" project with "new-aqa-function-00" value
         * create "automation-test" MLRun Project with code 201
         Given open url
         And wait load page

@@ -31,10 +31,11 @@ such restriction.
 // them all: the mock server keeps a separate instance per worker (scripts/mockServer.js, the `x-e2e-worker` header).
 // E2E_FULL_PER_WORKER=true - every scenario runs N times (`--repeat-each N`), e.g. to find the flaky ones
 import fs from 'node:fs'
+import { createRequire } from 'node:module'
 import net from 'node:net'
 import os from 'node:os'
 import path from 'node:path'
-import { spawnSync } from 'node:child_process'
+import { spawn, spawnSync } from 'node:child_process'
 
 import { appEnv, buildDir, buildMarker, reports_dir } from '../tests/config.js'
 import { acquireRunLock, MAX_WORKERS } from '../tests/e2e-lock.js'
@@ -106,10 +107,26 @@ try {
   fail(error.message)
 }
 
-// stopped while the tests are running: the lock is released (the report phase has its own Ctrl+C handling)
-const onStop = () => {
-  releaseRunLock()
-  process.exit(1)
+// the running `bddgen`/`playwright test` (an async child: a synchronous one blocks the signal handlers until it ends)
+let child = null
+let stoppedBy = null
+
+// stopped while the tests are running: Playwright gets SIGINT, its graceful stop (as Ctrl+C: it stops its workers and
+// the servers it started; a SIGTERM passed on through `npx` left the servers running), and the run goes on as after a
+// failure (the lock is released, the report is generated, it isn't opened). Ctrl+C in the terminal reaches Playwright by itself (the
+// whole foreground process group gets it), so it isn't sent a second time. Stopped before or after the tests: the lock
+// is released (the report phase has its own Ctrl+C handling)
+const onStop = signal => {
+  if (!child) {
+    releaseRunLock()
+    process.exit(1)
+  }
+
+  if (stoppedBy) return
+
+  stoppedBy = signal
+
+  if (signal !== 'SIGINT' || !process.stdin.isTTY) child.kill('SIGINT')
 }
 const stopSignals = ['SIGINT', 'SIGTERM', 'SIGHUP']
 
@@ -120,8 +137,24 @@ const playwrightArgs = process.argv.slice(2)
 const allureResultsDir = path.join(reports_dir, 'allure-results')
 const allureReportDir = path.join(reports_dir, 'allure-report')
 
-const npx = (args, env = process.env) =>
-  spawnSync('npx', args, { stdio: 'inherit', shell: isWindows, env }).status ?? 1
+// the Playwright CLI is run directly, not by `npx`: the stop signal must reach Playwright itself
+const playwrightCli = createRequire(import.meta.url).resolve('@playwright/test/cli')
+
+const run = (command, args, env = process.env, shell = false) =>
+  new Promise(resolve => {
+    child = spawn(command, args, { stdio: 'inherit', shell, env })
+    child.once('error', error => {
+      console.error(error.message)
+      child = null
+      resolve(1)
+    })
+    child.once('exit', code => {
+      child = null
+      resolve(code ?? 1)
+    })
+  })
+
+const npx = (args, env = process.env) => run('npx', args, env, isWindows)
 
 const isPortBusy = port =>
   new Promise(resolve => {
@@ -275,12 +308,13 @@ if (settings.app === 'build') {
 // only the results of the current run, the report keeps the history of runs
 fs.rmSync(allureResultsDir, { recursive: true, force: true })
 
-let status = npx(['bddgen'], runEnv)
+let status = await npx(['bddgen'], runEnv)
 
-if (status === 0) {
-  status = npx(
+if (status === 0 && !stoppedBy) {
+  status = await run(
+    process.execPath,
     [
-      'playwright',
+      playwrightCli,
       'test',
       `--workers=${settings.workers}`,
       // every scenario N times, the runs are shared between the workers: the whole regression N times at once
@@ -292,6 +326,9 @@ if (status === 0) {
     runEnv
   )
 }
+
+// a stopped run is a failed one, whatever Playwright returned
+if (stoppedBy && status === 0) status = 1
 
 // the tests are over: the next run can start while the report is generated and served (it can be open for long)
 releaseRunLock()
@@ -305,11 +342,11 @@ spawnSync('npx', ['allure', 'generate', '--clean', allureResultsDir], {
 console.log(`Allure report: ${allureReportDir} (npm run report:open)`)
 
 // the report loads its files on demand, so it's served (allurerc.mjs)
-if (shouldOpenReport && fs.existsSync(path.join(allureReportDir, 'index.html'))) {
+if (shouldOpenReport && !stoppedBy && fs.existsSync(path.join(allureReportDir, 'index.html'))) {
   console.log('Opening the report, press Ctrl+C to stop the report server')
   // Ctrl+C stops the report server, the exit code is still the one of the tests
   process.on('SIGINT', () => {})
-  npx(['allure', 'open', allureReportDir])
+  await npx(['allure', 'open', allureReportDir])
 }
 
 process.exit(status)

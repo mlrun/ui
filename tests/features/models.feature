@@ -372,7 +372,6 @@ Feature: Models Page
   @smoke @demoMode
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
   Scenario: MLM010 - Verify behaviour on Register new Model
-    * set tear-down property "model" created in "default" project with "automation-model" value
     Given open url
     And wait load page
     When turn on demo mode with query params "false"
@@ -984,7 +983,6 @@ Feature: Models Page
   @passive
   @smoke
   Scenario: MLM027 - Check Details panel still active on page refresh
-    * set tear-down property "model" created in "default" project with "test-model" value
     * create "test-model" Model with "v1" tag in "default" project with code 200
     Given open url
     And wait load page
@@ -1105,9 +1103,6 @@ Feature: Models Page
   @passive
   @smoke
   Scenario: MLM029 - Check components on Deploy Model Popup
-    * set tear-down property "function" created in "default" project with "automation-test-function-1" value
-    * set tear-down property "function" created in "default" project with "automation-test-function-2" value
-    * set tear-down property "model" created in "default" project with "automation-test-model" value
     * create "automation-test-function-1" Function with "serving" kind and "latest" tag in "default" project with code 200
     * create "automation-test-function-2" Function with "serving" kind and "non-latest" tag in "default" project with code 200
     * create "automation-test-model" Model with "latest" tag in "default" project with code 200

@@ -135,17 +135,21 @@ export const acquireRunLock = async ({ parallel = false } = {}) => {
   fs.mkdirSync(reports_dir, { recursive: true })
 
   for (let attempt = 0; attempt < 3; attempt++) {
+    // written in full to a file of this process first, then linked as the lock: the link fails if the lock exists, so
+    // only one process can take it, and the lock is never seen half-written (an unreadable lock would be taken over)
+    const ownFile = `${lockFile}.${process.pid}`
+
+    fs.writeFileSync(
+      ownFile,
+      JSON.stringify({
+        pid: process.pid,
+        startedAt: new Date().toISOString(),
+        cwd: process.cwd()
+      })
+    )
+
     try {
-      // `wx` - fails if the file exists: only one process can create the lock
-      fs.writeFileSync(
-        lockFile,
-        JSON.stringify({
-          pid: process.pid,
-          startedAt: new Date().toISOString(),
-          cwd: process.cwd()
-        }),
-        { flag: 'wx' }
-      )
+      fs.linkSync(ownFile, lockFile)
       process.env.E2E_LOCK_OWNER = String(process.pid)
 
       return releaseRunLock
@@ -175,7 +179,10 @@ export const acquireRunLock = async ({ parallel = false } = {}) => {
         await stopRun(lock.pid)
       }
 
-      fs.rmSync(lockFile, { force: true })
+      // a stale (or stopped) lock, unless another process has replaced it meanwhile
+      if (JSON.stringify(readLock()) === JSON.stringify(lock)) fs.rmSync(lockFile, { force: true })
+    } finally {
+      fs.rmSync(ownFile, { force: true })
     }
   }
 

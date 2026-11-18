@@ -196,7 +196,6 @@ Feature: Artifacts Page
   @MLA
   @smoke
   Scenario: MLA006 - Verify behaviour on Register new Artifact
-    * set tear-down property "project" created with "automation-test" value
     * create "automation-test" MLRun Project with code 201
     Given open url
     And wait load page

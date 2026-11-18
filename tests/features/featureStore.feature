@@ -1055,7 +1055,6 @@ Feature: Feature Store Page
     @smoke
     #TODO: Add V3IO checks
     Scenario: MLFS031 - Verify new Feature Set creation with 'Save' button
-        * set tear-down property "project" created with "automation-test-name3" value
         * create "automation-test-name3" MLRun Project with code 201
         Given open url
         And wait load page
@@ -1600,7 +1599,6 @@ Feature: Feature Store Page
         Then "Notification_Popup" element on "Notification_Popup" should contain "Feature vector created successfully" value
         Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
-        And set tear-down property "featureVector" created in "fsdemo-admin" project with "temp_vector01" value
         Then verify "Table_FilterBy_Button" element on "Add_To_Feature_Vector_Tab" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button_1"
         Then click on "Cross_Close_Button" element on "Feature_Vectors_Info_Pane" wizard
         And wait load page
@@ -1646,7 +1644,6 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
-        And set tear-down property "featureVector" created in "fsdemo-admin" project with "temp_vector02" value
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         And wait load page
         Then click on cell with value "temp_vector02" in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
@@ -1710,7 +1707,6 @@ Feature: Feature Store Page
     @MLFS
     @smoke
     Scenario: MLFS045 - Verify Feature Label icon on Requested Features tab on Feature Vectors tab
-        And set tear-down property "featureVector" created in "fsdemo-admin" project with "test_vector" value
         Given open url
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1742,7 +1738,6 @@ Feature: Feature Store Page
     @smoke @demoMode
     # Moved analyses tabs to Demo mode in `1.8.0` ML-9059
     Scenario: MLFS046 - Verify No Data message on Feature Store tabs
-        * set tear-down property "project" created with "automation-test-name001" value
         * create "automation-test-name001" MLRun Project with code 201
         Given open url
         And wait load page
@@ -1753,7 +1748,6 @@ Feature: Feature Store Page
         And select "Feature store" item in sidebar menu
         And wait load page
         Then "No_Data_Message" component on "commonPagesHeader" should contain "No_Data_Message"."Common_Message_Feature_Sets"
-        * set tear-down property "featureSet" created in "automation-test-name001" project with "test_fs" value
         * create "test_fs" Feature Set in "automation-test-name001" project with code 200
         Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         And click on cell with value "test_fs" in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1770,7 +1764,6 @@ Feature: Feature Store Page
         Then select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
         Then "No_Data_Message" component on "commonPagesHeader" should contain "No_Data_Message"."Common_Message_Feature_Vector"
-        * set tear-down property "featureVector" created in "automation-test-name001" project with "test_fv" value
         * create "test_fv" Feature Vector in "automation-test-name001" project with code 200
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         And click on cell with value "test_fv" in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
@@ -1787,9 +1780,7 @@ Feature: Feature Store Page
     # Moved analyses tabs to Demo mode in `1.8.0` ML-9059
     @rerun @demoMode
     Scenario: MLFS047 - Check broken link redirection
-        * set tear-down property "project" created with "automation-test-010" value
         * create "automation-test-010" MLRun Project with code 201
-        * set tear-down property "featureSet" created in "automation-test-010" project with "test_fs" value
         * create "test_fs" Feature Set in "automation-test-010" project with code 200
         Given open url
         And wait load page
@@ -1828,7 +1819,6 @@ Feature: Feature Store Page
         When select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
         Then verify redirection from "projects/automation-test-010/feature-store/INVALID" to "projects/automation-test-010/feature-store/feature-sets"
-        * set tear-down property "featureVector" created in "automation-test-010" project with "test_fv" value
         * create "test_fv" Feature Vector in "automation-test-010" project with code 200
         When select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -2204,7 +2194,6 @@ Feature: Feature Store Page
     # the ingestion is mocked: the mock starts the run "<feature set>-ingest" (startFeatureSetIngest, tests/mockServer/mock.js)
     @inProgress @rerun
     Scenario: MLFS056 - Verify new Feature Set creation with 'Save And Ingest' button
-        * set tear-down property "project" created with "automation-test-name201" value
         * create "automation-test-name201" MLRun Project with code 201
         Given open url
         And wait load page

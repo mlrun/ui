@@ -137,8 +137,6 @@ Feature: Datasets Page
   @smoke
   #TODO:  Datasets Analysis tab - add the data to verify
   Scenario: MLD005 - Check Details panel still active on page refresh
-#     * set tear-down property "dataset" created in "automation-test" project with "test-file" value
-    * set tear-down property "dataset" created in "default" project with "test-dataset" value
     * create "test-dataset" Dataset with "v1" tag in "default" project with code 200
     Given open url
     And wait load page

@@ -106,8 +106,14 @@ export const withExactText = (locator, text) =>
       `^\\s*${String(text)
         .trim()
         .split(/\s+/)
-        .map(word => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-        .join('\\s*')}\\s*$`
+        // between two words the whitespace is required ("my project" must not match "myproject"), next to a
+        // punctuation mark it is optional (the chip "key : value" is "key:value" in the textContent)
+        .reduce(
+          (pattern, word, index, words) =>
+            `${pattern}${index && /\w$/.test(words[index - 1]) && /^\w/.test(word) ? '\\s+' : index ? '\\s*' : ''}` +
+            word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+          ''
+        )}\\s*$`
     )
   })
 

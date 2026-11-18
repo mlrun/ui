@@ -29,17 +29,6 @@ import {
   getProjects
 } from '../common/actions/api.actions.js'
 
-Then('set tear-down property {string} created with {string} value', async function (type, name) {
-  this.createdItems.push({ name, type })
-})
-
-Then(
-  'set tear-down property {string} created in {string} project with {string} value',
-  async function (type, project, name) {
-    this.createdItems.push({ project, name, type })
-  }
-)
-
 When('create {string} MLRun Project with code {int}', async function (nameProject, status) {
   await createAPIMLProject(nameProject, status)
   await waitForPageQuiet(this.page)
@@ -56,7 +45,6 @@ Then('create up to limit projects with code {int}', async function (status) {
   for (let i = 0; i <= projectsLimit - projects.length; i++) {
     const name = `automation-test-name${i}`
     await createAPIMLProject(name, status)
-    this.createdItems.push({ name, type: 'project' })
   }
 })
 
