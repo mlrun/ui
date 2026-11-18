@@ -23,7 +23,8 @@ such restriction.
 //     E2E_BUILD=false refuses a build without it
 //  2. generates the specs from the feature files (`bddgen`)
 //  3. runs the scenarios headless: Playwright starts the mock server and the app (`webServer` in playwright.config.js)
-//  4. generates the Allure report (for failed runs as well) and opens it (not on CI, not with E2E_OPEN_REPORT=false)
+//  4. generates the Allure report (for failed runs as well, not with E2E_ALLURE=false) and opens it (not on CI, not
+//     with E2E_OPEN_REPORT=false)
 // The exit code is the one of the tests. The settings are environment variables (validated here, see README.md), extra
 // arguments are passed to Playwright, e.g. `npm run test:regression -- --grep MLPr001 --repeat-each 3`
 //
@@ -93,7 +94,10 @@ const settings = {
   headless: readChoice('E2E_HEADLESS', 'true', ['true', 'false']) === 'true',
   // E2E_FULL_PER_WORKER=true - the whole regression N times at once (N = E2E_WORKERS), not shared between the
   // workers, e.g. to find the flaky scenarios
-  fullPerWorker: readChoice('E2E_FULL_PER_WORKER', 'false', ['true', 'false']) === 'true'
+  fullPerWorker: readChoice('E2E_FULL_PER_WORKER', 'false', ['true', 'false']) === 'true',
+  // E2E_ALLURE=false - no Allure results and report (the PR runs on CI: the console and the job summary list the
+  // failures)
+  allure: readChoice('E2E_ALLURE', 'true', ['true', 'false']) === 'true'
 }
 const appPort = Number(process.env.E2E_APP_PORT || 3000)
 const mockPort = Number(process.env.E2E_MOCK_PORT || 30000)
@@ -246,6 +250,7 @@ console.log(
       : '') +
     `, retries=${settings.retries}, ` +
     `trace=${settings.trace}, ${settings.headless ? 'headless' : 'headed'}, ` +
+    (settings.allure ? '' : 'no Allure, ') +
     `tags=${process.env.E2E_TAGS || 'all'}${isCI ? ', CI' : ''}` +
     (playwrightArgs.length ? `, Playwright arguments: ${playwrightArgs.join(' ')}` : '')
 )
@@ -256,7 +261,8 @@ const runEnv = {
   E2E_APP: settings.app,
   E2E_RETRIES: String(settings.retries),
   E2E_TRACE: settings.trace,
-  E2E_HEADLESS: String(settings.headless)
+  E2E_HEADLESS: String(settings.headless),
+  E2E_ALLURE: String(settings.allure)
 }
 
 if (settings.app === 'build') {
@@ -334,15 +340,22 @@ if (stoppedBy && status === 0) status = 1
 releaseRunLock()
 stopSignals.forEach(signal => process.off(signal, onStop))
 
-console.log('Generating the Allure report...')
-spawnSync('npx', ['allure', 'generate', '--clean', allureResultsDir], {
-  stdio: ['ignore', 'ignore', 'inherit'],
-  shell: isWindows
-})
-console.log(`Allure report: ${allureReportDir} (npm run report:open)`)
+if (settings.allure) {
+  console.log('Generating the Allure report...')
+  spawnSync('npx', ['allure', 'generate', '--clean', allureResultsDir], {
+    stdio: ['ignore', 'ignore', 'inherit'],
+    shell: isWindows
+  })
+  console.log(`Allure report: ${allureReportDir} (npm run report:open)`)
+}
 
 // the report loads its files on demand, so it's served (allurerc.mjs)
-if (shouldOpenReport && !stoppedBy && fs.existsSync(path.join(allureReportDir, 'index.html'))) {
+if (
+  settings.allure &&
+  shouldOpenReport &&
+  !stoppedBy &&
+  fs.existsSync(path.join(allureReportDir, 'index.html'))
+) {
   console.log('Opening the report, press Ctrl+C to stop the report server')
   // Ctrl+C stops the report server, the exit code is still the one of the tests
   process.on('SIGINT', () => {})

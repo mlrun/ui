@@ -169,6 +169,7 @@ Docker image is built from its own `npm run build` (`build` is in `.dockerignore
 | `E2E_TZ`              | Timezone of the browser and of the steps                                                                                                                                                        | `UTC`                       |
 | `E2E_LOCALE`          | Locale of the browser (number and date formats)                                                                                                                                                 | `en-US`                     |
 | `E2E_OPEN_REPORT`     | `false` - don't serve the report after the run (it isn't served on CI)                                                                                                                          | `true`                      |
+| `E2E_ALLURE`          | `false` - no Allure results and report, the console (and the job summary on CI) lists the failures (the PR runs on CI)                                                                          | `true`                      |
 | `E2E_APP_PORT`        | Port of the app, e.g. to run next to another app on the default port                                                                                                                            | `3000`                      |
 | `E2E_MOCK_PORT`       | Port of the mock server, the app proxies the API requests to it                                                                                                                                 | `30000`                     |
 
@@ -263,23 +264,18 @@ in the environment priority over the files). All the proxied requests (`/api`, `
 `/function-catalog`) go to the mock server. One external request is left: the code editor (Monaco) is loaded by the app
 from `cdn.jsdelivr.net` (the default of `@monaco-editor/react`), so the runner needs the internet for it.
 
+**Report.** The job (`E2E sanity` on a PR, `E2E regression` for the weekly and the manual runs) writes a short job
+summary: the result line and, if any, a table of the failed scenarios (also a flaky one or a known bug that passed: they
+fail the run) with their steps, then the whole error of each of them (up to 100 lines, the job log has the rest). The
+failures are also annotations of the job (Playwright's `github` reporter), the whole console output is the job log. A
+PR run makes no Allure report (`E2E_ALLURE=false`), the full regression does.
+
 **Artifacts** (kept 14 days):
 
-| Artifact           | When             | Contents                                                                                                                               |
-| ------------------ | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `allure-report`    | always           | The Allure report: unpack it and serve it with `npx allure open <folder>` (it loads its files on demand, it can't be opened as a file) |
-| `e2e-resources`    | always           | The raw resource log of the run (`scripts/e2eResources.sh`)                                                                            |
-| `e2e-test-results` | failed/cancelled | `test-results` (the traces: `npx playwright show-trace <trace.zip>`, the screenshots), the console output and the build log            |
-
-The failures are also annotations of the job (Playwright's `github` reporter).
-
-**Resource verdict.** A sampler (`scripts/e2eResources.sh`, Linux) reads `/proc/loadavg`, `/proc/stat` and
-`/proc/meminfo` every 5 s in the background of the test step. After the run, also a failed one,
-`scripts/e2eCiSummary.js` writes the job summary: the result line, the selection, the workers, the duration, and the
-verdict - the CPU count, the load average (median, p95, against the CPUs), the CPU idle, iowait and steal, the minimum
-MemAvailable, the maximum swap used and the slowest scenarios. It warns ("Looks overloaded", also as a job warning) when
-the load p95 is above 2× the CPUs, the CPU idle median is below 10%, the iowait p95 is above 20%, MemAvailable went below
-1 GB or the swap use grew by more than 64 MB.
+| Artifact           | When                                 | Contents                                                                                                                               |
+| ------------------ | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `allure-report`    | the full regression (weekly, manual) | The Allure report: unpack it and serve it with `npx allure open <folder>` (it loads its files on demand, it can't be opened as a file) |
+| `e2e-test-results` | failed/cancelled                     | `test-results` (the traces: `npx playwright show-trace <trace.zip>`, the screenshots) and the build log                                |
 
 **Runner sizes and the memory estimate.** `ubuntu-latest` has 4 vCPU and 16 GB in public repositories; private
 repositories get a smaller standard runner (2 vCPU, 7-8 GB): there 3 workers are likely too many, use `workers=1` or
@@ -287,9 +283,8 @@ repositories get a smaller standard runner (2 vCPU, 7-8 GB): there 3 workers are
 app ~250 MB, every worker (a Playwright worker process, its browser, a mock instance) ~0.8-1.1 GB: ~3.3-4.2 GB with 3
 workers, ~4.1-5.3 GB with 4, well within 16 GB; on 4 vCPU the CPU is the likelier limit.
 
-**3 or 4 workers.** Run the workflow manually with `workers=4` on the same branch and compare the two job summaries:
-the duration, the load p95 per CPU, the CPU idle and the minimum MemAvailable. 4 workers are worth it if the run is
-clearly shorter, nothing is flaky and the verdict shows no overload signs.
+**3 or 4 workers.** Run the workflow manually with `workers=4` on the same branch and compare the durations of the two
+runs: 4 workers are worth it if the run is clearly shorter and nothing is flaky.
 
 **Rerun.** "Re-run jobs" on the run page (it can wait for the approval of a fork PR again), or a manual run with other inputs, e.g.
 `tags` `@MLPr` for a part of the scenarios.

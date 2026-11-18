@@ -20,6 +20,7 @@ such restriction.
 // Playwright reporter of the E2E regression console output: a line per scenario (with the worker that ran it when
 // there are several), the failure details, a live progress bar (in a terminal) and the summary. The workers run their
 // scenarios at the same time, so everything is keyed by the worker slot (`parallelIndex`), not by the order of events
+import fs from 'node:fs'
 import { stripVTControlCharacters, styleText } from 'node:util'
 
 const out = process.stdout
@@ -42,6 +43,8 @@ const KINDS = {
 }
 const SPINNER = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
 const BAR_WIDTH = 24
+// the lines of an error in the job summary
+const ERROR_LINES = 100
 const GHERKIN_STEP = /^(Given|When|Then|And|But|\*) /
 
 const formatDuration = ms => {
@@ -352,5 +355,78 @@ export default class ConsoleReporter {
         ''
       ].join('\n')
     )
+
+    this.writeJobSummary(isFailed)
+  }
+
+  // GitHub Actions (`GITHUB_STEP_SUMMARY`): the result line and only what made the run red - the failed scenarios (also
+  // a known bug that passed and a flaky one: CI fails on them) in a table, then the whole error of each of them
+  writeJobSummary(isFailed) {
+    const file = process.env.GITHUB_STEP_SUMMARY
+
+    if (!file) return
+
+    const { passed, flaky, known, skipped } = this.counts
+    const cell = text =>
+      String(text ?? '')
+        .replace(/\|/g, '\\|')
+        .replace(/\s+/g, ' ')
+        .trim()
+    // the whole error as a code block, up to ERROR_LINES lines (a long call log is cut, the job log has all of it)
+    const errorBlock = text => {
+      const errorLines = stripVTControlCharacters(String(text)).trimEnd().split('\n')
+      const shown = errorLines.slice(0, ERROR_LINES)
+
+      if (errorLines.length > shown.length) {
+        shown.push(`… ${errorLines.length - shown.length} more lines in the job log`)
+      }
+
+      // a fence longer than any backtick run of the error
+      const fence = '`'.repeat(Math.max(3, ...(text.match(/`+/g) ?? []).map(run => run.length + 1)))
+
+      return [fence, ...shown, fence]
+    }
+    const rows = [
+      ...this.finished.failed.map(event => ['✘ failed', event]),
+      ...this.finished.knownFixed.map(event => ['★ known bug passed, remove the tag', event]),
+      ...this.finished.flaky.map(event => ['⚠ flaky, passed on a retry', event])
+    ]
+    const lines = [
+      `### ${isFailed || rows.length ? '❌' : '✅'} E2E: ${this.done}/${this.total} scenarios in ` +
+        `${formatDuration(Date.now() - this.startTime)} (tags: \`${process.env.E2E_TAGS || 'all'}\`)`,
+      '',
+      `✓ ${passed + flaky} passed · ✘ ${rows.length} failed · ◆ ${known} known bugs · ○ ${skipped} skipped`
+    ]
+
+    if (rows.length) {
+      lines.push(
+        '',
+        '| Result | Scenario | Step |',
+        '| --- | --- | --- |',
+        ...rows.map(
+          ([result, event]) =>
+            `| ${result} | ${cell(`${event.feature} › ${event.name}`)} | ${cell(event.step)} |`
+        )
+      )
+
+      rows
+        .filter(([, event]) => event.error)
+        .forEach(([result, event]) =>
+          lines.push(
+            '',
+            `**${result}: ${event.feature} › ${event.name}**`,
+            ...(event.step ? ['', `Step: \`${event.step}\``] : []),
+            '',
+            ...errorBlock(event.error)
+          )
+        )
+    }
+
+    if (this.errors.length) {
+      lines.push('', '**Errors**')
+      this.errors.forEach(error => lines.push('', ...errorBlock(error)))
+    }
+
+    fs.appendFileSync(file, `${lines.join('\n')}\n`)
   }
 }

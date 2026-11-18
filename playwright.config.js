@@ -48,6 +48,8 @@ process.env.TZ = timezone
 
 const baseURL = `http://${test_url}:${test_port}`
 const isCI = Boolean(process.env.CI)
+// E2E_ALLURE=false - no Allure results (the PR runs on CI: the console and the job summary list the failures)
+const withAllure = process.env.E2E_ALLURE !== 'false'
 // the app the scenarios run against: `appMode` (E2E_APP) in tests/config.js
 if (!['build', 'dev'].includes(appMode)) {
   throw new Error(`E2E_APP=${appMode} is not supported: build, dev`)
@@ -84,6 +86,22 @@ const testDir = defineBddConfig({
   missingSteps: 'fail-on-run'
 })
 
+const allureReporter = [
+  'allure-playwright',
+  {
+    resultsDir: path.join(reports_dir, 'allure-results'),
+    environmentInfo: {
+      browser: 'chromium',
+      headless: String(headless),
+      timezone,
+      locale,
+      tags: process.env.E2E_TAGS || 'all',
+      node: process.version
+    },
+    listeners: [allureResultsListener]
+  }
+]
+
 export default defineConfig({
   testDir,
   // one E2E run at a time (the memory), `npm run test:regression` holds the lock in `scripts/testRegression.js`
@@ -107,21 +125,7 @@ export default defineConfig({
     ['./tests/reporters/console-reporter.js'],
     // the failures as annotations of the GitHub Actions job
     ...(process.env.GITHUB_ACTIONS ? [['github']] : []),
-    [
-      'allure-playwright',
-      {
-        resultsDir: path.join(reports_dir, 'allure-results'),
-        environmentInfo: {
-          browser: 'chromium',
-          headless: String(headless),
-          timezone,
-          locale,
-          tags: process.env.E2E_TAGS || 'all',
-          node: process.version
-        },
-        listeners: [allureResultsListener]
-      }
-    ]
+    ...(withAllure ? [allureReporter] : [])
   ],
   use: {
     baseURL,

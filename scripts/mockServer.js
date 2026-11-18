@@ -256,6 +256,12 @@ const forward = (index, entry, req, res) => {
 
 const server = http.createServer(async (req, res) => {
   try {
+    // a path only (`/...`): the request is passed on to the instance on 127.0.0.1 as it is, an absolute URL or any other
+    // request target (`http://host/...`, `*`) is refused, it isn't a request of the app or the steps
+    if (!req.url?.startsWith('/') || req.url.startsWith('//')) {
+      return sendJson(res, 400, { message: `Not a path: ${req.url}` })
+    }
+
     if (req.method === 'GET' && req.url === '/mock-front') {
       return sendJson(res, 200, describeFront())
     }
