@@ -4,7 +4,7 @@ Feature: Projects Page
 
     @MLPr
     @passive
-    @smoke @rerun
+    @smoke @rerun @sanity
     Scenario: MLPr001 - Check all mandatory components
         Given open url
         And wait load page
@@ -24,7 +24,7 @@ Feature: Projects Page
 
     @MLPr
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLPr002 - Verify searching by project name
         Given open url
         And wait load page
@@ -198,7 +198,7 @@ Feature: Projects Page
 
     @MLPr
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLPr008 - Archive ML Project
         * create "automation-test-name1" MLRun Project with code 201
         Given open url
@@ -213,7 +213,7 @@ Feature: Projects Page
 
     @MLPr
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLPr009 - Delete existing ML Project
         * create "automation-test-name2" MLRun Project with code 201
         Given open url
@@ -305,7 +305,7 @@ Feature: Projects Page
 
     @MLPr
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLPr013 - Create new ML Project and check navigation through project navigation menu
         Given open url
         And wait load page
@@ -620,7 +620,7 @@ Feature: Projects Page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
 
     @MLPr
-    @smoke
+    @smoke @sanity
     Scenario: MLPr021 - Check components numbers on Monitoring container
         Given open url
         And wait load page
@@ -680,7 +680,7 @@ Feature: Projects Page
     @MLPr
     @mlrunUnhealthyTest
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLPr019 - Check Mlrun unhealthy popup
         Given open url
         And wait load page

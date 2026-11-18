@@ -19,7 +19,8 @@ such restriction.
 */
 // Guard against several E2E runs at once: every run starts its own app server, mock server and browsers, so runs in
 // parallel grow the memory usage until the machine freezes.
-//  - one run at a time: the lock file holds the pid of the running one (a lock of a dead process is taken over);
+//  - one run at a time: the lock file holds the pid and the start time of the running one (a lock of a process that is gone
+//    is taken over, also when its pid belongs to another process by now);
 //  - a parallel run, `E2E_WORKERS` > 1, can be started only by a person: from an interactive terminal (or CI);
 //  - when another run is in progress, a person is asked whether to stop it and start the new one, a non-interactive
 //    start (e.g. an agent) is refused and must wait for the running one.
@@ -49,6 +50,30 @@ const isAlive = pid => {
     return error.code === 'EPERM'
   }
 }
+
+// the start time of the process (`ps -o lstart`, in the C locale so that every run formats it the same way), `null` when
+// it can't be read (no such process, Windows)
+const getProcessStart = pid => {
+  if (isWindows) return null
+
+  try {
+    return (
+      execFileSync('ps', ['-o', 'lstart=', '-p', String(pid)], {
+        encoding: 'utf8',
+        env: { ...process.env, LC_ALL: 'C' },
+        stdio: ['ignore', 'pipe', 'ignore']
+      }).trim() || null
+    )
+  } catch {
+    return null
+  }
+}
+
+// the run of the lock is still running: its pid is alive and is the same process. The lock outlives its run (a crash,
+// a reboot), and by then the pid can belong to another program: it must not be taken for the run, or stopped as it.
+// A lock without the start time (Windows) is checked by the pid only
+const isRunAlive = lock =>
+  isAlive(lock.pid) && (!lock.processStart || getProcessStart(lock.pid) === lock.processStart)
 
 const readLock = () => {
   try {
@@ -143,6 +168,7 @@ export const acquireRunLock = async ({ parallel = false } = {}) => {
       ownFile,
       JSON.stringify({
         pid: process.pid,
+        processStart: getProcessStart(process.pid),
         startedAt: new Date().toISOString(),
         cwd: process.cwd()
       })
@@ -158,7 +184,7 @@ export const acquireRunLock = async ({ parallel = false } = {}) => {
 
       const lock = readLock()
 
-      if (lock && lock.pid !== process.pid && isAlive(lock.pid)) {
+      if (lock && lock.pid !== process.pid && isRunAlive(lock)) {
         const description = `Another E2E run is in progress (pid ${lock.pid}, started ${lock.startedAt})`
 
         if (!isInteractive()) {

@@ -1483,7 +1483,7 @@ export default {
         false,
         '.form-field__warning svg'
       )
-    ),
+    )
   },
   addToFeatureVectorPopup: {
     Title: commonTitle,

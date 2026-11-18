@@ -4,7 +4,7 @@ Feature: Feature Store Page
 
     @MLFS
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLFS001 - Check all mandatory components on Feature Store tab
         Given open url
         And wait load page
@@ -45,7 +45,7 @@ Feature: Feature Store Page
 
     @MLFS
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLFS002 - Check all mandatory components on Features tab
         Given open url
         And wait load page
@@ -89,7 +89,7 @@ Feature: Feature Store Page
 
     @MLFS
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLFS003 - Check all mandatory components on Feature Vectors tab
         Given open url
         And wait load page
@@ -398,7 +398,7 @@ Feature: Feature Store Page
 
     @MLFS
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLFS012 - Check filtering by Name on Feature Store Feature Sets Tab
         Given open url
         And wait load page
@@ -1440,7 +1440,7 @@ Feature: Feature Store Page
 
     @MLFS
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLFS041 - Check all mandatory components on Add to feature vector tab
         Given open url
         And wait load page
@@ -1892,6 +1892,7 @@ Feature: Feature Store Page
     @passive
     @smoke
     #TODO: Add V3IO checks
+    @sanity
     Scenario: MLFS050 - Verify the creation of a feature set with completed target store components and the passthrough checkbox selected by default
         Given open url
         And wait load page
@@ -2253,6 +2254,7 @@ Feature: Feature Store Page
     @MLFS
     @smoke
     #TODO: check the loader after select "Delete" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table
+    @sanity
     Scenario: MLFS061 - Check Feature vector deletion 
         Given open url
         And wait load page

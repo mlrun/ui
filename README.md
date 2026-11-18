@@ -148,6 +148,7 @@ Docker image is built from its own `npm run build` (`build` is in `.dockerignore
 | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `npm run test:regression`        | The regression with a progress bar, then the Allure report is generated and served (`E2E_OPEN_REPORT=false` - not served)                                                                  |
 | `npm run test:regression:ci`     | The same for CI (`CI=true`): `.only` and flaky scenarios fail the run, no servers are reused, the report isn't served, the workers default to half of the CPUs, GitHub Actions annotations |
+| `npm run test:sanity`            | The sanity scenarios (the PR selection of CI, `@sanity`) with 3 workers, the report is generated but not opened (`npm run report:open`)                                                    |
 | `npm run test:regression:failed` | The scenarios failed in the previous run (one worker)                                                                                                                                      |
 | `npm run test:regression:debug`  | Playwright UI mode against the dev server: pick scenarios, watch them step by step, time-travel                                                                                            |
 | `npm run test:defects`           | Defect injection: breaks the mock server on purpose (`tests/mockServer/defects.js`) and checks that the scenarios of each defect fail; `E2E_DEFECTS=name,...` - some of them               |
@@ -225,25 +226,31 @@ A scenario that passes only on a retry is reported as flaky, on CI it fails the 
 `.github/workflows/e2e.yaml` runs the regression (`npm run test:regression:ci`) on GitHub Actions in one job on
 `ubuntu-latest`, with 3 workers by default.
 
-**Trigger.** Every PR into `development`, `feature/**` and the release branches (the same as `ci.yaml`: opened,
-reopened, a new push), after a maintainer approves the run. A new push to the PR cancels its running run, or the one
-waiting for the approval (`concurrency`). Manual runs: Actions → E2E regression → Run workflow, with the inputs
-`workers` (1-4, default 3) and `tags` (the tag expression, default the CI selection, `all` - every scenario). The
-manual runs don't cancel each other.
+**Trigger.** Every non-draft PR into `development`, `feature/**` and the release branches (the same as `ci.yaml`:
+opened, reopened, a new push, and marked ready for review: a draft PR doesn't run) runs the sanity scenarios on every
+push. A new push to the PR cancels its running run (`concurrency`). The full regression: weekly, every Thursday 03:00
+UTC on the default branch (`schedule`, GitHub switches the scheduled runs of a public repository off after 60 days
+without repository activity), and on demand: Actions → E2E regression → Run workflow, with
+the inputs `workers` (1-4, default 3) and `tags` (the tag expression, default the full CI selection, `all` - every
+scenario, `@sanity` - the PR selection). The manual runs don't cancel each other.
 
-**Approval.** The job uses the GitHub environment `e2e`; its required reviewers approve every run ("Review deployments"
-→ "Approve and deploy" on the run page). A repository admin sets it up **before the workflow is merged**: GitHub creates
-a missing environment on the first run that uses it, _without any protection_, and that run starts at once.
+**Who can run it.** The PRs of the repository's members run at once, no approval step. A PR from a fork waits until a
+maintainer clicks "Approve and run" (the PR page), by the repository setting Settings → Actions → General → "Fork pull
+request workflows from outside collaborators": set it to "Require approval for all outside collaborators", so nobody
+outside can spend the runners. The workflow file of a PR is the one of the PR itself, so a member can change it: it is
+a trust boundary of the repository, not of this workflow.
 
-1. Settings → Environments → New environment, the name `e2e` → Configure environment.
-2. Required reviewers: check it and add the maintainers (people or teams, up to 6) who may start the runs.
-3. Optional: "Prevent self-review" - the one who pushed can't approve their own run (another maintainer must).
-4. Optional: Deployment branches and tags - leave "No restriction": the runs come from the PR branches, a rule such as
-   "Protected branches only" would reject them.
-5. Save protection rules. The environment needs no secrets or variables.
+**Sanity scenarios (the PR selection).** A PR runs `E2E_TAGS='@sanity and not @demoMode and not @MLPH'` (set in the
+workflow): 67 scenarios tagged `@sanity`, ~9 minutes of scenario time, a few minutes with 3 workers. They cover the main
+functionality of every page of the CI selection: the page and its main components, the search and the filters, the
+details pane, the create/register flows, the tag editing, the delete actions and the main job/workflow actions (Batch Run, schedule,
+abort, retry, terminate). The rest (the component details of the wizards, the validation hints, the broken links, the
+paging over the generated data) is left to the full regression. Tag a new scenario `@sanity` only when it is the main
+check of a page or a flow that no sanity scenario covers yet, and keep it fast: not `@demoMode`, `@MLPH`, `@knownBug`
+or `@generatedData`. Run them locally with `npm run test:sanity`.
 
-**Selection.** CI runs `E2E_TAGS='not @demoMode and not @MLPH'` (set in the workflow): the UI that isn't shown to the
-users is left out. `@demoMode` is every scenario that turns the demo mode on (`turn on demo mode with query params ...`,
+**Selection (the full CI regression).** The weekly run and a manual run (by default) run
+`E2E_TAGS='not @demoMode and not @MLPH'`: the UI that isn't shown to the users is left out. `@demoMode` is every scenario that turns the demo mode on (`turn on demo mode with query params ...`,
 `?mode=demo`; the step fails in a scenario without the tag, so a new demo scenario can't slip into the CI selection),
 `@MLPH` is the Quick actions page (`quickActions.feature`). 333 of the 405 scenarios. Some scenarios turn the demo mode
 on only after checking the regular UI (MLFS005, MLJW002, MLJM002, MLPM001, MLPM011): those checks don't run on CI
@@ -284,5 +291,5 @@ workers, ~4.1-5.3 GB with 4, well within 16 GB; on 4 vCPU the CPU is the likelie
 the duration, the load p95 per CPU, the CPU idle and the minimum MemAvailable. 4 workers are worth it if the run is
 clearly shorter, nothing is flaky and the verdict shows no overload signs.
 
-**Rerun.** "Re-run jobs" on the run page (it waits for the approval again), or a manual run with other inputs, e.g.
+**Rerun.** "Re-run jobs" on the run page (it can wait for the approval of a fork PR again), or a manual run with other inputs, e.g.
 `tags` `@MLPr` for a part of the scenarios.

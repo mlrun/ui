@@ -3,7 +3,7 @@ Feature: Jobs Monitoring Page
     Testcases that verifies functionality on MLRun Jobs Monitoring Page
 
     @MLJM
-    @smoke
+    @smoke @sanity
     Scenario: MLJM001 - Check components on Jobs tab of Jobs monitoring page
         Given open url
         And wait load page
@@ -246,7 +246,7 @@ Feature: Jobs Monitoring Page
         Then "Pagination_Count" element on "Pagination_Info_Pane" should contain "Showing 1 - 50" value
 
     @MLJM
-    @smoke
+    @smoke @sanity
     Scenario: MLJM007 - Check filter by Statuses and View Yaml action on Jobs tab of Jobs monitoring page
         Given open url
         And wait load page
@@ -711,7 +711,7 @@ Feature: Jobs Monitoring Page
         And wait load page
 
     @MLJM
-    @smoke
+    @smoke @sanity
     Scenario: MLJM015 - Check the Terminate functionality on Workflows tab of Jobs monitoring page with running status on main table list
         Given open url
         And wait load page

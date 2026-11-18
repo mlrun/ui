@@ -4,7 +4,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLJW001 - Check all mandatory components on Jobs Monitor tab
         Given open url
         And wait load page
@@ -115,7 +115,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLJW003 - Check all mandatory components on Schedule Monitor tab
         Given open url
         And wait load page
@@ -283,7 +283,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLJW006 - Verify filtering by job name on Jobs Monitor tab
         Given open url
         And wait load page
@@ -477,7 +477,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLJW058 - Check all mandatory components in Item infopane on Overview tab table on Jobs Monitor Page
         Given open url
         And wait load page
@@ -610,7 +610,7 @@ Feature: Jobs and workflows
         
     @MLJW
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLJW063 - Check all mandatory components in Item infopane on Logs tab table on Jobs Monitor Page
         Given open url
         And wait load page
@@ -953,7 +953,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLJW071 - Check all mandatory components on Workflow List View
         Given open url
         And wait load page
@@ -1458,7 +1458,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLJW081 - Check visibility of main components on Workflow graph View
         Given open url
         And wait load page
@@ -1723,7 +1723,7 @@ Feature: Jobs and workflows
 
     # MLJW068 is destructive (deletes "erann-test" schedule of "default" project), it must run after MLJW083/MLJW084 which use that schedule
     @MLJW
-    @smoke
+    @smoke @sanity
     Scenario: MLJW068 - Delete Scheduled Job
         Given open url
         And wait load page
@@ -1856,7 +1856,7 @@ Feature: Jobs and workflows
         And wait load page
 
     @MLJW
-    @smoke
+    @smoke @sanity
     Scenario: MLJW012 - Check all mandatory components on Batch Run wizard - Function selection
         Given open url
         And wait load page
@@ -2462,7 +2462,7 @@ Feature: Jobs and workflows
         Then verify "Volumes_Subheader" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Label_Hint"."New_Job_Volumes"
 
     @MLJW
-    @smoke
+    @smoke @sanity
     Scenario: MLJW043 - Check Batch-Run running after edit GPU limit in Resources section
         Given open url
         And wait load page
@@ -2654,7 +2654,7 @@ Feature: Jobs and workflows
             |     data_tag    |      store://datasets/default/test-i#0:latest        |
 
     @MLJW
-    @smoke
+    @smoke @sanity
     Scenario: MLJW034 - Check setting schedule for a job - Batch Run - Schedule for later 
         Given open url
         And wait load page
@@ -2866,7 +2866,7 @@ Feature: Jobs and workflows
         Then verify "Hyper_Toggle_Switch" element does not exist in "Parameters_Accordion" on "Modal_Wizard_Form" wizard
     
     @MLJW
-    @smoke @rerun
+    @smoke @rerun @sanity
     Scenario: MLJW049 - Check Abort action on Monitor Jobs tab
         Given open url
         And wait load page
@@ -2931,6 +2931,7 @@ Feature: Jobs and workflows
     @passive
     @smoke
     #TODO: need to add check Retry option for error and running status, add check for retryed job visibility
+    @sanity
     Scenario: MLJW087 - Check Retry option in action menu on Workflows Monitor tab
         Given open url
         And wait load page
@@ -2981,7 +2982,7 @@ Feature: Jobs and workflows
         Then verify "Error_Content" element visibility on "Workflows_Monitor_Tab_Info_Pane" wizard
     
     @MLJW
-    @smoke
+    @smoke @sanity
     Scenario: MLJW089 - Check Delete run / Delete all runs options in Action menu
         Given open url
         And wait load page

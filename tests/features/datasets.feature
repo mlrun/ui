@@ -4,7 +4,7 @@ Feature: Datasets Page
     
   @MLD
   @passive
-  @smoke
+  @smoke @sanity
   Scenario: MLD001 - Check components on Datasets page
     Given open url
     And wait load page
@@ -83,6 +83,7 @@ Feature: Datasets Page
   @passive
   @smoke
   #TODO:  Datasets Analysis tab - add the data to verify
+  @sanity
   Scenario: MLD003 - Check all mandatory components in Item infopane on Overview tab table on Datasets page
     Given open url
     And wait load page
@@ -262,7 +263,7 @@ Feature: Datasets Page
     Then verify "Title" element does not exist on "Register_Dataset" wizard
   
   @MLD
-  @smoke
+  @smoke @sanity
   Scenario: MLD007 - Verify behaviour on Register new Dataset
     Given open url
     And wait load page
@@ -355,7 +356,7 @@ Feature: Datasets Page
   
   @MLD
   @passive
-  @smoke
+  @smoke @sanity
   Scenario: MLD015 - Verify action menu list, Downloads action,  View YAML action
     Given open url
     And wait load page
@@ -759,7 +760,7 @@ Feature: Datasets Page
     Then check "latest123456" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
 
   @MLD
-  @smoke
+  @smoke @sanity
   Scenario: MLD019 - Check steps, buttons components on Train Model wizard
     Given open url
     And wait load page
@@ -1473,7 +1474,7 @@ Feature: Datasets Page
     Then verify "Datasets_Table" element visibility on "Datasets" wizard
 
   @MLD
-  @smoke
+  @smoke @sanity
   Scenario: MLD028 - Verify the Delete option in Datasets table, details panel, full view action menu 
     Given open url
     And wait load page

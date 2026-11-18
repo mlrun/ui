@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# The E2E regression (README.md, "E2E regression" > "CI"): every PR, after a maintainer approves the run (the `e2e`
-# environment with required reviewers), and manually (Actions > E2E regression > Run workflow).
+# The E2E regression (README.md, "E2E regression" > "CI"): the sanity scenarios (`@sanity`, the main functionality of
+# every page) on every push to a PR (a fork's PR after a maintainer approves it, by the repository setting), the full
+# regression weekly (Thursday, the default branch) and manually (Actions > E2E regression > Run workflow). Draft PRs
+# don't run.
 name: E2E regression
 
 permissions:
@@ -25,6 +27,7 @@ on:
       - opened
       - reopened
       - synchronize
+      - ready_for_review               # a draft PR doesn't run, it does once it is marked ready
     branches:
       - development
       - 'feature/**'                   # Matches branches like 'feature/***'
@@ -32,6 +35,10 @@ on:
       - '[0-9]+.[0-9]+.[0-9]+'         # Matches branches like '1.2.3'
       - '[0-9]+.[0-9]+.[0-9]+_.*'      # Matches branches like '1.7.0_cpj_mm'
       - '[0-9]+.[0-9]+.[0-9]+-.*'      # Matches branches like '1.2.3-feature'
+  # weekly, on the default branch, 03:00 UTC on Thursday. GitHub switches the scheduled runs of a public repository off
+  # after 60 days without repository activity
+  schedule:
+    - cron: '0 3 * * 4'
   workflow_dispatch:
     inputs:
       workers:
@@ -40,11 +47,11 @@ on:
         options: ['1', '2', '3', '4']
         default: '3'
       tags:
-        description: 'Tag expression of the scenarios (E2E_TAGS), `all` - every scenario'
+        description: 'Tag expression of the scenarios (E2E_TAGS): the default - the full CI regression, `all` - every scenario, `@sanity` - the PR selection'
         type: string
         default: 'not @demoMode and not @MLPH'
 
-# one run per PR: a new push cancels the running one or the one waiting for the approval. The manual runs are not
+# one run per PR: a new push cancels the running one. The manual runs are not
 # cancelled (e.g. a run with 4 workers next to one with 3)
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
@@ -53,17 +60,18 @@ concurrency:
 jobs:
   e2e:
     name: E2E regression
+    # a draft PR doesn't run, it does once it is marked ready for review. The PRs of the members run at once; a PR from
+    # a fork waits for a maintainer by the repository setting (Settings > Actions > General > Fork pull request
+    # workflows from outside collaborators)
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-    # the run waits until a maintainer approves it: the required reviewers of the environment (Settings > Environments).
-    # The environment must exist with its reviewers before this file is merged: GitHub creates a missing one on the
-    # first run, without any protection
-    environment: e2e
     timeout-minutes: 60
     env:
-      # The CI selection leaves out the UI that isn't shown to the users: the demo mode (`@demoMode`, the scenarios that
-      # turn it on with `?mode=demo`; the step fails in an untagged scenario) and the Quick actions page
-      # (`@MLPH`, quickActions.feature). Local runs run all the scenarios
-      E2E_TAGS: ${{ inputs.tags || 'not @demoMode and not @MLPH' }}
+      # - a PR: the sanity scenarios (`@sanity`, the main functionality of every page, a few minutes), on every push
+      # - the weekly run and a manual run (by default): the full CI regression, the UI that isn't shown to the users is
+      #   left out: the demo mode (`@demoMode`, the scenarios that turn it on with `?mode=demo`; the step fails in an
+      #   untagged scenario) and the Quick actions page (`@MLPH`, quickActions.feature). Local runs run all the scenarios
+      E2E_TAGS: ${{ inputs.tags || (github.event_name == 'pull_request' && '@sanity and not @demoMode and not @MLPH' || 'not @demoMode and not @MLPH') }}
       # 3 workers by default (a worker is a Playwright worker process, a browser and a mock instance), the summary
       # says whether the runner kept up; `workers=4` in a manual run to compare
       E2E_WORKERS: ${{ inputs.workers || '3' }}

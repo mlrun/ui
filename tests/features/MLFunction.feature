@@ -66,7 +66,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLF006 - Verify filtering by function name on Functions page
         Given open url
         And wait load page
@@ -89,7 +89,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLF007 - Check all mandatory components in Item infopane on Overview tab table
         Given open url
         And wait load page
@@ -708,7 +708,7 @@ Feature: ML Functions
         Then check "new-aqa-function-01" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
 
     @MLF
-    @smoke
+    @smoke @sanity
     Scenario: MLF017 - Delete ml-function
         Given open url
         And wait load page
@@ -1053,7 +1053,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLF025 - Verify View YAML action
         Given open url
         And wait load page

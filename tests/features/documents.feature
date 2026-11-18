@@ -3,7 +3,7 @@ Feature: Documents Page
     Testcases that verifies functionality on Documents Page
     
   @MLDoc
-  @smoke
+  @smoke @sanity
   Scenario: MLDoc001 - Check components on Documents page
     Given open url
     And wait load page
@@ -117,7 +117,7 @@ Feature: Documents Page
     Then "Show_Iterations_Checkbox" element should be checked on "FilterBy_Popup" wizard
 
   @MLDoc
-  @smoke
+  @smoke @sanity
   Scenario: MLDoc003 - Check all mandatory components in Item infopane on Overview tab table on Documents page
     Given open url
     And wait load page

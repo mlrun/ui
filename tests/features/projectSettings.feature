@@ -223,7 +223,7 @@ Feature: Project Settings page
 
     @MLPS
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLPS007 - Verify all mandatory components on Secrets tab
         Given open url
         And wait load page

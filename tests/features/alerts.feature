@@ -51,7 +51,7 @@ Feature: Alerts Page
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         
     @MLAlert
-    @smoke
+    @smoke @sanity
     Scenario: MLAlert002 - Check filtering by Endpoint entity type on Alerts page
         Given open url
         And wait load page
@@ -355,7 +355,7 @@ Feature: Alerts Page
         Then "No_Data_Message" component on "commonPagesHeader" should contain "No_Data_Message"."No_Pods_data_Completion"
 
     @MLAlert
-    @smoke
+    @smoke @sanity
     Scenario: MLAlert007 - Check components on Endpoints alert detail pane on Alerts page
         Given open url
         And wait load page

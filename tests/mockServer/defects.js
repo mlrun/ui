@@ -97,7 +97,6 @@ if (mockDefect && !DEFECTS[mockDefect]) {
 }
 
 if (mockDefect) {
-  // eslint-disable-next-line no-console
   console.log(`Defect injection: ${mockDefect} - ${DEFECTS[mockDefect].description}`)
 }
 

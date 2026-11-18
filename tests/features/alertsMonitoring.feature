@@ -3,7 +3,7 @@ Feature: Alerts Monitoring Page
     Testcases that verifies functionality on MLRun Alerts Monitoring Page
 
     @MLAM
-    @smoke
+    @smoke @sanity
     Scenario: MLAM001 - Check components on Alerts monitoring page
         Given open url
         And wait load page
@@ -197,7 +197,7 @@ Feature: Alerts Monitoring Page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
 
     @MLAM
-    @smoke
+    @smoke @sanity
     Scenario: MLAM005 - Check components on Job alert detail pane
         Given open url
         And wait load page

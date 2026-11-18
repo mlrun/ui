@@ -951,7 +951,7 @@ export default {
         )
       ),
       Resources_Node_Selector_Table: commonTable(resourcesNodeSelectorTable)
-    },
+    }
   },
   newFunction: {
     Cross_Close_Button: '.new-item-side-panel .panel-title__btn_close',

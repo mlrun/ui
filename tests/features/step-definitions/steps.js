@@ -1292,8 +1292,10 @@ Then(
   }
 )
 
+// the second parameter (the browser's downloads folder) is not used: the downloads of the scenario are saved to its
+// output directory. It stays in the signature, the step function takes every parameter of the step text
+// eslint-disable-next-line no-unused-vars
 Then('check that {string} file exists on {string} directory', async function (file, filePath) {
-  // `filePath` is the browser's downloads folder: the downloads of the scenario are saved to its output directory
   const path = await generatePath(file, this.downloads)
 
   await determineFileAccess(path, file)

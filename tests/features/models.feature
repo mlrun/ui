@@ -43,7 +43,7 @@ Feature: Models Page
 
   @MLM
   @passive
-  @smoke
+  @smoke @sanity
   Scenario: MLM002 - Check all mandatory components on Model Endpoints tab
     Given open url
     And wait load page
@@ -87,7 +87,7 @@ Feature: Models Page
 
   @MLM
   @passive
-  @smoke
+  @smoke @sanity
   Scenario: MLM003 - Check all mandatory components on Real-Time Pipelines tab
     Given open url
     And wait load page
@@ -107,7 +107,7 @@ Feature: Models Page
 
   @MLM
   @passive
-  @smoke
+  @smoke @sanity
   Scenario: MLM004 - Verify filtering by model name on Models tab
     Given open url
     And wait load page
@@ -474,7 +474,7 @@ Feature: Models Page
 
   @MLM
   @passive
-  @smoke
+  @smoke @sanity
   Scenario: MLM014 - Check all mandatory components in Item infopane on Overview tab table
     Given open url
     And wait load page
@@ -856,7 +856,7 @@ Feature: Models Page
 
   @MLM
   @passive
-  @smoke
+  @smoke @sanity
   Scenario: MLM036 - Verify Deploy option, Deploy action
       Given open url
       And wait load page
@@ -1481,7 +1481,7 @@ Feature: Models Page
     Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
 
   @MLM
-  @smoke
+  @smoke @sanity
   Scenario: MLM020 - Check that version tag is filled when edit it in table view and full view on Overview tab table on Models page
     Given open url
     And wait load page
@@ -1806,6 +1806,7 @@ Feature: Models Page
   @MLM
   @smoke
   # !!! restart mock is required
+  @sanity
   Scenario: MLM037 - Verify the Delete option in Models table, details panel, full view action menu 
     Given open url
     And wait load page

@@ -90,6 +90,7 @@
     "test:watch": "vitest --watch",
     "test:regression": "node scripts/testRegression.js",
     "test:regression:ci": "cross-env CI=true node scripts/testRegression.js",
+    "test:sanity": "cross-env E2E_TAGS=@sanity E2E_WORKERS=3 E2E_OPEN_REPORT=false node scripts/testRegression.js",
     "test:regression:failed": "node scripts/testRegression.js --last-failed",
     "test:defects": "node scripts/testDefects.js",
     "test:mock-isolation": "node scripts/testMockIsolation.js",

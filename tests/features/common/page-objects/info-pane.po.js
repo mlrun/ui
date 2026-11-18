@@ -832,7 +832,7 @@ export default {
         false,
         true
       )
-    ),
+    )
   },
   transformationsInfoPane: {
     Header: header,

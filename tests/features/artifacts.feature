@@ -4,7 +4,7 @@ Feature: Artifacts Page
 
   @MLA
   @passive
-  @smoke
+  @smoke @sanity
   Scenario: MLA001 - Check all mandatory components on Artifacts tab
     Given open url
     And wait load page
@@ -33,7 +33,7 @@ Feature: Artifacts Page
 
   @MLA
   @passive
-  @smoke
+  @smoke @sanity
   Scenario: MLA002 - Verify filtering by file name on Artifacts page
     Given open url
     And wait load page
@@ -194,7 +194,7 @@ Feature: Artifacts Page
     Then verify "Files_Table" element visibility on "Files" wizard
 
   @MLA
-  @smoke
+  @smoke @sanity
   Scenario: MLA006 - Verify behaviour on Register new Artifact
     * create "automation-test" MLRun Project with code 201
     Given open url
@@ -340,7 +340,7 @@ Feature: Artifacts Page
     Then verify "Preview_Tab_Info_Pane_Table" element visibility on "Files_Info_Pane" wizard
 
   @MLA
-  @smoke
+  @smoke @sanity
   Scenario: MLA022 - Verify the Delete option state in Artifacts table and Overview details action menu 
     Given open url
     And wait load page
@@ -495,7 +495,7 @@ Feature: Artifacts Page
 
   @MLA
   @passive
-  @smoke
+  @smoke @sanity
   Scenario: MLA014 - Verify action menu list, Downloads action,  View YAML action
     Given open url
     And wait load page

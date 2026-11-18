@@ -3,7 +3,7 @@ Feature: LLM prompts Page
     Testcases that verifies functionality on LLM prompts Page
     
   @MLLP
-  @smoke
+  @smoke @sanity
   Scenario: MLLP001 - Check components on LLM prompts page
     Given open url
     And wait load page
@@ -201,7 +201,7 @@ Feature: LLM prompts Page
     Then "Show_Iterations_Checkbox" element should be checked on "FilterBy_Popup" wizard
 
   @MLLP
-  @smoke
+  @smoke @sanity
   Scenario: MLLP005 - Check components on prompt item infopane on Overview tab table
     Given open url
     And wait load page
@@ -247,7 +247,7 @@ Feature: LLM prompts Page
     Then verify "Cross_Close_Button" element visibility on "LLM_Prompts_Info_Pane" wizard
 
   @MLLP
-  @smoke
+  @smoke @sanity
   Scenario: MLLP006 - Verify Add a Tag, Edit a tag action and detail panel behavior after page refresh 
     Given open url
     And wait load page

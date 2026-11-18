@@ -4,7 +4,7 @@ Feature: Project Monitoring Page
 
     @MLPM
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLPM002 - Check components on the header details and the project monitoring container
         Given open url
         And wait load page
@@ -1226,7 +1226,7 @@ Feature: Project Monitoring Page
 
     @MLPM
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLPM022 - Verify behaviour of Breadcrumbs menu
         Given open url
         And wait load page
@@ -1248,7 +1248,7 @@ Feature: Project Monitoring Page
 
     @MLPM
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLPM016 - Check redirect to Jobs and workflows page using All jobs link
         Given open url
         And wait load page
