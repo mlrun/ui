@@ -112,7 +112,7 @@ const ConsumerGroups = () => {
           )}
         />
       )}
-      {nuclioStore.v3ioStreams.loading && <Loader />}
+      {nuclioStore.v3ioStreams.loading && <Loader overlay />}
     </>
   )
 }

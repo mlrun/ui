@@ -23,7 +23,6 @@ import PropTypes from 'prop-types'
 import ArtifactsTable from './ArtifactsTable'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
-import { Loader } from 'igz-controls/components'
 
 import './artifacts.scss'
 
@@ -99,7 +98,6 @@ function ArtifactsView({
           <Breadcrumbs itemName={params.artifactName} />
         </div>
         <div className="content">
-          {artifactsStore.loading && <Loader />}
           <ArtifactsTable
             actionButtons={actionButtons}
             actionsMenu={actionsMenu}
