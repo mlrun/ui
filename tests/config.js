@@ -66,7 +66,7 @@ const mockIngress = host => `${mock_server_url}/${host}.default-tenant.app.vmdev
 // none): the variables already in process.env win over the files in Vite's `loadEnv`. Nothing goes to another host
 export const appEnv = {
   // no Module Federation type generation worker (~1 GB per dev server), see vite.config.mjs
-  MF_DTS: 'false',
+  MODULE_FEDERATION_TYPES: 'false',
   // the app is served from the root (`--base /`): `/config.json`, `/api`, `/nuclio`, `/function-catalog`...
   VITE_PUBLIC_URL: '',
   VITE_MLRUN_API_URL: mockIngress('mlrun-api-ingress'),

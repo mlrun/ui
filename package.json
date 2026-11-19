@@ -95,7 +95,7 @@
     "test:defects": "node scripts/testDefects.js",
     "test:mock-isolation": "node scripts/testMockIsolation.js",
     "test:regression:debug": "bddgen && cross-env E2E_APP=dev playwright test --ui",
-    "build:regression": "cross-env MF_DTS=false vite build --mode development --base /",
+    "build:regression": "cross-env MODULE_FEDERATION_TYPES=false vite build --mode development --base /",
     "report": "allure generate --clean tests/reports/allure-results",
     "report:open": "allure open tests/reports/allure-report",
     "knip": "knip"

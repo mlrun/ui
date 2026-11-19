@@ -1332,8 +1332,7 @@ Then(
       pageObjects[wizardName][inputField],
       pageObjects['commonPagesHeader']['Common_Options'],
       false,
-      true,
-      this.testInfo
+      true
     )
   }
 )

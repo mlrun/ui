@@ -2,7 +2,7 @@ Feature: Quick actions Page
 
     Testcases that verifies functionality on MLRun Quick actions Page
 
-    # BUG-003 (tests/KNOWN_BUGS.md): the breadcrumb of the Quick actions page is the URL segment "quick-actions"
+    # BUG-003: the breadcrumb of the Quick actions page is the URL segment "quick-actions"
     @MLPH @rerun @knownBug
     Scenario: MLPH001 - Check all mandatory components on Project Home
         * create "automation-test-1002" MLRun Project with code 201

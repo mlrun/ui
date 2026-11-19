@@ -152,7 +152,7 @@ Docker image is built from its own `npm run build` (`build` is in `.dockerignore
 | `npm run test:regression:failed` | The scenarios failed in the previous run (one worker)                                                                                                                                      |
 | `npm run test:regression:debug`  | Playwright UI mode against the dev server: pick scenarios, watch them step by step, time-travel                                                                                            |
 | `npm run test:defects`           | Defect injection: breaks the mock server on purpose (`tests/mockServer/defects.js`) and checks that the scenarios of each defect fail; `E2E_DEFECTS=name,...` - some of them               |
-| `npm run test:mock-isolation`    | Checks that the workers' mock server instances are isolated and that the memory stays flat over the resets (no browser, ~1 minute)                                                         |
+| `npm run test:mock-isolation`    | Checks that the workers' mock server instances are isolated and that the memory stays flat over the resets (no browser, about a minute)                                                    |
 | `npm run report:open`            | Open the Allure report: every attempt of a scenario with its error, screenshot and trace, history of runs                                                                                  |
 
 | Environment variable  | Description                                                                                                                                                                                     | Default                     |
@@ -217,9 +217,10 @@ The big `auto-generated-data` project (`tests/mockServer/dataGenerators.js`: 270
 prompts) is generated only for the scenarios tagged `@generatedData` (paging, search over many items). Tag a scenario that
 needs it. To start the mock server with it manually: `MOCK_GENERATED_DATA=true npm run mock-server`.
 
-The scenarios tagged `@knownBug` or `@FAILED_TODO` are expected to fail: their failure doesn't fail the run, the console
-shows them as known bugs (◆) and the report as failed and known ("accepted", in the "Known app bugs" and "Not implemented
-yet" categories). Such a scenario that passes fails the run: remove the tag.
+The scenarios tagged `@knownBug` or `@FAILED_TODO` never fail the run. A failure is expected: the console shows it as a
+known bug (◆) and the report as failed and known ("accepted", in the "Known bugs" category). A pass is accepted too (a
+bug can show up only sometimes): the console shows it as a known bug that passed (★) and the report in the "Known bug
+passed" category. If it keeps passing, the bug is fixed: remove the tag.
 A scenario that passes only on a retry is reported as flaky, on CI it fails the run.
 
 ### CI
@@ -242,7 +243,7 @@ outside can spend the runners. The workflow file of a PR is the one of the PR it
 a trust boundary of the repository, not of this workflow.
 
 **Sanity scenarios (the PR selection).** A PR runs `E2E_TAGS='@sanity and not @demoMode and not @MLPH'` (set in the
-workflow): 67 scenarios tagged `@sanity`, ~9 minutes of scenario time, a few minutes with 3 workers. They cover the main
+workflow): the scenarios tagged `@sanity`, a few minutes with 3 workers. They cover the main
 functionality of every page of the CI selection: the page and its main components, the search and the filters, the
 details pane, the create/register flows, the tag editing, the delete actions and the main job/workflow actions (Batch Run, schedule,
 abort, retry, terminate). The rest (the component details of the wizards, the validation hints, the broken links, the
@@ -253,9 +254,17 @@ or `@generatedData`. Run them locally with `npm run test:sanity`.
 **Selection (the full CI regression).** The weekly run and a manual run (by default) run
 `E2E_TAGS='not @demoMode and not @MLPH'`: the UI that isn't shown to the users is left out. `@demoMode` is every scenario that turns the demo mode on (`turn on demo mode with query params ...`,
 `?mode=demo`; the step fails in a scenario without the tag, so a new demo scenario can't slip into the CI selection),
-`@MLPH` is the Quick actions page (`quickActions.feature`). 333 of the 405 scenarios. Some scenarios turn the demo mode
+`@MLPH` is the Quick actions page (`quickActions.feature`). Some scenarios turn the demo mode
 on only after checking the regular UI (MLFS005, MLJW002, MLJM002, MLPM001, MLPM011): those checks don't run on CI
 either. Local runs run all the scenarios.
+
+To count the scenarios of a selection (the specs are generated for the tag expression, `E2E_APP=dev` skips the check
+of the E2E build, nothing is started; the last `npx bddgen` generates all the specs back, otherwise a direct
+`npx playwright test` or the IDE runner runs only this selection):
+
+```bash
+E2E_TAGS='@sanity and not @demoMode and not @MLPH' npx bddgen && E2E_APP=dev npx playwright test --list --reporter=list; npx bddgen
+```
 
 **No local `.env*` files.** The run doesn't use them (they are gitignored, a CI checkout has none): every variable
 that the app (`import.meta.env`) and `vite.config.mjs` read is set by the run (`appEnv` in `tests/config.js`, for the

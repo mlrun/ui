@@ -164,10 +164,10 @@ Feature: Projects Page
         Then check "empty-project" value not in "name" column in "Projects_Table" table on "Projects" wizard
 
     @MLPr
-    @sanity
     @smoke
     #TODO: update "Labels_Value" options rules
-    # BUG-001 (tests/KNOWN_BUGS.md) shows up only sometimes: it is recognized when it happens, the scenario is then reported as the known bug
+    # BUG-001 shows up only sometimes here: the scenario then fails or is flaky. Not @sanity until the bug is fixed (a
+    # flaky scenario fails the PR run on CI)
     Scenario: MLPr007 - Create new ML Project with description
         Given open url
         And wait load page

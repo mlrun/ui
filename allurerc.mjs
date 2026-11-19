@@ -23,8 +23,6 @@ import { escapeRegExp } from 'lodash-es'
 
 import { KNOWN_FAILURE_FIXED_MESSAGE } from './tests/allure-results.js'
 
-const FAILED = ['failed', 'broken']
-
 export default defineConfig({
   name: 'MLRun UI E2E regression',
   output: './tests/reports/allure-report',
@@ -42,60 +40,25 @@ export default defineConfig({
       }
     }
   },
-  // failures are classified by the first matching rule, the tags are without "@"
+  // only the known bugs are put apart: the report shows by itself what failed, what was flaky (passed on a retry) and
+  // what passed. First matching rule wins
   categories: {
     rules: [
       {
+        // a known bug that passed (tests/allure-results.js), it doesn't fail the run
         id: 'known-bug-fixed',
-        name: 'Known bug is not reproduced anymore (remove the tag)',
+        name: 'Known bug passed (remove the tag if it keeps passing)',
         matchers: {
-          statuses: FAILED,
+          statuses: ['passed'],
           message: new RegExp(escapeRegExp(KNOWN_FAILURE_FIXED_MESSAGE))
         }
       },
       {
-        id: 'known-app-bugs',
-        name: 'Known app bugs (@knownBug)',
-        matchers: { statuses: ['failed'], labels: { tag: /^@?knownBug$/ } }
-      },
-      {
-        id: 'not-implemented',
-        name: 'Not implemented yet (@FAILED_TODO, @inProgress)',
-        matchers: { statuses: FAILED, labels: { tag: /^@?(FAILED_TODO|inProgress)$/ } }
-      },
-      {
-        id: 'infrastructure',
-        name: 'Infrastructure (app/mock server, browser)',
-        matchers: {
-          statuses: FAILED,
-          message:
-            /ERR_CONNECTION_REFUSED|browserType\.launch|Target page, context or browser has been closed|Process from config\.webServer/
-        }
-      },
-      {
-        id: 'ui-elements',
-        name: 'UI element not found / not interactable',
-        matchers: {
-          statuses: FAILED,
-          message:
-            /waiting for locator|strict mode violation|element is not (attached|visible|enabled|stable)|intercepts pointer events|Element is not displayed/
-        }
-      },
-      {
-        id: 'timeouts',
-        name: 'Timeouts',
-        matchers: {
-          statuses: FAILED,
-          message: /Timeout \d+ms exceeded|timed out|TimeoutError|\(waited \d+ms\)/
-        }
-      },
-      {
-        id: 'assertions',
-        name: 'Assertion failures (unexpected value)',
-        matchers: {
-          statuses: FAILED,
-          trace: /AssertionError|Arrays not equal|expect\(.+\)\.\w+\(.*\) failed/
-        }
+        // by the tag only. Only 'failed': tests/allure-results.js sets it for a failure that was expected; a 'broken'
+        // one (the test timed out) is a failure of the run
+        id: 'known-bugs',
+        name: 'Known bugs (@knownBug, @FAILED_TODO)',
+        matchers: { statuses: ['failed'], labels: { tag: /^@?(knownBug|FAILED_TODO)$/ } }
       }
     ]
   }

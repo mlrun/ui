@@ -59,11 +59,15 @@ Before({ timeout: 5 * 60 * 1000 }, async function () {
   }
 })
 
-// the known bugs are expected to fail: they don't make the run red, and a known bug scenario that passes fails the run
-// ("expected to fail"), so it's noticed that the bug is fixed and the tag can be removed. The console and the Allure
-// report show them as failed known bugs (tests/reporters, tests/allure-results.js)
+// the known bugs never make the run red: a failure is expected, and a pass is accepted too (a bug can show up only
+// sometimes). The console and the Allure report show a failure as a failed known bug and a pass as "known bug passed"
+// (tests/reporters, tests/allure-results.js)
 Before({ tags: '@knownBug or @FAILED_TODO' }, async function () {
   this.testInfo.fail(true, 'known bug (@knownBug/@FAILED_TODO): expected to fail')
+})
+
+After({ tags: '@knownBug or @FAILED_TODO' }, async function () {
+  if (this.testInfo.status === 'passed') this.testInfo.expectedStatus = 'passed'
 })
 // the browser clock is fake (it runs on, `move the browser time forward by N seconds` jumps it): the "MLRun seems to be
 // down" popup is shown after 3 minutes of failed retries (`fetchProjectsSummary`, src/reducers/projectReducer.js), the

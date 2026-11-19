@@ -33,8 +33,8 @@ const KINDS = {
   known: { icon: '◆', color: 'magenta', label: 'known bug, failed as expected' },
   knownFixed: {
     icon: '★',
-    color: 'red',
-    label: 'known bug passed: remove the @knownBug/@FAILED_TODO tag'
+    color: 'cyan',
+    label: 'known bug passed: remove the @knownBug/@FAILED_TODO tag if it keeps passing'
   },
   flaky: { icon: '⚠', color: 'yellow', label: 'flaky, passed on a retry' },
   retrying: { icon: '↻', color: 'yellow', label: 'failed, retrying' },
@@ -46,6 +46,7 @@ const BAR_WIDTH = 24
 // the lines of an error in the job summary
 const ERROR_LINES = 100
 const GHERKIN_STEP = /^(Given|When|Then|And|But|\*) /
+const KNOWN_BUG_TAGS = ['@knownBug', '@FAILED_TODO']
 
 const formatDuration = ms => {
   const seconds = Math.round(ms / 1000)
@@ -85,9 +86,11 @@ const getKind = (test, result) => {
   const outcome = test.outcome()
 
   if (outcome === 'skipped' || outcome === 'flaky') return outcome
-  if (outcome === 'expected') return test.expectedStatus === 'failed' ? 'known' : 'passed'
+  if (outcome !== 'expected') return 'failed'
+  if (test.expectedStatus === 'failed') return 'known'
 
-  return test.expectedStatus === 'failed' && result.status === 'passed' ? 'knownFixed' : 'failed'
+  // a known bug that passed: the hook accepts the pass (tests/features/support/hooks.js)
+  return test.tags.some(tag => KNOWN_BUG_TAGS.includes(tag)) ? 'knownFixed' : 'passed'
 }
 
 export default class ConsoleReporter {
@@ -166,11 +169,6 @@ export default class ConsoleReporter {
     this.running.delete(result.parallelIndex)
     this.testEnd({
       kind,
-      // an unexpected pass is retried as well
-      note:
-        kind === 'retrying' && result.status === 'passed'
-          ? 'known bug passed, retrying'
-          : undefined,
       feature: test.parent.title,
       name: test.title,
       repeat: this.repeatEach > 1 ? test.repeatEachIndex + 1 : 0,
@@ -212,13 +210,13 @@ export default class ConsoleReporter {
     const worker = event.worker ? paint('gray', `w${event.worker} `) : ''
     const repeat = event.repeat ? paint('gray', ` #${event.repeat}`) : ''
     const retry = event.retry ? paint('yellow', ` retry #${event.retry}`) : ''
-    const note = event.kind === 'passed' ? '' : paint(kind.color, ` ${event.note ?? kind.label}`)
+    const note = event.kind === 'passed' ? '' : paint(kind.color, ` ${kind.label}`)
     const lines = [
       `  ${paint(kind.color, kind.icon)} ${counter} ${worker}${paint('gray', `${event.feature} ›`)} ${event.name}` +
         `${repeat}${retry} ${paint('gray', `(${formatDuration(event.duration)})`)}${note}`
     ]
 
-    if (['failed', 'retrying', 'knownFixed'].includes(event.kind)) {
+    if (['failed', 'retrying'].includes(event.kind)) {
       lines.push(...this.formatError(event, 6))
     } else if (event.kind === 'known' && event.error) {
       lines.push(
@@ -266,8 +264,9 @@ export default class ConsoleReporter {
       `${this.done}/${this.total}`,
       paint('bold', `${Math.floor(ratio * 100)}%`),
       paint('green', `✓ ${this.counts.passed + flaky}`),
-      paint(failed + knownFixed ? 'red' : 'gray', `✘ ${failed + knownFixed}`),
+      paint(failed ? 'red' : 'gray', `✘ ${failed}`),
       paint(known ? 'magenta' : 'gray', `◆ ${known}`),
+      ...(knownFixed ? [paint('cyan', `★ ${knownFixed}`)] : []),
       paint(flaky ? 'yellow' : 'gray', `⚠ ${flaky}`),
       paint(
         'gray',
@@ -310,7 +309,7 @@ export default class ConsoleReporter {
     if (isTTY) out.write('\x1b[?25h')
 
     const { passed, failed, known, knownFixed, flaky, skipped, interrupted } = this.counts
-    const isFailed = failed + knownFixed + this.errors.length > 0
+    const isFailed = failed + this.errors.length > 0
     const listSection = (title, kind, events, withError) => {
       if (!events.length) return []
 
@@ -327,8 +326,9 @@ export default class ConsoleReporter {
     const totals = [
       paint('green', `✓ ${passed + flaky} passed`),
       paint(flaky ? 'yellow' : 'gray', `⚠ ${flaky} flaky`),
-      paint(failed + knownFixed ? 'red' : 'gray', `✘ ${failed + knownFixed} failed`),
+      paint(failed ? 'red' : 'gray', `✘ ${failed} failed`),
       paint(known ? 'magenta' : 'gray', `◆ ${known} known bugs`),
+      ...(knownFixed ? [paint('cyan', `★ ${knownFixed} known bugs passed`)] : []),
       paint('gray', `○ ${skipped} skipped`),
       ...(interrupted ? [paint('gray', `■ ${interrupted} interrupted`)] : [])
     ]
@@ -341,14 +341,14 @@ export default class ConsoleReporter {
           `${this.done}/${this.total} scenarios in ${formatDuration(Date.now() - this.startTime)}`,
         `  ${totals.join('   ')}`,
         ...listSection('Failed', 'failed', this.finished.failed, true),
+        ...listSection('Flaky (passed on a retry)', 'flaky', this.finished.flaky, false),
+        ...listSection('Known bugs (failed as expected)', 'known', this.finished.known, false),
         ...listSection(
-          'Known bugs passed, remove the tag',
+          'Known bugs passed (remove the tag if they keep passing)',
           'knownFixed',
           this.finished.knownFixed,
           false
         ),
-        ...listSection('Flaky (passed on a retry)', 'flaky', this.finished.flaky, false),
-        ...listSection('Known bugs (failed as expected)', 'known', this.finished.known, false),
         ...(this.errors.length
           ? ['', paint(['bold', 'red'], '  Errors'), ...this.errors.map(error => `    ${error}`)]
           : []),
@@ -360,13 +360,14 @@ export default class ConsoleReporter {
   }
 
   // GitHub Actions (`GITHUB_STEP_SUMMARY`): the result line and only what made the run red - the failed scenarios (also
-  // a known bug that passed and a flaky one: CI fails on them) in a table, then the whole error of each of them
+  // a flaky one: CI fails on it) in a table, then the whole error of each of them. The known bugs that passed are only
+  // counted, they don't make the run red
   writeJobSummary(isFailed) {
     const file = process.env.GITHUB_STEP_SUMMARY
 
     if (!file) return
 
-    const { passed, flaky, known, skipped } = this.counts
+    const { passed, flaky, known, knownFixed, skipped } = this.counts
     const cell = text =>
       String(text ?? '')
         .replace(/\|/g, '\\|')
@@ -388,14 +389,15 @@ export default class ConsoleReporter {
     }
     const rows = [
       ...this.finished.failed.map(event => ['✘ failed', event]),
-      ...this.finished.knownFixed.map(event => ['★ known bug passed, remove the tag', event]),
       ...this.finished.flaky.map(event => ['⚠ flaky, passed on a retry', event])
     ]
     const lines = [
       `### ${isFailed || rows.length ? '❌' : '✅'} E2E: ${this.done}/${this.total} scenarios in ` +
         `${formatDuration(Date.now() - this.startTime)} (tags: \`${process.env.E2E_TAGS || 'all'}\`)`,
       '',
-      `✓ ${passed + flaky} passed · ✘ ${rows.length} failed · ◆ ${known} known bugs · ○ ${skipped} skipped`
+      `✓ ${passed + flaky} passed · ✘ ${rows.length} failed · ◆ ${known} known bugs` +
+        (knownFixed ? ` · ★ ${knownFixed} known bugs passed` : '') +
+        ` · ○ ${skipped} skipped`
     ]
 
     if (rows.length) {

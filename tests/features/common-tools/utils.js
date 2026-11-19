@@ -243,8 +243,8 @@ export const generateRegEx = (
   }
 
   // the longest valid value is made of the widest character the field allows: the value of the max length of narrow
-  // characters ("a") fit in the input, its text never scrolled, so BUG-001 (tests/KNOWN_BUGS.md: the label chip editing
-  // ends on the scroll of its text, the rest is lost) was hit only when a random string happened to be wide enough
+  // characters ("a") fit in the input, its text never scrolled, so BUG-001 (the label chip editing ends on
+  // the scroll of its text, the rest is lost) was hit only when a random string happened to be wide enough
   if (lengthRule) {
     const widest = ['W', 'M', 'm', 'w', 'a']
       .map(character => character.repeat(Number(lengthRule)))

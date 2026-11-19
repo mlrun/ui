@@ -18,21 +18,16 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 // Allure results of the E2E regression (written by allure-playwright, playwright.config.js)
-import { KNOWN_BUG_MESSAGE_PREFIX } from './features/common-tools/known-bugs.js'
 
-// scenarios that are expected to fail (`test.fail()` in tests/features/support/hooks.js)
+// scenarios that are expected to fail (`test.fail()` in tests/features/support/hooks.js), a pass is accepted too
 const KNOWN_FAILURE_TAGS = ['knownBug', 'FAILED_TODO']
 export const KNOWN_FAILURE_FIXED_MESSAGE =
-  'Expected to fail, but passed: the bug looks fixed, remove the @knownBug/@FAILED_TODO tag'
+  'Known bug passed: if it keeps passing, the bug is fixed, remove the @knownBug/@FAILED_TODO tag'
 
 const getTags = result =>
   result.labels.filter(label => label.name === 'tag').map(label => label.value.replace(/^@/, ''))
 
-// tagged, or recognized when it happened (`failAsKnownBug` in tests/features/common-tools/known-bugs.js: a known bug
-// that a scenario hits only sometimes)
-const isKnownFailure = result =>
-  getTags(result).some(tag => KNOWN_FAILURE_TAGS.includes(tag)) ||
-  new RegExp(`^(Error: )?${KNOWN_BUG_MESSAGE_PREFIX} `).test(result.statusDetails?.message ?? '')
+const isKnownFailure = result => getTags(result).some(tag => KNOWN_FAILURE_TAGS.includes(tag))
 
 // a retried check (`expect.poll`, `retryAssertion`) records its failed attempts as failed steps, a step that passed in
 // the end looked broken in the report ("Values of "name" column" failed 3 times inside a passed step). The attempts of a
@@ -63,7 +58,7 @@ export const allureResultsListener = {
         // "known": the failure is shown as accepted, it isn't counted in the failures statistics
         result.status = 'failed'
         result.statusDetails = { ...result.statusDetails, known: true }
-      } else if (result.status === 'failed' && !hasError) {
+      } else if (result.status === 'passed') {
         result.statusDetails = { ...result.statusDetails, message: KNOWN_FAILURE_FIXED_MESSAGE }
       }
     }

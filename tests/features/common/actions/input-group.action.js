@@ -18,8 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { expect } from '@playwright/test'
-import { readTimeout } from '../../../config.js'
-import { failAsKnownBug } from '../../common-tools/known-bugs.js'
 import { parseString } from '../../common-tools/common-tools.js'
 import { hoverAndReadHint } from './common.action.js'
 import {
@@ -122,33 +120,13 @@ const withTypedValueDetails = async (input, expected, check) => {
   }
 }
 
-// BUG-001 (tests/KNOWN_BUGS.md), it shows up only sometimes: the editing of a label chip ends by itself while a long key
-// is typed, the rest of the key is lost - the field has a beginning of the typed key, or the chip input is gone
-const recognizeLabelKeyCut = async (testInfo, input, typed, error) => {
-  const value = await getAttribute(input, 'value', { timeout: readTimeout }).catch(() => null)
-  const isCut = value === null || (value.length < typed.length && typed.startsWith(value))
-
-  if (testInfo && isCut) {
-    failAsKnownBug(
-      testInfo,
-      'BUG-001',
-      `the label key was cut while typed: "${typed}" (${typed.length}) -> ` +
-        (value === null ? 'the chip input is gone' : `"${value}" (${value.length})`)
-    )
-  }
-
-  throw error
-}
-
-// `testInfo` - for the label fields: a known bug of them is recognized (see `recognizeLabelKeyCut`)
 export const checkInputAccordingHintText = async (
   page,
   attach,
   inputGroup,
   hintComponent,
   isForm = false,
-  isLabel = false,
-  testInfo = null
+  isLabel = false
 ) => {
   if (!isLabel) {
     const hintButton = page.locator(inputGroup.hintButton).first()
@@ -172,16 +150,10 @@ export const checkInputAccordingHintText = async (
     // the field must keep the whole valid value: a field that drops a part of it can still be valid, so the validity
     // check alone passed (a cut label key, BUG-001). The invalid ones are not checked: the field can cut them by design
     // (`maxlength`)
-    try {
-      await typeValue(page, inputGroup, string)
-      await pollAttribute(input, 'value', {
-        message: 'The field keeps the typed valid value'
-      }).toBe(string)
-    } catch (error) {
-      if (isLabel) await recognizeLabelKeyCut(testInfo, input, string, error)
-
-      throw error
-    }
+    await typeValue(page, inputGroup, string)
+    await pollAttribute(input, 'value', {
+      message: 'The field keeps the typed valid value'
+    }).toBe(string)
 
     await withTypedValueDetails(input, string, async () => {
       if (isForm) {
@@ -196,28 +168,21 @@ export const checkInputAccordingHintText = async (
 
   const maxLength = await getAttribute(input, 'maxlength')
 
-  // an invalid value must make the field invalid. In a label field the editing can end by itself meanwhile (BUG-001):
-  // the field is cut or gone, that is recognized as the known bug. The field must have the typed value (only its
-  // `maxlength` can cut it): a leftover of the previous value made the field invalid for another reason, and passed
+  // an invalid value must make the field invalid. The field must have the typed value (only its `maxlength` can cut it):
+  // a leftover of the previous value made the field invalid for another reason, and passed
   const expectInvalid = async string => {
-    try {
-      await typeValue(page, inputGroup, string)
-      await pollAttribute(input, 'value', {
-        message: 'The field keeps the typed invalid value'
-      }).toBe(maxLength ? string.slice(0, Number(maxLength)) : string)
-      await waitForPageQuiet(page)
-      await withTypedValueDetails(input, string, async () => {
-        if (isForm) {
-          await verifyFormInputInvalid(page, inputGroup)
-        } else {
-          await verifyInputInvalid(page, inputGroup)
-        }
-      })
-    } catch (error) {
-      if (isLabel) await recognizeLabelKeyCut(testInfo, input, string, error)
-
-      throw error
-    }
+    await typeValue(page, inputGroup, string)
+    await pollAttribute(input, 'value', {
+      message: 'The field keeps the typed invalid value'
+    }).toBe(maxLength ? string.slice(0, Number(maxLength)) : string)
+    await waitForPageQuiet(page)
+    await withTypedValueDetails(input, string, async () => {
+      if (isForm) {
+        await verifyFormInputInvalid(page, inputGroup)
+      } else {
+        await verifyInputInvalid(page, inputGroup)
+      }
+    })
 
     await clearManually(input)
   }
