@@ -54,6 +54,7 @@ export const mlrunUnhealthyErrors = [
   SERVICE_UNAVAILABLE_ERROR_STATUS_CODE,
   GATEWAY_TIMEOUT_STATUS_CODE
 ]
+export const DEFAULT_PROJECT_NAME = 'default'
 export const projectDeletionKind = 'project.deletion'
 export const projectDeletionWrapperKind = 'project.deletion.wrapper'
 export const pageData = {
@@ -106,9 +107,7 @@ export const generateProjectActionsMenu = (
           label: 'Delete',
           icon: <Delete />,
           className: 'danger',
-          hidden:
-            window.mlrunConfig?.nuclioMode === 'enabled' && project?.metadata?.name === 'default',
-          disabled: projectIsDeleting,
+          disabled: projectIsDeleting || project?.metadata?.name === DEFAULT_PROJECT_NAME,
           onClick: deleteProject
         }
       ]
