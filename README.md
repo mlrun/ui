@@ -122,178 +122,66 @@ Note: `npm install` should be run first.
 
 ## E2E regression
 
-The Gherkin scenarios in `tests/features/*.feature` run in Chromium by [Playwright Test](https://playwright.dev) via
-[playwright-bdd](https://vitalets.github.io/playwright-bdd): `bddgen` generates the Playwright specs into `.features-gen`,
-the steps are in `tests/features/step-definitions`.
+Gherkin scenarios (`tests/features/*.feature`, steps in `tests/features/step-definitions`) run in Chromium by
+[Playwright Test](https://playwright.dev) via [playwright-bdd](https://vitalets.github.io/playwright-bdd), against the
+built app and the mock server (`scripts/mockServer.js`). Playwright starts both.
 
-Install the browser once: `npx playwright install chromium` (on CI: `npx playwright install --with-deps chromium`).
-
-One command runs the regression, locally and on CI. It builds the app (`build:regression`, a few seconds), generates
-the specs, runs the scenarios headless against the app and the mock server (Playwright starts both) and generates the
-Allure report. The settings are environment variables, the arguments after `--` are passed to Playwright:
+Install the browser once: `npx playwright install chromium`.
 
 ```bash
 npm run test:regression
-E2E_WORKERS=3 E2E_RETRIES=2 npm run test:regression -- --grep "MLPr001 |MLA016 " --repeat-each 3
-npm run test:regression:ci
+E2E_WORKERS=3 npm run test:regression -- --grep "MLPr001 |MLA016 "
 ```
 
-The E2E build goes to `build`, the output folder of the production `npm run build` as well (the `base-href-first`
-plugin of `vite.config.mjs` patches `build/index.html`). After a successful build the run marks it with `build/.e2e-build` (the time of the build). A run without a rebuild (`E2E_BUILD=false`, or a
-direct `npx playwright test`) refuses a `build` without the marker, so it never tests a production build: run
-`npm run test:regression` once. Vite empties `build` on every build, so a production build removes the marker; the
-Docker image is built from its own `npm run build` (`build` is in `.dockerignore`).
+The run builds the app into `build`, generates the specs (`bddgen`), runs the scenarios and generates the Allure report.
+Arguments after `--` go to Playwright. Run through the npm scripts, not `npx playwright test`: a direct run skips
+`bddgen` and refuses a `build` that isn't an E2E build.
 
-| Command                          | Description                                                                                                                                                                                |
-| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `npm run test:regression`        | The regression with a progress bar, then the Allure report is generated and served (`E2E_OPEN_REPORT=false` - not served)                                                                  |
-| `npm run test:regression:ci`     | The same for CI (`CI=true`): `.only` and flaky scenarios fail the run, no servers are reused, the report isn't served, the workers default to half of the CPUs, GitHub Actions annotations |
-| `npm run test:sanity`            | The sanity scenarios (the PR selection of CI, `@sanity`) with 3 workers, the report is generated but not opened (`npm run report:open`)                                                    |
-| `npm run test:regression:failed` | The scenarios failed in the previous run (one worker)                                                                                                                                      |
-| `npm run test:regression:debug`  | Playwright UI mode against the dev server: pick scenarios, watch them step by step, time-travel                                                                                            |
-| `npm run test:defects`           | Defect injection: breaks the mock server on purpose (`tests/mockServer/defects.js`) and checks that the scenarios of each defect fail; `E2E_DEFECTS=name,...` - some of them               |
-| `npm run test:mock-isolation`    | Checks that the workers' mock server instances are isolated and that the memory stays flat over the resets (no browser, about a minute)                                                    |
-| `npm run report:open`            | Open the Allure report: every attempt of a scenario with its error, screenshot and trace, history of runs                                                                                  |
+| Command                          | Description                                                                |
+| -------------------------------- | -------------------------------------------------------------------------- |
+| `npm run test:regression`        | All the scenarios, then the Allure report is served                        |
+| `npm run test:regression:ci`     | The same in CI mode: flaky scenarios fail the run, the report isn't served |
+| `npm run test:sanity`            | The `@sanity` scenarios (the PR selection of CI) with 3 workers            |
+| `npm run test:regression:failed` | The scenarios that failed in the previous run                              |
+| `npm run test:regression:debug`  | Playwright UI mode against the dev server                                  |
+| `npm run test:defects`           | Breaks the mock server on purpose and checks that the scenarios fail       |
+| `npm run report:open`            | Opens the Allure report                                                    |
 
-| Environment variable  | Description                                                                                                                                                                                     | Default                     |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
-| `E2E_WORKERS`         | Scenarios run in parallel in N Playwright workers (`--workers N`), one app and one mock server (an instance per worker) serve them all, see [Parallel run](#parallel-run)                       | `1`, on CI half of the CPUs |
-| `E2E_FULL_PER_WORKER` | `true` - the whole regression N times at once (`--repeat-each N`, N = `E2E_WORKERS`), e.g. `E2E_WORKERS=3` to find the flaky scenarios; the report shows the runs of a scenario as its attempts | `false`                     |
-| `E2E_MAX_WORKERS`     | Upper limit of `E2E_WORKERS` (every worker is a Playwright worker process, a browser and a mock server instance)                                                                                | `4`                         |
-| `E2E_RETRIES`         | Retries of a failed scenario (0..5), a scenario passed on a retry is reported as flaky                                                                                                          | `1`                         |
-| `E2E_TRACE`           | Playwright trace: `on-first-retry` (only the retry of a failed scenario, a passing one records nothing), `retain-on-failure` (every attempt), `on`, `off`...                                    | `on-first-retry`            |
-| `E2E_APP`             | `build` - the prebuilt app (~190 MB, ~60 requests per page load), `dev` - the dev server (~2 GB, ~530 requests)                                                                                 | `build`                     |
-| `E2E_BUILD`           | `false` - don't rebuild the app, run against the existing E2E build in `build`, refused without its marker `build/.e2e-build` (e.g. after a production `npm run build`)                         | `true`                      |
-| `E2E_HEADLESS`        | `false` - show the browser                                                                                                                                                                      | `true`                      |
-| `E2E_TAGS`            | Tag expression, e.g. `@smoke and not @inProgress`                                                                                                                                               | all                         |
-| `E2E_TZ`              | Timezone of the browser and of the steps                                                                                                                                                        | `UTC`                       |
-| `E2E_LOCALE`          | Locale of the browser (number and date formats)                                                                                                                                                 | `en-US`                     |
-| `E2E_OPEN_REPORT`     | `false` - don't serve the report after the run (it isn't served on CI)                                                                                                                          | `true`                      |
-| `E2E_ALLURE`          | `false` - no Allure results and report, the console (and the job summary on CI) lists the failures (the PR runs on CI)                                                                          | `true`                      |
-| `E2E_APP_PORT`        | Port of the app, e.g. to run next to another app on the default port                                                                                                                            | `3000`                      |
-| `E2E_MOCK_PORT`       | Port of the mock server, the app proxies the API requests to it                                                                                                                                 | `30000`                     |
+| Environment variable | Description                                              | Default                     |
+| -------------------- | -------------------------------------------------------- | --------------------------- |
+| `E2E_WORKERS`        | Parallel Playwright workers                              | `1`, on CI half of the CPUs |
+| `E2E_MAX_WORKERS`    | Upper limit of `E2E_WORKERS` (each worker is ~1 GB)      | `4`                         |
+| `E2E_RETRIES`        | Retries of a failed scenario, a pass on a retry is flaky | `1`                         |
+| `E2E_TAGS`           | Tag expression, e.g. `@smoke and not @inProgress`        | all                         |
+| `E2E_HEADLESS`       | `false` - show the browser                               | `true`                      |
+| `E2E_TRACE`          | Playwright trace mode                                    | `on-first-retry`            |
+| `E2E_APP`            | `build` - the prebuilt app, `dev` - the dev server       | `build`                     |
+| `E2E_BUILD`          | `false` - reuse the existing E2E build                   | `true`                      |
+| `E2E_OPEN_REPORT`    | `false` - don't serve the report after the run           | `true`                      |
+| `E2E_ALLURE`         | `false` - no Allure report, only the console             | `true`                      |
+| `E2E_APP_PORT`       | Port of the app                                          | `3000`                      |
+| `E2E_MOCK_PORT`      | Port of the mock server                                  | `30000`                     |
 
-A wrong value fails the run before anything is started. An app or a mock server already running on the ports of the run
-is reused (not on CI), the run warns about it: the scenarios run against it, not against the build of the run.
+Only one run is active at a time (`tests/reports/.e2e-run.lock`). Runs with more than one worker start only from an
+interactive terminal or on CI. Every worker has its own browser and its own mock server instance, reset before each
+scenario, so the scenarios don't share state.
 
-Only one E2E run is active at a time (the lock file `tests/reports/.e2e-run.lock`): every run starts an app, a mock server
-and a browser, so runs in parallel exhaust the memory. Parallel runs (`E2E_WORKERS` > 1) can be started only by a person
-from an interactive terminal (or on CI), a start from a script or an agent is refused. If another run is in progress, a
-person is asked whether to stop it (with its servers and browsers) and start the new one; a non-interactive start is
-refused until the running one ends. A lock of a dead process is taken over.
+**Tags.**
 
-Defect injection (`npm run test:defects`) proves that the scenarios catch a broken app: every defect of
-`tests/mockServer/defects.js` (a wrong counter, a missing source, a filter that is ignored, a failed deletion...) is
-injected into the mock server (`MOCK_DEFECT`) and its scenarios run against it, one at a time. Each must fail, a scenario
-that passes on the broken mock is a false pass ("MISSED", the run fails). The result is in `tests/reports/defects.json`.
-A defect must be visible in the UI: check that the UI shows the broken field (e.g. the UI keeps the sources of an artifact
-by name, a duplicated source isn't shown). Stop a running mock server first: the run starts its own, with the defect.
-
-### Parallel run
-
-`E2E_WORKERS=N` is Playwright's own parallel run: one `playwright test --workers N`, one console reporter, one Allure
-report. The scenarios (not the feature files, `fullyParallel`) are spread over the workers, every worker has its own
-browser. One app server and one mock server serve all the workers.
-
-The mock server (`npm run mock-server`, `scripts/mockServer.js`) keeps a separate instance per worker: every request of
-a scenario carries the `x-e2e-worker` header (the Playwright `parallelIndex`: the browser through `extraHTTPHeaders`,
-the app passes it on to the mock server, the API steps and the mock control requests set it themselves), and the mock
-server passes it to the instance of that worker. An instance is `tests/mockServer/mock.js` in its own worker thread,
-with its own copy of the data, timers and background tasks. Before every scenario its worker's instance is replaced by
-a fresh one (`POST /reset-mock-state`), the other instances are not touched: a scenario starts on a clean state, the
-workers never see each other's data (a project, a failure condition, the generated data), and the memory doesn't grow
-over the run. In a run (`MOCK_STRICT_WORKERS=true`, playwright.config.js) a request without the header is refused (400):
-it can't silently share another worker's state. A mock server started by hand (`npm run mock-server` next to
-`npm start`) serves such requests from the instance of worker 0. `npm run test:mock-isolation` checks all this without
-a browser.
-
-The memory: the mock server is ~65 MB plus ~55-65 MB per worker (an instance), the app server (`vite preview`) ~180 MB
-for all the workers, every worker adds a Playwright worker process (~450 MB) and a browser (~300 MB, up to ~600 MB on
-the heavy pages). Before, every worker had its own mock server (~160 MB: a supervisor and the mock process) and app
-server (~180 MB) as well. A new instance starts about as fast as the mock server process restarted before (~0.25 s on
-an idle machine, seconds on a busy one: it's mostly the loading of the modules of `mock.js`, `lodash-es` above all).
-
-The big `auto-generated-data` project (`tests/mockServer/dataGenerators.js`: 2700 runs, 1200 alerts, models with LLM
-prompts) is generated only for the scenarios tagged `@generatedData` (paging, search over many items). Tag a scenario that
-needs it. To start the mock server with it manually: `MOCK_GENERATED_DATA=true npm run mock-server`.
-
-The scenarios tagged `@knownBug` or `@FAILED_TODO` never fail the run. A failure is expected: the console shows it as a
-known bug (◆) and the report as failed and known ("accepted", in the "Known bugs" category). A pass is accepted too (a
-bug can show up only sometimes): the console shows it as a known bug that passed (★) and the report in the "Known bug
-passed" category. If it keeps passing, the bug is fixed: remove the tag.
-A scenario that passes only on a retry is reported as flaky, on CI it fails the run.
+- `@sanity`: the main check of a page or a flow, run on every PR. Keep them fast.
+- `@knownBug`, `@FAILED_TODO`: never fail the run. A failure is shown as a known bug (◆), a pass as "known bug passed"
+  (★). Use them for work that is out of scope for now, and remove the tag once it's fixed.
+- `@generatedData`: the scenario needs the big generated project (paging, search over many items).
+- `@demoMode`, `@MLPH`: demo mode and the Quick actions page, left out on CI.
 
 ### CI
 
-`.github/workflows/e2e.yaml` runs the regression (`npm run test:regression:ci`) on GitHub Actions in one job on
-`ubuntu-latest`, with 3 workers by default.
+`.github/workflows/e2e.yaml` runs `npm run test:regression:ci` on `ubuntu-latest` with 3 workers.
 
-**Trigger.** Every non-draft PR into `development`, `feature/**` and the release branches (the same as `ci.yaml`:
-opened, reopened, a new push, and marked ready for review: a draft PR doesn't run) runs the sanity scenarios on every
-push. A new push to the PR cancels its running run (`concurrency`). The full regression: weekly, every Thursday 03:00
-UTC on the default branch (`schedule`, GitHub switches the scheduled runs of a public repository off after 60 days
-without repository activity), and on demand: Actions → E2E regression → Run workflow, with
-the inputs `workers` (1-4, default 3) and `tags` (the tag expression, default the full CI selection, `all` - every
-scenario, `@sanity` - the PR selection). The manual runs don't cancel each other.
-
-**Who can run it.** The PRs of the repository's members run at once, no approval step. A PR from a fork waits until a
-maintainer clicks "Approve and run" (the PR page), by the repository setting Settings → Actions → General → "Fork pull
-request workflows from outside collaborators": set it to "Require approval for all outside collaborators", so nobody
-outside can spend the runners. The workflow file of a PR is the one of the PR itself, so a member can change it: it is
-a trust boundary of the repository, not of this workflow.
-
-**Sanity scenarios (the PR selection).** A PR runs `E2E_TAGS='@sanity and not @demoMode and not @MLPH'` (set in the
-workflow): the scenarios tagged `@sanity`, a few minutes with 3 workers. They cover the main
-functionality of every page of the CI selection: the page and its main components, the search and the filters, the
-details pane, the create/register flows, the tag editing, the delete actions and the main job/workflow actions (Batch Run, schedule,
-abort, retry, terminate). The rest (the component details of the wizards, the validation hints, the broken links, the
-paging over the generated data) is left to the full regression. Tag a new scenario `@sanity` only when it is the main
-check of a page or a flow that no sanity scenario covers yet, and keep it fast: not `@demoMode`, `@MLPH`, `@knownBug`
-or `@generatedData`. Run them locally with `npm run test:sanity`.
-
-**Selection (the full CI regression).** The weekly run and a manual run (by default) run
-`E2E_TAGS='not @demoMode and not @MLPH'`: the UI that isn't shown to the users is left out. `@demoMode` is every scenario that turns the demo mode on (`turn on demo mode with query params ...`,
-`?mode=demo`; the step fails in a scenario without the tag, so a new demo scenario can't slip into the CI selection),
-`@MLPH` is the Quick actions page (`quickActions.feature`). Some scenarios turn the demo mode
-on only after checking the regular UI (MLFS005, MLJW002, MLJM002, MLPM001, MLPM011): those checks don't run on CI
-either. Local runs run all the scenarios.
-
-To count the scenarios of a selection (the specs are generated for the tag expression, `E2E_APP=dev` skips the check
-of the E2E build, nothing is started; the last `npx bddgen` generates all the specs back, otherwise a direct
-`npx playwright test` or the IDE runner runs only this selection):
-
-```bash
-E2E_TAGS='@sanity and not @demoMode and not @MLPH' npx bddgen && E2E_APP=dev npx playwright test --list --reporter=list; npx bddgen
-```
-
-**No local `.env*` files.** The run doesn't use them (they are gitignored, a CI checkout has none): every variable
-that the app (`import.meta.env`) and `vite.config.mjs` read is set by the run (`appEnv` in `tests/config.js`, for the
-build in `scripts/testRegression.js` and for the app server in `playwright.config.js`; Vite gives the variables already
-in the environment priority over the files). All the proxied requests (`/api`, `/nuclio`, `/iguazio`,
-`/function-catalog`) go to the mock server. One external request is left: the code editor (Monaco) is loaded by the app
-from `cdn.jsdelivr.net` (the default of `@monaco-editor/react`), so the runner needs the internet for it.
-
-**Report.** The job (`E2E sanity` on a PR, `E2E regression` for the weekly and the manual runs) writes a short job
-summary: the result line and, if any, a table of the failed scenarios (also a flaky one or a known bug that passed: they
-fail the run) with their steps, then the whole error of each of them (up to 100 lines, the job log has the rest). The
-failures are also annotations of the job (Playwright's `github` reporter), the whole console output is the job log. A
-PR run makes no Allure report (`E2E_ALLURE=false`), the full regression does.
-
-**Artifacts** (kept 14 days):
-
-| Artifact           | When                                 | Contents                                                                                                                               |
-| ------------------ | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `allure-report`    | the full regression (weekly, manual) | The Allure report: unpack it and serve it with `npx allure open <folder>` (it loads its files on demand, it can't be opened as a file) |
-| `e2e-test-results` | failed/cancelled                     | `test-results` (the traces: `npx playwright show-trace <trace.zip>`, the screenshots) and the build log                                |
-
-**Runner sizes and the memory estimate.** `ubuntu-latest` has 4 vCPU and 16 GB in public repositories; private
-repositories get a smaller standard runner (2 vCPU, 7-8 GB): there 3 workers are likely too many, use `workers=1` or
-`2`, or a larger runner. The estimate from the local measurements: the runner itself ~640 MB, the mock server and the
-app ~250 MB, every worker (a Playwright worker process, its browser, a mock instance) ~0.8-1.1 GB: ~3.3-4.2 GB with 3
-workers, ~4.1-5.3 GB with 4, well within 16 GB; on 4 vCPU the CPU is the likelier limit.
-
-**3 or 4 workers.** Run the workflow manually with `workers=4` on the same branch and compare the durations of the two
-runs: 4 workers are worth it if the run is clearly shorter and nothing is flaky.
-
-**Rerun.** "Re-run jobs" on the run page (it can wait for the approval of a fork PR again), or a manual run with other inputs, e.g.
-`tags` `@MLPr` for a part of the scenarios.
+- **PRs** (non-draft, into `development`, `feature/**` and the release branches) run
+  `@sanity and not @demoMode and not @MLPH`. A new push cancels the running run.
+- **Full regression** (`not @demoMode and not @MLPH`) runs weekly on Thursday 03:00 UTC, and on demand from Actions →
+  E2E regression → Run workflow (inputs `workers` 1-4 and `tags`).
+- **Report.** The job summary lists the failed and flaky scenarios with their errors. The full regression uploads the
+  `allure-report` artifact (serve it with `npx allure open <folder>`). A failed run uploads `e2e-test-results` with the
+  traces and screenshots (`npx playwright show-trace <trace.zip>`).
