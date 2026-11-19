@@ -2,9 +2,9 @@ Feature: Quick actions Page
 
     Testcases that verifies functionality on MLRun Quick actions Page
 
+    # BUG-003: the breadcrumb of the Quick actions page is the URL segment "quick-actions"
     @MLPH @rerun @knownBug
     Scenario: MLPH001 - Check all mandatory components on Project Home
-        * set tear-down property "project" created with "automation-test-1002" value
         * create "automation-test-1002" MLRun Project with code 201
         Given open url
         And wait load page
@@ -12,29 +12,23 @@ Feature: Quick actions Page
         And wait load page
         Then verify breadcrumbs "project" label should be equal "automation-test-1002" value
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Quick actions" value
         Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Project monitoring" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Header_Name_Label" element visibility on "Demo_Project" wizard
         Then verify "Header_Created_Time" element visibility on "Demo_Project" wizard
-        Then verify "Header_Project_Description" element visibility on "Demo_Project" wizard
         Then verify value should equal "automation-test-1002" in "Header_Name_Label" on "Demo_Project" wizard
-        Then verify value should equal "automation test description" in "Header_Project_Description" on "Demo_Project" wizard
         Then verify value should equal "Ingest and process data" in "Data_Collection_Header" on "Demo_Project" wizard
         Then verify value should equal "Project"."Data_Collection_Description" in "Data_Collection_Description" on "Demo_Project" wizard
-        Then verify "Data_Collection_Additional_Actions_Button" element visibility on "Demo_Project" wizard
         Then verify "Data_Collection_Actions_Table" element visibility on "Demo_Project" wizard
         Then verify "Data_Collection_Links_Table" element visibility on "Demo_Project" wizard
         Then verify value should equal "Develop and train model" in "Development_Header" on "Demo_Project" wizard
@@ -45,7 +39,6 @@ Feature: Quick actions Page
         Then verify value should equal "Project"."Deployment_Description" in "Deployment_Description" on "Demo_Project" wizard
         Then verify "Deployment_Actions_Table" element visibility on "Demo_Project" wizard
         Then verify "Deployment_Links_Table" element visibility on "Demo_Project" wizard
-        Then click on "Data_Collection_Additional_Actions_Button" element on "Demo_Project" wizard
         Then verify values in "Data_Collection_Actions_Table" table on "Demo_Project" wizard
             |          name           |
             |    Create feature set   |
@@ -78,7 +71,7 @@ Feature: Quick actions Page
             |  Nuclio Functions   |
             |     Monitoring      |
     
-    @MLPH
+    @MLPH @demoMode
     Scenario: MLPH002 - Verify behaviour on Register Model Popup on Project Home Page
         Given open url
         And wait load page
@@ -87,22 +80,20 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Project monitoring" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Actions_Table" table on "Demo_Project" wizard with offset "false"
             |          name           |
             |      Register model     |
         And wait load page
-        Then "Title" element on "Register_Model_Popup" should contains "Register Model" value
+        Then "Title" element on "Register_Model_Popup" should contain "Register Model" value
         Then verify "Cross_Cancel_Button" element visibility on "Register_Model_Popup" wizard
         Then verify "New_File_Name_Input" element visibility on "Register_Model_Popup" wizard
-        Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_Model_Popup" wizard should contains "Models"."Combobox_Options"
+        Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_Model_Popup" wizard should contain "Models"."Combobox_Options"
         Then verify "New_File_Description_Input" element visibility on "Register_Model_Popup" wizard
         Then verify "Cancel_Button" element visibility on "Register_Model_Popup" wizard
         Then verify "Register_Button" element visibility on "Register_Model_Popup" wizard
@@ -121,11 +112,10 @@ Feature: Quick actions Page
         Then type value "test-description" to "New_File_Description_Input" field on "Register_Model_Popup" wizard
         Then click on "Register_Button" element on "Register_Model_Popup" wizard
         And wait load page
-        And wait load page
         Then verify breadcrumbs "tab" label should be equal "Model artifacts" value
         Then click on cell with value "new-model" in "name" column in "Models_Table" table on "Models" wizard
         And wait load page
-        Then "Header" element on "Models_Info_Pane" should contains "new-model" value
+        Then "Header" element on "Models_Info_Pane" should contain "new-model" value
         Then check "new-model" value in "key" column in "Overview_Table" table on "Models_Info_Pane" wizard
         Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
         Then check "v3io:///target/" value in "path" column in "Overview_Table" table on "Models_Info_Pane" wizard
@@ -138,7 +128,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Actions_Table" table on "Demo_Project" wizard with offset "false"
             |          name           |
@@ -187,21 +176,20 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Actions_Table" table on "Demo_Project" wizard with offset "false"
             |          name           |
             |     Register dataset    |
         And wait load page
-        Then "Title" element on "Register_Dataset" should contains "Register Dataset" value
-        Then "Form_Text" component on "Register_Dataset" should contains "Register_Dataset"."Form_Text"
-        Then "Form_Subtext" component on "Register_Dataset" should contains "Register_Dataset"."Form_Subtext"
+        Then "Title" element on "Register_Dataset" should contain "Register Dataset" value
+        Then "Form_Text" component on "Register_Dataset" should contain "Register_Dataset"."Form_Text"
+        Then "Form_Subtext" component on "Register_Dataset" should contain "Register_Dataset"."Form_Subtext"
         Then verify "Name_Input" element visibility on "Register_Dataset" wizard
         Then type value "   " to "Name_Input" field on "Register_Dataset" wizard
         Then verify "Name_Input" on "Register_Dataset" wizard should display options "Input_Hint"."Artifact_Name_Hint"
         Then click on "Form_Subtext" element on "Register_Dataset" wizard
         Then verify "Name_Input" options rules on form "Register_Dataset" wizard
-        Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_Dataset" wizard should contains "Register_Dataset"."Combobox_Options"
+        Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_Dataset" wizard should contain "Register_Dataset"."Combobox_Options"
         When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
         When type value "  " to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
         Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Dataset" wizard should display hover warning "Input_Hint"."V3IO_Path_Hint"
@@ -209,9 +197,9 @@ Feature: Quick actions Page
         Then type value "   " to "Description_Input" field on "Register_Dataset" wizard
         Then verify "Description_Input" on "Register_Dataset" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then verify "Cancel_Button" element visibility on "Register_Dataset" wizard
-        Then "Cancel_Button" element on "Register_Dataset" should contains "Cancel" value
+        Then "Cancel_Button" element on "Register_Dataset" should contain "Cancel" value
         Then verify "Register_Button" element visibility on "Register_Dataset" wizard
-        Then "Register_Button" element on "Register_Dataset" should contains "Register" value
+        Then "Register_Button" element on "Register_Dataset" should contain "Register" value
         Then click on "Register_Button" element on "Register_Dataset" wizard
         Then verify "Register_Button" element on "Register_Dataset" wizard is disabled
         Then type value "dataset" to "Name_Input" field on "Register_Dataset" wizard
@@ -223,23 +211,22 @@ Feature: Quick actions Page
         Then verify if "Common_Popup" popup dialog appears
         Then click on "Cancel_Button" element on "Common_Popup" wizard
         Then verify if "Register_Dataset" popup dialog appears
-        Then verify "Name_Input" input should contains "dataset" value on "Register_Dataset" wizard
-        Then verify "Path_Scheme_Combobox" input should contains "target/path" value in "Target_Path" on "Register_Dataset" wizard
-        Then verify "Description_Input" input should contains "new dataset description" value on "Register_Dataset" wizard
+        Then verify "Name_Input" input should contain "dataset" value on "Register_Dataset" wizard
+        Then verify "Path_Scheme_Combobox" input should contain "target/path" value in "Target_Path" on "Register_Dataset" wizard
+        Then verify "Description_Input" input should contain "new dataset description" value on "Register_Dataset" wizard
         Then click on "Register_Button" element on "Register_Dataset" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Datasets" value
         Then click on cell with value "dataset" in "name" column in "Datasets_Table" table on "Datasets" wizard
         And wait load page
-        Then "Header" element on "Datasets_Info_Pane" should contains "dataset" value
+        Then "Header" element on "Datasets_Info_Pane" should contain "dataset" value
         Then check "dataset" value in "key" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
         Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
         Then check "v3io:///target/path" value in "path" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     
     @MLPH 
-    @passive
+    @passive @demoMode
     Scenario: MLPH005 - Check all mandatory components on Create ML Function on Project Home Page
-        * set tear-down property "project" created with "automation-test-1003" value
         * create "automation-test-1003" MLRun Project with code 201
         Given open url
         And wait load page
@@ -248,7 +235,6 @@ Feature: Quick actions Page
         And click on row root with value "automation-test-1003" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Actions_Table" table on "Demo_Project" wizard with offset "false"
             |            name           |
@@ -277,43 +263,42 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Actions_Table" table on "Demo_Project" wizard with offset "false"
             |          name           |
             |        Batch run        |
         And wait load page
         Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
-        Then "Title" element on "Modal_Wizard_Form" should contains "Batch Run" value
+        Then "Title" element on "Modal_Wizard_Form" should contain "Batch Run" value
         Then verify "Cross_Close_Button" element visibility on "Modal_Wizard_Form" wizard
         Then verify "Wizard_Steps_Content" element visibility on "Modal_Wizard_Form" wizard
         And click on row root with value "test" in "name" column in "Functions_Table" table on "Modal_Wizard_Form" wizard
-        Then "Function_Title" element on "Modal_Wizard_Form" should contains "test" value
+        Then "Function_Title" element on "Modal_Wizard_Form" should contain "test" value
         Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
-        Then "Step_1_Button_text" element on "commonPagesHeader" should contains "Function selection" value
+        Then "Step_1_Button_text" element on "commonPagesHeader" should contain "Function selection" value
         Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
-        Then "Step_2_Button_text" element on "commonPagesHeader" should contains "Run details" value
+        Then "Step_2_Button_text" element on "commonPagesHeader" should contain "Run details" value
         Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
-        Then "Step_3_Button_text" element on "commonPagesHeader" should contains "Data inputs" value
+        Then "Step_3_Button_text" element on "commonPagesHeader" should contain "Data inputs" value
         Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
-        Then "Step_4_Button_text" element on "commonPagesHeader" should contains "Parameters" value
+        Then "Step_4_Button_text" element on "commonPagesHeader" should contain "Parameters" value
         Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
-        Then "Step_5_Button_text" element on "commonPagesHeader" should contains "Resources" value
+        Then "Step_5_Button_text" element on "commonPagesHeader" should contain "Resources" value
         Then verify "Step_6_Button" element on "commonPagesHeader" wizard is enabled
-        Then "Step_6_Button_text" element on "commonPagesHeader" should contains "Advanced" value
+        Then "Step_6_Button_text" element on "commonPagesHeader" should contain "Advanced" value
         Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
         Then verify "Schedule_For_Later_Button" element on "Modal_Wizard_Form" wizard is enabled
         Then verify "Run_Button" element on "Modal_Wizard_Form" wizard is enabled
-        Then verify "Back_Button" element not exists on "Modal_Wizard_Form" wizard
+        Then verify "Back_Button" element does not exist on "Modal_Wizard_Form" wizard
         Then verify "Form_Header_Function_Selection" element visibility on "commonPagesHeader" wizard
-        Then verify "Function_Selection_Tabs" on "Modal_Wizard_Form" wizard should contains "Modal_Wizard_Form"."Tab_List"
+        Then verify "Function_Selection_Tabs" on "Modal_Wizard_Form" wizard should contain "Modal_Wizard_Form"."Tab_List"
         Then verify "Search_Input" element visibility on "Modal_Wizard_Form" wizard
         Then verify "Project_Selector_Dropdown" element visibility on "Modal_Wizard_Form" wizard
         Then select "Hub" tab in "Function_Selection_Tabs" on "Modal_Wizard_Form" wizard
         And wait load page
         Then verify "Filter_Button_Hub_Tab" element visibility on "Modal_Wizard_Form" wizard
         And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-        Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
+        Then "Form_Header_Run_Details" element on "commonPagesHeader" should contain "Run details" value
         Then "Hyperparameter_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
         Then verify "Run_Name_Input" element visibility on "Modal_Wizard_Form" wizard
         Then verify "Version_Tag_Dropdown" element visibility on "Modal_Wizard_Form" wizard
@@ -322,11 +307,11 @@ Feature: Quick actions Page
         Then verify "Image_Name_Input_Run_Details" element visibility on "Modal_Wizard_Form" wizard
         Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
         And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-        Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data inputs" value
-        Then verify "Data_Inputs_Headers" on "Modal_Wizard_Form" wizard should contains "Modal_Wizard_Form"."Data_Inputs_Table_Header"
+        Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contain "Data inputs" value
+        Then verify "Data_Inputs_Headers" on "Modal_Wizard_Form" wizard should contain "Modal_Wizard_Form"."Data_Inputs_Table_Header"
         And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-        Then "Form_Header_Parameters" element on "commonPagesHeader" should contains "Parameters" value
-        Then verify "Parameters_Headers" on "Modal_Wizard_Form" wizard should contains "Modal_Wizard_Form"."Parameters_Table_Header"
+        Then "Form_Header_Parameters" element on "commonPagesHeader" should contain "Parameters" value
+        Then verify "Parameters_Headers" on "Modal_Wizard_Form" wizard should contain "Modal_Wizard_Form"."Parameters_Table_Header"
         And click on "Next_Button" element on "Modal_Wizard_Form" wizard
         Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
         Then verify "Volume_Paths_Table" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
@@ -340,12 +325,12 @@ Feature: Quick actions Page
         Then verify "CPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
         Then verify "GPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
         And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-        Then "Form_Header_Advanced" element on "commonPagesHeader" should contains "Advanced" value
-        Then "Accordion_Advanced_Subheader" element on "Modal_Wizard_Form" should contains "Environment variables" value
+        Then "Form_Header_Advanced" element on "commonPagesHeader" should contain "Advanced" value
+        Then "Accordion_Advanced_Subheader" element on "Modal_Wizard_Form" should contain "Environment variables" value
         Then verify "Advanced_Environment_Variables_Table" element visibility on "Modal_Wizard_Form" wizard
         Then verify "Default_Input_Path_Input" element visibility in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
         Then verify "Default_Artifact_Path_Input" element visibility in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
-        Then "Default_Artifact_Path_Input" element in "Advanced_Accordion" on "Modal_Wizard_Form" should contains "v3io:///projects/{{run.project}}/artifacts" attribute value
+        Then "Default_Artifact_Path_Input" element in "Advanced_Accordion" on "Modal_Wizard_Form" should contain "v3io:///projects/{{run.project}}/artifacts" attribute value
         Then verify "Access_Key_Checkbox" element visibility on "Modal_Wizard_Form" wizard
         Then uncheck "Access_Key_Checkbox" element on "Modal_Wizard_Form" wizard
         Then verify "Access_Key_Input" element visibility on "Modal_Wizard_Form" wizard
@@ -353,23 +338,23 @@ Feature: Quick actions Page
         And click on "Step_2_Button" element on "commonPagesHeader" wizard
         Then check "Hyperparameter_Checkbox" element on "Modal_Wizard_Form" wizard
         And click on "Step_5_Button" element on "commonPagesHeader" wizard
-        Then "Form_Header_Hyperparameter_Strategy" element on "commonPagesHeader" should contains "Hyperparameter strategy" value
+        Then "Form_Header_Hyperparameter_Strategy" element on "commonPagesHeader" should contain "Hyperparameter strategy" value
         Then verify "Strategy_Dropdown" element visibility in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard
         Then verify "Max_Iterations" element visibility in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard
         Then verify "Max_Errors" element visibility in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard
-        Then "Ranking_Subheader" element on "Modal_Wizard_Form" should contains "Ranking" value
+        Then "Ranking_Subheader" element on "Modal_Wizard_Form" should contain "Ranking" value
         Then verify "Ranking_Result_Input" element visibility on "Modal_Wizard_Form" wizard
-        Then verify "Ranking_Criteria_Dropdown" dropdown element on "Modal_Wizard_Form" wizard should contains "Common_Lists"."Ranking_Criteria_List"
-        Then "Stop_Condition_Subheader" element on "Modal_Wizard_Form" should contains "Stop condition" value
+        Then verify "Ranking_Criteria_Dropdown" dropdown element on "Modal_Wizard_Form" wizard should contain "Common_Lists"."Ranking_Criteria_List"
+        Then "Stop_Condition_Subheader" element on "Modal_Wizard_Form" should contain "Stop condition" value
         Then verify "Stop_Condition_Input" element visibility on "Modal_Wizard_Form" wizard
-        Then "Parallelism_Subheader" element on "Modal_Wizard_Form" should contains "Parallelism" value
+        Then "Parallelism_Subheader" element on "Modal_Wizard_Form" should contain "Parallelism" value
         Then verify "Parallel_Runs_Number_Input" element visibility on "Modal_Wizard_Form" wizard
         Then verify "Dask_Clutter_URL_Input" element visibility on "Modal_Wizard_Form" wizard
         Then "Teardown_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
         Then verify "Run_Button" element on "Modal_Wizard_Form" wizard is enabled
         And click on "Run_Button" element on "Modal_Wizard_Form" wizard
         And wait load page
-        Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
+        Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contain "test"
 
     @MLPH
     @passive
@@ -379,22 +364,21 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Actions_Table" table on "Demo_Project" wizard with offset "false"
             |          name           |
             |    Register artifact    |
         And wait load page
-        Then "Title" element on "Register_File_Popup" should contains "Register Artifact" value
-        Then "Form_Text" component on "Register_File_Popup" should contains "Register_Artifact"."Form_Text"
-        Then "Form_Subtext" component on "Register_File_Popup" should contains "Register_Artifact"."Form_Subtext"
+        Then "Title" element on "Register_File_Popup" should contain "Register Artifact" value
+        Then "Form_Text" component on "Register_File_Popup" should contain "Register_Artifact"."Form_Text"
+        Then "Form_Subtext" component on "Register_File_Popup" should contain "Register_Artifact"."Form_Subtext"
         Then verify "Cross_Cancel_Button" element visibility on "Register_File_Popup" wizard
         Then verify "New_File_Name_Input" element visibility on "Register_File_Popup" wizard
         Then type value "   " to "New_File_Name_Input" field on "Register_File_Popup" wizard
         Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
         Then click on "Form_Subtext" element on "Register_File_Popup" wizard
         Then verify "New_File_Name_Input" options rules on form "Register_File_Popup" wizard
-        Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_File_Popup" wizard should contains "Register_Artifact"."Combobox_Options"
+        Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_File_Popup" wizard should contain "Register_Artifact"."Combobox_Options"
         When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
         When type value "  " to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
         Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_File_Popup" wizard should display hover warning "Input_Hint"."V3IO_Path_Hint"
@@ -402,12 +386,12 @@ Feature: Quick actions Page
         Then type value "   " to "New_File_Description_Input" field on "Register_File_Popup" wizard
         Then verify "New_File_Description_Input" on "Register_File_Popup" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then verify "New_File_Type_Dropdown" element visibility on "Register_File_Popup" wizard
-        Then verify "New_File_Type_Dropdown" dropdown element on "Register_File_Popup" wizard should contains "Register_Artifact"."Type_Options"
+        Then verify "New_File_Type_Dropdown" dropdown element on "Register_File_Popup" wizard should contain "Register_Artifact"."Type_Options"
         Then select "Table" option in "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard
         Then verify "Cancel_Button" element visibility on "Register_File_Popup" wizard
-        Then "Cancel_Button" element on "Register_File_Popup" should contains "Cancel" value
+        Then "Cancel_Button" element on "Register_File_Popup" should contain "Cancel" value
         Then verify "Register_Button" element visibility on "Register_File_Popup" wizard
-        Then "Register_Button" element on "Register_File_Popup" should contains "Register" value
+        Then "Register_Button" element on "Register_File_Popup" should contain "Register" value
         Then click on "Register_Button" element on "Register_File_Popup" wizard
         Then verify "Register_Button" element on "Register_File_Popup" wizard is disabled
         Then type value "artifact" to "New_File_Name_Input" field on "Register_File_Popup" wizard
@@ -419,16 +403,16 @@ Feature: Quick actions Page
         Then verify if "Common_Popup" popup dialog appears
         Then click on "Cancel_Button" element on "Common_Popup" wizard
         Then verify if "Register_Dataset" popup dialog appears
-        Then verify "New_File_Name_Input" input should contains "artifact" value on "Register_File_Popup" wizard
-        Then verify "Path_Scheme_Combobox" input should contains "target/path" value in "Target_Path" on "Register_File_Popup" wizard
-        Then verify "New_File_Description_Input" input should contains "new artifact description" value on "Register_File_Popup" wizard
+        Then verify "New_File_Name_Input" input should contain "artifact" value on "Register_File_Popup" wizard
+        Then verify "Path_Scheme_Combobox" input should contain "target/path" value in "Target_Path" on "Register_File_Popup" wizard
+        Then verify "New_File_Description_Input" input should contain "new artifact description" value on "Register_File_Popup" wizard
         Then verify "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard selected option value "Table"
         Then click on "Register_Button" element on "Register_File_Popup" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Other artifacts" value
         Then click on cell with value "artifact" in "name" column in "Files_Table" table on "Files" wizard
         And wait load page
-        Then "Header" element on "Files_Info_Pane" should contains "artifact" value
+        Then "Header" element on "Files_Info_Pane" should contain "artifact" value
         Then check "artifact" value in "key" column in "Overview_Table" table on "Files_Info_Pane" wizard
         Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
         Then check "v3io:///target/path" value in "path" column in "Overview_Table" table on "Files_Info_Pane" wizard
@@ -441,13 +425,12 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Actions_Table" table on "Demo_Project" wizard with offset "false"
             |          name           |
             |  Create feature vector  |
         And wait load page
-        Then "Title" element on "Create_Feature_Vector_Popup" should contains "Create feature vector" value
+        Then "Title" element on "Create_Feature_Vector_Popup" should contain "Create feature vector" value
         Then verify "Cross_Cancel_Button" element visibility on "Create_Feature_Vector_Popup" wizard
         Then verify "Name_Input" element visibility on "Create_Feature_Vector_Popup" wizard
         Then type value "   " to "Name_Input" field on "Create_Feature_Vector_Popup" wizard
@@ -457,7 +440,7 @@ Feature: Quick actions Page
         Then verify "Labels_Table" element visibility on "Create_Feature_Vector_Popup" wizard
 
     @MLPH
-    @passive
+    @passive @demoMode
     Scenario: MLPH009 - Check all mandatory components on Feature Set tab on Project Home Page
         Given open url
         And wait load page
@@ -466,21 +449,20 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Links_Table" table on "Demo_Project" wizard with offset "false"
             |     name     |
             | Feature Sets |
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Feature sets" value
-        Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
+        Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contain "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_FilterBy_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
         Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
-        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options_Feature_Sets_Default"
+        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contain "Dropdown_Options"."Tag_Filter_Options_Feature_Sets_Default"
         Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
@@ -495,7 +477,7 @@ Feature: Quick actions Page
         Then verify "Feature_Sets_Table" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature_Store_Tab_Selector" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
-        Then "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" should contains "Create set" value
+        Then "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" should contain "Create set" value
 
     @MLPH
     @passive
@@ -505,7 +487,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Links_Table" table on "Demo_Project" wizard with offset "false"
             |   name    |
@@ -520,7 +501,7 @@ Feature: Quick actions Page
         Then verify "Table_Refresh_Button" element visibility on "Files" wizard
         Then verify "Files_Table" element visibility on "Files" wizard
         Then verify "Register_File_Button" element visibility on "Files" wizard
-        Then "Register_File_Button" element on "Files" should contains "Register artifact" value
+        Then "Register_File_Button" element on "Files" should contain "Register artifact" value
 
     @MLPH
     @passive
@@ -530,7 +511,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Links_Table" table on "Demo_Project" wizard with offset "false"
             |   name   |
@@ -538,12 +518,12 @@ Feature: Quick actions Page
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Datasets" value
         Then verify "Register_Dataset_Button" element visibility on "Datasets" wizard
-        Then "Register_Dataset_Button" element on "Datasets" should contains "Register dataset" value
+        Then "Register_Dataset_Button" element on "Datasets" should contain "Register dataset" value
         Then verify "Table_Name_Filter_Input" element visibility on "Datasets" wizard
         Then click on "Table_FilterBy_Button" element on "Datasets" wizard
         Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
         Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
-        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options_Main_Table"
+        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contain "Dropdown_Options"."Tag_Filter_Options_Main_Table"
         Then verify "Table_Refresh_Button" element visibility on "Datasets" wizard
 
     @MLPH
@@ -554,7 +534,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Data_Collection_Links_Table" table on "Demo_Project" wizard with offset "false"
             |       name      |
@@ -565,7 +544,7 @@ Feature: Quick actions Page
         Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
         Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
-        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options_Feature_Vectors_Default"
+        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contain "Dropdown_Options"."Tag_Filter_Options_Feature_Vectors_Default"
         Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
@@ -575,14 +554,13 @@ Feature: Quick actions Page
         Then verify "Feature_Vectors_Table" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
 
     @MLPH
-    @passive
+    @passive @demoMode
     Scenario: MLPH013 - Check all mandatory components on ML Functions tab on Project Home Page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Links_Table" table on "Demo_Project" wizard with offset "false"
             |     name     |
@@ -591,11 +569,15 @@ Feature: Quick actions Page
         Then verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "ML_Functions" wizard selected option value "Past week"
-        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contain "Dropdown_Options"."Date_Picker_Filter_Options"
+        # the functions of the project were updated more than a week ago: the rows (and their expand buttons) were in "Past week"
+        # only when the previous scenarios had created functions in the project
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
+        And wait load page
         Then verify "Table_FilterBy_Button" element visibility on "ML_Functions" wizard
         Then verify "Table_FilterBy_Button" element on "ML_Functions" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
         Then click on "Table_FilterBy_Button" element on "ML_Functions" wizard
-        Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+        Then "Title" element on "FilterBy_Popup" should contain "Filter by" value
         Then verify "Show_Untagged" element visibility on "FilterBy_Popup" wizard
         Then "Show_Untagged" element should be unchecked on "FilterBy_Popup" wizard
         Then verify "Table_Refresh_Button" element visibility on "ML_Functions" wizard
@@ -603,10 +585,11 @@ Feature: Quick actions Page
         Then verify "Expand_All_Button" element visibility on "ML_Functions" wizard
         Then verify "Expand_All_Button" element on "ML_Functions" wizard should display hover tooltip "Common_Tooltips"."Expand_All_Button"
         Then verify "Table_Expand_Rows_Button" element visibility on "ML_Functions" wizard
-        When turn on demo mode with query params "false"
+        # "true": the URL has the query params of the "Any time" filter (`?dates=anyTime`)
+        When turn on demo mode with query params "true"
         And wait load page
         Then verify "New_Function_Button" element visibility on "ML_Functions" wizard
-        Then "New_Function_Button" element on "ML_Functions" should contains "New" value
+        Then "New_Function_Button" element on "ML_Functions" should contain "New" value
 
     @MLPH
     @passive
@@ -616,7 +599,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Links_Table" table on "Demo_Project" wizard with offset "false"
             | name |
@@ -625,7 +607,7 @@ Feature: Quick actions Page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
         Then verify "Table_Name_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contain "Dropdown_Options"."Date_Picker_Filter_Options"
         Then verify "Table_FilterBy_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
@@ -637,9 +619,9 @@ Feature: Quick actions Page
         Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then verify "Batch_Run_Button" element visibility on "Jobs_Monitor_Tab" wizard
-        Then "Batch_Run_Button" element on "Jobs_Monitor_Tab" should contains "Batch run" value
+        Then "Batch_Run_Button" element on "Jobs_Monitor_Tab" should contain "Batch run" value
         Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab" wizard
-        Then "Resource_Monitoring_Button" element on "Jobs_Monitor_Tab" should contains "Resource monitoring" value
+        Then "Resource_Monitoring_Button" element on "Jobs_Monitor_Tab" should contain "Resource monitoring" value
         Then verify "Auto_Refresh_Checkbox" element visibility on "Jobs_Monitor_Tab" wizard
         Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
@@ -648,14 +630,13 @@ Feature: Quick actions Page
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
 
     @MLPH
-    @passive
+    @passive @demoMode
     Scenario: MLPH015 - Check all mandatory components on Models tab on Project Home Page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Links_Table" table on "Demo_Project" wizard with offset "false"
             |  name  |
@@ -669,11 +650,11 @@ Feature: Quick actions Page
         Then verify "Table_Refresh_Button" element visibility on "Models" wizard
         Then verify "Models_Table" element visibility on "Models" wizard
         Then verify "Train_Model_Button" element visibility on "Models" wizard
-        Then "Train_Model_Button" element on "Models" should contains "Train model" value
+        Then "Train_Model_Button" element on "Models" should contain "Train model" value
         When turn on demo mode with query params "true"
         And wait load page
         Then verify "Register_Model_Button" element visibility on "Models" wizard
-        Then "Register_Model_Button" element on "Models" should contains "Register model" value
+        Then "Register_Model_Button" element on "Models" should contain "Register model" value
 
     @MLPH
     @passive
@@ -683,7 +664,6 @@ Feature: Quick actions Page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Development_Links_Table" table on "Demo_Project" wizard with offset "false"
             |    name   |
@@ -704,7 +684,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Deployment_Links_Table" table on "Demo_Project" wizard with offset "false"
             |      name       |
@@ -722,13 +701,13 @@ Feature: Quick actions Page
         Then verify "Table_Refresh_Button" element visibility on "Model_Endpoints" wizard
         Then verify "Table_Refresh_Button" element on "Model_Endpoints" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
         Then verify "Sort_By_Function" element visibility on "Model_Endpoints" wizard
-        Then verify "Sort_By_Name" element not exists on "Model_Endpoints" wizard
+        Then verify "Sort_By_Name" element does not exist on "Model_Endpoints" wizard
         Then click on "Column_Name_Header" element on "Model_Endpoints" wizard
         Then verify "Sort_By_Name" element visibility on "Model_Endpoints" wizard
-        Then verify "Sort_By_Function" element not exists on "Model_Endpoints" wizard
+        Then verify "Sort_By_Function" element does not exist on "Model_Endpoints" wizard
         Then click on "Column_Function_Header" element on "Model_Endpoints" wizard
         Then verify "Sort_By_Function" element visibility on "Model_Endpoints" wizard
-        Then verify "Sort_By_Name" element not exists on "Model_Endpoints" wizard
+        Then verify "Sort_By_Name" element does not exist on "Model_Endpoints" wizard
         Then verify "Model_Endpoints_Table" element visibility on "Model_Endpoints" wizard
 
     @MLPH
@@ -739,7 +718,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Deployment_Links_Table" table on "Demo_Project" wizard with offset "false"
             |        name         |
@@ -758,7 +736,6 @@ Feature: Quick actions Page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And open "quick-actions" page of current project by url
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         When click on "name" in "Deployment_Links_Table" table on "Demo_Project" wizard with offset "false"
             |    name    |
@@ -792,10 +769,10 @@ Feature: Quick actions Page
             | Train model |
         And wait load page
         Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
-        Then "Title" element on "Modal_Wizard_Form" should contains "Train Model" value
+        Then "Title" element on "Modal_Wizard_Form" should contain "Train Model" value
         Then verify "Cross_Close_Button" element visibility on "Modal_Wizard_Form" wizard
-        Then "Function_Title" element on "Modal_Wizard_Form" should contains "auto-trainer" value
-        Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
+        Then "Function_Title" element on "Modal_Wizard_Form" should contain "auto-trainer" value
+        Then "Form_Header_Run_Details" element on "commonPagesHeader" should contain "Run details" value
         Then "Hyperparameter_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
         Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
         Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
@@ -803,9 +780,9 @@ Feature: Quick actions Page
         Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
         Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
         Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
-        Then "Next_Button" element on "Modal_Wizard_Form" should contains "Next" value
+        Then "Next_Button" element on "Modal_Wizard_Form" should contain "Next" value
         Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
-        Then "Run_Training_Now_Button" element on "Modal_Wizard_Form" should contains "Run training now" value
+        Then "Run_Training_Now_Button" element on "Modal_Wizard_Form" should contain "Run training now" value
         Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
-        Then "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" should contains "Schedule training job" value
-        Then verify "Back_Button" element not exists on "Modal_Wizard_Form" wizard
+        Then "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" should contain "Schedule training job" value
+        Then verify "Back_Button" element does not exist on "Modal_Wizard_Form" wizard

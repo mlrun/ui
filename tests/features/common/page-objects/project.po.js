@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 import actionMenu from '../components/action-menu.component.js'
 import commonTable from '../components/table.component.js'
 import dropdownComponent from '../components/dropdown.component.js'
@@ -25,7 +24,7 @@ import labelComponent from '../components/label.component.js'
 import {
   generateInputGroup,
   generateLabelGroup,
-  generateDropdownGroup,
+  generateDropdownGroup
 } from '../../common-tools/common-tools.js'
 import inputGroup from '../components/input-group.component.js'
 
@@ -52,16 +51,26 @@ const realtimeFunctionsNuclioTable = {
     root: '.project-data-card__header',
     sorters: {
       title: '.project-data-card__header-text a',
-      running_counter_number: '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-value.statistics_running',
-      running_counter_subtitle: '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-label span',
-      running_counter_icon: '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-label i',
-      failed_counter_number: '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-value.statistics_failed',
-      failed_counter_subtitle: '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-label span',
-      failed_counter_icon: '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-label i',
-      api_gateways_counter_number: '.project-data-card__statistics-item:nth-of-type(3) .project-data-card__statistics-value .tooltip-wrapper',
-      api_gateways_counter_subtitle: '.project-data-card__statistics-item:nth-of-type(3) .project-data-card__statistics-label span',
-      consumer_groups_counter_number: '.project-data-card__statistics-item:nth-of-type(4) .project-data-card__statistics-value .tooltip-wrapper',
-      consumer_groups_counter_subtitle: '.project-data-card__statistics-item:nth-of-type(4) .project-data-card__statistics-label span',
+      running_counter_number:
+        '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-value.statistics_running',
+      running_counter_subtitle:
+        '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-label span',
+      running_counter_icon:
+        '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-label i',
+      failed_counter_number:
+        '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-value.statistics_failed',
+      failed_counter_subtitle:
+        '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-label span',
+      failed_counter_icon:
+        '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-label i',
+      api_gateways_counter_number:
+        '.project-data-card__statistics-item:nth-of-type(3) .project-data-card__statistics-value .tooltip-wrapper',
+      api_gateways_counter_subtitle:
+        '.project-data-card__statistics-item:nth-of-type(3) .project-data-card__statistics-label span',
+      consumer_groups_counter_number:
+        '.project-data-card__statistics-item:nth-of-type(4) .project-data-card__statistics-value .tooltip-wrapper',
+      consumer_groups_counter_subtitle:
+        '.project-data-card__statistics-item:nth-of-type(4) .project-data-card__statistics-label span',
       name: '.table-header__item:nth-of-type(1) .data-ellipsis',
       status: '.table-header__item:nth-of-type(2) .data-ellipsis'
     }
@@ -77,7 +86,7 @@ const realtimeFunctionsNuclioTable = {
     }
   }
 }
-      
+
 const runsTable = {
   root: '.d-flex:nth-of-type(1) .project-data-card',
   header: {
@@ -85,15 +94,24 @@ const runsTable = {
     sorters: {
       title: '.project-data-card__header-text a',
       time_period: '.project-data-card__header-info span',
-      in_process_counter_number: '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-value',
-      in_process_counter_subtitle: '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-label span',
-      in_process_counter_icon: '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-label i',
-      failed_counter_number: '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-value',
-      failed_counter_subtitle: '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-label span',
-      failed_counter_icon: '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-label i',
-      succeeded_counter_number: '.project-data-card__statistics-item:nth-of-type(3) .project-data-card__statistics-value',
-      succeeded_counter_subtitle: '.project-data-card__statistics-item:nth-of-type(3) .project-data-card__statistics-label span',
-      succeeded_counter_icon: '.project-data-card__statistics-item:nth-of-type(3) .project-data-card__statistics-label i',
+      in_process_counter_number:
+        '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-value',
+      in_process_counter_subtitle:
+        '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-label span',
+      in_process_counter_icon:
+        '.project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-label i',
+      failed_counter_number:
+        '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-value',
+      failed_counter_subtitle:
+        '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-label span',
+      failed_counter_icon:
+        '.project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-label i',
+      succeeded_counter_number:
+        '.project-data-card__statistics-item:nth-of-type(3) .project-data-card__statistics-value',
+      succeeded_counter_subtitle:
+        '.project-data-card__statistics-item:nth-of-type(3) .project-data-card__statistics-label span',
+      succeeded_counter_icon:
+        '.project-data-card__statistics-item:nth-of-type(3) .project-data-card__statistics-label i',
       name: '.table-header__item:nth-of-type(1) .data-ellipsis',
       type: '.table-header__item:nth-of-type(2) .data-ellipsis',
       status: '.table-header__item:nth-of-type(3) .data-ellipsis',
@@ -109,8 +127,7 @@ const runsTable = {
         name: '.table-cell_big:nth-of-type(1) .data-ellipsis',
         type: '.table-cell_small .data-ellipsis',
         status: '.status-cell .data-ellipsis',
-        started_at:
-          '.table-cell_big:nth-of-type(4) .data-ellipsis',
+        started_at: '.table-cell_big:nth-of-type(4) .data-ellipsis',
         duration: '.table-cell_medium:nth-of-type(5) .data-ellipsis'
       }
     }
@@ -118,24 +135,7 @@ const runsTable = {
 }
 
 const DataCollectionActionsTable = {
-  root:
-    '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-actions:nth-of-type(1)',
-  header: {},
-  body: {
-    row: {
-      root: 
-      '.project-overview-actions__item',
-      fields: {
-        name: 
-        '.link'
-      }
-    }
-  }
-}
-
-const DataCollectionAdditionalActionsTable = {
-  root:
-    '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-actions:nth-of-type(2)',
+  root: '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-actions:nth-of-type(1)',
   header: {},
   body: {
     row: {
@@ -148,8 +148,7 @@ const DataCollectionAdditionalActionsTable = {
 }
 
 const DevelopmentActionsTable = {
-  root:
-    '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__actions',
+  root: '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__actions',
   header: {},
   body: {
     root: '.project-overview-actions',
@@ -162,9 +161,8 @@ const DevelopmentActionsTable = {
   }
 }
 
-const DeploymetActionsTable = {
-  root:
-    '.project-overview .project-overview__content .project-overview-card:nth-of-type(3) .project-overview-card__actions',
+const DeploymentActionsTable = {
+  root: '.project-overview .project-overview__content .project-overview-card:nth-of-type(3) .project-overview-card__actions',
   header: {},
   body: {
     root: '.project-overview-actions',
@@ -178,8 +176,7 @@ const DeploymetActionsTable = {
 }
 
 const DataCollectionLinksTable = {
-  root:
-    '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-card__bottom',
+  root: '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-card__bottom',
   header: {},
   body: {
     root: '.additional-links',
@@ -193,8 +190,7 @@ const DataCollectionLinksTable = {
 }
 
 const DevelopmentLinksTable = {
-  root:
-    '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__bottom',
+  root: '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__bottom',
   header: {},
   body: {
     root: '.additional-links',
@@ -207,9 +203,8 @@ const DevelopmentLinksTable = {
   }
 }
 
-const DeploymetLinksTable = {
-  root:
-    '.project-overview .project-overview__content .project-overview-card:nth-of-type(3) .project-overview-card__bottom',
+const DeploymentLinksTable = {
+  root: '.project-overview .project-overview__content .project-overview-card:nth-of-type(3) .project-overview-card__bottom',
   header: {},
   body: {
     root: '.additional-links',
@@ -276,109 +271,156 @@ const shardLagsTable = {
 
 export default {
   project: {
-    Project_Name: By.css('.main-info .page-header__title'),
-    Created_Details: By.css('.project-details__details-label:nth-of-type(1)'),
-    Owner_Details: By.css('.project-details__details-label:nth-of-type(2)'),
-    Info_Baner_Icon: By.css('.main-info .page-header__title [data-testid="tip"] svg'),
+    Project_Name: '.main-info .page-header__title',
+    Created_Details: '.project-details__details-label:nth-of-type(1)',
+    Owner_Details: '.project-details__details-label:nth-of-type(2)',
+    Info_Baner_Icon: '.main-info .page-header__title [data-testid="tip"] svg',
     Quick_Actions: quickActionsObject,
-    Refresh_Button: By.css('[data-testid="refresh"]'),
-    Mono_Values_Cards: By.css('.projects-monitoring-container .projects-monitoring-stats'),
+    Refresh_Button: '[data-testid="refresh"]',
+    Mono_Values_Cards: '.projects-monitoring-container .projects-monitoring-stats',
     Artifacts_Stats_Container: {
-      Artifacts_Stats_Title: By.css('.projects-monitoring-stats > div:nth-child(1) .stats-card__title .tooltip-wrapper'),
-      Artifacts_Stats_Counter: By.css('.projects-monitoring-stats > div:nth-child(1) [data-testid="artifacts_total_counter"] .stats__counter'),
-      Datasets_Counter_Subtitle: By.css('.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(1) h6'),
-      Datasets_Counter_Number: By.css('.projects-monitoring-container > div > div:nth-child(1) .stats__details .stats-card__row:nth-of-type(1) .stats__counter'),
-      Documents_Counter_Subtitle: By.css('.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(2) h6'),
-      Documents_Counter_Number: By.css('.projects-monitoring-stats > div:nth-child(1) .stats__details .stats-card__row:nth-of-type(2) .stats__counter'),
-      LLM_Prompts_Counter_Subtitle: By.css('.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(3) h6'),
-      LLM_Prompts_Counter_Number: By.css('.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(3) .stats__counter'),
-      Other_Artifacts_Counter_Subtitle: By.css('.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(4) h6'),
-      Other_Artifacts_Counter_Number: By.css('.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(4) .stats__counter')
+      Artifacts_Stats_Title:
+        '.projects-monitoring-stats > div:nth-child(1) .stats-card__title .tooltip-wrapper',
+      Artifacts_Stats_Counter:
+        '.projects-monitoring-stats > div:nth-child(1) [data-testid="artifacts_total_counter"] .stats__counter',
+      Datasets_Counter_Subtitle:
+        '.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(1) h6',
+      Datasets_Counter_Number:
+        '.projects-monitoring-container > div > div:nth-child(1) .stats__details .stats-card__row:nth-of-type(1) .stats__counter',
+      Documents_Counter_Subtitle:
+        '.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(2) h6',
+      Documents_Counter_Number:
+        '.projects-monitoring-stats > div:nth-child(1) .stats__details .stats-card__row:nth-of-type(2) .stats__counter',
+      LLM_Prompts_Counter_Subtitle:
+        '.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(3) h6',
+      LLM_Prompts_Counter_Number:
+        '.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(3) .stats__counter',
+      Other_Artifacts_Counter_Subtitle:
+        '.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(4) h6',
+      Other_Artifacts_Counter_Number:
+        '.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(4) .stats__counter'
     },
     Workflows_Stats_Container: {
-      Workflows_Stats_Title: By.css('.projects-monitoring-stats > div:nth-child(2) .stats-card__title .tooltip-wrapper'),
-      Filtering_Time_Period: By.css('.projects-monitoring-stats > div:nth-child(2) .project-card__info span'),
-      Workflows_Stats_Counter: By.css('.projects-monitoring-stats > div:nth-child(2) [data-testid="wf_total_counter"] .stats__counter'),
-      In_Process_Counter_Subtitle: By.css('.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(1) h6'),
-      In_Process_Counter_Status_Icon: By.css('.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(1) i.state-running'),
-      In_Process_Counter_Number: By.css('.projects-monitoring-stats > div:nth-child(2) .stats__details .stats-card__row:nth-of-type(1) div:nth-child(2)'),
-      Failed_Counter_Subtitle: By.css('.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(2) h6'),
-      Failed_Counter_Status_Icon: By.css('.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(2) i.state-failed'),
-      Failed_Counter_Number: By.css('.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(2) div:nth-child(2)'),
-      Succeeded_Counter_Subtitle: By.css('.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(3) h6'),
-      Succeeded_Counter_Status_Icon: By.css('.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(3) i.state-completed'),
-      Succeeded_Counter_Number: By.css('.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(3) div:nth-child(2)')
+      Workflows_Stats_Title:
+        '.projects-monitoring-stats > div:nth-child(2) .stats-card__title .tooltip-wrapper',
+      Filtering_Time_Period:
+        '.projects-monitoring-stats > div:nth-child(2) .project-card__info span',
+      Workflows_Stats_Counter:
+        '.projects-monitoring-stats > div:nth-child(2) [data-testid="wf_total_counter"] .stats__counter',
+      In_Process_Counter_Subtitle:
+        '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(1) h6',
+      In_Process_Counter_Status_Icon:
+        '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(1) i.state-running',
+      In_Process_Counter_Number:
+        '.projects-monitoring-stats > div:nth-child(2) .stats__details .stats-card__row:nth-of-type(1) div:nth-child(2)',
+      Failed_Counter_Subtitle:
+        '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(2) h6',
+      Failed_Counter_Status_Icon:
+        '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(2) i.state-failed',
+      Failed_Counter_Number:
+        '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(2) div:nth-child(2)',
+      Succeeded_Counter_Subtitle:
+        '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(3) h6',
+      Succeeded_Counter_Status_Icon:
+        '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(3) i.state-completed',
+      Succeeded_Counter_Number:
+        '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(3) div:nth-child(2)'
     },
     Scheduled_Stats_Container: {
-      Scheduled_Stats_Title: By.css('.projects-monitoring-stats > div:nth-child(3) .stats-card__title .tooltip-wrapper'),
-      Filtering_Time_Period: By.css('.projects-monitoring-stats > div:nth-child(3) .project-card__info span'),
-      Scheduled_Stats_Counter: By.css('.projects-monitoring-stats > div:nth-child(3) [data-testid="scheduled_total_counter"] .stats__counter'),
-      Jobs_Counter_Subtitle: By.css('.projects-monitoring-stats > div:nth-child(3) .stats-card__row:nth-of-type(1) h6'),
-      Jobs_Counter_Number: By.css('.projects-monitoring-stats > div:nth-child(3) .stats__details .stats-card__row:nth-of-type(1) div:nth-child(2)'),
-      Workflows_Counter_Subtitle: By.css('.projects-monitoring-stats > div:nth-child(3) .stats-card__row:nth-of-type(2) h6'),
-      Workflows_Counter_Number: By.css('.projects-monitoring-stats > div:nth-child(3) .stats-card__row:nth-of-type(2) div:nth-child(2)')
+      Scheduled_Stats_Title:
+        '.projects-monitoring-stats > div:nth-child(3) .stats-card__title .tooltip-wrapper',
+      Filtering_Time_Period:
+        '.projects-monitoring-stats > div:nth-child(3) .project-card__info span',
+      Scheduled_Stats_Counter:
+        '.projects-monitoring-stats > div:nth-child(3) [data-testid="scheduled_total_counter"] .stats__counter',
+      Jobs_Counter_Subtitle:
+        '.projects-monitoring-stats > div:nth-child(3) .stats-card__row:nth-of-type(1) h6',
+      Jobs_Counter_Number:
+        '.projects-monitoring-stats > div:nth-child(3) .stats__details .stats-card__row:nth-of-type(1) div:nth-child(2)',
+      Workflows_Counter_Subtitle:
+        '.projects-monitoring-stats > div:nth-child(3) .stats-card__row:nth-of-type(2) h6',
+      Workflows_Counter_Number:
+        '.projects-monitoring-stats > div:nth-child(3) .stats-card__row:nth-of-type(2) div:nth-child(2)'
     },
     Models_Stats_Container: {
-      Models_Stats_Title: By.css('.card__small-container > div.stats-card.monitoring-stats .stats-card__title .tooltip-wrapper'),
-      Model_Stats_Counter: By.css('.projects-monitoring-stats [data-testid="models_total_counter"] .stats__counter')
+      Models_Stats_Title:
+        '.card__small-container > div.stats-card.monitoring-stats .stats-card__title .tooltip-wrapper',
+      Model_Stats_Counter:
+        '.projects-monitoring-stats [data-testid="models_total_counter"] .stats__counter'
     },
     Monitoring_App_Stats_Container: {
-      Monitoring_App_Stats_Title: By.css('.projects-monitoring-stats .application-card .stats-card__title .tooltip-wrapper'),
-      Monitoring_App_Running_Stats_Counter: By.css('.projects-monitoring-stats .application-card [data-testid="app_running_counter"] .stats__counter'),
-      Monitoring_App_Running_Counter_Subtitle: By.css('.application-card > div > div:nth-child(2) .stats__details .stats-card__col:nth-of-type(1) .stats__subtitle'),
-      Monitoring_App_Running_Counter_Status_Icon: By.css('.application-card > div > div:nth-child(2) .stats__details .stats-card__col:nth-of-type(1) .state-running'),
-      Monitoring_App_Failed_Stats_Counter: By.css('.projects-monitoring-stats .application-card [data-testid="app_failed_counter"] .stats__counter'),
-      Monitoring_App_Failed_Counter_Subtitle: By.css('.application-card > div > div:nth-child(2) .stats__details .stats-card__col:nth-of-type(2) .stats__subtitle'),
-      Monitoring_App_Failed_Counter_Status_Icon: By.css('.application-card > div > div:nth-child(2) .stats__details .stats-card__col:nth-of-type(2) .state-failed')
+      Monitoring_App_Stats_Title:
+        '.projects-monitoring-stats .application-card .stats-card__title .tooltip-wrapper',
+      Monitoring_App_Running_Stats_Counter:
+        '.projects-monitoring-stats .application-card [data-testid="app_running_counter"] .stats__counter',
+      Monitoring_App_Running_Counter_Subtitle:
+        '.application-card > div > div:nth-child(2) .stats__details .stats-card__col:nth-of-type(1) .stats__subtitle',
+      Monitoring_App_Running_Counter_Status_Icon:
+        '.application-card > div > div:nth-child(2) .stats__details .stats-card__col:nth-of-type(1) .state-running',
+      Monitoring_App_Failed_Stats_Counter:
+        '.projects-monitoring-stats .application-card [data-testid="app_failed_counter"] .stats__counter',
+      Monitoring_App_Failed_Counter_Subtitle:
+        '.application-card > div > div:nth-child(2) .stats__details .stats-card__col:nth-of-type(2) .stats__subtitle',
+      Monitoring_App_Failed_Counter_Status_Icon:
+        '.application-card > div > div:nth-child(2) .stats__details .stats-card__col:nth-of-type(2) .state-failed'
     },
     Alerts_Stats_Container: {
-      Alerts_Stats_Title: By.css('.projects-monitoring-stats > div:nth-child(5) .stats-card__title .tooltip-wrapper'),
-      Alerts_Stats_Title_Icon: By.css('.projects-monitoring-stats > div:nth-child(5) .stats-card__title-icon'),
-      Filtering_Time_Period: By.css('.projects-monitoring-stats > div:nth-child(5) .project-card__info span'),
-      Alerts_Stats_Counter: By.css('.projects-monitoring-stats > div:nth-child(5) [data-testid="alerts_total_counter"]'),
-      Alerts_Stats_Endpoint_Subtitle: By.css('.projects-monitoring-stats > div:nth-child(5) .stats-card__row:nth-of-type(1) h6'),
-      Alerts_Stats_Endpoint_Counter: By.css('.projects-monitoring-stats > div:nth-child(5) .stats__details .stats-card__row:nth-of-type(1) div:nth-child(2)'),
-      Alerts_Stats_Jobs_Subtitle: By.css('.projects-monitoring-stats > div:nth-child(5) .stats-card__row:nth-of-type(2) h6'),
-      Alerts_Stats_Jobs_Counter: By.css('.projects-monitoring-stats > div:nth-child(5) .stats-card__row:nth-of-type(2) div:nth-child(2)'),
-      Alerts_Stats_Application_Subtitle: By.css('.projects-monitoring-stats > div:nth-child(5) .stats-card__row:nth-of-type(3) .stats__subtitle'),
-      Alerts_Stats_Application_Counter: By.css('.projects-monitoring-stats > div:nth-child(5) .stats-card__row:nth-of-type(3) div:nth-child(2)')
+      Alerts_Stats_Title:
+        '.projects-monitoring-stats > div:nth-child(5) .stats-card__title .tooltip-wrapper',
+      Alerts_Stats_Title_Icon:
+        '.projects-monitoring-stats > div:nth-child(5) .stats-card__title-icon',
+      Filtering_Time_Period:
+        '.projects-monitoring-stats > div:nth-child(5) .project-card__info span',
+      Alerts_Stats_Counter:
+        '.projects-monitoring-stats > div:nth-child(5) [data-testid="alerts_total_counter"]',
+      Alerts_Stats_Endpoint_Subtitle:
+        '.projects-monitoring-stats > div:nth-child(5) .stats-card__row:nth-of-type(1) h6',
+      Alerts_Stats_Endpoint_Counter:
+        '.projects-monitoring-stats > div:nth-child(5) .stats__details .stats-card__row:nth-of-type(1) div:nth-child(2)',
+      Alerts_Stats_Jobs_Subtitle:
+        '.projects-monitoring-stats > div:nth-child(5) .stats-card__row:nth-of-type(2) h6',
+      Alerts_Stats_Jobs_Counter:
+        '.projects-monitoring-stats > div:nth-child(5) .stats-card__row:nth-of-type(2) div:nth-child(2)',
+      Alerts_Stats_Application_Subtitle:
+        '.projects-monitoring-stats > div:nth-child(5) .stats-card__row:nth-of-type(3) .stats__subtitle',
+      Alerts_Stats_Application_Counter:
+        '.projects-monitoring-stats > div:nth-child(5) .stats-card__row:nth-of-type(3) div:nth-child(2)'
     },
     Runs_Statistic_Table: commonTable(runsTable),
     Runs_Statistic_Section_Container: {
-      Runs_Statistic_Section_Title_Tip: By.css('.d-flex:nth-of-type(1) [data-testid="tip"] svg'),
-      In_Process_Counter_Subtitle: By.css('.d-flex:nth-of-type(1) .project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-label span'),
-      Failed_Counter_Subtitle: By.css('.d-flex:nth-of-type(1) .project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-label span'),
-      Succeeded_Counter_Subtitle: By.css('.d-flex:nth-of-type(1) .project-data-card__statistics-item:nth-of-type(3) .project-data-card__statistics-label span'),
-      Recent_Text: By.css('.d-flex:nth-of-type(1) .project-data-card .project-data-card__recent-text span'),
-      Recent_Text_Sm: By.css('.d-flex:nth-of-type(1) .project-data-card .project-data-card__recent-text .text-sm'),
-      All_Jobs_Link: By.css('.d-flex:nth-of-type(1) .project-data-card__see-all-link')
+      Runs_Statistic_Section_Title_Tip: '.d-flex:nth-of-type(1) [data-testid="tip"] svg',
+      In_Process_Counter_Subtitle:
+        '.d-flex:nth-of-type(1) .project-data-card__statistics-item:nth-of-type(1) .project-data-card__statistics-label span',
+      Failed_Counter_Subtitle:
+        '.d-flex:nth-of-type(1) .project-data-card__statistics-item:nth-of-type(2) .project-data-card__statistics-label span',
+      Succeeded_Counter_Subtitle:
+        '.d-flex:nth-of-type(1) .project-data-card__statistics-item:nth-of-type(3) .project-data-card__statistics-label span',
+      Recent_Text: '.d-flex:nth-of-type(1) .project-data-card .project-data-card__recent-text span',
+      Recent_Text_Sm:
+        '.d-flex:nth-of-type(1) .project-data-card .project-data-card__recent-text .text-sm',
+      All_Jobs_Link: '.d-flex:nth-of-type(1) .project-data-card__see-all-link'
     },
     Realtime_Functions_Nuclio_Table: commonTable(realtimeFunctionsNuclioTable),
     Realtime_Functions_Nuclio_Statistic_Section: {
-      ConsumerGroups_Stats_Counter: By.css('.d-flex:nth-of-type(2) .project-data-card__header .project-data-card__statistics-item:nth-of-type(4) .project-data-card__statistics-value'),
-      Recent_Text: By.css('.d-flex:nth-of-type(2) .project-data-card__recent-text span'),
-      All_Realtime_Functions_Link: By.css('.d-flex:nth-of-type(2) .project-data-card__see-all-link'),
-      Running_Counter_Subtitle: By.css('.d-flex:nth-of-type(2) .project-data-card__statistics .project-data-card__statistics-item:nth-of-type(1) span'),
-      Failed_Counter_Subtitle: By.css('.d-flex:nth-of-type(2) .project-data-card__statistics .project-data-card__statistics-item:nth-of-type(2) span')
+      ConsumerGroups_Stats_Counter:
+        '.d-flex:nth-of-type(2) .project-data-card__header .project-data-card__statistics-item:nth-of-type(4) .project-data-card__statistics-value',
+      Recent_Text: '.d-flex:nth-of-type(2) .project-data-card__recent-text span',
+      All_Realtime_Functions_Link: '.d-flex:nth-of-type(2) .project-data-card__see-all-link',
+      Running_Counter_Subtitle:
+        '.d-flex:nth-of-type(2) .project-data-card__statistics .project-data-card__statistics-item:nth-of-type(1) span',
+      Failed_Counter_Subtitle:
+        '.d-flex:nth-of-type(2) .project-data-card__statistics .project-data-card__statistics-item:nth-of-type(2) span'
     }
   },
+  // the Quick actions page: since the header redesign (#3318) the header has the project name as a page title and the
+  // "Created:" label only (no project description), all the actions of a card are shown (no "more actions" button)
   demoProject: {
     Header_Name_Label: labelComponent(
-      generateLabelGroup(
-        '.project-overview .project-overview__header .project-details__title',
-        ' ',
-        ' '
-      )
+      generateLabelGroup('.project-overview .project-overview__header .page-header__title', ' ')
     ),
     Header_Created_Time: labelComponent(
       generateLabelGroup(
-        '.project-overview .project-overview__header .project-details__title',
-        'div:nth-of-type(1)'
-      )
-    ),
-    Header_Project_Description: labelComponent(
-      generateLabelGroup(
-        '.project-overview .project-overview__header .project-details__description',
+        '.project-overview .project-overview__header .project-details__details-label',
         ' '
       )
     ),
@@ -395,13 +437,7 @@ export default {
       )
     ),
     Data_Collection_Actions_Table: commonTable(DataCollectionActionsTable),
-    Data_Collection_Additional_Actions_Table: commonTable(
-      DataCollectionAdditionalActionsTable
-    ),
     Data_Collection_Links_Table: commonTable(DataCollectionLinksTable),
-    Data_Collection_Additional_Actions_Button: By.css(
-      '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-card__actions'
-    ),
     Development_Header: labelComponent(
       generateLabelGroup(
         '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__header',
@@ -428,20 +464,16 @@ export default {
         '.project-overview-card__header-subtitle'
       )
     ),
-    Deployment_Actions_Table: commonTable(DeploymetActionsTable),
-    Deployment_Links_Table: commonTable(DeploymetLinksTable)
+    Deployment_Actions_Table: commonTable(DeploymentActionsTable),
+    Deployment_Links_Table: commonTable(DeploymentLinksTable)
   },
   consumerGroups: {
-    Arrow_Back: By.css('button > .page-header__back-btn'),
-    Title: By.css('.page-header__title-wrapper .page-header__title'),
-    Description: By.css(
-      '.page-header__title-wrapper .page-header__description'
-    ),
-    Search_Input: inputGroup(
-      generateInputGroup('.page-actions .search-container')
-    ),
+    Arrow_Back: 'button > .page-header__back-btn',
+    Title: '.page-header__title-wrapper .page-header__title',
+    Description: '.page-header__title-wrapper .page-header__description',
+    Search_Input: inputGroup(generateInputGroup('.page-actions .search-container')),
     Consumer_Groups_Table: commonTable(consumerGroupsTable),
     Shard_Lags_Table: commonTable(shardLagsTable),
-    Refresh_Button: By.css('.page-actions .round-icon-cp')
+    Refresh_Button: '.page-actions .round-icon-cp'
   }
 }

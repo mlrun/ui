@@ -17,37 +17,23 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 
-export default function(inputStructure) {
+export default function (inputStructure) {
   const element = {}
-  element.root = By.css(inputStructure.root)
-  element.inputField = By.css(
-    `${inputStructure.root} ${inputStructure.elements.input}`
-  )
+  element.root = inputStructure.root
+  element.inputField = `${inputStructure.root} ${inputStructure.elements.input}`
   if (inputStructure.elements.label) {
-    element.inputLabel = By.css(
-      `${inputStructure.root} ${inputStructure.elements.label}`
-    )
+    element.inputLabel = `${inputStructure.root} ${inputStructure.elements.label}`
   }
   if (inputStructure.elements.hint) {
-    element.hintButton = By.css(
-      `${inputStructure.root} ${inputStructure.elements.hint}`
-    )
+    element.hintButton = `${inputStructure.root} ${inputStructure.elements.hint}`
   }
   if (inputStructure.elements.hint_text) {
-    element.hintText = By.css(
-      `${inputStructure.root} ${inputStructure.elements.hint_text}`
-    )
+    element.hintText = `${inputStructure.root} ${inputStructure.elements.hint_text}`
   }
   if (inputStructure.elements.warningHint) {
-    element.warningHint = By.css(
-      `${inputStructure.root} ${inputStructure.elements.warningHint}`
-    )
-    element.warningText = By.css(
-      // `${inputStructure.root} ${inputStructure.elements.warningText}`
-      `${inputStructure.elements.warningText}`
-    )
+    element.warningHint = `${inputStructure.root} ${inputStructure.elements.warningHint}`
+    element.warningText = `${inputStructure.elements.warningText}`
   }
   return element
 }

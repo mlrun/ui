@@ -17,10 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 import { locatorBuilder } from '../../common-tools/common-tools.js'
 
-export default function(graphStructure) {
+export default function (graphStructure) {
   const options = locatorBuilder`${0} ${1}`
   const nodesTable = {
     ...graphStructure.elements.workflowGraphNodesTable.structure
@@ -41,16 +40,11 @@ export default function(graphStructure) {
   )
 
   return {
-    root: By.css(graphStructure.root),
-    svg: By.css(options(graphStructure.root, graphStructure.elements.svg)),
-    zoomPane: By.css(
-      options(graphStructure.root, graphStructure.elements.zoomPane)
-    ),
-    nodesTable: graphStructure.elements.workflowGraphNodesTable.componentType(
-      nodesTable
-    ),
-    graphConnections: graphStructure.elements.workflowGraphNodesTable.componentType(
-      graphConnections
-    )
+    root: graphStructure.root,
+    svg: options(graphStructure.root, graphStructure.elements.svg),
+    zoomPane: options(graphStructure.root, graphStructure.elements.zoomPane),
+    nodesTable: graphStructure.elements.workflowGraphNodesTable.componentType(nodesTable),
+    graphConnections:
+      graphStructure.elements.workflowGraphNodesTable.componentType(graphConnections)
   }
 }

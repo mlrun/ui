@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import commonPagesHeader from './page-objects/commonPagesHeader.po.js'
+import commonPagesHeader from './page-objects/common-pages-header.po.js'
 import project from './page-objects/project.po.js'
 import projects from './page-objects/projects.po.js'
 import featureStore from './page-objects/feature-store.po.js'
@@ -53,7 +53,6 @@ export default {
   Common_Popup: interactivePopup['commonPopup'],
   Consumer_Groups: project['consumerGroups'],
   Create_Feature_Vector_Popup: interactivePopup['createFeatureVectorPopup'],
-  Create_Job: jobsAndWorkflows['CreateJob'],
   Create_ML_Function_Popup: interactivePopup['createMLFunctionPopup'],
   Create_New_Project: interactivePopup['createNewProject'],
   Create_New_Secret_Popup: interactivePopup['createNewSecretPopup'],
@@ -66,7 +65,7 @@ export default {
   Delete_Artifact_Popup: interactivePopup['deleteArtifactPopup'],
   Documents: documents['documents'],
   Documents_Info_Pane: infoPane['documentsInfoPane'],
-  Downloads_Popup: interactivePopup['downloadsPopUp'],
+  Downloads_Popup: interactivePopup['downloadsPopup'],
   Feature_Set_Schedule_Popup: interactivePopup['featureSetSchedulePopup'],
   Feature_Sets_Info_Pane: infoPane['featureSetsInfoPane'],
   Feature_Store_Feature_Sets_Tab: featureStore['featureSetsTab'],
@@ -88,7 +87,7 @@ export default {
   Metrics_Selector_Popup: interactivePopup['metricsSelectorPopup'],
   ML_Function_Info_Pane: infoPane['mlFunctionInfoPane'],
   ML_Functions: Functions['mlFunctions'],
-  MLRun_Unhealthy_PopUp: interactivePopup['mLRunUnhealthyPopUp'],
+  MLRun_Unhealthy_Popup: interactivePopup['mLRunUnhealthyPopup'],
   Model_Endpoints: models['modelEndpoints'],
   Model_Endpoints_Info_Pane: infoPane['modelEndpointsInfoPane'],
   Models: models['modelsTab'],
@@ -99,7 +98,7 @@ export default {
   New_Feature_Set: sidePanel['newFeatureSet'],
   New_Function: sidePanel['newFunction'],
   New_JobTemplate_Edit: sidePanel['newJobTemplateEdit'],
-  Notification_Popup: interactivePopup['notificationPopUp'],
+  Notification_Popup: interactivePopup['notificationPopup'],
   Pagination_Info_Pane: infoPane['paginationInfoPane'],
   Preview_Info_Pane: infoPane['previewInfoPane'],
   Preview_Popup: interactivePopup['previewPopup'],
@@ -117,7 +116,7 @@ export default {
   Requested_Features_Info_Pane: infoPane['requestedFeaturesInfoPane'],
   Results_Info_Pane: infoPane['resultsInfoPane'],
   Schedule_Monitor_Tab: jobsAndWorkflows['ScheduleMonitorTab'],
-  Schedule_PopUp: interactivePopup['schedulePopUp'],
+  Schedule_Popup: interactivePopup['schedulePopup'],
   Statistics_Info_Pane: infoPane['statisticsInfoPane'],
   Transformations_Info_Pane: infoPane['transformationsInfoPane'],
   View_YAML: interactivePopup['viewYamlPopup'],

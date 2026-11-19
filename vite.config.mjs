@@ -45,9 +45,14 @@ export default defineConfig(({ mode }) => {
   const federationPlugin = federation({
     filename: 'remoteEntry.js',
     name: 'mlrun',
-    dts: {
-      tsConfigPath: false
-    },
+    // MODULE_FEDERATION_TYPES=false - no federated types (`dts`): the dev server forks a type generation worker (~1 GB) that the E2E runs
+    // (playwright.config.js, build:regression) don't need, the types are only for the hosts that consume this remote
+    dts:
+      process.env.MODULE_FEDERATION_TYPES === 'false'
+        ? false
+        : {
+            tsConfigPath: false
+          },
     exposes: {
       './loadRemoteConfig': './src/loadRemoteConfig.js',
       './app': './src/main.jsx'

@@ -17,23 +17,14 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 
-export default function(menuStructure) {
+export default function (menuStructure) {
   return {
-    root: By.css(menuStructure.root),
-    open_button: By.css(
-      `${menuStructure.root} ${menuStructure.menuElements.open_button}`
-    ),
-    options: By.css(
-      // `${menuStructure.root} ${menuStructure.menuElements.options}`
-      `${menuStructure.menuElements.options}`
-    ),
-    option: function(index) {
-      return By.css(
-        // `${menuStructure.root} ${menuStructure.menuElements.options}:nth-of-type(${index})`
-        `${menuStructure.menuElements.options}:nth-of-type(${index})`
-      )
+    root: menuStructure.root,
+    open_button: `${menuStructure.root} ${menuStructure.menuElements.open_button}`,
+    options: `${menuStructure.menuElements.options}`,
+    option: function (index) {
+      return `${menuStructure.menuElements.options}:nth-of-type(${index})`
     }
   }
 }

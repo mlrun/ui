@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 import inputGroup from '../components/input-group.component.js'
 import commonTable from '../components/table.component.js'
 import actionMenu from '../components/action-menu.component.js'
@@ -54,7 +53,7 @@ const functionsTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-row',  
+      root: '.table-row',
       fields: {
         kind: {
           componentType: labelComponent,
@@ -62,11 +61,11 @@ const functionsTable = {
             '.table-body__cell:nth-of-type(2)',
             '.data-ellipsis',
             true,
-            '.tooltip .tooltip__text span' 
+            '.tooltip .tooltip__text span'
           )
         },
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link', 
+        name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
         tag: '.table-body__cell:nth-of-type(1) a .item-tag span',
         name_expand_btn: '.table-body__cell:nth-of-type(1) a .name-wrapper .item-tag',
         status: '.table-body__cell:nth-of-type(1) .status i',
@@ -95,13 +94,11 @@ export default {
         false
       )
     ),
-    Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
-    New_Function_Button: By.css('.content [data-testid="btn"]'),
-    Table_Refresh_Button: By.css(
-      '.content [data-testid="refresh-tooltip-wrapper"]'
-    ),
-    Expand_All_Button: By.css('.action-bar [data-testid="toggle-collapse-tooltip-wrapper"]'),
-    Table_Expand_Rows_Button: By.css('#main-table-body .table-body__cell.table-cell-name svg'),
+    Table_FilterBy_Button: '[data-testid="filter-menu-btn-tooltip-wrapper"]',
+    New_Function_Button: '.content [data-testid="btn"]',
+    Table_Refresh_Button: '.content [data-testid="refresh-tooltip-wrapper"]',
+    Expand_All_Button: '.action-bar [data-testid="toggle-collapse-tooltip-wrapper"]',
+    Table_Expand_Rows_Button: '#main-table-body .table-body__cell.table-cell-name svg',
     Functions_Table: commonTable(functionsTable),
     Date_Picker_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
@@ -112,12 +109,10 @@ export default {
         false
       )
     ),
-    History_Back_Button: By.css('.history-back-link .history-back-link__icon'),
-    Version_History_Title: By.css(
-      '.history-back-link .history-back-link__title [data-testid="version-history"]'
-    ),
-    Version_History_Model_Name: By.css(
+    History_Back_Button: '.history-back-link .history-back-link__icon',
+    Version_History_Title:
+      '.history-back-link .history-back-link__title [data-testid="version-history"]',
+    Version_History_Model_Name:
       '.history-back-link .history-back-link__title .data-ellipsis.tooltip-wrapper'
-    )
   }
 }

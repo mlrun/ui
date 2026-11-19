@@ -17,118 +17,115 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { expect } from 'chai'
-import { differenceWith, isEqual } from 'lodash-es'
-import { clickNearComponent, scrollToWebElement } from './common.action.js'
+import { expect } from '@playwright/test'
+import { scrollToElement } from './common.action.js'
+import {
+  click,
+  expectListItems,
+  expectText,
+  getText,
+  getTexts,
+  pollAttribute,
+  retryAssertion,
+  waitForPageQuiet,
+  waitForScrollQuiet,
+  waitUntilStable,
+  withExactText
+} from '../../common-tools/element.js'
 
-export const getOptionValues = async (driver, options) => {
-    return await driver.findElements(options).then(function(elements) {
-    return Promise.all(elements.map(element => element.getText()))
-    })
+export const getOptionValues = async (page, options) => {
+  // an option is read once, also when the locator matches its label and the nested tooltip wrapper
+  return getTexts(page.locator(options), { outermost: true })
+}
+
+export const openDropdown = async (page, dropdown, scroll = true) => {
+  const element = page.locator(dropdown.open_button).first()
+  // the page can be re-rendering after the previous action
+  await waitForPageQuiet(page)
+  if (scroll) {
+    await scrollToElement(page, element)
   }
-
-export const openDropdown = async (driver, dropdown, scroll = true) => {
-    const element = await driver.findElement(dropdown.open_button)
-    if (scroll) {
-      await scrollToWebElement(driver, element)
-    }
-    if (element) {
-      await element.click()
-    }
-    await driver.sleep(1500)
+  // the button toggles the list: a list that is still open after the previous step (e.g. the click away didn't close
+  // it) must not be closed by the click
+  const isOpen = dropdown.options ? await page.locator(dropdown.options).first().isVisible() : false
+  if (element && !isOpen) {
+    await click(element)
   }
+  // the options are read as a snapshot by the selecting helpers, so wait until the list settles: the texts are
+  // rendered (they fade in: an option with `opacity: 0` has no text yet), the options are loaded and the list is
+  // scrolled to the selected one. A click on an option made earlier hits a moving or re-created element and
+  // closes the popup
+  if (dropdown.options) {
+    const firstOption = page.locator(dropdown.options).first()
 
-export const collapseDropdown = async (driver, dropdown) => {
-    // const element = await driver.findElement(dropdown.root)
-    await clickNearComponent(dropdown.root)
-    await driver.sleep(100)
-  }
-
-export const selectOptionInDropdown = async (driver, dropdown, option) => {
-    const selectedElement = await driver.findElement(dropdown.open_button)
-    const selectedText = await selectedElement.getText()
-    if (selectedText !== option) {
-      const elements = await driver.findElements(dropdown.options)
-      for (const element of elements) {
-        await scrollToWebElement(driver, element)
-        const txt = await element.getText()
-        if (txt === option) {
-          await element.click()
-          await driver.sleep(250)
-          break
-        }
-      }
-    } else {
-      selectedElement.click()
-      await driver.sleep(500)
-    }
-  }
-
-export const selectOptionInDropdownWithoutCheck = async (driver, dropdown, option) => {
-    const elements = await driver.findElements(dropdown.options)
-    for (const element of elements) {
-      const txt = await element.getText()
-      if (txt === option) {
-        await element.click()
-        await driver.sleep(500)
-        break
-      }
-    }
-  }
-
-export const checkDropdownSelectedOption = async (driver, dropdown, option) => {
-    const element = await driver.findElement(dropdown.open_button)
-    const txt = await element.getText()
-    expect(txt).equal(option)
-  }
-
-export const checkDropdownSelectedOptionWithAttribute = async (driver, dropdown, option) => {
-    const element = await driver.findElement(dropdown.open_button)
-    const attributeTxt = await element.getAttribute('value')
-    expect(attributeTxt).equal(option)
-  }
-
-export const checkDropdownOptions = async (driver, dropdown, values) => {
-    const options = await getOptionValues(driver, dropdown.options)
-    const diff = differenceWith(options, values, isEqual)
-    expect(diff.length).equal(0, `Options difference: "${diff}"`)
-  }
-
-export const checkDropdownContainsOptions = async (driver, dropdown, values) => {
-    const options = await getOptionValues(driver, dropdown.options)
-    let notPresent = []
-    for (let option of values) {
-      if (options.every(item => item !== option)) {
-        notPresent.push(option)
-      }
-    }
-
-    let extraPresent = []
-    for (let option of options) {
-      if (values.every(item => item !== option)) {
-        extraPresent.push(option)
-      }
-    }
-
-    expect(notPresent.length).equal(
-      0,
-      '\nOptions not present: ' +
-        notPresent +
-        '\noptions: ' +
-        options +
-        '\nexpected: ' +
-        values +
-        '\n'
+    await expect
+      .poll(async () => (await getOptionValues(page, dropdown.options)).some(text => text !== ''), {
+        timeout: 3000
+      })
+      .toBe(true)
+      .catch(() => {})
+    await waitUntilStable(
+      async () => ({
+        texts: await getOptionValues(page, dropdown.options),
+        box: await firstOption.boundingBox({ timeout: 500 }).catch(() => null)
+      }),
+      { timeout: 3000, interval: 80 }
     )
-
-    expect(extraPresent.length).equal(
-      0,
-      '\nExtra unexpected options: ' +
-        extraPresent +
-        '\noptions: ' +
-        options +
-        '\nexpected: ' +
-        values +
-        '\n'
-    )
+    await waitForScrollQuiet(page)
   }
+}
+
+// the options can be still rendered (or loaded), so the search is retried. The click scrolls the option into view and
+// waits until it stops moving itself: scrolling every option of a long list first leaves the list still scrolling
+// when the click is made, and the click outside of the list closes the popup
+const clickOptionByText = (page, dropdown, option) =>
+  retryAssertion(async () => {
+    const texts = await getOptionValues(page, dropdown.options)
+
+    // nothing is selected otherwise: the scenario must not go on as if it was (e.g. an outdated options locator)
+    if (!texts.includes(option)) {
+      throw new Error(`"${option}" option is not found in the dropdown, options: [${texts}]`)
+    }
+
+    const optionElement = withExactText(page.locator(dropdown.options), option).first()
+
+    await click(optionElement)
+    await waitForPageQuiet(page)
+  }, 5000)
+
+export const selectOptionInDropdown = async (page, dropdown, option) => {
+  const selectedElement = page.locator(dropdown.open_button).first()
+  const selectedText = await getText(selectedElement)
+  if (selectedText !== option) {
+    // the options can be still rendered (or loaded), so the search is retried
+    await clickOptionByText(page, dropdown, option)
+  } else {
+    await click(selectedElement)
+  }
+}
+
+export const selectOptionInDropdownWithoutCheck = async (page, dropdown, option) =>
+  clickOptionByText(page, dropdown, option)
+
+export const checkDropdownSelectedOption = async (page, dropdown, option) =>
+  expectText(page.locator(dropdown.open_button).first(), option, {
+    message: 'Selected dropdown option'
+  })
+
+export const checkDropdownSelectedOptionWithAttribute = async (page, dropdown, option) =>
+  pollAttribute(page.locator(dropdown.open_button).first(), 'value', {
+    message: 'Selected dropdown option'
+  }).toBe(option)
+
+// the options must be exactly the expected ones, in the same order (unless the expected list is `unordered`): the
+// previous check (actual options minus expected ones is empty) passed when the dropdown didn't open (no options) and
+// when expected options were missing
+export const checkDropdownOptions = (page, dropdown, values) =>
+  checkDropdownContainsOptions(page, dropdown, values)
+
+export const checkDropdownContainsOptions = async (page, dropdown, values) =>
+  retryAssertion(async () => {
+    const options = await getOptionValues(page, dropdown.options)
+
+    expectListItems(options, values, 'Options of the dropdown')
+  })

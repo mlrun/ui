@@ -17,14 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 import commonTable from '../components/table.component.js'
 import dropdownComponent from '../components/dropdown.component.js'
-import {
-  generateDropdownGroup,
-  generateInputGroup
-} from '../../common-tools/common-tools.js'
-import datepicker from '../components/date-picker.component.js'
+import { generateDropdownGroup, generateInputGroup } from '../../common-tools/common-tools.js'
 import inputGroup from '../components/input-group.component.js'
 
 const commonDatePickerFilter = dropdownComponent(
@@ -36,84 +31,6 @@ const commonDatePickerFilter = dropdownComponent(
     false
   )
 )
-const commonCustomRangeFilter = dropdownComponent(
-  generateDropdownGroup(
-    '[data-testid="date-picker-container"]',
-    '[data-testid="date-picker-input"] .input',
-    '.date-picker__pop-up .select__item',
-    '.data-ellipsis .data-ellipsis',
-    false
-  )
-)
-
-// date picker start
-const calendarTable = {
-  root: '',
-  header: {
-    root: '.date-picker__weeks',
-    sorters: {
-      Sunday: '.date-picker__weeks-day:nth-of-type(1)',
-      Monday: '.date-picker__weeks-day:nth-of-type(1)',
-      Tuesday: '.date-picker__weeks-day:nth-of-type(1)',
-      Wednesday: '.date-picker__weeks-day:nth-of-type(1)',
-      Thursday: '.date-picker__weeks-day:nth-of-type(1)',
-      Friday: '.date-picker__weeks-day:nth-of-type(1)',
-      Saturday: '.date-picker__weeks-day:nth-of-type(1)'
-    }
-  },
-  body: {
-    offset: 4,
-    row: {
-      root: '.date-picker__week',
-      fields: {
-        Sunday: '.date-picker__week-day-wrapper:nth-of-type(1)',
-        Monday: '.date-picker__week-day-wrapper:nth-of-type(2)',
-        Tuesday: '.date-picker__week-day-wrapper:nth-of-type(3)',
-        Wednesday: '.date-picker__week-day-wrapper:nth-of-type(4)',
-        Thursday: '.date-picker__week-day-wrapper:nth-of-type(5)',
-        Friday: '.date-picker__week-day-wrapper:nth-of-type(6)',
-        Saturday: '.date-picker__week-day-wrapper:nth-of-type(7)'
-      }
-    }
-  }
-}
-
-const dateTimePickerCalendars = {
-  root: '.date-picker__pop-up',
-  apply_button: 'button.date-picker__apply-btn',
-  error_message: '.error',
-  fromDatePicker: {
-    root: '.date-picker__calendars .date-picker__calendar:nth-of-type(1)',
-    elements: {
-      month_prev_btn:
-        '.date-picker__header svg.date-picker__header-previous-month',
-      month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
-      month_label: '.date-picker__header div .date-picker__header-month',
-      year_label: '.date-picker__header div .date-picker__header-year',
-      time_input: '.date-picker__time input',
-      calendar: {
-        componentType: commonTable,
-        structure: calendarTable
-      }
-    }
-  },
-  toDatePicker: {
-    root: '.date-picker__calendars .date-picker__calendar:nth-of-type(2)',
-    elements: {
-      month_prev_btn:
-        '.date-picker__header svg.date-picker__header-previous-month',
-      month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
-      month_label: '.date-picker__header div .date-picker__header-month',
-      year_label: '.date-picker__header div .date-picker__header-year',
-      time_input: '.date-picker__time input',
-      calendar: {
-        componentType: commonTable,
-        structure: calendarTable
-      }
-    }
-  }
-}
-// datepicker end
 
 const operatingFunctionsTable = {
   root: '.monitoring-apps .monitoring-app__section-item .section-table',
@@ -186,13 +103,7 @@ const artifactsTable = {
         name: '.section-table__table-cell:nth-of-type(1) .data-ellipsis',
         labels: {
           componentType: dropdownComponent,
-          structure: generateDropdownGroup(
-            '.table-cell_medium',
-            '',
-            '',
-            false,
-            false
-          )
+          structure: generateDropdownGroup('.table-cell_medium', '', '', false, false)
         }
       }
     }
@@ -280,85 +191,134 @@ const searchByEndpointFilterInput = inputGroup(
 
 export default {
   monitoringApp: {
-    Refresh_Button: By.css('[data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]'),
+    Refresh_Button: '[data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]',
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,
-    Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
-    Date_Time_Picker: datepicker(dateTimePickerCalendars),
-    Applications_Stats_Title: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(1) .stats-card__row:nth-of-type(1) .stats-card__title .data-ellipsis.tooltip-wrapper'),
-    Applications_Stats_Counter: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .stats__counter'),
-    Apps_Status_Title: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(2) .stats-card__row:nth-of-type(1) .stats-card__title .data-ellipsis.tooltip-wrapper'),
-    Apps_Status_Running_SubTitle: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) [data-testid="running_status"] .stats__subtitle'),
-    Apps_Status_Failed_SubTitle: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) [data-testid="failed_status"] .stats__subtitle'),
-    Apps_Status_Running_Counter: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) [data-testid="monitoring-app-running"] .stats__counter'),
-    Apps_Status_Failed_Counter: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) [data-testid="monitoring-app-failed"] .stats__counter'),
-    Apps_Status_Running_Tip: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) [data-testid="running_status"] i'),
-    Apps_Status_Failed_Tip: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) [data-testid="failed_status"] i'),
-    Endpoints_Stats_Title: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(3) .stats-card__row:nth-of-type(1) .stats-card__title .data-ellipsis.tooltip-wrapper'),
-    Endpoints_Batch_SubTitle: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) [data-testid="batch_status"] .stats__subtitle'),
-    Endpoints_RealTime_SubTitle: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) [data-testid="realTime_status"] .stats__subtitle'),
-    Endpoints_Batch_Counter: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) [data-testid="monitoring-app-batch"] .stats__counter'),
-    Endpoints_RealTime_Counter: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) [data-testid="monitoring-app-realTime"] .stats__counter'),
-    RunningFrequency_Stats_Title: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(4) .stats-card__row:nth-of-type(1) .stats-card__title .data-ellipsis.tooltip-wrapper'),
-    RunningFrequency_Value_Title: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(4) .stats-card__row:nth-of-type(2) [data-testid="monitoring-app-interval"] .stats__counter'),
-    Model_Endpoint_Detections_Title: By.css('.monitoring-apps .monitoring-app__section:nth-of-type(1) .monitoring-app__section-item:nth-of-type(1) .section-item_title span'),
-    Model_Endpoint_Detections_Tip: By.css('.monitoring-apps .monitoring-app__section:nth-of-type(1) .monitoring-app__section-item:nth-of-type(1) .section-item_title [data-testid="tip"]'),
-    Model_Endpoint_Detections_Chart: By.css('.monitoring-apps .monitoring-app__section:nth-of-type(1) .monitoring-app__section-item:nth-of-type(1) .section-item_chart-wrapper .chart-container'),
-    Operating_Functions_Title: By.css('.monitoring-apps .monitoring-app__section:nth-of-type(1) .monitoring-app__section-item:nth-of-type(2) .section-item_title span'),
-    Operating_Functions_Tip: By.css('.monitoring-apps .monitoring-app__section:nth-of-type(1) .monitoring-app__section-item:nth-of-type(2) .section-item_title [data-testid="tip"]'),
+    Applications_Stats_Title:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(1) .stats-card__row:nth-of-type(1) .stats-card__title .data-ellipsis.tooltip-wrapper',
+    Applications_Stats_Counter:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .stats__counter',
+    Apps_Status_Title:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(2) .stats-card__row:nth-of-type(1) .stats-card__title .data-ellipsis.tooltip-wrapper',
+    Apps_Status_Running_SubTitle:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) [data-testid="running_status"] .stats__subtitle',
+    Apps_Status_Failed_SubTitle:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) [data-testid="failed_status"] .stats__subtitle',
+    Apps_Status_Running_Counter:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) [data-testid="monitoring-app-running"] .stats__counter',
+    Apps_Status_Failed_Counter:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) [data-testid="monitoring-app-failed"] .stats__counter',
+    Apps_Status_Running_Tip:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) [data-testid="running_status"] i',
+    Apps_Status_Failed_Tip:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) [data-testid="failed_status"] i',
+    Endpoints_Stats_Title:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(3) .stats-card__row:nth-of-type(1) .stats-card__title .data-ellipsis.tooltip-wrapper',
+    Endpoints_Batch_SubTitle:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) [data-testid="batch_status"] .stats__subtitle',
+    Endpoints_RealTime_SubTitle:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) [data-testid="realTime_status"] .stats__subtitle',
+    Endpoints_Batch_Counter:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) [data-testid="monitoring-app-batch"] .stats__counter',
+    Endpoints_RealTime_Counter:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) [data-testid="monitoring-app-realTime"] .stats__counter',
+    RunningFrequency_Stats_Title:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(4) .stats-card__row:nth-of-type(1) .stats-card__title .data-ellipsis.tooltip-wrapper',
+    RunningFrequency_Value_Title:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(4) .stats-card__row:nth-of-type(2) [data-testid="monitoring-app-interval"] .stats__counter',
+    Model_Endpoint_Detections_Title:
+      '.monitoring-apps .monitoring-app__section:nth-of-type(1) .monitoring-app__section-item:nth-of-type(1) .section-item_title span',
+    Model_Endpoint_Detections_Tip:
+      '.monitoring-apps .monitoring-app__section:nth-of-type(1) .monitoring-app__section-item:nth-of-type(1) .section-item_title [data-testid="tip"]',
+    Model_Endpoint_Detections_Chart:
+      '.monitoring-apps .monitoring-app__section:nth-of-type(1) .monitoring-app__section-item:nth-of-type(1) .section-item_chart-wrapper .chart-container',
+    Operating_Functions_Title:
+      '.monitoring-apps .monitoring-app__section:nth-of-type(1) .monitoring-app__section-item:nth-of-type(2) .section-item_title span',
+    Operating_Functions_Tip:
+      '.monitoring-apps .monitoring-app__section:nth-of-type(1) .monitoring-app__section-item:nth-of-type(2) .section-item_title [data-testid="tip"]',
     Operating_Functions_Table: commonTable(operatingFunctionsTable),
-    Operating_Functions_Lag_Tip: By.css('.monitoring-apps .monitoring-app__section-item .section-table .table-cell_small:nth-of-type(4) [data-testid="tip"] svg'),
-    Operating_Functions_Commited_Offset_Tip: By.css('.monitoring-apps .monitoring-app__section-item .section-table .table-cell_small:nth-of-type(5) [data-testid="tip"] svg'),
-    All_Applications_Title: By.css('.monitoring-apps .monitoring-app__section:nth-of-type(2) .section-item_title span'),
+    Operating_Functions_Lag_Tip:
+      '.monitoring-apps .monitoring-app__section-item .section-table .table-cell_small:nth-of-type(4) [data-testid="tip"] svg',
+    Operating_Functions_Commited_Offset_Tip:
+      '.monitoring-apps .monitoring-app__section-item .section-table .table-cell_small:nth-of-type(5) [data-testid="tip"] svg',
+    All_Applications_Title:
+      '.monitoring-apps .monitoring-app__section:nth-of-type(2) .section-item_title span',
     All_Applications_Table: commonTable(allApplicationsTable),
-    All_Applications_Lag_Tip: By.css('.monitoring-apps #main-table [data-testid="lag"] [data-testid="tip"] svg'),
-    All_Applications_Commited_Offset_Tip: By.css('.monitoring-apps #main-table [data-testid="commitedOffset"] [data-testid="tip"] svg'),
+    All_Applications_Lag_Tip:
+      '.monitoring-apps #main-table [data-testid="lag"] [data-testid="tip"] svg',
+    All_Applications_Commited_Offset_Tip:
+      '.monitoring-apps #main-table [data-testid="commitedOffset"] [data-testid="tip"] svg'
   },
   applicationMonitoring: {
-    Back_Button: By.css('.content__action-bar-wrapper .table-top .link-back__icon button'),
-    Application_Name: By.css('.content__action-bar-wrapper .table-top .link-back__title .data-ellipsis'),
+    Back_Button: '.content__action-bar-wrapper .table-top .link-back__icon button',
+    Application_Name: '.content__action-bar-wrapper .table-top .link-back__title .data-ellipsis',
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,
-    Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
-    Date_Time_Picker: datepicker(dateTimePickerCalendars),
-    Application_Metrics_Button: By.css('.action-bar [data-testid="btn"] span'),
-    Refresh_Button: By.css('.action-bar [data-testid="refresh"] button'),
-    App_Status_Title: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(1) .stats-card__title .data-ellipsis.tooltip-wrapper'),
-    App_Status_SubTitle: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(1) [data-testid="monitoring-app-appStatus"] .stats__counter'),
-    Endpoints_Title: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(2) .stats-card__title .data-ellipsis.tooltip-wrapper'),
-    Endpoints_Tip: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(2) [data-testid="tip"] svg'),
-    Endpoints_Counter: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(2) [data-testid="monitoring-app-endpoints"] .stats__counter'),
-    Detections_Title: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(3) .stats-card__title .data-ellipsis.tooltip-wrapper'),
-    Detections_Counter: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(3) [data-testid="monitoring-app-detections"] .stats__counter'),
-    Possible_Detections_Title: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(4) .stats-card__title .data-ellipsis.tooltip-wrapper'),
-    Possible_Detections_Counter: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(4) [data-testid="monitoring-app-possibleDetections"] .stats__counter'),
-    Lag_Title: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(5) .stats-card__title .data-ellipsis.tooltip-wrapper'),
-    Lag_Tip: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(5) [data-testid="tip"] svg'),
-    Lag_Counter: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(5) [data-testid="monitoring-app-lag"] .stats__counter'),
-    Commited_Offset_Title: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(6) .stats-card__title .data-ellipsis.tooltip-wrapper'),
-    Commited_Offset_Tip: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(6) [data-testid="tip"] svg'),
-    Commited_Offset_Counter: By.css('.monitoring-application__statistics-section .stats-card:nth-of-type(6) [data-testid="monitoring-app-commitedOffset"]  .stats__counter'),
-    Artifacts_Title: By.css('.monitoring-app__section .section-item_title span'),
+    Application_Metrics_Button: '.action-bar [data-testid="btn"] span',
+    Refresh_Button: '.action-bar [data-testid="refresh"] button',
+    App_Status_Title:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(1) .stats-card__title .data-ellipsis.tooltip-wrapper',
+    App_Status_SubTitle:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(1) [data-testid="monitoring-app-appStatus"] .stats__counter',
+    Endpoints_Title:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(2) .stats-card__title .data-ellipsis.tooltip-wrapper',
+    Endpoints_Tip:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(2) [data-testid="tip"] svg',
+    Endpoints_Counter:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(2) [data-testid="monitoring-app-endpoints"] .stats__counter',
+    Detections_Title:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(3) .stats-card__title .data-ellipsis.tooltip-wrapper',
+    Detections_Counter:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(3) [data-testid="monitoring-app-detections"] .stats__counter',
+    Possible_Detections_Title:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(4) .stats-card__title .data-ellipsis.tooltip-wrapper',
+    Possible_Detections_Counter:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(4) [data-testid="monitoring-app-possibleDetections"] .stats__counter',
+    Lag_Title:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(5) .stats-card__title .data-ellipsis.tooltip-wrapper',
+    Lag_Tip:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(5) [data-testid="tip"] svg',
+    Lag_Counter:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(5) [data-testid="monitoring-app-lag"] .stats__counter',
+    Commited_Offset_Title:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(6) .stats-card__title .data-ellipsis.tooltip-wrapper',
+    Commited_Offset_Tip:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(6) [data-testid="tip"] svg',
+    Commited_Offset_Counter:
+      '.monitoring-application__statistics-section .stats-card:nth-of-type(6) [data-testid="monitoring-app-commitedOffset"]  .stats__counter',
+    Artifacts_Title: '.monitoring-app__section .section-item_title span',
     Artifacts_Table: commonTable(artifactsTable),
-    See_All_Link: By.css('.monitoring-app__section-item .monitoring-app__see-all-link'),
-    Results_Title: By.css('.monitoring-app__section.section_small:nth-of-type(2) .monitoring-app__section-item:nth-of-type(1) .section-item_title span'),
+    See_All_Link: '.monitoring-app__section-item .monitoring-app__see-all-link',
+    Results_Title:
+      '.monitoring-app__section.section_small:nth-of-type(2) .monitoring-app__section-item:nth-of-type(1) .section-item_title span',
     Results_Table: commonTable(resultsTable),
-    Metrics_Title: By.css('.monitoring-app__section.section_small:nth-of-type(2) .monitoring-app__section-item:nth-of-type(2) .section-item_title span'),
-    Metrics_Tip: By.css('.monitoring-app__section.section_small:nth-of-type(2) .monitoring-app__section-item:nth-of-type(2) [data-testid="tip"] svg'),
+    Metrics_Title:
+      '.monitoring-app__section.section_small:nth-of-type(2) .monitoring-app__section-item:nth-of-type(2) .section-item_title span',
+    Metrics_Tip:
+      '.monitoring-app__section.section_small:nth-of-type(2) .monitoring-app__section-item:nth-of-type(2) [data-testid="tip"] svg',
     Metrics_Table: commonTable(metricsTable),
-    Shards_Partitions_Status_Title: By.css('.monitoring-app__section.section_small:nth-of-type(3) .monitoring-app__section-item:nth-of-type(1) .section-item_title span'),
-    Shards_Partitions_Status_Tip: By.css('.monitoring-app__section.section_small:nth-of-type(3) .monitoring-app__section-item:nth-of-type(1) [data-testid="tip"] svg'),
+    Shards_Partitions_Status_Title:
+      '.monitoring-app__section.section_small:nth-of-type(3) .monitoring-app__section-item:nth-of-type(1) .section-item_title span',
+    Shards_Partitions_Status_Tip:
+      '.monitoring-app__section.section_small:nth-of-type(3) .monitoring-app__section-item:nth-of-type(1) [data-testid="tip"] svg',
     Shards_Partitions_Status_Table: commonTable(shardsPartitionsStatusTable),
-    Partitions_Status_Lag_Tip: By.css('.monitoring-app__section.section_small:nth-of-type(3) .monitoring-app__section-item:nth-of-type(1) .section-table .section-table__table-cell:nth-of-type(2) [data-testid="tip"] svg'),
-    Partitions_Status_Commited_Offset_Tip: By.css('.monitoring-app__section.section_small:nth-of-type(3) .monitoring-app__section-item:nth-of-type(1) .section-table .section-table__table-cell:nth-of-type(3) [data-testid="tip"] svg'),
+    Partitions_Status_Lag_Tip:
+      '.monitoring-app__section.section_small:nth-of-type(3) .monitoring-app__section-item:nth-of-type(1) .section-table .section-table__table-cell:nth-of-type(2) [data-testid="tip"] svg',
+    Partitions_Status_Commited_Offset_Tip:
+      '.monitoring-app__section.section_small:nth-of-type(3) .monitoring-app__section-item:nth-of-type(1) .section-table .section-table__table-cell:nth-of-type(3) [data-testid="tip"] svg'
   },
   applicationMetrics: {
-    Back_Button: By.css('.content__action-bar-wrapper .history-back-link [data-testid="history-back-link-btn"]'),
-    Applications_Metrics_Title: By.css('.content__action-bar-wrapper .history-back-link .history-back-link__title [data-testid="version-history"]'),
-    Application_Name: By.css('.content__action-bar-wrapper .history-back-link .history-back-link__title .data-ellipsis'),
-    Application_Monitoring_Button: By.css('.action-bar [data-testid="btn"] span'),
-    Refresh_Button: By.css('[data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]'),
-    Endpoints_List_Section: By.css('.application-metrics-container .list-view .list-view__section:nth-of-type(1)'),
+    Back_Button:
+      '.content__action-bar-wrapper .history-back-link [data-testid="history-back-link-btn"]',
+    Applications_Metrics_Title:
+      '.content__action-bar-wrapper .history-back-link .history-back-link__title [data-testid="version-history"]',
+    Application_Name:
+      '.content__action-bar-wrapper .history-back-link .history-back-link__title .data-ellipsis',
+    Application_Monitoring_Button: '.action-bar [data-testid="btn"] span',
+    Refresh_Button: '[data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]',
+    Endpoints_List_Section:
+      '.application-metrics-container .list-view .list-view__section:nth-of-type(1)',
     Search_By_Endpoint_Filter_Input: searchByEndpointFilterInput,
-    Search_Endpoints_Counter: By.css('.application-metrics-container .list-view .list-view__section:nth-of-type(1) .list-view__section-list__search_endpoints-counter'),
-    Endpoints_List_Table: commonTable(endpointsListTable),
+    Search_Endpoints_Counter:
+      '.application-metrics-container .list-view .list-view__section:nth-of-type(1) .list-view__section-list__search_endpoints-counter',
+    Endpoints_List_Table: commonTable(endpointsListTable)
   }
 }

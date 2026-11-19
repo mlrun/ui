@@ -19,8 +19,9 @@ such restriction.
 */
 // Allure report of the E2E regression run (`npm run report`, `npm run report:open`)
 import { defineConfig } from 'allure'
+import { escapeRegExp } from 'lodash-es'
 
-const FAILED = ['failed', 'broken']
+import { KNOWN_FAILURE_FIXED_MESSAGE } from './tests/allure-results.js'
 
 export default defineConfig({
   name: 'MLRun UI E2E regression',
@@ -28,49 +29,36 @@ export default defineConfig({
   // results of the previous runs: trends, new/fixed/flaky tests
   historyPath: './tests/reports/allure-history.jsonl',
   historyLimit: 30,
+  hideLabels: ['_fallbackTestCaseId', 'titlePath', 'package', 'language', 'framework'],
   plugins: {
-    // self-contained `allure-report/index.html`: opens from the file system, without `report:open`
-    awesome: { options: { singleFile: true } }
+    awesome: {
+      options: {
+        reportName: 'MLRun UI E2E regression',
+        groupBy: ['suite']
+        // not `singleFile`: every failed attempt has a Playwright trace (10-40MB), a single file with them embedded
+        // is too heavy for the browser, the separate files are loaded on demand (the report is served, `report:open`)
+      }
+    }
   },
-  // failures are classified by the first matching rule
+  // only the known bugs are put apart: the report shows by itself what failed, what was flaky (passed on a retry) and
+  // what passed. First matching rule wins
   categories: {
     rules: [
       {
-        id: 'known-app-bugs',
-        name: 'Known app bugs (tests/FOUND_BUGS.md)',
-        matchers: { statuses: FAILED, labels: { tag: /^@knownBug$/ } }
-      },
-      {
-        id: 'not-implemented',
-        name: 'Not implemented yet (@FAILED_TODO, @inProgress)',
-        matchers: { statuses: FAILED, labels: { tag: /^@(FAILED_TODO|inProgress)$/ } }
-      },
-      {
-        id: 'infrastructure',
-        name: 'Infrastructure (app/mock server, browser driver)',
+        // a known bug that passed (tests/allure-results.js), it doesn't fail the run
+        id: 'known-bug-fixed',
+        name: 'Known bug passed (remove the tag if it keeps passing)',
         matchers: {
-          statuses: FAILED,
-          message: /ERR_CONNECTION_REFUSED|Server terminated early|session not created|Servers are not available/
+          statuses: ['passed'],
+          message: new RegExp(escapeRegExp(KNOWN_FAILURE_FIXED_MESSAGE))
         }
       },
       {
-        id: 'timeouts',
-        name: 'Timeouts',
-        matchers: { statuses: FAILED, message: /timed out|TimeoutError/ }
-      },
-      {
-        id: 'ui-elements',
-        name: 'UI element not found / not interactable',
-        matchers: {
-          statuses: FAILED,
-          trace:
-            /NoSuchElementError|ElementNotInteractableError|ElementClickInterceptedError|StaleElementReferenceError|MoveTargetOutOfBoundsError|InvalidSelectorError/
-        }
-      },
-      {
-        id: 'assertions',
-        name: 'Assertion failures (unexpected value)',
-        matchers: { statuses: FAILED, trace: /AssertionError|Arrays not equal/ }
+        // by the tag only. Only 'failed': tests/allure-results.js sets it for a failure that was expected; a 'broken'
+        // one (the test timed out) is a failure of the run
+        id: 'known-bugs',
+        name: 'Known bugs (@knownBug, @FAILED_TODO)',
+        matchers: { statuses: ['failed'], labels: { tag: /^@?(knownBug|FAILED_TODO)$/ } }
       }
     ]
   }

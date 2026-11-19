@@ -4,7 +4,7 @@ Feature: Artifacts Page
 
   @MLA
   @passive
-  @smoke
+  @smoke @sanity
   Scenario: MLA001 - Check all mandatory components on Artifacts tab
     Given open url
     And wait load page
@@ -12,14 +12,12 @@ Feature: Artifacts Page
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
     And select "Other artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Other artifacts" value
     Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     And select "Other artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
     Then click on "Table_FilterBy_Button" element on "Files" wizard
@@ -30,12 +28,12 @@ Feature: Artifacts Page
     Then verify "Table_Refresh_Button" element on "Files" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
     Then verify "Files_Table" element visibility on "Files" wizard
     Then verify "Register_File_Button" element visibility on "Files" wizard
-    Then "Register_File_Button" element on "Files" should contains "Register artifact" value
-    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options_Main_Table"
+    Then "Register_File_Button" element on "Files" should contain "Register artifact" value
+    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contain "Dropdown_Options"."Tag_Filter_Options_Main_Table"
 
   @MLA
   @passive
-  @smoke
+  @smoke @sanity
   Scenario: MLA002 - Verify filtering by file name on Artifacts page
     Given open url
     And wait load page
@@ -43,20 +41,18 @@ Feature: Artifacts Page
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
     And select "Other artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     And select "Project monitoring" item in sidebar menu
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     And select "Other artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Other artifacts" value
     Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
     Then type value "test" to "Table_Name_Filter_Input" field on "Files" wizard
     Then click on "Table_Refresh_Button" element on "Files" wizard
     And wait load page
-    Then value in "name" column with "text" in "Files_Table" on "Files" wizard should contains "test"
+    Then value in "name" column with "text" in "Files_Table" on "Files" wizard should contain "test"
 
   @MLA
   @passive
@@ -72,18 +68,18 @@ Feature: Artifacts Page
     Then type value "owner" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then value in "labels" column with "dropdowns" in "Files_Table" on "Files" wizard should contains "owner"
+    Then value in "labels" column with "dropdowns" in "Files_Table" on "Files" wizard should contain "owner"
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     Then type value "v3io_user=admin" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then value in "labels" column with "dropdowns" in "Files_Table" on "Files" wizard should contains "v3io_user=admin"
+    Then value in "labels" column with "dropdowns" in "Files_Table" on "Files" wizard should contain "v3io_user=admin"
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-    Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Files_data"
+    Then "No_Data_Message" component on "commonPagesHeader" should contain "No_Data_Message"."No_Files_data"
 
   @MLA
   @passive
@@ -97,13 +93,13 @@ Feature: Artifacts Page
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
-    Then check "expand_btn" not presented in "Files_Table" on "Files" wizard
+    Then check "expand_btn" not present in "Files_Table" on "Files" wizard
     Then uncheck "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
-    Then check "expand_btn" not presented in "Files_Table" on "Files" wizard
+    Then check "expand_btn" not present in "Files_Table" on "Files" wizard
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     Then verify "show_all_versions" option is present on "Files" wizard in "Files_Table" table with "training_iteration_results" value in "name" column
     Then verify "show_all_versions" option on "Files" wizard in "Files_Table" table with "training_iteration_results" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions" with scroll "false"
@@ -114,7 +110,7 @@ Feature: Artifacts Page
     Then check "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then verify "Header" element not exists on "Files_Info_Pane" wizard
+    Then verify "Header" element does not exist on "Files_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     Then "Show_Iterations_Checkbox" element should be checked on "FilterBy_Popup" wizard
 
@@ -128,20 +124,19 @@ Feature: Artifacts Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Other artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then click on "Register_File_Button" element on "Files" wizard
     Then verify if "Register_File_Popup" popup dialog appears
-    Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_File_Popup" wizard should contains "Register_Artifact"."Combobox_Options"
+    Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_File_Popup" wizard should contain "Register_Artifact"."Combobox_Options"
     Then navigate back
-    Then verify "Title" element not exists on "Register_File_Popup" wizard
+    Then verify "Title" element does not exist on "Register_File_Popup" wizard
     Then navigate forward
-    Then verify "Title" element not exists on "Register_File_Popup" wizard
+    Then verify "Title" element does not exist on "Register_File_Popup" wizard
     Then click on "Register_File_Button" element on "Files" wizard
     Then verify if "Register_File_Popup" popup dialog appears
-    Then "Title" element on "Register_File_Popup" should contains "Register Artifact" value
-    Then "Form_Text" component on "Register_File_Popup" should contains "Register_Artifact"."Form_Text"
-    Then "Form_Subtext" component on "Register_File_Popup" should contains "Register_Artifact"."Form_Subtext"
+    Then "Title" element on "Register_File_Popup" should contain "Register Artifact" value
+    Then "Form_Text" component on "Register_File_Popup" should contain "Register_Artifact"."Form_Text"
+    Then "Form_Subtext" component on "Register_File_Popup" should contain "Register_Artifact"."Form_Subtext"
     Then verify "Cross_Cancel_Button" element visibility on "Register_File_Popup" wizard
     Then verify "New_File_Name_Input" element visibility on "Register_File_Popup" wizard
     Then type value " " to "New_File_Name_Input" field on "Register_File_Popup" wizard
@@ -156,12 +151,12 @@ Feature: Artifacts Page
     Then verify "New_File_Description_Input" on "Register_File_Popup" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
     Then verify "New_File_Type_Dropdown" element visibility on "Register_File_Popup" wizard
     Then verify "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard selected option value "General"
-    Then verify "New_File_Type_Dropdown" dropdown element on "Register_File_Popup" wizard should contains "Register_Artifact"."Type_Options"
+    Then verify "New_File_Type_Dropdown" dropdown element on "Register_File_Popup" wizard should contain "Register_Artifact"."Type_Options"
     Then select "Table" option in "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard
     Then verify "Cancel_Button" element visibility on "Register_File_Popup" wizard
-    Then "Cancel_Button" element on "Register_File_Popup" should contains "Cancel" value
+    Then "Cancel_Button" element on "Register_File_Popup" should contain "Cancel" value
     Then verify "Register_Button" element visibility on "Register_File_Popup" wizard
-    Then "Register_Button" element on "Register_File_Popup" should contains "Register" value
+    Then "Register_Button" element on "Register_File_Popup" should contain "Register" value
     Then click on "Register_Button" element on "Register_File_Popup" wizard
     Then verify "Register_Button" element on "Register_File_Popup" wizard is disabled
     Then type value "artifact" to "New_File_Name_Input" field on "Register_File_Popup" wizard
@@ -173,17 +168,17 @@ Feature: Artifacts Page
     Then verify if "Common_Popup" popup dialog appears
     Then click on "Cancel_Button" element on "Common_Popup" wizard
     Then verify if "Register_File_Popup" popup dialog appears
-    Then verify "New_File_Name_Input" input should contains "artifact" value on "Register_File_Popup" wizard
-    Then verify "Path_Scheme_Combobox" input should contains "target/path" value in "Target_Path" on "Register_File_Popup" wizard
-    Then verify "New_File_Description_Input" input should contains "new artifact description" value on "Register_File_Popup" wizard
+    Then verify "New_File_Name_Input" input should contain "artifact" value on "Register_File_Popup" wizard
+    Then verify "Path_Scheme_Combobox" input should contain "target/path" value in "Target_Path" on "Register_File_Popup" wizard
+    Then verify "New_File_Description_Input" input should contain "new artifact description" value on "Register_File_Popup" wizard
     Then verify "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard selected option value "Table"
     Then click on "Cross_Cancel_Button" element on "Register_File_Popup" wizard
     Then verify if "Common_Popup" popup dialog appears
     Then click on "Cancel_Button" element on "Common_Popup" wizard
     Then verify if "Register_File_Popup" popup dialog appears
-    Then verify "New_File_Name_Input" input should contains "artifact" value on "Register_File_Popup" wizard
-    Then verify "Path_Scheme_Combobox" input should contains "target/path" value in "Target_Path" on "Register_File_Popup" wizard
-    Then verify "New_File_Description_Input" input should contains "new artifact description" value on "Register_File_Popup" wizard
+    Then verify "New_File_Name_Input" input should contain "artifact" value on "Register_File_Popup" wizard
+    Then verify "Path_Scheme_Combobox" input should contain "target/path" value in "Target_Path" on "Register_File_Popup" wizard
+    Then verify "New_File_Description_Input" input should contain "new artifact description" value on "Register_File_Popup" wizard
     Then check "New_File_Description_Input" textarea counter on "Register_File_Popup" wizard
     Then verify "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard selected option value "Table"
     Then navigate back
@@ -193,15 +188,14 @@ Feature: Artifacts Page
     Then verify if "Common_Popup" popup dialog appears
     Then click on "Confirm_Button" element on "Common_Popup" wizard
     And wait load page
-    Then verify "Title" element not exists on "Register_File_Popup" wizard
+    Then verify "Title" element does not exist on "Register_File_Popup" wizard
     Then navigate forward
-    Then verify "Title" element not exists on "Register_File_Popup" wizard
+    Then verify "Title" element does not exist on "Register_File_Popup" wizard
     Then verify "Files_Table" element visibility on "Files" wizard
 
   @MLA
-  @smoke
+  @smoke @sanity
   Scenario: MLA006 - Verify behaviour on Register new Artifact
-    * set tear-down property "project" created with "automation-test" value
     * create "automation-test" MLRun Project with code 201
     Given open url
     And wait load page
@@ -218,15 +212,15 @@ Feature: Artifacts Page
     Then click on "Register_Button" element on "Register_File_Popup" wizard
     And wait load page
     Then verify if "Notification_Popup" popup dialog appears
-    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Register artifact initiated successfully" value
-    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
-    Then value in "name" column with "text" in "Files_Table" on "Files" wizard should contains "test-artifact"
-    Then value in "type" column with "text" in "Files_Table" on "Files" wizard should contains "table"
+    Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
+    Then "Notification_Popup" element on "Notification_Popup" should contain "Register artifact initiated successfully" value
+    Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then value in "name" column with "text" in "Files_Table" on "Files" wizard should contain "test-artifact"
+    Then value in "type" column with "text" in "Files_Table" on "Files" wizard should contain "table"
     Then click on cell with value "test-artifact" in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
-    Then "Header" element on "Files_Info_Pane" should contains "test-artifact" value
+    Then "Header" element on "Files_Info_Pane" should contain "test-artifact" value
     Then check "test-artifact" value in "key" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then check "v3io:///target/path" value in "path" column in "Overview_Table" table on "Files_Info_Pane" wizard
@@ -237,14 +231,14 @@ Feature: Artifacts Page
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then click on "Register_Button" element on "Register_File_Popup" wizard
     Then verify if "Confirm_Popup" popup dialog appears
-    Then "Title" element on "Confirm_Popup" should contains "Overwrite artifact?" value
+    Then "Title" element on "Confirm_Popup" should contain "Overwrite artifact?" value
     Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
     Then verify "Confirm_Dialog_Message" element visibility on "Confirm_Popup" wizard
-    Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Register_Artifact"."Register_Error_Message"
+    Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Register_Artifact"."Register_Error_Message" with "table"
     Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
-    Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
+    Then "Cancel_Button" element on "Confirm_Popup" should contain "Cancel" value
     Then verify "Overwrite_Button" element visibility on "Confirm_Popup" wizard
-    Then "Overwrite_Button" element on "Confirm_Popup" should contains "Overwrite" value
+    Then "Overwrite_Button" element on "Confirm_Popup" should contain "Overwrite" value
     When click on "Cancel_Button" element on "Confirm_Popup" wizard
 
   @MLA
@@ -257,39 +251,37 @@ Feature: Artifacts Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Other artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with value "training_iteration_results" in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
     Then verify "Updated" element visibility on "Files_Info_Pane" wizard
     Then verify "Action_Menu" element visibility on "Files_Info_Pane" wizard
-    Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
+    Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contain "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Files_Info_Pane" wizard
     And wait load page
+    Then verify "Download_Popup" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
-    And wait load page
-    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
-    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
-    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then verify "Header_Download_Popup" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Popup" element on "Downloads_Popup" should contain "Downloads" value
+    Then click on "Download_Popup_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
     Then verify "Full_View_Button" element visibility on "Files_Info_Pane" wizard
-    Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"
+    Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Overview_General_Headers"
     Then verify "Overview_Hash_Header" on "Files_Info_Pane" wizard should display "Label_Hint"."Overview_Hash"
     Then verify "Overview_UID_Header" on "Files_Info_Pane" wizard should display "Label_Hint"."Overview_UID"
-    Then verify "Overview_Producer_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_Producer_Headers"
-    Then verify "Overview_Sources_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_Sources_Headers"
+    Then verify "Overview_Producer_Headers" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Overview_Producer_Headers"
+    Then verify "Overview_Sources_Headers" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Overview_Sources_Headers"
     Then click on "Full_View_Button" element on "Files_Info_Pane" wizard
-    Then verify "Cross_Close_Button" element not exists on "Files_Info_Pane" wizard
-    Then click on "Tabel_View_Button" element on "Files_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element does not exist on "Files_Info_Pane" wizard
+    Then click on "Table_View_Button" element on "Files_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
 
   @MLA
@@ -302,19 +294,18 @@ Feature: Artifacts Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Other artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with value "download_content" in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Tab_List"
     Then verify "Preview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
     Then verify "Updated" element visibility on "Files_Info_Pane" wizard
     Then verify "Action_Menu" element visibility on "Files_Info_Pane" wizard
-    Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
+    Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contain "Common_Lists"."Action_Menu_List"
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
     When click on cell with value "test-i" in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
@@ -326,31 +317,30 @@ Feature: Artifacts Page
     And wait load page
     Then verify "Preview_Table" element visibility on "Preview_Popup" wizard
     Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Name" exact header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Path" exact header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Size" exact header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
-    Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contains "download_content"
+    Then check "Updated" exact header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contain "download_content"
     Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
     Then verify "Download_Button" element visibility on "Preview_Popup" wizard
     Then click on "Download_Button" element on "Preview_Popup" wizard
     And wait load page
+    Then verify "Download_Popup" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
-    And wait load page
-    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
-    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
-    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then verify "Header_Download_Popup" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Popup" element on "Downloads_Popup" should contain "Downloads" value
+    Then click on "Download_Popup_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
     Then verify "Preview_Tab_Info_Pane_Table" element visibility on "Files_Info_Pane" wizard
 
   @MLA
-  @smoke
+  @smoke @sanity
   Scenario: MLA022 - Verify the Delete option state in Artifacts table and Overview details action menu 
     Given open url
     And wait load page
@@ -358,14 +348,14 @@ Feature: Artifacts Page
     And wait load page
     And select "Other artifacts" item in sidebar menu
     And wait load page
-    Then verify action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then verify action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column should contain "Common_Lists"."Action_Menu_List"
     Then verify that in action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column "Delete" option is enabled
     Then verify that in action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column "Delete all versions" option is enabled
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then verify "Action_Menu" element visibility on "Files_Info_Pane" wizard
-    Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
+    Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contain "Common_Lists"."Action_Menu_List"
     Then check that "Delete" option in action menu on "Files_Info_Pane" wizard is enabled
     Then check that "Delete all versions" option in action menu on "Files_Info_Pane" wizard is enabled
     Then click on "Cross_Close_Button" element on "Files_Info_Pane" wizard
@@ -376,24 +366,24 @@ Feature: Artifacts Page
     And wait load page
     Then verify "History_Back_Button" element visibility on "Files" wizard
     Then verify "Version_History_Title" element visibility on "Files" wizard
-    Then "Version_History_Title" element on "Files" should contains "Version history:" value
+    Then "Version_History_Title" element on "Files" should contain "Version history:" value
     Then verify "Version_History_Model_Name" element visibility on "Files" wizard
-    Then "Version_History_Model_Name" element on "Files" should contains "survival-curves_km-survival" value
+    Then "Version_History_Model_Name" element on "Files" should contain "survival-curves_km-survival" value
     Then verify "Table_Refresh_Button" element visibility on "Files" wizard
     Then verify "Register_File_Button" element visibility on "Files" wizard
     Then verify "Table_FilterBy_Button" element visibility on "Files" wizard
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
-    Then verify action menu on "Files" wizard in "Files_Table" table with "5a44b12b-9ef3-4239-87e8-e0cbdae-17" value in "uid" column should contains "Common_Lists"."Action_Menu_List_Version_History"
+    Then verify action menu on "Files" wizard in "Files_Table" table with "5a44b12b-9ef3-4239-87e8-e0cbdae-17" value in "uid" column should contain "Common_Lists"."Action_Menu_List_Version_History"
     Then verify that in action menu on "Files" wizard in "Files_Table" table with "5a44b12b-9ef3-4239-87e8-e0cbdae-17" value in "uid" column "Delete" option is enabled
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then verify "Action_Menu" element visibility on "Files_Info_Pane" wizard
-    Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List_Version_History"
+    Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contain "Common_Lists"."Action_Menu_List_Version_History"
     Then check that "Delete" option in action menu on "Files_Info_Pane" wizard is enabled
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
-    Then "Header" element on "Files_Info_Pane" should contains "survival-curves_km-survival" value
+    Then "Header" element on "Files_Info_Pane" should contain "survival-curves_km-survival" value
     Then click on "Register_File_Button" element on "Files" wizard
     Then verify if "Register_File_Popup" popup dialog appears
     Then type value "survival-curves_km-survival" to "New_File_Name_Input" field on "Register_File_Popup" wizard
@@ -401,14 +391,14 @@ Feature: Artifacts Page
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
     Then click on "Register_Button" element on "Register_File_Popup" wizard
     Then verify if "Confirm_Popup" popup dialog appears
-    Then "Title" element on "Confirm_Popup" should contains "Overwrite artifact?" value
+    Then "Title" element on "Confirm_Popup" should contain "Overwrite artifact?" value
     When click on "Overwrite_Button" element on "Confirm_Popup" wizard
     And wait load page
     Then click on "History_Back_Button" element on "Files" wizard
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
-    Then "Header" element on "Files_Info_Pane" should contains "survival-curves_km-survival" value
+    Then "Header" element on "Files_Info_Pane" should contain "survival-curves_km-survival" value
     Then verify "Not_In_Filtered_List_Message" element visibility on "Files_Info_Pane" wizard
     Then "Not_In_Filtered_List_Message" component on "Files_Info_Pane" should be equal "Files_Info_Pane"."Info_Banner_Message"
     #TODO: Verify that editing the tag to an empty string '' will delete the artifact instance
@@ -423,14 +413,13 @@ Feature: Artifacts Page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Other artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
-    Then verify "Overview_Sources_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_Sources_Headers"
+    Then verify "Overview_Sources_Headers" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Overview_Sources_Headers"
     Then verify "Overview_Sources_Headers" element visibility on "Files_Info_Pane" wizard
     When click on cell with value "raw-data" in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
@@ -438,15 +427,15 @@ Feature: Artifacts Page
     And wait load page
     Then verify if "Modal_Transition_Popup" popup dialog appears
     Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
-    Then "Title" element on "Modal_Transition_Popup" should contains "survival-curves_km-timelines" value
+    Then "Title" element on "Modal_Transition_Popup" should contain "survival-curves_km-timelines" value
     Then verify "Data_Status" element visibility on "Modal_Transition_Popup" wizard
-    Then "Data_Status" element on "Modal_Transition_Popup" should contains "Aug 29, 2021, 07:54:15 PM" value
+    Then "Data_Status" element on "Modal_Transition_Popup" should contain "Aug 29, 2021, 07:54:15 PM" value
     Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
     Then click on "Refresh_Button" element on "Modal_Transition_Popup" wizard
     And wait load page
     Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
     Then verify "Action_Menu" element visibility on "Modal_Transition_Popup" wizard
-    Then verify "Action_Menu" dropdown element on "Modal_Transition_Popup" wizard should contains "Common_Lists"."Action_Menu_List_Artifacts_Transition_Popup"
+    Then verify "Action_Menu" dropdown element on "Modal_Transition_Popup" wizard should contain "Common_Lists"."Action_Menu_List_Artifacts_Transition_Popup"
     Then verify "Cross_Close_Button" element visibility on "Modal_Transition_Popup" wizard
     Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
     And wait load page
@@ -454,29 +443,28 @@ Feature: Artifacts Page
     And wait load page
     Then select "Download" option in action menu on "Modal_Transition_Popup" wizard
     And wait load page
+    Then verify "Download_Popup" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
-    And wait load page
-    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
-    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
-    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then verify "Header_Download_Popup" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Popup" element on "Downloads_Popup" should contain "Downloads" value
+    Then click on "Download_Popup_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then select "Copy URI" option in action menu on "Modal_Transition_Popup" wizard
     And wait load page
     Then verify if "Notification_Popup" popup dialog appears
-    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Copied to clipboard successfully" value
-    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
+    Then "Notification_Popup" element on "Notification_Popup" should contain "Copied to clipboard successfully" value
+    Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
     Then select "View YAML" option in action menu on "Modal_Transition_Popup" wizard
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
     Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
-    Then verify "Tab_Selector" on "Modal_Transition_Popup" wizard should contains "Datasets_Info_Pane"."Tab_List"
+    Then verify "Tab_Selector" on "Modal_Transition_Popup" wizard should contain "Datasets_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
     Then select "Preview" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
     Then verify "Preview" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
@@ -486,10 +474,10 @@ Feature: Artifacts Page
     Then verify "Analysis" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
     Then select "Overview" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
     Then verify "Overview" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
-    Then verify "Overview_General_Headers" on "Modal_Transition_Popup" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
-    Then verify "Overview_Producer_Headers" on "Modal_Transition_Popup" wizard should contains "Datasets_Info_Pane"."Overview_Producer_Headers"
+    Then verify "Overview_General_Headers" on "Modal_Transition_Popup" wizard should contain "Datasets_Info_Pane"."Overview_General_Headers"
+    Then verify "Overview_Producer_Headers" on "Modal_Transition_Popup" wizard should contain "Datasets_Info_Pane"."Overview_Producer_Headers"
     Then verify "Overview_Sources_Headers" element visibility on "Modal_Transition_Popup" wizard
-    Then verify "Overview_Sources_Headers" on "Modal_Transition_Popup" wizard should contains "Datasets_Info_Pane"."Overview_Sources_Headers"
+    Then verify "Overview_Sources_Headers" on "Modal_Transition_Popup" wizard should contain "Datasets_Info_Pane"."Overview_Sources_Headers"
 
   @MLA
   @passive
@@ -500,16 +488,14 @@ Feature: Artifacts Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Other artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     And click on "MLRun_Logo" element on "commonPagesHeader" wizard
-    And wait load page
     And wait load page
     Then verify "Projects_Table" element visibility on "Projects" wizard
 
   @MLA
   @passive
-  @smoke
+  @smoke @sanity
   Scenario: MLA014 - Verify action menu list, Downloads action,  View YAML action
     Given open url
     And wait load page
@@ -517,19 +503,17 @@ Feature: Artifacts Page
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     And select "Other artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    Then verify action menu on "Files" wizard in "Files_Table" table with "training_iteration_results" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then verify action menu on "Files" wizard in "Files_Table" table with "training_iteration_results" value in "name" column should contain "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Files" wizard in "Files_Table" table at row with "training_iteration_results" value in "name" column
     And wait load page
+    Then verify "Download_Popup" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
-    And wait load page
-    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
-    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
-    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then verify "Header_Download_Popup" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Popup" element on "Downloads_Popup" should contain "Downloads" value
+    Then click on "Download_Popup_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then select "View YAML" option in action menu on "Files" wizard in "Files_Table" table at row with "training_iteration_results" value in "name" column
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
@@ -554,7 +538,6 @@ Feature: Artifacts Page
       And wait load page
       Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
       And select "Other artifacts" item in sidebar menu
-      And hover "MLRun_Logo" component on "commonPagesHeader" wizard
       And wait load page
       Then verify "preview" option is present on "Files" wizard in "Files_Table" table with "training_iteration_results" value in "name" column
       Then click on "preview" option on "Files" wizard in "Files_Table" table with "training_iteration_results" value in "name" column with scroll "false"
@@ -565,14 +548,13 @@ Feature: Artifacts Page
       Then verify "Download_Button" element visibility on "Preview_Popup" wizard
       Then click on "Download_Button" element on "Preview_Popup" wizard
       And wait load page
+      Then verify "Download_Popup" element visibility on "Downloads_Popup" wizard
       And wait load page
-      Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+      Then verify "Download_Popup_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
       And wait load page
-      Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
-      And wait load page
-      Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
-      Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
-      Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+      Then verify "Header_Download_Popup" element visibility on "Downloads_Popup" wizard
+      Then "Header_Download_Popup" element on "Downloads_Popup" should contain "Downloads" value
+      Then click on "Download_Popup_Cross_Cancel_Button" element on "Downloads_Popup" wizard
       Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
       
   @MLA
@@ -584,7 +566,6 @@ Feature: Artifacts Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Other artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
@@ -609,12 +590,12 @@ Feature: Artifacts Page
     And wait load page
     Then verify redirection from "projects/default/files/INVALID/:latest@5a44b12b-9ef3-4239-87e8-e0cbdae-98/overview?bePage=1&fePage=1" to "projects/default/files?bePage=1&fePage=1"
     And wait load page
-    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
     And wait load page
-    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "An error occurred while retrieving the artifact." value
+    Then "Notification_Popup" element on "Notification_Popup" should contain "An error occurred while retrieving the artifact." value
     And wait load page
-    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
     And select "Datasets" item in sidebar menu
     And wait load page
     And select "Other artifacts" item in sidebar menu
@@ -629,12 +610,12 @@ Feature: Artifacts Page
     And wait load page
     Then verify redirection from "projects/default/files/training_iteration_results/:INVALID/overview?bePage=1&fePage=1" to "projects/default/files?bePage=1&fePage=1"
     And wait load page
-     Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+     Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
     And wait load page
-    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "An error occurred while retrieving the artifact." value
+    Then "Notification_Popup" element on "Notification_Popup" should contain "An error occurred while retrieving the artifact." value
     And wait load page
-    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
     Then verify redirection from "projects/INVALID/files?bePage=1&fePage=1" to "projects"
     And wait load page
 
@@ -673,20 +654,19 @@ Feature: Artifacts Page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Other artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
-    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
-    Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"
+    Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Overview_General_Headers"
     Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
-    Then verify "Edit_btn_table_view" element not exists on "Files_Info_Pane" wizard    
+    Then verify "Edit_btn_table_view" element does not exist on "Files_Info_Pane" wizard    
     Then click on "Full_View_Button" element on "Files_Info_Pane" wizard
-    Then verify "Cross_Close_Button" element not exists on "Files_Info_Pane" wizard
-    Then verify "Edit_btn_full_view" element not exists on "Files_Info_Pane" wizard   
-    Then "Version_tag_Value_full_view" element on "Files_Info_Pane" should contains "latest" value
-    Then click on "Tabel_View_Button" element on "Files_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element does not exist on "Files_Info_Pane" wizard
+    Then verify "Edit_btn_full_view" element does not exist on "Files_Info_Pane" wizard   
+    Then "Version_tag_Value_full_view" element on "Files_Info_Pane" should contain "latest" value
+    Then click on "Table_View_Button" element on "Files_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
 
   @MLA
@@ -700,23 +680,23 @@ Feature: Artifacts Page
     And wait load page
     When click on cell with value "test-i" in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
-    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
-    Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"
+    Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Overview_General_Headers"
     Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
-    Then verify "Edit_btn_table_view" element not exists on "Files_Info_Pane" wizard
+    Then verify "Edit_btn_table_view" element does not exist on "Files_Info_Pane" wizard
     Then select "Add a tag" option in action menu on "Files_Info_Pane" wizard
     And wait load page
     Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
     Then type value "newTag" to "Tag_Input" field on "Add_Tag_Popup" wizard
     Then click on "Add_Button" element on "Add_Tag_Popup" wizard
     And wait load page
-    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
     And wait load page
-    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was added successfully" value
+    Then "Notification_Popup" element on "Notification_Popup" should contain "Tag was added successfully" value
     And wait load page
-    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
     Then verify "Table_FilterBy_Button" element visibility on "Files" wizard
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     Then select "newTag" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
@@ -742,15 +722,15 @@ Feature: Artifacts Page
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
     Then click on "Register_Button" element on "Register_File_Popup" wizard
     Then verify if "Confirm_Popup" popup dialog appears
-    Then "Title" element on "Confirm_Popup" should contains "Overwrite artifact?" value
+    Then "Title" element on "Confirm_Popup" should contain "Overwrite artifact?" value
     When click on "Overwrite_Button" element on "Confirm_Popup" wizard
     And wait load page
     When click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
-    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
-    Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"   
-    Then "Version_Tag_Input_Placeholder" element on "Files_Info_Pane" should contains "Click to add" value
+    Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Overview_General_Headers"   
+    Then "Version_Tag_Input_Placeholder" element on "Files_Info_Pane" should contain "Click to add" value
 
   @MLA
   @smoke
@@ -765,9 +745,9 @@ Feature: Artifacts Page
     And wait load page
     Then verify "History_Back_Button" element visibility on "Files" wizard
     Then verify "Version_History_Title" element visibility on "Files" wizard
-    Then "Version_History_Title" element on "Files" should contains "Version history:" value
+    Then "Version_History_Title" element on "Files" should contain "Version history:" value
     Then verify "Version_History_Model_Name" element visibility on "Files" wizard
-    Then "Version_History_Model_Name" element on "Files" should contains "images" value
+    Then "Version_History_Model_Name" element on "Files" should contain "images" value
     Then verify "Table_Refresh_Button" element visibility on "Files" wizard
     Then verify "Register_File_Button" element visibility on "Files" wizard
     Then verify "Table_FilterBy_Button" element visibility on "Files" wizard
@@ -792,20 +772,20 @@ Feature: Artifacts Page
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
     Then click on "Register_Button" element on "Register_File_Popup" wizard
     Then verify if "Confirm_Popup" popup dialog appears
-    Then "Title" element on "Confirm_Popup" should contains "Overwrite artifact?" value
+    Then "Title" element on "Confirm_Popup" should contain "Overwrite artifact?" value
     When click on "Overwrite_Button" element on "Confirm_Popup" wizard
     And wait load page
     When click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
-    Then "Version_Tag_Input_Placeholder" element on "Files_Info_Pane" should contains "Click to add" value
+    Then "Version_Tag_Input_Placeholder" element on "Files_Info_Pane" should contain "Click to add" value
     Then click on "Click_To_Add_Button" element on "Files_Info_Pane" wizard
     Then type value "latest123456" to "Version_tag_Input" field on "Files_Info_Pane" wizard
     Then click on "Apply_Button" element on "Files_Info_Pane" wizard
     Then click on "Apply_Changes_Button" element on "Files_Info_Pane" wizard
     And wait load page
-    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
-    Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"
+    Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Overview_General_Headers"
     Then check "latest123456" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     And wait load page
@@ -827,12 +807,12 @@ Feature: Artifacts Page
     Then type value "test" to "Tag_Input" field on "Add_Tag_Popup" wizard
     Then click on "Add_Button" element on "Add_Tag_Popup" wizard
     And wait load page
-    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
     And wait load page
-    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was added successfully" value
+    Then "Notification_Popup" element on "Notification_Popup" should contain "Tag was added successfully" value
     And wait load page
-    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
     Then verify "Table_FilterBy_Button" element on "Files" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     Then select "test" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
@@ -851,20 +831,19 @@ Feature: Artifacts Page
     Then verify "Not_In_Filtered_List_Message" element visibility on "Files_Info_Pane" wizard
     Then "Not_In_Filtered_List_Message" component on "Files_Info_Pane" should be equal "Files_Info_Pane"."Info_Banner_Message"
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
-    Then "Header" element on "Files_Info_Pane" should contains "training_iteration_results" value
+    Then "Header" element on "Files_Info_Pane" should contain "training_iteration_results" value
     Then refresh a page
-    And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
     Then verify "Not_In_Filtered_List_Message" element visibility on "Files_Info_Pane" wizard
     Then "Not_In_Filtered_List_Message" component on "Files_Info_Pane" should be equal "Files_Info_Pane"."Info_Banner_Message"
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
-    Then "Header" element on "Files_Info_Pane" should contains "training_iteration_results" value
+    Then "Header" element on "Files_Info_Pane" should contain "training_iteration_results" value
     Then verify "Table_Refresh_Button" element visibility on "Files" wizard
     Then verify "Table_Refresh_Button" element on "Files" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
     Then click on "Table_Refresh_Button" element on "Files" wizard
@@ -873,23 +852,23 @@ Feature: Artifacts Page
     Then verify "Not_In_Filtered_List_Message" element visibility on "Files_Info_Pane" wizard
     Then "Not_In_Filtered_List_Message" component on "Files_Info_Pane" should be equal "Files_Info_Pane"."Info_Banner_Message"
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
     Then click on "Cross_Close_Button" element on "Files_Info_Pane" wizard
     And wait load page
-    Then verify "Header" element not exists on "Files_Info_Pane" wizard
+    Then verify "Header" element does not exist on "Files_Info_Pane" wizard
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-    Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Artifact_Tag"
+    Then "No_Data_Message" component on "commonPagesHeader" should be equal "No_Data_Message"."Common_Message_Artifact_Tag" with "test"
     Then click on "Table_FilterBy_Button" element on "LLM_Prompts" wizard
     Then click on "Clear_Button" element on "FilterBy_Popup" wizard
     And wait load page
     When click on cell with value "training_iteration_results" in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
-    Then verify "Not_In_Filtered_List_Message" element not exists on "Files_Info_Pane" wizard
+    Then verify "Not_In_Filtered_List_Message" element does not exist on "Files_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "Files" wizard
@@ -899,9 +878,9 @@ Feature: Artifacts Page
     When click on cell with value "training_iteration_results" in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
-    Then verify "Not_In_Filtered_List_Message" element not exists on "Files_Info_Pane" wizard
+    Then verify "Not_In_Filtered_List_Message" element does not exist on "Files_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contain "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
 
@@ -913,57 +892,54 @@ Feature: Artifacts Page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Other artifacts" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then verify "Full_View_Button" element visibility on "Files_Info_Pane" wizard
     Then click on "Full_View_Button" element on "Files_Info_Pane" wizard
     And wait load page
-    Then verify "Cross_Close_Button" element not exists on "Files_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element does not exist on "Files_Info_Pane" wizard
     Then verify "Header_Full_View" element visibility on "Files_Info_Pane" wizard
-    Then "Header_Full_View" element on "Files_Info_Pane" should contains "survival-curves_km-survival" value
+    Then "Header_Full_View" element on "Files_Info_Pane" should contain "survival-curves_km-survival" value
     Then verify "Updated_Full_View" element visibility on "Files_Info_Pane" wizard
     Then verify "Refresh_Button_Full_View" element visibility on "Files_Info_Pane" wizard
     Then click on "Refresh_Button_Full_View" element on "Files_Info_Pane" wizard
     And wait load page
     Then verify "Header_Full_View" element visibility on "Files_Info_Pane" wizard
-    Then "Header_Full_View" element on "Files_Info_Pane" should contains "survival-curves_km-survival" value
+    Then "Header_Full_View" element on "Files_Info_Pane" should contain "survival-curves_km-survival" value
     Then verify "Action_Menu_Full_View" element visibility on "Files_Info_Pane" wizard
-    Then verify "Action_Menu_Full_View" dropdown element on "Files_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
+    Then verify "Action_Menu_Full_View" dropdown element on "Files_Info_Pane" wizard should contain "Common_Lists"."Action_Menu_List"
     Then click on "Header_Full_View" element on "Files_Info_Pane" wizard
     Then select "Download" option in full view action menu on "Files_Info_Pane" wizard
     And wait load page
-    And wait load page
-    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup" element visibility on "Downloads_Popup" wizard
     Then select "Add a tag" option in full view action menu on "Files_Info_Pane" wizard
-    And wait load page
     And wait load page
     Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
     Then verify "Close_Button" element visibility on "Add_Tag_Popup" wizard
     Then verify "Title" element visibility on "Add_Tag_Popup" wizard
-    Then "Title" element on "Add_Tag_Popup" should contains "Add A Tag" value
+    Then "Title" element on "Add_Tag_Popup" should contain "Add A Tag" value
     Then verify "Input_Label" element visibility on "Add_Tag_Popup" wizard
-    Then "Input_Label" element on "Add_Tag_Popup" should contains "Artifact tag *" value
+    Then "Input_Label" element on "Add_Tag_Popup" should contain "Artifact tag *" value
     Then verify "Tag_Input" element visibility on "Add_Tag_Popup" wizard
     Then verify "Add_Button" element visibility on "Add_Tag_Popup" wizard
-    Then "Add_Button" element on "Add_Tag_Popup" should contains "Add" value
+    Then "Add_Button" element on "Add_Tag_Popup" should contain "Add" value
     Then verify "Cancel_Button" element visibility on "Add_Tag_Popup" wizard
-    Then "Cancel_Button" element on "Add_Tag_Popup" should contains "Cancel" value
+    Then "Cancel_Button" element on "Add_Tag_Popup" should contain "Cancel" value
     Then type value "newTag" to "Tag_Input" field on "Add_Tag_Popup" wizard
     Then click on "Cancel_Button" element on "Add_Tag_Popup" wizard
     And wait load page
     Then verify if "Common_Popup" popup dialog appears
-    Then "Title" element on "Common_Popup" should contains "Are you sure?" value
-    Then "Description" element on "Common_Popup" should contains "All changes will be lost" value
+    Then "Title" element on "Common_Popup" should contain "Are you sure?" value
+    Then "Description" element on "Common_Popup" should contain "All changes will be lost" value
     Then click on "Confirm_Button" element on "Common_Popup" wizard
     Then select "Copy URI" option in full view action menu on "Files_Info_Pane" wizard
     And wait load page
     Then verify if "Notification_Popup" popup dialog appears
-    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Copied to clipboard successfully" value
-    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
+    Then "Notification_Popup" element on "Notification_Popup" should contain "Copied to clipboard successfully" value
+    Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
     Then select "View YAML" option in full view action menu on "Files_Info_Pane" wizard
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
@@ -975,39 +951,36 @@ Feature: Artifacts Page
     Then verify "Delete_Artifact_Popup" element visibility on "Files_Info_Pane" wizard
     Then verify "Close_Button" element visibility on "Delete_Artifact_Popup" wizard
     Then verify "Title" element visibility on "Delete_Artifact_Popup" wizard
-    Then "Title" element on "Delete_Artifact_Popup" should contains "Delete artifact?" value
+    Then "Title" element on "Delete_Artifact_Popup" should contain "Delete artifact?" value
     Then verify "Dialog_Message" element visibility on "Delete_Artifact_Popup" wizard
-    Then "Dialog_Message" element on "Delete_Artifact_Popup" should contains "Are you sure you want to delete the artifact \"survival-curves_km-survival\" metadata? Deleted metadata can not be restored." value
+    Then "Dialog_Message" element on "Delete_Artifact_Popup" should contain "Are you sure you want to delete the artifact \"survival-curves_km-survival\" metadata? Deleted metadata can not be restored." value
     Then verify "Delete_Data_Checkbox" element visibility on "Delete_Artifact_Popup" wizard
     Then "Delete_Data_Checkbox" element should be unchecked on "Delete_Artifact_Popup" wizard
     Then verify "Cancel_Button" element visibility on "Delete_Artifact_Popup" wizard
-    Then "Cancel_Button" element on "Delete_Artifact_Popup" should contains "Cancel" value
+    Then "Cancel_Button" element on "Delete_Artifact_Popup" should contain "Cancel" value
     Then verify "Delete_Button" element visibility on "Delete_Artifact_Popup" wizard
-    Then "Delete_Button" element on "Delete_Artifact_Popup" should contains "Delete" value
+    Then "Delete_Button" element on "Delete_Artifact_Popup" should contain "Delete" value
     Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
     And wait load page
     Then verify if "Notification_Popup" popup dialog appears
-    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Artifact is successfully deleted" value
-    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
+    Then "Notification_Popup" element on "Notification_Popup" should contain "Artifact is successfully deleted" value
+    Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
     Then check "survival-curves_km-survival" value not in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     # the details of the selected artifact are fetched asynchronously, an URL update from it can drop "?view=full"
     # if the "Full view" button is clicked too early
-    And wait load page
-    Then "Header" element on "Files_Info_Pane" should contains "clean-data_preproc-numcat_map.json" value
+    Then "Header" element on "Files_Info_Pane" should contain "clean-data_preproc-numcat_map.json" value
     Then verify "Full_View_Button" element visibility on "Files_Info_Pane" wizard
     Then click on "Full_View_Button" element on "Files_Info_Pane" wizard
     And wait load page
-    And wait load page
-    Then verify "Cross_Close_Button" element not exists on "Files_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element does not exist on "Files_Info_Pane" wizard
     Then verify "Header_Full_View" element visibility on "Files_Info_Pane" wizard
-    Then "Header_Full_View" element on "Files_Info_Pane" should contains "clean-data_preproc-numcat_map.json" value
+    Then "Header_Full_View" element on "Files_Info_Pane" should contain "clean-data_preproc-numcat_map.json" value
     Then select "Add a tag" option in full view action menu on "Files_Info_Pane" wizard
-    And wait load page
     And wait load page
     Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
     Then verify "Title" element visibility on "Add_Tag_Popup" wizard
@@ -1015,8 +988,8 @@ Feature: Artifacts Page
     Then click on "Add_Button" element on "Add_Tag_Popup" wizard
     And wait load page
     Then verify "Header_Full_View" element visibility on "Files_Info_Pane" wizard
-    Then "Header_Full_View" element on "Files_Info_Pane" should contains "clean-data_preproc-numcat_map.json" value
-    Then click on "Tabel_View_Button" element on "Files_Info_Pane" wizard
+    Then "Header_Full_View" element on "Files_Info_Pane" should contain "clean-data_preproc-numcat_map.json" value
+    Then click on "Table_View_Button" element on "Files_Info_Pane" wizard
     And wait load page
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
     And wait load page

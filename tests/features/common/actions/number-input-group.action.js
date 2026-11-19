@@ -17,18 +17,18 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const incrementValue = async (driver, inputGroup, value) => {
-    const inc_btn = await driver.findElement(inputGroup.inc_btn)
-    for (let i = 0; i < value; i++) {
-      await inc_btn.click()
-      await driver.sleep(100)
-    }
-  }
+import { click } from '../../common-tools/element.js'
 
-export const decrementValue = async (driver, inputGroup, value) => {
-    const dec_btn = await driver.findElement(inputGroup.dec_btn)
-    for (let i = 0; i < value; i++) {
-      await dec_btn.click()
-      await driver.sleep(100)
-    }
+export const incrementValue = async (page, inputGroup, value) => {
+  const inc_btn = page.locator(inputGroup.inc_btn).first()
+  for (let i = 0; i < value; i++) {
+    await click(inc_btn)
   }
+}
+
+export const decrementValue = async (page, inputGroup, value) => {
+  const dec_btn = page.locator(inputGroup.dec_btn).first()
+  for (let i = 0; i < value; i++) {
+    await click(dec_btn)
+  }
+}
