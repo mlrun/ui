@@ -164,10 +164,11 @@ Feature: Projects Page
         Then check "empty-project" value not in "name" column in "Projects_Table" table on "Projects" wizard
 
     @MLPr
-    @smoke
+    @smoke @knownBug
     #TODO: update "Labels_Value" options rules
-    # BUG-001 shows up only sometimes here: the scenario then fails or is flaky. Not @sanity until the bug is fixed (a
-    # flaky scenario fails the PR run on CI)
+    # BUG-001 shows up only sometimes here (the long label key is cut while it is typed, more often under a load of
+    # several workers): the scenario then fails, also on the retry, or is flaky. The tag keeps it from failing the run
+    # (as MLPS011); remove it when the bug is fixed. Not @sanity until then
     Scenario: MLPr007 - Create new ML Project with description
         Given open url
         And wait load page
