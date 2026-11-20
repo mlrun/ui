@@ -27,12 +27,11 @@ import crypto from 'node:crypto'
 import { isMainThread, parentPort, workerData } from 'node:worker_threads'
 import {
   chain,
-  chunk,
+  escape,
   clamp,
   cloneDeep,
   defaults,
   find,
-  forEach,
   get,
   isEmpty,
   isFunction,
@@ -41,7 +40,6 @@ import {
   maxBy,
   noop,
   omit,
-  orderBy,
   pick,
   random,
   remove,
@@ -149,6 +147,16 @@ function keepEndpointAlertsRecent(alertsData) {
 const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+// the mock server is used only by tests, so the limit is high enough not to throttle any of them
+app.use(
+  rateLimit({
+    windowMs: 60 * 1000,
+    limit: 100000,
+    standardHeaders: true,
+    legacyHeaders: false
+  })
+)
 
 // intercepts all the requests and reject them if `failAllRequests` is true
 // should be used ONLY for test framework
@@ -366,15 +374,18 @@ function getPaginationConfig(data, query) {
   }
   let pageData = data
 
-  if (query['page-size'] && query.page) {
-    const dataPaginated = chunk(data, query['page-size'])
-    pageData = dataPaginated[query.page - 1] ?? []
+  const pageSize = Number.parseInt(query['page-size'], 10)
+  const pageNumber = Number.parseInt(query.page, 10)
+
+  if (pageSize > 0 && pageNumber > 0) {
+    const pageStart = (pageNumber - 1) * pageSize
+    pageData = data.slice(pageStart, pageStart + pageSize)
     const pageDataIsEmpty = isEmpty(pageData)
-    const nextPageDataIsEmpty = isEmpty(dataPaginated[query.page])
+    const nextPageDataIsEmpty = pageStart + pageSize >= data.length
 
     paginationQueryConfig = {
-      page: pageDataIsEmpty ? null : parseInt(query.page),
-      'page-size': pageDataIsEmpty ? null : parseInt(query['page-size']),
+      page: pageDataIsEmpty ? null : pageNumber,
+      'page-size': pageDataIsEmpty ? null : pageSize,
       'page-token': nextPageDataIsEmpty || pageDataIsEmpty ? null : '12345'
     }
   }
@@ -531,7 +542,7 @@ function createProjectsFeatureSet(req, res) {
   featureSet.status['state'] = null
   featureSets.feature_sets.push(featureSet)
 
-  res.send(featureSet)
+  res.json(featureSet)
 }
 
 // "Save and ingest" of a new feature set: MLRun starts the ingestion job of the feature set, the run
@@ -610,7 +621,7 @@ function updateProjectsFeatureSet(req, res) {
   featureSet.metadata.updated = new Date().toISOString()
   featureSets.feature_sets[featureSetIndex] = featureSet
 
-  res.send(featureSet)
+  res.json(featureSet)
 }
 
 function deleteFeatureSet(req, res) {
@@ -1324,11 +1335,22 @@ function getFunctionCatalog(req, res) {
   res.send(itemsCatalog)
 }
 
-function getFunctionTemplate(req, res) {
-  const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.params.function}/${req.params.function}.yaml`
-  const funcObject = fs.readFileSync(funcYAMLPath, 'utf8')
+function getFunctionYamlPath(functionName) {
+  // only a name of an existing function directory is allowed, so the path can't leave the functions directory
+  const functionsDir = './tests/mockServer/data/mlrun/functions'
+  const functionDirName = fs.readdirSync(functionsDir).find(dirName => dirName === functionName)
 
-  res.send(funcObject)
+  if (!functionDirName) {
+    throw new Error('Unknown function name')
+  }
+
+  return path.join(functionsDir, functionDirName, `${functionDirName}.yaml`)
+}
+
+function getFunctionTemplate(req, res) {
+  const funcObject = fs.readFileSync(getFunctionYamlPath(req.params.function), 'utf8')
+
+  res.type('text/plain').send(funcObject)
 }
 
 function getProjectsSchedules(req, res) {
@@ -1437,7 +1459,7 @@ function invokeSchedule(req, res) {
         item.metadata.name === functionName
     )
   } else {
-    const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(6)}/${req.body.task.spec.function.slice(6)}.yaml`
+    const funcYAMLPath = getFunctionYamlPath(req.body.task.spec.function.slice(6))
     funcObject = yaml.load(fs.readFileSync(funcYAMLPath, 'utf8'))
   }
   const funcUID = makeUID(32)
@@ -1805,7 +1827,7 @@ function getProjectsFeatureSets(req, res) {
     .filter(artifact => artifact.metadata.name === req.params.name)
     .filter(artifact => artifact.metadata.tag === req.params.tag)
 
-  res.send(featureArtifactTags[0])
+  res.json(featureArtifactTags[0])
 }
 
 function patchProjectsFeatureSets(req, res) {
@@ -1817,7 +1839,7 @@ function patchProjectsFeatureSets(req, res) {
   if (featureArtifactTags.length) {
     featureArtifactTags[0].metadata.labels = req.body.metadata.labels
   }
-  res.send(featureArtifactTags[0])
+  res.json(featureArtifactTags[0])
 }
 
 function postProjectsFeatureVectors(req, res) {
@@ -1835,7 +1857,7 @@ function postProjectsFeatureVectors(req, res) {
 
     featureVectors.feature_vectors.push(newFeatureVector)
 
-    res.send(newFeatureVector)
+    res.json(newFeatureVector)
   } else {
     res.statusCode = 409
     res.send({
@@ -1854,7 +1876,7 @@ function putProjectsFeatureVectors(req, res) {
 
   collectedFV[0] = req.body
 
-  res.send(req.body)
+  res.json(req.body)
 }
 
 function patchProjectsFeatureVectors(req, res) {
@@ -1888,7 +1910,7 @@ function getProjectsFeatureVector(req, res) {
   )
 
   if (featureVector) {
-    res.send(featureVector)
+    res.json(featureVector)
   } else {
     res.statusCode = 404
     res.send({
@@ -2180,7 +2202,9 @@ function getFuncs(req, res) {
     })
   }
 
-  collectedFuncs = orderBy(collectedFuncs, 'metadata.updated', 'desc')
+  collectedFuncs = [...collectedFuncs].sort((funcA, funcB) =>
+    String(funcB.metadata.updated).localeCompare(String(funcA.metadata.updated))
+  )
   const [paginatedFuncs, pagination] = getPaginationConfig(collectedFuncs, req.query)
 
   res.send({ funcs: paginatedFuncs, pagination })
@@ -2239,14 +2263,14 @@ function deleteFunc(req, res) {
 
   if (collectedFunc.length) {
     const taskFunc = id => {
-      forEach(collectedFunc, func => {
+      collectedFunc.forEach(func => {
         set(func, 'status.deletion_task_id', id)
       })
 
       return new Promise((resolve, reject) => {
         setTimeout(
           () => {
-            forEach(collectedFunc, func => {
+            collectedFunc.forEach(func => {
               delete func.status.deletion_task_id
             })
 
@@ -2341,7 +2365,7 @@ function sendLogsData(data, res) {
       function_status: 'ready',
       'x-mlrun-function-status': 'ready'
     })
-    logText = `${data.type} MLRun mock log message for "${data.name}" function in "${data.project}" project`
+    logText = `${escape(data.type)} MLRun mock log message for "${escape(data.name)}" function in "${escape(data.project)}" project`
   } else {
     res.set({
       function_status: 'running',
@@ -2349,7 +2373,7 @@ function sendLogsData(data, res) {
     })
   }
 
-  res.send(logText)
+  res.type('text/plain').send(logText)
 }
 
 function deployMLFunction(req, res) {
@@ -2572,7 +2596,7 @@ function postSubmitJob(req, res) {
           .filter(item => item.metadata.name === filterFunc)[0]
       )
     } else {
-      const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(6)}/${req.body.task.spec.function.slice(6)}.yaml`
+      const funcYAMLPath = getFunctionYamlPath(req.body.task.spec.function.slice(6))
       funcObject = yaml.load(fs.readFileSync(funcYAMLPath, 'utf8'))
     }
 
@@ -2949,7 +2973,7 @@ function getMetrics(req, res) {
 function getMetricsValues(req, res) {
   const start = req.query.start || new Date() - 86400000 // past 24 hours
   const end = req.query.end || new Date()
-  const names = req.query.name
+  const names = [req.query.name].flat().filter(name => typeof name === 'string')
 
   function generateSineSequence(length, isInvocation) {
     const result = []
@@ -3198,14 +3222,10 @@ function postProjectMembers(req, res) {
       principal_user_groups: item.body.data.relationships.principal_user_groups
     }
 
-    if (projectRelations.some(relation => relation.id === authRoleId)) {
-      const index = projectRelations.findIndex(relation => {
-        return relation.id === authRoleId
-      })
-      projectRelations[index] = {
-        ...projectRelations[index],
-        relationships: relationshipsTemplate
-      }
+    const existingRelation = projectRelations.find(relation => relation.id === authRoleId)
+
+    if (existingRelation) {
+      existingRelation.relationships = relationshipsTemplate
     } else {
       projectRelations.push({
         type: 'project_authorization_role',
@@ -3241,7 +3261,7 @@ function getNuclioStreams(req, res) {
 }
 
 function getNuclioShardLags(req, res) {
-  res.send({
+  res.json({
     [`${req.body.containerName}${req.body.streamPath}`]: {
       [req.body.consumerGroup]: {
         'shard-id-0': {
@@ -3290,9 +3310,9 @@ const submitJobRateLimiter = rateLimit({
 
 // Helper request for AQA framework to fail all the requests
 app.post('/set-failure-condition', (req, res) => {
-  failAllRequests = req.body.shouldFail
+  failAllRequests = req.body.shouldFail === true
 
-  res.send(`Failure condition set to ${failAllRequests}`)
+  res.type('text/plain').send(`Failure condition set to ${failAllRequests}`)
 })
 
 // REQUESTS

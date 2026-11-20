@@ -370,6 +370,7 @@ export default class ConsoleReporter {
     const { passed, flaky, known, knownFixed, skipped } = this.counts
     const cell = text =>
       String(text ?? '')
+        .replace(/\\/g, '\\\\')
         .replace(/\|/g, '\\|')
         .replace(/\s+/g, ' ')
         .trim()
