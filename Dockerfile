@@ -35,7 +35,7 @@ RUN echo ${COMMIT_HASH} > ./build/COMMIT_HASH && \
 
 # production stage
 
-FROM gcr.io/iguazio/nginx-unprivileged:1.31.1-alpine AS production-stage
+FROM nginx/nginx-unprivileged:1.31.9-alpine3.24 AS production-stage
 
 ARG GIT_COMMIT_SHA
 LABEL org.opencontainers.image.revision=$GIT_COMMIT_SHA
