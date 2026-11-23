@@ -1010,9 +1010,8 @@ Feature: Jobs Monitoring Page
         Then "Notification_Popup" component on "Notification_Popup" should contain "Jobs_And_Workflows"."Workflows_Successful_Run_Message"
         Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
 
-    # BUG-005: the no-data message of the Scheduled tab shows the default filter "Type: all"
     @MLJM
-    @smoke @generatedData @knownBug
+    @smoke @generatedData
     Scenario: MLJM003 - Check components on Scheduled tab of Jobs monitoring page
         Given open url
         And wait load page
