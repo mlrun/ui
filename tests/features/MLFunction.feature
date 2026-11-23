@@ -613,8 +613,7 @@ Feature: ML Functions
     @MLF
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    # BUG-004: the CPU limit unit select drops the requests, the edited function has the defaults
-    @rerun @knownBug @demoMode
+    @rerun @demoMode
     Scenario: MLF015 - Save new ml-function
         Given open url
         And wait load page
@@ -1235,8 +1234,7 @@ Feature: ML Functions
     @MLF
     @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    # BUG-004: the CPU limit unit select drops the requests, the Batch Run shows the defaults
-    @rerun @knownBug @demoMode
+    @rerun @demoMode
     Scenario: MLF033 - Verify Resources values on Function Deploy and Run
         * create "automation-test" MLRun Project with code 201
         Given open url
