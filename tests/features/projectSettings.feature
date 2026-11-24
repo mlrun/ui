@@ -261,8 +261,7 @@ Feature: Project Settings page
 
     @MLPS
     @inProgress
-    # BUG-002: the reason of a 403 is replaced by "You do not have a permission to view this data"
-    @smoke @rerun @knownBug
+    @smoke @rerun
     Scenario: MLPS008 - Verify Secrets table on Secrets tab
         Given open url
         And wait load page
@@ -277,7 +276,7 @@ Feature: Project Settings page
             | mlrun.something |    value    |
         And wait load page
         Then verify if "Notification_Popup" popup dialog appears
-        Then "Error_Message" component on "Projects_Settings_Secret_Tab" should contain "Error_Messages"."MLRunAccessDeniedError"
+        Then "Error_Message" component on "Projects_Settings_Secret_Tab" should contain "Error_Messages"."Access_Denied"
         Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
         And wait load page

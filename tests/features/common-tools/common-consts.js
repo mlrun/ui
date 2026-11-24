@@ -45,16 +45,7 @@ export default {
       'Create feature vector'
     ],
     // "created" is shown in the browser's timezone
-    Created_Details_Default: /^Created: [A-Z][a-z]{2} \d{1,2}, 2021, \d{2}:\d{2}:\d{2}\s[AP]M$/,
-    Data_Collection_Description:
-      'Register, upload data directly, or define ' + 'features using the feature store.',
-    Development_Description:
-      'Define your code in a function and train your ' +
-      'models. You can also run any additional code ' +
-      'in batch, as well as define and run workflows.',
-    Deployment_Description:
-      'Deploy online serving models, as well as define data and model ' +
-      'monitoring and notification.'
+    Created_Details_Default: /^Created: [A-Z][a-z]{2} \d{1,2}, 2021, \d{2}:\d{2}:\d{2}\s[AP]M$/
   },
   Feature_Store: {
     Tab_List: ['Feature Sets', 'Features', 'Feature Vectors'],
@@ -684,8 +675,7 @@ export default {
     // the app shows the backend error detail when there is one (projectReducer createNewProject)
     Projects_Limit_Reached:
       "MLRunHTTPError(\"Failed creating project in Iguazio: [{'status': 405, 'detail': 'Resource limit reached. Cannot create more records'}]\")",
-    MLRunAccessDeniedError:
-      "MLRunAccessDeniedError('Not allowed to create/update internal secrets (key starts with mlrun.)')",
+    Access_Denied: 'You do not have a permission to view this data',
     Must_Select_One: 'Must select at least one',
     Must_Select_One_Partition: 'Must select at least one partitioning option',
     One_Day_Option: 'Must select at least one day option'
