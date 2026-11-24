@@ -20,12 +20,7 @@ such restriction.
 import actionMenu from '../components/action-menu.component.js'
 import commonTable from '../components/table.component.js'
 import dropdownComponent from '../components/dropdown.component.js'
-import labelComponent from '../components/label.component.js'
-import {
-  generateInputGroup,
-  generateLabelGroup,
-  generateDropdownGroup
-} from '../../common-tools/common-tools.js'
+import { generateInputGroup, generateDropdownGroup } from '../../common-tools/common-tools.js'
 import inputGroup from '../components/input-group.component.js'
 
 const quickActionsObject = dropdownComponent(
@@ -129,89 +124,6 @@ const runsTable = {
         status: '.status-cell .data-ellipsis',
         started_at: '.table-cell_big:nth-of-type(4) .data-ellipsis',
         duration: '.table-cell_medium:nth-of-type(5) .data-ellipsis'
-      }
-    }
-  }
-}
-
-const DataCollectionActionsTable = {
-  root: '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-actions:nth-of-type(1)',
-  header: {},
-  body: {
-    row: {
-      root: '.project-overview-actions__item',
-      fields: {
-        name: '.link'
-      }
-    }
-  }
-}
-
-const DevelopmentActionsTable = {
-  root: '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__actions',
-  header: {},
-  body: {
-    root: '.project-overview-actions',
-    row: {
-      root: '.project-overview-actions__item',
-      fields: {
-        name: '.link'
-      }
-    }
-  }
-}
-
-const DeploymentActionsTable = {
-  root: '.project-overview .project-overview__content .project-overview-card:nth-of-type(3) .project-overview-card__actions',
-  header: {},
-  body: {
-    root: '.project-overview-actions',
-    row: {
-      root: '.project-overview-actions__item',
-      fields: {
-        name: '.link'
-      }
-    }
-  }
-}
-
-const DataCollectionLinksTable = {
-  root: '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-card__bottom',
-  header: {},
-  body: {
-    root: '.additional-links',
-    row: {
-      root: '.link',
-      fields: {
-        name: ''
-      }
-    }
-  }
-}
-
-const DevelopmentLinksTable = {
-  root: '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__bottom',
-  header: {},
-  body: {
-    root: '.additional-links',
-    row: {
-      root: '.link',
-      fields: {
-        name: ''
-      }
-    }
-  }
-}
-
-const DeploymentLinksTable = {
-  root: '.project-overview .project-overview__content .project-overview-card:nth-of-type(3) .project-overview-card__bottom',
-  header: {},
-  body: {
-    root: '.additional-links',
-    row: {
-      root: '.link',
-      fields: {
-        name: ''
       }
     }
   }
@@ -411,61 +323,6 @@ export default {
       Failed_Counter_Subtitle:
         '.d-flex:nth-of-type(2) .project-data-card__statistics .project-data-card__statistics-item:nth-of-type(2) span'
     }
-  },
-  // the Quick actions page: since the header redesign (#3318) the header has the project name as a page title and the
-  // "Created:" label only (no project description), all the actions of a card are shown (no "more actions" button)
-  demoProject: {
-    Header_Name_Label: labelComponent(
-      generateLabelGroup('.project-overview .project-overview__header .page-header__title', ' ')
-    ),
-    Header_Created_Time: labelComponent(
-      generateLabelGroup(
-        '.project-overview .project-overview__header .project-details__details-label',
-        ' '
-      )
-    ),
-    Data_Collection_Header: labelComponent(
-      generateLabelGroup(
-        '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-card__header',
-        'h3'
-      )
-    ),
-    Data_Collection_Description: labelComponent(
-      generateLabelGroup(
-        '.project-overview .project-overview__content .project-overview-card:nth-of-type(1) .project-overview-card__header',
-        '.project-overview-card__header-subtitle'
-      )
-    ),
-    Data_Collection_Actions_Table: commonTable(DataCollectionActionsTable),
-    Data_Collection_Links_Table: commonTable(DataCollectionLinksTable),
-    Development_Header: labelComponent(
-      generateLabelGroup(
-        '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__header',
-        'h3'
-      )
-    ),
-    Development_Description: labelComponent(
-      generateLabelGroup(
-        '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__header',
-        '.project-overview-card__header-subtitle'
-      )
-    ),
-    Development_Actions_Table: commonTable(DevelopmentActionsTable),
-    Development_Links_Table: commonTable(DevelopmentLinksTable),
-    Deployment_Header: labelComponent(
-      generateLabelGroup(
-        '.project-overview .project-overview__content .project-overview-card:nth-of-type(3) .project-overview-card__header',
-        'h3'
-      )
-    ),
-    Deployment_Description: labelComponent(
-      generateLabelGroup(
-        '.project-overview .project-overview__content .project-overview-card:nth-of-type(3) .project-overview-card__header',
-        '.project-overview-card__header-subtitle'
-      )
-    ),
-    Deployment_Actions_Table: commonTable(DeploymentActionsTable),
-    Deployment_Links_Table: commonTable(DeploymentLinksTable)
   },
   consumerGroups: {
     Arrow_Back: 'button > .page-header__back-btn',
