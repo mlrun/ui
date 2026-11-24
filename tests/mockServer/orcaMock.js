@@ -116,8 +116,9 @@ function registerOrcaMock(
    *     the project is absent and ignores prevOpId; PATCH returns 404.
    */
 
-  const ORCA_ONLINE_STATE = 1
-  const ORCA_ARCHIVED_STATE = 3
+  // The leader's ProjectState enum: 0 unspecified, 1 creating, 2 online, 3 deleting, 4 archived.
+  const ORCA_ONLINE_STATE = 2
+  const ORCA_ARCHIVED_STATE = 4
 
   // Keyed by op id, mirroring the real `sync-project` execution ({status: {state, lastError}}).
   const trackableActionExecutions = {}
@@ -180,6 +181,25 @@ function registerOrcaMock(
     return true
   }
 
+  // Like the leader, only online and archived may be requested; creating and deleting are
+  // system-managed.
+  function checkDesiredState(req, res) {
+    const { desiredState } = req.body
+
+    if (desiredState == null || [ORCA_ONLINE_STATE, ORCA_ARCHIVED_STATE].includes(desiredState)) {
+      return true
+    }
+
+    res.status(400).send({
+      status: {
+        errorMessage: `desired_state ${desiredState} is system-managed or not valid; use online or archived`,
+        statusCode: 400
+      }
+    })
+
+    return false
+  }
+
   function applyDesiredState(project, body) {
     if (body.desiredState === ORCA_ARCHIVED_STATE) {
       project.spec.desired_state = 'archived'
@@ -192,7 +212,8 @@ function registerOrcaMock(
 
   function applyOrcaFields(project, body) {
     if (body.description != null) project.spec.description = body.description
-    if (body.owner != null) project.spec.owner = body.owner
+    // like the leader, an update with another owner transfers the ownership
+    if (body.owner != null && body.owner !== project.spec.owner) moveOwnerRole(project, body.owner)
     if (body.labels != null) project.metadata.labels = body.labels
     if (body.annotations != null) project.metadata.annotations = body.annotations
   }
@@ -287,7 +308,13 @@ function registerOrcaMock(
       return
     }
 
-    if (!checkUpdateFields(req, res) || !checkCasWitness(req, res, project)) return
+    if (
+      !checkUpdateFields(req, res) ||
+      !checkDesiredState(req, res) ||
+      !checkCasWitness(req, res, project)
+    ) {
+      return
+    }
 
     applyOrcaFields(project, req.body)
     applyDesiredState(project, req.body)
@@ -297,7 +324,7 @@ function registerOrcaMock(
   }
 
   function putOrcaProject(req, res) {
-    if (!checkUpdateFields(req, res)) return
+    if (!checkUpdateFields(req, res) || !checkDesiredState(req, res)) return
 
     let project = findProject(req.params.name)
 
@@ -403,6 +430,174 @@ function registerOrcaMock(
     secretKeys[name] = secretKeyTemplate
   })
 
+  /* ======================== ORIS project membership (Orca) ========================
+   *
+   * The leader's authorization endpoints for project members, as the UI uses them in ORIS mode:
+   *
+   *   - GET  /v1/authorization/projects/:project/policies - one policy per project role, with the
+   *     members assigned to it. A member can hold several roles.
+   *   - PUT  /v1/authorization/projects/:project/owner - moves the Owner role. The previous owner
+   *     gets Admin and keeps every other role, and the project gets a new op id. A project update
+   *     (PUT/PATCH) with another owner does the same.
+   *   - PUT  /v1/authorization/projects/:project/roles - `{ membership: { <role>: { values } },
+   *     override }`. With `override` every non-owner role is replaced (a role left out is emptied),
+   *     without it the members are only added. The Owner role can't be set here.
+   *   - GET  /v1/authentication/self, /v1/profile/search-users-metadata and
+   *     /v1/profile/search-groups-metadata - the active user (`admin`) and the user search.
+   */
+
+  // The leader's project roles: the key it takes in `membership`, and the display name.
+  const PROJECT_ROLES = [
+    { role: 'owner', displayName: 'Owner' },
+    { role: 'admin', displayName: 'Admin' },
+    { role: 'editor', displayName: 'Editor' },
+    { role: 'builder', displayName: 'Builder' },
+    { role: 'curator', displayName: 'Curator' },
+    { role: 'viewer', displayName: 'Viewer' }
+  ]
+  const ORIS_ACTIVE_USER = 'admin'
+  const ORIS_USERS = [
+    { firstName: 'Admin', lastName: 'User', username: 'admin' },
+    { firstName: 'Bob', lastName: 'Smith', username: 'bob' },
+    { firstName: 'Carol', lastName: 'Jones', username: 'carol' },
+    { firstName: 'Dave', lastName: 'Brown', username: 'dave' }
+  ]
+
+  // Member ids by role key, per project name. A project starts with its owner in the Owner role. A
+  // Map, so a project name from a request can't reach Object.prototype (e.g. `__proto__`).
+  const projectRoleMembers = new Map()
+
+  const getRoleMembers = project => {
+    const name = project.metadata.name
+
+    if (!projectRoleMembers.has(name)) {
+      projectRoleMembers.set(
+        name,
+        new Map(
+          PROJECT_ROLES.map(({ role }) => [role, role === 'owner' ? [project.spec.owner] : []])
+        )
+      )
+    }
+
+    return projectRoleMembers.get(name)
+  }
+
+  // The Owner role moves to the new owner, and the previous owner gets Admin and keeps every other role
+  function moveOwnerRole(project, owner) {
+    const roleMembers = getRoleMembers(project)
+    const previousOwner = project.spec.owner
+
+    roleMembers.set('owner', [owner])
+
+    if (previousOwner && !roleMembers.get('admin').includes(previousOwner)) {
+      roleMembers.get('admin').push(previousOwner)
+    }
+
+    project.spec.owner = owner
+  }
+
+  function findProjectOr404(req, res) {
+    const project = findProject(req.params.project)
+
+    if (!project) {
+      res.status(404).send({ status: { errorMessage: `Project ${req.params.project} not found` } })
+    }
+
+    return project
+  }
+
+  function getProjectPolicies(req, res) {
+    const project = findProjectOr404(req, res)
+
+    if (!project) return
+
+    const roleMembers = getRoleMembers(project)
+
+    res.send({
+      items: PROJECT_ROLES.map(({ role, displayName }) => ({
+        spec: { displayName, role, projectName: project.metadata.name },
+        status: {
+          assignedMembers: roleMembers.get(role).map(id => ({ id, name: id, kind: 'user' }))
+        }
+      }))
+    })
+  }
+
+  function updateProjectOwner(req, res) {
+    const project = findProjectOr404(req, res)
+
+    if (!project) return
+
+    const { owner } = req.body
+
+    if (!owner) {
+      res.status(400).send({ status: { errorMessage: 'Project owner is required' } })
+      return
+    }
+
+    // the leader's owner endpoint is a PATCH of the project with the new owner: a new op id
+    if (owner !== project.spec.owner) {
+      moveOwnerRole(project, owner)
+      startOperation(project, getOperationFailure(project.metadata.name, nextOpId))
+    }
+
+    res.send({ status: { statusCode: 200 } })
+  }
+
+  function setProjectMembership(req, res) {
+    const project = findProjectOr404(req, res)
+
+    if (!project) return
+
+    const { membership = {}, override = false } = req.body
+
+    if (membership.owner) {
+      res.status(400).send({
+        status: { errorMessage: 'The owner role cannot be set, use UpdateProjectOwner instead' }
+      })
+      return
+    }
+
+    const roleMembers = getRoleMembers(project)
+
+    PROJECT_ROLES.filter(({ role }) => role !== 'owner').forEach(({ role }) => {
+      const values = membership[role]?.values
+
+      if (override) {
+        roleMembers.set(role, [...(values ?? [])])
+      } else if (values) {
+        roleMembers.set(role, [...new Set([...roleMembers.get(role), ...values])])
+      }
+    })
+
+    res.send({ status: { statusCode: 200 } })
+  }
+
+  function getOrisActiveUser(req, res) {
+    res.send({
+      metadata: { id: `${ORIS_ACTIVE_USER}-id`, username: ORIS_ACTIVE_USER },
+      relationships: []
+    })
+  }
+
+  function searchUsersMetadata(req, res) {
+    const searchTerm = String(req.query.searchTerm ?? '').toLowerCase()
+
+    res.send({
+      items: ORIS_USERS.filter(user =>
+        [user.username, user.firstName, user.lastName].some(value =>
+          value.toLowerCase().includes(searchTerm)
+        )
+      )
+    })
+  }
+
+  function searchGroupsMetadata(req, res) {
+    res.send({ items: [] })
+  }
+
+  /* ====================== end ORIS project membership (Orca) ====================== */
+
   /* ====================== end ORIS project lifecycle (Orca) ====================== */
 
   // Served under the platform prefix (what `/iguazio/api` is proxied to) and under `/oris`, the
@@ -415,6 +610,12 @@ function registerOrcaMock(
     app.put(`${prefix}/api/v1/projects/projects/:name`, putOrcaProject)
     app.delete(`${prefix}/api/v1/projects/projects/:name`, deleteOrcaProject)
     app.get(`${prefix}/api/v1/trackable-actions/executions`, getOrcaActionExecution)
+    app.get(`${prefix}/api/v1/authorization/projects/:project/policies`, getProjectPolicies)
+    app.put(`${prefix}/api/v1/authorization/projects/:project/owner`, updateProjectOwner)
+    app.put(`${prefix}/api/v1/authorization/projects/:project/roles`, setProjectMembership)
+    app.get(`${prefix}/api/v1/authentication/self`, getOrisActiveUser)
+    app.get(`${prefix}/api/v1/profile/search-users-metadata`, searchUsersMetadata)
+    app.get(`${prefix}/api/v1/profile/search-groups-metadata`, searchGroupsMetadata)
   })
 }
 

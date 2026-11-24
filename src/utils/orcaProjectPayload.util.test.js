@@ -19,9 +19,11 @@ such restriction.
 */
 import { PROJECT_ARCHIVED_STATE, PROJECT_ONLINE_STATUS } from '../constants'
 import {
+  getLeaderWitness,
   toOrcaCreatePayload,
   toOrcaStatePayload,
-  toOrcaUpdatePayload
+  toOrcaUpdatePayload,
+  withLeaderWitness
 } from './orcaProjectPayload.util'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -30,6 +32,12 @@ const makeProject = ({ metadata = {}, spec = {}, status } = {}) => ({
   metadata: { name: 'my-project', ...metadata },
   spec: { owner: 'alice', ...spec },
   ...(status && { status })
+})
+
+const makeWitnessProject = (name = 'my-project', status = {}) => ({
+  metadata: { name },
+  spec: { owner: 'alice' },
+  status
 })
 
 // ── Tests ─────────────────────────────────────────────────────────────────────
@@ -198,12 +206,12 @@ describe('orcaProjectPayload.util', () => {
   // ── toOrcaStatePayload ──────────────────────────────────────────────────────
 
   describe('toOrcaStatePayload', () => {
-    it('maps the online state to desiredState 1', () => {
-      expect(toOrcaStatePayload(PROJECT_ONLINE_STATUS, makeProject()).desiredState).toBe(1)
+    it('maps the online state to desiredState 2', () => {
+      expect(toOrcaStatePayload(PROJECT_ONLINE_STATUS, makeProject()).desiredState).toBe(2)
     })
 
-    it('maps the archived state to desiredState 3', () => {
-      expect(toOrcaStatePayload(PROJECT_ARCHIVED_STATE, makeProject()).desiredState).toBe(3)
+    it('maps the archived state to desiredState 4', () => {
+      expect(toOrcaStatePayload(PROJECT_ARCHIVED_STATE, makeProject()).desiredState).toBe(4)
     })
 
     it('yields an undefined desiredState for an unrecognised state', () => {
@@ -217,7 +225,7 @@ describe('orcaProjectPayload.util', () => {
     it('includes the mutation base alongside the desired state', () => {
       const payload = toOrcaStatePayload(PROJECT_ONLINE_STATUS, makeProject())
 
-      expect(payload).toEqual({ name: 'my-project', owner: 'alice', desiredState: 1 })
+      expect(payload).toEqual({ name: 'my-project', owner: 'alice', desiredState: 2 })
     })
 
     it('includes prevOpId when the project carries an opId', () => {
@@ -230,7 +238,7 @@ describe('orcaProjectPayload.util', () => {
         name: 'my-project',
         owner: 'alice',
         prevOpId: 'op-1',
-        desiredState: 3
+        desiredState: 4
       })
     })
 
@@ -248,7 +256,66 @@ describe('orcaProjectPayload.util', () => {
       expect(toOrcaStatePayload(PROJECT_ONLINE_STATUS)).toEqual({
         name: undefined,
         owner: undefined,
-        desiredState: 1
+        desiredState: 2
+      })
+    })
+  })
+
+  // ── getLeaderWitness ────────────────────────────────────────────────────────
+
+  describe('getLeaderWitness', () => {
+    it('reads the owner and op id of a leader project', () => {
+      expect(getLeaderWitness({ spec: { owner: 'bob' }, status: { opId: 'op-1' } })).toEqual({
+        owner: 'bob',
+        opId: 'op-1'
+      })
+    })
+
+    it('reads an axios response and a snake_case op id', () => {
+      expect(
+        getLeaderWitness({ data: { spec: { owner: 'bob' }, status: { op_id: 'op-1' } } })
+      ).toEqual({ owner: 'bob', opId: 'op-1' })
+    })
+
+    it('returns undefined fields for an empty read', () => {
+      expect(getLeaderWitness(undefined)).toEqual({ owner: undefined, opId: undefined })
+    })
+  })
+
+  // ── withLeaderWitness ───────────────────────────────────────────────────────
+
+  describe('withLeaderWitness', () => {
+    const witness = { owner: 'bob', opId: 'fresh-op' }
+
+    it('takes the owner and op id from the witness and keeps the rest', () => {
+      const project = {
+        metadata: { name: 'my-project' },
+        spec: { owner: 'alice', description: 'kept' },
+        status: { state: 'online', opId: 'stale-op' }
+      }
+
+      expect(withLeaderWitness(project, witness)).toEqual({
+        metadata: { name: 'my-project' },
+        spec: { owner: 'bob', description: 'kept' },
+        status: { state: 'online', opId: 'fresh-op' }
+      })
+    })
+
+    it('does not mutate the project it was given', () => {
+      const project = makeWitnessProject('my-project', { opId: 'stale-op' })
+
+      withLeaderWitness(project, witness)
+
+      expect(project).toEqual(makeWitnessProject('my-project', { opId: 'stale-op' }))
+    })
+
+    it('is what the update payload sends', () => {
+      const project = makeWitnessProject('my-project', { opId: 'stale-op' })
+
+      expect(toOrcaUpdatePayload(withLeaderWitness(project, witness))).toMatchObject({
+        name: 'my-project',
+        owner: 'bob',
+        prevOpId: 'fresh-op'
       })
     })
   })

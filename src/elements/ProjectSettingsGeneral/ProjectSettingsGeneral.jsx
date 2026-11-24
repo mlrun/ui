@@ -39,13 +39,11 @@ import {
 } from 'igz-controls/components'
 import ChangeOwnerPopUp from '../ChangeOwnerPopUp/ChangeOwnerPopUp'
 
-import projectsApi from '../../api/projects-api'
 import {
   ARTIFACT_PATH,
   DEFAULT_IMAGE,
   DESCRIPTION,
   GOALS,
-  IS_MF_MODE,
   KEY_CODES,
   LABELS,
   LOAD_SOURCE_ON_RUN,
@@ -68,15 +66,11 @@ import {
   getInternalLabelsValidationRule
 } from 'igz-controls/utils/validation.util'
 import { parseChipsData, convertChipsData } from '../../utils/convertChipsData'
-import {
-  getProjectOperationId,
-  handleProjectOperationConflict,
-  withLatestOpId
-} from '../../utils/projectOperation.util'
+import { handleProjectOperationConflict } from '../../utils/projectOperation.util'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { areNodeSelectorsSupported } from './projectSettingsGeneral.utils'
-import { fetchProject, removeProjectData } from '../../reducers/projectReducer'
+import { editProject, fetchProject, removeProjectData } from '../../reducers/projectReducer'
 
 import './projectSettingsGeneral.scss'
 
@@ -100,7 +94,6 @@ const ProjectSettingsGeneral = ({
     })
   )
   const formStateRef = useRef(null)
-  const latestOperationRef = useRef(null)
   const params = useParams()
   const dispatch = useDispatch()
 
@@ -175,21 +168,11 @@ const ProjectSettingsGeneral = ({
 
   const sendProjectSettingsData = useCallback(
     function sendProjectSettingsDataCallback(projectData) {
-      // In ORIS every save starts a new operation, and the next one must carry its op id as the
-      // witness; the loaded project still holds the one it was read with.
-      const latestOperation = latestOperationRef.current
-      const dataToSend =
-        latestOperation?.projectName === params.projectName
-          ? withLatestOpId(projectData, latestOperation.response)
-          : projectData
-
-      projectsApi
-        .editProject(params.projectName, dataToSend)
-        .then(response => {
-          if (IS_MF_MODE && getProjectOperationId(response)) {
-            latestOperationRef.current = { projectName: params.projectName, response }
-          }
-
+      // In ORIS the thunk takes the owner and op id from the leader right before sending, since the
+      // loaded project can be behind on both after an earlier save or an owner change.
+      dispatch(editProject({ projectName: params.projectName, project: projectData }))
+        .unwrap()
+        .then(() => {
           dispatch(
             setNotification({
               status: 200,
@@ -200,13 +183,9 @@ const ProjectSettingsGeneral = ({
         })
         .catch(error => {
           if (
-            handleProjectOperationConflict(error, params.projectName, dispatch, latest => {
-              if (getProjectOperationId(latest)) {
-                latestOperationRef.current = { projectName: params.projectName, response: latest }
-              }
-
+            handleProjectOperationConflict(error, params.projectName, dispatch, () =>
               sendProjectSettingsDataCallback(projectData)
-            })
+            )
           ) {
             return
           }

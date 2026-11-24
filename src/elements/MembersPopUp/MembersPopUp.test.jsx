@@ -123,3 +123,40 @@ describe('MembersPopUp "user is still a member" check (MF mode)', () => {
     expect(callback).toHaveBeenCalledWith(false)
   })
 })
+
+describe('MembersPopUp save (MF mode)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    document.body.innerHTML = '<div id="overlay_container"></div>'
+    projectsIguazioApi.setProjectMembership.mockResolvedValue({})
+  })
+
+  it('keeps the roles of a member the save did not touch', async () => {
+    const membersState = {
+      ...buildMembersState({
+        groupIds: [],
+        members: [
+          { id: 'userx', name: 'userx', type: 'user', role: 'Admin', initialRole: 'Admin' },
+          groupMember('group-uuid-1', 'delete')
+        ]
+      }),
+      projectAuthorizationRoles: [
+        {
+          spec: { displayName: 'Admin', role: 'admin' },
+          status: { assignedMembers: [{ id: 'userx' }, { id: 'group-uuid-1' }] }
+        },
+        {
+          spec: { displayName: 'Viewer', role: 'viewer' },
+          status: { assignedMembers: [{ id: 'userx' }] }
+        }
+      ]
+    }
+
+    await renderAndApply(membersState)
+
+    expect(projectsIguazioApi.setProjectMembership).toHaveBeenCalledWith('project-a', {
+      membership: { admin: { values: ['userx'] }, viewer: { values: ['userx'] } },
+      override: true
+    })
+  })
+})

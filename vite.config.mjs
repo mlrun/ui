@@ -126,6 +126,10 @@ export default defineConfig(({ mode }) => {
         }),
         ...proxyEntry('/nuclio', env.VITE_NUCLIO_API_URL, { stripPrefix: true }),
         ...proxyEntry('/iguazio', env.VITE_IGUAZIO_API_URL, { stripPrefix: true }),
+        // The platform API in ORIS (Module Federation) mode, where `iguazioHttpClient` calls
+        // `/oris-mlrun/api` in development builds (src/httpClient.js). Set for the e2e scenarios
+        // that run the app in ORIS mode (tests/config.js).
+        ...proxyEntry('/oris-mlrun', env.VITE_ORIS_API_URL, { stripPrefix: true }),
         ...proxyEntry('/function-catalog', env.VITE_FUNCTION_CATALOG_URL, { stripPrefix: true })
       },
       fs: {

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { ADMIN_ROLE, ALL_ROLES, EDITOR_ROLE, VIEWER_ROLE } from '../../constants'
+import { ADMIN_ROLE, ALL_ROLES, EDITOR_ROLE, OWNER_ROLE, VIEWER_ROLE } from '../../constants'
 
 export const DELETE_MODIFICATION = 'delete'
 export const initialNewMembersRole = VIEWER_ROLE
@@ -32,6 +32,39 @@ const getCurrentRoleOption = memberRole => {
   }
 
   return { id: memberRole, label: memberRole, hidden: true }
+}
+
+/**
+ * Builds the `membership` of the project roles PUT, which with `override: true` replaces every
+ * non-owner role. Each role starts from the members it was loaded with, so a member keeps the
+ * roles the user did not change. A member whose role was changed, or who was removed, is taken out
+ * of every non-owner role and then added to the role they now have.
+ * @param {Object[]} policies - the project policies the members were loaded from.
+ * @param {Object[]} members - the edited member rows.
+ * @returns {Object} the membership, keyed by the policy's role.
+ */
+export const buildProjectMembershipMF = (policies, members) => {
+  const changedMembers = members.filter(member => member.modification)
+  const changedMemberIds = new Set(changedMembers.map(member => member.id))
+  const membership = {}
+
+  policies
+    .filter(policy => policy.spec.displayName !== OWNER_ROLE)
+    .forEach(policy => {
+      const keptMemberIds = (policy.status?.assignedMembers || [])
+        .map(assignedMember => assignedMember.id)
+        .filter(memberId => !changedMemberIds.has(memberId))
+      const addedMemberIds = changedMembers
+        .filter(
+          member =>
+            member.modification !== DELETE_MODIFICATION && member.role === policy.spec.displayName
+        )
+        .map(member => member.id)
+
+      membership[policy.spec.role] = { values: [...keptMemberIds, ...addedMemberIds] }
+    })
+
+  return membership
 }
 
 export const getRoleOptions = (memberRole = '', allOption = false) => {

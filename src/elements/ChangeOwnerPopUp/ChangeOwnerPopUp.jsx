@@ -81,77 +81,56 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
     setShowSuggestionList(false)
   }
 
-  const applyChangesMF = () => {
-    projectsIguazioApi
-      .updateProjectOwner(projectId, newOwnerId)
-      .then(changeOwnerCallback)
-      .then(() => {
-        dispatch(
-          setNotification({
-            status: 200,
-            id: Math.random(),
-            message: 'Owner updated successfully'
-          })
-        )
-      })
-      .catch(error => {
-        const customErrorMsg =
-          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'Missing edit permission for the project'
-            : getErrorMsg(error, 'Failed to edit project data')
+  const updateOwnerMF = ownerId => projectsIguazioApi.updateProjectOwner(projectId, ownerId)
 
-        showErrorNotification(dispatch, error, '', customErrorMsg, () => applyChanges())
-      })
-      .finally(handleOnClose)
-  }
-
-  const applyChangesIGZ3 = () => {
-    const projectData = {
+  const updateOwnerIGZ3 = ownerId =>
+    projectsIguazioApi.editProject(projectId, {
       data: {
         type: 'project',
         attributes: {},
         relationships: {
           owner: {
             data: {
-              id: newOwnerId,
+              id: ownerId,
               type: USER_ROLE
             }
           }
         }
       }
-    }
+    })
 
-    projectsIguazioApi
-      .editProject(projectId, projectData)
-      .then(changeOwnerCallback)
-      .then(() => {
-        dispatch(
-          setNotification({
-            status: 200,
-            id: Math.random(),
-            message: 'Owner updated successfully'
-          })
-        )
-      })
-      .catch(error => {
-        const customErrorMsg =
-          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'Missing edit permission for the project'
-            : getErrorMsg(error, 'Failed to edit project data')
+  // Takes the owner as an argument because closing the pop-up clears `newOwnerId` before a retry.
+  const applyChanges = (ownerId = newOwnerId) => {
+    if (!ownerId) return
 
-        showErrorNotification(dispatch, error, '', customErrorMsg, () => applyChanges(newOwnerId))
-      })
+    const updateOwner = IS_MF_MODE ? updateOwnerMF : updateOwnerIGZ3
+
+    updateOwner(ownerId)
+      .then(
+        () => {
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: IS_MF_MODE
+                ? 'Owner updated successfully. It may take a few moments to synchronize changes.'
+                : 'Owner updated successfully'
+            })
+          )
+
+          // The callback reports its own refresh failures, so they don't read as a failed change.
+          return changeOwnerCallback()
+        },
+        error => {
+          const customErrorMsg =
+            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'Missing edit permission for the project'
+              : getErrorMsg(error, 'Failed to edit project data')
+
+          showErrorNotification(dispatch, error, '', customErrorMsg, () => applyChanges(ownerId))
+        }
+      )
       .finally(handleOnClose)
-  }
-
-  const applyChanges = () => {
-    if (newOwnerId) {
-      if (IS_MF_MODE) {
-        applyChangesMF()
-      } else {
-        applyChangesIGZ3()
-      }
-    }
   }
 
   const generateSuggestionListMF = async (memberName, resolve) => {
@@ -305,7 +284,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
             <Button
               disabled={!newOwnerId}
               label="Apply"
-              onClick={applyChanges}
+              onClick={() => applyChanges()}
               variant={PRIMARY_BUTTON}
             />
           </div>

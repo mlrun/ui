@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { forEach, groupBy } from 'lodash-es'
+import { forEach, groupBy, minBy } from 'lodash-es'
 
 import { membersActions } from '../../elements/MembersPopUp/membersReducer'
 
@@ -31,7 +31,11 @@ import {
   OWNER_ROLE,
   USER_ROLE,
   USER_GROUP_ROLE,
-  ADMIN_ROLE
+  ADMIN_ROLE,
+  BUILDER_ROLE,
+  CURATOR_ROLE,
+  EDITOR_ROLE,
+  VIEWER_ROLE
 } from '../../constants'
 
 import Settings from 'igz-controls/images/settings.svg?react'
@@ -66,17 +70,36 @@ export const validTabs = [
 
 export const page = PROJECTS_SETTINGS_PAGE
 
-const addMember = (members, name, id, type, initialRole, role) => {
+const addMember = (members, name, id, type, initialRole, role, roles) => {
   members.push({
     name,
     id,
     type,
     initialRole,
     role,
+    ...(roles && { roles }),
     icon: type === USER_ROLE ? <User /> : <Users />,
     modification: ''
   })
 }
+
+// The leader's project roles, highest first. Each role's permissions include the ones below it, and
+// Editor and Builder grant the same.
+const ROLES_BY_PRECEDENCE = [ADMIN_ROLE, EDITOR_ROLE, BUILDER_ROLE, CURATOR_ROLE, VIEWER_ROLE]
+
+const getRolePrecedence = role => {
+  const precedence = ROLES_BY_PRECEDENCE.indexOf(role)
+
+  return precedence === -1 ? ROLES_BY_PRECEDENCE.length : precedence
+}
+
+/**
+ * The role a member is shown with when they hold several: Admin, then Editor or Builder, then
+ * Curator, then Viewer, then any other role in the order the policies came in.
+ * @param {string[]} roles - the display names of the roles the member holds.
+ * @returns {string|undefined}
+ */
+export const getHighestRole = roles => minBy(roles, getRolePrecedence)
 
 export const getMemberDisplayName = ({ name, id }) => {
   const formattedName = (name ?? '').trim().replace(/^\//, '').replaceAll('/', ' / ')
@@ -84,9 +107,9 @@ export const getMemberDisplayName = ({ name, id }) => {
   return formattedName || id || ''
 }
 
-const generateMembersMF = (policiesResponse, membersDispatch) => {
+const generateMembersMF = (policiesResponse, membersDispatch, projectName) => {
   const members = []
-  const memberSet = new Set()
+  const membersById = new Map()
   const policies = policiesResponse.data.items || []
 
   membersDispatch({
@@ -102,32 +125,41 @@ const generateMembersMF = (policiesResponse, membersDispatch) => {
   membersDispatch({
     type: membersActions.SET_PROJECT_INFO,
     payload: {
-      id: policies[0]?.spec?.projectName || '',
+      id: projectName,
       owner: { id: ownerUsername, username: ownerUsername, firstName: '', lastName: '' }
     }
   })
 
+  // A member can hold several roles, e.g. a previous owner keeps Admin on top of what they had.
+  // All of them are kept so that a Save leaves the ones the user did not touch in place.
   policies.forEach(policy => {
     const roleName = policy.spec.displayName
     const assignedMembers = policy.status?.assignedMembers || []
 
     assignedMembers.forEach(assignedMember => {
-      if (memberSet.has(assignedMember.id)) return
+      if (!membersById.has(assignedMember.id)) {
+        membersById.set(assignedMember.id, { assignedMember, roles: [] })
+      }
 
-      const memberType = assignedMember.kind === USER_ROLE ? USER_ROLE : USER_GROUP_ROLE
-      const isOwner = ownerMemberIds.has(assignedMember.id)
-      const effectiveRole = isOwner ? OWNER_ROLE : roleName
-
-      addMember(
-        members,
-        getMemberDisplayName(assignedMember),
-        assignedMember.id,
-        memberType,
-        effectiveRole,
-        effectiveRole
-      )
-      memberSet.add(assignedMember.id)
+      if (roleName !== OWNER_ROLE) {
+        membersById.get(assignedMember.id).roles.push(roleName)
+      }
     })
+  })
+
+  membersById.forEach(({ assignedMember, roles }) => {
+    const memberType = assignedMember.kind === USER_ROLE ? USER_ROLE : USER_GROUP_ROLE
+    const role = ownerMemberIds.has(assignedMember.id) ? OWNER_ROLE : getHighestRole(roles)
+
+    addMember(
+      members,
+      getMemberDisplayName(assignedMember),
+      assignedMember.id,
+      memberType,
+      role,
+      role,
+      roles
+    )
   })
 
   membersDispatch({
@@ -138,6 +170,8 @@ const generateMembersMF = (policiesResponse, membersDispatch) => {
     type: membersActions.SET_MEMBERS,
     payload: members
   })
+
+  return members
 }
 
 const isOwnerInMembersList = (ownerId, membersList) => {
@@ -211,6 +245,23 @@ const generateMembersIGZ3 = (membersResponse, membersDispatch, owner) => {
 }
 
 export const generateMembers = IS_MF_MODE ? generateMembersMF : generateMembersIGZ3
+
+/**
+ * Whether the active user still has a role in the project, directly or through one of their groups.
+ * Any role counts, so this holds whatever role the leader leaves a previous owner with.
+ * @param {Object} activeUser - the active user, as kept in the members state.
+ * @param {Object[]} members - the project members.
+ * @returns {boolean}
+ */
+export const isActiveUserProjectMember = (activeUser, members) => {
+  const attributes = activeUser?.data?.attributes
+
+  return members.some(
+    member =>
+      member.id === attributes?.username ||
+      (member.type === USER_GROUP_ROLE && Boolean(attributes?.user_group_ids?.has(member.id)))
+  )
+}
 
 export const isProjectMembersTabShown = (
   projectMembershipIsEnabled,

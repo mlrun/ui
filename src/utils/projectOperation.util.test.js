@@ -23,12 +23,12 @@ import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import {
   endProjectTransition,
   getProjectOperationId,
+  handleProjectOperationConflict,
   isProjectOperationConflict,
   PROJECT_OPERATION_IN_PROGRESS_MESSAGE,
   showProjectOperationInProgress,
   startProjectTransition,
-  trackProjectMutation,
-  withLatestOpId
+  trackProjectMutation
 } from './projectOperation.util'
 import {
   getProjectTransition,
@@ -130,6 +130,30 @@ describe('projectOperation.util', () => {
 
     it('returns undefined for a null payload', () => {
       expect(getProjectOperationId(null)).toBeUndefined()
+    })
+  })
+
+  // ── handleProjectOperationConflict ──────────────────────────────────────────
+
+  describe('handleProjectOperationConflict', () => {
+    const conflict = { response: { status: 409 } }
+    const getRetryHandler = () => showErrorNotification.mock.calls[0][4]
+
+    it('leaves errors other than a conflict to the caller', () => {
+      expect(
+        handleProjectOperationConflict({ response: { status: 403 } }, 'my-project', vi.fn())
+      ).toBe(false)
+      expect(showErrorNotification).not.toHaveBeenCalled()
+    })
+
+    it('reports a conflict with a retry that runs the mutation again', () => {
+      const retry = vi.fn()
+
+      expect(handleProjectOperationConflict(conflict, 'my-project', vi.fn(), retry)).toBe(true)
+      getRetryHandler()()
+
+      expect(retry).toHaveBeenCalled()
+      expect(orcaProjectsApi.getProject).not.toHaveBeenCalled()
     })
   })
 
@@ -349,60 +373,6 @@ describe('projectOperation.util', () => {
       expect(getProjectTransitionTooltip('creating', false)).toBe(
         'The project is in creation process.'
       )
-    })
-  })
-
-  // ── withLatestOpId ──────────────────────────────────────────────────────────
-
-  describe('withLatestOpId', () => {
-    it('takes the opId from the latest read', () => {
-      const project = makeProject('my-project', { state: 'online', opId: 'stale-op' })
-      const latest = { status: { opId: 'fresh-op' } }
-
-      expect(withLatestOpId(project, latest).status.opId).toBe('fresh-op')
-    })
-
-    it('takes the opId from an axios-style latest read', () => {
-      const project = makeProject('my-project', { opId: 'stale-op' })
-      const latest = { data: { status: { op_id: 'fresh-op' } } }
-
-      expect(withLatestOpId(project, latest).status.opId).toBe('fresh-op')
-    })
-
-    it('preserves the rest of the project', () => {
-      const project = makeProject('my-project', { state: 'online', phase: 'online' })
-
-      expect(withLatestOpId(project, { status: { opId: 'fresh-op' } })).toEqual({
-        metadata: { name: 'my-project' },
-        spec: { owner: 'alice' },
-        status: { state: 'online', phase: 'online', opId: 'fresh-op' }
-      })
-    })
-
-    it('does not mutate the project it was given', () => {
-      const project = makeProject('my-project', { state: 'online', opId: 'stale-op' })
-
-      withLatestOpId(project, { status: { opId: 'fresh-op' } })
-
-      expect(project.status.opId).toBe('stale-op')
-    })
-
-    it('returns a new object', () => {
-      const project = makeProject()
-
-      expect(withLatestOpId(project, {})).not.toBe(project)
-    })
-
-    it('sets an undefined opId when the latest read carries none', () => {
-      const project = makeProject('my-project', { state: 'online', opId: 'stale-op' })
-
-      expect(withLatestOpId(project, {}).status.opId).toBeUndefined()
-    })
-
-    it('does not throw for an undefined project', () => {
-      expect(withLatestOpId(undefined, { status: { opId: 'fresh-op' } })).toEqual({
-        status: { opId: 'fresh-op' }
-      })
     })
   })
 

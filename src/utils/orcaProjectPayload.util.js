@@ -42,10 +42,11 @@ import { PROJECT_ARCHIVED_STATE, PROJECT_ONLINE_STATUS } from '../constants'
 // fields (e.g. MLRun-only `artifact_path`), so everything else must be left out of the body.
 const ORCA_UPDATABLE_FIELDS = ['description', 'labels', 'annotations']
 
-// 0: creating, 1: online, 2: deleting, 3: archived
+// The leader's ProjectState enum: 0 unspecified, 1 creating, 2 online, 3 deleting, 4 archived. Only
+// online and archived may be requested; the leader refuses creating and deleting with a 400.
 const ORCA_DESIRED_STATE_BY_MLRUN_STATE = {
-  [PROJECT_ONLINE_STATUS]: 1,
-  [PROJECT_ARCHIVED_STATE]: 3
+  [PROJECT_ONLINE_STATUS]: 2,
+  [PROJECT_ARCHIVED_STATE]: 4
 }
 
 /**
@@ -82,6 +83,32 @@ const toOrcaMutationBase = (project = {}) => {
 }
 
 /**
+ * Reads the CAS witness from a leader project: its owner and op id. Both are kept together because
+ * every owner change produces a new op id, so a pair read at the same time is either current or
+ * gets a 409, while an old owner sent with a new op id would transfer ownership back.
+ * @param {Object} [latest] - a leader project body or axios response.
+ * @returns {{owner: (string|undefined), opId: (string|undefined)}}
+ */
+export const getLeaderWitness = latest => {
+  const project = latest?.data ?? latest
+
+  return { owner: project?.spec?.owner, opId: readOpId(project) }
+}
+
+/**
+ * Puts a leader witness onto `project` without mutating either: `spec.owner` and `status.opId`
+ * come from the witness, everything else from the project.
+ * @param {Object} project
+ * @param {{owner: string, opId: string}} witness - see `getLeaderWitness`.
+ * @returns {Object} a new project object.
+ */
+export const withLeaderWitness = (project, { owner, opId }) => ({
+  ...project,
+  spec: { ...project?.spec, owner },
+  status: { ...project?.status, opId }
+})
+
+/**
  * Body for `POST /v1/projects/projects`. Create does not take a CAS witness.
  * @param {Object} project - MLRun-shaped `{ metadata, spec }` project.
  * @returns {Object}
@@ -105,7 +132,7 @@ export const toOrcaUpdatePayload = project => {
 
 /**
  * Body for archive/unarchive (`PATCH` with `desiredState`). Maps MLRun's `'online'`/`'archived'`
- * strings onto the leader's integer enum (1 and 3). An unrecognised state yields
+ * strings onto the leader's integer enum (2 and 4). An unrecognised state yields
  * `desiredState: undefined`.
  * @param {string} state - MLRun desired state (`'online'` or `'archived'`).
  * @param {Object} project - MLRun-shaped `{ metadata, spec }` project; supplies name, owner and
