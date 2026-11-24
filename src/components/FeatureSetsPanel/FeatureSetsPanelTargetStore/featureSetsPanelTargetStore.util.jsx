@@ -226,18 +226,23 @@ export const handlePathChange = (
   }
 }
 
+const PARQUET_FILE_REGEX = /\.(parquet|pq)\s*$/
+const FILE_EXTENSION_REGEX = /\.\w*\s*$/
+
+export const isParquetPathFormatValid = (path, partitioned) =>
+  partitioned ? !FILE_EXTENSION_REGEX.test(path) : PARQUET_FILE_REGEX.test(path)
+
 export const isParquetPathValid = (validation, parquet) => {
-  return (
-    !validation ||
-    Boolean(parquet.partitioned && /\.\w*\s*$/.test(parquet.path)) ||
-    Boolean(!parquet.partitioned && !/\.parquet\s*$|\.pq\s*$/.test(parquet.path))
-  )
+  return !validation || !isParquetPathFormatValid(parquet.path, parquet.partitioned)
 }
 
+export const getParquetPathPattern = partitioned =>
+  partitioned ? `(?!.*${FILE_EXTENSION_REGEX.source}).*` : `.*${PARQUET_FILE_REGEX.source}`
+
 export const getInvalidParquetPathMessage = parquet => {
-  return parquet.partitioned && /\.\w*\s*$/.test(parquet.path)
+  return parquet.partitioned && FILE_EXTENSION_REGEX.test(parquet.path)
     ? 'The partitioned Parquet target for storey engine must be a directory. (The directory name must not end in .parquet/.pq.)'
-    : !parquet.partitioned && !/\.parquet\s*$|\.pq\s*$/.test(parquet.path)
+    : !parquet.partitioned && !PARQUET_FILE_REGEX.test(parquet.path)
       ? 'The Parquet target for storey engine file path must have a .parquet/.pq suffix.'
       : 'This field is invalid.'
 }

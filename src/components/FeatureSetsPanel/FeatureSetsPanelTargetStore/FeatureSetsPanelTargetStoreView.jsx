@@ -47,6 +47,7 @@ import {
   EXTERNAL_OFFLINE,
   externalOfflineKindOptions,
   getInvalidParquetPathMessage,
+  getParquetPathPattern,
   isParquetPathValid,
   onlineKindOptions,
   NOSQL,
@@ -257,6 +258,7 @@ const FeatureSetsPanelTargetStoreView = ({
                           parquet: { ...state.parquet, path }
                         }))
                       }}
+                      pattern={getParquetPathPattern(data.parquet.partitioned)}
                       placeholder={
                         'v3io:///projects/{project}/FeatureStore/{name}/parquet/sets/{name}.parquet'
                       }
