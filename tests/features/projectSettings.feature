@@ -154,9 +154,7 @@ Feature: Project Settings page
         Then verify "Labels_Value" options rules on "Project_Settings_General_Tab" wizard with labels
 
     @MLPS
-    # BUG-001: the editing of a label chip ends by itself while a long key is typed, the rest is lost. Apart from MLPS002:
-    # the tag makes the whole scenario an expected failure
-    @smoke @knownBug
+    @smoke
     Scenario: MLPS011 - Verify the label key rules on General tab
         Given open url
         And wait load page

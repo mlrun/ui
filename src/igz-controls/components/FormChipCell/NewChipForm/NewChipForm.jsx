@@ -224,6 +224,8 @@ function NewChipForm({
 
   const handleScroll = useCallback(
     event => {
+      if (refInputContainer.current?.contains(event.target)) return
+
       if (validationRulesRef?.current && !validationRulesRef.current.contains(event.target)) {
         setShowValidationRules(false)
         outsideClick(event, true)
