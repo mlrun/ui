@@ -291,7 +291,7 @@ function registerOrcaMock(
     const summary = cloneDeep(summuryTemplate)
     summary.name = project.metadata.name
     projectsSummary.project_summaries.push(summary)
-    secretKeys[project.metadata.name] = secretKeyTemplate
+    secretKeys.set(project.metadata.name, secretKeyTemplate)
 
     startOperation(project, getOperationFailure(project.metadata.name, nextOpId))
 
@@ -338,7 +338,7 @@ function registerOrcaMock(
       const summary = cloneDeep(summuryTemplate)
       summary.name = project.metadata.name
       projectsSummary.project_summaries.push(summary)
-      secretKeys[project.metadata.name] = secretKeyTemplate
+      secretKeys.set(project.metadata.name, secretKeyTemplate)
 
       startOperation(project, getOperationFailure(project.metadata.name, nextOpId))
       res.status(202).send(project)
@@ -425,7 +425,7 @@ function registerOrcaMock(
     const summary = cloneDeep(summuryTemplate)
     summary.name = name
     projectsSummary.project_summaries.push(summary)
-    secretKeys[name] = secretKeyTemplate
+    secretKeys.set(name, secretKeyTemplate)
   })
 
   /* ======================== ORIS project membership (Orca) ========================
