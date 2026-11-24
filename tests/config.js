@@ -72,6 +72,9 @@ export const appEnv = {
   VITE_MLRUN_API_URL: mockIngress('mlrun-api-ingress'),
   VITE_NUCLIO_API_URL: mockIngress('nuclio-ingress'),
   VITE_IGUAZIO_API_URL: mockIngress('platform-api'),
+  // the platform API of the app in ORIS mode (`/oris-mlrun/api`, the `@ORIS` scenarios): the same mock host, which also
+  // serves the leader's (Orca) endpoints
+  VITE_ORIS_API_URL: mockIngress('platform-api'),
   // the function templates (`/function-catalog/<name>/function.yaml`, e.g. editing a schedule of a `hub://` function):
   // the mock serves them under the MLRun ingress (`/:function/function.yaml`, `/catalog.json`)
   VITE_FUNCTION_CATALOG_URL: mockIngress('mlrun-api-ingress'),

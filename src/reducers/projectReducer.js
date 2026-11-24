@@ -19,6 +19,7 @@ such restriction.
 */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
+import orcaProjectsApi from '../api/projects-orca-api'
 import projectsApi from '../api/projects-api'
 import { hideLoading, showLoading } from './redux.util'
 import {
@@ -38,6 +39,7 @@ import { getOrcaErrorMessage } from '../utils/orcaError.util'
 import { getReportedTransition } from '../utils/projectTransition.util'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { parseSummaryData } from '../utils/parseSummaryData'
+import { getLeaderWitness, withLeaderWitness } from '../utils/orcaProjectPayload.util'
 import {
   aggregateApplicationStatuses,
   filterNuclioAppFunctions,
@@ -184,14 +186,29 @@ const initialState = {
   }
 }
 
+// In ORIS every update needs the leader's current owner and op id, and the MLRun copy of the project
+// can be behind on both, e.g. after an earlier save or an owner change.
+const withCurrentLeaderWitness = (project, projectName) => {
+  if (!IS_MF_MODE) return Promise.resolve(project)
+
+  return orcaProjectsApi
+    .getProject(projectName)
+    .then(latest => withLeaderWitness(project, getLeaderWitness(latest)))
+}
+
 export const changeProjectState = createAsyncThunk(
   'changeProjectState',
   ({ project, status }, thunkAPI) => {
-    return projectsApi
-      .changeProjectState(project, status)
+    return withCurrentLeaderWitness(project, project.metadata.name)
+      .then(projectToSend => projectsApi.changeProjectState(projectToSend, status))
       .catch(error => thunkAPI.rejectWithValue(error))
   }
 )
+export const editProject = createAsyncThunk('editProject', ({ projectName, project }, thunkAPI) => {
+  return withCurrentLeaderWitness(project, projectName)
+    .then(projectToSend => projectsApi.editProject(projectName, projectToSend))
+    .catch(error => thunkAPI.rejectWithValue(error))
+})
 const getCreateProjectErrorMessage = (error, projectName) => {
   switch (error.response?.status) {
     case CONFLICT_ERROR_STATUS_CODE:

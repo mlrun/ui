@@ -17,9 +17,12 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import orcaProjectsApi from '../api/projects-orca-api'
 import projectsApi from '../api/projects-api'
 import projectReducer, {
+  changeProjectState,
   createNewProject,
+  editProject,
   fetchProjects,
   removeProject,
   setProjectTransition,
@@ -43,7 +46,10 @@ vi.mock('../constants', async importOriginal => {
   }
 })
 
-vi.mock('../api/projects-api', () => ({ default: { createProject: vi.fn() } }))
+vi.mock('../api/projects-api', () => ({
+  default: { changeProjectState: vi.fn(), createProject: vi.fn(), editProject: vi.fn() }
+}))
+vi.mock('../api/projects-orca-api', () => ({ default: { getProject: vi.fn() } }))
 
 vi.mock('igz-controls/utils/notification.util', () => ({
   showErrorNotification: vi.fn()
@@ -466,6 +472,98 @@ describe('projectReducer', () => {
 
       expect(state.projectsInTransition['project-a']).toBeDefined()
       expect(state.projects).toHaveLength(1)
+    })
+  })
+
+  // ── editProject / changeProjectState ────────────────────────────────────────
+
+  describe('updates in MF mode', () => {
+    // An MLRun copy of the project, read before the latest leader change.
+    const loadedProject = {
+      metadata: { name: 'project-a' },
+      spec: { owner: 'alice', source: 'git://repo' },
+      status: { state: 'online', op_id: 'stale-op' }
+    }
+    const leaderProject = { spec: { owner: 'bob' }, status: { opId: 'current-op' } }
+    const withCurrentWitness = {
+      ...loadedProject,
+      spec: { ...loadedProject.spec, owner: 'bob' },
+      status: { ...loadedProject.status, opId: 'current-op' }
+    }
+    const run = thunk => thunk(vi.fn(), vi.fn(), undefined)
+
+    beforeEach(() => {
+      vi.clearAllMocks()
+      orcaProjectsApi.getProject.mockResolvedValue(leaderProject)
+    })
+
+    describe('editProject', () => {
+      it('sends the owner and op id the leader has right before the edit', async () => {
+        projectsApi.editProject.mockResolvedValue({ status: 202 })
+
+        await run(editProject({ projectName: 'project-a', project: loadedProject }))
+
+        expect(orcaProjectsApi.getProject).toHaveBeenCalledWith('project-a')
+        expect(projectsApi.editProject).toHaveBeenCalledWith('project-a', withCurrentWitness)
+      })
+
+      it('does not send the edit when the leader read fails', async () => {
+        const error = { response: { status: 404 } }
+        orcaProjectsApi.getProject.mockRejectedValue(error)
+
+        const action = await run(editProject({ projectName: 'project-a', project: loadedProject }))
+
+        expect(projectsApi.editProject).not.toHaveBeenCalled()
+        expect(action.payload).toBe(error)
+      })
+
+      it('rejects with the error of the edit, so a 409 can be told apart', async () => {
+        const error = { response: { status: 409 } }
+        projectsApi.editProject.mockRejectedValue(error)
+
+        const action = await run(editProject({ projectName: 'project-a', project: loadedProject }))
+
+        expect(action.payload).toBe(error)
+      })
+
+      it('sends the project as given outside MF mode', async () => {
+        mfMode.enabled = false
+        projectsApi.editProject.mockResolvedValue({ data: loadedProject })
+
+        await run(editProject({ projectName: 'project-a', project: loadedProject }))
+
+        expect(orcaProjectsApi.getProject).not.toHaveBeenCalled()
+        expect(projectsApi.editProject).toHaveBeenCalledWith('project-a', loadedProject)
+      })
+    })
+
+    describe('changeProjectState', () => {
+      it('sends the owner and op id the leader has right before the change', async () => {
+        projectsApi.changeProjectState.mockResolvedValue({ status: 202 })
+
+        await run(changeProjectState({ project: loadedProject, status: 'archived' }))
+
+        expect(projectsApi.changeProjectState).toHaveBeenCalledWith(withCurrentWitness, 'archived')
+      })
+
+      it('does not send the change when the leader read fails', async () => {
+        orcaProjectsApi.getProject.mockRejectedValue(new Error('network error'))
+
+        const action = await run(changeProjectState({ project: loadedProject, status: 'archived' }))
+
+        expect(projectsApi.changeProjectState).not.toHaveBeenCalled()
+        expect(action.type).toBe(changeProjectState.rejected.type)
+      })
+
+      it('sends the project as given outside MF mode', async () => {
+        mfMode.enabled = false
+        projectsApi.changeProjectState.mockResolvedValue({ data: loadedProject })
+
+        await run(changeProjectState({ project: loadedProject, status: 'archived' }))
+
+        expect(orcaProjectsApi.getProject).not.toHaveBeenCalled()
+        expect(projectsApi.changeProjectState).toHaveBeenCalledWith(loadedProject, 'archived')
+      })
     })
   })
 

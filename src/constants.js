@@ -450,6 +450,8 @@ export const LLM_PROMPT_TYPE = 'llm-prompt'
 
 export const ADMIN_ROLE = 'Admin'
 export const ALL_ROLES = 'All'
+export const BUILDER_ROLE = 'Builder'
+export const CURATOR_ROLE = 'Curator'
 export const EDITOR_ROLE = 'Editor'
 export const OWNER_ROLE = 'Owner'
 export const USER_ROLE = 'user'

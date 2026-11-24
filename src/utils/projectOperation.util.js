@@ -264,27 +264,13 @@ export const trackProjectMutation = (payload, options) => {
 }
 
 /**
- * Copies `status.opId` from `latest` onto `project` without mutating either. Used after a 409 so
- * the retry carries the leader's current witness rather than the stale one.
- * @param {Object} project
- * @param {Object} latest - a project body or axios response carrying a fresh opId.
- * @returns {Object} a new project object.
- */
-export const withLatestOpId = (project, latest) => ({
-  ...project,
-  status: {
-    ...project?.status,
-    opId: getProjectOperationId(latest)
-  }
-})
-
-/**
  * Handles the compare-and-swap rejection the leader returns when another mutation raced ahead of
- * this one. Re-reads the project for a fresh opId, then lets the user retry.
+ * this one. The project mutation thunks read the current op id before each update, so a retry only
+ * has to run the mutation again.
  * @param {Object} error - an axios error.
  * @param {string} projectName
  * @param {function} dispatch
- * @param {function} [retry] - invoked with the freshly read project when the user retries.
+ * @param {function} [retry] - invoked when the user retries.
  * @returns {boolean} whether the error was a conflict and has been reported.
  */
 export const handleProjectOperationConflict = (error, projectName, dispatch, retry) => {
@@ -296,19 +282,6 @@ export const handleProjectOperationConflict = (error, projectName, dispatch, ret
     '',
     `The project "${projectName}" was modified by another operation. Please review the latest state and retry.`,
     retry
-      ? () =>
-          orcaProjectsApi
-            .getProject(projectName)
-            .then(latest => retry(latest))
-            .catch(readError =>
-              showErrorNotification(
-                dispatch,
-                readError,
-                '',
-                `Failed to reload the project "${projectName}"`
-              )
-            )
-      : undefined
   )
 
   return true

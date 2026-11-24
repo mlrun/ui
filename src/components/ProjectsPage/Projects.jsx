@@ -39,8 +39,7 @@ import { BG_TASK_RUNNING } from '../../utils/poll.util'
 import {
   handleProjectOperationConflict,
   startProjectTransition,
-  trackProjectMutation,
-  withLatestOpId
+  trackProjectMutation
 } from '../../utils/projectOperation.util'
 import { getOrcaErrorMessage } from '../../utils/orcaError.util'
 import {
@@ -266,8 +265,8 @@ const Projects = () => {
         })
         .catch(error => {
           if (
-            handleProjectOperationConflict(error, project.metadata.name, dispatch, latest =>
-              handleArchiveProject(withLatestOpId(project, latest))
+            handleProjectOperationConflict(error, project.metadata.name, dispatch, () =>
+              handleArchiveProject(project)
             )
           ) {
             return
@@ -296,8 +295,8 @@ const Projects = () => {
         })
         .catch(error => {
           if (
-            handleProjectOperationConflict(error, project.metadata.name, dispatch, latest =>
-              handleUnarchiveProject(withLatestOpId(project, latest))
+            handleProjectOperationConflict(error, project.metadata.name, dispatch, () =>
+              handleUnarchiveProject(project)
             )
           ) {
             return
