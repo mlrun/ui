@@ -237,7 +237,7 @@ export const isParquetPathValid = (validation, parquet) => {
 }
 
 export const getParquetPathPattern = partitioned =>
-  partitioned ? `(?!.*${FILE_EXTENSION_REGEX.source}).*` : `.*${PARQUET_FILE_REGEX.source}`
+  partitioned ? `^(?!.*${FILE_EXTENSION_REGEX.source}).*$` : `^.*${PARQUET_FILE_REGEX.source}`
 
 export const getInvalidParquetPathMessage = parquet => {
   return parquet.partitioned && FILE_EXTENSION_REGEX.test(parquet.path)

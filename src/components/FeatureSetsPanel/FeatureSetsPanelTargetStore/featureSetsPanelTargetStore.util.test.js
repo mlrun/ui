@@ -46,10 +46,13 @@ describe('parquet target path rules', () => {
     { partitioned: 'byTime', title: 'partitioned' }
   ])('$title path', ({ partitioned }) => {
     it.each(paths)('keeps the Input pattern in sync with the validity of "%s"', path => {
-      const pattern = new RegExp(`^(?:${getParquetPathPattern(partitioned)})$`)
+      const patternSource = getParquetPathPattern(partitioned)
+      const inputPattern = new RegExp(patternSource)
+      const htmlAttributePattern = new RegExp(`^(?:${patternSource})$`)
       const expectedValidity = isParquetPathFormatValid(path, partitioned)
 
-      expect(pattern.test(path)).toBe(expectedValidity)
+      expect(inputPattern.test(path)).toBe(expectedValidity)
+      expect(htmlAttributePattern.test(path)).toBe(expectedValidity)
       expect(isParquetPathValid(true, { path, partitioned })).toBe(!expectedValidity)
     })
   })

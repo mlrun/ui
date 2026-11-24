@@ -27,7 +27,7 @@ import featureStore from '../../../reducers/featureStoreReducer'
 
 const PROJECT = 'test-project'
 const FILE_PATH = `s3://test-artifacts/${PROJECT}/FeatureStore/test-set/parquet/updated_targets/test-set.parquet`
-const DIRECTORY_PATH = `s3://test-artifacts/${PROJECT}/FeatureStore/test-set/parquet/updated_targets/dir`
+const DIRECTORY_PATH = `s3://test-artifacts/${PROJECT}/FeatureStore/test-set/parquet/updated_targets/v1.${'a'.repeat(70)}/dir`
 
 const setNativeInputValue = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set
 
