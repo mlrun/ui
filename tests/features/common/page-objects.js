@@ -59,7 +59,6 @@ export default {
   Confirm_Popup: interactivePopup['confirmPopup'],
   Datasets: featureStore['datasets'],
   Datasets_Info_Pane: infoPane['datasetsInfoPane'],
-  Demo_Project: project['demoProject'],
   Deploy_Model_Popup: interactivePopup['deployModelPopup'],
   Discard_Changes_Popup: interactivePopup['discardChangesPopup'],
   Delete_Artifact_Popup: interactivePopup['deleteArtifactPopup'],

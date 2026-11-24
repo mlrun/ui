@@ -1394,17 +1394,6 @@ Then('select {string} project in sidebar project dropdown', async function (proj
   await selectSidebarProject(this.page, projectName)
 })
 
-// for project pages that are not available in the sidebar (e.g. "quick-actions")
-Then('open {string} page of current project by url', async function (page) {
-  const url = this.page.url()
-  const [projectsPath, projectName] = new URL(url).pathname.split('/').slice(1, 3)
-
-  await navigateToPage(
-    this.page,
-    `http://${test_url}:${test_port}/${projectsPath}/${projectName}/${page}`
-  )
-})
-
 Then(
   'verify workflow graph nodes and arrows connections on {string} on {string} wizard',
   async function (graphName, wizardName) {

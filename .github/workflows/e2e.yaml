@@ -49,7 +49,7 @@ on:
       tags:
         description: 'Tag expression of the scenarios (E2E_TAGS): the default - the full CI regression, `all` - every scenario, `@sanity` - the PR selection'
         type: string
-        default: 'not @demoMode and not @MLPH'
+        default: 'not @demoMode'
 
 # one run per PR: a new push cancels the running one. The manual runs are not
 # cancelled (e.g. a run with 4 workers next to one with 3)
@@ -71,8 +71,8 @@ jobs:
       # - a PR: the sanity scenarios (`@sanity`, the main functionality of every page, a few minutes), on every push
       # - the weekly run and a manual run (by default): the full CI regression, the UI that isn't shown to the users is
       #   left out: the demo mode (`@demoMode`, the scenarios that turn it on with `?mode=demo`; the step fails in an
-      #   untagged scenario) and the Quick actions page (`@MLPH`, quickActions.feature). Local runs run all the scenarios
-      E2E_TAGS: ${{ inputs.tags || (github.event_name == 'pull_request' && '@sanity and not @demoMode and not @MLPH' || 'not @demoMode and not @MLPH') }}
+      #   untagged scenario). Local runs run all the scenarios
+      E2E_TAGS: ${{ inputs.tags || (github.event_name == 'pull_request' && '@sanity and not @demoMode' || 'not @demoMode') }}
       # 3 workers by default (a worker is a Playwright worker process, a browser and a mock instance)
       E2E_WORKERS: ${{ inputs.workers || '3' }}
       # a PR gets a simple report: the failed scenarios in the job summary and as annotations (no Allure report), the

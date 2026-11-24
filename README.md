@@ -172,15 +172,15 @@ scenario, so the scenarios don't share state.
 - `@knownBug`, `@FAILED_TODO`: never fail the run. A failure is shown as a known bug (◆), a pass as "known bug passed"
   (★). Use them for work that is out of scope for now, and remove the tag once it's fixed.
 - `@generatedData`: the scenario needs the big generated project (paging, search over many items).
-- `@demoMode`, `@MLPH`: demo mode and the Quick actions page, left out on CI.
+- `@demoMode`: demo mode, left out on CI.
 
 ### CI
 
 `.github/workflows/e2e.yaml` runs `npm run test:regression:ci` on `ubuntu-latest` with 3 workers.
 
 - **PRs** (non-draft, into `development`, `feature/**` and the release branches) run
-  `@sanity and not @demoMode and not @MLPH`. A new push cancels the running run.
-- **Full regression** (`not @demoMode and not @MLPH`) runs weekly on Thursday 03:00 UTC, and on demand from Actions →
+  `@sanity and not @demoMode`. A new push cancels the running run.
+- **Full regression** (`not @demoMode`) runs weekly on Thursday 03:00 UTC, and on demand from Actions →
   E2E regression → Run workflow (inputs `workers` 1-4 and `tags`).
 - **Report.** The job summary lists the failed and flaky scenarios with their errors. The full regression uploads the
   `allure-report` artifact (serve it with `npx allure open <folder>`). A failed run uploads `e2e-test-results` with the
