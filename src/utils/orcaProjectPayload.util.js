@@ -83,9 +83,8 @@ const toOrcaMutationBase = (project = {}) => {
 }
 
 /**
- * Reads the CAS witness from a leader project: its owner and op id. Both are kept together because
- * every owner change produces a new op id, so a pair read at the same time is either current or
- * gets a 409, while an old owner sent with a new op id would transfer ownership back.
+ * Reads the CAS witness (owner and op id) from a leader project. They are read together: an old
+ * owner sent with a new op id would transfer ownership back.
  * @param {Object} [latest] - a leader project body or axios response.
  * @returns {{owner: (string|undefined), opId: (string|undefined)}}
  */

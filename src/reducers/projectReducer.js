@@ -186,14 +186,8 @@ const initialState = {
   }
 }
 
-/**
- * In ORIS, puts the project's current owner and op id, read from the leader, onto `project`. Every
- * leader update needs them, and a project read from MLRun can be behind on both, e.g. after an
- * earlier save or an owner change. Outside ORIS the project is sent as given.
- * @param {Object} project
- * @param {string} projectName
- * @returns {Promise<Object>} the project to send; rejects when the leader read fails.
- */
+// In ORIS every update needs the leader's current owner and op id, and the MLRun copy of the project
+// can be behind on both, e.g. after an earlier save or an owner change.
 const withCurrentLeaderWitness = (project, projectName) => {
   if (!IS_MF_MODE) return Promise.resolve(project)
 

@@ -118,7 +118,6 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
             })
           )
 
-          // The callback reports its own refresh failures, so they don't read as a failed change.
           return changeOwnerCallback()
         },
         error => {

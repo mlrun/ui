@@ -168,8 +168,6 @@ const ProjectSettingsGeneral = ({
 
   const sendProjectSettingsData = useCallback(
     function sendProjectSettingsDataCallback(projectData) {
-      // In ORIS the thunk takes the owner and op id from the leader right before sending, since the
-      // loaded project can be behind on both after an earlier save or an owner change.
       dispatch(editProject({ projectName: params.projectName, project: projectData }))
         .unwrap()
         .then(() => {

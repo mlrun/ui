@@ -367,9 +367,8 @@ const ProjectSettings = () => {
   // Never rejects: a failed refresh is reported here, not as a failed owner change.
   const changeOwnerCallback = () => {
     if (IS_MF_MODE) {
-      // Only the owner or a system admin can change the owner. The page is left only when the
-      // active user has no role left, so it does not depend on which role the leader gives the
-      // previous owner. fetchProjectPolicies reports its own failure.
+      // Leave only when the active user has no role left, whatever role the previous owner gets.
+      // fetchProjectPolicies reports its own failure.
       return fetchProjectPolicies()
         .then(members => {
           if (!userIsSystemAdmin && !isActiveUserProjectMember(membersState.activeUser, members)) {

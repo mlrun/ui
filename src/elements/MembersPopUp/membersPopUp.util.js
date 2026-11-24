@@ -34,15 +34,8 @@ const getCurrentRoleOption = memberRole => {
   return { id: memberRole, label: memberRole, hidden: true }
 }
 
-/**
- * Builds the `membership` of the project roles PUT, which with `override: true` replaces every
- * non-owner role. Each role starts from the members it was loaded with, so a member keeps the
- * roles the user did not change. A member whose role was changed, or who was removed, is taken out
- * of every non-owner role and then added to the role they now have.
- * @param {Object[]} policies - the project policies the members were loaded from.
- * @param {Object[]} members - the edited member rows.
- * @returns {Object} the membership, keyed by the policy's role.
- */
+// With `override: true` the PUT replaces every non-owner role, so each role starts from the members it
+// was loaded with, and only the members the user changed are moved.
 export const buildProjectMembershipMF = (policies, members) => {
   const changedMembers = members.filter(member => member.modification)
   const changedMemberIds = new Set(changedMembers.map(member => member.id))

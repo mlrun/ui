@@ -83,8 +83,7 @@ const addMember = (members, name, id, type, initialRole, role, roles) => {
   })
 }
 
-// The leader's project roles, highest first. Each role's permissions include the ones below it, and
-// Editor and Builder grant the same.
+// Highest first, as the leader ranks them. Editor and Builder grant the same permissions.
 const ROLES_BY_PRECEDENCE = [ADMIN_ROLE, EDITOR_ROLE, BUILDER_ROLE, CURATOR_ROLE, VIEWER_ROLE]
 
 const getRolePrecedence = role => {
@@ -93,12 +92,6 @@ const getRolePrecedence = role => {
   return precedence === -1 ? ROLES_BY_PRECEDENCE.length : precedence
 }
 
-/**
- * The role a member is shown with when they hold several: Admin, then Editor or Builder, then
- * Curator, then Viewer, then any other role in the order the policies came in.
- * @param {string[]} roles - the display names of the roles the member holds.
- * @returns {string|undefined}
- */
 export const getHighestRole = roles => minBy(roles, getRolePrecedence)
 
 export const getMemberDisplayName = ({ name, id }) => {
@@ -130,8 +123,8 @@ const generateMembersMF = (policiesResponse, membersDispatch, projectName) => {
     }
   })
 
-  // A member can hold several roles, e.g. a previous owner keeps Admin on top of what they had.
-  // All of them are kept so that a Save leaves the ones the user did not touch in place.
+  // A member can hold several roles (a previous owner gets Admin on top of theirs). Keep them all, so
+  // a Save doesn't drop the ones the user didn't touch.
   policies.forEach(policy => {
     const roleName = policy.spec.displayName
     const assignedMembers = policy.status?.assignedMembers || []
@@ -246,13 +239,6 @@ const generateMembersIGZ3 = (membersResponse, membersDispatch, owner) => {
 
 export const generateMembers = IS_MF_MODE ? generateMembersMF : generateMembersIGZ3
 
-/**
- * Whether the active user still has a role in the project, directly or through one of their groups.
- * Any role counts, so this holds whatever role the leader leaves a previous owner with.
- * @param {Object} activeUser - the active user, as kept in the members state.
- * @param {Object[]} members - the project members.
- * @returns {boolean}
- */
 export const isActiveUserProjectMember = (activeUser, members) => {
   const attributes = activeUser?.data?.attributes
 

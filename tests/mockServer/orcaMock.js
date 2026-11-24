@@ -181,8 +181,7 @@ function registerOrcaMock(
     return true
   }
 
-  // Like the leader, only online and archived may be requested; creating and deleting are
-  // system-managed.
+  // Like the leader: only online and archived may be requested.
   function checkDesiredState(req, res) {
     const { desiredState } = req.body
 
@@ -212,7 +211,6 @@ function registerOrcaMock(
 
   function applyOrcaFields(project, body) {
     if (body.description != null) project.spec.description = body.description
-    // like the leader, an update with another owner transfers the ownership
     if (body.owner != null && body.owner !== project.spec.owner) moveOwnerRole(project, body.owner)
     if (body.labels != null) project.metadata.labels = body.labels
     if (body.annotations != null) project.metadata.annotations = body.annotations
@@ -446,7 +444,6 @@ function registerOrcaMock(
    *     /v1/profile/search-groups-metadata - the active user (`admin`) and the user search.
    */
 
-  // The leader's project roles: the key it takes in `membership`, and the display name.
   const PROJECT_ROLES = [
     { role: 'owner', displayName: 'Owner' },
     { role: 'admin', displayName: 'Admin' },
@@ -463,8 +460,7 @@ function registerOrcaMock(
     { firstName: 'Dave', lastName: 'Brown', username: 'dave' }
   ]
 
-  // Member ids by role key, per project name. A project starts with its owner in the Owner role. A
-  // Map, so a project name from a request can't reach Object.prototype (e.g. `__proto__`).
+  // A Map, so a project name from a request can't reach Object.prototype (e.g. `__proto__`).
   const projectRoleMembers = new Map()
 
   const getRoleMembers = project => {
@@ -482,7 +478,6 @@ function registerOrcaMock(
     return projectRoleMembers.get(name)
   }
 
-  // The Owner role moves to the new owner, and the previous owner gets Admin and keeps every other role
   function moveOwnerRole(project, owner) {
     const roleMembers = getRoleMembers(project)
     const previousOwner = project.spec.owner
@@ -535,7 +530,6 @@ function registerOrcaMock(
       return
     }
 
-    // the leader's owner endpoint is a PATCH of the project with the new owner: a new op id
     if (owner !== project.spec.owner) {
       moveOwnerRole(project, owner)
       startOperation(project, getOperationFailure(project.metadata.name, nextOpId))
