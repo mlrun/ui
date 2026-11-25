@@ -46,6 +46,7 @@ import { removeModelEndpoints } from '../../../reducers/artifactsReducer'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { getScssVariableValue } from 'igz-controls/utils/common.util'
 import { isDetailsTabExists } from '../../../utils/link-helper.util'
+import { isRequestAborted } from '../../../utils/isRequestAborted'
 import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { clearMetricsOptions } from '../../../reducers/detailsReducer'
@@ -120,17 +121,18 @@ function ModelEndpointsTable({
 
   const fetchData = useCallback(
     filters => {
-      ref.current = new AbortController()
-
       fetchEndpoints(filters)
         .unwrap()
         .then(modelEndpoints => {
-          if (modelEndpoints) {
-            setModelEndpoints(modelEndpoints)
+          setModelEndpoints(modelEndpoints ?? [])
+        })
+        .catch(error => {
+          if (!isRequestAborted(error)) {
+            setModelEndpoints([])
           }
         })
     },
-    [fetchEndpoints, ref]
+    [fetchEndpoints]
   )
 
   const handleRefresh = useCallback(
@@ -169,6 +171,9 @@ function ModelEndpointsTable({
       setModelEndpoints([])
       dispatch(removeModelEndpoints())
       setSelectedModelEndpoint({})
+      // `ref` is an AbortController ref that the parent replaces on every request (not a DOM node),
+      // so the latest `ref.current` is needed here
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       ref.current.abort(REQUEST_CANCELED)
     }
   }, [dispatch, params.projectName, ref])
@@ -269,8 +274,6 @@ function ModelEndpointsTable({
 
   return (
     <>
-      {(artifactsStore.modelEndpoints.modelEndpointLoading ||
-        artifactsStore.modelEndpoints.loading) && <Loader />}
       <div className="models" ref={modelEndpointsRef}>
         <div className="table-container">
           <div className="content__action-bar-wrapper">
@@ -289,7 +292,9 @@ function ModelEndpointsTable({
               <ModelEndpointsFilters isDetails={isDetails} />
             </ActionBar>
           </div>
-          {artifactsStore.modelEndpoints.loading ? null : modelEndpoints.length === 0 ? (
+          {artifactsStore.modelEndpoints.loading ? (
+            <Loader section secondary />
+          ) : modelEndpoints.length === 0 ? (
             <NoData
               message={getNoDataMessage(
                 filters,
@@ -302,6 +307,7 @@ function ModelEndpointsTable({
             />
           ) : (
             <>
+              {artifactsStore.modelEndpoints.modelEndpointLoading && <Loader overlay />}
               <Table
                 actionsMenu={actionsMenu}
                 pageData={pageData}

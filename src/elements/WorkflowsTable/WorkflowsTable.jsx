@@ -825,10 +825,9 @@ function WorkflowsTable({
 
   return (
     <>
-      {(workflowsStore.workflows.loading || permissionsLoading) && <Loader />}
-      {workflowsStore.workflows.loading ? null : (!workflowsStore.workflows.loading &&
-          !params.workflowId &&
-          workflowsStore.workflows.data.length === 0) ||
+      {workflowsStore.workflows.loading ? (
+        <Loader section secondary />
+      ) : (!params.workflowId && workflowsStore.workflows.data.length === 0) ||
         requestErrorMessage ? (
         <NoData
           message={getNoDataMessage(
@@ -842,6 +841,7 @@ function WorkflowsTable({
         />
       ) : (
         <>
+          {permissionsLoading && <Loader overlay />}
           {params.workflowId ? (
             <Workflow
               actionsMenu={actionsMenu}

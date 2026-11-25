@@ -26,11 +26,13 @@ export const largeResponseCatchHandler = (
   dispatch,
   showNotificationCallback = () => {}
 ) => {
-  if (
-    ![LARGE_REQUEST_CANCELED, REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(error.message) &&
-    error &&
-    dispatch
-  ) {
+  const isRequestCanceled = [LARGE_REQUEST_CANCELED, REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(
+    error?.message
+  )
+
+  if (!isRequestCanceled && error && dispatch) {
     showErrorNotification(dispatch, error, defaultError, null, null, showNotificationCallback)
   }
+
+  return isRequestCanceled
 }

@@ -189,9 +189,7 @@ export const getArtifacts = (dispatch, project, projectItemType, setArtifacts) =
         setArtifacts(generateArtifactsList(artifacts ?? []))
       }
     })
-    .catch(error => {
-      showErrorNotification(dispatch, error, '', 'Failed to fetch artifacts')
-    })
+    .catch(() => {})
 }
 
 export const getArtifact = (dispatch, project, artifact, setArtifactsReferences) => {

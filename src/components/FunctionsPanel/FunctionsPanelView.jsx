@@ -86,7 +86,7 @@ const FunctionsPanelView = ({
       )}
       <div className="new-item-side-panel-container">
         <div className="functions-panel new-item-side-panel">
-          {loading && <Loader />}
+          {loading && <Loader overlay />}
           <FunctionsPanelTitle closePanel={closePanel} />
           <div className="new-item-side-panel__body">
             <Accordion

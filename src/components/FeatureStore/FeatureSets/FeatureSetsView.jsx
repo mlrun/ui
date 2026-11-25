@@ -89,7 +89,9 @@ function FeatureSetsView({
           <FeatureStoreFilters content={featureSets} />
         </ActionBar>
       </div>
-      {featureStore.loading ? null : featureSets.length === 0 ? (
+      {featureStore.loading ? (
+        <Loader section secondary />
+      ) : featureSets.length === 0 ? (
         <NoData
           message={getNoDataMessage(
             filters,
@@ -103,7 +105,9 @@ function FeatureSetsView({
         />
       ) : (
         <>
-          {(selectedRowData.loading || featureStore.featureSets.featureSetLoading) && <Loader />}
+          {(selectedRowData.loading || featureStore.featureSets.featureSetLoading) && (
+            <Loader overlay />
+          )}
           <Table
             actionsMenu={actionsMenu}
             applyDetailsChanges={applyDetailsChanges}

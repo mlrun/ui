@@ -407,8 +407,9 @@ function JobsTable({
 
   return (
     <>
-      {jobsStore.loading && <Loader />}
-      {paginatedJobs.length === 0 && !jobsStore.loading && filters && isEmpty(selectedJob) ? (
+      {jobsStore.loading ? (
+        <Loader section secondary />
+      ) : paginatedJobs.length === 0 && filters && isEmpty(selectedJob) ? (
         <NoData
           message={getNoDataMessage(
             filters,
@@ -420,61 +421,58 @@ function JobsTable({
           )}
         />
       ) : (
-        !jobsStore.loading && (
-          <>
-            <Table
-              actionsMenu={actionsMenu}
-              detailsFormInitialValues={detailsFormInitialValues}
-              getCloseDetailsLink={() =>
-                getCloseDetailsLink(
-                  params.jobName ||
-                    (params.projectName ? MONITOR_JOBS_TAB : JOBS_MONITORING_JOBS_TAB)
-                )
-              }
-              handleCancel={() => setSelectedJob({})}
-              pageData={pageData}
-              selectedItem={selectedJob}
-              tab={MONITOR_JOBS_TAB}
-              tableClassName="monitor-jobs-table"
-              tableHeaders={
-                tableContent[0]?.content ?? [
-                  {
-                    headerId: 'uid',
-                    headerLabel: 'UID',
-                    className: 'table-cell-name'
-                  }
-                ]
-              }
-            >
-              {tableContent.map((tableItem, index) => (
-                <JobsTableRow
-                  actionsMenu={actionsMenu}
-                  key={index}
-                  rowItem={tableItem}
-                  selectedJob={selectedJob}
-                />
-              ))}
-            </Table>
-            <Pagination
-              paginationConfig={paginationConfig}
-              closeParamName={selectedJob?.name}
-              disabledNextDoubleBtnTooltip={
-                paginationConfig?.paginationResponse?.['page-token'] &&
-                ((filtersStore.autoRefresh && !params.jobName) ||
-                  (params.jobName && filtersStore.internalAutoRefresh))
-                  ? 'Uncheck Auto Refresh to view more results'
-                  : autoRefreshPrevValue && paginationConfig?.paginationResponse?.['page-token']
-                    ? 'Close detailed view and uncheck Auto Refresh to view more results'
-                    : ''
-              }
-              disableNextDoubleBtn={
-                (filtersStore.autoRefresh && !params.jobName) ||
-                (params.jobName && filtersStore.internalAutoRefresh) ||
-                autoRefreshPrevValue
-              }
-            />
-          </>
-        )
+        <>
+          <Table
+            actionsMenu={actionsMenu}
+            detailsFormInitialValues={detailsFormInitialValues}
+            getCloseDetailsLink={() =>
+              getCloseDetailsLink(
+                params.jobName || (params.projectName ? MONITOR_JOBS_TAB : JOBS_MONITORING_JOBS_TAB)
+              )
+            }
+            handleCancel={() => setSelectedJob({})}
+            pageData={pageData}
+            selectedItem={selectedJob}
+            tab={MONITOR_JOBS_TAB}
+            tableClassName="monitor-jobs-table"
+            tableHeaders={
+              tableContent[0]?.content ?? [
+                {
+                  headerId: 'uid',
+                  headerLabel: 'UID',
+                  className: 'table-cell-name'
+                }
+              ]
+            }
+          >
+            {tableContent.map((tableItem, index) => (
+              <JobsTableRow
+                actionsMenu={actionsMenu}
+                key={index}
+                rowItem={tableItem}
+                selectedJob={selectedJob}
+              />
+            ))}
+          </Table>
+          <Pagination
+            paginationConfig={paginationConfig}
+            closeParamName={selectedJob?.name}
+            disabledNextDoubleBtnTooltip={
+              paginationConfig?.paginationResponse?.['page-token'] &&
+              ((filtersStore.autoRefresh && !params.jobName) ||
+                (params.jobName && filtersStore.internalAutoRefresh))
+                ? 'Uncheck Auto Refresh to view more results'
+                : autoRefreshPrevValue && paginationConfig?.paginationResponse?.['page-token']
+                  ? 'Close detailed view and uncheck Auto Refresh to view more results'
+                  : ''
+            }
+            disableNextDoubleBtn={
+              (filtersStore.autoRefresh && !params.jobName) ||
+              (params.jobName && filtersStore.internalAutoRefresh) ||
+              autoRefreshPrevValue
+            }
+          />
+        </>
       )}
     </>
   )
