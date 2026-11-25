@@ -62,14 +62,41 @@ const TargetPath = ({
   )
   const dispatch = useDispatch()
 
+  const changePathFieldInfo = useCallback(
+    (value, nextDataInputState) => {
+      const pathType = value.match(/^\w*:[/]{2,3}/)?.[0]
+
+      if (pathType) {
+        formState.form.change(`${formStateFieldInfo}.value`, value.replace(/[^:/]*:[/]{2,3}/, ''))
+        formState.form.change(`${formStateFieldInfo}.pathType`, pathType)
+
+        if (formStateDataInputState) {
+          formState.form.change(`${formStateDataInputState}`, nextDataInputState)
+        }
+      }
+    },
+    [formState.form, formStateDataInputState, formStateFieldInfo]
+  )
+
   const handleOnChange = (selectValue, inputValue) => {
     if (isNil(inputValue)) {
       setFieldState(get(formState.values, name), { modified: false })
+
+      return
     }
 
-    if (selectValue === MLRUN_STORAGE_INPUT_PATH_SCHEME && !isNil(inputValue)) {
-      handleStoreInputPathChange(dataInputState, setDataInputState, inputValue)
-    }
+    const nextDataInputState =
+      selectValue === MLRUN_STORAGE_INPUT_PATH_SCHEME
+        ? {
+            ...dataInputState,
+            ...handleStoreInputPathChange(dataInputState, setDataInputState, inputValue)
+          }
+        : dataInputState
+
+    // Typed input is applied in the change event. Applying it from the FormOnChange effect
+    // schedules a render per keystroke, and at machine speed (e.g. Selenium) React 19 counts those
+    // as nested updates and drops a keystroke once it hits its limit of 50
+    changePathFieldInfo(`${selectValue}${inputValue}`, nextDataInputState)
   }
 
   const validatePath = allValues => {
@@ -200,16 +227,13 @@ const TargetPath = ({
 
   const handlePathChange = useCallback(
     value => {
-      if (value.length !== 0) {
-        formState.form.change(`${formStateFieldInfo}.value`, value.replace(/[^:/]*:[/]{2,3}/, ''))
-        formState.form.change(`${formStateFieldInfo}.pathType`, value.match(/^\w*:[/]{2,3}/)[0])
+      const fieldInfo = get(formState.form.getState().values, formStateFieldInfo)
 
-        if (formStateDataInputState) {
-          formState.form.change(`${formStateDataInputState}`, dataInputState)
-        }
+      if (value.length !== 0 && value !== `${fieldInfo?.pathType}${fieldInfo?.value}`) {
+        changePathFieldInfo(value, dataInputState)
       }
     },
-    [dataInputState, formState.form, formStateDataInputState, formStateFieldInfo]
+    [changePathFieldInfo, dataInputState, formState.form, formStateFieldInfo]
   )
 
   return (

@@ -26,10 +26,6 @@ export const showLoading = state => {
 export const defaultPendingHandler = state => {
   state.loading = true
 }
-export const defaultFulfilledHandler = state => {
-  state.error = null
-  state.loading = false
-}
 export const defaultRejectedHandler = (state, action) => {
   state.loading = false
   state.error = action.error

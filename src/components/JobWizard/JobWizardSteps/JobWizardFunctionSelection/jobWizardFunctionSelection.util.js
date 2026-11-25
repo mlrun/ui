@@ -24,11 +24,6 @@ import { FUNCTION_SELECTION_STEP } from '../../../../constants'
 export const FUNCTIONS_SELECTION_FUNCTIONS_TAB = 'functions'
 export const FUNCTIONS_SELECTION_HUB_TAB = 'hub'
 
-export const trainModelAllowedHubFunctions = {
-  'auto-trainer': ['train'],
-  'azureml-utils': ['submit_training_job', 'train']
-}
-
 export const functionsSelectionTabs = [
   {
     id: FUNCTIONS_SELECTION_FUNCTIONS_TAB,
@@ -67,17 +62,4 @@ export const generateFunctionTemplateCardData = templateData => {
   // }
 
   return functionTemplateCardData
-}
-
-export const filterTrainFunctionHandlers = result => {
-  const allowedHandlers = trainModelAllowedHubFunctions[result.name]
-  const { entry_points } = result.functions[0].spec
-
-  if (entry_points) {
-    result.functions[0].spec.entry_points = Object.fromEntries(
-      Object.entries(entry_points).filter(([key]) => allowedHandlers.includes(key))
-    )
-  }
-
-  return result
 }

@@ -26,8 +26,10 @@ export const DENSITY_MEDIUM = 'medium'
 export const DENSITY_CHUNKY = 'chunky'
 
 /*=========== EVENT KEYS =============*/
+/** @public igz-controls public API. */
 export const BACKSPACE = 'Backspace'
 export const CLICK = 'Click'
+/** @public igz-controls public API. */
 export const DELETE = 'Delete'
 export const TAB = 'Tab'
 export const TAB_SHIFT = 'Tab+Shift'
@@ -62,6 +64,7 @@ export const validation = {
 
 /*=========== STATUS CODES =============*/
 
+/** @public igz-controls public API. */
 export const BADREQUEST_ERROR_STATUS_CODE = 400
 export const FORBIDDEN_ERROR_STATUS_CODE = 403
 export const NOTFOUND_ERROR_STATUS_CODE = 404

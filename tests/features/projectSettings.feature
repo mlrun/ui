@@ -13,13 +13,11 @@ Feature: Project Settings page
         And wait load page
         Then verify breadcrumbs "project" label should be equal "cat-vs-dog-classification" value
         Then select "Project settings" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         Then select "Project settings" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        Then verify "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard should contains "Project_Settings"."Tab_List"
+        Then verify "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard should contain "Project_Settings"."Tab_List"
         Then verify "General" tab is active in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display "Input_Hint"."Source_URL_Input"
         Then type value "   " to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
@@ -30,25 +28,24 @@ Feature: Project Settings page
         Then check "Pull_At_Runtime_Checkbox" element on "Project_Settings_General_Tab" wizard
         And wait load page
         Then verify if "Notification_Popup" popup dialog appears
-        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Data was edited successfully" value
-        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then "Notification_Popup" element on "Notification_Popup" should contain "Data was edited successfully" value
+        Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
         And wait load page
-        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
         And wait load page
         Then "Pull_At_Runtime_Checkbox" element should be checked on "Project_Settings_General_Tab" wizard
         Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         Then select "Project settings" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then "Pull_At_Runtime_Checkbox" element should be checked on "Project_Settings_General_Tab" wizard
         Then uncheck "Pull_At_Runtime_Checkbox" element on "Project_Settings_General_Tab" wizard
         And wait load page
         Then verify if "Notification_Popup" popup dialog appears
-        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Data was edited successfully" value
-        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then "Notification_Popup" element on "Notification_Popup" should contain "Data was edited successfully" value
+        Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
         And wait load page
         Then "Pull_At_Runtime_Checkbox" element should be unchecked on "Project_Settings_General_Tab" wizard
         Then verify "Artifact_Path_Input" element visibility on "Project_Settings_General_Tab" wizard
@@ -79,16 +76,14 @@ Feature: Project Settings page
         Given open url
         And wait load page
         Then type value "cat-vs-dog-classification" to "Search_Projects_Input" field on "Projects" wizard
-        Then value in "description" column with "text" in "Projects_Table" on "Projects" wizard should contains "123"
+        Then value in "description" column with "text" in "Projects_Table" on "Projects" wizard should contain "123"
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then select "Project settings" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And select "Project monitoring" item in sidebar menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         Then select "Project settings" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then type value "   " to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
         Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         When add rows to "Labels_Table" table on "Project_Settings_General_Tab" wizard
@@ -97,17 +92,19 @@ Feature: Project Settings page
             | c         | d           |
             | e         | f           |
         Then type value "test" to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
-        And wait load page
+        # the fields are saved on blur, and the logo reloads the page, which cancels a save that is still in progress
+        When click on "Project_Title" element on "Project_Settings_General_Tab" wizard
+        Then verify if "Notification_Popup" popup dialog appears
+        Then "Notification_Popup" element on "Notification_Popup" should contain "Data was edited successfully" value
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
         Then type value "cat-vs-dog-classification" to "Search_Projects_Input" field on "Projects" wizard
-        Then value in "labels_key" column with "attribute_list" in "Projects_Table" on "Projects" wizard should contains "a,c,e"
-        Then value in "labels_value" column with "attribute_list" in "Projects_Table" on "Projects" wizard should contains "b,d,f"
+        Then value in "labels_key" column with "attribute_list" in "Projects_Table" on "Projects" wizard should contain "a,c,e"
+        Then value in "labels_value" column with "attribute_list" in "Projects_Table" on "Projects" wizard should contain "b,d,f"
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then select "Project settings" item in sidebar menu
         And wait load page
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When click on "remove_btn" in "Labels_Table" table on "Project_Settings_General_Tab" wizard with attribute
             | key_verify |
             |     a      |
@@ -121,29 +118,55 @@ Feature: Project Settings page
             | project_label_key | project_label_value |
             | a                 | b                   |
         Then type value "test" to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
-        And wait load page
+        # the fields are saved on blur, and the logo reloads the page, which cancels a save that is still in progress
+        When click on "Project_Title" element on "Project_Settings_General_Tab" wizard
+        Then verify if "Notification_Popup" popup dialog appears
+        Then "Notification_Popup" element on "Notification_Popup" should contain "Data was edited successfully" value
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
-        Then type value "cat-vs-dog-classification" to "Search_Projects_Input" field on "Projects" wizard
-        Then value in "labels_key" column with "attribute_list" in "Projects_Table" on "Projects" wizard should contains "a12345,project_label_key,a"
-        Then value in "labels_value" column with "attribute_list" in "Projects_Table" on "Projects" wizard should contains "b54321,project_label_value,b"
+        # not the whole name: a search value longer than the input is scrolled, and the scroll on the blur (the click on "+ 2")
+        # closes the hidden labels right after they are opened (app bug, the same scroll handling as in the chips editing)
+        Then type value "cat-vs-dog" to "Search_Projects_Input" field on "Projects" wizard
+        # the card shows the first label, the other ones are hidden under "+ 2" (all the labels are verified in the settings below)
+        Then value in "labels_key" column with "attribute_list" in "Projects_Table" on "Projects" wizard should contain "a12345"
+        Then value in "labels_value" column with "attribute_list" in "Projects_Table" on "Projects" wizard should contain "b54321"
+        Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contain "project_label_key=project_label_value" in "Overlay"
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then select "Project settings" item in sidebar menu
         And wait load page
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        Then verify values in "Labels_Table" table on "Project_Settings_General_Tab" wizard with attribute
+            | key_verify        | value_verify        |
+            | a12345            | b54321              |
+            | project_label_key | project_label_value |
+            | a                 | b                   |
+        Then verify that 3 row elements are displayed in "Labels_Table" on "Project_Settings_General_Tab" wizard
         When click on "remove_btn" in "Labels_Table" table on "Project_Settings_General_Tab" wizard with attribute
             | key_verify        |
             | a                 |
             | project_label_key |
             | a12345            |
         And click on "Add_Label_Button" element on "Project_Settings_General_Tab" wizard
-        Then type value "/" to "Labels_Key" field on "Project_Settings_General_Tab" wizard
-        Then verify labels warning should display options "Input_Hint"."Projects_Labels_Warning_Key"
-        Then verify "Labels_Key" options rules on "Project_Settings_General_Tab" wizard with labels
+        # a valid key: the value of a label is validated with its key (the key rules are checked in MLPS011)
+        Then type value "key" to "Labels_Key" field on "Project_Settings_General_Tab" wizard
         Then type value "/" to "Labels_Value" field on "Project_Settings_General_Tab" wizard
         Then verify labels warning should display options "Input_Hint"."Projects_Labels_Warning_Value"
         Then verify "Labels_Value" options rules on "Project_Settings_General_Tab" wizard with labels
+
+    @MLPS
+    @smoke
+    Scenario: MLPS011 - Verify the label key rules on General tab
+        Given open url
+        And wait load page
+        Then type value "cat-vs-dog-classification" to "Search_Projects_Input" field on "Projects" wizard
+        And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then select "Project settings" item in sidebar menu
+        And wait load page
+        And click on "Add_Label_Button" element on "Project_Settings_General_Tab" wizard
+        Then type value "/" to "Labels_Key" field on "Project_Settings_General_Tab" wizard
+        Then verify labels warning should display options "Input_Hint"."Projects_Labels_Warning_Key"
+        Then verify "Labels_Key" options rules on "Project_Settings_General_Tab" wizard with labels
 
     @MLPS
     @inProgress
@@ -154,7 +177,6 @@ Feature: Project Settings page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then select "Project settings" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When add new rows to "Parameters_Table" table on "Project_Settings_General_Tab" wizard using nontable inputs
             | Parameters_Table_Key_Input | Parameters_Table_Value_Input | Parameters_Table_Add_Row_Button |
             |                            |                              |               yes               |
@@ -162,7 +184,7 @@ Feature: Project Settings page
         Then verify "Parameters_Table_Value_Input" on "Project_Settings_General_Tab" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         When click on "Parameters_Table_Discard_Row_Button" element on "Project_Settings_General_Tab" wizard
         And wait load page
-        When add new rows to "Parameters_Table" table on "Project_Settings_General_Tab" wizard using nontable inputs with notification pop-up
+        When add new rows to "Parameters_Table" table on "Project_Settings_General_Tab" wizard using nontable inputs with notification popup
             | Parameters_Table_Key_Input | Parameters_Table_Value_Input | Parameters_Table_Add_Row_Button | Parameters_Table_Discard_Row_Button |
             |          key0              |           value0             |               yes               |                                     |
             |          key1              |           value1             |               yes               |                                     |
@@ -185,13 +207,13 @@ Feature: Project Settings page
         When click on "remove_btn" in "Parameters_Table_Verify" table on "Project_Settings_General_Tab" wizard
             | key  |
             | key1 |
-        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
         When click on "remove_btn" in "Parameters_Table_Verify" table on "Project_Settings_General_Tab" wizard
             | key  |
             | key4 |
-        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
         When click on "remove_btn" in "Parameters_Table_Verify" table on "Project_Settings_General_Tab" wizard
             | key  |
             | key8 |
@@ -209,26 +231,24 @@ Feature: Project Settings page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then select "Project settings" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
         Then verify "Projects_Table" element visibility on "Projects" wizard
 
     @MLPS
     @passive
-    @smoke
+    @smoke @sanity
     Scenario: MLPS007 - Verify all mandatory components on Secrets tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then select "Project settings" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         And wait load page
         Then verify "Secrets_Table" element visibility on "Projects_Settings_Secret_Tab" wizard
-        Then "Secrets_Hint" component on "Projects_Settings_Secret_Tab" should contains "Project_Settings"."Secrets_Hint"
+        Then "Secrets_Hint" component on "Projects_Settings_Secret_Tab" should contain "Project_Settings"."Secrets_Hint"
         Then click on "Add_Secret_Button" element on "Projects_Settings_Secret_Tab" wizard
         Then verify "New_Secret_Key_Input" element visibility on "Create_New_Secret_Popup" wizard
         Then type value "   " to "New_Secret_Key_Input" field on "Create_New_Secret_Popup" wizard
@@ -239,14 +259,13 @@ Feature: Project Settings page
 
     @MLPS
     @inProgress
-    @smoke @rerun @knownBug
+    @smoke @rerun
     Scenario: MLPS008 - Verify Secrets table on Secrets tab
         Given open url
         And wait load page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then select "Project settings" item in sidebar menu
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         And wait load page
@@ -255,9 +274,9 @@ Feature: Project Settings page
             | mlrun.something |    value    |
         And wait load page
         Then verify if "Notification_Popup" popup dialog appears
-        Then "Error_Message" component on "Projects_Settings_Secret_Tab" should contains "Error_Messages"."MLRunAccessDeniedError"
-        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then "Error_Message" component on "Projects_Settings_Secret_Tab" should contain "Error_Messages"."Access_Denied"
+        Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
         And wait load page
         When add rows to "Secrets_Table" key-value table on "Projects_Settings_Secret_Tab" wizard
             | key_input | value_input |
@@ -327,8 +346,6 @@ Feature: Project Settings page
 
     @MLPS
     @enabledProjectMembership
-    @FAILED_TODO
-    #TODO: owner igz_nobody, iguazioUsers, change getIguazioProjects implementation
     @rerun
     Scenario: MLPS004 - Verify behaviour of Invite New Members on Members tab
         Given open url
@@ -339,7 +356,7 @@ Feature: Project Settings page
         And wait load page
         And select "Members" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         And wait load page
-        Then "Members_Summary" element on "Project_Members_Popup" should contains "One owner has access to this project" value
+        Then "Members_Summary" element on "Project_Members_Popup" should contain "One owner has access to this project" value
         Then verify "Discard_Button" element on "Project_Members_Popup" wizard is disabled
         Then verify "Apply_Button" element on "Project_Members_Popup" wizard is disabled
         Then click on "Invite_New_Members_Button" element on "Project_Members_Popup" wizard
@@ -353,18 +370,21 @@ Feature: Project Settings page
         Then type value "adm" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
         Then searchable case "insensitive" fragment "adm" should be in every suggested option into "New_Member_Name_Input" on "Project_Members_Popup" wizard
         Then select "admin" option in "New_Member_Name_Dropdown" dropdown on "Project_Members_Popup" wizard
-        Then verify values in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard
+        # the chips are disabled inputs: the names are their values
+        Then verify values in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard with attribute
             |  label    |
             | all_users |
             | iguazio   |
             | admin     |
-        When click on "remove_btn" in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard
+        Then verify that 3 row elements are displayed in "Invite_New_Members_Labels_Table" on "Project_Members_Popup" wizard
+        When click on "remove_btn" in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard with attribute
             |  label    |
             | iguazio   |
             | all_users |
-        Then verify values in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard
+        Then verify values in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard with attribute
             |  label    |
             | admin     |
+        Then verify that 1 row elements are displayed in "Invite_New_Members_Labels_Table" on "Project_Members_Popup" wizard
         Then select "Admin" option in "New_Member_Role_Dropdown" dropdown on "Project_Members_Popup" wizard
         Then click on "New_Member_Add_Button" element on "Project_Members_Popup" wizard
         Then verify "Discard_Button" element on "Project_Members_Popup" wizard is enabled
@@ -374,38 +394,42 @@ Feature: Project Settings page
         Then select "all_users" option in "New_Member_Name_Dropdown" dropdown on "Project_Members_Popup" wizard
         Then select "Viewer" option in "New_Member_Role_Dropdown" dropdown on "Project_Members_Popup" wizard
         Then click on "New_Member_Add_Button" element on "Project_Members_Popup" wizard
+        # the owner of the project is the first member
         Then verify values in "Members_Table" table on "Project_Members_Popup" wizard
-            | name      | role   |
-            | admin     | Admin  |
-            | all_users | Viewer |
+            | name       | role   |
+            | igz_nobody | Owner  |
+            | admin      | Admin  |
+            | all_users  | Viewer |
+        Then verify that 3 row elements are displayed in "Members_Table" on "Project_Members_Popup" wizard
         Then click on "Apply_Button" element on "Project_Members_Popup" wizard
         And wait load page
-        Then "Members_Summary" element on "Project_Members_Popup" should contains "2members have access to this project" value
+        Then "Members_Summary" element on "Project_Members_Popup" should contain "One owner and 2 members have access to this project" value
         When click on "delete_btn" in "Members_Table" table on "Project_Members_Popup" wizard with offset "false"
             | name  |
             | admin |
         Then verify if "Remove_Member_Popup" popup dialog appears
         Then verify "Remove_Member_Button" element visibility on "Remove_Member_Popup" wizard
-        Then "Remove_Member_Button" element on "Remove_Member_Popup" should contains "Remove member" value
+        Then "Remove_Member_Button" element on "Remove_Member_Popup" should contain "Remove member" value
         Then click on "Remove_Member_Button" element on "Remove_Member_Popup" wizard
         Then verify values in "Members_Table" table on "Project_Members_Popup" wizard
-            | name      | role   |
-            | all_users | Viewer |
+            | name       | role   |
+            | igz_nobody | Owner  |
+            | all_users  | Viewer |
+        Then verify that 2 row elements are displayed in "Members_Table" on "Project_Members_Popup" wizard
         Then click on "Apply_Button" element on "Project_Members_Popup" wizard
         And wait load page
-        Then "Members_Summary" element on "Project_Members_Popup" should contains "1member has access to this project" value
+        Then "Members_Summary" element on "Project_Members_Popup" should contain "One owner and one member have access to this project" value
         When click on "delete_btn" in "Members_Table" table on "Project_Members_Popup" wizard with offset "false"
             | name      |
             | all_users |
         Then click on "Remove_Member_Button" element on "Remove_Member_Popup" wizard
         Then click on "Discard_Button" element on "Project_Members_Popup" wizard
         Then verify if "Discard_Changes_Popup" popup dialog appears
-        Then "No_Button" element on "Discard_Changes_Popup" should contains "No" value
-        Then "Discard_Button" element on "Discard_Changes_Popup" should contains "Discard" value
+        Then "No_Button" element on "Discard_Changes_Popup" should contain "No" value
+        Then "Discard_Button" element on "Discard_Changes_Popup" should contain "Discard" value
         Then click on "Discard_Button" element on "Discard_Changes_Popup" wizard
         Then verify "Discard_Button" element on "Project_Members_Popup" wizard is disabled
         Then verify "Apply_Button" element on "Project_Members_Popup" wizard is disabled
-        And remove "automation-test" MLRun Project with code 204
 
     @MLPS
     @smoke @rerun

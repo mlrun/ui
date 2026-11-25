@@ -15,8 +15,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
-import { roundFloats } from './common.util'
-
 const chipOptions = [
   {
     type: 'labels',
@@ -84,33 +82,3 @@ const chipOptions = [
 ]
 
 export const getChipOptions = variant => chipOptions.find(item => item.type === variant)
-
-export const cutChips = (chips = [], maxLength, delimiter) => {
-  if (chips.length > maxLength) {
-    let hiddenChipsNumber = `+ ${chips.length - maxLength}`
-    const hiddenChips = chips.slice(maxLength).map(value => ({ value, delimiter }))
-    const visibleChips = chips.slice(0, maxLength).map(value => ({ value, delimiter }))
-    visibleChips.push({
-      value: hiddenChipsNumber,
-      delimiter
-    })
-
-    return {
-      visibleChips,
-      hiddenChips
-    }
-  }
-  return {
-    visibleChips: chips.map(value => ({ value, delimiter }))
-  }
-}
-
-export const getChipLabelAndValue = chip => {
-  const indexOfDelimiter = chip.value.indexOf(':')
-  const value = chip.value.slice(indexOfDelimiter + 1)
-
-  return {
-    chipLabel: indexOfDelimiter > 0 ? chip.value.slice(0, indexOfDelimiter) : chip.value,
-    chipValue: indexOfDelimiter > 0 ? (Number.isInteger(value) ? roundFloats(value) : value) : ''
-  }
-}

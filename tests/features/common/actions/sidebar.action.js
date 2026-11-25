@@ -17,124 +17,144 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { timeout } from '../../../config.js'
-import { until } from 'selenium-webdriver'
-import { expect } from 'chai'
+import { expectTimeout, readTimeout, timeout } from '../../../config.js'
+import { expect } from '@playwright/test'
 import sidebar from '../components/sidebar.component.js'
-import { scrollToWebElement } from './common.action.js'
+import { hoverElementCenter, scrollToElement } from './common.action.js'
+import {
+  click,
+  getAttribute,
+  getRect,
+  isDisplayed,
+  waitForPageQuiet
+} from '../../common-tools/element.js'
 
-const isSidebarPinned = async driver => {
-  const element = await driver.findElement(sidebar.root)
+const isSidebarPinned = async page => {
+  const element = page.locator(sidebar.root).first()
 
-  return (await element.getAttribute('data-pinned')) === 'true'
+  return (await getAttribute(element, 'data-pinned')) === 'true'
 }
 
 // the sidebar expands/collapses on hover, a few seconds are enough (shorter than the step timeout, so it can be retried)
 const SIDEBAR_STATE_TIMEOUT = 5000
 const SIDEBAR_HOVER_ATTEMPTS = 3
 
-const waitSidebarState = async (driver, state, waitTimeout = timeout) => {
-  await driver.wait(async () => {
-    const element = await driver.findElement(sidebar.root)
-
-    return (await element.getAttribute('data-state')) === state
-  }, waitTimeout, `Sidebar is not ${state}`)
-  // wait for the width transition to finish
-  await driver.sleep(350)
+const waitSidebarState = async (page, state, waitTimeout = expectTimeout) => {
+  await expect
+    .poll(() => getAttribute(page.locator(sidebar.root).first(), 'data-state'), {
+      timeout: waitTimeout,
+      message: `Sidebar is not ${state}`
+    })
+    .toBe(state)
+  // wait for the width transition to finish: the box of the sidebar stops changing
+  await getRect(page.locator(sidebar.root).first())
 }
 
-const movePointerOutOfSidebar = async driver => {
-  const { width, height } = await driver.executeScript(
-    'return { width: window.innerWidth, height: window.innerHeight }'
-  )
+const movePointerOutOfSidebar = async page => {
+  const { width, height } = page.viewportSize()
 
-  await driver
-    .actions({ async: true })
-    .move({ origin: 'viewport', x: width - 5, y: Math.floor(height / 2) })
-    .perform()
+  await page.mouse.move(width - 5, Math.floor(height / 2))
 }
 
-export const openSidebar = async driver => {
-  await driver.wait(until.elementLocated(sidebar.root), timeout)
-  const element = await driver.findElement(sidebar.root)
+export const openSidebar = async page => {
+  await page.locator(sidebar.root).first().waitFor({ state: 'attached', timeout })
+  const element = page.locator(sidebar.root).first()
 
-  if ((await element.getAttribute('data-state')) !== 'expanded') {
+  if ((await getAttribute(element, 'data-state')) !== 'expanded') {
     // if the pointer is already over the sidebar, moving it there doesn't fire `mouseenter`,
     // so move it out of the sidebar and back on retry
     for (let attempt = 1; attempt <= SIDEBAR_HOVER_ATTEMPTS; attempt++) {
       try {
-        const body = await driver.findElement(sidebar.body)
-        await driver.actions({ async: true }).move({ origin: body }).perform()
-        await waitSidebarState(driver, 'expanded', SIDEBAR_STATE_TIMEOUT)
+        const body = page.locator(sidebar.body).first()
+        await hoverElementCenter(page, body)
+        await waitSidebarState(page, 'expanded', SIDEBAR_STATE_TIMEOUT)
 
         return
       } catch (error) {
         if (attempt === SIDEBAR_HOVER_ATTEMPTS) throw error
 
-        await movePointerOutOfSidebar(driver)
-        await driver.sleep(500)
+        await movePointerOutOfSidebar(page)
+        await waitForPageQuiet(page)
       }
     }
   }
 }
 
-export const closeSidebar = async driver => {
-  if (!(await isSidebarPinned(driver))) {
+export const closeSidebar = async page => {
+  if (!(await isSidebarPinned(page))) {
     // <Suspense> hides #main (display: none) while a lazy route chunk is loading,
-    // moving the pointer to an element without size throws ElementNotInteractableError
-    await driver.wait(async () => {
-      try {
-        return await (await driver.findElement({ css: '#main' })).isDisplayed()
-      } catch {
-        return false
-      }
-    }, timeout / 2, 'Page content (#main) is not displayed')
-    const main = await driver.findElement({ css: '#main' })
-    await driver.actions({ async: true }).move({ origin: main }).perform()
-    await waitSidebarState(driver, 'collapsed', timeout / 4)
+    // an element without size has no point to move the pointer to
+    await expect
+      .poll(
+        async () => {
+          try {
+            return await isDisplayed(page.locator('#main').first(), { timeout: readTimeout })
+          } catch {
+            return false
+          }
+        },
+        { timeout: expectTimeout, message: 'Page content (#main) is not displayed' }
+      )
+      .toBeTruthy()
+    const main = page.locator('#main').first()
+    await hoverElementCenter(page, main)
+    await waitSidebarState(page, 'collapsed')
   }
 }
 
-export const selectSidebarItem = async (driver, label) => {
-  await openSidebar(driver)
+export const selectSidebarItem = async (page, label) => {
+  await openSidebar(page)
 
-  let links = await driver.findElements(sidebar.link(label))
+  const links = page.locator(sidebar.link(label))
 
   // nested items are rendered only when their collapsible group is expanded
-  if (links.length === 0) {
-    const groupButtons = await driver.findElements(sidebar.groupButtons)
+  if ((await links.count()) === 0) {
+    // the nested items are menu buttons as well, so `groupButtons` matches them once a group is expanded:
+    // the groups are taken by their test ids, not by their (shifting) positions in `groupButtons`
+    const groupTestIds = await page
+      .locator(sidebar.groupButtons)
+      .evaluateAll(buttons =>
+        buttons.map(
+          button => button.closest('[data-testid^="sidebar-collapsible-menu-item-"]').dataset.testid
+        )
+      )
 
-    for (const groupButton of groupButtons) {
-      if ((await groupButton.getAttribute('data-state')) !== 'open') {
-        await scrollToWebElement(driver, groupButton)
-        await groupButton.click()
-        await driver.sleep(250)
-        links = await driver.findElements(sidebar.link(label))
+    for (const groupTestId of groupTestIds) {
+      const groupButton = page
+        .locator(`[data-testid="${groupTestId}"] [data-sidebar="menu-button"]`)
+        .first()
 
-        if (links.length > 0) break
+      if ((await getAttribute(groupButton, 'data-state')) !== 'open') {
+        await scrollToElement(page, groupButton)
+        await click(groupButton)
+        await waitForPageQuiet(page)
+        if ((await links.count()) > 0) break
       }
     }
   }
 
-  expect(links.length).equal(1, `Sidebar item "${label}" was not found`)
+  expect(await links.count(), `Sidebar item "${label}" was not found`).toBe(1)
 
-  await scrollToWebElement(driver, links[0])
-  await links[0].click()
-  await driver.sleep(250)
-  await closeSidebar(driver)
+  await scrollToElement(page, links.first())
+  await click(links.first())
+  await waitForPageQuiet(page)
+  await closeSidebar(page)
 }
 
-export const selectSidebarProject = async (driver, projectName) => {
-  await openSidebar(driver)
+export const selectSidebarProject = async (page, projectName) => {
+  await openSidebar(page)
 
-  const trigger = await driver.findElement(sidebar.projectDropdown.open_button)
-  await trigger.click()
-  await driver.wait(until.elementLocated(sidebar.projectDropdown.content), timeout)
-  await driver.sleep(250)
+  const trigger = page.locator(sidebar.projectDropdown.open_button).first()
+  await click(trigger)
+  await page
+    .locator(sidebar.projectDropdown.content)
+    .first()
+    .waitFor({ state: 'attached', timeout })
+  await waitForPageQuiet(page)
 
-  const option = await driver.findElement(sidebar.projectDropdown.option(projectName))
-  await scrollToWebElement(driver, option)
-  await option.click()
-  await driver.sleep(250)
-  await closeSidebar(driver)
+  const option = page.locator(sidebar.projectDropdown.option(projectName)).first()
+  await scrollToElement(page, option)
+  await click(option)
+  await waitForPageQuiet(page)
+  await closeSidebar(page)
 }

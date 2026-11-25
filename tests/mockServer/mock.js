@@ -24,14 +24,14 @@ import rateLimit from 'express-rate-limit'
 import fs from 'fs'
 import path from 'path'
 import crypto from 'node:crypto'
+import { isMainThread, parentPort, workerData } from 'node:worker_threads'
 import {
   chain,
-  chunk,
+  escape,
   clamp,
   cloneDeep,
   defaults,
   find,
-  forEach,
   get,
   isEmpty,
   isFunction,
@@ -40,7 +40,6 @@ import {
   maxBy,
   noop,
   omit,
-  orderBy,
   pick,
   random,
   remove,
@@ -90,20 +89,22 @@ import {
   updatePipelineIDs,
   updateSchedules
 } from './dateSynchronization.js'
-import {
-  generateArtifacts,
-  generateFunctions,
-  makeUID,
-  generateRuns,
-  generateAlerts
-} from './dataGenerators.js'
+import { generateArtifacts, makeUID, generateRuns, generateAlerts } from './dataGenerators.js'
+import { applyDataDefect, hasDefect, mockDefect } from './defects.js'
 
-// pristine copies of the collections scenarios mutate (abort run, terminate/retry workflow, delete schedule...),
-// restored by `POST /reset-mock-state` before every scenario (hooks.js), so scenarios don't depend on each other
-const pristineRuns = cloneDeep(runs.runs)
-const pristinePipelines = cloneDeep(pipelines)
-const pristinePipelineIDs = cloneDeep(pipelineIDs)
-const pristineSchedules = cloneDeep(schedules.schedules)
+// An instance of the mock server: it runs in a worker thread of the mock server process (scripts/mockServer.js), one
+// per Playwright worker. A thread has its own module graph, so everything below (the imported JSON mutated by the
+// handlers, background tasks, timers, the failure condition) belongs to this instance only. Every scenario starts on a
+// fresh instance: `POST /reset-mock-state` (hooks.js) terminates the thread of its worker and starts a new one, so the
+// data below is loaded and computed again and nothing is left from the previous scenario - and the memory doesn't grow
+// over the run
+const MOCK_INSTANCE = crypto.randomUUID()
+// the big "auto-generated-data" project (dataGenerators.js): only for the scenarios tagged `@generatedData` (the reset
+// tells it), the others start faster without it. Started directly (`node tests/mockServer/mock.js`):
+// MOCK_GENERATED_DATA=true
+const withGeneratedData = isMainThread
+  ? process.env.MOCK_GENERATED_DATA === 'true'
+  : workerData?.generatedData === true
 
 // Updating values in files with synthetic data
 updateRuns(runs)
@@ -111,12 +112,15 @@ updatePipelines(pipelines)
 updatePipelineIDs(pipelineIDs)
 updateSchedules(schedules)
 
-// generate a lot of data for auto-generated-data project
-generateArtifacts(artifacts)
-generateFunctions(funcs)
-generateRuns(runs)
-generateAlerts(alerts)
+if (withGeneratedData) {
+  generateArtifacts(artifacts)
+  generateRuns(runs)
+  generateAlerts(alerts)
+}
+
 keepEndpointAlertsRecent(alerts)
+// MOCK_DEFECT (defects.js): breaks the data on purpose, only for the defect injection run
+applyDataDefect({ artifacts, projectsSummary, schedules })
 
 // the model endpoint "Alerts" tab always uses the "Past month" range (no date filter), keep the seeded "default"
 // endpoint alerts in it (10 days ago - outside "Past 24 hours"/"Past week"), shifted together to keep their order
@@ -139,29 +143,20 @@ function keepEndpointAlertsRecent(alertsData) {
   })
 }
 
-// artifacts are mutated by tag add/edit/delete, register (overwrite) and delete scenarios
-const pristineArtifacts = cloneDeep(artifacts.artifacts)
-
-const resetMockState = () => {
-  artifacts.artifacts = cloneDeep(pristineArtifacts)
-  runs.runs = cloneDeep(pristineRuns)
-  Object.keys(pipelines).forEach(project => delete pipelines[project])
-  Object.assign(pipelines, cloneDeep(pristinePipelines))
-  pipelineIDs.splice(0, pipelineIDs.length, ...cloneDeep(pristinePipelineIDs))
-  schedules.schedules = cloneDeep(pristineSchedules)
-
-  // re-calculate the time-relative data ("Past hour", "Next 24 hours"...) against the current time
-  updateRuns(runs)
-  updatePipelines(pipelines)
-  updatePipelineIDs(pipelineIDs)
-  updateSchedules(schedules)
-  generateRuns(runs)
-}
-
 // Here we are configuring express to use body-parser as middle-ware.
 const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+// the mock server is used only by tests, so the limit is high enough not to throttle any of them
+app.use(
+  rateLimit({
+    windowMs: 60 * 1000,
+    limit: 100000,
+    standardHeaders: true,
+    legacyHeaders: false
+  })
+)
 
 // intercepts all the requests and reject them if `failAllRequests` is true
 // should be used ONLY for test framework
@@ -261,8 +256,18 @@ const mlrunAPIIngress = `${mlrunIngress}/api/v1`
 const mlrunAPIIngressV2 = `${mlrunIngress}/api/v2`
 const nuclioApiUrl = '/nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
 const iguazioApiUrl = '/platform-api.default-tenant.app.vmdev36.lab.iguazeng.com'
-const port = 30000
+// started directly: the port of the mock server. In a thread: a free port on 127.0.0.1, only the front of
+// scripts/mockServer.js talks to it
+const port = isMainThread ? Number(process.env.E2E_MOCK_PORT || 30000) : 0
 const NOT_ALLOWED_SECRET_KEY = 'mlrun.'
+// ms, the background task adds `metadata.timeout` (600 ms) and the UI polls the task every 2 seconds
+const PROJECT_DELETION_DURATION = 3000
+// ms, fixed: the UI stops polling the abort task on every table refresh and restarts it only for the runs still
+// "aborting", so the "was aborted" notification is lost when the abort ends between the last poll and a refresh.
+// MLJW049: abort, refresh (R1, ~1 s), the "Aborting" status check (done by R1 + ~0.5 s), then it waits for the "was
+// aborted" notification and refreshes after it. The UI polls every 2 s from R1. The abort ends 4 s after the request
+// (this + the task's 600 ms `metadata.timeout`): after the status check, so the "Aborting" status is seen
+const RUN_ABORT_DURATION = hasDefect('run-abort-never-ends') ? 60 * 60 * 1000 : 3400
 const artifactsCategories = {
   dataset: ['dataset'],
   document: ['document'],
@@ -369,15 +374,18 @@ function getPaginationConfig(data, query) {
   }
   let pageData = data
 
-  if (query['page-size'] && query.page) {
-    const dataPaginated = chunk(data, query['page-size'])
-    pageData = dataPaginated[query.page - 1] ?? []
+  const pageSize = Number.parseInt(query['page-size'], 10)
+  const pageNumber = Number.parseInt(query.page, 10)
+
+  if (pageSize > 0 && pageNumber > 0) {
+    const pageStart = (pageNumber - 1) * pageSize
+    pageData = data.slice(pageStart, pageStart + pageSize)
     const pageDataIsEmpty = isEmpty(pageData)
-    const nextPageDataIsEmpty = isEmpty(dataPaginated[query.page])
+    const nextPageDataIsEmpty = pageStart + pageSize >= data.length
 
     paginationQueryConfig = {
-      page: pageDataIsEmpty ? null : parseInt(query.page),
-      'page-size': pageDataIsEmpty ? null : parseInt(query['page-size']),
+      page: pageDataIsEmpty ? null : pageNumber,
+      'page-size': pageDataIsEmpty ? null : pageSize,
       'page-token': nextPageDataIsEmpty || pageDataIsEmpty ? null : '12345'
     }
   }
@@ -534,7 +542,65 @@ function createProjectsFeatureSet(req, res) {
   featureSet.status['state'] = null
   featureSets.feature_sets.push(featureSet)
 
-  res.send(featureSet)
+  res.json(featureSet)
+}
+
+// "Save and ingest" of a new feature set: MLRun starts the ingestion job of the feature set, the run
+// `<feature set>-ingest` (shown on the Jobs page), and returns the feature set and the run
+function startFeatureSetIngest(req, res) {
+  const featureSet = featureSets.feature_sets.find(
+    item =>
+      item.metadata.project === req.params.project &&
+      item.metadata.name === req.params.name &&
+      [item.metadata.tag, item.metadata.uid].includes(req.params.reference)
+  )
+
+  if (!featureSet) {
+    res.statusCode = 404
+
+    return res.send({
+      detail: `MLRunNotFoundError('Feature set not found ${req.params.project}/${req.params.name}:${req.params.reference}')`
+    })
+  }
+
+  const startTime = new Date().toISOString()
+  const runUID = makeUID(32)
+  const job = {
+    ...jobTemplate,
+    metadata: {
+      uid: runUID,
+      name: `${featureSet.metadata.name}-ingest`,
+      project: req.params.project,
+      labels: { v3io_user: 'admin', owner: 'admin', kind: 'job' },
+      iteration: 0
+    },
+    spec: {
+      function: `${req.params.project}/${featureSet.metadata.name}-ingest@${makeUID(32)}`,
+      parameters: {},
+      inputs: {},
+      outputs: [],
+      output_path: '',
+      data_stores: [],
+      hyper_param_options: {},
+      hyperparams: {},
+      log_level: 'info'
+    },
+    status: {
+      state: 'running',
+      results: {},
+      artifacts: [],
+      start_time: startTime,
+      last_update: startTime
+    }
+  }
+
+  runs.runs.push(job)
+  logs.push({ uid: runUID, log: `> ${startTime} Mock autogenerated log data` })
+  setTimeout(() => {
+    job.status.state = 'completed'
+  }, 5000)
+
+  res.send({ feature_set: featureSet, run_object: job })
 }
 
 function updateProjectsFeatureSet(req, res) {
@@ -555,7 +621,7 @@ function updateProjectsFeatureSet(req, res) {
   featureSet.metadata.updated = new Date().toISOString()
   featureSets.feature_sets[featureSetIndex] = featureSet
 
-  res.send(featureSet)
+  res.json(featureSet)
 }
 
 function deleteFeatureSet(req, res) {
@@ -639,15 +705,15 @@ function deleteProjectV2(req, res) {
   const isCascade = req.headers['x-mlrun-deletion-strategy'] === 'cascade'
 
   const handleDeletion = () => {
+    // fixed duration: the UI shows "Project deletion in progress" for 10 seconds (auto-hide) and then
+    // "... was deleted successfully" when the task is done, the scenarios check and close both notifications,
+    // so with a random duration the first one can expire right before the check (or the close of it)
     const taskFunc = () => {
       return new Promise(resolve => {
-        setTimeout(
-          () => {
-            deleteProjectHandler(req, res, true)
-            resolve()
-          },
-          random(5000, 10000)
-        )
+        setTimeout(() => {
+          deleteProjectHandler(req, res, true)
+          resolve()
+        }, PROJECT_DELETION_DURATION)
       })
     }
 
@@ -976,6 +1042,8 @@ function getMonitoringApplicationDrift(req, res) {
 // Query params can be polluted into arbitrary objects (e.g. `?states[x]=y`), so only
 // accept plain strings or arrays of strings rather than trusting the parsed shape.
 function sanitizeStatesQueryParam(states) {
+  if (hasDefect('runs-status-filter-ignored')) return undefined
+
   if (isString(states)) {
     return states
   }
@@ -1213,22 +1281,19 @@ function abortRun(req, res) {
     currentRun.status.abort_task_id = id
 
     return new Promise(resolve => {
-      setTimeout(
-        () => {
-          const collectedPipeline = getGraphById(req.params.uid)
+      setTimeout(() => {
+        const collectedPipeline = getGraphById(req.params.uid)
 
-          currentRun.status.state = 'aborted'
+        currentRun.status.state = 'aborted'
 
-          if (collectedPipeline) {
-            collectedPipeline.phase = 'Error'
-          }
+        if (collectedPipeline) {
+          collectedPipeline.phase = 'Error'
+        }
 
-          delete currentRun.status.abort_task_id
+        delete currentRun.status.abort_task_id
 
-          resolve()
-        },
-        random(3000, 10000)
-      )
+        resolve()
+      }, RUN_ABORT_DURATION)
     })
   }
 
@@ -1270,11 +1335,22 @@ function getFunctionCatalog(req, res) {
   res.send(itemsCatalog)
 }
 
-function getFunctionTemplate(req, res) {
-  const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.params.function}/${req.params.function}.yaml`
-  const funcObject = fs.readFileSync(funcYAMLPath, 'utf8')
+function getFunctionYamlPath(functionName) {
+  // only a name of an existing function directory is allowed, so the path can't leave the functions directory
+  const functionsDir = './tests/mockServer/data/mlrun/functions'
+  const functionDirName = fs.readdirSync(functionsDir).find(dirName => dirName === functionName)
 
-  res.send(funcObject)
+  if (!functionDirName) {
+    throw new Error('Unknown function name')
+  }
+
+  return path.join(functionsDir, functionDirName, `${functionDirName}.yaml`)
+}
+
+function getFunctionTemplate(req, res) {
+  const funcObject = fs.readFileSync(getFunctionYamlPath(req.params.function), 'utf8')
+
+  res.type('text/plain').send(funcObject)
 }
 
 function getProjectsSchedules(req, res) {
@@ -1383,7 +1459,7 @@ function invokeSchedule(req, res) {
         item.metadata.name === functionName
     )
   } else {
-    const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(6)}/${req.body.task.spec.function.slice(6)}.yaml`
+    const funcYAMLPath = getFunctionYamlPath(req.body.task.spec.function.slice(6))
     funcObject = yaml.load(fs.readFileSync(funcYAMLPath, 'utf8'))
   }
   const funcUID = makeUID(32)
@@ -1751,7 +1827,7 @@ function getProjectsFeatureSets(req, res) {
     .filter(artifact => artifact.metadata.name === req.params.name)
     .filter(artifact => artifact.metadata.tag === req.params.tag)
 
-  res.send(featureArtifactTags[0])
+  res.json(featureArtifactTags[0])
 }
 
 function patchProjectsFeatureSets(req, res) {
@@ -1763,7 +1839,7 @@ function patchProjectsFeatureSets(req, res) {
   if (featureArtifactTags.length) {
     featureArtifactTags[0].metadata.labels = req.body.metadata.labels
   }
-  res.send(featureArtifactTags[0])
+  res.json(featureArtifactTags[0])
 }
 
 function postProjectsFeatureVectors(req, res) {
@@ -1781,7 +1857,7 @@ function postProjectsFeatureVectors(req, res) {
 
     featureVectors.feature_vectors.push(newFeatureVector)
 
-    res.send(newFeatureVector)
+    res.json(newFeatureVector)
   } else {
     res.statusCode = 409
     res.send({
@@ -1800,7 +1876,7 @@ function putProjectsFeatureVectors(req, res) {
 
   collectedFV[0] = req.body
 
-  res.send(req.body)
+  res.json(req.body)
 }
 
 function patchProjectsFeatureVectors(req, res) {
@@ -1834,7 +1910,7 @@ function getProjectsFeatureVector(req, res) {
   )
 
   if (featureVector) {
-    res.send(featureVector)
+    res.json(featureVector)
   } else {
     res.statusCode = 404
     res.send({
@@ -2072,7 +2148,7 @@ function getFuncs(req, res) {
     collectedFuncs = funcs.funcs.filter(func => func.metadata.project === req.params['project'])
   }
 
-  if (req.query['name']) {
+  if (req.query['name'] && !hasDefect('functions-name-filter-ignored')) {
     collectedFuncs = collectedFuncs.filter(func => {
       if (String(req.query['name']).includes('~')) {
         return func.metadata.name.includes(String(req.query['name']).slice(1))
@@ -2126,7 +2202,9 @@ function getFuncs(req, res) {
     })
   }
 
-  collectedFuncs = orderBy(collectedFuncs, 'metadata.updated', 'desc')
+  collectedFuncs = [...collectedFuncs].sort((funcA, funcB) =>
+    String(funcB.metadata.updated).localeCompare(String(funcA.metadata.updated))
+  )
   const [paginatedFuncs, pagination] = getPaginationConfig(collectedFuncs, req.query)
 
   res.send({ funcs: paginatedFuncs, pagination })
@@ -2185,16 +2263,20 @@ function deleteFunc(req, res) {
 
   if (collectedFunc.length) {
     const taskFunc = id => {
-      forEach(collectedFunc, func => {
+      collectedFunc.forEach(func => {
         set(func, 'status.deletion_task_id', id)
       })
 
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
         setTimeout(
           () => {
-            forEach(collectedFunc, func => {
+            collectedFunc.forEach(func => {
               delete func.status.deletion_task_id
             })
+
+            if (hasDefect('function-deletion-fails')) {
+              return reject(new Error('Defect injection: the function deletion failed'))
+            }
 
             remove(
               funcs.funcs,
@@ -2283,7 +2365,7 @@ function sendLogsData(data, res) {
       function_status: 'ready',
       'x-mlrun-function-status': 'ready'
     })
-    logText = `${data.type} MLRun mock log message for "${data.name}" function in "${data.project}" project`
+    logText = `${escape(data.type)} MLRun mock log message for "${escape(data.name)}" function in "${escape(data.project)}" project`
   } else {
     res.set({
       function_status: 'running',
@@ -2291,7 +2373,7 @@ function sendLogsData(data, res) {
     })
   }
 
-  res.send(logText)
+  res.type('text/plain').send(logText)
 }
 
 function deployMLFunction(req, res) {
@@ -2514,7 +2596,7 @@ function postSubmitJob(req, res) {
           .filter(item => item.metadata.name === filterFunc)[0]
       )
     } else {
-      const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(6)}/${req.body.task.spec.function.slice(6)}.yaml`
+      const funcYAMLPath = getFunctionYamlPath(req.body.task.spec.function.slice(6))
       funcObject = yaml.load(fs.readFileSync(funcYAMLPath, 'utf8'))
     }
 
@@ -2891,7 +2973,7 @@ function getMetrics(req, res) {
 function getMetricsValues(req, res) {
   const start = req.query.start || new Date() - 86400000 // past 24 hours
   const end = req.query.end || new Date()
-  const names = req.query.name
+  const names = [req.query.name].flat().filter(name => typeof name === 'string')
 
   function generateSineSequence(length, isInvocation) {
     const result = []
@@ -3026,7 +3108,7 @@ function getIguazioProjects(req, res) {
 }
 
 function getIguazioAuthorization(req, res) {
-  res.send({ data: [], meta: { ctx: 11661436569072727632 } })
+  res.send({ data: [], meta: { ctx: 11661436569072728000 } })
 }
 
 function getIguazioSelf(req, res) {
@@ -3140,14 +3222,10 @@ function postProjectMembers(req, res) {
       principal_user_groups: item.body.data.relationships.principal_user_groups
     }
 
-    if (projectRelations.some(relation => relation.id === authRoleId)) {
-      const index = projectRelations.findIndex(relation => {
-        return relation.id === authRoleId
-      })
-      projectRelations[index] = {
-        ...projectRelations[index],
-        relationships: relationshipsTemplate
-      }
+    const existingRelation = projectRelations.find(relation => relation.id === authRoleId)
+
+    if (existingRelation) {
+      existingRelation.relationships = relationshipsTemplate
     } else {
       projectRelations.push({
         type: 'project_authorization_role',
@@ -3183,7 +3261,7 @@ function getNuclioStreams(req, res) {
 }
 
 function getNuclioShardLags(req, res) {
-  res.send({
+  res.json({
     [`${req.body.containerName}${req.body.streamPath}`]: {
       [req.body.consumerGroup]: {
         'shard-id-0': {
@@ -3211,11 +3289,16 @@ function getIguazioJob(req, res) {
   })
 }
 
-// Helper request for AQA framework to restore runs/workflows/schedules to their initial state
+// Helper requests for AQA framework. The reset (a fresh instance for the next scenario) is done by the front
+// (scripts/mockServer.js), it never reaches an instance: only a mock server started directly gets here
 app.post('/reset-mock-state', (req, res) => {
-  resetMockState()
+  res.status(409).json({
+    message: 'The mock server restarts on reset only when started by `npm run mock-server`'
+  })
+})
 
-  res.json({ message: 'Mock state is reset' })
+app.get('/mock-instance', (req, res) => {
+  res.json({ instance: MOCK_INSTANCE, generatedData: withGeneratedData, defect: mockDefect })
 })
 
 const submitJobRateLimiter = rateLimit({
@@ -3227,9 +3310,9 @@ const submitJobRateLimiter = rateLimit({
 
 // Helper request for AQA framework to fail all the requests
 app.post('/set-failure-condition', (req, res) => {
-  failAllRequests = req.body.shouldFail
+  failAllRequests = req.body.shouldFail === true
 
-  res.send(`Failure condition set to ${failAllRequests}`)
+  res.type('text/plain').send(`Failure condition set to ${failAllRequests}`)
 })
 
 // REQUESTS
@@ -3246,6 +3329,10 @@ app.post(`${mlrunAPIIngress}/projects/:project/feature-sets`, createProjectsFeat
 app.put(
   `${mlrunAPIIngress}/projects/:project/feature-sets/:name/references/:tag`,
   updateProjectsFeatureSet
+)
+app.post(
+  `${mlrunAPIIngress}/projects/:project/feature-sets/:name/references/:reference/ingest`,
+  startFeatureSetIngest
 )
 app.delete(`${mlrunAPIIngress}/projects/:project/feature-sets/:featureSet`, deleteFeatureSet)
 
@@ -3408,6 +3495,18 @@ app.get(`${iguazioApiUrl}/api/scrubbed_users`, getIguazioUsers)
 
 app.get(`${iguazioApiUrl}/api/jobs/:id`, getIguazioJob)
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+if (isMainThread) {
+  app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`)
+  })
+} else {
+  const server = app.listen(port, '127.0.0.1', () => {
+    // the front passes the requests of this instance's worker here from now on
+    parentPort.postMessage({ type: 'ready', port: server.address().port, instance: MOCK_INSTANCE })
+  })
+
+  // the front reuses its sockets to this instance (a keep-alive agent): an idle socket closed here after the default
+  // 5 s, at the moment the front sends the next request on it, would fail that request (ECONNRESET, a 502). The
+  // instance never closes them, they go away with the thread on the reset
+  server.keepAliveTimeout = 0
+}

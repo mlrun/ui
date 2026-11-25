@@ -17,20 +17,19 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 
-export default (textAreaStructure) => {
+export default textAreaStructure => {
   const element = {}
-  element.root = By.css(textAreaStructure.root)
-  element.inputField = By.css(`${textAreaStructure.root} ${textAreaStructure.elements.input}`)
+  element.root = textAreaStructure.root
+  element.inputField = `${textAreaStructure.root} ${textAreaStructure.elements.input}`
 
   if (textAreaStructure.elements.label) {
-    element.inputLabel = By.css(`${textAreaStructure.root} ${textAreaStructure.elements.label}`)
+    element.inputLabel = `${textAreaStructure.root} ${textAreaStructure.elements.label}`
   }
 
-  element.counter =  By.css(`${textAreaStructure.root} ${textAreaStructure.elements.counter}`)
-  element.warningHint = By.css(`${textAreaStructure.root} ${textAreaStructure.elements.warningHint}`)
-  element.warningText = By.css(`${textAreaStructure.elements.warningText}`)
+  element.counter = `${textAreaStructure.root} ${textAreaStructure.elements.counter}`
+  element.warningHint = `${textAreaStructure.root} ${textAreaStructure.elements.warningHint}`
+  element.warningText = `${textAreaStructure.elements.warningText}`
 
   return element
 }

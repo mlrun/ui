@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 import commonTable from '../components/table.component.js'
 import dropdownComponent from '../components/dropdown.component.js'
 import actionMenu from '../components/action-menu.component.js'
@@ -78,7 +77,7 @@ const ProjectsTableSelector = {
         labels: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
-            '.project-card__labels',
+            '[data-testid="project-card__labels"]',
             '.chip-block span.chips_button',
             '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
             false,
@@ -117,222 +116,160 @@ const projectsTabSelector = {
 
 export default {
   Projects_Tab_Selector: commonTable(projectsTabSelector),
-  Retrieving_Projects_Message: By.css('[data-testid=no-data]'),
-  No_Archived_Projects_Message: By.css('[data-testid="no-data"] h3'),
-  New_Project_Button: By.css(
-    '.projects__wrapper .projects-content-header-item .page-actions-container .btn_register'
-  ),
-  Refresh_Projects_Button: By.css('.projects-content-header .data-ellipsis button'),
+  Retrieving_Projects_Message: '[data-testid=no-data]',
+  No_Archived_Projects_Message: '[data-testid="no-data"] h3',
+  New_Project_Button:
+    '.projects__wrapper .projects-content-header-item .page-actions-container .btn_register',
+  Refresh_Projects_Button: '.projects-content-header .data-ellipsis button',
   Projects_Table: commonTable(ProjectsTableSelector),
-  Project_Card_Alert_Icon: By.css('.project-card__header-title .project-card__alert'),
-  Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
-  Active_Projects_Button: By.css(
-    '.projects__wrapper .projects-content-header .projects-content-header-item [data-testid="active"]'
-  ),
-  Archive_Projects_Button: By.css(
-    '.projects__wrapper .projects-content-header .projects-content-header-item [data-testid=archived]'
-  ),
-  Projects_Sorter: By.css('.projects-content-header-item .sort .split-btn__button:nth-of-type(1)'),
+  Project_Card_Alert_Icon: '.project-card__header-title .project-card__alert',
+  Overlay: '#overlay_container .chip-block-hidden_visible',
+  Active_Projects_Button:
+    '.projects__wrapper .projects-content-header .projects-content-header-item [data-testid="active"]',
+  Archive_Projects_Button:
+    '.projects__wrapper .projects-content-header .projects-content-header-item [data-testid=archived]',
+  Projects_Sorter: '.projects-content-header-item .sort .split-btn__button:nth-of-type(1)',
   Projects_Sort_Dropdown: dropdownComponent(
     generateDropdownGroup(
       '.projects-content-header-item .sort .split-btn__button:nth-of-type(2)',
       'button svg', // Open Component
       '.select__item', // Options
-      '.data-ellipsis > .tooltip-wrapper' // Option value
+      '.select__item-main-label' // Option value
     )
   ),
-  No_Archived_Projects_Label: '.projects .projects__wrapper .projects-content .no-filtered-data',
   Search_Projects_Input: inputGroup(
     generateInputGroup('.projects__wrapper .projects-content-header .search-container')
   ),
   Projects_Monitoring_Container: {
-    Monitoring_Container: By.css('.projects .projects-monitoring-container'),
-    Monitoring_Container_Title: By.css(
-      '.projects-monitoring-container .page-header__title'
-    ),
-    Monitoring_Artifacts_Box: By.css(
-      '.projects-monitoring-container .projects-monitoring-stats.projects-monitoring-stats_wide > div:nth-child(1)'
-    ),
-    Monitoring_Jobs_Box: By.css(
-      '.projects-monitoring-container .projects-monitoring-stats .stats-card:nth-of-type(2)'
-    ),
-    Monitoring_Workflows_Box: By.css(
-      '.projects-monitoring-container .projects-monitoring-stats .stats-card:nth-of-type(2)'
-    ),
-    Monitoring_Models_Box: By.css(
-      '.projects-monitoring-container .projects-monitoring-stats .card__small-container'
-    ),
-    Monitoring_Scheduled_Box: By.css(
+    Monitoring_Container: '.projects .projects-monitoring-container',
+    Monitoring_Container_Title: '.projects-monitoring-container .page-header__title',
+    Monitoring_Artifacts_Box:
+      '.projects-monitoring-container .projects-monitoring-stats.projects-monitoring-stats_wide > div:nth-child(1)',
+    Monitoring_Jobs_Box:
+      '.projects-monitoring-container .projects-monitoring-stats .stats-card:nth-of-type(2)',
+    Monitoring_Workflows_Box:
+      '.projects-monitoring-container .projects-monitoring-stats .stats-card:nth-of-type(2)',
+    Monitoring_Models_Box:
+      '.projects-monitoring-container .projects-monitoring-stats .card__small-container',
+    Monitoring_Scheduled_Box:
+      '.projects-monitoring-container .projects-monitoring-stats .stats-card:nth-of-type(3)',
+    Monitoring_Alerts_Box:
       '.projects-monitoring-container .projects-monitoring-stats .stats-card:nth-of-type(3)'
-    ),
-    Monitoring_Alerts_Box: By.css(
-      '.projects-monitoring-container .projects-monitoring-stats .stats-card:nth-of-type(3)'
-    )
   },
   Monitoring_Artifacts_Box: {
-    Monitoring_Artifacts_Box_Title: By.css(
-      '.projects-monitoring-stats > div:nth-child(1) .stats-card__row .stats-card__title .tooltip-wrapper'
-    ),
-    Total_Counter_Number: By.css(
-      '.projects-monitoring-stats > div:nth-child(1) [data-testid="artifacts_total_counter"]'
-    ),
-    Counter_Datasets_Number: By.css(
-      '.projects-monitoring-stats > div:nth-child(1) .stats__details .stats-card__row:nth-of-type(1) .stats__counter'
-    ),
-    Counter_Datasets_Subtitle: By.css(
-      '.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(1) .stats__subtitle'
-    ),
-    Counter_Documents_Number: By.css(
-      '.projects-monitoring-stats > div:nth-child(1) .stats__details .stats-card__row:nth-of-type(2) .stats__counter'
-    ),
-    Counter_Documents_Subtitle: By.css(
-      '.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(2) .stats__subtitle'
-    ),
-    Counter_LLM_Prompt_Number: By.css(
-      '.projects-monitoring-stats > div:nth-child(1) .stats__details .stats-card__row:nth-of-type(3) .stats__counter' 
-    ),
-    Counter_LLM_Prompt_Subtitle: By.css(
-      '.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(3) .stats__subtitle' 
-    ),
-    Counter_Other_Artifacts_Number: By.css(
-      '.projects-monitoring-stats > div:nth-child(1) .stats__details .stats-card__row:nth-of-type(4) .stats__counter' 
-    ),
-    Counter_Other_Artifacts_Subtitle: By.css(
-      '.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(4) .stats__subtitle' 
-    )
+    Monitoring_Artifacts_Box_Title:
+      '.projects-monitoring-stats > div:nth-child(1) .stats-card__row .stats-card__title .tooltip-wrapper',
+    Total_Counter_Number:
+      '.projects-monitoring-stats > div:nth-child(1) [data-testid="artifacts_total_counter"]',
+    Counter_Datasets_Number:
+      '.projects-monitoring-stats > div:nth-child(1) .stats__details .stats-card__row:nth-of-type(1) .stats__counter',
+    Counter_Datasets_Subtitle:
+      '.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(1) .stats__subtitle',
+    Counter_Documents_Number:
+      '.projects-monitoring-stats > div:nth-child(1) .stats__details .stats-card__row:nth-of-type(2) .stats__counter',
+    Counter_Documents_Subtitle:
+      '.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(2) .stats__subtitle',
+    Counter_LLM_Prompt_Number:
+      '.projects-monitoring-stats > div:nth-child(1) .stats__details .stats-card__row:nth-of-type(3) .stats__counter',
+    Counter_LLM_Prompt_Subtitle:
+      '.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(3) .stats__subtitle',
+    Counter_Other_Artifacts_Number:
+      '.projects-monitoring-stats > div:nth-child(1) .stats__details .stats-card__row:nth-of-type(4) .stats__counter',
+    Counter_Other_Artifacts_Subtitle:
+      '.projects-monitoring-stats > div:nth-child(1) .stats-card__row:nth-of-type(4) .stats__subtitle'
   },
   Monitoring_Jobs_Box: {
-    Monitoring_Jobs_Box_Title: By.css(
-      '.projects-monitoring-stats > div:nth-child(2) .stats-card__title .tooltip-wrapper'
-    ),
-    Monitoring_Jobs_Box_Title_Tip: By.css(
-      '.projects-monitoring-stats > div:nth-child(2) .stats-card__title [data-testid="tip"] svg'
-    ),
-    Filtering_Time_Period: By.css('.projects-monitoring-stats > div:nth-child(2) span'),
-    Total_Counter_Number: By.css(
-      '.projects-monitoring-stats > div:nth-child(2) [data-testid="scheduled_total_counter"]'
-    ),
-    Counter_Running_Status_Number: By.css(
-      '.projects-monitoring-stats > div:nth-child(2) .stats__details .stats-card__row:nth-of-type(1) .stats__counter'
-    ),
-    Counter_Running_Status_Subtitle: By.css(
-      '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(1) .stats__subtitle'
-    ),
-    Counter_Running_Status_Icon: By.css(
-      '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(1) .state-running'
-    ),
-    Counter_Failed_Status_Number: By.css(
-      '.projects-monitoring-stats > div:nth-child(2) .stats__details .stats-card__row:nth-of-type(2) .stats__counter'
-    ),
-    Counter_Failed_Status_Subtitle: By.css(
-      '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(2) .stats__subtitle'
-    ),
-    Counter_Failed_Status_Icon: By.css(
-      '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(2) .state-failed' 
-    ),
-    Counter_Completed_Status_Number: By.css(
-      '.projects-monitoring-stats > div:nth-child(2) .stats__details .stats-card__row:nth-of-type(3) .stats__counter' 
-    ),
-    Counter_Completed_Status_Subtitle: By.css(
-      '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(3) .stats__subtitle' 
-    ),
-    Counter_Completed_Status_Icon: By.css(
+    Monitoring_Jobs_Box_Title:
+      '.projects-monitoring-stats > div:nth-child(2) .stats-card__title .tooltip-wrapper',
+    Monitoring_Jobs_Box_Title_Tip:
+      '.projects-monitoring-stats > div:nth-child(2) .stats-card__title [data-testid="tip"] svg',
+    Filtering_Time_Period: '.projects-monitoring-stats > div:nth-child(2) span',
+    Total_Counter_Number:
+      '.projects-monitoring-stats > div:nth-child(2) [data-testid="scheduled_total_counter"]',
+    Counter_Running_Status_Number:
+      '.projects-monitoring-stats > div:nth-child(2) .stats__details .stats-card__row:nth-of-type(1) .stats__counter',
+    Counter_Running_Status_Subtitle:
+      '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(1) .stats__subtitle',
+    Counter_Running_Status_Icon:
+      '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(1) .state-running',
+    Counter_Failed_Status_Number:
+      '.projects-monitoring-stats > div:nth-child(2) .stats__details .stats-card__row:nth-of-type(2) .stats__counter',
+    Counter_Failed_Status_Subtitle:
+      '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(2) .stats__subtitle',
+    Counter_Failed_Status_Icon:
+      '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(2) .state-failed',
+    Counter_Completed_Status_Number:
+      '.projects-monitoring-stats > div:nth-child(2) .stats__details .stats-card__row:nth-of-type(3) .stats__counter',
+    Counter_Completed_Status_Subtitle:
+      '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(3) .stats__subtitle',
+    Counter_Completed_Status_Icon:
       '.projects-monitoring-stats > div:nth-child(2) .stats-card__row:nth-of-type(3) .state-completed'
-    )
   },
   Monitoring_Workflows_Box: {
-    Monitoring_Workflows_Box_Title: By.css(
-      '.projects-monitoring-stats .stats-card:nth-of-type(3) .stats-card__title'
-    ),
-    Filtering_Time_Period: By.css('.stats-card:nth-of-type(3) .stats-card__row > div > span'),
-    Total_Counter_Number: By.css(
-      '.projects-monitoring-stats > div:nth-child(3) [data-testid="wf_total_counter"] .stats__counter'
-    ),
-    Counter_In_Process_Status_Number: By.css(
-      '.stats-card:nth-of-type(3) [data-testid="wf_running_counter"] .stats__counter'
-    ),
-    Counter_In_Process_Status_Subtitle: By.css(
-      '.stats-card:nth-of-type(3) [data-testid="wf_running_counter"] .stats__subtitle'
-    ),
-    Counter_In_Process_Status_Icon: By.css(
-      '.stats-card:nth-of-type(3) [data-testid="wf_running_counter"] .state-running'
-    ),
-    Counter_Failed_Status_Number: By.css(
-      '.stats-card:nth-of-type(3) [data-testid="wf_failed_counter"] .stats__counter'
-    ),
-    Counter_Failed_Status_Subtitle: By.css(
-      '.stats-card:nth-of-type(3) [data-testid="wf_failed_counter"] .stats__subtitle'
-    ),
-    Counter_Failed_Status_Icon: By.css(
-      '.stats-card:nth-of-type(3) [data-testid="wf_failed_counter"] .state-failed'
-    ),
-    Counter_Completed_Status_Number: By.css(
-      '.stats-card:nth-of-type(3) [data-testid="wf_completed_counter"] .stats__counter'
-    ),
-    Counter_Completed_Status_Subtitle: By.css(
-      '.stats-card:nth-of-type(3) [data-testid="wf_completed_counter"] .stats__subtitle'
-    ),
-    Counter_Completed_Status_Icon: By.css(
+    Monitoring_Workflows_Box_Title:
+      '.projects-monitoring-stats .stats-card:nth-of-type(3) .stats-card__title',
+    Filtering_Time_Period: '.stats-card:nth-of-type(3) .stats-card__row > div > span',
+    Total_Counter_Number:
+      '.projects-monitoring-stats > div:nth-child(3) [data-testid="wf_total_counter"] .stats__counter',
+    Counter_In_Process_Status_Number:
+      '.stats-card:nth-of-type(3) [data-testid="wf_running_counter"] .stats__counter',
+    Counter_In_Process_Status_Subtitle:
+      '.stats-card:nth-of-type(3) [data-testid="wf_running_counter"] .stats__subtitle',
+    Counter_In_Process_Status_Icon:
+      '.stats-card:nth-of-type(3) [data-testid="wf_running_counter"] .state-running',
+    Counter_Failed_Status_Number:
+      '.stats-card:nth-of-type(3) [data-testid="wf_failed_counter"] .stats__counter',
+    Counter_Failed_Status_Subtitle:
+      '.stats-card:nth-of-type(3) [data-testid="wf_failed_counter"] .stats__subtitle',
+    Counter_Failed_Status_Icon:
+      '.stats-card:nth-of-type(3) [data-testid="wf_failed_counter"] .state-failed',
+    Counter_Completed_Status_Number:
+      '.stats-card:nth-of-type(3) [data-testid="wf_completed_counter"] .stats__counter',
+    Counter_Completed_Status_Subtitle:
+      '.stats-card:nth-of-type(3) [data-testid="wf_completed_counter"] .stats__subtitle',
+    Counter_Completed_Status_Icon:
       '.stats-card:nth-of-type(3) [data-testid="wf_completed_counter"] .state-completed'
-    )
   },
   Monitoring_Scheduled_Box: {
-    Monitoring_Scheduled_Box_Title: By.css(
-      '.projects-monitoring-stats .stats-card:nth-of-type(4) .stats-card__title'
-    ),
-    Filtering_Time_Period: By.css('.stats-card:nth-of-type(4) .stats-card__row > div > span'),
-    Total_Job_Counter_Title: By.css(
-      '.stats-card:nth-of-type(4) [data-testid="scheduled_jobs_counter"] .stats__subtitle'
-    ),
-    Total_Workflows_Counter_Title: By.css(
-      '.stats-card:nth-of-type(4) [data-testid="scheduled_workflows_counter"] .stats__subtitle'
-    ),
-    Total_Job_Counter_Number: By.css(
-      '.stats-card:nth-of-type(4) [data-testid="scheduled_jobs_counter"] .stats__counter'
-    ),
-    Total_Workflows_Counter_Number: By.css(
-      '.stats-card:nth-of-type(4) [data-testid="scheduled_workflows_counter"] .stats__counter'
-    ),
-    Total_Scheduled_Number: By.css(
+    Monitoring_Scheduled_Box_Title:
+      '.projects-monitoring-stats .stats-card:nth-of-type(4) .stats-card__title',
+    Filtering_Time_Period: '.stats-card:nth-of-type(4) .stats-card__row > div > span',
+    Total_Job_Counter_Title:
+      '.stats-card:nth-of-type(4) [data-testid="scheduled_jobs_counter"] .stats__subtitle',
+    Total_Workflows_Counter_Title:
+      '.stats-card:nth-of-type(4) [data-testid="scheduled_workflows_counter"] .stats__subtitle',
+    Total_Job_Counter_Number:
+      '.stats-card:nth-of-type(4) [data-testid="scheduled_jobs_counter"] .stats__counter',
+    Total_Workflows_Counter_Number:
+      '.stats-card:nth-of-type(4) [data-testid="scheduled_workflows_counter"] .stats__counter',
+    Total_Scheduled_Number:
       '.projects-monitoring-stats > div:nth-child(4) [data-testid="scheduled_total_counter"]'
-    )
   },
   Monitoring_Models_Box: {
-    Monitoring_Models_Title: By.css(
-      '.projects-monitoring-stats .card__small-container .stats-card__row .stats-card__title .tooltip-wrapper'
-    ),
-    Total_Counter_Number: By.css(
+    Monitoring_Models_Title:
+      '.projects-monitoring-stats .card__small-container .stats-card__row .stats-card__title .tooltip-wrapper',
+    Total_Counter_Number:
       '.projects-monitoring-stats .card__small-container [data-testid="models_total_counter"]'
-    )
   },
   Monitoring_Alerts_Box: {
-    Monitoring_Alerts_Box_Title: By.css(
-      '.projects-monitoring-stats .alerts-card .stats-card__title .data-ellipsis'
-    ),
-    Monitoring_Alerts_Box_Title_Icon: By.css(
-      '.projects-monitoring-stats .alerts-card .stats-card__title svg'
-    ),
-    Filtering_Time_Period: By.css('.alerts-card .stats-card__row > div > span'),
-    Total_Endpoint_Counter_Number: By.css(
-      '.projects-monitoring-stats .alerts-card .stats__details [data-testid="alerts_endpoints_counter"] .stats__counter'
-    ),
-    Total_Endpoint_Counter_Title: By.css(
-      '.projects-monitoring-stats .alerts-card .stats__details [data-testid="alerts_endpoints_counter"] h6'
-    ),
-    Total_Jobs_Counter_Number: By.css(
-      '.projects-monitoring-stats .alerts-card .stats__details [data-testid="alerts_job_counter"] .stats__counter'
-    ),
-    Total_Jobs_Counter_Title: By.css(
-      '.projects-monitoring-stats .alerts-card .stats__details [data-testid="alerts_job_counter"] h6'
-    ),
-    Total_Application_Counter_Number: By.css(
-      '.projects-monitoring-stats .alerts-card .stats__details [data-testid="alerts_application_counter"] .stats__counter'
-    ),
-    Total_Application_Counter_Title: By.css(
-      '.projects-monitoring-stats .alerts-card .stats__details [data-testid="alerts_application_counter"] .stats__subtitle'
-    ),
-    Total_Alerts_Number: By.css(
+    Monitoring_Alerts_Box_Title:
+      '.projects-monitoring-stats .alerts-card .stats-card__title .data-ellipsis',
+    Monitoring_Alerts_Box_Title_Icon:
+      '.projects-monitoring-stats .alerts-card .stats-card__title svg',
+    Filtering_Time_Period: '.alerts-card .stats-card__row > div > span',
+    Total_Endpoint_Counter_Number:
+      '.projects-monitoring-stats .alerts-card .stats__details [data-testid="alerts_endpoints_counter"] .stats__counter',
+    Total_Endpoint_Counter_Title:
+      '.projects-monitoring-stats .alerts-card .stats__details [data-testid="alerts_endpoints_counter"] h6',
+    Total_Jobs_Counter_Number:
+      '.projects-monitoring-stats .alerts-card .stats__details [data-testid="alerts_job_counter"] .stats__counter',
+    Total_Jobs_Counter_Title:
+      '.projects-monitoring-stats .alerts-card .stats__details [data-testid="alerts_job_counter"] h6',
+    Total_Application_Counter_Number:
+      '.projects-monitoring-stats .alerts-card .stats__details [data-testid="alerts_application_counter"] .stats__counter',
+    Total_Application_Counter_Title:
+      '.projects-monitoring-stats .alerts-card .stats__details [data-testid="alerts_application_counter"] .stats__subtitle',
+    Total_Alerts_Number:
       '.projects-monitoring-stats .alerts-card [data-testid="alerts_total_counter"]'
-    )
   }
 }

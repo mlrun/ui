@@ -29,7 +29,6 @@ export const sourceCodeInBase64 = {
 
 export const NEW_IMAGE = 'newImage'
 export const EXISTING_IMAGE = 'existingImage'
-export const FORCE_BUILD = 'forceBuild'
 
 /* eslint-disable-next-line no-unused-vars*/
 export const generateCodeOptions = mode => [

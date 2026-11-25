@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 import inputGroup from '../components/input-group.component.js'
 import {
   generateInputGroup,
@@ -43,20 +42,6 @@ const actionMenuStructureExpand = {
   menuElements: {
     open_button: '[data-testid="actions-menu"] button',
     options: '.actions-menu__body .actions-menu__option'
-  }
-}
-
-const tabSelector = {
-  root: '.content .content-menu',
-  header: {},
-  body: {
-    root: '.content-menu__tabs',
-    row: {
-      root: '.content-menu__tab',
-      fields: {
-        key: ''
-      }
-    }
   }
 }
 
@@ -148,7 +133,7 @@ const modelsEndpointTable = {
           structure: generateDropdownGroup(
             '.table-body__cell:nth-of-type(5)',
             '.chip-block span.chips_button',
-            '.chip-block .data-ellipsis.tooltip-wrapper', 
+            '.chip-block .data-ellipsis.tooltip-wrapper',
             false,
             true
           )
@@ -258,7 +243,7 @@ const realTimePipelinesGraph = {
 }
 
 // Common components
-const tableRefreshButton = By.css('.content__action-bar-wrapper .action-bar [data-testid="refresh"]')
+const tableRefreshButton = '.content__action-bar-wrapper .action-bar [data-testid="refresh"]'
 const tableNameFilterInput = inputGroup(
   generateInputGroup(
     '.content .content__action-bar-wrapper .action-bar .name-filter .form-field-input',
@@ -270,52 +255,52 @@ const tableNameFilterInput = inputGroup(
 
 export default {
   modelsTab: {
-    Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
-    Models_Tab_Selector: commonTable(tabSelector),
+    Delete_Artifact_Popup: '[data-testid="pop-up-dialog"]',
     Table_Name_Filter_Input: tableNameFilterInput,
-    Table_Refresh_Button: By.css(
-      '.content__action-bar-wrapper .action-bar__actions [data-testid="refresh"]'
-    ),
+    Table_Refresh_Button:
+      '.content__action-bar-wrapper .action-bar__actions [data-testid="refresh"]',
     Models_Table: commonTable(modelsTable),
-    Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
-    Register_Model_Button: By.css('.content__action-bar-wrapper .action-bar__actions .btn-tertiary'),
-    Train_Model_Button: By.css('.content__action-bar-wrapper .action-bar__actions .btn-primary'),
-    Table_FilterBy_Button: By.css('.models .action-bar [data-testid="filter-menu-btn"]'),
-    History_Back_Button: By.css('.history-back-link .history-back-link__icon'),
-    Version_History_Title: By.css(
-      '.history-back-link .history-back-link__title [data-testid="version-history"]'
-    ),
-    Version_History_Model_Name: By.css(
+    Overlay: '#overlay_container .chip-block-hidden_visible',
+    Register_Model_Button: '.content__action-bar-wrapper .action-bar__actions .btn-tertiary',
+    Train_Model_Button: '.content__action-bar-wrapper .action-bar__actions .btn-primary',
+    Table_FilterBy_Button: '.models .action-bar [data-testid="filter-menu-btn"]',
+    History_Back_Button: '.history-back-link .history-back-link__icon',
+    Version_History_Title:
+      '.history-back-link .history-back-link__title [data-testid="version-history"]',
+    Version_History_Model_Name:
       '.history-back-link .history-back-link__title .data-ellipsis.tooltip-wrapper'
-    )
   },
   modelEndpoints: {
     Table_Refresh_Button: tableRefreshButton,
     Model_Endpoints_Table: commonTable(modelsEndpointTable),
-    Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
-    Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
-    Column_Name_Header: By.css('[data-testid="name"]'),
-    Sort_By_Name: By.css('[data-testid="name"].sortable-header-cell_active svg'),
-    Sort_By_Function: By.css('[data-testid="function"].sortable-header-cell_active svg'),
-    Column_Function_Header: By.css('[data-testid="function"]')
+    Overlay: '#overlay_container .chip-block-hidden_visible',
+    Table_FilterBy_Button: '[data-testid="filter-menu-btn-tooltip-wrapper"]',
+    Column_Name_Header: '[data-testid="name"]',
+    Sort_By_Name: '[data-testid="name"].sortable-header-cell_active svg',
+    Sort_By_Function: '[data-testid="function"].sortable-header-cell_active svg',
+    Column_Function_Header: '[data-testid="function"]'
   },
   realTimePipelinesTab: {
     Table_Name_Filter_Input: tableNameFilterInput,
     Table_Refresh_Button: tableRefreshButton,
     Real_Time_Pipelines_Table: commonTable(realTimePipelinesTable),
     Real_Time_Pipelines_Graph: graph(realTimePipelinesGraph),
-    Pipeline_Back_Button: By.css(
-      '[data-testid="detailsPanel"] .item-header__back-btn [data-testid="go-back-tooltip-wrapper"]'
-    ),
-    Pipeline_Link_Title: By.css(
-      '[data-testid="detailsPanel"] .item-header__title > .tooltip-wrapper:first-of-type'
-    ),
-    Router_List: By.css('[data-testid="detailsPanel"] [data-testid="router-list"]'),
-    Model_Runner_Step_Icon: By.css('.react-flow__node-ml-node-with-sub-items .react-flow__node-header .react-flow__node-header-icon'),
-    Model_Runner_Step_Label: By.css('.react-flow__node-ml-node-with-sub-items .react-flow__node-header-title .react-flow__node-header-label'),
-    Model_Runner_Step_Sub_Label: By.css('.react-flow__node-ml-node-with-sub-items .react-flow__node-header-title .react-flow__node-header-sub-label'),
-    Model_Runner_Monitoring_Icon: By.css('.react-flow__node-ml-node-with-sub-items .react-flow__node-header .react-flow__node-header-monitoring-icon'),
-    Model_Runner_Chips_Title: By.css('.react-flow__node-ml-node-with-sub-items div.react-flow__node-chips-title'),
-    Model_Runner_Chip_Container: By.css('.react-flow__node-ml-node-with-sub-items [data-testid="subItems-chips"] .chip-block .edit-chip-container')
+    Pipeline_Back_Button:
+      '[data-testid="detailsPanel"] .item-header__back-btn [data-testid="go-back-tooltip-wrapper"]',
+    Pipeline_Link_Title:
+      '[data-testid="detailsPanel"] .item-header__title > .tooltip-wrapper:first-of-type',
+    Router_List: '[data-testid="detailsPanel"] [data-testid="router-list"]',
+    Model_Runner_Step_Icon:
+      '.react-flow__node-ml-node-with-sub-items .react-flow__node-header .react-flow__node-header-icon',
+    Model_Runner_Step_Label:
+      '.react-flow__node-ml-node-with-sub-items .react-flow__node-header-title .react-flow__node-header-label',
+    Model_Runner_Step_Sub_Label:
+      '.react-flow__node-ml-node-with-sub-items .react-flow__node-header-title .react-flow__node-header-sub-label',
+    Model_Runner_Monitoring_Icon:
+      '.react-flow__node-ml-node-with-sub-items .react-flow__node-header .react-flow__node-header-monitoring-icon',
+    Model_Runner_Chips_Title:
+      '.react-flow__node-ml-node-with-sub-items div.react-flow__node-chips-title',
+    Model_Runner_Chip_Container:
+      '.react-flow__node-ml-node-with-sub-items [data-testid="subItems-chips"] .chip-block .edit-chip-container'
   }
 }

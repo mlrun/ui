@@ -25,11 +25,6 @@ export const parameterTypeBool = 'bool'
 export const parameterTypeList = 'list'
 export const parameterTypeDict = 'dict'
 
-export const parameterOptionRange = 'range'
-export const parameterOptionRandomize = 'randomize'
-export const parameterOptionMultiple = 'multiple'
-export const parameterOptionLogarithmicScale = 'logarithmicScale'
-
 export const parameterTypeValueMap = {
   [parameterTypeStr]: 'string',
   [parameterTypeInt]: 'integer',
@@ -39,15 +34,6 @@ export const parameterTypeValueMap = {
   [parameterTypeList]: 'list'
 }
 
-export const parametersValueOptionsList = [
-  {
-    label: 'Range',
-    id: parameterOptionRange
-  },
-  { label: 'Randomize', id: parameterOptionRandomize },
-  { label: 'Multiple', id: parameterOptionMultiple },
-  { label: 'LogarithmicScale', id: parameterOptionLogarithmicScale }
-]
 export const parametersValueTypeOptions = [
   {
     label: parameterTypeStr,

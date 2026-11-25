@@ -17,70 +17,115 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { expect } from 'chai'
-import { isEqual } from 'lodash-es'
+import { expect } from '@playwright/test'
 
-async function getOptionValues(driver, options) {
-  return await driver.findElements(options).then(function(elements) {
-    return Promise.all(elements.map(element => element.getText()))
+import { expectTimeout } from '../../../config.js'
+import {
+  click,
+  getAttribute,
+  getTexts,
+  pollOptions,
+  readOrNull,
+  retryAssertion,
+  waitForDownloadItemsRemoved,
+  withExactText
+} from '../../common-tools/element.js'
+
+async function getOptionValues(page, options) {
+  return getTexts(page.locator(options))
+}
+
+// the menu body is rendered only while the menu is open (ActionsMenu), so the options in the DOM mean it is open: the
+// text of the options is empty while they fade in, and the open button toggles, so an open menu must not be clicked
+const isActionMenuOpen = async (page, actionMenu) =>
+  (await page.locator(actionMenu.options).count()) > 0
+
+// the open button toggles the menu. The row (its buttons) can be re-rendered right after the hover and the menu closes
+// with it, so the click is repeated until the menu is open. The options are read as a snapshot by the selecting
+// helpers, so wait until their text is rendered
+export const openActionMenu = async (page, actionMenu) => {
+  await retryAssertion(async () => {
+    if (await isActionMenuOpen(page, actionMenu)) return
+
+    await click(page.locator(actionMenu.open_button).first())
+    await expect.poll(() => isActionMenuOpen(page, actionMenu), { timeout: 1500 }).toBe(true)
+  }, 8000).catch(error => {
+    // the menu never opened: the selecting helper would fail on a missing option instead
+    throw new Error(`The action menu (${actionMenu.open_button}) did not open: ${error.message}`)
   })
 }
 
-export const openActionMenu =  async (driver, actionMenu) => {
-    const element = await driver.findElement(actionMenu.open_button)
-    if (element) {
-      await element.click()
+// opens the menu unless it is open already: the open button toggles the menu, so a step that clicks it after a
+// previous step opened the menu (e.g. "dropdown element should contain" + "option is enabled") closes it
+export const openActionMenuIfClosed = async (page, actionMenu) => {
+  const isOpen = () => isActionMenuOpen(page, actionMenu)
+
+  if (await isOpen()) return
+
+  await openActionMenu(page, actionMenu)
+  await expect
+    .poll(isOpen, {
+      timeout: expectTimeout,
+      message: `The action menu is not open: ${actionMenu.open_button}`
+    })
+    .toBe(true)
+}
+
+// the options are rendered after the menu is opened, so the search is retried
+export const selectOptionInActionMenu = async (page, actionMenu, option) => {
+  // the same file downloaded again while the previous download is still in the notification list is rendered twice
+  // (duplicate keys) and the notification flickers, so it can't be clicked
+  if (option === 'Download') await waitForDownloadItemsRemoved(page)
+
+  return selectOption(page, actionMenu, option)
+}
+
+const selectOption = (page, actionMenu, option) =>
+  retryAssertion(async () => {
+    // the menu is closed by a re-render of the row
+    if (!(await isActionMenuOpen(page, actionMenu))) await openActionMenu(page, actionMenu)
+
+    const options = page.locator(actionMenu.options)
+
+    if (!(await getTexts(options)).includes(option)) {
+      throw new Error(`"${option}" option is not found in the action menu`)
     }
-  }
 
-export const selectOptionInActionMenu = async (driver, actionMenu, option) => {
-    const elements = await driver.findElements(actionMenu.options)
-    for (const element of elements) {
-      if ((await element.getText()) === option) {
-        await element.click()
+    await click(withExactText(options, option).first(), { timeout: 2000 })
+  }, 10000)
 
-        return
-      }
-    }
+// the same options in the same order (the previous check: the same length and every option equal by index)
+export const checkActionMenuOptions = async (page, actionMenu, values, timeout) =>
+  expect
+    .poll(
+      readOrNull(() => getOptionValues(page, actionMenu.options)),
+      pollOptions('Options of the action menu', timeout)
+    )
+    .toEqual(values)
 
-    throw new Error(`"${option}" option is not found in the action menu`)
-  }
+// the option must be in the (open) menu: the previous version asserted only inside the loop over the found options,
+// so an absent option, or a menu that wasn't open (hidden options have no text), passed
+const verifyOptionInActionMenuState = (page, actionMenu, option, isDisabled) =>
+  retryAssertion(async () => {
+    const options = page.locator(actionMenu.options)
+    const texts = await getTexts(options)
+    const index = texts.indexOf(option)
 
-export const checkActionMenuOptions = async (driver, actionMenu, values) => {
-    const options = await getOptionValues(driver, actionMenu.options)
+    expect(
+      index,
+      `"${option}" option is not found in the action menu, options: [${texts}]`
+    ).not.toBe(-1)
 
-    if (options.length === values.length){
-      const diff = options.every((elem, index) => isEqual(elem, values[index]))
-      expect(diff).to.equal(true, 
-        `Actual options in action menu [${options}] don't match with expected values [${values}]`)
-    } else {
-      expect(options.length).equal(values.length,
-        `Actual options in action menu [${options}] don't match with expected values [${values}]`)
-    }
-  }
+    const attributes = await getAttribute(options.nth(index), 'class')
 
-export const verifyOptionInActionMenuEnabled = async (driver, actionMenu, option) => {
-    const elements = await driver.findElements(actionMenu.options)
-    for (const element of elements) {
-      const attributes = await element.getAttribute('class')
-      const text = await element.getText()
-  
-      if (text === option) {
-        const flag = attributes.includes('actions-menu__option_disabled')
-        expect(flag).to.equal(false)
-      }
-    }
-  }
+    expect(
+      attributes.includes('actions-menu__option_disabled'),
+      `"${option}" option is expected to be ${isDisabled ? 'disabled' : 'enabled'}`
+    ).toBe(isDisabled)
+  })
 
-export const verifyOptionInActionMenuDisabled = async (driver, actionMenu, option) => {
-    const elements = await driver.findElements(actionMenu.options)
-    for (const element of elements) {
-      const attributes = await element.getAttribute('class')
-      const text = await element.getText()
-  
-      if (text === option) {
-        const flag = attributes.includes('actions-menu__option_disabled')
-        expect(flag).to.equal(true)
-      }
-    }
-  }
+export const verifyOptionInActionMenuEnabled = (page, actionMenu, option) =>
+  verifyOptionInActionMenuState(page, actionMenu, option, false)
+
+export const verifyOptionInActionMenuDisabled = (page, actionMenu, option) =>
+  verifyOptionInActionMenuState(page, actionMenu, option, true)

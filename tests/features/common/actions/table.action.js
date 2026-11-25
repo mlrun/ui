@@ -17,527 +17,561 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { expect } from 'chai'
-import { By } from 'selenium-webdriver'
-import { difference  } from 'lodash-es'
+import { expectTimeout } from '../../../config.js'
+import { expect } from '@playwright/test'
 import {
   getOptionValues,
   openDropdown,
   selectOptionInDropdownWithoutCheck
 } from './dropdown.action.js'
-import { getElementText, hoverComponent } from './common.action.js'
+import { getElementText, hoverComponent, readNonEmptyText } from './common.action.js'
+import {
+  click,
+  expectListItems,
+  expectText,
+  getAttribute,
+  getAttributes,
+  getRect,
+  getText,
+  getTexts,
+  pollOptions,
+  readOrNull,
+  retryAssertion,
+  scrollIntoView,
+  waitForPageQuiet
+} from '../../common-tools/element.js'
 
-async function getColumnValuesAttribute(driver, table, columnName) {
-  return await driver
-    .findElements(table.tableColumns[columnName])
-    .then(function(elements) {
+const getColumnValuesAttribute = (page, table, columnName) =>
+  getAttributes(page.locator(table.tableColumns[columnName]), 'value')
 
-      return Promise.all(elements.map(element => element.getAttribute('value')))
+export const getColumnValues = async (page, table, columnName) => {
+  return getTexts(page.locator(table.tableColumns[columnName]))
+}
+
+export const getTableRows = async (page, table) => {
+  return page.locator(table.tableColumns[table.tableColumnNames[0]]).count()
+}
+
+// the number of rows once the table has at least one row: the per-row checks ("in every row ...") would check
+// nothing on a table that is empty or not rendered yet
+export const waitForTableRows = async (page, table, timeout = expectTimeout) => {
+  await expect
+    .poll(() => getTableRows(page, table), {
+      timeout,
+      message: `The table has no rows: ${table.tableColumns[table.tableColumnNames[0]]}`
     })
+    .toBeGreaterThan(0)
+
+  return getTableRows(page, table)
 }
 
-export const getColumnValues = async (driver, table, columnName) => {
-  return await driver
-    .findElements(table.tableColumns[columnName])
-    .then(function(elements) {
-
-      return Promise.all(elements.map(element => element.getText()))
-    })
-}
-
-export const getHeaderColumnValue = async (driver, table, columnName) => {
-  const element = await driver.findElement(table.headerSorters[columnName])
-  
-  return await element.getText()
-}
-
-export const getTableRows = async (driver, table) => {
-  const arr = await driver
-    .findElements(table.tableColumns[table.tableCulumnNames[0]])
-    .then(function(elements) {
-      return Promise.all(elements.map(element => element))
-    })
-
-  return await arr.length
-}
-
-export const isContainsValueInColumn = async (driver, table, columnName, value) => {
-    const arr = await getColumnValues(driver, table, columnName)
-    expect(arr.includes(value)).equal(true, `Column values [${arr}] is not equal with "${value}" `)
-  }
-
-export const isContainsValueInHeaderColumn = async (driver, table, columnName, value) => {
-  const actualValue = await getHeaderColumnValue(driver, table, columnName)
-
-  expect(actualValue.includes(value)).equal(
-    true,
-    `Header column "${columnName}" value "${actualValue}" does not include "${value}"`
-  )
-}
-
-export const isNotContainsValueInColumn = async (driver, table, columnName, value) => {
-    const arr = await getColumnValues(driver, table, columnName)
-    expect(arr.includes(value)).equal(false)
-  }
-
-// visible chips are rendered as disabled inputs (DRC FormChipCell -> NewChipForm), `getText()` doesn't return input values
-const getCellTextWithChips = async cell => {
-  const text = await cell.getText()
-  const chips = await cell.findElements(By.css('.edit-chip-container'))
-  const chipsText = await Promise.all(
-    chips.map(async chip => {
-      const inputs = await chip.findElements(By.css('input'))
-      const values = await Promise.all(inputs.map(input => input.getAttribute('value')))
-
-      return values.join('\n:\n')
-    })
+const pollColumnValues = (page, table, columnName) =>
+  expect.poll(
+    readOrNull(() => getColumnValues(page, table, columnName)),
+    pollOptions(`Values of "${columnName}" column`)
   )
 
-  return [text, ...chipsText].join('\n')
+// one of the values is `value` (the whole value, not a substring)
+export const isContainsValueInColumn = async (page, table, columnName, value) =>
+  pollColumnValues(page, table, columnName).toContain(value)
+
+// the whole text of the header: "Runs" must not pass on "Runs (old)"
+export const isValueInHeaderColumn = async (page, table, columnName, value) =>
+  expectText(page.locator(table.headerSorters[columnName]).first(), value, {
+    message: `Header of "${columnName}" column`
+  })
+
+// a negative check passes on a table that isn't rendered yet, so the table must be loaded: it has rows, none of them with
+// the value, or there are no rows and the page shows that there is no data (the NoData block). One read, after the page
+// settled: with a separate "loaded" check, the table unmounted by a reload (after a delete) had no values for a moment and
+// the check passed before the row that was not deleted came back
+export const isNotContainsValueInColumn = async (page, table, columnName, value) => {
+  await waitForPageQuiet(page)
+  await expect
+    .poll(
+      async () => {
+        const values = await getColumnValues(page, table, columnName)
+
+        if (values.length > 0) {
+          return values.includes(value)
+            ? `"${value}" is in the column: [${values}]`
+            : 'not in the column'
+        }
+
+        return (await page.locator('[data-testid="no-data"]').first().isVisible())
+          ? 'not in the column'
+          : 'the table is not loaded: no rows and no "no data" message'
+      },
+      pollOptions(`"${value}" should not be in "${columnName}" column`)
+    )
+    .toBe('not in the column')
+}
+
+// the texts of the cells with their chips, read at once: a list being re-rendered (e.g. after filtering) can't be read
+// cell by cell. The visible chips are rendered as disabled inputs (DRC FormChipCell -> NewChipForm), the rendered text
+// doesn't include the input values: they are added as "key\n:\nvalue"
+const getCellsTextWithChips = locator =>
+  locator.evaluateAll(cells =>
+    cells.map(cell => {
+      const isVisible = cell.checkVisibility({ opacityProperty: true, visibilityProperty: true })
+      const text = isVisible
+        ? (cell.tagName === 'TEXTAREA' ? cell.value : (cell.innerText ?? cell.textContent))
+            .replace(/\u00a0/g, ' ')
+            .trim()
+        : ''
+      const chipsText = [...cell.querySelectorAll('.edit-chip-container')].map(chip =>
+        [...chip.querySelectorAll('input')].map(input => input.value).join('\n:\n')
+      )
+
+      return [text, ...chipsText].join('\n')
+    })
+  )
+
+// "should contain" checks: by default EVERY value of the column must contain the substring (the column must have values),
+// as the steps verify the filtered tables. The previous check passed when a single row matched, so a filter that did
+// nothing passed as well. `atLeastOne` - for the tables whose rows differ by design (e.g. the status of one job)
+export const expectColumnValuesContain = (values, subString, columnName, atLeastOne = false) => {
+  expect(values.length > 0, `"${columnName}" column has no values`).toBe(true)
+
+  if (atLeastOne) {
+    expect(
+      values.some(item => item.includes(subString)),
+      `No value of "${columnName}" column contains "${subString}", values: [${values}]`
+    ).toBe(true)
+  } else {
+    const notMatching = values.filter(item => !item.includes(subString))
+
+    expect(
+      notMatching,
+      `Not all the values of "${columnName}" column contain "${subString}", not matching: [${notMatching}], values: [${values}]`
+    ).toEqual([])
+  }
 }
 
 export const isContainsSubstringInColumnCells = async (
-    driver,
-    table,
-    columnName,
-    value
-  ) => {
-    const cells = await driver.findElements(table.tableColumns[columnName])
-    const arr = await Promise.all(cells.map(getCellTextWithChips))
+  page,
+  table,
+  columnName,
+  value,
+  atLeastOne = false
+) =>
+  retryAssertion(async () => {
+    const arr = await getCellsTextWithChips(page.locator(table.tableColumns[columnName]))
     const subString = value.replace('=', '\n:\n')
-    expect(arr.length > 0).equal(true)
-    expect(arr.some(item => item.includes(subString))).equal(
-      true,
-      `Value "${subString}" does not includes in all values: [${arr}]`
-    )
-  }
+
+    expectColumnValuesContain(arr, subString, columnName, atLeastOne)
+  })
 
 export const isContainsSubstringInColumnAttributeCells = async (
-    driver,
-    table,
-    columnName,
-    value
-  ) => {
-    const arr = await getColumnValuesAttribute(driver, table, columnName)
-    expect(arr.length > 0).equal(true)
-    expect(arr.some(item => item.includes(value))).equal(
-      true,
-      `Value "${value}" does not includes in all values: [${arr}]`
-    )
-  }
+  page,
+  table,
+  columnName,
+  value,
+  atLeastOne = false
+) =>
+  retryAssertion(async () => {
+    const arr = await getColumnValuesAttribute(page, table, columnName)
 
+    expectColumnValuesContain(arr, value, columnName, atLeastOne)
+  })
+
+// every expected item of the comma separated `value` must be one of the column values. The previous check
+// (`value.includes(item)` for some item) passed when a single value was a substring of the list, e.g. "a" of "a,c,e"
+// (so "c" and "e" were never checked), or an empty value
 export const isContainsSubstringInColumnAttributeListCells = async (
-    driver,
-    table,
-    columnName,
-    value
-  ) => {
-    const arr = await getColumnValuesAttribute(driver, table, columnName)
-    expect(arr.length > 0).to.equal(true)
-    expect(arr.some(item => value.includes(item))).to.equal(
-      true,
-      `Value "${value}" does not includes in all values: [${arr}]`
-    )
-  }
+  page,
+  table,
+  columnName,
+  value
+) =>
+  retryAssertion(async () => {
+    const arr = await getColumnValuesAttribute(page, table, columnName)
+    const missingValues = value.split(',').filter(item => !arr.includes(item))
 
-export const isContainsSubstringInColumnDropdownCells = async (
-    driver,
-    table,
-    column,
-    value
-  ) => {
-    const subString = value.replace('=', '\n:\n')
-    const rows = await getTableRows(driver, table)
-    let flag = true
+    expect(arr.length > 0, `"${columnName}" column has no values`).toBe(true)
+    expect(
+      missingValues,
+      `Values [${missingValues}] are not found in "${columnName}" column values: [${arr}]`
+    ).toEqual([])
+  })
 
-    expect(rows).not.equal(0)
+// The dropdown chips checks follow a filter change, when the table can still show the rows of the previous filter (the
+// rows are counted first, e.g. MLFS013: the rows of "my-key" checked for "type=featureSet"), so they are retried as a
+// whole: the rows are counted and checked again until the table matches or the timeout. The visible chips are inputs:
+// their values are not in the rendered text, the hidden ones (in the overlay) are text (see `getCellsTextWithChips`)
+export const isContainsSubstringInColumnDropdownCells = async (page, table, column, value) => {
+  const subString = value.replace('=', '\n:\n')
+
+  await retryAssertion(async () => {
+    await waitForPageQuiet(page)
+
+    const rows = await getTableRows(page, table)
+
+    expect(rows, 'The table has no rows').not.toBe(0)
 
     for (let i = 1; i <= rows; i++) {
-      await openDropdown(driver, table.tableFields[column](i))
-      const options = await getOptionValues(
-        driver,
-        table.tableFields[column](i).options
-      )
-      flag = flag && options.some(item => item.includes(subString))
-      // TODO: that is a workarround for collapsing labels dropdown
-      await selectOptionInDropdownWithoutCheck(
-        driver,
-        table.tableFields[column](i),
-        options[0]
-      )
-    }
+      await openDropdown(page, table.tableFields[column](i))
 
-    expect(flag).equal(true)
-  }
+      const options = await getOptionValues(page, table.tableFields[column](i).options)
+      const chips = await getCellsTextWithChips(page.locator(table.tableFields[column](i).options))
+
+      // TODO: that is a workaround for collapsing labels dropdown
+      await selectOptionInDropdownWithoutCheck(page, table.tableFields[column](i), options[0])
+      expect(
+        chips.some(item => item.includes(subString)),
+        `"${value}" is not found in "${column}" column of row ${i}: [${chips}]`
+      ).toBe(true)
+    }
+  })
+}
 
 export const isContainsSubstringInColumnDropdownCellsOverlay = async (
-    driver,
-    table,
-    overlay,
-    column,
-    value
-  ) => {
-    const subString = value.replace('=', '\n:\n')
-    const rows = await getTableRows(driver, table)
-    let flag = true
+  page,
+  table,
+  overlay,
+  column,
+  value
+) => {
+  const subString = value.replace('=', '\n:\n')
 
-    expect(rows).not.equal(0)
+  await retryAssertion(async () => {
+    await waitForPageQuiet(page)
+
+    const rows = await getTableRows(page, table)
+
+    expect(rows, 'The table has no rows').not.toBe(0)
 
     for (let i = 1; i <= rows; i++) {
-      await openDropdown(driver, table.tableFields[column](i))
-      const optionsRow = await getOptionValues(
-        driver,
-        table.tableFields[column](i).options
-      )
-      const optionsOverlay = await getOptionValues(
-        driver,
-        overlay
-      )
-      const options = optionsRow.concat(optionsOverlay)
+      // the counter ("+N") shows the hidden chips. Not `openDropdown`: its "options" are the visible chips, always
+      // shown, so it took the dropdown as open and never clicked the counter - the hidden chips were never read
+      const counter = page.locator(table.tableFields[column](i).open_button).first()
 
-      flag = flag && options.some(item => item.includes(subString))
+      if ((await counter.count()) > 0 && !(await page.locator(overlay).first().isVisible())) {
+        await waitForPageQuiet(page)
+        await click(counter)
+      }
+
+      let options = []
+      let optionsOverlay = []
+
+      // the hidden chips are rendered in the overlay a moment after the counter is clicked
+      await expect
+        .poll(
+          async () => {
+            optionsOverlay = await getCellsTextWithChips(page.locator(overlay))
+            options = (
+              await getCellsTextWithChips(page.locator(table.tableFields[column](i).options))
+            ).concat(optionsOverlay)
+
+            return options.some(item => item.includes(subString))
+          },
+          { timeout: 3000 }
+        )
+        .toBe(true)
+        .catch(() => {})
+
+      // close the hidden chips (the counter toggles them): the open overlay covered the next clicked element (e.g.
+      // the card)
+      if (optionsOverlay.length > 0) {
+        await click(page.locator(table.tableFields[column](i).open_button).first())
+        await expect
+          .poll(() => page.locator(overlay).count(), {
+            timeout: expectTimeout,
+            message: 'The hidden chips are not closed'
+          })
+          .toBe(0)
+      }
+
+      expect(
+        options.some(item => item.includes(subString)),
+        `"${value}" is not found in "${column}" column hidden chips of row ${i}: [${options}]`
+      ).toBe(true)
     }
+  })
+}
 
-    expect(flag).equal(true)
-  }
+// the text of the tooltip of a cell: the pointer is moved away first so the tooltip of the previous cell is gone, then
+// the cell is hovered and the tooltip is given time to render. An empty text is returned if there is no tooltip
+const readCellTooltip = async (page, cell) => {
+  const hint = page.locator(cell['hint']).first()
+
+  await page.mouse.move(0, 0)
+  await hint.waitFor({ state: 'detached', timeout: 1000 }).catch(() => {})
+  // centered, so the cell isn't covered by the sticky table header
+  await scrollIntoView(page.locator(cell['label']).first(), { block: 'center' })
+  await hoverComponent(page, cell['label'], false)
+
+  return retryAssertion(async () => {
+    const text = await getText(hint, { timeout: 1000 })
+
+    expect(text, 'The tooltip has no text').not.toBe('')
+
+    return text
+  }, 3000).catch(() => '')
+}
 
 export const isContainsSubstringInColumnTooltipCells = async (
-    driver,
-    table,
-    column,
-    value
-  ) => {
-    // the table is rendered after the data is fetched, `wait load page` can pass before the loader appears
-    await driver.wait(async () => (await getTableRows(driver, table)) > 0, 15000).catch(() => {})
-    const rows = await getTableRows(driver, table)
+  page,
+  table,
+  column,
+  value,
+  atLeastOne = false
+) => {
+  // the table is rendered after the data is fetched, `wait load page` can pass before the loader appears
+  await expect
+    .poll(() => getTableRows(page, table), { timeout: expectTimeout })
+    .toBeGreaterThan(0)
+    .catch(() => {})
+  // the tooltips are read row by row (hovered one at a time): a table that rendered more rows meanwhile had them not
+  // checked, so the tooltips are read again when the number of rows changed
+  for (let attempt = 1; ; attempt++) {
+    const rows = await getTableRows(page, table)
 
-    expect(rows).not.equal(0)
+    expect(rows).not.toBe(0)
 
     const arr = []
 
     for (let i = rows; i >= 1; i--) {
-      const label = await driver.findElement(table.tableFields[column](i)['label'])
-
-      // centered, so the cell isn't covered by the sticky table header
-      await driver.executeScript('arguments[0].scrollIntoView({ block: "center" })', label)
-      await driver.sleep(250)
-      await hoverComponent(driver, table.tableFields[column](i)['label'], false)
-      await driver.wait(
-        async () => (await driver.findElements(table.tableFields[column](i)['hint'])).length > 0,
-        3000
-      )
-      const text = await getElementText(
-        driver,
-        table.tableFields[column](i)['hint']
-      )
-      arr.push(text)
-      await driver.sleep(250)
+      arr.push(await readCellTooltip(page, table.tableFields[column](i)))
     }
 
-    expect(arr.some(item => item.includes(value))).equal(true)
+    const rowsAfter = await getTableRows(page, table)
+
+    if (rowsAfter !== rows && attempt < 3) continue
+
+    expect(rowsAfter, `The table kept changing while its tooltips were read`).toBe(rows)
+    expectColumnValuesContain(arr, value, column, atLeastOne)
+
+    return
   }
+}
 
 export const isDatetimeCelsValueInRange = async (
-    driver,
-    table,
-    columnName,
-    fromDateTime,
-    toDateTime
-  ) => {
-    const arr = await getColumnValues(driver, table, columnName)
+  page,
+  table,
+  columnName,
+  fromDateTime,
+  toDateTime
+) =>
+  retryAssertion(async () => {
+    const arr = await getColumnValues(page, table, columnName)
 
     // the old slicing of Date.toString() dropped the year (parsed as 2001)
     const minStamp = Date.parse(fromDateTime)
     const maxStamp = Date.parse(toDateTime)
 
-    const flag = arr.every(
-      item => minStamp < Date.parse(item) && maxStamp > Date.parse(item)
-    )
-    expect(flag).equal(
-      true,
-      `values "${arr}" is not in range: (${fromDateTime}..${toDateTime})`
-    )
-  }
+    // `every` of no values is true: an empty (or not rendered) table passed
+    expect(arr.length > 0, `"${columnName}" column has no values`).toBe(true)
 
-export const findRowIndexesByColumnValue = async (
-    driver,
-    table,
-    columnName,
-    value
-  ) => {
-    const arr = await getColumnValues(driver, table, columnName)
-    const indexes = []
+    const flag = arr.every(item => minStamp < Date.parse(item) && maxStamp > Date.parse(item))
+    expect(flag, `values "${arr}" is not in range: (${fromDateTime}..${toDateTime})`).toBe(true)
+  })
 
-    for (let indx in arr) {
-      if (arr[indx] === value) {
-        indexes.push(parseInt(indx) + 1)
-      }
+export const findRowIndexesByColumnValue = async (page, table, columnName, value) => {
+  const arr = await getColumnValues(page, table, columnName)
+  const indexes = []
+
+  for (let indx in arr) {
+    if (arr[indx] === value) {
+      indexes.push(parseInt(indx) + 1)
     }
-    return indexes
   }
+  return indexes
+}
 
 // tables/tabs are rendered asynchronously, wait until the value appears instead of failing with index `undefined`
-export const waitForRowIndexesByColumnValue = async (driver, table, columnName, value, waitTimeout = 10000) => {
-    let indexes = []
+export const waitForRowIndexesByColumnValue = async (
+  page,
+  table,
+  columnName,
+  value,
+  waitTimeout = expectTimeout
+) => {
+  let indexes = []
 
-    await driver
-      .wait(async () => {
+  await expect
+    .poll(
+      async () => {
         try {
-          indexes = await findRowIndexesByColumnValue(driver, table, columnName, value)
+          indexes = await findRowIndexesByColumnValue(page, table, columnName, value)
         } catch {
           indexes = []
         }
 
         return indexes.length > 0
-      }, waitTimeout)
-      .catch(() => {})
-
-    expect(indexes.length > 0).equal(true, `Value "${value}" was not found in "${columnName}" column`)
-
-    return indexes
-  }
-
-export const findRowIndexesByColumnValueExpand = async (
-    driver,
-    table,
-    columnName,
-    value
-  ) => {
-    const columnValues = await getColumnValues(driver, table, columnName)
-
-    return columnValues.reduce((acc, currentValue, index) => {
-      if (currentValue === value){
-        acc.push(index)
-      }  
-      
-      return acc
-    }, [])
-  }
-
-export const findRowIndexesByColumnValueAttribute = async (
-    driver,
-    table,
-    columnName,
-    value
-  ) => {
-    const arr = await getColumnValuesAttribute(driver, table, columnName)
-    const indexes = []
-
-    for (let indx in arr) {
-      if (arr[indx] === value) {
-        indexes.push(parseInt(indx) + 1)
-      }
-    }
-    return indexes
-  }
-
-export const findRowIndexesByColumnTooltipsValue = async (
-    driver,
-    table,
-    columnName,
-    value
-  ) => {
-    const indexes = []
-    const rowsNumber = await getTableRows(driver, table)
-    for (let row = rowsNumber; row >= 1; row--) {
-      const temp = await getElementText(
-        driver,
-        table.tableFields[columnName](row)['label']
-      )
-      if (temp) {
-        if (temp === value) {
-          indexes.push(row)
-        }
-      } else {
-        const label = await driver.findElement(table.tableFields[columnName](row)['label'])
-
-        // centered, so the cell isn't covered by the sticky table header
-        await driver.executeScript('arguments[0].scrollIntoView({ block: "center" })', label)
-        await driver.sleep(250)
-        await hoverComponent(driver, table.tableFields[columnName](row)['label'], false)
-        await driver
-          .wait(
-            async () => (await driver.findElements(table.tableFields[columnName](row)['hint'])).length > 0,
-            3000
-          )
-          .catch(() => {})
-        const text = await getElementText(
-          driver,
-          table.tableFields[columnName](row)['hint']
-        )
-        if (text === value) {
-          indexes.push(row)
-        }
-      }
-    }
-
-    return indexes.reverse()
-  }
-
-export const openActionMenuByIndex = async (driver, table, index) => {
-    const elements = await driver.findElements(
-      table.tableFields['action_menu'](index)
+      },
+      { timeout: waitTimeout }
     )
-    if (elements.length === 0) {
-      const element = await driver.findElement(
-        table.tableFields['action_menu_button'](index)
-      )
+    .toBe(true)
+    .catch(() => {})
 
-      if (element) {
-        await element.click()
+  expect(indexes.length > 0, `Value "${value}" was not found in "${columnName}" column`).toBe(true)
 
-        return table.tableFields['action_menu'](index)
-      }
+  return indexes
+}
+
+export const findRowIndexesByColumnValueAttribute = async (page, table, columnName, value) => {
+  const arr = await getColumnValuesAttribute(page, table, columnName)
+  const indexes = []
+
+  for (let indx in arr) {
+    if (arr[indx] === value) {
+      indexes.push(parseInt(indx) + 1)
+    }
+  }
+  return indexes
+}
+
+// as `waitForRowIndexesByColumnValue`, by the `value` attribute of the cells (inputs): clicking a not found row used
+// the NaN index (an invalid selector) instead of telling which value was not found
+export const waitForRowIndexesByColumnValueAttribute = async (
+  page,
+  table,
+  columnName,
+  value,
+  waitTimeout = expectTimeout
+) => {
+  let indexes = []
+
+  await expect
+    .poll(
+      async () => {
+        indexes = await findRowIndexesByColumnValueAttribute(page, table, columnName, value)
+
+        return indexes.length > 0
+      },
+      { timeout: waitTimeout }
+    )
+    .toBe(true)
+    .catch(() => {})
+
+  expect(
+    indexes.length > 0,
+    `Value "${value}" was not found in "${columnName}" column, values: [${await getColumnValuesAttribute(page, table, columnName)}]`
+  ).toBe(true)
+
+  return indexes
+}
+
+export const findRowIndexesByColumnTooltipsValue = async (page, table, columnName, value) => {
+  const indexes = []
+
+  // the table can be still rendering after the previous step
+  await expect
+    .poll(() => getTableRows(page, table), { timeout: expectTimeout })
+    .toBeGreaterThan(0)
+    .catch(() => {})
+
+  const rowsNumber = await getTableRows(page, table)
+  for (let row = rowsNumber; row >= 1; row--) {
+    if ((await getCellLabelOrTooltip(page, table, columnName, row)) === value) {
+      indexes.push(row)
     }
   }
 
-export const getCellByIndexColumn = async (driver, table, index, column) => {
-    return await table.tableFields[column](index)
-  }
+  return indexes.reverse()
+}
 
+// the label of the cell, or its tooltip when the label has no text (e.g. an icon)
+export const getCellLabelOrTooltip = async (page, table, columnName, row) =>
+  (await getElementText(page, table.tableFields[columnName](row)['label'])) ||
+  readCellTooltip(page, table.tableFields[columnName](row))
+
+export const getCellByIndexColumn = async (page, table, index, column) => {
+  return await table.tableFields[column](index)
+}
+
+// the column values must be ordered by `sortKey(value)` (the value itself by default), compared as the app's lodash
+// `orderBy` does (`<`/`>`). The previous check sorted the values in place and compared the array with itself
 export const isTableColumnSorted = async (
-    driver,
-    table,
-    columnName,
-    order = 'asc'
-  ) => {
-    const columnArray = await getColumnValues(driver, table, columnName)
-    let sortedArr = []
-    if (order === 'asc') {
-      sortedArr = columnArray.sort()
-    }
-    if (order === 'desc') {
-      sortedArr = columnArray.reverse()
-    }
+  page,
+  table,
+  columnName,
+  order = 'asc',
+  sortKey = value => value
+) =>
+  retryAssertion(async () => {
+    const values = await getColumnValues(page, table, columnName)
+    const keys = values.map(sortKey)
 
-    expect(sortedArr).equal(columnArray)
-  }
+    expect(
+      values.length > 1,
+      `At least 2 rows are needed to check the order, values: [${values}]`
+    ).toBe(true)
 
-export const checkTableColumnValues = async (driver, table, columnName, values) => {
-    const arr = await getColumnValues(driver, table, columnName)
-    if (arr.length === 0) {
-      throw new Error('Array is empty, nothing to compare')
-    }
+    const unorderedIndex = keys.findIndex(
+      (key, index) =>
+        index > 0 && (order === 'desc' ? keys[index - 1] < key : keys[index - 1] > key)
+    )
 
-    // find missing and extra values
-    const missingValues = difference(values, arr) // items in values but NOT in arr
-    const extraValues = difference(arr, values)   // items in arr but NOT in values
+    expect(
+      unorderedIndex,
+      `"${columnName}" column is not sorted in ${order} order: "${values[unorderedIndex - 1]}" (${keys[unorderedIndex - 1]}) ` +
+        `is before "${values[unorderedIndex]}" (${keys[unorderedIndex]}), values: [${values}]`
+    ).toBe(-1)
+  })
 
-    if (missingValues.length > 0 || extraValues.length > 0) {
-      throw new Error(
-        `Arrays not equal: \nMissing values: ${missingValues} \nExtra values: ${extraValues}`
-      )
-    }
+// the values in the order of the rows (the tabs, the headers), unless the expected list is `unordered`
+export const checkTableColumnValues = async (page, table, columnName, values) =>
+  retryAssertion(async () => {
+    const arr = await getColumnValues(page, table, columnName)
+
+    expect(arr.length > 0, `"${columnName}" column has no values`).toBe(true)
+    expectListItems(arr, values, `Values of "${columnName}" column`)
 
     return true
+  })
+
+export const getNamedRowsGeometry = async (page, table, name = 'name') => {
+  const rowsNumber = await getTableRows(page, table)
+  const result = []
+
+  for (let i = 1; i <= rowsNumber; i++) {
+    const rowRoot = page.locator(table.rowRoot(i)).first()
+    const rowName = await getText(page.locator(table.tableFields[name](i)).first())
+    const position = await getRect(rowRoot)
+
+    position['name'] = rowName
+    result.push(position)
   }
 
-export const getAllCellsWithAttribute = async (driver, table, attribute) => {
-    const result = []
+  return result
+}
 
-    for (const column of table.tableCulumnNames) {
-      const classes = await driver
-        .findElements(table.tableColumns[column])
-        .then(days =>
-          Promise.all(days.map(day => day.getAttribute(attribute.attribute)))
-        )
+export const getNamedFieldsGeometry = async (page, table, column) => {
+  const rowsNumber = await getTableRows(page, table)
+  const result = []
 
-      result.push(
-        ...classes
-          .map((item, index) => {
-            if (item.includes(attribute.value)) {
-              return index
-            }
-          })
-          .filter(element => element >= 0)
-          .map(dayNum => [column, dayNum])
-      )
-    }
-
-    return result
+  for (let i = 1; i <= rowsNumber; i++) {
+    const rowRoot = page.locator(table.tableFields[column](i)).first()
+    const coord = await getRect(rowRoot)
+    result.push(coord)
   }
 
-export const getRowsGeometry = async (driver, table) => {
-    const rowsNumber = await getTableRows(driver, table)
-    const result = []
-
-    for (let i = 1; i <= rowsNumber; i++) {
-      const rowRoot = await driver.findElement(table.rowRoot(i))
-      const position = await rowRoot.getRect()
-
-      result.push(position)
-    }
-
-    return result
-  }
-
-export const getFieldsGeometry = async (driver, table, column, attribute) => {
-    const rowsNumber = await getTableRows(driver, table)
-    const result = []
-
-    for (let i = 1; i <= rowsNumber; i++) {
-      const rowRoot = await driver.findElement(table.tableFields[column](i))
-      const coord = await rowRoot.getRect()
-      result.push(coord)
-    }
-
-    return result
-  }
-
-export const getNamedRowsGeometry = async (driver, table, name = 'name') => {
-    const rowsNumber = await getTableRows(driver, table)
-    const result = []
-
-    for (let i = 1; i <= rowsNumber; i++) {
-      const rowRoot = await driver.findElement(table.rowRoot(i))
-      const rowName = await driver
-        .findElement(table.tableFields[name](i))
-        .getText()
-      const position = await rowRoot.getRect()
-
-      position['name'] = rowName
-      result.push(position)
-    }
-
-    return result
-  }
-
-export const getNamedFieldsGeometry = async (driver, table, column) => {
-    const rowsNumber = await getTableRows(driver, table)
-    const result = []
-
-    for (let i = 1; i <= rowsNumber; i++) {
-      const rowRoot = await driver.findElement(table.tableFields[column](i))
-      const coord = await rowRoot.getRect()
-      result.push(coord)
-    }
-
-    return result
-  }
+  return result
+}
 
 export const putToTestContextCellParameters = async (
-    driver,
-    testContext,
-    table,
-    index,
-    column,
-    attribute
-  ) => {
-    const cellElement = await driver.findElement(
-      table.tableFields[column](index)
-    )
+  page,
+  testContext,
+  table,
+  index,
+  column,
+  attribute
+) => {
+  const cellElement = page.locator(table.tableFields[column](index)).first()
 
-    testContext[column] = await cellElement.getText()
-    if (attribute) {
-      testContext[attribute] = await cellElement.getAttribute(attribute)
-    }
+  testContext[column] = await readNonEmptyText(cellElement, `"${column}" cell of row ${index}`)
+  if (attribute) {
+    testContext[attribute] = await getAttribute(cellElement, attribute)
   }
+}
 
-export const checkCellHintText = async (driver, table, hintComponent, hintValue, index) => {
-    await hoverComponent(driver, table.tableFields['hintButton'](index))
-    await driver.sleep(250)
-    const hint = await driver.findElement(hintComponent)
-    const text = await hint.getText(hint)
+export const checkCellHintText = async (page, table, hintComponent, hintValue, index) => {
+  await hoverComponent(page, table.tableFields['hintButton'](index))
 
-    expect(text).equal(hintValue)
-  }
+  await expectText(page.locator(hintComponent).first(), hintValue, {
+    normalize: true,
+    message: 'Hint text'
+  })
+}

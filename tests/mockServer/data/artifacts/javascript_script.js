@@ -33,7 +33,12 @@ class Logger {
   }
 
   error(message, error) {
-    this.logs.push({ level: 'ERROR', message, error: error.message, timestamp: new Date().toISOString() })
+    this.logs.push({
+      level: 'ERROR',
+      message,
+      error: error.message,
+      timestamp: new Date().toISOString()
+    })
   }
 
   getLogs() {
@@ -82,7 +87,7 @@ class CodeModel extends Model {
     try {
       // Simulate async processing
       await new Promise(resolve => setTimeout(resolve, 500))
-      
+
       const result = {
         id: Math.random().toString(36).substr(2, 9),
         timestamp: Date.now(),
@@ -92,7 +97,7 @@ class CodeModel extends Model {
       this.executionHistory.push(result)
       this.status = 'completed'
       logger.info(`Execution ${result.id} successful`)
-      
+
       return result
     } catch (err) {
       this.status = 'error'
@@ -124,7 +129,7 @@ const main = async () => {
     })
 
   const results = await Promise.all(tasks)
-  
+
   const summary = {
     total: models.length,
     codeModels: models.filter(m => m instanceof CodeModel).length,

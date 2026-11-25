@@ -83,6 +83,7 @@ export const CHIP_OPTIONS = PropTypes.shape({
   borderRadius: PropTypes.oneOf(['primary', 'secondary'])
 })
 
+/** @public igz-controls public API. */
 export const CHIPS = PropTypes.arrayOf(CHIP)
 
 export const VISIBLE_CHIPS_MAX_LENGTH = PropTypes.oneOfType([
@@ -132,7 +133,6 @@ export const SELECT_OPTION = PropTypes.shape({
   icon: PropTypes.element,
   id: PropTypes.string.isRequired,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
-  labelHtml: PropTypes.string,
   status: PropTypes.string,
   subLabel: PropTypes.string
 })
@@ -156,6 +156,7 @@ export const COMBOBOX_SUGGESTION_LIST = PropTypes.arrayOf(
   })
 )
 
+/** @public igz-controls public API. */
 export const COMBOBOX_VALIDATION_RULES = PropTypes.arrayOf(
   PropTypes.shape({
     name: PropTypes.string.isRequired,

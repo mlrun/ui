@@ -25,15 +25,11 @@ import {
   FUNCTION_CREATING_STATE,
   ERROR_STATE,
   FUNCTION_INITIALIZED_STATE,
-  FUNCTION_PENDING_STATE,
   FUNCTION_READY_STATE,
   FUNCTION_RUN_KINDS,
-  FUNCTION_RUNNING_STATE,
   FUNCTION_TYPE_APPLICATION,
   FUNCTION_TYPE_JOB,
   FUNCTION_TYPE_LOCAL,
-  FUNCTION_TYPE_NUCLIO,
-  FUNCTION_TYPE_REMOTE,
   FUNCTION_TYPE_SERVING,
   FUNCTIONS_PAGE,
   PANEL_FUNCTION_CREATE_MODE,
@@ -55,20 +51,6 @@ import Yaml from 'igz-controls/images/yaml.svg?react'
 import DeployIcon from 'igz-controls/images/deploy-icon.svg?react'
 
 export const page = 'FUNCTIONS'
-export const detailsMenu = [
-  {
-    id: 'overview',
-    label: 'overview'
-  },
-  {
-    id: 'code',
-    label: 'code'
-  },
-  {
-    id: DETAILS_BUILD_LOG_TAB,
-    label: 'build log'
-  }
-]
 export const FUNCTIONS_FAILED_STATES = [FAILED_STATE, ERROR_STATE]
 export const FUNCTIONS_READY_STATES = [FUNCTION_READY_STATE]
 export const FUNCTIONS_EDITABLE_STATES = [
@@ -77,19 +59,6 @@ export const FUNCTIONS_EDITABLE_STATES = [
   ...FUNCTIONS_READY_STATES,
   ...FUNCTIONS_FAILED_STATES
 ]
-export const infoHeaders = [
-  { label: 'Name', id: 'name' },
-  { label: 'Kind', id: 'type' },
-  { label: 'Hash', id: 'hash' },
-  { label: 'Version tag', id: 'tag' },
-  { label: 'Code origin', id: 'codeOrigin' },
-  { label: 'Updated', id: 'updated' },
-  { label: 'Code Entry Point', id: 'command' },
-  { label: 'Default handler', id: 'defaultHandler' },
-  { label: 'Image', id: 'image' },
-  { label: 'Description', id: 'description' }
-]
-export const TRANSIENT_FUNCTION_STATUSES = [FUNCTION_PENDING_STATE, FUNCTION_RUNNING_STATE]
 
 export const handleFetchFunctionLogs = (
   dispatch,
@@ -260,13 +229,6 @@ export const getFunctionsEditableTypes = isStagingMode => {
   }
 
   return editableTypes
-}
-export const getFunctionImage = func => {
-  return func.type === FUNCTION_TYPE_NUCLIO ||
-    func.type === FUNCTION_TYPE_SERVING ||
-    func.type === FUNCTION_TYPE_REMOTE
-    ? func.container_image
-    : func.image
 }
 
 export const generateActionsMenu = (

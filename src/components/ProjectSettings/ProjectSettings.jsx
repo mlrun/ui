@@ -158,10 +158,10 @@ const ProjectSettings = () => {
         const activeUser = response.data
         const relationships = activeUser.relationships || []
 
-        const userGroupNames = new Set(
+        const userGroupIds = new Set(
           relationships
             .filter(rel => rel['@type']?.includes('usergroup'))
-            .map(rel => rel.spec?.name)
+            .map(rel => rel.metadata?.id)
             .filter(Boolean)
         )
 
@@ -180,7 +180,7 @@ const ProjectSettings = () => {
               attributes: {
                 username: activeUser.metadata?.username,
                 user_policies_collection: userPoliciesCollection,
-                user_group_names: userGroupNames
+                user_group_ids: userGroupIds
               }
             }
           }

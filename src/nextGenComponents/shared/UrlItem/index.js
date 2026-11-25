@@ -18,4 +18,4 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 export { default } from './UrlItem'
-export { URL_ITEM_VARIANT, toHref } from './urlItem.constants'
+export { URL_ITEM_VARIANT } from './urlItem.constants'

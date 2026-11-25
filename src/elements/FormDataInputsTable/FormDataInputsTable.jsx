@@ -24,7 +24,7 @@ import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash-es'
 
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
-import FormActionButton from 'igz-controls/elements/FormActionButton/FormActionButton'
+import { FormActionButton } from 'igz-controls/elements'
 import FormDataInputsRow from './FormDataInputsRow/FormDataInputsRow'
 
 import { useFormTable } from 'igz-controls/hooks'

@@ -17,36 +17,22 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 import { locatorBuilder } from '../../common-tools/common-tools.js'
 
-export default function(inputStructure) {
+export default function (inputStructure) {
   const options = locatorBuilder`${0} ${1} ${2}`
   const option = locatorBuilder`${0} ${1}:nth-of-type(${2}) ${3}`
 
   const element = {}
 
-  element.root = By.css(inputStructure.root)
+  element.root = inputStructure.root
 
-  element.inputField = By.css(
-    `${inputStructure.root} ${inputStructure.elements.input}`
-  )
+  element.inputField = `${inputStructure.root} ${inputStructure.elements.input}`
 
-  element.options = By.css(
-    options(
-      inputStructure.elements.options,
-      inputStructure.elements.option_name
-    )
-  )
+  element.options = options(inputStructure.elements.options, inputStructure.elements.option_name)
 
-  element.option = function(index) {
-    return By.css(
-      option(
-        inputStructure.elements.options,
-        index,
-        inputStructure.elements.option_name
-      )
-    )
+  element.option = function (index) {
+    return option(inputStructure.elements.options, index, inputStructure.elements.option_name)
   }
 
   return element

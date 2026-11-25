@@ -17,28 +17,19 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 
-export default function(radiobuttonStructure) {
+export default function (radiobuttonStructure) {
   const element = {}
-  element.root = By.css(radiobuttonStructure.root)
-  element.radiobutton = By.css(
-    `${radiobuttonStructure.root} ${radiobuttonStructure.elements.radiobutton}`
-  )
+  element.root = radiobuttonStructure.root
+  element.radiobutton = `${radiobuttonStructure.root} ${radiobuttonStructure.elements.radiobutton}`
   if (radiobuttonStructure.elements.mark) {
-    element.mark = By.css(
-      `${radiobuttonStructure.root} ${radiobuttonStructure.elements.mark}`
-    )
+    element.mark = `${radiobuttonStructure.root} ${radiobuttonStructure.elements.mark}`
   }
   if (radiobuttonStructure.elements.name) {
-    element.name = By.css(
-      `${radiobuttonStructure.root} ${radiobuttonStructure.elements.name}`
-    )
+    element.name = `${radiobuttonStructure.root} ${radiobuttonStructure.elements.name}`
   }
   if (radiobuttonStructure.elements.description) {
-    element.description = By.css(
-      `${radiobuttonStructure.root} ${radiobuttonStructure.elements.description}`
-    )
+    element.description = `${radiobuttonStructure.root} ${radiobuttonStructure.elements.description}`
   }
   return element
 }

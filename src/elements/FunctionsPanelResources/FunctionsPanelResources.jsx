@@ -298,13 +298,11 @@ const FunctionsPanelResources = ({ defaultData, mode, setValidation, validation 
     if (data[type].memory.length > 0) {
       dispatch(
         setNewFunctionResources({
-          [type]:
-            data[type].memory.length > 0
-              ? {
-                  ...functionsStore.newFunction.spec.resources[type],
-                  memory: `${Number.parseInt(data[type].memory)}${value !== 'Bytes' ? unit : ''}`
-                }
-              : functionsStore.newFunction.spec.resources[type]
+          ...functionsStore.newFunction.spec.resources,
+          [type]: {
+            ...functionsStore.newFunction.spec.resources[type],
+            memory: `${Number.parseInt(data[type].memory)}${value !== 'Bytes' ? unit : ''}`
+          }
         })
       )
     }
@@ -356,13 +354,11 @@ const FunctionsPanelResources = ({ defaultData, mode, setValidation, validation 
     if (data[type].cpu.length > 0) {
       dispatch(
         setNewFunctionResources({
-          [type]:
-            data[type].cpu.length > 0
-              ? {
-                  ...functionsStore.newFunction.spec.resources[type],
-                  cpu: selectedOption.onChange(data[type].cpu)
-                }
-              : functionsStore.newFunction.spec.resources[type]
+          ...functionsStore.newFunction.spec.resources,
+          [type]: {
+            ...functionsStore.newFunction.spec.resources[type],
+            cpu: selectedOption.onChange(data[type].cpu)
+          }
         })
       )
     }

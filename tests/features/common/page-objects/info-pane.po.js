@@ -28,7 +28,6 @@ import {
 import labelComponent from '../components/label.component.js'
 import inputGroup from '../components/input-group.component.js'
 import graph from '../components/graph.component.js'
-import { By } from 'selenium-webdriver'
 import textAreaGroup from '../components/text-area.component.js'
 import dropdownComponent from '../components/dropdown.component.js'
 
@@ -603,7 +602,7 @@ const featureSetsInfoPaneLabelsTable = {
   }
 }
 
-// Models real time piplines infopane headers
+// Models real time pipelines info pane headers
 const modelsRealTimeinfoPaneOverviewHeaders = {
   root: '.table-container',
   header: {},
@@ -630,7 +629,7 @@ const modelsRealTimeinfoPaneRunningModelsHeaders = {
       root: '.graph-pane__row',
       fields: {
         key: '.graph-pane__row-label',
-        key_value:'.graph-pane__row-value .link'
+        key_value: '.graph-pane__row-value .link'
       }
     }
   }
@@ -695,75 +694,60 @@ const modelsLLMPromptsTable = {
 
 // common components
 // h3 title contains the name tooltip and (on artifact pages) a kind chip tooltip - take the name only
-const header = By.css('.table__item .item-header__data h3 > .tooltip-wrapper:first-of-type')
-const updated = By.css('.table__item .item-header__data .item-header__status span.updated')
-const cancelButton = By.css(
+const header = '.table__item .item-header__data h3 > .tooltip-wrapper:first-of-type'
+const updated = '.table__item .item-header__data .item-header__status span.updated'
+const applyChangesButton =
   '.table__item .item-header__buttons > .data-ellipsis:nth-of-type(1) button'
-)
-const applyChangesButton = By.css(
-  '.table__item .item-header__buttons > .data-ellipsis:nth-of-type(1) button'
-)
-const applyButton = By.css('.item-info__details .round-icon-cp:nth-of-type(2) button')
+const applyButton = '.item-info__details .round-icon-cp:nth-of-type(2) button'
 const commonActionMenu = actionMenu(actionMenuStructure)
 const commonActionMenuFullView = actionMenu(actionMenuStructureFullView)
-const fullViewButton = By.css('.table__item .item-header__buttons .item-header__navigation-buttons > div > div')
-const tabelViewButton = By.css('#main-wrapper .table__item_big .item-header__navigation-buttons')
-const crossCloseButton = By.css('.table__item .item-header__buttons a .data-ellipsis')
-const commonDownloadButton = By.css('.table__item .item-header__buttons .download-container')
-const commonArrowBack = By.css('a.link-back__icon')
+const fullViewButton =
+  '.table__item .item-header__buttons .item-header__navigation-buttons > div > div'
+const tableViewButton = '#main-wrapper .table__item_big .item-header__navigation-buttons'
+const crossCloseButton = '.table__item .item-header__buttons a .data-ellipsis'
+const commonArrowBack = 'a.link-back__icon'
 const commonInfoPaneTabSelector = commonTable(infoPaneTabSelector)
-const commonEditBtnTableView = By.css('[data-testid="detailsPanel"] .details-item__data-btn-edit')
-const commonEditBtnFullView = By.css('.table__item_big .details-item__data-btn-edit')
-const commonVersionTagInputTableView = By.css('.details-item:nth-of-type(3) .details-item__input-wrapper input')
-const commonVersionTagInputPlaceholder = By.css('.details-item:nth-of-type(3) .details-item__data-add-placeholder')
+const commonEditBtnTableView = '[data-testid="detailsPanel"] .details-item__data-btn-edit'
+const commonEditBtnFullView = '.table__item_big .details-item__data-btn-edit'
+const commonVersionTagInputTableView =
+  '.details-item:nth-of-type(3) .details-item__input-wrapper input'
+const commonVersionTagInputPlaceholder =
+  '.details-item:nth-of-type(3) .details-item__data-add-placeholder'
 const commonVersionTagInput = inputGroup(
-  generateInputGroup(
-    '.details-item:nth-of-type(3) .details-item__input-wrapper',
-    false,
-    false
-  )
+  generateInputGroup('.details-item:nth-of-type(3) .details-item__input-wrapper', false, false)
 )
-const commonVersionTagInputFullView = By.css('.table__item_big .details-item__input-wrapper input')
-const commonLabelsApplyButton = By.css('.item-info__details-wrapper .details-item .details-item__data-chips .details-item__apply-btn-wrapper')
+const commonVersionTagInputFullView = '.table__item_big .details-item__input-wrapper input'
+const commonLabelsApplyButton =
+  '.item-info__details-wrapper .details-item .details-item__data-chips .details-item__apply-btn-wrapper'
 
 export default {
   featureSetsInfoPane: {
     Header: header,
     Updated: updated,
-    Cancel_Button: By.css('.table__item .item-header__buttons .btn-normal'),
+    Cancel_Button: '.table__item .item-header__buttons .btn-normal',
     Apply_Changes_Button: applyChangesButton,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
-    Empty_Description_Field: By.css(
-      '.item-info__details-wrapper .details-item:nth-of-type(1) .details-item__data-add-placeholder'
-    ),
-    Full_Description_Field: By.css(
-      '.item-info .details-item:nth-of-type(1) .details-item__data > div.data-ellipsis.tooltip-wrapper'
-    ),
+    Empty_Description_Field:
+      '.item-info__details-wrapper .details-item:nth-of-type(1) .details-item__data-add-placeholder',
+    Full_Description_Field:
+      '.item-info .details-item:nth-of-type(1) .details-item__data > div.data-ellipsis.tooltip-wrapper',
     Description_Input: textAreaGroup(
       generateTextAreaGroup(
         '.item-info__details-wrapper .details-item:nth-of-type(1) .form-field-textarea'
       )
     ),
-    Labels_Field: By.css(
-      '.item-info__details .details-item:nth-of-type(2) .button-add-density_dense'
-    ),
     Labels_Table: commonTable(featureSetsInfoPaneLabelsTable),
-    Apply_Button: By.css(
-      '.item-info__details-wrapper .details-item__input-wrapper .round-icon-cp:nth-of-type(2)'
-    ),
+    Apply_Button:
+      '.item-info__details-wrapper .details-item__input-wrapper .round-icon-cp:nth-of-type(2)',
     Labels_Apply_Button: commonLabelsApplyButton,
-    Edit_Button: By.css(
-      '.item-info__details-wrapper .details-item__data .details-item__data-btn-edit'
-    )
+    Edit_Button: '.item-info__details-wrapper .details-item__data .details-item__data-btn-edit'
   },
   featuresInfoPane: {
     Header: header,
     Updated: updated,
-    Cancel_Button: cancelButton,
-    Apply_Changes_Button: applyChangesButton,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
@@ -772,7 +756,7 @@ export default {
   featureVectorsInfoPane: {
     Header: header,
     Updated: updated,
-    Cancel_Button: By.css('.table__item .item-header__buttons .btn-normal'),
+    Cancel_Button: '.table__item .item-header__buttons .btn-normal',
     Apply_Changes_Button: applyChangesButton,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
@@ -780,30 +764,26 @@ export default {
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders)
   },
   datasetsInfoPane: {
-    Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
+    Delete_Artifact_Popup: '[data-testid="pop-up-dialog"]',
     Header: header,
     Updated: updated,
-    Cancel_Button: cancelButton,
     Apply_Changes_Button: applyChangesButton,
     Apply_Button: applyButton,
-    Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Full_View_Button: fullViewButton,
-    Header_Full_View: By.css('.table__item_big .item-header__data h3 > .tooltip-wrapper:first-of-type'),
-    Updated_Full_View: By.css('.table__item_big .item-header__data .item-header__status span.updated'),
-    Refresh_Button_Full_View: By.css(
-      '.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]'
-    ),
+    Header_Full_View: '.table__item_big .item-header__data h3 > .tooltip-wrapper:first-of-type',
+    Refresh_Button_Full_View:
+      '.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]',
     Action_Menu_Full_View: commonActionMenuFullView,
-    Tabel_View_Button: tabelViewButton,
+    Table_View_Button: tableViewButton,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
-    Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]'),
+    Pop_Out_Button: '[data-testid="details-preview-tooltip-wrapper"]',
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
     Overview_Sources_Headers: commonTable(infoPaneOverviewSourcesHeaders),
-    Train_Button: By.css('[data-testid="detailsPanel"] .item-header__buttons button'),
-    Label_column: By.css('.item-info__details .details-item:nth-of-type(6) .details-item__data'),
+    Train_Button: '[data-testid="detailsPanel"] .item-header__buttons button',
+    Label_column: '.item-info__details .details-item:nth-of-type(6) .details-item__data',
     Overview_Hash_Header: labelComponent(
       generateLabelGroup(
         '.item-info__details:nth-of-type(1) .details-item:nth-of-type(1) .details-item__header',
@@ -818,39 +798,25 @@ export default {
         true
       )
     ),
-    Expand_Sources: By.css('.details-item .info-sources'),
-    Info_Sources_Table: commonTable(filesInfoSourcesTable),
     Overview_Table: commonTable(datasetOverviewTable),
     Edit_btn_table_view: commonEditBtnTableView,
-    Edit_btn_full_view: commonEditBtnFullView,
-    Version_tag_Input_table_view: commonVersionTagInputTableView,
-    Version_tag_Input_full_view: commonVersionTagInputFullView,
-    Version_tag_Value_full_view: By.css('.table__item_big .item-info__details-wrapper:nth-of-type(1) .details-item:nth-of-type(3) .details-item__data .data-ellipsis'),
+    Version_tag_Value_full_view:
+      '.table__item_big .item-info__details-wrapper:nth-of-type(1) .details-item:nth-of-type(3) .details-item__data .data-ellipsis',
     Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
     Version_tag_Input: commonVersionTagInput,
-    Click_To_Add_Button: By.css('[data-testid="detailsPanel"] .item-info__details-wrapper:nth-of-type(1) .details-item:nth-of-type(3)  .details-item__data-add-placeholder'),
-    Not_In_Filtered_List_Message: By.css('[data-testid="detailsPanel"] .item-header__status .info-banner')
+    Click_To_Add_Button:
+      '[data-testid="detailsPanel"] .item-info__details-wrapper:nth-of-type(1) .details-item:nth-of-type(3)  .details-item__data-add-placeholder',
+    Not_In_Filtered_List_Message: '[data-testid="detailsPanel"] .item-header__status .info-banner'
   },
   documentsInfoPane: {
-    Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
     Header: header,
     Updated: updated,
-    Cancel_Button: cancelButton,
-    Apply_Changes_Button: applyChangesButton,
-    Apply_Button: applyButton,
-    Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Full_View_Button: fullViewButton,
-    Header_Full_View: By.css('.table__item_big .item-header__data h3 > .tooltip-wrapper:first-of-type'),
-    Updated_Full_View: By.css('.table__item_big .item-header__data .item-header__status span.updated'),
-    Refresh_Button_Full_View: By.css(
-      '.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]'
-    ),
     Action_Menu_Full_View: commonActionMenuFullView,
-    Tabel_View_Button: tabelViewButton,
+    Table_View_Button: tableViewButton,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
-    Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]'),
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeadersDoc),
     Overview_Hash_Header: labelComponent(
@@ -866,20 +832,11 @@ export default {
         false,
         true
       )
-    ),
-    Overview_Table: commonTable(datasetOverviewTable),
-    Edit_btn_table_view: commonEditBtnTableView,
-    Edit_btn_full_view: commonEditBtnFullView,
-    Version_tag_Input_table_view: commonVersionTagInputTableView,
-    Version_tag_Input_full_view: commonVersionTagInputFullView,
-    Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
-    Version_tag_Input: commonVersionTagInput
+    )
   },
   transformationsInfoPane: {
     Header: header,
     Updated: updated,
-    Cancel_Button: cancelButton,
-    Apply_Changes_Button: applyChangesButton,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
@@ -888,8 +845,6 @@ export default {
   previewInfoPane: {
     Header: header,
     Updated: updated,
-    Cancel_Button: cancelButton,
-    Apply_Changes_Button: applyChangesButton,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
@@ -898,8 +853,6 @@ export default {
   statisticsInfoPane: {
     Header: header,
     Updated: updated,
-    Cancel_Button: cancelButton,
-    Apply_Changes_Button: applyChangesButton,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
@@ -908,8 +861,6 @@ export default {
   analysisInfoPane: {
     Header: header,
     Updated: updated,
-    Cancel_Button: cancelButton,
-    Apply_Changes_Button: applyChangesButton,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector
@@ -928,72 +879,67 @@ export default {
     Overview_Table: commonTable(functionsOverviewTable)
   },
   jobsMonitorTabInfoPane: {
-    Arrow_Back: By.css('a.link-back__icon'),
+    Arrow_Back: 'a.link-back__icon',
     Header: header,
     Updated: updated,
-    State_Icon: By.css('.item-header .item-header__status .state'),
-    Error_Content: By.css('.item-header .item-header__status .error-container'),
+    State_Icon: '.item-header .item-header__status .state',
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_Headers: commonTable(infoPaneOverviewHeaders),
-    Resource_Monitoring_Button: By.css('.item-header__buttons .btn-tertiary'),
-    Info_Pane_Refresh_Button: By.css('.item-header__buttons [data-testid="refresh"]'),
 
     // Logs tab.
-    Logs_Text_container: By.css('.table__item .table__item-logs-content'),
-    Logs_Refresh_Button: By.css('.table__item .logs-refresh')
+    Logs_Text_container: '.table__item .table__item-logs-content',
+    Logs_Refresh_Button: '.table__item .logs-refresh'
   },
   workflowsMonitorTabInfoPane: {
     Arrow_Back: commonArrowBack,
-    Header: By.css('.workflow-container .link-back__title .data-ellipsis'),
+    Header: '.workflow-container .link-back__title .data-ellipsis',
     Updated: updated,
-    State_Icon: By.css('.item-header .item-header__status .state'),
-    Error_Content: By.css('.item-header .item-header__status .error-container'),
+    State_Icon: '.item-header .item-header__status .state',
+    Error_Content: '.item-header .item-header__status .error-container',
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_Headers: commonTable(infoPaneOverviewHeaders),
 
     // Logs tab.
-    Logs_Text_container: By.css('.table__item .table__item-logs-content'),
-    Logs_Refresh_Button: By.css('.table__item .logs-refresh')
+    Logs_Text_container: '.table__item .table__item-logs-content',
+    Logs_Refresh_Button: '.table__item .logs-refresh'
   },
   inputsInfoPane: {
     Inputs_Table: commonTable(inputsTable)
   },
   artifactsInfoPane: {
     Artifacts_Table: commonTable(artifactsTable),
-    Artifact_Preview_Button: By.css('.item-artifacts .artifacts__preview .data-ellipsis svg'),
+    Artifact_Preview_Button: '.item-artifacts .artifacts__preview .data-ellipsis svg',
     Iterations_Dropdown: dropdownComponent(generateDropdownGroup('.item-header-wrapper .select'))
   },
   resultsInfoPane: {
     Results_Table: commonTable(resultsTable)
   },
   filesInfoPane: {
-    Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
+    Delete_Artifact_Popup: '[data-testid="pop-up-dialog"]',
     Header: header,
     Updated: updated,
-    Not_In_Filtered_List_Message: By.css('[data-testid="detailsPanel"] .item-header__status .info-banner'),
-    Download_Button: commonDownloadButton,
+    Not_In_Filtered_List_Message: '[data-testid="detailsPanel"] .item-header__status .info-banner',
     Action_Menu: commonActionMenu,
     Apply_Changes_Button: applyChangesButton,
     Apply_Button: applyButton,
     Cross_Close_Button: crossCloseButton,
     Full_View_Button: fullViewButton,
-    Header_Full_View: By.css('.table__item_big .item-header__data h3 > .tooltip-wrapper:first-of-type'),
-    Updated_Full_View: By.css('.table__item_big .item-header__data .item-header__status span.updated'),
-    Refresh_Button_Full_View: By.css(
-      '.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]'
-    ),
+    Header_Full_View: '.table__item_big .item-header__data h3 > .tooltip-wrapper:first-of-type',
+    Updated_Full_View: '.table__item_big .item-header__data .item-header__status span.updated',
+    Refresh_Button_Full_View:
+      '.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]',
     Action_Menu_Full_View: commonActionMenuFullView,
-    Tabel_View_Button: tabelViewButton,
+    Table_View_Button: tableViewButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
-    Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]'),
+    Pop_Out_Button: '[data-testid="details-preview-tooltip-wrapper"]',
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
     Overview_Sources_Headers: commonTable(infoPaneOverviewSourcesHeaders),
-    Source_Path: By.css('[data-testid="sources"] .info-sources__table-value .link'),
+    Source_Path: '[data-testid="sources"] .info-sources__table-value .link',
     Overview_Hash_Header: labelComponent(
       generateLabelGroup(
         '.item-info__details:nth-of-type(1) .details-item:nth-of-type(1) .details-item__header',
@@ -1011,32 +957,30 @@ export default {
     Overview_Table: commonTable(artifactOverviewTable),
     Edit_btn_table_view: commonEditBtnTableView,
     Edit_btn_full_view: commonEditBtnFullView,
-    Click_To_Add_Button: By.css('[data-testid="detailsPanel"] .item-info__details-wrapper:nth-of-type(1) .details-item:nth-of-type(3)  .details-item__data-add-placeholder'),
-    Version_tag_Input_table_view: commonVersionTagInputTableView,
-    Version_tag_Input_full_view: commonVersionTagInputFullView,
-    Version_tag_Value_full_view: By.css('.table__item_big .item-info__details-wrapper:nth-of-type(1) .details-item:nth-of-type(3) .details-item__data .data-ellipsis'),
+    Click_To_Add_Button:
+      '[data-testid="detailsPanel"] .item-info__details-wrapper:nth-of-type(1) .details-item:nth-of-type(3)  .details-item__data-add-placeholder',
+    Version_tag_Value_full_view:
+      '.table__item_big .item-info__details-wrapper:nth-of-type(1) .details-item:nth-of-type(3) .details-item__data .data-ellipsis',
     Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
     Version_tag_Input: commonVersionTagInput,
     Preview_Tab_Info_Pane_Table: commonTable(artifactsPreviewInfoPaneTable)
   },
   modelsInfoPane: {
-    Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
+    Delete_Artifact_Popup: '[data-testid="pop-up-dialog"]',
     Header: header,
     Updated: updated,
-    Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Apply_Changes_Button: applyChangesButton,
     Labels_Apply_Button: commonLabelsApplyButton,
     Cross_Close_Button: crossCloseButton,
     Full_View_Button: fullViewButton,
-    Tabel_View_Button: tabelViewButton,
-    Header_Full_View: By.css('.table__item_big .item-header__data h3 > .tooltip-wrapper:first-of-type'),
-    Not_In_Filtered_List_Message: By.css('[data-testid="detailsPanel"] .item-header__status .info-banner'),
+    Table_View_Button: tableViewButton,
+    Header_Full_View: '.table__item_big .item-header__data h3 > .tooltip-wrapper:first-of-type',
+    Not_In_Filtered_List_Message: '[data-testid="detailsPanel"] .item-header__status .info-banner',
     Action_Menu_Full_View: commonActionMenuFullView,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
-    Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]'),
+    Pop_Out_Button: '[data-testid="details-preview-tooltip-wrapper"]',
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
-    Overview_Drift_Headers: commonTable(infoPaneDriftHeaders),
     Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
     Overview_Sources_Headers: commonTable({
       root: '.table-container [data-testid="detailsPanel"]',
@@ -1065,27 +1009,24 @@ export default {
         true
       )
     ),
-    Expand_Sources: By.css('.details-item .info-sources'),
     Overview_Table: commonTable(modelsOverviewTable),
     LLMPrompts_Table: commonTable(modelsLLMPromptsTable),
     Info_Sources_Table: commonTable(filesInfoSourcesTable),
-    Labels_Field: By.css(
-      '.item-info__details-wrapper .details-item:nth-of-type(14) [data-testid="labels-add-chip"]'
-    ),
+    Labels_Field:
+      '.item-info__details-wrapper .details-item:nth-of-type(14) [data-testid="labels-add-chip"]',
     Labels_Table: commonTable(featureSetsInfoPaneLabelsTable),
-    Apply_Button: By.css('.item-info__details .round-icon-cp:nth-of-type(2) button'),
+    Apply_Button: '.item-info__details .round-icon-cp:nth-of-type(2) button',
     Edit_btn_table_view: commonEditBtnTableView,
     Edit_btn_full_view: commonEditBtnFullView,
     Version_tag_Input_table_view: commonVersionTagInputTableView,
     Version_tag_Input_full_view: commonVersionTagInputFullView,
-    Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
     Version_tag_Input: commonVersionTagInput
   },
   modelEndpointsInfoPane: {
     // title also contains a kind chip ("model-endpoint") - take the name tooltip only
-    Header: By.css('[data-testid="detailsPanel"] .item-header__title > .tooltip-wrapper:first-of-type'),
+    Header: '[data-testid="detailsPanel"] .item-header__title > .tooltip-wrapper:first-of-type',
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
-    Choose_Metrics_Dropdown: By.css('[data-testid="metric-selector-field"]'),
+    Choose_Metrics_Dropdown: '[data-testid="metric-selector-field"]',
     Date_Picker_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
         '[data-testid="date-picker-container"]',
@@ -1097,69 +1038,56 @@ export default {
     ),
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Drift_Headers: commonTable(infoPaneDriftHeaders),
-    Endpoint_Call_Count: By.css('.metrics .metrics__card-invocation'),
-    Expand_Collapse_Invocation_Card_Button: By.css('[data-testid="invocation-card-toggle-icon"]'),
-    Invocation_Title: By.css('.stats-card .stats-card__title'),
-    Invocation_Collapse_Title: By.css('.stats-card .metrics__card-invocation-content-title'),
-    Invocation_Drift_Icon: By.css('.stats-card .metrics__card-invocation-header__drift-icon-container'),
-    Invocation_Drift_Down: By.css('.stats-card .metrics__card-invocation-header__drift_down'),
-    Invocation_Drift_Up: By.css('.stats-card .metrics__card-invocation-header__drift_up'),
+    Endpoint_Call_Count: '.metrics .metrics__card-invocation',
+    Expand_Collapse_Invocation_Card_Button: '[data-testid="invocation-card-toggle-icon"]',
+    Invocation_Title: '.stats-card .stats-card__title',
+    Invocation_Collapse_Title: '.stats-card .metrics__card-invocation-content-title',
+    Invocation_Drift_Icon: '.stats-card .metrics__card-invocation-header__drift-icon-container',
     // mock invocation metrics are random, so the drift can go either way
-    Invocation_Drift_Value: By.css(
-      '.stats-card .metrics__card-invocation-header__drift_up, .stats-card .metrics__card-invocation-header__drift_down'
-    ),
-    Invocation_Selected_Date: By.css('.stats-card .metrics__card-invocation-header__selected-date'),
-    Invocation_Total_Title: By.css('.stats-card .metrics__card-invocation-header__total-title'),
-    Invocation_Total_Score: By.css('.stats-card .metrics__card-invocation-header__total-score'),
-    Invocation_Graph: By.css('.stats-card .metrics__card-body-invocation'),
-    Metrics_Empty_Select_Message: By.css('.metrics .metrics__empty-select'),
-    Metric_App_Name: By.css('.metrics .metrics__app-name:nth-of-type(3)'),
-    Metrics_Card: By.css('.metrics .metrics__card:nth-of-type(4)'),
-    Search_By_Name_Filter_Input: inputGroup(
-      generateInputGroup(
-        '[data-testid="name-form-input"]',
-        true,
-        false
-      )
-    ),
-    Alerts_FilterBy_Button: By.css('[data-testid="detailsPanel"] [data-testid="filter-menu-btn-tooltip-wrapper"]'),
-    Alerts_Refresh_Button: By.css('[data-testid="detailsPanel"] [data-testid="refresh-tooltip-wrapper"]'),
+    Invocation_Drift_Value:
+      '.stats-card .metrics__card-invocation-header__drift_up, .stats-card .metrics__card-invocation-header__drift_down',
+    Invocation_Selected_Date: '.stats-card .metrics__card-invocation-header__selected-date',
+    Invocation_Total_Title: '.stats-card .metrics__card-invocation-header__total-title',
+    Invocation_Total_Score: '.stats-card .metrics__card-invocation-header__total-score',
+    Invocation_Graph: '.stats-card .metrics__card-body-invocation',
+    Metrics_Empty_Select_Message: '.metrics .metrics__empty-select',
+    Metric_App_Name: '.metrics .metrics__app-name:nth-of-type(3)',
+    Metrics_Card: '.metrics .metrics__card:nth-of-type(4)',
     Alerts_Table: commonTable(alertsTable),
-    Metrics_Stats_Card: By.css('.alert-row__expanded-row .alerts-table .stats-card')
+    Metrics_Stats_Card: '.alert-row__expanded-row .alerts-table .stats-card'
   },
   modelsRealTimePipelineInfoPane: {
     // pipeline is shown in the details screen now - "Go to list" back button in the details header
-    Arrow_Back: By.css('[data-testid="detailsPanel"] a.item-header__back-btn'),
-    Header: By.css('.graph-pane__title .graph-pane__title-label'),
-    Title_Icon: By.css('.graph-pane__title .graph-pane__title-icon'),
-    Cross_Close_Button: By.css('.graph-pane__title .round-icon-cp .round-icon-cp__circle'),
-    General_Section_Title: By.css('.graph-pane .graph-pane__section:nth-of-type(2) .graph-pane__section-title'),
+    Arrow_Back: '[data-testid="detailsPanel"] a.item-header__back-btn',
+    Header: '.graph-pane__title .graph-pane__title-label',
+    Title_Icon: '.graph-pane__title .graph-pane__title-icon',
+    Cross_Close_Button: '.graph-pane__title .round-icon-cp .round-icon-cp__circle',
+    General_Section_Title:
+      '.graph-pane .graph-pane__section:nth-of-type(2) .graph-pane__section-title',
     Overview_Headers: commonTable(modelsRealTimeinfoPaneOverviewHeaders),
-    Running_Models_Section_Title: By.css('.graph-pane .graph-pane__section:nth-of-type(3) .graph-pane__section-title'),
-    Graph_Pane_Expand_Icon: By.css('.graph-pane .graph-pane__section:nth-of-type(3) .graph-pane__expand-icon'),
+    Running_Models_Section_Title:
+      '.graph-pane .graph-pane__section:nth-of-type(3) .graph-pane__section-title',
+    Graph_Pane_Expand_Icon:
+      '.graph-pane .graph-pane__section:nth-of-type(3) .graph-pane__expand-icon',
     Running_Models_Headers: commonTable(modelsRealTimeinfoPaneRunningModelsHeaders)
   },
   llmPromptsInfoPane: {
     Header: header,
     Updated: updated,
-    Not_In_Filtered_List_Message: By.css('[data-testid="detailsPanel"] .item-header__status .info-banner'),
+    Not_In_Filtered_List_Message: '[data-testid="detailsPanel"] .item-header__status .info-banner',
     Action_Menu: commonActionMenu,
     Apply_Changes_Button: applyChangesButton,
     Apply_Button: applyButton,
     Cross_Close_Button: crossCloseButton,
     Full_View_Button: fullViewButton,
-    Tabel_View_Button: tabelViewButton,
+    Table_View_Button: tableViewButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Prompt_Template_Tab_Selector: commonTable(promptTemplateTabSelector),
     Prompt_Arguments_Tab_Selector: commonTable(promptArgumentsTabSelector),
     Arguments_Tab_Table: commonTable(argumentsTabTable),
     Generation_Configuration_Tab_Table: commonTable(generationConfigurationTabTable),
     Find_In_Prompt_Filter_Input: inputGroup(
-      generateInputGroup(
-        '.search-navigator [data-testid="search-container"]',
-        true,
-        false
-      )
+      generateInputGroup('.search-navigator [data-testid="search-container"]', true, false)
     ),
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
@@ -1179,48 +1107,42 @@ export default {
     ),
     Overview_Table: commonTable(llmPromptOverviewTable),
     Prompt_Template_Table: commonTable(infoPaneOverviewPromptTable),
-    Prompt_Template_Argument: By.css('.prompt-tab__table .prompt-tab__row:nth-of-type(3) .prompt-tab__content span'),
-    Generation_Configuration_Counter: By.css('.generation-configuration-tab .generation-configuration-tab__counter'),
+    Prompt_Template_Argument:
+      '.prompt-tab__table .prompt-tab__row:nth-of-type(3) .prompt-tab__content span',
+    Generation_Configuration_Counter:
+      '.generation-configuration-tab .generation-configuration-tab__counter',
     Edit_btn_table_view: commonEditBtnTableView,
     Version_tag_Input: inputGroup(
-      generateInputGroup(
-        '.details-item:nth-of-type(5) .details-item__input-wrapper',
-        false,
-        false
-      )
+      generateInputGroup('.details-item:nth-of-type(5) .details-item__input-wrapper', false, false)
     )
   },
   paginationInfoPane: {
-    BE_Pagination_Navigate_Prev: By.css(
-      '[data-testid="pagination-navigate-double-prev-btn"] button'
-    ),
-    BE_Pagination_Navigate_Next: By.css(
-      '[data-testid="pagination-navigate-next-double-btn"] button'
-    ),
-    FE_Pagination_Navigate_Next: By.css('[data-testid="pagination-navigate-next-btn"] button'),
-    FE_Pagination_Navigate_Prev: By.css('[data-testid="pagination-navigate-prev-btn"] button'),
-    Pagination_Page_Number: By.css('.pagination-pages .pagination-page-number'),
-    Pagination_Count: By.css('.pagination .pagination-items-count')
+    BE_Pagination_Navigate_Prev: '[data-testid="pagination-navigate-double-prev-btn"] button',
+    BE_Pagination_Navigate_Next: '[data-testid="pagination-navigate-next-double-btn"] button',
+    FE_Pagination_Navigate_Next: '[data-testid="pagination-navigate-next-btn"] button',
+    FE_Pagination_Navigate_Prev: '[data-testid="pagination-navigate-prev-btn"] button',
+    Pagination_Page_Number: '.pagination-pages .pagination-page-number',
+    Pagination_Count: '.pagination .pagination-items-count'
   },
   alertsJobsInfoPane: {
     Header: header,
     Cross_Close_Button: crossCloseButton,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
-    Job_Detail_PopUp_Link: By.css('.details-item:nth-of-type(6) .details-item__link'),
+    Job_Detail_Popup_Link: '.details-item:nth-of-type(6) .details-item__link',
     Overview_Trigger_Criteria: commonTable(infoPaneAlertsTriggerCriteriaHeaders),
-    Notifications_Header: By.css('[data-testid="additional-info"] .item-info__header:nth-of-type(2)'),
-    Notifications_Item: By.css('[data-testid="additional-info"] .notifications-item'),
-    Logs_Text_container: By.css('.table__item .table__item-logs-content'),
-    Logs_Refresh_Button: By.css('.table__item .logs-refresh'),
-    Full_View_Logs_Button: By.css('.alert-row__details-alert-logs [data-testid="details-close-btn"]')
+    Notifications_Header: '[data-testid="additional-info"] .item-info__header:nth-of-type(2)',
+    Notifications_Item: '[data-testid="additional-info"] .notifications-item',
+    Logs_Text_container: '.table__item .table__item-logs-content',
+    Logs_Refresh_Button: '.table__item .logs-refresh',
+    Full_View_Logs_Button: '.alert-row__details-alert-logs [data-testid="details-close-btn"]'
   },
   alertsEndpointInfoPane: {
     Header: header,
     Cross_Close_Button: crossCloseButton,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Trigger_Criteria: commonTable(infoPaneAlertsTriggerCriteriaHeaders),
-    Notifications_Header: By.css('[data-testid="additional-info"] .item-info__header:nth-of-type(2)'),
-    Notifications_Item: By.css('[data-testid="additional-info"] .notifications-item'),
+    Notifications_Header: '[data-testid="additional-info"] .item-info__header:nth-of-type(2)',
+    Notifications_Item: '[data-testid="additional-info"] .notifications-item',
     Date_Picker_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
         '.item-info [data-testid="date-picker-container"]',
@@ -1230,19 +1152,22 @@ export default {
         false
       )
     ),
-    Metrics_App_Name: By.css('[data-testid="detailsPanel"] .metrics .alerts-table__metrics-header'),
-    Metrics_Stats_Card: By.css('[data-testid="detailsPanel"] .metrics .metrics__card'),
-    Metrics_Stats_Card_Metric_Name: By.css('[data-testid="detailsPanel"] .metrics .metrics__card .stats-card__title .stats-card__title-wrapper'),
-    Metrics_Stats_Card_Metric_BodyBar: By.css('[data-testid="detailsPanel"] .metrics .metrics__card .metrics__card-body .metrics__card-body-bar'),
-    Metrics_Stats_Card_Metric_BodyLine: By.css('[data-testid="detailsPanel"] .metrics .metrics__card .metrics__card-body .metrics__card-body-line'),
-    Metrics_Stats_Card_Empty: By.css('[data-testid="detailsPanel"] .metrics__empty-select')
+    Metrics_App_Name: '[data-testid="detailsPanel"] .metrics .alerts-table__metrics-header',
+    Metrics_Stats_Card: '[data-testid="detailsPanel"] .metrics .metrics__card',
+    Metrics_Stats_Card_Metric_Name:
+      '[data-testid="detailsPanel"] .metrics .metrics__card .stats-card__title .stats-card__title-wrapper',
+    Metrics_Stats_Card_Metric_BodyBar:
+      '[data-testid="detailsPanel"] .metrics .metrics__card .metrics__card-body .metrics__card-body-bar',
+    Metrics_Stats_Card_Metric_BodyLine:
+      '[data-testid="detailsPanel"] .metrics .metrics__card .metrics__card-body .metrics__card-body-line',
+    Metrics_Stats_Card_Empty: '[data-testid="detailsPanel"] .metrics__empty-select'
   },
   alertsApplicationInfoPane: {
     Header: header,
     Cross_Close_Button: crossCloseButton,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Trigger_Criteria: commonTable(infoPaneAlertsTriggerCriteriaHeaders),
-    Notifications_Header: By.css('[data-testid="additional-info"] .item-info__header:nth-of-type(2)'),
-    Notifications_Item: By.css('[data-testid="additional-info"] .notifications-item')
+    Notifications_Header: '[data-testid="additional-info"] .item-info__header:nth-of-type(2)',
+    Notifications_Item: '[data-testid="additional-info"] .notifications-item'
   }
 }

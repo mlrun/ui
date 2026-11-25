@@ -13,25 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# install google-chrome and utilites
-yum update -y
-yum install -y screen
-curl https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm -o google-chrome-stable_current_x86_64.rpm
-yum install google-chrome-stable_current_x86_64.rpm -y
-# set headless mode for browsers
-sed -i "s/headless: false/headless: true/g" tests/config.js
-# install dependencies
+# Runs the E2E regression in a Debian/Ubuntu based image with Node.js 24,
+# e.g. mcr.microsoft.com/playwright (the browser and its system dependencies are already installed there)
+set -e
+
 echo "install dependencies"
-npm i
-# setup mock endpoints
-printf "VITE_MLRUN_API_URL=http://localhost:30000/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com\n\
-VITE_NUCLIO_API_URL=http://localhost:30000/nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.com\n\
-VITE_IGUAZIO_API_URL=http://localhost:30000/platform-api.default-tenant.app.vmdev36.lab.iguazeng.com\n\
-VITE_NUCLIO_UI_URL=http://localhost:8070\n\
-VITE_FUNCTION_CATALOG_URL=https://raw.githubusercontent.com/mlrun/functions/master\n" > .env.development.local
-# start UI test run
+npm ci
+# no-op when the image already has the browser of the installed Playwright version
+npx playwright install --with-deps chromium
+# the app's variables (the mock server's URLs) are set by the run itself (`appEnv` in tests/config.js)
+# start UI test run: Playwright starts the mock server and the app itself (`webServer` in playwright.config.js)
 echo "start UI test run"
-screen -dm npm run mock-server
-screen -dm npm start
-npm run test:regression
-pkill screen
+CI=true E2E_HEADLESS=true npm run test:regression

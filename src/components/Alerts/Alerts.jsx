@@ -41,7 +41,7 @@ import { getJobLogs } from '../../utils/getJobLogs.util'
 import { useAlertsPageData } from '../../hooks/useAlertsPageData'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { removeProjects } from '../../reducers/projectReducer'
-import { useTableScroll } from 'igz-controls/hooks/useTable.hook'
+import { useTableScroll } from 'igz-controls/hooks'
 
 const Alerts = () => {
   const [selectedAlert, setSelectedAlert] = useState({})

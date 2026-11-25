@@ -1,0 +1,144 @@
+# Copyright 2019 Iguazio
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# The E2E regression (README.md, "E2E regression" > "CI"): the sanity scenarios (`@sanity`, the main functionality of
+# every page) on every push to a PR (a fork's PR after a maintainer approves it, by the repository setting), the full
+# regression weekly (Thursday, the default branch) and manually (Actions > E2E regression > Run workflow). Draft PRs
+# don't run.
+name: E2E regression
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review               # a draft PR doesn't run, it does once it is marked ready
+    branches:
+      - development
+      - 'feature/**'                   # Matches branches like 'feature/***'
+      - '[0-9]+.[0-9]+.x'              # Matches branches like '1.3.x'
+      - '[0-9]+.[0-9]+.[0-9]+'         # Matches branches like '1.2.3'
+      - '[0-9]+.[0-9]+.[0-9]+_.*'      # Matches branches like '1.7.0_cpj_mm'
+      - '[0-9]+.[0-9]+.[0-9]+-.*'      # Matches branches like '1.2.3-feature'
+  # weekly, on the default branch, 03:00 UTC on Thursday. GitHub switches the scheduled runs of a public repository off
+  # after 60 days without repository activity
+  schedule:
+    - cron: '0 3 * * 4'
+  workflow_dispatch:
+    inputs:
+      workers:
+        description: 'Parallel workers (E2E_WORKERS), e.g. 4 to compare the run and the resources with the default 3'
+        type: choice
+        options: ['1', '2', '3', '4']
+        default: '3'
+      tags:
+        description: 'Tag expression of the scenarios (E2E_TAGS): the default - the full CI regression, `all` - every scenario, `@sanity` - the PR selection'
+        type: string
+        default: 'not @demoMode'
+
+# one run per PR: a new push cancels the running one. The manual runs are not
+# cancelled (e.g. a run with 4 workers next to one with 3)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    # "E2E sanity" on a PR (the `@sanity` scenarios), "E2E regression" for the weekly and the manual runs
+    name: ${{ github.event_name == 'pull_request' && 'E2E sanity' || 'E2E regression' }}
+    # a draft PR doesn't run, it does once it is marked ready for review. The PRs of the members run at once; a PR from
+    # a fork waits for a maintainer by the repository setting (Settings > Actions > General > Fork pull request
+    # workflows from outside collaborators)
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      # - a PR: the sanity scenarios (`@sanity`, the main functionality of every page, a few minutes), on every push
+      # - the weekly run and a manual run (by default): the full CI regression, the UI that isn't shown to the users is
+      #   left out: the demo mode (`@demoMode`, the scenarios that turn it on with `?mode=demo`; the step fails in an
+      #   untagged scenario). Local runs run all the scenarios
+      E2E_TAGS: ${{ inputs.tags || (github.event_name == 'pull_request' && '@sanity and not @demoMode' || 'not @demoMode') }}
+      # 3 workers by default (a worker is a Playwright worker process, a browser and a mock instance)
+      E2E_WORKERS: ${{ inputs.workers || '3' }}
+      # a PR gets a simple report: the failed scenarios in the job summary and as annotations (no Allure report), the
+      # full regression gets the Allure report as well
+      E2E_ALLURE: ${{ github.event_name == 'pull_request' && 'false' || 'true' }}
+    steps:
+      - name: Checking Out
+        uses: actions/checkout@v5
+        with:
+          # nothing is pushed: the token isn't kept in the checkout for the next steps
+          persist-credentials: false
+
+      - name: Preparing Node Env
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('./node_modules/@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache the Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}-chromium
+
+      - name: Install Chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      # the browser is cached, its system libraries are not
+      - name: Install the system dependencies of Chromium
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      # the console output is the job log, the failed scenarios are also in the job summary and the annotations
+      - name: Run the E2E regression
+        shell: bash
+        run: |
+          if [ "$E2E_TAGS" = all ]; then export E2E_TAGS=; fi
+          npm run test:regression:ci
+
+      # the full regression only: served by `npx allure open <the unpacked folder>` (the report loads its files on demand)
+      - name: Upload the Allure report
+        if: always() && env.E2E_ALLURE == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: tests/reports/allure-report
+          retention-days: 14
+          if-no-files-found: warn
+
+      # the traces (`npx playwright show-trace <trace.zip>`), the screenshots and the build log of a failed run
+      - name: Upload the test results
+        if: failure() || cancelled()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-results
+          path: |
+            tests/reports/test-results
+            tests/reports/build.log
+          retention-days: 14
+          if-no-files-found: warn

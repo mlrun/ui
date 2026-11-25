@@ -26,7 +26,7 @@ import Details from '../Details/Details'
 import { EMPTY_OBJECT } from '../../constants'
 import { FULL_VIEW_MODE } from 'igz-controls/constants'
 import { SORT_PROPS, VIRTUALIZATION_CONFIG, ACTIONS_MENU } from 'igz-controls/types'
-import { useTable } from 'igz-controls/hooks/useTable.hook'
+import { useTable } from 'igz-controls/hooks'
 
 import 'igz-controls/scss/table.scss'
 

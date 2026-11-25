@@ -41,12 +41,6 @@ export const parseLocalDate = (text: string): Date | null => {
   return date
 }
 
-/** @deprecated Use formatLocalDate */
-export const formatDateDDMMYYYY = formatLocalDate
-
-/** @deprecated Use parseLocalDate */
-export const parseDateDDMMYYYY = parseLocalDate
-
 export const getDatePlaceholder = (): string =>
   getSupportedLocale() === 'en-US' ? 'mm/dd/yyyy' : 'dd/mm/yyyy'
 
@@ -65,13 +59,7 @@ export const buildHalfHourOptions = (): string[] => {
   )
 }
 
-/** @deprecated Use buildHalfHourOptions */
-export const buildHalfHourOptions12h = buildHalfHourOptions
-
 export const toUTCISO = (d: Date): string => d.toISOString()
-
-/** @deprecated Use toUTCISO */
-export const toLocalISO = toUTCISO
 
 const TIME_PARSE_FORMATS = ['hh:mm a', 'h:mm a', 'HH:mm', 'H:mm'] as const
 

@@ -17,51 +17,59 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { expect } from 'chai'
-import { Key } from 'selenium-webdriver'
+import { expect } from '@playwright/test'
+import {
+  getAttribute,
+  getTexts,
+  retryAssertion,
+  sendKeys,
+  waitForPageQuiet
+} from '../../common-tools/element.js'
 
-export const clearManually = async (inputField) => {
-  const existValue = await inputField.getAttribute('value')
+export const clearManually = async inputField => {
+  const existValue = await getAttribute(inputField, 'value')
   for (let i = 0; i <= existValue.length; i++) {
-    await inputField.sendKeys(Key.BACK_SPACE, Key.DELETE)
+    await inputField.press('Backspace')
+    await inputField.press('Delete')
   }
 }
 
-export const getOptionValues = async (driver, options) => {
-  return await driver.findElements(options).then(function(elements) {
-    return Promise.all(elements.map(element => element.getText()))
-  })
+export const getOptionValues = async (page, options) => {
+  // an option is read once, also when the locator matches its label and the nested tooltip wrapper
+  return getTexts(page.locator(options), { outermost: true })
 }
 
-export const typeSearchableValue = async (driver, inputGroup, value) => {
-    const inputField = await driver.findElement(inputGroup.inputField)
-    await clearManually(inputField)
-    return await inputField.sendKeys(value)
-  }
+export const typeSearchableValue = async (page, inputGroup, value) => {
+  const inputField = page.locator(inputGroup.inputField).first()
+  // the previous suggestion is being handled (e.g. its data is fetched), the typed value would be lost
+  await waitForPageQuiet(page)
+  await clearManually(inputField)
+  return await sendKeys(inputField, value)
+}
 
-export const verifyTypedValue = async (driver, inputGroup, value) => {
-    const inputField = await driver.findElement(inputGroup.inputField)
-    const txt = await inputField.getAttribute('value')
-    expect(txt).equal(value)
-  }
-
+// retried: the suggestions are rendered after the typed value is handled and they can be fetched (e.g. the artifacts
+// of the typed project). EVERY suggestion must contain the fragment (the steps say "every"): one was enough before, so a
+// list that was not filtered at all passed
 export const isContainsSubstringInSuggestedOptions = async (
-    driver,
-    inputGroup,
-    value,
-    caseSensitive = false
-  ) => {
-    let arr = await getOptionValues(driver, inputGroup.options)
+  page,
+  inputGroup,
+  value,
+  ignoreCase = false
+) =>
+  retryAssertion(async () => {
+    let arr = await getOptionValues(page, inputGroup.options)
     let tmpValue = value
 
-    if (caseSensitive) {
+    if (ignoreCase) {
       arr = arr.map(item => item.toLowerCase())
       tmpValue = value.toLowerCase()
     }
 
-    expect(arr.length > 0).equal(true, `Elements not found: [${arr}]`)
-    expect(arr.some(item => item.includes(tmpValue))).equal(
-      true,
-      `Searcheble string "${tmpValue}" do not find in all values of: [${arr}]`
-    )
-  }
+    const notMatching = arr.filter(item => !item.includes(tmpValue))
+
+    expect(arr.length > 0, `No suggestions are shown for "${value}"`).toBe(true)
+    expect(
+      notMatching,
+      `Suggestions without "${tmpValue}": [${notMatching}], all suggestions: [${arr}]`
+    ).toEqual([])
+  })

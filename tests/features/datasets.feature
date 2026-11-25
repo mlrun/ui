@@ -4,7 +4,7 @@ Feature: Datasets Page
     
   @MLD
   @passive
-  @smoke
+  @smoke @sanity
   Scenario: MLD001 - Check components on Datasets page
     Given open url
     And wait load page
@@ -13,7 +13,6 @@ Feature: Datasets Page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "getting-started-tutorial-admin" value
     And select "Datasets" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Datasets" value
     And wait load page
@@ -22,22 +21,21 @@ Feature: Datasets Page
     Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "getting-started-tutorial-admin" value
     And select "Datasets" item in sidebar menu
-    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Datasets" value
     And wait load page
     Then verify "Register_Dataset_Button" element visibility on "Datasets" wizard
-    Then "Register_Dataset_Button" element on "Datasets" should contains "Register dataset" value
+    Then "Register_Dataset_Button" element on "Datasets" should contain "Register dataset" value
     Then verify "Table_Name_Filter_Input" element visibility on "Datasets" wizard
     Then verify "Table_FilterBy_Button" element visibility on "Datasets" wizard
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
-    Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+    Then "Title" element on "FilterBy_Popup" should contain "Filter by" value
     Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
     Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
-    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options_Main_Table"
+    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contain "Dropdown_Options"."Tag_Filter_Options_Main_Table"
     Then click on "Title" element on "FilterBy_Popup" wizard
     Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
-    Then "Checkbox_Label" element on "FilterBy_Popup" should contains "Show best iteration only" value
+    Then "Checkbox_Label" element on "FilterBy_Popup" should contain "Show best iteration only" value
     Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
     Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
     Then verify "Table_Refresh_Button" element visibility on "Datasets" wizard
@@ -61,7 +59,7 @@ Feature: Datasets Page
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
     Then "Show_Iterations_Checkbox" element should be checked on "FilterBy_Popup" wizard
-    Then check "expand_btn" not presented in "Datasets_Table" on "Datasets" wizard
+    Then check "expand_btn" not present in "Datasets_Table" on "Datasets" wizard
     Then uncheck "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
@@ -77,7 +75,7 @@ Feature: Datasets Page
     Then check "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then verify "Header" element not exists on "Datasets_Info_Pane" wizard
+    Then verify "Header" element does not exist on "Datasets_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then "Show_Iterations_Checkbox" element should be checked on "FilterBy_Popup" wizard
 
@@ -85,6 +83,7 @@ Feature: Datasets Page
   @passive
   @smoke
   #TODO:  Datasets Analysis tab - add the data to verify
+  @sanity
   Scenario: MLD003 - Check all mandatory components in Item infopane on Overview tab table on Datasets page
     Given open url
     And wait load page
@@ -94,45 +93,44 @@ Feature: Datasets Page
     And wait load page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contain "Datasets_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Updated" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Action_Menu" element visibility on "Datasets_Info_Pane" wizard
-    Then verify "Action_Menu" dropdown element on "Datasets_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
+    Then verify "Action_Menu" dropdown element on "Datasets_Info_Pane" wizard should contain "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Datasets_Info_Pane" wizard
     And wait load page
+    Then verify "Download_Popup" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
-    And wait load page
-    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
-    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
-    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then verify "Header_Download_Popup" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Popup" element on "Downloads_Popup" should contain "Downloads" value
+    Then click on "Download_Popup_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then verify "Full_View_Button" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
-    Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
-    Then verify "Overview_Producer_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_Producer_Headers"
+    Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contain "Datasets_Info_Pane"."Overview_General_Headers"
+    Then verify "Overview_Producer_Headers" on "Datasets_Info_Pane" wizard should contain "Datasets_Info_Pane"."Overview_Producer_Headers"
     Then verify "Overview_Sources_Headers" element visibility on "Datasets_Info_Pane" wizard
-    Then verify "Overview_Sources_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_Sources_Headers"
-    Then "Label_column" element on "Datasets_Info_Pane" should contains "radius" value 
+    Then verify "Overview_Sources_Headers" on "Datasets_Info_Pane" wizard should contain "Datasets_Info_Pane"."Overview_Sources_Headers_Two_Sources"
+    Then "Label_column" element on "Datasets_Info_Pane" should contain "radius" value 
     Then verify "Train_Button" element visibility on "Datasets_Info_Pane" wizard
-    Then "Train_Button" element on "Datasets_Info_Pane" should contains "Train" value
+    Then "Train_Button" element on "Datasets_Info_Pane" should contain "Train" value
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
-    Then "Title" element on "Modal_Wizard_Form" should contains "Train Model" value
+    Then "Title" element on "Modal_Wizard_Form" should contain "Train Model" value
     Then verify "Cross_Close_Button" element visibility on "Modal_Wizard_Form" wizard
     Then click on "Cross_Close_Button" element on "Modal_Wizard_Form" wizard
     And hover "Overview_Hash_Header" component on "Datasets_Info_Pane" wizard
     Then verify "Overview_Hash_Header" on "Datasets_Info_Pane" wizard should display "Label_Hint"."Overview_Hash"
     Then verify "Overview_UID_Header" on "Datasets_Info_Pane" wizard should display "Label_Hint"."Overview_UID"
     Then click on "Full_View_Button" element on "Datasets_Info_Pane" wizard
-    Then verify "Cross_Close_Button" element not exists on "Datasets_Info_Pane" wizard
-    Then click on "Tabel_View_Button" element on "Datasets_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element does not exist on "Datasets_Info_Pane" wizard
+    Then click on "Table_View_Button" element on "Datasets_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
   
   @MLD
@@ -140,8 +138,6 @@ Feature: Datasets Page
   @smoke
   #TODO:  Datasets Analysis tab - add the data to verify
   Scenario: MLD005 - Check Details panel still active on page refresh
-#     * set tear-down property "dataset" created in "automation-test" project with "test-file" value
-    * set tear-down property "dataset" created in "default" project with "test-dataset" value
     * create "test-dataset" Dataset with "v1" tag in "default" project with code 200
     Given open url
     And wait load page
@@ -162,12 +158,12 @@ Feature: Datasets Page
     Then click on "Apply_Button" element on "Datasets_Info_Pane" wizard
     Then click on "Apply_Changes_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
     And wait load page
-    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was updated" value
+    Then "Notification_Popup" element on "Notification_Popup" should contain "Tag was updated" value
     And wait load page
-    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
     Then click on "History_Back_Button" element on "Datasets" wizard
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
@@ -179,18 +175,17 @@ Feature: Datasets Page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
-    Then "Header" element on "Datasets_Info_Pane" should contains "test-dataset" value
+    Then "Header" element on "Datasets_Info_Pane" should contain "test-dataset" value
     Then refresh a page
-    And wait load page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
-    Then "Header" element on "Datasets_Info_Pane" should contains "test-dataset" value
+    Then "Header" element on "Datasets_Info_Pane" should contain "test-dataset" value
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then click on "Clear_Button" element on "FilterBy_Popup" wizard
     And wait load page
     When click on cell with value "auto-trainer-train_test_set" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Datasets_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contain "Datasets_Info_Pane"."Tab_List"
   
   @MLD
   @passive
@@ -202,19 +197,19 @@ Feature: Datasets Page
     And wait load page
     And select "Datasets" item in sidebar menu
     And wait load page
-    Then "Register_Dataset_Button" element on "Datasets" should contains "Register dataset" value
+    Then "Register_Dataset_Button" element on "Datasets" should contain "Register dataset" value
     Then click on "Register_Dataset_Button" element on "Datasets" wizard
     Then verify if "Register_Dataset" popup dialog appears
-    Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_Dataset" wizard should contains "Register_Dataset"."Combobox_Options"
+    Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_Dataset" wizard should contain "Register_Dataset"."Combobox_Options"
     Then navigate back
-    Then verify "Title" element not exists on "Register_Dataset" wizard
+    Then verify "Title" element does not exist on "Register_Dataset" wizard
     Then navigate forward
-    Then verify "Title" element not exists on "Register_Dataset" wizard
+    Then verify "Title" element does not exist on "Register_Dataset" wizard
     Then click on "Register_Dataset_Button" element on "Datasets" wizard
     Then verify if "Register_File_Popup" popup dialog appears
-    Then "Title" element on "Register_Dataset" should contains "Register Dataset" value
-    Then "Form_Text" component on "Register_Dataset" should contains "Register_Dataset"."Form_Text"
-    Then "Form_Subtext" component on "Register_Dataset" should contains "Register_Dataset"."Form_Subtext"
+    Then "Title" element on "Register_Dataset" should contain "Register Dataset" value
+    Then "Form_Text" component on "Register_Dataset" should contain "Register_Dataset"."Form_Text"
+    Then "Form_Subtext" component on "Register_Dataset" should contain "Register_Dataset"."Form_Subtext"
     Then verify "Name_Input" element visibility on "Register_Dataset" wizard
     Then type value " " to "Name_Input" field on "Register_Dataset" wizard
     And wait load page
@@ -228,9 +223,9 @@ Feature: Datasets Page
     Then type value " " to "Description_Input" field on "Register_Dataset" wizard
     Then verify "Description_Input" on "Register_Dataset" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
     Then verify "Cancel_Button" element visibility on "Register_Dataset" wizard
-    Then "Cancel_Button" element on "Register_Dataset" should contains "Cancel" value
+    Then "Cancel_Button" element on "Register_Dataset" should contain "Cancel" value
     Then verify "Register_Button" element visibility on "Register_Dataset" wizard
-    Then "Register_Button" element on "Register_Dataset" should contains "Register" value
+    Then "Register_Button" element on "Register_Dataset" should contain "Register" value
     Then click on "Register_Button" element on "Register_Dataset" wizard
     Then verify "Register_Button" element on "Register_Dataset" wizard is disabled
     Then type value "dataset" to "Name_Input" field on "Register_Dataset" wizard
@@ -243,16 +238,16 @@ Feature: Datasets Page
     Then verify if "Common_Popup" popup dialog appears
     Then click on "Cancel_Button" element on "Common_Popup" wizard
     Then verify if "Register_Dataset" popup dialog appears
-    Then verify "Name_Input" input should contains "dataset" value on "Register_Dataset" wizard
-    Then verify "Path_Scheme_Combobox" input should contains "target/path" value in "Target_Path" on "Register_Dataset" wizard
-    Then verify "Description_Input" input should contains "new dataset description" value on "Register_Dataset" wizard
+    Then verify "Name_Input" input should contain "dataset" value on "Register_Dataset" wizard
+    Then verify "Path_Scheme_Combobox" input should contain "target/path" value in "Target_Path" on "Register_Dataset" wizard
+    Then verify "Description_Input" input should contain "new dataset description" value on "Register_Dataset" wizard
     Then click on "Cross_Cancel_Button" element on "Register_Dataset" wizard
     Then verify if "Common_Popup" popup dialog appears
     Then click on "Cancel_Button" element on "Common_Popup" wizard
     Then verify if "Register_Dataset" popup dialog appears
-    Then verify "Name_Input" input should contains "dataset" value on "Register_Dataset" wizard
-    Then verify "Path_Scheme_Combobox" input should contains "target/path" value in "Target_Path" on "Register_Dataset" wizard
-    Then verify "Description_Input" input should contains "new dataset description" value on "Register_Dataset" wizard
+    Then verify "Name_Input" input should contain "dataset" value on "Register_Dataset" wizard
+    Then verify "Path_Scheme_Combobox" input should contain "target/path" value in "Target_Path" on "Register_Dataset" wizard
+    Then verify "Description_Input" input should contain "new dataset description" value on "Register_Dataset" wizard
     Then navigate back
     Then verify if "Common_Popup" popup dialog appears
     Then click on "Cancel_Button" element on "Common_Popup" wizard
@@ -263,12 +258,12 @@ Feature: Datasets Page
     Then verify if "Common_Popup" popup dialog appears
     Then click on "Confirm_Button" element on "Common_Popup" wizard
     And wait load page
-    Then verify "Title" element not exists on "Register_Dataset" wizard
+    Then verify "Title" element does not exist on "Register_Dataset" wizard
     Then navigate forward
-    Then verify "Title" element not exists on "Register_Dataset" wizard
+    Then verify "Title" element does not exist on "Register_Dataset" wizard
   
   @MLD
-  @smoke
+  @smoke @sanity
   Scenario: MLD007 - Verify behaviour on Register new Dataset
     Given open url
     And wait load page
@@ -283,16 +278,16 @@ Feature: Datasets Page
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then click on "Register_Button" element on "Register_Dataset" wizard
     And wait load page
-    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
     And wait load page
-    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Register dataset initiated successfully" value
+    Then "Notification_Popup" element on "Notification_Popup" should contain "Register dataset initiated successfully" value
     And wait load page
-    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
     Then check "dataset-test" value in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then click on cell with value "dataset-test" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then "Header" element on "Datasets_Info_Pane" should contains "dataset-test" value
+    Then "Header" element on "Datasets_Info_Pane" should contain "dataset-test" value
     Then check "dataset-test" value in "key" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then check "v3io:///target/path" value in "path" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
@@ -303,14 +298,14 @@ Feature: Datasets Page
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then click on "Register_Button" element on "Register_Dataset" wizard
     Then verify if "Confirm_Popup" popup dialog appears
-    Then "Title" element on "Confirm_Popup" should contains "Overwrite dataset?" value
+    Then "Title" element on "Confirm_Popup" should contain "Overwrite dataset?" value
     Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
     Then verify "Confirm_Dialog_Message" element visibility on "Confirm_Popup" wizard
-    Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Register_Artifact"."Register_Error_Message"
+    Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Register_Artifact"."Register_Error_Message" with "dataset"
     Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
-    Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
+    Then "Cancel_Button" element on "Confirm_Popup" should contain "Cancel" value
     Then verify "Overwrite_Button" element visibility on "Confirm_Popup" wizard
-    Then "Overwrite_Button" element on "Confirm_Popup" should contains "Overwrite" value
+    Then "Overwrite_Button" element on "Confirm_Popup" should contain "Overwrite" value
     When click on "Cancel_Button" element on "Confirm_Popup" wizard
   
   @MLD
@@ -328,7 +323,7 @@ Feature: Datasets Page
     Then type value "ea" to "Table_Name_Filter_Input" field on "Datasets" wizard
     Then click on "Table_Refresh_Button" element on "Datasets" wizard
     And wait load page
-    Then value in "name" column with "text" in "Datasets_Table" on "Datasets" wizard should contains "ea"
+    Then value in "name" column with "text" in "Datasets_Table" on "Datasets" wizard should contain "ea"
   
   @MLD
   @passive
@@ -346,22 +341,22 @@ Feature: Datasets Page
     Then type value "owner" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then value in "labels" column with "dropdowns" in "Datasets_Table" on "Datasets" wizard should contains "owner"
+    Then value in "labels" column with "dropdowns" in "Datasets_Table" on "Datasets" wizard should contain "owner"
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then type value "v3io_user=admin" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then value in "labels" column with "dropdowns" in "Datasets_Table" on "Datasets" wizard should contains "v3io_user=admin"
+    Then value in "labels" column with "dropdowns" in "Datasets_Table" on "Datasets" wizard should contain "v3io_user=admin"
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
-    Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Datasets_data"
+    Then "No_Data_Message" component on "commonPagesHeader" should contain "No_Data_Message"."No_Datasets_data"
   
   @MLD
   @passive
-  @smoke
+  @smoke @sanity
   Scenario: MLD015 - Verify action menu list, Downloads action,  View YAML action
     Given open url
     And wait load page
@@ -369,19 +364,18 @@ Feature: Datasets Page
     And wait load page
     And select "Datasets" item in sidebar menu
     And wait load page
-    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "survival-curves_km-timelines" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "survival-curves_km-timelines" value in "name" column should contain "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "survival-curves_km-timelines" value in "name" column
     And wait load page
+    Then verify "Download_Popup" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
-    And wait load page
-    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
-    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
-    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then verify "Header_Download_Popup" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Popup" element on "Downloads_Popup" should contain "Downloads" value
+    Then click on "Download_Popup_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then select "View YAML" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "survival-curves_km-timelines" value in "name" column
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
@@ -391,11 +385,11 @@ Feature: Datasets Page
     Then uncheck "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then check "expand_btn" not presented in "Datasets_Table" on "Datasets" wizard
+    Then check "expand_btn" not present in "Datasets_Table" on "Datasets" wizard
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column with scroll "false"
     And wait load page
-    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "5a44b12b-9ef3-4239-87e8-e0cbdae-21" value in "uid" column should contains "Common_Lists"."Action_Menu_List_Version_History"
+    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "5a44b12b-9ef3-4239-87e8-e0cbdae-21" value in "uid" column should contain "Common_Lists"."Action_Menu_List_Version_History"
     Then select "View YAML" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "5a44b12b-9ef3-4239-87e8-e0cbdae-21" value in "uid" column
     And wait load page
     Then verify if "View_YAML" popup dialog appears
@@ -420,14 +414,14 @@ Feature: Datasets Page
     And wait load page
     And select "Datasets" item in sidebar menu
     And wait load page
-    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column should contain "Common_Lists"."Action_Menu_List"
     Then verify that in action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column "Delete" option is enabled
     Then verify that in action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column "Delete all versions" option is enabled
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then verify "Action_Menu" element visibility on "Datasets_Info_Pane" wizard
-    Then verify "Action_Menu" dropdown element on "Datasets_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
+    Then verify "Action_Menu" dropdown element on "Datasets_Info_Pane" wizard should contain "Common_Lists"."Action_Menu_List"
     Then check that "Delete" option in action menu on "Datasets_Info_Pane" wizard is enabled
     Then check that "Delete all versions" option in action menu on "Datasets_Info_Pane" wizard is enabled
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
@@ -438,24 +432,24 @@ Feature: Datasets Page
     And wait load page
     Then verify "History_Back_Button" element visibility on "Datasets" wizard
     Then verify "Version_History_Title" element visibility on "Datasets" wizard
-    Then "Version_History_Title" element on "Datasets" should contains "Version history:" value
+    Then "Version_History_Title" element on "Datasets" should contain "Version history:" value
     Then verify "Version_History_Model_Name" element visibility on "Datasets" wizard
-    Then "Version_History_Model_Name" element on "Datasets" should contains "test-regressor_cox-test-summary" value
+    Then "Version_History_Model_Name" element on "Datasets" should contain "test-regressor_cox-test-summary" value
     Then verify "Table_Refresh_Button" element visibility on "Datasets" wizard
     Then verify "Register_Dataset_Button" element visibility on "Datasets" wizard
     Then verify "Table_FilterBy_Button" element visibility on "Datasets" wizard
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
-    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "5a44b12b-9ef3-4239-87e8-e0cbdae-21" value in "uid" column should contains "Common_Lists"."Action_Menu_List_Version_History"
+    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "5a44b12b-9ef3-4239-87e8-e0cbdae-21" value in "uid" column should contain "Common_Lists"."Action_Menu_List_Version_History"
     Then verify that in action menu on "Datasets" wizard in "Datasets_Table" table with "5a44b12b-9ef3-4239-87e8-e0cbdae-21" value in "uid" column "Delete" option is enabled
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then verify "Action_Menu" element visibility on "Datasets_Info_Pane" wizard
-    Then verify "Action_Menu" dropdown element on "Datasets_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List_Version_History"
+    Then verify "Action_Menu" dropdown element on "Datasets_Info_Pane" wizard should contain "Common_Lists"."Action_Menu_List_Version_History"
     Then check that "Delete" option in action menu on "Datasets_Info_Pane" wizard is enabled
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
-    Then "Header" element on "Datasets_Info_Pane" should contains "test-regressor_cox-test-summary" value
+    Then "Header" element on "Datasets_Info_Pane" should contain "test-regressor_cox-test-summary" value
     Then click on "Register_Dataset_Button" element on "Datasets" wizard
     Then verify if "Register_Dataset" popup dialog appears
     Then type value "test-regressor_cox-test-summary" to "Name_Input" field on "Register_Dataset" wizard
@@ -463,34 +457,34 @@ Feature: Datasets Page
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then click on "Register_Button" element on "Register_Dataset" wizard
     Then verify if "Confirm_Popup" popup dialog appears
-    Then "Title" element on "Confirm_Popup" should contains "Overwrite dataset?" value
+    Then "Title" element on "Confirm_Popup" should contain "Overwrite dataset?" value
     When click on "Overwrite_Button" element on "Confirm_Popup" wizard
     And wait load page
-    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
     And wait load page
-    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Register dataset initiated successfully" value
+    Then "Notification_Popup" element on "Notification_Popup" should contain "Register dataset initiated successfully" value
     And wait load page
-    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
     Then click on "History_Back_Button" element on "Datasets" wizard
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
-    Then "Header" element on "Datasets_Info_Pane" should contains "test-regressor_cox-test-summary" value
+    Then "Header" element on "Datasets_Info_Pane" should contain "test-regressor_cox-test-summary" value
     Then verify "Not_In_Filtered_List_Message" element visibility on "Datasets_Info_Pane" wizard
     Then "Not_In_Filtered_List_Message" component on "Datasets_Info_Pane" should be equal "Datasets_Info_Pane"."Info_Banner_Message"
     Then click on "Table_Refresh_Button" element on "Datasets" wizard
     And wait load page
-    Then "Header" element on "Datasets_Info_Pane" should contains "test-regressor_cox-test-summary" value
-    Then verify "Not_In_Filtered_List_Message" element not exists on "Datasets_Info_Pane" wizard
+    Then "Header" element on "Datasets_Info_Pane" should contain "test-regressor_cox-test-summary" value
+    Then verify "Not_In_Filtered_List_Message" element does not exist on "Datasets_Info_Pane" wizard
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then verify "Datasets_Table" element visibility on "Datasets" wizard
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
-    Then "Header" element on "Files_Info_Pane" should contains "test-regressor_cox-test-summary" value
-    Then verify "Not_In_Filtered_List_Message" element not exists on "Datasets_Info_Pane" wizard
+    Then "Header" element on "Files_Info_Pane" should contain "test-regressor_cox-test-summary" value
+    Then verify "Not_In_Filtered_List_Message" element does not exist on "Datasets_Info_Pane" wizard
     #TODO: Verify that editing the tag to an empty string '' will delete the artifact instance
 
   @MLD
@@ -507,26 +501,25 @@ Feature: Datasets Page
     And wait load page
     Then verify "Preview_Table" element visibility on "Preview_Popup" wizard
     Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Name" exact header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Path" exact header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Size" exact header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
-    Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contains "test_new_structure"
+    Then check "Updated" exact header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contain "test_new_structure"
     Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
     Then verify "Download_Button" element visibility on "Preview_Popup" wizard
     Then click on "Download_Button" element on "Preview_Popup" wizard
     And wait load page
+    Then verify "Download_Popup" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
-    And wait load page
-    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
-    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
-    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then verify "Header_Download_Popup" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Popup" element on "Downloads_Popup" should contain "Downloads" value
+    Then click on "Download_Popup_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
     When click on cell with value "auto-trainer-train_test_set" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
@@ -537,26 +530,25 @@ Feature: Datasets Page
     And wait load page
     Then verify "Preview_Table" element visibility on "Preview_Popup" wizard
     Then verify visibility of header column "name" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Name" header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Name" exact header value in "name" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "path" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Path" header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Path" exact header value in "path" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "size" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Size" header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then check "Size" exact header value in "size" column in "Preview_Table" table on "Preview_Popup" wizard
     Then verify visibility of header column "updated" in "Preview_Table" table on "Preview_Popup" wizard
-    Then check "Updated" header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
-    Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contains "auto-trainer-train_test_set"
+    Then check "Updated" exact header value in "updated" column in "Preview_Table" table on "Preview_Popup" wizard
+    Then value in "name" column with "text" in "Preview_Table" on "Preview_Popup" wizard should contain "auto-trainer-train_test_set"
     Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
     Then verify "Download_Button" element visibility on "Preview_Popup" wizard
     Then click on "Download_Button" element on "Preview_Popup" wizard
     And wait load page
+    Then verify "Download_Popup" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then verify "Download_Popup_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
-    And wait load page
-    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
-    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
-    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then verify "Header_Download_Popup" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Popup" element on "Downloads_Popup" should contain "Downloads" value
+    Then click on "Download_Popup_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
   
   @MLD
@@ -579,12 +571,12 @@ Feature: Datasets Page
     And wait load page
     Then verify redirection from "projects/INVALID/datasets/auto-trainer-train_test_set/:latest@5a44b12b-9ef3-4239-87e8-e0cbdae-97/overview?bePage=1&fePage=1" to "projects"
     And wait load page
-    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
     And wait load page
-    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "This project does not exist" value
+    Then "Notification_Popup" element on "Notification_Popup" should contain "This project does not exist" value
     And wait load page
-    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
     Then verify redirection from "projects/default/INVALID/auto-trainer-train_test_set/:latest@5a44b12b-9ef3-4239-87e8-e0cbdae-97/overview?bePage=1&fePage=1" to "projects"
     And wait load page
   
@@ -627,17 +619,17 @@ Feature: Datasets Page
     And wait load page
     When click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contain "Datasets_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
-    Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
+    Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contain "Datasets_Info_Pane"."Overview_General_Headers"
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
-    Then verify "Edit_btn_table_view" element not exists on "Files_Info_Pane" wizard 
+    Then verify "Edit_btn_table_view" element does not exist on "Files_Info_Pane" wizard 
     Then click on "Full_View_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then verify "Cross_Close_Button" element not exists on "Datasets_Info_Pane" wizard
-    Then verify "Edit_btn_table_view" element not exists on "Files_Info_Pane" wizard 
-    Then "Version_tag_Value_full_view" element on "Datasets_Info_Pane" should contains "latest" value  
-    Then click on "Tabel_View_Button" element on "Datasets_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element does not exist on "Datasets_Info_Pane" wizard
+    Then verify "Edit_btn_table_view" element does not exist on "Files_Info_Pane" wizard 
+    Then "Version_tag_Value_full_view" element on "Datasets_Info_Pane" should contain "latest" value  
+    Then click on "Table_View_Button" element on "Datasets_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
 
   @MLD
@@ -651,23 +643,23 @@ Feature: Datasets Page
     And wait load page
     When click on cell with value "auto-trainer-train_test_set" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contain "Datasets_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
-    Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
+    Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contain "Datasets_Info_Pane"."Overview_General_Headers"
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
-    Then verify "Edit_btn_table_view" element not exists on "Datasets_Info_Pane" wizard
+    Then verify "Edit_btn_table_view" element does not exist on "Datasets_Info_Pane" wizard
     Then select "Add a tag" option in action menu on "Datasets_Info_Pane" wizard
     And wait load page
     Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
     Then type value "newTag" to "Tag_Input" field on "Add_Tag_Popup" wizard
     Then click on "Add_Button" element on "Add_Tag_Popup" wizard
     And wait load page
-    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
     And wait load page
-    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Tag was added successfully" value
+    Then "Notification_Popup" element on "Notification_Popup" should contain "Tag was added successfully" value
     And wait load page
-    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
     Then verify "Table_FilterBy_Button" element visibility on "Datasets" wizard
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then select "newTag" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
@@ -687,9 +679,9 @@ Feature: Datasets Page
     And wait load page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contain "Datasets_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
-    Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
+    Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contain "Datasets_Info_Pane"."Overview_General_Headers"
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
     Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "data_clean_encoded-data" value in "name" column with scroll "false"
@@ -701,15 +693,15 @@ Feature: Datasets Page
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then click on "Register_Button" element on "Register_Dataset" wizard
     Then verify if "Confirm_Popup" popup dialog appears
-    Then "Title" element on "Confirm_Popup" should contains "Overwrite dataset?" value
+    Then "Title" element on "Confirm_Popup" should contain "Overwrite dataset?" value
     When click on "Overwrite_Button" element on "Confirm_Popup" wizard
     And wait load page
     When click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contain "Datasets_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
-    Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"   
-    Then "Version_Tag_Input_Placeholder" element on "Datasets_Info_Pane" should contains "Click to add" value
+    Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contain "Datasets_Info_Pane"."Overview_General_Headers"   
+    Then "Version_Tag_Input_Placeholder" element on "Datasets_Info_Pane" should contain "Click to add" value
 
   @MLD
   @smoke
@@ -725,9 +717,9 @@ Feature: Datasets Page
     And wait load page
     Then verify "History_Back_Button" element visibility on "Datasets" wizard
     Then verify "Version_History_Title" element visibility on "Datasets" wizard
-    Then "Version_History_Title" element on "Datasets" should contains "Version history:" value
+    Then "Version_History_Title" element on "Datasets" should contain "Version history:" value
     Then verify "Version_History_Model_Name" element visibility on "Datasets" wizard
-    Then "Version_History_Model_Name" element on "Datasets" should contains "cleaned_data" value
+    Then "Version_History_Model_Name" element on "Datasets" should contain "cleaned_data" value
     Then verify "Table_Refresh_Button" element visibility on "Datasets" wizard
     Then verify "Register_Dataset_Button" element visibility on "Datasets" wizard
     Then verify "Table_FilterBy_Button" element visibility on "Datasets" wizard
@@ -752,23 +744,23 @@ Feature: Datasets Page
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then click on "Register_Button" element on "Register_Dataset" wizard
     Then verify if "Confirm_Popup" popup dialog appears
-    Then "Title" element on "Confirm_Popup" should contains "Overwrite dataset?" value
+    Then "Title" element on "Confirm_Popup" should contain "Overwrite dataset?" value
     When click on "Overwrite_Button" element on "Confirm_Popup" wizard
     And wait load page
     When click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then "Version_Tag_Input_Placeholder" element on "Datasets_Info_Pane" should contains "Click to add" value
+    Then "Version_Tag_Input_Placeholder" element on "Datasets_Info_Pane" should contain "Click to add" value
     Then click on "Click_To_Add_Button" element on "Datasets_Info_Pane" wizard
     Then type value "latest123456" to "Version_tag_Input" field on "Datasets_Info_Pane" wizard
     Then click on "Apply_Button" element on "Datasets_Info_Pane" wizard
     Then click on "Apply_Changes_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
-    Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
+    Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contain "Datasets_Info_Pane"."Overview_General_Headers"
     Then check "latest123456" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
 
   @MLD
-  @smoke
+  @smoke @sanity
   Scenario: MLD019 - Check steps, buttons components on Train Model wizard
     Given open url
     And wait load page
@@ -779,67 +771,67 @@ Feature: Datasets Page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify "Train_Button" element visibility on "Datasets_Info_Pane" wizard
-    Then "Train_Button" element on "Datasets_Info_Pane" should contains "Train" value
+    Then "Train_Button" element on "Datasets_Info_Pane" should contain "Train" value
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
-    Then "Title" element on "Modal_Wizard_Form" should contains "Train Model" value
+    Then "Title" element on "Modal_Wizard_Form" should contain "Train Model" value
     Then verify "Cross_Close_Button" element visibility on "Modal_Wizard_Form" wizard
-    Then "Function_Title" element on "Modal_Wizard_Form" should contains "auto-trainer" value
-    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
+    Then "Function_Title" element on "Modal_Wizard_Form" should contain "auto-trainer" value
+    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contain "Run details" value
     Then "Hyperparameter_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
     Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
-    Then "Step_1_Button_text" element on "commonPagesHeader" should contains "Run details" value
+    Then "Step_1_Button_text" element on "commonPagesHeader" should contain "Run details" value
     Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
-    Then "Next_Button" element on "Modal_Wizard_Form" should contains "Next" value
+    Then "Next_Button" element on "Modal_Wizard_Form" should contain "Next" value
     Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
-    Then "Run_Training_Now_Button" element on "Modal_Wizard_Form" should contains "Run training now" value
+    Then "Run_Training_Now_Button" element on "Modal_Wizard_Form" should contain "Run training now" value
     Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
-    Then "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" should contains "Schedule training job" value
-    Then verify "Back_Button" element not exists on "Modal_Wizard_Form" wizard
+    Then "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" should contain "Schedule training job" value
+    Then verify "Back_Button" element does not exist on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-    Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data inputs" value
+    Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contain "Data inputs" value
     Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
-    Then "Step_2_Button_text" element on "commonPagesHeader" should contains "Data inputs" value
+    Then "Step_2_Button_text" element on "commonPagesHeader" should contain "Data inputs" value
     Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
-    Then "Back_Button" element on "Modal_Wizard_Form" should contains "Back" value
+    Then "Back_Button" element on "Modal_Wizard_Form" should contain "Back" value
     Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-    Then "Form_Header_Parameters" element on "commonPagesHeader" should contains "Parameters" value
+    Then "Form_Header_Parameters" element on "commonPagesHeader" should contain "Parameters" value
     Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
-    Then "Step_3_Button_text" element on "commonPagesHeader" should contains "Parameters" value
+    Then "Step_3_Button_text" element on "commonPagesHeader" should contain "Parameters" value
     Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-    Then "Form_Header_Resources" element on "commonPagesHeader" should contains "Resources" value
+    Then "Form_Header_Resources" element on "commonPagesHeader" should contain "Resources" value
     Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
-    Then "Step_4_Button_text" element on "commonPagesHeader" should contains "Resources" value
+    Then "Step_4_Button_text" element on "commonPagesHeader" should contain "Resources" value
     Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-    Then "Form_Header_Advanced" element on "commonPagesHeader" should contains "Advanced" value
+    Then "Form_Header_Advanced" element on "commonPagesHeader" should contain "Advanced" value
     Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
-    Then "Step_5_Button_text" element on "commonPagesHeader" should contains "Advanced" value
+    Then "Step_5_Button_text" element on "commonPagesHeader" should contain "Advanced" value
     Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is disabled
     Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
@@ -857,46 +849,53 @@ Feature: Datasets Page
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-    Then "Form_Header_Hyperparameter_Strategy" element on "commonPagesHeader" should contains "Hyperparameter strategy" value
+    Then "Form_Header_Hyperparameter_Strategy" element on "commonPagesHeader" should contain "Hyperparameter strategy" value
     Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_6_Button" element on "commonPagesHeader" wizard is enabled
-    Then "Step_4_Button_text" element on "commonPagesHeader" should contains "Hyperparameter strategy" value
+    Then "Step_4_Button_text" element on "commonPagesHeader" should contain "Hyperparameter strategy" value
     Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-    Then "Form_Header_Resources" element on "commonPagesHeader" should contains "Resources" value
+    Then "Form_Header_Resources" element on "commonPagesHeader" should contain "Resources" value
     Then verify "Step_6_Button" element on "commonPagesHeader" wizard is enabled
-    Then "Step_5_Button_text" element on "commonPagesHeader" should contains "Resources" value
+    Then "Step_5_Button_text" element on "commonPagesHeader" should contain "Resources" value
     Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-    Then "Form_Header_Advanced" element on "commonPagesHeader" should contains "Advanced" value
+    Then "Form_Header_Advanced" element on "commonPagesHeader" should contain "Advanced" value
     Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
-    Then "Step_6_Button_text" element on "commonPagesHeader" should contains "Advanced" value
+    Then "Step_6_Button_text" element on "commonPagesHeader" should contain "Advanced" value
     Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is disabled
     Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
     And click on "Step_1_Button" element on "commonPagesHeader" wizard
-    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
+    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contain "Run details" value
     And click on "Step_3_Button" element on "commonPagesHeader" wizard
-    Then "Form_Header_Parameters" element on "commonPagesHeader" should contains "Parameters" value
+    Then "Form_Header_Parameters" element on "commonPagesHeader" should contain "Parameters" value
     And click on "Step_4_Button" element on "commonPagesHeader" wizard
-    Then "Form_Header_Hyperparameter_Strategy" element on "commonPagesHeader" should contains "Hyperparameter strategy" value
+    Then "Form_Header_Hyperparameter_Strategy" element on "commonPagesHeader" should contain "Hyperparameter strategy" value
     And click on "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard
     Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is disabled
     Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is disabled
     Then verify data in "Parameters_Table" table on "Modal_Wizard_Form" wizard
             | name_verify           |         type_dropdown_verify         | value_verify |
             | model_class           |                str                   |              |
+            | label_columns         |  Optional[Union[str, List[str]]]     |              |
+            | drop_columns          |              List[str]               |              |
+            | model_name            |                str                   |     model    |
+            | tag                   |                str                   |              |
+            | train_test_split_size |                float                 |              |
+            | random_state          |                int                   |              |
+            | labels                |                dict                  |              |
 
   @MLD
   @smoke
@@ -911,19 +910,19 @@ Feature: Datasets Page
     And wait load page
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
+    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contain "Run details" value
     Then "Hyperparameter_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
     Then verify "Run_Name_Input" element visibility on "Modal_Wizard_Form" wizard
     Then type value "/" to "Run_Name_Input" field on "Modal_Wizard_Form" wizard
     Then verify "Run_Name_Input" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Run_Name_Hint"
     Then verify "Version_Tag_Dropdown" element on "Modal_Wizard_Form" wizard is disabled by class name
     Then verify "Handler_Dropdown" element visibility on "Modal_Wizard_Form" wizard
-    Then verify "Handler_Dropdown" dropdown element on "Modal_Wizard_Form" wizard should contains "Common_Lists"."Handler_List"
+    Then verify "Handler_Dropdown" dropdown element on "Modal_Wizard_Form" wizard should contain "Common_Lists"."Handler_List"
     Then verify "Labels_Table" element visibility on "Modal_Wizard_Form" wizard
     And click on "Add_Label_Button" element on "Modal_Wizard_Form" wizard
     Then type value "/" to "Run_Details_Labels_Key" field on "Modal_Wizard_Form" wizard
     Then verify labels warning should display options "Input_Hint"."Labels_Warning_Key_Modal_Wizard_Form"
-    Then type value "/" to "Run_Details_Labels_Value" field on "Modal_Wizard_Form" wizard without inputgroup
+    Then type value "/" to "Run_Details_Labels_Value" field on "Modal_Wizard_Form" wizard without input group
     When click on "Title" element on "Modal_Wizard_Form" wizard
     And click on "Close_Label_Button" element on "Modal_Wizard_Form" wizard   
     When add rows to "Labels_Table" table on "Modal_Wizard_Form" wizard
@@ -939,7 +938,7 @@ Feature: Datasets Page
     Then verify "Image_Name_Input_Run_Details" element visibility on "Modal_Wizard_Form" wizard
     Then type value "" to "Image_Name_Input_Run_Details" field on "Modal_Wizard_Form" wizard
     Then verify "Image_Name_Input_Run_Details" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
-    Then "Image_Name_Text_Run_Details" component on "Modal_Wizard_Form" should contains "Modal_Wizard_Form"."Image_Name_Text"
+    Then "Image_Name_Text_Run_Details" component on "Modal_Wizard_Form" should contain "Modal_Wizard_Form"."Image_Name_Text"
 
   @MLD
   @smoke
@@ -954,10 +953,10 @@ Feature: Datasets Page
     And wait load page
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
+    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contain "Run details" value
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-    Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data inputs" value
-    Then verify "Data_Inputs_Headers" on "Modal_Wizard_Form" wizard should contains "Modal_Wizard_Form"."Data_Inputs_Table_Header"
+    Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contain "Data inputs" value
+    Then verify "Data_Inputs_Headers" on "Modal_Wizard_Form" wizard should contain "Modal_Wizard_Form"."Data_Inputs_Table_Header"
     Then verify data in "Data_Inputs_Table" table on "Modal_Wizard_Form" wizard
             | name_verify |                     path_verify                       |      
             | dataset     | store://datasets/default/test_new_structure2#0:latest | 
@@ -1008,11 +1007,11 @@ Feature: Datasets Page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
+    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contain "Run details" value
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-    Then "Form_Header_Parameters" element on "commonPagesHeader" should contains "Parameters" value
-    Then verify "Parameters_Headers" on "Modal_Wizard_Form" wizard should contains "Modal_Wizard_Form"."Parameters_Table_Header"
+    Then "Form_Header_Parameters" element on "commonPagesHeader" should contain "Parameters" value
+    Then verify "Parameters_Headers" on "Modal_Wizard_Form" wizard should contain "Modal_Wizard_Form"."Parameters_Table_Header"
     Then verify data in "Parameters_Table" table on "Modal_Wizard_Form" wizard
             | name_verify           |         type_dropdown_verify         | value_verify |
             | model_class           |                str                   |              |
@@ -1076,8 +1075,6 @@ Feature: Datasets Page
   Scenario: MLD023 - Check Resources components on Train Model wizard
     Given open url
     And wait load page
-    Then turn Off MLRun CE mode
-    And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And select "Datasets" item in sidebar menu
@@ -1085,15 +1082,15 @@ Feature: Datasets Page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
+    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contain "Run details" value
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-    Then "Form_Header_Resources" element on "commonPagesHeader" should contains "Resources" value
+    Then "Form_Header_Resources" element on "commonPagesHeader" should contain "Resources" value
     Then verify "Pods_Priority_Dropdown" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then verify "Pods_Priority_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Common_Lists"."Pods_Priority_List"
+    Then verify "Pods_Priority_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contain "Common_Lists"."Pods_Priority_List"
     Then verify "Node_Selection_Subheader" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then "Node_Selection_Subheader" element in "Resources_Accordion" on "Modal_Wizard_Form" should contains "Node selection" value
+    Then "Node_Selection_Subheader" element in "Resources_Accordion" on "Modal_Wizard_Form" should contain "Node selection" value
     When add data rows to "Resources_Node_Selector_Table" key-value table in "Resources_Accordion" on "Modal_Wizard_Form" wizard
             | key_input | value_input |
             | key1      | value1      |
@@ -1121,8 +1118,8 @@ Feature: Datasets Page
             | key        | value        |
             | key2edited | value2edited |
             | key4       | value4       |
-    Then verify "Memory_Request_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
-    Then verify "Memory_Limit_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
+    Then verify "Memory_Request_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contain "Dropdown_Options"."Memory_Unit_Options"
+    Then verify "Memory_Limit_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contain "Dropdown_Options"."Memory_Unit_Options"
     Then type value "0" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
     Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Minimum_Value_Warning"
     Then type value "1" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
@@ -1140,8 +1137,8 @@ Feature: Datasets Page
     Then select "GB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "Modal_Wizard_Form" wizard
     Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Limit_Number_Warning"
     Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Request_Number_Warning"
-    Then verify "CPU_Request_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
-    Then verify "CPU_Limit_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
+    Then verify "CPU_Request_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contain "Dropdown_Options"."CPU_Unit_Options"
+    Then verify "CPU_Limit_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contain "Dropdown_Options"."CPU_Unit_Options"
     Then select "millicpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "Modal_Wizard_Form" wizard
     Then select "millicpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "Modal_Wizard_Form" wizard
     Then type value "0" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
@@ -1152,29 +1149,29 @@ Feature: Datasets Page
     Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Request_Number_Warning" 
     Then type value "0" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
     Then verify "GPU_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Minimum_Value_Warning"
-    Then verify "Memory_Request_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
+    Then verify "Memory_Request_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contain "Dropdown_Options"."Memory_Unit_Options"
     Then type value "1" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then increase value on 15 points in "Memory_Request_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then decrease value on 15 points in "Memory_Request_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then verify "Memory_Limit_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
+    Then increase value by 15 points in "Memory_Request_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then decrease value by 15 points in "Memory_Request_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "Memory_Limit_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contain "Dropdown_Options"."Memory_Unit_Options"
     Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then increase value on 15 points in "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then decrease value on 15 points in "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then verify "CPU_Request_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
+    Then increase value by 15 points in "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then decrease value by 15 points in "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "CPU_Request_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contain "Dropdown_Options"."CPU_Unit_Options"
     Then type value "3" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then increase value on 15 points in "CPU_Request_Number_Input" field with "millicpu" on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then decrease value on 15 points in "CPU_Request_Number_Input" field with "millicpu" on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then increase value by 15 points in "CPU_Request_Number_Input" field with "millicpu" on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then decrease value by 15 points in "CPU_Request_Number_Input" field with "millicpu" on "Resources_Accordion" on "Modal_Wizard_Form" wizard
     Then select "cpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then verify "CPU_Request_Number_Input" input should contains "0.003" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then verify "CPU_Limit_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
+    Then verify "CPU_Request_Number_Input" input should contain "0.003" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "CPU_Limit_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contain "Dropdown_Options"."CPU_Unit_Options"
     Then type value "4" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then increase value on 15 points in "CPU_Limit_Number_Input" field with "millicpu" on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then decrease value on 15 points in "CPU_Limit_Number_Input" field with "millicpu" on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then increase value by 15 points in "CPU_Limit_Number_Input" field with "millicpu" on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then decrease value by 15 points in "CPU_Limit_Number_Input" field with "millicpu" on "Resources_Accordion" on "Modal_Wizard_Form" wizard
     Then select "cpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then verify "CPU_Limit_Number_Input" input should contains "0.004" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "CPU_Limit_Number_Input" input should contain "0.004" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
     Then type value "5" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then increase value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then decrease value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then increase value by 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then decrease value by 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
     Then verify "Volumes_Subheader" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Label_Hint"."New_Job_Volumes"
     When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button |
@@ -1204,11 +1201,11 @@ Feature: Datasets Page
     Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Mount_Path_Hint"
     When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
     When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
-            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Claime_Name_Input | Add_New_Row_Button |
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Claim_Name_Input | Add_New_Row_Button |
             |               PVC                |                                      |                               |                                      |         yes        |
     Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
     Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Claime_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Claim_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
     Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Mount_Path_Hint"
     When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
 
@@ -1265,13 +1262,13 @@ Feature: Datasets Page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
+    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contain "Run details" value
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-    Then "Form_Header_Advanced" element on "commonPagesHeader" should contains "Advanced" value
-    Then "Accordion_Advanced_Subheader" element on "Modal_Wizard_Form" should contains "Environment variables" value
+    Then "Form_Header_Advanced" element on "commonPagesHeader" should contain "Advanced" value
+    Then "Accordion_Advanced_Subheader" element on "Modal_Wizard_Form" should contain "Environment variables" value
     Then verify "Advanced_Environment_Variables_Table" element visibility on "Modal_Wizard_Form" wizard 
     When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
             | name_input | type_dropdown | value_input |
@@ -1346,14 +1343,14 @@ Feature: Datasets Page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run details" value
+    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contain "Run details" value
     Then check "Hyperparameter_Checkbox" element on "Modal_Wizard_Form" wizard
     Then "Hyperparameter_Checkbox" element should be checked on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-    Then "Form_Header_Hyperparameter_Strategy" element on "commonPagesHeader" should contains "Hyperparameter strategy" value
-    Then verify "Strategy_Dropdown" element in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."Hyperparameter_Strategy_Options"
+    Then "Form_Header_Hyperparameter_Strategy" element on "commonPagesHeader" should contain "Hyperparameter strategy" value
+    Then verify "Strategy_Dropdown" element in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard should contain "Dropdown_Options"."Hyperparameter_Strategy_Options"
     Then verify "Strategy_Dropdown" dropdown in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard selected option value "List"
     Then verify "Max_Iterations" element in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard is disabled by class name
     Then verify "Max_Errors" element in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard is disabled by class name
@@ -1365,15 +1362,15 @@ Feature: Datasets Page
     Then verify "Strategy_Dropdown" dropdown in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard selected option value "Random"
     Then verify "Max_Iterations" element in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard is enabled by class name
     Then verify "Max_Errors" element in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard is enabled by class name
-    Then "Ranking_Subheader" element on "Modal_Wizard_Form" should contains "Ranking" value
+    Then "Ranking_Subheader" element on "Modal_Wizard_Form" should contain "Ranking" value
     When type value "ordinal" to "Ranking_Result_Input" field on "Modal_Wizard_Form" wizard
-    Then verify "Ranking_Criteria_Dropdown" dropdown element on "Modal_Wizard_Form" wizard should contains "Common_Lists"."Ranking_Criteria_List"
-    Then "Stop_Condition_Subheader" element on "Modal_Wizard_Form" should contains "Stop condition" value
+    Then verify "Ranking_Criteria_Dropdown" dropdown element on "Modal_Wizard_Form" wizard should contain "Common_Lists"."Ranking_Criteria_List"
+    Then "Stop_Condition_Subheader" element on "Modal_Wizard_Form" should contain "Stop condition" value
     When type value "dbutils.notebook.exit()" to "Stop_Condition_Input" field on "Modal_Wizard_Form" wizard
-    Then "Parallelism_Subheader" element on "Modal_Wizard_Form" should contains "Parallelism" value
+    Then "Parallelism_Subheader" element on "Modal_Wizard_Form" should contain "Parallelism" value
     Then type value "5" to "Parallel_Runs_Number_Input" field on "Modal_Wizard_Form" wizard
-    Then increase value on 4 points in "Parallel_Runs_Number_Input" field on "Modal_Wizard_Form" wizard
-    Then decrease value on 4 points in "Parallel_Runs_Number_Input" field on "Modal_Wizard_Form" wizard
+    Then increase value by 4 points in "Parallel_Runs_Number_Input" field on "Modal_Wizard_Form" wizard
+    Then decrease value by 4 points in "Parallel_Runs_Number_Input" field on "Modal_Wizard_Form" wizard
     When type value "cluster.dashboard_link" to "Dask_Clutter_URL_Input" field on "Modal_Wizard_Form" wizard
     Then "Teardown_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
     Then check "Teardown_Checkbox" element on "Modal_Wizard_Form" wizard
@@ -1391,11 +1388,11 @@ Feature: Datasets Page
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     When click on cell with value "test-regressor_cox-test-summary" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contain "Datasets_Info_Pane"."Tab_List"
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
-    Then check "expand_btn" not presented in "Datasets_Table" on "Datasets" wizard
+    Then check "expand_btn" not present in "Datasets_Table" on "Datasets" wizard
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on cell with value "test-regressor_cox-test-summary" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
@@ -1407,7 +1404,7 @@ Feature: Datasets Page
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on cell with value "survival-curves_coxhazard-summary" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contain "Datasets_Info_Pane"."Tab_List"
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
@@ -1427,7 +1424,7 @@ Feature: Datasets Page
     Then click on "show_all_versions" option on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column with scroll "false"
     And wait load page
     Then verify "History_Back_Button" element visibility on "Datasets" wizard
-    Then "Version_History_Model_Name" element on "Datasets" should contains "test-regressor_cox-test-summary" value
+    Then "Version_History_Model_Name" element on "Datasets" should contain "test-regressor_cox-test-summary" value
     Then verify "Register_Dataset_Button" element visibility on "Datasets" wizard
     Then click on "Register_Dataset_Button" element on "Datasets" wizard
     Then verify if "Register_Dataset" popup dialog appears
@@ -1436,48 +1433,48 @@ Feature: Datasets Page
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then click on "Register_Button" element on "Register_Dataset" wizard
     Then verify if "Confirm_Popup" popup dialog appears
-    Then "Title" element on "Confirm_Popup" should contains "Overwrite dataset?" value
+    Then "Title" element on "Confirm_Popup" should contain "Overwrite dataset?" value
     When click on "Overwrite_Button" element on "Confirm_Popup" wizard
     And wait load page
-    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
     And wait load page
-    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Register dataset initiated successfully" value
+    Then "Notification_Popup" element on "Notification_Popup" should contain "Register dataset initiated successfully" value
     And wait load page
-    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
     Then click on "History_Back_Button" element on "Datasets" wizard
     And wait load page
     Then click on cell with value "test-regressor_cox-test-summary" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then "Header" element on "Datasets_Info_Pane" should contains "test-regressor_cox-test-summary" value
+    Then "Header" element on "Datasets_Info_Pane" should contain "test-regressor_cox-test-summary" value
     Then verify "Not_In_Filtered_List_Message" element visibility on "Datasets_Info_Pane" wizard
     Then "Not_In_Filtered_List_Message" component on "Datasets_Info_Pane" should be equal "Datasets_Info_Pane"."Info_Banner_Message"
     Then click on "Full_View_Button" element on "Datasets_Info_Pane" wizard
-    Then verify "Cross_Close_Button" element not exists on "Datasets_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element does not exist on "Datasets_Info_Pane" wizard
     Then verify "Header_Full_View" element visibility on "Datasets_Info_Pane" wizard
-    Then "Header_Full_View" element on "Datasets_Info_Pane" should contains "test-regressor_cox-test-summary" value
+    Then "Header_Full_View" element on "Datasets_Info_Pane" should contain "test-regressor_cox-test-summary" value
     Then verify "Not_In_Filtered_List_Message" element visibility on "Datasets_Info_Pane" wizard
     Then "Not_In_Filtered_List_Message" component on "Datasets_Info_Pane" should be equal "Datasets_Info_Pane"."Info_Banner_Message"
     Then click on "Refresh_Button_Full_View" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then verify "Not_In_Filtered_List_Message" element visibility on "Datasets_Info_Pane" wizard
     Then "Not_In_Filtered_List_Message" component on "Datasets_Info_Pane" should be equal "Datasets_Info_Pane"."Info_Banner_Message"
-    Then click on "Tabel_View_Button" element on "Datasets_Info_Pane" wizard
+    Then click on "Table_View_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
-    Then "Header" element on "Datasets_Info_Pane" should contains "test-regressor_cox-test-summary" value
+    Then "Header" element on "Datasets_Info_Pane" should contain "test-regressor_cox-test-summary" value
     Then verify "Not_In_Filtered_List_Message" element visibility on "Datasets_Info_Pane" wizard
     Then "Not_In_Filtered_List_Message" component on "Datasets_Info_Pane" should be equal "Datasets_Info_Pane"."Info_Banner_Message"
     Then click on "Table_Refresh_Button" element on "Datasets" wizard
     And wait load page
-    Then "Header" element on "Datasets_Info_Pane" should contains "test-regressor_cox-test-summary" value
-    Then verify "Not_In_Filtered_List_Message" element not exists on "Datasets_Info_Pane" wizard
+    Then "Header" element on "Datasets_Info_Pane" should contain "test-regressor_cox-test-summary" value
+    Then verify "Not_In_Filtered_List_Message" element does not exist on "Datasets_Info_Pane" wizard
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then verify "Datasets_Table" element visibility on "Datasets" wizard
 
   @MLD
-  @smoke
+  @smoke @sanity
   Scenario: MLD028 - Verify the Delete option in Datasets table, details panel, full view action menu 
     Given open url
     And wait load page
@@ -1485,38 +1482,37 @@ Feature: Datasets Page
     And wait load page
     And select "Datasets" item in sidebar menu
     And wait load page
-    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column should contain "Common_Lists"."Action_Menu_List"
     Then select "Delete" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "test-regressor_cox-test-summary" value in "name" column
     And wait load page
     Then verify if "Delete_Artifact_Popup" popup dialog appears
     Then verify "Delete_Artifact_Popup" element visibility on "Datasets" wizard
     Then verify "Close_Button" element visibility on "Delete_Artifact_Popup" wizard
     Then verify "Title" element visibility on "Delete_Artifact_Popup" wizard
-    Then "Title" element on "Delete_Artifact_Popup" should contains "Delete dataset?" value
+    Then "Title" element on "Delete_Artifact_Popup" should contain "Delete dataset?" value
     Then verify "Dialog_Message" element visibility on "Delete_Artifact_Popup" wizard
-    Then "Dialog_Message" element on "Delete_Artifact_Popup" should contains "Do you want to delete the dataset \"test-regressor_cox-test-summary\"? Deleted datasets can not be restored." value
+    Then "Dialog_Message" element on "Delete_Artifact_Popup" should contain "Do you want to delete the dataset \"test-regressor_cox-test-summary\"? Deleted datasets can not be restored." value
     Then verify "Cancel_Button" element visibility on "Delete_Artifact_Popup" wizard
-    Then "Cancel_Button" element on "Delete_Artifact_Popup" should contains "Cancel" value
+    Then "Cancel_Button" element on "Delete_Artifact_Popup" should contain "Cancel" value
     Then verify "Delete_Button" element visibility on "Delete_Artifact_Popup" wizard
-    Then "Delete_Button" element on "Delete_Artifact_Popup" should contains "Delete" value
+    Then "Delete_Button" element on "Delete_Artifact_Popup" should contain "Delete" value
     Then click on "Cancel_Button" element on "Delete_Artifact_Popup" wizard
-    Then verify "Delete_Artifact_Popup" element not exists on "Datasets" wizard
+    Then verify "Delete_Artifact_Popup" element does not exist on "Datasets" wizard
     Then select "Delete" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "test-regressor_cox-test-summary" value in "name" column
     And wait load page
     Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
     And wait load page
-    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
     And wait load page
+    Then "Notification_Popup" element on "Notification_Popup" should contain "Dataset is successfully deleted" value
     And wait load page
-    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Dataset is successfully deleted" value
-    And wait load page
-    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
     Then check "test-regressor_cox-test-summary" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
-    Then "Header" element on "Datasets_Info_Pane" should contains "survival-curves_coxhazard-summary" value
+    Then "Header" element on "Datasets_Info_Pane" should contain "survival-curves_coxhazard-summary" value
     Then verify "Action_Menu" element visibility on "Datasets_Info_Pane" wizard
     Then select "Delete" option in action menu on "Datasets_Info_Pane" wizard
     And wait load page
@@ -1524,37 +1520,36 @@ Feature: Datasets Page
     Then verify "Delete_Artifact_Popup" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Close_Button" element visibility on "Delete_Artifact_Popup" wizard
     Then verify "Title" element visibility on "Delete_Artifact_Popup" wizard
-    Then "Title" element on "Delete_Artifact_Popup" should contains "Delete dataset?" value
+    Then "Title" element on "Delete_Artifact_Popup" should contain "Delete dataset?" value
     Then verify "Dialog_Message" element visibility on "Delete_Artifact_Popup" wizard
-    Then "Dialog_Message" element on "Delete_Artifact_Popup" should contains "Do you want to delete the dataset \"survival-curves_coxhazard-summary\"? Deleted datasets can not be restored." value
+    Then "Dialog_Message" element on "Delete_Artifact_Popup" should contain "Do you want to delete the dataset \"survival-curves_coxhazard-summary\"? Deleted datasets can not be restored." value
     Then verify "Cancel_Button" element visibility on "Delete_Artifact_Popup" wizard
-    Then "Cancel_Button" element on "Delete_Artifact_Popup" should contains "Cancel" value
+    Then "Cancel_Button" element on "Delete_Artifact_Popup" should contain "Cancel" value
     Then verify "Delete_Button" element visibility on "Delete_Artifact_Popup" wizard
-    Then "Delete_Button" element on "Delete_Artifact_Popup" should contains "Delete" value
+    Then "Delete_Button" element on "Delete_Artifact_Popup" should contain "Delete" value
     Then click on "Cancel_Button" element on "Delete_Artifact_Popup" wizard
-    Then verify "Delete_Artifact_Popup" element not exists on "Datasets_Info_Pane" wizard
+    Then verify "Delete_Artifact_Popup" element does not exist on "Datasets_Info_Pane" wizard
     Then select "Delete" option in action menu on "Datasets_Info_Pane" wizard
     And wait load page
     Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
     And wait load page
-    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
     And wait load page
+    Then "Notification_Popup" element on "Notification_Popup" should contain "Dataset is successfully deleted" value
     And wait load page
-    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Dataset is successfully deleted" value
-    And wait load page
-    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
     Then check "survival-curves_coxhazard-summary" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then click on cell with value "iris_gen_iris_dataset" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
-    Then "Header" element on "Datasets_Info_Pane" should contains "iris_gen_iris_dataset" value
+    Then "Header" element on "Datasets_Info_Pane" should contain "iris_gen_iris_dataset" value
     Then click on "Full_View_Button" element on "Datasets_Info_Pane" wizard
-    Then verify "Cross_Close_Button" element not exists on "Datasets_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element does not exist on "Datasets_Info_Pane" wizard
     Then verify "Header_Full_View" element visibility on "Datasets_Info_Pane" wizard
-    Then "Header_Full_View" element on "Datasets_Info_Pane" should contains "iris_gen_iris_dataset" value
+    Then "Header_Full_View" element on "Datasets_Info_Pane" should contain "iris_gen_iris_dataset" value
     Then verify "Action_Menu_Full_View" element visibility on "Datasets_Info_Pane" wizard
-    Then verify "Action_Menu_Full_View" dropdown element on "Datasets_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
+    Then verify "Action_Menu_Full_View" dropdown element on "Datasets_Info_Pane" wizard should contain "Common_Lists"."Action_Menu_List"
     Then click on "Header_Full_View" element on "Datasets_Info_Pane" wizard
     Then select "Delete" option in full view action menu on "Datasets_Info_Pane" wizard
     And wait load page
@@ -1562,24 +1557,22 @@ Feature: Datasets Page
     Then verify "Delete_Artifact_Popup" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Close_Button" element visibility on "Delete_Artifact_Popup" wizard
     Then verify "Title" element visibility on "Delete_Artifact_Popup" wizard
-    Then "Title" element on "Delete_Artifact_Popup" should contains "Delete dataset?" value
+    Then "Title" element on "Delete_Artifact_Popup" should contain "Delete dataset?" value
     Then verify "Dialog_Message" element visibility on "Delete_Artifact_Popup" wizard
-    Then "Dialog_Message" element on "Delete_Artifact_Popup" should contains "Do you want to delete the dataset \"iris_gen_iris_dataset\"? Deleted datasets can not be restored." value
+    Then "Dialog_Message" element on "Delete_Artifact_Popup" should contain "Do you want to delete the dataset \"iris_gen_iris_dataset\"? Deleted datasets can not be restored." value
     Then verify "Cancel_Button" element visibility on "Delete_Artifact_Popup" wizard
-    Then "Cancel_Button" element on "Delete_Artifact_Popup" should contains "Cancel" value
+    Then "Cancel_Button" element on "Delete_Artifact_Popup" should contain "Cancel" value
     Then verify "Delete_Button" element visibility on "Delete_Artifact_Popup" wizard
-    Then "Delete_Button" element on "Delete_Artifact_Popup" should contains "Delete" value
+    Then "Delete_Button" element on "Delete_Artifact_Popup" should contain "Delete" value
     Then click on "Cancel_Button" element on "Delete_Artifact_Popup" wizard
-    Then verify "Delete_Artifact_Popup" element not exists on "Datasets_Info_Pane" wizard
+    Then verify "Delete_Artifact_Popup" element does not exist on "Datasets_Info_Pane" wizard
     Then select "Delete" option in full view action menu on "Datasets_Info_Pane" wizard
     And wait load page
     Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
-    Then wait for 4 seconds
-    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then verify "Notification_Popup" element visibility on "Notification_Popup" wizard
     And wait load page
+    Then "Notification_Popup" element on "Notification_Popup" should contain "Dataset is successfully deleted" value
     And wait load page
-    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Dataset is successfully deleted" value
-    And wait load page
-    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then verify "Notification_Popup_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Popup_Cross_Close_Button" element on "Notification_Popup" wizard
     Then check "iris_gen_iris_dataset" value not in "name" column in "Datasets_Table" table on "Datasets" wizard

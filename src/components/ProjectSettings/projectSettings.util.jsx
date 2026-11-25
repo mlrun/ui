@@ -78,6 +78,12 @@ const addMember = (members, name, id, type, initialRole, role) => {
   })
 }
 
+export const getMemberDisplayName = ({ name, id }) => {
+  const formattedName = (name ?? '').trim().replace(/^\//, '').replaceAll('/', ' / ')
+
+  return formattedName || id || ''
+}
+
 const generateMembersMF = (policiesResponse, membersDispatch) => {
   const members = []
   const memberSet = new Set()
@@ -114,7 +120,7 @@ const generateMembersMF = (policiesResponse, membersDispatch) => {
 
       addMember(
         members,
-        assignedMember.id,
+        getMemberDisplayName(assignedMember),
         assignedMember.id,
         memberType,
         effectiveRole,
@@ -226,7 +232,7 @@ export const isProjectMembersTabShown = (
             member.role === ADMIN_ROLE &&
             (member.id === activeUsername ||
               (member.type === USER_GROUP_ROLE &&
-                activeUser.data?.attributes?.user_group_names?.has(member.id)))
+                activeUser.data?.attributes?.user_group_ids?.has(member.id)))
         )
       })()
     : members.some(

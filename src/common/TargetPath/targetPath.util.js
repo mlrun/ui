@@ -143,9 +143,7 @@ export const handleStoreInputPathChange = (targetPathState, setTargetPathState, 
     projectItemRef => projectItemRef.id === projectItemReference
   )
   const isInputStorePathTypeValid = storePathTypes.some(type => type.id.startsWith(pathItems[0]))
-
-  setTargetPathState(prev => ({
-    ...prev,
+  const storeInputPathState = {
     artifacts:
       isNil(pathItems[2]) && targetPathState.artifacts.length > 0 ? [] : targetPathState.artifacts,
     artifactsReferences: projectItemReference ? targetPathState.artifactsReferences : [],
@@ -162,7 +160,14 @@ export const handleStoreInputPathChange = (targetPathState, setTargetPathState, 
     projectItem: projectItem ?? targetPathState.projectItem,
     projectItemReference: projectItemReference ?? targetPathState.projectItemReference,
     storePathType: pathItems[0] ?? targetPathState.storePathType
+  }
+
+  setTargetPathState(prev => ({
+    ...prev,
+    ...storeInputPathState
   }))
+
+  return storeInputPathState
 }
 
 export const getTargetPathOptions = hiddenOptionsIds => [

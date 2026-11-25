@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { By } from 'selenium-webdriver'
 import inputGroup from '../components/input-group.component.js'
 import { generateInputGroup, generateDropdownGroup } from '../../common-tools/common-tools.js'
 import dropdownComponent from '../components/dropdown.component.js'
@@ -91,10 +90,8 @@ export default {
         true
       )
     ),
-    Table_Refresh_Button: By.css(
-      '.content .content__action-bar-wrapper [data-testid="refresh"]'
-    ),
+    Table_Refresh_Button: '.content .content__action-bar-wrapper [data-testid="refresh"]',
     Documents_Table: commonTable(documentsTable),
-    Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn"]')
+    Table_FilterBy_Button: '[data-testid="filter-menu-btn"]'
   }
 }

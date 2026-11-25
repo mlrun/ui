@@ -50,8 +50,6 @@ SmartHandle.propTypes = {
   type: PropTypes.string.isRequired
 }
 
-export default SmartHandle
-
 export const SourceHandleComponent = ({ cycleTo, nodeId, ...props }) => {
   if (cycleTo) {
     return <SmartHandle {...props} nodeId={nodeId} />

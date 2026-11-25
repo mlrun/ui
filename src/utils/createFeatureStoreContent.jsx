@@ -36,18 +36,6 @@ import Stream from 'igz-controls/images/stream.svg?react'
 import TsdbIcon from 'igz-controls/images/tsdb-icon.svg?react'
 import DbIcon from 'igz-controls/images/db-icon.svg?react'
 
-export const createFeatureStoreContent = (content, pageTab, project, isTablePanelOpen) => {
-  return content.map(contentItem => {
-    if (pageTab === FEATURE_SETS_TAB) {
-      return createFeatureSetsRowData(contentItem, project, pageTab)
-    } else if (pageTab === FEATURE_VECTORS_TAB) {
-      return createFeatureVectorsRowData(contentItem, pageTab, project)
-    }
-
-    return createFeaturesRowData(contentItem, isTablePanelOpen)
-  })
-}
-
 export const createFeatureSetsRowData = (featureSet, project, pageTab, showExpandButton) => {
   return {
     data: {

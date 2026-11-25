@@ -20,10 +20,6 @@ such restriction.
 
 import localStorageService from './localStorageService'
 
-export const isDemoMode = search => {
-  return new URLSearchParams(search).get('demo')?.toLowerCase() === 'true'
-}
-
 export const getUrlMode = search => {
   return new URLSearchParams(search).get('mode')?.toLowerCase()
 }

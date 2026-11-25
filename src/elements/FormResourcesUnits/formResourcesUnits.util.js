@@ -85,10 +85,6 @@ export const getMemoryData = (currentMemory, defaultMemory) => {
   return [memory, memoryUnitId]
 }
 
-export const getMemoryUnit = unitId => {
-  return selectUnitOptions.unitMemory.find(option => option.id === unitId)?.unit ?? ''
-}
-
 export const getCpuData = (currentCpu, defaultCpu) => {
   let cpu = ''
   let cpuUnit = ''
@@ -109,10 +105,6 @@ export const getCpuData = (currentCpu, defaultCpu) => {
   }
 
   return [cpu, cpuUnitId]
-}
-
-export const getCpuUnit = unitId => {
-  return selectUnitOptions.unitCpu.find(option => option.id === unitId)?.unit ?? ''
 }
 
 export const generateMemoryWithUnit = (memoryValue, memoryUnitId) => {

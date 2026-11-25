@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isEqual, keyBy } from 'lodash-es'
+import { castArray, isEqual, keyBy } from 'lodash-es'
 import {
   ADD_TO_FEATURE_VECTOR_TAB,
   ALERTS_PAGE,
@@ -228,7 +228,8 @@ const getVisibleFilterTypes = (filtersConfig, filters, filtersStore) => {
       filters[PROJECT_FILTER] &&
       !isEqual(filters[PROJECT_FILTER], PROJECTS_FILTER_ALL_ITEMS)
     const isSeverityVisible = type === SEVERITY && !isEqual(filters[SEVERITY], [FILTER_ALL_ITEMS])
-    const isTypeVisible = type === TYPE_FILTER && !isEqual(filters[TYPE_FILTER], FILTER_ALL_ITEMS)
+    const isTypeVisible =
+      type === TYPE_FILTER && !isEqual(castArray(filters[TYPE_FILTER]), [FILTER_ALL_ITEMS])
     const isDateVisible =
       (type === DATE_RANGE_TIME_FILTER &&
         !isEqual(filters[DATES_FILTER]?.value, DATE_FILTER_ANY_TIME)) ||

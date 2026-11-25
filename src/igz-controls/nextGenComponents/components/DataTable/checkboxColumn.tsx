@@ -5,10 +5,7 @@ import { DATATABLE_TEXT } from '../../constants'
 
 import type { DataTableFeatures } from './dataTableFeatures'
 
-export const createCheckboxColumn = <TData extends RowData>(): ColumnDef<
-  DataTableFeatures,
-  TData
-> => ({
+const createCheckboxColumn = <TData extends RowData>(): ColumnDef<DataTableFeatures, TData> => ({
   id: DATATABLE_TEXT.CHECKBOX_COLUMN_ID,
   header: ({ table }) => (
     <Checkbox

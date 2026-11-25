@@ -25,6 +25,7 @@ import { debounce } from 'lodash-es'
 
 import Input from '../../common/Input/Input'
 import { Button, PopUpDialog } from 'igz-controls/components'
+import { HighlightedText } from 'igz-controls/elements'
 
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import {
@@ -280,14 +281,9 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
                           }
                         }}
                       >
-                        <span
-                          className="member-name"
-                          dangerouslySetInnerHTML={{
-                            __html: member.label.replace(new RegExp(searchValue, 'gi'), match =>
-                              match ? `<b>${match}</b>` : match
-                            )
-                          }}
-                        />
+                        <span className="member-name">
+                          <HighlightedText text={member.label} highlight={searchValue} />
+                        </span>
                         <span className="member-role">{member.role}</span>
                       </div>
                     )
