@@ -30,6 +30,7 @@ import { Button, ConfirmDialog, Loader } from 'igz-controls/components'
 
 import {
   generateMembers,
+  isActiveUserProjectMember,
   isProjectMembersTabShown,
   page,
   tabs,
@@ -96,7 +97,9 @@ const ProjectSettings = () => {
   const fetchProjectPolicies = useCallback(() => {
     return projectsIguazioApi
       .getProjectPolicies(params.projectName)
-      .then(policiesResponse => generateMembers(policiesResponse, membersDispatch))
+      .then(policiesResponse =>
+        generateMembers(policiesResponse, membersDispatch, params.projectName)
+      )
       .catch(error => {
         showErrorNotification(dispatch, error, 'Failed to fetch project members')
         throw error
@@ -361,23 +364,28 @@ const ProjectSettings = () => {
         fetchJob()
       }
 
+  // Never rejects: a failed refresh is reported here, not as a failed owner change.
   const changeOwnerCallback = () => {
     if (IS_MF_MODE) {
-      const prevOwnerUsername = membersState.projectInfo.owner.username
-
-      return fetchProjectPolicies().then(() => {
-        if (!membersState.members.some(member => member.id === prevOwnerUsername)) {
-          navigate('/projects/')
-        }
-      })
+      // Leave only when the active user has no role left, whatever role the previous owner gets.
+      // fetchProjectPolicies reports its own failure.
+      return fetchProjectPolicies()
+        .then(members => {
+          if (!userIsSystemAdmin && !isActiveUserProjectMember(membersState.activeUser, members)) {
+            navigate('/projects/')
+          }
+        })
+        .catch(() => {})
     } else {
       const prevOwner = membersState.projectInfo.owner.id
 
-      return fetchProjectIdAndOwner().then(() => {
-        if (!membersState.users.some(member => member.id === prevOwner)) {
-          navigate('/projects/')
-        }
-      })
+      return fetchProjectIdAndOwner()
+        .then(() => {
+          if (!membersState.users.some(member => member.id === prevOwner)) {
+            navigate('/projects/')
+          }
+        })
+        .catch(error => showErrorNotification(dispatch, error, 'Failed to refresh project data'))
     }
   }
 

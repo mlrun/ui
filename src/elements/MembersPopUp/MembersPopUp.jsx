@@ -33,12 +33,17 @@ import { TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
-import { getRoleOptions, initialNewMembersRole, DELETE_MODIFICATION } from './membersPopUp.util'
+import {
+  buildProjectMembershipMF,
+  getRoleOptions,
+  initialNewMembersRole,
+  DELETE_MODIFICATION
+} from './membersPopUp.util'
 import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
 import { membersActions } from './membersReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
-import { IS_MF_MODE, OWNER_ROLE, USER_GROUP_ROLE, USER_ROLE } from '../../constants'
+import { IS_MF_MODE, USER_GROUP_ROLE, USER_ROLE } from '../../constants'
 
 import Add from 'igz-controls/images/add.svg?react'
 import Close from 'igz-controls/images/close.svg?react'
@@ -98,24 +103,11 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
 
   const applyMembersChangesMF = () => {
     const projectName = membersData.projectInfo.id
-    const visibleMembers = membersData.members.filter(
-      member => member.modification !== DELETE_MODIFICATION && member.role !== OWNER_ROLE
-    )
-    const groupedByRole = groupBy(visibleMembers, 'role')
-
-    const membership = {}
-
-    membersState.projectAuthorizationRoles
-      .filter(policy => policy.spec.displayName !== OWNER_ROLE)
-      .forEach(policy => {
-        const roleName = policy.spec.role
-        membership[roleName] = {
-          values: (groupedByRole[policy.spec.displayName] || []).map(member => member.id)
-        }
-      })
-
     const body = {
-      membership,
+      membership: buildProjectMembershipMF(
+        membersState.projectAuthorizationRoles,
+        membersData.members
+      ),
       override: true
     }
 

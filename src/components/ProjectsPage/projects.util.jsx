@@ -21,11 +21,6 @@ import React from 'react'
 import { get, omit, last } from 'lodash-es'
 
 import {
-  BAD_GATEWAY_ERROR_STATUS_CODE,
-  SERVICE_UNAVAILABLE_ERROR_STATUS_CODE,
-  GATEWAY_TIMEOUT_STATUS_CODE
-} from 'igz-controls/constants'
-import {
   BG_TASK_FAILED,
   BG_TASK_SUCCEEDED,
   isBackgroundTaskRunning,
@@ -39,7 +34,16 @@ import {
 } from '../../reducers/projectReducer'
 import tasksApi from '../../api/tasks-api'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import { PROJECT_ONLINE_STATUS } from '../../constants'
+import {
+  endProjectTransition,
+  isProjectOperationConflict,
+  showProjectOperationInProgress,
+  startProjectTransition,
+  trackProjectMutation
+} from '../../utils/projectOperation.util'
+import { getOrcaErrorMessage } from '../../utils/orcaError.util'
+import { isProjectTransitioning } from '../../utils/projectTransition.util'
+import { PROJECT_DELETING_STATE, PROJECT_ONLINE_STATUS } from '../../constants'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 
@@ -49,16 +53,12 @@ import DownloadIcon from 'igz-controls/images/ml-download.svg?react'
 import UnarchiveIcon from 'igz-controls/images/unarchive-icon.svg?react'
 import Yaml from 'igz-controls/images/yaml.svg?react'
 
-export const mlrunUnhealthyErrors = [
-  BAD_GATEWAY_ERROR_STATUS_CODE,
-  SERVICE_UNAVAILABLE_ERROR_STATUS_CODE,
-  GATEWAY_TIMEOUT_STATUS_CODE
-]
 export const projectDeletionKind = 'project.deletion'
 export const projectDeletionWrapperKind = 'project.deletion.wrapper'
 export const generateProjectActionsMenu = (
   projects,
   deletingProjects,
+  projectsInTransition,
   exportYaml,
   viewYaml,
   archiveProject,
@@ -70,6 +70,7 @@ export const generateProjectActionsMenu = (
 
   projects.forEach(project => {
     const projectIsDeleting = deletingProjectNames.includes(project.metadata.name)
+    const projectIsTransitioning = isProjectTransitioning(project, projectsInTransition)
 
     actionsMenu[project.metadata.name] = [
       [
@@ -77,26 +78,26 @@ export const generateProjectActionsMenu = (
           label: 'Archive',
           icon: <ArchiveIcon />,
           hidden: project.status.state === 'archived',
-          disabled: projectIsDeleting,
+          disabled: projectIsDeleting || projectIsTransitioning,
           onClick: archiveProject
         },
         {
           label: 'Unarchive',
           icon: <UnarchiveIcon />,
           hidden: project.status.state === PROJECT_ONLINE_STATUS,
-          disabled: projectIsDeleting,
+          disabled: projectIsDeleting || projectIsTransitioning,
           onClick: unarchiveProject
         },
         {
           label: 'Export YAML',
           icon: <DownloadIcon />,
-          disabled: projectIsDeleting,
+          disabled: projectIsDeleting || projectIsTransitioning,
           onClick: exportYaml
         },
         {
           label: 'View YAML',
           icon: <Yaml />,
-          disabled: projectIsDeleting,
+          disabled: projectIsDeleting || projectIsTransitioning,
           onClick: viewYaml
         },
         {
@@ -105,7 +106,7 @@ export const generateProjectActionsMenu = (
           className: 'danger',
           hidden:
             window.mlrunConfig?.nuclioMode === 'enabled' && project?.metadata?.name === 'default',
-          disabled: projectIsDeleting,
+          disabled: projectIsDeleting || projectIsTransitioning,
           onClick: deleteProject
         }
       ]
@@ -178,11 +179,14 @@ export const handleDeleteProjectError = (
         )
       }
     })
+  } else if (isProjectOperationConflict(error)) {
+    // Another operation on the project is still in flight (e.g. a second click on Delete).
+    dispatch(showProjectOperationInProgress())
   } else {
     const customErrorMsg =
       error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
         ? `You do not have permission to delete the project ${projectName} `
-        : `Failed to delete the project ${projectName}`
+        : getOrcaErrorMessage(error) || `Failed to delete the project ${projectName}`
 
     showErrorNotification(dispatch, error, '', customErrorMsg, () =>
       handleDeleteProject(
@@ -390,10 +394,33 @@ export const handleDeleteProject = (
 ) => {
   setConfirmData && setConfirmData(null)
 
+  startProjectTransition(dispatch, projectName, PROJECT_DELETING_STATE)
+
   dispatch(deleteProject({ projectName, deleteNonEmpty }))
     .unwrap()
     .then(({ response }) => {
-      if (isBackgroundTaskRunning(response)) {
+      const isTracked = trackProjectMutation(response, {
+        projectName,
+        dispatch,
+        successMessage: `Project "${projectName}" was deleted successfully`,
+        removeProjectOnSuccess: true,
+        operation: PROJECT_DELETING_STATE,
+        onSettled: refreshProjects ?? fetchMinimalProjects
+      })
+
+      if (isTracked) {
+        dispatch(
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: 'Project deletion in progress'
+          })
+        )
+
+        if (navigate) {
+          navigate('/projects')
+        }
+      } else if (isBackgroundTaskRunning(response)) {
         dispatch(
           setNotification({
             status: 200,
@@ -431,6 +458,11 @@ export const handleDeleteProject = (
       }
     })
     .catch(({ error }) => {
+      // On a conflict another operation on this project is still tracked; leave its card state.
+      if (!isProjectOperationConflict(error)) {
+        endProjectTransition(dispatch, projectName)
+      }
+
       handleDeleteProjectError(
         error,
         handleDeleteProject,

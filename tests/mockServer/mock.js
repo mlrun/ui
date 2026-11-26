@@ -45,6 +45,7 @@ import {
   remove,
   set
 } from 'lodash-es'
+import { registerOrcaMock } from './orcaMock.js'
 import mime from 'mime-types'
 import moment from 'moment'
 
@@ -3339,6 +3340,18 @@ app.delete(`${mlrunAPIIngress}/projects/:project/feature-sets/:featureSet`, dele
 app.get(`${mlrunAPIIngress}/projects`, getProjects)
 app.post(`${mlrunAPIIngress}/projects`, createNewProject)
 app.get(`${mlrunAPIIngress}/projects/:project`, getProject)
+
+// ORIS-3384: in ORIS the leader owns project mutations, so they are served by the Orca mock
+// instead of the MLRun routes above (see orcaMock.js).
+registerOrcaMock(app, {
+  iguazioApiUrl,
+  projects,
+  projectsSummary,
+  secretKeys,
+  projectTemplate,
+  summuryTemplate,
+  secretKeyTemplate
+})
 app.delete(`${mlrunAPIIngress}/projects/:project`, deleteProject)
 app.delete(`${mlrunAPIIngressV2}/projects/:project`, deleteProjectV2)
 app.patch(`${mlrunAPIIngress}/projects/:project`, patchProject)

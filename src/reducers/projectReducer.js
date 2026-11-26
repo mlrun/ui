@@ -19,6 +19,7 @@ such restriction.
 */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
+import orcaProjectsApi from '../api/projects-orca-api'
 import projectsApi from '../api/projects-api'
 import { hideLoading, showLoading } from './redux.util'
 import {
@@ -26,17 +27,64 @@ import {
   FORBIDDEN_ERROR_STATUS_CODE,
   INTERNAL_SERVER_ERROR_STATUS_CODE
 } from 'igz-controls/constants'
-import { DEFAULT_ABORT_MSG, PROJECT_ONLINE_STATUS, REQUEST_CANCELED } from '../constants'
+import {
+  DEFAULT_ABORT_MSG,
+  IS_MF_MODE,
+  MLRUN_UNHEALTHY_ERRORS,
+  PROJECT_ONLINE_STATUS,
+  REQUEST_CANCELED
+} from '../constants'
 import { parseProjects } from '../utils/parseProjects'
+import { getOrcaErrorMessage } from '../utils/orcaError.util'
+import { getReportedTransition } from '../utils/projectTransition.util'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { parseSummaryData } from '../utils/parseSummaryData'
-import { mlrunUnhealthyErrors } from '../components/ProjectsPage/projects.util'
+import { getLeaderWitness, withLeaderWitness } from '../utils/orcaProjectPayload.util'
 import {
   aggregateApplicationStatuses,
   filterNuclioAppFunctions,
   splitApplicationsContent
 } from '../utils/applications.utils'
 import { fetchNuclioFunctions } from './nuclioReducer'
+
+/**
+ * Takes the fetched list as-is. A still-polling entry is left in `projectsInTransition` so the
+ * card stays dimmed. A stored project that the leader has not listed yet is appended back.
+ */
+const mergeIncomingProjects = (state, incomingProjects = []) => {
+  if (!IS_MF_MODE) return incomingProjects
+
+  const incomingNames = new Set()
+  const projects = []
+
+  incomingProjects.forEach(project => {
+    const name = project?.metadata?.name
+
+    if (name) {
+      incomingNames.add(name)
+    }
+
+    const transition = state.projectsInTransition[name]
+
+    if (transition && !transition.polling && !getReportedTransition(project)) {
+      delete state.projectsInTransition[name]
+    }
+
+    projects.push(project)
+  })
+
+  Object.entries(state.projectsInTransition).forEach(([name, transition]) => {
+    if (incomingNames.has(name)) return
+
+    if (transition.project) {
+      projects.push(transition.project)
+    } else if (!transition.polling) {
+      delete state.projectsInTransition[name]
+    }
+  })
+
+  return projects
+}
 
 const initialState = {
   deletingProjects: {},
@@ -120,6 +168,7 @@ const initialState = {
   },
   projectTotalAlerts: {},
   projects: [],
+  projectsInTransition: {},
   projectsNames: {
     error: null,
     loading: false,
@@ -137,14 +186,46 @@ const initialState = {
   }
 }
 
+// In ORIS every update needs the leader's current owner and op id, and the MLRun copy of the project
+// can be behind on both, e.g. after an earlier save or an owner change.
+const withCurrentLeaderWitness = (project, projectName) => {
+  if (!IS_MF_MODE) return Promise.resolve(project)
+
+  return orcaProjectsApi
+    .getProject(projectName)
+    .then(latest => withLeaderWitness(project, getLeaderWitness(latest)))
+}
+
 export const changeProjectState = createAsyncThunk(
   'changeProjectState',
   ({ project, status }, thunkAPI) => {
-    return projectsApi
-      .changeProjectState(project, status)
+    return withCurrentLeaderWitness(project, project.metadata.name)
+      .then(projectToSend => projectsApi.changeProjectState(projectToSend, status))
       .catch(error => thunkAPI.rejectWithValue(error))
   }
 )
+export const editProject = createAsyncThunk('editProject', ({ projectName, project }, thunkAPI) => {
+  return withCurrentLeaderWitness(project, projectName)
+    .then(projectToSend => projectsApi.editProject(projectName, projectToSend))
+    .catch(error => thunkAPI.rejectWithValue(error))
+})
+const getCreateProjectErrorMessage = (error, projectName) => {
+  switch (error.response?.status) {
+    case CONFLICT_ERROR_STATUS_CODE:
+      return `A project named "${projectName}" already exists.`
+    case FORBIDDEN_ERROR_STATUS_CODE:
+      return 'Permission denied: Unable to create a project. Contact your system administrator to review user policy and data access permissions.'
+    case INTERNAL_SERVER_ERROR_STATUS_CODE:
+      return (
+        error.response.data?.detail ||
+        getOrcaErrorMessage(error) ||
+        'The system already has the maximum number of projects. An existing project must be deleted before you can create another.'
+      )
+    default:
+      return getOrcaErrorMessage(error) || error.message
+  }
+}
+
 export const createNewProject = createAsyncThunk('createNewProject', ({ postData }, thunkAPI) => {
   return projectsApi
     .createProject(postData)
@@ -152,17 +233,7 @@ export const createNewProject = createAsyncThunk('createNewProject', ({ postData
       return result.data
     })
     .catch(error => {
-      const message =
-        error.response?.status === CONFLICT_ERROR_STATUS_CODE
-          ? `A project named "${postData.metadata.name}" already exists.`
-          : error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'Permission denied: Unable to create a project. Contact your system administrator to review user policy and data access permissions.'
-            : error.response?.status === INTERNAL_SERVER_ERROR_STATUS_CODE
-              ? error.response.data?.detail ||
-                'The system already has the maximum number of projects. An existing project must be deleted before you can create another.'
-              : error.message
-
-      return thunkAPI.rejectWithValue(message)
+      return thunkAPI.rejectWithValue(getCreateProjectErrorMessage(error, postData.metadata.name))
     })
 })
 export const deleteProject = createAsyncThunk(
@@ -180,16 +251,11 @@ export const deleteProject = createAsyncThunk(
 export const fetchProject = createAsyncThunk(
   'fetchProject',
   ({ project, params, signal }, thunkAPI) => {
-    return projectsApi
-      .getProject(project, params, signal)
-      .then(response => {
-        return response
-      })
-      .catch(error => {
-        if (![REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(error.message)) {
-          return thunkAPI.rejectWithValue(error)
-        }
-      })
+    return projectsApi.getProject(project, params, signal).catch(error => {
+      if (![REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(error.message)) {
+        return thunkAPI.rejectWithValue(error)
+      }
+    })
   }
 )
 export const fetchProjectDataSets = createAsyncThunk(
@@ -287,9 +353,7 @@ export const fetchProjects = createAsyncThunk(
 
     return projectsApi
       .getProjects(params)
-      .then(response => {
-        return parseProjects(response.data.projects)
-      })
+      .then(response => parseProjects(response.data.projects))
       .catch(error => {
         if (showNotification) {
           showErrorNotification(
@@ -338,7 +402,7 @@ export const fetchProjectsSummary = createAsyncThunk(
         return parseSummaryData(project_summaries)
       })
       .catch(err => {
-        if (mlrunUnhealthyErrors.includes(err.response?.status)) {
+        if (MLRUN_UNHEALTHY_ERRORS.includes(err.response?.status)) {
           if (!firstServerErrorTimestamp) {
             firstServerErrorTimestamp = new Date()
 
@@ -399,11 +463,50 @@ const projectStoreSlice = createSlice({
     setProjectTotalAlerts(state, action) {
       state.projectTotalAlerts = { ...action.payload }
     },
+    setProjectTransition(state, action) {
+      const { projectName, ...fields } = action.payload
+
+      if (fields.operation === null) {
+        delete state.projectsInTransition[projectName]
+        return
+      }
+
+      const current = state.projectsInTransition[projectName]
+
+      if (!current) {
+        if (!fields.operation) return
+
+        state.projectsInTransition[projectName] = fields
+        return
+      }
+
+      Object.assign(current, fields)
+    },
     setAccessibleProjectsMap(state, action) {
       state.accessibleProjectsMap = {
         ...state.accessibleProjectsMap,
         ...action.payload
       }
+    },
+    // Only used to surface a just-created project before the leader lists it, so an existing entry
+    // is left untouched and the insert position does not matter - the list is sorted for display.
+    upsertProject(state, action) {
+      if (!action.payload?.metadata?.name) return
+
+      const [project] = parseProjects([action.payload])
+      const name = project.metadata.name
+
+      const index = state.projects.findIndex(item => item.metadata.name === name)
+
+      if (index === -1) {
+        state.projects.push(project)
+      }
+    },
+    removeProject(state, action) {
+      const projectName = action.payload
+
+      state.projects = state.projects.filter(project => project.metadata.name !== projectName)
+      state.projectsNames.data = state.projectsNames.data.filter(name => name !== projectName)
     }
   },
   extraReducers: builder => {
@@ -546,9 +649,15 @@ const projectStoreSlice = createSlice({
         loading: false
       }
     })
-    builder.addCase(fetchProjects.pending, showLoading)
+    // A refresh triggered by a finished lifecycle operation asks for `silent`, so the list is
+    // replaced in place instead of collapsing behind the page-level loader.
+    builder.addCase(fetchProjects.pending, (state, action) => {
+      if (!action.meta.arg?.silent) {
+        state.loading = true
+      }
+    })
     builder.addCase(fetchProjects.fulfilled, (state, action) => {
-      state.projects = action.payload
+      state.projects = mergeIncomingProjects(state, action.payload)
       state.loading = false
       state.error = null
       state.projectsNames.data = action.payload
@@ -556,7 +665,9 @@ const projectStoreSlice = createSlice({
         .map(project => project.metadata.name)
     })
     builder.addCase(fetchProjects.rejected, (state, action) => {
-      state.projects = []
+      if (!action.meta.arg?.silent) {
+        state.projects = []
+      }
       state.loading = false
       state.error = action.payload
     })
@@ -607,7 +718,10 @@ export const {
   setMlrunUnhealthyRetrying,
   setJobsMonitoringData,
   setProjectTotalAlerts,
-  setAccessibleProjectsMap
+  setProjectTransition,
+  setAccessibleProjectsMap,
+  upsertProject,
+  removeProject
 } = projectStoreSlice.actions
 
 export default projectStoreSlice.reducer

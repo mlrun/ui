@@ -24,6 +24,7 @@ import { Form } from 'react-final-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 import { cloneDeep, isEmpty } from 'lodash-es'
+import { getOrcaErrorMessage } from '../../utils/orcaError.util'
 import { useParams } from 'react-router'
 
 import {
@@ -38,7 +39,6 @@ import {
 } from 'igz-controls/components'
 import ChangeOwnerPopUp from '../ChangeOwnerPopUp/ChangeOwnerPopUp'
 
-import projectsApi from '../../api/projects-api'
 import {
   ARTIFACT_PATH,
   DEFAULT_IMAGE,
@@ -66,10 +66,11 @@ import {
   getInternalLabelsValidationRule
 } from 'igz-controls/utils/validation.util'
 import { parseChipsData, convertChipsData } from '../../utils/convertChipsData'
+import { handleProjectOperationConflict } from '../../utils/projectOperation.util'
 import { setNotification } from 'igz-controls/reducers/notificationReducer'
 import { showErrorNotification } from 'igz-controls/utils/notification.util'
 import { areNodeSelectorsSupported } from './projectSettingsGeneral.utils'
-import { fetchProject, removeProjectData } from '../../reducers/projectReducer'
+import { editProject, fetchProject, removeProjectData } from '../../reducers/projectReducer'
 
 import './projectSettingsGeneral.scss'
 
@@ -167,8 +168,8 @@ const ProjectSettingsGeneral = ({
 
   const sendProjectSettingsData = useCallback(
     function sendProjectSettingsDataCallback(projectData) {
-      projectsApi
-        .editProject(params.projectName, projectData)
+      dispatch(editProject({ projectName: params.projectName, project: projectData }))
+        .unwrap()
         .then(() => {
           dispatch(
             setNotification({
@@ -179,10 +180,18 @@ const ProjectSettingsGeneral = ({
           )
         })
         .catch(error => {
+          if (
+            handleProjectOperationConflict(error, params.projectName, dispatch, () =>
+              sendProjectSettingsDataCallback(projectData)
+            )
+          ) {
+            return
+          }
+
           const customErrorMsg =
             error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
               ? 'Missing edit permission for the project'
-              : getErrorMsg(error, 'Failed to edit project data')
+              : getErrorMsg(error, getOrcaErrorMessage(error) || 'Failed to edit project data')
 
           showErrorNotification(dispatch, error, '', customErrorMsg, () =>
             sendProjectSettingsDataCallback(projectData)
