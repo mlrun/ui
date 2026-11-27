@@ -7,7 +7,8 @@
     "tests/features/support/*.js",
     "tests/mockServer/mock.js",
     "tests/mockServer/backendSynchronizator.js",
-    "allurerc.mjs"
+    "allurerc.mjs",
+    ".github/scripts/*.cjs"
   ],
   // igz-controls is internal code, not a published library: its barrels (index files) re-export only
   // what the app imports through them, `utils` and `reducers` have no barrels and are imported by path.
